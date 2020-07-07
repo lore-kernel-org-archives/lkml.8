@@ -2,158 +2,142 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70593C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D3EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AAAB2067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:52:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4POi9w8"
+	by mail.kernel.org (Postfix) with ESMTP id C7FD42067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594151544;
+	bh=BCg2O5jFZBlDRc+MF49DFW22EwGVWh89T01WR1/QAyk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=wuoR29L2t1OnpHCN6D6aPPTGl59r9nO8z2zy9EUfX1peRj2enEzn2cSA/OLgJN1wX
+	 QgzcKbgubpDXLosb7q56NHpFW15VaXq1amrALLFvgzCXHhKCU77MoqU/+GWxGv6eaX
+	 PxKKvDa2nDLLBecKSiGIJ7gNvFjDzRzWMOICjW6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgGGTwP (ORCPT
+        id S1728731AbgGGTwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgGGTwO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:52:14 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CE32C061755;
-        Tue,  7 Jul 2020 12:52:14 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id d18so2412842ion.0;
-        Tue, 07 Jul 2020 12:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Cspl6RQza0BoSmE5XXIXy/+J4esPE2BdRB9cMVQHRY=;
-        b=G4POi9w8Qq0IGizNb7ryCd4o0A1m/mKhcPpW+MPVzcB5AqQMqFZOZtvcrjTx1ZC6NZ
-         IHSOP0iTG0JhubvRBG4VEfwfjNtaAWwFZSntwZZOeLVByAPR0Qar4rugJzW4h4WVU4zm
-         K4jIxmQJrKM7wya5lZTvHwBpwDLgcHBrT4KUcGqQ9ft2wh/u2O2a+50OaYZrAVsNXUPX
-         Ah+t1cueopn/VXWcyLbwxRK5pY43wwih64BIK8AcE9unuFUsDpt94lkJ0BHpdgFS0ZHu
-         7RVJf8qKeYk6GPK2NDihdb/2Ls3GThu3DyFjqeY6VBjV7MyN05IAF5m+x5C3NWv2HJnT
-         zbTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Cspl6RQza0BoSmE5XXIXy/+J4esPE2BdRB9cMVQHRY=;
-        b=Azj3JxQNCyM+8QPU/3Jxma21bYwfTkaJgZ/4j8ZY6pfN7QZDY4aQemiyIeLsJ37S0s
-         m//5Kmhj7zOVrgkrGoDRVcwrOSRwM9mUPkhm5nS0Wed577XGVh7VT5L4Av7ICMTLGlvl
-         hyhtiqVfP2QGUlj649aZFc1wXf3VQvuZIC6Z2EIlyDb1pk9zd7t7tsPtaptGHJC0VE5q
-         sELfdBTr5RFZxr9sNMfi83AMlcHNsrtuQ3qziXD70axT0kb3dvR2MTwBoS9e6M4rgyIz
-         xiNKTp51oSwmCWAOzK8Ya8pm3rssl5pAsMM8fNQvbRF6jg+3wLx5noQMbUMLoJcCaUQe
-         GpLQ==
-X-Gm-Message-State: AOAM531e8btTr3TGg1H1aBB7cLHCmGyLYmXan1jEzmUnRyAvRehE6SzE
-        FG4N/ezTL7BIfLdEPXWi/r9VdGLcLseP9AQA0hU=
-X-Google-Smtp-Source: ABdhPJxpDcMU/6sQeaJ1MKQrqBTwFVPhJ9rzxB93g8MotvV5VkpDFwvRg+1fpk1xkEqPqtgSRUNbSOS+dlN976DVvBc=
-X-Received: by 2002:a02:c7cc:: with SMTP id s12mr63300691jao.79.1594151533957;
- Tue, 07 Jul 2020 12:52:13 -0700 (PDT)
+        Tue, 7 Jul 2020 15:52:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726951AbgGGTwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:52:22 -0400
+Received: from embeddedor (unknown [200.39.26.250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A36C92067D;
+        Tue,  7 Jul 2020 19:52:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594151541;
+        bh=BCg2O5jFZBlDRc+MF49DFW22EwGVWh89T01WR1/QAyk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=P0+GOtA5+XNYmpksFCVRBIEVNBW3/ffnM5bFqEXHW3Db77YWs0JiCtPjul3JHKXa/
+         9pNhzwj5h9xARmb4DA5JAN96erzS3jTHF5vKWuofCOxAcU48XacsCAMBEWD+a1v25G
+         +ytUhAhKlzTaodKBZM5p4euorN0Ow1ZgQHcp6v6I=
+Date:   Tue, 7 Jul 2020 14:57:47 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH] USB: serial: Use fallthrough pseudo-keyword
+Message-ID: <20200707195747.GA4354@embeddedor>
 MIME-Version: 1.0
-References: <20200707012707.13267-1-cphealy@localhost.localdomain> <CAHp75VedcWazv9=KkWXU75SP3giPtBXvyDF3dQbCEETRM5bjaQ@mail.gmail.com>
-In-Reply-To: <CAHp75VedcWazv9=KkWXU75SP3giPtBXvyDF3dQbCEETRM5bjaQ@mail.gmail.com>
-From:   Chris Healy <cphealy@gmail.com>
-Date:   Tue, 7 Jul 2020 12:52:00 -0700
-Message-ID: <CAFXsbZr5Yy3kyScVZoNrEYGy9-H76YwQhbXS4cpq45RfqUtgWA@mail.gmail.com>
-Subject: Re: [PATCH net-next v3] net: sfp: Unique GPIO interrupt names
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 11:52 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
->
->
-> On Tuesday, July 7, 2020, Chris Healy <cphealy@gmail.com> wrote:
->>
->> From: Chris Healy <cphealy@gmail.com>
->>
->> Dynamically generate a unique GPIO interrupt name, based on the
->> device name and the GPIO name.  For example:
->>
->> 103:          0   sx1503q  12 Edge      sff2-los
->> 104:          0   sx1503q  13 Edge      sff2-tx-fault
->>
->> The sffX indicates the SFP the los and tx-fault are associated with.
->>
->> Signed-off-by: Chris Healy <cphealy@gmail.com>
->>
->> v3:
->> - reverse Christmas tree new variable
->> - fix spaces vs tabs
->> v2:
->> - added net-next to PATCH part of subject line
->> - switched to devm_kasprintf()
->> ---
->>  drivers/net/phy/sfp.c | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
->> index 73c2969f11a4..7bdfcde98266 100644
->> --- a/drivers/net/phy/sfp.c
->> +++ b/drivers/net/phy/sfp.c
->> @@ -2238,6 +2238,7 @@ static int sfp_probe(struct platform_device *pdev)
->>  {
->>         const struct sff_data *sff;
->>         struct i2c_adapter *i2c;
->> +       char *sfp_irq_name;
->>         struct sfp *sfp;
->>         int err, i;
->>
->> @@ -2349,12 +2350,16 @@ static int sfp_probe(struct platform_device *pdev)
->>                         continue;
->>                 }
->>
->> +               sfp_irq_name = devm_kasprintf(sfp->dev, GFP_KERNEL,
->> +                                             "%s-%s", dev_name(sfp->dev),
->> +                                             gpio_of_names[i]);
->
->
->
-> No error check? Why?
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-Good point.  I will add this.  I see this patch was just applied so
-I'll submit a follow on patch to add the appropriate error check.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
->
->
->>
->> +
->>                 err = devm_request_threaded_irq(sfp->dev, sfp->gpio_irq[i],
->>                                                 NULL, sfp_irq,
->>                                                 IRQF_ONESHOT |
->>                                                 IRQF_TRIGGER_RISING |
->>                                                 IRQF_TRIGGER_FALLING,
->> -                                               dev_name(sfp->dev), sfp);
->> +                                               sfp_irq_name, sfp);
->>                 if (err) {
->>                         sfp->gpio_irq[i] = 0;
->>                         sfp->need_poll = true;
->> --
->> 2.21.3
->>
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/usb/serial/cypress_m8.c  |    4 ++--
+ drivers/usb/serial/io_edgeport.c |    4 ++--
+ drivers/usb/serial/kobil_sct.c   |    2 +-
+ drivers/usb/serial/upd78f0730.c  |    2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/usb/serial/cypress_m8.c b/drivers/usb/serial/cypress_m8.c
+index 216edd5826ca..53e3051b0a71 100644
+--- a/drivers/usb/serial/cypress_m8.c
++++ b/drivers/usb/serial/cypress_m8.c
+@@ -1046,7 +1046,7 @@ static void cypress_read_int_callback(struct urb *urb)
+ 		return;
+ 	case -EPIPE:
+ 		/* Can't call usb_clear_halt while in_interrupt */
+-		/* FALLS THROUGH */
++		fallthrough;
+ 	default:
+ 		/* something ugly is going on... */
+ 		dev_err(dev, "%s - unexpected nonzero read status received: %d\n",
+@@ -1195,7 +1195,7 @@ static void cypress_write_int_callback(struct urb *urb)
+ 		return;
+ 	case -EPIPE:
+ 		/* Cannot call usb_clear_halt while in_interrupt */
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	default:
+ 		dev_err(dev, "%s - unexpected nonzero write status received: %d\n",
+ 			__func__, status);
+diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
+index 4cca0b836f43..ba5d8df69518 100644
+--- a/drivers/usb/serial/io_edgeport.c
++++ b/drivers/usb/serial/io_edgeport.c
+@@ -1752,7 +1752,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
+ 				edge_serial->rxState = EXPECT_HDR2;
+ 				break;
+ 			}
+-			/* Fall through */
++			fallthrough;
+ 		case EXPECT_HDR2:
+ 			edge_serial->rxHeader2 = *buffer;
+ 			++buffer;
+@@ -1804,7 +1804,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
+ 				edge_serial->rxState = EXPECT_DATA;
+ 				break;
+ 			}
+-			/* Fall through */
++			fallthrough;
+ 		case EXPECT_DATA: /* Expect data */
+ 			if (bufferLength < edge_serial->rxBytesRemaining) {
+ 				rxLen = bufferLength;
+diff --git a/drivers/usb/serial/kobil_sct.c b/drivers/usb/serial/kobil_sct.c
+index e9882ba20933..9660c16be56a 100644
+--- a/drivers/usb/serial/kobil_sct.c
++++ b/drivers/usb/serial/kobil_sct.c
+@@ -499,7 +499,7 @@ static void kobil_set_termios(struct tty_struct *tty,
+ 		break;
+ 	default:
+ 		speed = 9600;
+-		/* fall through */
++		fallthrough;
+ 	case 9600:
+ 		urb_val = SUSBCR_SBR_9600;
+ 		break;
+diff --git a/drivers/usb/serial/upd78f0730.c b/drivers/usb/serial/upd78f0730.c
+index 1ba1401d27d7..0a2268c479af 100644
+--- a/drivers/usb/serial/upd78f0730.c
++++ b/drivers/usb/serial/upd78f0730.c
+@@ -332,7 +332,7 @@ static void upd78f0730_set_termios(struct tty_struct *tty,
+ 		tty->termios.c_cflag &= ~CSIZE;
+ 		tty->termios.c_cflag |= CS8;
+ 		dev_warn(dev, "data size is not supported, using 8 bits\n");
+-		/* fall through */
++		fallthrough;
+ 	case CS8:
+ 		request.params |= UPD78F0730_DATA_SIZE_8_BITS;
+ 		dev_dbg(dev, "%s - 8 data bits\n", __func__);
+
