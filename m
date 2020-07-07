@@ -2,105 +2,100 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E267FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F28C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4AAE20771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594160769;
-	bh=T0DwWvl2eKQOwlym/Ko2pveZIneqmF3MFNc5/b/pqUc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=YR9NOSB7HGEO3hHelAlFfKhEcYXuTKWjc6jrFuyKf+OphlcoyEfDZAmejDEMyMjsW
-	 qPsDgrpS4I/GQq43CuUi5yahge6NuwFrqeJn3eUfozYZ7X3G6PCd6dE24hMBGVapUe
-	 uy3CHjMewnjVk2+UPcNW1+X1Gc1ah2IrpMf8Y8do=
+	by mail.kernel.org (Postfix) with ESMTP id BC202206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:31:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="YZEOK9JN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgGGW0I (ORCPT
+        id S1729276AbgGGWbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:26:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbgGGW0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:26:07 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 7 Jul 2020 18:31:32 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:53513 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbgGGWbc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 18:31:32 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FEC72075B;
-        Tue,  7 Jul 2020 22:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594160767;
-        bh=T0DwWvl2eKQOwlym/Ko2pveZIneqmF3MFNc5/b/pqUc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=iFSFhwxsVgud7cEq81TXjXMt+pj4sGtRZLl5pqFopex1zqIZhnmgiRmIj9Q4Tzpia
-         TQsRN7Tckb+OJLbjWiU0jTkVg3AMnBq9nrhE0wYd9XJZlSn6AvifOkwmKZ4e+m3WGB
-         hRemOCesXYEBoZT9KaRl8R6fCQczl3Oc5XOZ+keE=
-Date:   Tue, 7 Jul 2020 17:26:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: Re: [PATCH] PCI: Replace kmalloc with kzalloc in the comment/message
-Message-ID: <20200707222600.GA391475@bjorn-Precision-5520>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EA2DD22723;
+        Wed,  8 Jul 2020 00:31:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1594161090;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/uH5LVCD2f9ksp83Amofj282y55+pudcW4fgiuCHQE4=;
+        b=YZEOK9JNEKRH3b3/6WjZ4kWOC6WJg95FuzdEfb9DrBYZdVXgS3LP8IdejiBLmt4RZvjiRE
+        aYs2hFlIxidEC8ir6EGy9oqYIjCyz8J+tZ405vJ4Tcq5AlqFjjNZyx1W8LcN8aFIovJtIW
+        pzPnBYC08kesvBhzzhvIhQN8ew+jSvU=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+List-Id: <soc.lore.kernel.org>
+Cc:     soc@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH 1/2] arm64: defconfig: enable TSN features for ENETC and similiar hardware
+Date:   Wed,  8 Jul 2020 00:31:12 +0200
+Message-Id: <20200707223114.16355-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590714119-15744-1-git-send-email-wang.yi59@zte.com.cn>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 09:01:59AM +0800, Yi Wang wrote:
-> From: Liao Pingfang <liao.pingfang@zte.com.cn>
-> 
-> Use kzalloc instead of kmalloc in the comment/message according to
-> the previous kzalloc() call.
-> 
-> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
+Newer network cards and switches support offloading of certain packet
+scheduling, classifying and actions onto the hardware itself. For
+example, time-aware and credit based schedulers. To use this feature we
+have to enable the corresponding modules. Please note, that this will
+also enable NET_SCHED and NET_CLS_ACT as builtin because there is no
+module option. The enabled modules should get us a good foundation.
 
-I would be happy to apply this, but this needs to show a connection
-between Liao Pingfang and Yi Wang.
+$ scripts/bloat-o-meter old-vmlinux vmlinux
+add/remove: 446/215 grow/shrink: 48/31 up/down: 78445/-11519 (66926)
+[..]
+Total: Before=20452567, After=20519493, chg +0.33%
 
-Ideally this patch would be sent directly by Liao Pingfang.  The
-sender should at least appear in the Signed-off-by chain.  See
-Documentation/process/submitting-patches.rst
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ arch/arm64/configs/defconfig | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> ---
->  drivers/pci/hotplug/ibmphp_pci.c | 2 +-
->  drivers/pci/setup-bus.c          | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/ibmphp_pci.c b/drivers/pci/hotplug/ibmphp_pci.c
-> index e22d023..2d36992 100644
-> --- a/drivers/pci/hotplug/ibmphp_pci.c
-> +++ b/drivers/pci/hotplug/ibmphp_pci.c
-> @@ -205,7 +205,7 @@ int ibmphp_configure_card(struct pci_func *func, u8 slotno)
->  								cur_func->next = newfunc;
->  
->  							rc = ibmphp_configure_card(newfunc, slotno);
-> -							/* This could only happen if kmalloc failed */
-> +							/* This could only happen if kzalloc failed */
->  							if (rc) {
->  								/* We need to do this in case bridge itself got configured properly, but devices behind it failed */
->  								func->bus = 1; /* To indicate to the unconfigure function that this is a PPB */
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index bbcef1a..13c5a44 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -151,7 +151,7 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
->  
->  		tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
->  		if (!tmp)
-> -			panic("pdev_sort_resources(): kmalloc() failed!\n");
-> +			panic("%s: kzalloc() failed!\n", __func__);
->  		tmp->res = r;
->  		tmp->dev = dev;
->  
-> -- 
-> 2.9.5
-> 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e38486b836f4..0aeb9971e086 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -162,6 +162,18 @@ CONFIG_NET_DSA=m
+ CONFIG_VLAN_8021Q=m
+ CONFIG_VLAN_8021Q_GVRP=y
+ CONFIG_VLAN_8021Q_MVRP=y
++CONFIG_NET_SCHED=y
++CONFIG_NET_SCH_CBS=m
++CONFIG_NET_SCH_ETF=m
++CONFIG_NET_SCH_TAPRIO=m
++CONFIG_NET_SCH_MQPRIO=m
++CONFIG_NET_SCH_INGRESS=m
++CONFIG_NET_CLS_BASIC=m
++CONFIG_NET_CLS_FLOWER=m
++CONFIG_NET_CLS_ACT=y
++CONFIG_NET_ACT_GACT=m
++CONFIG_NET_ACT_MIRRED=m
++CONFIG_NET_ACT_GATE=m
+ CONFIG_QRTR=m
+ CONFIG_QRTR_SMD=m
+ CONFIG_QRTR_TUN=m
+-- 
+2.20.1
+
