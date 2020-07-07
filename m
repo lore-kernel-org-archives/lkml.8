@@ -2,98 +2,97 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47671206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19DA6206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:59:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HKDcobdw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgGGL5a (ORCPT
+        id S1727875AbgGGL7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:57:30 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7819 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726745AbgGGL53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:57:29 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D659616BD5B4F6A04B78;
-        Tue,  7 Jul 2020 19:57:27 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.214) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Tue, 7 Jul 2020
- 19:57:21 +0800
-Subject: Re: [PATCH] ubifs: Fix wrong orphan node deletion in
- ubifs_jnl_update()
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-CC:     <linux-mtd@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        "zhangyi (F)" <yi.zhang@huawei.com>
-References: <20200702152048.1819867-1-chengzhihao1@huawei.com>
- <CAFLxGvybobVbhS4zQSxSmq3xR40QP=pkyDG8j7jA8a6eOOKfHg@mail.gmail.com>
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <37d3628a-1904-bb94-e225-348dfeafe6b1@huawei.com>
-Date:   Tue, 7 Jul 2020 19:57:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 7 Jul 2020 07:59:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726745AbgGGL7F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:59:05 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47BCFC08C5E1
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:59:05 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id s16so19074552lfp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HTPmD5Tv5dUMriTVMEYPSE4aq44oEkYldNJx6iUd92U=;
+        b=HKDcobdwR59Fn4UPxGHRQ0tpAtbpLCJNsZlPMJ/sOiZyRbiNswsgF9jOe/BAk8id8l
+         /5EDjFn+j7IrqQI7DBI2n7Uq2bBWEf1LX5BO0SlioDHGovjRN/+aYEtpFSj1onhKowwd
+         Jyzt+IOCjBFb2xLwG5Ql2hJk4eWSyQElpoG1w08NxiRQ4BjeE4juggLuIqQZrxnUm4AW
+         wxJ5rCZerV2AejOoEFy2/ofH5gJdnEUHklmMBmyEWjepQYIJFNJR4M9pxxd22+ChBxqi
+         z7Y0JHiZJBtFRhUTWf6BA4ruLd/6iHkPnoKgZc0WXt+PJk9Ns+TyOPs2bDd4yFIVnyF9
+         qKqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HTPmD5Tv5dUMriTVMEYPSE4aq44oEkYldNJx6iUd92U=;
+        b=Bjj5V8ZOY3IdpwD4UBMDaXKKr5UTNaPjiNlAq36hu0XWowopF5BW7smCoQN81JxD1f
+         c/R3PskuLqQxo/ltrCC3EhRERQv8oxZnrBCzXMtgkF7FlLd1H/AX8gEUmV06Il5ICuX9
+         hSw/kid5sFbI6JsMT3zdArAtMdIg2YvjfiVbN36x/IiQYFNTu1bClGBh6d/0Sfi38SAH
+         1jcOjAotmaisoGu33SZtsKAja7HyF1+i9DgoasdYX/ECGqesiXca7oqKlF+qO7d446Nf
+         Pf9d9WGR/sfFwCMqi9D1Oh7YmgcgLj/HZ56WezYRm4tpr5vorgRPCq1GlRYpNBpXpxYF
+         uADQ==
+X-Gm-Message-State: AOAM530LYoSm+Mftq7cvuXAYLUyRPBJUuWraN1mJhP0/82p/Eki8fzxX
+        zqF20Ink0wdkNbGYwMIg0s0ZXUY5nENrcpGiqOWmlMNwq9E=
+X-Google-Smtp-Source: ABdhPJy0TxaIe1Wz0GdlFd5FdxpVp2FOvGGrBFkEn0oi3CjP4qg2V304qTt6rBtZAznq91V/ed9yiUW+UN8gJyowQaY=
+X-Received: by 2002:a19:e05d:: with SMTP id g29mr32404950lfj.217.1594123143709;
+ Tue, 07 Jul 2020 04:59:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFLxGvybobVbhS4zQSxSmq3xR40QP=pkyDG8j7jA8a6eOOKfHg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.214]
-X-CFilter-Loop: Reflected
+References: <20200615133242.24911-1-lars.povlsen@microchip.com> <20200615133242.24911-6-lars.povlsen@microchip.com>
+In-Reply-To: <20200615133242.24911-6-lars.povlsen@microchip.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jul 2020 13:58:52 +0200
+Message-ID: <CACRpkdaSVRg3F5FLKi=sGCFQDXXkiz2e1pT3H9dcoaPDSYKrXQ@mail.gmail.com>
+Subject: Re: [PATCH v3 05/10] pinctrl: ocelot: Add Sparx5 SoC support
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020/7/7 19:52, Richard Weinberger 写道:
-> On Thu, Jul 2, 2020 at 5:21 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
->> There a wrong orphan node deleting in error handling path in
->> ubifs_jnl_update(), which may cause following error msg:
->>
->>    UBIFS error (ubi0:0 pid 1522): ubifs_delete_orphan [ubifs]:
->>    missing orphan ino 65
->>
->> Fix this by checking whether the node has been operated for
->> adding to orphan list before being deleted,
->>
->> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
->> ---
->>   fs/ubifs/journal.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/ubifs/journal.c b/fs/ubifs/journal.c
->> index e5ec1afe1c66..db0a80dd9d52 100644
->> --- a/fs/ubifs/journal.c
->> +++ b/fs/ubifs/journal.c
->> @@ -539,7 +539,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
->>                       const struct fscrypt_name *nm, const struct inode *inode,
->>                       int deletion, int xent)
->>   {
->> -       int err, dlen, ilen, len, lnum, ino_offs, dent_offs;
->> +       int err, dlen, ilen, len, lnum, ino_offs, dent_offs, orphan_added = 0;
->>          int aligned_dlen, aligned_ilen, sync = IS_DIRSYNC(dir);
->>          int last_reference = !!(deletion && inode->i_nlink == 0);
->>          struct ubifs_inode *ui = ubifs_inode(inode);
->> @@ -630,6 +630,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
->>                          goto out_finish;
->>                  }
->>                  ui->del_cmtno = c->cmt_no;
->> +               orphan_added = 1;
->>          }
->>
->>          err = write_head(c, BASEHD, dent, len, &lnum, &dent_offs, sync);
->> @@ -702,7 +703,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
->>          kfree(dent);
->>   out_ro:
->>          ubifs_ro_mode(c, err);
->> -       if (last_reference)
->> +       if (last_reference && orphan_added)
-> I think you can just check for orphan_added here.
-> Looks good otherwise, thanks for fixing! :-)
-Sounds reasonable. I will send v2.
+On Mon, Jun 15, 2020 at 3:33 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
 
+> This add support for Sparx5 pinctrl, using the ocelot drives as
+> basis. It adds pinconfig support as well, as supported by the
+> platform.
+>
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+
+This one patch applied to the pinctrl tree.
+
+Yours,
+Linus Walleij
