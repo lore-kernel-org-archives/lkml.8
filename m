@@ -2,74 +2,105 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E267FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7C922075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4AAE20771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594160769;
+	bh=T0DwWvl2eKQOwlym/Ko2pveZIneqmF3MFNc5/b/pqUc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=YR9NOSB7HGEO3hHelAlFfKhEcYXuTKWjc6jrFuyKf+OphlcoyEfDZAmejDEMyMjsW
+	 qPsDgrpS4I/GQq43CuUi5yahge6NuwFrqeJn3eUfozYZ7X3G6PCd6dE24hMBGVapUe
+	 uy3CHjMewnjVk2+UPcNW1+X1Gc1ah2IrpMf8Y8do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgGGWYT (ORCPT
+        id S1729286AbgGGW0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbgGGWYT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:24:19 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00977C061755;
-        Tue,  7 Jul 2020 15:24:18 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 86C6B120F19F2;
-        Tue,  7 Jul 2020 15:24:18 -0700 (PDT)
-Date:   Tue, 07 Jul 2020 15:24:17 -0700 (PDT)
-Message-Id: <20200707.152417.1518177240219672343.davem@davemloft.net>
-To:     trix@redhat.com
-Cc:     mlindner@marvell.com, stephen@networkplumber.org, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: sky2: initialize return of gm_phy_read
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200703133359.22723-1-trix@redhat.com>
-References: <20200703133359.22723-1-trix@redhat.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jul 2020 15:24:18 -0700 (PDT)
+        Tue, 7 Jul 2020 18:26:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726946AbgGGW0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 18:26:07 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FEC72075B;
+        Tue,  7 Jul 2020 22:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594160767;
+        bh=T0DwWvl2eKQOwlym/Ko2pveZIneqmF3MFNc5/b/pqUc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=iFSFhwxsVgud7cEq81TXjXMt+pj4sGtRZLl5pqFopex1zqIZhnmgiRmIj9Q4Tzpia
+         TQsRN7Tckb+OJLbjWiU0jTkVg3AMnBq9nrhE0wYd9XJZlSn6AvifOkwmKZ4e+m3WGB
+         hRemOCesXYEBoZT9KaRl8R6fCQczl3Oc5XOZ+keE=
+Date:   Tue, 7 Jul 2020 17:26:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
+Subject: Re: [PATCH] PCI: Replace kmalloc with kzalloc in the comment/message
+Message-ID: <20200707222600.GA391475@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590714119-15744-1-git-send-email-wang.yi59@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: trix@redhat.com
-Date: Fri,  3 Jul 2020 06:33:59 -0700
+On Fri, May 29, 2020 at 09:01:59AM +0800, Yi Wang wrote:
+> From: Liao Pingfang <liao.pingfang@zte.com.cn>
+> 
+> Use kzalloc instead of kmalloc in the comment/message according to
+> the previous kzalloc() call.
+> 
+> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
 
-> From: Tom Rix <trix@redhat.com>
-> 
-> clang static analysis flags this garbage return
-> 
-> drivers/net/ethernet/marvell/sky2.c:208:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
->         return v;
->         ^~~~~~~~
-> 
-> static inline u16 gm_phy_read( ...
-> {
-> 	u16 v;
-> 	__gm_phy_read(hw, port, reg, &v);
-> 	return v;
-> }
-> 
-> __gm_phy_read can return without setting v.
-> 
-> So handle similar to skge.c's gm_phy_read, initialize v.
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
+I would be happy to apply this, but this needs to show a connection
+between Liao Pingfang and Yi Wang.
 
-Applied, thank you.
+Ideally this patch would be sent directly by Liao Pingfang.  The
+sender should at least appear in the Signed-off-by chain.  See
+Documentation/process/submitting-patches.rst
+
+> ---
+>  drivers/pci/hotplug/ibmphp_pci.c | 2 +-
+>  drivers/pci/setup-bus.c          | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/ibmphp_pci.c b/drivers/pci/hotplug/ibmphp_pci.c
+> index e22d023..2d36992 100644
+> --- a/drivers/pci/hotplug/ibmphp_pci.c
+> +++ b/drivers/pci/hotplug/ibmphp_pci.c
+> @@ -205,7 +205,7 @@ int ibmphp_configure_card(struct pci_func *func, u8 slotno)
+>  								cur_func->next = newfunc;
+>  
+>  							rc = ibmphp_configure_card(newfunc, slotno);
+> -							/* This could only happen if kmalloc failed */
+> +							/* This could only happen if kzalloc failed */
+>  							if (rc) {
+>  								/* We need to do this in case bridge itself got configured properly, but devices behind it failed */
+>  								func->bus = 1; /* To indicate to the unconfigure function that this is a PPB */
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index bbcef1a..13c5a44 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -151,7 +151,7 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+>  
+>  		tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
+>  		if (!tmp)
+> -			panic("pdev_sort_resources(): kmalloc() failed!\n");
+> +			panic("%s: kzalloc() failed!\n", __func__);
+>  		tmp->res = r;
+>  		tmp->dev = dev;
+>  
+> -- 
+> 2.9.5
+> 
