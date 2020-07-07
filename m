@@ -2,117 +2,197 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E46C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA12C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F74B2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594141016;
-	bh=Pxamgvc2FYcqKzB/kO/K+pvItVmdREDTa9V2Uq/pm90=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Lx53JnV43pU4/2WPu1e1TxGgwMggXxLZVP192b3Kly//qe+hd8/Gq+fDHqNd5f8TB
-	 eqB6z137n4kF3nqVnwlWUNRopHCb/B4dSIdyWygT/bppWjNSS72+tumO/5Igfm0wsv
-	 E5a6LSEv6YqQdj/jDUDetVLkVYOoxNHsTpjCs1w4=
+	by mail.kernel.org (Postfix) with ESMTP id 1AE7E20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgGGQ4y (ORCPT
+        id S1728305AbgGGRAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:56:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbgGGQ4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:56:54 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ECEC2065D;
-        Tue,  7 Jul 2020 16:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594141014;
-        bh=Pxamgvc2FYcqKzB/kO/K+pvItVmdREDTa9V2Uq/pm90=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WfluW2mALu5v2u4IsB9+2+vbjc5luGQpkCpWji2UWyn5eJGKh2+w3PCRaCORF0/YN
-         +46mUvg1IPuLlsjfbJFei4Opj8gC35QmxI1XVnc0h/gl29judPMY7nyXTpvF+QwI80
-         oPi+MhkEYdPflHpFGc+lNEnz/Mg7+kCFEw68dC9I=
-Date:   Tue, 7 Jul 2020 09:56:51 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
+        Tue, 7 Jul 2020 13:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgGGRAJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 13:00:09 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275D2C08C5E2
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:00:09 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jsqwt-0004FP-U5; Tue, 07 Jul 2020 19:00:03 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jsqws-00038n-M4; Tue, 07 Jul 2020 19:00:02 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200707095651.422f0b22@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200707160528.GA1300535@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
-        <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
-        <20200629232059.GA3787278@google.com>
-        <20200707155107.GA3357035@google.com>
-        <20200707160528.GA1300535@google.com>
+        Jiri Slaby <jslaby@suse.com>
+Cc:     kernel@pengutronix.de, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH v7 1/3] tty: rename tty_kopen() and add new function tty_kopen_shared()
+Date:   Tue,  7 Jul 2020 18:59:56 +0200
+Message-Id: <20200707165958.16522-2-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200707165958.16522-1-u.kleine-koenig@pengutronix.de>
+References: <20200707165958.16522-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jul 2020 09:05:28 -0700 Sami Tolvanen wrote:
-> On Tue, Jul 07, 2020 at 08:51:07AM -0700, Sami Tolvanen wrote:
-> > After spending some time debugging this with Nick, it looks like the
-> > error is caused by a recent optimization change in LLVM, which together
-> > with the inlining of ur_load_imm_any into jeq_imm, changes a runtime
-> > check in FIELD_FIT that would always fail, to a compile-time check that
-> > breaks the build. In jeq_imm, we have:
-> > 
-> >     /* struct bpf_insn: _s32 imm */
-> >     u64 imm = insn->imm; /* sign extend */
-> >     ...
-> >     if (imm >> 32) { /* non-zero only if insn->imm is negative */
-> >     	/* inlined from ur_load_imm_any */
-> > 	u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
-> > 
-> >         /*
-> > 	 * __imm has a value known at compile-time, which means
-> > 	 * __builtin_constant_p(__imm) is true and we end up with
-> > 	 * essentially this in __BF_FIELD_CHECK:
-> > 	 */
-> > 	if (__builtin_constant_p(__imm) && __imm <= 255)  
-> 
-> Should be __imm > 255, of course, which means the compiler will generate
-> a call to __compiletime_assert.
+Introduce a new function tty_kopen_shared() that yields a struct
+tty_struct. The semantic difference to tty_kopen() is that the tty is
+expected to be used already. So rename tty_kopen() to
+tty_kopen_exclusive() for clearness, adapt the single user and put the
+common code in a new static helper function.
 
-I think FIELD_FIT() should not pass the value into __BF_FIELD_CHECK().
+tty_kopen_shared is to be used to implement an LED trigger for tty
+devices in one of the next patches.
 
-So:
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/staging/speakup/spk_ttyio.c |  2 +-
+ drivers/tty/tty_io.c                | 58 ++++++++++++++++++++---------
+ include/linux/tty.h                 |  5 ++-
+ 3 files changed, 44 insertions(+), 21 deletions(-)
 
-diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-index 48ea093ff04c..4e035aca6f7e 100644
---- a/include/linux/bitfield.h
-+++ b/include/linux/bitfield.h
-@@ -77,7 +77,7 @@
-  */
- #define FIELD_FIT(_mask, _val)                                         \
-        ({                                                              \
--               __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");     \
-+               __BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");     \
-                !((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
-        })
+diff --git a/drivers/staging/speakup/spk_ttyio.c b/drivers/staging/speakup/spk_ttyio.c
+index 9b95f77f9265..5a134718dac8 100644
+--- a/drivers/staging/speakup/spk_ttyio.c
++++ b/drivers/staging/speakup/spk_ttyio.c
+@@ -147,7 +147,7 @@ static int spk_ttyio_initialise_ldisc(struct spk_synth *synth)
+ 	if (ret)
+ 		return ret;
  
-It's perfectly legal to pass a constant which does not fit, in which
-case FIELD_FIT() should just return false not break the build.
+-	tty = tty_kopen(dev);
++	tty = tty_kopen_exclusive(dev);
+ 	if (IS_ERR(tty))
+ 		return PTR_ERR(tty);
+ 
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 5a6f36b391d9..05d42f226304 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -1871,22 +1871,7 @@ static struct tty_driver *tty_lookup_driver(dev_t device, struct file *filp,
+ 	return driver;
+ }
+ 
+-/**
+- *	tty_kopen	-	open a tty device for kernel
+- *	@device: dev_t of device to open
+- *
+- *	Opens tty exclusively for kernel. Performs the driver lookup,
+- *	makes sure it's not already opened and performs the first-time
+- *	tty initialization.
+- *
+- *	Returns the locked initialized &tty_struct
+- *
+- *	Claims the global tty_mutex to serialize:
+- *	  - concurrent first-time tty initialization
+- *	  - concurrent tty driver removal w/ lookup
+- *	  - concurrent tty removal from driver table
+- */
+-struct tty_struct *tty_kopen(dev_t device)
++static struct tty_struct *tty_kopen(dev_t device, int shared)
+ {
+ 	struct tty_struct *tty;
+ 	struct tty_driver *driver;
+@@ -1901,7 +1886,7 @@ struct tty_struct *tty_kopen(dev_t device)
+ 
+ 	/* check whether we're reopening an existing tty */
+ 	tty = tty_driver_lookup_tty(driver, NULL, index);
+-	if (IS_ERR(tty))
++	if (IS_ERR(tty) || shared)
+ 		goto out;
+ 
+ 	if (tty) {
+@@ -1919,7 +1904,44 @@ struct tty_struct *tty_kopen(dev_t device)
+ 	tty_driver_kref_put(driver);
+ 	return tty;
+ }
+-EXPORT_SYMBOL_GPL(tty_kopen);
++
++/**
++ *	tty_kopen_exclusive	-	open a tty device for kernel
++ *	@device: dev_t of device to open
++ *
++ *	Opens tty exclusively for kernel. Performs the driver lookup,
++ *	makes sure it's not already opened and performs the first-time
++ *	tty initialization.
++ *
++ *	Returns the locked initialized &tty_struct
++ *
++ *	Claims the global tty_mutex to serialize:
++ *	  - concurrent first-time tty initialization
++ *	  - concurrent tty driver removal w/ lookup
++ *	  - concurrent tty removal from driver table
++ */
++struct tty_struct *tty_kopen_exclusive(dev_t device)
++{
++	return tty_kopen(device, 0);
++}
++EXPORT_SYMBOL_GPL(tty_kopen_exclusive);
++
++/**
++ *	tty_kopen_shared	-	open a tty device for shared in-kernel use
++ *	@device: dev_t of device to open
++ *
++ *	Opens an already existing tty
++ *	rnel. Performs the driver lookup,
++ *	makes sure it's not already opened and performs the first-time
++ *	tty initialization.
++ *
++ *	Locking is identical to tty_kopen() above.
++ */
++struct tty_struct *tty_kopen_shared(dev_t device)
++{
++	return tty_kopen(device, 1);
++}
++EXPORT_SYMBOL_GPL(tty_kopen_shared);
+ 
+ /**
+  *	tty_open_by_driver	-	open a tty device
+diff --git a/include/linux/tty.h b/include/linux/tty.h
+index a99e9b8e4e31..c867d6fe67c4 100644
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -413,7 +413,8 @@ extern struct tty_struct *get_current_tty(void);
+ /* tty_io.c */
+ extern int __init tty_init(void);
+ extern const char *tty_name(const struct tty_struct *tty);
+-extern struct tty_struct *tty_kopen(dev_t device);
++extern struct tty_struct *tty_kopen_exclusive(dev_t device);
++extern struct tty_struct *tty_kopen_shared(dev_t device);
+ extern void tty_kclose(struct tty_struct *tty);
+ extern int tty_dev_name_to_number(const char *name, dev_t *number);
+ extern int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout);
+@@ -438,7 +439,7 @@ static inline int __init tty_init(void)
+ { return 0; }
+ static inline const char *tty_name(const struct tty_struct *tty)
+ { return "(none)"; }
+-static inline struct tty_struct *tty_kopen(dev_t device)
++static inline struct tty_struct *tty_kopen_exclusive(dev_t device)
+ { return ERR_PTR(-ENODEV); }
+ static inline void tty_kclose(struct tty_struct *tty)
+ { }
+-- 
+2.27.0
 
-Right?
