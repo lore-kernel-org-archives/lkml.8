@@ -4,73 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3009C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3149DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C942073E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D54F2073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jXqgCo/x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a3utOKUU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgGGOjJ (ORCPT
+        id S1728700AbgGGOjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:39:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53700 "EHLO
+        Tue, 7 Jul 2020 10:39:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728397AbgGGOiK (ORCPT
+        with ESMTP id S1728275AbgGGOiE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:38:10 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E347DC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:09 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f139so46803824wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:09 -0700 (PDT)
+        Tue, 7 Jul 2020 10:38:04 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B6EC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:04 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a6so1897077wmm.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MeJNmc8Tyj+Q0twt9zY+vng7Jbsk0DhIYimyC4Uuyj0=;
-        b=jXqgCo/xrVf3wccOvx8zSZXI+4BMW/Sxa9JnuReURq5CKjzu/p7Scdr4XGrE9TNNN+
-         9fI1VvqahoInrASq2Evq+lKAJIcPXs74067opxQ++jtWGSJ4eq2iEbseCWXJ7qJsGsLR
-         +Bgnk6U/P3g6XKgTnQ1jij1TCJF6yb1z9pUnQeWB3YC7D8IL06B4AOtvJVyKvTnMdj2j
-         Z/pHNqfU3VeiF248cB4q/lHEOuY5rez80ebVMeMijOpZs/JJWSsFuS2/ee8OlasaVc7H
-         S1Da87TMz5/HQwfNcl1QQl88zaV5Jd0SgMSaSIfTpmcOLam279PZtmLm2QrmwbOLz9hi
-         H89w==
+        bh=ceIee8YBFX9kzqJWoK/1iqOS7aaLJ7GoK8i5sFpusg4=;
+        b=a3utOKUUtmKkFumgYHWsrcA1cg/wCdSJzx/eQgQLrrlD+gKnImbCleOaOXKOhYAKbQ
+         wFtcCg0Zo07kbM7/6b2WCbMEHtqRx0z5z8x45mkeHdE3bvPHfdCb/TUOyMt7XXoEq+KQ
+         o8/c8hFiFt4TI3ZC+VsiuM7fi3SZ8WfEOadMim+lOC72FVkmNDmll/pBDzmpXzouNgZF
+         mUbq2kGI6/L1hRYrnhevYOeHjGlQmRVZAAtBN2SQ6pF+rb9isxab6LqIUpDrOsAI0MhP
+         DQwJZds52dUHxrq1ypA88jHKSu/zyLTc4WUK+bTAjzBhJXhdv7fX8pvOqDcGdewSDIZG
+         aGHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MeJNmc8Tyj+Q0twt9zY+vng7Jbsk0DhIYimyC4Uuyj0=;
-        b=o+wgc68nTinGbY3YvnmkCtqa6XmcMgyb8b1XsUTvnwRftnqi+v2nBcUTpvgB+FFKjX
-         AFH+c8Kuf+KW9XQXewwldL++1hG/w3eT4sW66TQHaVYNdRSXdjvZEpC5bw7woIDlsnsv
-         z60UDhTyNEiwP0R/YVCy5dMxa1Cc/ii/Fcd5Sr3e2zhU5GPRbEZ5s+B4mWwKc16Iw8bw
-         QO7gpGv29vSD/nOOhu3HyRlXEZlRo9wmwUUMpIzKa0Fgd+OUK4KuT1RrulZtkx2T8XEg
-         QuBn1kdJZB/rHI0TCGz3+G6Uo+sUt+BKOBAr8wQ8xaOF+/WqXXRSm+/EeVIGElhWjSb2
-         U1OA==
-X-Gm-Message-State: AOAM532XFc7FyUbg4DmBPUxisUaz7kg7gwog9dB1q9v421g3FsNkD40Z
-        exMEc5PqMG04fr3zMbjjbzI9aQ==
-X-Google-Smtp-Source: ABdhPJx4EGK+a98YUUNvZXG/6XzKwko1V/11TSzbBj53QSByas+d2hxb2ueuJBY/bfG6WSQIaQcvlA==
-X-Received: by 2002:a1c:2ec7:: with SMTP id u190mr4463500wmu.48.1594132688648;
-        Tue, 07 Jul 2020 07:38:08 -0700 (PDT)
+        bh=ceIee8YBFX9kzqJWoK/1iqOS7aaLJ7GoK8i5sFpusg4=;
+        b=hHGe3Zfb9+3YabPMzPtsSfZFzfz0Q72eyfIvfClJzdn7IIUf2enazfMQhh7/Gx2xGC
+         3gb0F8AkBSHGS1SyLc+SvsPHabJc3XyhG/J7zgYHD20JWAFhPZi71l/2GZIF2dEqC4XL
+         WN68/OIzVbOCq5UbwG2dZcNMQL5dhBK6r247VeDtWd/QCKee53ihsq2olW+4nWde/j8r
+         KJFuWDcQYL0L6zSgm1PhYUczZI6zpyPwqR3Q11qfchw8wRxBx8Dy3TglGMdU+WokvGRJ
+         9N7PcKWR9eb99cX1ug24Kj2DPFUu25tnaITCRTQpPOXHUAyijnwSTovnS74gFhJc3vwn
+         QBbw==
+X-Gm-Message-State: AOAM533WKik92T5+uaFeYltgACgUtEYAKp1vn7h54lKmvpH6lNAXd0rv
+        3O382XYXNo9QA15j+e/alLn8tA==
+X-Google-Smtp-Source: ABdhPJwBhFtwMc09q5I1X/u5knzfYzz3vq0gulrDOAYoVOgPpYR9Udx/EMDFNfeERzWsGHW0kriQDg==
+X-Received: by 2002:a1c:b409:: with SMTP id d9mr4245606wmf.99.1594132682705;
+        Tue, 07 Jul 2020 07:38:02 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.07
+        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:38:08 -0700 (PDT)
+        Tue, 07 Jul 2020 07:38:02 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Seungwhan Youn <sw.youn@samsung.com>
-Subject: [PATCH v2 15/28] ASoC: samsung: spdif: Fix 3 misspelled struct properties
-Date:   Tue,  7 Jul 2020 15:37:29 +0100
-Message-Id: <20200707143742.2959960-16-lee.jones@linaro.org>
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 10/28] ASoC: fsl: fsl_esai: Add descriptions for 'tx_mask' and 'rx_mask' to 'fsl_esai'
+Date:   Tue,  7 Jul 2020 15:37:24 +0100
+Message-Id: <20200707143742.2959960-11-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707143742.2959960-1-lee.jones@linaro.org>
 References: <20200707143742.2959960-1-lee.jones@linaro.org>
@@ -81,40 +82,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When documenting structure properties, they must match the names exactly.
-
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/samsung/spdif.c:89: warning: Function parameter or member 'saved_clkcon' not described in 'samsung_spdif_info'
- sound/soc/samsung/spdif.c:89: warning: Function parameter or member 'saved_con' not described in 'samsung_spdif_info'
- sound/soc/samsung/spdif.c:89: warning: Function parameter or member 'saved_cstas' not described in 'samsung_spdif_info'
+ sound/soc/fsl/fsl_esai.c:86: warning: Function parameter or member 'tx_mask' not described in 'fsl_esai'
+ sound/soc/fsl/fsl_esai.c:86: warning: Function parameter or member 'rx_mask' not described in 'fsl_esai'
 
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sangbeom Kim <sbkim73@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Seungwhan Youn <sw.youn@samsung.com>
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/samsung/spdif.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/fsl/fsl_esai.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/samsung/spdif.c b/sound/soc/samsung/spdif.c
-index 759fc66443298..4ae7ff623b826 100644
---- a/sound/soc/samsung/spdif.c
-+++ b/sound/soc/samsung/spdif.c
-@@ -70,9 +70,9 @@
-  * @clk_rate: Current clock rate for calcurate ratio.
-  * @pclk: The peri-clock pointer for spdif master operation.
-  * @sclk: The source clock pointer for making sync signals.
-- * @save_clkcon: Backup clkcon reg. in suspend.
-- * @save_con: Backup con reg. in suspend.
-- * @save_cstas: Backup cstas reg. in suspend.
-+ * @saved_clkcon: Backup clkcon reg. in suspend.
-+ * @saved_con: Backup con reg. in suspend.
-+ * @saved_cstas: Backup cstas reg. in suspend.
-  * @dma_playback: DMA information for playback channel.
-  */
- struct samsung_spdif_info {
+diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+index bb3c405df623c..3f67f4a465780 100644
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -49,6 +49,8 @@ struct fsl_esai_soc_data {
+  * @fifo_depth: depth of tx/rx FIFO
+  * @slot_width: width of each DAI slot
+  * @slots: number of slots
++ * @tx_mask: tx register mask
++ * @rx_mask: rx register mask
+  * @channels: channel num for tx or rx
+  * @hck_rate: clock rate of desired HCKx clock
+  * @sck_rate: clock rate of desired SCKx clock
 -- 
 2.25.1
 
