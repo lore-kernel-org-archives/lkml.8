@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C673BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A61B207D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986132082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135413;
-	bh=SDYgL+60Cc5HwO1CKauf2tQ2K13tykHdnW4vG5neRoA=;
+	s=default; t=1594135416;
+	bh=JPzRGWn7cmoO61coy8AdI/bFEF2GMG+WlPquS4fq+Ls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AkzByUWAXVlcXwxmdMJnYDJXUbegc6YiaFQjPTA/Ig3Ook1RlVI/VI9FPbLdMXt3V
-	 Dh3XLHswnY6nxFredKSSI7NiNC6jnlKvEC2DXwE2eWKAPENl2KX6JgXKUqsLqCiMIh
-	 aXBf2rSqGkuxlTJuZmprXyWMOHZMxVlBSqVLRH7w=
+	b=l1LPdHsuUIKcIvLGctVmnrfQk0OjscwtjDXohnrTRbSvIao2EOnc9zIN8bJ+lubmj
+	 SUHOYdeA7IYTXbjtb8sp/o8iVjx753MCGy3mcY7XocvzVxMWCyPKjC+1OVIOS8QL1Y
+	 XbSZNdHbIh9ASF2PHXCQO9XloT8AaMtI4yAszCOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgGGPX0 (ORCPT
+        id S1729489AbgGGPXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:23:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36384 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729966AbgGGPXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:23:22 -0400
+        id S1728970AbgGGPX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:23:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59F32208C3;
-        Tue,  7 Jul 2020 15:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1812F20771;
+        Tue,  7 Jul 2020 15:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135401;
-        bh=SDYgL+60Cc5HwO1CKauf2tQ2K13tykHdnW4vG5neRoA=;
+        s=default; t=1594135406;
+        bh=JPzRGWn7cmoO61coy8AdI/bFEF2GMG+WlPquS4fq+Ls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xwUriVum8ANvfKubgj2O2ubei21euADyHYZTZaEYND0RrBl2oPZkbWCw2HSwqs+dF
-         B8FQom6mu4yhTUKTGdOpqkiwn9dKNsrCyGcT84OrlZ2GpC7v3ny2+EFe0lmB8kiygo
-         VJEpmnsiSfQinBjDKV7LFwv6P1vOEpNB4pvdJL74=
+        b=VLtHNeOJMQqsvO5bIWI+nlGH1cMPv93BMRgJfpQd/xzz/HFNqRMgb0tE7arv6CyS/
+         c2xccgvCgX6MJXGe7Wn5g7Z3yrhJRYdc2qsiaAh0/CDYWdTUgCbbRnwfwusebj0PZC
+         ScvIQ8yXNmSFDQc/U2Aw2wSuH5i1Vewk+NBpVNv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Chris Murphy <lists@colorremedies.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 006/112] btrfs: block-group: refactor how we delete one block group item
-Date:   Tue,  7 Jul 2020 17:16:11 +0200
-Message-Id: <20200707145801.239600248@linuxfoundation.org>
+Subject: [PATCH 5.7 008/112] mm: fix swap cache node allocation mask
+Date:   Tue,  7 Jul 2020 17:16:13 +0200
+Message-Id: <20200707145801.338495007@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,96 +64,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit 7357623a7f4beb4ac76005f8fac9fc0230f9a67e ]
+[ Upstream commit 243bce09c91b0145aeaedd5afba799d81841c030 ]
 
-When deleting a block group item, it's pretty straight forward, just
-delete the item pointed by the key.  However it will not be that
-straight-forward for incoming skinny block group item.
+Chris Murphy reports that a slightly overcommitted load, testing swap
+and zram along with i915, splats and keeps on splatting, when it had
+better fail less noisily:
 
-So refactor the block group item deletion into a new function,
-remove_block_group_item(), also to make the already lengthy
-btrfs_remove_block_group() a little shorter.
+  gnome-shell: page allocation failure: order:0,
+  mode:0x400d0(__GFP_IO|__GFP_FS|__GFP_COMP|__GFP_RECLAIMABLE),
+  nodemask=(null),cpuset=/,mems_allowed=0
+  CPU: 2 PID: 1155 Comm: gnome-shell Not tainted 5.7.0-1.fc33.x86_64 #1
+  Call Trace:
+    dump_stack+0x64/0x88
+    warn_alloc.cold+0x75/0xd9
+    __alloc_pages_slowpath.constprop.0+0xcfa/0xd30
+    __alloc_pages_nodemask+0x2df/0x320
+    alloc_slab_page+0x195/0x310
+    allocate_slab+0x3c5/0x440
+    ___slab_alloc+0x40c/0x5f0
+    __slab_alloc+0x1c/0x30
+    kmem_cache_alloc+0x20e/0x220
+    xas_nomem+0x28/0x70
+    add_to_swap_cache+0x321/0x400
+    __read_swap_cache_async+0x105/0x240
+    swap_cluster_readahead+0x22c/0x2e0
+    shmem_swapin+0x8e/0xc0
+    shmem_swapin_page+0x196/0x740
+    shmem_getpage_gfp+0x3a2/0xa60
+    shmem_read_mapping_page_gfp+0x32/0x60
+    shmem_get_pages+0x155/0x5e0 [i915]
+    __i915_gem_object_get_pages+0x68/0xa0 [i915]
+    i915_vma_pin+0x3fe/0x6c0 [i915]
+    eb_add_vma+0x10b/0x2c0 [i915]
+    i915_gem_do_execbuffer+0x704/0x3430 [i915]
+    i915_gem_execbuffer2_ioctl+0x1ea/0x3e0 [i915]
+    drm_ioctl_kernel+0x86/0xd0 [drm]
+    drm_ioctl+0x206/0x390 [drm]
+    ksys_ioctl+0x82/0xc0
+    __x64_sys_ioctl+0x16/0x20
+    do_syscall_64+0x5b/0xf0
+    entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported on 5.7, but it goes back really to 3.1: when
+shmem_read_mapping_page_gfp() was implemented for use by i915, and
+allowed for __GFP_NORETRY and __GFP_NOWARN flags in most places, but
+missed swapin's "& GFP_KERNEL" mask for page tree node allocation in
+__read_swap_cache_async() - that was to mask off HIGHUSER_MOVABLE bits
+from what page cache uses, but GFP_RECLAIM_MASK is now what's needed.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208085
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2006151330070.11064@eggly.anvils
+Fixes: 68da9f055755 ("tmpfs: pass gfp to shmem_getpage_gfp")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reported-by: Chris Murphy <lists@colorremedies.com>
+Analyzed-by: Vlastimil Babka <vbabka@suse.cz>
+Analyzed-by: Matthew Wilcox <willy@infradead.org>
+Tested-by: Chris Murphy <lists@colorremedies.com>
+Cc: <stable@vger.kernel.org>	[3.1+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/block-group.c | 37 +++++++++++++++++++++++++------------
- 1 file changed, 25 insertions(+), 12 deletions(-)
+ mm/swap_state.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 0c17f18b47940..d80857d00b0fb 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -863,11 +863,34 @@ static void clear_incompat_bg_bits(struct btrfs_fs_info *fs_info, u64 flags)
- 	}
- }
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index ebed37bbf7a39..e3d36776c08bf 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -23,6 +23,7 @@
+ #include <linux/huge_mm.h>
  
-+static int remove_block_group_item(struct btrfs_trans_handle *trans,
-+				   struct btrfs_path *path,
-+				   struct btrfs_block_group *block_group)
-+{
-+	struct btrfs_fs_info *fs_info = trans->fs_info;
-+	struct btrfs_root *root;
-+	struct btrfs_key key;
-+	int ret;
-+
-+	root = fs_info->extent_root;
-+	key.objectid = block_group->start;
-+	key.type = BTRFS_BLOCK_GROUP_ITEM_KEY;
-+	key.offset = block_group->length;
-+
-+	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
-+	if (ret > 0)
-+		ret = -ENOENT;
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = btrfs_del_item(trans, root, path);
-+	return ret;
-+}
-+
- int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 			     u64 group_start, struct extent_map *em)
- {
- 	struct btrfs_fs_info *fs_info = trans->fs_info;
--	struct btrfs_root *root = fs_info->extent_root;
- 	struct btrfs_path *path;
- 	struct btrfs_block_group *block_group;
- 	struct btrfs_free_cluster *cluster;
-@@ -1068,10 +1091,6 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ #include <asm/pgtable.h>
++#include "internal.h"
  
- 	spin_unlock(&block_group->space_info->lock);
- 
--	key.objectid = block_group->start;
--	key.type = BTRFS_BLOCK_GROUP_ITEM_KEY;
--	key.offset = block_group->length;
--
- 	mutex_lock(&fs_info->chunk_mutex);
- 	spin_lock(&block_group->lock);
- 	block_group->removed = 1;
-@@ -1107,16 +1126,10 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 	if (ret)
- 		goto out;
- 
--	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
--	if (ret > 0)
--		ret = -EIO;
-+	ret = remove_block_group_item(trans, path, block_group);
- 	if (ret < 0)
- 		goto out;
- 
--	ret = btrfs_del_item(trans, root, path);
--	if (ret)
--		goto out;
--
- 	if (remove_em) {
- 		struct extent_map_tree *em_tree;
- 
+ /*
+  * swapper_space is a fiction, retained to simplify the path through
+@@ -418,7 +419,8 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 		/* May fail (-ENOMEM) if XArray node allocation failed. */
+ 		__SetPageLocked(new_page);
+ 		__SetPageSwapBacked(new_page);
+-		err = add_to_swap_cache(new_page, entry, gfp_mask & GFP_KERNEL);
++		err = add_to_swap_cache(new_page, entry,
++					gfp_mask & GFP_RECLAIM_MASK);
+ 		if (likely(!err)) {
+ 			/* Initiate read into locked page */
+ 			SetPageWorkingset(new_page);
 -- 
 2.25.1
 
