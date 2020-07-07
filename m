@@ -2,95 +2,112 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9673FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF2E2065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134936;
-	bh=2G3BIuTU/HhHkQyqAuE2BMwJlaSOPZWt+5/kKJe2Nek=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YU3tdBCNVNIL4V4/KZTcoaJoRdbIaiF6SkzOPUPLBiaTy8zHXiHLeT5LIhfsmYWnn
-	 h1TYZq2ucza64d8U3F8atjQsqyIoUY3Nu69HTX1YEvkSvCWQY4vhzCrWAV4U95AfoO
-	 7tyBhPXit0IyPLEnsJOYrVP6Jhk+0IZtkkZJcjlA=
+	by mail.kernel.org (Postfix) with ESMTP id 6FADE2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgGGPPf (ORCPT
+        id S1728865AbgGGPPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53640 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:15:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:56318 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728519AbgGGPOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:14:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75D722065D;
-        Tue,  7 Jul 2020 15:14:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134860;
-        bh=2G3BIuTU/HhHkQyqAuE2BMwJlaSOPZWt+5/kKJe2Nek=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6D31zI1Qc2j/jNytIvyxE8y+jWwQ/gOdJhaLfYNZE4JnSb38Bj/64nyLr8LI1ykU
-         tJs3ZYOcjpKu++PTMDAzT+HT+nGZcIt3cQbPYpPAPkpk4IRahCpwqIFhiazRMJgfwm
-         6nO/5/sfwPfERMxHHsuDsGytv+UA82WzyjtGXrDE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 16/24] virtio-blk: free vblk-vqs in error path of virtblk_probe()
-Date:   Tue,  7 Jul 2020 17:13:48 +0200
-Message-Id: <20200707145749.756714344@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145748.952502272@linuxfoundation.org>
-References: <20200707145748.952502272@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728519AbgGGPPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:15:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E3F8C0A;
+        Tue,  7 Jul 2020 08:15:36 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 638773F68F;
+        Tue,  7 Jul 2020 08:15:34 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 16:15:28 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/12] Multiple fixes in PCIe qcom driver
+Message-ID: <20200707151528.GA18240@e121166-lin.cambridge.arm.com>
+References: <20200615210608.21469-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615210608.21469-1-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+On Mon, Jun 15, 2020 at 11:05:56PM +0200, Ansuel Smith wrote:
+> This contains multiple fix for PCIe qcom driver.
+> Some optional reset and clocks were missing.
+> Fix a problem with no PARF programming that cause kernel lock on load.
+> Add support to force gen 1 speed if needed. (due to hardware limitation)
+> Add ipq8064 rev 2 support that use a different tx termination offset.
+> 
+> v7:
+> * Rework GEN1 patch
+> 
+> v6:
+> * Replace custom define
+> * Move define not used in 07 to 08
+> 
+> v5:
+> * Split PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
+> 
+> v4:
+> * Fix grammar error across all patch subject
+> * Use bulk api for clks
+> * Program PARF only in ipq8064 SoC
+> * Program tx term only in ipq8064 SoC
+> * Drop configurable tx-dempth rx-eq
+> * Make added clk optional
+> 
+> v3:
+> * Fix check reported by checkpatch --strict
+> * Rename force_gen1 to gen
+> 
+> v2:
+> * Drop iATU programming (already done in pcie init)
+> * Use max-link-speed instead of force-gen1 custom definition
+> * Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+> * Introduce a new variant for different revision of ipq8064
+> 
+> Abhishek Sahu (1):
+>   PCI: qcom: Change duplicate PCI reset to phy reset
+> 
+> Ansuel Smith (10):
+>   PCI: qcom: Add missing ipq806x clocks in PCIe driver
+>   dt-bindings: PCI: qcom: Add missing clks
+>   PCI: qcom: Add missing reset for ipq806x
+>   dt-bindings: PCI: qcom: Add ext reset
+>   PCI: qcom: Use bulk clk api and assert on error
+>   PCI: qcom: Define some PARF params needed for ipq8064 SoC
+>   PCI: qcom: Add support for tx term offset for rev 2.1.0
+>   PCI: qcom: Add ipq8064 rev2 variant
+>   dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
+>   PCI: qcom: Replace define with standard value
+> 
+> Sham Muthayyan (1):
+>   PCI: qcom: Support pci speed set for ipq806x
+> 
+>  .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
+>  drivers/pci/controller/dwc/pcie-qcom.c        | 186 +++++++++++-------
+>  2 files changed, 128 insertions(+), 73 deletions(-)
 
-[ Upstream commit e7eea44eefbdd5f0345a0a8b80a3ca1c21030d06 ]
+Applied to pci/dwc for v5.9, thanks.
 
-Else there will be memory leak if alloc_disk() fails.
-
-Fixes: 6a27b656fc02 ("block: virtio-blk: support multi virt queues per virtio-blk device")
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/block/virtio_blk.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index f287eec36b282..e57a1f6e39d5c 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -749,6 +749,7 @@ static int virtblk_probe(struct virtio_device *vdev)
- 	put_disk(vblk->disk);
- out_free_vq:
- 	vdev->config->del_vqs(vdev);
-+	kfree(vblk->vqs);
- out_free_vblk:
- 	kfree(vblk);
- out_free_index:
--- 
-2.25.1
-
-
-
+Lorenzo
