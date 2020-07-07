@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F2DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B7AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA552065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F98F20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135519;
-	bh=7a2qDkJQi+K2FE9L4U3Hjg2yiZJsBwvPef1onkFCnTI=;
+	s=default; t=1594135522;
+	bh=cETobMTfjW3FcUetdTwCtS+A8WEk7VJqGnBu37Pj5mc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vh8V0zvmhdJUzR/3ubZoW/y7uqpZ1ZYgryCZZ+DK4BsXlqDBsayXybgEYwvyt08CQ
-	 WDxMFzN0lkhK2Fm+clUcGMicncrSaHMgsOEBzVAHaESPG7+Fzh23wMANkofqijHHOs
-	 XKk39xX0PzxgZMyyCy25ST+Jrhnx3rBrofQzVQbM=
+	b=N6lLx6nBv4qUuTHvpfbMvnuke6D5xwMfkGdoHF3I8K+pOMZ8fAhFG6ZOfUTBD6deR
+	 5W5P6Q1buB8jtHz3F0+y59WbbZljNr7KXrY1+4NHVDRShh4VglfyHbomUSMoarbRJ9
+	 p/CRIeA7x6wnW4Ha/u3IPTiyyn1/66oqVhd5orTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729775AbgGGPZS (ORCPT
+        id S1728267AbgGGPZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:25:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39080 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:25:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729756AbgGGPZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:13 -0400
+        id S1730183AbgGGPZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:25:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE9532065D;
-        Tue,  7 Jul 2020 15:25:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 624902065D;
+        Tue,  7 Jul 2020 15:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135512;
-        bh=7a2qDkJQi+K2FE9L4U3Hjg2yiZJsBwvPef1onkFCnTI=;
+        s=default; t=1594135514;
+        bh=cETobMTfjW3FcUetdTwCtS+A8WEk7VJqGnBu37Pj5mc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w3S31ZniRqCnUEhy65r+7ed6EW6RfoZY3TNvaeco368jkY0c8QhUARFX8Ltgg5i7A
-         Urnzm0Xc1934l9BlhMswV9unjjYEpKFCpPdCkcOJo4GgQKudTkiH8lmcvnRIl1xmD2
-         bnqsA8f4osHYaYZWiZFjdPyxoaOdxOPj+oBl2c5U=
+        b=bejW2gM3zQcG/EpxPLN8ZJHvdDLA9s6UA/fC3kCQjF/o10dYxssaS2uJCQd63OKux
+         1qn4dq4LiFdy6JcYa537z/mlIVIVjVYuhoR0F9Mwqyh614MWWPLTzslIl/f3DCSL3L
+         h+t2PdVryCV7fDz8p7FHe7MAC4c6dehbi+QsLKrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 071/112] nfsd: clients dont need to break their own delegations
-Date:   Tue,  7 Jul 2020 17:17:16 +0200
-Message-Id: <20200707145804.379713164@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>, Luo Xiaogang <lxgrxd@163.com>
+Subject: [PATCH 5.7 072/112] nfsd4: fix nfsdfs reference count loop
+Date:   Tue,  7 Jul 2020 17:17:17 +0200
+Message-Id: <20200707145804.424998034@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,183 +61,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: J. Bruce Fields <bfields@redhat.com>
 
-[ Upstream commit 28df3d1539de5090f7916f6fff03891b67f366f4 ]
+[ Upstream commit 681370f4b00af0fcc65bbfb9f82de526ab7ceb0a ]
 
-We currently revoke read delegations on any write open or any operation
-that modifies file data or metadata (including rename, link, and
-unlink).  But if the delegation in question is the only read delegation
-and is held by the client performing the operation, that's not really
-necessary.
+We don't drop the reference on the nfsdfs filesystem with
+mntput(nn->nfsd_mnt) until nfsd_exit_net(), but that won't be called
+until the nfsd module's unloaded, and we can't unload the module as long
+as there's a reference on nfsdfs.  So this prevents module unloading.
 
-It's not always possible to prevent this in the NFSv4.0 case, because
-there's not always a way to determine which client an NFSv4.0 delegation
-came from.  (In theory we could try to guess this from the transport
-layer, e.g., by assuming all traffic on a given TCP connection comes
-from the same client.  But that's not really correct.)
-
-In the NFSv4.1 case the session layer always tells us the client.
-
-This patch should remove such self-conflicts in all cases where we can
-reliably determine the client from the compound.
-
-To do that we need to track "who" is performing a given (possibly
-lease-breaking) file operation.  We're doing that by storing the
-information in the svc_rqst and using kthread_data() to map the current
-task back to a svc_rqst.
-
+Fixes: 2c830dd7209b ("nfsd: persist nfsd filesystem across mounts")
+Reported-and-Tested-by:  Luo Xiaogang <lxgrxd@163.com>
 Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/filesystems/locking.rst |  2 ++
- fs/locks.c                            |  3 +++
- fs/nfsd/nfs4proc.c                    |  2 ++
- fs/nfsd/nfs4state.c                   | 14 ++++++++++++++
- fs/nfsd/nfsd.h                        |  2 ++
- fs/nfsd/nfssvc.c                      |  6 ++++++
- include/linux/fs.h                    |  1 +
- include/linux/sunrpc/svc.h            |  1 +
- 8 files changed, 31 insertions(+)
+ fs/nfsd/nfs4state.c |  8 +++++++-
+ fs/nfsd/nfsctl.c    | 22 ++++++++++++----------
+ fs/nfsd/nfsd.h      |  3 +++
+ 3 files changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
-index 5057e4d9dcd1d..9fdcec4166142 100644
---- a/Documentation/filesystems/locking.rst
-+++ b/Documentation/filesystems/locking.rst
-@@ -425,6 +425,7 @@ prototypes::
- 	int (*lm_grant)(struct file_lock *, struct file_lock *, int);
- 	void (*lm_break)(struct file_lock *); /* break_lease callback */
- 	int (*lm_change)(struct file_lock **, int);
-+	bool (*lm_breaker_owns_lease)(struct file_lock *);
- 
- locking rules:
- 
-@@ -435,6 +436,7 @@ lm_notify:		yes		yes			no
- lm_grant:		no		no			no
- lm_break:		yes		no			no
- lm_change		yes		no			no
-+lm_breaker_owns_lease:	no		no			no
- ==========		=============	=================	=========
- 
- buffer_head
-diff --git a/fs/locks.c b/fs/locks.c
-index b8a31c1c4fff3..a3f186846e93e 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1557,6 +1557,9 @@ static bool leases_conflict(struct file_lock *lease, struct file_lock *breaker)
- {
- 	bool rc;
- 
-+	if (lease->fl_lmops->lm_breaker_owns_lease
-+			&& lease->fl_lmops->lm_breaker_owns_lease(lease))
-+		return false;
- 	if ((breaker->fl_flags & FL_LAYOUT) != (lease->fl_flags & FL_LAYOUT)) {
- 		rc = false;
- 		goto trace;
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 0e75f7fb5fec0..a6d73aa51ce4e 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2302,6 +2302,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 	}
- 	check_if_stalefh_allowed(args);
- 
-+	rqstp->rq_lease_breaker = (void **)&cstate->clp;
-+
- 	trace_nfsd_compound(rqstp, args->opcnt);
- 	while (!status && resp->opcnt < args->opcnt) {
- 		op = &args->ops[resp->opcnt++];
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index c107caa565254..f71e5590967bb 100644
+index f71e5590967bb..95e459a1dd7dc 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -4522,6 +4522,19 @@ nfsd_break_deleg_cb(struct file_lock *fl)
- 	return ret;
+@@ -7873,9 +7873,14 @@ nfs4_state_start_net(struct net *net)
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	int ret;
+ 
+-	ret = nfs4_state_create_net(net);
++	ret = get_nfsdfs(net);
+ 	if (ret)
+ 		return ret;
++	ret = nfs4_state_create_net(net);
++	if (ret) {
++		mntput(nn->nfsd_mnt);
++		return ret;
++	}
+ 	locks_start_grace(net, &nn->nfsd4_manager);
+ 	nfsd4_client_tracking_init(net);
+ 	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
+@@ -7944,6 +7949,7 @@ nfs4_state_shutdown_net(struct net *net)
+ 
+ 	nfsd4_client_tracking_exit(net);
+ 	nfs4_state_destroy_net(net);
++	mntput(nn->nfsd_mnt);
  }
  
-+static bool nfsd_breaker_owns_lease(struct file_lock *fl)
+ void
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 71687d99b0901..9b22d857549c3 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1424,6 +1424,18 @@ static struct file_system_type nfsd_fs_type = {
+ };
+ MODULE_ALIAS_FS("nfsd");
+ 
++int get_nfsdfs(struct net *net)
 +{
-+	struct nfs4_delegation *dl = fl->fl_owner;
-+	struct svc_rqst *rqst;
-+	struct nfs4_client *clp;
++	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
++	struct vfsmount *mnt;
 +
-+	if (!i_am_nfsd())
-+		return NULL;
-+	rqst = kthread_data(current);
-+	clp = *(rqst->rq_lease_breaker);
-+	return dl->dl_stid.sc_client == clp;
++	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
++	if (IS_ERR(mnt))
++		return PTR_ERR(mnt);
++	nn->nfsd_mnt = mnt;
++	return 0;
 +}
 +
- static int
- nfsd_change_deleg_cb(struct file_lock *onlist, int arg,
- 		     struct list_head *dispose)
-@@ -4533,6 +4546,7 @@ nfsd_change_deleg_cb(struct file_lock *onlist, int arg,
- }
+ #ifdef CONFIG_PROC_FS
+ static int create_proc_exports_entry(void)
+ {
+@@ -1451,7 +1463,6 @@ unsigned int nfsd_net_id;
+ static __net_init int nfsd_init_net(struct net *net)
+ {
+ 	int retval;
+-	struct vfsmount *mnt;
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
  
- static const struct lock_manager_operations nfsd_lease_mng_ops = {
-+	.lm_breaker_owns_lease = nfsd_breaker_owns_lease,
- 	.lm_break = nfsd_break_deleg_cb,
- 	.lm_change = nfsd_change_deleg_cb,
- };
+ 	retval = nfsd_export_init(net);
+@@ -1478,16 +1489,8 @@ static __net_init int nfsd_init_net(struct net *net)
+ 	init_waitqueue_head(&nn->ntf_wq);
+ 	seqlock_init(&nn->boot_lock);
+ 
+-	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
+-	if (IS_ERR(mnt)) {
+-		retval = PTR_ERR(mnt);
+-		goto out_mount_err;
+-	}
+-	nn->nfsd_mnt = mnt;
+ 	return 0;
+ 
+-out_mount_err:
+-	nfsd_reply_cache_shutdown(nn);
+ out_drc_error:
+ 	nfsd_idmap_shutdown(net);
+ out_idmap_error:
+@@ -1500,7 +1503,6 @@ static __net_exit void nfsd_exit_net(struct net *net)
+ {
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
+-	mntput(nn->nfsd_mnt);
+ 	nfsd_reply_cache_shutdown(nn);
+ 	nfsd_idmap_shutdown(net);
+ 	nfsd_export_shutdown(net);
 diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 2ab5569126b8a..36cdd81b6688a 100644
+index 36cdd81b6688a..57c832d1b30fd 100644
 --- a/fs/nfsd/nfsd.h
 +++ b/fs/nfsd/nfsd.h
-@@ -88,6 +88,8 @@ int		nfsd_pool_stats_release(struct inode *, struct file *);
+@@ -90,6 +90,8 @@ void		nfsd_destroy(struct net *net);
  
- void		nfsd_destroy(struct net *net);
+ bool		i_am_nfsd(void);
  
-+bool		i_am_nfsd(void);
++int get_nfsdfs(struct net *);
 +
  struct nfsdfs_client {
  	struct kref cl_ref;
  	void (*cl_release)(struct kref *kref);
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index ca9fd348548b8..4f588c0eaaf44 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -601,6 +601,11 @@ static const struct svc_serv_ops nfsd_thread_sv_ops = {
- 	.svo_module		= THIS_MODULE,
- };
+@@ -100,6 +102,7 @@ struct dentry *nfsd_client_mkdir(struct nfsd_net *nn,
+ 		struct nfsdfs_client *ncl, u32 id, const struct tree_descr *);
+ void nfsd_client_rmdir(struct dentry *dentry);
  
-+bool i_am_nfsd()
-+{
-+	return kthread_func(current) == nfsd;
-+}
 +
- int nfsd_create_serv(struct net *net)
- {
- 	int error;
-@@ -1011,6 +1016,7 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
- 		*statp = rpc_garbage_args;
- 		return 1;
- 	}
-+	rqstp->rq_lease_breaker = NULL;
- 	/*
- 	 * Give the xdr decoder a chance to change this if it wants
- 	 * (necessary in the NFSv4.0 compound case)
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 45cc10cdf6ddd..70a0ac7b8f66a 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1045,6 +1045,7 @@ struct lock_manager_operations {
- 	bool (*lm_break)(struct file_lock *);
- 	int (*lm_change)(struct file_lock *, int, struct list_head *);
- 	void (*lm_setup)(struct file_lock *, void **);
-+	bool (*lm_breaker_owns_lease)(struct file_lock *);
- };
- 
- struct lock_manager {
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index fd390894a5849..abf4a57ce4a7d 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -299,6 +299,7 @@ struct svc_rqst {
- 	struct net		*rq_bc_net;	/* pointer to backchannel's
- 						 * net namespace
- 						 */
-+	void **			rq_lease_breaker; /* The v4 client breaking a lease */
- };
- 
- #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
+ #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+ #ifdef CONFIG_NFSD_V2_ACL
+ extern const struct svc_version nfsd_acl_version2;
 -- 
 2.25.1
 
