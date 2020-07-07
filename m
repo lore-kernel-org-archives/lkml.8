@@ -2,176 +2,88 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D5EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA029C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0EC8206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:13:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n+PP/J3k"
+	by mail.kernel.org (Postfix) with ESMTP id 94917206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgGGINu (ORCPT
+        id S1728149AbgGGIOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgGGINu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:13:50 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7153C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:13:49 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id w3so33040110wmi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=05xI6wJb+pvE4wHQ2qdDsXdX+BPzXeWRcihwoqOjd6U=;
-        b=n+PP/J3kqkRrr/c7+eNimD9rRpfjE7IfpEMRiSGV9YCwHelXn8b/BUiPC0odXPJ9Lj
-         Pk35HpivQKzprFoKVnlhMtQZ/GDkd8aQ2PStjrZ1X0Y8ZoWPLy1kVYKyoaIKMsrgAs0e
-         uH9Wk/Q2I7r1qYRQIr9/RC2bKU8JqDbJkxJ2bapjEp6s7RwmUNBw7c8dF7rJ/uk8BADc
-         lSOeTTNRTPrPMqchjvdNy3sQEIcRUaYxvGEhvnAGm4aoCl/Nus1MGTw7140hSpOVEoOb
-         5Ilm9oHGJ/KAT0yE73lpzAOE0wbO2KlVK9VVnMbdb4ankQFT+e/b/nRaxEwbXYwN6Qrt
-         GjCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=05xI6wJb+pvE4wHQ2qdDsXdX+BPzXeWRcihwoqOjd6U=;
-        b=ln19CSV9/tnOi2ifmIChONnY2bwDqI1cELInyOFs6rO8/bWFw/QqTmTeT47V7S6YR1
-         1Hb+KUXcY4UMAjWuzFKOTRX0Qhac/5AO/WzP9nyul7SZla7sndCbpeWKJxlRtbrxvBw7
-         MtFgxZjTwPzrkZxSM2gXcpaSplPfgnul1exziZBVOTyaA6zZ03y3MEr2ZP5sFIgs/l1Y
-         iHTzPLIOOZ8rwRn62krxDgD5D5nC6GpZIxPdqWsepXDu9Gu873wxkSQrGr3Ovi6exuz7
-         +/j1PWJK85yWKf5NLelyxf75eZmnBYML/UFPtUTWyQ024T/4cM8JOyxF170M6hsPDrL4
-         ujlA==
-X-Gm-Message-State: AOAM532Blwvc+CC70++lIwPNgFz/Z9DO9Eh2tEP3pvXkzw4wzxXB1lDX
-        IlR3+/5BLlpnLI5nzUbCNE3vdSwCdBg=
-X-Google-Smtp-Source: ABdhPJymOd3pRu1aeygaJdWogJ2lVl28ew4bcNoyZooPVWuB6BUsMYd/al2WZYRoxJG2w6KApZ9B9g==
-X-Received: by 2002:a7b:c0c9:: with SMTP id s9mr2747323wmh.166.1594109627674;
-        Tue, 07 Jul 2020 01:13:47 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:b4ff:29eb:619e:318? ([2a01:e34:ed2f:f020:b4ff:29eb:619e:318])
-        by smtp.googlemail.com with ESMTPSA id g3sm18887963wrb.59.2020.07.07.01.13.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 01:13:47 -0700 (PDT)
-Subject: Re: [v4,7/7] thermal: mediatek: use spinlock to protect PTPCORESEL
-To:     Michael Kao <michael.kao@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, hsinyi@chromium.org,
-        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20200323121537.22697-1-michael.kao@mediatek.com>
- <20200323121537.22697-8-michael.kao@mediatek.com>
- <1afbf412-fbeb-8abe-66d8-bd7ac4e9dd83@linaro.org>
- <1591329023.12739.0.camel@mtksdccf07>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <4c9e9abf-1f87-ae68-3827-22df52adfd19@linaro.org>
-Date:   Tue, 7 Jul 2020 10:13:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 7 Jul 2020 04:14:46 -0400
+Received: from mga05.intel.com ([192.55.52.43]:15586 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbgGGIOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 04:14:46 -0400
+IronPort-SDR: 3ZrIrXrnREHacF2pCqf+vwnyJzdp+/UsBry5nrR9vLtGCnxtSyEC9pFQ5IPWFKU5kzkU/snJhm
+ ANXd8Eua5XGQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="232418321"
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="232418321"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 01:14:45 -0700
+IronPort-SDR: iWXnmWfF7WjbYVS9uIAnIyK+6IP6h3A3sqKLYfhU4aGaOJsqtU2fu934B8nCftSomqWeGCt0Kf
+ Ey81F/WybHAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="279528555"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 07 Jul 2020 01:14:44 -0700
+Date:   Tue, 7 Jul 2020 01:14:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH] kvm: x86: rewrite kvm_spec_ctrl_valid_bits
+Message-ID: <20200707081444.GA7417@linux.intel.com>
+References: <20200702174455.282252-1-mlevitsk@redhat.com>
+ <20200702181606.GF3575@linux.intel.com>
+ <3793ae0da76fe00036ed0205b5ad8f1653f58ef2.camel@redhat.com>
+ <20200707061105.GH5208@linux.intel.com>
+ <7c1d9bbe-5f59-5b86-01e9-43c929b24218@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1591329023.12739.0.camel@mtksdccf07>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c1d9bbe-5f59-5b86-01e9-43c929b24218@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/2020 05:50, Michael Kao wrote:
-> On Fri, 2020-05-22 at 17:36 +0200, Daniel Lezcano wrote:
->> On 23/03/2020 13:15, Michael Kao wrote:
->>> From: "michael.kao" <michael.kao@mediatek.com>
->>>
->>> The driver of thermal and svs will use the
->>> same register for the project which should select
->>> bank before reading sensor value.
->>
->> Here there is a design problem AFAICT. The sensor should not be using
->> external locks.
->>
-> The PTPCORESEL is a common register used by svs and thermal.
-> The thermal need to ensure PTPCORESEL register will not be changed by
-> svs when thermal switch bank to read raw data of temperature.
-> So we use svs_lock to make sure there is no conflict between the two
-> drivers.
+Aren't you supposed to be on vacation? :-)
 
-Why not use regmap ?
-
->>> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
->>> ---
->>>  drivers/thermal/mtk_thermal.c | 9 ++++-----
->>>  1 file changed, 4 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
->>> index 9eaca432920e..594ad4f0f8cd 100644
->>> --- a/drivers/thermal/mtk_thermal.c
->>> +++ b/drivers/thermal/mtk_thermal.c
->>> @@ -22,6 +22,7 @@
->>>  #include <linux/thermal.h>
->>>  #include <linux/reset.h>
->>>  #include <linux/types.h>
->>> +#include <linux/power/mtk_svs.h>
->>>  
->>>  /* AUXADC Registers */
->>>  #define AUXADC_CON1_SET_V	0x008
->>> @@ -262,7 +263,7 @@ struct mtk_thermal {
->>>  	struct clk *clk_peri_therm;
->>>  	struct clk *clk_auxadc;
->>>  	/* lock: for getting and putting banks */
->>> -	struct mutex lock;
->>> +	unsigned long flags;
->>>  
->>>  	/* Calibration values */
->>>  	s32 adc_ge;
->>> @@ -561,7 +562,7 @@ static void mtk_thermal_get_bank(struct mtk_thermal_bank *bank)
->>>  	u32 val;
->>>  
->>>  	if (mt->conf->need_switch_bank) {
->>> -		mutex_lock(&mt->lock);
->>> +		mt->flags = claim_mtk_svs_lock();
->>>  
->>>  		val = readl(mt->thermal_base + PTPCORESEL);
->>>  		val &= ~0xf;
->>> @@ -581,7 +582,7 @@ static void mtk_thermal_put_bank(struct mtk_thermal_bank *bank)
->>>  	struct mtk_thermal *mt = bank->mt;
->>>  
->>>  	if (mt->conf->need_switch_bank)
->>> -		mutex_unlock(&mt->lock);
->>> +		release_mtk_svs_lock(mt->flags);
->>>  }
->>>  
->>>  /**
->>> @@ -938,8 +939,6 @@ static int mtk_thermal_probe(struct platform_device *pdev)
->>>  	if (ret)
->>>  		return ret;
->>>  
->>> -	mutex_init(&mt->lock);
->>> -
->>>  	mt->dev = &pdev->dev;
->>>  
->>>  	auxadc = of_parse_phandle(np, "mediatek,auxadc", 0);
->>>
->>
->>
+On Tue, Jul 07, 2020 at 10:04:22AM +0200, Paolo Bonzini wrote:
+> On 07/07/20 08:11, Sean Christopherson wrote:
+> > One oddity with this whole thing is that by passing through the MSR, KVM is
+> > allowing the guest to write bits it doesn't know about, which is definitely
+> > not normal.  It also means the guest could write bits that the host VMM
+> > can't.
 > 
+> That's true.  However, the main purpose of the kvm_spec_ctrl_valid_bits
+> check is to ensure that host-initiated writes are valid; this way, you
+> don't get a #GP on the next vmentry's WRMSR to MSR_IA32_SPEC_CTRL.
+> Checking the guest CPUID bit is not even necessary.
 
+Right, what I'm saying is that rather than try and decipher specs to
+determine what bits are supported, just throw the value at hardware and
+go from there.  That's effectively what we end up doing for the guest writes
+anyways.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Actually, the current behavior will break migration if there are ever legal
+bits that KVM doesn't recognize, e.g. guest writes a value that KVM doesn't
+allow and then migration fails when the destination tries to stuff the value
+into KVM.
