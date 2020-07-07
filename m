@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57029C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 228B420663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50DDD2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135244;
-	bh=lcAk/MdYca1FSQV397hRvZG7gSl/5f02OBNcFf7j7Qo=;
+	s=default; t=1594135247;
+	bh=uzT2E0K+tOIWrprQmEmnJN0iK49KZfC9ZlTd6G5BhZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HOCrhseh7A4qH6Gp/wwo+P3dT+4mFFC0pt/k/AKUMcYKX6MSVhVkh2BjrhMWa5kEM
-	 5tju+Ki6Z+D8eDi8tj9UaLGURGT1TS15GSc7eEQX0qMnUAVBGCvvpV9ltjYBtOOS+m
-	 jtCx5c/80b75nlpRaBJmoAEqn/Q3egX6RLB+eMQg=
+	b=BGbT/QINtWsoUkvXE7ybZksolHJpw5w5krwMk2eKC8f5oQIt3wqP9NF/6UtvOwO35
+	 VK0uufaAJXzYyZ7tz75IDz5XNNK8F68N1ho4TMC7Z+abowexYAHmHItkxEUmowvoY6
+	 +hOJ8Ph3rbHbF7OZSh8Y70xEXdMLHVD1qjz+KICo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgGGPUn (ORCPT
+        id S1728657AbgGGPUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60698 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:20:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728598AbgGGPUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:33 -0400
+        id S1729540AbgGGPUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:20:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87A812065D;
-        Tue,  7 Jul 2020 15:20:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3961820663;
+        Tue,  7 Jul 2020 15:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135233;
-        bh=lcAk/MdYca1FSQV397hRvZG7gSl/5f02OBNcFf7j7Qo=;
+        s=default; t=1594135240;
+        bh=uzT2E0K+tOIWrprQmEmnJN0iK49KZfC9ZlTd6G5BhZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZbqWiiYJ9nMcjZeZBtnB87CLYwJCZKQ1Z2Ie1Db5h3dCFuRetk+wqq2xzrQy4ZHxO
-         brsQ4b9n12m6AuV25Q8fqp6iGGFgju9BfauqvRYIzmNqBvABxG52A65yrHOUU//LRE
-         K2Tq0Rrb1uXrb+QS1AMh7Sri0uKMNVBtFX9eTjBo=
+        b=ldswGIGPeJ6wb0yFI2JWDZsn+5jOkh/mPQt5QsOxGJsR1yPMtitIp3d7kNl9yXf7a
+         ue7xWu0acPNMb9YYbzz6pxZteW/2afuEsaPaxTQ7MRWIFyq+h9S5yQLCm7Z62YPlQC
+         VWpCEwzz6Yu0K5ZsxOBOqzdgUC+HziLdUotn4/eY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 25/65] cxgb4: use unaligned conversion for fetching timestamp
-Date:   Tue,  7 Jul 2020 17:17:04 +0200
-Message-Id: <20200707145753.702366107@linuxfoundation.org>
+Subject: [PATCH 5.4 28/65] cxgb4: use correct type for all-mask IP address comparison
+Date:   Tue,  7 Jul 2020 17:17:07 +0200
+Message-Id: <20200707145753.835519759@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -63,35 +63,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit 589b1c9c166dce120e27b32a83a78f55464a7ef9 ]
+[ Upstream commit f286dd8eaad5a2758750f407ab079298e0bcc8a5 ]
 
-Use get_unaligned_be64() to fetch the timestamp needed for ns_to_ktime()
-conversion.
+Use correct type to check for all-mask exact match IP addresses.
 
-Fixes following sparse warning:
-sge.c:3282:43: warning: cast to restricted __be64
+Fixes following sparse warnings due to big endian value checks
+against 0xffffffff in is_addr_all_mask():
+cxgb4_filter.c:977:25: warning: restricted __be32 degrades to integer
+cxgb4_filter.c:983:37: warning: restricted __be32 degrades to integer
+cxgb4_filter.c:984:37: warning: restricted __be32 degrades to integer
+cxgb4_filter.c:985:37: warning: restricted __be32 degrades to integer
+cxgb4_filter.c:986:37: warning: restricted __be32 degrades to integer
 
-Fixes: a456950445a0 ("cxgb4: time stamping interface for PTP")
+Fixes: 3eb8b62d5a26 ("cxgb4: add support to create hash-filters via tc-flower offload")
 Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/sge.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-index 3a45ac8f0e011..506170fe3a8b7 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-@@ -2816,7 +2816,7 @@ static noinline int t4_systim_to_hwstamp(struct adapter *adapter,
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+index 8a67a04a5bbc6..375e1be6a2d8d 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+@@ -839,16 +839,16 @@ static bool is_addr_all_mask(u8 *ipmask, int family)
+ 		struct in_addr *addr;
  
- 	hwtstamps = skb_hwtstamps(skb);
- 	memset(hwtstamps, 0, sizeof(*hwtstamps));
--	hwtstamps->hwtstamp = ns_to_ktime(be64_to_cpu(*((u64 *)data)));
-+	hwtstamps->hwtstamp = ns_to_ktime(get_unaligned_be64(data));
+ 		addr = (struct in_addr *)ipmask;
+-		if (addr->s_addr == 0xffffffff)
++		if (ntohl(addr->s_addr) == 0xffffffff)
+ 			return true;
+ 	} else if (family == AF_INET6) {
+ 		struct in6_addr *addr6;
  
- 	return RX_PTP_PKT_SUC;
- }
+ 		addr6 = (struct in6_addr *)ipmask;
+-		if (addr6->s6_addr32[0] == 0xffffffff &&
+-		    addr6->s6_addr32[1] == 0xffffffff &&
+-		    addr6->s6_addr32[2] == 0xffffffff &&
+-		    addr6->s6_addr32[3] == 0xffffffff)
++		if (ntohl(addr6->s6_addr32[0]) == 0xffffffff &&
++		    ntohl(addr6->s6_addr32[1]) == 0xffffffff &&
++		    ntohl(addr6->s6_addr32[2]) == 0xffffffff &&
++		    ntohl(addr6->s6_addr32[3]) == 0xffffffff)
+ 			return true;
+ 	}
+ 	return false;
 -- 
 2.25.1
 
