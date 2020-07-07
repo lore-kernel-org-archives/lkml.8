@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F586C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA5FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 655432075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D94132075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HSUvcfv6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ky+1hg9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgGGWvW (ORCPT
+        id S1729847AbgGGWvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:51:22 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21635 "EHLO
+        Tue, 7 Jul 2020 18:51:37 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55727 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729738AbgGGWvC (ORCPT
+        by vger.kernel.org with ESMTP id S1729155AbgGGWu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:51:02 -0400
+        Tue, 7 Jul 2020 18:50:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594162260;
+        s=mimecast20190719; t=1594162255;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rPMcfxrEZ236mfezmh1VLu12AnYLZCZwUp1nicTiMR4=;
-        b=HSUvcfv6T2cBFFhmD0yOPrN5UjvO/MgDCrpnCvGVM5mbNdQIXUT3KjPoGLjMm5g17HB7nw
-        bhEK6hhhZ296hluNczHMjL5RnNxFC+O5VRJqvtehPNmmf6VKyVikpfR7BKvtAIoYGMmbIo
-        lcVl5nIZ7rGk9O+JmRjO2mpEAf6hcxQ=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313-SsiS5YcVNMWQEoxx1zEr3Q-1; Tue, 07 Jul 2020 18:50:59 -0400
-X-MC-Unique: SsiS5YcVNMWQEoxx1zEr3Q-1
-Received: by mail-qk1-f197.google.com with SMTP id z2so14072228qkb.17
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 15:50:59 -0700 (PDT)
+        bh=C2j+0prlu3q0Pnx3SiAUON88ocaozCL3GS+ha/ScH8o=;
+        b=Ky+1hg9ptBWCZS3H1F11PwlIoAIzUDLDLNtKpq9SadADBGRKTS5e13KarGSNlIEOMfgunA
+        9CTirE90Nk81/cfeivU+lE7qOScqH6NLfqjhAY4lIcBw64+j7HMVsXf1NP7+HVV4pXviZV
+        WTQy4txzJxNzHn3HwJ/byQClKMSFSa0=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-334-DlzZKJxkPwWATQhA7sTjUQ-1; Tue, 07 Jul 2020 18:50:48 -0400
+X-MC-Unique: DlzZKJxkPwWATQhA7sTjUQ-1
+Received: by mail-qt1-f197.google.com with SMTP id r25so31792354qtj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 15:50:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rPMcfxrEZ236mfezmh1VLu12AnYLZCZwUp1nicTiMR4=;
-        b=eIgl8j1NZ5Xx2G/3SlRsY3RixksQZXW3KMveD8N6GU/+mGwaTLD6+FZc9SQmsJNPIQ
-         /Z889WFULCZx/n6a6QzX4JKIbV6Yi16sQ6+beMu6qiDIA9+P8Pr2fyrFtEvvVEHpQi9P
-         Btmu/KF9CgwBylqg9QtpRaICeDWPJvpX5RoUqCKq/+3PcCy+nHBx2z1uM5XjqByVwsl6
-         +KemCdDnh0SPsF6BDz9jY/kx6MAFkrdDnlMi5fm+Aq7Wb+P27fUvvY1CqtWJSpgxUvrg
-         JH4BubUeChgNK4qtz4hpBY/iLDgRNBT8/pOxc9T2ZfcUobivtzH8emxgIITihHPJZq6h
-         hnCg==
-X-Gm-Message-State: AOAM531kBsCJOqlskIBP5PTlFMxiH8zrrCHZaREmB8BSKC+XdjwG+/7i
-        CkkI4ulTOw0BwmESOyMgii/NYiz5u34+eFbhCeYSU8/RgDUNA+CXIS75abRV+gUGl9cesqpQKNu
-        JsL/WSbU4RIYjReeUu2ctKJma
-X-Received: by 2002:a05:620a:b1a:: with SMTP id t26mr55133336qkg.473.1594162258932;
-        Tue, 07 Jul 2020 15:50:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz2J0ngM7MXGA4Cel+DD1H81KUpKJX7/J++AxGaN1fxx6mcf6hQbpqhfEsYybz9zmsLxfBU8g==
-X-Received: by 2002:a05:620a:b1a:: with SMTP id t26mr55133309qkg.473.1594162258730;
-        Tue, 07 Jul 2020 15:50:58 -0700 (PDT)
+        bh=C2j+0prlu3q0Pnx3SiAUON88ocaozCL3GS+ha/ScH8o=;
+        b=RKp7kSGNh8L4JPoD2TcW6NwnZI9T8OsDPEL70Ebcr+8XaF3zBkjZAPql06e3mLDs+R
+         S0ahNw28uQBXCEy7Eu7N/jCAadZfJie0Vr8eE8VrGMRF3fMVaj+OOOoRFCPsnxzZ0Nyi
+         NWLAyZThrQ89q1lsugUIIdTAyY6dNxX2AZCKnlPrb8ZG6JZlEnlTaKKmdkcdKuSTFq3m
+         OKyjlc0ZYvg/+PvG0EltaB3lCDW1jLHD8zrZW+MVRfpIyeF4svv1J/LCa6jOqz9/Cj/N
+         E+AJHiaoWaATctBGrFIzH59xGyzyKtLgKePUJDjmbIOXWj9iwxqxoktrt17ELi/YmM9v
+         +NCQ==
+X-Gm-Message-State: AOAM532LC60w9sx5HrwLa+S36kAgPgeoKv2EXyn1tV2dYofy6rSmt+/t
+        e+nKkwU6drYBs2zMQAlu858Hct1mX4thiYjv9O7FqX3usjhIANAFJEO852LdlWWDTHgWctugNQg
+        Veuob2ltxeOoTIwrk3m0DJ868
+X-Received: by 2002:a0c:da04:: with SMTP id x4mr54367805qvj.71.1594162247279;
+        Tue, 07 Jul 2020 15:50:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz91h7dze6hXBpExvldsXu0sEfg+FT9NjBcwqSN/tOXe3f7PIXsIg7+TlKvGVkbKH0rXidC5g==
+X-Received: by 2002:a0c:da04:: with SMTP id x4mr54367784qvj.71.1594162247063;
+        Tue, 07 Jul 2020 15:50:47 -0700 (PDT)
 Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id j16sm26267642qtp.92.2020.07.07.15.50.57
+        by smtp.gmail.com with ESMTPSA id j16sm26267642qtp.92.2020.07.07.15.50.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 15:50:58 -0700 (PDT)
+        Tue, 07 Jul 2020 15:50:46 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
@@ -72,11 +72,13 @@ Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
         David Rientjes <rientjes@google.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org
-Subject: [PATCH v5 21/25] mm/sparc64: Use general page fault accounting
-Date:   Tue,  7 Jul 2020 18:50:17 -0400
-Message-Id: <20200707225021.200906-22-peterx@redhat.com>
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        openrisc@lists.librecores.org
+Subject: [PATCH v5 14/25] mm/openrisc: Use general page fault accounting
+Date:   Tue,  7 Jul 2020 18:50:10 -0400
+Message-Id: <20200707225021.200906-15-peterx@redhat.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200707225021.200906-1-peterx@redhat.com>
 References: <20200707225021.200906-1-peterx@redhat.com>
@@ -91,40 +93,57 @@ Use the general page fault accounting by passing regs into handle_mm_fault().
 It naturally solve the issue of multiple page fault accounting when page fault
 retry happened.
 
-CC: David S. Miller <davem@davemloft.net>
-CC: sparclinux@vger.kernel.org
-Acked-by: David S. Miller <davem@davemloft.net>
+Add the missing PERF_COUNT_SW_PAGE_FAULTS perf events too.  Note, the other two
+perf events (PERF_COUNT_SW_PAGE_FAULTS_[MAJ|MIN]) were done in handle_mm_fault().
+
+CC: Jonas Bonn <jonas@southpole.se>
+CC: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+CC: Stafford Horne <shorne@gmail.com>
+CC: openrisc@lists.librecores.org
+Acked-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- arch/sparc/mm/fault_64.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ arch/openrisc/mm/fault.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/sparc/mm/fault_64.c b/arch/sparc/mm/fault_64.c
-index 9ebee14ee893..0a6bcc85fba7 100644
---- a/arch/sparc/mm/fault_64.c
-+++ b/arch/sparc/mm/fault_64.c
-@@ -422,7 +422,7 @@ asmlinkage void __kprobes do_sparc64_fault(struct pt_regs *regs)
- 			goto bad_area;
- 	}
+diff --git a/arch/openrisc/mm/fault.c b/arch/openrisc/mm/fault.c
+index 3daa491d1edb..ca97d9baab51 100644
+--- a/arch/openrisc/mm/fault.c
++++ b/arch/openrisc/mm/fault.c
+@@ -15,6 +15,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/extable.h>
+ #include <linux/sched/signal.h>
++#include <linux/perf_event.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/siginfo.h>
+@@ -103,6 +104,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	if (in_interrupt() || !mm)
+ 		goto no_context;
+ 
++	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
++
+ retry:
+ 	mmap_read_lock(mm);
+ 	vma = find_vma(mm, address);
+@@ -159,7 +162,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	 * the fault.
+ 	 */
  
 -	fault = handle_mm_fault(vma, address, flags, NULL);
 +	fault = handle_mm_fault(vma, address, flags, regs);
  
  	if (fault_signal_pending(fault, regs))
- 		goto exit_exception;
-@@ -438,15 +438,6 @@ asmlinkage void __kprobes do_sparc64_fault(struct pt_regs *regs)
- 	}
+ 		return;
+@@ -176,10 +179,6 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long address,
  
  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
--		if (fault & VM_FAULT_MAJOR) {
--			current->maj_flt++;
--			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ,
--				      1, regs, address);
--		} else {
--			current->min_flt++;
--			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN,
--				      1, regs, address);
--		}
+ 		/*RGD modeled on Cris */
+-		if (fault & VM_FAULT_MAJOR)
+-			tsk->maj_flt++;
+-		else
+-			tsk->min_flt++;
  		if (fault & VM_FAULT_RETRY) {
  			flags |= FAULT_FLAG_TRIED;
  
