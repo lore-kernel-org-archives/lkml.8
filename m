@@ -2,54 +2,51 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B528C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2D2204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC6A204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135945;
-	bh=pOz1h0Kui2vd4TQTtCN/LUp1rK8LonyhxFM4eNU/vBQ=;
+	s=default; t=1594135949;
+	bh=SlcQ3CLVq0OHfMVLc4x9rNOY2A1HJDTfvari2YNnBvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZJybKDy9bcR6dllAltTufRalli34oiVN/9Qa3U5ziZo+GkllNFkdIpFACiiqdME9N
-	 C9YzoKrbpf0/yrMVUIjB9FUwwwNZ2vaB7HmwPIDvvnw3ql9tyeXFa0m60/3hRL7+qh
-	 K/fw+2XaKQ/YcL5KuoliMIZsiCF/a+rUV4SOyYkg=
+	b=kspVDXioc64hhZ6y7GvVA/w92v5RPJyRUWFNt5RSmt1Ez51NdrpqRdjQquG3Yz/ee
+	 SbdMyJsy2/mNLHV/QI8Zi4skSXnxJpHS3g8m8wQdLtPcc+MKIiz0tgwRhta9ZSzRZ4
+	 6Xr4ecKQ722rULYmLQ9pWQhw7r+k6zhrVqnWCIgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbgGGPWM (ORCPT
+        id S1729167AbgGGPc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:22:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34438 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:32:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729791AbgGGPWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:22:05 -0400
+        id S1728575AbgGGPWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:22:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31B39206E2;
-        Tue,  7 Jul 2020 15:22:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A16BA20663;
+        Tue,  7 Jul 2020 15:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135324;
-        bh=pOz1h0Kui2vd4TQTtCN/LUp1rK8LonyhxFM4eNU/vBQ=;
+        s=default; t=1594135327;
+        bh=SlcQ3CLVq0OHfMVLc4x9rNOY2A1HJDTfvari2YNnBvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QIfuaEVJrJJ0FU73iXlHgr1gZ8D9Kl57Psqfy7QOt/cIL42LLZXKn63mbKvVBEAaC
-         XCvEZ/wS2JdxgPecYxcWG0tPPOac+dD6pubRUuBFy2hBRuKv+3KWE3QaPyJb5oYQHk
-         SWCdoZVFANRNOy6m26o8so6qARrohC23/XzaX+GI=
+        b=cyKIJ82pA2pHdXwLkI0fA8hmRd/Kba9CZMMcc5LZxipBow2Ubt4pVMH8qHZtLZ64S
+         rPTdTtsNnV91Z3rhev0w6DYwSuDUnwf5feY8tmgvyN54rw80SZMRKBfOuCfnxBuGHR
+         Dzu/QDdvaDwr6+r/I7RS7aIeOQKsk4B4FesXp4C0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 61/65] mm, compaction: fully assume capture is not NULL in compact_zone_order()
-Date:   Tue,  7 Jul 2020 17:17:40 +0200
-Message-Id: <20200707145755.418273739@linuxfoundation.org>
+        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 35/65] nfsd: clients dont need to break their own delegations
+Date:   Tue,  7 Jul 2020 17:17:14 +0200
+Message-Id: <20200707145754.171869800@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -62,87 +59,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlastimil Babka <vbabka@suse.cz>
+From: J. Bruce Fields <bfields@redhat.com>
 
-commit 6467552ca64c4ddd2b83ed73192107d7145f533b upstream.
+[ Upstream commit 28df3d1539de5090f7916f6fff03891b67f366f4 ]
 
-Dan reports:
+We currently revoke read delegations on any write open or any operation
+that modifies file data or metadata (including rename, link, and
+unlink).  But if the delegation in question is the only read delegation
+and is held by the client performing the operation, that's not really
+necessary.
 
-The patch 5e1f0f098b46: "mm, compaction: capture a page under direct
-compaction" from Mar 5, 2019, leads to the following Smatch complaint:
+It's not always possible to prevent this in the NFSv4.0 case, because
+there's not always a way to determine which client an NFSv4.0 delegation
+came from.  (In theory we could try to guess this from the transport
+layer, e.g., by assuming all traffic on a given TCP connection comes
+from the same client.  But that's not really correct.)
 
-    mm/compaction.c:2321 compact_zone_order()
-     error: we previously assumed 'capture' could be null (see line 2313)
+In the NFSv4.1 case the session layer always tells us the client.
 
-mm/compaction.c
-  2288  static enum compact_result compact_zone_order(struct zone *zone, int order,
-  2289                  gfp_t gfp_mask, enum compact_priority prio,
-  2290                  unsigned int alloc_flags, int classzone_idx,
-  2291                  struct page **capture)
-                                      ^^^^^^^
+This patch should remove such self-conflicts in all cases where we can
+reliably determine the client from the compound.
 
-  2313		if (capture)
-                    ^^^^^^^
-Check for NULL
+To do that we need to track "who" is performing a given (possibly
+lease-breaking) file operation.  We're doing that by storing the
+information in the svc_rqst and using kthread_data() to map the current
+task back to a svc_rqst.
 
-  2314			current->capture_control = &capc;
-  2315
-  2316		ret = compact_zone(&cc, &capc);
-  2317
-  2318		VM_BUG_ON(!list_empty(&cc.freepages));
-  2319		VM_BUG_ON(!list_empty(&cc.migratepages));
-  2320
-  2321		*capture = capc.page;
-                ^^^^^^^^
-Unchecked dereference.
-
-  2322		current->capture_control = NULL;
-  2323
-
-In practice this is not an issue, as the only caller path passes non-NULL
-capture:
-
-__alloc_pages_direct_compact()
-  struct page *page = NULL;
-  try_to_compact_pages(capture = &page);
-    compact_zone_order(capture = capture);
-
-So let's remove the unnecessary check, which should also make Smatch happy.
-
-Fixes: 5e1f0f098b46 ("mm, compaction: capture a page under direct compaction")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
-Link: http://lkml.kernel.org/r/18b0df3c-0589-d96c-23fa-040798fee187@suse.cz
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/compaction.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/filesystems/locking.rst |  2 ++
+ fs/locks.c                            |  3 +++
+ fs/nfsd/nfs4proc.c                    |  2 ++
+ fs/nfsd/nfs4state.c                   | 14 ++++++++++++++
+ fs/nfsd/nfsd.h                        |  2 ++
+ fs/nfsd/nfssvc.c                      |  6 ++++++
+ include/linux/fs.h                    |  1 +
+ include/linux/sunrpc/svc.h            |  1 +
+ 8 files changed, 31 insertions(+)
 
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2310,8 +2310,7 @@ static enum compact_result compact_zone_
- 		.page = NULL,
- 	};
+diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+index fc3a0704553cf..b5f8d15a30fb7 100644
+--- a/Documentation/filesystems/locking.rst
++++ b/Documentation/filesystems/locking.rst
+@@ -425,6 +425,7 @@ prototypes::
+ 	int (*lm_grant)(struct file_lock *, struct file_lock *, int);
+ 	void (*lm_break)(struct file_lock *); /* break_lease callback */
+ 	int (*lm_change)(struct file_lock **, int);
++	bool (*lm_breaker_owns_lease)(struct file_lock *);
  
--	if (capture)
--		current->capture_control = &capc;
-+	current->capture_control = &capc;
+ locking rules:
  
- 	ret = compact_zone(&cc, &capc);
+@@ -435,6 +436,7 @@ lm_notify:		yes		yes			no
+ lm_grant:		no		no			no
+ lm_break:		yes		no			no
+ lm_change		yes		no			no
++lm_breaker_owns_lease:	no		no			no
+ ==========		=============	=================	=========
  
-@@ -2333,6 +2332,7 @@ int sysctl_extfrag_threshold = 500;
-  * @alloc_flags: The allocation flags of the current allocation
-  * @ac: The context of current allocation
-  * @prio: Determines how hard direct compaction should try to succeed
-+ * @capture: Pointer to free page created by compaction will be stored here
-  *
-  * This is the main entry point for direct page compaction.
-  */
+ buffer_head
+diff --git a/fs/locks.c b/fs/locks.c
+index b8a31c1c4fff3..a3f186846e93e 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -1557,6 +1557,9 @@ static bool leases_conflict(struct file_lock *lease, struct file_lock *breaker)
+ {
+ 	bool rc;
+ 
++	if (lease->fl_lmops->lm_breaker_owns_lease
++			&& lease->fl_lmops->lm_breaker_owns_lease(lease))
++		return false;
+ 	if ((breaker->fl_flags & FL_LAYOUT) != (lease->fl_flags & FL_LAYOUT)) {
+ 		rc = false;
+ 		goto trace;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 4798667af647c..96fa2837d3cfb 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1961,6 +1961,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 		goto encode_op;
+ 	}
+ 
++	rqstp->rq_lease_breaker = (void **)&cstate->clp;
++
+ 	trace_nfsd_compound(rqstp, args->opcnt);
+ 	while (!status && resp->opcnt < args->opcnt) {
+ 		op = &args->ops[resp->opcnt++];
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 8650a97e2ba96..1e8f5e281bb53 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -4464,6 +4464,19 @@ nfsd_break_deleg_cb(struct file_lock *fl)
+ 	return ret;
+ }
+ 
++static bool nfsd_breaker_owns_lease(struct file_lock *fl)
++{
++	struct nfs4_delegation *dl = fl->fl_owner;
++	struct svc_rqst *rqst;
++	struct nfs4_client *clp;
++
++	if (!i_am_nfsd())
++		return NULL;
++	rqst = kthread_data(current);
++	clp = *(rqst->rq_lease_breaker);
++	return dl->dl_stid.sc_client == clp;
++}
++
+ static int
+ nfsd_change_deleg_cb(struct file_lock *onlist, int arg,
+ 		     struct list_head *dispose)
+@@ -4475,6 +4488,7 @@ nfsd_change_deleg_cb(struct file_lock *onlist, int arg,
+ }
+ 
+ static const struct lock_manager_operations nfsd_lease_mng_ops = {
++	.lm_breaker_owns_lease = nfsd_breaker_owns_lease,
+ 	.lm_break = nfsd_break_deleg_cb,
+ 	.lm_change = nfsd_change_deleg_cb,
+ };
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index af2947551e9ce..7a835fb7d79f7 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -87,6 +87,8 @@ int		nfsd_pool_stats_release(struct inode *, struct file *);
+ 
+ void		nfsd_destroy(struct net *net);
+ 
++bool		i_am_nfsd(void);
++
+ struct nfsdfs_client {
+ 	struct kref cl_ref;
+ 	void (*cl_release)(struct kref *kref);
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index e8bee8ff30c59..cb7f0aa9a3b05 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -590,6 +590,11 @@ static const struct svc_serv_ops nfsd_thread_sv_ops = {
+ 	.svo_module		= THIS_MODULE,
+ };
+ 
++bool i_am_nfsd()
++{
++	return kthread_func(current) == nfsd;
++}
++
+ int nfsd_create_serv(struct net *net)
+ {
+ 	int error;
+@@ -997,6 +1002,7 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+ 		*statp = rpc_garbage_args;
+ 		return 1;
+ 	}
++	rqstp->rq_lease_breaker = NULL;
+ 	/*
+ 	 * Give the xdr decoder a chance to change this if it wants
+ 	 * (necessary in the NFSv4.0 compound case)
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 5bd384dbdca58..4b5b7667405d8 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1040,6 +1040,7 @@ struct lock_manager_operations {
+ 	bool (*lm_break)(struct file_lock *);
+ 	int (*lm_change)(struct file_lock *, int, struct list_head *);
+ 	void (*lm_setup)(struct file_lock *, void **);
++	bool (*lm_breaker_owns_lease)(struct file_lock *);
+ };
+ 
+ struct lock_manager {
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 1afe38eb33f7e..ab6e12d9fcf61 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -299,6 +299,7 @@ struct svc_rqst {
+ 	struct net		*rq_bc_net;	/* pointer to backchannel's
+ 						 * net namespace
+ 						 */
++	void **			rq_lease_breaker; /* The v4 client breaking a lease */
+ };
+ 
+ #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
+-- 
+2.25.1
+
 
 
