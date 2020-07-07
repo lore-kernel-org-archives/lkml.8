@@ -7,67 +7,71 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6103D207DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B1420773
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mjsQaDQY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QqqZZ4pE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgGGOiT (ORCPT
+        id S1728509AbgGGOiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:38:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53710 "EHLO
+        Tue, 7 Jul 2020 10:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728417AbgGGOiM (ORCPT
+        with ESMTP id S1728428AbgGGOiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:38:12 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A83FC08C5E1
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:12 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l2so45291538wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:12 -0700 (PDT)
+        Tue, 7 Jul 2020 10:38:14 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B643AC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:13 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z2so23134889wrp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qvkfvflL72kN7LZNfXrEA+gETlAfB400MfXaywOwHac=;
-        b=mjsQaDQYPUXaqe/g2dKsXNXr+7jrGE4gHc1/ZEMmctM17H8epnfpYGpc69ciz9exAt
-         vKN8+AkaEx/gn6EHBU4QVRlYPfIlD8sgXTzscKM0wzZM+5oJ66huwErQbKU5PZhbrEah
-         Hws2v3v6fr8uOj1dv/ORfJaSw6pYCv0r8IXkBLQpmjRoqokN8O0qao4Jr8+hX/5FYrdb
-         V2kE4xzZgYRakwN/LsCwncknbGHnJaFL7XuNqsTN4VXculb3MKfwjPe4956FyA+mGSjl
-         QWzBADvD2hhEkushVerjKlac8O1Zwi+91Y/OSC/0qGkTkOO4aBJsUGT+Ta5vxSmLmFWA
-         C/ng==
+        bh=i3kHcmoqkZhWZ4oxxNqqC7HGSrDg94q7cDYwU1R7wZ0=;
+        b=QqqZZ4pESAuIWwDoPRnNoufHsQOPJdYeYXwBBwabjk1uLwS42wFEAqiWGt+bbkxoUW
+         Dt3j7tTPi2S2uGuSN7pApq05aDzKTfIvedNoOVayX3DFlIlmVjjshralPJmUdpHAZFHT
+         bC02jDQsGPGvkAYuqHMUQ7SAKmIEE5Wyv/WRDH3TsDo4+Bw+1tP3WM07zo8+K5aWDv0T
+         kRTLqiFyThI4W4Ar9ywWWAc2Tw43IULOb4U6bNqk+lako8lgAWUP4Y8adbJUjgSe9ayR
+         yO5vgvDWxlAskhJoxs7gLDV7z90M4c5hTTn7ZoTzaC/0ksGTuUevFdvu7htJ+Yqa37w+
+         Vi9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qvkfvflL72kN7LZNfXrEA+gETlAfB400MfXaywOwHac=;
-        b=N7CB8wr8copPvLoWFOpCPXdAmM+g8+L2wOVpyhtKbfrucT6d1Xp+r93Dd6eh5WwHWc
-         tJC575nNCYv8o5uzCvJsQPgh2mcLgevVmzenNvG6NqcxoiUBHrINn7p7f4DIM4MhOdWU
-         hDlQIB+VHLjVbEZGO7t9oXnipomhiliI1ovg/FAxL2HoOhILpUiqDCmhCJLHsYpsUS4p
-         pTDDJqKixIZb5opA45CAhNjlOsMendYm2APWX19Du7yvrnkeRaKemQZ3pLqPYZQTndOZ
-         eD1IMkDi5Iw9G3M/zDyYfCvGnTz3+HFTBAktTUTpD6Zsc45bFQK9z9RIXx3CLxSdiiyR
-         48uA==
-X-Gm-Message-State: AOAM531gqTPYAwfUOJlba6eCbtAPEAFxESfwCq8gOMtAagM2/wFFl/GE
-        ArR+E5YQjnapT+Sqbe6oZpKn/A==
-X-Google-Smtp-Source: ABdhPJz2nCLsOfgeVFtOafx/HAFdZTbjjaJ2muxDQjix4kEwHujevhKyX7Gcrv0w5cFSyTNdM6S0hA==
-X-Received: by 2002:a1c:a7c4:: with SMTP id q187mr4450878wme.0.1594132691332;
-        Tue, 07 Jul 2020 07:38:11 -0700 (PDT)
+        bh=i3kHcmoqkZhWZ4oxxNqqC7HGSrDg94q7cDYwU1R7wZ0=;
+        b=b6Mk+Od8+8cuUFivRJziEUFBqLrlgmoP9BjLD2xFkoTKo8+xiske25+/NHkMH0stVY
+         W9rmur17bWLQkJ02gYPc1QV+/tq8JgSW42Nj9CLugAvFpgm46hWcoctMDmYd9mHzDlI5
+         oE64pa6HY5pcbXiqxeOuYD/7VM9yag/+PjIFmWh1BFdu8xtxLwC9GKxeyqnk0Wal4WCC
+         dxR7Jco7a5PPfqm/y4QlpuUBj85k/55G7RoMPPlUPk7cCwQRkX7McwUQmm+ZLb7mzJAz
+         31n/+vX71InUAFpboLMhUa2i5PJOa56CzZDKrY0KYWiP9auORZ0YzEQI/Qg1NFuBAwi6
+         Yv5A==
+X-Gm-Message-State: AOAM530N9xSkh5sfrOakVS60ftDveulQH3Ibj7rzzDon60x4XJtA/zzP
+        Qzhc/pPqqs6a3YpRFH/9DBMeTg==
+X-Google-Smtp-Source: ABdhPJwsSC0UeTUN9Csfj74emOCu/UtJQH5pDIqnq5THkRvAxrdrQ5fybem8qUGk6n26vzyQHj4srg==
+X-Received: by 2002:a5d:6a04:: with SMTP id m4mr53013495wru.418.1594132692517;
+        Tue, 07 Jul 2020 07:38:12 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.10
+        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:38:10 -0700 (PDT)
+        Tue, 07 Jul 2020 07:38:11 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2 17/28] ASoC: uniphier: aio-core: Fix incorrectly named struct property and remove another
-Date:   Tue,  7 Jul 2020 15:37:31 +0100
-Message-Id: <20200707143742.2959960-18-lee.jones@linaro.org>
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andrea Venturi <be17068@iperbole.bo.it>,
+        Marcus Cooper <codekipper@gmail.com>
+Subject: [PATCH v2 18/28] ASoC: sunxi: sun4i-spdif: Fix misspelling of 'reg_dac_txdata'
+Date:   Tue,  7 Jul 2020 15:37:32 +0100
+Message-Id: <20200707143742.2959960-19-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707143742.2959960-1-lee.jones@linaro.org>
 References: <20200707143742.2959960-1-lee.jones@linaro.org>
@@ -78,45 +82,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both issues are likely due to bitrot.  Let's bring them up-to-date.
+Property name descriptions need to match exactly.
 
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/uniphier/aio-core.c:107: warning: Function parameter or member 'pll_id' not described in 'aio_chip_set_pll'
- sound/soc/uniphier/aio-core.c:107: warning: Excess function parameter 'source' description in 'aio_chip_set_pll'
- sound/soc/uniphier/aio-core.c:279: warning: Excess function parameter 'ch' description in 'aio_port_set_ch'
+ sound/soc/sunxi/sun4i-spdif.c:178: warning: Function parameter or member 'reg_dac_txdata' not described in 'sun4i_spdif_quirks'
 
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Andrea Venturi <be17068@iperbole.bo.it>
+Cc: Marcus Cooper <codekipper@gmail.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/uniphier/aio-core.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ sound/soc/sunxi/sun4i-spdif.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/uniphier/aio-core.c b/sound/soc/uniphier/aio-core.c
-index 9bcba06ba52ea..86eb0915d80ad 100644
---- a/sound/soc/uniphier/aio-core.c
-+++ b/sound/soc/uniphier/aio-core.c
-@@ -93,9 +93,9 @@ void aio_iecout_set_enable(struct uniphier_aio_chip *chip, bool enable)
- 
+diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-spdif.c
+index 86779a99df751..326dd45e39dab 100644
+--- a/sound/soc/sunxi/sun4i-spdif.c
++++ b/sound/soc/sunxi/sun4i-spdif.c
+@@ -167,7 +167,7 @@
  /**
-  * aio_chip_set_pll - set frequency to audio PLL
-- * @chip  : the AIO chip pointer
-- * @source: PLL
-- * @freq  : frequency in Hz, 0 is ignored
-+ * @chip:	the AIO chip pointer
-+ * @pll_id:	PLL
-+ * @freq:	frequency in Hz, 0 is ignored
+  * struct sun4i_spdif_quirks - Differences between SoC variants.
   *
-  * Sets frequency of audio PLL. This function can be called anytime,
-  * but it takes time till PLL is locked.
-@@ -267,7 +267,6 @@ void aio_port_reset(struct uniphier_aio_sub *sub)
- /**
-  * aio_port_set_ch - set channels of LPCM
-  * @sub: the AIO substream pointer, PCM substream only
-- * @ch : count of channels
-  *
-  * Set suitable slot selecting to input/output port block of AIO.
-  *
+- * @reg_dac_tx_data: TX FIFO offset for DMA config.
++ * @reg_dac_txdata: TX FIFO offset for DMA config.
+  * @has_reset: SoC needs reset deasserted.
+  * @val_fctl_ftx: TX FIFO flush bitmask.
+  */
 -- 
 2.25.1
 
