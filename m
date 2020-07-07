@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B3CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C76EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5677620663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B29120663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135486;
-	bh=JE9Pc3l9KUo/kiQ0jt7wUFYfAizCkUiPcI2ByP56Mdw=;
+	s=default; t=1594135489;
+	bh=djgJv5sPGtFSvjLrP1dLw1yMBUcbSp0t7Xs692s/lq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMiLbT3JJC6MnO4JAdoLVwXo4CP2uHFA9aB8sIk+WTyZ18vNdLJnXEKcQXVK1Ztvq
-	 XtsnQaa+adTWdBTWAZVKceSr5zisSxyXdgkok0B+Yh2bWYfdasN+4YxWlOH12upJnH
-	 B+4rHICI3Z8KnAZIweK5m4ek3q+UZ4HivWYy9Byc=
+	b=baEGLWYVu5mKBepnrJFY6FrzS8zo9lL7EesyZl4KtI1VRWSALZ5zHgVZIOvB1kMCa
+	 6Ght1+O5j4ZHfeVv+quRaN5P2aptrw2P13Bm0W11ASXfFyCHZYvAelOgaWcFiTGzOA
+	 sS7ctBqCgRwTJtpOlcM7WoYkCPOgCPRDosCRtSU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbgGGPYo (ORCPT
+        id S1730135AbgGGPYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38218 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:24:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729085AbgGGPYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:35 -0400
+        id S1729674AbgGGPYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80E072065D;
-        Tue,  7 Jul 2020 15:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF7A420663;
+        Tue,  7 Jul 2020 15:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135475;
-        bh=JE9Pc3l9KUo/kiQ0jt7wUFYfAizCkUiPcI2ByP56Mdw=;
+        s=default; t=1594135477;
+        bh=djgJv5sPGtFSvjLrP1dLw1yMBUcbSp0t7Xs692s/lq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rMK2td3mY1ktWVO2HwPj/siOJgRV87UhDYCuYdCxSR5ar3bv6tpjphGjKUyGd6PUp
-         Jp9enLjQyFvtfNu+2hxd6XGlmvAyqZrt9iNb+Beyf0bxK80dWqX6lpvMGlbCv34YOT
-         5nmVBGbZqbUHY4RpPchYN2dUMyqbFCetU1qAkXrw=
+        b=ZagKn0gGBfTMyxashLJd6+P2Xf6vmj4SckOJb6vmmGMU+ClDgmOQiXziDsoAv84EX
+         O18pevPw4EYZUlbDGAX9YOETuMemLidxy0xmThXw/wqpBOfODlY+2IbPShldLKk07L
+         XCu3FfmtGrvtNjw7PEVWAkKojbds+3rgJYHQUud4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 054/112] RDMA/counter: Query a counter before release
-Date:   Tue,  7 Jul 2020 17:16:59 +0200
-Message-Id: <20200707145803.570726049@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 027/112] io_uring: fix {SQ,IO}POLL with unsupported opcodes
+Date:   Tue,  7 Jul 2020 17:16:32 +0200
+Message-Id: <20200707145802.280728361@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -62,47 +59,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit c1d869d64a1955817c4d6fff08ecbbe8e59d36f8 ]
+[ Upstream commit 3232dd02af65f2d01be641120d2a710176b0c7a7 ]
 
-Query a dynamically-allocated counter before release it, to update it's
-hwcounters and log all of them into history data. Otherwise all values of
-these hwcounters will be lost.
+IORING_SETUP_IOPOLL is defined only for read/write, other opcodes should
+be disallowed, otherwise it'll get an error as below. Also refuse
+open/close with SQPOLL, as the polling thread wouldn't know which file
+table to use.
 
-Fixes: f34a55e497e8 ("RDMA/core: Get sum value of all counters when perform a sysfs stat read")
-Link: https://lore.kernel.org/r/20200621110000.56059-1-leon@kernel.org
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+RIP: 0010:io_iopoll_getevents+0x111/0x5a0
+Call Trace:
+ ? _raw_spin_unlock_irqrestore+0x24/0x40
+ ? do_send_sig_info+0x64/0x90
+ io_iopoll_reap_events.part.0+0x5e/0xa0
+ io_ring_ctx_wait_and_kill+0x132/0x1c0
+ io_uring_release+0x20/0x30
+ __fput+0xcd/0x230
+ ____fput+0xe/0x10
+ task_work_run+0x67/0xa0
+ do_exit+0x353/0xb10
+ ? handle_mm_fault+0xd4/0x200
+ ? syscall_trace_enter+0x18c/0x2c0
+ do_group_exit+0x43/0xa0
+ __x64_sys_exit_group+0x18/0x20
+ do_syscall_64+0x60/0x1e0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+[axboe: allow provide/remove buffers and files update]
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/counters.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/io_uring.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/infiniband/core/counters.c b/drivers/infiniband/core/counters.c
-index 2257d7f7810fd..738d1faf4bba5 100644
---- a/drivers/infiniband/core/counters.c
-+++ b/drivers/infiniband/core/counters.c
-@@ -202,7 +202,7 @@ static int __rdma_counter_unbind_qp(struct ib_qp *qp)
- 	return ret;
- }
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 4ab1728de247c..bb74e45941af2 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2748,6 +2748,8 @@ static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
  
--static void counter_history_stat_update(const struct rdma_counter *counter)
-+static void counter_history_stat_update(struct rdma_counter *counter)
+ 	if (req->flags & REQ_F_NEED_CLEANUP)
+ 		return 0;
++	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
++		return -EINVAL;
+ 
+ 	sp->file_in = NULL;
+ 	sp->off_in = READ_ONCE(sqe->splice_off_in);
+@@ -2910,6 +2912,8 @@ static int io_fallocate_prep(struct io_kiocb *req,
  {
- 	struct ib_device *dev = counter->device;
- 	struct rdma_port_counter *port_counter;
-@@ -212,6 +212,8 @@ static void counter_history_stat_update(const struct rdma_counter *counter)
- 	if (!port_counter->hstats)
- 		return;
+ 	if (sqe->ioprio || sqe->buf_index || sqe->rw_flags)
+ 		return -EINVAL;
++	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
++		return -EINVAL;
  
-+	rdma_counter_query_stats(counter);
-+
- 	for (i = 0; i < counter->stats->num_counters; i++)
- 		port_counter->hstats->value[i] += counter->stats->value[i];
- }
+ 	req->sync.off = READ_ONCE(sqe->off);
+ 	req->sync.len = READ_ONCE(sqe->addr);
+@@ -2935,6 +2939,8 @@ static int io_openat_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	const char __user *fname;
+ 	int ret;
+ 
++	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
++		return -EINVAL;
+ 	if (sqe->ioprio || sqe->buf_index)
+ 		return -EINVAL;
+ 	if (req->flags & REQ_F_FIXED_FILE)
+@@ -2968,6 +2974,8 @@ static int io_openat2_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	size_t len;
+ 	int ret;
+ 
++	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
++		return -EINVAL;
+ 	if (sqe->ioprio || sqe->buf_index)
+ 		return -EINVAL;
+ 	if (req->flags & REQ_F_FIXED_FILE)
+@@ -3207,6 +3215,8 @@ static int io_epoll_ctl_prep(struct io_kiocb *req,
+ #if defined(CONFIG_EPOLL)
+ 	if (sqe->ioprio || sqe->buf_index)
+ 		return -EINVAL;
++	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
++		return -EINVAL;
+ 
+ 	req->epoll.epfd = READ_ONCE(sqe->fd);
+ 	req->epoll.op = READ_ONCE(sqe->len);
+@@ -3251,6 +3261,8 @@ static int io_madvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)
+ 	if (sqe->ioprio || sqe->buf_index || sqe->off)
+ 		return -EINVAL;
++	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
++		return -EINVAL;
+ 
+ 	req->madvise.addr = READ_ONCE(sqe->addr);
+ 	req->madvise.len = READ_ONCE(sqe->len);
+@@ -3285,6 +3297,8 @@ static int io_fadvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ {
+ 	if (sqe->ioprio || sqe->buf_index || sqe->addr)
+ 		return -EINVAL;
++	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
++		return -EINVAL;
+ 
+ 	req->fadvise.offset = READ_ONCE(sqe->off);
+ 	req->fadvise.len = READ_ONCE(sqe->len);
+@@ -3322,6 +3336,8 @@ static int io_statx_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	unsigned lookup_flags;
+ 	int ret;
+ 
++	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
++		return -EINVAL;
+ 	if (sqe->ioprio || sqe->buf_index)
+ 		return -EINVAL;
+ 	if (req->flags & REQ_F_FIXED_FILE)
+@@ -3402,6 +3418,8 @@ static int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	 */
+ 	req->work.flags |= IO_WQ_WORK_NO_CANCEL;
+ 
++	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
++		return -EINVAL;
+ 	if (sqe->ioprio || sqe->off || sqe->addr || sqe->len ||
+ 	    sqe->rw_flags || sqe->buf_index)
+ 		return -EINVAL;
 -- 
 2.25.1
 
