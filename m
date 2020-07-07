@@ -2,147 +2,96 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1356CC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D88206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6F220656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:49:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VLodcZ+X"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="YPAO/bHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgGGKsk (ORCPT
+        id S1728184AbgGGKtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:48:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgGGKsj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:48:39 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4CADC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:48:38 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id e15so37967525edr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:48:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OZw9WF+sLD7+S/P+7F6VJUju0c1b8KGkxnX1D6C0CBY=;
-        b=VLodcZ+XVy6S8cm4qwMKpTFvUNqrFoZEbNt/c4CCapdXa7iXxB5CpvNSLzMPaFPdid
-         LHVLihcWQ+Q2oZcjFMyUezBnO/uav7shIwwBtxbaIyBR/zcLXsQS3hdDHRtl1BwJhVyX
-         KeCZh+yMfxSDW58BnTwMioYFGPuHU+T9iquLZmLY6QmsymaYnOtBvwmEIYQEQ+xRvPqJ
-         Hm8Bi7plNgs/1ulVCD/3t3wD59OEGJ1ktz5X1+9/Rg5i4YrlUspH4ZnC3eTYsuIz9enK
-         x0tUCUdT5vuKNswGw+11te2bqgOsOYOEGxaKk3OcG4qgEqfCgyzCD71pXavPIJ7HIoBp
-         WgaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OZw9WF+sLD7+S/P+7F6VJUju0c1b8KGkxnX1D6C0CBY=;
-        b=Vq77T6NSDOZNtlhxemx3ZTK2FqP/FcDnqw1q9POurcDnjPlYU1nClmbKwqMoOVjbzF
-         9KC0S0b9KpQaRTRWkDncMxHPowbGm+XsVgPETQz4ACukqmx4hhfeV6mTgtRU+8Kd5isg
-         +Y0NYMvXF+wp4K/MkRABdsqRHi+lVEkZDWMxIc0lfTRTGFoKt1FUP1iNMZeaDr9dRomE
-         kRrWZejvFqmLsqthX1fiugFf7DovWrrkiY3/+uRgo2wIkRGX4NIV3Fv0mNCpJ0zB66w+
-         IqmYW0igQzBpMwFATrC+UyYqWTXwUqmpgZbDV7V2krwExkcXnmHnMnley0b4bxzrO4VO
-         HlYg==
-X-Gm-Message-State: AOAM530G86eA+2XP7HC/rV1cJK0ydthYt+/kRGzbFpfy9AX0SregZeRI
-        7zln8gni7kRNoy9j88xph5Zzrg==
-X-Google-Smtp-Source: ABdhPJxMCfYoXtG9EMvYyx83jtYoaHCy9ePgt3od0RIGDNDJYG7oY/Sdl2HKdoTPTHU2HCFZPmLE6A==
-X-Received: by 2002:a05:6402:16db:: with SMTP id r27mr61765206edx.139.1594118917429;
-        Tue, 07 Jul 2020 03:48:37 -0700 (PDT)
-Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id t25sm174229ejc.34.2020.07.07.03.48.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 03:48:36 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 12:48:25 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        John Stultz <john.stultz@linaro.org>,
-        freedreno@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/6] iommu/arm-smmu: Add auxiliary domain support for
- arm-smmuv2
-Message-ID: <20200707104825.GA159413@myrica>
-References: <20200626200414.14382-1-jcrouse@codeaurora.org>
- <20200626200414.14382-2-jcrouse@codeaurora.org>
+        Tue, 7 Jul 2020 06:49:40 -0400
+Received: from crapouillou.net ([89.234.176.41]:55324 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbgGGKtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:49:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1594118977; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZmDFVd32HVWpn2fLFFX5aBkZfhcHoubKvi/z02gqnBE=;
+        b=YPAO/bHbTjq1Sm6NWJD8vbC8leRKZZL/co7H4rMR+AnM+37r3oae3RMy+uH+OcA1rBYg8P
+        9WH4Y0Qvg9vKpEU8UWt0zuX1MiDJh76iM5kL9ogH3jbYSWZvadOzV5qsGOmc1Q0iB5Ocu5
+        CRije11Vqkq6KZB8MabZLVMumce5eJQ=
+Date:   Tue, 07 Jul 2020 12:49:27 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 0/2] remoteproc: Address runtime PM issues
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <F2I3DQ.SZMCCDC0DNAD3@crapouillou.net>
+In-Reply-To: <20200630163118.3830422-1-mathieu.poirier@linaro.org>
+References: <20200630163118.3830422-1-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626200414.14382-2-jcrouse@codeaurora.org>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jordan,
+Hi,
 
-On Fri, Jun 26, 2020 at 02:04:09PM -0600, Jordan Crouse wrote:
-> Support auxiliary domains for arm-smmu-v2 to initialize and support
-> multiple pagetables for a single SMMU context bank. Since the smmu-v2
-> hardware doesn't have any built in support for switching the pagetable
-> base it is left as an exercise to the caller to actually use the pagetable.
-> 
-> Aux domains are supported if split pagetable (TTBR1) support has been
-> enabled on the master domain.  Each auxiliary domain will reuse the
-> configuration of the master domain. By default the a domain with TTBR1
-> support will have the TTBR0 region disabled so the first attached aux
-> domain will enable the TTBR0 region in the hardware and conversely the
-> last domain to be detached will disable TTBR0 translations.  All subsequent
-> auxiliary domains create a pagetable but not touch the hardware.
-> 
-> The leaf driver will be able to query the physical address of the
-> pagetable with the DOMAIN_ATTR_PTBASE attribute so that it can use the
-> address with whatever means it has to switch the pagetable base.
-> 
-> Following is a pseudo code example of how a domain can be created
-> 
->  /* Check to see if aux domains are supported */
->  if (iommu_dev_has_feature(dev, IOMMU_DEV_FEAT_AUX)) {
-> 	 iommu = iommu_domain_alloc(...);
-> 
+Le mar. 30 juin 2020 =E0 10:31, Mathieu Poirier=20
+<mathieu.poirier@linaro.org> a =E9crit :
+> This set follows the conversation that took place here[1] and provides
+> the "two small patches" I alluded to at the end of the thread.
+>=20
+> Paul Cercueil: patch 1/2 is compile tested only - please see that it=20
+> does what
+> you want.
 
-The device driver should also call iommu_dev_enable_feature() before using
-the AUX feature. I see that you implement them as NOPs and in this case
-the GPU is tightly coupled with the SMMU so interoperability between
-different IOMMU and device drivers doesn't matter much, but I think it's
-still a good idea to follow the same patterns in all drivers to make
-future work on the core IOMMU easier.
+Still works fine, so
+Tested-by: Paul Cercueil <paul@crapouillou.net>
 
-> 	 if (iommu_aux_attach_device(domain, dev))
-> 		 return FAIL;
-> 
-> 	/* Save the base address of the pagetable for use by the driver
-> 	iommu_domain_get_attr(domain, DOMAIN_ATTR_PTBASE, &ptbase);
->  }
-> 
-> Then 'domain' can be used like any other iommu domain to map and
-> unmap iova addresses in the pagetable.
-> 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
-> 
->  drivers/iommu/arm-smmu.c | 219 ++++++++++++++++++++++++++++++++++++---
->  drivers/iommu/arm-smmu.h |   1 +
->  2 files changed, 204 insertions(+), 16 deletions(-)
-[...]
-> @@ -1653,6 +1836,10 @@ static struct iommu_ops arm_smmu_ops = {
->  	.get_resv_regions	= arm_smmu_get_resv_regions,
->  	.put_resv_regions	= generic_iommu_put_resv_regions,
->  	.def_domain_type	= arm_smmu_def_domain_type,
-> +	.dev_has_feat		= arm_smmu_dev_has_feat,
-> +	.dev_enable_feat	= arm_smmu_dev_enable_feat,
-> +	.dev_disable_feat	= arm_smmu_dev_disable_feat,
-> +	.aux_attach_dev		= arm_smmu_aux_attach_dev,
+for the patchset.
 
-To be complete this also needs dev_feat_enabled() and aux_detach_dev() ops
+Cheers,
+-Paul
 
-Thanks,
-Jean
+> Suman Anna: Please test on your side and confirm that it addresses=20
+> the Omap
+> regression.
+>=20
+> Applies on top of rproc-next (7dcef3988eed)
+>=20
+> Thanks,
+> Mathieu
+>=20
+> [1].=20
+> https://lore.kernel.org/linux-remoteproc/20200515104340.10473-1-paul@crap=
+ouillou.net/T/#t
+>=20
+> Mathieu Poirier (2):
+>   remoteproc: ingenic: Move clock handling to prepare/unprepare
+>     callbacks
+>   Revert "remoteproc: Add support for runtime PM"
+>=20
+>  drivers/remoteproc/ingenic_rproc.c   | 84=20
+> +++++++++-------------------
+>  drivers/remoteproc/remoteproc_core.c | 17 +-----
+>  2 files changed, 27 insertions(+), 74 deletions(-)
+>=20
+> --
+> 2.25.1
+>=20
+
+
