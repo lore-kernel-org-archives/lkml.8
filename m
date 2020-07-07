@@ -4,73 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06812C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA7ED20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385882073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KtfiWAoC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HBvBoIuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbgGGOBO (ORCPT
+        id S1728294AbgGGOBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:01:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47918 "EHLO
+        Tue, 7 Jul 2020 10:01:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728253AbgGGOBL (ORCPT
+        with ESMTP id S1728263AbgGGOBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:01:11 -0400
+        Tue, 7 Jul 2020 10:01:13 -0400
 Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81140C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:01:11 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id o11so45292430wrv.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:01:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD07C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:01:13 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z13so45262704wrw.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vhaBeVx21COzmeKvnb9gJbc8Z89FUyhuQpmdHktQvNU=;
-        b=KtfiWAoCLK/CcBzFXZH0DW+6gnwMZ2c+Afoe7FlgDiLH/DcOmeTzvT3CLZ28OGCcLk
-         BUMwFTWdx9lJz0VKuH/Y0B3Y1mi4EzQtjsGBgL1VwD4zIDyaSJKOp9N3OGwr0p1XvkwK
-         wY8TeV3ixEerfVcYgVoT74cyeUVJ4DQ/n5prdBAU6gTD8jcov5a8/KoS47ByMuhEYize
-         jEiVEC4KeZVxshjRGg8fBBFvEia+tj0ZDrICFHZMvaLfpJQ0U04UDOZhgcz6SpHuFn+r
-         Y8fTa1GJHRTF3KbL6oTL43DcMXqaq3QH2Yu+hI2peNaMNNI2etqkDKkLOGVnDoA1ma8H
-         4Tzw==
+        bh=Otr0IW/lc2aubOhQuGn1p9ls5bh+wk/N6Wv8oEf4Osw=;
+        b=HBvBoIuzw1P53PX21z9xl0S2Ei5cCmdfti89y/X22YhzPD8leJdxCyYAe5MqjAAObx
+         t1E1P2P9Mt2oi9isgC0/LHnqeHNKZYWtJaO+qhuy07fzjZUTGXrc+CimfVho9ZGf/ZWU
+         FDKy8A+01W+GzzbMSh0NL/QIw5GrC1SzMU8Ku91XKRykA1P90kFf0lvjwOf9VATuJ2AA
+         9517Y+eDIrAIT5wZd8ZZtjlif5PsJkDCzQ/IYlFfSzlxY79jehb6IrMwyQxTx7/P8qGZ
+         eTJ9g4UC2LIojpNdHyExhVDGr4hCe53uRJOxLjIosZU7CLcCCZeB1c2aAfcu+QhcE4go
+         aC+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vhaBeVx21COzmeKvnb9gJbc8Z89FUyhuQpmdHktQvNU=;
-        b=R6vIia9ZN2TMKlwuIuP/yH/wzVc2ibqq+he9ExRYQMBqX/sHcVb4U40F93ym4bwVn4
-         XTVC7b2Qnkg6oUnhuQ8rgHxcYKXEfg1JsS7JY2921YQdwPZIesS0YLPTzzmyptVfFlHZ
-         Nt2oNp9K1b0aSladBf4FIfRfc2k3b4OUNxUmDsPesoVq51buFTCLKYA+il1phc38Z8nG
-         EhcRrnhebXnMGmCVU3HE9lSudYXSI3bNuSPthk63w1hx7Y4ZWo8TD8w4KDZF/YlTIdYL
-         KKCZnRgVM8mxzAo6fY+EBcpqcaS3K2MqcdY6c74652wvY7mkGCPK+lfDdgzZobXilgTL
-         Fbmg==
-X-Gm-Message-State: AOAM530flpDsC/9h0mBuM3eC/GNcP3B7xc6qgkzESExMHQQgexd5L6vq
-        zV5We6zchAm36Jwo40tIbb3m9o+VV5w=
-X-Google-Smtp-Source: ABdhPJwu+ESA+SEzUKUARUNrHJI/19OQ9CJ+6yAjcqNN7zpyPDfFUIUE0XxR14tt9XDWcrNGAZqbeg==
-X-Received: by 2002:adf:cf0c:: with SMTP id o12mr53592490wrj.265.1594130470272;
-        Tue, 07 Jul 2020 07:01:10 -0700 (PDT)
+        bh=Otr0IW/lc2aubOhQuGn1p9ls5bh+wk/N6Wv8oEf4Osw=;
+        b=Y0RidMfxyRmnlPH7nEBqZu2XPvo+GXor+Mk181pHrIs5mSl9fLWHD7s9T64gzjCDeE
+         5M0/BpUyzMIH7awcXu3MTvZ3r9HHCsEG0GnM2ijP4BQ7XUTTmbrsIKmKsFMSJN5R92p/
+         yoroGygUwtNh5UPZSdZ1EtGrjhyWTYPtMlxupiAnbUAJ5JRqunppC7RR7O/yxIHRzmC0
+         p7V9eRVrdM+qkL267CWlJzBD3EbzF9A4XWnVpjE0rS7WGZcyudIM/s6whQdyKw2j2bqE
+         Kkp5t6L/GBYuFTUo1reVhCIidZ0QlANzJsNii8FA8p6uLOEI5Jqa0UbwluQpjRGzkEn1
+         IgQA==
+X-Gm-Message-State: AOAM533JeO7wB27pJCm8DYvRNU8wBBKJ0kS3Q6VzeCBCenhM5FyhmAcA
+        75vgVLHG/sFMLUUc/UFfKfB6vw==
+X-Google-Smtp-Source: ABdhPJyMIkqrJx6U0TAgCC1Ldg2yjfRozO5omk7C8zyrNAPXTCsDDxyptx/G91iGoIUhvFmHoTGxBQ==
+X-Received: by 2002:adf:e647:: with SMTP id b7mr57813003wrn.170.1594130471901;
+        Tue, 07 Jul 2020 07:01:11 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id z25sm1102823wmk.28.2020.07.07.07.01.09
+        by smtp.gmail.com with ESMTPSA id z25sm1102823wmk.28.2020.07.07.07.01.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:01:09 -0700 (PDT)
+        Tue, 07 Jul 2020 07:01:11 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 09/10] scsi: libfc: fc_disc: Fix-up some incorrectly referenced function parameters
-Date:   Tue,  7 Jul 2020 15:00:54 +0100
-Message-Id: <20200707140055.2956235-10-lee.jones@linaro.org>
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        megaraidlinux.pdl@broadcom.com
+Subject: [PATCH 10/10] scsi: megaraid: megaraid_sas: Convert forward-declarations to prototypes
+Date:   Tue,  7 Jul 2020 15:00:55 +0100
+Message-Id: <20200707140055.2956235-11-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707140055.2956235-1-lee.jones@linaro.org>
 References: <20200707140055.2956235-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -79,50 +83,132 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/libfc/fc_disc.c:343: warning: Function parameter or member 'disc' not described in 'fc_disc_gpn_ft_req'
- drivers/scsi/libfc/fc_disc.c:343: warning: Excess function parameter 'lport' description in 'fc_disc_gpn_ft_req'
- drivers/scsi/libfc/fc_disc.c:380: warning: Function parameter or member 'disc' not described in 'fc_disc_gpn_ft_parse'
- drivers/scsi/libfc/fc_disc.c:380: warning: Excess function parameter 'lport' description in 'fc_disc_gpn_ft_parse'
- drivers/scsi/libfc/fc_disc.c:498: warning: Function parameter or member 'disc_arg' not described in 'fc_disc_gpn_ft_resp'
- drivers/scsi/libfc/fc_disc.c:498: warning: Excess function parameter 'lp_arg' description in 'fc_disc_gpn_ft_resp'
+ drivers/scsi/megaraid/megaraid_sas_base.c:240:5: warning: no previous prototype for ‘megasas_readl’ [-Wmissing-prototypes]
+ 240 | u32 megasas_readl(struct megasas_instance *instance,
+ | ^~~~~~~~~~~~~
+ drivers/scsi/megaraid/megaraid_sas_base.c:301:21: warning: no previous prototype for ‘megasas_get_cmd’ [-Wmissing-prototypes]
+ 301 | struct megasas_cmd *megasas_get_cmd(struct megasas_instance
+ | ^~~~~~~~~~~~~~~
+ drivers/scsi/megaraid/megaraid_sas_base.c:327:1: warning: no previous prototype for ‘megasas_return_cmd’ [-Wmissing-prototypes]
+ 327 | megasas_return_cmd(struct megasas_instance *instance, struct megasas_cmd *cmd)
+ | ^~~~~~~~~~~~~~~~~~
+ drivers/scsi/megaraid/megaraid_sas_base.c:1088:1: warning: no previous prototype for ‘megasas_issue_polled’ [-Wmissing-prototypes]
+ 1088 | megasas_issue_polled(struct megasas_instance *instance, struct megasas_cmd *cmd)
+ | ^~~~~~~~~~~~~~~~~~~~
+ drivers/scsi/megaraid/megaraid_sas_base.c:2149:6: warning: no previous prototype for ‘megaraid_sas_kill_hba’ [-Wmissing-prototypes]
+ 2149 | void megaraid_sas_kill_hba(struct megasas_instance *instance)
+ | ^~~~~~~~~~~~~~~~~~~~~
+ drivers/scsi/megaraid/megaraid_sas_base.c:2186:1: warning: no previous prototype for ‘megasas_check_and_restore_queue_depth’ [-Wmissing-prototypes]
+ 2186 | megasas_check_and_restore_queue_depth(struct megasas_instance *instance)
+ | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ drivers/scsi/megaraid/megaraid_sas_base.c:2263:6: warning: no previous prototype for ‘megasas_start_timer’ [-Wmissing-prototypes]
+ 2263 | void megasas_start_timer(struct megasas_instance *instance)
+ | ^~~~~~~~~~~~~~~~~~~
+ drivers/scsi/megaraid/megaraid_sas_base.c:2579:5: warning: no previous prototype for ‘megasas_sriov_start_heartbeat’ [-Wmissing-prototypes]
+ 2579 | int megasas_sriov_start_heartbeat(struct megasas_instance *instance,
+ | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ drivers/scsi/megaraid/megaraid_sas_base.c:4292:6: warning: no previous prototype for ‘megasas_free_cmds’ [-Wmissing-prototypes]
+ 4292 | void megasas_free_cmds(struct megasas_instance *instance)
+ | ^~~~~~~~~~~~~~~~~
+ drivers/scsi/megaraid/megaraid_sas_base.c:4329:5: warning: no previous prototype for ‘megasas_alloc_cmds’ [-Wmissing-prototypes]
+ 4329 | int megasas_alloc_cmds(struct megasas_instance *instance)
+ | ^~~~~~~~~~~~~~~~~~
 
-Cc: Hannes Reinecke <hare@suse.de>
+Cc: Kashyap Desai <kashyap.desai@broadcom.com>
+Cc: Sumit Saxena <sumit.saxena@broadcom.com>
+Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Cc: megaraidlinux.pdl@broadcom.com
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/libfc/fc_disc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas.h        | 25 +++++++++++++++++-
+ drivers/scsi/megaraid/megaraid_sas_fusion.c | 29 ---------------------
+ 2 files changed, 24 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
-index 2b865c6423e29..428f40cfd1c36 100644
---- a/drivers/scsi/libfc/fc_disc.c
-+++ b/drivers/scsi/libfc/fc_disc.c
-@@ -337,7 +337,7 @@ static void fc_disc_error(struct fc_disc *disc, struct fc_frame *fp)
+diff --git a/drivers/scsi/megaraid/megaraid_sas.h b/drivers/scsi/megaraid/megaraid_sas.h
+index af2c7a2a95657..5c8037fca5fc6 100644
+--- a/drivers/scsi/megaraid/megaraid_sas.h
++++ b/drivers/scsi/megaraid/megaraid_sas.h
+@@ -2683,8 +2683,31 @@ void megasas_return_cmd_fusion(struct megasas_instance *instance,
+ 	struct megasas_cmd_fusion *cmd);
+ int megasas_issue_blocked_cmd(struct megasas_instance *instance,
+ 	struct megasas_cmd *cmd, int timeout);
+-void __megasas_return_cmd(struct megasas_instance *instance,
++void megasas_return_cmd(struct megasas_instance *instance,
+ 	struct megasas_cmd *cmd);
++u32 megasas_readl(struct megasas_instance *instance,
++		  const volatile void __iomem *addr);
++void megasas_free_cmds(struct megasas_instance *instance);
++struct megasas_cmd *megasas_get_cmd(struct megasas_instance *instance);
++void megaraid_sas_kill_hba(struct megasas_instance *instance);
++void megasas_complete_cmd(struct megasas_instance *instance,
++		     struct megasas_cmd *cmd, u8 alt_status);
++int wait_and_poll(struct megasas_instance *instance, struct megasas_cmd *cmd,
++		  int seconds);
++
++int megasas_alloc_cmds(struct megasas_instance *instance);
++int megasas_clear_intr_fusion(struct megasas_instance *instance);
++int megasas_issue_polled(struct megasas_instance *instance,
++			 struct megasas_cmd *cmd);
++void megasas_check_and_restore_queue_depth(struct megasas_instance *instance);
++
++int megasas_transition_to_ready(struct megasas_instance *instance, int ocr);
++void megaraid_sas_kill_hba(struct megasas_instance *instance);
++
++extern u32 megasas_dbg_lvl;
++int megasas_sriov_start_heartbeat(struct megasas_instance *instance,
++				  int initial);
++void megasas_start_timer(struct megasas_instance *instance);
+ 
+ void megasas_return_mfi_mpt_pthr(struct megasas_instance *instance,
+ 	struct megasas_cmd *cmd_mfi, struct megasas_cmd_fusion *cmd_fusion);
+diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+index a0cf55776361c..fd0f40bc1795d 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -48,34 +48,7 @@
+ #include "megaraid_sas.h"
+ 
+ 
+-extern void megasas_free_cmds(struct megasas_instance *instance);
+-extern struct megasas_cmd *megasas_get_cmd(struct megasas_instance
+-					   *instance);
+-extern void
+-megasas_complete_cmd(struct megasas_instance *instance,
+-		     struct megasas_cmd *cmd, u8 alt_status);
+-int
+-wait_and_poll(struct megasas_instance *instance, struct megasas_cmd *cmd,
+-	      int seconds);
+-
+-void
+-megasas_return_cmd(struct megasas_instance *instance, struct megasas_cmd *cmd);
+-int megasas_alloc_cmds(struct megasas_instance *instance);
+-int
+-megasas_clear_intr_fusion(struct megasas_instance *instance);
+-int
+-megasas_issue_polled(struct megasas_instance *instance,
+-		     struct megasas_cmd *cmd);
+-void
+-megasas_check_and_restore_queue_depth(struct megasas_instance *instance);
+-
+-int megasas_transition_to_ready(struct megasas_instance *instance, int ocr);
+-void megaraid_sas_kill_hba(struct megasas_instance *instance);
+ 
+-extern u32 megasas_dbg_lvl;
+-int megasas_sriov_start_heartbeat(struct megasas_instance *instance,
+-				  int initial);
+-void megasas_start_timer(struct megasas_instance *instance);
+ extern struct megasas_mgmt_info megasas_mgmt_info;
+ extern unsigned int resetwaittime;
+ extern unsigned int dual_qdepth_disable;
+@@ -84,8 +57,6 @@ static void megasas_free_reply_fusion(struct megasas_instance *instance);
+ static inline
+ void megasas_configure_queue_sizes(struct megasas_instance *instance);
+ static void megasas_fusion_crash_dump(struct megasas_instance *instance);
+-extern u32 megasas_readl(struct megasas_instance *instance,
+-			 const volatile void __iomem *addr);
  
  /**
-  * fc_disc_gpn_ft_req() - Send Get Port Names by FC-4 type (GPN_FT) request
-- * @lport: The discovery context
-+ * @disc: The discovery context
-  */
- static void fc_disc_gpn_ft_req(struct fc_disc *disc)
- {
-@@ -370,7 +370,7 @@ static void fc_disc_gpn_ft_req(struct fc_disc *disc)
- 
- /**
-  * fc_disc_gpn_ft_parse() - Parse the body of the dNS GPN_FT response.
-- * @lport: The local port the GPN_FT was received on
-+ * @disc:  The descovery context
-  * @buf:   The GPN_FT response buffer
-  * @len:   The size of response buffer
-  *
-@@ -488,7 +488,7 @@ static void fc_disc_timeout(struct work_struct *work)
-  * fc_disc_gpn_ft_resp() - Handle a response frame from Get Port Names (GPN_FT)
-  * @sp:	    The sequence that the GPN_FT response was received on
-  * @fp:	    The GPN_FT response frame
-- * @lp_arg: The discovery context
-+ * @disc_arg: The discovery context
-  *
-  * Locking Note: This function is called without disc mutex held, and
-  *		 should do all its processing with the mutex held
+  * megasas_adp_reset_wait_for_ready -	initiate chip reset and wait for
 -- 
 2.25.1
 
