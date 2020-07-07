@@ -2,53 +2,52 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93705206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B54920663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594136041;
-	bh=bvPcKlwlDuQ39NgeyRvOJPem66G0vhDdmIycbdbyolo=;
+	s=default; t=1594136046;
+	bh=dSaS6VukJ9Y7DdEb7vl9l6SSOIzzZN4BxSsGV00mMdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UsiFN9WXa+1DZOcRvFw1l2VGsCdJYFjyAbgjcPKFAsIcyqgUZYqETdrZGJAgid4XK
-	 OP+hd09kNEvmDXjK2Oe1TtG7g4Hmux1FnDY/KZF0ThLFhZ+xrS3AbtxVzidu/lZSIi
-	 Ryew1x+PKT6df8h59bssaHTz+RlH/7xlsp9GGHuU=
+	b=r+zz1eBeO5SeFkF1WdAQ6mF2IoiShiMe5xDXsNMg5Dn2t1wQu3kDt1csChaJSzT+p
+	 VCjosPm+00MnHd34fECg5XHuUr9Zu4Q4NNVSd4d/Z+6V3h+ZkdM5XuUX6rbFcHTvB9
+	 SDKxwrtgCOgN3zl/lo9NYmMxnPl//naZMD5WdMYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbgGGPeA (ORCPT
+        id S1729381AbgGGPTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59558 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:19:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728620AbgGGPTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:19:47 -0400
+        id S1729051AbgGGPTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:19:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1388920663;
-        Tue,  7 Jul 2020 15:19:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7123820663;
+        Tue,  7 Jul 2020 15:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135186;
-        bh=bvPcKlwlDuQ39NgeyRvOJPem66G0vhDdmIycbdbyolo=;
+        s=default; t=1594135176;
+        bh=dSaS6VukJ9Y7DdEb7vl9l6SSOIzzZN4BxSsGV00mMdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hTV6uEiwaeAYLJiBn4Xtl33KdeVpUMBSvx73GmWTcuep5Kt2aIS+C86KREFBCqY0t
-         bIUVfu1kB3GfOpwZOvP3g8hVCId47AwfkEZVX9aPO3gzX/GgoC23tVA3yaz4YxXG30
-         smz1HeFlsjdPILpamkhpDEzpSCZn3BFqMiUMRnIE=
+        b=K2cHZ5mzL2c6XK3qjUNSuYLdQVdHW6+iV/vIvGVJyH0k24yt9r7sDsd3mfFPXHsou
+         IJJrHnsanz6apww+N9Hcm4d/Q8E1otNo2+GlFbPDlZWynFOPzoDZthpfB6nIyqo1BV
+         jjiURQhmJ73Ej5PrC709O8rKLEPr5bQENtY1nKLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
         Steve French <stfrench@microsoft.com>,
-        Aurelien Aptel <aaptel@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 23/36] SMB3: Honor posix flag for multiuser mounts
-Date:   Tue,  7 Jul 2020 17:17:15 +0200
-Message-Id: <20200707145750.232853396@linuxfoundation.org>
+        Aurelien Aptel <aaptel@suse.com>
+Subject: [PATCH 4.19 29/36] SMB3: Honor seal flag for multiuser mounts
+Date:   Tue,  7 Jul 2020 17:17:21 +0200
+Message-Id: <20200707145750.548775360@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -63,49 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Paul Aurich <paul@darkrain42.org>
 
-[ Upstream commit 5391b8e1b7b7e5cfa2dd4ffdc4b8c6b64dfd1866 ]
+commit cc15461c73d7d044d56c47e869a215e49bd429c8 upstream.
 
-The flag from the primary tcon needs to be copied into the volume info
-so that cifs_get_tcon will try to enable extensions on the per-user
-tcon. At that point, since posix extensions must have already been
-enabled on the superblock, don't try to needlessly adjust the mount
-flags.
+Ensure multiuser SMB3 mounts use encryption for all users' tcons if the
+mount options are configured to require encryption. Without this, only
+the primary tcon and IPC tcons are guaranteed to be encrypted. Per-user
+tcons would only be encrypted if the server was configured to require
+encryption.
 
-Fixes: ce558b0e17f8 ("smb3: Add posix create context for smb3.11 posix mounts")
-Fixes: b326614ea215 ("smb3: allow "posix" mount option to enable new SMB311 protocol extensions")
 Signed-off-by: Paul Aurich <paul@darkrain42.org>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Steve French <stfrench@microsoft.com>
 Reviewed-by: Aurelien Aptel <aaptel@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/cifs/connect.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 9e569d60c636b..136de62f351a7 100644
+---
+ fs/cifs/connect.c |    1 +
+ 1 file changed, 1 insertion(+)
+
 --- a/fs/cifs/connect.c
 +++ b/fs/cifs/connect.c
-@@ -4602,6 +4602,7 @@ cifs_construct_tcon(struct cifs_sb_info *cifs_sb, kuid_t fsuid)
- 	vol_info->nohandlecache = master_tcon->nohandlecache;
- 	vol_info->local_lease = master_tcon->local_lease;
- 	vol_info->no_linux_ext = !master_tcon->unix_ext;
-+	vol_info->linux_ext = master_tcon->posix_extensions;
+@@ -4605,6 +4605,7 @@ cifs_construct_tcon(struct cifs_sb_info
+ 	vol_info->linux_ext = master_tcon->posix_extensions;
  	vol_info->sectype = master_tcon->ses->sectype;
  	vol_info->sign = master_tcon->ses->sign;
++	vol_info->seal = master_tcon->seal;
  
-@@ -4629,10 +4630,6 @@ cifs_construct_tcon(struct cifs_sb_info *cifs_sb, kuid_t fsuid)
- 		goto out;
- 	}
- 
--	/* if new SMB3.11 POSIX extensions are supported do not remap / and \ */
--	if (tcon->posix_extensions)
--		cifs_sb->mnt_cifs_flags |= CIFS_MOUNT_POSIX_PATHS;
--
- 	if (cap_unix(ses))
- 		reset_cifs_unix_caps(0, tcon, NULL, vol_info);
- 
--- 
-2.25.1
-
+ 	rc = cifs_set_vol_auth(vol_info, master_tcon->ses);
+ 	if (rc) {
 
 
