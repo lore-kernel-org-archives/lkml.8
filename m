@@ -2,165 +2,69 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0093C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99E67206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:18:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="u//BIq20"
+	by mail.kernel.org (Postfix) with ESMTP id 65BB9206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgGGJSr (ORCPT
+        id S1727097AbgGGJTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:18:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgGGJSr (ORCPT
+        Tue, 7 Jul 2020 05:19:37 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:33745 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725874AbgGGJTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:18:47 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3278C061755;
-        Tue,  7 Jul 2020 02:18:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PEPkpJ1U8/XdtEMupOhDNtE/L5C3GtSPL7IkTCZNSMY=; b=u//BIq20gBtm03+DHzBIfHpOo
-        c3f7BD9SX4z6mbRxtXLNTaGYT7qcYXauf2PDiEJWmh3LYiu2wYfwE8Dsffj8bEoN4gf1i49YwKDPW
-        yZjaMuVNZvJFnR6itt6Etd1kxP4foHLxPsjPuxZQEMT/hV9ZlhMw2GBUfCXSfsuAlnlu3zeBNkzFG
-        l2/GJU7EjlJWHNFWqHUapU1NaSC80Go76p1CAwAh+fsWmkch6UuQMMaybL5o0xsXIc8W0xaVWF46R
-        dDxmKr1HClbrZNoLaQYb8YyA5TyP588oOTZyvXwMwl/0cIP1ncDm6FzEeaINK/OEtZb8/AlRqIBeY
-        oG7CusBVQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36396)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jsjkI-0006n7-A9; Tue, 07 Jul 2020 10:18:34 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jsjkF-0008O5-Dj; Tue, 07 Jul 2020 10:18:31 +0100
-Date:   Tue, 7 Jul 2020 10:18:31 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Michael Walle <michael@walle.cc>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>
-Subject: Re: [PATCH net-next v4 1/3] net: dsa: felix: move USXGMII defines to
- common place
-Message-ID: <20200707091831.GX1551@shell.armlinux.org.uk>
-References: <20200706220255.14738-1-michael@walle.cc>
- <20200706220255.14738-2-michael@walle.cc>
+        Tue, 7 Jul 2020 05:19:37 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=dust.li@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U2.VupE_1594113573;
+Received: from DustLi-Macbook.local(mailfrom:dust.li@linux.alibaba.com fp:SMTPD_---0U2.VupE_1594113573)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 07 Jul 2020 17:19:34 +0800
+Subject: Re: [PATCH] docs: fix incorrent references to DMA APIs
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200628143017.17399-1-dust.li@linux.alibaba.com>
+ <20200705143212.446c50f3@lwn.net>
+From:   "dust.li" <dust.li@linux.alibaba.com>
+Message-ID: <e6a5b7ce-a974-78ec-874e-d5dca167cf2a@linux.alibaba.com>
+Date:   Tue, 7 Jul 2020 17:19:33 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706220255.14738-2-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200705143212.446c50f3@lwn.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 12:02:53AM +0200, Michael Walle wrote:
-> The ENETC has the same PCS PHY and thus needs the same definitions. Move
-> them into the common enetc_mdio.h header which has already the macros
-> for the SGMII PCS.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/net/dsa/ocelot/felix_vsc9959.c | 21 ---------------------
->  include/linux/fsl/enetc_mdio.h         | 19 +++++++++++++++++++
->  2 files changed, 19 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
-> index 19614537b1ba..53453c7015f6 100644
-> --- a/drivers/net/dsa/ocelot/felix_vsc9959.c
-> +++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
-> @@ -16,29 +16,8 @@
->  #define VSC9959_VCAP_IS2_CNT		1024
->  #define VSC9959_VCAP_IS2_ENTRY_WIDTH	376
->  #define VSC9959_VCAP_PORT_CNT		6
-> -
-> -/* TODO: should find a better place for these */
-> -#define USXGMII_BMCR_RESET		BIT(15)
-> -#define USXGMII_BMCR_AN_EN		BIT(12)
-> -#define USXGMII_BMCR_RST_AN		BIT(9)
-> -#define USXGMII_BMSR_LNKS(status)	(((status) & GENMASK(2, 2)) >> 2)
-> -#define USXGMII_BMSR_AN_CMPL(status)	(((status) & GENMASK(5, 5)) >> 5)
-> -#define USXGMII_ADVERTISE_LNKS(x)	(((x) << 15) & BIT(15))
-> -#define USXGMII_ADVERTISE_FDX		BIT(12)
-> -#define USXGMII_ADVERTISE_SPEED(x)	(((x) << 9) & GENMASK(11, 9))
-> -#define USXGMII_LPA_LNKS(lpa)		((lpa) >> 15)
-> -#define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
-> -#define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
-> -
->  #define VSC9959_TAS_GCL_ENTRY_MAX	63
->  
-> -enum usxgmii_speed {
-> -	USXGMII_SPEED_10	= 0,
-> -	USXGMII_SPEED_100	= 1,
-> -	USXGMII_SPEED_1000	= 2,
-> -	USXGMII_SPEED_2500	= 4,
-> -};
-> -
->  static const u32 vsc9959_ana_regmap[] = {
->  	REG(ANA_ADVLEARN,			0x0089a0),
->  	REG(ANA_VLANMASK,			0x0089a4),
-> diff --git a/include/linux/fsl/enetc_mdio.h b/include/linux/fsl/enetc_mdio.h
-> index 2d9203314865..611a7b0d5f10 100644
-> --- a/include/linux/fsl/enetc_mdio.h
-> +++ b/include/linux/fsl/enetc_mdio.h
-> @@ -28,6 +28,25 @@ enum enetc_pcs_speed {
->  	ENETC_PCS_SPEED_2500	= 2,
->  };
->  
-> +#define USXGMII_BMCR_RESET		BIT(15)
-> +#define USXGMII_BMCR_AN_EN		BIT(12)
-> +#define USXGMII_BMCR_RST_AN		BIT(9)
 
-Aren't these just redefinitions of the standard BMCR definitions?
+On 7/6/20 4:32 AM, Jonathan Corbet wrote:
+> On Sun, 28 Jun 2020 22:30:17 +0800
+> Dust Li <dust.li@linux.alibaba.com> wrote:
+>
+>> dma-api
+>> dma-api-howto
+>> dma-attributes
+>> dma-isa-lpc
+>>
+>> The above 4 documents have been renamed and moved to
+>> Documentation/core-api/, but there are still some old references
+>> refer to the old files, this patch tries to correct them.
+>>
+>> Fixes: 728c1471b544 ("docs: move DMA kAPI to Documentation/core-api")
+>> Signed-off-by: Dust Li <dust.li@linux.alibaba.com>
+> Thanks, but these have already been addressed in the docs tree.
+>
+> jon
 
-> +#define USXGMII_BMSR_LNKS(status)	(((status) & GENMASK(2, 2)) >> 2)
-> +#define USXGMII_BMSR_AN_CMPL(status)	(((status) & GENMASK(5, 5)) >> 5)
 
-Aren't these just redefinitions of the standard BMSR definitions just
-differently?
+Got it. Thanks for reply, sorry I didn't notice that.
 
-Maybe convert the code to use the standard definitions found in
-include/uapi/linux/mii.h and include/uapi/linux/mdio.h?
-
-> +#define USXGMII_ADVERTISE_LNKS(x)	(((x) << 15) & BIT(15))
-> +#define USXGMII_ADVERTISE_FDX		BIT(12)
-> +#define USXGMII_ADVERTISE_SPEED(x)	(((x) << 9) & GENMASK(11, 9))
-> +#define USXGMII_LPA_LNKS(lpa)		((lpa) >> 15)
-> +#define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
-> +#define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
-> +
-> +enum usxgmii_speed {
-> +	USXGMII_SPEED_10	= 0,
-> +	USXGMII_SPEED_100	= 1,
-> +	USXGMII_SPEED_1000	= 2,
-> +	USXGMII_SPEED_2500	= 4,
-> +};
-> +
-
-I've asked in other patch sets for the USXGMII definitions to be moved
-into some header that everyone can use - there is nothing enetc specific
-about the USXGMII word definitions.  Please move them to a header file
-so that everyone can use them.
-
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
