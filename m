@@ -2,482 +2,196 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7364FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41541206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943E1206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DC1kiwRg"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bBfIegz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgGGOp4 (ORCPT
+        id S1728184AbgGGOqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:45:56 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60784 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgGGOpz (ORCPT
+        Tue, 7 Jul 2020 10:46:39 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:14063 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGGOqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:45:55 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 067EjfgK054235;
-        Tue, 7 Jul 2020 09:45:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594133141;
-        bh=hwmGth6kz7aQbdeUWnXr1PY/LfP0g2QrwGgxtf5E2Q8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DC1kiwRgF2F2DIxIiOEJg9GFijd1WXfSX9kZ2RpBvo+z7RxP6c7lDSI0wiwA6PO6e
-         FxhO2aHpWqgr12bSHgcMAFTPuyF8b18XLji8FBjqF0he+Ttvqk4WwOselK6ChJTVRO
-         rwnUS49GpGxpEbuC1BYAOacSg9XRKphYpoOMi/iw=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 067EjfKL067285
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jul 2020 09:45:41 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 7 Jul
- 2020 09:45:41 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 7 Jul 2020 09:45:41 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 067EjZrA010366;
-        Tue, 7 Jul 2020 09:45:35 -0500
-Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
- communication
-To:     Jason Wang <jasowang@redhat.com>
-CC:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>
-References: <20200702082143.25259-1-kishon@ti.com>
- <20200702055026-mutt-send-email-mst@kernel.org>
- <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
- <14c6cad7-9361-7fa4-e1c6-715ccc7e5f6b@ti.com>
- <59fd6a0b-8566-44b7-3dae-bb52b468219b@redhat.com>
- <ce9eb6a5-cd3a-a390-5684-525827b30f64@ti.com>
- <da2b671c-b05d-a57f-7bdf-8b1043a41240@redhat.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <fee8a0fb-f862-03bd-5ede-8f105b6af529@ti.com>
-Date:   Tue, 7 Jul 2020 20:15:34 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 7 Jul 2020 10:46:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594133200; x=1625669200;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=lXfPh1cIq2OX1oePMsmgXGjuzMq12soLCAiX+ykF0N8=;
+  b=bBfIegz+I3wbqhc6egBYWnq3wVF0lJXsrV2ivXUDsl+ZsLcy/apv/gN9
+   Re5X8AavG/Q7mvEOiEkVegRbZgrLi+XElbOKXFqlBVkxbCQ0LsVMnxgXN
+   kg4VCkFjW0Pyi5EunstFFbnPW779+cxFzDIWBwdlemHsvF5FqAju6v9HU
+   E=;
+IronPort-SDR: aOSU1x9erEaGD6R9Jbjwon6LvaU8Q11pczIrtEFRU7M22h/wSdrAKPmX2dliSByZGfodw+vuOk
+ uk6Oz041Y5OQ==
+X-IronPort-AV: E=Sophos;i="5.75,324,1589241600"; 
+   d="scan'208";a="40469771"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-579b7f5b.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 07 Jul 2020 14:46:35 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-579b7f5b.us-west-2.amazon.com (Postfix) with ESMTPS id 04473A1FF6;
+        Tue,  7 Jul 2020 14:46:31 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 14:46:31 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.214) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 14:46:13 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <rppt@kernel.org>, <sblbir@amazon.com>,
+        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v5 00/11] DAMON: Support Physical Memory Address Space Monitoring
+Date:   Tue, 7 Jul 2020 16:45:29 +0200
+Message-ID: <20200707144540.21216-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <da2b671c-b05d-a57f-7bdf-8b1043a41240@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.214]
+X-ClientProxiedBy: EX13D35UWC001.ant.amazon.com (10.43.162.197) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+From: SeongJae Park <sjpark@amazon.de>
 
-On 7/7/2020 3:17 PM, Jason Wang wrote:
-> 
-> On 2020/7/6 下午5:32, Kishon Vijay Abraham I wrote:
->> Hi Jason,
->>
->> On 7/3/2020 12:46 PM, Jason Wang wrote:
->>> On 2020/7/2 下午9:35, Kishon Vijay Abraham I wrote:
->>>> Hi Jason,
->>>>
->>>> On 7/2/2020 3:40 PM, Jason Wang wrote:
->>>>> On 2020/7/2 下午5:51, Michael S. Tsirkin wrote:
->>>>>> On Thu, Jul 02, 2020 at 01:51:21PM +0530, Kishon Vijay Abraham I wrote:
->>>>>>> This series enhances Linux Vhost support to enable SoC-to-SoC
->>>>>>> communication over MMIO. This series enables rpmsg communication between
->>>>>>> two SoCs using both PCIe RC<->EP and HOST1-NTB-HOST2
->>>>>>>
->>>>>>> 1) Modify vhost to use standard Linux driver model
->>>>>>> 2) Add support in vring to access virtqueue over MMIO
->>>>>>> 3) Add vhost client driver for rpmsg
->>>>>>> 4) Add PCIe RC driver (uses virtio) and PCIe EP driver (uses vhost) for
->>>>>>>       rpmsg communication between two SoCs connected to each other
->>>>>>> 5) Add NTB Virtio driver and NTB Vhost driver for rpmsg communication
->>>>>>>       between two SoCs connected via NTB
->>>>>>> 6) Add configfs to configure the components
->>>>>>>
->>>>>>> UseCase1 :
->>>>>>>
->>>>>>>     VHOST RPMSG                     VIRTIO RPMSG
->>>>>>>          +                               +
->>>>>>>          |                               |
->>>>>>>          |                               |
->>>>>>>          |                               |
->>>>>>>          |                               |
->>>>>>> +-----v------+                 +------v-------+
->>>>>>> |   Linux    |                 |     Linux    |
->>>>>>> |  Endpoint  |                 | Root Complex |
->>>>>>> |            <----------------->              |
->>>>>>> |            |                 |              |
->>>>>>> |    SOC1    |                 |     SOC2     |
->>>>>>> +------------+                 +--------------+
->>>>>>>
->>>>>>> UseCase 2:
->>>>>>>
->>>>>>>         VHOST RPMSG                                      VIRTIO RPMSG
->>>>>>>              +                                                 +
->>>>>>>              |                                                 |
->>>>>>>              |                                                 |
->>>>>>>              |                                                 |
->>>>>>>              |                                                 |
->>>>>>>       +------v------+                                   +------v------+
->>>>>>>       |             |                                   |             |
->>>>>>>       |    HOST1    |                                   |    HOST2    |
->>>>>>>       |             |                                   |             |
->>>>>>>       +------^------+                                   +------^------+
->>>>>>>              |                                                 |
->>>>>>>              |                                                 |
->>>>>>> +---------------------------------------------------------------------+
->>>>>>> |  +------v------+                                   +------v------+  |
->>>>>>> |  |             |                                   |             |  |
->>>>>>> |  |     EP      |                                   |     EP      |  |
->>>>>>> |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
->>>>>>> |  |             <----------------------------------->             |  |
->>>>>>> |  |             |                                   |             |  |
->>>>>>> |  |             |                                   |             |  |
->>>>>>> |  |             |  SoC With Multiple EP Instances   |             |  |
->>>>>>> |  |             |  (Configured using NTB Function)  |             |  |
->>>>>>> |  +-------------+                                   +-------------+  |
->>>>>>> +---------------------------------------------------------------------+
->>>>>>>
->>>>>>> Software Layering:
->>>>>>>
->>>>>>> The high-level SW layering should look something like below. This series
->>>>>>> adds support only for RPMSG VHOST, however something similar should be
->>>>>>> done for net and scsi. With that any vhost device (PCI, NTB, Platform
->>>>>>> device, user) can use any of the vhost client driver.
->>>>>>>
->>>>>>>
->>>>>>>        +----------------+  +-----------+  +------------+  +----------+
->>>>>>>        |  RPMSG VHOST   |  | NET VHOST |  | SCSI VHOST |  |    X     |
->>>>>>>        +-------^--------+  +-----^-----+  +-----^------+  +----^-----+
->>>>>>>                |                 |              |              |
->>>>>>>                |                 |              |              |
->>>>>>>                |                 |              |              |
->>>>>>> +-----------v-----------------v--------------v--------------v----------+
->>>>>>> |                            VHOST CORE                                |
->>>>>>> +--------^---------------^--------------------^------------------^-----+
->>>>>>>             |               |                    |                  |
->>>>>>>             |               |                    |                  |
->>>>>>>             |               |                    |                  |
->>>>>>> +--------v-------+  +----v------+  +----------v----------+  +----v-----+
->>>>>>> |  PCI EPF VHOST |  | NTB VHOST |  |PLATFORM DEVICE VHOST|  |    X     |
->>>>>>> +----------------+  +-----------+  +---------------------+  +----------+
->>>>>>>
->>>>>>> This was initially proposed here [1]
->>>>>>>
->>>>>>> [1] ->
->>>>>>> https://lore.kernel.org/r/2cf00ec4-1ed6-f66e-6897-006d1a5b6390@ti.com
->>>>>> I find this very interesting. A huge patchset so will take a bit
->>>>>> to review, but I certainly plan to do that. Thanks!
->>>>> Yes, it would be better if there's a git branch for us to have a look.
->>>> I've pushed the branch
->>>> https://github.com/kishon/linux-wip.git vhost_rpmsg_pci_ntb_rfc
->>>
->>> Thanks
->>>
->>>
->>>>> Btw, I'm not sure I get the big picture, but I vaguely feel some of the
->>>>> work is
->>>>> duplicated with vDPA (e.g the epf transport or vhost bus).
->>>> This is about connecting two different HW systems both running Linux and
->>>> doesn't necessarily involve virtualization.
->>>
->>> Right, this is something similar to VOP
->>> (Documentation/misc-devices/mic/mic_overview.rst). The different is the
->>> hardware I guess and VOP use userspace application to implement the device.
->> I'd also like to point out, this series tries to have communication between two
->> SoCs in vendor agnostic way. Since this series solves for 2 usecases (PCIe
->> RC<->EP and NTB), for the NTB case it directly plugs into NTB framework and any
->> of the HW in NTB below should be able to use a virtio-vhost communication
->>
->> #ls drivers/ntb/hw/
->> amd  epf  idt  intel  mscc
->>
->> And similarly for the PCIe RC<->EP communication, this adds a generic endpoint
->> function driver and hence any SoC that supports configurable PCIe endpoint can
->> use virtio-vhost communication
->>
->> # ls drivers/pci/controller/dwc/*ep*
->> drivers/pci/controller/dwc/pcie-designware-ep.c
->> drivers/pci/controller/dwc/pcie-uniphier-ep.c
->> drivers/pci/controller/dwc/pci-layerscape-ep.c
-> 
-> 
-> Thanks for those backgrounds.
-> 
-> 
->>
->>>
->>>>    So there is no guest or host as in
->>>> virtualization but two entirely different systems connected via PCIe cable,
->>>> one
->>>> acting as guest and one as host. So one system will provide virtio
->>>> functionality reserving memory for virtqueues and the other provides vhost
->>>> functionality providing a way to access the virtqueues in virtio memory.
->>>> One is
->>>> source and the other is sink and there is no intermediate entity. (vhost was
->>>> probably intermediate entity in virtualization?)
->>>
->>> (Not a native English speaker) but "vhost" could introduce some confusion for
->>> me since it was use for implementing virtio backend for userspace drivers. I
->>> guess "vringh" could be better.
->> Initially I had named this vringh but later decided to choose vhost instead of
->> vringh. vhost is still a virtio backend (not necessarily userspace) though it
->> now resides in an entirely different system. Whatever virtio is for a frontend
->> system, vhost can be that for a backend system. vring can be for accessing
->> virtqueue and can be used either in frontend or backend.
-> 
-> 
-> Ok.
-> 
-> 
->>>
->>>>> Have you considered to implement these through vDPA?
->>>> IIUC vDPA only provides an interface to userspace and an in-kernel rpmsg
->>>> driver
->>>> or vhost net driver is not provided.
->>>>
->>>> The HW connection looks something like https://pasteboard.co/JfMVVHC.jpg
->>>> (usecase2 above),
->>>
->>> I see.
->>>
->>>
->>>>    all the boards run Linux. The middle board provides NTB
->>>> functionality and board on either side provides virtio/vhost functionality and
->>>> transfer data using rpmsg.
->>>
->>> So I wonder whether it's worthwhile for a new bus. Can we use the existed
->>> virtio-bus/drivers? It might work as, except for the epf transport, we can
->>> introduce a epf "vhost" transport driver.
->> IMHO we'll need two buses one for frontend and other for backend because the
->> two components can then co-operate/interact with each other to provide a
->> functionality. Though both will seemingly provide similar callbacks, they are
->> both provide symmetrical or complimentary funcitonality and need not be same or
->> identical.
->>
->> Having the same bus can also create sequencing issues.
->>
->> If you look at virtio_dev_probe() of virtio_bus
->>
->> device_features = dev->config->get_features(dev);
->>
->> Now if we use same bus for both front-end and back-end, both will try to
->> get_features when there has been no set_features. Ideally vhost device should
->> be initialized first with the set of features it supports. Vhost and virtio
->> should use "status" and "features" complimentarily and not identically.
-> 
-> 
-> Yes, but there's no need for doing status/features passthrough in epf vhost
-> drivers.b
-> 
-> 
->>
->> virtio device (or frontend) cannot be initialized before vhost device (or
->> backend) gets initialized with data such as features. Similarly vhost (backend)
->> cannot access virqueues or buffers before virtio (frontend) sets
->> VIRTIO_CONFIG_S_DRIVER_OK whereas that requirement is not there for virtio as
->> the physical memory for virtqueues are created by virtio (frontend).
-> 
-> 
-> epf vhost drivers need to implement two devices: vhost(vringh) device and
-> virtio device (which is a mediated device). The vhost(vringh) device is doing
-> feature negotiation with the virtio device via RC/EP or NTB. The virtio device
-> is doing feature negotiation with local virtio drivers. If there're feature
-> mismatch, epf vhost drivers and do mediation between them.
+DAMON[1] programming interface users can extend DAMON for any address space by
+configuring the address-space specific low level primitives with appropriate
+ones including their own implementations.  However, because the implementation
+for the virtual address space is only available now, the users should implement
+their own for other address spaces.  Worse yet, the user space users who rely
+on the debugfs interface and user space tool, cannot implement their own.
 
-Here epf vhost should be initialized with a set of features for it to negotiate
-either as vhost device or virtio device no? Where should the initial feature
-set for epf vhost come from?
-> 
-> 
->>
->>> It will have virtqueues but only used for the communication between itself and
->>> uppter virtio driver. And it will have vringh queues which will be probe by
->>> virtio epf transport drivers. And it needs to do datacopy between virtqueue and
->>> vringh queues.
->>>
->>> It works like:
->>>
->>> virtio drivers <- virtqueue/virtio-bus -> epf vhost drivers <- vringh
->>> queue/epf>
->>>
->>> The advantages is that there's no need for writing new buses and drivers.
->> I think this will work however there is an addtional copy between vringh queue
->> and virtqueue,
-> 
-> 
-> I think not? E.g in use case 1), if we stick to virtio bus, we will have:
-> 
-> virtio-rpmsg (EP) <- virtio ring(1) -> epf vhost driver (EP) <- virtio ring(2)
-> -> virtio pci (RC) <-> virtio rpmsg (RC)
+This patchset implements another reference implementation of the low level
+primitives for the physical memory address space.  With this change, hence, the
+kernel space users can monitor both the virtual and the physical address spaces
+by simply changing the configuration in the runtime.  Further, this patchset
+links the implementation to the debugfs interface and the user space tool for
+the user space users.
 
-IIUC epf vhost driver (EP) will access virtio ring(2) using vringh? And virtio
-ring(2) is created by virtio pci (RC).
-> 
-> What epf vhost driver did is to read from virtio ring(1) about the buffer len
-> and addr and them DMA to Linux(RC)?
+Note that the implementation supports only the user memory, as same to the idle
+page access tracking feature.
 
-okay, I made some optimization here where vhost-rpmsg using a helper writes a
-buffer from rpmsg's upper layer directly to remote Linux (RC) as against here
-were it has to be first written to virtio ring (1).
+[1] https://lore.kernel.org/linux-mm/20200706115322.29598-1-sjpark@amazon.com/
 
-Thinking how this would look for NTB
-virtio-rpmsg (HOST1) <- virtio ring(1) -> NTB(HOST1) <-> NTB(HOST2)  <- virtio
-ring(2) -> virtio-rpmsg (HOST2)
+Baseline and Complete Git Trees
+===============================
 
-Here the NTB(HOST1) will access the virtio ring(2) using vringh?
+The patches are based on the v5.7 plus DAMON v17 patchset[1] and DAMOS RFC v13
+patchset[2].  You can also clone the complete git tree:
 
-Do you also think this will work seamlessly with virtio_net.c, virtio_blk.c?
+    $ git clone git://github.com/sjp38/linux -b cdamon/rfc/v5
 
-I'd like to get clarity on two things in the approach you suggested, one is
-features (since epf vhost should ideally be transparent to any virtio driver)
-and the other is how certain inputs to virtio device such as number of buffers
-be determined.
+The web is also available:
+https://github.com/sjp38/linux/releases/tag/cdamon/rfc/v5
 
-Thanks again for your suggestions!
+[1] https://lore.kernel.org/linux-mm/20200706115322.29598-1-sjpark@amazon.com/
+[2] https://lore.kernel.org/linux-mm/20200707093805.4775-1-sjpark@amazon.com/
 
-Regards
-Kishon
+Sequence of Patches
+===================
 
-> 
-> 
->> in some cases adds latency because of forwarding interrupts
->> between vhost and virtio driver, vhost drivers providing features (which means
->> it has to be aware of which virtio driver will be connected).
->> virtio drivers (front end) generally access the buffers from it's local memory
->> but when in backend it can access over MMIO (like PCI EPF or NTB) or userspace.
->>> Does this make sense?
->> Two copies in my opinion is an issue but lets get others opinions as well.
-> 
-> 
-> Sure.
-> 
-> 
->>
->> Thanks for your suggestions!
-> 
-> 
-> You're welcome.
-> 
-> Thanks
-> 
-> 
->>
->> Regards
->> Kishon
->>
->>> Thanks
->>>
->>>
->>>> Thanks
->>>> Kishon
->>>>
->>>>> Thanks
->>>>>
->>>>>
->>>>>>> Kishon Vijay Abraham I (22):
->>>>>>>      vhost: Make _feature_ bits a property of vhost device
->>>>>>>      vhost: Introduce standard Linux driver model in VHOST
->>>>>>>      vhost: Add ops for the VHOST driver to configure VHOST device
->>>>>>>      vringh: Add helpers to access vring in MMIO
->>>>>>>      vhost: Add MMIO helpers for operations on vhost virtqueue
->>>>>>>      vhost: Introduce configfs entry for configuring VHOST
->>>>>>>      virtio_pci: Use request_threaded_irq() instead of request_irq()
->>>>>>>      rpmsg: virtio_rpmsg_bus: Disable receive virtqueue callback when
->>>>>>>        reading messages
->>>>>>>      rpmsg: Introduce configfs entry for configuring rpmsg
->>>>>>>      rpmsg: virtio_rpmsg_bus: Add Address Service Notification support
->>>>>>>      rpmsg: virtio_rpmsg_bus: Move generic rpmsg structure to
->>>>>>>        rpmsg_internal.h
->>>>>>>      virtio: Add ops to allocate and free buffer
->>>>>>>      rpmsg: virtio_rpmsg_bus: Use virtio_alloc_buffer() and
->>>>>>>        virtio_free_buffer()
->>>>>>>      rpmsg: Add VHOST based remote processor messaging bus
->>>>>>>      samples/rpmsg: Setup delayed work to send message
->>>>>>>      samples/rpmsg: Wait for address to be bound to rpdev for sending
->>>>>>>        message
->>>>>>>      rpmsg.txt: Add Documentation to configure rpmsg using configfs
->>>>>>>      virtio_pci: Add VIRTIO driver for VHOST on Configurable PCIe Endpoint
->>>>>>>        device
->>>>>>>      PCI: endpoint: Add EP function driver to provide VHOST interface
->>>>>>>      NTB: Add a new NTB client driver to implement VIRTIO functionality
->>>>>>>      NTB: Add a new NTB client driver to implement VHOST functionality
->>>>>>>      NTB: Describe the ntb_virtio and ntb_vhost client in the documentation
->>>>>>>
->>>>>>>     Documentation/driver-api/ntb.rst              |   11 +
->>>>>>>     Documentation/rpmsg.txt                       |   56 +
->>>>>>>     drivers/ntb/Kconfig                           |   18 +
->>>>>>>     drivers/ntb/Makefile                          |    2 +
->>>>>>>     drivers/ntb/ntb_vhost.c                       |  776 +++++++++++
->>>>>>>     drivers/ntb/ntb_virtio.c                      |  853 ++++++++++++
->>>>>>>     drivers/ntb/ntb_virtio.h                      |   56 +
->>>>>>>     drivers/pci/endpoint/functions/Kconfig        |   11 +
->>>>>>>     drivers/pci/endpoint/functions/Makefile       |    1 +
->>>>>>>     .../pci/endpoint/functions/pci-epf-vhost.c    | 1144 ++++++++++++++++
->>>>>>>     drivers/rpmsg/Kconfig                         |   10 +
->>>>>>>     drivers/rpmsg/Makefile                        |    3 +-
->>>>>>>     drivers/rpmsg/rpmsg_cfs.c                     |  394 ++++++
->>>>>>>     drivers/rpmsg/rpmsg_core.c                    |    7 +
->>>>>>>     drivers/rpmsg/rpmsg_internal.h                |  136 ++
->>>>>>>     drivers/rpmsg/vhost_rpmsg_bus.c               | 1151 +++++++++++++++++
->>>>>>>     drivers/rpmsg/virtio_rpmsg_bus.c              |  184 ++-
->>>>>>>     drivers/vhost/Kconfig                         |    1 +
->>>>>>>     drivers/vhost/Makefile                        |    2 +-
->>>>>>>     drivers/vhost/net.c                           |   10 +-
->>>>>>>     drivers/vhost/scsi.c                          |   24 +-
->>>>>>>     drivers/vhost/test.c                          |   17 +-
->>>>>>>     drivers/vhost/vdpa.c                          |    2 +-
->>>>>>>     drivers/vhost/vhost.c                         |  730 ++++++++++-
->>>>>>>     drivers/vhost/vhost_cfs.c                     |  341 +++++
->>>>>>>     drivers/vhost/vringh.c                        |  332 +++++
->>>>>>>     drivers/vhost/vsock.c                         |   20 +-
->>>>>>>     drivers/virtio/Kconfig                        |    9 +
->>>>>>>     drivers/virtio/Makefile                       |    1 +
->>>>>>>     drivers/virtio/virtio_pci_common.c            |   25 +-
->>>>>>>     drivers/virtio/virtio_pci_epf.c               |  670 ++++++++++
->>>>>>>     include/linux/mod_devicetable.h               |    6 +
->>>>>>>     include/linux/rpmsg.h                         |    6 +
->>>>>>>     {drivers/vhost => include/linux}/vhost.h      |  132 +-
->>>>>>>     include/linux/virtio.h                        |    3 +
->>>>>>>     include/linux/virtio_config.h                 |   42 +
->>>>>>>     include/linux/vringh.h                        |   46 +
->>>>>>>     samples/rpmsg/rpmsg_client_sample.c           |   32 +-
->>>>>>>     tools/virtio/virtio_test.c                    |    2 +-
->>>>>>>     39 files changed, 7083 insertions(+), 183 deletions(-)
->>>>>>>     create mode 100644 drivers/ntb/ntb_vhost.c
->>>>>>>     create mode 100644 drivers/ntb/ntb_virtio.c
->>>>>>>     create mode 100644 drivers/ntb/ntb_virtio.h
->>>>>>>     create mode 100644 drivers/pci/endpoint/functions/pci-epf-vhost.c
->>>>>>>     create mode 100644 drivers/rpmsg/rpmsg_cfs.c
->>>>>>>     create mode 100644 drivers/rpmsg/vhost_rpmsg_bus.c
->>>>>>>     create mode 100644 drivers/vhost/vhost_cfs.c
->>>>>>>     create mode 100644 drivers/virtio/virtio_pci_epf.c
->>>>>>>     rename {drivers/vhost => include/linux}/vhost.h (66%)
->>>>>>>
->>>>>>> -- 
->>>>>>> 2.17.1
->>>>>>>
-> 
+The sequence of patches is as follow.
+
+The first 5 patches allow the user space users manually set the monitoring
+regions.  The 1st and 2nd patches implements the features in the debugfs
+interface and the user space tool .  Following two patches each implement
+unittests (the 3rd patch) and selftests (the 4th patch) for the new feature.
+Finally, the 5th patch documents this new feature.
+
+Following 6 patches implement the physical memory monitoring.  The 6th patch
+exports rmap essential functions to GPL modules as those will be used by the
+DAMON's implementation of the low level primitives for the physical memory
+address space.  The 7th patch implements the low level primitives.  The 8th and
+the 9th patches links the feature to the debugfs and the user space tool,
+respectively.  The 10th patch further implement a handy NUMA specific memory
+monitoring feature on the user space tool.  Finally, the 11th patch documents
+this new features.
+
+Patch History
+=============
+
+Changes from RFC v4
+(https://lore.kernel.org/linux-mm/20200616140813.17863-1-sjpark@amazon.com/)
+ - Support NUMA specific physical memory monitoring
+
+Changes from RFC v3
+(https://lore.kernel.org/linux-mm/20200609141941.19184-1-sjpark@amazon.com/)
+ - Export rmap functions
+ - Reorganize for physical memory monitoring support only
+ - Clean up debugfs code
+
+Changes from RFC v2
+(https://lore.kernel.org/linux-mm/20200603141135.10575-1-sjpark@amazon.com/)
+ - Support the physical memory monitoring with the user space tool
+ - Use 'pfn_to_online_page()' (David Hildenbrand)
+ - Document more detail on random 'pfn' and its safeness (David Hildenbrand)
+
+Changes from RFC v1
+(https://lore.kernel.org/linux-mm/20200409094232.29680-1-sjpark@amazon.com/)
+ - Provide the reference primitive implementations for the physical memory
+ - Connect the extensions with the debugfs interface
+
+SeongJae Park (11):
+  mm/damon/debugfs: Allow users to set initial monitoring target regions
+  tools/damon: Support init target regions specification
+  mm/damon-test: Add more unit tests for 'init_regions'
+  selftests/damon/_chk_record: Do not check number of gaps
+  Docs/damon: Document 'initial_regions' feature
+  mm/rmap: Export essential functions for rmap_run
+  mm/damon: Implement callbacks for physical memory monitoring
+  mm/damon/debugfs: Support physical memory monitoring
+  tools/damon/record: Support physical memory monitoring
+  tools/damon/record: Support NUMA specific recording
+  Docs/damon: Document physical memory monitoring support
+
+ Documentation/admin-guide/mm/damon/faq.rst    |   7 +-
+ Documentation/admin-guide/mm/damon/index.rst  |   1 -
+ .../admin-guide/mm/damon/mechanisms.rst       |  29 +-
+ Documentation/admin-guide/mm/damon/plans.rst  |   7 -
+ Documentation/admin-guide/mm/damon/usage.rst  |  80 +++-
+ include/linux/damon.h                         |   5 +
+ mm/damon-test.h                               |  53 +++
+ mm/damon.c                                    | 374 +++++++++++++++++-
+ mm/rmap.c                                     |   2 +
+ mm/util.c                                     |   1 +
+ tools/damon/_damon.py                         |  41 ++
+ tools/damon/_paddr_layout.py                  | 158 ++++++++
+ tools/damon/heats.py                          |   2 +-
+ tools/damon/record.py                         |  60 ++-
+ tools/damon/schemes.py                        |  12 +-
+ tools/testing/selftests/damon/_chk_record.py  |   6 -
+ 16 files changed, 783 insertions(+), 55 deletions(-)
+ delete mode 100644 Documentation/admin-guide/mm/damon/plans.rst
+ create mode 100644 tools/damon/_paddr_layout.py
+
+-- 
+2.17.1
+
