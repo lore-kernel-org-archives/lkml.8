@@ -2,109 +2,215 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67411C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E714206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:50:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594147856;
-	bh=q1dR/jTPZVK8xl37KWCnPKEDb2AOMCbqOvChW4D47CU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RBuHecflei2HBTYJqTeIm+prvqXyW3kz+lNWf/iyY4QFcHC1lBt+Zh2ygTZCh/Y+e
-	 F2C7NKYbjZuHl/jvCE9CLARqVvVTp36xPTEG4O42x9dfer3HYl+z/Tc0LCJbowM9aY
-	 aXW3vGQzfPVS9RpOxDjnWbr+Nnpl+Gxdivkan2aE=
+	by mail.kernel.org (Postfix) with ESMTP id 4734C206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:53:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="amIbU5He"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgGGSuz convert rfc822-to-8bit (ORCPT
+        id S1728318AbgGGSxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:50:55 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36788 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbgGGSuz (ORCPT
+        Tue, 7 Jul 2020 14:53:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37556 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728183AbgGGSxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 14:50:55 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 17so193930wmo.1;
-        Tue, 07 Jul 2020 11:50:53 -0700 (PDT)
+        Tue, 7 Jul 2020 14:53:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594148028;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qd7GvFWxfTyKmbpo/F2p4KRc33HgtT765IWzuAxWIYI=;
+        b=amIbU5Hen67T1YXf0ewg06Ypcg1FocY2IxneqeZrN6AVDNSsTnoxuVGbc8K6CT2AYFirdf
+        CquM+jdzlLaUkVlzMfO8lP6Vdt7ThwciNudSWGQQTdstIknELnsVtJ14JCX00gYOY63Iq5
+        ziGoXa55u6MFEX0v8eAmhDr/0+fAMG0=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-303-VElsKiqMNwSuGUBqB-2SpA-1; Tue, 07 Jul 2020 14:53:44 -0400
+X-MC-Unique: VElsKiqMNwSuGUBqB-2SpA-1
+Received: by mail-qk1-f197.google.com with SMTP id o26so29216395qko.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 11:53:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=m/t4PDWucGx9E7+lQRxXkI+ujQ2IZO1RtvREvMleNek=;
-        b=XYeRo8UuqhamN5mxrIR+8yPg8YOy2sTA77fV1exURMx1f/eYvCpMashZ6MsTQuuxSq
-         PHZJSmm52aColg3xteJFnkDJf/HgMR8rKdDO5uwJjQUl3+DmssxODEEUiBbj/hqw+oDH
-         QlQgpqq7KITu7HjQZ/ogYmLgJjh8lH4ROPvzW/nfHBLLg8HEEZNGn1umScGjxw6H8E7Z
-         C9uJVG3UtIQsKDk4QDdEYPIBuMEuehWbkYjNkRZf4AvMC7WBw+JnDKY9gf+OT0cr0Xrv
-         VNRax9ytJOk+g1o5+ObsNcyq4uGDUri41NhY338KaaFDOMGTd8KVA+QNGEym3BHNkGd5
-         iFhw==
-X-Gm-Message-State: AOAM532YeTzozaK3JgBFKjDhy69Q02HaFCrToLi2I9r0a19YFQ77p2LN
-        e3iQEYSrkgFqNpc39fkLEhc=
-X-Google-Smtp-Source: ABdhPJyeYxQzWHl3HP96w4mkIZMaje9wIX3EMZDnNv2vf2IMnQnRi6Mcgqa62eD6LSqOcYGyqZ2I6A==
-X-Received: by 2002:a7b:cc08:: with SMTP id f8mr5884261wmh.106.1594147852592;
-        Tue, 07 Jul 2020 11:50:52 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id p25sm1909109wmg.39.2020.07.07.11.50.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jul 2020 11:50:51 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 20:50:49 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH v2 1/8] dt-bindings: pwm: samsung: Do not require
- interrupts on Exynos SoCs
-Message-ID: <20200707185049.GA4698@kozik-lap>
-References: <20200702155149.12854-1-krzk@kernel.org>
- <20200706094157.kyag7p5df3vo54wx@pengutronix.de>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Qd7GvFWxfTyKmbpo/F2p4KRc33HgtT765IWzuAxWIYI=;
+        b=Rc/zFXsVjj1BkswYGkQy/Rzrw4OAzZmAAr13PLk4pvawSoFQY7vHyUgVrFss1ywj6v
+         IdDqDTDBOPyq6Ehlnmd2Rgp3+5TlVXWmHy+h4e2iB+cHOiuVPQek+eF0beSRh6JbLE3I
+         gyvVgEcDW7mrOkqcEinvfVXDcjiXnkM6++eoGcFPtJP1iF8xX2wUbD1R5Gm1vvnxjpHn
+         kOPc+zNuTPB3rI2oKXILuet2EBC/G2woyP3/eT73kJneqCqOUlchOnkiWqEnLHdhbA+H
+         SWCgIy0SueCST4Yme7wy5eNn/2FCyfOEtaD9VLrKOleTpN8RV08qDRsOFdqbWRim2Uzd
+         jYsw==
+X-Gm-Message-State: AOAM531IykQvKszpMfNgZPEPCAd4TXGxmqufI4GwMxYK3HJOQthSdJrK
+        l3trE66aL3sXPOl169B31E+YJqaDjnBmuNl/+m0hM0RjPp9DWzPVgAiCW8bKerw+3udqUSEefuO
+        Mnwl4O5ruKglNQbfb/RHskcVO
+X-Received: by 2002:a37:64cd:: with SMTP id y196mr44880289qkb.303.1594148024014;
+        Tue, 07 Jul 2020 11:53:44 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyR00NCuC+wWsuRVMna6tP+BHj3IB5WxyNjpTX+b7L1EfMmtMFmi7fdb8X2pT7uHkbWKKSCLA==
+X-Received: by 2002:a37:64cd:: with SMTP id y196mr44880268qkb.303.1594148023641;
+        Tue, 07 Jul 2020 11:53:43 -0700 (PDT)
+Received: from [192.168.1.4] (198-84-170-103.cpe.teksavvy.com. [198.84.170.103])
+        by smtp.gmail.com with ESMTPSA id x29sm20420381qtx.74.2020.07.07.11.53.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 11:53:42 -0700 (PDT)
+Subject: Re: [RFC PATCH for 5.8 3/4] rseq: Introduce RSEQ_FLAG_RELIABLE_CPU_ID
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fw@deneb.enyo.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>
+References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
+ <20200706204913.20347-4-mathieu.desnoyers@efficios.com>
+ <87fta3zstr.fsf@mid.deneb.enyo.de>
+ <2088331919.943.1594118895344.JavaMail.zimbra@efficios.com>
+ <874kqjzhkb.fsf@mid.deneb.enyo.de>
+ <378862525.1039.1594123580789.JavaMail.zimbra@efficios.com>
+From:   Carlos O'Donell <carlos@redhat.com>
+Organization: Red Hat
+Message-ID: <d6b28b3e-9866-ce6f-659e-2c0dba4cd527@redhat.com>
+Date:   Tue, 7 Jul 2020 14:53:41 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <378862525.1039.1594123580789.JavaMail.zimbra@efficios.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200706094157.kyag7p5df3vo54wx@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 11:41:57AM +0200, Uwe Kleine-König wrote:
-> On Thu, Jul 02, 2020 at 05:51:42PM +0200, Krzysztof Kozlowski wrote:
-> > The bindings required interrupts for all SoCs but actually only the PWM
-> > timer clocksource (for S3C/S5P SoCs) was using them.  This PWM timer
-> > clocksource driver is not used on Exynos SoCs thus the interrupts can be
-> > marked as optional.
-> > 
-> > Reported-by: Alim Akhtar <alim.akhtar@samsung.com>
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+On 7/7/20 8:06 AM, Mathieu Desnoyers wrote:
+> ----- On Jul 7, 2020, at 7:32 AM, Florian Weimer fw@deneb.enyo.de wrote:
 > 
-> LGTM,
+>> * Mathieu Desnoyers:
+>>
+>>> Those are very good points. One possibility we have would be to let
+>>> glibc do the rseq registration without the RSEQ_FLAG_RELIABLE_CPU_ID
+>>> flag. On kernels with the bug present, the cpu_id field is still good
+>>> enough for typical uses of sched_getcpu() which does not appear to
+>>> have a very strict correctness requirement on returning the right
+>>> cpu number.
+>>>
+>>> Then libraries and applications which require a reliable cpu_id
+>>> field could check this on their own by calling rseq with the
+>>> RSEQ_FLAG_RELIABLE_CPU_ID flag. This would not make the state more
+>>> complex in __rseq_abi, and let each rseq user decide about its own
+>>> fate: whether it uses rseq or keeps using an rseq-free fallback.
+>>>
+>>> I am still tempted to allow combining RSEQ_FLAG_REGISTER |
+>>> RSEQ_FLAG_RELIABLE_CPU_ID for applications which would not be using
+>>> glibc, and want to check this flag on thread registration.
+>>
+>> Well, you could add a bug fix level field to the __rseq_abi variable.
 > 
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Even though I initially planned to make the struct rseq_abi extensible,
+> the __rseq_abi variable ends up being fix-sized, so we need to be very
+> careful in choosing what we place in the remaining 12 bytes of padding.
+> I suspect we'd want to keep 8 bytes to express a pointer to an
+> "extended" structure.
 > 
-> I'd expect it is ok to let this patch go in via whatever way the other
-> patches go. (But it's Thierry who has the authority here.)
+> I wonder if a bug fix level "version" is the right approach. We could
+> instead have a bitmask of fixes, which the application could independently
+> check. For instance, some applications may care about cpu_id field
+> reliability, and others not.
 
-This patch is independent so it can go either through PWM tree or DT
-bindings.  Usually the latter, so Rob was picking it up.
+I agree with Florian.
 
-Thanks for ack.
+Developers are not interested in a bitmask of fixes.
 
-Best regards,
-Krzysztof
+They want a version they can check and that at a given version everything
+works as expected.
+
+In reality today this is the kernel version.
+
+So rseq is broken from a developer perspective until they can get a new
+kernel or an agreement from their downstream vendor that revision Z of
+the kernel they are using has the fix you've just committed.
+
+Essentially this problem solves itself at level higher than the interfaces
+we're talking about today.
+
+Encoding this as a bitmask of fixes is an overengineered solution for a
+problem that the downstream communities already know how to solve.
+
+I would strongly suggest a "version" or nothing.
+
+>> Then applications could check if the kernel has the appropriate level
+>> of non-buggyness.  But the same thing could be useful for many other
+>> kernel interfaces, and I haven't seen such a fix level value for them.
+>> What makes rseq so special?
+> 
+> I guess my only answer is because I care as a user of the system call, and
+> what is a system call without users ? I have real applications which work
+> today with end users deploying them on various kernels, old and new, and I
+> want to take advantage of this system call to speed them up. However, if I
+> have to choose between speed and correctness (in other words, not crashing
+> a critical application), I will choose correctness. So if I cannot detect
+> that I can safely use the system call, it becomes pretty much useless even
+> for my own use-cases.
+
+Yes.
+
+In the case of RHEL we have *tons*  of users in the same predicament.
+
+They just wait until the RHEL kernel team releases a fixed kernel version
+and check for that version and deploy with that version.
+
+Likewise every other user of a kernel. They solve it by asking their
+kernel provider, internal or external, to verify the fix is applied to
+the deployment kernel.
+
+If they are an ISV they have to test and deploy similar strategies for
+multiple kernel version.
+
+By trying to automate this you are encoding into the API some level of
+package management concepts e.g. patch level, revision level, etc.
+
+This is difficult to do without a more generalized API. Why do it just
+for rseq? Why do it with the few bits you have?
+
+It's not a great fit IMO. Just let the kernel version be the arbiter of
+correctness.
+ 
+>> It won't help with the present bug, but maybe we should add an rseq
+>> API sub-call that blocks future rseq registration for the thread.
+>> Then we can add a glibc tunable that flips off rseq reliably if people
+>> do not want to use it for some reason (and switch to the non-rseq
+>> fallback code instead).  But that's going to help with future bugs
+>> only.
+> 
+> I don't think it's needed. All I really need is to have _some_ way to
+> let lttng-ust or liburcu query whether the cpu_id field is reliable. This
+> state does not have to be made quickly accessible to other libraries,
+> nor does it have to be shared between libraries. It would allow each
+> user library or application to make its own mind on whether it can use
+> rseq or not.
+ 
+That check is "kernel version > x.y.z" :-)
+
+or
+
+"My kernel vendor told me it's fixed."
+
+-- 
+Cheers,
+Carlos.
 
