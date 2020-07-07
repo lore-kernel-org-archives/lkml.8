@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C39C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34E80207C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A946320773
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135128;
-	bh=qzPHmZKYuLcVw+C0AcHXnE/OZJMRQVPaCQdrtUOUQj0=;
+	s=default; t=1594135131;
+	bh=D4YRO9MFSrZLokgGMY3kWA+jrpa9nXrTLSjB8vCGRQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fOvf9xUB5ZO9V8JaMbimWwcnw/gQVBF9FDocBwgOgrxnYktKzXstnDOr78L7miwZD
-	 SYEwq6KT+KKEWKzQ6yD5Q+rWsWbHNb54XObJSRgnEEP4SSIAZm198TfPyuOjo74Hrc
-	 a13Rpd+9fATtyHRy6kNbbntiZ56yda/vy2G7VDVk=
+	b=yhhO2jxFOaK0oJSL50HU7ZP4MadRVQVQVmRUqS04eRx0jl4TVvQL3pS2HCAsoL5BL
+	 uETQndghdLcz1+g9+ISqLCX1IdeQbM6RCR0zS50dcMY6pUU9FPsYzqe6C0fjT6bnZw
+	 0SfG0MYFZfKUU9nylc35jhn+vtltNRjNJbwCnZtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgGGPSr (ORCPT
+        id S1729269AbgGGPSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:18:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:18:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729216AbgGGPSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:18:45 -0400
+        id S1729216AbgGGPSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:18:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E65F20773;
-        Tue,  7 Jul 2020 15:18:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7E1D20738;
+        Tue,  7 Jul 2020 15:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135124;
-        bh=qzPHmZKYuLcVw+C0AcHXnE/OZJMRQVPaCQdrtUOUQj0=;
+        s=default; t=1594135127;
+        bh=D4YRO9MFSrZLokgGMY3kWA+jrpa9nXrTLSjB8vCGRQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQSLNDpmw/tFPkdXieajM6Y4H9ldGoNUv91mUI2okqMl8INtcHkdNDtgNEQpJP3QT
-         RUjoF7TW07EWozoaozMGCLq+TpHguSgn3GgWvJbMUs2T/sBtLsS24alwvTybIB7e/3
-         PaORaBFkJTrqNGasNX7yDqMy0heq87e3qL2ZxPbQ=
+        b=wVMSd4xIlaAluwIB5zOXowyB4ZsmgKHTsZK3+Sn4T52ogzMZwXM4dcqtiohTRHSuz
+         vSBJYL7KG+BEFUDZUvm3F02ZBEZibPmfT8ykFTf/HRYkomo44BDbA76htU/8HJdCW0
+         okDwO5UCDJHH6JO/NYLeF6+dgus4Dl/n+uqHPzYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Andersson <pipatron@gmail.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/36] EDAC/amd64: Read back the scrub rate PCI register on F15h
-Date:   Tue,  7 Jul 2020 17:16:55 +0200
-Message-Id: <20200707145749.295372865@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 21/36] drm: sun4i: hdmi: Remove extra HPD polling
+Date:   Tue,  7 Jul 2020 17:17:13 +0200
+Message-Id: <20200707145750.140298346@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -59,45 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit ee470bb25d0dcdf126f586ec0ae6dca66cb340a4 ]
+[ Upstream commit bda8eaa6dee7525f4dac950810a85a88bf6c2ba0 ]
 
-Commit:
+The HPD sense mechanism in Allwinner's old HDMI encoder hardware is more
+or less an input-only GPIO. Other GPIO-based HPD implementations
+directly return the current state, instead of polling for a specific
+state and returning the other if that times out.
 
-  da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
+Remove the I/O polling from sun4i_hdmi_connector_detect() and directly
+return a known state based on the current reading. This also gets rid
+of excessive CPU usage by kworker as reported on Stack Exchange [1] and
+Armbian forums [2].
 
-added support for F15h, model 0x60 CPUs but in doing so, missed to read
-back SCRCTRL PCI config register on F15h CPUs which are *not* model
-0x60. Add that read so that doing
+ [1] https://superuser.com/questions/1515001/debian-10-buster-on-cubietruck-with-bug-in-sun4i-drm-hdmi
+ [2] https://forum.armbian.com/topic/14282-headless-systems-and-sun4i_drm_hdmi-a10a20/
 
-  $ cat /sys/devices/system/edac/mc/mc0/sdram_scrub_rate
-
-can show the previously set DRAM scrub rate.
-
-Fixes: da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
-Reported-by: Anders Andersson <pipatron@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org> #v4.4..
-Link: https://lkml.kernel.org/r/CAKkunMbNWppx_i6xSdDHLseA2QQmGJqj_crY=NF-GZML5np4Vw@mail.gmail.com
+Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200629060032.24134-1-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/amd64_edac.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 268ada29cd987..cbe4158531979 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -261,6 +261,8 @@ static int get_scrub_rate(struct mem_ctl_info *mci)
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+index 8ad36f574df8c..7e7fa8cef2ade 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -242,9 +242,8 @@ sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
+ 	struct sun4i_hdmi *hdmi = drm_connector_to_sun4i_hdmi(connector);
+ 	unsigned long reg;
  
- 		if (pvt->model == 0x60)
- 			amd64_read_pci_cfg(pvt->F2, F15H_M60H_SCRCTRL, &scrubval);
-+		else
-+			amd64_read_pci_cfg(pvt->F3, SCRCTRL, &scrubval);
- 		break;
- 
- 	case 0x17:
+-	if (readl_poll_timeout(hdmi->base + SUN4I_HDMI_HPD_REG, reg,
+-			       reg & SUN4I_HDMI_HPD_HIGH,
+-			       0, 500000)) {
++	reg = readl(hdmi->base + SUN4I_HDMI_HPD_REG);
++	if (reg & SUN4I_HDMI_HPD_HIGH) {
+ 		cec_phys_addr_invalidate(hdmi->cec_adap);
+ 		return connector_status_disconnected;
+ 	}
 -- 
 2.25.1
 
