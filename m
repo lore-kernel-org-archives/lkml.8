@@ -3,721 +3,252 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E10A206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1878206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:15:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oDnQRNKe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoD5s6Eq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgGGRPI (ORCPT
+        id S1728467AbgGGRPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:15:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50068 "EHLO
+        Tue, 7 Jul 2020 13:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbgGGRPH (ORCPT
+        with ESMTP id S1727834AbgGGRPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:15:07 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43F2C08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:15:06 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j4so43617536wrp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 10:15:06 -0700 (PDT)
+        Tue, 7 Jul 2020 13:15:19 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA663C061755;
+        Tue,  7 Jul 2020 10:15:18 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f18so37969193wrs.0;
+        Tue, 07 Jul 2020 10:15:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=fsknguNoZ07OoFgJVvUKLRv6z8mZoUKYL4RqNUVZ7W8=;
-        b=oDnQRNKejXpefTAv1Mu/maBHrGFh6PZw9UoRBMsqsUlsVAhriYzTQbqctAgtrG0CpU
-         DhR5gQIKEA10m+1Hkg4hqXi8H+JcL/npW8WXib44VHmv6wssSlv+XlkMIdvfyVrSjFEi
-         BChZaDrTUJAc2furwO6/K+/h3wKfwNlScjeZcxUAchK6vax7JBmjWJi3o+rlNu+YEFbD
-         TBHGNk7/8kusnBJ5k+3uAVCIjCM5laCjF+R22ZgMJiq0ZPxw28zabrQctF6+3xl1a0fE
-         OGQOA+jzk0Xc2ySnWrh30Ap55+MIjpziVYbM0VnPjGIHZcpqKHg3hvnJG5Yti3+w+feh
-         34yQ==
+        bh=zPaFNN0CwRIrxgMT/Hx12rk1w2uEgsV43cWtsFNawmA=;
+        b=OoD5s6EqQZLxfIp3I7A669VifnUn9Ibnc7LYMSzZ0tIPUiA9Tp+buHQWel8bB9NGk2
+         EGangoBXq+izJzkRL1SnU8OAXuEDSdrGvKiTIwg3pdycFDevybGoENDig+Lin5AzfxWn
+         rV61Zirbp/gFLfE4XdvxvCOlOODfeXWxT96BQOHVqZkX/J+llXtaJhvzMN3duDyx1vmF
+         UtnFxZDDLSvOdsxVgUzYyobE4n4F/ZgGwV+CqNdRYZAjF1GmtCkfutynvWYnuKPjn1wm
+         ymW3Rw/ZTEaVMH6waJzp/4nd8HMM7k76LkNaYVpT4umj4p1Z6H3JkI3G8/Hg1SfAn7v2
+         IxdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fsknguNoZ07OoFgJVvUKLRv6z8mZoUKYL4RqNUVZ7W8=;
-        b=jiDDuoWl3fstzk71Az16q6LIGwridaSuA3J652w+nHFghe0WssZmNTyk3z7VVVsmwi
-         2Ia/8HHozEVritLEOtcjDgeKCicmbsQfjPPDN4MAvs0L0Odow0fUqkG9lX/UWCto/17v
-         uIf3zpuTj12r4qPHB1p/wRnZbFR8NW74c255XXXfkHAYCozM+BDmmcK9E7fOd/KSsEBP
-         MKeI/hszTRNO1gijT6WXZatjzCD8ovSArXYQ68LLPdcGW2A2+WqGC+gt9cSzETNsqOE2
-         6vTKgGfa2qC4EAWeOAKMZSLKxchuKT9maYTBuT771ZVA9iGJ5VE0PQh8gz6pAvro5OTK
-         TMeg==
-X-Gm-Message-State: AOAM532euqTnpYG9WKyCKXl7ILfTbNGwHG5rZtn8SIps7VqlHH8w/tVk
-        NT9EhBOm3IeIKlI8ZsRsenmj/rdMsRk=
-X-Google-Smtp-Source: ABdhPJwPHuJj6lewHF14r9syR3uPj4ORQXiDmSFnOg8KJD8E/ETdp57lspatmrGj+NHaJTgXSGC0sw==
-X-Received: by 2002:a5d:5706:: with SMTP id a6mr19194826wrv.328.1594142105103;
-        Tue, 07 Jul 2020 10:15:05 -0700 (PDT)
-Received: from localhost.localdomain (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
-        by smtp.gmail.com with ESMTPSA id w128sm2237575wmb.19.2020.07.07.10.15.03
+        bh=zPaFNN0CwRIrxgMT/Hx12rk1w2uEgsV43cWtsFNawmA=;
+        b=bBrUUUf2JVcBAHcp8P7U/l62YvlsVWBC4yA6G1YXFjf6RDy85RgK/ngcdPpsVUDluo
+         h3RcpreFKki1YTjUd2DiEMGhkr45E41Q1FJdzNTN8c1OBVAt+wkkNHkIIXshXQZbohPW
+         V1kpaa0w5zCh9RyX7ISKFZp3tU+5ms1r4laEs541Ny10MWIrUQsHHqLmpgBa0YCITRdi
+         ArK810IAF/RtcOP3T5WXsHvXbqF6nfHDBIcC35Q2rK1PbJDyTRGMvlemxXBJPKApR05Y
+         3P2EgZy7TcvtKIxCYyOgtU+K4u8ZnIcbByHTPGLN1h0Nlpfbee3ZrXjLO8Rcr0f4FvmX
+         rXLA==
+X-Gm-Message-State: AOAM531138zjzglc/zRSHI2yYLJ/zYv+Bfw/4D4XwOXW3Ohy7B8Jvm+9
+        qxhZaSponVLGhLKb6up4oag=
+X-Google-Smtp-Source: ABdhPJwhTIoqPYMMiP4fvG9oZ1gOVUngiaKMsqX034M6n5Y/X7x48Jlyu5WLxXmWUrCOj1WsUBIg7A==
+X-Received: by 2002:a5d:6683:: with SMTP id l3mr7880261wru.288.1594142117582;
+        Tue, 07 Jul 2020 10:15:17 -0700 (PDT)
+Received: from localhost.localdomain ([185.200.214.168])
+        by smtp.gmail.com with ESMTPSA id d132sm1872742wmd.35.2020.07.07.10.15.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 10:15:04 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rafael@kernel.org, lukasz.luba@arm.com
-Cc:     amit.kucheria@linaro.org, srinivas.pandruvada@linux.intel.com,
-        rkumbako@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH RFC] powercap/drivers/energy_model: protocode: Add powercap energy model based
-Date:   Tue,  7 Jul 2020 19:14:57 +0200
-Message-Id: <20200707171457.31540-1-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 07 Jul 2020 10:15:16 -0700 (PDT)
+From:   izabela.bakollari@gmail.com
+To:     nhorman@tuxdriver.com, davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        izabela.bakollari@gmail.com
+Subject: [PATCH net-next] dropwatch: Support monitoring of dropped frames
+Date:   Tue,  7 Jul 2020 19:15:15 +0200
+Message-Id: <20200707171515.110818-1-izabela.bakollari@gmail.com>
+X-Mailer: git-send-email 2.18.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the embedded world, the complexity of the SoC leads to an
-increasing number of hotspots which need to be monitored and mitigated
-as a whole in order to prevent the temperature to go above the
-normative and legally stated 'skin temperature'.
+From: Izabela Bakollari <izabela.bakollari@gmail.com>
 
-Another aspect is to sustain the performance for a given power budget,
-for example virtual reality where the user can feel dizziness if the
-GPU performance is capped while a big CPU is processing something
-else. Or reduce the battery charging because the dissipated power is
-too high compared with the power consumed by other devices.
+Dropwatch is a utility that monitors dropped frames by having userspace
+record them over the dropwatch protocol over a file. This augument
+allows live monitoring of dropped frames using tools like tcpdump.
 
-Nowadays, the current thermal daemons are abusing the thermal
-framework cooling device state to force a specific and arbitraty state
-without taking care of the governor decisions. Given the closed loop
-of some governors that can confuse the logic or directly enter in
-a decision conflict.
+With this feature, dropwatch allows two additional commands (start and
+stop interface) which allows the assignment of a net_device to the
+dropwatch protocol. When assinged, dropwatch will clone dropped frames,
+and receive them on the assigned interface, allowing tools like tcpdump
+to monitor for them.
 
-As the number of cooling device support is limited today to the CPU
-and the GPU, the thermal daemons have little control on the power
-dissipation of the system. The out of tree solutions are hacking
-around here and there in the drivers, in the frameworks to have
-control on the devices.
+With this feature, create a dummy ethernet interface (ip link add dev
+dummy0 type dummy), assign it to the dropwatch kernel subsystem, by using
+these new commands, and then monitor dropped frames in real time by
+running tcpdump -i dummy0.
 
-The recent introduction of the energy model allows to get power
-information related to a gpu or a cpu device with a limited support.
-
-Thanks of the current work of Lukasz Luba:
-
-       https://lkml.org/lkml/2020/5/27/406
-
-The energy model is now being improved to be generic and extended to
-all devices, so giving the opportunity to SoC vendor to define the
-device energy model.
-
-On the other side, the powercap infrastructure is a perfect fit to define
-power constraints in a hierarchical way.
-
-The proposal is to use the powercap framework with the energy model in
-order to create a hierarchy of constraints the SoC vendor is able to
-define and assign a power budget on some nodes to cap the power.
-
-Example of constraints hierarchy:
-
-Soc
-  |
-  |-- gpu
-  |
-  `-- package
-        |
-	|-- perfdomain0
-	|         |
-	|         |-- cpu0
-	|         |
-	|         |-- cpu1
-	|         |
-	|         |-- cpu2
-	|         |
-	|         `-- cpu3
-	|
-	`-- perfdomain1
-	          |
-		  |-- cpu4
-		  |
-		  `-- cpu5
-
-The leaves of the tree are the real devices, the intermediate nodes
-are virtual, aggregating the children constraints and power
-characteristics.
-
-For example: cpu[0-3] have 179mW max, 'perfdomain0' has 716mW max,
-cpu[4-5] have 1130mw max each, 'perfordomain1' has 2260mW. It results
-'package' has 2260 + 716 = 2976mW max.
-
-Each node have a weight on a 2^10 basis, in order to reflect the
-percentage of power distribution of the children's node. This
-percentage is used to dispatch the power limit to the children.
-
-For example: package has 2976mW max, the weigths for the children are:
-
-  perfdomain0: (716 * 1024) / 2976 = 246
-  perfdomain1: (2260 * 1024) / 2976 = 778
-
-If we want to apply a power limit constraint of 1500mW at the package
-level, the power limit will be distributed along the children as:
-
-  perfdomain0: (1500 * 246) / 1024 = 360mW
-  perfdomain1: (1500 * 778) / 1024 = 1140mW
-
-This simple approach allows to do a fair distribution of the power
-limit but it will be replaced by a more complex mechanism where the
-power limit will be dynamically adjusted depending on the power
-consumption of the different devices. This is an algorithm with auto
-power balancing with unused power. When an allocated power budget is
-not used by a device, the siblings can share this free power until the
-device needs more power.
-
-The algorithm was presented during the ELC:
-
-https://ossna2020.sched.com/event/c3Wf/ideas-for-finer-grained-control-over-your-heat-budget-amit-kucheria-daniel-lezcano-linaro
-
-Given the complexity of the code, it sounds reasonable to provide a
-first stone of the edifice allowing at least the thermal daemons to
-stop abusing the thermal framework where the primary goal is to
-protect the silicone, not cap the power.
-
-However, one question remains: how do we describe the hierarchy?
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Izabela Bakollari <izabela.bakollari@gmail.com>
 ---
- drivers/powercap/Kconfig       |   8 +
- drivers/powercap/Makefile      |   1 +
- drivers/powercap/powercap_em.c | 485 +++++++++++++++++++++++++++++++++
- include/linux/cpuhotplug.h     |   1 +
- 4 files changed, 495 insertions(+)
- create mode 100644 drivers/powercap/powercap_em.c
+ include/uapi/linux/net_dropmon.h |  3 ++
+ net/core/drop_monitor.c          | 79 +++++++++++++++++++++++++++++++-
+ 2 files changed, 80 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/powercap/Kconfig b/drivers/powercap/Kconfig
-index ebc4d4578339..57f2e9f31560 100644
---- a/drivers/powercap/Kconfig
-+++ b/drivers/powercap/Kconfig
-@@ -43,4 +43,12 @@ config IDLE_INJECT
- 	  CPUs for power capping. Idle period can be injected
- 	  synchronously on a set of specified CPUs or alternatively
- 	  on a per CPU basis.
-+
-+config POWERCAP_EM
-+        bool "Energy model based power capping"
-+	depends on ENERGY_MODEL
-+	default y
-+	help
-+	  This enables support for the power capping using the energy
-+	  model and the associated per device performance state.
- endif
-diff --git a/drivers/powercap/Makefile b/drivers/powercap/Makefile
-index 7255c94ec61c..d9fa1255a499 100644
---- a/drivers/powercap/Makefile
-+++ b/drivers/powercap/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_POWERCAP)	+= powercap_sys.o
-+obj-$(CONFIG_POWERCAP_EM) += powercap_em.o
- obj-$(CONFIG_INTEL_RAPL_CORE) += intel_rapl_common.o
- obj-$(CONFIG_INTEL_RAPL) += intel_rapl_msr.o
- obj-$(CONFIG_IDLE_INJECT) += idle_inject.o
-diff --git a/drivers/powercap/powercap_em.c b/drivers/powercap/powercap_em.c
-new file mode 100644
-index 000000000000..a5252d32c4e9
---- /dev/null
-+++ b/drivers/powercap/powercap_em.c
-@@ -0,0 +1,485 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2020 Linaro Limited
-+ *
-+ * Author: Daniel Lezcano <daniel.lezcano@linaro.org>
-+ *
-+ */
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/cpumask.h>
-+#include <linux/cpufreq.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/device.h>
-+#include <linux/energy_model.h>
-+#include <linux/hrtimer.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pm_qos.h>
-+#include <linux/powercap.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/sysfs.h>
-+#include <linux/units.h>
-+
-+struct powercap_em {
-+	struct powercap_zone zone;
-+	struct powercap_em *parent;
-+	struct list_head sibling;
-+	struct list_head children;
-+	struct freq_qos_request qos_req;
-+	spinlock_t lock;
-+	bool mode;
-+	u64 power_limit;
-+	u64 power_max;
-+	u64 power_min;
-+	int weight;
-+	int cpu;
-+};
-+
-+static const char *constraint_name[] = {
-+	"Performance capping",
-+};
-+
-+static struct powercap_control_type *pct;
-+static struct powercap_em *pc_soc;
-+static struct powercap_em *pc_package;
-+
-+struct powercap_em *to_powercap_em(struct powercap_zone *zone)
-+{
-+	return container_of(zone, struct powercap_em, zone);
-+}
-+
-+/*
-+ * Browse the powercap nodes of the tree and rebalance their
-+ * weigths. This function is called when a node is inserted or
-+ * deleted.
-+ */
-+static void powercap_em_rebalance_weight(struct powercap_em *pcem)
-+{
-+	struct powercap_em *child;
-+
-+	spin_lock(&pcem->lock);
-+	list_for_each_entry(child, &pcem->children, sibling) {
-+
-+		child->weight = (child->power_max * 1024) / pcem->power_max;
-+
-+		powercap_em_rebalance_weight(child);
-+	}
-+	spin_unlock(&pcem->lock);
-+}
-+
-+/*
-+ * Initialize the energy model powercap zone by calling the underlying
-+ * powercap register function followed by the specific allocations.
-+ */
-+static struct powercap_em *
-+powercap_em_register(struct powercap_control_type *control_type,
-+		     const char *name,
-+		     struct powercap_em *parent,
-+		     const struct powercap_zone_ops *ops,
-+		     int nr_constraints,
-+		     const struct powercap_zone_constraint_ops *const_ops)
-+{
-+	struct powercap_em *pcem;
-+	struct powercap_zone *pcz;
-+
-+	pcem = kzalloc(sizeof(*pcem), GFP_KERNEL);
-+	if (!pcem)
-+		return NULL;
-+
-+	INIT_LIST_HEAD(&pcem->children);
-+	INIT_LIST_HEAD(&pcem->sibling);
-+	spin_lock_init(&pcem->lock);
-+
-+	pcz = powercap_register_zone(&pcem->zone, control_type, name,
-+				     parent ? &parent->zone : NULL,
-+				     ops, nr_constraints, const_ops);
-+	if (IS_ERR(pcz)) {
-+		kfree(pcem);
-+		return NULL;
-+	}
-+
-+	/*
-+	 * The root node does not have a parent
-+	 */
-+	if (parent) {
-+		spin_lock(&parent->lock);
-+		list_add_tail(&pcem->sibling, &parent->children);
-+		spin_unlock(&parent->lock);
-+		pcem->parent = parent;
-+	}
-+
-+	return pcem;
-+}
-+
-+/*
-+ * When a new powercap zone is inserted, propagate its power numbers
-+ * to the parents.
-+ */
-+static int powercap_em_set_power_range(struct powercap_em *pcem,
-+				       struct em_perf_domain *em)
-+{
-+	struct powercap_em *parent = pcem->parent;
-+	int nr_cpus = cpumask_weight(to_cpumask(em->cpus));
-+
-+	if (pcem->power_min || pcem->power_max)
-+		return -EINVAL;
-+
-+	pcem->power_min = em->table[0].power;
-+	pcem->power_min *= MICROWATT_PER_MILLIWATT;
-+	pcem->power_min *= nr_cpus;
-+
-+	pcem->power_max = em->table[em->nr_cap_states - 1].power;
-+	pcem->power_max *= MICROWATT_PER_MILLIWATT;
-+	pcem->power_max *= nr_cpus;
-+
-+	while (parent) {
-+		spin_lock(&parent->lock);
-+		parent->power_min += pcem->power_min;
-+		parent->power_max += pcem->power_max;
-+		spin_unlock(&parent->lock);
-+		parent = parent->parent;
-+	}
-+
-+	return 0;
-+}
-+
-+static int get_max_power_range_uw(struct powercap_zone *pcz, u64 *max_power_uw)
-+{
-+	struct powercap_em *pcem = to_powercap_em(pcz);
-+
-+	spin_lock(&pcem->lock);
-+	*max_power_uw = pcem->power_max;
-+	spin_unlock(&pcem->lock);
-+
-+	return 0;
-+}
-+
-+static int get_pd_power_uw(struct powercap_zone *pcz, u64 *power_uw)
-+{
-+	struct powercap_em *pcem = to_powercap_em(pcz);
-+	struct em_perf_domain *pd;
-+	unsigned long freq;
-+	int i, nr_cpus;
-+
-+	freq = cpufreq_quick_get(pcem->cpu);
-+	pd = em_cpu_get(pcem->cpu);
-+	nr_cpus = cpumask_weight(to_cpumask(pd->cpus));
-+
-+	for (i = 0; i < pd->nr_cap_states; i++) {
-+
-+		if (pd->table[i].frequency < freq)
-+			continue;
-+
-+		*power_uw = pd->table[i].power *
-+			MICROWATT_PER_MILLIWATT * nr_cpus;
-+
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int get_children_power_uw(struct powercap_zone *pcz, u64 *power_uw)
-+{
-+	struct powercap_em *pcem = to_powercap_em(pcz);
-+	struct powercap_em *child;
-+	u64 power;
-+	int ret = 0;
-+
-+	*power_uw = 0;
-+
-+	spin_lock(&pcem->lock);
-+	list_for_each_entry(child, &pcem->children, sibling) {
-+		ret = child->zone.ops->get_power_uw(&child->zone, &power);
-+		if (ret)
-+			break;
-+		*power_uw += power;
-+	}
-+	spin_unlock(&pcem->lock);
-+
-+	return ret;
-+}
-+
-+static int set_domain_enable(struct powercap_zone *pcz, bool mode)
-+{
-+	struct powercap_em *pcem = to_powercap_em(pcz);
-+	struct cpufreq_policy *policy;
-+	struct em_perf_domain *pd;
-+	int ret;
-+
-+	if (mode) {
-+		policy = cpufreq_cpu_get(pcem->cpu);
-+		if (!policy)
-+			return -EINVAL;
-+
-+		pd = em_cpu_get(pcem->cpu);
-+		if (!pd)
-+			return -EINVAL;
-+
-+		ret = freq_qos_add_request(&policy->constraints,
-+					   &pcem->qos_req, FREQ_QOS_MAX,
-+					   pd->table[pd->nr_cap_states - 1].frequency);
-+		if (ret)
-+			return ret;
-+
-+	} else {
-+		freq_qos_remove_request(&pcem->qos_req);
-+	}
-+
-+	pcem->mode = mode;
-+
-+	powercap_em_rebalance_weight(pc_soc);
-+
-+	return 0;
-+}
-+
-+static int get_domain_enable(struct powercap_zone *pcz, bool *mode)
-+{
-+	struct powercap_em *pcem = to_powercap_em(pcz);
-+
-+	*mode = pcem->mode;
-+
-+	return 0;
-+}
-+
-+static int release_zone(struct powercap_zone *pcz)
-+{
-+	struct powercap_em *pcem = to_powercap_em(pcz);
-+
-+	if (!list_empty(&pcem->children))
-+		return -EBUSY;
-+
-+	freq_qos_remove_request(&pcem->qos_req);
-+	list_del(&pcem->sibling);
-+	kfree(pcem);
-+	powercap_em_rebalance_weight(pc_soc);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Set the power limit on the nodes, the power limit is distributed
-+ * given the weight of the children.
-+ */
-+static int set_children_power_limit(struct powercap_zone *pcz, int cid,
-+				    u64 power_limit)
-+{
-+	struct powercap_em *pcem = to_powercap_em(pcz);
-+	struct powercap_em *child;
-+	u64 power;
-+	int ret = 0;
-+
-+	/*
-+	 * Don't allow values outside of the power range previously
-+	 * set when initiliazing the powercap energy model zone
-+	 */
-+	pcem->power_limit = clamp_val(power_limit,
-+				      pcem->power_min,
-+				      pcem->power_max);
-+
-+	spin_lock(&pcem->lock);
-+	list_for_each_entry(child, &pcem->children, sibling) {
-+
-+		power = (pcem->power_limit * child->weight) / 1024;
-+
-+		ret = child->zone.constraints->ops->set_power_limit_uw(
-+			&child->zone, cid, power);
-+		if (ret)
-+			break;
-+	}
-+	spin_unlock(&pcem->lock);
-+
-+
-+	return ret;
-+}
-+
-+static int get_children_power_limit(struct powercap_zone *pcz, int cid, u64 *data)
-+{
-+	struct powercap_em *pcem = to_powercap_em(pcz);
-+	struct powercap_em *child;
-+	u64 power;
-+	int ret = 0;
-+
-+	*data = 0;
-+
-+	spin_lock(&pcem->lock);
-+	list_for_each_entry(child, &pcem->children, sibling) {
-+		ret = child->zone.constraints->ops->get_power_limit_uw(
-+			&child->zone, cid, &power);
-+		if (ret)
-+			break;
-+		*data += power;
-+	}
-+	spin_unlock(&pcem->lock);
-+
-+	return ret;
-+}
-+
-+static const char *get_constraint_name(struct powercap_zone *pcz, int cid)
-+{
-+	return constraint_name[cid];
-+}
-+
-+static int set_pd_power_limit(struct powercap_zone *pcz, int cid,
-+			       u64 power_limit)
-+{
-+	struct powercap_em *pcem = to_powercap_em(pcz);
-+	struct em_perf_domain *pd;
-+	unsigned long frequency;
-+	int i, nr_cpus;
-+
-+	spin_lock(&pcem->lock);
-+
-+	power_limit = clamp_val(power_limit, pcem->power_min, pcem->power_max);
-+
-+	pd = em_cpu_get(pcem->cpu);
-+
-+	nr_cpus = cpumask_weight(to_cpumask(pd->cpus));
-+
-+	for (i = 0, frequency = pd->table[0].frequency; i < pd->nr_cap_states; i++) {
-+
-+		u64 power = pd->table[i].power * MICROWATT_PER_MILLIWATT;
-+
-+		if ((power * nr_cpus) > power_limit)
-+			break;
-+
-+		frequency = pd->table[i].frequency;
-+	}
-+
-+	freq_qos_update_request(&pcem->qos_req, frequency);
-+
-+	pcem->power_limit = power_limit;
-+
-+	spin_unlock(&pcem->lock);
-+
-+	return 0;
-+}
-+
-+static int get_pd_power_limit(struct powercap_zone *pcz, int cid, u64 *data)
-+{
-+	struct powercap_em *pcem = to_powercap_em(pcz);
-+
-+	spin_lock(&pcem->lock);
-+	*data = pcem->power_limit ? pcem->power_limit : pcem->power_max;
-+	spin_unlock(&pcem->lock);
-+
-+	return 0;
-+}
-+
-+static int set_time_window(struct powercap_zone *pcz, int cid, u64 window)
-+{
-+	return -ENOSYS;
-+}
-+
-+
-+static int get_time_window(struct powercap_zone *pcz, int cid, u64 *data)
-+{
-+	*data = 0;
-+
-+	return 0;
-+}
-+
-+static int get_max_power_uw(struct powercap_zone *pcz, int id, u64 *data)
-+{
-+	return get_max_power_range_uw(pcz, data);
-+}
-+
-+static const struct powercap_zone_constraint_ops constraint_ops = {
-+	.set_power_limit_uw = set_children_power_limit,
-+	.get_power_limit_uw = get_children_power_limit,
-+	.set_time_window_us = set_time_window,
-+	.get_time_window_us = get_time_window,
-+	.get_max_power_uw = get_max_power_uw,
-+	.get_name = get_constraint_name,
-+};
-+
-+static const struct powercap_zone_constraint_ops pd_constraint_ops = {
-+	.set_power_limit_uw = set_pd_power_limit,
-+	.get_power_limit_uw = get_pd_power_limit,
-+	.set_time_window_us = set_time_window,
-+	.get_time_window_us = get_time_window,
-+	.get_max_power_uw = get_max_power_uw,
-+	.get_name = get_constraint_name,
-+};
-+
-+static const struct powercap_zone_ops zone_ops = {
-+	.get_max_power_range_uw = get_max_power_range_uw,
-+	.get_power_uw = get_children_power_uw,
-+	.set_enable = set_domain_enable,
-+	.get_enable = get_domain_enable,
-+	.release = release_zone,
-+};
-+
-+static const struct powercap_zone_ops pd_zone_ops = {
-+	.get_max_power_range_uw = get_max_power_range_uw,
-+	.get_power_uw = get_pd_power_uw,
-+	.set_enable = set_domain_enable,
-+	.get_enable = get_domain_enable,
-+	.release = release_zone,
-+};
-+
-+static int cpuhp_powercap_em_online(unsigned int cpu)
-+{
-+        struct powercap_em *pcem;
-+	struct cpufreq_policy *policy;
-+	struct em_perf_domain *pd;
-+	char name[CPUFREQ_NAME_LEN];
-+	int ret;
-+
-+	policy = cpufreq_cpu_get(cpu);
-+
-+	if (!policy || cpumask_first(policy->related_cpus) != cpu)
-+		return 0;
-+
-+	pd = em_cpu_get(cpu);
-+	if (!pd)
-+		return -EINVAL;
-+
-+	sprintf(name, "policy%d", cpu);
-+
-+	pcem = powercap_em_register(pct, name, pc_package,
-+				    &pd_zone_ops, 1, &pd_constraint_ops);
-+	if (!pcem)
-+		return -EINVAL;
-+
-+	ret = powercap_em_set_power_range(pcem, pd);
-+	if (ret)
-+		return ret;
-+
-+	pcem->cpu = cpu;
-+
-+	ret = freq_qos_add_request(&policy->constraints,
-+				   &pcem->qos_req, FREQ_QOS_MAX,
-+				   pd->table[pd->nr_cap_states - 1].frequency);
-+
-+	powercap_em_rebalance_weight(pc_soc);
-+
-+	return ret;
-+}
-+
-+static int __init powercap_em_init(void)
-+{
-+	pct = powercap_register_control_type(NULL, "energy_model", NULL);
-+	if (!pct) {
-+		pr_err("Failed to register control type\n");
-+		return -EINVAL;
-+	}
-+
-+	pc_soc = powercap_em_register(pct, "soc", NULL,
-+				      &zone_ops, 1, &constraint_ops);
-+	if (!pc_soc)
-+		return -EINVAL;
-+
-+	pc_package = powercap_em_register(pct, "package", pc_soc,
-+					  &zone_ops, 1, &constraint_ops);
-+	if (!pc_package)
-+		return -EINVAL;
-+
-+	return cpuhp_setup_state(CPUHP_AP_POWERCAP_EM_ONLINE,
-+				 "powercap_em:online",
-+				 cpuhp_powercap_em_online, NULL);
-+}
-+late_initcall(powercap_em_init);
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 191772d4a4d7..09fe4e1b430e 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -189,6 +189,7 @@ enum cpuhp_state {
- 	CPUHP_AP_ONLINE_DYN_END		= CPUHP_AP_ONLINE_DYN + 30,
- 	CPUHP_AP_X86_HPET_ONLINE,
- 	CPUHP_AP_X86_KVM_CLK_ONLINE,
-+	CPUHP_AP_POWERCAP_EM_ONLINE,
- 	CPUHP_AP_ACTIVE,
- 	CPUHP_ONLINE,
+diff --git a/include/uapi/linux/net_dropmon.h b/include/uapi/linux/net_dropmon.h
+index 67e31f329190..e8e861e03a8a 100644
+--- a/include/uapi/linux/net_dropmon.h
++++ b/include/uapi/linux/net_dropmon.h
+@@ -58,6 +58,8 @@ enum {
+ 	NET_DM_CMD_CONFIG_NEW,
+ 	NET_DM_CMD_STATS_GET,
+ 	NET_DM_CMD_STATS_NEW,
++	NET_DM_CMD_START_IFC,
++	NET_DM_CMD_STOP_IFC,
+ 	_NET_DM_CMD_MAX,
  };
+ 
+@@ -93,6 +95,7 @@ enum net_dm_attr {
+ 	NET_DM_ATTR_SW_DROPS,			/* flag */
+ 	NET_DM_ATTR_HW_DROPS,			/* flag */
+ 	NET_DM_ATTR_FLOW_ACTION_COOKIE,		/* binary */
++	NET_DM_ATTR_IFNAME,			/* string */
+ 
+ 	__NET_DM_ATTR_MAX,
+ 	NET_DM_ATTR_MAX = __NET_DM_ATTR_MAX - 1
+diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+index 8e33cec9fc4e..8049bff05abd 100644
+--- a/net/core/drop_monitor.c
++++ b/net/core/drop_monitor.c
+@@ -30,6 +30,7 @@
+ #include <net/genetlink.h>
+ #include <net/netevent.h>
+ #include <net/flow_offload.h>
++#include <net/sock.h>
+ 
+ #include <trace/events/skb.h>
+ #include <trace/events/napi.h>
+@@ -46,6 +47,7 @@
+  */
+ static int trace_state = TRACE_OFF;
+ static bool monitor_hw;
++struct net_device *interface;
+ 
+ /* net_dm_mutex
+  *
+@@ -220,9 +222,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 	struct per_cpu_dm_data *data;
+ 	unsigned long flags;
+ 
+-	local_irq_save(flags);
++	spin_lock_irqsave(&data->lock, flags);
+ 	data = this_cpu_ptr(&dm_cpu_data);
+-	spin_lock(&data->lock);
+ 	dskb = data->skb;
+ 
+ 	if (!dskb)
+@@ -255,6 +256,12 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 
+ out:
+ 	spin_unlock_irqrestore(&data->lock, flags);
++
++	if (interface && interface != skb->dev) {
++		skb = skb_clone(skb, GFP_ATOMIC);
++		skb->dev = interface;
++		netif_receive_skb(skb);
++	}
+ }
+ 
+ static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb, void *location)
+@@ -1315,6 +1322,63 @@ static int net_dm_cmd_trace(struct sk_buff *skb,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static int net_dm_interface_start(struct net *net, const char *ifname)
++{
++	struct net_device *nd;
++
++	nd = dev_get_by_name(net, ifname);
++
++	if (nd) {
++		interface = nd;
++		dev_hold(interface);
++	} else {
++		return -ENODEV;
++	}
++	return 0;
++}
++
++static int net_dm_interface_stop(struct net *net, const char *ifname)
++{
++	struct net_device *nd;
++
++	nd = dev_get_by_name(net, ifname);
++
++	if (nd) {
++		interface = nd;
++		dev_put(interface);
++	} else {
++		return -ENODEV;
++	}
++	return 0;
++}
++
++static int net_dm_cmd_ifc_trace(struct sk_buff *skb, struct genl_info *info)
++{
++	struct net *net = sock_net(skb->sk);
++	char ifname[IFNAMSIZ];
++	int rc;
++
++	memset(ifname, 0, IFNAMSIZ);
++	nla_strlcpy(ifname, info->attrs[NET_DM_ATTR_IFNAME], IFNAMSIZ - 1);
++
++	switch (info->genlhdr->cmd) {
++	case NET_DM_CMD_START_IFC:
++		rc = net_dm_interface_start(net, ifname);
++		if (rc)
++			return rc;
++		break;
++	case NET_DM_CMD_STOP_IFC:
++		if (interface) {
++			rc = net_dm_interface_stop(net, interface->ifname);
++			return rc;
++		} else {
++			return -ENODEV;
++		}
++	}
++
++	return 0;
++}
++
+ static int net_dm_config_fill(struct sk_buff *msg, struct genl_info *info)
+ {
+ 	void *hdr;
+@@ -1543,6 +1607,7 @@ static const struct nla_policy net_dm_nl_policy[NET_DM_ATTR_MAX + 1] = {
+ 	[NET_DM_ATTR_QUEUE_LEN] = { .type = NLA_U32 },
+ 	[NET_DM_ATTR_SW_DROPS]	= {. type = NLA_FLAG },
+ 	[NET_DM_ATTR_HW_DROPS]	= {. type = NLA_FLAG },
++	[NET_DM_ATTR_IFNAME] = {. type = NLA_STRING, .len = IFNAMSIZ },
+ };
+ 
+ static const struct genl_ops dropmon_ops[] = {
+@@ -1570,6 +1635,16 @@ static const struct genl_ops dropmon_ops[] = {
+ 		.cmd = NET_DM_CMD_STATS_GET,
+ 		.doit = net_dm_cmd_stats_get,
+ 	},
++	{
++		.cmd = NET_DM_CMD_START_IFC,
++		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
++		.doit = net_dm_cmd_ifc_trace,
++	},
++	{
++		.cmd = NET_DM_CMD_STOP_IFC,
++		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
++		.doit = net_dm_cmd_ifc_trace,
++	},
+ };
+ 
+ static int net_dm_nl_pre_doit(const struct genl_ops *ops,
 -- 
-2.17.1
+2.18.4
 
