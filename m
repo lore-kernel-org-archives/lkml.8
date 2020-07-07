@@ -6,55 +6,55 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A944C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E77920771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCFA20773
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594131451;
-	bh=JvMHWS5oVH4hJWhlbLg3xOagK5SJNSGlwa487H/MIj0=;
+	s=default; t=1594131461;
+	bh=TK5Cmeh9M/MUfKwtkEO+yW3fxeLeyY7PEeljzDxg6Ss=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=lFNvwIgPREYMW7QeTm/mblmfZoo+He56ANUX74TRhZ0D7zkcNmuGouqfDOmwxKWY/
-	 Jyf8nDg3w8bSBZjjk7lu905EtoByLvQsKa2PobjRlE+Eu/K5EM1njDFCHTYseLFy4f
-	 qNcCyWCjOzhIjBMYdAeBknKARrQrQRbGjxrYPFMI=
+	b=LR66D/JxPSSPVYdFn8T6dbARhPZ0KZVd4EmGUV2HU2NI4m8A4DaavIOo51eP0Pzm+
+	 kum0WzJG2XDXJSnCgReAihAt1fN63TpzIpLsRhJ1XQRT6qj5eb+9uUWL4tHodZyjhQ
+	 doy9ddW52vUOKaU01jjwSimFrbWafl9TO3n5Ay4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgGGORa (ORCPT
+        id S1728275AbgGGORk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:17:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 10:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgGGOR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:17:29 -0400
+        id S1727090AbgGGORj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:17:39 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09CD920773;
-        Tue,  7 Jul 2020 14:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C28220771;
+        Tue,  7 Jul 2020 14:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594131449;
-        bh=JvMHWS5oVH4hJWhlbLg3xOagK5SJNSGlwa487H/MIj0=;
+        s=default; t=1594131459;
+        bh=TK5Cmeh9M/MUfKwtkEO+yW3fxeLeyY7PEeljzDxg6Ss=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=sAfOmiyf8FHFWKOA6FwaxwupDn1VBbapkTzn+i6k/rVy8xYFmWsZn5ZYG3i5u/jm7
-         Ip0g94Gq0sMn6tahJkEelS0HPHNK4BnzNDrUJLNoe4UPdYVDvhfBd2GQIrulNt1aRx
-         atJusenmrdQQCelNdL6Ew9Q0dZLKWmxR1sc4I8AI=
-Date:   Tue, 07 Jul 2020 15:17:25 +0100
+        b=S9GITpcSEv1WJqH3IKUE+Ppu4DyA6YBHZG1krJj2NErR/mlM0kb8OXdjllSTmX+WB
+         30TKI4qU9XgipwupbpksKfiQpKe8Y9RgZvh0ooOYlIRiuAtBlBwO2ccRvty9Ew0zbS
+         jFz8/dT3SqtISBb0Wxp4w2LJLW7ANSCuFjGXP1sg=
+Date:   Tue, 07 Jul 2020 15:17:35 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     Nicolin Chen <nicoleotsuka@gmail.com>
 Cc:     timur@tabi.org, shengjiu.wang@nxp.com,
         linux-kernel@vger.kernel.org, festevam@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, Li.Xiubo@freescale.com,
-        alsa-devel@alsa-project.org
-In-Reply-To: <20200702193102.25282-1-nicoleotsuka@gmail.com>
-References: <20200702193102.25282-1-nicoleotsuka@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add Shengjiu to reviewer list of sound/soc/fsl
-Message-Id: <159413142466.34737.11451730915770619660.b4-ty@kernel.org>
+        Xiubo.Lee@gmail.com, shengjiu.wang@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org
+In-Reply-To: <20200707045829.10002-1-nicoleotsuka@gmail.com>
+References: <20200707045829.10002-1-nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v2] MAINTAINERS: Add Shengjiu to reviewer list of sound/soc/fsl
+Message-Id: <159413142466.34737.3295058697996171604.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020 12:31:02 -0700, Nicolin Chen wrote:
+On Mon, 6 Jul 2020 21:58:29 -0700, Nicolin Chen wrote:
 > Add Shengjiu who's actively working on the latest fsl/nxp audio drivers.
 
 Applied to
