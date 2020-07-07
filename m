@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC855C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77805C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A20FF206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4065A206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135262;
-	bh=8s2YqL+W4O6wUd7+uw80P/xTp4oSuBVxXG+1zBaMDiQ=;
+	s=default; t=1594135266;
+	bh=mF+NvVN5NAtMW5RZRp6kYqnq2L/xSN0Wo+a1+EVBHcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gTn1KVVrrxDPK6vQVgQYEk6GesnMQUvaRFiJ1nPZVs7U2fVLKoLgV/g06LVI7NJSg
-	 P8Zr/BT8rj392OnzR5tXPish1Q0dEsNY/iULI2pNq9mUf9eZ/09uCOjtfEzT8DKZkP
-	 YsHfREN8F37N/G63TOP1v0dGjOQY3XZY+RCNIhCw=
+	b=2EULDlj/sksB41FRyvILbM27j685WPfJ+HZlbAugjWbGzUSDL1V0v9IyrhApwgXdn
+	 UIYUr4hkNG1Bgaq5EZ1/1HgsCeC2VxMR9SiMrR2bSNO45hSpZDYol3/RiyAbicREjI
+	 Q4BN3tsaGy27nOQCpDuPi5UAdt3pdh0tayNsADBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgGGPU5 (ORCPT
+        id S1728350AbgGGPVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:20:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32838 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:21:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729599AbgGGPUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:51 -0400
+        id S1728597AbgGGPU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:20:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41FE42065D;
-        Tue,  7 Jul 2020 15:20:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83E3A206F6;
+        Tue,  7 Jul 2020 15:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135250;
-        bh=8s2YqL+W4O6wUd7+uw80P/xTp4oSuBVxXG+1zBaMDiQ=;
+        s=default; t=1594135258;
+        bh=mF+NvVN5NAtMW5RZRp6kYqnq2L/xSN0Wo+a1+EVBHcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sjt6Xgzat7Sgp3rUNkXNJmxJ7yIeTIJ21Xx6GgP/GE5HQItTqikP3RIFWY9c8x4B8
-         8I26QfhUR5i5dyoh4pAwqcC68eMfuZVBOKiUXHlzArDC4ocXWFW7sh791nqcmrNvDe
-         sumI1a9RxX2r1NYB3SizZqP+Z6phj4Hg9tmRvVdw=
+        b=bkyQ2PJL8ix4ldfA0ggE5szoeZOOXSxGnwTxwc9Kt3ttVTQ8BQ6IOJYi2+xMePCgY
+         AxyuSI/b32/dIyFN3CDlwzjF4XfZabcQKwAqhzvDXOpVF5k7BzK3j9rx1ydHiNLKxp
+         Vd1z/wjd/4lI+n7L/9UfQdcy7883NF5gtnhDvtvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Glauber Costa <glauber@scylladb.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 31/65] hwmon: (acpi_power_meter) Fix potential memory leak in acpi_power_meter_add()
-Date:   Tue,  7 Jul 2020 17:17:10 +0200
-Message-Id: <20200707145753.979609221@linuxfoundation.org>
+Subject: [PATCH 5.4 07/65] mm/slub: fix stack overruns with SLUB_STATS
+Date:   Tue,  7 Jul 2020 17:16:46 +0200
+Message-Id: <20200707145752.794100576@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -61,44 +66,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 8b97f9922211c44a739c5cbd9502ecbb9f17f6d1 ]
+[ Upstream commit a68ee0573991e90af2f1785db309206408bad3e5 ]
 
-Although it rarely happens, we should call free_capabilities()
-if error happens after read_capabilities() to free allocated strings.
+There is no need to copy SLUB_STATS items from root memcg cache to new
+memcg cache copies.  Doing so could result in stack overruns because the
+store function only accepts 0 to clear the stat and returns an error for
+everything else while the show method would print out the whole stat.
 
-Fixes: de584afa5e188 ("hwmon driver for ACPI 4.0 power meters")
-Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
-Link: https://lore.kernel.org/r/20200625043242.31175-1-misono.tomohiro@jp.fujitsu.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Then, the mismatch of the lengths returns from show and store methods
+happens in memcg_propagate_slab_attrs():
+
+	else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
+		buf = mbuf;
+
+max_attr_size is only 2 from slab_attr_store(), then, it uses mbuf[64]
+in show_stat() later where a bounch of sprintf() would overrun the stack
+variable.  Fix it by always allocating a page of buffer to be used in
+show_stat() if SLUB_STATS=y which should only be used for debug purpose.
+
+  # echo 1 > /sys/kernel/slab/fs_cache/shrink
+  BUG: KASAN: stack-out-of-bounds in number+0x421/0x6e0
+  Write of size 1 at addr ffffc900256cfde0 by task kworker/76:0/53251
+
+  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
+  Call Trace:
+    number+0x421/0x6e0
+    vsnprintf+0x451/0x8e0
+    sprintf+0x9e/0xd0
+    show_stat+0x124/0x1d0
+    alloc_slowpath_show+0x13/0x20
+    __kmem_cache_create+0x47a/0x6b0
+
+  addr ffffc900256cfde0 is located in stack of task kworker/76:0/53251 at offset 0 in frame:
+   process_one_work+0x0/0xb90
+
+  this frame has 1 object:
+   [32, 72) 'lockdep_map'
+
+  Memory state around the buggy address:
+   ffffc900256cfc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   ffffc900256cfd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  >ffffc900256cfd80: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
+                                                         ^
+   ffffc900256cfe00: 00 00 00 00 00 f2 f2 f2 00 00 00 00 00 00 00 00
+   ffffc900256cfe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ==================================================================
+  Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: __kmem_cache_create+0x6ac/0x6b0
+  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
+  Call Trace:
+    __kmem_cache_create+0x6ac/0x6b0
+
+Fixes: 107dab5c92d5 ("slub: slub-specific propagation changes")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Glauber Costa <glauber@scylladb.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Link: http://lkml.kernel.org/r/20200429222356.4322-1-cai@lca.pw
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/acpi_power_meter.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ mm/slub.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
-index 4cf25458f0b95..740ac0a1b7265 100644
---- a/drivers/hwmon/acpi_power_meter.c
-+++ b/drivers/hwmon/acpi_power_meter.c
-@@ -883,7 +883,7 @@ static int acpi_power_meter_add(struct acpi_device *device)
- 
- 	res = setup_attrs(resource);
- 	if (res)
--		goto exit_free;
-+		goto exit_free_capability;
- 
- 	resource->hwmon_dev = hwmon_device_register(&device->dev);
- 	if (IS_ERR(resource->hwmon_dev)) {
-@@ -896,6 +896,8 @@ static int acpi_power_meter_add(struct acpi_device *device)
- 
- exit_remove:
- 	remove_attrs(resource);
-+exit_free_capability:
-+	free_capabilities(resource);
- exit_free:
- 	kfree(resource);
- exit:
+diff --git a/mm/slub.c b/mm/slub.c
+index 5c05a36bb746f..709e31002504c 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5648,7 +5648,8 @@ static void memcg_propagate_slab_attrs(struct kmem_cache *s)
+ 		 */
+ 		if (buffer)
+ 			buf = buffer;
+-		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
++		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf) &&
++			 !IS_ENABLED(CONFIG_SLUB_STATS))
+ 			buf = mbuf;
+ 		else {
+ 			buffer = (char *) get_zeroed_page(GFP_KERNEL);
 -- 
 2.25.1
 
