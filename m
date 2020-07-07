@@ -2,125 +2,98 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD59820663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7620F206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594136080;
-	bh=xkymQXiS3eOpuljz4jMxRKZ+J/A6bYNQ4D/KVgyO4Z8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PP1zoaV3tpawuj0zWh2YEz9MkYtki6hsva/PAZ4YUYzEt/vx29t6aSLCRpkmawJln
-	 kGi53Q4p9eW22lWR6eicZaWOLcPnxM9BGKtTWTO9OLAkLj01seJAcTIksMlnKWRSJG
-	 oWl4P1L56y4f4TYSBb7w0SCIVQkS3dnxz+FdmmcQ=
+	s=default; t=1594136114;
+	bh=a0T6ft6shyocwqSr39cTZCmpgAAfdPrbzkMPJK3i0R8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YjBLLgf81zsNPJDnNUQsZ1guScVNmVwKE4B/RSBft8D634VZCKqW6iQtxKA9KJX1w
+	 AM6bG+qur7qvj4rJl63k4zZnDrLjU99LxVzEJUqts3Ct9YtYjk8fT4keCZraDJNp7U
+	 HDu0+UuxMce6Xyy9LoA3zhrQexhFbeAPo1gFrUwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgGGPej (ORCPT
+        id S1728979AbgGGPfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:34:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58092 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:35:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728422AbgGGPSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:18:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727079AbgGGPfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:35:11 -0400
+Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A2C320663;
-        Tue,  7 Jul 2020 15:18:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D26B20663;
+        Tue,  7 Jul 2020 15:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135120;
-        bh=xkymQXiS3eOpuljz4jMxRKZ+J/A6bYNQ4D/KVgyO4Z8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ar7FmcmYcrkQ8UQPPhVGDLohC/EA/lYvw1Ah2kCperHp879ZpjV8gD7JHidG/5xOj
-         VIDy/D6TqnYSdG/dfGJnpJ0zW9m0+4U7pmUcGaO2/BW1QoImRmwTCgFeJukKiObC93
-         6b1drxb5keWsyO55A+Byvy8w8UFK0HijCFzyT12A=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chu Lin <linchuyuan@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 19/36] hwmon: (max6697) Make sure the OVERT mask is set correctly
-Date:   Tue,  7 Jul 2020 17:17:11 +0200
-Message-Id: <20200707145750.053560653@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
-References: <20200707145749.130272978@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1594136111;
+        bh=a0T6ft6shyocwqSr39cTZCmpgAAfdPrbzkMPJK3i0R8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sYm6HN6vQNCSP8UaYveiQFdSOWg03VElJwFBZ/y4+Ppeu0Ytl2U6XDlE0EvmYrjRW
+         91cf5/ldZcLbuLKxK/v8kKOfFVB+NPOlkmTGh3lyZMKpoSkKlH6ujFs9VNee/3OIEK
+         K51bI2K/WdkIBxpv2+2ZefGbYV0c41OmxPKCKqjQ=
+Date:   Tue, 7 Jul 2020 21:05:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 13/28] ASoC: qcom: qdsp6: q6asm: Provide documentation
+ for WMA 'codec_profile'
+Message-ID: <20200707153505.GA5155@vkoul-mobl>
+References: <20200707101642.1747944-1-lee.jones@linaro.org>
+ <20200707101642.1747944-14-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707101642.1747944-14-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chu Lin <linchuyuan@google.com>
+On 07-07-20, 11:16, Lee Jones wrote:
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  sound/soc/qcom/qdsp6/q6asm.c:924: warning: Function parameter or member 'codec_profile' not described in 'q6asm_open_write'
+> 
+> Cc: Patrick Lai <plai@codeaurora.org>
+> Cc: Banajit Goswami <bgoswami@codeaurora.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  sound/soc/qcom/qdsp6/q6asm.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
+> index ae4b2cabdf2d6..58720b18fc8c8 100644
+> --- a/sound/soc/qcom/qdsp6/q6asm.c
+> +++ b/sound/soc/qcom/qdsp6/q6asm.c
+> @@ -915,6 +915,7 @@ static int q6asm_ac_send_cmd_sync(struct audio_client *ac, struct apr_pkt *pkt)
+>   *
+>   * @ac: audio client pointer
+>   * @format: audio sample format
+> + * @codec_profile: profile to use when WMA
 
-[ Upstream commit 016983d138cbe99a5c0aaae0103ee88f5300beb3 ]
+Yes it is used with WMA only for now, but we should describe in
+generically as "Audio codec profile"
 
-Per the datasheet for max6697, OVERT mask and ALERT mask are different.
-For example, the 7th bit of OVERT is the local channel but for alert
-mask, the 6th bit is the local channel. Therefore, we can't apply the
-same mask for both registers. In addition to that, the max6697 driver
-is supposed to be compatibale with different models. I manually went over
-all the listed chips and made sure all chip types have the same layout.
+>   * @bits_per_sample: bits per sample
+>   *
+>   * Return: Will be an negative value on error or zero on success
+> -- 
+> 2.25.1
 
-Testing;
-    mask value of 0x9 should map to 0x44 for ALERT and 0x84 for OVERT.
-    I used iotool to read the reg value back to verify. I only tested this
-    change on max6581.
-
-Reference:
-https://datasheets.maximintegrated.com/en/ds/MAX6581.pdf
-https://datasheets.maximintegrated.com/en/ds/MAX6697.pdf
-https://datasheets.maximintegrated.com/en/ds/MAX6699.pdf
-
-Signed-off-by: Chu Lin <linchuyuan@google.com>
-Fixes: 5372d2d71c46e ("hwmon: Driver for Maxim MAX6697 and compatibles")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hwmon/max6697.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
-index 221fd14920576..6df28fe0577da 100644
---- a/drivers/hwmon/max6697.c
-+++ b/drivers/hwmon/max6697.c
-@@ -47,8 +47,9 @@ static const u8 MAX6697_REG_CRIT[] = {
-  * Map device tree / platform data register bit map to chip bit map.
-  * Applies to alert register and over-temperature register.
-  */
--#define MAX6697_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
-+#define MAX6697_ALERT_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
- 				 (((reg) & 0x01) << 6) | ((reg) & 0x80))
-+#define MAX6697_OVERT_MAP_BITS(reg) (((reg) >> 1) | (((reg) & 0x01) << 7))
- 
- #define MAX6697_REG_STAT(n)		(0x44 + (n))
- 
-@@ -587,12 +588,12 @@ static int max6697_init_chip(struct max6697_data *data,
- 		return ret;
- 
- 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_ALERT_MASK,
--					MAX6697_MAP_BITS(pdata->alert_mask));
-+				MAX6697_ALERT_MAP_BITS(pdata->alert_mask));
- 	if (ret < 0)
- 		return ret;
- 
- 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_OVERT_MASK,
--				MAX6697_MAP_BITS(pdata->over_temperature_mask));
-+			MAX6697_OVERT_MAP_BITS(pdata->over_temperature_mask));
- 	if (ret < 0)
- 		return ret;
- 
 -- 
-2.25.1
-
-
-
+~Vinod
