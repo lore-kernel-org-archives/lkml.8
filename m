@@ -2,76 +2,111 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53205C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C232C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3854720739
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C41920739
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgGGGQV (ORCPT
+        id S1727122AbgGGGRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:16:21 -0400
-Received: from mleia.com ([178.79.152.223]:40318 "EHLO mail.mleia.com"
+        Tue, 7 Jul 2020 02:17:34 -0400
+Received: from mga05.intel.com ([192.55.52.43]:1426 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbgGGGQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:16:21 -0400
-Received: from mail.mleia.com (localhost [127.0.0.1])
-        by mail.mleia.com (Postfix) with ESMTP id 8251B3F31DE;
-        Tue,  7 Jul 2020 06:16:19 +0000 (UTC)
-Subject: Re: [PATCH 12/32] usb: gadget: udc: lpc32xx_udc: Staticify 2 local
- functions
-To:     Lee Jones <lee.jones@linaro.org>, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Kevin Wells <kevin.wells@nxp.com>,
-        Roland Stigge <stigge@antcom.de>
-References: <20200706133341.476881-1-lee.jones@linaro.org>
- <20200706133341.476881-13-lee.jones@linaro.org>
-From:   Vladimir Zapolskiy <vz@mleia.com>
-Message-ID: <c8ae6ed2-8739-e2fb-729a-872d38256ac8@mleia.com>
-Date:   Tue, 7 Jul 2020 09:16:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1725974AbgGGGRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 02:17:33 -0400
+IronPort-SDR: u3dzJVe6oCRt/JWaMZ3pQv9EAN7l/6jYheOuj/SaYbL0C0ASJTl+RKMPYzDlRYIaxjmdtzykCD
+ l7VpVKZs1DrQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="232405481"
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="232405481"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 23:17:32 -0700
+IronPort-SDR: N34W45B6rEEFTRZ/LgN7qlqRSKG4prvchZenPMGgmsPkxFy9npsOpMiUq7PlQMuhJ4fs58ed5R
+ tNn+oUBx9vQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="357684608"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga001.jf.intel.com with ESMTP; 06 Jul 2020 23:17:32 -0700
+Date:   Mon, 6 Jul 2020 23:17:32 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>
+Subject: Re: [PATCH v10 02/14] KVM: Cache as_id in kvm_memory_slot
+Message-ID: <20200707061732.GI5208@linux.intel.com>
+References: <20200601115957.1581250-1-peterx@redhat.com>
+ <20200601115957.1581250-3-peterx@redhat.com>
+ <20200702230849.GL3575@linux.intel.com>
+ <20200703184122.GF6677@xz-x1>
 MIME-Version: 1.0
-In-Reply-To: <20200706133341.476881-13-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20200707_061619_555379_BBAB11ED 
-X-CRM114-Status: UNSURE (   8.88  )
-X-CRM114-Notice: Please train this message. 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703184122.GF6677@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/20 4:33 PM, Lee Jones wrote:
-> These are not used outside of this sourcefile, so make them static.
+On Fri, Jul 03, 2020 at 02:41:22PM -0400, Peter Xu wrote:
+> On Thu, Jul 02, 2020 at 04:08:49PM -0700, Sean Christopherson wrote:
+> > On Mon, Jun 01, 2020 at 07:59:45AM -0400, Peter Xu wrote:
+> > > Cache the address space ID just like the slot ID.  It will be used in
+> > > order to fill in the dirty ring entries.
+> > > 
+> > > Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> > > Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > > ---
+> > >  include/linux/kvm_host.h | 1 +
+> > >  virt/kvm/kvm_main.c      | 1 +
+> > >  2 files changed, 2 insertions(+)
+> > > 
+> > > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> > > index 01276e3d01b9..5e7bbaf7a36b 100644
+> > > --- a/include/linux/kvm_host.h
+> > > +++ b/include/linux/kvm_host.h
+> > > @@ -346,6 +346,7 @@ struct kvm_memory_slot {
+> > >  	unsigned long userspace_addr;
+> > >  	u32 flags;
+> > >  	short id;
+> > > +	u16 as_id;
+> > >  };
+> > >  
+> > >  static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
+> > > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > > index 74bdb7bf3295..ebdd98a30e82 100644
+> > > --- a/virt/kvm/kvm_main.c
+> > > +++ b/virt/kvm/kvm_main.c
+> > > @@ -1243,6 +1243,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
+> > >  	if (!mem->memory_size)
+> > >  		return kvm_delete_memslot(kvm, mem, &old, as_id);
+> > 
+> > This technically needs to set as_id in the deleted memslot.  I highly doubt
+> > it will ever matter from a functionality perspective, but it'd be confusing
+> > to encounter a memslot whose as_id did not match that of its owner.
 > 
-> Fixes the following W=1 kernel build warning(s):
+> Yeah it shouldn't matter because as_id is directly passed in to look up the
+> pointer of kvm_memslots in kvm_delete_memslot, and memslot->as_id shouldn't be
+> further referenced.
 > 
->  drivers/usb/gadget/udc/lpc32xx_udc.c:1929:6: warning: no previous prototype for ‘udc_send_in_zlp’ [-Wmissing-prototypes]
->  1929 | void udc_send_in_zlp(struct lpc32xx_udc *udc, struct lpc32xx_ep *ep)
->  | ^~~~~~~~~~~~~~~
->  drivers/usb/gadget/udc/lpc32xx_udc.c:1943:6: warning: no previous prototype for ‘udc_handle_eps’ [-Wmissing-prototypes]
->  1943 | void udc_handle_eps(struct lpc32xx_udc *udc, struct lpc32xx_ep *ep)
->  | ^~~~~~~~~~~~~~
+> I can add a comment above if this can clarify things a bit:
 > 
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Vladimir Zapolskiy <vz@mleia.com>
-> Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
-> Cc: Kevin Wells <kevin.wells@nxp.com>
-> Cc: Roland Stigge <stigge@antcom.de>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> +	u16 as_id; /* cache of as_id; only valid if npages != 0 */
 
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
-
---
-Best wishes,
-Vladimir
+Why not just set it?  It's a single line of code, and there's more than one
+"shouldn't" in the above.
