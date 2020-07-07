@@ -2,181 +2,240 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9057DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17858C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71F4A2064C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E28D520708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQycTV/T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgGGQnh (ORCPT
+        id S1728335AbgGGQng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:43:37 -0400
-Received: from mga07.intel.com ([134.134.136.100]:56936 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728164AbgGGQnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:43:33 -0400
-IronPort-SDR: vwEPATn9OEm6bJy6J7o8z0/VIHXzivsVaGdPL49QbqJBVA+AWYzCyMVHb4aaeceqQKw0xA5mqa
- FyOxlj/HEBpw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="212602699"
-X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
-   d="scan'208";a="212602699"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 09:43:32 -0700
-IronPort-SDR: oQJ/tEihpDHExqAfyy+Cnpez1MU6oJYlK9ZIkEtPwN0yIGIoumosSVlUET8NOTFm5yQnJ1Xoys
- KKPo4owxLmCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,324,1589266800"; 
-   d="scan'208";a="314370861"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 07 Jul 2020 09:43:31 -0700
-Received: from [10.249.228.33] (abudanko-mobl.ccr.corp.intel.com [10.249.228.33])
-        by linux.intel.com (Postfix) with ESMTP id 7379458033E;
-        Tue,  7 Jul 2020 09:43:29 -0700 (PDT)
-Subject: Re: [PATCH v9 11/15] perf stat: implement control commands handling
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
- <21669f5a-6220-df0a-09f1-b73b32487f23@linux.intel.com>
- <20200706123436.GD3401866@krava>
- <6cf91811-ea6a-3c7c-8bbf-7f96bfa1fc82@linux.intel.com>
- <20200706193418.GB3424581@krava>
- <b28806b9-b66e-aa2e-5425-4d9f00341387@linux.intel.com>
- <20200707131403.GD3424581@krava>
- <865ad42a-6085-41d6-06d5-730cb9904ce8@linux.intel.com>
- <20200707142351.GE3424581@krava>
- <44f494d6-b4a5-2d56-001e-b3289cbeedaa@linux.intel.com>
- <20200707160524.GA3524217@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <1a996f82-edce-1a27-2dda-5f162e358cfe@linux.intel.com>
-Date:   Tue, 7 Jul 2020 19:43:28 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 7 Jul 2020 12:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbgGGQne (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 12:43:34 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA04DC061755;
+        Tue,  7 Jul 2020 09:43:33 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id lx13so28618628ejb.4;
+        Tue, 07 Jul 2020 09:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xI3EFOdDK97fBdcB1+8EI7de19472Lb47rxMR6f0Teg=;
+        b=OQycTV/Tzy5T0/XoAHPBRkBiIhwm/frE69h6Kt9xFNu0JHGwHuTguJ7FYCcx0yD8A/
+         0SQQSCw16BqEE6JrgjQiBDRKBVMNK/VEEM03qbebq53LXhj/2RmImYfZYGN3DvOgJvLQ
+         ++Y0m08Fs/aODMqbtdyqLFAF9aTh/sKKf/VnQBtBVfsVsJ507Qv+mXYwTAJLWlRxtDHB
+         UZ4ORsw6rgE8I75dOxbTmjycH+Xx2dCKXCLKY5cwpbT5pmecTAD3wObT0y8Zz3zBIbi6
+         s/a1k/2dkPNuIOSmUv/wHCJzIW897Te9laZtNKdgLek9QkDDAvNCQjrcZylZa14TymhS
+         xp3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xI3EFOdDK97fBdcB1+8EI7de19472Lb47rxMR6f0Teg=;
+        b=RLBwReX0FIbIxiamP5aBLkP3XJJlGKLtWZkHhIQKyhs10OgC6Jivk3joLEZvrN/lgF
+         bESzMxQo/s5FspAxgtBxeN+JptoyvrSo7tqM15iHH2jLxu6Rl5qpWOlikpI11i6oCJ7P
+         nfbzhV4WaLbas0RQUevVst5YI5ijh8w2fc580KyCMO6H/6hh5//QYwvbTOf9LbByVP+r
+         fLuJzcwKE0hkl93667Lpu71iLUkK7CE+CGamiomB5bY9Ziv1tHrs2XveP1eIPk1Fifil
+         a9WvGRMIqwVb9EXKVdlfo/eGlqNi7ADNCg8X8i/xSP3IOP1H8syWb9MDticpwbmkRFMh
+         tuUw==
+X-Gm-Message-State: AOAM532zhuKEmjjNnkW7yqnhVZVDhBQ9jrB98JxY8flc1acK1s2AupL4
+        4Tnrkf2sPZvbuLz4NGr13Y0=
+X-Google-Smtp-Source: ABdhPJwct8KkIgjJ38GUaqLHn3ulTKB5Tst62f63wHwRtQxaBu8Nc//f90clH0KPQU2H7l55roI5tA==
+X-Received: by 2002:a17:906:fa9a:: with SMTP id lt26mr38577976ejb.502.1594140212329;
+        Tue, 07 Jul 2020 09:43:32 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id x10sm594738ejc.46.2020.07.07.09.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 09:43:31 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 19:43:29 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Sergey Organov <sorganov@gmail.com>
+Cc:     richardcochran@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
+ current kernel time
+Message-ID: <20200707164329.pm4p73nzbsda3sfv@skbuf>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+ <20200706142616.25192-4-sorganov@gmail.com>
+ <20200706152721.3j54m73bm673zlnj@skbuf>
+ <874kqksdrb.fsf@osv.gnss.ru>
+ <20200707063651.zpt6bblizo5r3kir@skbuf>
+ <87sge371hv.fsf@osv.gnss.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200707160524.GA3524217@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87sge371hv.fsf@osv.gnss.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 07, 2020 at 07:07:08PM +0300, Sergey Organov wrote:
+> Vladimir Oltean <olteanv@gmail.com> writes:
+> >
+> > What do you mean 'no ticking', and what do you mean by 'non-initialized
+> > clock' exactly? I don't know if the fec driver is special in any way, do
+> > you mean that multiple runs of $(phc_ctl /dev/ptp0 get) from user space
+> > all return 0? That is not at all what is to be expected, I think. The
+> > PHC is always ticking. Its time is increasing.
+> 
+> That's how it is right now. My point is that it likely shouldn't. Why is
+> it ticking when nobody needs it? Does it draw more power due to that?
+> 
+> > What would be that initialization procedure that makes it tick, and
+> > who is doing it (and when)?
+> 
+> The user space code that cares, obviously. Most probably some PTP stack
+> daemon. I'd say that any set clock time ioctl() should start the clock,
+> or yet another ioctl() that enables/disables the clock, whatever.
+> 
 
-On 07.07.2020 19:05, Jiri Olsa wrote:
-> On Tue, Jul 07, 2020 at 05:55:14PM +0300, Alexey Budankov wrote:
-> 
-> SNIP
-> 
->> process_evlist() now looks suboptimal since record mode code directly calls evlist__ctlfd_process()
->> and then handles returned command specifically to the mode. So in v10 I replaced process_evlist()
->> call with direct evlist__ctlfd_process() call and then handling the returned command by printing
->> command msg tag and counter values in the required order. Like this:
->>
->> +		clock_gettime(CLOCK_MONOTONIC, &time_start);
->> +		if (!(evlist__poll(evsel_list, time_to_sleep) > 0)) { /* poll timeout or EINTR */
->> +			if (timeout)
->> +				break;
->> +			else
->> +				stop = handle_interval(interval, times);
->> +			time_to_sleep = sleep_time;
->> +		} else { /* fd revent */
->> +			if (evlist__ctlfd_process(evsel_list, &cmd) > 0) {
->> +				if (interval) {
->> +					switch (cmd) {
->> +					case EVLIST_CTL_CMD_ENABLE:
->> +						pr_info(EVLIST_ENABLED_MSG);
->> +						process_interval();
->> +						break;
->> +					case EVLIST_CTL_CMD_DISABLE:
->> +						process_interval();
->> +						pr_info(EVLIST_DISABLED_MSG);
->> +						break;
->> +					case EVLIST_CTL_CMD_ACK:
->> +					case EVLIST_CTL_CMD_UNSUPPORTED:
->> +					default:
->> +						break;
->> +					}
->> +				}
->> +			}
->> +			clock_gettime(CLOCK_MONOTONIC, &time_stop);
->> +			compute_tts(&time_start, &time_stop, &time_to_sleep);
->> +		}
-> 
-> 
-> hum, why not just get the bool from process_evlist like below?
+That ioctl doesn't exist, at least not in PTP land. This also addresses
+your previous point.
 
-Yes, also possible and works. However it checks twice to implement
-parts of logically the same work and passes the result using extra
-memory: switch/case at process_evlist(), 'if' at dispatch_events(),
-dispatch_events() should also call process_interval() instead of 
-handle_interval() to avoid wasting of times counter for commands.
+> >
+> >> > Whatever the default value of the clock may be, it's bound to be
+> >> > confusing for some reason, _if_ the reason why you're investigating it
+> >> > in the first place is a driver bug. Also, I don't really see how your
+> >> > change to use Jan 1st 1970 makes it any less confusing.
+> >> 
+> >> When I print the clocks in application, I see seconds and milliseconds
+> >> part since epoch. With this patch seconds count from 0, that simply
+> >> match uptime. Easy to tell from any other (malfunctioning) clock.
+> >> 
+> >
+> > It doesn't really match uptime (CLOCK_MONOTONIC). Instead, it is just
+> > initialized with zero. If you have fec built as module and you insmod it
+> > after a few days of uptime, it will not track CLOCK_MONOTONIC at all.
+> >
+> > Not to say that there's anything wrong with initializing it with 0. It's
+> > just that I don't see why it would be objectively better.
+> 
+> Well, it would have been better for me in my particular quest to find
+> the problem, so it rather needs to be shown where initializing with
+> kernel time is objectively better.
+> 
+> Moreover, everything else being equal, 0 is always better, just because
+> of simplicity.
+> 
+> >
+> >> Here is the description of confusion and improvement. I spent half a day
+> >> not realizing that I sometimes get timestamps from the wrong PTP clock.
+> >
+> > There is a suite of tests in tools/testing/selftests/ptp/ which is
+> > useful in debugging problems like this.
+> >
+> > Alternatively, you can write to each individual clock using $(phc_ctl
+> > /dev/ptpN set 0) and check your timestamps again. If the timestamps
+> > don't nudge, it's clear that the timestamps you're getting are not from
+> > the PHC you've written to. Much simpler.
+> 
+> Maybe. Once you do figure there is another clock in the system and/or
+> that that clock is offending. In my case /that/ was the hard part, not
+> changing that offending clock, once found, to whatever.
+> 
 
-Alexey
+And my point was that you could have been in a different situation, when
+all of your clocks could have been ticking in 1970, so this wouldn't
+have been a distiguishing point. So this argument is poor. Using
+phc_ctl, or scripts around that, is much more dynamic.
 
+> >
+> >> Part of the problem is that kernel time at startup, when it is used for
+> >> initialization of the PTP clock, is in fact somewhat random, and it
+> >> could be off by a few seconds.
+> >
+> > Yes, the kernel time at startup is exactly random (not traceable to any
+> > clock reference). And so is the PHC.
+> >
+> >> Now, when in application I get time stamp
+> >> that is almost right, and then another one that is, say, 9 seconds off,
+> >> what should I think? Right, that I drive PTP clock wrongly.
+> >> 
+> >> Now, when one of those timestamps is almost 0, I see immediately I got
+> >> time from wrong PTP clock, rather than wrong time from correct PTP
+> >> clock.
+> >> 
+> >
+> > There are 2 points to be made here:
+> >
+> > 1. There are simpler ways to debug your issue than to leave a patch in
+> >    the kernel, like the "phc_ctl set 0" I mentioned above. This can be
+> >    considered a debugging patch which is also going to have consequences
+> >    for the other users of the driver, if applied. We need to consider
+> >    whether the change in behavior is useful in general.
 > 
-> jirka
+> This does not apply to my particular case as I explained above, and then
+> ease with debug is just a nice side-effect of code simplification.
 > 
+> >
+> > 2. There are boards out there which don't have any battery-backed RTC,
+> >    so CLOCK_REALTIME could be ticking in Jan 1970 already, and therefore
+> >    the PHC would be initialized with a time in 1970. Or your GM might be
+> >    configured to be ticking in Jan 1970 (there are some applications
+> >    that only require the network to be synchronized, but not for the
+> >    time to be traceable to TAI). How does your change make a difference
+> >    to eliminate confusion there, when all of your clocks are going to be
+> >    in 1970? It doesn't make a net difference. Bottom line, a clock
+> >    initialized with 0 doesn't mean it's special in any way. You _could_
+> >    make that change in your debugging environment, and it _could_ be
+> >    useful to your debugging, but if it's not universally useful, I
+> >    wouldn't try to patch the kernel with this change.
 > 
-> ---
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 5021f7286422..32dd3de93f35 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -485,20 +485,20 @@ static bool handle_interval(unsigned int interval, int *times)
->  	return false;
->  }
->  
-> -static bool process_evlist(struct evlist *evlist, unsigned int interval, int *times)
-> +static bool process_evlist(struct evlist *evlist)
->  {
-> -	bool stop = false;
->  	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
-> +	bool display = false;
->  
->  	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
->  		switch (cmd) {
->  		case EVLIST_CTL_CMD_ENABLE:
->  			pr_info(EVLIST_ENABLED_MSG);
-> -			stop = handle_interval(interval, times);
-> +			display = true;
->  			break;
->  		case EVLIST_CTL_CMD_DISABLE:
-> -			stop = handle_interval(interval, times);
->  			pr_info(EVLIST_DISABLED_MSG);
-> +			display = true;
->  			break;
->  		case EVLIST_CTL_CMD_ACK:
->  		case EVLIST_CTL_CMD_UNSUPPORTED:
-> @@ -507,7 +507,7 @@ static bool process_evlist(struct evlist *evlist, unsigned int interval, int *ti
->  		}
->  	}
->  
-> -	return stop;
-> +	return display;
->  }
->  
->  static void enable_counters(void)
-> @@ -618,7 +618,8 @@ static int dispatch_events(bool forks, int timeout, int interval, int *times)
->  				stop = handle_interval(interval, times);
->  			time_to_sleep = sleep_time;
->  		} else { /* fd revent */
-> -			stop = process_evlist(evsel_list, interval, times);
-> +			if (process_evlist(evsel_list))
-> +				stop = handle_interval(interval, times);
->  			clock_gettime(CLOCK_MONOTONIC, &time_stop);
->  			diff_timespec(&time_diff, &time_stop, &time_start);
->  			time_to_sleep -= time_diff.tv_sec * MSEC_PER_SEC +
+> If there is nothing special about any value, 0 is the value to choose,
+> because of simplicity. Once again, I only explained debugging advantages
+> because you've asked about it. It's just a nice side-effect, as it
+> often happens to be when one keeps things as simple as possible.
 > 
+> > Please note that, although my comments appear to be in disagreement with
+> > your idea, they are in fact not at all. It's just that, if there's a a
+> > particular answer to "what time to initialize a PHC with" that is more
+> > favourable than the rest (even though the question itself is a bit
+> > irrelevant overall), then that answer ought to be enforced kernel-wide,
+> > I think.
+> 
+> As everybody, I believe in a set of generic programming principles that
+> are not to be violated lightly. KISS is one of the principles I believe,
+> and trying to be clever with no apparent reason is one way of violating
+> it.
+> 
+> Overall, here is my argument: 0 is simpler than kernel time, so how is
+> it useful to initialize PTP with kernel time that is as wrong as a value
+> for PTP time as 0?
+> 
+
+And overall, my argument is: you are making a user-visible change, for
+basically no strong reason, other than the fact that you like zero
+better. You're trying to reduce confusion, not increase it, right?
+
+I agree with the basic fact that zero is a simpler and more consistent
+value to initialize a PHC with, than the system time. As I've already
+shown to you, I even attempted to make a similar change to the ptp_qoriq
+driver which was rejected. So I hoped that you could bring some better
+arguments than "I believe 0 is simpler". Since no value is right, no
+value is wrong either, so why make a change in the first place? The only
+value in _changing_ to zero would be if all drivers were changed to use
+it consistently, IMO.
+
+But I will stop here and let the PTP maintainer make a choice. I only
+intervened because I knew what the default answer was going to be.
+
+> Thanks,
+> -- Sergey.
+
+Thanks,
+-Vladimir
