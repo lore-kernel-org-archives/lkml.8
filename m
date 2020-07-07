@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E651BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD84C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFAFB207D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7481207D0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135467;
-	bh=co+nTpKG8qYDYuVZfFmnb13CQYw05JwSHsxV7dRzXTM=;
+	s=default; t=1594135472;
+	bh=8HfJxiaBhyuUcN47TRW9Cdd12Anjqh3d9fdQtGgxGGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UVZAb5Qkv02jxm+Cwom0wUx+74syfNQ8WQBBHghm0SwZizGGHqyGzQKyteBlDlWyL
-	 093iwzntZW447Wgcc1hlq7zW3v1CZnBdOKdwqN5PRF53Qt+1JhDquqU3Opme+HtLY2
-	 abfMXOyt+V6JNIL792upZE6oHRNVc3wZrwlxYLPU=
+	b=DBDz6v8cK7o1XLyOqQXgmz67dASK1KtrIONCicYKH7zFVHVGhvXZytLQxW/jNICVy
+	 GGd6eiezQyV0Isk/LcnID+15+xI5WEFMHGNZfQNPNYh+XKF3dSIkEuaowKCGxofCiL
+	 mqGm132lLuFQhNv/t+XiJRmVJO62F/T2MbfBtIQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbgGGPY0 (ORCPT
+        id S1730100AbgGGPY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37952 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:24:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730085AbgGGPYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:22 -0400
+        id S1728878AbgGGPYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC89B206F6;
-        Tue,  7 Jul 2020 15:24:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41D3A2078D;
+        Tue,  7 Jul 2020 15:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135462;
-        bh=co+nTpKG8qYDYuVZfFmnb13CQYw05JwSHsxV7dRzXTM=;
+        s=default; t=1594135459;
+        bh=8HfJxiaBhyuUcN47TRW9Cdd12Anjqh3d9fdQtGgxGGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H+x8z/7gpJjx3WJobqgEmN4qkJCNooz1gtqxZuyj49vJsGwQ3i1iP1Kt7/LbMlYFi
-         LEihZfQbBoByZ/OWOeTVVuEAmfd2PE2uxaCZz1PuAz+DfDZrfA3DgpQ0Y/c8ST9mb7
-         /0u7hbgQ7b2F85B9oiixADsJ0v/c31Ja84F5420o=
+        b=GcgiBGkYGz8pQLlc18S6xrZRTND6CpFgF4KHYj06QaavvCOxNZr5LCcIlzxartLu2
+         2mJVqNbBRKZVypWgfZ+egi7RLwwlnUIc0mk/lgm0HRc0BpB+iWnw+mX1hAGJmNH1Nz
+         Ap2h9JZ994tE7hTPRbUERppGu0smPyXEmu4PrvyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 050/112] mptcp: drop MP_JOIN request sock on syn cookies
-Date:   Tue,  7 Jul 2020 17:16:55 +0200
-Message-Id: <20200707145803.384930723@linuxfoundation.org>
+Subject: [PATCH 5.7 049/112] rxrpc: Fix afs large storage transmission performance drop
+Date:   Tue,  7 Jul 2020 17:16:54 +0200
+Message-Id: <20200707145803.337562856@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,77 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 9e365ff576b7c1623bbc5ef31ec652c533e2f65e ]
+[ Upstream commit 02c28dffb13abbaaedece1e4a6493b48ad3f913a ]
 
-Currently any MPTCP socket using syn cookies will fallback to
-TCP at 3rd ack time. In case of MP_JOIN requests, the RFC mandate
-closing the child and sockets, but the existing error paths
-do not handle the syncookie scenario correctly.
+Commit 2ad6691d988c, which moved the modification of the status annotation
+for a packet in the Tx buffer prior to the retransmission moved the state
+clearance, but managed to lose the bit that set it to UNACK.
 
-Address the issue always forcing the child shutdown in case of
-MP_JOIN fallback.
+Consequently, if a retransmission occurs, the packet is accidentally
+changed to the ACK state (ie. 0) by masking it off, which means that the
+packet isn't counted towards the tally of newly-ACK'd packets if it gets
+hard-ACK'd.  This then prevents the congestion control algorithm from
+recovering properly.
 
-Fixes: ae2dd7164943 ("mptcp: handle tcp fallback when using syn cookies")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix by reinstating the change of state to UNACK.
+
+Spotted by the generic/460 xfstest.
+
+Fixes: 2ad6691d988c ("rxrpc: Fix race between incoming ACK parser and retransmitter")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mptcp/subflow.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ net/rxrpc/call_event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index db3e4e74e7857..0112ead58fd8b 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -424,22 +424,25 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 	struct mptcp_subflow_context *listener = mptcp_subflow_ctx(sk);
- 	struct mptcp_subflow_request_sock *subflow_req;
- 	struct mptcp_options_received mp_opt;
--	bool fallback_is_fatal = false;
-+	bool fallback, fallback_is_fatal;
- 	struct sock *new_msk = NULL;
--	bool fallback = false;
- 	struct sock *child;
+diff --git a/net/rxrpc/call_event.c b/net/rxrpc/call_event.c
+index 985fb89202d0c..9ff85ee8337cd 100644
+--- a/net/rxrpc/call_event.c
++++ b/net/rxrpc/call_event.c
+@@ -253,7 +253,7 @@ static void rxrpc_resend(struct rxrpc_call *call, unsigned long now_j)
+ 		 * confuse things
+ 		 */
+ 		annotation &= ~RXRPC_TX_ANNO_MASK;
+-		annotation |= RXRPC_TX_ANNO_RESENT;
++		annotation |= RXRPC_TX_ANNO_UNACK | RXRPC_TX_ANNO_RESENT;
+ 		call->rxtx_annotations[ix] = annotation;
  
- 	pr_debug("listener=%p, req=%p, conn=%p", listener, req, listener->conn);
- 
--	/* we need later a valid 'mp_capable' value even when options are not
--	 * parsed
-+	/* After child creation we must look for 'mp_capable' even when options
-+	 * are not parsed
- 	 */
- 	mp_opt.mp_capable = 0;
--	if (tcp_rsk(req)->is_mptcp == 0)
-+
-+	/* hopefully temporary handling for MP_JOIN+syncookie */
-+	subflow_req = mptcp_subflow_rsk(req);
-+	fallback_is_fatal = subflow_req->mp_join;
-+	fallback = !tcp_rsk(req)->is_mptcp;
-+	if (fallback)
- 		goto create_child;
- 
- 	/* if the sk is MP_CAPABLE, we try to fetch the client key */
--	subflow_req = mptcp_subflow_rsk(req);
- 	if (subflow_req->mp_capable) {
- 		if (TCP_SKB_CB(skb)->seq != subflow_req->ssn_offset + 1) {
- 			/* here we can receive and accept an in-window,
-@@ -460,12 +463,11 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 		if (!new_msk)
- 			fallback = true;
- 	} else if (subflow_req->mp_join) {
--		fallback_is_fatal = true;
- 		mptcp_get_options(skb, &mp_opt);
- 		if (!mp_opt.mp_join ||
- 		    !subflow_hmac_valid(req, &mp_opt)) {
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
--			return NULL;
-+			fallback = true;
- 		}
- 	}
- 
+ 		skb = call->rxtx_buffer[ix];
 -- 
 2.25.1
 
