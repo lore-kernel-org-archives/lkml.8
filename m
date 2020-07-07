@@ -2,129 +2,96 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E65C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 238DF20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA5B20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:44:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LywVwyGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgGGFl0 (ORCPT
+        id S1727987AbgGGFoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 01:41:26 -0400
-Received: from mga17.intel.com ([192.55.52.151]:23108 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgGGFlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 01:41:25 -0400
-IronPort-SDR: pvE1meqStglqeqmBLwmoMCQS/57BBUZ7zDJbmAlPXbvtxJc5ZXpKVVd9RcZok8UM0hCNrNDlvo
- FQayTIGKZYuw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="127628928"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="127628928"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 22:41:25 -0700
-IronPort-SDR: FSNhW8VrQIYxVDuURu1WYzQeuKzoq5PkkMeyvVkFPYE7Bnx91dYtbXg4fQc8qLYQNQuiSNl9l0
- ve7HLN6ylEBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="305536538"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Jul 2020 22:41:20 -0700
-Date:   Tue, 7 Jul 2020 13:41:20 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andi Kleen <andi.kleen@intel.com>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, tim.c.chen@intel.com,
-        dave.hansen@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, lkp@lists.01.org
-Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
-Message-ID: <20200707054120.GC21741@shbuild999.sh.intel.com>
-References: <20200705044454.GA90533@shbuild999.sh.intel.com>
- <FAAE2B23-2565-4F36-B278-018A5AD219EE@lca.pw>
- <20200705125854.GA66252@shbuild999.sh.intel.com>
- <20200705155232.GA608@lca.pw>
- <20200706014313.GB66252@shbuild999.sh.intel.com>
- <20200706023614.GA1231@lca.pw>
- <20200706132443.GA34488@shbuild999.sh.intel.com>
- <20200706133434.GA3483883@tassilo.jf.intel.com>
- <20200707023829.GA85993@shbuild999.sh.intel.com>
- <87zh8c7z5i.fsf@yhuang-dev.intel.com>
+        Tue, 7 Jul 2020 01:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgGGFoS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 01:44:18 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0CAC061755;
+        Mon,  6 Jul 2020 22:44:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=VZkOok0klgYFwIIGzlVgtaFmTD1Z+sQAb+yB5lFvhOw=; b=LywVwyGX/TJ2DZv2pe2/K08L5r
+        MJDRPMQ6dPYqEoL75gE7NLMEC2Gk+iIYvxkj5BYB9ir7uaGoEI3KTdZTpUy2dK34VvxQ5IFnAkwfj
+        Z53fC+wV1m6YnNgod2y063+J0kDfkvSfL/JwxNnlgomj7ITPpGPt+ZMG2WaX8F9AreLeNJrdSXecK
+        C33ZP48O7t5qd6WBZhZZe6Ns+2Q9Rie0b8hfMh7t/uoX8Nx7NBckcI4Euv6qnOwbdA3LL2fhNu/Dg
+        In2bIpTuJuOw3SGWeK3oz3vCTfaZLo+AtgrZSyUq4n4nu7vRqZyNWxQyd5eeNefJn6MixQuYJg1XN
+        ttz4h/7A==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsgOj-00019U-FU; Tue, 07 Jul 2020 05:44:06 +0000
+Subject: Re: mmotm 2020-07-06-18-53 uploaded
+ (sound/soc/amd/renoir/rn-pci-acp3x.c:)
+To:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>,
+        sfr@canb.auug.org.au, Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+References: <20200707015344.U9ep-OO5Z%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b54188c7-47b4-b7e4-2f74-6394320df5df@infradead.org>
+Date:   Mon, 6 Jul 2020 22:44:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zh8c7z5i.fsf@yhuang-dev.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200707015344.U9ep-OO5Z%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 12:00:09PM +0800, Huang, Ying wrote:
-> Feng Tang <feng.tang@intel.com> writes:
+On 7/6/20 6:53 PM, Andrew Morton wrote:
+> The mm-of-the-moment snapshot 2020-07-06-18-53 has been uploaded to
 > 
-> > On Mon, Jul 06, 2020 at 06:34:34AM -0700, Andi Kleen wrote:
-> >> >  	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-> >> > -	if (ret == 0 && write)
-> >> > +	if (ret == 0 && write) {
-> >> > +		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
-> >> > +			schedule_on_each_cpu(sync_overcommit_as);
-> >> 
-> >> The schedule_on_each_cpu is not atomic, so the problem could still happen
-> >> in that window.
-> >> 
-> >> I think it may be ok if it eventually resolves, but certainly needs
-> >> a comment explaining it. Can you do some stress testing toggling the
-> >> policy all the time on different CPUs and running the test on
-> >> other CPUs and see if the test fails?
-> >
-> > For the raw test case reported by 0day, this patch passed in 200 times
-> > run. And I will read the ltp code and try stress testing it as you
-> > suggested.
-> >
-> >
-> >> The other alternative would be to define some intermediate state
-> >> for the sysctl variable and only switch to never once the schedule_on_each_cpu
-> >> returned. But that's more complexity.
-> >
-> > One thought I had is to put this schedule_on_each_cpu() before
-> > the proc_dointvec_minmax() to do the sync before sysctl_overcommit_memory
-> > is really changed. But the window still exists, as the batch is
-> > still the larger one. 
+>    http://www.ozlabs.org/~akpm/mmotm/
 > 
-> Can we change the batch firstly, then sync the global counter, finally
-> change the overcommit policy?
+> mmotm-readme.txt says
+> 
+> README for mm-of-the-moment:
+> 
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+> 
+> You will need quilt to apply these patches to the latest Linus release (5.x
+> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> http://ozlabs.org/~akpm/mmotm/series
+> 
 
-These reorderings are really head scratching :)
+on i386:
 
-I've thought about this before when Qian Cai first reported the warning
-message, as kernel had a check: 
+when CONFIG_ACPI is not set/enabled:
 
-	VM_WARN_ONCE(percpu_counter_read(&vm_committed_as) <
-			-(s64)vm_committed_as_batch * num_online_cpus(),
-			"memory commitment underflow");
-
-If the batch is decreased first, the warning will be easier/earlier to be
-triggered, so I didn't brought this up when handling the warning message.
-
-But it might work now, as the warning has been removed.
-
-Thanks,
-Feng
+../sound/soc/amd/renoir/rn-pci-acp3x.c: In function ‘snd_rn_acp_probe’:
+../sound/soc/amd/renoir/rn-pci-acp3x.c:222:9: error: implicit declaration of function ‘acpi_evaluate_integer’; did you mean ‘acpi_evaluate_object’? [-Werror=implicit-function-declaration]
+   ret = acpi_evaluate_integer(handle, "_WOV", NULL, &dmic_status);
+         ^~~~~~~~~~~~~~~~~~~~~
+         acpi_evaluate_object
 
 
 
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
