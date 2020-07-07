@@ -2,99 +2,222 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAEA82075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AEB92073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:54:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z7xophkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgGGNxQ (ORCPT
+        id S1728029AbgGGNyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 09:53:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:51224 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbgGGNxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 09:53:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C7A4C0A;
-        Tue,  7 Jul 2020 06:53:15 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 064C43F68F;
-        Tue,  7 Jul 2020 06:53:13 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 14:53:11 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Indicate error in 'val' when config read
- fails
-Message-ID: <20200707135311.GB17163@e121166-lin.cambridge.arm.com>
-References: <20200601130315.18895-1-pali@kernel.org>
- <20200619105618.aksoivu4gb5ex3s3@pali>
+        Tue, 7 Jul 2020 09:54:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgGGNyj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 09:54:39 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8DBCC08C5E0
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 06:54:38 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id h1so9343530vkn.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 06:54:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S3jdzOO32cHlgwmkrkbUpdIm/1MzyDL/EIRbxMTEa5A=;
+        b=Z7xophkPQOkh4ARlxVwFuQJQTBEkSwbOlfOmHHyVle/OWVRWv195/0w2f2t+18snII
+         n3FQ2codAubRjrUSwmyf3H/bvuc0OsNnp3dke2n7VO6YXh/6U9sff01yJTCcBXB97N4O
+         6B26hIolpF+/goAhq8UKgXegM8/9vMeegLeLdtHGeuWYpcRucq5jfbOcGwqaVg8ngSrA
+         1JAP0gkX+J8Um4gTC2fymZhoWIPl9qMkepe+SA81ejzI+RbrXNzlK46JX9YIvPugCwKS
+         f8ceM9b+8mKnMjWN+emWh7vUYj6LvvjD7sNWmzfTZebUC506AFLaUOgH5ESXowrLhRpq
+         RYcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S3jdzOO32cHlgwmkrkbUpdIm/1MzyDL/EIRbxMTEa5A=;
+        b=QRZT2NJG9Go2+D5k/Sv0evp8vl5Oo8Ieilsvf/PdRnnoHWTFIAlM+TqzF43aiA95sV
+         jsCUohqhpSLEWgC2QoishTyeZDaYi79gqpRC7nkoCWeaPEzSiDk6CLJoZaS+v2ulQM4h
+         m/wbQ1uORFVPH3Odf3AXNm5+dDFhT0fpP5hU5qYffxR0+NLcaHRcauCz+sIjQwnNV5wo
+         eEf5V6IIWQqwnQKntlxp4H54BUw3MU68xkxFYcdn8DHT3KZfYEvpaPspiyxot2RQ2Er+
+         XeApD1XcomZVJLKwn6io3+B9aTFu0YIW3jVl3b9wJeLQOG8kuQZeELU5+j3Z725GX81U
+         bPlA==
+X-Gm-Message-State: AOAM531i1rLe8A3FownQXto/4QQmpInaDVSwdtnEwywXvbSk/aQlIGfn
+        bCXLLDa/X1oVogICmlliYXl6ppmhQX2Z6vgRJor6PQ==
+X-Google-Smtp-Source: ABdhPJw9SoRYf79I1P+jKjjZvaJuTnoqHslNrUEV0toooQ5NEaW+6rlt/daKxhkuVtAbPlSqKvED9krSaR3HLLT6Tbw=
+X-Received: by 2002:a1f:1889:: with SMTP id 131mr29817788vky.59.1594130077760;
+ Tue, 07 Jul 2020 06:54:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200619105618.aksoivu4gb5ex3s3@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200624103247.7115-1-daniel.baluta@oss.nxp.com> <20200624103247.7115-2-daniel.baluta@oss.nxp.com>
+In-Reply-To: <20200624103247.7115-2-daniel.baluta@oss.nxp.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 7 Jul 2020 15:54:01 +0200
+Message-ID: <CAPDyKFr8BTkM2W_qbXK1KxtuoZC=uO14_uY9zCWvzfyU0h1a6Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] PM / domains: Introduce multi PM domains helpers
+To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
+Cc:     Kevin Hilman <khilman@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        alsa-devel@alsa-project.org, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 12:56:18PM +0200, Pali Rohár wrote:
-> Hello Lorenzo! Could you please review this patch?
-> 
-> On Monday 01 June 2020 15:03:15 Pali Rohár wrote:
-> > Most callers of config read do not check for return value. But most of the
-> > ones that do, checks for error indication in 'val' variable.
-> > 
-> > This patch updates error handling in advk_pcie_rd_conf() function. If PIO
-> > transfer fails then 'val' variable is set to 0xffffffff which indicates
-> > failture.
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> 
-> I should add credit for Bjorn as he found this issue
+On Wed, 24 Jun 2020 at 12:33, Daniel Baluta <daniel.baluta@oss.nxp.com> wrote:
+>
+> From: Daniel Baluta <daniel.baluta@nxp.com>
+>
+> This patch introduces helpers support for multi PM domains.
+>
+> API consists of:
+>
+> 1) dev_multi_pm_attach - powers up all PM domains associated with a given
+> device. Because we can attach one PM domain per device, we create
+> virtual devices (children of initial device) and associate PM domains
+> one per virtual device.
+>
+> 2) dev_multi_pm_detach - detaches all virtual devices from PM domains
+> attached with.
 
-Could you provide a lore archive link to the relevant
-discussion please ? I will apply it then.
+Nit pick:
+I suggest to rename the helpers into
+dev_pm_domain_attach|detach_multi(), to be more consistent with
+existing function names. It's a bit long I admit that, but I prefer
+the consistency.
 
-Lorenzo
+>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  drivers/base/power/common.c | 93 +++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_domain.h   | 19 ++++++++
+>  2 files changed, 112 insertions(+)
+>
+> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
+> index bbddb267c2e6..b0a4d0109810 100644
+> --- a/drivers/base/power/common.c
+> +++ b/drivers/base/power/common.c
+> @@ -228,3 +228,96 @@ void dev_pm_domain_set(struct device *dev, struct dev_pm_domain *pd)
+>         device_pm_check_callbacks(dev);
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_domain_set);
+> +
+> +/**
+> + * dev_multi_pm_attach - power up device associated power domains
+> + * @dev: The device used to lookup the PM domains
+> + *
+> + * Parse device's OF node to find all PM domains specifiers. For each power
+> + * domain found, create a virtual device and associate it with the
+> + * current power domain.
+> + *
+> + * This function should typically be invoked by a driver during the
+> + * probe phase, in the case its device requires power management through
+> + * multiple PM domains.
+> + *
+> + * Returns a pointer to @dev_multi_pm_domain_data if successfully attached PM
+> + * domains, NULL when the device doesn't need a PM domain or when single
+> + * power-domains exists for it, else an ERR_PTR() in case of
+> + * failures.
+> + */
+> +struct dev_multi_pm_domain_data *dev_multi_pm_attach(struct device *dev)
+> +{
+> +       struct dev_multi_pm_domain_data *mpd, *retp;
+> +       int num_domains;
+> +       int i;
+> +
+> +       num_domains = of_count_phandle_with_args(dev->of_node, "power-domains",
+> +                                                "#power-domain-cells");
+> +       if (num_domains < 2)
+> +               return NULL;
 
-> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> 
-> > ---
-> >  drivers/pci/controller/pci-aardvark.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index 53a4cfd7d377..783a7f1f2c44 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -691,8 +691,10 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
-> >  	advk_writel(pcie, 1, PIO_START);
-> >  
-> >  	ret = advk_pcie_wait_pio(pcie);
-> > -	if (ret < 0)
-> > +	if (ret < 0) {
-> > +		*val = 0xffffffff;
-> >  		return PCIBIOS_SET_FAILED;
-> > +	}
-> >  
-> >  	advk_pcie_check_pio_status(pcie);
-> >  
-> > -- 
-> > 2.20.1
-> > 
+dev_pm_domain_attach_* is typically wrapper functions, allowing
+different types of PM domains to be supported. For example,
+dev_pm_domain_attach() calls acpi_dev_pm_attach() and
+genpd_dev_pm_attach(). While dev_pm_domain_attach_by_id() only calls
+genpd_dev_pm_attach_by_id(), as there's no corresponding interface for
+the acpi PM domain.
+
+The above said, I don't think another layer should be needed here, but
+there is something missing that makes this consistent with the
+behaviour of the above mentioned functions.
+
+How about adding a genpd OF helper ("of_genpd_num_domains(struct
+device_node *)"), that deals with the above parsing and returns the
+number of domains for the device? In this way, if
+of_genpd_num_domains() returns an error code or zero, it's easier to
+continue to try with other PM domain providers (if/when that is
+supported).
+
+> +
+> +       mpd = devm_kzalloc(dev, sizeof(*mpd), GFP_KERNEL);
+> +       if (!mpd)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       mpd->dev = dev;
+> +       mpd->num_domains = num_domains;
+> +
+> +       mpd->virt_devs = devm_kmalloc_array(dev, mpd->num_domains,
+> +                                           sizeof(*mpd->virt_devs),
+> +                                           GFP_KERNEL);
+> +       if (!mpd->virt_devs)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       mpd->links = devm_kmalloc_array(dev, mpd->num_domains,
+> +                                       sizeof(*mpd->links), GFP_KERNEL);
+> +       if (!mpd->links)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       for (i = 0; i < mpd->num_domains; i++) {
+> +               mpd->virt_devs[i] = dev_pm_domain_attach_by_id(dev, i);
+> +               if (IS_ERR(mpd->virt_devs[i])) {
+> +                       retp = (struct dev_multi_pm_domain_data *)
+> +                               mpd->virt_devs[i];
+> +                       goto exit_unroll_pm;
+> +               }
+> +               mpd->links[i] = device_link_add(dev, mpd->virt_devs[i],
+> +                                               DL_FLAG_STATELESS |
+> +                                               DL_FLAG_PM_RUNTIME |
+> +                                               DL_FLAG_RPM_ACTIVE);
+
+As a suggestion to be a little bit more flexible, perhaps these bits
+should be given as an in-parameter instead. Potentially we could then
+also treat the in-parameter being zero, as that no device link should
+be added.
+
+Although, it's kind of hard to know as the users of this interface
+aren't really widely known yet.
+
+> +               if (!mpd->links[i]) {
+> +                       retp = ERR_PTR(-ENOMEM);
+> +                       dev_pm_domain_detach(mpd->virt_devs[i], false);
+> +                       goto exit_unroll_pm;
+> +               }
+> +       }
+> +       return mpd;
+> +
+> +exit_unroll_pm:
+> +       while (--i >= 0) {
+> +               device_link_del(mpd->links[i]);
+> +               dev_pm_domain_detach(mpd->virt_devs[i], false);
+> +       }
+> +
+> +       return retp;
+> +}
+> +EXPORT_SYMBOL(dev_multi_pm_attach);
+> +
+
+[...]
+
+Kind regards
+Uffe
