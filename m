@@ -2,119 +2,100 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD06AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C8720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B5DE20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CaAH029j"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LrprgMdB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbgGGV5U (ORCPT
+        id S1729186AbgGGV7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:57:20 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12494 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728517AbgGGV5U (ORCPT
+        Tue, 7 Jul 2020 17:59:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728357AbgGGV73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:57:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f04ef550000>; Tue, 07 Jul 2020 14:55:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jul 2020 14:57:19 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jul 2020 14:57:19 -0700
-Received: from [10.2.50.36] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jul
- 2020 21:57:18 +0000
-Subject: Re: [PATCH V3] mm/vmstat: Add events for THP migration without split
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-CC:     <linux-mm@kvack.org>, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        "Hugh Dickins" <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        <linux-kernel@vger.kernel.org>
-References: <1594080415-27924-1-git-send-email-anshuman.khandual@arm.com>
- <20200707130406.21ce3d61a4cce25831abb2d1@linux-foundation.org>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <dfb0661f-60bc-92a4-9a10-3cf09342714c@nvidia.com>
-Date:   Tue, 7 Jul 2020 14:57:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 7 Jul 2020 17:59:29 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 645D1C061755;
+        Tue,  7 Jul 2020 14:59:29 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id e13so39691778qkg.5;
+        Tue, 07 Jul 2020 14:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0LujZH3tbuUZGpL+nqS5KjyB11nfc4ieFAgqsO06FcQ=;
+        b=LrprgMdBbCVp4quez8dlfvVtMub+Odvz2yu07WWstpvYsuUbb4QotlwvYJrZgzgXa3
+         LIV3ic16E2kQ+5Z4BxFSLv1qJo8RCXVF3NwuyNgos0lkmpqcsFoU+t5YpkeLSY0AUqYN
+         tpkgwHjubJWQ7ifSbuGIWDQft6LXLbizfrPUlrmp4jiCJdt3ZvlFVvy0OHfxrtVkvMbe
+         cVqkAx/rkEYHVqaiz1xOhLKkMx2LPa8caaQWG5iJbNG7ZQJJqa4GfHoP6ZvjM9kcaMEf
+         dx7PAwLVzxFEyOaQNVOIw10S/GcxtkR+FbQyHt3I0KAlKI9Rb6f1kZIgrcAl2IH7QBU1
+         WO3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=0LujZH3tbuUZGpL+nqS5KjyB11nfc4ieFAgqsO06FcQ=;
+        b=r9gWnsJUnQ9nqu7Mbi4z2U9dcpfRGU2aaXm3qgSTDOqz8BkHqPs3rtFVahNjwdSNNE
+         3O8DxHM6KxkMSAJPlzurEA/hFRUfACaZqs6invNPCcgNCLvxyNKHKRXCiaPp8vtbZ9E/
+         WwaAibEqCilMMxFb2kTEs6XFjMX4aDkM8Ayf1n2Kig+ze18gfeb6BWgB3jjjPxgaXz4C
+         n0ZbUuQqz4qDLnwx6REt0J5pzh9EWzqxPHw50cTz5Yfjet+LyJwsrPF6j+9+EmqeIIgB
+         +qm9FQanQQEHnMvn+Vy2v3GaG024LqLUfOO0cRdXQhqQE4/HgKPNMqs6TTFxqjEf90/Z
+         tm6A==
+X-Gm-Message-State: AOAM531w0VIKUuzeXwht1vB+ZbsMknDNd6Nd6dCYCaB+pfigHToWvxMX
+        qj5m4yqdfMf19Wr11uq7VEE=
+X-Google-Smtp-Source: ABdhPJxUZqZB2fqVPgzHgDgpuScL+9miiipK7SwKP1XY2jR0266CmUPrnavXP7+cXWr85pfmgFDjOw==
+X-Received: by 2002:a37:a316:: with SMTP id m22mr55887513qke.378.1594159167658;
+        Tue, 07 Jul 2020 14:59:27 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id p66sm25301009qkf.58.2020.07.07.14.59.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 14:59:27 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 7 Jul 2020 17:59:25 -0400
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Terrell <terrelln@fb.com>
+Subject: Re: [PATCH v6 2/8] lib: prepare xxhash for preboot environment
+Message-ID: <20200707215925.GA1591079@rani.riverdale.lan>
+References: <20200707034604.1539157-1-nickrterrell@gmail.com>
+ <20200707034604.1539157-3-nickrterrell@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200707130406.21ce3d61a4cce25831abb2d1@linux-foundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594158933; bh=UkjuVJX7qXH4aNelVrfrk3vUbsAK4xxYDBiu8YGtRZ8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CaAH029jU/ZygbHUlEeyaPeQXOxoPlgNNwtuI50UlNXAm6hjhNSjwIpfiVPUGchMl
-         iO/RuP4kZ/ABSyY7LCnlVUGN7otdsM1kAFeDVqNfmbzcn0G0PGPFtxpLssBWYdOxsc
-         yw8J6TeVnmAe9Jl1Ch1ATKJuEgWuwhosNiGg9p9Ac1i7kFSjtdBH+cDyyQWVsVSlXw
-         brIN7QyXVi5EzYO4bfEqYnBFl7IR7rcmJWdaU6E2DQgsnaa3Ci2/N/Gb2Q0knguFO/
-         FL2S+jfmg19kC0ZIathlvEr7PIiJRLL7oStSYeg2bGkrRJSNZfFXBAfYpOjLJRx9ej
-         HBIQ7khdtkhMA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200707034604.1539157-3-nickrterrell@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-07 13:04, Andrew Morton wrote:
-> On Tue,  7 Jul 2020 05:36:55 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+On Mon, Jul 06, 2020 at 08:45:58PM -0700, Nick Terrell wrote:
+> From: Nick Terrell <terrelln@fb.com>
 > 
->> Add following new vmstat events which will help in validating THP migration
->> without split. Statistics reported through these new VM events will help in
->> performance debugging.
->>
->> 1. THP_MIGRATION_SUCCESS
->> 2. THP_MIGRATION_FAILURE
->> 3. THP_MIGRATION_SPLIT
->>
->> In addition, these new events also update normal page migration statistics
->> appropriately via PGMIGRATE_SUCCESS and PGMIGRATE_FAILURE. While here, this
->> updates current trace event 'mm_migrate_pages' to accommodate now available
->> THP statistics.
+> Don't export symbols if XXH_PREBOOT is defined.
 > 
-> Patch looks straightforward enough.  It would be nice to see some
-> confirmation from others that these metrics are a desirable thing to
-> export.
+> This change is necessary to get xxhash to work in a preboot environment,
+> which is needed to support zstd-compressed kernels.
 
-Taking a peek now.
-
-> 
->> ...
->>
->> -	trace_mm_migrate_pages(nr_succeeded, nr_failed, mode, reason);
->> +	if (nr_thp_succeeded)
->> +		count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
->> +	if (nr_thp_failed)
->> +		count_vm_events(THP_MIGRATION_FAILURE, nr_thp_failed);
->> +	if (nr_thp_split)
->> +		count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
-> 
-> Are these "if"s worthwhile to have?
-
-No, they are not. And there are a couple more pre-existing cases as well,
-right above what can be seen here (this patch just follows the local pattern)
-that should also be removed.
-
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+The usual way to do it is by adding -D__DISABLE_EXPORTS to the CFLAGS, which will
+cause EXPORT_SYMBOL to be stubbed out. Doesn't that work here?
