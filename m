@@ -2,128 +2,164 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8EEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B43C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7CD20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134700;
-	bh=rRrhi/xCzVPhTHln5P2aDeaPQr651n89QI1ogMfLPqc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HiCwo0DJqdn+d4s51Qatd0g5J+DbyLESbXzLYXevkSaI+/pP35+CjNGKyETLuuYtu
-	 81Ixl28H1aXGjNTYa3pFXuihX6SUqJKR1CDAweSIxl2Q2g1Dqy7PvtCqR5dRFkF6VP
-	 Mh0OPSTOTmN3BKCg+cTYwuGneI5gKwFsPwgJFHIE=
+	by mail.kernel.org (Postfix) with ESMTP id ADA8E2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:12:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pMBw7q2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgGGPLi (ORCPT
+        id S1728382AbgGGPMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728595AbgGGPLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:11:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A26A620663;
-        Tue,  7 Jul 2020 15:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134666;
-        bh=rRrhi/xCzVPhTHln5P2aDeaPQr651n89QI1ogMfLPqc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DpbAvdD63PvsuOrnzFeQqFc1TwTh8HIxcX4beofbbXR9jmozOJysfFTvlICk1si0h
-         6LXbJ4PnhFf2kKvfB0lAUPSYdFiO/fB3IejOq+Y4DuF9mNsuVZhRWH0uQaQ9mUSCx5
-         7wTZ1eJC8vjb2n33MSjBxdTeTQ9IOlGUftlAJ+is=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Kyungtae Kim <kt0755@gmail.com>,
-        Zqiang <qiang.zhang@windriver.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 06/19] usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
-Date:   Tue,  7 Jul 2020 17:10:09 +0200
-Message-Id: <20200707145747.825157147@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145747.493710555@linuxfoundation.org>
-References: <20200707145747.493710555@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 7 Jul 2020 11:12:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgGGPMR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:12:17 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5EB3C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:12:16 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id b6so45532953wrs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:12:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9gOopT7I1OsIRVZ7gP8eL3IBFb1IUCjqvEssUF76BG4=;
+        b=pMBw7q2CFOQfGmvkpqC/zFRqxOWQ1b7p2+cEAWcF3mCdub5F2Ib4bRWeyCUg8D9e/p
+         OGctjFDilSnopnt9CwMBPoMjshPumFWLq+24vUZa/F+8z0eQcB5V125GtWHS7J8FCBAi
+         olXgEecpuFIpgRHSivW/kY39xGYXlGu1D5YAZkaMvByYxB0WBPXJX21Iay/n/zfvv5B1
+         XGan0uHFhRQj6e7e1PtHNfloLwBgxjg7XKveppNjrMStBeWdP3RUa9AbGRv90xmUTNf+
+         daK4lBDjMHXd+pKrdwj5T7auAYljz+YtqyjZCcarbyAW5kreekC8mDfKzY3A4oDORsMc
+         MWQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9gOopT7I1OsIRVZ7gP8eL3IBFb1IUCjqvEssUF76BG4=;
+        b=GtaKHqm94qai8bJXDEn/BxtdoBd6CLIqmKyflWoqBiCWSahR7zlOKiyNkevYK6EQUA
+         GHRZrI562ts3I5Djt6w6h8vu9ot7QYRsABy1Kr3Dir9Z/xu/eAFlJGzKJRqGn5ndXqkA
+         etCC+7mmeZ3yCUYRAdCEGBXrnnI5O7wpQuqFN3wYargGvFJ+hbDSvawPQUvJUS3Xtf5O
+         53vYirYmXdfrNvtV6MGNBMUe9PGVeRctgxKOF91TCtMSMalMRSdJs887GFqJfBlIA97f
+         oruHC+pAfnGMGp6oK2YsjvVUjXDOhQ6J+hP53ODw0N8HRSmsvPfs9f2gwuu9MSbPtyCv
+         zfIg==
+X-Gm-Message-State: AOAM531ldma/pqIBEFxrEQjTwGMk01iwZwcDV04ALeSrkfTOdIfjn3r8
+        AuyXhbuScufi+dzw3MpNJU/iJDG7gRNIxZkrXid3Ng==
+X-Google-Smtp-Source: ABdhPJzyL7Ci3JIid8hEd7ueUZ+ZnZ09+gKP6KqRip8QlXnvviomlhUgfqgfQEoWKehK4g+kzJ1CJo+batzFSMZXVBI=
+X-Received: by 2002:adf:dd8d:: with SMTP id x13mr53383056wrl.362.1594134735494;
+ Tue, 07 Jul 2020 08:12:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200706122857.27661-1-trix@redhat.com>
+In-Reply-To: <20200706122857.27661-1-trix@redhat.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 7 Jul 2020 11:12:04 -0400
+Message-ID: <CADnq5_PZEg=tW1Nku_=g4FDbL2qXBf=xz9JuFik0fAR3_SSffQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/radeon: fix double free
+To:     trix@redhat.com
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zqiang <qiang.zhang@windriver.com>
+Applied.  Thanks!
 
-[ Upstream commit 28ebeb8db77035e058a510ce9bd17c2b9a009dba ]
+Alex
 
-BUG: memory leak
-unreferenced object 0xffff888055046e00 (size 256):
-  comm "kworker/2:9", pid 2570, jiffies 4294942129 (age 1095.500s)
-  hex dump (first 32 bytes):
-    00 70 04 55 80 88 ff ff 18 bb 5a 81 ff ff ff ff  .p.U......Z.....
-    f5 96 78 81 ff ff ff ff 37 de 8e 81 ff ff ff ff  ..x.....7.......
-  backtrace:
-    [<00000000d121dccf>] kmemleak_alloc_recursive
-include/linux/kmemleak.h:43 [inline]
-    [<00000000d121dccf>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000d121dccf>] slab_alloc_node mm/slub.c:2786 [inline]
-    [<00000000d121dccf>] slab_alloc mm/slub.c:2794 [inline]
-    [<00000000d121dccf>] kmem_cache_alloc_trace+0x15e/0x2d0 mm/slub.c:2811
-    [<000000005c3c3381>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000005c3c3381>] usbtest_probe+0x286/0x19d0
-drivers/usb/misc/usbtest.c:2790
-    [<000000001cec6910>] usb_probe_interface+0x2bd/0x870
-drivers/usb/core/driver.c:361
-    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
-    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
-    [<000000003ef66004>] __device_attach_driver+0x1b6/0x240
-drivers/base/dd.c:831
-    [<00000000eee53e97>] bus_for_each_drv+0x14e/0x1e0 drivers/base/bus.c:431
-    [<00000000bb0648d0>] __device_attach+0x1f9/0x350 drivers/base/dd.c:897
-    [<00000000838b324a>] device_initial_probe+0x1a/0x20 drivers/base/dd.c:944
-    [<0000000030d501c1>] bus_probe_device+0x1e1/0x280 drivers/base/bus.c:491
-    [<000000005bd7adef>] device_add+0x131d/0x1c40 drivers/base/core.c:2504
-    [<00000000a0937814>] usb_set_configuration+0xe84/0x1ab0
-drivers/usb/core/message.c:2030
-    [<00000000e3934741>] generic_probe+0x6a/0xe0 drivers/usb/core/generic.c:210
-    [<0000000098ade0f1>] usb_probe_device+0x90/0xd0
-drivers/usb/core/driver.c:266
-    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
-    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Signed-off-by: Zqiang <qiang.zhang@windriver.com>
-Link: https://lore.kernel.org/r/20200612035210.20494-1-qiang.zhang@windriver.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/misc/usbtest.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
-index bc92a498ec03d..9f19aa950bb19 100644
---- a/drivers/usb/misc/usbtest.c
-+++ b/drivers/usb/misc/usbtest.c
-@@ -2703,6 +2703,7 @@ static void usbtest_disconnect(struct usb_interface *intf)
- 
- 	usb_set_intfdata(intf, NULL);
- 	dev_dbg(&intf->dev, "disconnect\n");
-+	kfree(dev->buf);
- 	kfree(dev);
- }
- 
--- 
-2.25.1
-
-
-
+On Mon, Jul 6, 2020 at 8:29 AM <trix@redhat.com> wrote:
+>
+> From: Tom Rix <trix@redhat.com>
+>
+> clang static analysis flags this error
+>
+> drivers/gpu/drm/radeon/ci_dpm.c:5652:9: warning: Use of memory after it is freed [unix.Malloc]
+>                 kfree(rdev->pm.dpm.ps[i].ps_priv);
+>                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/radeon/ci_dpm.c:5654:2: warning: Attempt to free released memory [unix.Malloc]
+>         kfree(rdev->pm.dpm.ps);
+>         ^~~~~~~~~~~~~~~~~~~~~~
+>
+> problem is reported in ci_dpm_fini, with these code blocks.
+>
+>         for (i = 0; i < rdev->pm.dpm.num_ps; i++) {
+>                 kfree(rdev->pm.dpm.ps[i].ps_priv);
+>         }
+>         kfree(rdev->pm.dpm.ps);
+>
+> The first free happens in ci_parse_power_table where it cleans up locally
+> on a failure.  ci_dpm_fini also does a cleanup.
+>
+>         ret = ci_parse_power_table(rdev);
+>         if (ret) {
+>                 ci_dpm_fini(rdev);
+>                 return ret;
+>         }
+>
+> So remove the cleanup in ci_parse_power_table and
+> move the num_ps calculation to inside the loop so ci_dpm_fini
+> will know how many array elements to free.
+>
+> Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  drivers/gpu/drm/radeon/ci_dpm.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
+> index 86ac032275bb..ba20c6f03719 100644
+> --- a/drivers/gpu/drm/radeon/ci_dpm.c
+> +++ b/drivers/gpu/drm/radeon/ci_dpm.c
+> @@ -5563,6 +5563,7 @@ static int ci_parse_power_table(struct radeon_device *rdev)
+>         if (!rdev->pm.dpm.ps)
+>                 return -ENOMEM;
+>         power_state_offset = (u8 *)state_array->states;
+> +       rdev->pm.dpm.num_ps = 0;
+>         for (i = 0; i < state_array->ucNumEntries; i++) {
+>                 u8 *idx;
+>                 power_state = (union pplib_power_state *)power_state_offset;
+> @@ -5572,10 +5573,8 @@ static int ci_parse_power_table(struct radeon_device *rdev)
+>                 if (!rdev->pm.power_state[i].clock_info)
+>                         return -EINVAL;
+>                 ps = kzalloc(sizeof(struct ci_ps), GFP_KERNEL);
+> -               if (ps == NULL) {
+> -                       kfree(rdev->pm.dpm.ps);
+> +               if (ps == NULL)
+>                         return -ENOMEM;
+> -               }
+>                 rdev->pm.dpm.ps[i].ps_priv = ps;
+>                 ci_parse_pplib_non_clock_info(rdev, &rdev->pm.dpm.ps[i],
+>                                               non_clock_info,
+> @@ -5597,8 +5596,8 @@ static int ci_parse_power_table(struct radeon_device *rdev)
+>                         k++;
+>                 }
+>                 power_state_offset += 2 + power_state->v2.ucNumDPMLevels;
+> +               rdev->pm.dpm.num_ps = i + 1;
+>         }
+> -       rdev->pm.dpm.num_ps = state_array->ucNumEntries;
+>
+>         /* fill in the vce power states */
+>         for (i = 0; i < RADEON_MAX_VCE_LEVELS; i++) {
+> --
+> 2.18.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
