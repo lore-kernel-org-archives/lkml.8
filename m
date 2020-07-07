@@ -2,106 +2,134 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D43C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEFC02063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594132286;
-	bh=u9cHwcNir4o7CZoNQdiplIx+fI5Q1NadDlETdmWe2oc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mew+rD/82A1rudqhxlq5/SHZEdt2CXrjYnIkjmvTg6NEAr9NaDUNV/gl3CTcTg9k4
-	 WQ0aqZXPf7O0dXvrvozEfEBTQXlZmTBmtavkRWFR8QlUKNzg9fhjfnInafuQwELgQp
-	 lcevymvvmFdxal10PpSQAh6LNG8K7kOyCIpEtY2k=
+	by mail.kernel.org (Postfix) with ESMTP id 913E72063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="JGTzfnCq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgGGObZ (ORCPT
+        id S1728312AbgGGOcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbgGGObZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:31:25 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBBF22063A;
-        Tue,  7 Jul 2020 14:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594132284;
-        bh=u9cHwcNir4o7CZoNQdiplIx+fI5Q1NadDlETdmWe2oc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lsF4Y6TI4se0MULQuP2J7GCVnVkZH1HtvKHRAViGf7AzJiw+Z7pLIT0vKpzmqS2u2
-         u49kEzWJOv9ebnbufCdyxWLBZVbDNSZLpNhQuVqmTnVv1hkGl0T+Wh/YcKmbonOIiS
-         pdBnkAjOP/MiWgYxipjjYW4FXbuzs5EyhC/TLFOI=
-Received: by mail-oi1-f170.google.com with SMTP id t198so22472079oie.7;
-        Tue, 07 Jul 2020 07:31:24 -0700 (PDT)
-X-Gm-Message-State: AOAM530fygOCNDFuGCiuE1o3lmvdZyp8+hCkV10NpKYERi6OhtqY1q3l
-        YxGxJOXZeMo9RPKKY4Q05rBcHCBOJVP3G/nJ2A==
-X-Google-Smtp-Source: ABdhPJxZpu3muVU1JSTu4HLqkdyNBb1nY6MBHbFPTUmS3FU1uehTPnYLfxZ3J02PgSTI2PbjH/Sgsk/bfoi+WKTi2sE=
-X-Received: by 2002:aca:30d2:: with SMTP id w201mr3517914oiw.147.1594132284171;
- Tue, 07 Jul 2020 07:31:24 -0700 (PDT)
+        Tue, 7 Jul 2020 10:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgGGOcC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:32:02 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32955C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:32:02 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id a12so43400740ion.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:32:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K9wtGrRmm/8ioPgsuW/ScKzBbF1VAv0JgQlxPuaeZjA=;
+        b=JGTzfnCq2nLpWgT0i7AllodECtqIXc0lJai/AdmQNrYkIOD+LRzHS62If436OjZZ3y
+         gz7dHtnAhIElDndYwbPYyOpuDSH5GBd1lLBu+mL2tIY6ACa6KkahSdPTT3meGSRzwu3m
+         8QUYEGRFeuLy2VcuM6yGDL7mJsQqncBHsTwuuWbTXerN0cEGb0mJz72UJItyM9bOwI8j
+         ikQNiuc6d5gMEHhSVqb7alcfRt+DtPS++HhgDfhX/VUmJGPByXmQ08e8+M7nV19M425K
+         xU7PDUIhdH/MJn7F07/L4BHgx/xR9sC46PGo26+B4ZYGbMw7rFzNXV/zrK3oGsXJ9wNy
+         W+8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K9wtGrRmm/8ioPgsuW/ScKzBbF1VAv0JgQlxPuaeZjA=;
+        b=gLPEJWnXJqhq4OFLPAcn0lh8+D1ddH7zrgCte4dzFNDcemTTUdmhypYZA06NC85ljR
+         92nxF8qvYy3lr9v76d7s5Jo4s8aIoT+6frDLXskHkbLywvQDanBsjJwrzgK2z1HRmQmG
+         1F57GYaoLZvCkke6lI4O1sUOCVGC2gVMAwYbO5OHBxAmxA3m7FNrpQFuY2+V4EFAEuzf
+         tKPtoF83mcbvWsge9hLbpEULXOlL5oUrAb2Dz+3UnYdoWD7rCTjngic0vFISm7Hce4C7
+         Bd/RH3C4/A4qRn0UiD9O5PIFog5clTTu9es5uo2FW6qUsKG7dQA3IpETOQIpNMnlYYQ+
+         Dovw==
+X-Gm-Message-State: AOAM533T6h26sgYKl4pVKwWY3adXV/YcNTh4t10JbcY55nDAhO7MGmhp
+        jlnxue0vrarHDAGyeY5V6JRbjoPQxT1dGA==
+X-Google-Smtp-Source: ABdhPJxwqxcaRrvKoFd0HyQLe2vIc0kunz65FpiBhfVS0IaAWWJE8PhV/N97KGvKH2kLRP5T0Bk2Ag==
+X-Received: by 2002:a05:6602:5db:: with SMTP id w27mr31920956iox.58.1594132320139;
+        Tue, 07 Jul 2020 07:32:00 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id l10sm12956943ilc.52.2020.07.07.07.31.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 07:31:59 -0700 (PDT)
+Subject: Re: [PATCH 05/15] mm: allow read-ahead with IOCB_NOWAIT set
+To:     =?UTF-8?Q?Andreas_Gr=c3=bcnbacher?= <andreas.gruenbacher@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Dave Chinner <david@fromorbit.com>, io-uring@vger.kernel.org,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+References: <20200618144355.17324-1-axboe@kernel.dk>
+ <20200618144355.17324-6-axboe@kernel.dk>
+ <20200624010253.GB5369@dread.disaster.area>
+ <20200624014645.GJ21350@casper.infradead.org>
+ <bad52be9-ae44-171b-8dbf-0d98eedcadc0@kernel.dk>
+ <70b0427c-7303-8f45-48bd-caa0562a2951@kernel.dk>
+ <20200624164127.GP21350@casper.infradead.org>
+ <8835b6f2-b3c5-c9a0-2119-1fb161cf87dd@kernel.dk>
+ <CAHpGcMJsrQXX4OQe6MqjyTt8BOLZw-y1ixdk76p_DsZONyEJcQ@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b147aa47-940c-c641-3dac-8d99f8789a47@kernel.dk>
+Date:   Tue, 7 Jul 2020 08:31:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
- <1593701576-28580-2-git-send-email-amittomer25@gmail.com> <20200702210014.GA1685248@bogus>
- <CABHD4K8=8+fFu=ZjQHEgR44x+QsvLZ+LW7w=XKH7O4oXu+QY4A@mail.gmail.com> <CABHD4K-_jmC512_ckmw66FppJHitkU8j-M9TQ316+M9zou3Fmg@mail.gmail.com>
-In-Reply-To: <CABHD4K-_jmC512_ckmw66FppJHitkU8j-M9TQ316+M9zou3Fmg@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 7 Jul 2020 08:31:12 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKrdP_XzG_iSgJmdp=tj7mdhTZZFNaRuUwe=YgmELeAGg@mail.gmail.com>
-Message-ID: <CAL_JsqKrdP_XzG_iSgJmdp=tj7mdhTZZFNaRuUwe=YgmELeAGg@mail.gmail.com>
-Subject: Re: [PATCH v5 01/10] dt-bindings: dmaengine: convert Actions Semi Owl
- SoCs bindings to yaml
-To:     Amit Tomer <amittomer25@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Andre Przywara <andre.przywara@arm.com>,
-        cristian.ciocaltea@gmail.com, Vinod Koul <vkoul@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-actions@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHpGcMJsrQXX4OQe6MqjyTt8BOLZw-y1ixdk76p_DsZONyEJcQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 1:55 AM Amit Tomer <amittomer25@gmail.com> wrote:
->
-> On Fri, Jul 3, 2020 at 12:48 PM Amit Tomer <amittomer25@gmail.com> wrote:
-> >
-> > Hi Rob,
-> >
-> >
-> > > If you already ran 'make dt_binding_check' and didn't see the above
-> > > error(s), then make sure dt-schema is up to date:
-> > >
-> > > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> > >
-> > > Please check and re-submit.
-> >
-> > I wasn't able to reproduce it, even after updating the dt-schema.
-> > Kindly have a look at logs:
-> >
-> > https://pastebin.ubuntu.com/p/xTBNNyBdFv/
->
-> Looks like, dtschema even after upgrade pointing to older commit "6a941d46b9f5".
-> Wondering why it has not been pointing to latest commit "6a941d46b9f5"
->
-> After upgrading the pip version for python3, and upgrading the dt-schema again
-> https://pastebin.ubuntu.com/p/Rd9knQgvKH/
->
-> Issue is still reproduced.
+On 7/7/20 5:38 AM, Andreas Grünbacher wrote:
+> Am Mi., 24. Juni 2020 um 18:48 Uhr schrieb Jens Axboe <axboe@kernel.dk>:
+>>
+>> On 6/24/20 10:41 AM, Matthew Wilcox wrote:
+>>> On Wed, Jun 24, 2020 at 09:35:19AM -0600, Jens Axboe wrote:
+>>>> On 6/24/20 9:00 AM, Jens Axboe wrote:
+>>>>> On 6/23/20 7:46 PM, Matthew Wilcox wrote:
+>>>>>> I'd be quite happy to add a gfp_t to struct readahead_control.
+>>>>>> The other thing I've been looking into for other reasons is adding
+>>>>>> a memalloc_nowait_{save,restore}, which would avoid passing down
+>>>>>> the gfp_t.
+>>>>>
+>>>>> That was my first thought, having the memalloc_foo_save/restore for
+>>>>> this. I don't think adding a gfp_t to readahead_control is going
+>>>>> to be super useful, seems like the kind of thing that should be
+>>>>> non-blocking by default.
+>>>>
+>>>> We're already doing memalloc_nofs_save/restore in
+>>>> page_cache_readahead_unbounded(), so I think all we need is to just do a
+>>>> noio dance in generic_file_buffered_read() and that should be enough.
+>>>
+>>> I think we can still sleep though, right?  I was thinking more
+>>> like this:
+>>>
+>>> http://git.infradead.org/users/willy/linux.git/shortlog/refs/heads/memalloc
+>>
+>> Yeah, that's probably better. How do we want to handle this? I've already
+>> got the other bits queued up. I can either add them to the series, or
+>> pull a branch that'll go into Linus as well.
+> 
+> Also note my conflicting patch that introduces a IOCB_NOIO flag for
+> fixing a gfs2 regression:
+> 
+> https://lore.kernel.org/linux-fsdevel/20200703095325.1491832-2-agruenba@redhat.com/
 
-If dtschema is changed, you need a clean tree as make doesn't track
-that changing. Specifically, processed-schema-examples.yaml needs to
-be removed.
+Yeah I noticed, pretty easy to resolve though.
 
-Rob
+-- 
+Jens Axboe
+
