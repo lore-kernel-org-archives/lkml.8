@@ -2,71 +2,386 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B182C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC486C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0389C2064C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52312064C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 22:46:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eBoPjreR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgGGWpD (ORCPT
+        id S1729450AbgGGWqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 18:45:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44932 "EHLO
+        Tue, 7 Jul 2020 18:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728924AbgGGWpC (ORCPT
+        with ESMTP id S1728740AbgGGWqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 18:45:02 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796ADC061755;
-        Tue,  7 Jul 2020 15:45:02 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E93F1120F93E0;
-        Tue,  7 Jul 2020 15:45:01 -0700 (PDT)
-Date:   Tue, 07 Jul 2020 15:45:01 -0700 (PDT)
-Message-Id: <20200707.154501.526542996364970721.davem@davemloft.net>
-To:     grandmaster@al2klimov.de
-Cc:     andrew.hendry@gmail.com, kuba@kernel.org,
-        mchehab+huawei@kernel.org, masahiroy@kernel.org,
-        linux-x25@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: X.25 network layer
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200706205030.21459-1-grandmaster@al2klimov.de>
-References: <20200706205030.21459-1-grandmaster@al2klimov.de>
-X-Mailer: Mew version 6.8 on Emacs 26.3
+        Tue, 7 Jul 2020 18:46:08 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB58AC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 15:46:08 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id i4so23154942ybh.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 15:46:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=IEfZLZ78xcvl63YOGXYJYdTw/XucW2SRwmLFdcRTwIE=;
+        b=eBoPjreRWiU8NjeW0Fu/7efs7C8GadIPXxLb/b4W5z53Uu77vk+4febcwq1JkQeMf2
+         4H/ljOzw8mCmTooOmnt6GTFSbciL3mt1aeUEH4vXypwvYUAt/br50PHlR9O93yw1uz50
+         P5Z3GylpA0obhYQ4nFfgyViY67nhALdrKqOadGfpMwgmh/wg4DJQWkH6oiXAXR1+hk66
+         JVswL/NopEugGFHnkAXeD9cuoksXiQqw5s9qdAYbVgxJsaBCyu15+e//XDy+MSlpV3XL
+         7yAgS1UvTX8hmQd3/1kGtTB7NBQRMFzrH8jTJjOSbDe2ogGDcE4PST808XY3R4jmRHol
+         VzpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=IEfZLZ78xcvl63YOGXYJYdTw/XucW2SRwmLFdcRTwIE=;
+        b=qXRvVa/PQaVu5B+CaYg6SH5jqWTpir9rB0TvwNTCieieN6zWA9X8SiNFKAulRI1NKd
+         Ks/wKBPgzQrc9NsQt3aE/65C3kc5U3+L6x7EQlNZ/c4ZDcNC2vpgABEoWJrUa9UCMqw4
+         7COVvkLxl0Gl2IVSvUvhRDoU0sUr+gQ6ZO7kGDxlCkxeuj+iaJGwAbysWP7OHMootY02
+         GFeu9G5jc/Ujh3dWhi1UboK8t73g0/n/sRC7665//4U3m4jW18ddMHIuMNdVUlc3SoGe
+         Lde4RlehMyiK8x8uWrvxK4sksZYuQlSFE+t9OarwPa7NrL2f9BsT4A9R71T9vI5Ej2gt
+         OSzw==
+X-Gm-Message-State: AOAM533OnW9KuPS4I9V8AGD0fq2VOF4p4fhv/oIIcvJEMBPohjh3EktZ
+        PRiefxdptk0D/TAoPuahWUJTYVhb5KxI
+X-Google-Smtp-Source: ABdhPJz62vzOsYrjFc5Vg2wRsVItzBkR3EFMlTaNhnQrwZLPYqgptPIriecmFQNCxJnn+co+nTLjrfOxXlzl
+X-Received: by 2002:a25:7755:: with SMTP id s82mr34709305ybc.275.1594161967387;
+ Tue, 07 Jul 2020 15:46:07 -0700 (PDT)
+Date:   Tue,  7 Jul 2020 15:46:01 -0700
+Message-Id: <20200707224604.3737893-1-rajatja@google.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jul 2020 15:45:02 -0700 (PDT)
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+Subject: [PATCH v4 1/4] PCI: Move pci_enable_acs() and its dependencies up in pci.c
+From:   Rajat Jain <rajatja@google.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Date: Mon,  6 Jul 2020 22:50:30 +0200
+Move pci_enable_acs() and the functions it depends on, further up in the
+source code to avoid having to forward declare it when we make it static
+in near future (next patch).
 
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If both the HTTP and HTTPS versions
->           return 200 OK and serve the same content:
->             Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+No functional changes intended.
 
-Applied.
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+v4: Same as v3
+v3: Initial version of the patch, created per Bjorn's suggestion
+
+ drivers/pci/pci.c | 254 +++++++++++++++++++++++-----------------------
+ 1 file changed, 127 insertions(+), 127 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce096272f52b1..eec625f0e594e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -777,6 +777,133 @@ int pci_wait_for_pending(struct pci_dev *dev, int pos, u16 mask)
+ 	return 0;
+ }
+ 
++static int pci_acs_enable;
++
++/**
++ * pci_request_acs - ask for ACS to be enabled if supported
++ */
++void pci_request_acs(void)
++{
++	pci_acs_enable = 1;
++}
++
++static const char *disable_acs_redir_param;
++
++/**
++ * pci_disable_acs_redir - disable ACS redirect capabilities
++ * @dev: the PCI device
++ *
++ * For only devices specified in the disable_acs_redir parameter.
++ */
++static void pci_disable_acs_redir(struct pci_dev *dev)
++{
++	int ret = 0;
++	const char *p;
++	int pos;
++	u16 ctrl;
++
++	if (!disable_acs_redir_param)
++		return;
++
++	p = disable_acs_redir_param;
++	while (*p) {
++		ret = pci_dev_str_match(dev, p, &p);
++		if (ret < 0) {
++			pr_info_once("PCI: Can't parse disable_acs_redir parameter: %s\n",
++				     disable_acs_redir_param);
++
++			break;
++		} else if (ret == 1) {
++			/* Found a match */
++			break;
++		}
++
++		if (*p != ';' && *p != ',') {
++			/* End of param or invalid format */
++			break;
++		}
++		p++;
++	}
++
++	if (ret != 1)
++		return;
++
++	if (!pci_dev_specific_disable_acs_redir(dev))
++		return;
++
++	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
++	if (!pos) {
++		pci_warn(dev, "cannot disable ACS redirect for this hardware as it does not have ACS capabilities\n");
++		return;
++	}
++
++	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
++
++	/* P2P Request & Completion Redirect */
++	ctrl &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC);
++
++	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
++
++	pci_info(dev, "disabled ACS redirect\n");
++}
++
++/**
++ * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
++ * @dev: the PCI device
++ */
++static void pci_std_enable_acs(struct pci_dev *dev)
++{
++	int pos;
++	u16 cap;
++	u16 ctrl;
++
++	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
++	if (!pos)
++		return;
++
++	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
++	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
++
++	/* Source Validation */
++	ctrl |= (cap & PCI_ACS_SV);
++
++	/* P2P Request Redirect */
++	ctrl |= (cap & PCI_ACS_RR);
++
++	/* P2P Completion Redirect */
++	ctrl |= (cap & PCI_ACS_CR);
++
++	/* Upstream Forwarding */
++	ctrl |= (cap & PCI_ACS_UF);
++
++	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
++}
++
++/**
++ * pci_enable_acs - enable ACS if hardware support it
++ * @dev: the PCI device
++ */
++void pci_enable_acs(struct pci_dev *dev)
++{
++	if (!pci_acs_enable)
++		goto disable_acs_redir;
++
++	if (!pci_dev_specific_enable_acs(dev))
++		goto disable_acs_redir;
++
++	pci_std_enable_acs(dev);
++
++disable_acs_redir:
++	/*
++	 * Note: pci_disable_acs_redir() must be called even if ACS was not
++	 * enabled by the kernel because it may have been enabled by
++	 * platform firmware.  So if we are told to disable it, we should
++	 * always disable it after setting the kernel's default
++	 * preferences.
++	 */
++	pci_disable_acs_redir(dev);
++}
++
+ /**
+  * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
+  * @dev: PCI device to have its BARs restored
+@@ -3230,133 +3357,6 @@ void pci_configure_ari(struct pci_dev *dev)
+ 	}
+ }
+ 
+-static int pci_acs_enable;
+-
+-/**
+- * pci_request_acs - ask for ACS to be enabled if supported
+- */
+-void pci_request_acs(void)
+-{
+-	pci_acs_enable = 1;
+-}
+-
+-static const char *disable_acs_redir_param;
+-
+-/**
+- * pci_disable_acs_redir - disable ACS redirect capabilities
+- * @dev: the PCI device
+- *
+- * For only devices specified in the disable_acs_redir parameter.
+- */
+-static void pci_disable_acs_redir(struct pci_dev *dev)
+-{
+-	int ret = 0;
+-	const char *p;
+-	int pos;
+-	u16 ctrl;
+-
+-	if (!disable_acs_redir_param)
+-		return;
+-
+-	p = disable_acs_redir_param;
+-	while (*p) {
+-		ret = pci_dev_str_match(dev, p, &p);
+-		if (ret < 0) {
+-			pr_info_once("PCI: Can't parse disable_acs_redir parameter: %s\n",
+-				     disable_acs_redir_param);
+-
+-			break;
+-		} else if (ret == 1) {
+-			/* Found a match */
+-			break;
+-		}
+-
+-		if (*p != ';' && *p != ',') {
+-			/* End of param or invalid format */
+-			break;
+-		}
+-		p++;
+-	}
+-
+-	if (ret != 1)
+-		return;
+-
+-	if (!pci_dev_specific_disable_acs_redir(dev))
+-		return;
+-
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
+-	if (!pos) {
+-		pci_warn(dev, "cannot disable ACS redirect for this hardware as it does not have ACS capabilities\n");
+-		return;
+-	}
+-
+-	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
+-
+-	/* P2P Request & Completion Redirect */
+-	ctrl &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC);
+-
+-	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+-
+-	pci_info(dev, "disabled ACS redirect\n");
+-}
+-
+-/**
+- * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
+- * @dev: the PCI device
+- */
+-static void pci_std_enable_acs(struct pci_dev *dev)
+-{
+-	int pos;
+-	u16 cap;
+-	u16 ctrl;
+-
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
+-	if (!pos)
+-		return;
+-
+-	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
+-	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
+-
+-	/* Source Validation */
+-	ctrl |= (cap & PCI_ACS_SV);
+-
+-	/* P2P Request Redirect */
+-	ctrl |= (cap & PCI_ACS_RR);
+-
+-	/* P2P Completion Redirect */
+-	ctrl |= (cap & PCI_ACS_CR);
+-
+-	/* Upstream Forwarding */
+-	ctrl |= (cap & PCI_ACS_UF);
+-
+-	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+-}
+-
+-/**
+- * pci_enable_acs - enable ACS if hardware support it
+- * @dev: the PCI device
+- */
+-void pci_enable_acs(struct pci_dev *dev)
+-{
+-	if (!pci_acs_enable)
+-		goto disable_acs_redir;
+-
+-	if (!pci_dev_specific_enable_acs(dev))
+-		goto disable_acs_redir;
+-
+-	pci_std_enable_acs(dev);
+-
+-disable_acs_redir:
+-	/*
+-	 * Note: pci_disable_acs_redir() must be called even if ACS was not
+-	 * enabled by the kernel because it may have been enabled by
+-	 * platform firmware.  So if we are told to disable it, we should
+-	 * always disable it after setting the kernel's default
+-	 * preferences.
+-	 */
+-	pci_disable_acs_redir(dev);
+-}
+-
+ static bool pci_acs_flags_enabled(struct pci_dev *pdev, u16 acs_flags)
+ {
+ 	int pos;
+-- 
+2.27.0.212.ge8ba1cc988-goog
+
