@@ -2,130 +2,103 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E38C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22616206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594119656;
-	bh=SPhgPQejzR/07fcEolAXk+aK9D/qqSFwLNJIywwhpVI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PCUHNeE4sUMzDuW/z6Du5ZtMLkKe8LPipB7XjDv3ENs6l9Qj0iMZesjIXXKj5XZ+l
-	 ujn5BzoU7gy7s0Naf9XhObaTDaCQjVKNc8FWCtDFEwAgn2QPzsXmPCmCQAxHdIqClF
-	 Qz6pGHs1wvImuHt/FSKs075F9rGU2TznRkxKyvY4=
+	by mail.kernel.org (Postfix) with ESMTP id 8193D206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:01:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="sVLlHdMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgGGLAy (ORCPT
+        id S1728216AbgGGLBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:00:54 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:57610 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgGGLAy (ORCPT
+        Tue, 7 Jul 2020 07:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727936AbgGGLBJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:00:54 -0400
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 067B0M3d019851
-        for <linux-kernel@vger.kernel.org>; Tue, 7 Jul 2020 20:00:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 067B0M3d019851
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1594119623;
-        bh=4yu2n3n5C/fRjnuTP126S3/fQ4gXKW38TCxG+vu9Yfo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QhMl2uhfl8jVzfqfeZAGj4XD2OPl5Z51Y3YdlFy2LpD7O6dm6hk3OPB+nQZhEF2S/
-         M4qrJd42cOhz3lhbpQxCeliFSRXJTGQhbi+XbjbC6T9d02Yv/XTkQI01H5hNmAwAxC
-         6tFLHux7puahnHIhq42mGspsB1RAtrwEJmJ9ThFdfGNHqOX/WT0jGrxKqxrab86hOp
-         NNddFl4hv1tktjJM1sXQK//sNUo5KF4aLF+d7tJzGXppRmc6rWTannpejWzalJWbEN
-         9WzY/XmlJI/bcYnDsL4J3Yx9UHY7xYF6A45BhwtuCEEkr6iQLDAryAuwijan0sGwB1
-         JbnTxU38gSmHw==
-X-Nifty-SrcIP: [209.85.222.51]
-Received: by mail-ua1-f51.google.com with SMTP id b24so5601318uak.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:00:22 -0700 (PDT)
-X-Gm-Message-State: AOAM5337T6lMiKslCEkJT01jRcDSL+8tuB1k8WxHwXDjwgLFu5GxR3tB
-        VF7zD7WaknUmOPr1fTR0w2ZStSd6Oyx2J3xn1G0=
-X-Google-Smtp-Source: ABdhPJymeeoDYkbNlY6GxjialEfi35FAedJEi2UP4hQmNNDZE11PD/TRgqjDOK419vOntfEQFPdcUsPXFEPdhUoJYxQ=
-X-Received: by 2002:ab0:5b91:: with SMTP id y17mr38993416uae.95.1594119621316;
- Tue, 07 Jul 2020 04:00:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200707101642.1747944-1-lee.jones@linaro.org> <20200707101642.1747944-18-lee.jones@linaro.org>
-In-Reply-To: <20200707101642.1747944-18-lee.jones@linaro.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 7 Jul 2020 19:59:44 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQynE+HJDf=qGkw9qxTeHd81DZmiM2iXhODkWHNd9qXig@mail.gmail.com>
-Message-ID: <CAK7LNAQynE+HJDf=qGkw9qxTeHd81DZmiM2iXhODkWHNd9qXig@mail.gmail.com>
-Subject: Re: [PATCH 17/28] ASoC: uniphier: aio-core: Fix incorrectly named
- struct property and remove another
+        Tue, 7 Jul 2020 07:01:09 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E44C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:01:09 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d4so19839955pgk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:01:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pAMYwt59LkqLrwNKFzr4bzymX1Cf2qes9pBL1ueiJsw=;
+        b=sVLlHdMUd8rpWhgiQiLbWBdoAxrVOLLuGkJyTbwkwNnfnestrgIC/Eh7rGZDqrouF/
+         Vx7uhpmmhReZUbK7jt0UwQiXKhDytDqQYJZCcVPHc/LBboJrs5UjJzwt9BLJ2iSA+MU1
+         8ItartpECjVNe28EQAlhwU3T2aLuiOh9AY6dzImJ8m8PlURTK8EdPgCLvx5z9wPsV9r5
+         mLVgv85Ias4NN48SW/HUv0CGVojbV2QiKTjDRBLZvn05BkYgboxIbicO1gKRw/mWxI84
+         r0aHp7txAt5K6ypaIuOOxvDHSrWI0FK26LYlGnUUh2mk65G3l/Tz4E9kkXdQUvMLvHar
+         sSWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pAMYwt59LkqLrwNKFzr4bzymX1Cf2qes9pBL1ueiJsw=;
+        b=qHHcHPzIiB0WZt1310Ri1QE4i7gHOYz6CQAlJco1SPN3WAAkj0lO0niHuussnasSzE
+         1R2yo7bqfMVIn9OYQAVPjtsmnZwyFyqoW2m0LCpQjUAFKUDUc5iRztZd8pAL/64OAYOp
+         9g66uYX6Qg4CcxAiNH/6L6Ah5qUXfxfBWMrAPtPXOC/7+Bt5yuaMFuSCJ3+ftOVjonTx
+         T5GO3D8YkPUM8b0+eiwCHYA/4hFAKE8JpUD9rXhMuup4IrlB2KZjbm2u+Utrh6WbcSFg
+         6Ow3Soirjm+LdvFL1WGBDARxY9PLqc/HAu0aaMF/PAfGHJ9MckiVrfuNdxfBQp4PJC7p
+         8TGw==
+X-Gm-Message-State: AOAM530AYkZXdVw3gQS+tU1yrixjVItmD59cy6TQSSYFzPhn+qB4dkSq
+        fcQhweBsbiFcn1Au/OP+J0aDCQ==
+X-Google-Smtp-Source: ABdhPJw63aAiU5OimGX+Q6ywEfE3uOzW82MXV5UIsx4a8uxSy+Tww3NfCJ7K5weY+joU3K5TNmpHEA==
+X-Received: by 2002:a63:135b:: with SMTP id 27mr36576925pgt.37.1594119668943;
+        Tue, 07 Jul 2020 04:01:08 -0700 (PDT)
+Received: from localhost.localdomain (36-239-210-101.dynamic-ip.hinet.net. [36.239.210.101])
+        by smtp.gmail.com with ESMTPSA id w1sm22211314pfq.53.2020.07.07.04.01.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 04:01:08 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
 To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Chen-Yu Tsai <wens@csie.org>, Carlo Caione <carlo@caione.org>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] mfd/axp20x-i2c: Fix "CONFIG_ACPI" is not defined warning
+Date:   Tue,  7 Jul 2020 19:00:58 +0800
+Message-Id: <20200707110058.976371-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 7:18 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> Both issues are likely due to bitrot.  Let's bring them up-to-date.
->
-> Fixes the following W=1 kernel build warning(s):
->
->  sound/soc/uniphier/aio-core.c:107: warning: Function parameter or member 'pll_id' not described in 'aio_chip_set_pll'
->  sound/soc/uniphier/aio-core.c:107: warning: Excess function parameter 'source' description in 'aio_chip_set_pll'
->  sound/soc/uniphier/aio-core.c:279: warning: Excess function parameter 'ch' description in 'aio_port_set_ch'
->
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fix below build warning:
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+drivers/mfd/axp20x-i2c.c:82:5: warning: "CONFIG_ACPI" is not defined, evaluates to 0 [-Wundef]
+   82 | #if CONFIG_ACPI
+      |     ^~~~~~~~~~~
 
-but Pierre-Louis Bossart had already sent an equivalent patch.
+Fixes: 20f359cb236b ("mfd: axp20x-i2c: Do not define 'struct acpi_device_id' when !CONFIG_ACPI")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/mfd/axp20x-i2c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  sound/soc/uniphier/aio-core.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/sound/soc/uniphier/aio-core.c b/sound/soc/uniphier/aio-core.c
-> index 9bcba06ba52ea..86eb0915d80ad 100644
-> --- a/sound/soc/uniphier/aio-core.c
-> +++ b/sound/soc/uniphier/aio-core.c
-> @@ -93,9 +93,9 @@ void aio_iecout_set_enable(struct uniphier_aio_chip *chip, bool enable)
->
->  /**
->   * aio_chip_set_pll - set frequency to audio PLL
-> - * @chip  : the AIO chip pointer
-> - * @source: PLL
-> - * @freq  : frequency in Hz, 0 is ignored
-> + * @chip:      the AIO chip pointer
-> + * @pll_id:    PLL
-> + * @freq:      frequency in Hz, 0 is ignored
->   *
->   * Sets frequency of audio PLL. This function can be called anytime,
->   * but it takes time till PLL is locked.
-> @@ -267,7 +267,6 @@ void aio_port_reset(struct uniphier_aio_sub *sub)
->  /**
->   * aio_port_set_ch - set channels of LPCM
->   * @sub: the AIO substream pointer, PCM substream only
-> - * @ch : count of channels
->   *
->   * Set suitable slot selecting to input/output port block of AIO.
->   *
-> --
-> 2.25.1
->
-
-
+diff --git a/drivers/mfd/axp20x-i2c.c b/drivers/mfd/axp20x-i2c.c
+index bd271fbe1ec1..3c930316d48b 100644
+--- a/drivers/mfd/axp20x-i2c.c
++++ b/drivers/mfd/axp20x-i2c.c
+@@ -79,7 +79,7 @@ static const struct i2c_device_id axp20x_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
+ 
+-#if CONFIG_ACPI
++#ifdef CONFIG_ACPI
+ static const struct acpi_device_id axp20x_i2c_acpi_match[] = {
+ 	{
+ 		.id = "INT33F4",
 -- 
-Best Regards
-Masahiro Yamada
+2.25.1
+
