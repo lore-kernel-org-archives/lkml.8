@@ -2,113 +2,108 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5753BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C40AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314D5206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555B2206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 13:24:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jlJttwew"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k402dYHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgGGNYo (ORCPT
+        id S1728110AbgGGNYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 09:24:44 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:15146 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727975AbgGGNYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 09:24:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594128283; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=50fFHxqOqiGbl65PO6T3ISd+brFmJjDWNvJZpirTFFk=; b=jlJttwewL54Hk11PoaGUeyDX/UF30gMIa+tH73dCA8T6oe9lVvdOMhu20hI0aLA3tAHxzoy+
- UB2Ow9cG4wFiCU394TSAk4DPnZauhxvIBbkIRdvc70HvRXyBofdybHaWgYtrJ2VCA8D56HOC
- wUqCxDE2KKzFvFrmZ5s9WEHbqug=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f047787a19992ac6523bd73 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Jul 2020 13:24:23
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7D0E2C43387; Tue,  7 Jul 2020 13:24:23 +0000 (UTC)
-Received: from [192.168.0.102] (unknown [182.74.172.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5822C433C6;
-        Tue,  7 Jul 2020 13:24:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B5822C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
-Subject: Re: [PATCH V2 0/6] Add frequency / voltage scaling support for
- IPQ6018 SoC
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     sivaprak@codeaurora.org, sricharan@codeaurora.org
-References: <1592889472-6843-1-git-send-email-kathirav@codeaurora.org>
-From:   Kathiravan T <kathirav@codeaurora.org>
-Message-ID: <4d8e7bc2-55c9-1ac4-c287-00094e4e7a9c@codeaurora.org>
-Date:   Tue, 7 Jul 2020 18:54:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 7 Jul 2020 09:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgGGNYs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 09:24:48 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC73BC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 06:24:47 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id k17so11911011lfg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 06:24:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6e8r6byPcRWNj2RxIEqZuV+scBnjKV1qFFgcNxHbcMk=;
+        b=k402dYHd3Sh9OuaY3cwiRV4OA2jwf8FVD3iGl46dMwT0scxWX2Ahxok8Kz7lUNu067
+         KC3R/QFiRNC1VrNNacByaQCgAqf2UwaoboL0G0mzZJg0I+N0hM75jCpvjQ2GmU0xnDO2
+         UTZ3t29Iv2jZbGuZRVueJf1A6A/y5uoqB1mwZWRj6/oj/JfbP2jG/uFEUHIx9pCeypKd
+         i6LHxFb9mGknM1pouJ+4j1cOVY3WOD6UO2ernsJMVIhvrwvNsBf5p69gej3bzWhcbxBj
+         RshS4ympZLipqgI0kpd9DrHQw/bHCDWaO49iB0o9H05JX0z/wmrrpH/NC4SWthw+tq3O
+         wJeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6e8r6byPcRWNj2RxIEqZuV+scBnjKV1qFFgcNxHbcMk=;
+        b=IoU55RzTAzSYjKVh+4d0nT2MahGf/TCfgNSJEYtaoxZopEWJWvwqWxqdugIR8Mze4s
+         0XelkMziU3pgXSwkkc5yN1UAAF62elMPGOsiOySqmJRyI5G4C9K3g3Vhxr9ETVykKQqj
+         IbrUX6cxQ/Co/0t+KPNrecAKwn99yFKJnDJdYQxRus2XSEdMCamrkioag/6xjZ+Lwjx2
+         BKeJoXooVU5S9KwbClQ6AEm4hiW/I47dYAgu0l+pNRHr+A0qHV1expNjlex6DyZ20v6R
+         jIRz0+wvJDOZust5eqd0V+BjurbbHAqsLo/Zt8K4NMAuczMb61YdZoOWLBW/1RFKZZjM
+         +0FQ==
+X-Gm-Message-State: AOAM533ymRchPsDSQPjtj3S3nxQrlZiQ9Gkpwq/RTuQ8lp4HfqCbEeXC
+        mXxadMLWXfc6PJE0J8jWwk8=
+X-Google-Smtp-Source: ABdhPJwQolnlny6NtJTP91g3lOzH720eDwi/jkgPyEN1QbUdoCuVMdkDoFONP41bGbAbd4RxmG0GKA==
+X-Received: by 2002:a05:6512:250:: with SMTP id b16mr32303647lfo.67.1594128286073;
+        Tue, 07 Jul 2020 06:24:46 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id t7sm166872ljh.22.2020.07.07.06.24.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 06:24:44 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 7 Jul 2020 15:24:42 +0200
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tian Tao <tiantao6@hisilicon.com>
+Cc:     Tian Tao <tiantao6@hisilicon.com>, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com
+Subject: Re: [PATCH] vmalloc: Removing incorrect logs when vmalloc failed
+Message-ID: <20200707132442.GA26493@pc636>
+References: <1594113232-32193-1-git-send-email-tiantao6@hisilicon.com>
+ <5e7885ef-081e-0682-7be7-40eb7712d2c7@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1592889472-6843-1-git-send-email-kathirav@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e7885ef-081e-0682-7be7-40eb7712d2c7@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn, Can you help to review the below patches in this series?
+On Tue, Jul 07, 2020 at 03:18:54PM +0530, Anshuman Khandual wrote:
+> 
+> 
+> On 07/07/2020 02:43 PM, Tian Tao wrote:
+> > It is not possible to increase size with vmalloc=<size> in arm64
+> > architecture and it will mislead.however vmalloc return failure
+> > is a rare occurrence in 'many architectures including arm64'.
+> 
+> But there is a chance that vmalloc() might work on architectures
+> that support 'vmalloc=' command line i.e after a change and this
+> information here might be helpful in those cases.
+> 
+Agree. At least i see a few users of it:
 
-   dt-bindings: soc: qcom: Add IPQ6018 compatible
-   soc: qcom: smd-rpm: Add IPQ6018 compatible
+<snip>
+urezki@pc638:~/data/coding/linux-next.git$ grep -rn early_param ./arch/ | grep vmalloc
+./arch/arm/mm/mmu.c:1152:early_param("vmalloc", early_vmalloc);
+./arch/unicore32/mm/mmu.c:276:early_param("vmalloc", early_vmalloc);
+./arch/x86/mm/pgtable_32.c:86:early_param("vmalloc", parse_vmalloc);
+urezki@pc638:~/data/coding/linux-next.git$
+<snip>
 
-Hi Rob, Can you help to review the YAML schema in this series?
+Thanks!
 
-Thanks,
-
-Kathiravan T.
-
-On 6/23/2020 10:47 AM, Kathiravan T wrote:
-> IPQ6018 SoC uses the PMIC MP5496. SMPA2 and LDOA2 regulator of MP5496
-> controls the APSS and SDCC voltage scaling respectively. Add support
-> for the same.
->
-> changes since V1:
-> 	- Moved YAML conversion to the last as per Mark's comments
->
-> Kathiravan T (6):
->    dt-bindings: soc: qcom: Add IPQ6018 compatible
->    soc: qcom: smd-rpm: Add IPQ6018 compatible
->    dt-bindings: regulator: add MP5496 regulator compatible
->    regulator: qcom_smd: Add MP5496 regulators
->    dt-bindings: soc: qcom: convert the SMD-RPM document to YAML schema
->    dt-bindings: regulator: convert QCOM SMD-RPM regulator document to
->      YAML schema
->
->   .../bindings/regulator/qcom,smd-rpm-regulator.txt  | 320 ---------------------
->   .../bindings/regulator/qcom,smd-rpm-regulator.yaml | 106 +++++++
->   .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  |  62 ----
->   .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml |  92 ++++++
->   drivers/regulator/qcom_smd-regulator.c             |  34 +++
->   drivers/soc/qcom/smd-rpm.c                         |   1 +
->   6 files changed, 233 insertions(+), 382 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
->   create mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
->   delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
->   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
->
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+--
+Vlad Rezki
