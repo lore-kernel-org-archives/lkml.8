@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14743C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE39C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E858B2082E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3759C2082E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135438;
-	bh=i4XSvbvtC7Ca7fy5r1SeCxDj3Kj1bHrfkY3BraejvUM=;
+	s=default; t=1594135442;
+	bh=NZZf369o9CqVagxURHWT3hkOtLKZWAf5ATL3y3fFzPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mLfF2D7graTyZjnfYR+SdmkuuNG9qXlL36BiQYptgXogKbcVfi31edfJ4e2KzR9Yb
-	 yp8U6NbCtUc7Uq6dHVMVqZ/pKPYowemTl+89w5eA18l4b/GOqiYeOD0DxuUpzsJhZv
-	 +tZSuJG74Oehkh1JrFT7u82lMWaqZOmjJcwMbXfU=
+	b=ym+siONepXs3jn388TRMnPzSwUSHvbB9g1zlCINMLhBkzEQcXmvBpF0FTKHtAyY9S
+	 OaeRY66kbTcZhF8L82ELTAavnl/gXOArIs7PuSYSmOtogfwU4QX4CERWbpo+f4Qkha
+	 lC+svSZRNDm0SW5OXanK3IhOjdWGYua6PZV8RCJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbgGGPXz (ORCPT
+        id S1730025AbgGGPYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:23:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37172 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:24:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728799AbgGGPXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:23:52 -0400
+        id S1730022AbgGGPXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:23:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 705902083B;
-        Tue,  7 Jul 2020 15:23:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45F1E2078D;
+        Tue,  7 Jul 2020 15:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135431;
-        bh=i4XSvbvtC7Ca7fy5r1SeCxDj3Kj1bHrfkY3BraejvUM=;
+        s=default; t=1594135434;
+        bh=NZZf369o9CqVagxURHWT3hkOtLKZWAf5ATL3y3fFzPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sVUYJYcHNDlyK3K58iJGH2YYP2wWKAbUa5N1AczNEwC+2ewH6diork8VMvmXHgQA0
-         Nuqb6m7g0SSl9QL6svkgBdbaVPPDf9WiumR/pd+tk0yTVcwmBIgHEz2ClJBMMMqRv8
-         CRMcX/Si/djKSdrYVd/h/MuoqQ8skPdzVRKwvLUQ=
+        b=RHwgKE9kMcrNdfnAIWy3fZ1WR3iMCQeDXGJaaBnHD8kVPhowFBb0f6rgZjMAe2HGp
+         rEhYDKvugH83Ug1nLD3tlTX8njH7SZ6PMIKIZV8ZdfemB/Z6dgVzxlzCMuZSn53RAz
+         o5EFTwzdDo5cXkIIrcawPtU9wWbzyjrHMk+G4wKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 039/112] io_uring: fix current->mm NULL dereference on exit
-Date:   Tue,  7 Jul 2020 17:16:44 +0200
-Message-Id: <20200707145802.851894457@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 040/112] kgdb: Avoid suspicious RCU usage warning
+Date:   Tue,  7 Jul 2020 17:16:45 +0200
+Message-Id: <20200707145802.900551198@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -59,78 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit d60b5fbc1ce8210759b568da49d149b868e7c6d3 ]
+[ Upstream commit 440ab9e10e2e6e5fd677473ee6f9e3af0f6904d6 ]
 
-Don't reissue requests from io_iopoll_reap_events(), the task may not
-have mm, which ends up with NULL. It's better to kill everything off on
-exit anyway.
+At times when I'm using kgdb I see a splat on my console about
+suspicious RCU usage.  I managed to come up with a case that could
+reproduce this that looked like this:
 
-[  677.734670] RIP: 0010:io_iopoll_complete+0x27e/0x630
-...
-[  677.734679] Call Trace:
-[  677.734695]  ? __send_signal+0x1f2/0x420
-[  677.734698]  ? _raw_spin_unlock_irqrestore+0x24/0x40
-[  677.734699]  ? send_signal+0xf5/0x140
-[  677.734700]  io_iopoll_getevents+0x12f/0x1a0
-[  677.734702]  io_iopoll_reap_events.part.0+0x5e/0xa0
-[  677.734703]  io_ring_ctx_wait_and_kill+0x132/0x1c0
-[  677.734704]  io_uring_release+0x20/0x30
-[  677.734706]  __fput+0xcd/0x230
-[  677.734707]  ____fput+0xe/0x10
-[  677.734709]  task_work_run+0x67/0xa0
-[  677.734710]  do_exit+0x35d/0xb70
-[  677.734712]  do_group_exit+0x43/0xa0
-[  677.734713]  get_signal+0x140/0x900
-[  677.734715]  do_signal+0x37/0x780
-[  677.734717]  ? enqueue_hrtimer+0x41/0xb0
-[  677.734718]  ? recalibrate_cpu_khz+0x10/0x10
-[  677.734720]  ? ktime_get+0x3e/0xa0
-[  677.734721]  ? lapic_next_deadline+0x26/0x30
-[  677.734723]  ? tick_program_event+0x4d/0x90
-[  677.734724]  ? __hrtimer_get_next_event+0x4d/0x80
-[  677.734726]  __prepare_exit_to_usermode+0x126/0x1c0
-[  677.734741]  prepare_exit_to_usermode+0x9/0x40
-[  677.734742]  idtentry_exit_cond_rcu+0x4c/0x60
-[  677.734743]  sysvec_reschedule_ipi+0x92/0x160
-[  677.734744]  ? asm_sysvec_reschedule_ipi+0xa/0x20
-[  677.734745]  asm_sysvec_reschedule_ipi+0x12/0x20
+  WARNING: suspicious RCU usage
+  5.7.0-rc4+ #609 Not tainted
+  -----------------------------
+  kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  other info that might help us debug this:
+
+    rcu_scheduler_active = 2, debug_locks = 1
+  3 locks held by swapper/0/1:
+   #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
+   #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
+   #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
+
+  stack backtrace:
+  CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
+  Hardware name: Google Cheza (rev3+) (DT)
+  Call trace:
+   dump_backtrace+0x0/0x1b8
+   show_stack+0x1c/0x24
+   dump_stack+0xd4/0x134
+   lockdep_rcu_suspicious+0xf0/0x100
+   find_task_by_pid_ns+0x5c/0x80
+   getthread+0x8c/0xb0
+   gdb_serial_stub+0x9d4/0xd04
+   kgdb_cpu_enter+0x284/0x7ac
+   kgdb_handle_exception+0x174/0x20c
+   kgdb_brk_fn+0x24/0x30
+   call_break_hook+0x6c/0x7c
+   brk_handler+0x20/0x5c
+   do_debug_exception+0x1c8/0x22c
+   el1_sync_handler+0x3c/0xe4
+   el1_sync+0x7c/0x100
+   rpmh_rsc_probe+0x38/0x420
+   platform_drv_probe+0x94/0xb4
+   really_probe+0x134/0x300
+   driver_probe_device+0x68/0x100
+   __device_attach_driver+0x90/0xa8
+   bus_for_each_drv+0x84/0xcc
+   __device_attach+0xb4/0x13c
+   device_initial_probe+0x18/0x20
+   bus_probe_device+0x38/0x98
+   device_add+0x38c/0x420
+
+If I understand properly we should just be able to blanket kgdb under
+one big RCU read lock and the problem should go away.  We'll add it to
+the beast-of-a-function known as kgdb_cpu_enter().
+
+With this I no longer get any splats and things seem to work fine.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200602154729.v2.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ kernel/debug/debug_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 63a456921903e..71d281f68ed83 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -858,6 +858,7 @@ static int __io_sqe_files_update(struct io_ring_ctx *ctx,
- 				 struct io_uring_files_update *ip,
- 				 unsigned nr_args);
- static int io_grab_files(struct io_kiocb *req);
-+static void io_complete_rw_common(struct kiocb *kiocb, long res);
- static void io_cleanup_req(struct io_kiocb *req);
- static int io_file_get(struct io_submit_state *state, struct io_kiocb *req,
- 		       int fd, struct file **out_file, bool fixed);
-@@ -1697,6 +1698,14 @@ static void io_iopoll_queue(struct list_head *again)
- 	do {
- 		req = list_first_entry(again, struct io_kiocb, list);
- 		list_del(&req->list);
-+
-+		/* shouldn't happen unless io_uring is dying, cancel reqs */
-+		if (unlikely(!current->mm)) {
-+			io_complete_rw_common(&req->rw.kiocb, -EAGAIN);
-+			io_put_req(req);
-+			continue;
-+		}
-+
- 		refcount_inc(&req->refs);
- 		io_queue_async_work(req);
- 	} while (!list_empty(again));
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index d47c7d6656cd3..9be6accf8fe3d 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -577,6 +577,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 		arch_kgdb_ops.disable_hw_break(regs);
+ 
+ acquirelock:
++	rcu_read_lock();
+ 	/*
+ 	 * Interrupts will be restored by the 'trap return' code, except when
+ 	 * single stepping.
+@@ -636,6 +637,7 @@ return_normal:
+ 			atomic_dec(&slaves_in_kgdb);
+ 			dbg_touch_watchdogs();
+ 			local_irq_restore(flags);
++			rcu_read_unlock();
+ 			return 0;
+ 		}
+ 		cpu_relax();
+@@ -654,6 +656,7 @@ return_normal:
+ 		raw_spin_unlock(&dbg_master_lock);
+ 		dbg_touch_watchdogs();
+ 		local_irq_restore(flags);
++		rcu_read_unlock();
+ 
+ 		goto acquirelock;
+ 	}
+@@ -777,6 +780,7 @@ kgdb_restore:
+ 	raw_spin_unlock(&dbg_master_lock);
+ 	dbg_touch_watchdogs();
+ 	local_irq_restore(flags);
++	rcu_read_unlock();
+ 
+ 	return kgdb_info[cpu].ret_state;
+ }
 -- 
 2.25.1
 
