@@ -2,53 +2,52 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2733C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A138C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53ACC20771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04CB20771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135173;
-	bh=QHZHaMRGai+vdVgWa6RY1S8eqxxr2yVw5NNDIaD0tBo=;
+	s=default; t=1594135176;
+	bh=Nw05yyms+dL37Vxoz1oy/1BvjPadV0/lGa/L8xOJlUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Szta1RGSUr0bda23PocsfyaktCGPzBOoaopRdaI902YUaXgICCAc1ZYkxTZWTbNoT
-	 3JAPVerTp+zvjxcO+S/qXPcZ3LlWZUrwy0tqiqSLyllI3/sfgaBw8boA+3OqTuwmqo
-	 3FDo9o6ebZbxa8/iBXtnfMyW32+9w35WjewKWxsw=
+	b=Ku+hdhYhAkXpaM6vHb2CJFI6DtGQTjYZyTlusID+z0kB40G+UGsFz8tOWvOfov7Ej
+	 pI53C9k6ok1JbuaFk4yTOoeMIbm9OeXmu4h1UM8R6oET5G6ebJPUGQu9UefMDSgu7y
+	 1GcTgClxJtpHOr69ckRQIoQhGdYz+h+T+y7swyDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbgGGPTc (ORCPT
+        id S1729360AbgGGPTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:19:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59212 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729341AbgGGPT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:19:28 -0400
+        id S1729342AbgGGPTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:19:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3D4F20771;
-        Tue,  7 Jul 2020 15:19:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FAEF2065D;
+        Tue,  7 Jul 2020 15:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135168;
-        bh=QHZHaMRGai+vdVgWa6RY1S8eqxxr2yVw5NNDIaD0tBo=;
+        s=default; t=1594135170;
+        bh=Nw05yyms+dL37Vxoz1oy/1BvjPadV0/lGa/L8xOJlUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k4OEp1g5p1j2xGJ/G5bsqGKLIiolXQdUNX9NQ3FCyCQzSOwmnI2kzYo06dyhlPyoe
-         AeJlkgiN8gEHkpofPQ0cMwJQ/UX7S0zk+tjQyASlSWnUmiEJJEBqvNwae3sIsUMwA7
-         QKp5yDOs5Nx8Au2eY9NxDw1TuuiclDEQJSLhnmUk=
+        b=SahrpoJlWbwaYZXmucI+51bKwfsxhP5GpL41/dKXSmV6olBByB1tBvg2uPqkvkXYB
+         6u7EUBNWdORw8bHZm8AteCnmH71b4ku7Gpt7HRDQ+S3hnyzWmCQqc1nlTqANVBfFvj
+         wLfdcF3nw+tu+KC0s0346WK28LXjR4hajIiI2wF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Michael Shych <michaelsh@mellanox.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 26/36] i2c: mlxcpld: check correct size of maximum RECV_LEN packet
-Date:   Tue,  7 Jul 2020 17:17:18 +0200
-Message-Id: <20200707145750.391213659@linuxfoundation.org>
+        stable@vger.kernel.org, Elliott Mitchell <ehem+debian@m5p.com>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.19 27/36] nfsd: apply umask on fs without ACL support
+Date:   Tue,  7 Jul 2020 17:17:19 +0200
+Message-Id: <20200707145750.449013671@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -61,42 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: J. Bruce Fields <bfields@redhat.com>
 
-[ Upstream commit 597911287fcd13c3a4b4aa3e0a52b33d431e0a8e ]
+commit 22cf8419f1319ff87ec759d0ebdff4cbafaee832 upstream.
 
-I2C_SMBUS_BLOCK_MAX defines already the maximum number as defined in the
-SMBus 2.0 specs. I don't see a reason to add 1 here. Also, fix the errno
-to what is suggested for this error.
+The server is failing to apply the umask when creating new objects on
+filesystems without ACL support.
 
-Fixes: c9bfdc7c16cb ("i2c: mlxcpld: Add support for smbus block read transaction")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Michael Shych <michaelsh@mellanox.com>
-Tested-by: Michael Shych <michaelsh@mellanox.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To reproduce this, you need to use NFSv4.2 and a client and server
+recent enough to support umask, and you need to export a filesystem that
+lacks ACL support (for example, ext4 with the "noacl" mount option).
+
+Filesystems with ACL support are expected to take care of the umask
+themselves (usually by calling posix_acl_create).
+
+For filesystems without ACL support, this is up to the caller of
+vfs_create(), vfs_mknod(), or vfs_mkdir().
+
+Reported-by: Elliott Mitchell <ehem+debian@m5p.com>
+Reported-by: Salvatore Bonaccorso <carnil@debian.org>
+Tested-by: Salvatore Bonaccorso <carnil@debian.org>
+Fixes: 47057abde515 ("nfsd: add support for the umask attribute")
+Cc: stable@vger.kernel.org
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/i2c/busses/i2c-mlxcpld.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfsd/vfs.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-mlxcpld.c b/drivers/i2c/busses/i2c-mlxcpld.c
-index 2fd717d8dd30e..71d7bae2cbcad 100644
---- a/drivers/i2c/busses/i2c-mlxcpld.c
-+++ b/drivers/i2c/busses/i2c-mlxcpld.c
-@@ -337,9 +337,9 @@ static int mlxcpld_i2c_wait_for_tc(struct mlxcpld_i2c_priv *priv)
- 		if (priv->smbus_block && (val & MLXCPLD_I2C_SMBUS_BLK_BIT)) {
- 			mlxcpld_i2c_read_comm(priv, MLXCPLD_LPCI2C_NUM_DAT_REG,
- 					      &datalen, 1);
--			if (unlikely(datalen > (I2C_SMBUS_BLOCK_MAX + 1))) {
-+			if (unlikely(datalen > I2C_SMBUS_BLOCK_MAX)) {
- 				dev_err(priv->dev, "Incorrect smbus block read message len\n");
--				return -E2BIG;
-+				return -EPROTO;
- 			}
- 		} else {
- 			datalen = priv->xfer.data_len;
--- 
-2.25.1
-
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1206,6 +1206,9 @@ nfsd_create_locked(struct svc_rqst *rqst
+ 		iap->ia_mode = 0;
+ 	iap->ia_mode = (iap->ia_mode & S_IALLUGO) | type;
+ 
++	if (!IS_POSIXACL(dirp))
++		iap->ia_mode &= ~current_umask();
++
+ 	err = 0;
+ 	host_err = 0;
+ 	switch (type) {
+@@ -1439,6 +1442,9 @@ do_nfsd_create(struct svc_rqst *rqstp, s
+ 		goto out;
+ 	}
+ 
++	if (!IS_POSIXACL(dirp))
++		iap->ia_mode &= ~current_umask();
++
+ 	host_err = vfs_create(dirp, dchild, iap->ia_mode, true);
+ 	if (host_err < 0) {
+ 		fh_drop_write(fhp);
 
 
