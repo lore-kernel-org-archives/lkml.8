@@ -2,100 +2,150 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67410C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0692C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46BC62067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC64206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:50:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ezn5S6o1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgGGTuM (ORCPT
+        id S1728509AbgGGTuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:50:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgGGTuM (ORCPT
+        Tue, 7 Jul 2020 15:50:16 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24679 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726951AbgGGTuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:50:12 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E6EC061755;
-        Tue,  7 Jul 2020 12:50:11 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 2A597BC06F;
-        Tue,  7 Jul 2020 19:50:06 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, mhiramat@kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: kprobes
-Date:   Tue,  7 Jul 2020 21:49:59 +0200
-Message-Id: <20200707194959.52487-1-grandmaster@al2klimov.de>
+        Tue, 7 Jul 2020 15:50:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594151414;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1MyiecDX95vYDn16o1AnLNPElpX9iu/bMS7QGJmoJuA=;
+        b=Ezn5S6o1mJtao82drG9DKUfIGEvcH6/qddkvT5XkH6r8sOkg6mDh9XBfhmeSQTTBCm/YS0
+        Yv7lKHFMnuxUCJ/omVEpVwc9Q6JQJJk6uOR+8qg+CX3VMIUjHbTPu+WZbJUBU31YIcH9vw
+        n0HpTmVeQyeoXbFc+DG2FOSUB2gooO8=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-468-p9AkMfYZMTSdWbZ5mhhRcg-1; Tue, 07 Jul 2020 15:50:12 -0400
+X-MC-Unique: p9AkMfYZMTSdWbZ5mhhRcg-1
+Received: by mail-qt1-f199.google.com with SMTP id g6so31534133qtr.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 12:50:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1MyiecDX95vYDn16o1AnLNPElpX9iu/bMS7QGJmoJuA=;
+        b=RUvGSw8jeLgDtXQtj2+D3hprmjHbTJr9wJxu656vi0vnd7j+yoSs00cfqKGXO/gkht
+         EhLiu0VJUcyDxhknmFYrcMqqbEST1LbasUfThuphozpU5OMb3JRxPDkwrD4+nfV0vOnG
+         gRhEslSPtwrkH3nouaw4jZy05E8m0NiP/wvzrkjy5yDwYs7srzFGtLAjKDCOGvFcCQS+
+         RgUCnto04fvD+87uhezkHJpgViSqgUSeMv1XFvhLFiXFHCO743uafSKJAu3L2fHCKnAt
+         8l0spVlsVtQ66pG7atLBWvOP2duSgDq+46caCzTI/eJEDHdcFw0m+UnuKsxfqYSDNhQW
+         t2rQ==
+X-Gm-Message-State: AOAM533nEKULojWeZLjQW0RjQXNT+OIpcrSuI+CKiKohQHdzrXvLE6fF
+        Mob4i9RvloZEWfqlpBy2BBZwX/vyAnYRjvr5Ta6PXBOtXMKIw821JpkA93hgdjQxuexNUqyXneO
+        I4V6vxDbanDV+eHAjwZ22SFts
+X-Received: by 2002:aed:2fa1:: with SMTP id m30mr41633877qtd.306.1594151412052;
+        Tue, 07 Jul 2020 12:50:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxQG9gFW6u6nd+w3S2m/MpDzbGYxLTlBzGT3OREctmj26wBZlUi6rIGQkS/PR/KM97vnhychQ==
+X-Received: by 2002:aed:2fa1:: with SMTP id m30mr41633836qtd.306.1594151411697;
+        Tue, 07 Jul 2020 12:50:11 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id o20sm28889533qtk.56.2020.07.07.12.50.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 12:50:10 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 15:50:09 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>
+Subject: Re: [PATCH v10 02/14] KVM: Cache as_id in kvm_memory_slot
+Message-ID: <20200707195009.GE88106@xz-x1>
+References: <20200601115957.1581250-1-peterx@redhat.com>
+ <20200601115957.1581250-3-peterx@redhat.com>
+ <20200702230849.GL3575@linux.intel.com>
+ <20200703184122.GF6677@xz-x1>
+ <20200707061732.GI5208@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200707061732.GI5208@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, Jul 06, 2020 at 11:17:32PM -0700, Sean Christopherson wrote:
+> On Fri, Jul 03, 2020 at 02:41:22PM -0400, Peter Xu wrote:
+> > On Thu, Jul 02, 2020 at 04:08:49PM -0700, Sean Christopherson wrote:
+> > > On Mon, Jun 01, 2020 at 07:59:45AM -0400, Peter Xu wrote:
+> > > > Cache the address space ID just like the slot ID.  It will be used in
+> > > > order to fill in the dirty ring entries.
+> > > > 
+> > > > Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> > > > Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > > > ---
+> > > >  include/linux/kvm_host.h | 1 +
+> > > >  virt/kvm/kvm_main.c      | 1 +
+> > > >  2 files changed, 2 insertions(+)
+> > > > 
+> > > > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> > > > index 01276e3d01b9..5e7bbaf7a36b 100644
+> > > > --- a/include/linux/kvm_host.h
+> > > > +++ b/include/linux/kvm_host.h
+> > > > @@ -346,6 +346,7 @@ struct kvm_memory_slot {
+> > > >  	unsigned long userspace_addr;
+> > > >  	u32 flags;
+> > > >  	short id;
+> > > > +	u16 as_id;
+> > > >  };
+> > > >  
+> > > >  static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
+> > > > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > > > index 74bdb7bf3295..ebdd98a30e82 100644
+> > > > --- a/virt/kvm/kvm_main.c
+> > > > +++ b/virt/kvm/kvm_main.c
+> > > > @@ -1243,6 +1243,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
+> > > >  	if (!mem->memory_size)
+> > > >  		return kvm_delete_memslot(kvm, mem, &old, as_id);
+> > > 
+> > > This technically needs to set as_id in the deleted memslot.  I highly doubt
+> > > it will ever matter from a functionality perspective, but it'd be confusing
+> > > to encounter a memslot whose as_id did not match that of its owner.
+> > 
+> > Yeah it shouldn't matter because as_id is directly passed in to look up the
+> > pointer of kvm_memslots in kvm_delete_memslot, and memslot->as_id shouldn't be
+> > further referenced.
+> > 
+> > I can add a comment above if this can clarify things a bit:
+> > 
+> > +	u16 as_id; /* cache of as_id; only valid if npages != 0 */
+> 
+> Why not just set it?
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-          If both the HTTP and HTTPS versions
-          return 200 OK and serve the same content:
-            Replace HTTP with HTTPS.
+Because the value is useless even if set? :)
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
+You mean in kvm_delete_memslot(), am I right?  
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also https://lkml.org/lkml/2020/6/27/64
+> It's a single line of code, and there's more than one
+> "shouldn't" in the above.
 
- If there are any valid, but yet not changed URLs:
- See https://lkml.org/lkml/2020/6/26/837
+If you want, I can both set it and add the comment.  Thanks,
 
- Documentation/kprobes.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/kprobes.txt b/Documentation/kprobes.txt
-index 8baab8832c5b..f6990f64154f 100644
---- a/Documentation/kprobes.txt
-+++ b/Documentation/kprobes.txt
-@@ -693,7 +693,7 @@ process. Here are sample overhead figures (in usec) for x86 architectures::
- TODO
- ====
- 
--a. SystemTap (http://sourceware.org/systemtap): Provides a simplified
-+a. SystemTap (https://sourceware.org/systemtap): Provides a simplified
-    programming interface for probe-based instrumentation.  Try it out.
- b. Kernel return probes for sparc64.
- c. Support for other architectures.
-@@ -712,8 +712,8 @@ See samples/kprobes/kretprobe_example.c
- 
- For additional information on Kprobes, refer to the following URLs:
- 
--- http://www-106.ibm.com/developerworks/library/l-kprobes.html?ca=dgr-lnxw42Kprobe
--- http://www.redhat.com/magazine/005mar05/features/kprobes/
-+- https://www-106.ibm.com/developerworks/library/l-kprobes.html?ca=dgr-lnxw42Kprobe
-+- https://www.redhat.com/magazine/005mar05/features/kprobes/
- - http://www-users.cs.umn.edu/~boutcher/kprobes/
- - http://www.linuxsymposium.org/2006/linuxsymposium_procv2.pdf (pages 101-115)
- 
 -- 
-2.27.0
+Peter Xu
 
