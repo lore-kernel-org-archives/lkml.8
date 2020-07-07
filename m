@@ -2,161 +2,289 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A565120702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2202320702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 05:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mySypNmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgGGFJf (ORCPT
+        id S1727942AbgGGFLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 01:09:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:33299 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbgGGFJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 01:09:34 -0400
-IronPort-SDR: YWsy+C/S7ExO0UmKUYBTMLHHDTL7epyR7I7qngUxCv749/04iGMnAIofC1MFsSXEnrzdG0kqsh
- qLgtSrV4JbdA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="209061775"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="209061775"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 22:09:33 -0700
-IronPort-SDR: f/9beZVbR0NOrJqRH44hjU6uz7MqG9WCQj8U3OXBJ6uGDPbw6iCFWZHYWHRETebT/roATGJrv1
- +UKH6K9vXAnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="314195913"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 22:09:32 -0700
-Date:   Mon, 6 Jul 2020 22:09:32 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "David P. Reed" <dpreed@deepplum.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
+        Tue, 7 Jul 2020 01:11:46 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:32242 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727094AbgGGFLq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 01:11:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594098704; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=iJ1b9PLO/bxp0y4unq/jkiqf45yay0HTXCX57824wro=; b=mySypNmQd4MxUoGZ/zG9weQltQiaRoR40tRpoQMWX3hbYaN9whNUQAJRURZxBW6hgZuxPn0F
+ k5NDBkbRGme+wTq1psTtya0RfVsXLYP3YAlIJb3ffYCc5c1o/bq4+KzVzC7xmo+tn/j2G8cV
+ Mi7lesV72ujvPMgWt4p5uEeydLI=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5f04040419b27ae9ce6ec77a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Jul 2020 05:11:32
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C4733C4339C; Tue,  7 Jul 2020 05:11:31 +0000 (UTC)
+Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1516C433C6;
+        Tue,  7 Jul 2020 05:11:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A1516C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Martin Molnar <martin.molnar.programming@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] Fix undefined operation fault that can hang a cpu
- on crash or panic
-Message-ID: <20200707050932.GF5208@linux.intel.com>
-References: <20200629214956.GA12962@linux.intel.com>
- <20200704203809.76391-1-dpreed@deepplum.com>
- <20200704203809.76391-3-dpreed@deepplum.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+ <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com>
+ <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
+ <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
+ <20200615194239.GW4525@google.com>
+ <3f8fcb0e-387d-e902-9f6b-1fde9d6ae404@codeaurora.org>
+ <20200616203849.GY4525@google.com> <20200630224243.GH39073@google.com>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <8ac28471-7c0a-1850-6560-50da0d734445@codeaurora.org>
+Date:   Tue, 7 Jul 2020 10:41:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200704203809.76391-3-dpreed@deepplum.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200630224243.GH39073@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 04:38:08PM -0400, David P. Reed wrote:
-> Fix: Mask undefined operation fault during emergency VMXOFF that must be
-> attempted to force cpu exit from VMX root operation.
-> Explanation: When a cpu may be in VMX root operation (only possible when
-> CR4.VMXE is set), crash or panic reboot tries to exit VMX root operation
-> using VMXOFF. This is necessary, because any INIT will be masked while cpu
-> is in VMX root operation, but that state cannot be reliably
-> discerned by the state of the cpu.
-> VMXOFF faults if the cpu is not actually in VMX root operation, signalling
-> undefined operation.
-> Discovered while debugging an out-of-tree x-visor with a race. Can happen
-> due to certain kinds of bugs in KVM.
-> 
-> Fixes: 208067 <https://bugzilla.kernel.org/show_bug.cgi?id=208067>
-> Reported-by: David P. Reed <dpreed@deepplum.com>
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: David P. Reed <dpreed@deepplum.com>
-> ---
->  arch/x86/include/asm/virtext.h | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
-> index 0ede8d04535a..0e0900eacb9c 100644
-> --- a/arch/x86/include/asm/virtext.h
-> +++ b/arch/x86/include/asm/virtext.h
-> @@ -30,11 +30,11 @@ static inline int cpu_has_vmx(void)
->  }
->  
->  
-> -/* Disable VMX on the current CPU
-> +/* Exit VMX root mode and isable VMX on the current CPU.
->   *
->   * vmxoff causes a undefined-opcode exception if vmxon was not run
-> - * on the CPU previously. Only call this function if you know VMX
-> - * is enabled.
-> + * on the CPU previously. Only call this function if you know cpu
-> + * is in VMX root mode.
->   */
->  static inline void cpu_vmxoff(void)
->  {
-> @@ -47,14 +47,22 @@ static inline int cpu_vmx_enabled(void)
->  	return __read_cr4() & X86_CR4_VMXE;
->  }
->  
-> -/* Disable VMX if it is enabled on the current CPU
-> +/* Safely exit VMX root mode and disable VMX if VMX enabled
-> + * on the current CPU. Handle undefined-opcode fault
-> + * that can occur if cpu is not in VMX root mode, due
-> + * to a race.
->   *
->   * You shouldn't call this if cpu_has_vmx() returns 0.
->   */
->  static inline void __cpu_emergency_vmxoff(void)
->  {
-> -	if (cpu_vmx_enabled())
-> -		cpu_vmxoff();
-> +	if (!cpu_vmx_enabled())
-> +		return;
-> +	asm volatile ("1:vmxoff\n\t"
-> +		      "2:\n\t"
-> +		      _ASM_EXTABLE(1b, 2b)
-> +		      ::: "cc", "memory");
-> +	cr4_clear_bits(X86_CR4_VMXE);
 
-Open coding vmxoff doesn't make sense, and IMO is flat out wrong as it fixes
-flows that use __cpu_emergency_vmxoff() but leaves the same bug hanging
-around in emergency_vmx_disable_all() until the next patch.
+On 7/1/2020 4:12 AM, Matthias Kaehlcke wrote:
+> On Tue, Jun 16, 2020 at 01:38:49PM -0700, Matthias Kaehlcke wrote:
+>> On Tue, Jun 16, 2020 at 10:22:47AM +0530, Sandeep Maheswaram (Temp) wrote:
+>>> On 6/16/2020 1:12 AM, Matthias Kaehlcke wrote:
+>>>> On Thu, Jun 04, 2020 at 04:16:31AM -0700, Stephen Boyd wrote:
+>>>>> Quoting Sandeep Maheswaram (Temp) (2020-06-04 02:43:09)
+>>>>>> On 6/3/2020 11:06 PM, Stephen Boyd wrote:
+>>>>>>> Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
+>>>>>>>> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+>>>>>>>> index 1dfd024..d33ae86 100644
+>>>>>>>> --- a/drivers/usb/dwc3/dwc3-qcom.c
+>>>>>>>> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+>>>>>>>> @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>>>>>>>>            return 0;
+>>>>>>>>     }
+>>>>>>>> +
+>>>>>>>> +/**
+>>>>>>>> + * dwc3_qcom_interconnect_init() - Get interconnect path handles
+>>>>>>>> + * @qcom:                      Pointer to the concerned usb core.
+>>>>>>>> + *
+>>>>>>>> + */
+>>>>>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+>>>>>>>> +{
+>>>>>>>> +       struct device *dev = qcom->dev;
+>>>>>>>> +       int ret;
+>>>>>>>> +
+>>>>>>>> +       if (!device_is_bound(&qcom->dwc3->dev))
+>>>>>>>> +               return -EPROBE_DEFER;
+>>>>>>> How is this supposed to work? I see that this was added in an earlier
+>>>>>>> revision of this patch series but there isn't any mention of why
+>>>>>>> device_is_bound() is used here. It would be great if there was a comment
+>>>>>>> detailing why this is necessary. It sounds like maximum_speed is
+>>>>>>> important?
+>>>>>>>
+>>>>>>> Furthermore, dwc3_qcom_interconnect_init() is called by
+>>>>>>> dwc3_qcom_probe() which is the function that registers the device for
+>>>>>>> qcom->dwc3->dev. If that device doesn't probe between the time it is
+>>>>>>> registered by dwc3_qcom_probe() and this function is called then we'll
+>>>>>>> fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
+>>>>>>> qcom->dwc3->dev device from the platform bus because we call
+>>>>>>> of_platform_depopulate() on the error path of dwc3_qcom_probe().
+>>>>>>>
+>>>>>>> So isn't this whole thing racy and can potentially lead us to a driver
+>>>>>>> probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
+>>>>>>> and we're trying to time it just right so that driver for dwc3 binds
+>>>>>>> before we setup interconnects? I don't know if dwc3 can communicate to
+>>>>>>> the wrapper but that would be more of a direct way to do this. Or maybe
+>>>>>>> the wrapper should try to read the DT property for maximum speed and
+>>>>>>> fallback to a worst case high bandwidth value if it can't figure it out
+>>>>>>> itself without help from dwc3 core.
+>>>>>>>
+>>>>>> This was added in V4 to address comments from Matthias in V3
+>>>>>>
+>>>>>> https://patchwork.kernel.org/patch/11148587/
+>>>>>>
+>>>>> Yes, that why I said:
+>>>>>
+>>>>> "I see that this was added in an earlier
+>>>>>    revision of this patch series but there isn't any mention of why
+>>>>>    device_is_bound() is used here. It would be great if there was a comment
+>>>>>    detailing why this is necessary. It sounds like maximum_speed is
+>>>>>    important?"
+>>>>>
+>>>>> Can you please respond to the rest of my email?
+>>>> I agree with Stephen that using device_is_bound() isn't a good option
+>>>> in this case, when I suggested it I wasn't looking at the big picture
+>>>> of how probing the core driver is triggered, sorry about that.
+>>>>
+>>>> Reading the speed from the DT with usb_get_maximum_speed() as Stephen
+>>>> suggests would be an option, the inconvenient is that we then
+>>>> essentially require the property to be defined, while the core driver
+>>>> gets a suitable value from hardware registers. Not sure if the wrapper
+>>>> driver could read from the same registers.
+>>>>
+>>>> One option could be to poll device_is_bound() for 100 ms (or so), with
+>>>> sleeps between polls. It's not elegant but would probably work if we
+>>>> don't find a better solution.
+>>> if (np)
+>>>          ret = dwc3_qcom_of_register_core(pdev);
+>>>      else
+>>>          ret = dwc3_qcom_acpi_register_core(pdev);
+>>>
+>>>      if (ret) {
+>>>          dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
+>>>          goto depopulate;
+>>>      }
+>>>
+>>>      ret = dwc3_qcom_interconnect_init(qcom);
+>>>      if (ret)
+>>>          goto depopulate;
+>>>
+>>>      qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+>>>
+>>> Before calling dwc3_qcom_interconnect_init we are checking
+>>>
+>>>      if (ret) {
+>>>          dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
+>>>          goto depopulate;
+>>>      }
+>>>
+>>> Doesn't  this condition confirm the core driver is probed?
+>> Not really:
+>>
+>> // called under the hood by of_platform_populate()
+>> static int really_probe(struct device *dev, struct device_driver *drv)
+>> {
+>> 	...
+>>
+>> 	if (dev->bus->probe) {
+>> 		ret = dev->bus->probe(dev);
+>> 		if (ret)
+>> 			goto probe_failed;
+>> 	} else if (drv->probe) {
+>> 		ret = drv->probe(dev);
+>> 	        if (ret)
+>> 	       		goto probe_failed;
+>>          }
+>>
+>> 	...
+>>
+>> probe_failed:
+>> 	...
+>>
+>> 	/*
+>>           * Ignore errors returned by ->probe so that the next driver can try
+>>           * its luck.
+>>           */
+>>          ret = 0;
+>>
+>> 	...
+>>
+>> 	return ret;
+>> }
+>>
+>> As a result of_platform_populate() in dwc3_qcom_of_register_core()
+>> returns 0 even when probing the device failed:
+>>
+>> [    0.244339] dwc3-qcom a6f8800.usb: DBG: populate
+>> [    0.244772] dwc3 a600000.dwc3: DBG: dwc3_probe
+>> [    0.245237] dwc3 a600000.dwc3: DBG: dwc3_probe err: -517
+>> [    0.245264] dwc3-qcom a6f8800.usb: DBG: populate (done)
+>> [    0.245317] dwc3-qcom a6f8800.usb: DBG: dwc3_qcom_interconnect_init() failed: -517
+>>
+>> Probe fails because the interconnect stuff isn't ready yet, otherwise
+>> it could access invalid data.
+>>
+>> A later _populate() is successful and the probing of the core is done
+>> synchronously, i.e. after _populate() the core driver is fully
+>> initialized:
+>>
+>> [    3.898106] dwc3-qcom a6f8800.usb: DBG: populate
+>> [    3.908356] dwc3 a600000.dwc3: DBG: dwc3_probe
+>> [    4.205104] dwc3 a600000.dwc3: DBG: dwc3_probe (done)
+>> [    4.210305] dwc3-qcom a6f8800.usb: DBG: populate (done)
+>>
+>> The synchronous probing in _populate() suggests that using device_is_bound()
+>> would actually be a valid option, either the core device was successfully
+>> probed or not, there should be no race.
+>>
+>> I sent a patch that adds this check to dwc3_qcom_of_register_core(), which
+>> is less confusing and makes clear that the core device is valid unless
+>> this function returns an error:
+>>
+>>    https://lore.kernel.org/patchwork/patch/1257279/
+>>
+>> It might make sense to add your "driver core:Export the symbol
+>> device_is_bound" patch, mine and this one to a single series.
+>  From the discussion on "driver core:Export the symbol device_is_bound"
+> (https://patchwork.kernel.org/patch/11584225/) it is clear that
+> this won't fly. The split dwc3 driver is considered a broken
+> design.
+>
+> This is what Rob Herring said:
+>
+>    We never should have had this split either in the DT binding nor
+>    driver(s) as if the SoC wrapper crap and licensed IP block are
+>    independent things. The thing to do here is either make the DWC3 code
+>    a library which drivers call (e.g. SDHCI) or add hooks into the DWC3
+>    driver for platform specifics (e.g. Designware PCI). Neither is a
+>    simple solution though.
+>
+> That seems to be the desirable solution in the longer term, but it
+> doesn't seem reasonable to me to expect you to fix this design issue
+> to add interconnect support.
+>
+> Some possible options to move forward:
+>
+> - try to determine the max speed without involving the core device
+> - select a reasonable default when 'maximum-speed' is not specified
+> - use the core device to determine the max speed and pray
 
-The reason I say it doesn't make sense is that there is no sane scenario
-where the generic vmxoff helper should _not_ eat the fault.  All other VMXOFF
-faults are mode related, i.e. any fault is guaranteed to be due to the
-!post-VMXON check unless we're magically in RM, VM86, compat mode, or at
-CPL>0.  Given that the whole point of this series is that it's impossible to
-determine whether or not the CPU if post-VMXON if CR4.VMXE=1 without taking a
-fault of some form, there's simply no way that anything except the hypervisor
-(in normal operation) can know the state of VMX.  And given that the only
-in-tree hypervisor (KVM) has its own version of vmxoff, that means there is
-no scenario in which cpu_vmxoff() can safely be used.  Case in point, after
-the next patch there are no users of cpu_vmxoff().
+Can we do as below to get speed
 
-TL;DR: Just do fixup on cpu_vmxoff().
+qcom->max_speed = usb_get_maximum_speed(&qcom->dwc3->dev);
 
->  }
->  
->  /* Disable VMX if it is supported and enabled on the current CPU
-> -- 
-> 2.26.2
-> 
+as they were doing similarly in below code to get mode
+
+qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
