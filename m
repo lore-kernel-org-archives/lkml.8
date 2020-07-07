@@ -2,151 +2,130 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C8CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD05C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC08A20758
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13DCA20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L5iewm1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgGGDii (ORCPT
+        id S1728266AbgGGDiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 23:38:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:28969 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727094AbgGGDii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 23:38:38 -0400
-IronPort-SDR: F4C7oaRz1a4cMLGoTsmPaOeIW1l1cSYPtLg3hXFv7+urbq+BI9L70JmUOfgHu9DeRgLVEjDD7z
- Pozfy8b+8rnw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="146609028"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="146609028"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 20:38:37 -0700
-IronPort-SDR: 2NjR3t2ea/FOKojabu1JpuYneXZIc+OGF2G5cme2RcgHsi9eJKestLVScar0iiaWnTLJBNWzXR
- 4emc1qw6XJhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="427314226"
-Received: from apiccion-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.45.178])
-  by orsmga004.jf.intel.com with ESMTP; 06 Jul 2020 20:38:26 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     x86@kernel.org, linux-sgx@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: [PATCH v35 03/24] x86/mm: x86/sgx: Signal SIGSEGV with PF_SGX
-Date:   Tue,  7 Jul 2020 06:37:26 +0300
-Message-Id: <20200707033747.142828-4-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
-References: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
+        Mon, 6 Jul 2020 23:38:50 -0400
+Received: from mail-eopbgr70088.outbound.protection.outlook.com ([40.107.7.88]:56334
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727094AbgGGDiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 23:38:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kMABKDjkN2o189BMpY9JRciGHuDp0ViLZFb262n5c51lEZgMkeADOD4uol9LZ5buIg5vMjRUgUky+rIVXPrPxL9HHVYE1zHtJsz57wj5cKoPOekPkce2AWKmjrbfGNeFTafozdqy6yd3NJLtbDhYMB0PSgM4tMPRg55ot2kUN1ZV3N9hiwFQt/EzL736d/p8T9Mz18CsTx7NJfElAzy/5fMPigmRTKxjswdjVYsgdd6zQ4Rew/SzzzMyu/mUzB9+OAYM4YHNWml1YyWuYF7Zloj+7yR8kPzJiLHhn8vRKuBJy5bW4Hb9Xml+BtUf5h60NRs3HJYjxaBHowoQMQolng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8jHC4TOvjgTEo40coA6j1Wybg9vg7m+4gelALYf92Pg=;
+ b=j8oqS6c/yycwJ5uhxWl4diosju9ckO3rMBUYiGMNSbQ6lYpNV6Yce671YBLIXngOjeIJBbnXraDyMxdpQb/BM0/BvgXx6zJoJxIP47zEm4nJL4CK6zzct5jeMoVx4lyeZK53Pnvqo+x0qX8JBPXO2BwvBW1r90sKdhvOCd/ug7rGnrf4PJ2cq8BnsHcFfkECq0+/9XyRLx0SIZv5QJYI0D4ajPMhQnP7ncOiwcCdOnNWKJBSk/62WEVyi8bKO83or46EWPEoPDyVqzAHtYO0UOXc0t694lWXJ98pVl7W3IvReZ1WLIgtnfY3jwW6WkjzgViKZ8yfYj8Wy+BWM6NanA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8jHC4TOvjgTEo40coA6j1Wybg9vg7m+4gelALYf92Pg=;
+ b=L5iewm1YsVNzh7mLD4AzrMcwbGScAHtkEAEtAc6Kg5ARsmcv9ZMm35ohfBvEfT2vfPnMm95PbhIHQLUZV25dvkZZ+nf6/y1bxq1SHAB41q22MH9RoT7FUC0kCJ1p/Oh1YmGNDkXt86CgwcVIg34dOB3HJR67gFfoJDCm0ELWhHM=
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18) by AM5PR0401MB2642.eurprd04.prod.outlook.com
+ (2603:10a6:203:37::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Tue, 7 Jul
+ 2020 03:38:47 +0000
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::75d9:c8cb:c564:d17f]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::75d9:c8cb:c564:d17f%5]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
+ 03:38:47 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>
+CC:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
+ internal routing of clk_enet_ref
+Thread-Topic: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
+ internal routing of clk_enet_ref
+Thread-Index: AQHWUMBIY0/PmQIJzUKZXhlXPuzWDKj3d74AgAGaMECAABAPAIAA5FDQgACP3wCAABQBAIAAAHAAgADT71A=
+Date:   Tue, 7 Jul 2020 03:38:46 +0000
+Message-ID: <AM6PR0402MB36078DBF3B7737B1C3F032AAFF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+References: <20200702175352.19223-1-TheSven73@gmail.com>
+ <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+ <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
+ <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com>
+ <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAOMZO5ATv9o197pH4O-7DV-ftsP7gGVuF1+r-sGd2j44x+n-Ug@mail.gmail.com>
+ <CAGngYiVeNQits4CXiXmN2ZBWyoN32zqUYtaxKCqwtKztm-Ky8A@mail.gmail.com>
+ <CAGngYiX9Hx413BX-rgaaUjD9umS9hGg=gMLbM+QmdyEt2Nut5A@mail.gmail.com>
+In-Reply-To: <CAGngYiX9Hx413BX-rgaaUjD9umS9hGg=gMLbM+QmdyEt2Nut5A@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a06ff749-b937-4d9a-186b-08d822274182
+x-ms-traffictypediagnostic: AM5PR0401MB2642:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR0401MB2642EA1D3464ADBA2CC2A5B4FF660@AM5PR0401MB2642.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0457F11EAF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: A4vIqcXa60JRJTIiFs5XEkO2DeDGK44XzhtHncA/QgUVyz3jbEUxpjJIKiRwDd3jsxuTb7ofeNsVDFyGd2j+O+pVE8lODE+cyjbMIxlniLQF8iyXjRLyRY95/mq4aRsIj1REzFTYl0xjbKphm1/avki9VGd+hqkPUSegBaKdAYR7fiBgTtBwFWLt9PqlQPkKO0G3D3UNxidUBCKA0snwXELhpd3jwoyNdXySEFjsJsbfDjqTiEzzRs0tPlUXUExmjb7p+mr8k6FfTxcVUPYNmlKeUh5valb1GnLO2MrYd8KjSRtq3o9IY7MivY3MEYTz62jorR1kCE3mv9X+bzN6lXGhxlP8+dTgaThR/dXRSDTehCOXxkL5BkIh8u7erNAN
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(396003)(346002)(39860400002)(136003)(4326008)(86362001)(71200400001)(83380400001)(5660300002)(4744005)(33656002)(9686003)(7696005)(7416002)(55016002)(2906002)(26005)(186003)(8936002)(53546011)(8676002)(6506007)(478600001)(316002)(110136005)(52536014)(54906003)(66476007)(66946007)(66446008)(76116006)(64756008)(66556008)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: wb+GO4a03VrOxVTXiWbjM6ArVMYNAeH++uzeqlzM1UCS8RhZGpInu1iM5VAB5rN2jZubzuOQnfu9XnoEunCGl4ka1JoqmaVjh7rij+ncaXVLReo7a0AG1J7IDT2syzIc20oxHFvnIN9/QstPAjmxXCfmGXxAafaf+wPFvV9bMANDtyPI1NPjr5+2rsh21PwhtqaalKc9VaiQf+DBcMy7jACZ9gVeOggnJKVaAqd3GIbEHxLppvUwrZjBhepDv900wtzhfLNmu6zU/pLZDUomrAwJv0T+PIUj1aZ8q17W0dwUfiiv+jMmKLCauuh5fLokxBhIyufv2WvMhbtfxMapW5Ffg1R7GJeEtyEaxeDEQgy9dUVtr4wUUE2vUY46hrVjTv4ZU/c5ZwvoXyfh175CjAwG9PfjBE8oE2NEE+ZosfsKF2rRJI4e4vwQncA2zJ8P/93lkfa7ZaCOeKJzRwBVamp0gkEGswaJOO5qneVdB98=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR0402MB3607.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a06ff749-b937-4d9a-186b-08d822274182
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 03:38:47.0149
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IfLAWBue8SGykUlkjeZncHKQ7WfM940vKDSgJe0FfV+ZM8BXz/EJxNT475emOpEQoJYxLkngXNrH4xJXCEodQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0401MB2642
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-
-Include SGX bit to the PF error codes and throw SIGSEGV with PF_SGX when
-a #PF with SGX set happens.
-
-CPU throws a #PF with the SGX set in the event of Enclave Page Cache Map
-(EPCM) conflict. The EPCM is a CPU-internal table, which describes the
-properties for a enclave page. Enclaves are measured and signed software
-entities, which SGX hosts. [1]
-
-Although the primary purpose of the EPCM conflict checks  is to prevent
-malicious accesses to an enclave, an illegit access can happen also for
-legit reasons.
-
-All SGX reserved memory, including EPCM is encrypted with a transient key
-that does not survive from the power transition. Throwing a SIGSEGV allows
-user space software to react when this happens (e.g. recreate the enclave,
-which was invalidated).
-
-[1] Intel SDM: 36.5.1 Enclave Page Cache Map (EPCM)
-
-Acked-by: Jethro Beekman <jethro@fortanix.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- arch/x86/include/asm/traps.h | 14 ++++++++------
- arch/x86/mm/fault.c          | 13 +++++++++++++
- 2 files changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-index 714b1a30e7b0..4446f95ad997 100644
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -44,12 +44,13 @@ void __noreturn handle_stack_overflow(const char *message,
- /*
-  * Page fault error code bits:
-  *
-- *   bit 0 ==	 0: no page found	1: protection fault
-- *   bit 1 ==	 0: read access		1: write access
-- *   bit 2 ==	 0: kernel-mode access	1: user-mode access
-- *   bit 3 ==				1: use of reserved bit detected
-- *   bit 4 ==				1: fault was an instruction fetch
-- *   bit 5 ==				1: protection keys block access
-+ *   bit 0  ==	 0: no page found	1: protection fault
-+ *   bit 1  ==	 0: read access		1: write access
-+ *   bit 2  ==	 0: kernel-mode access	1: user-mode access
-+ *   bit 3  ==				1: use of reserved bit detected
-+ *   bit 4  ==				1: fault was an instruction fetch
-+ *   bit 5  ==				1: protection keys block access
-+ *   bit 15 ==				1: inside SGX enclave
-  */
- enum x86_pf_error_code {
- 	X86_PF_PROT	=		1 << 0,
-@@ -58,5 +59,6 @@ enum x86_pf_error_code {
- 	X86_PF_RSVD	=		1 << 3,
- 	X86_PF_INSTR	=		1 << 4,
- 	X86_PF_PK	=		1 << 5,
-+	X86_PF_SGX	=		1 << 15,
- };
- #endif /* _ASM_X86_TRAPS_H */
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 1ead568c0101..1db6fbd7af8e 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -1055,6 +1055,19 @@ access_error(unsigned long error_code, struct vm_area_struct *vma)
- 	if (error_code & X86_PF_PK)
- 		return 1;
- 
-+	/*
-+	 * Access is blocked by the Enclave Page Cache Map (EPCM), i.e. the
-+	 * access is allowed by the PTE but not the EPCM. This usually happens
-+	 * when the EPCM is yanked out from under us, e.g. by hardware after a
-+	 * suspend/resume cycle. In any case, software, i.e. the kernel, can't
-+	 * fix the source of the fault as the EPCM can't be directly modified by
-+	 * software. Handle the fault as an access error in order to signal
-+	 * userspace so that userspace can rebuild their enclave(s), even though
-+	 * userspace may not have actually violated access permissions.
-+	 */
-+	if (unlikely(error_code & X86_PF_SGX))
-+		return 1;
-+
- 	/*
- 	 * Make sure to check the VMA so that we do not perform
- 	 * faults just to hit a X86_PF_PK as soon as we fill in a
--- 
-2.25.1
-
+RnJvbTogU3ZlbiBWYW4gQXNicm9lY2sgPHRoZXN2ZW43M0BnbWFpbC5jb20+IFNlbnQ6IE1vbmRh
+eSwgSnVseSA2LCAyMDIwIDExOjAwIFBNDQo+IE9uIE1vbiwgSnVsIDYsIDIwMjAgYXQgMTA6NTgg
+QU0gU3ZlbiBWYW4gQXNicm9lY2sgPHRoZXN2ZW43M0BnbWFpbC5jb20+DQo+IHdyb3RlOg0KPiA+
+DQo+ID4gSGkgRmFiaW8sDQo+ID4NCj4gPiBPbiBNb24sIEp1bCA2LCAyMDIwIGF0IDk6NDYgQU0g
+RmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KPiB3cm90ZToNCj4gPiA+DQo+ID4g
+PiBXb3VsZCBpdCBtYWtlIHNlbnNlIHRvIHVzZSBjb21wYXRpYmxlID0gIm1taW8tbXV4IjsgbGlr
+ZSB3ZSBkbyBvbg0KPiA+ID4gaW14N3MsIGlteDZxZGwuZHRzaSBhbmQgaW14OG1xLmR0c2k/DQo+
+ID4NCj4gPiBNYXliZSAiZml4ZWQtbW1pby1jbG9jayIgaXMgYSBiZXR0ZXIgY2FuZGlkYXRlID8N
+Cj4gDQo+IEFjdHVhbGx5IG5vLCB0aGUgbW1pbyBtZW1vcnkgdGhlcmUgb25seSBjb250cm9scyB0
+aGUgZnJlcXVlbmN5Li4uDQo+IA0KPiBJIGRvbid0IHRoaW5rIHRoZSBjbG9jayBmcmFtZXdvcmsg
+aGFzIGEgcmVhZHktbWFkZSBhYnN0cmFjdGlvbiBzdWl0YWJsZSBmb3IgYQ0KPiBHUFIgY2xvY2sg
+bXV4IHlldD8NCg0KVGhhdCBuZWVkcyB0byBhZGQgR1BSIGNsb2NrIEFQSSBzdXBwb3J0Lg0K
