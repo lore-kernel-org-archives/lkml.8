@@ -2,125 +2,144 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30052C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E61DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5E02063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191242063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:03:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CfqqS+lW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TqS6r/FO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgGGIDP (ORCPT
+        id S1728350AbgGGIDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48956 "EHLO
+        Tue, 7 Jul 2020 04:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgGGIDP (ORCPT
+        with ESMTP id S1728121AbgGGIDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:03:15 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0820DC08C5DB
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:03:15 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a6so44139204wrm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:03:14 -0700 (PDT)
+        Tue, 7 Jul 2020 04:03:48 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E6EC08C5DB
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:03:48 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id o11so44163100wrv.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:03:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=mMZpUKfqpJCdbAhsZp+bXjqEnQ4z2yPe16N+eOasptM=;
-        b=CfqqS+lWIiN0P+noAXvDnsJP+vvKJH1pGpe6wR/eDn+gDpTDB6XlzvA1O82fWtEMno
-         Ki7iRep7tGg2zVXbSxW27Q950XkwGmY2uQBXwEAsbViVMf/cldEOS2mX30FrDp8KTKyK
-         a57MleK0nWcnTlQ/TsoFxGTvUHatmaqb65XI6F4BpZ6d7Nv0cK9fzhJ2V7pnYfq6iKc7
-         M8qAuVUB4WjUSdt97tDmgEZY4HpyexXnpJPOTG4mLJF/fQcIIuqeHasmLXgoAaea2Luu
-         AITsf8jPhP0+M1Jx3eP3yAP/AE4ZG5UxcPnSH8Y5idwstO/Dc9K2lFQ74GY1Aynb17LO
-         gC9Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vi8QIB3allPIgtc+g0TQIDBLQpQq3t8N/dpOokskUIo=;
+        b=TqS6r/FOFqwjyy0ZYLrNgewmD/GW5FRT6IK4DchWcSREKSGX/AnlKCZxH+MbHoVEY8
+         FpT6X4Wjt2Z510SzVrsKwyLl6iwreWo8yAXQR/YQNKVP++DJ9b6viH/ajhIqp2lCC/vM
+         PaabZ1UTLZ0w/upJq0sj3FeLdn0huKm8VIgG/6FmhUoX8Qo3CWtEcM0JKbLkJu9PgJ5d
+         Bo+hH0tHtIZ6jLcotPdMZ8mK0qS/CqHLHO2sXQS02vuhcsjThc6j0LEdSKRIvcLCKUDl
+         vgjItvckjEDVh6Z0OM+f+lKIXT4YV4grEn/HzhS5dXvuMR38OlhVGl0y5l7A4FWu+kvl
+         VhTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mMZpUKfqpJCdbAhsZp+bXjqEnQ4z2yPe16N+eOasptM=;
-        b=dHfkxm5hcXU6LQMIhNxOUXKW/6pnBs2NUpXVMQ/ln7o2fN2ykAWV9M6KDm5S5hgNep
-         QaN/78d1lB2u3fUiBBvtyhzqJ6dgktak1rCDNuDJDCd3Tog6776fCeuP1Cb8GylCs4ly
-         7bWlRImiGowhj1emtYoZpJTNT3aqw7mxupfdVJpVp101NgKUUiJ4UuYyFZuIPN1c8hKW
-         akOQ7bozC6mEy+29hkLNy5pbFNimFnfj0Qx4LwezvdvqNVpYz8OvJrvf0FfqVgd0o8CW
-         kBbFO++Lg88HhaNG1xgm58TKGarRgYNxqWmxtB4loZgrK6lC8F/DCXwLyl2Q3LXv0cDB
-         YZOA==
-X-Gm-Message-State: AOAM533s8efOWfuTrFkEqUUknkH8q0YtcuT9L+GBwLFSfWKobVSa43MP
-        q6365zM6Xvlf0HslM11lrseVmA==
-X-Google-Smtp-Source: ABdhPJwcpPtoD7n14Ffrr43fIwA5zL6dutKmKygss05H+0o2d5I4bzNNKViRKd4dKqbjeRyRASpwzw==
-X-Received: by 2002:a05:6000:1283:: with SMTP id f3mr53367032wrx.106.1594108993639;
-        Tue, 07 Jul 2020 01:03:13 -0700 (PDT)
-Received: from dell ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id 12sm2340143wmg.6.2020.07.07.01.03.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 01:03:12 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 09:03:11 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Winischhofer <thomas@winischhofer.net>
-Subject: Re: [PATCH 04/30] usb: misc: sisusbvga: sisusb_init: Mark all
- 'static const' arrays as __maybe_unused
-Message-ID: <20200707080311.GE3500@dell>
-References: <20200703174148.2749969-1-lee.jones@linaro.org>
- <20200703174148.2749969-5-lee.jones@linaro.org>
- <af66b6e94a26ebd500c1376631891b0bdd0912f0.camel@perches.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vi8QIB3allPIgtc+g0TQIDBLQpQq3t8N/dpOokskUIo=;
+        b=daFz+a+0atqlQmvs4FNFyg3867waypq4W3Uur/sVAIl8jJ257GZKiPxkm/8RnLiTlO
+         0p1YJ5mh5l6JVqZgoZMy1bNsfEmzbg9WBAqac7ckikHljEwewA4M7O+z7gX4uZxwvgOh
+         qjnwFUhexwoqwsxpnwdeGQ9w89RVvUwM9zPSYSpDsMu7nfKB6iBxYICf0sIMEP61LkSB
+         IPW/pLSFZbfbJBfQl3kErU+qBnNcEm/+6hNgFE3+WHBKl1PLZjV0RuQzbdFm+iIk/OBY
+         6bhnNJECmGQSF22CVHhdjTpjcrJadLnSPPVPAvT5SlH0mwlkYdsLZcYr+Nf9oah7CEhM
+         U2RQ==
+X-Gm-Message-State: AOAM530RkK1+UxO1dX4FiEq28IBc6vx5wj96HRuSdRlvj07Cf521wp16
+        J6KedQyVWwc/vSHtLVfaC231b1nbJU0kzsIZN65XMA==
+X-Google-Smtp-Source: ABdhPJyl4Q71vOqumcQz4YfC1YAuHs6zh2eiNBQQqOIQUkflwCRnOimvIwqwTX7hst2UVshvN1suVKbkXvoRi7qE8O4=
+X-Received: by 2002:adf:b6a4:: with SMTP id j36mr53365270wre.260.1594109026427;
+ Tue, 07 Jul 2020 01:03:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <af66b6e94a26ebd500c1376631891b0bdd0912f0.camel@perches.com>
+References: <20200706085240.1979622-1-darekm@google.com> <20200706090056.GI6538@piout.net>
+In-Reply-To: <20200706090056.GI6538@piout.net>
+From:   Dariusz Marcinkiewicz <darekm@google.com>
+Date:   Tue, 7 Jul 2020 10:03:34 +0200
+Message-ID: <CALFZZQH3NaMVuaxt8noWcpWToxwYWdWO_jUOQPvwdtFBPaNLRw@mail.gmail.com>
+Subject: Re: [PATCH] media: cros-ec-cec: disable the device wakeup on remove
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-media@vger.kernel.org, hverkuil-cisco@xs4all.nl,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dariusz Marcinkiewicz <darekm@chromium.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 03 Jul 2020, Joe Perches wrote:
+On Mon, Jul 6, 2020 at 11:00 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> On 06/07/2020 10:52:38+0200, Dariusz Marcinkiewicz wrote:
+> > The device is enabled for wake up while the driver is loaded.
+> > For symmetry, disable wakeup when it is removed.
+> >
+>
+> This is not necessary as it is handled by the core properly. There are
+> currently 73 calls to device_init_wakeup that are not necessary, this
+> would add one more.
+>
+Thank you.
 
-> On Fri, 2020-07-03 at 18:41 +0100, Lee Jones wrote:
-> > drivers/usb/misc/sisusbvga/sisusb_init.h is included by a few
-> > source files.  Most of which do not use the majority of the
-> > shared static const arrays which have been declared.  This
-> > causes the build system to spew 100's of warnings.
-> > 
-> > Fixes the following W=1 kernel build warning(s) - and a whole lot more:
-> > 
-> >  In file included from drivers/usb/misc/sisusbvga/sisusb.c:54:
-> >  drivers/usb/misc/sisusbvga/sisusb_init.h:695:34: warning: ‘SiSUSB_VCLKData’ defined but not used [-Wunused-const-variable=]
-> >  695 | static const struct SiS_VCLKData SiSUSB_VCLKData[] = {
-> >  | ^~~~~~~~~~~~~~~
-> > [10's of lines snipped]
-> >  drivers/usb/misc/sisusbvga/sisusb_init.h:206:28: warning: ‘SiS_VGA_DAC’ defined but not used [-Wunused-const-variable=]
-> >  206 | static const unsigned char SiS_VGA_DAC[] = {
-> >  | ^~~~~~~~~~~
-> > [10's of lines snipped]
-> >  drivers/usb/misc/sisusbvga/sisusb_init.h:171:29: warning: ‘ModeIndex_1280x1024’ defined but not used [-Wunused-const-variable=]
-> >  171 | static const unsigned short ModeIndex_1280x1024[] = { 0x3a, 0x4d, 0x00, 0x65 };
-> >  | ^~~~~~~~~~~~~~~~~~~
-> > [10's of lines snipped]
-> 
-> They are not __maybe_unused, they _are_ used.
+To make sure - your comment applies even if the device node in
+question is not actually removed, as it is the case here? This is a
+platform dev, which won't be freed when the driver is unloaded.
 
-Actually, it looks like all of the ModeIndex_* table are *not* used,
-so those will be removed.
+Regards.
 
-> I think these instead should be moved to where
-> they are used instead of being declared in an
-> #include file.
 
-The remaining tables are many and large, so stuffing them into the
-source file does not seem like the correct thing to do.  Instead I
-shall move them to their own "sisusb_tables.h" include file where they
-can be referenced only by the file(s) which make use of them.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> > Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> > ---
+> >  drivers/media/cec/platform/cros-ec/cros-ec-cec.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+> > index 2d95e16cd248..3881ed7bc3d9 100644
+> > --- a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+> > +++ b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+> > @@ -277,8 +277,6 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
+> >       platform_set_drvdata(pdev, cros_ec_cec);
+> >       cros_ec_cec->cros_ec = cros_ec;
+> >
+> > -     device_init_wakeup(&pdev->dev, 1);
+> > -
+> >       cros_ec_cec->adap = cec_allocate_adapter(&cros_ec_cec_ops, cros_ec_cec,
+> >                                                DRV_NAME,
+> >                                                CEC_CAP_DEFAULTS |
+> > @@ -306,6 +304,8 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
+> >       if (ret < 0)
+> >               goto out_probe_notify;
+> >
+> > +     device_init_wakeup(&pdev->dev, 1);
+> > +
+> >       return 0;
+> >
+> >  out_probe_notify:
+> > @@ -335,6 +335,8 @@ static int cros_ec_cec_remove(struct platform_device *pdev)
+> >                                        cros_ec_cec->adap);
+> >       cec_unregister_adapter(cros_ec_cec->adap);
+> >
+> > +     device_init_wakeup(&pdev->dev, 0);
+> > +
+> >       return 0;
+> >  }
+> >
+> > --
+> > 2.27.0.212.ge8ba1cc988-goog
+> >
+>
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
