@@ -5,115 +5,114 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00010C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAE9D206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D367F206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hYVZlimb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yjtJryfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgGGKSH (ORCPT
+        id S1728210AbgGGKRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:18:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41440 "EHLO
+        Tue, 7 Jul 2020 06:17:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgGGKRP (ORCPT
+        with ESMTP id S1727989AbgGGKQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:17:15 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B56C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:17:15 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id l2so44399312wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:17:15 -0700 (PDT)
+        Tue, 7 Jul 2020 06:16:59 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1BE6C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:16:58 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f7so41530949wrw.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:16:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Eb/RPEg+kMf5EbfmZ+xzaRqlinKf/Ie6foYLp+7RL7o=;
-        b=hYVZlimbR1Y4vTKWrzDgy1aOXAjhRbuXLpjometenz6KMcYiaNc5FhS2U/BgwBCWXy
-         LzGWQeSIPg9sR21qe7fjeRqIc3SEMoZrxAkopagoIob1IVlOGbwvFoVywKOqplqP8Umt
-         XvO5Yn4OK6ezPzEVhTp5NEyj+HxHd9PFoQ1Fsavx+M+BoqizA5C06Jn5KeLfpr+OIWrh
-         +5N+5by4tWgAD/1iQ/PsHy93hhlGY9XnJaOnJKnMMbeQ2LmKUuDnMHIW9lPfudD4XTye
-         qSnp/RyyG0guNjiIyiyWHMN+FOLPl53mrX7b5uT0jtu3YXZc4Fa80g30Up4hUTbEk/B9
-         MpYQ==
+        bh=pNlZaQWHbaIHYTs0iyc+dtmoOXHEctaupDIvIqecIP4=;
+        b=yjtJryfpQL6B6O+GfgFViYidP0Zfm2TNnBAeSexpzgadJ0xpgfrAVW4b+dn87kGz6C
+         EZ20LZ2Ach4spz+6mWWhfonGFfs2/rcy9nw1nAUr6v3gjXQ3E0cGVWpLruB6V7BWcVKA
+         NCL298eJZDj7ZhP4xvIuCDI1BvtD35Mo5E9bGkX6iUv4iYAAQPpZP38IaOr9k6wvCT0n
+         Jauv59h1FuWhqhRbx4pA4BUC4us6dOrcZW5shkE7d6GTM45WW2uOaKGiuBEwVYlhIvDm
+         Ht9quBZq0GIUYGteKk4rPBi59T6GO0mAXIXQ0Kg0IC8E0hgNv6gc97KOTf9D6n8+RNH2
+         QigA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Eb/RPEg+kMf5EbfmZ+xzaRqlinKf/Ie6foYLp+7RL7o=;
-        b=HXTCAnvUBSiNTtBeT4uZBUtkYspCvgWTsDMfTQf3swYjoIsltAKO290OAEERBulG0Z
-         LtZooh4y2uGyTqxrkZinTJ9j3QZ5jR28Rc3b5kjH0T0eGG/V6f1I8Fz8GEmXlz76qmh8
-         tIRXUcZBUhUPU0rjRjKIXTLZg0PKlSmj/T4sCShU8+6SGWYFAuzPzse0LD9QBSYWHyGe
-         pheeU103fGkvNxW//PMGzisWLGhIvo+oze99X9ZCE/0iq9aOOFycm9gBzQpWsZUE2C4f
-         GZZyW5IekBiYDzYVQXwUbLh3y1j/KlF8qFBp9eac5IJ26D4ks4pxeWnPqV2wq4WY5UjU
-         uhvA==
-X-Gm-Message-State: AOAM533kVvsthXVff8lTcsjlfsrCv6HUi/ehj8RI2WoRUv9I1yOiIxJx
-        C6Q9+hUjv07yvpxQmrluVz93ht7SJ3o=
-X-Google-Smtp-Source: ABdhPJwiukos6NDimwam5UH9qNhkPMjAs8ALC3WtOoAlktRpKr9H6nmMroUuFl9TDomf2uyT3u8ExA==
-X-Received: by 2002:a7b:c259:: with SMTP id b25mr3421129wmj.107.1594117034103;
-        Tue, 07 Jul 2020 03:17:14 -0700 (PDT)
+        bh=pNlZaQWHbaIHYTs0iyc+dtmoOXHEctaupDIvIqecIP4=;
+        b=YklOEzA5NeLDOj1DzrQZwdx4zyzO+rFP0E6AnkTpPsNiszWTo6AE+q//WXo43wQmgM
+         iANAK7sjHEmlLcRa6bn+sAalxkNafnXiX/DMUOij5OLzfwcVNMHsZMwt+q2WoM47A8WD
+         HP4NGilD1A2TZhgwZ9lQh+PxYKjpj98Ko+7GHvpR7+GZLzeJyN5j0i81+IEQ/iuZFQPx
+         rZaa+SOJ763cA/Cj0gRtXombn5TbGdSDL+zRWzLYpU5U6gNr6VvG+WXwiRdVqDq6Sexz
+         Jc1UXMLt/PFM1tIFTXD135FWAAJVfgrH0vK/7IILq8zBJ3QKFdeTJz/ZJHzI1k/bDWeu
+         rkxg==
+X-Gm-Message-State: AOAM530i6oCAi/AK1MqqE2TMyEVTumX81L8zluYY9Fhz9//YQuOy47RZ
+        JNQSG9JjqLHvRIFYthB9d23CYQ==
+X-Google-Smtp-Source: ABdhPJwPGZGh7haWMlGt/1TcC8QGkDnJP2knf1a1NGX34zsnQYiFoWMcsNgAkfwT9eECzK95dCDJuA==
+X-Received: by 2002:a5d:484b:: with SMTP id n11mr50993417wrs.320.1594117017437;
+        Tue, 07 Jul 2020 03:16:57 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.17.12
+        by smtp.gmail.com with ESMTPSA id z8sm469409wmg.39.2020.07.07.03.16.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 03:17:13 -0700 (PDT)
+        Tue, 07 Jul 2020 03:16:56 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Samuel Ortiz <samuel.ortiz@nokia.com>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH 21/28] ASoC: ti: omap-mcbsp-st: Remove set, but unused variable 'w'
-Date:   Tue,  7 Jul 2020 11:16:35 +0100
-Message-Id: <20200707101642.1747944-22-lee.jones@linaro.org>
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Vladimir Barinov <vbarinov@embeddedalley.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 07/28] ASoC: fsl: fsl_spdif: Use correct formatting when denoting struct documentation
+Date:   Tue,  7 Jul 2020 11:16:21 +0100
+Message-Id: <20200707101642.1747944-8-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707101642.1747944-1-lee.jones@linaro.org>
 References: <20200707101642.1747944-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like 'w' has remained unchecked since the driver's inception.
+Kerneldoc expects struct documentation to start with "struct $NAME".
 
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/ti/omap-mcbsp-st.c: In function ‘omap_mcbsp_st_chgain’:
- sound/soc/ti/omap-mcbsp-st.c:145:6: warning: variable ‘w’ set but not used [-Wunused-but-set-variable]
+ sound/soc/fsl/fsl_spdif.c:104: warning: cannot understand function prototype: 'struct fsl_spdif_priv '
 
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>
-Cc: Samuel Ortiz <samuel.ortiz@nokia.com>
-Cc: linux-omap@vger.kernel.org
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Vladimir Barinov <vbarinov@embeddedalley.com>
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/ti/omap-mcbsp-st.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/soc/fsl/fsl_spdif.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/ti/omap-mcbsp-st.c b/sound/soc/ti/omap-mcbsp-st.c
-index 5a32b54bbf3bb..643ef7eb68fc8 100644
---- a/sound/soc/ti/omap-mcbsp-st.c
-+++ b/sound/soc/ti/omap-mcbsp-st.c
-@@ -142,10 +142,9 @@ static void omap_mcbsp_st_fir_write(struct omap_mcbsp *mcbsp, s16 *fir)
+diff --git a/sound/soc/fsl/fsl_spdif.c b/sound/soc/fsl/fsl_spdif.c
+index 5b2689ae63d4d..7aa3bdec5b6b5 100644
+--- a/sound/soc/fsl/fsl_spdif.c
++++ b/sound/soc/fsl/fsl_spdif.c
+@@ -81,7 +81,7 @@ struct spdif_mixer_control {
+ };
  
- static void omap_mcbsp_st_chgain(struct omap_mcbsp *mcbsp)
- {
--	u16 w;
- 	struct omap_mcbsp_st_data *st_data = mcbsp->st_data;
- 
--	w = MCBSP_ST_READ(mcbsp, SSELCR);
-+	MCBSP_ST_READ(mcbsp, SSELCR);
- 
- 	MCBSP_ST_WRITE(mcbsp, SGAINCR, ST_CH0GAIN(st_data->ch0gain) |
- 		       ST_CH1GAIN(st_data->ch1gain));
+ /**
+- * fsl_spdif_priv: Freescale SPDIF private data
++ * struct fsl_spdif_priv - Freescale SPDIF private data
+  *
+  * @fsl_spdif_control: SPDIF control data
+  * @cpu_dai_drv: cpu dai driver
 -- 
 2.25.1
 
