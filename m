@@ -2,111 +2,100 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DBFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E4EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A65B2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="ZS2vQUAe"
+	by mail.kernel.org (Postfix) with ESMTP id B139A20771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594130694;
+	bh=aI7fADWXYx23GnKpPWN2X5XgChmWqQZyJqYKmMDSAQo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HsMllWHveQv70Fmg199sEmGwpuWETXxoMFS9/fGGBd5d310SRlHKEXljsE/vCyHFy
+	 a++D74weF/21WrfYkGz8TSBt2R+BubOLGspkWLDFyO1S/Y3mHzw/FjaFbST8wQctWm
+	 AFWGKgSF8nSoVUoLXm0zudvpThZzcMi5wN1JDqw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgGGODP (ORCPT
+        id S1727962AbgGGOEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgGGODP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:03:15 -0400
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC712C061755;
-        Tue,  7 Jul 2020 07:03:14 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Tue, 7 Jul 2020 10:04:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726805AbgGGOEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:04:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4B1PKW5V4WzQlH2;
-        Tue,  7 Jul 2020 16:03:11 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1594130589;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ll7gVSOL9XzROZUsvjqsjM/q+j59gZ3tVsoc4JCDtNA=;
-        b=ZS2vQUAeQJHJPZt1jny2VGDtSVHRhegIw8xtPLsbJocmWRMiL5uVguvw1FWnkqtYb6g7q6
-        AdMEjo0BFuMFRATOn5oElrxBJWvbqmyma+Mc+NAo0aKypOcTQmk5Myd5v++BNafQDp32b2
-        +bigyB6DFx+jbTfxFDcREMbZJhTRGdkr/LgF0gY4i/qy1c2qO7+cLekhLc+SBNR4pGZity
-        xJYXCmnpPyORS35HePL4T4Bg+FRA5TYmlN9T8/ORs8DIvYQFOEMj2RJNLbb80Qm20dwPV1
-        /NvEVW8MXCzf4LOv06HV8mpDURY6xZS3+uimkweMl2B9rkp3sn/fxaRHl1RYtg==
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id aMe3dxk8w6IU; Tue,  7 Jul 2020 16:03:08 +0200 (CEST)
-Subject: Re: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-References: <20200705133038.161547-1-mans0n@gorani.run>
- <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
- <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com>
-From:   Sungbo Eo <mans0n@gorani.run>
-Message-ID: <15d8ae43-6905-b861-3b50-d1ba780edf2d@gorani.run>
-Date:   Tue, 7 Jul 2020 23:03:00 +0900
+        by mail.kernel.org (Postfix) with ESMTPSA id 398AE20738;
+        Tue,  7 Jul 2020 14:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594130692;
+        bh=aI7fADWXYx23GnKpPWN2X5XgChmWqQZyJqYKmMDSAQo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SoeLmtx77p+kv58rEoMdD32iQGKtENB4JdzIcrm0MMUfuY/CTUKXKrVkpIz3Owf1R
+         HadstbQ2cSVV898JPYqRGaA55VuzX9tBpxvSTtkb8iFpJgxF7GgpWo+p9HpTGwVR5o
+         2YAAJijAXWscKIGdY/F4xTheKIY36IL1I5K1nsPo=
+Date:   Tue, 7 Jul 2020 16:04:50 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Babu Moger <babu.moger@amd.com>
+Cc:     fenghua.yu@intel.com, stable@vger.kernel.org, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, tglx@linutronix.de,
+        reinette.chatre@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/resctrl: Fix memory bandwidth counter width for AMD
+Message-ID: <20200707140450.GB4064836@kroah.com>
+References: <159364160826.31030.7457664122034606608.stgit@bmoger-ubuntu>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: 0
-X-Rspamd-Score: -4.05 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 78083178A
-X-Rspamd-UID: 2ba226
+In-Reply-To: <159364160826.31030.7457664122034606608.stgit@bmoger-ubuntu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20. 7. 6. 오후 9:00, Andy Shevchenko wrote:
-> On Mon, Jul 6, 2020 at 2:21 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:>
->> On Sun, Jul 5, 2020 at 3:31 PM Sungbo Eo <mans0n@gorani.run> wrote:
->>>
->>> NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
->>> Its ports are controlled only by a data byte without register address.
->>>
+On Wed, Jul 01, 2020 at 05:13:45PM -0500, Babu Moger wrote:
+> [ Upstream commit 2c18bd525c47f882f033b0a813ecd09c93e1ecdf ]
 > 
->>> Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
->>>
+> Memory bandwidth is calculated reading the monitoring counter
+> at two intervals and calculating the delta. It is the software’s
+> responsibility to read the count often enough to avoid having
+> the count roll over _twice_ between reads.
 > 
-> No blank line here.
+> The current code hardcodes the bandwidth monitoring counter's width
+> to 24 bits for AMD. This is due to default base counter width which
+> is 24. Currently, AMD does not implement the CPUID 0xF.[ECX=1]:EAX
+> to adjust the counter width. But, the AMD hardware supports much
+> wider bandwidth counter with the default width of 44 bits.
 > 
->>> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> Kernel reads these monitoring counters every 1 second and adjusts the
+> counter value for overflow. With 24 bits and scale value of 64 for AMD,
+> it can only measure up to 1GB/s without overflowing. For the rates
+> above 1GB/s this will fail to measure the bandwidth.
 > 
->> This driver looks nice now but why did you remove the mutex in v3? I
->> think when Andy commented on that, he meant not understanding why the
->> error check is protected, not the i2c operations.
+> Fix the issue setting the default width to 44 bits by adjusting the
+> offset.
 > 
-> Right.
+> AMD future products will implement CPUID 0xF.[ECX=1]:EAX.
+> 
+>  [ bp: Let the line stick out and drop {}-brackets around a single
+>    statement. ]
+> 
+> Fixes: 4d05bf71f157 ("x86/resctrl: Introduce AMD QOS feature")
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Link: https://lkml.kernel.org/r/159129975546.62538.5656031125604254041.stgit@naples-babu.amd.com
+> ---
+> 
+> Note:
+>  This commit is already queued for 5.7 stable kernel.
+>  Backporting it t 5.6 stable and older kernels now.
 
-Oh, probably I misunderstood the comment... :(
+Now queued up to 5.4.y, thanks.
 
-But I don't really understand what mutex does here. The driver does not 
-need consecutive commands, it only sends/receives only one byte at a 
-time. And AFAIK each i2c_smbus function is already protected by a mutex. 
-So what should be exactly inside the lock? Should we protect the output 
-buffer as well? I'm not an expert on this so please enlighten me.
-
-Thanks for your kind reviews, as always. :)
-
-> 
->> Are you sure you don't need this lock?
-> 
-> It's a good point!
-> 
+greg k-h
