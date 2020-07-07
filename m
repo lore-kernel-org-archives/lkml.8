@@ -2,175 +2,369 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6494FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3402C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4653F206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:29:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qm2gIMJS"
+	by mail.kernel.org (Postfix) with ESMTP id 62189206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594153819;
+	bh=ZBG73L/0WVqupbAF8AmWnDxYad91I+9I1o5IDmHitwY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ZqHNaJP5X5XFY0Hf38zmFJTx1JpcYVEWLaM8OR70mXWS0t6qxfLUnoQSiuBVgHtxM
+	 A89KYyvUgBpuNB+tGIqTGShEDbUKA6koy8hKawwBbH2tJ3Cjspsfyj4PSSASl/GpVQ
+	 0bpXiH91pOfHjMw/V+g1Xk7+Cwlnr0xvqlA+Bj58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgGGU3M (ORCPT
+        id S1728863AbgGGUaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:29:12 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8289 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgGGU3L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:29:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f04db0a0002>; Tue, 07 Jul 2020 13:28:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jul 2020 13:29:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jul 2020 13:29:11 -0700
-Received: from [10.2.173.217] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jul
- 2020 20:29:10 +0000
-Subject: Re: [RFC PATCH v2 11/18] media: tegra-video: Add support for external
- sensor capture
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <robh+dt@kernel.org>, <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
- <50deca28-c198-703c-96e2-82c53f48cd65@xs4all.nl>
- <6ee18b4d-b63b-8053-1b7e-c3ec7c1d4956@nvidia.com>
- <6846e5bb-db1d-c2ff-c52c-70a2094c5b50@nvidia.com>
- <af11cb24-57b2-7326-ca29-e168dcbb8006@xs4all.nl>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <c08ea38f-7629-1800-fb74-a2f75daf2eb0@nvidia.com>
-Date:   Tue, 7 Jul 2020 13:29:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 7 Jul 2020 16:30:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728020AbgGGUaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 16:30:17 -0400
+Received: from embeddedor (unknown [200.39.26.250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2129206C3;
+        Tue,  7 Jul 2020 20:30:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594153815;
+        bh=ZBG73L/0WVqupbAF8AmWnDxYad91I+9I1o5IDmHitwY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NzUBMPH/ZaapJTJiyzPUPPW1foolDWpL0iqmVYiH4frWQyxIpGocwDiReTEJo31Ul
+         CZ49UYizkrY++Si77EnlY3L448s4U3/xeNe97CUzBzFfJGmI+O2mlkcH0kGfjdQ6vN
+         QjQzahhoQ5rWu9yUmfrrDJYEzaWyQe4UWFp3GpbU=
+Date:   Tue, 7 Jul 2020 15:35:41 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] Bluetooth: Use fallthrough pseudo-keyword
+Message-ID: <20200707203541.GA8972@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <af11cb24-57b2-7326-ca29-e168dcbb8006@xs4all.nl>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594153738; bh=41u0GL5cMfBoVRtx5rywogpG12/ebnA5LHTDhsHfwM4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=qm2gIMJSMkbFfKypTqzi0HUw27rTjlHyza8d8CrVMsdmdz9kZHHbcltBu9kaRPB2l
-         RrJ3oWaEmjCZXYx4q/kQ/JWx0uOSBV5hGC68ULq+vq7ToQ8W2XnA22FBZJN935Vllt
-         r6+cuvlIs0rdZjTZNP0ptA0CsjtLRZLD+o0Og7oF5Y7cxOPN5we3xZHAwfXriDRT+C
-         +Ol5Kr2xuAY3h14mG6XZqAEV3z6PLVYV4eqFg0lMcei0MKIteouiNrdz7NLHO59LxV
-         b2OxQpOo58uPSW8S6ykElYzZmOn32HB/dST9WqGV9EoMcCTu0cTFvyM2THDyE0cWcO
-         MPHAntPEs3YzQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-On 7/7/20 12:35 PM, Hans Verkuil wrote:
-> On 07/07/2020 21:25, Sowjanya Komatineni wrote:
->> On 7/7/20 12:01 PM, Sowjanya Komatineni wrote:
->>>
->>> On 7/6/20 2:10 AM, Hans Verkuil wrote:
->>>>> +static void tegra_vi_graph_cleanup(struct tegra_vi *vi)
->>>>> +{
->>>>> +	struct tegra_vi_channel *chan;
->>>>> +
->>>>> +	list_for_each_entry(chan, &vi->vi_chans, list) {
->>>>> +		video_unregister_device(&chan->video);
->>>>> +		mutex_lock(&chan->video_lock);
->>>>> +		vb2_queue_release(&chan->queue);
->>>> No need for this since this is done in vb2_fop_release().
->>>>
->>>> In fact, vb2_queue_release should never be called by drivers. Just usi=
-ng
->>>> vb2_fop_release or __vb2_fop_release is sufficient.
->>>>
->>>> The confusion is due to the fact that the name suggests that vb2_queue=
-_release
->>>> has to be balanced with vb2_queue_init, but that's not the case. Perha=
-ps
->>>> vb2_queue_stop or something like that might be a better name. I'll hav=
-e to
->>>> think about this since I see that a lot of drivers do this wrong.
->>>>
->>>>> +		mutex_unlock(&chan->video_lock);
->>>>> +		v4l2_async_notifier_unregister(&chan->notifier);
->>>>> +		v4l2_async_notifier_cleanup(&chan->notifier);
->>>>> +	}
->>>>> +}
->>>>> +
->>> vb2_queue_release() here is called to stop streaming a head before medi=
-a links are removed in case of when driver unbind happens while
->>> userspace application holds video device with active streaming in progr=
-ess.
->>>
->>> Without vb2_queue_release() here streaming will be active during the dr=
-iver unbind and by the time vb2_queue_release() happens from
->>> vb2_fop_release(), async notifiers gets unregistered and media links wi=
-ll be removed which causes channel stop stream to crash as we can't
->>> retrieve sensor subdev=C2=A0 thru media entity pads to execute s_stream=
- on subdev.
->>>
->> I think we don't need async notifier unbind. Currently media links are r=
-emoved during unbind so during notifier unregister all subdevs gets
->> unbind and links removed.
->>
->> media_device_unregister during video device release callback takes care =
-of media entity unregister and removing links.
->>
->> So, will try by removing notifier unbind along with removing vb2_queue_r=
-elease during cleanup.
->>
-> I actually wonder if vb2_queue_release shouldn't be called from video_unr=
-egister_device.
->
-> I'll look into this tomorrow.
->
-> Regards,
->
-> 	Hans
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Thanks Hans.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/bluetooth/bcm203x.c     |  2 +-
+ drivers/bluetooth/bluecard_cs.c |  2 --
+ drivers/bluetooth/hci_ll.c      |  2 +-
+ drivers/bluetooth/hci_qca.c     |  8 +-------
+ net/bluetooth/hci_event.c       |  4 ++--
+ net/bluetooth/hci_sock.c        |  3 +--
+ net/bluetooth/l2cap_core.c      | 19 +++++++++----------
+ net/bluetooth/l2cap_sock.c      |  4 ++--
+ net/bluetooth/mgmt.c            |  4 ++--
+ net/bluetooth/rfcomm/core.c     |  2 +-
+ net/bluetooth/rfcomm/sock.c     |  2 +-
+ net/bluetooth/smp.c             |  2 +-
+ 12 files changed, 22 insertions(+), 32 deletions(-)
 
-Tried without notifier unbind to remove media links and I still see=20
-crash due to below diff reason now.
-
-With userspace app holding video device node with active streaming in=20
-progress when I do driver unbind, v4l2_device release callback=20
-tegra_v4l2_dev_release() happens prior to vb2_fops_release() ->=20
-vb2_queue_release().
-
-All channels resources and channel memory is freed during v4l2_device=20
-release callback.
-
-Letting vb2_queue_release() to happen thru vb2_fops_release() causes=20
-crash as stop streaming tries to retrieve subdev thru channel media pads=20
-and channel memory is freed by that time.
-
-So, doing vb2_queue_release() during driver unbind -> tegra_vi_exit() ->=20
-tegra_vi_graph_cleanup(), stops subdev stream properly and then on=20
-v4l2_device release channel memory gets freed and this works which is=20
-the existing implementation in the patch.
-
-I remember adding vb2_queue_release() during graph cleanup for TPG as=20
-well for the same reason to allow driver unbind while holding video=20
-device from user space so media pad can be accessible to stop stream=20
-before channel cleanup.
-
-Regards,
-
-Sowjanya
+diff --git a/drivers/bluetooth/bcm203x.c b/drivers/bluetooth/bcm203x.c
+index 3b176257b993..e667933c3d70 100644
+--- a/drivers/bluetooth/bcm203x.c
++++ b/drivers/bluetooth/bcm203x.c
+@@ -106,7 +106,7 @@ static void bcm203x_complete(struct urb *urb)
+ 		}
+ 
+ 		data->state = BCM203X_LOAD_FIRMWARE;
+-		/* fall through */
++		fallthrough;
+ 	case BCM203X_LOAD_FIRMWARE:
+ 		if (data->fw_sent == data->fw_size) {
+ 			usb_fill_int_urb(urb, udev, usb_rcvintpipe(udev, BCM203X_IN_EP),
+diff --git a/drivers/bluetooth/bluecard_cs.c b/drivers/bluetooth/bluecard_cs.c
+index cc6e56223656..36eabf61717f 100644
+--- a/drivers/bluetooth/bluecard_cs.c
++++ b/drivers/bluetooth/bluecard_cs.c
+@@ -295,7 +295,6 @@ static void bluecard_write_wakeup(struct bluecard_info *info)
+ 				baud_reg = REG_CONTROL_BAUD_RATE_115200;
+ 				break;
+ 			case PKT_BAUD_RATE_57600:
+-				/* Fall through... */
+ 			default:
+ 				baud_reg = REG_CONTROL_BAUD_RATE_57600;
+ 				break;
+@@ -585,7 +584,6 @@ static int bluecard_hci_set_baud_rate(struct hci_dev *hdev, int baud)
+ 		hci_skb_pkt_type(skb) = PKT_BAUD_RATE_115200;
+ 		break;
+ 	case 57600:
+-		/* Fall through... */
+ 	default:
+ 		cmd[4] = 0x03;
+ 		hci_skb_pkt_type(skb) = PKT_BAUD_RATE_57600;
+diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
+index d9a4c6c691e0..8bfe024d1fcd 100644
+--- a/drivers/bluetooth/hci_ll.c
++++ b/drivers/bluetooth/hci_ll.c
+@@ -219,7 +219,7 @@ static void ll_device_want_to_wakeup(struct hci_uart *hu)
+ 		 * perfectly safe to always send one.
+ 		 */
+ 		BT_DBG("dual wake-up-indication");
+-		/* fall through */
++		fallthrough;
+ 	case HCILL_ASLEEP:
+ 		/* acknowledge device wake up */
+ 		if (send_hcill_cmd(HCILL_WAKE_UP_ACK, hu) < 0) {
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 99d14c777105..7e395469ca4f 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -472,8 +472,6 @@ static void hci_ibs_tx_idle_timeout(struct timer_list *t)
+ 
+ 	case HCI_IBS_TX_ASLEEP:
+ 	case HCI_IBS_TX_WAKING:
+-		/* Fall through */
+-
+ 	default:
+ 		BT_ERR("Spurious timeout tx state %d", qca->tx_ibs_state);
+ 		break;
+@@ -516,8 +514,6 @@ static void hci_ibs_wake_retrans_timeout(struct timer_list *t)
+ 
+ 	case HCI_IBS_TX_ASLEEP:
+ 	case HCI_IBS_TX_AWAKE:
+-		/* Fall through */
+-
+ 	default:
+ 		BT_ERR("Spurious timeout tx state %d", qca->tx_ibs_state);
+ 		break;
+@@ -835,8 +831,6 @@ static void device_woke_up(struct hci_uart *hu)
+ 		break;
+ 
+ 	case HCI_IBS_TX_ASLEEP:
+-		/* Fall through */
+-
+ 	default:
+ 		BT_ERR("Received HCI_IBS_WAKE_ACK in tx state %d",
+ 		       qca->tx_ibs_state);
+@@ -2072,7 +2066,7 @@ static int __maybe_unused qca_suspend(struct device *dev)
+ 	switch (qca->tx_ibs_state) {
+ 	case HCI_IBS_TX_WAKING:
+ 		del_timer(&qca->wake_retrans_timer);
+-		/* Fall through */
++		fallthrough;
+ 	case HCI_IBS_TX_AWAKE:
+ 		del_timer(&qca->tx_idle_timer);
+ 
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 03a0759f2fc2..94f046f08301 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -2825,7 +2825,7 @@ static void hci_disconn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
+ 		case HCI_AUTO_CONN_LINK_LOSS:
+ 			if (ev->reason != HCI_ERROR_CONNECTION_TIMEOUT)
+ 				break;
+-			/* Fall through */
++			fallthrough;
+ 
+ 		case HCI_AUTO_CONN_DIRECT:
+ 		case HCI_AUTO_CONN_ALWAYS:
+@@ -4320,7 +4320,7 @@ static void hci_sync_conn_complete_evt(struct hci_dev *hdev,
+ 			if (hci_setup_sync(conn, conn->link->handle))
+ 				goto unlock;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 
+ 	default:
+ 		conn->state = BT_CLOSED;
+diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
+index d5627967fc25..fad842750442 100644
+--- a/net/bluetooth/hci_sock.c
++++ b/net/bluetooth/hci_sock.c
+@@ -443,8 +443,7 @@ static struct sk_buff *create_monitor_event(struct hci_dev *hdev, int event)
+ 	case HCI_DEV_SETUP:
+ 		if (hdev->manufacturer == 0xffff)
+ 			return NULL;
+-
+-		/* fall through */
++		fallthrough;
+ 
+ 	case HCI_DEV_UP:
+ 		skb = bt_skb_alloc(HCI_MON_INDEX_INFO_SIZE, GFP_ATOMIC);
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 35d2bc569a2d..ade83e224567 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -666,8 +666,7 @@ void l2cap_chan_del(struct l2cap_chan *chan, int err)
+ 
+ 		l2cap_seq_list_free(&chan->srej_list);
+ 		l2cap_seq_list_free(&chan->retrans_list);
+-
+-		/* fall through */
++		fallthrough;
+ 
+ 	case L2CAP_MODE_STREAMING:
+ 		skb_queue_purge(&chan->tx_q);
+@@ -872,7 +871,8 @@ static inline u8 l2cap_get_auth_type(struct l2cap_chan *chan)
+ 			else
+ 				return HCI_AT_NO_BONDING;
+ 		}
+-		/* fall through */
++		fallthrough;
++
+ 	default:
+ 		switch (chan->sec_level) {
+ 		case BT_SECURITY_HIGH:
+@@ -2983,8 +2983,7 @@ static void l2cap_tx_state_wait_f(struct l2cap_chan *chan,
+ 		break;
+ 	case L2CAP_EV_RECV_REQSEQ_AND_FBIT:
+ 		l2cap_process_reqseq(chan, control->reqseq);
+-
+-		/* Fall through */
++		fallthrough;
+ 
+ 	case L2CAP_EV_RECV_FBIT:
+ 		if (control && control->final) {
+@@ -3311,7 +3310,7 @@ static inline __u8 l2cap_select_mode(__u8 mode, __u16 remote_feat_mask)
+ 	case L2CAP_MODE_ERTM:
+ 		if (l2cap_mode_supported(mode, remote_feat_mask))
+ 			return mode;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		return L2CAP_MODE_BASIC;
+ 	}
+@@ -3447,7 +3446,7 @@ static int l2cap_build_conf_req(struct l2cap_chan *chan, void *data, size_t data
+ 		if (__l2cap_efs_supported(chan->conn))
+ 			set_bit(FLAG_EFS_ENABLE, &chan->flags);
+ 
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		chan->mode = l2cap_select_mode(rfc.mode, chan->conn->feat_mask);
+ 		break;
+@@ -4539,7 +4538,7 @@ static inline int l2cap_config_rsp(struct l2cap_conn *conn,
+ 				goto done;
+ 			break;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 
+ 	default:
+ 		l2cap_chan_set_err(chan, ECONNRESET);
+@@ -7719,7 +7718,7 @@ static struct l2cap_conn *l2cap_conn_add(struct hci_conn *hcon)
+ 			conn->mtu = hcon->hdev->le_mtu;
+ 			break;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		conn->mtu = hcon->hdev->acl_mtu;
+ 		break;
+@@ -7841,7 +7840,7 @@ int l2cap_chan_connect(struct l2cap_chan *chan, __le16 psm, u16 cid,
+ 	case L2CAP_MODE_STREAMING:
+ 		if (!disable_ertm)
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		err = -EOPNOTSUPP;
+ 		goto done;
+diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
+index a995d2c51fa7..738a5345fa21 100644
+--- a/net/bluetooth/l2cap_sock.c
++++ b/net/bluetooth/l2cap_sock.c
+@@ -284,7 +284,7 @@ static int l2cap_sock_listen(struct socket *sock, int backlog)
+ 	case L2CAP_MODE_STREAMING:
+ 		if (!disable_ertm)
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		err = -EOPNOTSUPP;
+ 		goto done;
+@@ -760,7 +760,7 @@ static int l2cap_sock_setsockopt_old(struct socket *sock, int optname,
+ 		case L2CAP_MODE_STREAMING:
+ 			if (!disable_ertm)
+ 				break;
+-			/* fall through */
++			fallthrough;
+ 		default:
+ 			err = -EINVAL;
+ 			break;
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 5e9b9728eeac..2e6b4312f5fe 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -4504,7 +4504,7 @@ static bool discovery_type_is_valid(struct hci_dev *hdev, uint8_t type,
+ 		*mgmt_status = mgmt_le_support(hdev);
+ 		if (*mgmt_status)
+ 			return false;
+-		/* Intentional fall-through */
++		fallthrough;
+ 	case DISCOV_TYPE_BREDR:
+ 		*mgmt_status = mgmt_bredr_support(hdev);
+ 		if (*mgmt_status)
+@@ -5880,7 +5880,7 @@ static int load_long_term_keys(struct sock *sk, struct hci_dev *hdev,
+ 		case MGMT_LTK_P256_DEBUG:
+ 			authenticated = 0x00;
+ 			type = SMP_LTK_P256_DEBUG;
+-			/* fall through */
++			fallthrough;
+ 		default:
+ 			continue;
+ 		}
+diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
+index 2e20af317cea..f2bacb464ccf 100644
+--- a/net/bluetooth/rfcomm/core.c
++++ b/net/bluetooth/rfcomm/core.c
+@@ -479,7 +479,7 @@ static int __rfcomm_dlc_close(struct rfcomm_dlc *d, int err)
+ 		/* if closing a dlc in a session that hasn't been started,
+ 		 * just close and unlink the dlc
+ 		 */
+-		/* fall through */
++		fallthrough;
+ 
+ 	default:
+ 		rfcomm_dlc_clear_timer(d);
+diff --git a/net/bluetooth/rfcomm/sock.c b/net/bluetooth/rfcomm/sock.c
+index df14eebe80da..0afc4bc5ab41 100644
+--- a/net/bluetooth/rfcomm/sock.c
++++ b/net/bluetooth/rfcomm/sock.c
+@@ -218,7 +218,7 @@ static void __rfcomm_sock_close(struct sock *sk)
+ 	case BT_CONFIG:
+ 	case BT_CONNECTED:
+ 		rfcomm_dlc_close(d, 0);
+-		/* fall through */
++		fallthrough;
+ 
+ 	default:
+ 		sock_set_flag(sk, SOCK_ZAPPED);
+diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+index 684e60e1915c..21f5e6d9ea95 100644
+--- a/net/bluetooth/smp.c
++++ b/net/bluetooth/smp.c
+@@ -1654,7 +1654,7 @@ int smp_user_confirm_reply(struct hci_conn *hcon, u16 mgmt_op, __le32 passkey)
+ 		memset(smp->tk, 0, sizeof(smp->tk));
+ 		BT_DBG("PassKey: %d", value);
+ 		put_unaligned_le32(value, smp->tk);
+-		/* Fall Through */
++		fallthrough;
+ 	case MGMT_OP_USER_CONFIRM_REPLY:
+ 		set_bit(SMP_FLAG_TK_VALID, &smp->flags);
+ 		break;
+-- 
+2.27.0
 
