@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C59C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E651BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3C9B2065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFAFB207D0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135463;
-	bh=r04Y4mUiDsaVVGGSKtOVGu/kIzxHagWSP2D/OpDco4w=;
+	s=default; t=1594135467;
+	bh=co+nTpKG8qYDYuVZfFmnb13CQYw05JwSHsxV7dRzXTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DDDm5ZI5oc60APk1WC/oeUL2gQni9VStHf1yEjl5BgF7rBpXVIlx5jyvnulG9dp1N
-	 i1294sKp0h07Fe+J0t0aOz6e2hC4r6iC4HLDmdgLUcL8ob0Vr51VgqYfngXZvgbAD9
-	 OdTIrXTc/9y58cAWbL9ncLpFiGRtE2e/CRhxy8ZM=
+	b=UVZAb5Qkv02jxm+Cwom0wUx+74syfNQ8WQBBHghm0SwZizGGHqyGzQKyteBlDlWyL
+	 093iwzntZW447Wgcc1hlq7zW3v1CZnBdOKdwqN5PRF53Qt+1JhDquqU3Opme+HtLY2
+	 abfMXOyt+V6JNIL792upZE6oHRNVc3wZrwlxYLPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbgGGPYW (ORCPT
+        id S1730091AbgGGPY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37826 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730074AbgGGPYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:18 -0400
+        id S1730085AbgGGPYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C969E207D0;
-        Tue,  7 Jul 2020 15:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC89B206F6;
+        Tue,  7 Jul 2020 15:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135457;
-        bh=r04Y4mUiDsaVVGGSKtOVGu/kIzxHagWSP2D/OpDco4w=;
+        s=default; t=1594135462;
+        bh=co+nTpKG8qYDYuVZfFmnb13CQYw05JwSHsxV7dRzXTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x1PutwLocey9VBF7Cs+nj2tAUIQfVrA0aOeD8VszGFtXHEqlV6ZC6I7tSsOz48Mzl
-         w/StyYMQlusUPYSefW5hPWzQpfKC97HLAHrzATsVT0B+qzWuSXak5qYVGkbRPs2bsi
-         oqF6Tmj2a1MqglqVhAJJvSJS420nSyCgt/Ajat/8=
+        b=H+x8z/7gpJjx3WJobqgEmN4qkJCNooz1gtqxZuyj49vJsGwQ3i1iP1Kt7/LbMlYFi
+         LEihZfQbBoByZ/OWOeTVVuEAmfd2PE2uxaCZz1PuAz+DfDZrfA3DgpQ0Y/c8ST9mb7
+         /0u7hbgQ7b2F85B9oiixADsJ0v/c31Ja84F5420o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 048/112] btrfs: fix RWF_NOWAIT writes blocking on extent locks and waiting for IO
-Date:   Tue,  7 Jul 2020 17:16:53 +0200
-Message-Id: <20200707145803.290182070@linuxfoundation.org>
+Subject: [PATCH 5.7 050/112] mptcp: drop MP_JOIN request sock on syn cookies
+Date:   Tue,  7 Jul 2020 17:16:55 +0200
+Message-Id: <20200707145803.384930723@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,128 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit 5dbb75ed6900048e146247b6325742d92c892548 ]
+[ Upstream commit 9e365ff576b7c1623bbc5ef31ec652c533e2f65e ]
 
-A RWF_NOWAIT write is not supposed to wait on filesystem locks that can be
-held for a long time or for ongoing IO to complete.
+Currently any MPTCP socket using syn cookies will fallback to
+TCP at 3rd ack time. In case of MP_JOIN requests, the RFC mandate
+closing the child and sockets, but the existing error paths
+do not handle the syncookie scenario correctly.
 
-However when calling check_can_nocow(), if the inode has prealloc extents
-or has the NOCOW flag set, we can block on extent (file range) locks
-through the call to btrfs_lock_and_flush_ordered_range(). Such lock can
-take a significant amount of time to be available. For example, a fiemap
-task may be running, and iterating through the entire file range checking
-all extents and doing backref walking to determine if they are shared,
-or a readpage operation may be in progress.
+Address the issue always forcing the child shutdown in case of
+MP_JOIN fallback.
 
-Also at btrfs_lock_and_flush_ordered_range(), called by check_can_nocow(),
-after locking the file range we wait for any existing ordered extent that
-is in progress to complete. Another operation that can take a significant
-amount of time and defeat the purpose of RWF_NOWAIT.
-
-So fix this by trying to lock the file range and if it's currently locked
-return -EAGAIN to user space. If we are able to lock the file range without
-waiting and there is an ordered extent in the range, return -EAGAIN as
-well, instead of waiting for it to complete. Finally, don't bother trying
-to lock the snapshot lock of the root when attempting a RWF_NOWAIT write,
-as that is only important for buffered writes.
-
-Fixes: edf064e7c6fec3 ("btrfs: nowait aio support")
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: ae2dd7164943 ("mptcp: handle tcp fallback when using syn cookies")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c | 37 ++++++++++++++++++++++++++-----------
- 1 file changed, 26 insertions(+), 11 deletions(-)
+ net/mptcp/subflow.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index 52d565ff66e2d..93244934d4f92 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -1541,7 +1541,7 @@ lock_and_cleanup_extent_if_need(struct btrfs_inode *inode, struct page **pages,
- }
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index db3e4e74e7857..0112ead58fd8b 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -424,22 +424,25 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 	struct mptcp_subflow_context *listener = mptcp_subflow_ctx(sk);
+ 	struct mptcp_subflow_request_sock *subflow_req;
+ 	struct mptcp_options_received mp_opt;
+-	bool fallback_is_fatal = false;
++	bool fallback, fallback_is_fatal;
+ 	struct sock *new_msk = NULL;
+-	bool fallback = false;
+ 	struct sock *child;
  
- static noinline int check_can_nocow(struct btrfs_inode *inode, loff_t pos,
--				    size_t *write_bytes)
-+				    size_t *write_bytes, bool nowait)
- {
- 	struct btrfs_fs_info *fs_info = inode->root->fs_info;
- 	struct btrfs_root *root = inode->root;
-@@ -1549,27 +1549,43 @@ static noinline int check_can_nocow(struct btrfs_inode *inode, loff_t pos,
- 	u64 num_bytes;
- 	int ret;
+ 	pr_debug("listener=%p, req=%p, conn=%p", listener, req, listener->conn);
  
--	if (!btrfs_drew_try_write_lock(&root->snapshot_lock))
-+	if (!nowait && !btrfs_drew_try_write_lock(&root->snapshot_lock))
- 		return -EAGAIN;
- 
- 	lockstart = round_down(pos, fs_info->sectorsize);
- 	lockend = round_up(pos + *write_bytes,
- 			   fs_info->sectorsize) - 1;
-+	num_bytes = lockend - lockstart + 1;
- 
--	btrfs_lock_and_flush_ordered_range(inode, lockstart,
--					   lockend, NULL);
-+	if (nowait) {
-+		struct btrfs_ordered_extent *ordered;
+-	/* we need later a valid 'mp_capable' value even when options are not
+-	 * parsed
++	/* After child creation we must look for 'mp_capable' even when options
++	 * are not parsed
+ 	 */
+ 	mp_opt.mp_capable = 0;
+-	if (tcp_rsk(req)->is_mptcp == 0)
 +
-+		if (!try_lock_extent(&inode->io_tree, lockstart, lockend))
-+			return -EAGAIN;
-+
-+		ordered = btrfs_lookup_ordered_range(inode, lockstart,
-+						     num_bytes);
-+		if (ordered) {
-+			btrfs_put_ordered_extent(ordered);
-+			ret = -EAGAIN;
-+			goto out_unlock;
-+		}
-+	} else {
-+		btrfs_lock_and_flush_ordered_range(inode, lockstart,
-+						   lockend, NULL);
-+	}
++	/* hopefully temporary handling for MP_JOIN+syncookie */
++	subflow_req = mptcp_subflow_rsk(req);
++	fallback_is_fatal = subflow_req->mp_join;
++	fallback = !tcp_rsk(req)->is_mptcp;
++	if (fallback)
+ 		goto create_child;
  
--	num_bytes = lockend - lockstart + 1;
- 	ret = can_nocow_extent(&inode->vfs_inode, lockstart, &num_bytes,
- 			NULL, NULL, NULL);
- 	if (ret <= 0) {
- 		ret = 0;
--		btrfs_drew_write_unlock(&root->snapshot_lock);
-+		if (!nowait)
-+			btrfs_drew_write_unlock(&root->snapshot_lock);
- 	} else {
- 		*write_bytes = min_t(size_t, *write_bytes ,
- 				     num_bytes - pos + lockstart);
- 	}
--
-+out_unlock:
- 	unlock_extent(&inode->io_tree, lockstart, lockend);
- 
- 	return ret;
-@@ -1641,7 +1657,7 @@ static noinline ssize_t btrfs_buffered_write(struct kiocb *iocb,
- 			if ((BTRFS_I(inode)->flags & (BTRFS_INODE_NODATACOW |
- 						      BTRFS_INODE_PREALLOC)) &&
- 			    check_can_nocow(BTRFS_I(inode), pos,
--					&write_bytes) > 0) {
-+					    &write_bytes, false) > 0) {
- 				/*
- 				 * For nodata cow case, no need to reserve
- 				 * data space.
-@@ -1920,12 +1936,11 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
- 		 */
- 		if (!(BTRFS_I(inode)->flags & (BTRFS_INODE_NODATACOW |
- 					      BTRFS_INODE_PREALLOC)) ||
--		    check_can_nocow(BTRFS_I(inode), pos, &nocow_bytes) <= 0) {
-+		    check_can_nocow(BTRFS_I(inode), pos, &nocow_bytes,
-+				    true) <= 0) {
- 			inode_unlock(inode);
- 			return -EAGAIN;
+ 	/* if the sk is MP_CAPABLE, we try to fetch the client key */
+-	subflow_req = mptcp_subflow_rsk(req);
+ 	if (subflow_req->mp_capable) {
+ 		if (TCP_SKB_CB(skb)->seq != subflow_req->ssn_offset + 1) {
+ 			/* here we can receive and accept an in-window,
+@@ -460,12 +463,11 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 		if (!new_msk)
+ 			fallback = true;
+ 	} else if (subflow_req->mp_join) {
+-		fallback_is_fatal = true;
+ 		mptcp_get_options(skb, &mp_opt);
+ 		if (!mp_opt.mp_join ||
+ 		    !subflow_hmac_valid(req, &mp_opt)) {
+ 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
+-			return NULL;
++			fallback = true;
  		}
--		/* check_can_nocow() locks the snapshot lock on success */
--		btrfs_drew_write_unlock(&root->snapshot_lock);
- 		/*
- 		 * There are holes in the range or parts of the range that must
- 		 * be COWed (shared extents, RO block groups, etc), so just bail
+ 	}
+ 
 -- 
 2.25.1
 
