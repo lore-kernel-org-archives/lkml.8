@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D196C207D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1574B2078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135581;
-	bh=hHgvl0Dc8pGUFtYfFK3SnYyT+hb26J/OUJArdMEHL4w=;
+	s=default; t=1594135585;
+	bh=gZ3+xywpq6HFNvCTLfeu8PDvu8ayxT0YNwIo59vIrgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=soPTVEdvNBP7dmkyuMI352o+WFEV3OiGNqOpWZWtUU197qmyDyYJ2dXqSPR7uXMjt
-	 1sgQW/yE/yhp/KWK0rdP8a8hmaZ6SqT5bE/MX8M+/VPI5fM5vO4u8+6Q72tto38/wP
-	 MLBir9yu5dc12xS5ZD4HmM6qaWqGYjA5fvzgohfU=
+	b=i8oFesQ0rSNNTd7PkNkI41uADx+7+kb/kOg5uyFAmCUPNUEm43yleMeiyr+PGZrhq
+	 2oQM/JnN4QvV3BiKKgPCthHWy/aewPZ2RP38y6smgYn1aXYjRaty0vsTi3U+iBHy5J
+	 awLRH7jS9Ym+YUmCdsJhzrqnDdcKRsgaySobVybY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730266AbgGGP0V (ORCPT
+        id S1730275AbgGGP0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:26:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40404 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:26:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728835AbgGGP0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:26:11 -0400
+        id S1728500AbgGGP0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:26:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 800A320663;
-        Tue,  7 Jul 2020 15:26:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09103206F6;
+        Tue,  7 Jul 2020 15:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135571;
-        bh=hHgvl0Dc8pGUFtYfFK3SnYyT+hb26J/OUJArdMEHL4w=;
+        s=default; t=1594135573;
+        bh=gZ3+xywpq6HFNvCTLfeu8PDvu8ayxT0YNwIo59vIrgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bgU0KfAgOhLhDYk7LTXoMsc9AfOopaOiq32KW1P3cYlSnh5kmvWWlvbMzVq03N9CW
-         a6VHdlgKzqYLLT1s7T17trIk99Pc/CspK6Ia1szvFLjmq3Dd3UBuFS5l6g8BADlyVT
-         sLxXTO5WVGPitaHt2q+KJnn606JjZv0zQXDHfLh4=
+        b=VwYzyzrgOhUl7ZGIOqJlgdCluA6YG/Dxe4ZzwmmKvygruSlY2fOAg25a0gCB/MqHV
+         ROklfkrpfigfjdLbwto9QdbfxuneDOYxkSOnGvzEuhRFTTvEvPMGtzDENpAdj7riTR
+         zTNw7mQltRsdReMA324ECMnhIaCCv/2YSOKG+PpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, KP Singh <kpsingh@google.com>,
-        James Morris <jmorris@namei.org>,
+        stable@vger.kernel.org, Chu Lin <linchuyuan@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 063/112] security: Fix hook iteration and default value for inode_copy_up_xattr
-Date:   Tue,  7 Jul 2020 17:17:08 +0200
-Message-Id: <20200707145803.998566427@linuxfoundation.org>
+Subject: [PATCH 5.7 064/112] hwmon: (max6697) Make sure the OVERT mask is set correctly
+Date:   Tue,  7 Jul 2020 17:17:09 +0200
+Message-Id: <20200707145804.044514573@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,69 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+From: Chu Lin <linchuyuan@google.com>
 
-[ Upstream commit 23e390cdbe6f85827a43d38f9288dcd3066fa376 ]
+[ Upstream commit 016983d138cbe99a5c0aaae0103ee88f5300beb3 ]
 
-inode_copy_up_xattr returns 0 to indicate the acceptance of the xattr
-and 1 to reject it. If the LSM does not know about the xattr, it's
-expected to return -EOPNOTSUPP, which is the correct default value for
-this hook. BPF LSM, currently, uses 0 as the default value and thereby
-falsely allows all overlay fs xattributes to be copied up.
+Per the datasheet for max6697, OVERT mask and ALERT mask are different.
+For example, the 7th bit of OVERT is the local channel but for alert
+mask, the 6th bit is the local channel. Therefore, we can't apply the
+same mask for both registers. In addition to that, the max6697 driver
+is supposed to be compatibale with different models. I manually went over
+all the listed chips and made sure all chip types have the same layout.
 
-The iteration logic is also updated from the "bail-on-fail"
-call_int_hook to continue on the non-decisive -EOPNOTSUPP and bail out
-on other values.
+Testing;
+    mask value of 0x9 should map to 0x44 for ALERT and 0x84 for OVERT.
+    I used iotool to read the reg value back to verify. I only tested this
+    change on max6581.
 
-Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
-Signed-off-by: KP Singh <kpsingh@google.com>
-Signed-off-by: James Morris <jmorris@namei.org>
+Reference:
+https://datasheets.maximintegrated.com/en/ds/MAX6581.pdf
+https://datasheets.maximintegrated.com/en/ds/MAX6697.pdf
+https://datasheets.maximintegrated.com/en/ds/MAX6699.pdf
+
+Signed-off-by: Chu Lin <linchuyuan@google.com>
+Fixes: 5372d2d71c46e ("hwmon: Driver for Maxim MAX6697 and compatibles")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/lsm_hook_defs.h |  2 +-
- security/security.c           | 17 ++++++++++++++++-
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ drivers/hwmon/max6697.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 5616b2567aa7f..c2d073c49bf8a 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -149,7 +149,7 @@ LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char *buffer,
- 	 size_t buffer_size)
- LSM_HOOK(void, LSM_RET_VOID, inode_getsecid, struct inode *inode, u32 *secid)
- LSM_HOOK(int, 0, inode_copy_up, struct dentry *src, struct cred **new)
--LSM_HOOK(int, 0, inode_copy_up_xattr, const char *name)
-+LSM_HOOK(int, -EOPNOTSUPP, inode_copy_up_xattr, const char *name)
- LSM_HOOK(int, 0, kernfs_init_security, struct kernfs_node *kn_dir,
- 	 struct kernfs_node *kn)
- LSM_HOOK(int, 0, file_permission, struct file *file, int mask)
-diff --git a/security/security.c b/security/security.c
-index 51de970fbb1ed..8b4d342ade5e1 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1409,7 +1409,22 @@ EXPORT_SYMBOL(security_inode_copy_up);
+diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
+index 743752a2467a2..64122eb38060d 100644
+--- a/drivers/hwmon/max6697.c
++++ b/drivers/hwmon/max6697.c
+@@ -38,8 +38,9 @@ static const u8 MAX6697_REG_CRIT[] = {
+  * Map device tree / platform data register bit map to chip bit map.
+  * Applies to alert register and over-temperature register.
+  */
+-#define MAX6697_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
++#define MAX6697_ALERT_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
+ 				 (((reg) & 0x01) << 6) | ((reg) & 0x80))
++#define MAX6697_OVERT_MAP_BITS(reg) (((reg) >> 1) | (((reg) & 0x01) << 7))
  
- int security_inode_copy_up_xattr(const char *name)
- {
--	return call_int_hook(inode_copy_up_xattr, -EOPNOTSUPP, name);
-+	struct security_hook_list *hp;
-+	int rc;
-+
-+	/*
-+	 * The implementation can return 0 (accept the xattr), 1 (discard the
-+	 * xattr), -EOPNOTSUPP if it does not know anything about the xattr or
-+	 * any other error code incase of an error.
-+	 */
-+	hlist_for_each_entry(hp,
-+		&security_hook_heads.inode_copy_up_xattr, list) {
-+		rc = hp->hook.inode_copy_up_xattr(name);
-+		if (rc != LSM_RET_DEFAULT(inode_copy_up_xattr))
-+			return rc;
-+	}
-+
-+	return LSM_RET_DEFAULT(inode_copy_up_xattr);
- }
- EXPORT_SYMBOL(security_inode_copy_up_xattr);
+ #define MAX6697_REG_STAT(n)		(0x44 + (n))
+ 
+@@ -562,12 +563,12 @@ static int max6697_init_chip(struct max6697_data *data,
+ 		return ret;
+ 
+ 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_ALERT_MASK,
+-					MAX6697_MAP_BITS(pdata->alert_mask));
++				MAX6697_ALERT_MAP_BITS(pdata->alert_mask));
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_OVERT_MASK,
+-				MAX6697_MAP_BITS(pdata->over_temperature_mask));
++			MAX6697_OVERT_MAP_BITS(pdata->over_temperature_mask));
+ 	if (ret < 0)
+ 		return ret;
  
 -- 
 2.25.1
