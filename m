@@ -2,204 +2,122 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76469C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4935B2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:39:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WaOOs7pZ"
+	by mail.kernel.org (Postfix) with ESMTP id 364A32065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgGGJjm (ORCPT
+        id S1728214AbgGGJjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:39:42 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:9286 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbgGGJjl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:39:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594114781; x=1625650781;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=mIgUox7uwj8thtKs2JbmsZgOp7Zig/++PODoaiDRC+A=;
-  b=WaOOs7pZzEcNHx9sR+03zYKzqjoEkXmVSsGYgb7NApYf1OUWRviA46Yj
-   3AsR/GqPF9hz7I8uOEOAkzaqx9MH4tEUgvoYn0PAKU8FAGdKaSb5Uvvm9
-   ngPpF7jLu7W6AeotQdUvuzPvibea1jhG8HMMWU/Ig3dLCd5nORukiHwd3
-   Y=;
-IronPort-SDR: wZZk2i/Mvl91gpY124d1UCPVvkmTlU048tRtQyIuDVhcLsFRmlOl8/EY7lBQPo0jOZIBC/CfLZ
- X1Yds6/SNZ3A==
-X-IronPort-AV: E=Sophos;i="5.75,323,1589241600"; 
-   d="scan'208";a="41867180"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 07 Jul 2020 09:39:39 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id A861CA1DEA;
-        Tue,  7 Jul 2020 09:39:27 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 7 Jul 2020 09:39:26 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.203) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 7 Jul 2020 09:39:10 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <rppt@kernel.org>, <sblbir@amazon.com>,
-        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v13 2/8] mm/damon: Account age of target regions
-Date:   Tue, 7 Jul 2020 11:37:59 +0200
-Message-ID: <20200707093805.4775-3-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200707093805.4775-1-sjpark@amazon.com>
-References: <20200707093805.4775-1-sjpark@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.203]
-X-ClientProxiedBy: EX13D36UWA002.ant.amazon.com (10.43.160.24) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+        Tue, 7 Jul 2020 05:39:44 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:54998 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727120AbgGGJjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:39:43 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr964QgRfBzJRAA--.950S2;
+        Tue, 07 Jul 2020 17:39:05 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>
+Subject: [PATCH] MIPS: Prevent READ_IMPLIES_EXEC propagation
+Date:   Tue,  7 Jul 2020 17:39:01 +0800
+Message-Id: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxr964QgRfBzJRAA--.950S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJry3Ar4ruF4DGw4xtryfXrb_yoW8tr48pF
+        ykCa4Dt3yUGryFkas5Z3ykury5JFZxGr429ayxuFWDAanIv3WFvwnayFn0yF15CFsYqa42
+        v3sakrnrJF4jkFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4f
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
+        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUPl13UUUU
+        U==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+In the MIPS architecture, we should clear the security-relevant
+flag READ_IMPLIES_EXEC in the function SET_PERSONALITY2() of the
+file arch/mips/include/asm/elf.h.
 
-DAMON can be used as a primitive for data access pattern aware memory
-management optimizations.  However, users who want such optimizations
-should run DAMON, read the monitoring results, analyze it, plan a new
-memory management scheme, and apply the new scheme by themselves.  It
-would not be too hard, but still require some level of effort.  For
-complicated optimizations, this effort is inevitable.
+Otherwise, with this flag set, PROT_READ implies PROT_EXEC for
+mmap to make memory executable that is not safe, because this
+condition allows an attacker to simply jump to and execute bytes
+that are considered to be just data [1].
 
-That said, in many cases, users would simply want to apply an actions to
-a memory region of a specific size having a specific access frequency
-for a specific time.  For example, "page out a memory region larger than
-100 MiB but having a low access frequency more than 10 minutes", or "Use
-THP for a memory region larger than 2 MiB having a high access frequency
-for more than 2 seconds".
+In mm/mmap.c:
+unsigned long do_mmap(struct file *file, unsigned long addr,
+			unsigned long len, unsigned long prot,
+			unsigned long flags, vm_flags_t vm_flags,
+			unsigned long pgoff, unsigned long *populate,
+			struct list_head *uf)
+{
+	[...]
+	if ((prot & PROT_READ) && (current->personality & READ_IMPLIES_EXEC))
+		if (!(file && path_noexec(&file->f_path)))
+			prot |= PROT_EXEC;
+	[...]
+}
 
-For such optimizations, users will need to first account the age of each
-region themselves.  To reduce such efforts, this commit implements a
-simple age account of each region in DAMON.  For each aggregation step,
-DAMON compares the access frequency with that from last aggregation and
-reset the age of the region if the change is significant.  Else, the age
-is incremented.  Also, in case of the merge of regions, the region
-size-weighted average of the ages is set as the age of merged new
-region.
+By the way, x86 and ARM64 have done the similar thing.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
+After commit 250c22777fe1 ("x86_64: move kernel"), in the file
+arch/x86/kernel/process_64.c:
+void set_personality_64bit(void)
+{
+	[...]
+	current->personality &= ~READ_IMPLIES_EXEC;
+}
+
+After commit 48f99c8ec0b2 ("arm64: Preventing READ_IMPLIES_EXEC
+propagation"), in the file arch/arm64/include/asm/elf.h:
+#define SET_PERSONALITY(ex)						\
+({									\
+	clear_thread_flag(TIF_32BIT);					\
+	current->personality &= ~READ_IMPLIES_EXEC;			\
+})
+
+[1] https://insights.sei.cmu.edu/cert/2014/02/feeling-insecure-blame-your-parent.html
+
+Reported-by: Juxin Gao <gaojuxin@loongson.cn>
+Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- include/linux/damon.h | 10 ++++++++++
- mm/damon.c            | 20 +++++++++++++++++---
- 2 files changed, 27 insertions(+), 3 deletions(-)
+ arch/mips/include/asm/elf.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index b0e7e31a22b3..e94dab4edab6 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -31,12 +31,22 @@ struct damon_addr_range {
-  * @sampling_addr:	Address of the sample for the next access check.
-  * @nr_accesses:	Access frequency of this region.
-  * @list:		List head for siblings.
-+ * @age:		Age of this region.
-+ * @last_nr_accesses:	Internal value for age calculation.
-+ *
-+ * @age is initially zero, increased for each aggregation interval, and reset
-+ * to zero again if the access frequency is significantly changed.  If two
-+ * regions are merged into a new region, both @nr_accesses and @age of the new
-+ * region are set as region size-weighted average of those of the two regions.
-  */
- struct damon_region {
- 	struct damon_addr_range ar;
- 	unsigned long sampling_addr;
- 	unsigned int nr_accesses;
- 	struct list_head list;
-+
-+	unsigned int age;
-+	unsigned int last_nr_accesses;
- };
- 
- /**
-diff --git a/mm/damon.c b/mm/damon.c
-index 0f906126d21f..f46844540b37 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -107,6 +107,9 @@ static struct damon_region *damon_new_region(unsigned long start,
- 	region->nr_accesses = 0;
- 	INIT_LIST_HEAD(&region->list);
- 
-+	region->age = 0;
-+	region->last_nr_accesses = 0;
-+
- 	return region;
- }
- 
-@@ -815,6 +818,7 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- 			damon_write_rbuf(c, &r->nr_accesses,
- 					sizeof(r->nr_accesses));
- 			trace_damon_aggregated(t, r, nr);
-+			r->last_nr_accesses = r->nr_accesses;
- 			r->nr_accesses = 0;
- 		}
- 	}
-@@ -828,9 +832,11 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- static void damon_merge_two_regions(struct damon_region *l,
- 				struct damon_region *r)
- {
--	l->nr_accesses = (l->nr_accesses * sz_damon_region(l) +
--			r->nr_accesses * sz_damon_region(r)) /
--			(sz_damon_region(l) + sz_damon_region(r));
-+	unsigned long sz_l = sz_damon_region(l), sz_r = sz_damon_region(r);
-+
-+	l->nr_accesses = (l->nr_accesses * sz_l + r->nr_accesses * sz_r) /
-+			(sz_l + sz_r);
-+	l->age = (l->age * sz_l + r->age * sz_r) / (sz_l + sz_r);
- 	l->ar.end = r->ar.end;
- 	damon_destroy_region(r);
- }
-@@ -850,6 +856,11 @@ static void damon_merge_regions_of(struct damon_task *t, unsigned int thres,
- 	struct damon_region *r, *prev = NULL, *next;
- 
- 	damon_for_each_region_safe(r, next, t) {
-+		if (diff_of(r->nr_accesses, r->last_nr_accesses) > thres)
-+			r->age = 0;
-+		else
-+			r->age++;
-+
- 		if (prev && prev->ar.end == r->ar.start &&
- 		    diff_of(prev->nr_accesses, r->nr_accesses) <= thres &&
- 		    sz_damon_region(prev) + sz_damon_region(r) <= sz_limit)
-@@ -893,6 +904,9 @@ static void damon_split_region_at(struct damon_ctx *ctx,
- 	new = damon_new_region(r->ar.start + sz_r, r->ar.end);
- 	r->ar.end = new->ar.start;
- 
-+	new->age = r->age;
-+	new->last_nr_accesses = r->last_nr_accesses;
-+
- 	damon_insert_region(new, r, damon_next_region(r));
- }
- 
+diff --git a/arch/mips/include/asm/elf.h b/arch/mips/include/asm/elf.h
+index 5aa29ce..71c7622 100644
+--- a/arch/mips/include/asm/elf.h
++++ b/arch/mips/include/asm/elf.h
+@@ -410,6 +410,7 @@ do {									\
+ 	clear_thread_flag(TIF_32BIT_FPREGS);				\
+ 	clear_thread_flag(TIF_HYBRID_FPREGS);				\
+ 	clear_thread_flag(TIF_32BIT_ADDR);				\
++	current->personality &= ~READ_IMPLIES_EXEC;			\
+ 									\
+ 	if ((ex).e_ident[EI_CLASS] == ELFCLASS32)			\
+ 		__SET_PERSONALITY32(ex, state);				\
 -- 
-2.17.1
+2.1.0
 
