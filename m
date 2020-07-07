@@ -2,58 +2,58 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF06C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A586207D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C3E20771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgGGMXr (ORCPT
+        id S1728172AbgGGMXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:23:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20662 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726540AbgGGMXr (ORCPT
+        Tue, 7 Jul 2020 08:23:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14942 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728088AbgGGMXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 08:23:53 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 067C4YFR094587;
         Tue, 7 Jul 2020 08:23:47 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 067C6oAV074399;
-        Tue, 7 Jul 2020 08:23:34 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 324hfqw2ce-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3248nrw32v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 08:23:34 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 067C6vUB074799;
-        Tue, 7 Jul 2020 08:23:33 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 324hfqw2bc-1
+        Tue, 07 Jul 2020 08:23:46 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 067C4mg6095626;
+        Tue, 7 Jul 2020 08:23:46 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3248nrw31u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 08:23:33 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 067CKI9b019518;
-        Tue, 7 Jul 2020 12:23:31 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 322hd83fqj-1
+        Tue, 07 Jul 2020 08:23:46 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 067CKJR9030258;
+        Tue, 7 Jul 2020 12:23:44 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 322hd7udtp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 12:23:30 +0000
+        Tue, 07 Jul 2020 12:23:44 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 067CNSan54788154
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 067CNfsp42336298
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jul 2020 12:23:28 GMT
+        Tue, 7 Jul 2020 12:23:41 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E8B04AE056;
-        Tue,  7 Jul 2020 12:23:27 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 27723AE056;
+        Tue,  7 Jul 2020 12:23:41 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E629AE045;
-        Tue,  7 Jul 2020 12:23:24 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 4130CAE053;
+        Tue,  7 Jul 2020 12:23:37 +0000 (GMT)
 Received: from localhost.localdomain.com (unknown [9.85.118.59])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Jul 2020 12:23:23 +0000 (GMT)
+        Tue,  7 Jul 2020 12:23:36 +0000 (GMT)
 From:   Kajol Jain <kjain@linux.ibm.com>
 To:     acme@kernel.org
 Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
@@ -64,100 +64,83 @@ Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
         maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
         anju@linux.vnet.ibm.com, kan.liang@linux.intel.com,
         nasastry@in.ibm.com, kjain@linux.ibm.com
-Subject: [RFC v2 0/5] tools/perf/pmu-events/jevents.c
-Date:   Tue,  7 Jul 2020 17:53:09 +0530
-Message-Id: <20200707122314.624400-1-kjain@linux.ibm.com>
+Subject: [RFC v2 3/5] perf jevents: Add support for parsing perchip/percore events
+Date:   Tue,  7 Jul 2020 17:53:12 +0530
+Message-Id: <20200707122314.624400-4-kjain@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200707122314.624400-1-kjain@linux.ibm.com>
+References: <20200707122314.624400-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-07_07:2020-07-07,2020-07-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- clxscore=1015 cotscore=-2147483648 lowpriorityscore=0 adultscore=0
- mlxlogscore=999 priorityscore=1501 phishscore=0 mlxscore=0 spamscore=0
- suspectscore=1 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007070092
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 mlxlogscore=999 spamscore=0 phishscore=0 suspectscore=1
+ adultscore=0 clxscore=1015 bulkscore=0 priorityscore=1501
+ cotscore=-2147483648 mlxscore=0 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007070090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patchset enhance current runtime parameter support. It introduces new
-fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
-used to specify perpkg events. 
+Added the "PerChip" field  in enum so that perf knows they are
+per chip events.
 
-The "PerCore" and "PerChip" specifies whether its core or chip events.
-Based on which we can decide which runtime parameter user want to
-access. Now character  '?' can refers different parameter based on user
-requirement.
+Added the "PerCore" field in enum so that perf knows they are
+per core events and add these fields to pmu_event structure.
 
-Initially, every time we want to add new terms like chip, core, thread
-etc, we need to create corrsponding fields in pmu_events and event
-struct.
-This patchset adds an enum called 'aggr_mode_class' which store all these
-aggregation like perpkg/percore. It also adds new field 'AggregationMode'
-to capture these terms.
-Now, if user wants to add any new term, they just need to add it in
-the enum defined. I try to test it with  my current setup.
+Similar to the way we had "PerPkg field
+to specify perpkg events.
 
-I also need to replace PerPkg field to AggregationMode in all the
-x86 uncore json files. It will great if Andi and team can test it
-and let me know if they have any concerns.
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ tools/perf/pmu-events/jevents.c    | 8 +++++++-
+ tools/perf/pmu-events/pmu-events.h | 4 +++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-Changelog:
-v1 -> v2:
-- Rather then adding new field as PerCore/PerChip, created a new enum
-  to get these fields. And new field as "AggregationMode" which can
-  be used to capture these fields from json file.
-
-Kajol Jain (5):
-  perf/pmu-events/jevents: Add enum to store aggregation like PerPkg
-  pmu-events/x86/uncore: Replace PerPkg field to AggregationMode in x86
-    json files
-  perf jevents: Add support for parsing perchip/percore events
-  perf/tools: Pass pmu_event structure as a parameter for
-    arch_get_runtimeparam
-  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
-
- tools/perf/arch/powerpc/util/header.c         |   7 +-
- .../arch/powerpc/power9/nest_metrics.json     |  17 +-
- .../arch/x86/broadwellde/uncore-cache.json    |  62 ++--
- .../arch/x86/broadwellde/uncore-memory.json   |  18 +-
- .../arch/x86/broadwellde/uncore-power.json    |  18 +-
- .../arch/x86/broadwellx/uncore-cache.json     |  62 ++--
- .../x86/broadwellx/uncore-interconnect.json   |   6 +-
- .../arch/x86/broadwellx/uncore-memory.json    |  18 +-
- .../arch/x86/broadwellx/uncore-power.json     |  18 +-
- .../arch/x86/cascadelakex/uncore-memory.json  |  64 ++--
- .../arch/x86/cascadelakex/uncore-other.json   | 332 +++++++++---------
- .../arch/x86/haswellx/uncore-cache.json       |  62 ++--
- .../x86/haswellx/uncore-interconnect.json     |   6 +-
- .../arch/x86/haswellx/uncore-memory.json      |  18 +-
- .../arch/x86/haswellx/uncore-power.json       |  18 +-
- .../arch/x86/ivytown/uncore-cache.json        |  62 ++--
- .../arch/x86/ivytown/uncore-interconnect.json |  10 +-
- .../arch/x86/ivytown/uncore-memory.json       |  16 +-
- .../arch/x86/ivytown/uncore-power.json        |  52 +--
- .../arch/x86/jaketown/uncore-cache.json       |  40 +--
- .../x86/jaketown/uncore-interconnect.json     |  10 +-
- .../arch/x86/jaketown/uncore-memory.json      |  18 +-
- .../arch/x86/jaketown/uncore-power.json       |  52 +--
- .../x86/knightslanding/uncore-memory.json     |   8 +-
- .../arch/x86/skylakex/uncore-memory.json      |  36 +-
- .../arch/x86/skylakex/uncore-other.json       | 220 ++++++------
- .../arch/x86/tremontx/uncore-memory.json      |  14 +-
- .../arch/x86/tremontx/uncore-other.json       |  70 ++--
- .../arch/x86/tremontx/uncore-power.json       |   2 +-
- tools/perf/pmu-events/jevents.c               |  45 ++-
- tools/perf/pmu-events/jevents.h               |   2 +-
- tools/perf/pmu-events/pmu-events.h            |   8 +-
- tools/perf/tests/pmu-events.c                 |   8 +-
- tools/perf/util/metricgroup.c                 |   5 +-
- tools/perf/util/metricgroup.h                 |   3 +-
- tools/perf/util/pmu.c                         |   6 +-
- 36 files changed, 724 insertions(+), 689 deletions(-)
-
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index b2f59f0af63d..1f65047db000 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -54,13 +54,19 @@ int verbose;
+ char *prog;
+ 
+ enum aggr_mode_class {
+-	PerPkg = 1
++	PerChip = 0,
++	PerPkg = 1,
++	PerCore = 2
+ };
+ 
+ enum aggr_mode_class convert(const char *aggr_mode)
+ {
+ 	if (!strcmp(aggr_mode, "PerPkg"))
+ 		return PerPkg;
++	else if (!strcmp(aggr_mode, "PerCore"))
++		return PerCore;
++	else if (!strcmp(aggr_mode, "PerChip"))
++		return PerChip;
+ 	return -1;
+ }
+ 
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index 71b7aa6278d0..114ae1559358 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -3,7 +3,9 @@
+ #define PMU_EVENTS_H
+ 
+ enum aggr_mode_class {
+-	PerPkg = 1
++	PerChip = 0,
++	PerPkg = 1,
++	PerCore = 2
+ };
+ 
+ /*
 -- 
 2.26.2
 
