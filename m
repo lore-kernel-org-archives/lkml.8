@@ -2,110 +2,171 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70033C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3099C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C74020738
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594145686;
-	bh=uD2w603wgU0bU7XLH2y1Ntci6dAVVpbixOgMNfmbeas=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=EfA+RDP2OEAOyd80cAxlvBvsvLsnrBOX5MNQgl1/0Ss0+v7m1FRnyWytaXUJQvPOd
-	 drB06UcYNBD4Yfz8UqVxOKqWHp1TZOBA1Aua62DOythELGYwGHDj/bOgscRrAy3sah
-	 spdAw9YUlpuAsxPAcUJ8ZQXcV4VDB23Du1mkxeF8=
+	by mail.kernel.org (Postfix) with ESMTP id 96B3420720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgGGSOo (ORCPT
+        id S1727777AbgGGSPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgGGSOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 14:14:42 -0400
-Received: from embeddedor (unknown [200.39.26.250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A74F92065F;
-        Tue,  7 Jul 2020 18:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594145682;
-        bh=uD2w603wgU0bU7XLH2y1Ntci6dAVVpbixOgMNfmbeas=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RwJ3LiHsX5bikASuTHCgtD+BwMWe7tD8wJ9BzgYPDgL8VRca8j5L35IZw2bxdEWcd
-         aFljhWi1gYx0Ne4A9lKHr3HqXIMqn48Iz2FjdcbrJY+zi3+fZvnc5W7BK7KaTxAViD
-         J054kC/aCUOCAfOfLTi60DKHwXvyOwMVR4gV75y4=
-Date:   Tue, 7 Jul 2020 13:20:08 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH] staging: rtl8188eu: Use fallthrough pseudo-keyword
-Message-ID: <20200707182008.GA341@embeddedor>
+        Tue, 7 Jul 2020 14:15:52 -0400
+Received: from smtp-190c.mail.infomaniak.ch ([185.125.25.12]:34177 "EHLO
+        smtp-190c.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728246AbgGGSPw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 14:15:52 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4B1VpY0hpGzlhfRS;
+        Tue,  7 Jul 2020 20:10:13 +0200 (CEST)
+Received: from localhost (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4B1VpX4sh7zlh8T5;
+        Tue,  7 Jul 2020 20:10:12 +0200 (CEST)
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Richard Weinberger <richard@nod.at>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v19 06/12] fs,security: Add sb_delete hook
+Date:   Tue,  7 Jul 2020 20:09:49 +0200
+Message-Id: <20200707180955.53024-7-mic@digikod.net>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200707180955.53024-1-mic@digikod.net>
+References: <20200707180955.53024-1-mic@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
+The sb_delete security hook is called when shutting down a superblock,
+which may be useful to release kernel objects tied to the superblock's
+lifetime (e.g. inodes).
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+This new hook is needed by Landlock to release (ephemerally) tagged
+struct inodes.  This comes from the unprivileged nature of Landlock
+described in the next commit.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: James Morris <jmorris@namei.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Serge E. Hallyn <serge@hallyn.com>
 ---
- drivers/staging/rtl8188eu/core/rtw_mlme_ext.c    |    2 +-
- drivers/staging/rtl8188eu/hal/usb_halinit.c      |    2 +-
- drivers/staging/rtl8188eu/os_dep/usb_ops_linux.c |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-index 8d035f67ef61..414f1834657a 100644
---- a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-@@ -4133,7 +4133,7 @@ void mgt_dispatcher(struct adapter *padapter, struct recv_frame *precv_frame)
- 			ptable->func = &OnAuth;
- 		else
- 			ptable->func = &OnAuthClient;
--		/* fall through */
-+		fallthrough;
- 	case WIFI_ASSOCREQ:
- 	case WIFI_REASSOCREQ:
- 	case WIFI_PROBEREQ:
-diff --git a/drivers/staging/rtl8188eu/hal/usb_halinit.c b/drivers/staging/rtl8188eu/hal/usb_halinit.c
-index 16a57b31a439..114638f6f719 100644
---- a/drivers/staging/rtl8188eu/hal/usb_halinit.c
-+++ b/drivers/staging/rtl8188eu/hal/usb_halinit.c
-@@ -1728,7 +1728,7 @@ void rtw_hal_get_hwreg(struct adapter *Adapter, u8 variable, u8 *val)
- 	switch (variable) {
- 	case HW_VAR_BASIC_RATE:
- 		*((u16 *)(val)) = Adapter->HalData->BasicRateSet;
--		/* fall through */
-+		fallthrough;
- 	case HW_VAR_TXPAUSE:
- 		val[0] = usb_read8(Adapter, REG_TXPAUSE);
- 		break;
-diff --git a/drivers/staging/rtl8188eu/os_dep/usb_ops_linux.c b/drivers/staging/rtl8188eu/os_dep/usb_ops_linux.c
-index 3cd6da1f843d..a80c7f3b86d1 100644
---- a/drivers/staging/rtl8188eu/os_dep/usb_ops_linux.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_ops_linux.c
-@@ -400,7 +400,7 @@ static void usb_read_port_complete(struct urb *purb, struct pt_regs *regs)
- 		case -ENODEV:
- 		case -ESHUTDOWN:
- 			adapt->bSurpriseRemoved = true;
--			/* fall through */
-+			fallthrough;
- 		case -ENOENT:
- 			adapt->bDriverStopped = true;
- 			RT_TRACE(_module_hci_ops_os_c_, _drv_err_,
+Changes since v17:
+* Initial patch to replace the direct call to landlock_release_inodes()
+  (requested by James Morris).
+  https://lore.kernel.org/lkml/alpine.LRH.2.21.2005150536440.7929@namei.org/
+---
+ fs/super.c                    | 1 +
+ include/linux/lsm_hook_defs.h | 1 +
+ include/linux/lsm_hooks.h     | 2 ++
+ include/linux/security.h      | 4 ++++
+ security/security.c           | 5 +++++
+ 5 files changed, 13 insertions(+)
+
+diff --git a/fs/super.c b/fs/super.c
+index 904459b35119..d5517e49ccdf 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -454,6 +454,7 @@ void generic_shutdown_super(struct super_block *sb)
+ 		evict_inodes(sb);
+ 		/* only nonzero refcount inodes can have marks */
+ 		fsnotify_sb_delete(sb);
++		security_sb_delete(sb);
+ 
+ 		if (sb->s_dio_done_wq) {
+ 			destroy_workqueue(sb->s_dio_done_wq);
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index af998f93d256..2b855d6a299e 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -59,6 +59,7 @@ LSM_HOOK(int, 0, fs_context_dup, struct fs_context *fc,
+ LSM_HOOK(int, -ENOPARAM, fs_context_parse_param, struct fs_context *fc,
+ 	 struct fs_parameter *param)
+ LSM_HOOK(int, 0, sb_alloc_security, struct super_block *sb)
++LSM_HOOK(void, LSM_RET_VOID, sb_delete, struct super_block *sb)
+ LSM_HOOK(void, LSM_RET_VOID, sb_free_security, struct super_block *sb)
+ LSM_HOOK(void, LSM_RET_VOID, sb_free_mnt_opts, void *mnt_opts)
+ LSM_HOOK(int, 0, sb_eat_lsm_opts, char *orig, void **mnt_opts)
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 80c629d8a2ad..499f19a70a19 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -108,6 +108,8 @@
+  *	allocated.
+  *	@sb contains the super_block structure to be modified.
+  *	Return 0 if operation was successful.
++ * @sb_delete:
++ *	Release objects tied to a superblock (e.g. inodes).
+  * @sb_free_security:
+  *	Deallocate and clear the sb->s_security field.
+  *	@sb contains the super_block structure to be modified.
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 0a0a03b36a3b..28b0ee6c7239 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -286,6 +286,7 @@ void security_bprm_committed_creds(struct linux_binprm *bprm);
+ int security_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc);
+ int security_fs_context_parse_param(struct fs_context *fc, struct fs_parameter *param);
+ int security_sb_alloc(struct super_block *sb);
++void security_sb_delete(struct super_block *sb);
+ void security_sb_free(struct super_block *sb);
+ void security_free_mnt_opts(void **mnt_opts);
+ int security_sb_eat_lsm_opts(char *options, void **mnt_opts);
+@@ -614,6 +615,9 @@ static inline int security_sb_alloc(struct super_block *sb)
+ 	return 0;
+ }
+ 
++static inline void security_sb_delete(struct super_block *sb)
++{ }
++
+ static inline void security_sb_free(struct super_block *sb)
+ { }
+ 
+diff --git a/security/security.c b/security/security.c
+index d60aa835b670..9337b511306c 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -898,6 +898,11 @@ int security_sb_alloc(struct super_block *sb)
+ 	return rc;
+ }
+ 
++void security_sb_delete(struct super_block *sb)
++{
++	call_void_hook(sb_delete, sb);
++}
++
+ void security_sb_free(struct super_block *sb)
+ {
+ 	call_void_hook(sb_free_security, sb);
+-- 
+2.27.0
 
