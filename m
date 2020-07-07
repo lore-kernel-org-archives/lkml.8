@@ -2,92 +2,127 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D283BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 448EA20702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FED206E9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:56:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Ru7o1usU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgGGGzy (ORCPT
+        id S1728152AbgGGG4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:55:54 -0400
-Received: from verein.lst.de ([213.95.11.211]:57417 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbgGGGzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:55:53 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 21E0268BEB; Tue,  7 Jul 2020 08:55:50 +0200 (CEST)
-Date:   Tue, 7 Jul 2020 08:55:49 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     David Rientjes <rientjes@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, linux-mm@kvack.org,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: [BUG] XHCI getting ZONE_DMA32 memory > than its bus_dma_limit
-Message-ID: <20200707065549.GA23760@lst.de>
-References: <34619bdf-6527-ae82-7e4d-e2ea7c67ed56@arm.com> <a9058fd2c54bbea69fdf97e30277338a61b5c0b4.camel@suse.de> <cc17fe85-99a3-ec8c-985a-2a21cf09bf49@arm.com> <alpine.DEB.2.23.453.2007051635250.3687564@chino.kir.corp.google.com> <32ee3bf222b1966caa98b67a9cec8712817a4b52.camel@suse.de>
+        Tue, 7 Jul 2020 02:56:38 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:49395 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgGGG4i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 02:56:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594104997; x=1625640997;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=dYTenh+4o/E5myW1JLq36hnqWz98bpD2JBziT4XX3pU=;
+  b=Ru7o1usUeqF5LoH3R/DjTHwCXMxyclt4tKiyb2S0UopGQqm1OFCNex8g
+   Ls2zyLOOT7TlnSoXfE0Ip5Adr0AEZ/84YTZceuqFAwu50v9d6oP6tpXXL
+   Drtjpzt1ChNL+uyHJWA8duljW5TZbqwi2ta0v77oG35cytCK/evrww3du
+   M=;
+IronPort-SDR: 6J3coRccikdW1T9bSDb8H9lL3PtPOgswF22QI0fS3hcrC5A7Wn4q495t7lL19LXA0m8OpNz9kb
+ fx29I08i9XKQ==
+X-IronPort-AV: E=Sophos;i="5.75,321,1589241600"; 
+   d="scan'208";a="40386945"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 07 Jul 2020 06:56:35 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id EC10DA1F51;
+        Tue,  7 Jul 2020 06:56:34 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 06:56:34 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.145) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Jul 2020 06:56:30 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <torvalds@linux-foundation.org>,
+        <ksummit-discuss@lists.linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        <tech-board-discuss@lists.linuxfoundation.org>,
+        Chris Mason <clm@fb.clm>
+Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
+Date:   Tue, 7 Jul 2020 08:56:12 +0200
+Message-ID: <20200707065612.8239-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com> (raw)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <32ee3bf222b1966caa98b67a9cec8712817a4b52.camel@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.145]
+X-ClientProxiedBy: EX13D30UWC004.ant.amazon.com (10.43.162.4) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 04:09:36PM +0200, Nicolas Saenz Julienne wrote:
-> On Sun, 2020-07-05 at 16:41 -0700, David Rientjes wrote:
-> > On Fri, 3 Jul 2020, Robin Murphy wrote:
-> > > Or perhaps just get rid of atomic_pool_dma32 (and allocate atomic_pool_dma
-> > > from ZONE_DMA32 if !ZONE_DMA). That should make it fall pretty much back in
-> > > line while still preserving the potential benefit of the kernel pool for
-> > > non-address-constrained devices.
-> > > 
-> > 
-> > I assume it depends on how often we have devices where 
-> > __dma_direct_alloc_pages() behavior is required, i.e. what requires the 
-> > dma_coherent_ok() checks and altering of the gfp flags to get memory that 
-> > works.
-> > 
-> > Is the idea that getting rid of atomic_pool_dma32 would use GFP_KERNEL 
-> > (and atomic_pool_kernel) as the default policy here?  That doesn't do any 
-> > dma_coherent_ok() checks so dma_direct_alloc_pages would return from 
-> > ZONE_NORMAL without a < 3G check?
-> 
-> IIUC this is not what Robin proposes.
-> 
-> The idea is to only have one DMA pool, located in ZONE_DMA, if enabled, and
-> ZONE_DMA32 otherwise. This way you're always sure the memory is going to be
-> good enough for any device while maintaining the benefits of
-> atomic_pool_kernel.
+Hello,
 
-That is how I understood the proposal from Robin and I think it is
-the right thing to do.
+On Sat, 04 Jul 2020 13:02:51 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> > It *seems* like we want to check if dma_coherent_ok() succeeds for ret in 
-> > dma_direct_alloc_pages() when allocating from the atomic pool and, based 
-> > on criteria that allows fallback, just fall into 
-> > __dma_direct_alloc_pages()?
-> 
-> I suspect I don't have enough perspective here but, isn't that breaking the
-> point of having an atomic pool? Wouldn't that generate big latency spikes? I
-> can see how audio transfers over USB could be affected by this specifically,
-> IIRC those are allocated atomically and have timing constraints.
-> 
-> That said, if Robin solution works for you, I don't mind having a go at it.
+> Recent events have prompted a Linux position statement on inclusive
+> terminology. Given that Linux maintains a coding-style and its own
+> idiomatic set of terminology here is a proposal to answer the call to
+> replace non-inclusive terminology.
 
-We can't just fall back to __dma_direct_alloc_pages when allocation
-from the atomic pool fails, as the atomic pool exists for provide
-allocations that require sleeping actions for callers that can't
-sleep.
+I'm glad to see this patch.
+
+> 
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Chris Mason <clm@fb.clm>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Acked-by: SeongJae Park <sjpark@amazon.de>
+
+> ---
+>  Documentation/process/coding-style.rst          |   12 ++++
+>  Documentation/process/inclusive-terminology.rst |   64 +++++++++++++++++++++++
+>  Documentation/process/index.rst                 |    1 
+>  3 files changed, 77 insertions(+)
+>  create mode 100644 Documentation/process/inclusive-terminology.rst
+> 
+> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+> index 2657a55c6f12..4b15ab671089 100644
+> --- a/Documentation/process/coding-style.rst
+> +++ b/Documentation/process/coding-style.rst
+> @@ -319,6 +319,18 @@ If you are afraid to mix up your local variable names, you have another
+>  problem, which is called the function-growth-hormone-imbalance syndrome.
+>  See chapter 6 (Functions).
+>  
+> +For symbol names, avoid introducing new usage of the words 'slave' and
+> +'blacklist'. Recommended replacements for 'slave' are: 'secondary',
+> +'subordinate', 'replica', 'responder', 'follower', 'proxy', or
+> +'performer'.  Recommended replacements for blacklist are: 'blocklist' or
+> +'denylist'.
+
+I have submitted a couple of patches for automated encouragement of the the
+inclusive terms and those merged in the -next tree[1,2] now.  Nonetheless, the
+version says only "please consider using 'denylist' and 'allowlist' instead of
+'blacklist' and 'whitelist'" for now.  I think we could add more terms in there
+based on this discussion.  I could do that after this patch is merged, or you
+could do that yourself in the next spin of this patch.  Please do whatever you
+feel comfort.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=7d0bea01dec27195d95d929c1ee49a4a74dd6671
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=95a94258ceb27052f00b7e51588a128d20bf05ed
+
+
+Thanks,
+SeongJae Park
