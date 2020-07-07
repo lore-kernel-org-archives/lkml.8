@@ -2,88 +2,110 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA029C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94917206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0752206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:14:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHVP5Ibh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgGGIOq (ORCPT
+        id S1728372AbgGGIOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:14:46 -0400
-Received: from mga05.intel.com ([192.55.52.43]:15586 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbgGGIOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:14:46 -0400
-IronPort-SDR: 3ZrIrXrnREHacF2pCqf+vwnyJzdp+/UsBry5nrR9vLtGCnxtSyEC9pFQ5IPWFKU5kzkU/snJhm
- ANXd8Eua5XGQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="232418321"
-X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
-   d="scan'208";a="232418321"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 01:14:45 -0700
-IronPort-SDR: iWXnmWfF7WjbYVS9uIAnIyK+6IP6h3A3sqKLYfhU4aGaOJsqtU2fu934B8nCftSomqWeGCt0Kf
- Ey81F/WybHAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
-   d="scan'208";a="279528555"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 07 Jul 2020 01:14:44 -0700
-Date:   Tue, 7 Jul 2020 01:14:44 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH] kvm: x86: rewrite kvm_spec_ctrl_valid_bits
-Message-ID: <20200707081444.GA7417@linux.intel.com>
-References: <20200702174455.282252-1-mlevitsk@redhat.com>
- <20200702181606.GF3575@linux.intel.com>
- <3793ae0da76fe00036ed0205b5ad8f1653f58ef2.camel@redhat.com>
- <20200707061105.GH5208@linux.intel.com>
- <7c1d9bbe-5f59-5b86-01e9-43c929b24218@redhat.com>
+        Tue, 7 Jul 2020 04:14:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgGGIOs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 04:14:48 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F34C061755;
+        Tue,  7 Jul 2020 01:14:48 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id d10so16449043pls.5;
+        Tue, 07 Jul 2020 01:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0C0wcrNGaktDjuYvX7l+qcJPA3Xk9qtFSM1cNlh6Gqw=;
+        b=MHVP5Ibh0HfJIKkVSxQSJqtyapKe7AmeX3KHnvylIYdLmkrFdK+BdWnLHlnA6xX0wO
+         olcwcJxLWCZ+G9sSZ5n51OjJUvX0MT95bQeWi7ndH0ZDenKaIga4mFRwOlzEsTw4Q5BV
+         K6TkhASmK++WOvxa+gmi30ZuR6c2c8hFGS3xC4waI/0c3l5eWwM4018gJmHsqOrBOx0y
+         9GdKpXvIVj6hcXvGYMZf9t4mtO634XsEsFayB4WviwtpQkX6mVG6O5AGzl8+E+8CHMMu
+         TapQFobQonVp/XH4BjQgbvmdajDWK/QnmWsWIqdlk8kpwiNg8/HnvVXubdySHmpCFLYE
+         kCIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=0C0wcrNGaktDjuYvX7l+qcJPA3Xk9qtFSM1cNlh6Gqw=;
+        b=F++R2zlwwvz/6UJvOKX1jQTapJC8cbBlTomUup/WQT1peKtEDHW2LlxgBBfQ81f0dc
+         cImVKDcRMykArL7D5PdGjpKXz0H5jjkjdB2kzmw/Mzq41tFd8nAUie7ecEopFKpKvSlx
+         ktVUz0fxOQmy9Jrd+Ve3KTdqQayf6tbUWheY7i0dc6qGvu8CECx+KRHL/KA9gzZUGbjl
+         dSwgQFfBG8H7UyoNFmY1BUtx1jYEY1xG4oLoCnCjT6RIG2uzsylWBDtxYEnpoznO+sjc
+         Nxekh2yTEPLgPOWpipaYhjfnIp8jYgYP5/bFuJzK2JXxAkIp5fnPtzkauO4icKiuruqq
+         c2hg==
+X-Gm-Message-State: AOAM5339Ct/U+JOE7CZOqa53Lep7e9Fy5QFjHjjPitz2aQrdPW4NTziT
+        CfkO4RISOYVdPr4EueR4+nlxZ8985Xc=
+X-Google-Smtp-Source: ABdhPJzH5j0mGQivJNGvT6+qUs8TD2MzZMPQcNhcl+65cjsduM7sELqERvmAeUCCagK7ZJVhlZ9ytA==
+X-Received: by 2002:a17:90a:ad8e:: with SMTP id s14mr3331658pjq.36.1594109687736;
+        Tue, 07 Jul 2020 01:14:47 -0700 (PDT)
+Received: from localhost (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id n137sm21997748pfd.194.2020.07.07.01.14.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 01:14:47 -0700 (PDT)
+From:   AceLan Kao <acelan.kao@canonical.com>
+To:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: usb: qmi_wwan: add support for Quectel EG95 LTE modem
+Date:   Tue,  7 Jul 2020 16:14:45 +0800
+Message-Id: <20200707081445.1064346-1-acelan.kao@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c1d9bbe-5f59-5b86-01e9-43c929b24218@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aren't you supposed to be on vacation? :-)
+Add support for Quectel Wireless Solutions Co., Ltd. EG95 LTE modem
 
-On Tue, Jul 07, 2020 at 10:04:22AM +0200, Paolo Bonzini wrote:
-> On 07/07/20 08:11, Sean Christopherson wrote:
-> > One oddity with this whole thing is that by passing through the MSR, KVM is
-> > allowing the guest to write bits it doesn't know about, which is definitely
-> > not normal.  It also means the guest could write bits that the host VMM
-> > can't.
-> 
-> That's true.  However, the main purpose of the kvm_spec_ctrl_valid_bits
-> check is to ensure that host-initiated writes are valid; this way, you
-> don't get a #GP on the next vmentry's WRMSR to MSR_IA32_SPEC_CTRL.
-> Checking the guest CPUID bit is not even necessary.
+T:  Bus=01 Lev=01 Prnt=01 Port=02 Cnt=02 Dev#=  5 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=2c7c ProdID=0195 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+I:  If#=0x1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
 
-Right, what I'm saying is that rather than try and decipher specs to
-determine what bits are supported, just throw the value at hardware and
-go from there.  That's effectively what we end up doing for the guest writes
-anyways.
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Actually, the current behavior will break migration if there are ever legal
-bits that KVM doesn't recognize, e.g. guest writes a value that KVM doesn't
-allow and then migration fails when the destination tries to stuff the value
-into KVM.
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 31b1d4b959f6..07c42c0719f5 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1370,6 +1370,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_QUIRK_SET_DTR(0x1e0e, 0x9001, 5)},	/* SIMCom 7100E, 7230E, 7600E ++ */
+ 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0121, 4)},	/* Quectel EC21 Mini PCIe */
+ 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
++	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0195, 4)},	/* Quectel EG95 */
+ 	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
+ 	{QMI_QUIRK_SET_DTR(0x2cb7, 0x0104, 4)},	/* Fibocom NL678 series */
+ 	{QMI_FIXED_INTF(0x0489, 0xe0b4, 0)},	/* Foxconn T77W968 LTE */
+-- 
+2.25.1
+
