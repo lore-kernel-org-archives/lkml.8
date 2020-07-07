@@ -2,103 +2,85 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77271C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7FC2206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7D8206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgGGLnR (ORCPT
+        id S1728184AbgGGLnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:43:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46920 "EHLO mx2.suse.de"
+        Tue, 7 Jul 2020 07:43:23 -0400
+Received: from mga03.intel.com ([134.134.136.65]:30778 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbgGGLnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:43:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 53655AE35;
-        Tue,  7 Jul 2020 11:43:15 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] xen/privcmd: Mark pages as dirty
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        sstabellini@kernel.org, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Paul Durrant <xadimgnik@gmail.com>
-References: <1594059372-15563-1-git-send-email-jrdr.linux@gmail.com>
- <1594059372-15563-3-git-send-email-jrdr.linux@gmail.com>
- <8fdd8c77-27dd-2847-7929-b5d3098b1b45@suse.com>
- <CAFqt6zZRx3oDO+p2e6EiDig9fzKirME-t6fanzDRh6e7gWx+nA@mail.gmail.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <4abc0dd2-655c-16fa-dfc3-95904196c81f@suse.com>
-Date:   Tue, 7 Jul 2020 13:43:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1727044AbgGGLnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:43:23 -0400
+IronPort-SDR: cAUUrvW/l+t5jssCsQujWvaimEdGWug7nCaXb2DT9NW+oginVxZCKGkRqd/XPQWl/xsIv1SV6d
+ wBTAfBee3tNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="147591448"
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="147591448"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 04:43:22 -0700
+IronPort-SDR: GCuC/FORKkR4Jxrfb3KiRRGaDII+yAnyEk1Dbl1/bBv/VtBTukqSmssBxbnrWxmRXWR4ZL+sxm
+ 5sx3H641rS0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="388489360"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Jul 2020 04:43:19 -0700
+Date:   Tue, 7 Jul 2020 19:44:45 +0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2][RFC] Makes sd->flags sysctl writable
+Message-ID: <20200707114445.GA25765@chenyu-office.sh.intel.com>
+References: <cover.1594062828.git.yu.c.chen@intel.com>
+ <20200706200049.GB5523@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAFqt6zZRx3oDO+p2e6EiDig9fzKirME-t6fanzDRh6e7gWx+nA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706200049.GB5523@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.07.20 13:30, Souptick Joarder wrote:
-> On Tue, Jul 7, 2020 at 3:08 PM Jürgen Groß <jgross@suse.com> wrote:
->>
->> On 06.07.20 20:16, Souptick Joarder wrote:
->>> pages need to be marked as dirty before unpinned it in
->>> unlock_pages() which was oversight. This is fixed now.
->>>
->>> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
->>> Suggested-by: John Hubbard <jhubbard@nvidia.com>
->>> Cc: John Hubbard <jhubbard@nvidia.com>
->>> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->>> Cc: Paul Durrant <xadimgnik@gmail.com>
->>> ---
->>>    drivers/xen/privcmd.c | 5 ++++-
->>>    1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
->>> index 33677ea..f6c1543 100644
->>> --- a/drivers/xen/privcmd.c
->>> +++ b/drivers/xen/privcmd.c
->>> @@ -612,8 +612,11 @@ static void unlock_pages(struct page *pages[], unsigned int nr_pages)
->>>    {
->>>        unsigned int i;
->>>
->>> -     for (i = 0; i < nr_pages; i++)
->>> +     for (i = 0; i < nr_pages; i++) {
->>> +             if (!PageDirty(pages[i]))
->>> +                     set_page_dirty_lock(pages[i]);
->>
->> With put_page() directly following I think you should be able to use
->> set_page_dirty() instead, as there is obviously a reference to the page
->> existing.
+Hi Peter,
+On Mon, Jul 06, 2020 at 10:00:49PM +0200, Peter Zijlstra wrote:
+> On Tue, Jul 07, 2020 at 03:36:13AM +0800, Chen Yu wrote:
+> > It was found that recently the flags of sched domain could
+> > not be customized via sysctl, which might make it a little
+> > inconenient for performance tuning/debugging.
 > 
-> Patch [3/3] will convert above codes to use unpin_user_pages_dirty_lock()
-> which internally do the same check. So I thought to keep linux-stable and
-> linux-next code in sync. John had a similar concern [1] and later agreed to keep
-> this check.
-> 
-> Shall I keep this check ?  No ?
-> 
-> [1] https://lore.kernel.org/xen-devel/a750e5e5-fd5d-663b-c5fd-261d7c939ba7@nvidia.com/
+> What specific goals do you have? This is a debug interface.
+The origin motivation is for debugging purpose during daily work,
+I was trying to evaluate the load balance behavior on some specific
+platforms.
+Another motivation was inspired by a previous lkp performance regression
+report that, after the rework of load balance, some workloads might get
+performance downgrading. And it is suspected that the system after the
+rework is more likely to spread tasks onto more CPUs, which brings more
+idle time -> and deeper cstate -> lower performance. So in order to
+evaluate which flag might help mitigate the spreading(disable PREFER_SIBLING?),
+it might be an applicable option to make the flags writable, so lkp could
+launch the workload with different flags settings so we can gather more clues.
+But yes, I'm ok if the flags are kept read-only, and we can hack into
+the code temporarily to turn it into writable for debugging.
 
-I wasn't referring to checking PageDirty(), but to the use of
-set_page_dirty_lock().
-
-Looking at the comment just before the implementation of
-set_page_dirty_lock() suggests that it is fine to use set_page_dirty()
-instead (so not calling lock_page()).
-
-Only the transition from get_user_pages_fast() to pin_user_pages_fast()
-requires to use the locked version IMO.
-
-
-Juergen
+thx,
+Chenyu
