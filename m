@@ -2,163 +2,110 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39053C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2E620674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:11:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZIRm1sCw"
+	by mail.kernel.org (Postfix) with ESMTP id 2304120674
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgGGQLT (ORCPT
+        id S1728449AbgGGQNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:11:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728453AbgGGQLS (ORCPT
+        Tue, 7 Jul 2020 12:13:17 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:30692 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727789AbgGGQNQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:11:18 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29091C08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 09:11:18 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id d198so1509866vsc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 09:11:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PdkRv62nUyer3utyHGyA4zyawQ7UJwHUu+IzIsdxXbk=;
-        b=ZIRm1sCwWG3uRuWaf7gqVsqLFlt4i5nQz7D3SKhQhXqifxYIfsrwV7RYthE1frvidf
-         BirGcXuaaJKJ4hYD7MHm32VHftEpvf0G5tFcM7LQkFDNl8cT0WJ0NQdDwx10Ci9aIObS
-         OCMwze0DIhf2sgT7WI1QToBUwX4SISOB1G0+M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PdkRv62nUyer3utyHGyA4zyawQ7UJwHUu+IzIsdxXbk=;
-        b=gqP5iuknDrSp8UTTCKY/H/MpwDXl7dtkD/BLARD0MYrxtRPWpnlCfH/Se2QRUjOukf
-         kLWonozzwmyU9cSylctzZZPcDjgf/JfGl2GkWUtzDNOjDl2+LWKud8eVUvF/JacLJxbW
-         jEzoqamFbALNlE9KhLuqJGyfWsLE++ZLGZ8KAYJPBsLqTwKABt3SNuGYvZK+ITgroT9r
-         eVbUhhW7YwBopQMPM+tAqdavOLNsovqnNUtwv4I1YhVXnX1WpzExZ52DloC+IzJSKQ3h
-         Ga6VtdL3qRI+9nrDuUww0XjsAntDGeMo8G2S8skFHz7WYc4ldRiH7RUTDGmSHJZ4tIVM
-         q60A==
-X-Gm-Message-State: AOAM531RyEgeB13xWQ8X5HhKSXibiD4kwX6UHtQg72HUmI0AntzHlMeU
-        buKOEvfGqNkmn6Xtz1O8ocMUZynRte1olIVoChjbcQ==
-X-Google-Smtp-Source: ABdhPJxMj1B4DMC0cpSoOzvOLQGp4qu9v2iXoupdVrCYhGX2pRj4jjKQXOUpCAK37GZcNDrEen+wpsqytTGK7L52DQc=
-X-Received: by 2002:a67:6e05:: with SMTP id j5mr32157567vsc.196.1594138277134;
- Tue, 07 Jul 2020 09:11:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200707154905.2763616-1-abhishekpandit@chromium.org>
- <20200707084857.v3.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid> <20200707160045.GA118278@kroah.com>
-In-Reply-To: <20200707160045.GA118278@kroah.com>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Tue, 7 Jul 2020 09:11:06 -0700
-Message-ID: <CANFp7mV_5HtaKo0Q5BRanVhbu618gQS-Xiut7uz+CuGbVmf5EQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        rafael.j.wysocki@intel.com, Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 7 Jul 2020 12:13:16 -0400
+X-IronPort-AV: E=Sophos;i="5.75,324,1589209200"; 
+   d="scan'208";a="51539948"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 08 Jul 2020 01:13:14 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 00C6640062C8;
+        Wed,  8 Jul 2020 01:13:11 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 00/14] Add core support for Renesas RZ/G2H SoC
+Date:   Tue,  7 Jul 2020 17:12:34 +0100
+Message-Id: <1594138368-16449-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I admit I didn't test this but I built it with allmodconfig.
+Hi All,
 
-Sadly, this only raised a warning instead of an error so I didn't go
-look through the build logs (ignore the 5.4, the remote here is the
-linux-pm git repo):
+This patch series adds initial core support for Renesas RZ/G2H
+(R8A774E1) SoC, enabling the CPG, RST and PFC support.
 
-/usr/local/google/home/abhishekpandit/chromiumos/src/third_party/kernel/v5.=
-4/drivers/base/power/sysfs.c:
-In function =E2=80=98wakeup_sysfs_remove=E2=80=99:
-/usr/local/google/home/abhishekpandit/chromiumos/src/third_party/kernel/v5.=
-4/drivers/base/power/sysfs.c:754:9:
-warning: =E2=80=98return=E2=80=99 with a value, in function returning void
-[-Wreturn-type]
-  754 |  return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/usr/local/google/home/abhishekpandit/chromiumos/src/third_party/kernel/v5.=
-4/drivers/base/power/sysfs.c:751:6:
-note: declared here
-  751 | void wakeup_sysfs_remove(struct device *dev)
+Cheers,
+Prabhakar
 
+Lad Prabhakar (1):
+  pinctrl: sh-pfc: pfc-r8a77951: Add R8A774E1 PFC support
 
-Will send up another fix.
+Marian-Cristian Rotariu (13):
+  dt-bindings: arm: renesas: Document RZ/G2H SoC DT bindings
+  dt-bindings: arm: renesas: Add HopeRun RZ/G2H boards
+  soc: renesas: Identify RZ/G2H
+  soc: renesas: Add Renesas R8A774E1 config option
+  dt-bindings: power: renesas,rcar-sysc: Document r8a774e1 SYSC binding
+  dt-bindings: power: Add r8a774e1 SYSC power domain definitions
+  soc: renesas: rcar-sysc: Add r8a774e1 support
+  dt-bindings: reset: renesas,rst: Document r8a774e1 reset module
+  soc: renesas: rcar-rst: Add support for RZ/G2H
+  dt-bindings: clock: renesas,cpg-mssr: Document r8a774e1
+  clk: renesas: Add r8a774e1 CPG Core Clock Definitions
+  clk: renesas: cpg-mssr: Add r8a774e1 support
+  dt-bindings: pinctrl: renesas,pfc-pinctrl: Document r8a774e1 PFC
+    support
 
-Thanks
-Abhishek
+ .../devicetree/bindings/arm/renesas.yaml      |  12 +
+ .../bindings/clock/renesas,cpg-mssr.yaml      |   1 +
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt  |   1 +
+ .../bindings/power/renesas,rcar-sysc.yaml     |   1 +
+ .../bindings/reset/renesas,rst.yaml           |   1 +
+ drivers/clk/renesas/Kconfig                   |   5 +
+ drivers/clk/renesas/Makefile                  |   1 +
+ drivers/clk/renesas/r8a774e1-cpg-mssr.c       | 348 +++++++
+ drivers/clk/renesas/renesas-cpg-mssr.c        |   6 +
+ drivers/clk/renesas/renesas-cpg-mssr.h        |   1 +
+ drivers/pinctrl/sh-pfc/Kconfig                |   4 +
+ drivers/pinctrl/sh-pfc/Makefile               |   1 +
+ drivers/pinctrl/sh-pfc/core.c                 |   6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a77951.c         | 877 +++++++++---------
+ drivers/pinctrl/sh-pfc/sh_pfc.h               |   1 +
+ drivers/soc/renesas/Kconfig                   |  11 +
+ drivers/soc/renesas/Makefile                  |   1 +
+ drivers/soc/renesas/r8a774e1-sysc.c           |  43 +
+ drivers/soc/renesas/rcar-rst.c                |   1 +
+ drivers/soc/renesas/rcar-sysc.c               |   3 +
+ drivers/soc/renesas/rcar-sysc.h               |   1 +
+ drivers/soc/renesas/renesas-soc.c             |   8 +
+ include/dt-bindings/clock/r8a774e1-cpg-mssr.h |  59 ++
+ include/dt-bindings/power/r8a774e1-sysc.h     |  36 +
+ 24 files changed, 1014 insertions(+), 415 deletions(-)
+ create mode 100644 drivers/clk/renesas/r8a774e1-cpg-mssr.c
+ create mode 100644 drivers/soc/renesas/r8a774e1-sysc.c
+ create mode 100644 include/dt-bindings/clock/r8a774e1-cpg-mssr.h
+ create mode 100644 include/dt-bindings/power/r8a774e1-sysc.h
 
-On Tue, Jul 7, 2020 at 9:00 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jul 07, 2020 at 08:49:05AM -0700, Abhishek Pandit-Subedi wrote:
-> > Udev rules that depend on the power/wakeup attribute don't get triggere=
-d
-> > correctly if device_set_wakeup_capable is called after the device is
-> > created. This can happen for several reasons (driver sets wakeup after
-> > device is created, wakeup is changed on parent device, etc) and it seem=
-s
-> > reasonable to emit a changed event when adding or removing attributes o=
-n
-> > the device.
-> >
-> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > ---
-> >
-> > Changes in v3:
-> > - Simplified error handling
-> >
-> > Changes in v2:
-> > - Add newline at end of bt_dev_err
-> >
-> >  drivers/base/power/sysfs.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> > index 24d25cf8ab1487..04c82373c8f240 100644
-> > --- a/drivers/base/power/sysfs.c
-> > +++ b/drivers/base/power/sysfs.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  /* sysfs entries for device PM */
-> >  #include <linux/device.h>
-> > +#include <linux/kobject.h>
-> >  #include <linux/string.h>
-> >  #include <linux/export.h>
-> >  #include <linux/pm_qos.h>
-> > @@ -739,12 +740,18 @@ int dpm_sysfs_change_owner(struct device *dev, ku=
-id_t kuid, kgid_t kgid)
-> >
-> >  int wakeup_sysfs_add(struct device *dev)
-> >  {
-> > -     return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > +     int ret =3D sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > +
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-> >  }
-> >
-> >  void wakeup_sysfs_remove(struct device *dev)
-> >  {
-> >       sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
-> > +     return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
->
-> Always test build and hopefully actually test, your patches before
-> sending them out :(
->
+-- 
+2.17.1
+
