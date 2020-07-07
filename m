@@ -2,156 +2,128 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59661C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EB2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEC4206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:14:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ADTRAN.onmicrosoft.com header.i=@ADTRAN.onmicrosoft.com header.b="XBt2eL0O"
+	by mail.kernel.org (Postfix) with ESMTP id E6C2D206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594124067;
+	bh=HKw0Koe6asxAgHCPqsTFwk0HGEWW3757f3wOC/sLtns=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H4H0mJFMkRYXH3jhHMf2iFrQ3VZWAFF2OlRipSc5hhWQC2/LHps1hHvmPAQepY+1r
+	 nxBe6urnCFGKdmtodjjSATT27/iyqAHxeCZ8giTuGLXwiQtB9q0+z1kmqsrRZyzcZS
+	 q2nq4PREFG0ZgOBA2PNJ/IXfwW/Un3/W2CmYdDtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgGGMN4 (ORCPT
+        id S1728178AbgGGMO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:13:56 -0400
-Received: from mail-co1nam11on2136.outbound.protection.outlook.com ([40.107.220.136]:27000
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728053AbgGGMNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:13:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FETKPUCAFjSTYUU+CmWQNcQXHOzXpl/5qVF8cY+/UN64obYpqF6McJpAJiP+fDrEjnpgR/C+K52KTqojoVgqfLSXxe++JTYHNxQodg0xdBQIjaNGkkp/9sFwwGBhyehEdocyoOkpEpRzJvwQ8j6AiOj5jFMNVDrRimYnIXk2KosObzuIyE6Jl0ozBZL15/yytt3UdSsYTJxoawp9YZtER/AtUj1WDpwVR4Y9Cl7WHtaJrp8VPIZoLsp12vQpvQsMU4w5aX5Yi5QIzl4p5hUOKKrRhK4xDYXfudmH+xidSe41Wd0vPGaNXl7UMfGHlhTpjuucQB0ziZP6SsdWe7lRoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OgIlzWnuWeGaNJhjWYMyGkGOidyQanpqiaj+Uu9O/b0=;
- b=i313B+qIxOLCVGXaNiOVd+RWdiUjbUjZeivNclL3wiYMnRwrDInxXtjTaRDRrpnwmMPLw6r2WHs1sLiNvLhNe4uCjpkk/y2Rg4UQGp0ET1lkss/Be1ddR8aQVOu3/n8zb/SLccP5wmQdo5f1DGxxpPzuez7p+ECY5Lf2KXg/AE+AbvraRlVf0e37E64WBBOQOarMK27QknElME0BGMoCFR7VGIjzGjBmZ3YIdSSZeIRdoXFqrK1FA9NSENOScn/a6H8iJMDOi72RGCjG+XYZWKQR9GQq0iFqIubdKJqTTemdnedyFMFihgR1OTx932f61G+V1wEgu3qI8ouvu7W0Kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=adtran.com; dmarc=pass action=none header.from=adtran.com;
- dkim=pass header.d=adtran.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=ADTRAN.onmicrosoft.com; s=selector2-ADTRAN-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OgIlzWnuWeGaNJhjWYMyGkGOidyQanpqiaj+Uu9O/b0=;
- b=XBt2eL0O+yVPEGsLZ3npkeqzW7j02EReZV0i9KSTGWb3QHfgSw+gnnJaby9Jde7evlvX9AiGoqPy4hsmV6BiJeZFNDVp+hKk+Rx3QdcXLRRrcE1o92wgjmrnYMUNuTP/bUu57yxFH5m8Y9cWG+JOE59TxjFNLXHmU364pRWJFTk=
-Received: from CH2PR19MB3590.namprd19.prod.outlook.com (2603:10b6:610:41::21)
- by CH2PR19MB4056.namprd19.prod.outlook.com (2603:10b6:610:a3::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Tue, 7 Jul
- 2020 12:13:52 +0000
-Received: from CH2PR19MB3590.namprd19.prod.outlook.com
- ([fe80::d08:8df0:e25a:2a83]) by CH2PR19MB3590.namprd19.prod.outlook.com
- ([fe80::d08:8df0:e25a:2a83%3]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
- 12:13:52 +0000
-From:   Timothy Myers <timothy.myers@adtran.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Boike <david.boike@adtran.com>
-Subject: Re: [PATCH v3 1/1] watchdog: Add common nowayout parameter to
- booke_wdt driver
-Thread-Topic: [PATCH v3 1/1] watchdog: Add common nowayout parameter to
- booke_wdt driver
-Thread-Index: AQHWU7JDRSh3gBbtWE2YCV42YoqLz6j7H2KAgADogn0=
-Date:   Tue, 7 Jul 2020 12:13:52 +0000
-Message-ID: <CH2PR19MB359083E23E8A94C23EE712379D660@CH2PR19MB3590.namprd19.prod.outlook.com>
-References: <CH2PR19MB359059AA5C8917D8D24633FF9D690@CH2PR19MB3590.namprd19.prod.outlook.com>,<ed8ba33f-b3d4-8070-e0ca-fdaf4668cf91@roeck-us.net>
-In-Reply-To: <ed8ba33f-b3d4-8070-e0ca-fdaf4668cf91@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: roeck-us.net; dkim=none (message not signed)
- header.d=none;roeck-us.net; dmarc=none action=none header.from=adtran.com;
-x-originating-ip: [24.96.75.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 32f1834b-f094-445c-1fc6-08d8226f365f
-x-ms-traffictypediagnostic: CH2PR19MB4056:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR19MB4056E94E6BBC72A0A53ED0589D660@CH2PR19MB4056.namprd19.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0457F11EAF
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 057+PLjLkPT6DmWrmd4mH4vkAWer7PHxkR5VnpTW6DWIAfXw6BjAWOehWiXs48EPSpziyB9T24LuHt/q5lEPOhdAWwZm3i036YloQhk5e/QjTGXffl9xVTst4+fpwLFKD0B8jGwOqLvwOJ3a4ekz3fdYSVw8+a+jD0osP9r2Lp97JLvWMXusIp76x88XmnuSd1rB/7n7nlZb9hRmkB413fzD9ZYdwtWa33MQwsnS753dRHTzAg5+P1wiCZHeEZv4wM5hAOoKoYAvRl+Cj5Ha+hqu5i5BiuqTa/GXgY05Mo/rXbGE6bKjKwHfWPf0i+O0pwiEi16O0bXUzzhFcsYtPza79iFmjubuY/3a+KhF68QRrxhzNzL86MlZTQovACkuXcQvkVelPWY1cPkqZvIedw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR19MB3590.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(39850400004)(396003)(366004)(376002)(136003)(8676002)(7696005)(9686003)(966005)(4326008)(5660300002)(478600001)(71200400001)(44832011)(83380400001)(45080400002)(186003)(52536014)(53546011)(55016002)(26005)(6506007)(2906002)(8936002)(54906003)(107886003)(91956017)(86362001)(76116006)(66556008)(316002)(66446008)(66476007)(64756008)(33656002)(66946007)(110136005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 6gxBZNcOj/ANbfXOfUI392KmgRfJ3aQWmVZelz1zhMwUDafftQZDfMYkOmx4XAe1hI5oV0M63u4WU11w7D7H1XlgsfyWoxWrN+v1tkTUU3lQTvd38KsBIp6sQQ/2iWb68qE1zEBdaVS9z/qxrNdPuwEUxx44bja6PnYjKmMXvl52hhrVFtKQYRQ45758LHmEcPQO5i2pCsnWCiX2vjh385tMCL2pTDNGJGsfLrUt0AZcA5ClnGoUKo+BOGhj6ULcckJ9ukPvsTrmYO4k2NmQFfSneHEcwcMc38veErjbOvgQfgTJOBtr3rBv0w2P1iZpc4Ae9oaF/HNcQEB+vf0s73Tvt1mMGx7D1y6Nax97ao7h6ftG6GEhPVfWXWoStZnlmgnaIS9C69+ptSaRohojj15HLCTbSXdsgkXfPEw8sVwPp8WMqK6p2YAUXwKqi5rxM/bS1CTHTx06XBJOz6gbnCQtA5NZ6WxvbWWt1+t2qUU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 7 Jul 2020 08:14:27 -0400
+Received: from mail-wr1-f54.google.com ([209.85.221.54]:33617 "EHLO
+        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbgGGMO0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 08:14:26 -0400
+Received: by mail-wr1-f54.google.com with SMTP id f18so36831030wrs.0;
+        Tue, 07 Jul 2020 05:14:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=F9LJxovcUSPNZdF3NUzfceGi+J9EyhfzFFKBXy2kNNI=;
+        b=Zv5Oza6aL4nJoxFui8QmkdCuufLbCRP8Mf6zpMX2wFaCmzA/7kjOX1XEUWtI53ew9+
+         z8eTcr2ifhDJAd9/6fQenM4CnpALbVV8moIpE4ChhZ1sJ7DaX3UdoHSECEe6n/Uxa6Ui
+         9vTU5lTI7aICB8VJZmerR0eZbb2AwCUitfTYmZl6O+N8C7IzM9RAoHBBPBGN8NAG6cA4
+         HRJL78oNaY8VOohwh0cdQfSJfFxdCcnnXUAQK7WaW+jp9zSfSH3fpzIvi3V9GxVSpq6x
+         R21DiYISLChyOxnxaOjyl4pO29e5cWAcXG2higBFOWzsV4nRO9d5m2uZeHFUtzay5+Pz
+         ESaw==
+X-Gm-Message-State: AOAM530WckB0dA3GvL9c5RyJ9dreWWLhoLFhIFy++E2lmmybHMJtRXB9
+        uXOk+LbDIq6tZsKvZfN6lMA=
+X-Google-Smtp-Source: ABdhPJx2p62DkvqQJFVgHhS+KncXimRczZEYgd7zQKP9q+v9KXZDitL6TpQ6lQ1nPjic1zaspwIsfA==
+X-Received: by 2002:adf:f504:: with SMTP id q4mr52656042wro.163.1594124064098;
+        Tue, 07 Jul 2020 05:14:24 -0700 (PDT)
+Received: from localhost (ip-37-188-179-51.eurotel.cz. [37.188.179.51])
+        by smtp.gmail.com with ESMTPSA id z16sm749165wrr.35.2020.07.07.05.14.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 05:14:23 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 14:14:22 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>
+Subject: Re: [RFC PROPOSAL] memcg: per-memcg user space reclaim interface
+Message-ID: <20200707121422.GP5913@dhcp22.suse.cz>
+References: <20200702152222.2630760-1-shakeelb@google.com>
+ <20200703063548.GM18446@dhcp22.suse.cz>
+ <CALvZod5gthVX5m6o50OiYsXa=0_NpXK-tVvjTF42Oj4udr4Nuw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: adtran.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR19MB3590.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32f1834b-f094-445c-1fc6-08d8226f365f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 12:13:52.0613
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 423946e4-28c0-4deb-904c-a4a4b174fb3f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1mt+cI3Kca91mrdIvbgyhF8gJD7fTxkCcjrHNft/tjhXS6A/GPNeRplIJIaD65M8eBZeg+XB8O3MlCNrccFguPsqi82YXqMB5sdbSKe4VYo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR19MB4056
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod5gthVX5m6o50OiYsXa=0_NpXK-tVvjTF42Oj4udr4Nuw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=0A=
-=0A=
-=0A=
-From: linux-watchdog-owner@vger.kernel.org <linux-watchdog-owner@vger.kerne=
-l.org> on behalf of Guenter Roeck <linux@roeck-us.net>=0A=
-Sent: Monday, July 6, 2020 5:18 PM=0A=
-To: Timothy Myers <timothy.myers@adtran.com>; Wim Van Sebroeck <wim@linux-w=
-atchdog.org>; linux-watchdog@vger.kernel.org <linux-watchdog@vger.kernel.or=
-g>=0A=
-Cc: linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; David Boik=
-e <david.boike@adtran.com>=0A=
-Subject: Re: [PATCH v3 1/1] watchdog: Add common nowayout parameter to book=
-e_wdt driver =0A=
-=A0=0A=
-On 7/6/20 9:33 AM, Timothy Myers wrote:=0A=
->> Add the common "nowayout" parameter to booke_wdt to make this behavior=
-=0A=
->> selectable at runtime and to make the implementation more consistent wit=
-h=0A=
->> many other watchdog drivers.=0A=
->> =0A=
->> Signed-off-by: Timothy Myers <timothy.myers@adtran.com>=0A=
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>=0A=
->> =0A=
->> Changes in:=0A=
->> v2:=0A=
->> Added Guenter Roeck's reviewed-by tag at his request=0A=
->> v3:=0A=
->> Fix whitespace formatting in message.=0A=
->> ---=0A=
->=0A=
->Change log goes here.=0A=
->=0A=
->I applied your patch to watchdog-next, but there is still something=0A=
->in it which prevents it from showing up at=0A=
->https://patchwork.kernel.org/project/linux-watchdog/list/, even though=0A=
->I do see it at https://lore.kernel.org/linux-watchdog/.=0A=
->=0A=
->Looking into the e-mail source, I think the problem may be due=0A=
->to some Outlook specific formatting in the raw message:=0A=
->=0A=
->Add the common "nowayout" parameter to booke_wdt to make this behavior=3D0=
-A=3D=0A=
->selectable at runtime and to make the implementation more consistent with=
-=3D=0A=
->=3D0A=3D=0A=
->many other watchdog drivers.=3D0A=3D=0A=
->=3D0A=3D=0A=
->=0A=
->and so on. If that is persistent, it may make sense to fix it, or=0A=
->you might wonder why some of your patches are being ignored.=0A=
->=0A=
->Thanks,=0A=
->Guenter=0A=
-Thank you for applying the patch, and thank you again for your help with my=
- mail. I'll look into the formatting.=
+On Fri 03-07-20 07:23:14, Shakeel Butt wrote:
+> On Thu, Jul 2, 2020 at 11:35 PM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Thu 02-07-20 08:22:22, Shakeel Butt wrote:
+> > [...]
+> > > Interface options:
+> > > ------------------
+> > >
+> > > 1) memcg interface e.g. 'echo 10M > memory.reclaim'
+> > >
+> > > + simple
+> > > + can be extended to target specific type of memory (anon, file, kmem).
+> > > - most probably restricted to cgroup v2.
+> > >
+> > > 2) fadvise(PAGEOUT) on cgroup_dir_fd
+> > >
+> > > + more general and applicable to other FSes (actually we are using
+> > > something similar for tmpfs).
+> > > + can be extended in future to just age the LRUs instead of reclaim or
+> > > some new use cases.
+> >
+> > Could you explain why memory.high as an interface to trigger pro-active
+> > memory reclaim is not sufficient. Also memory.low limit to protect
+> > latency sensitve workloads?
+> 
+> Yes, we can use memory.high to trigger [proactive] reclaim in a memcg
+> but note that it can also introduce stalls in the application running
+> in that memcg. Let's suppose the memory.current of a memcg is 100MiB
+> and we want to reclaim 20MiB from it, we can set the memory.high to
+> 80MiB but any allocation attempt from the application running in that
+> memcg can get stalled/throttled. I want the functionality of the
+> reclaim without potential stalls.
+
+It would be great if the proposal mention this limitation.
+
+> The memory.min is for protection against the global reclaim and is
+> unrelated to this discussion.
+
+Well, I was talkingg about memory.low. It is not meant only to protect
+from the global reclaim. It can be used for balancing memory reclaim
+from _any_ external memory pressure source. So it is somehow related to
+the usecase you have mentioned.
+
+What you consider a latency sensitive workload could be protected from
+directly induced reclaim latencies. You could use low events to learn
+about the external memory pressure and update your protection to allow
+for some reclaim. I do understand that this wouldn't solve your problem
+who gets reclaimed and maybe that is the crux on why it is not
+applicable but that should really be mentioned explicitly.
+
+-- 
+Michal Hocko
+SUSE Labs
