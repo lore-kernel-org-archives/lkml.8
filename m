@@ -2,114 +2,122 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8818720702
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:49:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YbqqsTv/"
+	by mail.kernel.org (Postfix) with ESMTP id 5822220738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594108166;
+	bh=CVePBN888INea7ywvCAsmXbwNJlV06gx1hSh3Oz/o04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AqkSRSVRNjEprtRadtHOvzBWY8AFx51Bkx8rwwl5TbSpOkVdGeKGXnn7flbXOV/w6
+	 bJUwzfs6H8W9d6IivrvkrC/LDTBlnRWNFTkToTQfPJAAKimkgkv7vcEHPruWvQFhyi
+	 x+L0x9qajd7vZCXM8cyNIjdgX/RutRpW3H2DayUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgGGHtM (ORCPT
+        id S1728315AbgGGHtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 03:49:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGHtL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 03:49:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64C01C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 00:49:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qpCyLxWI8+vr0RRTomM8CK40nhOuK0K2F+B2/Nf6Os8=; b=YbqqsTv/GfrsMC95U9tokQPr5n
-        +etquVO7AkoJT+OeTAPPUl+hN9Caw6UCaPupuzoGRC1liysB6zpQj8EhGX3pcL9r7A26li+subYry
-        FW/4FqoLVT+QwzMUV6cELMtyvoRnS8NWcAMqoJ22csTiSpPAxuR+CuImX7tHe0FxIK+1zhsKyBqG+
-        LvjvrJ4SIYNdi38lNE1WgF0fvlIz/DBhp5eBoY7cQAqptFtHiMIz96cOi0JI0mRfVQCFez/L86dxD
-        QrN8rPUAqndcJka26PzVfe4/R+Oe66a0ECSnXGpw6q9fScNRwtUFxLYurP9KGzA5eEp31QidcKbqE
-        PokuypKw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsiLa-0001Kv-LH; Tue, 07 Jul 2020 07:48:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 7 Jul 2020 03:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbgGGHtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 03:49:24 -0400
+Received: from kernel.org (unknown [87.71.40.38])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8B3823006D0;
-        Tue,  7 Jul 2020 09:48:57 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 71026213C65B5; Tue,  7 Jul 2020 09:48:57 +0200 (CEST)
-Date:   Tue, 7 Jul 2020 09:48:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dave Jones <davej@codemonkey.org.uk>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linux Kernel <linux-kernel@vger.kernel.org>, mingo@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        paul.gortmaker@windriver.com, valentin.schneider@arm.com
-Subject: Re: weird loadavg on idle machine post 5.7
-Message-ID: <20200707074857.GJ4800@hirez.programming.kicks-ass.net>
-References: <20200702171548.GA11813@codemonkey.org.uk>
- <20200702213627.GF3183@techsingularity.net>
- <20200703090226.GV4800@hirez.programming.kicks-ass.net>
- <20200703104033.GK117543@hirez.programming.kicks-ass.net>
- <20200703205153.GA19901@codemonkey.org.uk>
- <20200706145952.GB597537@hirez.programming.kicks-ass.net>
- <20200706212057.GA18637@codemonkey.org.uk>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F67B206E2;
+        Tue,  7 Jul 2020 07:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594108163;
+        bh=CVePBN888INea7ywvCAsmXbwNJlV06gx1hSh3Oz/o04=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fx2kSVTeTD5lk0ULyPMK9IQ05r83DTv81nFso5+auGDFO6tdAnC4xYVGjvvsHk07S
+         6t11omFqlTxQ6wBqW8sdfew4xe0gtnwE+XaWNtVoNcir/qlmR4Fb9Gp6yT5xEemQ33
+         dAGJs8euhiFbPNDapnfTyV5qBO2nQCZZsSgRe0ac=
+Date:   Tue, 7 Jul 2020 10:49:06 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
+        Jonathan.Cameron@huawei.com, aarcange@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
+        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
+        corbet@lwn.net, dwmw@amazon.com, foersleo@amazon.de,
+        irogers@google.com, jolsa@redhat.com, kirill@shutemov.name,
+        mark.rutland@arm.com, mgorman@suse.de, minchan@kernel.org,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+        rdunlap@infradead.org, riel@surriel.com, rientjes@google.com,
+        rostedt@goodmis.org, sblbir@amazon.com, shakeelb@google.com,
+        shuah@kernel.org, sj38.park@gmail.com, snu@amazon.de,
+        vbabka@suse.cz, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
+        ying.huang@intel.com, david@redhat.com, linux-damon@amazon.com,
+        linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v17 12/15] Documentation/admin-guide/mm: Add a document
+ for DAMON
+Message-ID: <20200707074906.GC9449@kernel.org>
+References: <20200706115322.29598-1-sjpark@amazon.com>
+ <20200706115322.29598-13-sjpark@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200706212057.GA18637@codemonkey.org.uk>
+In-Reply-To: <20200706115322.29598-13-sjpark@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 05:20:57PM -0400, Dave Jones wrote:
-> On Mon, Jul 06, 2020 at 04:59:52PM +0200, Peter Zijlstra wrote:
->  > On Fri, Jul 03, 2020 at 04:51:53PM -0400, Dave Jones wrote:
->  > > On Fri, Jul 03, 2020 at 12:40:33PM +0200, Peter Zijlstra wrote:
->  > >  
->  > > looked promising the first few hours, but as soon as it hit four hours
->  > > of uptime, loadavg spiked and is now pinned to at least 1.00
->  > 
->  > OK, lots of cursing later, I now have the below...
->  > 
->  > The TL;DR is that while schedule() doesn't change p->state once it
->  > starts, it does read it quite a bit, and ttwu() will actually change it
->  > to TASK_WAKING. So if ttwu() changes it to WAKING before schedule()
->  > reads it to do loadavg accounting, things go sideways.
->  > 
->  > The below is extra complicated by the fact that I've had to scrounge up
->  > a bunch of load-store ordering without actually adding barriers. It adds
->  > yet another control dependency to ttwu(), so take that C standard :-)
+Hello SeongJae,
+
+On Mon, Jul 06, 2020 at 01:53:19PM +0200, SeongJae Park wrote:
+> From: SeongJae Park <sjpark@amazon.de>
 > 
-> Man this stuff is subtle. I could've read this a hundred times and not
-> even come close to approaching this.
+> This commit adds a document for DAMON under
+> `Documentation/admin-guide/mm/damon/`.
 > 
-> Basically me reading scheduler code:
-> http://www.quickmeme.com/img/96/9642ed212bbced00885592b39880ec55218e922245e0637cf94db2e41857d558.jpg
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> ---
+>  Documentation/admin-guide/mm/damon/api.rst    |  20 ++
+>  .../admin-guide/mm/damon/damon_heatmap.png    | Bin 0 -> 8366 bytes
+>  .../admin-guide/mm/damon/damon_wss_change.png | Bin 0 -> 7211 bytes
+>  .../admin-guide/mm/damon/damon_wss_dist.png   | Bin 0 -> 6173 bytes
+>  Documentation/admin-guide/mm/damon/eval.rst   | 222 +++++++++++++
+>  Documentation/admin-guide/mm/damon/faq.rst    |  59 ++++
+>  .../admin-guide/mm/damon/freqmine_heatmap.png | Bin 0 -> 9999 bytes
+>  .../admin-guide/mm/damon/freqmine_wss_sz.png  | Bin 0 -> 5589 bytes
+>  .../mm/damon/freqmine_wss_time.png            | Bin 0 -> 6550 bytes
+>  Documentation/admin-guide/mm/damon/guide.rst  | 194 ++++++++++++
+>  Documentation/admin-guide/mm/damon/index.rst  |  35 +++
+>  .../admin-guide/mm/damon/mechanisms.rst       | 159 ++++++++++
+>  Documentation/admin-guide/mm/damon/plans.rst  |  29 ++
+>  Documentation/admin-guide/mm/damon/start.rst  | 117 +++++++
+>  .../mm/damon/streamcluster_heatmap.png        | Bin 0 -> 42210 bytes
+>  .../mm/damon/streamcluster_wss_sz.png         | Bin 0 -> 6327 bytes
+>  .../mm/damon/streamcluster_wss_time.png       | Bin 0 -> 8830 bytes
+>  Documentation/admin-guide/mm/damon/usage.rst  | 296 ++++++++++++++++++
+>  Documentation/admin-guide/mm/index.rst        |   1 +
 
-Heh, that one made me nearly spill my tea, much funnies :-)
+It's really cool to see documentation along with the code!
 
-But yes, Dave Chinner also complained about this for the previous fix.
-I've written this:
+I'd suggest to reorganize the DAMON docs to better match the current
+structure of Documentation/ directory.
 
-  https://lore.kernel.org/lkml/20200703133259.GE4781@hirez.programming.kicks-ass.net/
+The description of DAMON usage from the userspace and reference for the
+userland tools does belong to Documentation/admin-guide/mm. However, the
+kernel APIs are better to be placed in Documentation/core-api or even
+Documentation/dev-tools. As for the detailed description of the internal
+DAMON operation, this would naturally belong to Documentation/vm.
 
-to help with that. But clearly I'll need to update that patch again
-after this little adventure.
+Another thing is that this patch is really hard to review because of the
+encoded png blobs. In general, we try to keep Documentation/ readable in
+plain text, but if you think that the images are essential and must be a
+part of DAMON in-tree docs rather than links to an external resource,
+please split them to a separate patch.
 
->  > I've booted it, and build a few kernels with it and checked loadavg
->  > drops to 0 after each build, so from that pov all is well, but since
->  > I'm not confident I can reproduce the issue, I can't tell this actually
->  > fixes anything, except maybe phantoms of my imagination.
-> 
-> Five hours in, looking good so far.  I think you nailed it.
-
-\o/ hooray! Thanks for testing Dave!
+-- 
+Sincerely yours,
+Mike.
