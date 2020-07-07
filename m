@@ -5,49 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47FCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F03C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85C822065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32572065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135269;
-	bh=hTbUvOF/JFnFT0p2wG5DgDAwt3T4hRgBb5o3JsrfnL8=;
+	s=default; t=1594135273;
+	bh=S3KLbkQ6IOnMwXCM22w0HlZk3j5lz12lCVxAvrXIe6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ub9ih9tMdcZg6gpyLw1tJbRX+XUFeD+iuLScHznNPyOjTuQxTvvakGUEO2YcQSwow
-	 r9YAh3ULqrODNIJOmex1dLtSVMGSNx2AVqA18CGNI56k+sJ/zWiNpW1S5xvO7VAKHR
-	 EjCmX1C2TLyGRZB5Ag8yfI+VhmJ5FNDwniT7g/tY=
+	b=X85yKBHhiyuJzITlGEdy/S4Z+7kKYoxmoag+r0dsA8jDp8YjFbbaFEN/M4DuA8kXL
+	 CkvxSs+IwME7n4938cgeeh2/ihWUN+0ia3e1kZvA2dbmEnjJnynyFlH+zsMQJeC+Bp
+	 llbDGxQ9//iPnd07q6juaExAB6/ZeKUGF7bwbQ0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbgGGPVI (ORCPT
+        id S1729665AbgGGPVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:21:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:21:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbgGGPVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:21:01 -0400
+        id S1729642AbgGGPVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:21:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C273206E2;
-        Tue,  7 Jul 2020 15:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F044C20663;
+        Tue,  7 Jul 2020 15:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135260;
-        bh=hTbUvOF/JFnFT0p2wG5DgDAwt3T4hRgBb5o3JsrfnL8=;
+        s=default; t=1594135265;
+        bh=S3KLbkQ6IOnMwXCM22w0HlZk3j5lz12lCVxAvrXIe6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kiq2fqcxaXJfQ/LwZBmU0/u+bKueKZ/mNy//tZgIiUC5P8QqCyH5NbRKO/d5/62w9
-         LkoQpUxICSAZEwo1FiRzpKDB63dHv7nl/JSHSqMw/z4xyucMM+/WrLYHq7I0+jK07r
-         IDxQR06oDsCiDENgEpiw6K+8WBSJ6AstATCnXTtU=
+        b=ar18+ym8s6wuHi8pEAI8mh63UczRORNYzLIwO0gvepwUTzzM3QMchBqess0RFHYhV
+         a82oGqZpR0iUeIVsqIMDSa7dr1Dvy2Xf/insnCRscCQUJ1cPiMvnATjAyACdLaGK8Y
+         6+tXi0G6hA2L7RpTav1fpSzStmA8Vh6s+wBqKfnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jaewon Lim <jaewon31.kim@samsung.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kees Kook <keescook@chromium.org>, linux-mm@kvack.org,
+        linux-trace-devel@vger.kernel.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 08/65] rxrpc: Fix race between incoming ACK parser and retransmitter
-Date:   Tue,  7 Jul 2020 17:16:47 +0200
-Message-Id: <20200707145752.841736013@linuxfoundation.org>
+Subject: [PATCH 5.4 10/65] tools lib traceevent: Add append() function helper for appending strings
+Date:   Tue,  7 Jul 2020 17:16:49 +0200
+Message-Id: <20200707145752.948683510@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -60,102 +68,240 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 2ad6691d988c0c611362ddc2aad89e0fb50e3261 ]
+[ Upstream commit 27d4d336f2872193e90ee5450559e1699fae0f6d ]
 
-There's a race between the retransmission code and the received ACK parser.
-The problem is that the retransmission loop has to drop the lock under
-which it is iterating through the transmission buffer in order to transmit
-a packet, but whilst the lock is dropped, the ACK parser can crank the Tx
-window round and discard the packets from the buffer.
+There's several locations that open code realloc and strcat() to append
+text to strings. Add an append() function that takes a delimiter and a
+string to append to another string.
 
-The retransmission code then updated the annotations for the wrong packet
-and a later retransmission thought it had to retransmit a packet that
-wasn't there, leading to a NULL pointer dereference.
-
-Fix this by:
-
- (1) Moving the annotation change to before we drop the lock prior to
-     transmission.  This means we can't vary the annotation depending on
-     the outcome of the transmission, but that's fine - we'll retransmit
-     again later if it failed now.
-
- (2) Skipping the packet if the skb pointer is NULL.
-
-The following oops was seen:
-
-	BUG: kernel NULL pointer dereference, address: 000000000000002d
-	Workqueue: krxrpcd rxrpc_process_call
-	RIP: 0010:rxrpc_get_skb+0x14/0x8a
-	...
-	Call Trace:
-	 rxrpc_resend+0x331/0x41e
-	 ? get_vtime_delta+0x13/0x20
-	 rxrpc_process_call+0x3c0/0x4ac
-	 process_one_work+0x18f/0x27f
-	 worker_thread+0x1a3/0x247
-	 ? create_worker+0x17d/0x17d
-	 kthread+0xe6/0xeb
-	 ? kthread_delayed_work_timer_fn+0x83/0x83
-	 ret_from_fork+0x1f/0x30
-
-Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jaewon Lim <jaewon31.kim@samsung.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kees Kook <keescook@chromium.org>
+Cc: linux-mm@kvack.org
+Cc: linux-trace-devel@vger.kernel.org
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Link: http://lore.kernel.org/lkml/20200324200956.515118403@goodmis.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/call_event.c | 29 +++++++++++------------------
- 1 file changed, 11 insertions(+), 18 deletions(-)
+ tools/lib/traceevent/event-parse.c | 98 ++++++++++++------------------
+ 1 file changed, 40 insertions(+), 58 deletions(-)
 
-diff --git a/net/rxrpc/call_event.c b/net/rxrpc/call_event.c
-index 2a65ac41055f5..985fb89202d0c 100644
---- a/net/rxrpc/call_event.c
-+++ b/net/rxrpc/call_event.c
-@@ -248,7 +248,18 @@ static void rxrpc_resend(struct rxrpc_call *call, unsigned long now_j)
- 		if (anno_type != RXRPC_TX_ANNO_RETRANS)
- 			continue;
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index d948475585ced..4bc3e1b906652 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -1425,6 +1425,19 @@ static unsigned int type_size(const char *name)
+ 	return 0;
+ }
  
-+		/* We need to reset the retransmission state, but we need to do
-+		 * so before we drop the lock as a new ACK/NAK may come in and
-+		 * confuse things
-+		 */
-+		annotation &= ~RXRPC_TX_ANNO_MASK;
-+		annotation |= RXRPC_TX_ANNO_RESENT;
-+		call->rxtx_annotations[ix] = annotation;
++static int append(char **buf, const char *delim, const char *str)
++{
++	char *new_buf;
 +
- 		skb = call->rxtx_buffer[ix];
-+		if (!skb)
-+			continue;
++	new_buf = realloc(*buf, strlen(*buf) + strlen(delim) + strlen(str) + 1);
++	if (!new_buf)
++		return -1;
++	strcat(new_buf, delim);
++	strcat(new_buf, str);
++	*buf = new_buf;
++	return 0;
++}
 +
- 		rxrpc_get_skb(skb, rxrpc_skb_got);
- 		spin_unlock_bh(&call->lock);
+ static int event_read_fields(struct tep_event *event, struct tep_format_field **fields)
+ {
+ 	struct tep_format_field *field = NULL;
+@@ -1432,6 +1445,7 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 	char *token;
+ 	char *last_token;
+ 	int count = 0;
++	int ret;
  
-@@ -262,24 +273,6 @@ static void rxrpc_resend(struct rxrpc_call *call, unsigned long now_j)
+ 	do {
+ 		unsigned int size_dynamic = 0;
+@@ -1490,24 +1504,15 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 					field->flags |= TEP_FIELD_IS_POINTER;
  
- 		rxrpc_free_skb(skb, rxrpc_skb_freed);
- 		spin_lock_bh(&call->lock);
+ 				if (field->type) {
+-					char *new_type;
+-					new_type = realloc(field->type,
+-							   strlen(field->type) +
+-							   strlen(last_token) + 2);
+-					if (!new_type) {
+-						free(last_token);
+-						goto fail;
+-					}
+-					field->type = new_type;
+-					strcat(field->type, " ");
+-					strcat(field->type, last_token);
++					ret = append(&field->type, " ", last_token);
+ 					free(last_token);
++					if (ret < 0)
++						goto fail;
+ 				} else
+ 					field->type = last_token;
+ 				last_token = token;
+ 				continue;
+ 			}
 -
--		/* We need to clear the retransmit state, but there are two
--		 * things we need to be aware of: A new ACK/NAK might have been
--		 * received and the packet might have been hard-ACK'd (in which
--		 * case it will no longer be in the buffer).
--		 */
--		if (after(seq, call->tx_hard_ack)) {
--			annotation = call->rxtx_annotations[ix];
--			anno_type = annotation & RXRPC_TX_ANNO_MASK;
--			if (anno_type == RXRPC_TX_ANNO_RETRANS ||
--			    anno_type == RXRPC_TX_ANNO_NAK) {
--				annotation &= ~RXRPC_TX_ANNO_MASK;
--				annotation |= RXRPC_TX_ANNO_UNACK;
--			}
--			annotation |= RXRPC_TX_ANNO_RESENT;
--			call->rxtx_annotations[ix] = annotation;
--		}
--
- 		if (after(call->tx_hard_ack, seq))
- 			seq = call->tx_hard_ack;
- 	}
+ 			break;
+ 		}
+ 
+@@ -1523,8 +1528,6 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 		if (strcmp(token, "[") == 0) {
+ 			enum tep_event_type last_type = type;
+ 			char *brackets = token;
+-			char *new_brackets;
+-			int len;
+ 
+ 			field->flags |= TEP_FIELD_IS_ARRAY;
+ 
+@@ -1536,29 +1539,27 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 				field->arraylen = 0;
+ 
+ 		        while (strcmp(token, "]") != 0) {
++				const char *delim;
++
+ 				if (last_type == TEP_EVENT_ITEM &&
+ 				    type == TEP_EVENT_ITEM)
+-					len = 2;
++					delim = " ";
+ 				else
+-					len = 1;
++					delim = "";
++
+ 				last_type = type;
+ 
+-				new_brackets = realloc(brackets,
+-						       strlen(brackets) +
+-						       strlen(token) + len);
+-				if (!new_brackets) {
++				ret = append(&brackets, delim, token);
++				if (ret < 0) {
+ 					free(brackets);
+ 					goto fail;
+ 				}
+-				brackets = new_brackets;
+-				if (len == 2)
+-					strcat(brackets, " ");
+-				strcat(brackets, token);
+ 				/* We only care about the last token */
+ 				field->arraylen = strtoul(token, NULL, 0);
+ 				free_token(token);
+ 				type = read_token(&token);
+ 				if (type == TEP_EVENT_NONE) {
++					free(brackets);
+ 					do_warning_event(event, "failed to find token");
+ 					goto fail;
+ 				}
+@@ -1566,13 +1567,11 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 
+ 			free_token(token);
+ 
+-			new_brackets = realloc(brackets, strlen(brackets) + 2);
+-			if (!new_brackets) {
++			ret = append(&brackets, "", "]");
++			if (ret < 0) {
+ 				free(brackets);
+ 				goto fail;
+ 			}
+-			brackets = new_brackets;
+-			strcat(brackets, "]");
+ 
+ 			/* add brackets to type */
+ 
+@@ -1582,34 +1581,23 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 			 * the format: type [] item;
+ 			 */
+ 			if (type == TEP_EVENT_ITEM) {
+-				char *new_type;
+-				new_type = realloc(field->type,
+-						   strlen(field->type) +
+-						   strlen(field->name) +
+-						   strlen(brackets) + 2);
+-				if (!new_type) {
++				ret = append(&field->type, " ", field->name);
++				if (ret < 0) {
+ 					free(brackets);
+ 					goto fail;
+ 				}
+-				field->type = new_type;
+-				strcat(field->type, " ");
+-				strcat(field->type, field->name);
++				ret = append(&field->type, "", brackets);
++
+ 				size_dynamic = type_size(field->name);
+ 				free_token(field->name);
+-				strcat(field->type, brackets);
+ 				field->name = field->alias = token;
+ 				type = read_token(&token);
+ 			} else {
+-				char *new_type;
+-				new_type = realloc(field->type,
+-						   strlen(field->type) +
+-						   strlen(brackets) + 1);
+-				if (!new_type) {
++				ret = append(&field->type, "", brackets);
++				if (ret < 0) {
+ 					free(brackets);
+ 					goto fail;
+ 				}
+-				field->type = new_type;
+-				strcat(field->type, brackets);
+ 			}
+ 			free(brackets);
+ 		}
+@@ -2046,19 +2034,16 @@ process_op(struct tep_event *event, struct tep_print_arg *arg, char **tok)
+ 		/* could just be a type pointer */
+ 		if ((strcmp(arg->op.op, "*") == 0) &&
+ 		    type == TEP_EVENT_DELIM && (strcmp(token, ")") == 0)) {
+-			char *new_atom;
++			int ret;
+ 
+ 			if (left->type != TEP_PRINT_ATOM) {
+ 				do_warning_event(event, "bad pointer type");
+ 				goto out_free;
+ 			}
+-			new_atom = realloc(left->atom.atom,
+-					    strlen(left->atom.atom) + 3);
+-			if (!new_atom)
++			ret = append(&left->atom.atom, " ", "*");
++			if (ret < 0)
+ 				goto out_warn_free;
+ 
+-			left->atom.atom = new_atom;
+-			strcat(left->atom.atom, " *");
+ 			free(arg->op.op);
+ 			*arg = *left;
+ 			free(left);
+@@ -3151,18 +3136,15 @@ process_arg_token(struct tep_event *event, struct tep_print_arg *arg,
+ 		}
+ 		/* atoms can be more than one token long */
+ 		while (type == TEP_EVENT_ITEM) {
+-			char *new_atom;
+-			new_atom = realloc(atom,
+-					   strlen(atom) + strlen(token) + 2);
+-			if (!new_atom) {
++			int ret;
++
++			ret = append(&atom, " ", token);
++			if (ret < 0) {
+ 				free(atom);
+ 				*tok = NULL;
+ 				free_token(token);
+ 				return TEP_EVENT_ERROR;
+ 			}
+-			atom = new_atom;
+-			strcat(atom, " ");
+-			strcat(atom, token);
+ 			free_token(token);
+ 			type = read_token_item(&token);
+ 		}
 -- 
 2.25.1
 
