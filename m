@@ -7,71 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50078C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15B1420773
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26AE420738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:38:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QqqZZ4pE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o5qFIiE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgGGOiX (ORCPT
+        id S1728523AbgGGOi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53716 "EHLO
+        Tue, 7 Jul 2020 10:38:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728428AbgGGOiO (ORCPT
+        with ESMTP id S1728493AbgGGOiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:38:14 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B643AC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:13 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z2so23134889wrp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:13 -0700 (PDT)
+        Tue, 7 Jul 2020 10:38:20 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9980AC08C5E1
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 07:38:20 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j4so42988549wrp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 07:38:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=i3kHcmoqkZhWZ4oxxNqqC7HGSrDg94q7cDYwU1R7wZ0=;
-        b=QqqZZ4pESAuIWwDoPRnNoufHsQOPJdYeYXwBBwabjk1uLwS42wFEAqiWGt+bbkxoUW
-         Dt3j7tTPi2S2uGuSN7pApq05aDzKTfIvedNoOVayX3DFlIlmVjjshralPJmUdpHAZFHT
-         bC02jDQsGPGvkAYuqHMUQ7SAKmIEE5Wyv/WRDH3TsDo4+Bw+1tP3WM07zo8+K5aWDv0T
-         kRTLqiFyThI4W4Ar9ywWWAc2Tw43IULOb4U6bNqk+lako8lgAWUP4Y8adbJUjgSe9ayR
-         yO5vgvDWxlAskhJoxs7gLDV7z90M4c5hTTn7ZoTzaC/0ksGTuUevFdvu7htJ+Yqa37w+
-         Vi9w==
+        bh=EXLqTyUKMLj4M51ntYR1QA4V9xA1YrzmuNUETaX0PBA=;
+        b=o5qFIiE60x8cX+Bhm0rgzWF0oy0LXLTwf++5sVrWU5JMR62946RZ49b2fud+ahUxan
+         M3fyhMHkqfpuyZPTvDJ6FLSUfLQZSmxONDGQ5cEbwEnAEEIlIjX/w+B9YHhPuaO/ydBR
+         +7G31bbUN/ChKb43mdklUoqkHM2wTxewBYKlrV8Ic+LjI5zxU0xnw/9ps3p7Q/IYFkZC
+         bSPRlsbBl90eqE1Wrcaad9xHV1OArmn3GcJA4JxXnmZq9Z8XjsfwdVfYMJFL+IbYyqIP
+         ghwioQaNbFCOyXYEV0SfC7uV+2lls7XmQ01d5xuzA3RjuI1uH+nHX6DtiKjxfhFRljqM
+         ec+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=i3kHcmoqkZhWZ4oxxNqqC7HGSrDg94q7cDYwU1R7wZ0=;
-        b=b6Mk+Od8+8cuUFivRJziEUFBqLrlgmoP9BjLD2xFkoTKo8+xiske25+/NHkMH0stVY
-         W9rmur17bWLQkJ02gYPc1QV+/tq8JgSW42Nj9CLugAvFpgm46hWcoctMDmYd9mHzDlI5
-         oE64pa6HY5pcbXiqxeOuYD/7VM9yag/+PjIFmWh1BFdu8xtxLwC9GKxeyqnk0Wal4WCC
-         dxR7Jco7a5PPfqm/y4QlpuUBj85k/55G7RoMPPlUPk7cCwQRkX7McwUQmm+ZLb7mzJAz
-         31n/+vX71InUAFpboLMhUa2i5PJOa56CzZDKrY0KYWiP9auORZ0YzEQI/Qg1NFuBAwi6
-         Yv5A==
-X-Gm-Message-State: AOAM530N9xSkh5sfrOakVS60ftDveulQH3Ibj7rzzDon60x4XJtA/zzP
-        Qzhc/pPqqs6a3YpRFH/9DBMeTg==
-X-Google-Smtp-Source: ABdhPJwsSC0UeTUN9Csfj74emOCu/UtJQH5pDIqnq5THkRvAxrdrQ5fybem8qUGk6n26vzyQHj4srg==
-X-Received: by 2002:a5d:6a04:: with SMTP id m4mr53013495wru.418.1594132692517;
-        Tue, 07 Jul 2020 07:38:12 -0700 (PDT)
+        bh=EXLqTyUKMLj4M51ntYR1QA4V9xA1YrzmuNUETaX0PBA=;
+        b=mOu27x+XB2kz+EdvtxwdEKlRWENP75qYcPUHv2O3wByWEXdTSBlpcfmvIudQF3+1Bk
+         vWl4A1tvouAijyDQ9Co31kMf2AX7AycD9YduLiqnjjXGeN1pGHQJI2MmkJbXDypkBkpE
+         SZ6qEoQ5Sjbswl8HZZ6HBDMPrE92P6OebtqaPxknX4K033QZ9He2fHcgaAQBJFclVylb
+         n/8BcyWR9KLC+7ma3c067w/utsgBeIQbPOqjQsQIH7yx8Q+JzT3NtEygkZ2MOGglwQa0
+         5qSif3nbeUQFBe/yyRPAOfnba1A/8fFuZxjFiOsg9G4hQFQXUhhYuazxNxc9t/xy2Dva
+         gHjQ==
+X-Gm-Message-State: AOAM530l0XscMBEL4Vqnv6R8Amvw0yA6as35Zf5JHfFbg+HIGIGtWFD5
+        P3/Ylife0VBNFa3mEQzHf71tyA==
+X-Google-Smtp-Source: ABdhPJyRMAvI6NkTDV7IWsTK5HtfFZ6l9B/O82Lz0Ooky54tkmtjUVeL9Ss/7Rr8kNE7uRm+HvYhCg==
+X-Received: by 2002:a05:6000:6:: with SMTP id h6mr53076969wrx.26.1594132699386;
+        Tue, 07 Jul 2020 07:38:19 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.11
+        by smtp.gmail.com with ESMTPSA id y16sm1276131wro.71.2020.07.07.07.38.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 07:38:11 -0700 (PDT)
+        Tue, 07 Jul 2020 07:38:18 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, Lee Jones <lee.jones@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andrea Venturi <be17068@iperbole.bo.it>,
-        Marcus Cooper <codekipper@gmail.com>
-Subject: [PATCH v2 18/28] ASoC: sunxi: sun4i-spdif: Fix misspelling of 'reg_dac_txdata'
-Date:   Tue,  7 Jul 2020 15:37:32 +0100
-Message-Id: <20200707143742.2959960-19-lee.jones@linaro.org>
+        Richard Purdie <richard@openedhand.com>
+Subject: [PATCH v2 23/28] ASoC: soc-ac97: Demote seemingly unintentional kerneldoc header
+Date:   Tue,  7 Jul 2020 15:37:37 +0100
+Message-Id: <20200707143742.2959960-24-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707143742.2959960-1-lee.jones@linaro.org>
 References: <20200707143742.2959960-1-lee.jones@linaro.org>
@@ -82,35 +78,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Property name descriptions need to match exactly.
+This is the only use of kerneldoc in the sourcefile and no
+descriptions are provided.
 
 Fixes the following W=1 kernel build warning(s):
 
- sound/soc/sunxi/sun4i-spdif.c:178: warning: Function parameter or member 'reg_dac_txdata' not described in 'sun4i_spdif_quirks'
+ sound/soc/soc-ac97.c:402: warning: Function parameter or member 'ops' not described in 'snd_soc_set_ac97_ops_of_reset'
+ sound/soc/soc-ac97.c:402: warning: Function parameter or member 'pdev' not described in 'snd_soc_set_ac97_ops_of_reset'
 
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Andrea Venturi <be17068@iperbole.bo.it>
-Cc: Marcus Cooper <codekipper@gmail.com>
+Cc: Richard Purdie <richard@openedhand.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- sound/soc/sunxi/sun4i-spdif.c | 2 +-
+ sound/soc/soc-ac97.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-spdif.c
-index 86779a99df751..326dd45e39dab 100644
---- a/sound/soc/sunxi/sun4i-spdif.c
-+++ b/sound/soc/sunxi/sun4i-spdif.c
-@@ -167,7 +167,7 @@
- /**
-  * struct sun4i_spdif_quirks - Differences between SoC variants.
+diff --git a/sound/soc/soc-ac97.c b/sound/soc/soc-ac97.c
+index 906106ed8ca14..af789552a9d4c 100644
+--- a/sound/soc/soc-ac97.c
++++ b/sound/soc/soc-ac97.c
+@@ -391,7 +391,7 @@ int snd_soc_set_ac97_ops(struct snd_ac97_bus_ops *ops)
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_set_ac97_ops);
+ 
+-/**
++/*
+  * snd_soc_set_ac97_ops_of_reset - Set ac97 ops with generic ac97 reset functions
   *
-- * @reg_dac_tx_data: TX FIFO offset for DMA config.
-+ * @reg_dac_txdata: TX FIFO offset for DMA config.
-  * @has_reset: SoC needs reset deasserted.
-  * @val_fctl_ftx: TX FIFO flush bitmask.
-  */
+  * This function sets the reset and warm_reset properties of ops and parses
 -- 
 2.25.1
 
