@@ -7,78 +7,88 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 558F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E695C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E40420775
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BEAD20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zZbgmRNE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z7BbP72N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgGGMkH (ORCPT
+        id S1728179AbgGGMk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:40:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35374 "EHLO
+        Tue, 7 Jul 2020 08:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728143AbgGGMkH (ORCPT
+        with ESMTP id S1725944AbgGGMk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:40:07 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B479C08C5E0
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 05:40:07 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e8so15425407ljb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 05:40:07 -0700 (PDT)
+        Tue, 7 Jul 2020 08:40:57 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02068C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 05:40:57 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q4so13976425lji.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 05:40:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gBIdGRLf5Cnr5tv5YyMZkrd+hNTUnC4qnI3yzrVPz4s=;
-        b=zZbgmRNEN+Cc2hDtQX4Dm++WQhE8xQ1v3PBJo3ZQkSoPi1uYxkQ0Y29tM+h5uKGgxk
-         R8up+SY/8shg5vXKAKBYFVvPefxK3DJU2owMhFJAiPknsu5GBf7xv+NAp6iuN1YwAbbx
-         JBrdLrAEF0nsFHEocS3BfUTnMuCiln9uvZrgQ5KcOD8dKfletfW5Zmi66OduL8C1mDfd
-         aeR0RB0IEkQNAiVbxOhPycMRNU10M38wRQ3fSm4M7bBoT0G0Q6UUdE/qvQevtWiL0jWp
-         lsrncyKGCtDTzWPim/17xR0UDZgms1JWq55rkqAn7E74ohJsp382XEzEAd3ELD1v2jrU
-         JtOA==
+        bh=QGcoFBPPxrng8eM90mEgFMsK7e0Ej5rArXOEd/o/bOc=;
+        b=z7BbP72NcF/rAPzxpGYTN7OtYHdbfQTFq6N/8aGnLvg8gXxIvYoXy9df/SlkKyemSr
+         zJ8hgYPkbAXBClonuaQuUMx3Ba1b2g8LdQCxocVGihwXkhk33tLyHJdHqcPZqaD6nlq4
+         /B9cv3igBFC5Af3J/G3R5czIgkytIC9U9zZ26dB4ZeMtDGGiVZlvvV/XM9HPCjMnYCyd
+         2m+GVvBJjkmvUW6dbx2YAQUqtKr4oRaxv9iNzn4ciJHPvf+j1/C54JqhQYbFZixENuMM
+         AeokBASnTOXpqcfIE2FtPJdpxWZozV0uIw3BLS69ymo0JiZoH89JkmaWOoIcjr/x5jI0
+         nY0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gBIdGRLf5Cnr5tv5YyMZkrd+hNTUnC4qnI3yzrVPz4s=;
-        b=S+kWD4cC/0/bgguvrw4YzEkadc3Wx6yXAiyRarmAEZrC7EJu3t3PY1rYMge8MMrPhe
-         VE7qZ9Iou/9x4DB1OgiFMpGEIyBGHxlJwNR1uHD6C/lK+/XabBk0L90GbbbcIursS9B7
-         0m1rrUaZ4UNucuYZuuo/KXom973xpBib40vMkRU2AfSGbmWf1Hr4cnRoWOZB7ESlmBT2
-         wtWQENvIsZfiereiAhVuvL1yBD3EIqHrQGtgTYqkPAzCP2TbnmRkPt/Gh5Z1ykoYw1+U
-         bH1P7IaJTdqggc+Clk2Vfp605uBpnvYm02l63coKYJGGvmEh+zS+W+/bN9IKte4fcmeb
-         mD4A==
-X-Gm-Message-State: AOAM531yzM9+umsfxBSmSBMyRvDBjSJMTBbED9tqV8ucZkYMv71eAiUC
-        BJbOOmoSWd14/h2927yF1AwMuzZvHf+7YEzPp9yP8w==
-X-Google-Smtp-Source: ABdhPJxDXru6RgwaBVIBtujonT5DdydJbJILVYEaNJo44eej7MQdGO5rlBUNjRspneYJmwhSKBueSL0fK+zw5ir6UWc=
-X-Received: by 2002:a2e:810a:: with SMTP id d10mr24438178ljg.144.1594125605584;
- Tue, 07 Jul 2020 05:40:05 -0700 (PDT)
+        bh=QGcoFBPPxrng8eM90mEgFMsK7e0Ej5rArXOEd/o/bOc=;
+        b=Cy+WafQCnmmYjZU758ViQ7J3O0eVAKTCKfXmF5pd7lZh+pk1P0WjJ8ZSvORxH01ZRd
+         7w0gpNlCfY8hE9ZQNSrXEpFI8iSh1LPvwmwxUVLvRsOGd4Jp5o4cV87nIcmFj5fY83sP
+         ZzgLq0tIylKQBVfztPjVOJXfedPRNizO7aQGznpebrxgZHZVpN/CMav8Y5TD5oRnos2w
+         WYf6HsCy4WOnY8kO/oldfFJAE5I4jZPn0X1/234QG2shTC7PK3pf83Ow2U8ty4l+2mNh
+         I+9QBVqjwaIQVWU31wa9VUrXtDmTs0AhDjT7+yQvpOn9ET9zTyJF9620bWIijHiTHk3u
+         J+Mg==
+X-Gm-Message-State: AOAM530SQBaqpbx2fEGRWN5TMaO55GG1ma0MbFktxZoqcp4JOmiSVjnE
+        gIXYTRqT8jNapkFIfjHTRDc+x0cbVk0kJPeUPgD67Q==
+X-Google-Smtp-Source: ABdhPJx0Mf86e5V6mQ4GHGO9xYIah6dO+UFkuYm8wL2/d7xbFzE7p6F1m8WeXnkTEy8KWN2UQbub3S5yOIXQahc3+Q0=
+X-Received: by 2002:a2e:8046:: with SMTP id p6mr16117035ljg.100.1594125655520;
+ Tue, 07 Jul 2020 05:40:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200625064619.2775707-1-lee.jones@linaro.org> <20200625064619.2775707-5-lee.jones@linaro.org>
-In-Reply-To: <20200625064619.2775707-5-lee.jones@linaro.org>
+References: <20200625163127.4000462-1-lee.jones@linaro.org> <20200625163127.4000462-5-lee.jones@linaro.org>
+In-Reply-To: <20200625163127.4000462-5-lee.jones@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 14:39:54 +0200
-Message-ID: <CACRpkdYPdO94x2dRLgKXioaSi3NbrG_ieDUA00QbdUyhfrCmvg@mail.gmail.com>
-Subject: Re: [PATCH 04/10] mfd: db8500-prcmu: Remove incorrect function header
- from .probe() function
+Date:   Tue, 7 Jul 2020 14:40:43 +0200
+Message-ID: <CACRpkdZ5ruZsdBeq38hEBRAvBwuDSVe=eo7Nnozb1C_J5FKS6g@mail.gmail.com>
+Subject: Re: [PATCH 04/10] mfd: ab3100-otp: Add missing colon(s) for all
+ documented kerneldoc arguments
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 8:46 AM Lee Jones <lee.jones@linaro.org> wrote:
+On Thu, Jun 25, 2020 at 6:31 PM Lee Jones <lee.jones@linaro.org> wrote:
 
-> Not only is the current header incorrect, the isn't actually a
-> need to document the ubiquitous platform probe call.
+> Kerneldoc validation gets confused if syntax isn't "@.*: ".
 >
-> Cc: <stable@vger.kernel.org>
+> Adding the missing colons squashes the following W=1 warnings:
+>
+>  drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'dev' not described in 'ab3100_otp'
+>  drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'locked' not described in 'ab3100_otp'
+>  drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'freq' not described in 'ab3100_otp'
+>  drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'paf' not described in 'ab3100_otp'
+>  drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'imeich' not described in 'ab3100_otp'
+>  drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'cid' not described in 'ab3100_otp'
+>  drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'tac' not described in 'ab3100_otp'
+>  drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'fac' not described in 'ab3100_otp'
+>  drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'svn' not described in 'ab3100_otp'
+>  drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'debugfs' not described in 'ab3100_otp'
+>
 > Cc: Linus Walleij <linus.walleij@linaro.org>
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
