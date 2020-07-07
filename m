@@ -2,94 +2,127 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A43AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA377C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED15F20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:18:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N/OvAqBu"
+	by mail.kernel.org (Postfix) with ESMTP id 92C832075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgGGMSS (ORCPT
+        id S1727800AbgGGMW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:18:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGMSS (ORCPT
+        Tue, 7 Jul 2020 08:22:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38950 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgGGMWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:18:18 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027E6C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 05:18:18 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id y18so24562153lfh.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 05:18:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SOnszkcT7TNdqVrzh07A8SyMxgSxeV8gTnMwaKIquLk=;
-        b=N/OvAqBuFoj3Pd62waZt9/FVEceVBKbXkq4lTVip5frbC/0py1e7qlSOX/CaOcJ9KN
-         0ebXE5iiaXIXyQ4zZoZ/VQWHhEOelXphjkuL5AH8WTrx3FrDh+7Lq7yQMGJnjPLYPGjf
-         JlYqdmHB0kc4EsvML9Dg+v5OpEY/f1e+X5c3iVVMyrMs/Vj8caqxoTOpjfK6uHf7rAxS
-         HCtI7caAC/hBKCsbr+Otirw4x55NLo9xlDxOyYY2pg0EfJv7aYkbVXr7eZT1NSwSEi88
-         XvcPSH8TDp6QBHWzKhtfH++wuwbFvJXZZ9qs7kic+y2B6FLOMsY3iYjf8g7y4gqTI4K1
-         nxMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SOnszkcT7TNdqVrzh07A8SyMxgSxeV8gTnMwaKIquLk=;
-        b=ThntAG+VKtKejtkSYmaNLHHUgJpJds13lNfPgxrjJNQP/NMm3Cx3RNVx3zuKk4DYKL
-         cz5YjpN2LJUv7Ri1xMY4ebzYQ5gEIO66Uj7iN8pfCAjvnVjlcgH1XcGgJ6BOXxJIth44
-         pXVqdoOIPBVEQBENhx8GF2tw7//xmCusqgNJNf5Z1wPKo9UUh9eqQwv9Zv4Fsuby/+iJ
-         A4In7x/GmBysj4znR6sea7D8wxyErzQkWLr6bLX1y2taA8kkZNyjMK5X3aT3E1UVK3UG
-         +7rb90iACYm9D7cMKs73PS7t6cA0soKBBogD8MlKX2tUFx6BhNaessaXoIEVA2/X5RZ5
-         CCwA==
-X-Gm-Message-State: AOAM5312SqYkce5SzKyQLGfX/XfIVryxNiqiInEDFdbezrRP/O2eX/xW
-        vrhvOk4NUvpN8D+NmUpyCsy25x0ASkfujbO86LHKMg==
-X-Google-Smtp-Source: ABdhPJxH0G4kh8NlF9pHPkG/HVOhx9RJ/tQnhLrHOKjaGWMKl3J+G1CqdUSXg1kIkjYFLaEAugmTgoODVIXAf9jL/7E=
-X-Received: by 2002:a19:745:: with SMTP id 66mr32931901lfh.77.1594124296456;
- Tue, 07 Jul 2020 05:18:16 -0700 (PDT)
+        Tue, 7 Jul 2020 08:22:25 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jsmcA-0006wX-2H; Tue, 07 Jul 2020 12:22:22 +0000
+Date:   Tue, 7 Jul 2020 14:22:20 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@ACULAB.COM>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 4/7] pidfd: Replace open-coded partial receive_fd()
+Message-ID: <20200707122220.cazzek4655gj4tj7@wittgenstein>
+References: <20200706201720.3482959-1-keescook@chromium.org>
+ <20200706201720.3482959-5-keescook@chromium.org>
 MIME-Version: 1.0
-References: <20200622113740.46450-1-paul@crapouillou.net>
-In-Reply-To: <20200622113740.46450-1-paul@crapouillou.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 14:18:05 +0200
-Message-ID: <CACRpkdYsH9B4_6XLuc-8koMsA6JdFSaMokcF+k9KK=mz-CtUBA@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2] dt-bindings: pinctrl: Convert
- ingenic,pinctrl.txt to YAML
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200706201720.3482959-5-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 1:38 PM Paul Cercueil <paul@crapouillou.net> wrote:
-
-> Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
->
-> In the process, some compatible strings now require a fallback, as the
-> corresponding SoCs are pin-compatible with their fallback variant.
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+On Mon, Jul 06, 2020 at 01:17:17PM -0700, Kees Cook wrote:
+> The sock counting (sock_update_netprioidx() and sock_update_classid()) was
+> missing from pidfd's implementation of received fd installation. Replace
+> the open-coded version with a call to the new receive_fd()
+> helper.
+> 
+> Thanks to Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com> for
+> catching a missed fput() in an earlier version of this patch.
+> 
+> Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
+> Reviewed-by: Sargun Dhillon <sargun@sargun.me>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->
-> Notes:
->     v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
->         - remove 'additionalProperties: false' since we will have pin conf nodes
 
-Patch applied.
+Thanks!
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Yours,
-Linus Walleij
+Christoph, Kees,
+
+So while the patch is correct it leaves 5.6 and 5.7 with a bug in the
+pidfd_getfd() implementation and that just doesn't seem right. I'm
+wondering whether we should introduce:
+
+void sock_update(struct file *file)
+{
+	struct socket *sock;
+	int error;
+
+	sock = sock_from_file(file, &error);
+	if (sock) {
+		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
+		sock_update_classid(&sock->sk->sk_cgrp_data);
+	}
+}
+
+and switch pidfd_getfd() over to:
+
+diff --git a/kernel/pid.c b/kernel/pid.c
+index f1496b757162..c26bba822be3 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -642,10 +642,12 @@ static int pidfd_getfd(struct pid *pid, int fd)
+        }
+
+        ret = get_unused_fd_flags(O_CLOEXEC);
+-       if (ret < 0)
++       if (ret < 0) {
+                fput(file);
+-       else
++       } else {
++               sock_update(file);
+                fd_install(ret, file);
++       }
+
+        return ret;
+ }
+
+first thing in the series and then all of the other patches on top of it
+so that we can Cc stable for this and that can get it backported to 5.6,
+5.7, and 5.8.
+
+Alternatively, I can make this a separate bugfix patch series which I'll
+send upstream soonish. Or we have specific patches just for 5.6, 5.7,
+and 5.8. Thoughts?
+
+Thanks!
+Christian
