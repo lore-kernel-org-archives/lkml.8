@@ -2,92 +2,158 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E61C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70593C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3D942067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AAAB2067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:52:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="adHG4Sn5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4POi9w8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgGGTwG (ORCPT
+        id S1728711AbgGGTwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:52:06 -0400
-Received: from smtp114.iad3a.emailsrvr.com ([173.203.187.114]:43095 "EHLO
-        smtp114.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726951AbgGGTwD (ORCPT
+        Tue, 7 Jul 2020 15:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbgGGTwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:52:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
-        s=20190322-9u7zjiwi; t=1594151521;
-        bh=EtQXgiskvrmcRf9wNzmGtIzZoRnsw2CxrLx1nXjgTEo=;
-        h=Date:Subject:From:To:From;
-        b=adHG4Sn55+RmvYyBdHm93qvP4WbTDbxd76IthLQNOdq1GAs0L5iX/r07Gsrq+q5yp
-         MOPv2n8NRS2KnA7g5pZF0/XrIL3RWU+kCdeaI6B7X8MMd/EGNlLMjVqEVIgUh76CEy
-         7vj6np1FNrkKvNeHLhNsLl+BXEDOlTSRSQrvVL+4=
-Received: from app12.wa-webapps.iad3a (relay-webapps.rsapps.net [172.27.255.140])
-        by smtp31.relay.iad3a.emailsrvr.com (SMTP Server) with ESMTP id A177924886;
-        Tue,  7 Jul 2020 15:52:01 -0400 (EDT)
-Received: from deepplum.com (localhost.localdomain [127.0.0.1])
-        by app12.wa-webapps.iad3a (Postfix) with ESMTP id 87C25E0059;
-        Tue,  7 Jul 2020 15:52:01 -0400 (EDT)
-Received: by apps.rackspace.com
-    (Authenticated sender: dpreed@deepplum.com, from: dpreed@deepplum.com) 
-    with HTTP; Tue, 7 Jul 2020 15:52:01 -0400 (EDT)
-X-Auth-ID: dpreed@deepplum.com
-Date:   Tue, 7 Jul 2020 15:52:01 -0400 (EDT)
-Subject: Re: [PATCH v3 2/3] Fix undefined operation fault that can hang a cpu on crash or panic
-From:   "David P. Reed" <dpreed@deepplum.com>
-To:     "Sean Christopherson" <sean.j.christopherson@intel.com>
-Cc:     "Andy Lutomirski" <luto@amacapital.net>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "X86 ML" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        "Allison Randal" <allison@lohutok.net>,
-        "Enrico Weigelt" <info@metux.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        "=?utf-8?Q?Peter_Zijlstra_=28Intel=29?=" <peterz@infradead.org>,
-        "Randy Dunlap" <rdunlap@infradead.org>,
-        "Martin Molnar" <martin.molnar.programming@gmail.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Alexandre Chartre" <alexandre.chartre@oracle.com>,
-        "Jann Horn" <jannh@google.com>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        "LKML" <linux-kernel@vger.kernel.org>
+        Tue, 7 Jul 2020 15:52:14 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CE32C061755;
+        Tue,  7 Jul 2020 12:52:14 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id d18so2412842ion.0;
+        Tue, 07 Jul 2020 12:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Cspl6RQza0BoSmE5XXIXy/+J4esPE2BdRB9cMVQHRY=;
+        b=G4POi9w8Qq0IGizNb7ryCd4o0A1m/mKhcPpW+MPVzcB5AqQMqFZOZtvcrjTx1ZC6NZ
+         IHSOP0iTG0JhubvRBG4VEfwfjNtaAWwFZSntwZZOeLVByAPR0Qar4rugJzW4h4WVU4zm
+         K4jIxmQJrKM7wya5lZTvHwBpwDLgcHBrT4KUcGqQ9ft2wh/u2O2a+50OaYZrAVsNXUPX
+         Ah+t1cueopn/VXWcyLbwxRK5pY43wwih64BIK8AcE9unuFUsDpt94lkJ0BHpdgFS0ZHu
+         7RVJf8qKeYk6GPK2NDihdb/2Ls3GThu3DyFjqeY6VBjV7MyN05IAF5m+x5C3NWv2HJnT
+         zbTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Cspl6RQza0BoSmE5XXIXy/+J4esPE2BdRB9cMVQHRY=;
+        b=Azj3JxQNCyM+8QPU/3Jxma21bYwfTkaJgZ/4j8ZY6pfN7QZDY4aQemiyIeLsJ37S0s
+         m//5Kmhj7zOVrgkrGoDRVcwrOSRwM9mUPkhm5nS0Wed577XGVh7VT5L4Av7ICMTLGlvl
+         hyhtiqVfP2QGUlj649aZFc1wXf3VQvuZIC6Z2EIlyDb1pk9zd7t7tsPtaptGHJC0VE5q
+         sELfdBTr5RFZxr9sNMfi83AMlcHNsrtuQ3qziXD70axT0kb3dvR2MTwBoS9e6M4rgyIz
+         xiNKTp51oSwmCWAOzK8Ya8pm3rssl5pAsMM8fNQvbRF6jg+3wLx5noQMbUMLoJcCaUQe
+         GpLQ==
+X-Gm-Message-State: AOAM531e8btTr3TGg1H1aBB7cLHCmGyLYmXan1jEzmUnRyAvRehE6SzE
+        FG4N/ezTL7BIfLdEPXWi/r9VdGLcLseP9AQA0hU=
+X-Google-Smtp-Source: ABdhPJxpDcMU/6sQeaJ1MKQrqBTwFVPhJ9rzxB93g8MotvV5VkpDFwvRg+1fpk1xkEqPqtgSRUNbSOS+dlN976DVvBc=
+X-Received: by 2002:a02:c7cc:: with SMTP id s12mr63300691jao.79.1594151533957;
+ Tue, 07 Jul 2020 12:52:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Importance: Normal
-X-Priority: 3 (Normal)
-X-Type: plain
-In-Reply-To: <20200707192455.GI20096@linux.intel.com>
-References: <20200629214956.GA12962@linux.intel.com> 
- <20200704203809.76391-1-dpreed@deepplum.com> 
- <20200704203809.76391-3-dpreed@deepplum.com> 
- <20200707050932.GF5208@linux.intel.com> 
- <1594148978.965916054@apps.rackspace.com> 
- <20200707192455.GI20096@linux.intel.com>
-Message-ID: <1594151521.553815968@apps.rackspace.com>
-X-Mailer: webmail/17.3.12-RC
-X-Classification-ID: 7af768d6-d92a-4734-a147-d86d4dabcbb8-1-1
+References: <20200707012707.13267-1-cphealy@localhost.localdomain> <CAHp75VedcWazv9=KkWXU75SP3giPtBXvyDF3dQbCEETRM5bjaQ@mail.gmail.com>
+In-Reply-To: <CAHp75VedcWazv9=KkWXU75SP3giPtBXvyDF3dQbCEETRM5bjaQ@mail.gmail.com>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Tue, 7 Jul 2020 12:52:00 -0700
+Message-ID: <CAFXsbZr5Yy3kyScVZoNrEYGy9-H76YwQhbXS4cpq45RfqUtgWA@mail.gmail.com>
+Subject: Re: [PATCH net-next v3] net: sfp: Unique GPIO interrupt names
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=0A=0AOn Tuesday, July 7, 2020 3:24pm, "Sean Christopherson" <sean.j.christ=
-opherson@intel.com> said:=0A=0A> On Tue, Jul 07, 2020 at 03:09:38PM -0400, =
-David P. Reed wrote:=0A>>=0A>> On Tuesday, July 7, 2020 1:09am, "Sean Chris=
-topherson"=0A>> <sean.j.christopherson@intel.com> said:=0A>> Sean, are you =
-the one who would get this particular fix pushed into Linus's=0A>> tree, by=
- the way? The "maintainership" is not clear to me.=0A> =0A> Nope, I'm just =
-here to complain and nitpick :-)  There's no direct maintainer=0A> for virt=
-ext.h so it falls under the higher level arch/x86 umbrella, i.e. I=0A> expe=
-ct Boris/Thomas/Ingo will pick this up.=0A> =0AThanks for your time and eff=
-ort in helping.
+On Mon, Jul 6, 2020 at 11:52 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+>
+>
+> On Tuesday, July 7, 2020, Chris Healy <cphealy@gmail.com> wrote:
+>>
+>> From: Chris Healy <cphealy@gmail.com>
+>>
+>> Dynamically generate a unique GPIO interrupt name, based on the
+>> device name and the GPIO name.  For example:
+>>
+>> 103:          0   sx1503q  12 Edge      sff2-los
+>> 104:          0   sx1503q  13 Edge      sff2-tx-fault
+>>
+>> The sffX indicates the SFP the los and tx-fault are associated with.
+>>
+>> Signed-off-by: Chris Healy <cphealy@gmail.com>
+>>
+>> v3:
+>> - reverse Christmas tree new variable
+>> - fix spaces vs tabs
+>> v2:
+>> - added net-next to PATCH part of subject line
+>> - switched to devm_kasprintf()
+>> ---
+>>  drivers/net/phy/sfp.c | 7 ++++++-
+>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+>> index 73c2969f11a4..7bdfcde98266 100644
+>> --- a/drivers/net/phy/sfp.c
+>> +++ b/drivers/net/phy/sfp.c
+>> @@ -2238,6 +2238,7 @@ static int sfp_probe(struct platform_device *pdev)
+>>  {
+>>         const struct sff_data *sff;
+>>         struct i2c_adapter *i2c;
+>> +       char *sfp_irq_name;
+>>         struct sfp *sfp;
+>>         int err, i;
+>>
+>> @@ -2349,12 +2350,16 @@ static int sfp_probe(struct platform_device *pdev)
+>>                         continue;
+>>                 }
+>>
+>> +               sfp_irq_name = devm_kasprintf(sfp->dev, GFP_KERNEL,
+>> +                                             "%s-%s", dev_name(sfp->dev),
+>> +                                             gpio_of_names[i]);
+>
+>
+>
+> No error check? Why?
 
+Good point.  I will add this.  I see this patch was just applied so
+I'll submit a follow on patch to add the appropriate error check.
+
+>
+>
+>>
+>> +
+>>                 err = devm_request_threaded_irq(sfp->dev, sfp->gpio_irq[i],
+>>                                                 NULL, sfp_irq,
+>>                                                 IRQF_ONESHOT |
+>>                                                 IRQF_TRIGGER_RISING |
+>>                                                 IRQF_TRIGGER_FALLING,
+>> -                                               dev_name(sfp->dev), sfp);
+>> +                                               sfp_irq_name, sfp);
+>>                 if (err) {
+>>                         sfp->gpio_irq[i] = 0;
+>>                         sfp->need_poll = true;
+>> --
+>> 2.21.3
+>>
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
