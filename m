@@ -2,184 +2,104 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B662C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36982C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7322065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096A820771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134687;
-	bh=tXgPE9b+fNC7S+SMte1ZUgnBKaxiTY7sLpEt0TqW93k=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=lAXfdMmY9B9yl9ztg/Z5AFJEG9P8A5CYbMgpufWpWwAUSXBHd2pNsNnj9jhJ7vBAZ
-	 jaiey2C3aD/G7SJXn1OcFDdLDhN23n8f/SeS6w7J8f9LJMyJIZ06K00RGBO2ArNDCJ
-	 /kIlUKDbIjsc1W2JKY3rM7L91Ar4iSfaBwAyrUbs=
+	s=default; t=1594134689;
+	bh=PqU1iyClieuo239iU5loC0OdtGBXkNz5pdOKjsTYV3A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cpBTz0W3XFrg3Kbe6hSh8hBvoN83bdYlcnJOJ+VqlI7jvbHauCFFPPMvQqCcL9Ddy
+	 4S439aTFeeKasBq9zyq38jb/tfFHHOqEYJg2BVMX5mYr/zVP6EgZ98WaIpcEWSCJZg
+	 ubT+DAaxh3eYF91w4z+hP5wXmtwFznFIzl4U7FUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbgGGPL0 (ORCPT
+        id S1728706AbgGGPL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728650AbgGGPLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:11:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AECB20674;
-        Tue,  7 Jul 2020 15:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134676;
-        bh=tXgPE9b+fNC7S+SMte1ZUgnBKaxiTY7sLpEt0TqW93k=;
-        h=From:To:Cc:Subject:Date:From;
-        b=qfHUdR+anyhdpIhNu2XBKi3EuTZdV/mNO5IaJ7wnkuEBSsgA2CaxHg+FKZ91J3xWK
-         DR/1ZVnysa+JvqzQ1dUN+T9rUVMx2tFwNjoyaHONSfS+Jae8Sc2phga/okxNZK+/Sp
-         Bs+42rEIpzqYhKDYzJ/8TH5VoQO4h9syii5eU9xY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.4 00/19] 4.4.230-rc1 review
-Date:   Tue,  7 Jul 2020 17:10:03 +0200
-Message-Id: <20200707145747.493710555@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
+        Tue, 7 Jul 2020 11:11:27 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39732 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728122AbgGGPLY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:11:24 -0400
+Received: by mail-wm1-f68.google.com with SMTP id w3so34447238wmi.4;
+        Tue, 07 Jul 2020 08:11:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P5HQjNhCixCjoEKGC+mEwSigDVUlJKQtv6gsV/u680E=;
+        b=orQoXrHBJ67jA8inU9zrJKp1jPrgB33p9/bbz8rE/Rp0iP/1QxTcFuj0a8zxMmZtTr
+         StZYxb/6XTLaZvaV1J4cYf6Xi4AZaiG+uBLm4gusjF/aaRT/RUK2r24LJ7jeZFX6jBrz
+         Kh0ySpjJgfLQevHtIGMs8drMNdOYeLtNgGPBCq4Kp/PJdoLxPUvZ0yx8FLCz4CJl22IB
+         CpXsdgkyOmmh9/TyCnICdeFg7E1OwlKPM0GVs5equ01QQ32c6u7VbS1VvX5LWjGyWYdC
+         EnUXRVmIoiiYUW/pSHl3m4iT5kVpcKOVJQ6Nbsstk5AqGyl7aT8b8pF/ERoDpMrLroa4
+         JQ/w==
+X-Gm-Message-State: AOAM532oOxYQgIDYEQS4GXFpAnHisR78jkzgsoazK8+BhOVwTfU0naIk
+        ITYMuvF7VdVrfdDKPnBkZXiKTcjkwgU+NL5qY08=
+X-Google-Smtp-Source: ABdhPJyQCGg9VpFaZNj2dsCnv1aNhRU0Me+z25bKOzZYWQuHvqUD1GvpUMhPeoP8ERgj++srxuOXiyeQkmBYw1KVhAI=
+X-Received: by 2002:a05:600c:410f:: with SMTP id j15mr4610640wmi.128.1594134681738;
+ Tue, 07 Jul 2020 08:11:21 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.230-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.230-rc1
-X-KernelTest-Deadline: 2020-07-09T14:57+00:00
-Content-Transfer-Encoding: 8bit
+References: <20200702185344.913492689@goodmis.org> <20200702185704.559785000@goodmis.org>
+In-Reply-To: <20200702185704.559785000@goodmis.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 8 Jul 2020 00:11:10 +0900
+Message-ID: <CAM9d7cj1LJ=QO8QxhBo_oDM9APpAswX4BbTwge0JhZ3Y4-Bv9w@mail.gmail.com>
+Subject: Re: [PATCH v2 07/15] tools lib traceevent: Optimize pretty_print() function
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.4.230 release.
-There are 19 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+On Fri, Jul 3, 2020 at 3:57 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+>
+> Each time the pretty_print() function is called to print an event,
+> the event's format string is parsed. As this format string does not
+> change, this parsing can be done only once - when the event struct
+> is initialized.
+>
+> Link: https://lore.kernel.org/linux-trace-devel/20200529134929.537110-1-tz.stoyanov@gmail.com
+> Link: http://lore.kernel.org/linux-trace-devel/20200625100516.365338-8-tz.stoyanov@gmail.com
+>
+> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  tools/lib/traceevent/event-parse-local.h |  17 +
+>  tools/lib/traceevent/event-parse.c       | 672 ++++++++++++++++-------
+>  tools/lib/traceevent/event-parse.h       |   3 +
+>  3 files changed, 495 insertions(+), 197 deletions(-)
+>
+> diff --git a/tools/lib/traceevent/event-parse-local.h b/tools/lib/traceevent/event-parse-local.h
+> index 96a0b0ca0675..e71296a62236 100644
+> --- a/tools/lib/traceevent/event-parse-local.h
+> +++ b/tools/lib/traceevent/event-parse-local.h
+> @@ -85,6 +85,23 @@ struct tep_handle {
+>         struct tep_plugins_dir *plugins_dir;
+>  };
+>
+> +enum tep_print_parse_type {
+> +       PRINT_FMT_STING,
 
-Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-Anything received after that time might be too late.
+STRING ?
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.230-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.4.230-rc1
-
-Vasily Averin <vvs@virtuozzo.com>
-    netfilter: nf_conntrack_h323: lost .data_len definition for Q.931/ipv6
-
-Hauke Mehrtens <hauke@hauke-m.de>
-    MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
-
-Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-    cifs: Fix the target file was deleted when rename failed.
-
-Paul Aurich <paul@darkrain42.org>
-    SMB3: Honor persistent/resilient handle flags for multiuser mounts
-
-Paul Aurich <paul@darkrain42.org>
-    SMB3: Honor 'seal' flag for multiuser mounts
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "ALSA: usb-audio: Improve frames size computation"
-
-Chris Packham <chris.packham@alliedtelesis.co.nz>
-    i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
-
-Hou Tao <houtao1@huawei.com>
-    virtio-blk: free vblk-vqs in error path of virtblk_probe()
-
-Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
-    hwmon: (acpi_power_meter) Fix potential memory leak in acpi_power_meter_add()
-
-Chu Lin <linchuyuan@google.com>
-    hwmon: (max6697) Make sure the OVERT mask is set correctly
-
-Shile Zhang <shile.zhang@nokia.com>
-    sched/rt: Show the 'sched_rr_timeslice' SCHED_RR timeslice tuning knob in milliseconds
-
-Herbert Xu <herbert@gondor.apana.org.au>
-    crypto: af_alg - fix use-after-free in af_alg_accept() due to bh_lock_sock()
-
-Douglas Anderson <dianders@chromium.org>
-    kgdb: Avoid suspicious RCU usage warning
-
-Zqiang <qiang.zhang@windriver.com>
-    usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
-
-Qian Cai <cai@lca.pw>
-    mm/slub: fix stack overruns with SLUB_STATS
-
-Borislav Petkov <bp@suse.de>
-    EDAC/amd64: Read back the scrub rate PCI register on F15h
-
-Hugh Dickins <hughd@google.com>
-    mm: fix swap cache node allocation mask
-
-Filipe Manana <fdmanana@suse.com>
-    btrfs: fix data block group relocation failure due to concurrent scrub
-
-Anand Jain <Anand.Jain@oracle.com>
-    btrfs: cow_file_range() num_bytes and disk_num_bytes are same
-
-
--------------
-
-Diffstat:
-
- Makefile                               |  4 ++--
- arch/mips/kernel/traps.c               |  1 +
- crypto/af_alg.c                        | 26 +++++++++-----------
- crypto/algif_aead.c                    |  9 +++----
- crypto/algif_hash.c                    |  9 +++----
- crypto/algif_skcipher.c                |  9 +++----
- drivers/block/virtio_blk.c             |  1 +
- drivers/edac/amd64_edac.c              |  2 ++
- drivers/hwmon/acpi_power_meter.c       |  4 +++-
- drivers/hwmon/max6697.c                |  7 +++---
- drivers/i2c/algos/i2c-algo-pca.c       |  3 ++-
- drivers/usb/misc/usbtest.c             |  1 +
- fs/btrfs/inode.c                       | 36 ++++++++++++++++++++--------
- fs/cifs/connect.c                      |  3 +++
- fs/cifs/inode.c                        | 10 ++++++--
- include/crypto/if_alg.h                |  4 ++--
- include/linux/sched/sysctl.h           |  1 +
- kernel/debug/debug_core.c              |  4 ++++
- kernel/sched/core.c                    |  5 ++--
- kernel/sched/rt.c                      |  1 +
- kernel/sysctl.c                        |  2 +-
- mm/slub.c                              |  3 ++-
- mm/swap_state.c                        |  3 ++-
- net/netfilter/nf_conntrack_h323_main.c |  1 +
- sound/usb/card.h                       |  4 ----
- sound/usb/endpoint.c                   | 43 ++++------------------------------
- sound/usb/endpoint.h                   |  1 -
- sound/usb/pcm.c                        |  2 --
- 28 files changed, 95 insertions(+), 104 deletions(-)
-
-
+> +       PRINT_FMT_ARG_DIGIT,
+> +       PRINT_FMT_ARG_POINTER,
+> +       PRINT_FMT_ARG_STRING,
+> +};
