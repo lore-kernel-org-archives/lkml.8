@@ -4,58 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5130C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A78C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F64D2065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78632088E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134909;
-	bh=UovBvNl176vXXkoshjlCvEe5FE1uU/GFN9ITd37nFdY=;
+	s=default; t=1594134911;
+	bh=hMGRfixjywKqcnh7RXIFeYxP2Grb1Pl3dGsTnwQXZTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n1vooeMrOOLTEYlDPtSvLMVGU/kDkABJL75W62yCZkMyZ7ffHzAimBoNqUq6sDyNw
-	 lZBoBwrX+SFTvtztp7uq7Mat/s9BZ3zYzhCkMxOe+Lq9AKbY7asEO26nK18FV0uhGU
-	 gaN4GqlFWkTKK1/Z5vo4MzJQ7iPrRSBHSmQQ5N/k=
+	b=gcRvayOEa80wLlIYxrNRVY4QlHnt58umMkZ+aIUHgfLFP/nDq5GgYksO2HgcCWCPM
+	 S2Ef0SL5ZZcA+iOUor4i3yasi/kXIs+cxvEktLFPpgjIhRiuhJ96MGPVWLWJl5Q8bk
+	 Jw1ybunIgqlYg6XV7Tla6f9vty+LpiN6kfvrIfqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgGGPPI (ORCPT
+        id S1728807AbgGGPO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54630 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:14:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgGGPPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:15:04 -0400
+        id S1728793AbgGGPO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:14:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70A7D2065D;
-        Tue,  7 Jul 2020 15:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD2842065D;
+        Tue,  7 Jul 2020 15:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134903;
-        bh=UovBvNl176vXXkoshjlCvEe5FE1uU/GFN9ITd37nFdY=;
+        s=default; t=1594134895;
+        bh=hMGRfixjywKqcnh7RXIFeYxP2Grb1Pl3dGsTnwQXZTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GGN5qIVCQ45zJl1ka2kskibMJQthReFlJNJtljuA/1Up6iwKKo4fQyTtHvOmFmROA
-         oVPcz1Hwl/Jj9hSxZUeX/lbjU/cz4FCpZ+VjP2VnVECIGbbrnRh5w2aoBrS3lxrYYr
-         royQafYI6Zmgm1AP0Y4+60AIHuVMK7JEyJh9gLEg=
+        b=qkpSkv6kQwz6kvDuGZF7wIkuj6GRjf1BaMGcoOm/cxyev6S8oHXFiktXFEVWaqS+J
+         BjRMOUHzhJa579+zdxt8XWe1axjKoJqBXqPtbdjkd6d9Gf8FF0R2Y22KMoknVKN28i
+         Fbj/drswWMI11MIDPt6BAAC/u3sk8IrOalIsggBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Glauber Costa <glauber@scylladb.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 01/24] btrfs: fix a block group ref counter leak after failure to remove block group
-Date:   Tue,  7 Jul 2020 17:13:33 +0200
-Message-Id: <20200707145749.020067363@linuxfoundation.org>
+Subject: [PATCH 4.9 08/24] mm/slub: fix stack overruns with SLUB_STATS
+Date:   Tue,  7 Jul 2020 17:13:40 +0200
+Message-Id: <20200707145749.371612734@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145748.952502272@linuxfoundation.org>
 References: <20200707145748.952502272@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,116 +66,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 9fecd13202f520f3f25d5b1c313adb740fe19773 ]
+[ Upstream commit a68ee0573991e90af2f1785db309206408bad3e5 ]
 
-When removing a block group, if we fail to delete the block group's item
-from the extent tree, we jump to the 'out' label and end up decrementing
-the block group's reference count once only (by 1), resulting in a counter
-leak because the block group at that point was already removed from the
-block group cache rbtree - so we have to decrement the reference count
-twice, once for the rbtree and once for our lookup at the start of the
-function.
+There is no need to copy SLUB_STATS items from root memcg cache to new
+memcg cache copies.  Doing so could result in stack overruns because the
+store function only accepts 0 to clear the stat and returns an error for
+everything else while the show method would print out the whole stat.
 
-There is a second bug where if removing the free space tree entries (the
-call to remove_block_group_free_space()) fails we end up jumping to the
-'out_put_group' label but end up decrementing the reference count only
-once, when we should have done it twice, since we have already removed
-the block group from the block group cache rbtree. This happens because
-the reference count decrement for the rbtree reference happens after
-attempting to remove the free space tree entries, which is far away from
-the place where we remove the block group from the rbtree.
+Then, the mismatch of the lengths returns from show and store methods
+happens in memcg_propagate_slab_attrs():
 
-To make things less error prone, decrement the reference count for the
-rbtree immediately after removing the block group from it. This also
-eleminates the need for two different exit labels on error, renaming
-'out_put_label' to just 'out' and removing the old 'out'.
+	else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
+		buf = mbuf;
 
-Fixes: f6033c5e333238 ("btrfs: fix block group leak when removing fails")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+max_attr_size is only 2 from slab_attr_store(), then, it uses mbuf[64]
+in show_stat() later where a bounch of sprintf() would overrun the stack
+variable.  Fix it by always allocating a page of buffer to be used in
+show_stat() if SLUB_STATS=y which should only be used for debug purpose.
+
+  # echo 1 > /sys/kernel/slab/fs_cache/shrink
+  BUG: KASAN: stack-out-of-bounds in number+0x421/0x6e0
+  Write of size 1 at addr ffffc900256cfde0 by task kworker/76:0/53251
+
+  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
+  Call Trace:
+    number+0x421/0x6e0
+    vsnprintf+0x451/0x8e0
+    sprintf+0x9e/0xd0
+    show_stat+0x124/0x1d0
+    alloc_slowpath_show+0x13/0x20
+    __kmem_cache_create+0x47a/0x6b0
+
+  addr ffffc900256cfde0 is located in stack of task kworker/76:0/53251 at offset 0 in frame:
+   process_one_work+0x0/0xb90
+
+  this frame has 1 object:
+   [32, 72) 'lockdep_map'
+
+  Memory state around the buggy address:
+   ffffc900256cfc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   ffffc900256cfd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  >ffffc900256cfd80: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
+                                                         ^
+   ffffc900256cfe00: 00 00 00 00 00 f2 f2 f2 00 00 00 00 00 00 00 00
+   ffffc900256cfe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ==================================================================
+  Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: __kmem_cache_create+0x6ac/0x6b0
+  Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
+  Call Trace:
+    __kmem_cache_create+0x6ac/0x6b0
+
+Fixes: 107dab5c92d5 ("slub: slub-specific propagation changes")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Glauber Costa <glauber@scylladb.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Link: http://lkml.kernel.org/r/20200429222356.4322-1-cai@lca.pw
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ mm/slub.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index a83f353e44188..c0033a0d00787 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -10645,7 +10645,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 	path = btrfs_alloc_path();
- 	if (!path) {
- 		ret = -ENOMEM;
--		goto out_put_group;
-+		goto out;
- 	}
- 
- 	/*
-@@ -10684,7 +10684,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 		ret = btrfs_orphan_add(trans, inode);
- 		if (ret) {
- 			btrfs_add_delayed_iput(inode);
--			goto out_put_group;
-+			goto out;
- 		}
- 		clear_nlink(inode);
- 		/* One for the block groups ref */
-@@ -10707,13 +10707,13 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 
- 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
- 	if (ret < 0)
--		goto out_put_group;
-+		goto out;
- 	if (ret > 0)
- 		btrfs_release_path(path);
- 	if (ret == 0) {
- 		ret = btrfs_del_item(trans, tree_root, path);
- 		if (ret)
--			goto out_put_group;
-+			goto out;
- 		btrfs_release_path(path);
- 	}
- 
-@@ -10722,6 +10722,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 		 &root->fs_info->block_group_cache_tree);
- 	RB_CLEAR_NODE(&block_group->cache_node);
- 
-+	/* Once for the block groups rbtree */
-+	btrfs_put_block_group(block_group);
-+
- 	if (root->fs_info->first_logical_byte == block_group->key.objectid)
- 		root->fs_info->first_logical_byte = (u64)-1;
- 	spin_unlock(&root->fs_info->block_group_cache_lock);
-@@ -10871,10 +10874,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 
- 	ret = remove_block_group_free_space(trans, root->fs_info, block_group);
- 	if (ret)
--		goto out_put_group;
--
--	/* Once for the block groups rbtree */
--	btrfs_put_block_group(block_group);
-+		goto out;
- 
- 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
- 	if (ret > 0)
-@@ -10884,10 +10884,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 
- 	ret = btrfs_del_item(trans, root, path);
- 
--out_put_group:
-+out:
- 	/* Once for the lookup reference */
- 	btrfs_put_block_group(block_group);
--out:
- 	btrfs_free_path(path);
- 	return ret;
- }
+diff --git a/mm/slub.c b/mm/slub.c
+index c20c87099a99d..454c1d550ad22 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5526,7 +5526,8 @@ static void memcg_propagate_slab_attrs(struct kmem_cache *s)
+ 		 */
+ 		if (buffer)
+ 			buf = buffer;
+-		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf))
++		else if (root_cache->max_attr_size < ARRAY_SIZE(mbuf) &&
++			 !IS_ENABLED(CONFIG_SLUB_STATS))
+ 			buf = mbuf;
+ 		else {
+ 			buffer = (char *) get_zeroed_page(GFP_KERNEL);
 -- 
 2.25.1
 
