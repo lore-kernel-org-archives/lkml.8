@@ -2,104 +2,156 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEABC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0D420663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135981;
-	bh=xNgxuafim4tGyZpEE1Liq7qCviauMv+IL2AhbUrrGCQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zGGPebMbAKLlYQ9PCOITIOpIn+vzXw1VCiAjcgZhti3KeaudPWRh/NAM4T8du3SEx
-	 RjQnL6U/veENkVCXEKKYpBUhX2H28I2pWiIrOwzgHQ+DcLAV6d+TW+n4LSnAiQIq71
-	 YZBRVRu88hE8B8Pu/cTkz8feuVHP9+scVT2ItD78=
+	by mail.kernel.org (Postfix) with ESMTP id EF6E620663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MqIm4JMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgGGPVQ (ORCPT
+        id S1727834AbgGGPdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729673AbgGGPVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:21:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 7 Jul 2020 11:33:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28019 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730120AbgGGPc5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:32:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594135976;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fI6zyW/Q6dQ0mgMSvs1HAB1XmZOZ4PZvn8vJbh28b3s=;
+        b=MqIm4JMiikXrfVdHaAcc+wsRCjvTyKlxoX/4Ixm2+u2cyLkT1wTLj/fP0F954sedKqzWPh
+        JzxVDsE/YaZJ3u1EzRICOA+GLT56tSLcDeIcZQ2qXeMRmYmwf1LqsBKOOrZ4EZxpXmtIb5
+        P1xUs/UQYr85BOv5b2XhSm+Fj9FWOh8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-48-F94UkfFIPM6ewwm_MEYMXg-1; Tue, 07 Jul 2020 11:32:52 -0400
+X-MC-Unique: F94UkfFIPM6ewwm_MEYMXg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7A14206F6;
-        Tue,  7 Jul 2020 15:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135272;
-        bh=xNgxuafim4tGyZpEE1Liq7qCviauMv+IL2AhbUrrGCQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BCJdsPn/WbO45Ku5sY/cAbvdIozSNhC/EDb4BGb4Mw4RQNdu4nfAC5/hawoh3QAyg
-         hx+YBstzm+0y8t9D/4e95YPNSBX2nTjnF2YIH2wrzq5aXq3/t23pp1/47mufVIJgS2
-         LGAW/omsEgmGE82QYycbIwv+1qcWXEDRFhIZkzwE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avinash M N <Avinash.M.N@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 42/65] nvme: fix a crash in nvme_mpath_add_disk
-Date:   Tue,  7 Jul 2020 17:17:21 +0200
-Message-Id: <20200707145754.492490789@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
-References: <20200707145752.417212219@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A5BC1005510;
+        Tue,  7 Jul 2020 15:32:51 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-114-172.phx2.redhat.com [10.3.114.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F2E2A10013D7;
+        Tue,  7 Jul 2020 15:32:50 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id F26701202DC; Tue,  7 Jul 2020 11:32:49 -0400 (EDT)
+Date:   Tue, 7 Jul 2020 11:32:49 -0400
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 5.7 070/112] kthread: save thread function
+Message-ID: <20200707153249.GC171624@pick.fieldses.org>
+References: <20200707145800.925304888@linuxfoundation.org>
+ <20200707145804.332402326@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707145804.332402326@linuxfoundation.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+NACK to this and following patch.--b.
 
-[ Upstream commit 72d447113bb751ded97b2e2c38f886e4a4139082 ]
-
-For private namespaces ns->head_disk is NULL, so add a NULL check
-before updating the BDI capabilities.
-
-Fixes: b2ce4d90690b ("nvme-multipath: set bdi capabilities once")
-Reported-by: Avinash M N <Avinash.M.N@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/multipath.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index e1eeed5856570..5433aa2f76017 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -673,10 +673,11 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
- 	}
- 
- 	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
--		struct backing_dev_info *info =
--					ns->head->disk->queue->backing_dev_info;
-+		struct gendisk *disk = ns->head->disk;
- 
--		info->capabilities |= BDI_CAP_STABLE_WRITES;
-+		if (disk)
-+			disk->queue->backing_dev_info->capabilities |=
-+					BDI_CAP_STABLE_WRITES;
- 	}
- }
- 
--- 
-2.25.1
-
-
+On Tue, Jul 07, 2020 at 05:17:15PM +0200, Greg Kroah-Hartman wrote:
+> From: J. Bruce Fields <bfields@redhat.com>
+> 
+> [ Upstream commit 52782c92ac85c4e393eb4a903a62e6c24afa633f ]
+> 
+> It's handy to keep the kthread_fn just as a unique cookie to identify
+> classes of kthreads.  E.g. if you can verify that a given task is
+> running your thread_fn, then you may know what sort of type kthread_data
+> points to.
+> 
+> We'll use this in nfsd to pass some information into the vfs.  Note it
+> will need kthread_data() exported too.
+> 
+> Original-patch-by: Tejun Heo <tj@kernel.org>
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  include/linux/kthread.h |  1 +
+>  kernel/kthread.c        | 17 +++++++++++++++++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/include/linux/kthread.h b/include/linux/kthread.h
+> index 8bbcaad7ef0f4..c2a274b79c429 100644
+> --- a/include/linux/kthread.h
+> +++ b/include/linux/kthread.h
+> @@ -57,6 +57,7 @@ bool kthread_should_stop(void);
+>  bool kthread_should_park(void);
+>  bool __kthread_should_park(struct task_struct *k);
+>  bool kthread_freezable_should_stop(bool *was_frozen);
+> +void *kthread_func(struct task_struct *k);
+>  void *kthread_data(struct task_struct *k);
+>  void *kthread_probe_data(struct task_struct *k);
+>  int kthread_park(struct task_struct *k);
+> diff --git a/kernel/kthread.c b/kernel/kthread.c
+> index bfbfa481be3a5..b84fc7eec0358 100644
+> --- a/kernel/kthread.c
+> +++ b/kernel/kthread.c
+> @@ -46,6 +46,7 @@ struct kthread_create_info
+>  struct kthread {
+>  	unsigned long flags;
+>  	unsigned int cpu;
+> +	int (*threadfn)(void *);
+>  	void *data;
+>  	struct completion parked;
+>  	struct completion exited;
+> @@ -152,6 +153,20 @@ bool kthread_freezable_should_stop(bool *was_frozen)
+>  }
+>  EXPORT_SYMBOL_GPL(kthread_freezable_should_stop);
+>  
+> +/**
+> + * kthread_func - return the function specified on kthread creation
+> + * @task: kthread task in question
+> + *
+> + * Returns NULL if the task is not a kthread.
+> + */
+> +void *kthread_func(struct task_struct *task)
+> +{
+> +	if (task->flags & PF_KTHREAD)
+> +		return to_kthread(task)->threadfn;
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(kthread_func);
+> +
+>  /**
+>   * kthread_data - return data value specified on kthread creation
+>   * @task: kthread task in question
+> @@ -164,6 +179,7 @@ void *kthread_data(struct task_struct *task)
+>  {
+>  	return to_kthread(task)->data;
+>  }
+> +EXPORT_SYMBOL_GPL(kthread_data);
+>  
+>  /**
+>   * kthread_probe_data - speculative version of kthread_data()
+> @@ -244,6 +260,7 @@ static int kthread(void *_create)
+>  		do_exit(-ENOMEM);
+>  	}
+>  
+> +	self->threadfn = threadfn;
+>  	self->data = data;
+>  	init_completion(&self->exited);
+>  	init_completion(&self->parked);
+> -- 
+> 2.25.1
+> 
+> 
+> 
 
