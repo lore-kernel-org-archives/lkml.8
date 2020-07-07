@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECF920663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B50204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135916;
-	bh=hLB3XyH93zncgHdZnGjMXbexFAUNLhyNMxZ4vKjDV6I=;
+	s=default; t=1594135924;
+	bh=Jz4gFQK5q46RmtPj1m4NWM1unA7WG2z/dnwJHV6seIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBnCyUxnBGvjKF0t6W+mrRfF7fY8k8viy/8VzS4k64jSQmpjF9n6eNkp17QBgPSHt
-	 c7HOgycA5TPWxOt0BQX5mdRX/HwLdtSes5R0pR/z9j3oNvO9OjjCO7h7IcfPs9EB2A
-	 oIn66LVDmbqjiVsLz4aGw0HEmJGR5VTVM35rYgfU=
+	b=tUyO5EBw5tzkcAM1PdE+Kw5WhuS5NmVdj5dVLQitK8M/11mt/bVvGTFM5H7cesfLa
+	 iQGilP/6X3gSEXDc+M34tQ9ePy3BFSqKKH11gZhEnCcIp3rgXeXvscCAzjhj+IdCDr
+	 PRIIabOn4xzdMRVW0c/UB8B6L44h/BRNuEIetuJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbgGGPby (ORCPT
+        id S1729327AbgGGPWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35290 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729894AbgGGPWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:22:40 -0400
+        id S1729853AbgGGPW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:22:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B32F72065D;
-        Tue,  7 Jul 2020 15:22:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0953F20663;
+        Tue,  7 Jul 2020 15:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135360;
-        bh=hLB3XyH93zncgHdZnGjMXbexFAUNLhyNMxZ4vKjDV6I=;
+        s=default; t=1594135347;
+        bh=Jz4gFQK5q46RmtPj1m4NWM1unA7WG2z/dnwJHV6seIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=reFaLGLBUyS1K0jA0Qt8llhrBI/qcSA59cre0bcADEA7YsMvo7u28PeoE5xDczU3+
-         idhOzcca1iYlsoYI9qofENciSF2QcshW4uxP0Z1BARApACn+f8BIhdryao28DN71RK
-         IakqnBzdr5LB1dsbHvEJImkSbGDqscPLy5rbkQVc=
+        b=XpnHjXqbr5ajA/jPxFHXC2lG77stvvxPwkWVcVshu21IoIIraF+wY3U1BZoaokZvj
+         3WE1tym/3cZF5q/OmYEdciBUOdvXJKFRIt7/zaz+24dMP7k6NPpcJwb6BSlomRp3sJ
+         osZu9yvUF/XOzUdUQVJWHxlwtthOc48zyBoTkus8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stylon Wang <stylon.wang@amd.com>,
-        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
+        Steve French <stfrench@microsoft.com>,
+        Aurelien Aptel <aaptel@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 010/112] drm/amd/display: Fix ineffective setting of max bpc property
-Date:   Tue,  7 Jul 2020 17:16:15 +0200
-Message-Id: <20200707145801.487144078@linuxfoundation.org>
+Subject: [PATCH 5.4 40/65] SMB3: Honor posix flag for multiuser mounts
+Date:   Tue,  7 Jul 2020 17:17:19 +0200
+Message-Id: <20200707145754.396140663@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
-References: <20200707145800.925304888@linuxfoundation.org>
+In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
+References: <20200707145752.417212219@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,42 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stylon Wang <stylon.wang@amd.com>
+From: Paul Aurich <paul@darkrain42.org>
 
-[ Upstream commit fa7041d9d2fc7401cece43f305eb5b87b7017fc4 ]
+[ Upstream commit 5391b8e1b7b7e5cfa2dd4ffdc4b8c6b64dfd1866 ]
 
-[Why]
-Regression was introduced where setting max bpc property has no effect
-on the atomic check and final commit. It has the same effect as max bpc
-being stuck at 8.
+The flag from the primary tcon needs to be copied into the volume info
+so that cifs_get_tcon will try to enable extensions on the per-user
+tcon. At that point, since posix extensions must have already been
+enabled on the superblock, don't try to needlessly adjust the mount
+flags.
 
-[How]
-Correctly propagate max bpc with the new connector state.
-
-Signed-off-by: Stylon Wang <stylon.wang@amd.com>
-Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: ce558b0e17f8 ("smb3: Add posix create context for smb3.11 posix mounts")
+Fixes: b326614ea215 ("smb3: allow "posix" mount option to enable new SMB311 protocol extensions")
+Signed-off-by: Paul Aurich <paul@darkrain42.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/cifs/connect.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index b7e161f2a47d4..69b1f61928eff 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -4808,7 +4808,8 @@ create_validate_stream_for_sink(struct amdgpu_dm_connector *aconnector,
- 	struct drm_connector *connector = &aconnector->base;
- 	struct amdgpu_device *adev = connector->dev->dev_private;
- 	struct dc_stream_state *stream;
--	int requested_bpc = connector->state ? connector->state->max_requested_bpc : 8;
-+	const struct drm_connector_state *drm_state = dm_state ? &dm_state->base : NULL;
-+	int requested_bpc = drm_state ? drm_state->max_requested_bpc : 8;
- 	enum dc_status dc_result = DC_OK;
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 947c4aad5d6a4..134a90dc72322 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -5282,6 +5282,7 @@ cifs_construct_tcon(struct cifs_sb_info *cifs_sb, kuid_t fsuid)
+ 	vol_info->nohandlecache = master_tcon->nohandlecache;
+ 	vol_info->local_lease = master_tcon->local_lease;
+ 	vol_info->no_linux_ext = !master_tcon->unix_ext;
++	vol_info->linux_ext = master_tcon->posix_extensions;
+ 	vol_info->sectype = master_tcon->ses->sectype;
+ 	vol_info->sign = master_tcon->ses->sign;
  
- 	do {
+@@ -5309,10 +5310,6 @@ cifs_construct_tcon(struct cifs_sb_info *cifs_sb, kuid_t fsuid)
+ 		goto out;
+ 	}
+ 
+-	/* if new SMB3.11 POSIX extensions are supported do not remap / and \ */
+-	if (tcon->posix_extensions)
+-		cifs_sb->mnt_cifs_flags |= CIFS_MOUNT_POSIX_PATHS;
+-
+ 	if (cap_unix(ses))
+ 		reset_cifs_unix_caps(0, tcon, NULL, vol_info);
+ 
 -- 
 2.25.1
 
