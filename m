@@ -2,155 +2,216 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAC6A2067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4C12075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594151306;
-	bh=FzVkTRZbVTWo26JlUWux1r2hqQFY+dIy55fBtRo68nw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Fpxsn0wQTYdn0gpNoTogWImeggP/tFjYHTI1rx+WDzsbwnaHR+y33zSHlbYUSoTo2
-	 hH13ko1ueolgQOalpNVQlRWHsU+l1Z6ECYNn1htt8kUMVYhrcUM5gMbuRozuOyK5FQ
-	 SARcP9LE7ls7aDp4CjqYCnIuy1EfmHjcpnK9koSc=
+	s=default; t=1594151314;
+	bh=P5O2RFLu94XJ2KvgAcsE/rb3opbTIi3P8AsDfD3kfr8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=df5bhkPez1Poh6nSh7RONbactQsisOu1ZA7h2Ajc3f7IBOlwJPlgWAxC/QsYcQuez
+	 omAHsF5eKQmOVoJpATWV1mT7KHbbH78tyh/1TEwVEi6NOk5+gyovs+8oPjULTHBtIx
+	 GWGT+enKnUpXHoBRgM1e4qRTFmc4sGDH5Wyd/0tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgGGTsZ (ORCPT
+        id S1728379AbgGGTsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59872 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 15:48:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgGGTsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:48:25 -0400
-Received: from embeddedor (unknown [200.39.26.250])
+        id S1727090AbgGGTsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 15:48:32 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E90F2067D;
-        Tue,  7 Jul 2020 19:48:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B2A3206E9;
+        Tue,  7 Jul 2020 19:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594151304;
-        bh=FzVkTRZbVTWo26JlUWux1r2hqQFY+dIy55fBtRo68nw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YN2eRfFAQTisuTkdb3UVqOKJQx9daTY64aN7IyfvLHFCAzzBdWPd2oRh4CDMJTt5J
-         G9mM9RXD7DymeXTdImTyOM5p0QFsBPRHyesVvYknnD3igrVuJdXYOxPuYChgcHZfUN
-         RpUpIhv1Re0t8QBCiwiCT8tgu0wagWfS9pril6jg=
-Date:   Tue, 7 Jul 2020 14:53:51 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH] USB: OHCI: Use fallthrough pseudo-keyword
-Message-ID: <20200707195351.GA4061@embeddedor>
+        s=default; t=1594151312;
+        bh=P5O2RFLu94XJ2KvgAcsE/rb3opbTIi3P8AsDfD3kfr8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=kJG6TbQBla3EU75pfHW7PNF5CNdHJOwnKVsOfw/Ou4hjqACK5vmngo3kQHGaL3N04
+         7BoUbaRSQokS3VB4Qb+p8Hlg4iTcm7b4x6cIBGED39F+QY0G4w/oBcIMu0IXa33mD0
+         x1X49fV48pLboorLO16u1x+WH2DAdt+sug6nAbeo=
+Date:   Tue, 7 Jul 2020 14:48:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     kan.liang@linux.intel.com
+Cc:     peterz@infradead.org, bhelgaas@google.com, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        jeffrey.t.kirsher@intel.com, olof@lixom.net,
+        dan.j.williams@intel.com, ak@linux.intel.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/7] PCI/portdrv: Create a platform device for the perf
+ uncore driver
+Message-ID: <20200707194830.GA372615@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1593709517-108857-2-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
+[+cc Stephane in case he has thoughts on the perf driver claim issue]
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+On Thu, Jul 02, 2020 at 10:05:11AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> On Snow Ridge server, several performance monitoring counters are added
+> in the Root Port Configuration Space of CPU Complex PCIe Root Ports A,
+> which can be used to collect the performance data between the PCIe
+> devices and the components (in M2IOSF) which are responsible for
+> translating and managing the requests to/from the device. The
+> performance data is very useful for analyzing the performance of the
+> PCIe devices.
+> 
+> However, the perf uncore driver cannot be loaded to register a
+> performance monitoring unit (PMU) for the counters, because the PCIe
+> Root Ports device already has a bonded driver portdrv_pci.
+> 
+> To enable the uncore PMU support for these counters on the uncore
+> driver, a new solution should be introduced, which has to meet the
+> requirements as below:
+> - must have a reliable way to find the PCIe Root Port device from the
+>   uncore driver;
+> - must be able to access the uncore counters of the PCIe Root Port
+>   device from the uncore driver;
+> - must support hotplug. When the PCIe Root Port device is removed, the
+>   uncore driver has to be notified and unregisters the uncore PMU.
+> 
+> A new platform device 'perf_uncore_pcieport' is introduced as part of
+> the new solution, which can facilitate the enabling of the uncore PMU in
+> the uncore driver. The new platform device
+> - is a child device of the PCIe Root Port device. It's allocated when
+>   the PCIe Root Ports A device is probed. (For SNR, the PMU counters are
+>   only located in the configuration space of the PCIe Root Ports A.)
+> - stores its pdev as the private driver data pointer of the PCIe Root
+>   Ports A. The pdev can be easily retrieved to check the existence of
+>   the platform device when removing the PCIe Root Ports A.
+> - is unregistered when the PCIe Root Port A is removed. The remove()
+>   method which is provided in the uncore driver will be invoked. The
+>   uncore PMU will be unregistered as well.
+> - doesn't share any memory and IRQ resources. The uncore driver will
+>   only touch the PMU counters in the configuration space of the PCIe
+>   Root Port A.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/usb/host/ohci-hcd.c  |    4 ++--
- drivers/usb/host/ohci-hub.c  |    2 +-
- drivers/usb/host/ohci-q.c    |    6 +++---
- drivers/usb/host/ohci-tmio.c |    6 +++---
- 4 files changed, 9 insertions(+), 9 deletions(-)
+I have to admit this is clever.  I don't really *like* it, but we
+don't have any very good alternatives at the moment.
 
-diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
-index 4de91653a2c7..9b4121927d4a 100644
---- a/drivers/usb/host/ohci-hcd.c
-+++ b/drivers/usb/host/ohci-hcd.c
-@@ -385,7 +385,7 @@ ohci_endpoint_disable (struct usb_hcd *hcd, struct usb_host_endpoint *ep)
- 			ed_free (ohci, ed);
- 			break;
- 		}
--		/* fall through */
-+		fallthrough;
- 	default:
- 		/* caller was supposed to have unlinked any requests;
- 		 * that's not our job.  can't recover; must leak ed.
-@@ -1051,7 +1051,7 @@ int ohci_restart(struct ohci_hcd *ohci)
- 			ed->ed_next = ohci->ed_rm_list;
- 			ed->ed_prev = NULL;
- 			ohci->ed_rm_list = ed;
--			/* FALLTHROUGH */
-+			fallthrough;
- 		case ED_UNLINK:
- 			break;
- 		default:
-diff --git a/drivers/usb/host/ohci-hub.c b/drivers/usb/host/ohci-hub.c
-index 634f3c7bf774..44504c1751e0 100644
---- a/drivers/usb/host/ohci-hub.c
-+++ b/drivers/usb/host/ohci-hub.c
-@@ -58,7 +58,7 @@ __acquires(ohci->lock)
- 		ohci->hc_control |= OHCI_USB_RESET;
- 		ohci_writel (ohci, ohci->hc_control, &ohci->regs->control);
- 		(void) ohci_readl (ohci, &ohci->regs->control);
--		/* FALL THROUGH */
-+		fallthrough;
- 	case OHCI_USB_RESET:
- 		status = -EBUSY;
- 		ohci_dbg (ohci, "needs reinit!\n");
-diff --git a/drivers/usb/host/ohci-q.c b/drivers/usb/host/ohci-q.c
-index 4ccb85a67bb3..3b445312beea 100644
---- a/drivers/usb/host/ohci-q.c
-+++ b/drivers/usb/host/ohci-q.c
-@@ -647,7 +647,7 @@ static void td_submit_urb (
- 		/* ... and periodic urbs have extra accounting */
- 		periodic = ohci_to_hcd(ohci)->self.bandwidth_int_reqs++ == 0
- 			&& ohci_to_hcd(ohci)->self.bandwidth_isoc_reqs == 0;
--		/* FALLTHROUGH */
-+		fallthrough;
- 	case PIPE_BULK:
- 		info = is_out
- 			? TD_T_TOGGLE | TD_CC | TD_DP_OUT
-@@ -879,11 +879,11 @@ static void ed_halted(struct ohci_hcd *ohci, struct td *td, int cc)
- 	case TD_DATAUNDERRUN:
- 		if ((urb->transfer_flags & URB_SHORT_NOT_OK) == 0)
- 			break;
--		/* fallthrough */
-+		fallthrough;
- 	case TD_CC_STALL:
- 		if (usb_pipecontrol (urb->pipe))
- 			break;
--		/* fallthrough */
-+		fallthrough;
- 	default:
- 		ohci_dbg (ohci,
- 			"urb %p path %s ep%d%s %08x cc %d --> status %d\n",
-diff --git a/drivers/usb/host/ohci-tmio.c b/drivers/usb/host/ohci-tmio.c
-index fb6f5e9ae5c6..7f857bad9e95 100644
---- a/drivers/usb/host/ohci-tmio.c
-+++ b/drivers/usb/host/ohci-tmio.c
-@@ -97,13 +97,13 @@ static void tmio_stop_hc(struct platform_device *dev)
- 	switch (ohci->num_ports) {
- 		default:
- 			dev_err(&dev->dev, "Unsupported amount of ports: %d\n", ohci->num_ports);
--			/* fall through */
-+			fallthrough;
- 		case 3:
- 			pm |= CCR_PM_USBPW3;
--			/* fall through */
-+			fallthrough;
- 		case 2:
- 			pm |= CCR_PM_USBPW2;
--			/* fall through */
-+			fallthrough;
- 		case 1:
- 			pm |= CCR_PM_USBPW1;
- 	}
+I don't like the idea of a list of PCI IDs
+(perf_uncore_pcieport_ids[]) below that must be updated for every
+device that needs something like this.  That PCI ID information is
+normally in the drivers themselves, not in bus-level code like this.
 
+And I don't like the way this subverts the device ownership model.
+Now we have several drivers (pciehp, aer, dpc, etc, plus this new perf
+driver) that share the same PCI device.  And we rely on the assumption
+that none of these drivers interferes with the others.
+
+I think the best way to deal with this would be to incorporate the
+existing portdrv users (pciehp, aer, dpc, etc) directly into the PCI
+core so portdrv would not use pci_register_driver(), leaving the Root
+Port device available for the perf driver to claim it the normal way.
+But realistically I don't know when or even whether this will be done.
+
+I think Stephane has worked around this problem in a different way,
+IIRC by using pci_get_device() in a perf driver to find Ports of
+interest.  That also subverts the device ownership model, and it
+doesn't work naturally with hotplug, but at least it gets the device
+IDs out of the PCI core and into the driver where they belong.  And
+there's value in solving the same problem in the same way.
+
+Wait a minute!  You've already used the pci_get_device() strategy
+several times:
+
+  2b3b76b5ec67 ("perf/x86/intel/uncore: Add Ice Lake server uncore support")
+  fdb64822443e ("perf/x86: Add Intel Tiger Lake uncore support")
+  ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
+
+So what's really different about *this* situation?  Why would you not
+just continue using the same strategy?
+
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  drivers/pci/pcie/portdrv_pci.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+> index 3acf151..47e33b2 100644
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/init.h>
+>  #include <linux/aer.h>
+>  #include <linux/dmi.h>
+> +#include <linux/platform_device.h>
+>  
+>  #include "../pci.h"
+>  #include "portdrv.h"
+> @@ -90,6 +91,40 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
+>  #define PCIE_PORTDRV_PM_OPS	NULL
+>  #endif /* !PM */
+>  
+> +static const struct pci_device_id perf_uncore_pcieport_ids[] = {
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a) },
+> +	{ },
+> +};
+> +
+> +static void perf_platform_device_register(struct pci_dev *dev)
+> +{
+> +	struct platform_device *pdev;
+> +
+> +	if (!pci_match_id(perf_uncore_pcieport_ids, dev))
+> +		return;
+> +
+> +	pdev = platform_device_alloc("perf_uncore_pcieport", PLATFORM_DEVID_AUTO);
+> +	if (!pdev)
+> +		return;
+> +
+> +	pdev->dev.parent = &dev->dev;
+> +
+> +	if (platform_device_add(pdev)) {
+> +		platform_device_put(pdev);
+> +		return;
+> +	}
+> +
+> +	pci_set_drvdata(dev, pdev);
+> +}
+> +
+> +static void perf_platform_device_unregister(struct pci_dev *dev)
+> +{
+> +	struct platform_device *pdev = pci_get_drvdata(dev);
+> +
+> +	if (pdev)
+> +		platform_device_unregister(pdev);
+> +}
+> +
+>  /*
+>   * pcie_portdrv_probe - Probe PCI-Express port devices
+>   * @dev: PCI-Express port device being probed
+> @@ -113,6 +148,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>  	if (status)
+>  		return status;
+>  
+> +	perf_platform_device_register(dev);
+> +
+>  	pci_save_state(dev);
+>  
+>  	dev_pm_set_driver_flags(&dev->dev, DPM_FLAG_NO_DIRECT_COMPLETE |
+> @@ -142,6 +179,7 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+>  		pm_runtime_dont_use_autosuspend(&dev->dev);
+>  	}
+>  
+> +	perf_platform_device_unregister(dev);
+>  	pcie_port_device_remove(dev);
+>  }
+>  
+> -- 
+> 2.7.4
+> 
