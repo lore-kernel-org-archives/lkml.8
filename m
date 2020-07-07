@@ -2,97 +2,325 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D82C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30348C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDD7206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046AE206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594113823;
+	bh=SFFIblF5jUq1GJjdAblyK8HQgQfUgYu08HBWCGS0bAU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=stF+qynO4gn9qgwbOygOttbZ7KhAcVhZbnK2KpYPgZvvIuKIVoB2BPhDeZUQGF8nT
+	 sADZO3ja7rbuxXPOm8hijFCUGZtqM6Z5rH5CUM+CyD4wy2aBMx+0rZtaTDEDQqGkLz
+	 cGn7nUxsL2oQoXZJhhtAGMRGgRFGLUVhndCtyZbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgGGJWt (ORCPT
+        id S1727096AbgGGJXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:22:49 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:51160 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725825AbgGGJWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:22:48 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxL+jcPgRfsi9RAA--.921S2;
-        Tue, 07 Jul 2020 17:22:36 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: [PATCH] phy: allwinner: Make PHY_SUN6I_MIPI_DPHY depend on COMMON_CLK
-Date:   Tue,  7 Jul 2020 17:22:26 +0800
-Message-Id: <1594113746-25393-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9AxL+jcPgRfsi9RAA--.921S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ar17ur4UKF1DXF4xWFWfKrg_yoW8Cr1xpa
-        yfGrW8uryrtFWYqFsrJrykuFZaganrXFyxGaykGa43ZF98Aa1j93s8CFyqkF4jvr4kJr4f
-        Gas5GFZIgF98t37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkIb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
-        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8uwCF04k2
-        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-        AIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2
-        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0nXo5UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 7 Jul 2020 05:23:41 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:39556 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgGGJXl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:23:41 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 0679LLSD013006;
+        Tue, 7 Jul 2020 18:21:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 0679LLSD013006
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1594113685;
+        bh=DGOsSYyty8roOyC5A5FX8LaGKLV2BgeM9zt8xr5UYM4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JDbNjpOzvr7/x76F9KaMdoFrTKEggtICdwPlCWJ2nLX8WlTRLUc0XnIZDJhUUfr9S
+         HPlA1ubAq2lrrANKINqbMM9j0unpUpp3xeFrRD5eg57ohA0L8O3BoAhXyVbUuLIxUA
+         yg8Ai+v1KElzTAS1qarKG7CBoTSh0aX4xOlT2ZHIJ6Q/mDXkG3cs51o2Vnbz4QkX6/
+         rfBfozMdn9L0HmhH2amrvY6S+iHkOqvqOVR2u5q5aMB1pmmlhsADDBuJt6GpiLubdi
+         fybtXxsHk7w8cBGHfbU8pLSqAQavPBxRZyN7iDW+fhthgFxD3RuHOQuA+z8me3Xz1C
+         5oFmfKmhIPAaQ==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Haren Myneni <haren@us.ibm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Tal Gilboa <talgi@mellanox.com>, kunit-dev@googlegroups.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, live-patching@vger.kernel.org
+Subject: [PATCH v2 2/2] kbuild: trace functions in subdirectories of lib/
+Date:   Tue,  7 Jul 2020 18:21:17 +0900
+Message-Id: <20200707092117.963394-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200707092117.963394-1-masahiroy@kernel.org>
+References: <20200707092117.963394-1-masahiroy@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_ARCH_SUNXI is not set but CONFIG_COMPILE_TEST=y,
-CONFIG_HAVE_CLK=y, CONFIG_HAVE_LEGACY_CLK=y, there exists
-the following build errors with CONFIG_PHY_SUN6I_MIPI_DPHY=y:
+  ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
 
-drivers/phy/allwinner/phy-sun6i-mipi-dphy.o: In function `sun6i_dphy_init':
-phy-sun6i-mipi-dphy.c:(.text+0x320): undefined reference to `clk_set_rate_exclusive'
-drivers/phy/allwinner/phy-sun6i-mipi-dphy.o: In function `sun6i_dphy_exit':
-phy-sun6i-mipi-dphy.c:(.text+0x2c8): undefined reference to `clk_rate_exclusive_put'
+exists here in sub-directories of lib/ to keep the behavior of
+commit 2464a609ded0 ("ftrace: do not trace library functions").
 
-clk_set_rate_exclusive() and clk_rate_exclusive_put() are defined
-in drivers/clk/clk.c, this file is built under CONFIG_COMMON_CLK,
-so in order to build drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
-successful used with various configs, CONFIG_PHY_SUN6I_MIPI_DPHY
-should depend on CONFIG_COMMON_CLK.
+Since that commit, not only the objects in lib/ but also the ones in
+the sub-directories are excluded from ftrace (although the commit
+description did not explicitly mention this).
 
-Fixes: 133552bf03ed ("phy: Remove CONFIG_ARCH_* check for related subdir in Makefile")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+However, most of library functions in sub-directories are not so hot.
+Re-add them to ftrace.
+
+Going forward, only the objects right under lib/ will be excluded.
+
+Cc: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
-This patch is based on linux-phy.git:
-https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/?h=next
+Changes in v2:
+  - New patch
 
- drivers/phy/allwinner/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/842/Makefile          | 3 ---
+ lib/crypto/Makefile       | 2 --
+ lib/dim/Makefile          | 2 --
+ lib/fonts/Makefile        | 2 --
+ lib/kunit/Makefile        | 3 ---
+ lib/livepatch/Makefile    | 2 --
+ lib/lz4/Makefile          | 1 -
+ lib/lzo/Makefile          | 2 --
+ lib/math/Makefile         | 2 --
+ lib/mpi/Makefile          | 2 --
+ lib/raid6/Makefile        | 3 ---
+ lib/reed_solomon/Makefile | 2 --
+ lib/xz/Makefile           | 3 ---
+ lib/zlib_deflate/Makefile | 2 --
+ lib/zlib_dfltcc/Makefile  | 2 --
+ lib/zlib_inflate/Makefile | 2 --
+ lib/zstd/Makefile         | 1 -
+ 17 files changed, 36 deletions(-)
 
-diff --git a/drivers/phy/allwinner/Kconfig b/drivers/phy/allwinner/Kconfig
-index e760d89..fb584518 100644
---- a/drivers/phy/allwinner/Kconfig
-+++ b/drivers/phy/allwinner/Kconfig
-@@ -22,7 +22,7 @@ config PHY_SUN4I_USB
- config PHY_SUN6I_MIPI_DPHY
- 	tristate "Allwinner A31 MIPI D-PHY Support"
- 	depends on ARCH_SUNXI || COMPILE_TEST
--	depends on HAS_IOMEM
-+	depends on HAS_IOMEM && COMMON_CLK
- 	depends on RESET_CONTROLLER
- 	select GENERIC_PHY
- 	select GENERIC_PHY_MIPI_DPHY
+diff --git a/lib/842/Makefile b/lib/842/Makefile
+index b815e824ae37..6f7aad269288 100644
+--- a/lib/842/Makefile
++++ b/lib/842/Makefile
+@@ -1,6 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_842_COMPRESS) += 842_compress.o
+ obj-$(CONFIG_842_DECOMPRESS) += 842_decompress.o
+diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
+index b557ef0b07c2..3a435629d9ce 100644
+--- a/lib/crypto/Makefile
++++ b/lib/crypto/Makefile
+@@ -1,7 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ # chacha is used by the /dev/random driver which is always builtin
+ obj-y						+= chacha.o
+ obj-$(CONFIG_CRYPTO_LIB_CHACHA_GENERIC)		+= libchacha.o
+diff --git a/lib/dim/Makefile b/lib/dim/Makefile
+index 97fc3e89d34e..1d6858a108cb 100644
+--- a/lib/dim/Makefile
++++ b/lib/dim/Makefile
+@@ -2,8 +2,6 @@
+ # DIM Dynamic Interrupt Moderation library
+ #
+ 
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_DIMLIB) += dim.o
+ 
+ dim-y := dim.o net_dim.o rdma_dim.o
+diff --git a/lib/fonts/Makefile b/lib/fonts/Makefile
+index f951750c179e..ed95070860de 100644
+--- a/lib/fonts/Makefile
++++ b/lib/fonts/Makefile
+@@ -1,8 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Font handling
+ 
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ font-objs := fonts.o
+ 
+ font-objs-$(CONFIG_FONT_SUN8x16)   += font_sun8x16.o
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index 8c847557ab24..724b94311ca3 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -1,6 +1,3 @@
+-
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_KUNIT) +=			kunit.o
+ 
+ kunit-objs +=				test.o \
+diff --git a/lib/livepatch/Makefile b/lib/livepatch/Makefile
+index 9abdf615b088..295b94bff370 100644
+--- a/lib/livepatch/Makefile
++++ b/lib/livepatch/Makefile
+@@ -2,8 +2,6 @@
+ #
+ # Makefile for livepatch test code.
+ 
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_TEST_LIVEPATCH) += test_klp_atomic_replace.o \
+ 				test_klp_callbacks_demo.o \
+ 				test_klp_callbacks_demo2.o \
+diff --git a/lib/lz4/Makefile b/lib/lz4/Makefile
+index 53da4cab7015..5b42242afaa2 100644
+--- a/lib/lz4/Makefile
++++ b/lib/lz4/Makefile
+@@ -1,6 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ ccflags-y += -O3
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+ 
+ obj-$(CONFIG_LZ4_COMPRESS) += lz4_compress.o
+ obj-$(CONFIG_LZ4HC_COMPRESS) += lz4hc_compress.o
+diff --git a/lib/lzo/Makefile b/lib/lzo/Makefile
+index 9565a555275b..2f58fafbbddd 100644
+--- a/lib/lzo/Makefile
++++ b/lib/lzo/Makefile
+@@ -1,6 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ lzo_compress-objs := lzo1x_compress.o
+ lzo_decompress-objs := lzo1x_decompress_safe.o
+ 
+diff --git a/lib/math/Makefile b/lib/math/Makefile
+index 49aa50e28185..be6909e943bd 100644
+--- a/lib/math/Makefile
++++ b/lib/math/Makefile
+@@ -1,6 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-y += div64.o gcd.o lcm.o int_pow.o int_sqrt.o reciprocal_div.o
+ 
+ obj-$(CONFIG_CORDIC)		+= cordic.o
+diff --git a/lib/mpi/Makefile b/lib/mpi/Makefile
+index df7883521619..d5874a7f5ff9 100644
+--- a/lib/mpi/Makefile
++++ b/lib/mpi/Makefile
+@@ -3,8 +3,6 @@
+ # MPI multiprecision maths library (from gpg)
+ #
+ 
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_MPILIB) = mpi.o
+ 
+ mpi-y = \
+diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
+index 3482d6ae3f3b..b4c0df6d706d 100644
+--- a/lib/raid6/Makefile
++++ b/lib/raid6/Makefile
+@@ -1,7 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_RAID6_PQ)	+= raid6_pq.o
+ 
+ raid6_pq-y	+= algos.o recov.o tables.o int1.o int2.o int4.o \
+diff --git a/lib/reed_solomon/Makefile b/lib/reed_solomon/Makefile
+index a5c9defdac7f..5d4fa68f26cb 100644
+--- a/lib/reed_solomon/Makefile
++++ b/lib/reed_solomon/Makefile
+@@ -3,7 +3,5 @@
+ # This is a modified version of reed solomon lib,
+ #
+ 
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_REED_SOLOMON) += reed_solomon.o
+ obj-$(CONFIG_REED_SOLOMON_TEST) += test_rslib.o
+diff --git a/lib/xz/Makefile b/lib/xz/Makefile
+index fae9b6c7c389..fa6af814a8d1 100644
+--- a/lib/xz/Makefile
++++ b/lib/xz/Makefile
+@@ -1,7 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_XZ_DEC) += xz_dec.o
+ xz_dec-y := xz_dec_syms.o xz_dec_stream.o xz_dec_lzma2.o
+ xz_dec-$(CONFIG_XZ_DEC_BCJ) += xz_dec_bcj.o
+diff --git a/lib/zlib_deflate/Makefile b/lib/zlib_deflate/Makefile
+index 1fcefe73536f..2622e03c0b94 100644
+--- a/lib/zlib_deflate/Makefile
++++ b/lib/zlib_deflate/Makefile
+@@ -7,8 +7,6 @@
+ # decompression code.
+ #
+ 
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_ZLIB_DEFLATE) += zlib_deflate.o
+ 
+ zlib_deflate-objs := deflate.o deftree.o deflate_syms.o
+diff --git a/lib/zlib_dfltcc/Makefile b/lib/zlib_dfltcc/Makefile
+index 7a8067f6e772..8e4d5afbbb10 100644
+--- a/lib/zlib_dfltcc/Makefile
++++ b/lib/zlib_dfltcc/Makefile
+@@ -6,8 +6,6 @@
+ # This is the code for s390 zlib hardware support.
+ #
+ 
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_ZLIB_DFLTCC) += zlib_dfltcc.o
+ 
+ zlib_dfltcc-objs := dfltcc.o dfltcc_deflate.o dfltcc_inflate.o dfltcc_syms.o
+diff --git a/lib/zlib_inflate/Makefile b/lib/zlib_inflate/Makefile
+index a451e96f9845..27327d3e9f54 100644
+--- a/lib/zlib_inflate/Makefile
++++ b/lib/zlib_inflate/Makefile
+@@ -14,8 +14,6 @@
+ # uncompression can be done without blocking on allocation).
+ #
+ 
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+-
+ obj-$(CONFIG_ZLIB_INFLATE) += zlib_inflate.o
+ 
+ zlib_inflate-objs := inffast.o inflate.o infutil.o \
+diff --git a/lib/zstd/Makefile b/lib/zstd/Makefile
+index 01be908a2d94..f5d778e7e5c7 100644
+--- a/lib/zstd/Makefile
++++ b/lib/zstd/Makefile
+@@ -3,7 +3,6 @@ obj-$(CONFIG_ZSTD_COMPRESS) += zstd_compress.o
+ obj-$(CONFIG_ZSTD_DECOMPRESS) += zstd_decompress.o
+ 
+ ccflags-y += -O3
+-ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+ 
+ zstd_compress-y := fse_compress.o huf_compress.o compress.o \
+ 		   entropy_common.o fse_decompress.o zstd_common.o
 -- 
-2.1.0
+2.25.1
 
