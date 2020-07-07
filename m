@@ -2,120 +2,111 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEB5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DBFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0904F2073E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594130569;
-	bh=edIgc1HsmNAf0Fn0SMHWtli5jUaKGL0947RRvOW2G+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ND78xwEC04xMlf0772k3UkBi4XUObDdl4YSAb5GTbG7wIgAGMPo7cOHYgwOy2yEJ2
-	 jL66/Aq78IxLwBW/eFODh5YJ4O/8tywRPkEOuTrJh1wVUZ4W1zl1P056velb1aT/2j
-	 ejAVTBLSAAk//3KxLsYCz2yDtUC4Qk5XFRIB0pmg=
+	by mail.kernel.org (Postfix) with ESMTP id 8A65B2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="ZS2vQUAe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgGGOCr (ORCPT
+        id S1728253AbgGGODP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:02:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbgGGOCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:02:47 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 7 Jul 2020 10:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgGGODP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:03:15 -0400
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC712C061755;
+        Tue,  7 Jul 2020 07:03:14 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB9ED20738;
-        Tue,  7 Jul 2020 14:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594130566;
-        bh=edIgc1HsmNAf0Fn0SMHWtli5jUaKGL0947RRvOW2G+U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yXHwPMNojeUXhMOEmzHyHl8EmzY47rKX1qvX5FKtkoDiZpK5tGx06I9dluEM8fJhG
-         XCCUlR4qSly/5HxmgHBQ7kXUsBS2Y87+39MBCMt+KqI2CxuDJ7zeGq7wExXuQgnbNK
-         cB6vrrfdgounGRCkKNx89GXdGFkMpmrVYJhtGaGk=
-Received: by pali.im (Postfix)
-        id A62ABBF7; Tue,  7 Jul 2020 16:02:44 +0200 (CEST)
-Date:   Tue, 7 Jul 2020 16:02:44 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Indicate error in 'val' when config read
- fails
-Message-ID: <20200707140244.uhmyoqd5mblz5ids@pali>
-References: <20200601130315.18895-1-pali@kernel.org>
- <20200619105618.aksoivu4gb5ex3s3@pali>
- <20200707135311.GB17163@e121166-lin.cambridge.arm.com>
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4B1PKW5V4WzQlH2;
+        Tue,  7 Jul 2020 16:03:11 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1594130589;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ll7gVSOL9XzROZUsvjqsjM/q+j59gZ3tVsoc4JCDtNA=;
+        b=ZS2vQUAeQJHJPZt1jny2VGDtSVHRhegIw8xtPLsbJocmWRMiL5uVguvw1FWnkqtYb6g7q6
+        AdMEjo0BFuMFRATOn5oElrxBJWvbqmyma+Mc+NAo0aKypOcTQmk5Myd5v++BNafQDp32b2
+        +bigyB6DFx+jbTfxFDcREMbZJhTRGdkr/LgF0gY4i/qy1c2qO7+cLekhLc+SBNR4pGZity
+        xJYXCmnpPyORS35HePL4T4Bg+FRA5TYmlN9T8/ORs8DIvYQFOEMj2RJNLbb80Qm20dwPV1
+        /NvEVW8MXCzf4LOv06HV8mpDURY6xZS3+uimkweMl2B9rkp3sn/fxaRHl1RYtg==
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id aMe3dxk8w6IU; Tue,  7 Jul 2020 16:03:08 +0200 (CEST)
+Subject: Re: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Michael Walle <michael@walle.cc>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+References: <20200705133038.161547-1-mans0n@gorani.run>
+ <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
+ <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com>
+From:   Sungbo Eo <mans0n@gorani.run>
+Message-ID: <15d8ae43-6905-b861-3b50-d1ba780edf2d@gorani.run>
+Date:   Tue, 7 Jul 2020 23:03:00 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200707135311.GB17163@e121166-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20180716
+X-MBO-SPAM-Probability: 0
+X-Rspamd-Score: -4.05 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 78083178A
+X-Rspamd-UID: 2ba226
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 07 July 2020 14:53:11 Lorenzo Pieralisi wrote:
-> On Fri, Jun 19, 2020 at 12:56:18PM +0200, Pali Rohár wrote:
-> > Hello Lorenzo! Could you please review this patch?
-> > 
-> > On Monday 01 June 2020 15:03:15 Pali Rohár wrote:
-> > > Most callers of config read do not check for return value. But most of the
-> > > ones that do, checks for error indication in 'val' variable.
-> > > 
-> > > This patch updates error handling in advk_pcie_rd_conf() function. If PIO
-> > > transfer fails then 'val' variable is set to 0xffffffff which indicates
-> > > failture.
-> > > 
-> > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > 
-> > I should add credit for Bjorn as he found this issue
+On 20. 7. 6. 오후 9:00, Andy Shevchenko wrote:
+> On Mon, Jul 6, 2020 at 2:21 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:>
+>> On Sun, Jul 5, 2020 at 3:31 PM Sungbo Eo <mans0n@gorani.run> wrote:
+>>>
+>>> NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
+>>> Its ports are controlled only by a data byte without register address.
+>>>
 > 
-> Could you provide a lore archive link to the relevant
-> discussion please ? I will apply it then.
-
-Hello Lorenzo! Here is link to the Bjorn's email:
-https://lore.kernel.org/linux-pci/20200528162604.GA323482@bjorn-Precision-5520/
-
-> Lorenzo
+>>> Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
+>>>
 > 
-> > Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> > 
-> > > ---
-> > >  drivers/pci/controller/pci-aardvark.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > index 53a4cfd7d377..783a7f1f2c44 100644
-> > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > @@ -691,8 +691,10 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
-> > >  	advk_writel(pcie, 1, PIO_START);
-> > >  
-> > >  	ret = advk_pcie_wait_pio(pcie);
-> > > -	if (ret < 0)
-> > > +	if (ret < 0) {
-> > > +		*val = 0xffffffff;
-> > >  		return PCIBIOS_SET_FAILED;
-> > > +	}
-> > >  
-> > >  	advk_pcie_check_pio_status(pcie);
-> > >  
-> > > -- 
-> > > 2.20.1
-> > > 
+> No blank line here.
+> 
+>>> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> 
+>> This driver looks nice now but why did you remove the mutex in v3? I
+>> think when Andy commented on that, he meant not understanding why the
+>> error check is protected, not the i2c operations.
+> 
+> Right.
+
+Oh, probably I misunderstood the comment... :(
+
+But I don't really understand what mutex does here. The driver does not 
+need consecutive commands, it only sends/receives only one byte at a 
+time. And AFAIK each i2c_smbus function is already protected by a mutex. 
+So what should be exactly inside the lock? Should we protect the output 
+buffer as well? I'm not an expert on this so please enlighten me.
+
+Thanks for your kind reviews, as always. :)
+
+> 
+>> Are you sure you don't need this lock?
+> 
+> It's a good point!
+> 
