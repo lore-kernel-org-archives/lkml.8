@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4088C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29276C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 806192065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F180620771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135391;
-	bh=gd92U56RmoV99eATKd4qvxZYYmO56fFyB+M5e7f5O3c=;
+	s=default; t=1594135395;
+	bh=t48+Xhwq9/p8QGgsPqjcI4Z6WeMmsCy0ku+QepkjvXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n794+nkPyxzXy9m0VbA6M4UBzWa5S8PAXZx3GXuc0T5CNp+deGc+2NAZy9i1ti7qA
-	 vd9qFBjsrf+U1n/ihrZj/Ewr1YNNQ1MYzRzDPAyJ08iiGc2J3ezv1B7NvtoVOQeCtN
-	 jv3xZ4ll2sLDbNCOFugIoMbDUGzAxLSEAZXRecFY=
+	b=m5WXDvgolNIyPko4ISrcQtkugOoQ2NNyM6FEZkZWu0G1HuH5GRRoXDjgBt0DvNu7d
+	 BKEHGw5jzZZIpEArVw/6O9OQgcuaFug7BrXHN5lfmlp9bmm60yrxZJveEcwqCUAt8r
+	 KGdMzC+tcDb6jxgkGlYztwOXpxlFhAiE82v6sbhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgGGPXJ (ORCPT
+        id S1729953AbgGGPXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:23:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36060 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729941AbgGGPXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:23:07 -0400
+        id S1729950AbgGGPXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:23:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 435A5206F6;
-        Tue,  7 Jul 2020 15:23:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE16B207CD;
+        Tue,  7 Jul 2020 15:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135386;
-        bh=gd92U56RmoV99eATKd4qvxZYYmO56fFyB+M5e7f5O3c=;
+        s=default; t=1594135389;
+        bh=t48+Xhwq9/p8QGgsPqjcI4Z6WeMmsCy0ku+QepkjvXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q3YBIg9VLYuXYEmaeU3uozl2TJozPSU8j9kqwfiHj/CU8OqiwkWIeckETrsn5rj5X
-         6GHvYgsHeoWPhZ8M+OAh+Gft9FmGUrqVZbvxmHf5q279BR+Hyuof7VKhObAWNa5/1C
-         0Wo7uhJ4PFZ+tcROSB+6g7irxFdJSZNkRVP6DCu0=
+        b=ww75triTQgAHN1JQZlS7oCve4Mw5O51C7dvlpVr34Cy2g1e0gJN2sao9ZSksI8DoD
+         2VbSIjz/RSjrPBHVwDk2p5bLpScrUl7ps/AYlbXEuRRbPu196ssG35gfWU6wIpRNIo
+         X3LeD7/obuIAIA7Z0UKORme9v4x7h5YUAw9ElNFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 020/112] sched/debug: Make sd->flags sysctl read-only
-Date:   Tue,  7 Jul 2020 17:16:25 +0200
-Message-Id: <20200707145801.948953381@linuxfoundation.org>
+Subject: [PATCH 5.7 021/112] soc: ti: omap-prm: use atomic iopoll instead of sleeping one
+Date:   Tue,  7 Jul 2020 17:16:26 +0200
+Message-Id: <20200707145801.997136149@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,46 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit 9818427c6270a9ce8c52c8621026fe9cebae0f92 ]
+[ Upstream commit 98ece19f247159a51003796ede7112fef2df5d7f ]
 
-Writing to the sysctl of a sched_domain->flags directly updates the value of
-the field, and goes nowhere near update_top_cache_domain(). This means that
-the cached domain pointers can end up containing stale data (e.g. the
-domain pointed to doesn't have the relevant flag set anymore).
+The reset handling APIs for omap-prm can be invoked PM runtime which
+runs in atomic context. For this to work properly, switch to atomic
+iopoll version instead of the current which can sleep. Otherwise,
+this throws a "BUG: scheduling while atomic" warning. Issue is seen
+rather easily when CONFIG_PREEMPT is enabled.
 
-Explicit domain walks that check for flags will be affected by
-the write, but this won't be in sync with the cached pointers which will
-still point to the domains that were cached at the last sched_domain
-build.
-
-In other words, writing to this interface is playing a dangerous game. It
-could be made to trigger an update of the cached sched_domain pointers when
-written to, but this does not seem to be worth the trouble. Make it
-read-only.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200415210512.805-3-valentin.schneider@arm.com
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/ti/omap_prm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 239970b991c03..0f4aaad236a9d 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -258,7 +258,7 @@ sd_alloc_ctl_domain_table(struct sched_domain *sd)
- 	set_table_entry(&table[2], "busy_factor",	  &sd->busy_factor,	    sizeof(int),  0644, proc_dointvec_minmax);
- 	set_table_entry(&table[3], "imbalance_pct",	  &sd->imbalance_pct,	    sizeof(int),  0644, proc_dointvec_minmax);
- 	set_table_entry(&table[4], "cache_nice_tries",	  &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0644, proc_dointvec_minmax);
-+	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0444, proc_dointvec_minmax);
- 	set_table_entry(&table[6], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
- 	set_table_entry(&table[7], "name",		  sd->name,	       CORENAME_MAX_SIZE, 0444, proc_dostring);
- 	/* &table[8] is terminator */
+diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
+index 96c6f777519c0..c9b3f9ebf0bbf 100644
+--- a/drivers/soc/ti/omap_prm.c
++++ b/drivers/soc/ti/omap_prm.c
+@@ -256,10 +256,10 @@ static int omap_reset_deassert(struct reset_controller_dev *rcdev,
+ 		goto exit;
+ 
+ 	/* wait for the status to be set */
+-	ret = readl_relaxed_poll_timeout(reset->prm->base +
+-					 reset->prm->data->rstst,
+-					 v, v & BIT(st_bit), 1,
+-					 OMAP_RESET_MAX_WAIT);
++	ret = readl_relaxed_poll_timeout_atomic(reset->prm->base +
++						 reset->prm->data->rstst,
++						 v, v & BIT(st_bit), 1,
++						 OMAP_RESET_MAX_WAIT);
+ 	if (ret)
+ 		pr_err("%s: timedout waiting for %s:%lu\n", __func__,
+ 		       reset->prm->data->name, id);
 -- 
 2.25.1
 
