@@ -2,170 +2,128 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F96AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C501EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07BAA206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A11B206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c1U9uUkd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6Ta1Kv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgGGVpP (ORCPT
+        id S1729161AbgGGVsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:45:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35686 "EHLO
+        Tue, 7 Jul 2020 17:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgGGVpO (ORCPT
+        with ESMTP id S1728802AbgGGVsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:45:14 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3249C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 14:45:14 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b92so241696pjc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:45:14 -0700 (PDT)
+        Tue, 7 Jul 2020 17:48:07 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB60C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 14:48:07 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id g13so32980203qtv.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:48:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=+X2Xhmqqsv0iqlLQQgWOIh/h4XwKHm7DRSh8jQWFnII=;
-        b=c1U9uUkdrkhW1asUELPte2OOBTvNiETRx3xLuK0Jg7I453xkG+Y+lWevjhbk9Q33v8
-         +8X4WBO3m2tBmVN1D8DLJqjiJ6rP34+a4QGgzHsR8v8VD2UN/8nVX4qAgNARioPhUATW
-         V+FlQoeq3bNgrBvlSUJvyTH63wOE59cHAsydM=
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kea5lz5SuEVjMYthwUPDUREfiUZ4imDQ4+lMs08zB6U=;
+        b=S6Ta1Kv+P7Eg1sW5CWt+ahJt07X+1kO7D8SmRfRyR/GN3XSrYWuchEH82VMppIlBTm
+         9rNp0tV1WORXPSiQPYBv/W9eRs9VHILhguUh4V0kIsX/5fsa4wlaSiqsjPCRAf5Je704
+         V7gte79Kr6uk6ZsRX1e81zPc0/iReVb6G4Or31edv7NGdpfHo8GDT6wRiu2HByS4qnjK
+         UK1HQM+2S+whIr63pSsErzlA8Y4uoqIKDdNI9QOliKKcnBcBL4+k+rRKgCqkWAx05iv7
+         qdqeL5Xhw1NAUsM6Z+3BtcEMQZKpG9sMavMaZ5c6V8VE7JQFvcL+vQ665tie91AGCHLb
+         eZrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=+X2Xhmqqsv0iqlLQQgWOIh/h4XwKHm7DRSh8jQWFnII=;
-        b=MO3s9N5s1FJMeh6u9mOHhlIltWVhVUxAPRkOntvimqV2bqep+olWJfEZR9fZIUgA4v
-         NflCuDdbClJkl74KhbYHO/dXomLpTwz9c6HjzlNOqonLs6gujpDRbwOUuEiET02P0+p2
-         O8UHdpu4VKbkZygeDuIaJ9atZqE8D9QHH9MlUKXnvziQrd3oH4bpmK6aQn3k/Ie8nLRc
-         U8Q1f4xOrpEfI4zqNusHRxiZosk0Lhjl0Vax50QmwJlqWKOw6mmp25ahbcjIMSYE3bi7
-         xp2nWwMV+vxtTV209Ehm1c7D0A7Xzkgen9WNlLk3Ma13qN27gSnhQjWjDYYRu6B7/6bX
-         54xQ==
-X-Gm-Message-State: AOAM531XCgEwz5md7zE2SlFr4D7KDSqXw4DOMblef8LylLn7MjKEPFVx
-        UVLA7GgPPoJaMNla/yNuoy6N9w==
-X-Google-Smtp-Source: ABdhPJwJvh8fkTd5j8YoULkHA3MqKVqIp0iKE5PJOfznsAz0swonzvETE92J5nlo2+4ZNlrYhFctrA==
-X-Received: by 2002:a17:90a:234c:: with SMTP id f70mr6654067pje.13.1594158313261;
-        Tue, 07 Jul 2020 14:45:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c134sm8777846pfc.115.2020.07.07.14.45.11
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=kea5lz5SuEVjMYthwUPDUREfiUZ4imDQ4+lMs08zB6U=;
+        b=ZIG7kTcsbiQr2Qjvc3aznJ9QOwGIuK40aqP8zcL6exJhkBiOdpJlA4yhX+x90Gfyso
+         vZY8OTmyFkkQ4wy5SInlX23V8XX0EiIRh7/STGiwoYPkjhjZWk/Tb0fHqbxV31Cex83v
+         Kx+lyXXtgdvhAZBzePDvz5vhQL2ecUj3vFc9hCS+gY2ZmsfOrZVNa37v306YpsrizSwi
+         XbraEUvzsCoO/PFAvCYM5uNrR36yOTIX4T9YLx4htOVrZGAnOwsAuF34n4ZfZwMnxll/
+         Qii0R97jnmgkTfV9afY4skiiBU3LH/Je/PJgGuy24ktBWvcb1setUaINOqHjHou7/fkk
+         EzhA==
+X-Gm-Message-State: AOAM530N17njY/Ha4rMALjksfQjtSdFfGzhTE/7/q4xP/uJ8ft3Ghi2M
+        3Le7GVURa0qKfduOszqrydU=
+X-Google-Smtp-Source: ABdhPJwST4ORT9+NOST6EufPbIia2FmPxXFBTvW3IBn571c6j8gcIDV2QsJHi3xAKoz99PN6PV84vA==
+X-Received: by 2002:ac8:4250:: with SMTP id r16mr43504761qtm.378.1594158486843;
+        Tue, 07 Jul 2020 14:48:06 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id t48sm29525053qtb.50.2020.07.07.14.48.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 14:45:11 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 14:45:10 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     James Morris <jmorris@namei.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Scott Branden <scott.branden@broadcom.com>,
+        Tue, 07 Jul 2020 14:48:06 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 7 Jul 2020 17:48:04 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Harrosh, Boaz" <Boaz.Harrosh@netapp.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jessica Yu <jeyu@kernel.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <stephen.boyd@linaro.org>,
-        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 0/4] Fix misused kernel_read_file() enums
-Message-ID: <202007071433.55488B0C@keescook>
-References: <20200707081926.3688096-1-keescook@chromium.org>
- <1594136164.23056.76.camel@linux.ibm.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        "tech-board-discuss@lists.linuxfoundation.org" 
+        <tech-board-discuss@lists.linuxfoundation.org>,
+        Chris Mason <clm@fb.clm>
+Subject: Re: [Ksummit-discuss] [PATCH] CodingStyle: Inclusive Terminology
+Message-ID: <20200707214804.GA1582632@rani.riverdale.lan>
+References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CALCETrXewAK4_fpaJNDHJVDK9mUcjghA5HwYvZFQNYVfC9M+OQ@mail.gmail.com>
+ <202007062234.A90F922DF@keescook>
+ <DM6PR06MB3836FBAD65096AF63ACD3DB3EE660@DM6PR06MB3836.namprd06.prod.outlook.com>
+ <202007070137.3ADBEDC@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1594136164.23056.76.camel@linux.ibm.com>
+In-Reply-To: <202007070137.3ADBEDC@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 11:36:04AM -0400, Mimi Zohar wrote:
-> Hi Kees,
-> 
-> On Tue, 2020-07-07 at 01:19 -0700, Kees Cook wrote:
-> > Hi,
+On Tue, Jul 07, 2020 at 01:54:23AM -0700, Kees Cook wrote:
+> On Tue, Jul 07, 2020 at 06:56:53AM +0000, Harrosh, Boaz wrote:
+> > Kees Cook wrote:
+> > > I have struggled with this as well. The parts of speech change, and my
+> > > grammar senses go weird. whitelist = adjective noun. allow-list = verb
+> > > noun. verbing the adj/noun combo feels okay, but verbing a verb/noun is
+> > > weird.
 > > 
-> > In looking for closely at the additions that got made to the
-> > kernel_read_file() enums, I noticed that FIRMWARE_PREALLOC_BUFFER
-> > and FIRMWARE_EFI_EMBEDDED were added, but they are not appropriate
-> > *kinds* of files for the LSM to reason about. They are a "how" and
-> > "where", respectively. Remove these improper aliases and refactor the
-> > code to adapt to the changes.
-> 
-> Thank you for adding the missing calls and the firmware pre allocated
-> buffer comment update.
-> 
+> > > And just using "allowed" and "denied" doesn't impart whether it refers
+> > > to a _single_ instance or a _list_ of instances.
 > > 
-> > Additionally adds in missing calls to security_kernel_post_read_file()
-> > in the platform firmware fallback path (to match the sysfs firmware
-> > fallback path) and in module loading. I considered entirely removing
-> > security_kernel_post_read_file() hook since it is technically unused,
-> > but IMA probably wants to be able to measure EFI-stored firmware images,
-> > so I wired it up and matched it for modules, in case anyone wants to
-> > move the module signature checks out of the module core and into an LSM
-> > to avoid the current layering violations.
+> > > But that's all fine. The change is easy to do and is more descriptive
+> > > even if I can't find terms that don't collide with my internal grammar
+> > > checker. ;)
+> > 
+> > But why. In English many times a verb when it comes before the noun means an adjective, or an adjective like, describing some traits of the noun.
 > 
-> IMa has always verified kernel module signatures.  Recently appended
-
-Right, but not through the kernel_post_read_file() hook, nor via
-out-of-band hooks in kernel/module.c. I was just meaning that future
-work could be done here to regularize module_sig_check() into an actual
-LSM (which could, in theory, be extended to kexec() to avoid code
-duplication there, as kimage_validate_signature() has some overlap with
-mod_verify_sig()). into a bit more normal of an LSM.
-
-As far as IMA and regularizing things, though, what about fixing IMA to
-not manually stack:
-
-$ grep -B3 ima_ security/security.c
-        ret = call_int_hook(bprm_check_security, 0, bprm);
-        if (ret)
-                return ret;
-        return ima_bprm_check(bprm);
---
-        ret = call_int_hook(file_mprotect, 0, vma, reqprot, prot);
-        if (ret)
-                return ret;
-        return ima_file_mprotect(vma, prot);
-...
-
-Can IMA implement a hook-last method to join the regular stacking routines?
-
-> kernel module signature support was added to IMA.  The same appended
-> signature format is also being used to sign and verify the kexec
-> kernel image.
+> This is kind of my problem being a native English speaker: I can't
+> entirely describe _why_ a grammar construct feels wrong. :(
 > 
-> With IMA's new kernel module appended signature support and patch 4/4
-> in this series, IMA won't be limit to the finit_module syscall, but
-> could support the init_module syscall as well.
-
-Exactly.
-
-> > This touches several trees, and I suspect it would be best to go through
-> > James's LSM tree.
+> > Example: 
+> > I work - work is a verb here.
+> > I used the work bench. - Work is saying something about the type of bench, an adjective. Same as you would say "I used the green bench".
 > 
-> Sure.
+> Right, so the verb-noun being used as a noun is find, just as adj-noun
+> is. To me, "add it to the allow-list" is entirely sensible just like
+> "set it on the work-bench." It's the "verbing" of a noun that trips me
+> up.
+> 
+> "I will whitelist the syscall" -- sounds correct to me (same for
+> "it is whitelisted" or "it is in whitelisting mode").
+> 
+> "I will allow-list the syscall" -- sounds wrong to me (same for
+> "it is allow-listed" or "it is in allow-listing mode").
 
-Is this an "Acked-by"? :)
-
--- 
-Kees Cook
+I suspect it's at least partly because "allow" and "list" are both verbs
+-- in fact, "list" is the actual verb in "I will allow-list it", and
+"allow" is being used to modify the verb "list". But because "allow" is
+usually a verb, the sentence sounds like there are two verbs in there
+when there should only be one. I expect our ears will get trained to
+accept that sentence once you encounter "allowlist" often enough.
