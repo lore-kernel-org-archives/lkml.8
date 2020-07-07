@@ -2,93 +2,130 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC913C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B250320771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594137389;
-	bh=h2DRcrH555thyPlfhsaenoNzAzXnBlcYnLdbImNRHks=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oWugNAmEI0eeF0KwUi+RMSN4ALHCQE9f8S+baK45KY019R8u2o1RAKKT9X3dXfI2c
-	 v8ek/l2flFHeF2UZAxN3ONBA2ApAXemoKAcmmjprpiRsjtRZKZxbRLUQP4ooniN7dY
-	 rBmWcqFLN5Ap/vzAb6aGjRZEjmEJbftF/swe/5Zs=
+	by mail.kernel.org (Postfix) with ESMTP id 0B1BC20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:58:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="SQauLQ9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgGGP42 (ORCPT
+        id S1728246AbgGGP6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:56:28 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45390 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbgGGP41 (ORCPT
+        Tue, 7 Jul 2020 11:58:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgGGP6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:56:27 -0400
-Received: by mail-oi1-f193.google.com with SMTP id j11so32597969oiw.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:56:27 -0700 (PDT)
+        Tue, 7 Jul 2020 11:58:51 -0400
+Received: from mail-ed1-x561.google.com (mail-ed1-x561.google.com [IPv6:2a00:1450:4864:20::561])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6B63C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:58:50 -0700 (PDT)
+Received: by mail-ed1-x561.google.com with SMTP id e22so38867463edq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flowbird.group; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=hGGzB42iFy6ghF2u4QUqQFvdM4Y3ZVYyPzuZ+b6j5U8=;
+        b=SQauLQ9kLevGI1sjapbckHVSOl/rItba2jDiiEVbyk6vgD+ekaU79GMgdlUfeg7csN
+         k3FdKEQUQbUTZHGuSDJ6Hc1TCopRcYom+7PnjG012s215/7xWz96ysJjtfamTV2vBUIk
+         GTH3Tt9sXgLdclGWvy/420eUO0eSeRH3Lj7hEo1jcNtzrhX3DFCuZgX20Lw6tJLifJ/y
+         5lFyyEB9m8vy15HwlJmM9Fmxyw8y1jMDeQMUWteqGLSYd3fPNmPoVdfmM28eLKdieewY
+         Un2WtQzZYAELNz1E0JK3TaPSXrIkbgrzYXuv2CcIW/dhpW5JgfdO4BL74R7Q2uxoCwXE
+         XZdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NCjRnARbr1X8HdhzuPrbBUvApsiMNIB+sJAlPqOMZu0=;
-        b=bHtHfMQwBZcAKI5N606S5lIAMwHQEFdpzugDnoVY7c1mewElTMhVvLzdsUdKiPF2cy
-         cPAzb0vU/ZQubNjqRCLYj/sucdMbB9kfTiwcxifdWlpSDa43CaaqpXFYODUz7o/ZdTkp
-         9wP2Tx4RxxKrjgZ5lkAGZC+hN0NloaEF0PaXH3SVbK1aYhmHLEoTR9UUoDNVF0WiXkQX
-         LJWZ51lSFZRFbSDEdoVJds6WDqtLYsNZvJPN1Y1inli99tGaGepJN7iCPbBnvWc4SUK2
-         V8YZhVyJbFbFPugxMYyaELrd8R+1T3eZYJeTmbkTqExkFiV3CkxU7mNeIroeMqG/w+wU
-         fWcA==
-X-Gm-Message-State: AOAM530nDdw26Dw5uZJ8ObNV/3SzQ1Tb8kzA5qOC18G4dXwaPaiG/cXZ
-        PwDFltyKYUS6oPz2Jk9w6uf3YQEwIRW+CtQyAMs=
-X-Google-Smtp-Source: ABdhPJycD20badF50r3gZ0VFnYTjpBMRzp88oAnSeW9v7jdnx+d0oH4x5ss7im4Lkf+hEXpqf+NUv2pwUY9ZMMu7nCg=
-X-Received: by 2002:aca:4a89:: with SMTP id x131mr3948863oia.103.1594137387019;
- Tue, 07 Jul 2020 08:56:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200701194259.3337652-1-saravanak@google.com>
-In-Reply-To: <20200701194259.3337652-1-saravanak@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 7 Jul 2020 17:56:16 +0200
-Message-ID: <CAJZ5v0gPKHSpC+9BNt_n_wP+8Lmekb1VapfgHPwenHopekHV=w@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Fix dpm_list ordering issue due to fw_devlink optimization
-To:     Saravana Kannan <saravanak@google.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hGGzB42iFy6ghF2u4QUqQFvdM4Y3ZVYyPzuZ+b6j5U8=;
+        b=o3zWK3fA4C9K/rF0tsX94pdWPl9GkejDuklcwqHQWmueXxgN2wHJB/om2OPjxOKiLg
+         H2GVIKI6QcXO1kSVr8cX4mwItmWHwSxfaC7EwYoy7AEuf8l7v4IC056hZ7Q/L/xBMk7K
+         F0bpGz1pwlwevU9xBnnL+uJMvG1V596t6QLOzrDSti76oj6955wuJhmGbiQ/aVVoZfra
+         RJe1qHr+zmr9DCNb0AOq7vovMiw40cea1AnzMpv0rg/S74b+wi6/KFS7f8lIGKujgiqO
+         ZTTHTdEdNcr42SjusrsHXaPlhSScz0vtASPmJkF0PDnKc9GUr2Jt8nd0oJXzTJIx4Bv+
+         /rBg==
+X-Gm-Message-State: AOAM532QTkTWcitoi+ZTOnwgNuiSLYt4K2Gxc0XIYYxqQ/hsGHYd75Oq
+        rD7bzV45CeiXEYS62VDIi+esZY1cyooMcpybdmrrku/AfROB
+X-Google-Smtp-Source: ABdhPJw3Tm43QgiqUvFQKRBYj1WOXo2yPNyh9gnBzpc4EcPlPdfH4671tIhDdJpTzLcWR0pDV42EoW7gLio1
+X-Received: by 2002:a50:acc5:: with SMTP id x63mr39384755edc.99.1594137528113;
+        Tue, 07 Jul 2020 08:58:48 -0700 (PDT)
+Received: from mta1.parkeon.com ([185.149.63.251])
+        by smtp-relay.gmail.com with ESMTPS id dn20sm5596ejc.142.2020.07.07.08.58.48
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Tue, 07 Jul 2020 08:58:48 -0700 (PDT)
+X-Relaying-Domain: flowbird.group
+Received: from [172.16.14.70] (port=54136 helo=PC12445-BES.dynamic.besancon.parkeon.com)
+        by mta1.parkeon.com with esmtp (Exim 4.71)
+        (envelope-from <martin.fuzzey@flowbird.group>)
+        id 1jspzb-00069x-Mi; Tue, 07 Jul 2020 17:58:47 +0200
+From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm: imx: Fix occasional screen corruption on modeset.
+Date:   Tue,  7 Jul 2020 17:56:59 +0200
+Message-Id: <1594137527-15201-1-git-send-email-martin.fuzzey@flowbird.group>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 9:43 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> When commit 93d2e4322aa7 ("of: platform: Batch fwnode parsing when
-> adding all top level devices") enabled batch processing of fw_devlink to
-> optimize the parsing time, it caused a suspend/resume regression due to
-> the use of deferred probing early on at boot.
->
-> This series fixes the regression by avoiding the use of deferred probing
-> when optimizing fw_devlink parsing.
->
-> Saravana Kannan (3):
->   driver core: Don't do deferred probe in parallel with kernel_init
->     thread
->   driver core: Rename dev_links_info.defer_sync to defer_hook
->   driver core: Avoid deferred probe due to fw_devlink_pause/resume()
->
->  drivers/base/base.h    |  1 -
->  drivers/base/core.c    | 44 ++++++++++++++++++++++++++++++------------
->  drivers/base/dd.c      |  5 -----
->  include/linux/device.h |  5 +++--
->  4 files changed, 35 insertions(+), 20 deletions(-)
->
-> --
+When performing a modeset the atomic core calls
+ipu_crtc_atomic_disable() which switches off the DC and DI.
 
-Geert, any chance to test this series on top of 5.8-rc?  It is
-expected to fix the suspend/resume regression reported by you.
+When we immediately restart as in the modeset case this sometimes
+leads to corruption at the bottom of the screen looking like a mirror
+image of the top.
 
-Cheers!
+The exact reason isn't understood but it seems timing related.
+
+This was observed on i.MX6DL on a system that does 2 mode
+transitions on boot (fbcon->android boot animation->android homescreen)
+then no more during normal operation resulting in corruption
+about once every 10 boots that lasted for variable durations
+from a few seconds to several hours.
+
+Dumping the buffers confirmed that they were correct in memory,
+just the display was wrong.
+
+For tests the problem was reproduced systematically by forcing
+a full modeset every 10 frames even if when not required.
+
+Leaving the DC and DI on if the CRTC is staying on fixes this.
+
+Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+---
+ drivers/gpu/drm/imx/ipuv3-crtc.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+index 63c0284..9137b64 100644
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -84,8 +84,15 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	struct ipu_crtc *ipu_crtc = to_ipu_crtc(crtc);
+ 	struct ipu_soc *ipu = dev_get_drvdata(ipu_crtc->dev->parent);
+ 
+-	ipu_dc_disable_channel(ipu_crtc->dc);
+-	ipu_di_disable(ipu_crtc->di);
++	/*
++	 * If we are just doing a modeset don't disable dc/di as that
++	 * sometimes leads to corruption at the bottom of the screen
++	 */
++	if (!crtc->state->active) {
++		ipu_dc_disable_channel(ipu_crtc->dc);
++		ipu_di_disable(ipu_crtc->di);
++	}
++
+ 	/*
+ 	 * Planes must be disabled before DC clock is removed, as otherwise the
+ 	 * attached IDMACs will be left in undefined state, possibly hanging
+-- 
+1.9.1
+
