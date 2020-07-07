@@ -2,188 +2,258 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE16C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09357C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E85E6206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D24AC206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594142326;
-	bh=pUTBhug55qWGrkAB5wyXchKr2yiif3vkK2Iy9BKGHjA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vUwGDes7uHI2YMfkcfPpH+/nE/8jZMV9IjIEl8mOHmeK/qI2RrGhjuzBAHh9dr5hh
-	 iFroklZWRfJgwQVRMTurFyUyAnvIrg/aH20DnCoQA2X1lv/Ef97Da7h+r2c5TmYbyx
-	 NZEap8Nw62iwip9v+00ZG6lEjBbP6Hb+ESJ9RtKc=
+	s=default; t=1594142351;
+	bh=UI6ad7jF+GLOgLZjqwH7py9rzEms/ROJb7QA5wR5xgk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=S6BpLMqtMQX13ZP0SiLFgeJGcZPf9cvDSKOSyTQD3NC8902h9MqXcaiyxP6enDHoR
+	 LBRCzKpyOyLNRMSlsTMLf//oaR/ZdnbCqP7Jgd/qAbbBFYn5d+NK/AIY+EbpkUiHF7
+	 0wLt924rm6YcOw7ISk6CLQaYlFXc+tIssTrZNVns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbgGGRSo (ORCPT
+        id S1728536AbgGGRTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:18:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55784 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 13:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728036AbgGGRSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:18:44 -0400
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727886AbgGGRTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 13:19:10 -0400
+Received: from embeddedor (unknown [200.39.26.250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 085FC2078A;
-        Tue,  7 Jul 2020 17:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F734206C3;
+        Tue,  7 Jul 2020 17:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594142323;
-        bh=pUTBhug55qWGrkAB5wyXchKr2yiif3vkK2Iy9BKGHjA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wr+azqwMC9OUQNGFPyarr/RRGonhfj+ni3j/001lS0VuvuHb1DU3ElKkcqIEDyrDN
-         isR7LcVuOlEzX8pprkE6WoKBcqYEQ22xsePJLpWYdS2r7Gn5LsPNU7dnRrc4xPcZYF
-         KopGEdei7R2mWWjl0ko2ftoay7RToo1lnwhV1j24=
-Received: by mail-oi1-f174.google.com with SMTP id k4so35474878oik.2;
-        Tue, 07 Jul 2020 10:18:43 -0700 (PDT)
-X-Gm-Message-State: AOAM531gsCp3povzGC48otAPz6drY6B1xkG9S7B4PrAmWMGpappznIb8
-        3Dc3ekYlUMeUFy8FxWGM5GpU1N7HwnfamrcY6w==
-X-Google-Smtp-Source: ABdhPJwnW18eGjcb7GypEIvTrmIdxT1Ml5LeeQBihduI7SVrU/0eaFhyDjBHwHYGID/JvvhQjMBKML+Lr4CMW074jT8=
-X-Received: by 2002:aca:4844:: with SMTP id v65mr4330159oia.152.1594142322315;
- Tue, 07 Jul 2020 10:18:42 -0700 (PDT)
+        s=default; t=1594142349;
+        bh=UI6ad7jF+GLOgLZjqwH7py9rzEms/ROJb7QA5wR5xgk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZSyuTZ6EI24W2lQFqC5tugp4B+j3WbMCzNaJsmb+4wy+MKNIjYTO4a14tOCIu9L4v
+         +M3NYX7Th3J3RntZFay5DBm7cu75ivq7ciStXnRAycFHcd44cGXqObLLFWkq7WM8QU
+         UMGv2QE2wvZsYpmb8rnjJrHPuIymJnDP2vsDLzhU=
+Date:   Tue, 7 Jul 2020 12:24:36 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] sparc: Use fallthrough pseudo-keyword
+Message-ID: <20200707172436.GA27273@embeddedor>
 MIME-Version: 1.0
-References: <20200706181331.x2tn5cl5jn5kqmhx@gilmour.lan> <20200707141918.GA928075@lunn.ch>
- <20200707145440.teimwt6kmsnyi5dz@gilmour.lan> <82482500-d329-71d4-619a-7cb2eddaf9ad@gmail.com>
-In-Reply-To: <82482500-d329-71d4-619a-7cb2eddaf9ad@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 Jul 2020 11:18:31 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLxUbf28MqYXsTd-bUPTq9XXaRqVOOy6qnDd9t3LQoP9A@mail.gmail.com>
-Message-ID: <CAL_JsqLxUbf28MqYXsTd-bUPTq9XXaRqVOOy6qnDd9t3LQoP9A@mail.gmail.com>
-Subject: Re: PHY reset handling during DT parsing
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 10:39 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 7/7/2020 7:54 AM, Maxime Ripard wrote:
-> > Hi Andrew,
-> >
-> > On Tue, Jul 07, 2020 at 04:19:18PM +0200, Andrew Lunn wrote:
-> >> On Mon, Jul 06, 2020 at 08:13:31PM +0200, Maxime Ripard wrote:
-> >>> I came across an issue today on an Allwinner board, but I believe it's a
-> >>> core issue.
-> >>>
-> >>> That board is using the stmac driver together with a phy that happens to
-> >>> have a reset GPIO, except that that GPIO will never be claimed, and the
-> >>> PHY will thus never work.
-> >>>
-> >>> You can find an example of such a board here:
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/sun6i-a31-hummingbird.dts#n195
-> >>>
-> >>> It looks like when of_mdiobus_register() will parse the DT, it will then
-> >>> call of_mdiobus_register_phy() for each PHY it encounters [1].
-> >>> of_mdiobus_register_phy() will then if the phy doesn't have an
-> >>> ethernet-phy-id* compatible call get_phy_device() [2], and will later on
-> >>> call phy_register_device [3].
-> >>>
-> >>> get_phy_device() will then call get_phy_id() [4], that will try to
-> >>> access the PHY through the MDIO bus [5].
-> >>>
-> >>> The code that deals with the PHY reset line / GPIO is however only done
-> >>> in mdiobus_device_register, called through phy_device_register. Since
-> >>> this is happening way after the call to get_phy_device, our PHY might
-> >>> still very well be in reset if the bootloader hasn't put it out of reset
-> >>> and left it there.
-> >>
-> >> Hi Maxime
-> >>
-> >> If you look at the history of this code,
-> >>
-> >> commit bafbdd527d569c8200521f2f7579f65a044271be
-> >> Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >> Date:   Mon Dec 4 13:35:05 2017 +0100
-> >>
-> >>     phylib: Add device reset GPIO support
-> >>
-> >> you will see there is an assumption the PHY can be detected while in
-> >> reset. The reset was originally handled inside the at803x PHY driver
-> >> probe function, before it got moved into the core.
-> >>
-> >> What you are asking for it reasonable, but you have some history to
-> >> deal with, changing some assumptions as to what the reset is all
-> >> about.
-> >
-> > Thanks for the pointer.
-> >
-> > It looks to me from the commit log that the assumption was that a
-> > bootloader could leave the PHY into reset though?
-> >
-> > It starts with:
-> >
-> >> The PHY devices sometimes do have their reset signal (maybe even power
-> >> supply?) tied to some GPIO and sometimes it also does happen that a
-> >> boot loader does not leave it deasserted.
-> >
-> > This is exactly the case I was discussing. The bootloader hasn't used
-> > the PHY, and thus the PHY reset signal is still asserted?
->
-> The current solution to this problem would be to have a reset property
-> specified for the MDIO bus controller node such that the reset would be
-> de-asserted during mdiobus_register() and prior to scanning the MDIO bus.
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-Unless the reset controls all the devices on the mdio bus, the
-controller node is not the right place. The core could look into the
-child nodes, but this is just one possible property.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-> This has the nice property that for a 1:1 mapping between MDIO bus
-> controller and device, it works (albeit maybe not being accurately
-> describing hardware), but if you have multiple MDIO/PHY devices sitting
-> on the bus, they might each have their own reset control and while we
-> would attempt to manage that reset line from that call path:
->
-> mdiobus_scan()
->  -> phy_device_register()
->     -> mdiobus_register_device()
->
-> it would be too late because there is a preceding get_phy_device() which
-> attempts to read the PHY device's OUI and it would fail if the PHY is
-> still held in reset.
->
-> We have had a similar discussion before with regulators:
->
-> http://archive.lwn.net:8080/devicetree/20200622093744.13685-1-brgl@bgdev.pl/
->
-> and so far we do not really have a good solution to this problem either.
->
-> For your specific use case with resets you could do a couple of things:
->
-> - if there is only one PHY on the MDIO bus you can describe the reset
-> line to be within the MDIO bus controller node (explained above), this
-> is not great but it is not necessarily too far from reality either
->
-> - if you know the PHY OUI, you can put it as a compatible string in the
-> form: ethernet-phy-id%4x.%4x and that will avoid the MDIO bus layer to
-> try to read from the PHY but instead match it with a driver and create a
-> phy_device instance right away
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ arch/sparc/kernel/auxio_64.c  |    1 -
+ arch/sparc/kernel/central.c   |    2 +-
+ arch/sparc/kernel/kgdb_32.c   |    2 +-
+ arch/sparc/kernel/kgdb_64.c   |    2 +-
+ arch/sparc/kernel/pcr.c       |    2 +-
+ arch/sparc/kernel/prom_32.c   |    2 +-
+ arch/sparc/kernel/signal32.c  |    4 ++--
+ arch/sparc/kernel/signal_32.c |    4 ++--
+ arch/sparc/kernel/signal_64.c |    4 ++--
+ arch/sparc/math-emu/math_32.c |    8 ++++----
+ 10 files changed, 15 insertions(+), 16 deletions(-)
 
-The h/w is simply not discoverable, so it needs a compatible string.
+diff --git a/arch/sparc/kernel/auxio_64.c b/arch/sparc/kernel/auxio_64.c
+index 4843f48bfe85..774a82b0c649 100644
+--- a/arch/sparc/kernel/auxio_64.c
++++ b/arch/sparc/kernel/auxio_64.c
+@@ -87,7 +87,6 @@ void auxio_set_lte(int on)
+ 		__auxio_sbus_set_lte(on);
+ 		break;
+ 	case AUXIO_TYPE_EBUS:
+-		/* FALL-THROUGH */
+ 	default:
+ 		break;
+ 	}
+diff --git a/arch/sparc/kernel/central.c b/arch/sparc/kernel/central.c
+index bfae98ab8638..23f8838dd96e 100644
+--- a/arch/sparc/kernel/central.c
++++ b/arch/sparc/kernel/central.c
+@@ -55,7 +55,7 @@ static int clock_board_calc_nslots(struct clock_board *p)
+ 			else
+ 				return 5;
+ 		}
+-		/* Fallthrough */
++		fallthrough;
+ 	default:
+ 		return 4;
+ 	}
+diff --git a/arch/sparc/kernel/kgdb_32.c b/arch/sparc/kernel/kgdb_32.c
+index 7580775a14b9..58ad3f7de1fb 100644
+--- a/arch/sparc/kernel/kgdb_32.c
++++ b/arch/sparc/kernel/kgdb_32.c
+@@ -122,7 +122,7 @@ int kgdb_arch_handle_exception(int e_vector, int signo, int err_code,
+ 			linux_regs->pc = addr;
+ 			linux_regs->npc = addr + 4;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 
+ 	case 'D':
+ 	case 'k':
+diff --git a/arch/sparc/kernel/kgdb_64.c b/arch/sparc/kernel/kgdb_64.c
+index 5d6c2d287e85..177746ae2c81 100644
+--- a/arch/sparc/kernel/kgdb_64.c
++++ b/arch/sparc/kernel/kgdb_64.c
+@@ -148,7 +148,7 @@ int kgdb_arch_handle_exception(int e_vector, int signo, int err_code,
+ 			linux_regs->tpc = addr;
+ 			linux_regs->tnpc = addr + 4;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 
+ 	case 'D':
+ 	case 'k':
+diff --git a/arch/sparc/kernel/pcr.c b/arch/sparc/kernel/pcr.c
+index c0886b400dad..2a12c86af956 100644
+--- a/arch/sparc/kernel/pcr.c
++++ b/arch/sparc/kernel/pcr.c
+@@ -359,7 +359,7 @@ int __init pcr_arch_init(void)
+ 		 * counter overflow interrupt so we can't make use of
+ 		 * their hardware currently.
+ 		 */
+-		/* fallthrough */
++		fallthrough;
+ 	default:
+ 		err = -ENODEV;
+ 		goto out_unregister;
+diff --git a/arch/sparc/kernel/prom_32.c b/arch/sparc/kernel/prom_32.c
+index da8902295c8c..3df960c137f7 100644
+--- a/arch/sparc/kernel/prom_32.c
++++ b/arch/sparc/kernel/prom_32.c
+@@ -224,7 +224,7 @@ void __init of_console_init(void)
+ 
+ 		case PROMDEV_TTYB:
+ 			skip = 1;
+-			/* FALLTHRU */
++			fallthrough;
+ 
+ 		case PROMDEV_TTYA:
+ 			type = "serial";
+diff --git a/arch/sparc/kernel/signal32.c b/arch/sparc/kernel/signal32.c
+index e2c6f0abda00..e9695a06492f 100644
+--- a/arch/sparc/kernel/signal32.c
++++ b/arch/sparc/kernel/signal32.c
+@@ -646,7 +646,7 @@ static inline void syscall_restart32(unsigned long orig_i0, struct pt_regs *regs
+ 	case ERESTARTSYS:
+ 		if (!(sa->sa_flags & SA_RESTART))
+ 			goto no_system_call_restart;
+-		/* fallthrough */
++		fallthrough;
+ 	case ERESTARTNOINTR:
+ 		regs->u_regs[UREG_I0] = orig_i0;
+ 		regs->tpc -= 4;
+@@ -686,7 +686,7 @@ void do_signal32(struct pt_regs * regs)
+ 				regs->tpc -= 4;
+ 				regs->tnpc -= 4;
+ 				pt_regs_clear_syscall(regs);
+-				/* fall through */
++				fallthrough;
+ 			case ERESTART_RESTARTBLOCK:
+ 				regs->u_regs[UREG_G1] = __NR_restart_syscall;
+ 				regs->tpc -= 4;
+diff --git a/arch/sparc/kernel/signal_32.c b/arch/sparc/kernel/signal_32.c
+index 3b005b6c3e0f..e08d294d63e4 100644
+--- a/arch/sparc/kernel/signal_32.c
++++ b/arch/sparc/kernel/signal_32.c
+@@ -441,7 +441,7 @@ static inline void syscall_restart(unsigned long orig_i0, struct pt_regs *regs,
+ 	case ERESTARTSYS:
+ 		if (!(sa->sa_flags & SA_RESTART))
+ 			goto no_system_call_restart;
+-		/* fallthrough */
++		fallthrough;
+ 	case ERESTARTNOINTR:
+ 		regs->u_regs[UREG_I0] = orig_i0;
+ 		regs->pc -= 4;
+@@ -507,7 +507,7 @@ static void do_signal(struct pt_regs *regs, unsigned long orig_i0)
+ 				regs->pc -= 4;
+ 				regs->npc -= 4;
+ 				pt_regs_clear_syscall(regs);
+-				/* fall through */
++				fallthrough;
+ 			case ERESTART_RESTARTBLOCK:
+ 				regs->u_regs[UREG_G1] = __NR_restart_syscall;
+ 				regs->pc -= 4;
+diff --git a/arch/sparc/kernel/signal_64.c b/arch/sparc/kernel/signal_64.c
+index 6937339a272c..255264bcb46a 100644
+--- a/arch/sparc/kernel/signal_64.c
++++ b/arch/sparc/kernel/signal_64.c
+@@ -461,7 +461,7 @@ static inline void syscall_restart(unsigned long orig_i0, struct pt_regs *regs,
+ 	case ERESTARTSYS:
+ 		if (!(sa->sa_flags & SA_RESTART))
+ 			goto no_system_call_restart;
+-		/* fallthrough */
++		fallthrough;
+ 	case ERESTARTNOINTR:
+ 		regs->u_regs[UREG_I0] = orig_i0;
+ 		regs->tpc -= 4;
+@@ -532,7 +532,7 @@ static void do_signal(struct pt_regs *regs, unsigned long orig_i0)
+ 				regs->tpc -= 4;
+ 				regs->tnpc -= 4;
+ 				pt_regs_clear_syscall(regs);
+-				/* fall through */
++				fallthrough;
+ 			case ERESTART_RESTARTBLOCK:
+ 				regs->u_regs[UREG_G1] = __NR_restart_syscall;
+ 				regs->tpc -= 4;
+diff --git a/arch/sparc/math-emu/math_32.c b/arch/sparc/math-emu/math_32.c
+index 72e560ef4a09..d5beec856146 100644
+--- a/arch/sparc/math-emu/math_32.c
++++ b/arch/sparc/math-emu/math_32.c
+@@ -359,7 +359,7 @@ static int do_one_mathemu(u32 insn, unsigned long *pfsr, unsigned long *fregs)
+ 			*pfsr |= (6 << 14);
+ 			return 0;			/* simulate invalid_fp_register exception */
+ 		}
+-	/* fall through */
++		fallthrough;
+ 	case 2:
+ 		if (freg & 1) {				/* doublewords must have bit 5 zeroed */
+ 			*pfsr |= (6 << 14);
+@@ -380,7 +380,7 @@ static int do_one_mathemu(u32 insn, unsigned long *pfsr, unsigned long *fregs)
+ 			*pfsr |= (6 << 14);
+ 			return 0;			/* simulate invalid_fp_register exception */
+ 		}
+-	/* fall through */
++		fallthrough;
+ 	case 2:
+ 		if (freg & 1) {				/* doublewords must have bit 5 zeroed */
+ 			*pfsr |= (6 << 14);
+@@ -408,13 +408,13 @@ static int do_one_mathemu(u32 insn, unsigned long *pfsr, unsigned long *fregs)
+ 			*pfsr |= (6 << 14);
+ 			return 0;			/* simulate invalid_fp_register exception */
+ 		}
+-	/* fall through */
++		fallthrough;
+ 	case 2:
+ 		if (freg & 1) {				/* doublewords must have bit 5 zeroed */
+ 			*pfsr |= (6 << 14);
+ 			return 0;
+ 		}
+-	/* fall through */
++		fallthrough;
+ 	case 1:
+ 		rd = (void *)&fregs[freg];
+ 		break;
 
-> I think we are open to a "pre probe" model where it is possible to have
-> a phy_device instance created that would allow reset controller or
-> regulator (or clocks, too) to be usable with a struct device reference,
-> yet make no HW access until all of these resources have been enabled.
-
-I think this is needed for the kernel's driver model in general. It's
-not an MDIO specific problem.
-
-Rob
