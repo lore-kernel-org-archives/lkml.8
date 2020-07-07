@@ -4,68 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A432CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F607C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73DC420773
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC5920771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594131467;
-	bh=AOgNC96ffB16G2PnMWfsUocfvapenbvNsXU0H973Ycs=;
+	s=default; t=1594131473;
+	bh=pve5QprljZ4UYpaZLR9H+cQw5sf2yLulSSnup7LqVq4=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=pXKH8SIUidYd2E3yiwcproOQDYKSE7I2TD5qmHvEVAVHPIIsWyxcR35fHv3P0i0YB
-	 VCM9BI19B1ADLiXmn6GC+SnHrm3ncavzFwyXU9uOqp9Ripb7n+if6u0B7YQobX2kk1
-	 P6bHqfDypDBFN/RMQ7CWTop+kLlROBQjpc9zLtxQ=
+	b=kbfD0dsi47v4RxLXGo1l8IBf0DH7KIgUf0JeOB/8HoImT4IVD+RlPRg4acf7sRWH/
+	 cqR3DEc4KpGecyZe6/h3XwXz5QXLJwdlOBxPFCJ6931dL+Dna/B0F1qQk5NUkKtytq
+	 mdshmhfLqjLoBMzpSVyyUrmWptvablQtMXP4aZ34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgGGORq (ORCPT
+        id S1728312AbgGGORw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:17:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 10:17:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbgGGORp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:17:45 -0400
+        id S1727064AbgGGORw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:17:52 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31E7720771;
-        Tue,  7 Jul 2020 14:17:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04C1520771;
+        Tue,  7 Jul 2020 14:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594131465;
-        bh=AOgNC96ffB16G2PnMWfsUocfvapenbvNsXU0H973Ycs=;
+        s=default; t=1594131471;
+        bh=pve5QprljZ4UYpaZLR9H+cQw5sf2yLulSSnup7LqVq4=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=fPQD2I9ZyMUfKGMK6gRBWjFY5LbEvoGBRULTk5UWRrTrfWj4y766CljI5x8r1bSYw
-         PBV6kz0O32LKfVD7K69sVr38RUgFBM9uwYbN5NUNxhuc2vZVKkORcUGs7Tfr3edk7M
-         pBC5WRB2EsP+d2afMjapx5BQ+/EBwyKGMSuhAWQA=
-Date:   Tue, 07 Jul 2020 15:17:41 +0100
+        b=v94pGfnpkt+1iWcdy7HEv8hILl70AgmCSFhrQtwKguzL7jcIqUIL5Y6IUkBPwejWt
+         ScKC/u6TYYhseFcnsSnNWy/VvkjLp8lFP7ZEqgih4agghenABndSt+oiIfl5UdsxOR
+         oX4gKT6hXJWiridoPY47IYULindd3ubEA0aZ/jh8=
+Date:   Tue, 07 Jul 2020 15:17:47 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Christoph Fritz <chf.fritz@googlemail.com>
-Cc:     clang-built-linux@googlegroups.com,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-In-Reply-To: <1c437154873ace65ff738a0ebca511308f1cecc1.camel@googlemail.com>
-References: <202007071433.Z3bmcgjU%lkp@intel.com> <da3aece9abd23b12837e9abf908ee67f0c2c988c.camel@googlemail.com> <20200707102042.GD4870@sirena.org.uk> <1c437154873ace65ff738a0ebca511308f1cecc1.camel@googlemail.com>
-Subject: Re: [PATCH] regulator: fan53880: Add support for COMPILE_TEST
-Message-Id: <159413146113.34914.999828290847057133.b4-ty@kernel.org>
+To:     Andy Gross <agross@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-spi@vger.kernel.org, ctheegal@codeaurora.org,
+        akashast@codeaurora.org, mkshah@codeaurora.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        georgi.djakov@linaro.org, swboyd@chromium.org,
+        linux-arm-msm@vger.kernel.org
+In-Reply-To: <20200702004509.2333554-1-dianders@chromium.org>
+References: <20200702004509.2333554-1-dianders@chromium.org>
+Subject: Re: [PATCH 0/3] spi: spi-geni-qcom: Avoid a bunch of per-transfer overhead
+Message-Id: <159413146696.34997.14314538342841889757.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 07 Jul 2020 12:57:31 +0200, Christoph Fritz wrote:
-> This patch adds support for COMPILE_TEST while fixing a warning when
-> no support for device tree is there.
+On Wed, 1 Jul 2020 17:45:06 -0700, Douglas Anderson wrote:
+> This series tries to reduce a whole bunch of overhead in each SPI
+> transfer.  Much of this overhead is new with the recent interconnect
+> changes, but even without those changes we still had some overhead
+> that we could avoid.  Let's avoid all of it.
+> 
+> These changes are atop the Qualcomm tree to avoid merge conflicts.  If
+> they look good, the most expedient way to land them is probably to get
+> Ack's from Mark and land then via the Qualcomm tree.
+> 
+> [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: fan53880: Add support for COMPILE_TEST
-      commit: 318b8a09f295cbf86fd504bcff3769b1fc4a936b
+[1/3] spi: spi-geni-qcom: Avoid clock setting if not needed
+      (no commit info)
+[2/3] spi: spi-geni-qcom: Set an autosuspend delay of 250 ms
+      commit: e99f0b6ef2679b0abeefcd7bd148cd65651c7857
+[3/3] spi: spi-geni-qcom: Get rid of most overhead in prepare_message()
+      (no commit info)
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
