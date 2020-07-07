@@ -2,189 +2,165 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB41EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 310D020663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA41206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QUWAF8LC"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pkgM4Awg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgGGAnf (ORCPT
+        id S1726906AbgGGAqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 20:43:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34101 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725987AbgGGAne (ORCPT
+        Mon, 6 Jul 2020 20:46:45 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:51162 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725942AbgGGAqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 20:43:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594082612;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bmJ7C85eBCHqi3uCC4lh1tP3/MpQ+1OZkBVEhNoxOsY=;
-        b=QUWAF8LCnzJ9c8e1qQ0bzXZXh0CgD2WEjH8GGG0HHpzXnLa5sNJovHUWlpqm2Xudgky9+W
-        I7x9+5wKI3yiyliVtgjoUr/Ly6sDRC2XDwacR1dn1B7m/RUKDiVei1OrxQdU5ReYvjf0I7
-        7Af28aLGw/QB6sk80P2inDRhfc6aFuE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-468-2DeQi2riNRmXcyNFLYANkA-1; Mon, 06 Jul 2020 20:43:28 -0400
-X-MC-Unique: 2DeQi2riNRmXcyNFLYANkA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC5F1107ACCA;
-        Tue,  7 Jul 2020 00:43:26 +0000 (UTC)
-Received: from [10.72.8.24] (ovpn-8-24.pek2.redhat.com [10.72.8.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B0145D9F3;
-        Tue,  7 Jul 2020 00:43:18 +0000 (UTC)
-Subject: Re: [PATCH v2 00/12] ppc64: enable kdump support for kexec_file_load
- syscall
-To:     Hari Bathini <hbathini@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
-Cc:     Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-From:   piliu <piliu@redhat.com>
-Message-ID: <4b63d9d1-b460-cfbe-55d1-0944b2e2c743@redhat.com>
-Date:   Tue, 7 Jul 2020 08:43:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Mon, 6 Jul 2020 20:46:45 -0400
+X-UUID: e40676f9293240e6a31db48b3fdd0b16-20200707
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=9+BgWtK/CBgwcVCXkyOr08QW0zYWgf+PY9UfH+ilC/c=;
+        b=pkgM4AwgulucaxKgow4xvjadIqp24Lynb/33XkSbzV8yEmSqxxSRSSttDwK2otU0YGxNWGJrvQgowRL23aNBjwzo2UczvnLhXBEvx+93xXsqvqSH5eyss72owU4KTBkrzX521pzBWGEp4QwGeK+4TyDuvWtFj9rG8MuuEBRKa7Q=;
+X-UUID: e40676f9293240e6a31db48b3fdd0b16-20200707
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 455299607; Tue, 07 Jul 2020 08:46:41 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 7 Jul 2020 08:46:39 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 7 Jul 2020 08:46:39 +0800
+Message-ID: <1594082800.24876.0.camel@mtkswgap22>
+Subject: Re: [PATCH v2 8/8] soc: mediatek: cmdq: add clear option in
+ cmdq_pkt_wfe api
+From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        HS Liao <hs.liao@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 7 Jul 2020 08:46:40 +0800
+In-Reply-To: <CAAOTY_-5um+X=cS3rkuN7YHycK2AyJsovumCQ4t+dbwXw62uAQ@mail.gmail.com>
+References: <1593931715-32761-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1593931715-32761-9-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <CAAOTY_-5um+X=cS3rkuN7YHycK2AyJsovumCQ4t+dbwXw62uAQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 07/03/2020 03:53 AM, Hari Bathini wrote:
-> This patch series enables kdump support for kexec_file_load system
-> call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
-> code but heavily modified for kernel consumption. There is scope to
-> expand purgatory to verify sha256 digest along with other improvements
-> in purgatory code. Will deal with those changes in a separate patch
-> series later.
-> 
-> The first patch adds a weak arch_kexec_locate_mem_hole() function to
-> override locate memory hole logic suiting arch needs. There are some
-> special regions in ppc64 which should be avoided while loading buffer
-> & there are multiple callers to kexec_add_buffer making it complicated
-> to maintain range sanity and using generic lookup at the same time.
-> 
-> The second patch marks ppc64 specific code within arch/powerpc/kexec
-> and arch/powerpc/purgatory to make the subsequent code changes easy
-> to understand.
-> 
-> The next patch adds helper function to setup different memory ranges
-> needed for loading kdump kernel, booting into it and exporting the
-> crashing kernel's elfcore.
-> 
-> The fourth patch overrides arch_kexec_locate_mem_hole() function to
-> locate memory hole for kdump segments by accounting for the special
-> memory regions, referred to as excluded memory ranges, and sets
-> kbuf->mem when a suitable memory region is found.
-> 
-> The fifth patch moves walk_drmem_lmbs() out of .init section with
-> a few changes to reuse it for setting up kdump kernel's usable memory
-> ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
-> and set linux,drconf-usable-memory & linux,usable-memory properties
-> in order to restrict kdump kernel's memory usage.
-> 
-> The seventh patch adds relocation support for the purgatory. Patch 8
-> helps setup the stack for the purgatory. The next patch setups up
-> backup region as a segment while loading kdump kernel and teaches
-> purgatory to copy it from source to destination.
-> 
-> Patch 10 builds the elfcore header for the running kernel & passes
-> the info to kdump kernel via "elfcorehdr=" parameter to export as
-> /proc/vmcore file. The next patch sets up the memory reserve map
-> for the kexec kernel and also claims kdump support for kdump as
-> all the necessary changes are added.
-> 
-> The last patch fixes a lookup issue for `kexec -l -s` case when
-> memory is reserved for crashkernel.
-> 
-> Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
-> boxes and a simulator.
-> 
-> Changes in v2:
-> * Introduced arch_kexec_locate_mem_hole() for override and dropped
->   weak arch_kexec_add_buffer().
-> * Addressed warnings reported by lkp.
-> * Added patch to address kexec load issue when memory is reserved
->   for crashkernel.
-> * Used the appropriate license header for the new files added.
-> * Added an option to merge ranges to minimize reallocations while
->   adding memory ranges.
-> * Dropped within_crashkernel parameter for add_opal_mem_range() &
->   add_rtas_mem_range() functions as it is not really needed.
-> 
-> ---
-> 
-> Hari Bathini (12):
->       kexec_file: allow archs to handle special regions while locating memory hole
->       powerpc/kexec_file: mark PPC64 specific code
->       powerpc/kexec_file: add helper functions for getting memory ranges
->       ppc64/kexec_file: avoid stomping memory used by special regions
->       powerpc/drmem: make lmb walk a bit more flexible
->       ppc64/kexec_file: restrict memory usage of kdump kernel
->       ppc64/kexec_file: add support to relocate purgatory
->       ppc64/kexec_file: setup the stack for purgatory
->       ppc64/kexec_file: setup backup region for kdump kernel
->       ppc64/kexec_file: prepare elfcore header for crashing kernel
->       ppc64/kexec_file: add appropriate regions for memory reserve map
->       ppc64/kexec_file: fix kexec load failure with lack of memory hole
-> 
-> 
->  arch/powerpc/include/asm/crashdump-ppc64.h |   15 
->  arch/powerpc/include/asm/drmem.h           |    9 
->  arch/powerpc/include/asm/kexec.h           |   35 +
->  arch/powerpc/include/asm/kexec_ranges.h    |   18 
->  arch/powerpc/include/asm/purgatory.h       |   11 
->  arch/powerpc/kernel/prom.c                 |   13 
->  arch/powerpc/kexec/Makefile                |    2 
->  arch/powerpc/kexec/elf_64.c                |   35 +
->  arch/powerpc/kexec/file_load.c             |   78 +
->  arch/powerpc/kexec/file_load_64.c          | 1509 ++++++++++++++++++++++++++++
->  arch/powerpc/kexec/ranges.c                |  397 +++++++
->  arch/powerpc/mm/drmem.c                    |   87 +-
->  arch/powerpc/mm/numa.c                     |   13 
->  arch/powerpc/purgatory/Makefile            |   28 -
->  arch/powerpc/purgatory/purgatory_64.c      |   36 +
->  arch/powerpc/purgatory/trampoline.S        |  117 --
->  arch/powerpc/purgatory/trampoline_64.S     |  175 +++
->  include/linux/kexec.h                      |   29 -
->  kernel/kexec_file.c                        |   16 
->  19 files changed, 2413 insertions(+), 210 deletions(-)
->  create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
->  create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
->  create mode 100644 arch/powerpc/include/asm/purgatory.h
->  create mode 100644 arch/powerpc/kexec/file_load_64.c
->  create mode 100644 arch/powerpc/kexec/ranges.c
->  create mode 100644 arch/powerpc/purgatory/purgatory_64.c
->  delete mode 100644 arch/powerpc/purgatory/trampoline.S
->  create mode 100644 arch/powerpc/purgatory/trampoline_64.S
-> 
-Tested-by: Pingfan Liu <piliu@redhat.com>
+SGkgQ0ssDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KDQpPbiBUdWUsIDIwMjAtMDctMDcg
+YXQgMDc6NDYgKzA4MDAsIENodW4tS3VhbmcgSHUgd3JvdGU6DQo+IEhpLCBEZW5uaXM6DQo+IA0K
+PiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRlay5jb20+IOaWvCAyMDIw
+5bm0N+aciDbml6Ug6YCx5LiAIOS4i+WNiDM6MjDlr6vpgZPvvJoNCj4gPg0KPiA+IEFkZCBjbGVh
+ciBwYXJhbWV0ZXIgdG8gbGV0IGNsaWVudCBkZWNpZGUgaWYNCj4gPiBldmVudCBzaG91bGQgYmUg
+Y2xlYXIgdG8gMCBhZnRlciBHQ0UgcmVjZWl2ZSBpdC4NCj4gPg0KPiA+IEZpeGVzOiAyZjk2NWJl
+N2Y5MDA4ICgiZHJtL21lZGlhdGVrOiBhcHBseSBDTURRIGNvbnRyb2wgZmxvdyIpDQo+IA0KPiBJ
+IHRoaW5rIHRoaXMgcGF0Y2ggaW5jbHVkZSB0d28gdGhpbmdzLCBvbmUgaXMgYnVnIGZpeCwgYW5v
+dGhlciBpcw0KPiBjaGFuZ2luZyBpbnRlcmZhY2UuDQo+IGJlbG93IGlzIHRoZSBidWcgZml4IHBh
+cnQuDQo+IA0KPiAtI2RlZmluZSBDTURRX1dGRV9PUFRJT04gICAgICAgICAgICAgICAgICAgICAg
+ICAoQ01EUV9XRkVfVVBEQVRFIHwNCj4gQ01EUV9XRkVfV0FJVCB8IFwNCj4gLSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIENNRFFfV0ZFX1dBSVRfVkFMVUUpDQo+ICsjZGVm
+aW5lIENNRFFfV0ZFX09QVElPTiAgICAgICAgICAgICAgICAgICAgICAgIChDTURRX1dGRV9XQUlU
+IHwNCj4gQ01EUV9XRkVfV0FJVF9WQUxVRSkNCj4gDQo+IHRoZSBvdGhlciBpcyBjaGFuZ2luZyBp
+bnRlcmZhY2UgcGFydC4gU28gdGhpcyBwYXRjaCBzaG91bGQgYmUgYnJva2VuDQo+IGludG8gdHdv
+IHBhdGNoZXMuDQoNCm9rIEknbGwgYnJlYWsgaW50byB0d28gcGF0Y2hlcw0KDQoNClJlZ2FyZHMs
+DQpEZW5uaXMNCg0KPiANCj4gUmVnYXJkcywNCj4gQ2h1bi1LdWFuZy4NCj4gDQo+ID4gU2lnbmVk
+LW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0K
+PiA+IFJldmlld2VkLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+
+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgIHwgICAgMiArLQ0KPiA+
+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyAgIHwgICAgNSArKystLQ0K
+PiA+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIHwgICAgMyArLS0N
+Cj4gPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCAgICB8ICAgIDUgKysr
+LS0NCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0p
+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+Y3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+ID4gaW5k
+ZXggZWM2YzlmZmJmMzVlLi5iYTZjZjk1NmIyMzkgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+ID4gQEAgLTQ5MCw3ICs0OTAsNyBAQCBzdGF0aWMg
+dm9pZCBtdGtfZHJtX2NydGNfaHdfY29uZmlnKHN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRj
+KQ0KPiA+ICAgICAgICAgICAgICAgICBtYm94X2ZsdXNoKG10a19jcnRjLT5jbWRxX2NsaWVudC0+
+Y2hhbiwgMjAwMCk7DQo+ID4gICAgICAgICAgICAgICAgIGNtZHFfaGFuZGxlID0gY21kcV9wa3Rf
+Y3JlYXRlKG10a19jcnRjLT5jbWRxX2NsaWVudCwgUEFHRV9TSVpFKTsNCj4gPiAgICAgICAgICAg
+ICAgICAgY21kcV9wa3RfY2xlYXJfZXZlbnQoY21kcV9oYW5kbGUsIG10a19jcnRjLT5jbWRxX2V2
+ZW50KTsNCj4gPiAtICAgICAgICAgICAgICAgY21kcV9wa3Rfd2ZlKGNtZHFfaGFuZGxlLCBtdGtf
+Y3J0Yy0+Y21kcV9ldmVudCk7DQo+ID4gKyAgICAgICAgICAgICAgIGNtZHFfcGt0X3dmZShjbWRx
+X2hhbmRsZSwgbXRrX2NydGMtPmNtZHFfZXZlbnQsIGZhbHNlKTsNCj4gPiAgICAgICAgICAgICAg
+ICAgbXRrX2NydGNfZGRwX2NvbmZpZyhjcnRjLCBjbWRxX2hhbmRsZSk7DQo+ID4gICAgICAgICAg
+ICAgICAgIGNtZHFfcGt0X2ZpbmFsaXplKGNtZHFfaGFuZGxlKTsNCj4gPiAgICAgICAgICAgICAg
+ICAgY21kcV9wa3RfZmx1c2hfYXN5bmMoY21kcV9oYW5kbGUsIGRkcF9jbWRxX2NiLCBjbWRxX2hh
+bmRsZSk7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhl
+bHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gPiBpbmRl
+eCBkNTVkYzMyOTYxMDUuLjUwNTY1MWIwZDcxNSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Nv
+Yy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gQEAgLTMxNiwxNSArMzE2LDE2IEBAIGludCBjbWRx
+X3BrdF93cml0ZV9zX21hc2tfdmFsdWUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHU4IGhpZ2hfYWRk
+cl9yZWdfaWR4LA0KPiA+ICB9DQo+ID4gIEVYUE9SVF9TWU1CT0woY21kcV9wa3Rfd3JpdGVfc19t
+YXNrX3ZhbHVlKTsNCj4gPg0KPiA+IC1pbnQgY21kcV9wa3Rfd2ZlKHN0cnVjdCBjbWRxX3BrdCAq
+cGt0LCB1MTYgZXZlbnQpDQo+ID4gK2ludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNtZHFfcGt0ICpw
+a3QsIHUxNiBldmVudCwgYm9vbCBjbGVhcikNCj4gPiAgew0KPiA+ICAgICAgICAgc3RydWN0IGNt
+ZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+ID4gKyAgICAgICB1MzIgY2xlYXJfb3B0
+aW9uID0gY2xlYXIgPyBDTURRX1dGRV9VUERBVEUgOiAwOw0KPiA+DQo+ID4gICAgICAgICBpZiAo
+ZXZlbnQgPj0gQ01EUV9NQVhfRVZFTlQpDQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiAtRUlO
+VkFMOw0KPiA+DQo+ID4gICAgICAgICBpbnN0Lm9wID0gQ01EUV9DT0RFX1dGRTsNCj4gPiAtICAg
+ICAgIGluc3QudmFsdWUgPSBDTURRX1dGRV9PUFRJT047DQo+ID4gKyAgICAgICBpbnN0LnZhbHVl
+ID0gQ01EUV9XRkVfT1BUSU9OIHwgY2xlYXJfb3B0aW9uOw0KPiA+ICAgICAgICAgaW5zdC5ldmVu
+dCA9IGV2ZW50Ow0KPiA+DQo+ID4gICAgICAgICByZXR1cm4gY21kcV9wa3RfYXBwZW5kX2NvbW1h
+bmQocGt0LCBpbnN0KTsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210
+ay1jbWRxLW1haWxib3guaCBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
+LmgNCj4gPiBpbmRleCBlZmJkOGE5ZWIyZDEuLmQ1YTk4M2Q2NWYwNSAxMDA2NDQNCj4gPiAtLS0g
+YS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+ID4gKysrIGIvaW5j
+bHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiA+IEBAIC0yOCw4ICsyOCw3
+IEBADQo+ID4gICAqIGJpdCAxNi0yNzogdXBkYXRlIHZhbHVlDQo+ID4gICAqIGJpdCAzMTogMSAt
+IHVwZGF0ZSwgMCAtIG5vIHVwZGF0ZQ0KPiA+ICAgKi8NCj4gPiAtI2RlZmluZSBDTURRX1dGRV9P
+UFRJT04gICAgICAgICAgICAgICAgICAgICAgICAoQ01EUV9XRkVfVVBEQVRFIHwgQ01EUV9XRkVf
+V0FJVCB8IFwNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ01E
+UV9XRkVfV0FJVF9WQUxVRSkNCj4gPiArI2RlZmluZSBDTURRX1dGRV9PUFRJT04gICAgICAgICAg
+ICAgICAgICAgICAgICAoQ01EUV9XRkVfV0FJVCB8IENNRFFfV0ZFX1dBSVRfVkFMVUUpDQo+ID4N
+Cj4gPiAgLyoqIGNtZHEgZXZlbnQgbWF4aW11bSAqLw0KPiA+ICAjZGVmaW5lIENNRFFfTUFYX0VW
+RU5UICAgICAgICAgICAgICAgICAweDNmZg0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4
+L3NvYy9tZWRpYXRlay9tdGstY21kcS5oIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRr
+LWNtZHEuaA0KPiA+IGluZGV4IDM0MzU0ZTk1MmY2MC4uOTYwNzA0ZDc1OTk0IDEwMDY0NA0KPiA+
+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gPiArKysgYi9p
+bmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+ID4gQEAgLTE4MiwxMSArMTgy
+LDEyIEBAIGludCBjbWRxX3BrdF93cml0ZV9zX21hc2tfdmFsdWUoc3RydWN0IGNtZHFfcGt0ICpw
+a3QsIHU4IGhpZ2hfYWRkcl9yZWdfaWR4LA0KPiA+ICAvKioNCj4gPiAgICogY21kcV9wa3Rfd2Zl
+KCkgLSBhcHBlbmQgd2FpdCBmb3IgZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4g
+PiAgICogQHBrdDogICAgICAgdGhlIENNRFEgcGFja2V0DQo+ID4gLSAqIEBldmVudDogICAgIHRo
+ZSBkZXNpcmVkIGV2ZW50IHR5cGUgdG8gIndhaXQgYW5kIENMRUFSIg0KPiA+ICsgKiBAZXZlbnQ6
+ICAgICB0aGUgZGVzaXJlZCBldmVudCB0eXBlIHRvIHdhaXQNCj4gPiArICogQGNsZWFyOiAgICAg
+Y2xlYXIgZXZlbnQgb3Igbm90IGFmdGVyIGV2ZW50IGFycml2ZQ0KPiA+ICAgKg0KPiA+ICAgKiBS
+ZXR1cm46IDAgZm9yIHN1Y2Nlc3M7IGVsc2UgdGhlIGVycm9yIGNvZGUgaXMgcmV0dXJuZWQNCj4g
+PiAgICovDQo+ID4gLWludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiBl
+dmVudCk7DQo+ID4gK2ludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiBl
+dmVudCwgYm9vbCBjbGVhcik7DQo+ID4NCj4gPiAgLyoqDQo+ID4gICAqIGNtZHFfcGt0X2NsZWFy
+X2V2ZW50KCkgLSBhcHBlbmQgY2xlYXIgZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQN
+Cj4gPiAtLQ0KPiA+IDEuNy45LjUNCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXw0KPiA+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QNCj4gPiBkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+ID4gaHR0cHM6Ly91cmxkZWZlbnNlLmNvbS92My9f
+X2h0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+X187ISFDVFJOS0E5d01nMEFSYnchd24wS1BpWWFHSnhmWjNPczJMZWF2dXZCWHRoM0hVZWpuMXNO
+aGk4X1duVmdSX2pUeWZtTGdvX2tCYkdIcFRGMFVxb0RRUSQgDQoNCg==
 
