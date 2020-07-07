@@ -2,260 +2,118 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C34C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA10206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9CC206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qEUvpwxL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/h94cUG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgGGR52 (ORCPT
+        id S1728215AbgGGSA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:57:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56694 "EHLO
+        Tue, 7 Jul 2020 14:00:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728036AbgGGR51 (ORCPT
+        with ESMTP id S1727777AbgGGSA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:57:27 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53F92C061755;
-        Tue,  7 Jul 2020 10:57:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=Weuro944qoHsBvfyYbAkCMwQQQFAVhE01qJV6uQvAx8=; b=qEUvpwxLV9Ae+jesGCTc8ddeVN
-        jGipuy3RunNhHETYZHOmVHp5QJdHPMfa4ANtLhcKnGmjgJCvdZ66O6kxxuuxgtTEaAFIxgb7F2PHT
-        sbugZOIJv06LBO6lUw6NEwFsTuejwARoWEo2q+u6t+q+nmJ+pig5LXrTBj0Vr2KjeqViACGMZbUpj
-        9iIgKq64i99ET+EkzHUOcChRV77Uw0JHFVhLNuJnsyn1aAeBT5Tudzb55y0K5hbY0rspbagi7BAGb
-        2zk/jttD7JQxE6OhHw4IBKglDFZ1g0QpQZWkYtav2MIUxjqixFt9+l70ZAxGtz1gA7l6jyHH1nF2z
-        mXiUX7RQ==;
-Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsrqJ-0003xp-LF; Tue, 07 Jul 2020 17:57:20 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 23/23] fs: don't allow splice read/write without explicit ops
-Date:   Tue,  7 Jul 2020 19:48:01 +0200
-Message-Id: <20200707174801.4162712-24-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200707174801.4162712-1-hch@lst.de>
-References: <20200707174801.4162712-1-hch@lst.de>
+        Tue, 7 Jul 2020 14:00:58 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E20C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 11:00:57 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id a8so38113961edy.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 11:00:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=W8TPM5bdyg71dTiB8jNn7OZEEqQzG0GKM7OFFwfgiDw=;
+        b=K/h94cUGQRAnMGuxd+caPCyuOVecpYq7lkiqe12dXivDNYSIS2W7nA/6d6xHUVwqHW
+         L0PTHHjzgf/6x454ljLlcwPu0r2lI3MgpXuxkH6BNaHcONuq1rfWJwYKAQwYU8bpq7il
+         WXS+iwx+ItTrJoS+D5ot8XXBigRVFMazQS/joqhV+4FbhyvFNBe2ix1LFu1+XP+hwIaU
+         cw5Ma9+cM1/gO2BQrWp5LOrvxuphyExhv94teqkL2hjjdjDMwJxKVfwbsZQXhotZ8E3Y
+         Grfny+Lv4W13MiVJBUEWg4sqUMPeHNyGCe/ZSjBCv9DHDPRxgiJWMr8Hl5V7WeQ4j5/r
+         q+OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=W8TPM5bdyg71dTiB8jNn7OZEEqQzG0GKM7OFFwfgiDw=;
+        b=K4BztGqZhsZuCy3XwbFioViktyf6NUFwd3vnTdxmV9FAdfYYbEz/qjElLpiNprbvUr
+         axiQnFr2UNe/D0XGgn3qNJpYwe3UeftIt7Luc2YcZ8niq9b2b/lXjr8vSdRYOhDEwOcN
+         r7MZ65sWW4nX4PDJAzVt8raJjvD6EELf6KuDNZxnG0/++HDpML67+Y0wd4zr0D6D1rQ+
+         /e0XJytQOUcX5pAVJ0o7fOpOriaamfHp1KZDBDEVdtaVyyNgSW7POd64KV9oTI+RAb+5
+         5l8C6QMFjtxIvUzE6rjIJn9n1ecEBEyUY+H2c5G3f8dteYyYi9GCV+lvyH82lJkil/ia
+         bS7g==
+X-Gm-Message-State: AOAM530Xg08A0wAHXiWPckNsQ8+KyiBgjGCFzY3rpybMkOx0ZOmbiAWB
+        BI064aYaTQ9XQJqedFv/JhfRZ0izjrQsntWNLTtBuMTGPOA=
+X-Google-Smtp-Source: ABdhPJykMRStnd4trilBtj5i4D4gaKZ5GcjXdYTfXEawrY7dsNiAXwuo1XMh/Xr0OoySQVDWaF1ZZzJ+glTAoiYu2/4=
+X-Received: by 2002:a05:6402:377:: with SMTP id s23mr63936839edw.200.1594144856588;
+ Tue, 07 Jul 2020 11:00:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Tue, 7 Jul 2020 11:00:16 -0700
+Message-ID: <CAHbLzkq5rSHUSbHegM5mURytS7nEDyHHbxOYn8DaBwYB0qGocw@mail.gmail.com>
+Subject: [RFC] Kill THP deferred split queue?
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't allow calling ->read or ->write with set_fs as a preparation for
-killing off set_fs.  While I've not triggered any of these cases in my
-setups as all the usual suspect (file systems, pipes, sockets, block
-devices, system character devices) use the iter ops this is almost
-going to be guaranteed to eventuall break something, so print a detailed
-error message helping to debug such cases.  The fix will be to switch the
-affected driver to use the iter ops.
+Hi folks,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/read_write.c    |   2 +-
- fs/splice.c        | 121 ++++-----------------------------------------
- include/linux/fs.h |   2 -
- 3 files changed, 10 insertions(+), 115 deletions(-)
+The THP deferred split queue is used to store PTE mapped THP (i.e.
+partial unmapped THP) then they will get split by deferred split
+shrinker when memory pressure kicks in.
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 8d8113ae8561e6..c33182f97d1ef0 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1077,7 +1077,7 @@ ssize_t vfs_iter_write(struct file *file, struct iov_iter *iter, loff_t *ppos,
- }
- EXPORT_SYMBOL(vfs_iter_write);
- 
--ssize_t vfs_readv(struct file *file, const struct iovec __user *vec,
-+static ssize_t vfs_readv(struct file *file, const struct iovec __user *vec,
- 		  unsigned long vlen, loff_t *pos, rwf_t flags)
- {
- 	struct iovec iovstack[UIO_FASTIOV];
-diff --git a/fs/splice.c b/fs/splice.c
-index 52485158023778..3ceaaf3b8c122c 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -342,89 +342,6 @@ const struct pipe_buf_operations nosteal_pipe_buf_ops = {
- };
- EXPORT_SYMBOL(nosteal_pipe_buf_ops);
- 
--static ssize_t kernel_readv(struct file *file, const struct kvec *vec,
--			    unsigned long vlen, loff_t offset)
--{
--	mm_segment_t old_fs;
--	loff_t pos = offset;
--	ssize_t res;
--
--	old_fs = get_fs();
--	set_fs(KERNEL_DS);
--	/* The cast to a user pointer is valid due to the set_fs() */
--	res = vfs_readv(file, (const struct iovec __user *)vec, vlen, &pos, 0);
--	set_fs(old_fs);
--
--	return res;
--}
--
--static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
--				 struct pipe_inode_info *pipe, size_t len,
--				 unsigned int flags)
--{
--	struct kvec *vec, __vec[PIPE_DEF_BUFFERS];
--	struct iov_iter to;
--	struct page **pages;
--	unsigned int nr_pages;
--	unsigned int mask;
--	size_t offset, base, copied = 0;
--	ssize_t res;
--	int i;
--
--	if (pipe_full(pipe->head, pipe->tail, pipe->max_usage))
--		return -EAGAIN;
--
--	/*
--	 * Try to keep page boundaries matching to source pagecache ones -
--	 * it probably won't be much help, but...
--	 */
--	offset = *ppos & ~PAGE_MASK;
--
--	iov_iter_pipe(&to, READ, pipe, len + offset);
--
--	res = iov_iter_get_pages_alloc(&to, &pages, len + offset, &base);
--	if (res <= 0)
--		return -ENOMEM;
--
--	nr_pages = DIV_ROUND_UP(res + base, PAGE_SIZE);
--
--	vec = __vec;
--	if (nr_pages > PIPE_DEF_BUFFERS) {
--		vec = kmalloc_array(nr_pages, sizeof(struct kvec), GFP_KERNEL);
--		if (unlikely(!vec)) {
--			res = -ENOMEM;
--			goto out;
--		}
--	}
--
--	mask = pipe->ring_size - 1;
--	pipe->bufs[to.head & mask].offset = offset;
--	pipe->bufs[to.head & mask].len -= offset;
--
--	for (i = 0; i < nr_pages; i++) {
--		size_t this_len = min_t(size_t, len, PAGE_SIZE - offset);
--		vec[i].iov_base = page_address(pages[i]) + offset;
--		vec[i].iov_len = this_len;
--		len -= this_len;
--		offset = 0;
--	}
--
--	res = kernel_readv(in, vec, nr_pages, *ppos);
--	if (res > 0) {
--		copied = res;
--		*ppos += res;
--	}
--
--	if (vec != __vec)
--		kfree(vec);
--out:
--	for (i = 0; i < nr_pages; i++)
--		put_page(pages[i]);
--	kvfree(pages);
--	iov_iter_advance(&to, copied);	/* truncates and discards */
--	return res;
--}
--
- /*
-  * Send 'sd->len' bytes to socket from 'sd->file' at position 'sd->pos'
-  * using sendpage(). Return the number of bytes sent.
-@@ -788,33 +705,6 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
- 
- EXPORT_SYMBOL(iter_file_splice_write);
- 
--static int write_pipe_buf(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
--			  struct splice_desc *sd)
--{
--	int ret;
--	void *data;
--	loff_t tmp = sd->pos;
--
--	data = kmap(buf->page);
--	ret = __kernel_write(sd->u.file, data + buf->offset, sd->len, &tmp);
--	kunmap(buf->page);
--
--	return ret;
--}
--
--static ssize_t default_file_splice_write(struct pipe_inode_info *pipe,
--					 struct file *out, loff_t *ppos,
--					 size_t len, unsigned int flags)
--{
--	ssize_t ret;
--
--	ret = splice_from_pipe(pipe, out, ppos, len, flags, write_pipe_buf);
--	if (ret > 0)
--		*ppos += ret;
--
--	return ret;
--}
--
- /**
-  * generic_splice_sendpage - splice data from a pipe to a socket
-  * @pipe:	pipe to splice from
-@@ -844,7 +734,10 @@ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
- {
- 	if (out->f_op->splice_write)
- 		return out->f_op->splice_write(pipe, out, ppos, len, flags);
--	return default_file_splice_write(pipe, out, ppos, len, flags);
-+	pr_warn_ratelimited(
-+		"splice write not supported for file %pD4 (pid: %d comm: %.20s)\n",
-+		out, current->pid, current->comm);
-+	return -EINVAL;
- }
- 
- /*
-@@ -870,7 +763,11 @@ static long do_splice_to(struct file *in, loff_t *ppos,
- 		return in->f_op->splice_read(in, ppos, pipe, len, flags);
- 	if (in->f_op->read_iter)
- 		return generic_file_splice_read(in, ppos, pipe, len, flags);
--	return default_file_splice_read(in, ppos, pipe, len, flags);
-+
-+	pr_warn_ratelimited(
-+		"splice read not supported for file %pD4 (pid: %d comm: %.20s)\n",
-+		in, current->pid, current->comm);
-+	return -EINVAL;
- }
- 
- /**
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0c0ec76b600b50..fac6aead402a98 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1919,8 +1919,6 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
- 
- extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
- extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
--extern ssize_t vfs_readv(struct file *, const struct iovec __user *,
--		unsigned long, loff_t *, rwf_t);
- extern ssize_t vfs_copy_file_range(struct file *, loff_t , struct file *,
- 				   loff_t, size_t, unsigned int);
- extern ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
--- 
-2.26.2
+Now the page reclaim could handle such cases nicely without calling
+the shrinker. Since the THPs on deferred split queue is not PMD mapped
+so they will be split unconditionally, then the unmapped sub pages
+would get freed. Please see the below code snippet:
 
+                             if (PageTransHuge(page)) {
+                                        /* cannot split THP, skip it */
+                                        if (!can_split_huge_page(page, NULL=
+))
+                                                goto activate_locked;
+                                        /*
+                                         * Split pages without a PMD map ri=
+ght
+                                         * away. Chances are some or all of=
+ the
+                                         * tail pages can be freed without =
+IO.
+                                         */
+                                        if (!compound_mapcount(page) &&
+                                            split_huge_page_to_list(page,
+                                                                    page_li=
+st))
+                                                goto activate_locked;
+                                }
+
+Then the unmapped pages will be moved to free_list by
+move_pages_to_lru() called by shrink_inactive_list(). The mapped sub
+pages will be kept on LRU. So, it does exactly the same thing as
+deferred split shrinker and at the exact same timing.
+
+The only benefit of shrinker is they can be split and freed via "echo
+2 > /proc/sys/vm/drop_caches=E2=80=9D, but I'm not sure how many people rel=
+y
+on this?
+
+The benefit of killing deferred split queue is code simplification.
+
+Any comment is welcome.
+
+Thanks,
+Yang
