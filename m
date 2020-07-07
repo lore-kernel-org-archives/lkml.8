@@ -7,68 +7,67 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C67C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFBC20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4560D20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:42:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nQyANoeX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A4ESPLRG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgGGMlj (ORCPT
+        id S1728048AbgGGMmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35612 "EHLO
+        Tue, 7 Jul 2020 08:42:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgGGMlh (ORCPT
+        with ESMTP id S1726805AbgGGMmY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:41:37 -0400
+        Tue, 7 Jul 2020 08:42:24 -0400
 Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592BAC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 05:41:37 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id j11so962758ljo.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 05:41:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675BDC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 05:42:24 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e4so49733137ljn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 05:42:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ypETbYDmBUU+3F9o/BjesSvCn4v+una8ZbjJDtRTCVk=;
-        b=nQyANoeXOviqCRwhNlHHF4L93TF7B5Jk8/+7jVP0zkRn0KT1KLYMYdPwlpPYWDzOVp
-         40Bb0RHbTiFM4B2sdEhda5RK47VgYLc2hqCj7AJ1ZUT8oz7UHgu5BJEI5Gb5443VWL5h
-         ys8r/C6XWesEiKuDylcnJCrow7hFumAUfIhpPneS3Za1zxiSQEAENkK531xKMlexu4k2
-         XOX+19DjyjfbkG1srUQZZQriNLXxrCHvTSHg1VzoiiPkVQHjBq1BimEYm0n2XD7STkMq
-         HDvv4P1Z5H2J3IJLBjyW1EHytVghu4N8/uhN5XHiRbXMS23sd3kMj6dCWgmVQJP1q/Ql
-         /yeg==
+         :cc;
+        bh=6qpEzrY02ovA0aYgrzmDF7GFid8ang4s0P7kWvdAM18=;
+        b=A4ESPLRGuaLgSSD2COKNlNdTLY9d3I1rMaSMMn7vinB9AltBGxkFIQm8dMNtw+bGe3
+         z7jgR4k0m2woWIrylhhxzUYxBztXql8eLhpsmJRZ7rleF4nlwm2sAb1it0KS2JROJG/4
+         avMpFkA2f1F4rFOFzEoR5YLOt76+IDeu1kpiLnHOXL4bwgeeqTfm7E7aJ2Mfv1we2T2u
+         15OAKeJGikQMp/gSQsT0gGYq6QYaegakm8ru0j/eIaYdd4Aw2lqBoMx7JDTY0x/EeEWM
+         IjensR/CTcFUz6cPf82UOUDvCAs4g+gnkUAvS1n/MT6FOM5kNGfELAtXAey0NUKheteR
+         dDVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ypETbYDmBUU+3F9o/BjesSvCn4v+una8ZbjJDtRTCVk=;
-        b=CK0XErpXlKF6Pal+Vxl69Sy/auTMoUrnhoD+w8Rhu6YuAuuxfmBnMKxBD73e8c0Lr5
-         W7M0weZA7Ej85WEP78YQb7rMgnfRRyMQ70gW6ognC4wMmoFkPJ8uI5lTAYxsLWma0n9n
-         dTnrPEhemKF4x2JOlfMnAHgEOfos4KsAlmTrrI4HzLk1+n7hDG2xgsC7MjFaao7Envlh
-         Qbf+0GAfcLJFQ3u/HOtOB7og04Sk/Ut4BKJb/2TiX7g9gM2Y3xPxu9+HKadm8qH6azaM
-         MeNYUyvW4G6JtXOB0GNq2bKvs+eqbAlFWMpvzY3GIgOynHKvlKQWwo+OdLJeC1t8ydcC
-         MWCg==
-X-Gm-Message-State: AOAM531NmQH5pRPiVv+Ri1A45gZ1FJyzy5mqSztZOCIYevAp1fVxj90l
-        RD+10RpIYJm1aNVhkp1T/dITINYckPt+ep2h0Gcfq0kXhZM=
-X-Google-Smtp-Source: ABdhPJxpOK1i7BDud/fkrVXbDocIMD5x9danptsvKnwSh+im+EKSOqbAVhMD7vbAoRt9U4AF6LlCeqrg0J3p2+8XTLI=
-X-Received: by 2002:a2e:810a:: with SMTP id d10mr24442069ljg.144.1594125695862;
- Tue, 07 Jul 2020 05:41:35 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=6qpEzrY02ovA0aYgrzmDF7GFid8ang4s0P7kWvdAM18=;
+        b=X48lvLiGjkfng2Lz3Rn9Z0JpjFywKGzeoUimaI8kGeAKGJeg8T8id4j84HeIagKqEH
+         u1ssPWJKjrXDV/JXd3BOtkqh3/m6Mhk5XHCvdyHcou90aVqEGBifZhi0Om3b0DOFX4U1
+         995HIfwBFXXExgfJznvxWiW1j2PYbzpaqj7mW0lohHy7+JphMc9G9dvcTv1IHYYpnBkz
+         PdIknGUKHJRwzLlRrtDNAFU+2EFRQspwoFsaE1pPHydZC2VrZB+UHa/TPo7EaXYsQNee
+         vQzRg098f/KQ2gtUs5uzX3csHHMbOJp5JqgQ2vAdFidwb4ExoOAo29+CAyAzMCT5S9TC
+         lA/w==
+X-Gm-Message-State: AOAM531p6r7M7rccktY+hnt2SjCwRIewBlOrEKTSKV2Q1kd139CfXqKj
+        /9Q+gE0o22RVE2l+kZ7vQlKky76ywdc4oVPMc+ZnQw==
+X-Google-Smtp-Source: ABdhPJwYC2CtSDClbk5eUasXsml9ZGmgHAUpCfPZpo4GflqJeILbdq+wspjnFBOfTezLth8SX5+6d8dBlTZ6aq7sS4I=
+X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr8715562ljj.283.1594125742967;
+ Tue, 07 Jul 2020 05:42:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200625191708.4014533-1-lee.jones@linaro.org> <20200625191708.4014533-5-lee.jones@linaro.org>
-In-Reply-To: <20200625191708.4014533-5-lee.jones@linaro.org>
+References: <20200625191708.4014533-1-lee.jones@linaro.org> <20200625191708.4014533-6-lee.jones@linaro.org>
+In-Reply-To: <20200625191708.4014533-6-lee.jones@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 14:41:25 +0200
-Message-ID: <CACRpkda4tphGY1UvMtR6k1vDNaKpsgyQLcVLQL9h964pDz=O3g@mail.gmail.com>
-Subject: Re: [RESEND 04/10] regulator: dbx500-prcmu: Remove unused function dbx500_regulator_testcase()
+Date:   Tue, 7 Jul 2020 14:42:12 +0200
+Message-ID: <CACRpkdZSL9MekpPDgy79nbRDkf8bfx_KUfrOCDv22YJNrCbSbA@mail.gmail.com>
+Subject: Re: [RESEND 05/10] regulator: ab8500: Remove unused embedded struct expand_register
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,17 +75,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, Jun 25, 2020 at 9:17 PM Lee Jones <lee.jones@linaro.org> wrote:
 
-> There isn't any code present within the current kernel to
-> override this 'weak' function.  Besides returning '0', which
-> is never checked anyway, the whole function appears to be
-> superfluous.
+> Used primarily for the AB8540 which lost support in early 2018.
+> It is now deemed safe to remove this legacy data structure.
 >
-> Consequently fixes W=3D1 warning:
+> Also fixes W=1 issue:
 >
->  drivers/regulator/dbx500-prcmu.c:113:27: warning: no previous prototype =
-for =E2=80=98dbx500_regulator_testcase=E2=80=99 [-Wmissing-prototypes]
->  113 | int __attribute__((weak)) dbx500_regulator_testcase(
->  | ^~~~~~~~~~~~~~~~~~~~~~~~~
+>   drivers/regulator/ab8500.c:88: warning: Function parameter or member 'expand_register' not described in 'ab8500_regulator_info'
 >
 > Cc: Linus Walleij <linus.walleij@linaro.org>
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
