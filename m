@@ -2,134 +2,209 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66355C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416892073E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A86C20773
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 17:27:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dIn98eWp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Da7lTAGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgGGR0q (ORCPT
+        id S1728357AbgGGR1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:26:46 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36213 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727791AbgGGR0p (ORCPT
+        Tue, 7 Jul 2020 13:27:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728316AbgGGR1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:26:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594142803;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3LrO7VqgYVoFRtAEnJtwxKftEVr1AjGjug4X5J7y9k0=;
-        b=dIn98eWp9RHmiKsDMXPiKF+BUmNB48SQTo2/ffJOEyVD+4Jek2cMUEz8VEMWtptO4g86UZ
-        S9w7qPdJDJcn18AMyZwx6ARqUnCR3R5qoAd1aehJtq0xEEszYdpn16rWrwYSGyQ39GdW5T
-        BefEfh47WiSFM0pep3f1GMS8ASqBgTQ=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-u2bssbMSPEmfWKliSg11ew-1; Tue, 07 Jul 2020 13:26:42 -0400
-X-MC-Unique: u2bssbMSPEmfWKliSg11ew-1
-Received: by mail-wr1-f70.google.com with SMTP id z1so19342137wrn.18
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 10:26:42 -0700 (PDT)
+        Tue, 7 Jul 2020 13:27:10 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1307C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 10:27:10 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g37so11165658otb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 10:27:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rMuppVQPw1RXuBiFiMtip818dqgzLT1r4LNtpXbqYiA=;
+        b=Da7lTAGxPQmYXMvQQ4cWrsEYHZWwOInlr895o9PE9VLeruKvguPNzyTvemAQ/LrYS3
+         DCf/hccEnf3/CIb91aCbopgUylSF/m/e5azHPG9mr0w6qgj+DvDQwlRXm+/GwyAIqIoo
+         hTzEnElApg23ktZgKJoXMax6ANqQnXW9HMqtjEG0enAglxuDNKSKtapq12Vk44EnL84p
+         5Stao3rqWDccSRI6DH1dhJZoeS+r6JYbKjPBpSwa9Y4PcrjR41m2L3njV4bWAtkF8Tcr
+         JoS865rPiiDrtT5lDm6X4CmVHV1P5AvXOrebwF91HtRH8nfrBLwObxrCQp3eaijWbpGP
+         Tn8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3LrO7VqgYVoFRtAEnJtwxKftEVr1AjGjug4X5J7y9k0=;
-        b=UR2TpWlYMohaBjFT3J72f4oUhxZjHxtDEBfzSm4rUmQWJ/JhnkY/t7mJu02D4Iu2FX
-         Lr16OjX2qC5nNTM2SvktDMgftPj5dl7eRC/gveDA/tKnM5cuq/NtQqWIg58J2j9pNSfB
-         Gp3yCNt7iNE/XB6gJfgaisnis1Xo45B3CZYDTT02iywZFp4xMmQqyttaOU2akWkB4YEg
-         BJpr7QEs93CX8sZ5XI+4Qatx37U5ygDRR37Zixd7feplRRjxbVOhxn3XQNm9YqbyQQxq
-         kb+tK1l1xJZ4lCWDl24ZMfN/z5i7m0nXwZYjYkpYErP+MWRbL2bpa4brezS9MLVULhPx
-         uMXg==
-X-Gm-Message-State: AOAM532tCDNvATpFTEcVSyWyeek/dCvLMG4v57Prrr/CStU96AML+PkH
-        rmYjCEoT0ZlYS/FBbnXecnEpl/aEk7gXn8b+IUFsz7xvreLN02LOp6UH0XFlknXz6OQJjRkuT+y
-        d55ABHzEcZdxRTnYvEbz/OccS
-X-Received: by 2002:a1c:9e4c:: with SMTP id h73mr5663954wme.177.1594142801266;
-        Tue, 07 Jul 2020 10:26:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzNNrn3AIg1g3/5R2NVngn8kYJ+htIdF6x+ntfOrYeAJwFW3NKZhvcjYcIPkbdIJED+yPp84A==
-X-Received: by 2002:a1c:9e4c:: with SMTP id h73mr5663931wme.177.1594142801054;
-        Tue, 07 Jul 2020 10:26:41 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e95f:9718:ec18:4c46? ([2001:b07:6468:f312:e95f:9718:ec18:4c46])
-        by smtp.gmail.com with ESMTPSA id a12sm1870753wrv.41.2020.07.07.10.26.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 10:26:40 -0700 (PDT)
-Subject: Re: [PATCH] kvm: x86: rewrite kvm_spec_ctrl_valid_bits
-To:     Maxim Levitsky <mlevitsk@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20200702174455.282252-1-mlevitsk@redhat.com>
- <20200702181606.GF3575@linux.intel.com>
- <3793ae0da76fe00036ed0205b5ad8f1653f58ef2.camel@redhat.com>
- <20200707061105.GH5208@linux.intel.com>
- <a0ab28aa726df404962dbc1c6d1f833947cc149b.camel@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e49c6f78-ac9a-b001-b3b6-7c7dcccc182c@redhat.com>
-Date:   Tue, 7 Jul 2020 19:26:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rMuppVQPw1RXuBiFiMtip818dqgzLT1r4LNtpXbqYiA=;
+        b=N/Rpang8Y6evg5l+W/4Qgr6NiiOCIJbH4eI7unMiR4snUDdiwTC2LYpjOiLZ5KTd1u
+         EBfDStNVobE3/R7VR1bHHJzK2wu3R/HSlmW553HFy1rUoQ13c+uMGH8mmHW3SwyyoCr/
+         kFdlhrhwVFjVpIP7qMjMG3jy9S88bvKKeiUxCQ4jY8iqs9FxcgKpOYwwC+gf2Zh7stvQ
+         GNjoqZWbccCLvNrRdGPe5SQ9vJoQWSI0Htj7BE1/po02zuq+/5y+lnuv4Znydf/wYXZ+
+         WKiQH8fbWIsPWvJnFcciCU+d3+usPdnyBwYLCFmkX0it8qiTVQzSHYPLjswgCJ7HY1L6
+         qiSA==
+X-Gm-Message-State: AOAM532vz+wqe6QXLEmnGroyFFWm979RP0AbwG6GRQPQvobG9CWrgFXk
+        aBCWYoql3qG2+8vaPA4F0qtK3kSoxFmVzTq58mZg6g==
+X-Google-Smtp-Source: ABdhPJzF8Ar2RTTATP+hMbbUYSw+rN5v6I36KsgvZGdJ7W8qxDfi5DUq8PDe5clf7m+OO0iWEvBEeJcUqeLFcuSqUa0=
+X-Received: by 2002:a9d:688:: with SMTP id 8mr46326077otx.108.1594142824174;
+ Tue, 07 Jul 2020 10:27:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a0ab28aa726df404962dbc1c6d1f833947cc149b.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200706211309.3314644-1-urielguajardojr@gmail.com>
+ <20200706211309.3314644-3-urielguajardojr@gmail.com> <20200706213905.GA1916@lca.pw>
+ <CAG30EeeV0c8vQCdtqPBUNMiN--0K+j5xE+PMwW-godhX1qqwQg@mail.gmail.com> <20200706231730.GA2613@lca.pw>
+In-Reply-To: <20200706231730.GA2613@lca.pw>
+From:   Uriel Guajardo <urielguajardo@google.com>
+Date:   Tue, 7 Jul 2020 12:26:52 -0500
+Message-ID: <CAG30EeeJL_LUpZdBYpi4TRhw8pzBxhSrVF-4j1g3z22-ZXTGrw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kunit: kmemleak integration
+To:     Qian Cai <cai@lca.pw>
+Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        catalin.marinas@arm.com, akpm@linux-foundation.org,
+        rdunlap@infradead.org, masahiroy@kernel.org, 0x7f454c46@gmail.com,
+        krzk@kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/07/20 13:30, Maxim Levitsky wrote:
->> Somehwat crazy idea inbound... rather than calculating the valid bits in
->> software, what if we throw the value at the CPU and see if it fails?  At
->> least that way the host and guest are subject to the same rules.  E.g.
->>
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -2062,11 +2062,19 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>                     !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
->>                         return 1;
->>
->> -               if (data & ~kvm_spec_ctrl_valid_bits(vcpu))
->> -                       return 1;
->> -
->> +               ret = 0;
->>                 vmx->spec_ctrl = data;
->> -               if (!data)
->> +
->> +               local_irq_disable();
->> +               if (rdmsrl_safe(MSR_IA32_SPEC_CTRL, &data))
->> +                       ret = 1;
->> +               else if (wrmsrl_safe(MSR_IA32_SPEC_CTRL, vmx->spec_ctrl))
->> +                       ret = 1;
->> +               else
->> +                       wrmsrl(MSR_IA32_SPEC_CTRL, data))
->> +               local_irq_enable();
->> +
->> +               if (ret || !vmx->spec_ctrl)
->>                         break;
->>
->>                 /*
->>
-> I don't mind this as well, knowing that this is done only one per VM run anyway.
+On Mon, Jul 6, 2020 at 6:17 PM Qian Cai <cai@lca.pw> wrote:
+>
+> On Mon, Jul 06, 2020 at 05:48:21PM -0500, Uriel Guajardo wrote:
+> > On Mon, Jul 6, 2020 at 4:39 PM Qian Cai <cai@lca.pw> wrote:
+> > >
+> > > On Mon, Jul 06, 2020 at 09:13:09PM +0000, Uriel Guajardo wrote:
+> > > > From: Uriel Guajardo <urielguajardo@google.com>
+> > > >
+> > > > Integrate kmemleak into the KUnit testing framework.
+> > > >
+> > > > Kmemleak will now fail the currently running KUnit test case if it finds
+> > > > any memory leaks.
+> > > >
+> > > > The minimum object age for reporting is set to 0 msecs so that leaks are
+> > > > not ignored if the test case finishes too quickly.
+> > > >
+> > > > Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+> > > > ---
+> > > >  include/linux/kmemleak.h | 11 +++++++++++
+> > > >  lib/Kconfig.debug        | 26 ++++++++++++++++++++++++++
+> > > >  lib/kunit/test.c         | 36 +++++++++++++++++++++++++++++++++++-
+> > > >  mm/kmemleak.c            | 27 +++++++++++++++++++++------
+> > > >  4 files changed, 93 insertions(+), 7 deletions(-)
+> > > >
+> > > > diff --git a/include/linux/kmemleak.h b/include/linux/kmemleak.h
+> > > > index 34684b2026ab..0da427934462 100644
+> > > > --- a/include/linux/kmemleak.h
+> > > > +++ b/include/linux/kmemleak.h
+> > > > @@ -35,6 +35,10 @@ extern void kmemleak_free_part_phys(phys_addr_t phys, size_t size) __ref;
+> > > >  extern void kmemleak_not_leak_phys(phys_addr_t phys) __ref;
+> > > >  extern void kmemleak_ignore_phys(phys_addr_t phys) __ref;
+> > > >
+> > > > +extern ssize_t kmemleak_write(struct file *file,
+> > > > +                           const char __user *user_buf,
+> > > > +                           size_t size, loff_t *ppos);
+> > > > +
+> > > >  static inline void kmemleak_alloc_recursive(const void *ptr, size_t size,
+> > > >                                           int min_count, slab_flags_t flags,
+> > > >                                           gfp_t gfp)
+> > > > @@ -120,6 +124,13 @@ static inline void kmemleak_ignore_phys(phys_addr_t phys)
+> > > >  {
+> > > >  }
+> > > >
+> > > > +static inline ssize_t kmemleak_write(struct file *file,
+> > > > +                                  const char __user *user_buf,
+> > > > +                                  size_t size, loff_t *ppos)
+> > > > +{
+> > > > +     return -1;
+> > > > +}
+> > > > +
+> > > >  #endif       /* CONFIG_DEBUG_KMEMLEAK */
+> > > >
+> > > >  #endif       /* __KMEMLEAK_H */
+> > > > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > > > index 21d9c5f6e7ec..e9c492cb3f4d 100644
+> > > > --- a/lib/Kconfig.debug
+> > > > +++ b/lib/Kconfig.debug
+> > > > @@ -602,6 +602,32 @@ config DEBUG_KMEMLEAK_MEM_POOL_SIZE
+> > > >         fully initialised, this memory pool acts as an emergency one
+> > > >         if slab allocations fail.
+> > > >
+> > > > +config DEBUG_KMEMLEAK_MAX_TRACE
+> > > > +     int "Kmemleak stack trace length"
+> > > > +     depends on DEBUG_KMEMLEAK
+> > > > +     default 16
+> > > > +
+> > > > +config DEBUG_KMEMLEAK_MSECS_MIN_AGE
+> > > > +     int "Minimum object age before reporting in msecs"
+> > > > +     depends on DEBUG_KMEMLEAK
+> > > > +     default 0 if KUNIT
+> > > > +     default 5000
+> > > > +
+> > > > +config DEBUG_KMEMLEAK_SECS_FIRST_SCAN
+> > > > +     int "Delay before first scan in secs"
+> > > > +     depends on DEBUG_KMEMLEAK
+> > > > +     default 60
+> > > > +
+> > > > +config DEBUG_KMEMLEAK_SECS_SCAN_WAIT
+> > > > +     int "Delay before subsequent auto scans in secs"
+> > > > +     depends on DEBUG_KMEMLEAK
+> > > > +     default 600
+> > > > +
+> > > > +config DEBUG_KMEMLEAK_MAX_SCAN_SIZE
+> > > > +     int "Maximum size of scanned block"
+> > > > +     depends on DEBUG_KMEMLEAK
+> > > > +     default 4096
+> > > > +
+> > >
+> > > Why do you make those configurable? I don't see anywhere you make use of
+> > > them except DEBUG_KMEMLEAK_MSECS_MIN_AGE?
+> > >
+> >
+> > That's correct. Strictly speaking, only DEBUG_KMEMLEAK_MSECS_MIN_AGE
+> > is used to set a default when KUnit is configured.
+> >
+> > There is no concrete reason why these other variables need to be
+> > configurable. At the time of writing this, it seemed to make the most
+> > sense to configure the other configuration options, given that I was
+> > already going to make MSECS_MIN_AGE configurable. It can definitely be
+> > taken out.
+> >
+> > > Even then, how setting DEBUG_KMEMLEAK_MSECS_MIN_AGE=0 not giving too
+> > > many false positives? Kmemleak simply does not work that instantly.
+> > >
+> >
+> > I did not experience this issue, but I see your point.
+> >
+> > An alternative that I was thinking about -- and one that is not in
+> > this patch -- is to wait DEBUG_KMEMLEAK_MSECS_MIN_AGE after each test
+> > case in a test suite, while leaving kmemleak's default value as is. I
+> > was hesitant to do this initially because many KUnit test cases run
+> > quick, so this may result in a lot of time just waiting. But if we
+> > leave it configurable, the user can change this as needed and deal
+> > with the possible false positives.
+>
+> I doubt that is good idea. We don't really want people to start
+> reporting those false positives to the MLs just because some kunit tests
+> starts to flag them. It is wasting everyone's time. Reports from
+> DEBUG_KMEMLEAK_MSECS_MIN_AGE=0 are simply trustful. I don't think there
+> is a way around. Kmemleak was designed to have a lot of
+> waitings/re-scans to be useful not even mentioning kfree_rcu() etc until
+> it is redesigned...
 
-Maxim, this is okay as well; can you send a patch for it?
-
-Paolo
-
+I agree with your statement about false positives.
+Is your suggestion to not make MSECS_MIN_AGE configurable and have
+KUnit wait after each test case? Or are you saying that this will not
+work entirely?
+It seems like kmemleak should be able to work in some fashion under
+KUnit, since it has specific documentation over testing parts of code
+(https://www.kernel.org/doc/html/latest/dev-tools/kmemleak.html#testing-specific-sections-with-kmemleak).
