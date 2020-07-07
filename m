@@ -2,51 +2,56 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECE2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BAB3207BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E56E20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594134888;
-	bh=QHDXzivtkwC3kforEMyWKXWhN8/o4mt0nziV458Ra/Y=;
+	s=default; t=1594134889;
+	bh=bMIgGGwhvSawfOAj7SiOOHFGQHDHbpq1RNgtwDoTtP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EeZxjUjgo1l9mmGbTgGmIJAMWdGG3XAPZyF+h2FzdN+npKhtfa9xvXNAKy22FUH9E
-	 y6ZemDhZ3r2dmgn/eHaoBEX79/GwYi1N3/GEe/g1qPan6DuCIxelOcy7/EFN10NVyj
-	 m8+LreipARY/u8xfdn3/Na4nxqQ3VDTNmwiRp9zo=
+	b=NyJRGFyputC5N7hCxP8lDa+fvd1iIIQACMwAZCP4mtXg/Fa6BNoGyQ8wvFX4Of+mH
+	 6TW8KNQ1AYsr9nzbf+7Y4BNDrUBraYqTBmgedz8EL522Shf8zGmaWn3dAdGiDr/Z63
+	 HINEZbwo6DK/k7abjMnuYJLKVW7vfR98HrmEEhq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgGGPOq (ORCPT
+        id S1728509AbgGGPOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54126 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728732AbgGGPOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:14:43 -0400
+        id S1728742AbgGGPOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:14:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45BB5207CD;
-        Tue,  7 Jul 2020 15:14:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 938DD2065D;
+        Tue,  7 Jul 2020 15:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134882;
-        bh=QHDXzivtkwC3kforEMyWKXWhN8/o4mt0nziV458Ra/Y=;
+        s=default; t=1594134885;
+        bh=bMIgGGwhvSawfOAj7SiOOHFGQHDHbpq1RNgtwDoTtP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nhz3GtDw0Ykf0aEM1yZ/L5gid2N87YhhNPURNgO8lhE7AQa7vkbuHHSR57+6Qjh7U
-         qRFpSN6uD6hKrdNlF2bfSUOFyu1W955iH1+qJ8gx4Au+vuIotyOu0SEMTq9ZkyMLYw
-         x31uIfMRRDUI1qhB2f+PabOvF6nKtG1YkUvN1q7M=
+        b=kNy2v+j47eJgC1mc+sb/cufJMhyy/sWawNuciO38AoaEbHsmm/lHcQAsdEIWAxxHc
+         CqcW7akb+j5e8xyV6qU4YKuFfQTFSIRopiGtJvgqZPlBEtCf91hHFtLyVT7sGZPZmT
+         Z5fTHwKwHmmGL8fdFRej0A0Wk5vc2iMpzUanu3Ug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Jones <pjones@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.9 24/24] efi: Make it possible to disable efivar_ssdt entirely
-Date:   Tue,  7 Jul 2020 17:13:56 +0200
-Message-Id: <20200707145750.141120398@linuxfoundation.org>
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Chris Murphy <lists@colorremedies.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 04/24] mm: fix swap cache node allocation mask
+Date:   Tue,  7 Jul 2020 17:13:36 +0200
+Message-Id: <20200707145749.167786208@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145748.952502272@linuxfoundation.org>
 References: <20200707145748.952502272@linuxfoundation.org>
@@ -59,61 +64,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Jones <pjones@redhat.com>
+From: Hugh Dickins <hughd@google.com>
 
-commit 435d1a471598752446a72ad1201b3c980526d869 upstream.
+[ Upstream commit 243bce09c91b0145aeaedd5afba799d81841c030 ]
 
-In most cases, such as CONFIG_ACPI_CUSTOM_DSDT and
-CONFIG_ACPI_TABLE_UPGRADE, boot-time modifications to firmware tables
-are tied to specific Kconfig options.  Currently this is not the case
-for modifying the ACPI SSDT via the efivar_ssdt kernel command line
-option and associated EFI variable.
+Chris Murphy reports that a slightly overcommitted load, testing swap
+and zram along with i915, splats and keeps on splatting, when it had
+better fail less noisily:
 
-This patch adds CONFIG_EFI_CUSTOM_SSDT_OVERLAYS, which defaults
-disabled, in order to allow enabling or disabling that feature during
-the build.
+  gnome-shell: page allocation failure: order:0,
+  mode:0x400d0(__GFP_IO|__GFP_FS|__GFP_COMP|__GFP_RECLAIMABLE),
+  nodemask=(null),cpuset=/,mems_allowed=0
+  CPU: 2 PID: 1155 Comm: gnome-shell Not tainted 5.7.0-1.fc33.x86_64 #1
+  Call Trace:
+    dump_stack+0x64/0x88
+    warn_alloc.cold+0x75/0xd9
+    __alloc_pages_slowpath.constprop.0+0xcfa/0xd30
+    __alloc_pages_nodemask+0x2df/0x320
+    alloc_slab_page+0x195/0x310
+    allocate_slab+0x3c5/0x440
+    ___slab_alloc+0x40c/0x5f0
+    __slab_alloc+0x1c/0x30
+    kmem_cache_alloc+0x20e/0x220
+    xas_nomem+0x28/0x70
+    add_to_swap_cache+0x321/0x400
+    __read_swap_cache_async+0x105/0x240
+    swap_cluster_readahead+0x22c/0x2e0
+    shmem_swapin+0x8e/0xc0
+    shmem_swapin_page+0x196/0x740
+    shmem_getpage_gfp+0x3a2/0xa60
+    shmem_read_mapping_page_gfp+0x32/0x60
+    shmem_get_pages+0x155/0x5e0 [i915]
+    __i915_gem_object_get_pages+0x68/0xa0 [i915]
+    i915_vma_pin+0x3fe/0x6c0 [i915]
+    eb_add_vma+0x10b/0x2c0 [i915]
+    i915_gem_do_execbuffer+0x704/0x3430 [i915]
+    i915_gem_execbuffer2_ioctl+0x1ea/0x3e0 [i915]
+    drm_ioctl_kernel+0x86/0xd0 [drm]
+    drm_ioctl+0x206/0x390 [drm]
+    ksys_ioctl+0x82/0xc0
+    __x64_sys_ioctl+0x16/0x20
+    do_syscall_64+0x5b/0xf0
+    entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Peter Jones <pjones@redhat.com>
-Link: https://lore.kernel.org/r/20200615202408.2242614-1-pjones@redhat.com
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported on 5.7, but it goes back really to 3.1: when
+shmem_read_mapping_page_gfp() was implemented for use by i915, and
+allowed for __GFP_NORETRY and __GFP_NOWARN flags in most places, but
+missed swapin's "& GFP_KERNEL" mask for page tree node allocation in
+__read_swap_cache_async() - that was to mask off HIGHUSER_MOVABLE bits
+from what page cache uses, but GFP_RECLAIM_MASK is now what's needed.
 
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208085
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2006151330070.11064@eggly.anvils
+Fixes: 68da9f055755 ("tmpfs: pass gfp to shmem_getpage_gfp")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reported-by: Chris Murphy <lists@colorremedies.com>
+Analyzed-by: Vlastimil Babka <vbabka@suse.cz>
+Analyzed-by: Matthew Wilcox <willy@infradead.org>
+Tested-by: Chris Murphy <lists@colorremedies.com>
+Cc: <stable@vger.kernel.org>	[3.1+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/Kconfig |   11 +++++++++++
- drivers/firmware/efi/efi.c   |    2 +-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ mm/swap_state.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -129,6 +129,17 @@ config EFI_TEST
- 	  Say Y here to enable the runtime services support via /dev/efi_test.
- 	  If unsure, say N.
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index 35d7e0ee1c77c..f5cb6b23cedaf 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -19,6 +19,7 @@
+ #include <linux/migrate.h>
  
-+config EFI_CUSTOM_SSDT_OVERLAYS
-+	bool "Load custom ACPI SSDT overlay from an EFI variable"
-+	depends on EFI_VARS && ACPI
-+	default ACPI_TABLE_UPGRADE
-+	help
-+	  Allow loading of an ACPI SSDT overlay from an EFI variable specified
-+	  by a kernel command line option.
-+
-+	  See Documentation/admin-guide/acpi/ssdt-overlays.rst for more
-+	  information.
-+
- endmenu
+ #include <asm/pgtable.h>
++#include "internal.h"
  
- config UEFI_CPER
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -198,7 +198,7 @@ static void generic_ops_unregister(void)
- 	efivars_unregister(&generic_efivars);
- }
+ /*
+  * swapper_space is a fiction, retained to simplify the path through
+@@ -326,7 +327,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 		/*
+ 		 * call radix_tree_preload() while we can wait.
+ 		 */
+-		err = radix_tree_maybe_preload(gfp_mask & GFP_KERNEL);
++		err = radix_tree_maybe_preload(gfp_mask & GFP_RECLAIM_MASK);
+ 		if (err)
+ 			break;
  
--#if IS_ENABLED(CONFIG_ACPI)
-+#ifdef CONFIG_EFI_CUSTOM_SSDT_OVERLAYS
- #define EFIVAR_SSDT_NAME_MAX	16
- static char efivar_ssdt[EFIVAR_SSDT_NAME_MAX] __initdata;
- static int __init efivar_ssdt_setup(char *str)
+-- 
+2.25.1
+
 
 
