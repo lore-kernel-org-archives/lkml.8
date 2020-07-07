@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A885C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1275C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B43D2078D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0A1206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135788;
-	bh=lWL7UQC9ozt0/QZx+J+2+syn9yzi1khDLGN/pX0tpOQ=;
+	s=default; t=1594135792;
+	bh=G+rAMT6LhkOWlncqszbebKQ70fqYSaj8mZENtE+BSoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t8ebTxX9PIBnhD41FBKqh2CpyomoVDDefhe40g2HP+bExlhiKaoNB/KIKjWowLzl6
-	 6OH83DMNRMyyLibzQ+nKl7hdaP84MXn4ReYG3bK25a+/VoNxnCvaeNSlDd/WEqeAkA
-	 72MZWu4+kBAV5n51rmGO00ac/fSCbXwA8vj97uEI=
+	b=qU4Se12e7EtyKSC12gtBJ23ILLHi9clBLMyuCAYUBNq3ujOgLDm1/MJ9Tuy2rToyf
+	 IgyLSQiYj9E0Ia1ypLLM+J6+N/oCCZRHmcwCMyV5AS9X5ykVFZ+qhcjcCzuRuk8eHa
+	 Jzx38jA0GHsmozKdKQGHdjtPbyUW6LWVSYEmwV/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbgGGP3q (ORCPT
+        id S1730103AbgGGPYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38346 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:24:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730119AbgGGPYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:24:42 -0400
+        id S1729085AbgGGPYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:24:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 247ED2065D;
-        Tue,  7 Jul 2020 15:24:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38DB1207D0;
+        Tue,  7 Jul 2020 15:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135482;
-        bh=lWL7UQC9ozt0/QZx+J+2+syn9yzi1khDLGN/pX0tpOQ=;
+        s=default; t=1594135464;
+        bh=G+rAMT6LhkOWlncqszbebKQ70fqYSaj8mZENtE+BSoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nS2FIXXKrJZHsy0gX8a6N4WFsrczZa4vDNvcYKdixv2DA50ws1qvoFQmZWgQHd+Em
-         oqBNiYxz/ZDlvUZOONYIp6p1QHjw+iopUwwNOwBRjZCNX6e5+sGYTT3cplorE/TcQw
-         mPVPs3SDxZdoJh1ZG0GF8EKX9tgEvo7fZhbhymyM=
+        b=XRB6qZ0Wf+uK1Zs/uppBtoHqvG21VYQD0qRtW7wE7/vvIg8WjMDkP8mk40Hnazneg
+         Lc6fJ36iky+UL08ouDKHkCje6swb9EZcf1lkuVixTsUzWRRIkbWzWmGebtbm1JIHd7
+         mx1StRSw0p/WMGRWTLc95JGM4C9qazDVZfbTJcZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Kyungtae Kim <kt0755@gmail.com>,
-        Zqiang <qiang.zhang@windriver.com>,
+        stable@vger.kernel.org, Po Liu <Po.Liu@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 029/112] usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
-Date:   Tue,  7 Jul 2020 17:16:34 +0200
-Message-Id: <20200707145802.371383696@linuxfoundation.org>
+Subject: [PATCH 5.7 051/112] net: enetc: add hw tc hw offload features for PSPF capability
+Date:   Tue,  7 Jul 2020 17:16:56 +0200
+Message-Id: <20200707145803.429515727@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,67 +60,222 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zqiang <qiang.zhang@windriver.com>
+From: Po Liu <Po.Liu@nxp.com>
 
-[ Upstream commit 28ebeb8db77035e058a510ce9bd17c2b9a009dba ]
+[ Upstream commit 79e499829f3ff5b8f70c87baf1b03ebb3401a3e4 ]
 
-BUG: memory leak
-unreferenced object 0xffff888055046e00 (size 256):
-  comm "kworker/2:9", pid 2570, jiffies 4294942129 (age 1095.500s)
-  hex dump (first 32 bytes):
-    00 70 04 55 80 88 ff ff 18 bb 5a 81 ff ff ff ff  .p.U......Z.....
-    f5 96 78 81 ff ff ff ff 37 de 8e 81 ff ff ff ff  ..x.....7.......
-  backtrace:
-    [<00000000d121dccf>] kmemleak_alloc_recursive
-include/linux/kmemleak.h:43 [inline]
-    [<00000000d121dccf>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000d121dccf>] slab_alloc_node mm/slub.c:2786 [inline]
-    [<00000000d121dccf>] slab_alloc mm/slub.c:2794 [inline]
-    [<00000000d121dccf>] kmem_cache_alloc_trace+0x15e/0x2d0 mm/slub.c:2811
-    [<000000005c3c3381>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000005c3c3381>] usbtest_probe+0x286/0x19d0
-drivers/usb/misc/usbtest.c:2790
-    [<000000001cec6910>] usb_probe_interface+0x2bd/0x870
-drivers/usb/core/driver.c:361
-    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
-    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
-    [<000000003ef66004>] __device_attach_driver+0x1b6/0x240
-drivers/base/dd.c:831
-    [<00000000eee53e97>] bus_for_each_drv+0x14e/0x1e0 drivers/base/bus.c:431
-    [<00000000bb0648d0>] __device_attach+0x1f9/0x350 drivers/base/dd.c:897
-    [<00000000838b324a>] device_initial_probe+0x1a/0x20 drivers/base/dd.c:944
-    [<0000000030d501c1>] bus_probe_device+0x1e1/0x280 drivers/base/bus.c:491
-    [<000000005bd7adef>] device_add+0x131d/0x1c40 drivers/base/core.c:2504
-    [<00000000a0937814>] usb_set_configuration+0xe84/0x1ab0
-drivers/usb/core/message.c:2030
-    [<00000000e3934741>] generic_probe+0x6a/0xe0 drivers/usb/core/generic.c:210
-    [<0000000098ade0f1>] usb_probe_device+0x90/0xd0
-drivers/usb/core/driver.c:266
-    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
-    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
+This patch is to let ethtool enable/disable the tc flower offload
+features. Hardware ENETC has the feature of PSFP which is for per-stream
+policing. When enable the tc hw offloading feature, driver would enable
+the IEEE 802.1Qci feature. It is only set the register enable bit for
+this feature not enable for any entry of per stream filtering and stream
+gate or stream identify but get how much capabilities for each feature.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Signed-off-by: Zqiang <qiang.zhang@windriver.com>
-Link: https://lore.kernel.org/r/20200612035210.20494-1-qiang.zhang@windriver.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Po Liu <Po.Liu@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/usbtest.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/freescale/enetc/enetc.c  | 23 +++++++++
+ drivers/net/ethernet/freescale/enetc/enetc.h  | 48 +++++++++++++++++++
+ .../net/ethernet/freescale/enetc/enetc_hw.h   | 17 +++++++
+ .../net/ethernet/freescale/enetc/enetc_pf.c   |  8 ++++
+ 4 files changed, 96 insertions(+)
 
-diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
-index 98ada1a3425c6..bae88893ee8e3 100644
---- a/drivers/usb/misc/usbtest.c
-+++ b/drivers/usb/misc/usbtest.c
-@@ -2873,6 +2873,7 @@ static void usbtest_disconnect(struct usb_interface *intf)
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
+index 4486a0db8ef0c..9ac5cccfe0204 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+@@ -756,6 +756,9 @@ void enetc_get_si_caps(struct enetc_si *si)
  
- 	usb_set_intfdata(intf, NULL);
- 	dev_dbg(&intf->dev, "disconnect\n");
-+	kfree(dev->buf);
- 	kfree(dev);
+ 	if (val & ENETC_SIPCAPR0_QBV)
+ 		si->hw_features |= ENETC_SI_F_QBV;
++
++	if (val & ENETC_SIPCAPR0_PSFP)
++		si->hw_features |= ENETC_SI_F_PSFP;
  }
  
+ static int enetc_dma_alloc_bdr(struct enetc_bdr *r, size_t bd_size)
+@@ -1567,6 +1570,23 @@ static int enetc_set_rss(struct net_device *ndev, int en)
+ 	return 0;
+ }
+ 
++static int enetc_set_psfp(struct net_device *ndev, int en)
++{
++	struct enetc_ndev_priv *priv = netdev_priv(ndev);
++
++	if (en) {
++		priv->active_offloads |= ENETC_F_QCI;
++		enetc_get_max_cap(priv);
++		enetc_psfp_enable(&priv->si->hw);
++	} else {
++		priv->active_offloads &= ~ENETC_F_QCI;
++		memset(&priv->psfp_cap, 0, sizeof(struct psfp_cap));
++		enetc_psfp_disable(&priv->si->hw);
++	}
++
++	return 0;
++}
++
+ int enetc_set_features(struct net_device *ndev,
+ 		       netdev_features_t features)
+ {
+@@ -1575,6 +1595,9 @@ int enetc_set_features(struct net_device *ndev,
+ 	if (changed & NETIF_F_RXHASH)
+ 		enetc_set_rss(ndev, !!(features & NETIF_F_RXHASH));
+ 
++	if (changed & NETIF_F_HW_TC)
++		enetc_set_psfp(ndev, !!(features & NETIF_F_HW_TC));
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc.h b/drivers/net/ethernet/freescale/enetc/enetc.h
+index 56c43f35b633b..2cfe877c37786 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc.h
++++ b/drivers/net/ethernet/freescale/enetc/enetc.h
+@@ -151,6 +151,7 @@ enum enetc_errata {
+ };
+ 
+ #define ENETC_SI_F_QBV BIT(0)
++#define ENETC_SI_F_PSFP BIT(1)
+ 
+ /* PCI IEP device data */
+ struct enetc_si {
+@@ -203,12 +204,20 @@ struct enetc_cls_rule {
+ };
+ 
+ #define ENETC_MAX_BDR_INT	2 /* fixed to max # of available cpus */
++struct psfp_cap {
++	u32 max_streamid;
++	u32 max_psfp_filter;
++	u32 max_psfp_gate;
++	u32 max_psfp_gatelist;
++	u32 max_psfp_meter;
++};
+ 
+ /* TODO: more hardware offloads */
+ enum enetc_active_offloads {
+ 	ENETC_F_RX_TSTAMP	= BIT(0),
+ 	ENETC_F_TX_TSTAMP	= BIT(1),
+ 	ENETC_F_QBV             = BIT(2),
++	ENETC_F_QCI		= BIT(3),
+ };
+ 
+ struct enetc_ndev_priv {
+@@ -231,6 +240,8 @@ struct enetc_ndev_priv {
+ 
+ 	struct enetc_cls_rule *cls_rules;
+ 
++	struct psfp_cap psfp_cap;
++
+ 	struct device_node *phy_node;
+ 	phy_interface_t if_mode;
+ };
+@@ -289,9 +300,46 @@ int enetc_setup_tc_taprio(struct net_device *ndev, void *type_data);
+ void enetc_sched_speed_set(struct net_device *ndev);
+ int enetc_setup_tc_cbs(struct net_device *ndev, void *type_data);
+ int enetc_setup_tc_txtime(struct net_device *ndev, void *type_data);
++
++static inline void enetc_get_max_cap(struct enetc_ndev_priv *priv)
++{
++	u32 reg;
++
++	reg = enetc_port_rd(&priv->si->hw, ENETC_PSIDCAPR);
++	priv->psfp_cap.max_streamid = reg & ENETC_PSIDCAPR_MSK;
++	/* Port stream filter capability */
++	reg = enetc_port_rd(&priv->si->hw, ENETC_PSFCAPR);
++	priv->psfp_cap.max_psfp_filter = reg & ENETC_PSFCAPR_MSK;
++	/* Port stream gate capability */
++	reg = enetc_port_rd(&priv->si->hw, ENETC_PSGCAPR);
++	priv->psfp_cap.max_psfp_gate = (reg & ENETC_PSGCAPR_SGIT_MSK);
++	priv->psfp_cap.max_psfp_gatelist = (reg & ENETC_PSGCAPR_GCL_MSK) >> 16;
++	/* Port flow meter capability */
++	reg = enetc_port_rd(&priv->si->hw, ENETC_PFMCAPR);
++	priv->psfp_cap.max_psfp_meter = reg & ENETC_PFMCAPR_MSK;
++}
++
++static inline void enetc_psfp_enable(struct enetc_hw *hw)
++{
++	enetc_wr(hw, ENETC_PPSFPMR, enetc_rd(hw, ENETC_PPSFPMR) |
++		 ENETC_PPSFPMR_PSFPEN | ENETC_PPSFPMR_VS |
++		 ENETC_PPSFPMR_PVC | ENETC_PPSFPMR_PVZC);
++}
++
++static inline void enetc_psfp_disable(struct enetc_hw *hw)
++{
++	enetc_wr(hw, ENETC_PPSFPMR, enetc_rd(hw, ENETC_PPSFPMR) &
++		 ~ENETC_PPSFPMR_PSFPEN & ~ENETC_PPSFPMR_VS &
++		 ~ENETC_PPSFPMR_PVC & ~ENETC_PPSFPMR_PVZC);
++}
+ #else
+ #define enetc_setup_tc_taprio(ndev, type_data) -EOPNOTSUPP
+ #define enetc_sched_speed_set(ndev) (void)0
+ #define enetc_setup_tc_cbs(ndev, type_data) -EOPNOTSUPP
+ #define enetc_setup_tc_txtime(ndev, type_data) -EOPNOTSUPP
++#define enetc_get_max_cap(p)		\
++	memset(&((p)->psfp_cap), 0, sizeof(struct psfp_cap))
++
++#define enetc_psfp_enable(hw) (void)0
++#define enetc_psfp_disable(hw) (void)0
+ #endif
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+index 2a6523136947d..587974862f488 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
++++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+@@ -19,6 +19,7 @@
+ #define ENETC_SICTR1	0x1c
+ #define ENETC_SIPCAPR0	0x20
+ #define ENETC_SIPCAPR0_QBV	BIT(4)
++#define ENETC_SIPCAPR0_PSFP	BIT(9)
+ #define ENETC_SIPCAPR0_RSS	BIT(8)
+ #define ENETC_SIPCAPR1	0x24
+ #define ENETC_SITGTGR	0x30
+@@ -228,6 +229,15 @@ enum enetc_bdr_type {TX, RX};
+ #define ENETC_PM0_IFM_RLP	(BIT(5) | BIT(11))
+ #define ENETC_PM0_IFM_RGAUTO	(BIT(15) | ENETC_PMO_IFM_RG | BIT(1))
+ #define ENETC_PM0_IFM_XGMII	BIT(12)
++#define ENETC_PSIDCAPR		0x1b08
++#define ENETC_PSIDCAPR_MSK	GENMASK(15, 0)
++#define ENETC_PSFCAPR		0x1b18
++#define ENETC_PSFCAPR_MSK	GENMASK(15, 0)
++#define ENETC_PSGCAPR		0x1b28
++#define ENETC_PSGCAPR_GCL_MSK	GENMASK(18, 16)
++#define ENETC_PSGCAPR_SGIT_MSK	GENMASK(15, 0)
++#define ENETC_PFMCAPR		0x1b38
++#define ENETC_PFMCAPR_MSK	GENMASK(15, 0)
+ 
+ /* MAC counters */
+ #define ENETC_PM0_REOCT		0x8100
+@@ -621,3 +631,10 @@ struct enetc_cbd {
+ /* Port time specific departure */
+ #define ENETC_PTCTSDR(n)	(0x1210 + 4 * (n))
+ #define ENETC_TSDE		BIT(31)
++
++/* PSFP setting */
++#define ENETC_PPSFPMR 0x11b00
++#define ENETC_PPSFPMR_PSFPEN BIT(0)
++#define ENETC_PPSFPMR_VS BIT(1)
++#define ENETC_PPSFPMR_PVC BIT(2)
++#define ENETC_PPSFPMR_PVZC BIT(3)
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+index 85e2b741df414..eacd597b55f22 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+@@ -739,6 +739,14 @@ static void enetc_pf_netdev_setup(struct enetc_si *si, struct net_device *ndev,
+ 	if (si->hw_features & ENETC_SI_F_QBV)
+ 		priv->active_offloads |= ENETC_F_QBV;
+ 
++	if (si->hw_features & ENETC_SI_F_PSFP) {
++		priv->active_offloads |= ENETC_F_QCI;
++		ndev->features |= NETIF_F_HW_TC;
++		ndev->hw_features |= NETIF_F_HW_TC;
++		enetc_get_max_cap(priv);
++		enetc_psfp_enable(&si->hw);
++	}
++
+ 	/* pick up primary MAC address from SI */
+ 	enetc_get_primary_mac_addr(&si->hw, ndev->dev_addr);
+ }
 -- 
 2.25.1
 
