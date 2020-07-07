@@ -2,217 +2,104 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0768CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C84820773
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2CB2067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594152253;
-	bh=Ed/3Q7E4vJs5EEEvSsgo4t0m6Y1QmUKPsEeCTSlajUw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=xx4ig+hbkVtU8Hi2uKJh/b05r8ugnfOHwp0Pagpvrxi0GJHHHdd3Ja7lqENjW2JHF
-	 JS0Z0VZLAskxILAirTf2BBgve7erQotdW+vdt0zHKcfl9NwPdakxUi4WH5E/HQKLdn
-	 HRE4kKg39rTPLGeyErrGetz9LHrx5aSuiLGpcPBg=
+	s=default; t=1594152390;
+	bh=Q8cYr3emIBz5I2SVRAbSwt8x/mXTe6S9IVSIduWrF8M=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=eD8lFylprs8/9mdBGozad1zcs5n6NcW86O661w9MHGR0Y2HwDCdJyuRH0O4XbSTVt
+	 +VmANcFnJOm43/RBd5dYCLuMgShhAuXM93sspxibTH6rvqvuUaAISa8+07YBli/U+m
+	 09ufHq46U0OFBqoFe3s+vQ6REgHPbJFfcSN4ojoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgGGUEM (ORCPT
+        id S1728677AbgGGUGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:04:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbgGGUEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:04:12 -0400
-Received: from embeddedor (unknown [200.39.26.250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46A9420771;
-        Tue,  7 Jul 2020 20:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594152251;
-        bh=Ed/3Q7E4vJs5EEEvSsgo4t0m6Y1QmUKPsEeCTSlajUw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NpOwVTRcK4pi9d7+Ph7yi1fSUhNU4/YEm+Fl0RXO8wHxTESFYwqoV1mImsIQ2sM06
-         P9JVxou3jRy9QRV71ZF69o3kZUYknlCsfn2Eb2nIrfkKCEafLBCy+h5jq3jIq4ZiHZ
-         P/6FbXdK5zITYaHFKS/42MdBxKJQEeSQ5IWUJWUg=
-Date:   Tue, 7 Jul 2020 15:09:37 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH] ACPI: Use fallthrough pseudo-keyword
-Message-ID: <20200707200937.GA5056@embeddedor>
+        Tue, 7 Jul 2020 16:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728208AbgGGUG2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 16:06:28 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9281CC08C5E1
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 13:06:28 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id h1so13093277otq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 13:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=r5PL45TtpUanLMjUFz1CcEwQghycNM5MHybEf6+OAdY=;
+        b=Ia/xRu4E5EmGy6Euz2yN+Lu4bpiUJmEdWdzTD8OqM8AxBU6FQFBhSUpyKT01Vr8Gfb
+         B1Z5wCAkGvzqfHGLEzzzBaknQJXeNrxuVnCP9kf8bRooXqJKq6zqnMXR+v5lLmKVtu5A
+         QTSvpd1Xn3a+ElGJKiVI+MGiIxrLD5plOOwc0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=r5PL45TtpUanLMjUFz1CcEwQghycNM5MHybEf6+OAdY=;
+        b=ikEi5yLFEhJYdTBwppK19DCtFLOaUAKn+LacFom1mkv5acJuz2lpRE+mwEnJ+x8OOG
+         1i660JCY8aoPP9hy1T0N89jnUq2eWArYGuocF3OgcaR3DTuAbfDB7cUywOo/qgrTTE4g
+         DxSEbIk9aAfNkDW38ixnzupSz5ow9jXMUMFJv2Nq5tq3XDuHRrl4yjkmI1GMSCeOmCt6
+         TkyfVwY07J7u8WyFaFv0d48BVXuXaZSgTky7LriQncEIOIrpfBAPBopOq9O+d0lPyKSL
+         Brl2urzc1pkS3GdHVCYIrwx3HqUPe7qPhrRE4MopLvwBZF9xgx2jVm91MRDBua07LxPh
+         OdKA==
+X-Gm-Message-State: AOAM533T08aqGECNAnRlk70wYY2gBLUF7mfUHH0rMn3qsr1viIZ9CDYh
+        KOwt5Vbvquv7ZY+BVSi78OvbIA==
+X-Google-Smtp-Source: ABdhPJwwnZXLOhRRrCJBbJ2DZTfTavUWiRd8aI97qtpmNCNSuXiRBk3Odg92UJhZ/9Q7+WOFz9Le2Q==
+X-Received: by 2002:a9d:2261:: with SMTP id o88mr8252897ota.334.1594152388040;
+        Tue, 07 Jul 2020 13:06:28 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id d193sm302792oib.53.2020.07.07.13.06.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 13:06:27 -0700 (PDT)
+Subject: Re: [PATCH] usbip: Use fallthrough pseudo-keyword
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200707195214.GA3932@embeddedor>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <977e88c2-58cb-9507-c889-854e574a8f31@linuxfoundation.org>
+Date:   Tue, 7 Jul 2020 14:06:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200707195214.GA3932@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
+On 7/7/20 1:52 PM, Gustavo A. R. Silva wrote:
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> fall-through markings when it is the case.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> 
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+Is fallthrough syntax supported on our min gcc version?
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/acpi/ac.c             |    2 +-
- drivers/acpi/acpi_processor.c |    2 +-
- drivers/acpi/button.c         |    2 +-
- drivers/acpi/dock.c           |    2 +-
- drivers/acpi/evged.c          |    2 +-
- drivers/acpi/processor_idle.c |    3 +--
- drivers/acpi/resource.c       |    2 +-
- drivers/acpi/spcr.c           |    4 ++--
- drivers/pci/pci-acpi.c        |    6 +++---
- 9 files changed, 12 insertions(+), 13 deletions(-)
+Does checkpatch or coccicheck catch these cases?
 
-diff --git a/drivers/acpi/ac.c b/drivers/acpi/ac.c
-index 69d2db13886b..2dfa08f939c6 100644
---- a/drivers/acpi/ac.c
-+++ b/drivers/acpi/ac.c
-@@ -236,7 +236,7 @@ static void acpi_ac_notify(struct acpi_device *device, u32 event)
- 	default:
- 		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
- 				  "Unsupported event [0x%x]\n", event));
--	/* fall through */
-+		fallthrough;
- 	case ACPI_AC_NOTIFY_STATUS:
- 	case ACPI_NOTIFY_BUS_CHECK:
- 	case ACPI_NOTIFY_DEVICE_CHECK:
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index 5379bc3f275d..b51ddf3bb616 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -79,7 +79,7 @@ static int acpi_processor_errata_piix4(struct pci_dev *dev)
- 		 * PIIX4 models.
- 		 */
- 		errata.piix4.throttle = 1;
--		/* fall through*/
-+		fallthrough;
- 
- 	case 2:		/* PIIX4E */
- 	case 3:		/* PIIX4M */
-diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-index 3c35e57dd854..a4eda7fe50d3 100644
---- a/drivers/acpi/button.c
-+++ b/drivers/acpi/button.c
-@@ -405,7 +405,7 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
- 	switch (event) {
- 	case ACPI_FIXED_HARDWARE_EVENT:
- 		event = ACPI_BUTTON_NOTIFY_STATUS;
--		/* fall through */
-+		fallthrough;
- 	case ACPI_BUTTON_NOTIFY_STATUS:
- 		input = button->input;
- 		if (button->type == ACPI_BUTTON_TYPE_LID) {
-diff --git a/drivers/acpi/dock.c b/drivers/acpi/dock.c
-index e3414131bfca..9bd72c26ef46 100644
---- a/drivers/acpi/dock.c
-+++ b/drivers/acpi/dock.c
-@@ -469,7 +469,7 @@ int dock_notify(struct acpi_device *adev, u32 event)
- 		surprise_removal = 1;
- 		event = ACPI_NOTIFY_EJECT_REQUEST;
- 		/* Fall back */
--		/* fall through */
-+		fallthrough;
- 	case ACPI_NOTIFY_EJECT_REQUEST:
- 		begin_undock(ds);
- 		if ((immediate_undock && !(ds->flags & DOCK_IS_ATA))
-diff --git a/drivers/acpi/evged.c b/drivers/acpi/evged.c
-index ccd900690b6f..b1a7f8d6965e 100644
---- a/drivers/acpi/evged.c
-+++ b/drivers/acpi/evged.c
-@@ -106,7 +106,7 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
- 
- 		if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
- 			break;
--		/* fall through */
-+		fallthrough;
- 	default:
- 		if (ACPI_SUCCESS(acpi_get_handle(handle, "_EVT", &evt_handle)))
- 			break;
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index 75534c5b5433..9325feaac5f8 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -203,8 +203,7 @@ static void tsc_check_state(int state)
- 		 */
- 		if (boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
- 			return;
--
--		/*FALL THROUGH*/
-+		fallthrough;
- 	default:
- 		/* TSC could halt in idle, so notify users */
- 		if (state > ACPI_STATE_C1)
-diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index 3b4448972374..ad04824ca3ba 100644
---- a/drivers/acpi/resource.c
-+++ b/drivers/acpi/resource.c
-@@ -373,7 +373,7 @@ unsigned int acpi_dev_get_irq_type(int triggering, int polarity)
- 	case ACPI_ACTIVE_BOTH:
- 		if (triggering == ACPI_EDGE_SENSITIVE)
- 			return IRQ_TYPE_EDGE_BOTH;
--		/* fall through */
-+		fallthrough;
- 	default:
- 		return IRQ_TYPE_NONE;
- 	}
-diff --git a/drivers/acpi/spcr.c b/drivers/acpi/spcr.c
-index d73b4535e79d..88460bacd5ae 100644
---- a/drivers/acpi/spcr.c
-+++ b/drivers/acpi/spcr.c
-@@ -111,7 +111,7 @@ int __init acpi_parse_spcr(bool enable_earlycon, bool enable_console)
- 			table->serial_port.access_width))) {
- 		default:
- 			pr_err("Unexpected SPCR Access Width.  Defaulting to byte size\n");
--			/* fall through */
-+			fallthrough;
- 		case 8:
- 			iotype = "mmio";
- 			break;
-@@ -128,7 +128,7 @@ int __init acpi_parse_spcr(bool enable_earlycon, bool enable_console)
- 	switch (table->interface_type) {
- 	case ACPI_DBG2_ARM_SBSA_32BIT:
- 		iotype = "mmio32";
--		/* fall through */
-+		fallthrough;
- 	case ACPI_DBG2_ARM_PL011:
- 	case ACPI_DBG2_ARM_SBSA_GENERIC:
- 	case ACPI_DBG2_BCM2835:
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 7224b1e5f2a8..0d85025c55fd 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -527,8 +527,8 @@ static void program_hpx_type3_register(struct pci_dev *dev,
- 			return;
- 
- 		break;
--	case HPX_CFG_VEND_CAP:	/* Fall through */
--	case HPX_CFG_DVSEC:	/* Fall through */
-+	case HPX_CFG_VEND_CAP:
-+	case HPX_CFG_DVSEC:
- 	default:
- 		pci_warn(dev, "Encountered _HPX type 3 with unsupported config space location");
- 		return;
-@@ -1001,7 +1001,7 @@ static int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
- 			error = -EBUSY;
- 			break;
- 		}
--		/* Fall through */
-+		fallthrough;
- 	case PCI_D0:
- 	case PCI_D1:
- 	case PCI_D2:
+The patch looks good.
 
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
