@@ -2,136 +2,116 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA7A8206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B4C206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:16:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AvG/+FW5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wcKWsYuJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgGGHMb (ORCPT
+        id S1727107AbgGGHQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 03:12:31 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39378 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728145AbgGGHMa (ORCPT
+        Tue, 7 Jul 2020 03:16:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgGGHQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 03:12:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594105949;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RJ2u3BtHw/gjxmZh9JTdaDzy0J/3L7Tf4wqVQ4apjc4=;
-        b=AvG/+FW5mrMFnI40hHj51Toz+XZm50uhkR7eCt5Gl2Cu3UPu3izKLsyRoQuEVfzEQvWoZW
-        4lHTEDiMFwUPg5CeYSkQSW1o+5ZI6yzyrNN+4/co08dTiqUqx469HA8kg+1EfZ7a2+T6z6
-        Gr373xuarWyLUN07/CsFrRyD+/6VJXk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-315-6j_oPuNoPge-FahGjpZIlQ-1; Tue, 07 Jul 2020 03:12:27 -0400
-X-MC-Unique: 6j_oPuNoPge-FahGjpZIlQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50186800C64;
-        Tue,  7 Jul 2020 07:12:26 +0000 (UTC)
-Received: from firesoul.localdomain (unknown [10.40.208.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 096EA77889;
-        Tue,  7 Jul 2020 07:12:26 +0000 (UTC)
-Received: from [192.168.42.3] (localhost [IPv6:::1])
-        by firesoul.localdomain (Postfix) with ESMTP id 0E8EE3002D6DA;
-        Tue,  7 Jul 2020 09:12:25 +0200 (CEST)
-Subject: [PATCH bpf-next V3 2/2] selftests/bpf: test_progs avoid minus shell
- exit codes
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     bpf@vger.kernel.org, Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Hangbin Liu <haliu@redhat.com>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        vkabatov@redhat.com, jbenc@redhat.com, yhs@fb.com, kafai@fb.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 07 Jul 2020 09:12:25 +0200
-Message-ID: <159410594499.1093222.11080787853132708654.stgit@firesoul>
-In-Reply-To: <159410590190.1093222.8436994742373578091.stgit@firesoul>
-References: <159410590190.1093222.8436994742373578091.stgit@firesoul>
-User-Agent: StGit/0.19
+        Tue, 7 Jul 2020 03:16:02 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC72C061794
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 00:16:02 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id c7so11447010uap.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 00:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wULRYb8hTQ3DSK0waXDTahHo3SLIrsIw0jdCnMxAKcA=;
+        b=wcKWsYuJHcCaZBBYXq+uak+cU00WVu2UgYkovzrsp2rvH7fV8jVNnFn0xBKxwAF2Ae
+         uWdnbQRiEK6JyTL9+FutmmrqTR3CC+lasw9LeA6aw0fQQSzkQYqjEbzn6cJbo7ptrWdQ
+         xGTIzf4ImUSRJoQMT+3OMQTx5AVpNVC3uq6QieRnLDtFAvv6iql5C1xW3TRRE9H5zW/1
+         TLCi3BH+Aafjz00IRsYJlvW5DyHGtm5u8uX9WfwWO32F8TishTYObMok5gWvtCg2XBjD
+         eVLL9QOY7EwPrs099vYX04X/yY7hsRooQcG8m+svdn/kyzzQ4IFCc/ThOlUtXtLlZUOu
+         8IYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wULRYb8hTQ3DSK0waXDTahHo3SLIrsIw0jdCnMxAKcA=;
+        b=U+IC8BUT+0u8/lFMrLQ0kB4SfOGtTexzJcMSEcymbgGQWo246xP1Mo9ScvRjG87ZC3
+         kgtqTM8OIfYqKy5qbKeHv+eTSFYKkF5q+2eiCbYOeczZccCIV305rFw/EJeFq7W1Tv2t
+         RXpdA2cQlhZgR2hkA3B6pvMpZeB4jdAPUxvK/v2W5SvILM17itr1Zw0Ty51sKofanCBF
+         fhm9qW3VD1SX959L5yNOWDHJsddcyHN6c+LCpbmnXc3SD6jAwxtB74SHTR5eUCL0EzjG
+         Fp5Dk+2EaNK1jdg40uee9u3l8C4pnJcOp9bHGtZIFJyPlLXmMy0+ebIpeqcJWrH2k/+W
+         7m3A==
+X-Gm-Message-State: AOAM533woiW2p9SaJAxn9PuZZkS1XYIrqXJ6+xiFamhA7PzhHnK89Jf7
+        N/YUwlnCjZkwJChNLpAzHCUBJ3Uuwa4YuIqNcAQahA==
+X-Google-Smtp-Source: ABdhPJwMwTl3YpAgByVRV5/0CyJMIT9UexQ3ZB6gZc+BkUJfj4jbLurrY4uFc+j16UQ+IYEihjoOLDUK2mNhKiKB2zQ=
+X-Received: by 2002:a9f:22e1:: with SMTP id 88mr36772869uan.19.1594106161737;
+ Tue, 07 Jul 2020 00:16:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200706163031.503431-1-colin.king@canonical.com>
+In-Reply-To: <20200706163031.503431-1-colin.king@canonical.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 7 Jul 2020 09:15:25 +0200
+Message-ID: <CAPDyKFqtcw+zccgR4LOPqYAs3dQ02Hu7SmpNq7aNgOs23dzJ5g@mail.gmail.com>
+Subject: Re: [PATCH] mmc: dw_mmc-exynos: remove redundant initialization of
+ variable 'found'
+To:     Colin King <colin.king@canonical.com>
+Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a number of places in test_progs that use minus-1 as the argument
-to exit(). This is confusing as a process exit status is masked to be a
-number between 0 and 255 as defined in man exit(3). Thus, users will see
-status 255 instead of minus-1.
+On Mon, 6 Jul 2020 at 18:30, Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The variable 'found' is being initialized with a value that is never read
+> and it is being updated later with a new value.  The initialization is
+> redundant and can be removed.
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-This patch use positive exit code 3 instead of minus-1. These cases are put
-in the same group of infrastructure setup errors.
+Applied for next, thanks!
 
-Fixes: fd27b1835e70 ("selftests/bpf: Reset process and thread affinity after each test/sub-test")
-Fixes: 811d7e375d08 ("bpf: selftests: Restore netns after each test")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
----
- tools/testing/selftests/bpf/test_progs.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index 65d3f8686e29..b1e4dadacd9b 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -13,6 +13,7 @@
- #include <execinfo.h> /* backtrace */
- 
- #define EXIT_NO_TEST		2
-+#define EXIT_ERR_SETUP_INFRA	3
- 
- /* defined in test_progs.h */
- struct test_env env = {};
-@@ -113,13 +114,13 @@ static void reset_affinity() {
- 	if (err < 0) {
- 		stdio_restore();
- 		fprintf(stderr, "Failed to reset process affinity: %d!\n", err);
--		exit(-1);
-+		exit(EXIT_ERR_SETUP_INFRA);
- 	}
- 	err = pthread_setaffinity_np(pthread_self(), sizeof(cpuset), &cpuset);
- 	if (err < 0) {
- 		stdio_restore();
- 		fprintf(stderr, "Failed to reset thread affinity: %d!\n", err);
--		exit(-1);
-+		exit(EXIT_ERR_SETUP_INFRA);
- 	}
- }
- 
-@@ -128,7 +129,7 @@ static void save_netns(void)
- 	env.saved_netns_fd = open("/proc/self/ns/net", O_RDONLY);
- 	if (env.saved_netns_fd == -1) {
- 		perror("open(/proc/self/ns/net)");
--		exit(-1);
-+		exit(EXIT_ERR_SETUP_INFRA);
- 	}
- }
- 
-@@ -137,7 +138,7 @@ static void restore_netns(void)
- 	if (setns(env.saved_netns_fd, CLONE_NEWNET) == -1) {
- 		stdio_restore();
- 		perror("setns(CLONE_NEWNS)");
--		exit(-1);
-+		exit(EXIT_ERR_SETUP_INFRA);
- 	}
- }
- 
+Kind regards
+Uffe
 
 
+> ---
+>  drivers/mmc/host/dw_mmc-exynos.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
+> index 5e3d95b63676..99b900008a03 100644
+> --- a/drivers/mmc/host/dw_mmc-exynos.c
+> +++ b/drivers/mmc/host/dw_mmc-exynos.c
+> @@ -472,7 +472,7 @@ static int dw_mci_exynos_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>         struct dw_mci_exynos_priv_data *priv = host->priv;
+>         struct mmc_host *mmc = slot->mmc;
+>         u8 start_smpl, smpl, candiates = 0;
+> -       s8 found = -1;
+> +       s8 found;
+>         int ret = 0;
+>
+>         start_smpl = dw_mci_exynos_get_clksmpl(host);
+> --
+> 2.27.0
+>
