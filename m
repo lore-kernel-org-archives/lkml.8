@@ -2,108 +2,78 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF23FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4721BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E97206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:47:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="agDyytg7"
+	by mail.kernel.org (Postfix) with ESMTP id 2A0E62065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgGGJru (ORCPT
+        id S1727850AbgGGJtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbgGGJrt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:47:49 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C742C061755;
-        Tue,  7 Jul 2020 02:47:49 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1Hfp3KR1z9sDX;
-        Tue,  7 Jul 2020 19:47:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594115266;
-        bh=YKsHVWxqBB8l5sJnD398yJiZ8PFMtfVazI/na/4CzjU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=agDyytg74DH7zKhv2kmGzowyBcwZ0B3nD89ypnxODJf+QTbyyecneBfDxvTe0uZwZ
-         QxhCiAk3c7U8eQXzw4bWBS6yprhxADDNj19XMnXf+uPTBO7Kq2HPCPvsUG2jB94u2c
-         az7lJwVFFGFCrkn1dlEqB5Sq2asCneS8Skz7yiLhmlo1fUV+K5XdsVVGaKD3N8BHSM
-         CbuRI0GxYZT5wrJKKaSjCsDFTEk06RlFDRGdFFW6AKNLypYdGo+Vv+XzFScAnH4JcA
-         q4HzQK+xpG5p53QwBQQ5YdHNsxt9BROlP9HOTyQY/+AI8Y+jhUMqjJlZN3AMu3uLpJ
-         YOn35w7s03BQQ==
-Date:   Tue, 7 Jul 2020 19:47:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the
- generic-ioremap tree
-Message-ID: <20200707194744.2b8380d0@canb.auug.org.au>
-In-Reply-To: <20200707083917.GA26906@lst.de>
-References: <20200707183035.56420aaa@canb.auug.org.au>
-        <20200707083917.GA26906@lst.de>
+        Tue, 7 Jul 2020 05:49:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:35272 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726745AbgGGJtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:49:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA528C0A;
+        Tue,  7 Jul 2020 02:49:16 -0700 (PDT)
+Received: from [10.163.86.118] (unknown [10.163.86.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA2B63F718;
+        Tue,  7 Jul 2020 02:49:14 -0700 (PDT)
+Subject: Re: [PATCH] vmalloc: Removing incorrect logs when vmalloc failed
+To:     Tian Tao <tiantao6@hisilicon.com>, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     linuxarm@huawei.com
+References: <1594113232-32193-1-git-send-email-tiantao6@hisilicon.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <5e7885ef-081e-0682-7be7-40eb7712d2c7@arm.com>
+Date:   Tue, 7 Jul 2020 15:18:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/HQhoNQMQLKex=AWG3X0i3kF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <1594113232-32193-1-git-send-email-tiantao6@hisilicon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/HQhoNQMQLKex=AWG3X0i3kF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Christoph,
 
-On Tue, 7 Jul 2020 10:39:17 +0200 Christoph Hellwig <hch@lst.de> wrote:
->
-> On Tue, Jul 07, 2020 at 06:30:35PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > Commit
-> >=20
-> >   2ee080ecf668 ("wip")
-> >=20
-> > is missing a Signed-off-by from its author and comitter.
-> >=20
-> > Not much of a commit message either :-) =20
->=20
-> This commit should have never made it into the for-next tree, sorry.
-> Please drop it if you can - I'll fix it up ASAP.
+On 07/07/2020 02:43 PM, Tian Tao wrote:
+> It is not possible to increase size with vmalloc=<size> in arm64
+> architecture and it will mislead.however vmalloc return failure
+> is a rare occurrence in 'many architectures including arm64'.
 
-No worries, I often fetch trees after finishing linux-next for the
-day (to save time the next day), so the tree I saw will not be used
-until tomorrow (plenty of time to be fixed up).
+But there is a chance that vmalloc() might work on architectures
+that support 'vmalloc=' command line i.e after a change and this
+information here might be helpful in those cases.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/HQhoNQMQLKex=AWG3X0i3kF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ERMAACgkQAVBC80lX
-0Gxtsgf/YYYLXeD7A+LcX+t09gNU+6J2a9+gQeuMqYeBwXwCnVF2S1zZpHQMkzeH
-hkFG+nORbo70GlLViGOqP8t9f7EZxUfdN+rczYi6N9tupn4MVU11PKM1HDKYy6pz
-KxXbwy+UDWdaax/pEwBlPdjLNJhAbi40viDGfm1x3p5t5MinaJ8LDM07agkyz9Fr
-4w/WiktGOqOdb0Koqt4wHpwZPP+Gfbz6++I+/Uw003fx/w0J4aRhBE4Dwj18q1Uj
-XgaSIN9HGzbbXQKdS+icYcwg4ifFq/l7Rc+tQSMJY+SPDHnEOHDGC7Yh84uFNYWd
-EY3MrBl5m96AshM+M99Du7AiNY0Y/w==
-=ZCJf
------END PGP SIGNATURE-----
-
---Sig_/HQhoNQMQLKex=AWG3X0i3kF--
+> 
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> ---
+>  mm/vmalloc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 89e83d3..c7b5a9a 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -1238,8 +1238,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+>  	}
+>  
+>  	if (!(gfp_mask & __GFP_NOWARN) && printk_ratelimit())
+> -		pr_warn("vmap allocation for size %lu failed: use vmalloc=<size> to increase size\n",
+> -			size);
+> +		pr_warn("vmap allocation for size %lu failed\n", size);
+>  
+>  	kmem_cache_free(vmap_area_cachep, va);
+>  	return ERR_PTR(-EBUSY);
+> 
