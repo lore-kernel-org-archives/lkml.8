@@ -2,140 +2,177 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C61E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A246206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5FB206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgGGKKY (ORCPT
+        id S1728135AbgGGKK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:10:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:36564 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbgGGKKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:10:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87A21C0A;
-        Tue,  7 Jul 2020 03:10:22 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4C603F71E;
-        Tue,  7 Jul 2020 03:10:19 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 11:10:17 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Matt Turner <mattst88@gmail.com>, kernel-team@android.com,
-        Marco Elver <elver@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org
-Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when
- CLANG_LTO=y
-Message-ID: <20200707101015.GH10992@arm.com>
-References: <20200630173734.14057-1-will@kernel.org>
- <20200630173734.14057-19-will@kernel.org>
- <20200706160820.GC10992@arm.com>
- <20200706183510.GA23766@willie-the-truck>
+        Tue, 7 Jul 2020 06:10:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgGGKK6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:10:58 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2ED3C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 03:10:57 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 87E242A5112
+Subject: Re: [PATCH] platform/chrome: cros_ec_proto: Convert EC error codes to
+ Linux error codes
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Benson Leung <bleung@chromium.org>, linux-kernel@vger.kernel.org,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+References: <20200704142607.171400-1-linux@roeck-us.net>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <7fd5528a-017e-d706-8092-8e1d6b187243@collabora.com>
+Date:   Tue, 7 Jul 2020 12:10:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706183510.GA23766@willie-the-truck>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200704142607.171400-1-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 07:35:11PM +0100, Will Deacon wrote:
-> On Mon, Jul 06, 2020 at 05:08:20PM +0100, Dave Martin wrote:
-> > On Tue, Jun 30, 2020 at 06:37:34PM +0100, Will Deacon wrote:
-> > > diff --git a/arch/arm64/include/asm/rwonce.h b/arch/arm64/include/asm/rwonce.h
-> > > new file mode 100644
-> > > index 000000000000..515e360b01a1
-> > > --- /dev/null
-> > > +++ b/arch/arm64/include/asm/rwonce.h
-> > > @@ -0,0 +1,63 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > +/*
-> > > + * Copyright (C) 2020 Google LLC.
-> > > + */
-> > > +#ifndef __ASM_RWONCE_H
-> > > +#define __ASM_RWONCE_H
-> > > +
-> > > +#ifdef CONFIG_CLANG_LTO
-> > > +
-> > > +#include <linux/compiler_types.h>
-> > > +#include <asm/alternative-macros.h>
-> > > +
-> > > +#ifndef BUILD_VDSO
-> > > +
-> > > +#ifdef CONFIG_AS_HAS_LDAPR
-> > > +#define __LOAD_RCPC(sfx, regs...)					\
-> > > +	ALTERNATIVE(							\
-> > > +		"ldar"	#sfx "\t" #regs,				\
-> > 
-> > ^ Should this be here?  It seems that READ_ONCE() will actually read
-> > twice... even if that doesn't actually conflict with the required
-> > semantics of READ_ONCE(), it looks odd.
+Hi Prashant and Guenter,
+
+Thank you to spend your time on look at this.
+
+On 4/7/20 16:26, Guenter Roeck wrote:
+> The EC reports a variety of error codes. Most of those, with the exception
+> of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
+> error code gets lost. Convert all EC errors to Linux error codes to report
+> a more meaningful error to the caller to aid debugging.
 > 
-> It's patched at runtime, so it's either LDAR or LDAPR.
+> Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> Cc: Prashant Malani <pmalani@chromium.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
 
-Agh ignore me, I somehow failed to sport the ALTERNATIVE().
+For me the patch looks good as is. Said that, I'd like to discuss a bit more
+(but not too much) about it :-). My "concerns" are:
 
-For my understanding -- my background here is a bit shaky -- the LDAPR
-gives us load-to-load order even if there is just a control dependency?
+- It is not clear to me if some EC errors match directly to a linux kernel error
+codes, the importance of them, and which action should be taken in that case or
+if just reporting is enough.
 
-If so (possibly dumb question): why can't we just turn this on
-unconditionally?  Is there a significant performance impact?
+- The EC result can be obtained, either, enabling more debug traces or using the
+linux kernel tracing tools. So, IMO mapping _all_ the errors has very little value.
 
-I'm still confused (or ignorant) though.  If both loads are READ_ONCE()
-then switching to LDAPR presumably helps, but otherwise, once the
-compiler has reduced the address dependency to a control dependency
-can't it then go one step further and reverse the order of the loads?
-LDAPR wouldn't rescue us from that.
+Right now, the policy I followed is return -EPROTO for all EC errors and
+introduce/match a new error when someone (another kernel driver or userspace
+needs to know about it, i.e [1], where some EC drivers do different actions if
+-ENOTSUPP is returned). We introduced that error because we had a use case for it.
 
-Or does the "memory" clobber in READ_ONCE() fix that for all important
-cases?  I can't see this mattering for local variables (where it
-definitely won't work), but I wonder whether static variables might not
-count as "memory" in some situations.
+The future, I'd like to maintain this policy if it makes sense to you. And
+introduce a new error when we have a use case for it. I.e if at some point a
+kernel driver needs to know when the EC is busy (-EBUSY) because the driver
+waits and retries again, I'll be fine to introduce this new error/match code.
+Otherwise, I feel that has no really value.
 
-Discounting ridiculous things like static register variables, I think
-the only way for a static variable not to count as memory would be if
-there are no writes to it that are reachable from any translation unit
-entry point (possibly after dead code removal).  If so, maybe that's
-enough.
+Said that, if you still feel, that this will help you for debugging purposes, I
+am completely fine to pick the patch.
 
-> > Making a direct link between LTO and the memory model also seems highly
-> > spurious (as discussed in the other subthread) so can we have a comment
-> > explaining the reasoning?
+Thoughts?
+
+Thanks,
+ Enric
+
+[1]
+commit c5cd2b47b203f63682778c2a1783198e6b644294
+Author: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Date:   Thu Feb 20 16:58:52 2020 +0100
+
+    platform/chrome: cros_ec_proto: Report command not supported
+
+    In practice most drivers that use the EC protocol what really care is if
+    the result was successful or not, hence, we introduced a
+    cros_ec_cmd_xfer_status() function that converts EC errors to standard
+    Linux error codes. On some few cases, though, we are interested on know
+    if the command is supported or not, and in such cases, just ignore the
+    error. To achieve this, return a -ENOTSUPP error when the command is not
+    supported.
+
+
+>  drivers/platform/chrome/cros_ec_proto.c | 37 +++++++++++++++++++------
+>  1 file changed, 29 insertions(+), 8 deletions(-)
 > 
-> Sure, although like I say, this is more about helping to progress that
-> conversation.
-
-That's fair enough, but when there is a consensus it would be good to
-see it documented in the code _especially_ if we know that the fix won't
-address all instances of the problem and in any case works partly by
-accident.  That doesn't mean it's not a good practical compromise, but
-it could be very confusing to unpick later on.
-
-Cheers
----Dave
+> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> index 3e745e0fe092..10aa9e483d35 100644
+> --- a/drivers/platform/chrome/cros_ec_proto.c
+> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> @@ -543,6 +543,29 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+>  }
+>  EXPORT_SYMBOL(cros_ec_cmd_xfer);
+>  
+> +static const int cros_ec_error_map[] = {
+> +	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
+> +	[EC_RES_ERROR] = -EIO,
+> +	[EC_RES_INVALID_PARAM] = -EINVAL,
+> +	[EC_RES_ACCESS_DENIED] = -EACCES,
+> +	[EC_RES_INVALID_RESPONSE] = -EPROTO,
+> +	[EC_RES_INVALID_VERSION] = -ENOTSUPP,
+> +	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
+> +	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
+> +	[EC_RES_UNAVAILABLE] = -ENODATA,
+> +	[EC_RES_TIMEOUT] = -ETIMEDOUT,
+> +	[EC_RES_OVERFLOW] = -EOVERFLOW,
+> +	[EC_RES_INVALID_HEADER] = -EBADR,
+> +	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
+> +	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
+> +	[EC_RES_BUS_ERROR] = -EFAULT,
+> +	[EC_RES_BUSY] = -EBUSY,
+> +	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
+> +	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
+> +	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
+> +	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
+> +};
+> +
+>  /**
+>   * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
+>   * @ec_dev: EC device.
+> @@ -555,8 +578,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
+>   *
+>   * Return:
+>   * >=0 - The number of bytes transferred
+> - * -ENOTSUPP - Operation not supported
+> - * -EPROTO - Protocol error
+> + * <0 - Linux error code
+>   */
+>  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>  			    struct cros_ec_command *msg)
+> @@ -566,13 +588,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>  	ret = cros_ec_cmd_xfer(ec_dev, msg);
+>  	if (ret < 0) {
+>  		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
+> -	} else if (msg->result == EC_RES_INVALID_VERSION) {
+> -		dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
+> -			msg->result);
+> -		return -ENOTSUPP;
+>  	} else if (msg->result != EC_RES_SUCCESS) {
+> -		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
+> -		return -EPROTO;
+> +		if (msg->result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[msg->result])
+> +			ret = cros_ec_error_map[msg->result];
+> +		else
+> +			ret = -EPROTO;
+> +		dev_dbg(ec_dev->dev, "Command result (err: %d [%d])\n", msg->result, ret);
+>  	}
+>  
+>  	return ret;
+> 
