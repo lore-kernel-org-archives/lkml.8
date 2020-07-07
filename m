@@ -2,126 +2,198 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A32C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB15DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B75A206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:11:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="o3NV80BN"
+	by mail.kernel.org (Postfix) with ESMTP id 9C497206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 23:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgGGXLz (ORCPT
+        id S1728592AbgGGXMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 19:11:55 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:32565 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727777AbgGGXLy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 19:11:54 -0400
-X-UUID: 6363544267ef4f80b9d9ec5b870c4a26-20200708
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=ACgdKKQvvl0IN9nE7D17jMhl6fwZEjwiF6CEjA4GWAU=;
-        b=o3NV80BNsX4PmP6KgyiMYWE09jSPqxpKHDYAiV42GAs1eUcfH/QuMlmSdcI58gY/3bjvPeQpd3o+HsoQRCzQ50Laqf9jZxjpLnX/H11qW7ZUBw/QQ4Swx4RvRFG33XnQWG6w06AONjqYK87jvQRxqvE0aXQyBhU0di4beslthvg=;
-X-UUID: 6363544267ef4f80b9d9ec5b870c4a26-20200708
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <sean.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 729408332; Wed, 08 Jul 2020 07:11:49 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 8 Jul 2020 07:11:29 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 8 Jul 2020 07:11:19 +0800
-From:   <sean.wang@mediatek.com>
-To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <sr@denx.de>, <arnd@arndb.de>,
-        <matthias.bgg@gmail.com>, <tthayer@opensource.altera.com>
-CC:     <linux-mediatek@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>,
-        Steven Liu <steven.liu@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v5] tty: serial: don't do termios for BTIF
-Date:   Wed, 8 Jul 2020 07:11:22 +0800
-Message-ID: <7c67171728cdcc4ccc10adfaea1a14bfbcf8375a.1594163304.git.sean.wang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Tue, 7 Jul 2020 19:12:39 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27798 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727777AbgGGXMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 19:12:38 -0400
+IronPort-SDR: 5DYJ162OmQuognN5N60v/ipe1MbTzto7nYYWo0Yo5aDx3mYU75HWzo2gcQ6a3jMbG05Uo4xC0c
+ gj3PwxtffiJg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="165783022"
+X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
+   d="scan'208";a="165783022"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 16:12:36 -0700
+IronPort-SDR: BTtvrTuI7Rq/6kKI1tRiK0WsR/JhgkaBU0FlPiow27t0jKe11+R3Qyo1VIiwfgZxJLP4zTQsFV
+ FnYJJDW1+gdg==
+X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
+   d="scan'208";a="427637462"
+Received: from ideak-desk.fi.intel.com ([10.237.72.183])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 16:12:34 -0700
+Date:   Wed, 8 Jul 2020 02:12:29 +0300
+From:   Imre Deak <imre.deak@intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Cooper Chiou <cooper.chiou@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        intel-gfx@lists.freedesktop.org,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Intel-gfx] [PATCH 2/2] drm/i915/mst: filter out the display
+ mode exceed sink's capability
+Message-ID: <20200707231229.GB22747@ideak-desk.fi.intel.com>
+Reply-To: imre.deak@intel.com
+References: <20200526182313.4005-1-lyude@redhat.com>
+ <20200526182313.4005-3-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 4F28F1CAC5E7592B35293C87473BAF934B244B4F5546B2CBC7BAF98B527E8F2A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526182313.4005-3-lyude@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPg0KDQpCbHVldG9vdGggSW50
-ZXJmYWNlIChCVElGKSBpcyBkZXNpZ25lZCBkZWRpY2F0ZWRseSBmb3IgTWVkaWFUZWsgU09DIHdp
-dGgNCkJUIGluIG9yZGVyIHRvIGJlIGluc3RlYWQgb2YgdGhlIFVBUlQgaW50ZXJmYWNlIGJldHdl
-ZW4gQlQgbW9kdWxlIGFuZCBIb3N0DQpDUFUsIGFuZCBub3QgZXhwb3J0ZWQgdG8gdXNlciBzcGFj
-ZSB0byBhY2Nlc3MuDQoNCkFzIHRoZSBVQVJUIGRlc2lnbiwgQlRJRiB3aWxsIGJlIGFuIEFQQiBz
-bGF2ZSBhbmQgY2FuIHRyYW5zbWl0IG9yIHJlY2VpdmUNCmRhdGEgYnkgTUNVIGFjY2VzcywgYnV0
-IGRvZXNuJ3QgcHJvdmlkZSB0ZXJtaW9zIGZ1bmN0aW9uIGxpa2UgYmF1ZHJhdGUgYW5kDQpmbG93
-IGNvbnRyb2wgc2V0dXAuDQoNCkV2ZW4gTENSIG9uIG9mZnNldCAweEMgdGhhdCBpcyBqdXN0IGEg
-RkFLRUxDUg0KYS4gSWYgRkFLRUxDUls3XSBpcyBlcXVhbGVkIHRvIDEsIFJCUigweDAwKSwgVEhS
-KDB4MDApLCBJRVIoMHgwNCkNCiAgIHdpbGwgbm90IGJlIHJlYWRhYmxlL3dyaXRhYmxlLg0KDQpi
-LiBJZiBGQUtFTENSIGlzIGVxdWFsZWQgdG8gMHhCRiwgUkJSKDB4MDApLCBUSFIoMHgwMCksIElF
-UigweDA0KSwNCiAgIElJUigweDA4KSwgYW5kIExTUigweDE0KSB3aWxsIG5vdCBiZSByZWFkYWJs
-ZS93cml0YWJsZS4NCg0KU28gYWRkaW5nIGEgbmV3IGNhcGFiaWxpdHkgJ1VBUlRfQ0FQX05USU8n
-IGZvciB0aGUgdW51c3VhbCB1bnN1cHBvcnRlZA0KY2FzZS4NCg0KVGhlIGJsdWV0b290aCBkcml2
-ZXIgd291bGQgdXNlIEJUSUYgZGV2aWNlIGFzIGEgc2VyZGV2LiBTbyB0aGUgdGVybWlvcw0Kc3Rp
-bGwgZnVuY3Rpb24gd291bGQgYmUgY2FsbGVkIGluIGtlcm5lbHNwYWNlIGZyb20gdHR5cG9ydF9v
-cGVuIGluDQpkcml2ZXJzL3R0eS9zZXJkZXYvc2VyZGV2LXR0eXBydC5jLg0KDQpGaXhlczogMWMx
-NmFlNjVlMjUwICgic2VyaWFsOiA4MjUwOiBvZjogQWRkIG5ldyBwb3J0IHR5cGUgZm9yIE1lZGlh
-VGVrIEJUSUYgY29udHJvbGxlciBvbiBNVDc2MjIvMjMgU29DIikNCkNjOiBTdGV2ZW4gTGl1IDxz
-dGV2ZW4ubGl1QG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IFNlYW4gV2FuZyA8c2Vhbi53
-YW5nQG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IFJ5ZGVyIExlZSA8cnlkZXIubGVlQG1l
-ZGlhdGVrLmNvbT4NCg0KLS0NCnYxLT52MjoNCm5vIGNoYW5nZSBvbiB0ZXJtaW9zLT5jX2NmbGFn
-IGFuZCByZWZpbmUgY29tbWl0IG1lc3NhZ2UNCg0KdjItPnYzOg0KY2hhbmdlIHRoZSBuYW1pbmcg
-ZnJvbSBOTU9EIHRvIE5USU8gYXMgVElPIGlzIGEgd2VsbCBlc3RhYmxpc2hlZCBwcmVmaXgNCmZv
-ciB0ZXJtaW9zIElPQ1RMcy4NCg0KdjMtPnY0Og0KMS4gcmVtb3ZlIGFwcHJvcHJpYXRlIHRhZw0K
-Mi4gYWRkIHRoZSBleHBsYW5hdGlvbiB3aHkgdGhlIHRlcm1pb3MgaXMgcmVxdWlyZWQgZXZlbiB3
-aGVuIHRoZSBjb25uZWN0aW9uDQogICBpc24ndCBleHBvcnRlZCB0byB1c2Vyc3BhY2UuDQoNCnY0
-LT52NToNClVzZSB1cC0+cG9ydC5xdWlya3MgVVBRX0lHTk9SRV9URVJNSU9TIGluc3RlYWQuDQot
-LS0NCiBkcml2ZXJzL3R0eS9zZXJpYWwvODI1MC84MjUwX2NvcmUuYyB8IDMgKysrDQogZHJpdmVy
-cy90dHkvc2VyaWFsLzgyNTAvODI1MF9wb3J0LmMgfCAzICsrKw0KIGluY2x1ZGUvbGludXgvc2Vy
-aWFsX2NvcmUuaCAgICAgICAgIHwgMSArDQogMyBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMo
-KykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfY29yZS5jIGIv
-ZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1MF9jb3JlLmMNCmluZGV4IGZjMTE4ZjY0OTg4Ny4u
-YjAwMDYwYzYxNWMyIDEwMDY0NA0KLS0tIGEvZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1MF9j
-b3JlLmMNCisrKyBiL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfY29yZS5jDQpAQCAtNDkw
-LDYgKzQ5MCw5IEBAIHN0YXRpYyB2b2lkIHVuaXY4MjUwX3JzYV9zdXBwb3J0KHN0cnVjdCB1YXJ0
-X29wcyAqb3BzKQ0KIHN0YXRpYyBpbmxpbmUgdm9pZCBzZXJpYWw4MjUwX2FwcGx5X3F1aXJrcyhz
-dHJ1Y3QgdWFydF84MjUwX3BvcnQgKnVwKQ0KIHsNCiAJdXAtPnBvcnQucXVpcmtzIHw9IHNraXBf
-dHhlbl90ZXN0ID8gVVBRX05PX1RYRU5fVEVTVCA6IDA7DQorDQorCWlmICh1cC0+cG9ydC50eXBl
-ID09IFBPUlRfTVRLX0JUSUYpDQorCQl1cC0+cG9ydC5xdWlya3MgfD0gVVBRX0lHTk9SRV9URVJN
-SU9TOw0KIH0NCiANCiBzdGF0aWMgdm9pZCBfX2luaXQgc2VyaWFsODI1MF9pc2FfaW5pdF9wb3J0
-cyh2b2lkKQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfcG9ydC5j
-IGIvZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1MF9wb3J0LmMNCmluZGV4IDE2MzJmN2QyNWFj
-Yy4uYmUzODA2NDlmZWZiIDEwMDY0NA0KLS0tIGEvZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1
-MF9wb3J0LmMNCisrKyBiL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfcG9ydC5jDQpAQCAt
-MjY0MCw2ICsyNjQwLDkgQEAgc2VyaWFsODI1MF9kb19zZXRfdGVybWlvcyhzdHJ1Y3QgdWFydF9w
-b3J0ICpwb3J0LCBzdHJ1Y3Qga3Rlcm1pb3MgKnRlcm1pb3MsDQogCXVuc2lnbmVkIGxvbmcgZmxh
-Z3M7DQogCXVuc2lnbmVkIGludCBiYXVkLCBxdW90LCBmcmFjID0gMDsNCiANCisJaWYgKHBvcnQt
-PnF1aXJrcyAmIFVQUV9JR05PUkVfVEVSTUlPUykNCisJCXJldHVybjsNCisNCiAJaWYgKHVwLT5j
-YXBhYmlsaXRpZXMgJiBVQVJUX0NBUF9NSU5JKSB7DQogCQl0ZXJtaW9zLT5jX2NmbGFnICY9IH4o
-Q1NUT1BCIHwgUEFSRU5CIHwgUEFST0REIHwgQ01TUEFSKTsNCiAJCWlmICgodGVybWlvcy0+Y19j
-ZmxhZyAmIENTSVpFKSA9PSBDUzUgfHwNCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3Nlcmlh
-bF9jb3JlLmggYi9pbmNsdWRlL2xpbnV4L3NlcmlhbF9jb3JlLmgNCmluZGV4IDlmZDU1MGU3OTQ2
-YS4uYzQ2YWFlMzc0ZTBlIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9zZXJpYWxfY29yZS5o
-DQorKysgYi9pbmNsdWRlL2xpbnV4L3NlcmlhbF9jb3JlLmgNCkBAIC0xNTUsNiArMTU1LDcgQEAg
-c3RydWN0IHVhcnRfcG9ydCB7DQogDQogCS8qIHF1aXJrcyBtdXN0IGJlIHVwZGF0ZWQgd2hpbGUg
-aG9sZGluZyBwb3J0IG11dGV4ICovDQogI2RlZmluZSBVUFFfTk9fVFhFTl9URVNUCUJJVCgwKQ0K
-KyNkZWZpbmUgVVBRX0lHTk9SRV9URVJNSU9TCUJJVCgxKQ0KIA0KIAl1bnNpZ25lZCBpbnQJCXJl
-YWRfc3RhdHVzX21hc2s7CS8qIGRyaXZlciBzcGVjaWZpYyAqLw0KIAl1bnNpZ25lZCBpbnQJCWln
-bm9yZV9zdGF0dXNfbWFzazsJLyogZHJpdmVyIHNwZWNpZmljICovDQotLSANCjIuMjUuMQ0K
+On Tue, May 26, 2020 at 02:23:10PM -0400, Lyude Paul wrote:
+> From: Lee Shawn C <shawn.c.lee@intel.com>
+> 
+> So far, max dot clock rate for MST mode rely on physcial
+> bandwidth limitation. It would caused compatibility issue
+> if source display resolution exceed MST hub output ability.
+> 
+> For example, source DUT had DP 1.2 output capability.
+> And MST docking just support HDMI 1.4 spec. When a HDMI 2.0
+> monitor connected. Source would retrieve EDID from external
+> and get max resolution 4k@60fps. DP 1.2 can support 4K@60fps
+> because it did not surpass DP physical bandwidth limitation.
+> Do modeset to 4k@60fps, source output display data but MST
+> docking can't output HDMI properly due to this resolution
+> already over HDMI 1.4 spec.
+> 
+> Refer to commit <fcf463807596> ("drm/dp_mst: Use full_pbn
+> instead of available_pbn for bandwidth checks").
+> Source driver should refer to full_pbn to evaluate sink
+> output capability. And filter out the resolution surpass
+> sink output limitation.
+> 
+> v2: Using mgr->base.lock to protect full_pbn.
+> v3: Add ctx lock.
+> v4:
+> * s/intel_dp_mst_mode_clock_exceed_pbn_bandwidth/
+>   intel_dp_mst_mode_clock_exceeds_pbn_bw/
+> * Use the new drm_connector_helper_funcs.mode_valid_ctx to properly pipe
+>   down the drm_modeset_acquire_ctx that the probe helpers are using, so
+>   we can safely grab &mgr->base.lock without deadlocking
+> 
+> Cc: Manasi Navare <manasi.d.navare@intel.com>
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Ville Syrjala <ville.syrjala@linux.intel.com>
+> Cc: Cooper Chiou <cooper.chiou@intel.com>
+> Co-developed-by: Lyude Paul <lyude@redhat.com>
+> Signed-off-by: Lee Shawn C <shawn.c.lee@intel.com>
+> Tested-by: Lee Shawn C <shawn.c.lee@intel.com>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  drivers/gpu/drm/i915/display/intel_dp_mst.c | 39 ++++++++++++++++++---
+>  1 file changed, 35 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+> index d18b406f2a7d2..cf052095ad785 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+> @@ -610,15 +610,42 @@ static int intel_dp_mst_get_modes(struct drm_connector *connector)
+>  	return intel_dp_mst_get_ddc_modes(connector);
+>  }
+>  
+> +static int
+> +intel_dp_mst_mode_clock_exceeds_pbn_bw(struct drm_connector *connector,
+> +				       struct drm_modeset_acquire_ctx *ctx,
+> +				       int clock, int bpp)
+> +{
+> +	struct intel_connector *intel_connector = to_intel_connector(connector);
+> +	struct intel_dp *intel_dp = intel_connector->mst_port;
+> +	struct drm_dp_mst_topology_mgr *mgr = &intel_dp->mst_mgr;
+> +	struct drm_dp_mst_port *port = (to_intel_connector(connector))->port;
 
+					intel_connector
+
+> +	int ret = MODE_OK;
+> +
+> +	if (!mgr)
+
+As a NULL check this would be bogus, but also connector->mst_port and so
+mst_mgr too should be always non-NULL?
+
+> +		return ret;
+> +
+> +	ret = drm_modeset_lock(&mgr->base.lock, ctx);
+> +	if (ret == -EDEADLK)
+> +		return ret;
+> +
+> +	if (port->full_pbn &&
+
+How could full_pbn be unset?
+
+> +	    drm_dp_calc_pbn_mode(clock, bpp, false) > port->full_pbn)
+> +		ret = MODE_CLOCK_HIGH;
+> +
+> +	return ret;
+> +}
+> +
+>  static enum drm_mode_status
+> -intel_dp_mst_mode_valid(struct drm_connector *connector,
+> -			struct drm_display_mode *mode)
+> +intel_dp_mst_mode_valid_ctx(struct drm_connector *connector,
+> +			    struct drm_display_mode *mode,
+> +			    struct drm_modeset_acquire_ctx *ctx)
+>  {
+>  	struct drm_i915_private *dev_priv = to_i915(connector->dev);
+>  	struct intel_connector *intel_connector = to_intel_connector(connector);
+>  	struct intel_dp *intel_dp = intel_connector->mst_port;
+>  	int max_dotclk = to_i915(connector->dev)->max_dotclk_freq;
+>  	int max_rate, mode_rate, max_lanes, max_link_clock;
+> +	int ret;
+>  
+>  	if (drm_connector_is_unregistered(connector))
+>  		return MODE_ERROR;
+> @@ -632,7 +659,11 @@ intel_dp_mst_mode_valid(struct drm_connector *connector,
+>  	max_rate = intel_dp_max_data_rate(max_link_clock, max_lanes);
+>  	mode_rate = intel_dp_link_required(mode->clock, 18);
+>  
+> -	/* TODO - validate mode against available PBN for link */
+> +	ret = intel_dp_mst_mode_clock_exceeds_pbn_bw(connector, ctx,
+> +						     mode->clock, 24);
+
+Why 24 bpp and not 18?
+
+Nit: could be checked after max_rate/max_dotclk for consistency.
+
+> +	if (ret != MODE_OK)
+> +		return ret;
+> +
+>  	if (mode->clock < 10000)
+>  		return MODE_CLOCK_LOW;
+>  
+> @@ -671,7 +702,7 @@ intel_dp_mst_detect(struct drm_connector *connector,
+>  
+>  static const struct drm_connector_helper_funcs intel_dp_mst_connector_helper_funcs = {
+>  	.get_modes = intel_dp_mst_get_modes,
+> -	.mode_valid = intel_dp_mst_mode_valid,
+> +	.mode_valid_ctx = intel_dp_mst_mode_valid_ctx,
+>  	.atomic_best_encoder = intel_mst_atomic_best_encoder,
+>  	.atomic_check = intel_dp_mst_atomic_check,
+>  	.detect_ctx = intel_dp_mst_detect,
+> -- 
+> 2.26.2
+> 
+> _______________________________________________
+> Intel-gfx mailing list
+> Intel-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
+> 
