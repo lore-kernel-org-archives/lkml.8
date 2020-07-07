@@ -2,122 +2,126 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1531C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E975C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0F19206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:32:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W4FLApme"
+	by mail.kernel.org (Postfix) with ESMTP id 46A9020720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgGGVcQ (ORCPT
+        id S1729115AbgGGVda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728502AbgGGVcP (ORCPT
+        Tue, 7 Jul 2020 17:33:30 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:35118 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728296AbgGGVd3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:32:15 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A254C08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 14:32:15 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so20602936pgb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:32:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7RZJvmavIn0O2TKntqB9QMi92acXLHjQQiD6TqtsJM8=;
-        b=W4FLApmeUSAjzZei1tcFaAdYwlotTF70I4pqSAQG7rO5K1XEga+KnzxWnE/bCLq90N
-         sQjhKVPREYroxBtzQItv//t58RkmCbDUYk9mS899tJrQuouZKBGKic5p/HdASJzraak6
-         LSXz9O0gsIm+1nPah9eL7XgYtEJsFnRYWVq34=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7RZJvmavIn0O2TKntqB9QMi92acXLHjQQiD6TqtsJM8=;
-        b=P7HYjr2fKAY8noOpGe6sNHfOWjnT7qLbcfqm+8B9uPoQFYFmYtVwUZJKMtLaP2Bj6i
-         wPFaqEj9DBtH2NY4YuLK8Yzuy1KueY5YJ6yGKuKor2epakJ7sgOkbD+8DpdQ/Aoj6s1C
-         26zgg1BQVDCbd7QljK5C/2K279BEZkcozlS/Kx+R9/WyuhdPDFpfP4yvbJvFoyZ8BFUb
-         iPguzBc3U/X6Hm4FpkS5Fr8t0OK88MURhS9PBr6V3i2MO6AN/n5cnINdjttOP59e2l6m
-         ivGBi3ix9o4CLgwJLLGfjRdQZ5AHrCzYg65suD+DoHEiHfdwX0uFvRXTNaf8ZDPtYxov
-         Rv2A==
-X-Gm-Message-State: AOAM533qEqh28BrWJ0bFYQGeaQ9G/dU+VBI4rVD68SsDvCVbJcLoL5YY
-        n/xjhVx9Tx+qmowSoerv30S3KQ==
-X-Google-Smtp-Source: ABdhPJyjWOYHT6AfI1WRr7cur6K+X6jRbh3iIvEo/GyqoEveZ4YQtxGCntbWjkIu+/Fdy5u9itfeOA==
-X-Received: by 2002:a63:3d07:: with SMTP id k7mr46650708pga.93.1594157534774;
-        Tue, 07 Jul 2020 14:32:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ji2sm3301357pjb.1.2020.07.07.14.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 14:32:13 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 14:32:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Cc:     Nick Terrell <nickrterrell@gmail.com>,
-        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-        linux-kbuild@vger.kernel.org, gregkh@linuxfoundation.org,
-        Petr Malat <oss@malat.biz>, Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Norbert Lange <nolange79@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Terrell <terrelln@fb.com>
-Subject: Re: [GIT PULL][PATCH v6 0/8] Add support for ZSTD-compressed kernel
- and initramfs
-Message-ID: <202007071422.1060F5932@keescook>
-References: <20200707034604.1539157-1-nickrterrell@gmail.com>
+        Tue, 7 Jul 2020 17:33:29 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 39D6A1C0C0A; Tue,  7 Jul 2020 23:33:27 +0200 (CEST)
+Date:   Tue, 7 Jul 2020 23:33:26 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 17/36] cxgb4: use correct type for all-mask IP
+ address comparison
+Message-ID: <20200707213326.GB11158@amd>
+References: <20200707145749.130272978@linuxfoundation.org>
+ <20200707145749.959174058@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Bn2rw/3z4jIqBvZU"
 Content-Disposition: inline
-In-Reply-To: <20200707034604.1539157-1-nickrterrell@gmail.com>
+In-Reply-To: <20200707145749.959174058@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 08:45:56PM -0700, Nick Terrell wrote:
-> From: Nick Terrell <terrelln@fb.com>
-> 
-> Please pull from
-> 
->   git@github.com:terrelln/linux.git tags/v6-zstd
-> 
-> to get these changes. Alternatively the patchset is included.
-> 
-> Hi all,
-> 
-> This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
-> initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
-> are supported on all architectures. The ZSTD-compressed kernel is only
-> hooked up to x86 in this patch set.
 
-Hello x86 maintainers!
+--Bn2rw/3z4jIqBvZU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think this series is ready to go. Notes below...
+Hi!
 
-> [...]
->   x86: bump ZO_z_extra_bytes margin for zstd
+> From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+>=20
+> [ Upstream commit f286dd8eaad5a2758750f407ab079298e0bcc8a5 ]
+>=20
+> Use correct type to check for all-mask exact match IP addresses.
+>=20
+> Fixes following sparse warnings due to big endian value checks
+> against 0xffffffff in is_addr_all_mask():
+> cxgb4_filter.c:977:25: warning: restricted __be32 degrades to integer
+> cxgb4_filter.c:983:37: warning: restricted __be32 degrades to integer
+> cxgb4_filter.c:984:37: warning: restricted __be32 degrades to integer
+> cxgb4_filter.c:985:37: warning: restricted __be32 degrades to integer
+> cxgb4_filter.c:986:37: warning: restricted __be32 degrades to integer
 
-The above patch is really the only thing that has any external visibility
-to kernels that have ZSTD disabled. Given the ratios of memory sizes
-involved (an extra 64K when we're dealing with 2MB windows) seems
-reasonable to me. If that isn't acceptable, it should be trivial to make
-it CONFIG-selectable (like we already do with BOOT_HEAP_SIZE).
+> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c b/drivers/=
+net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+> index 7dddb9e748b81..86745f33a252d 100644
+> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+> @@ -810,16 +810,16 @@ static bool is_addr_all_mask(u8 *ipmask, int family)
+>  		struct in_addr *addr;
+> =20
+>  		addr =3D (struct in_addr *)ipmask;
+> -		if (addr->s_addr =3D=3D 0xffffffff)
+> +		if (ntohl(addr->s_addr) =3D=3D 0xffffffff)
 
-What do you think? If the non-x86 parts should land first in -mm, I
-guess that would be okay, but I think it makes sense for all of this to
-go via -tip.
+Endianity does not really matter for ~0, but can compiler figure it
+out?
 
--Kees
+would it be better to do these tests as=20
 
--- 
-Kees Cook
+      if (foo =3D=3D htonl(0xffffffff))
+
+to make it clear to the compiler?
+
+Thanks,
+								Pavel
+
+>  	} else if (family =3D=3D AF_INET6) {
+>  		struct in6_addr *addr6;
+> =20
+>  		addr6 =3D (struct in6_addr *)ipmask;
+> -		if (addr6->s6_addr32[0] =3D=3D 0xffffffff &&
+> -		    addr6->s6_addr32[1] =3D=3D 0xffffffff &&
+> -		    addr6->s6_addr32[2] =3D=3D 0xffffffff &&
+> -		    addr6->s6_addr32[3] =3D=3D 0xffffffff)
+> +		if (ntohl(addr6->s6_addr32[0]) =3D=3D 0xffffffff &&
+> +		    ntohl(addr6->s6_addr32[1]) =3D=3D 0xffffffff &&
+> +		    ntohl(addr6->s6_addr32[2]) =3D=3D 0xffffffff &&
+> +		    ntohl(addr6->s6_addr32[3]) =3D=3D 0xffffffff)
+>  			return true;
+>  	}
+>  	return false;
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Bn2rw/3z4jIqBvZU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8E6iYACgkQMOfwapXb+vJLpACdEj/Y83rAxd9brW1nECrg00xp
+ZhIAn1OLUasoKxmEd9olKPWbXPxy/3UR
+=t1HC
+-----END PGP SIGNATURE-----
+
+--Bn2rw/3z4jIqBvZU--
