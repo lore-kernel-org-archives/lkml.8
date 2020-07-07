@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE65DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC6120853
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07362080D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135536;
-	bh=J3t/S/L7oeGjQsfSZyXk5bZmjtV9IFVrDsi76la7UpQ=;
+	s=default; t=1594135540;
+	bh=Oi7wYcE/YFfHSzj7dau8rDS3JbKaxqE5Oyv2XFaEYvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yolCbLjD5WKPZk4QZByBrccK5YvQkuNeKJBQmDw9oncvGr08woFaIm6HdA8i2jCMB
-	 L5jzsG4GcJcU8lfmhz8VEOhJO78r2kWHLowMf1m/ZgAZt4CO+HoxL4iyDTw9/02aby
-	 gEOXMxhcObUXKpaKjZngXidjk7BzIEesCAm8ZO4o=
+	b=q5aOq/asBiBy5FXdUqpNT4KgpYMcWD6CMt/tcVX/7kDrMVUo9wubWO0Agd6bIvfc7
+	 g4zh+KpuAziE78HQRuFJg8c79fyzBeOYq1Vc06vL34XBaTaOe3u0qcFqgaf3YqLwxq
+	 bDmNcIaOzrR6hJUyziSW8PHSUxy2piTrOesaVg/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgGGPZf (ORCPT
+        id S1730236AbgGGPZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39600 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:25:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730219AbgGGPZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:25:30 -0400
+        id S1730222AbgGGPZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:25:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2E21206F6;
-        Tue,  7 Jul 2020 15:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1444520663;
+        Tue,  7 Jul 2020 15:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135530;
-        bh=J3t/S/L7oeGjQsfSZyXk5bZmjtV9IFVrDsi76la7UpQ=;
+        s=default; t=1594135532;
+        bh=Oi7wYcE/YFfHSzj7dau8rDS3JbKaxqE5Oyv2XFaEYvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IByoKDnqQ0bcMQk1hNvwrdGKP5a2FrhntSaUwkGXD6xa40WRSDdGvniYySqv4gNdh
-         pijadGVMTBY5TdlMF29Ing2kfjXaTNf3jRJ/sGI/0Tqm6vt6tWAwQE3XafckEWzPoT
-         HQEUrNaRwQXpamLGGkdc8aGIvfpwp/3Dgo/SGwSw=
+        b=DSd5ViqUi9wLkmNvDSeykY1fUfL8ApwK+nrbdtKmM+1EZ+bMuLlO5DxJ4aLmnGmUx
+         Hkc8fL92ncQB7Hfi/M7S4RyofvD2Wg26lkhMNfAPLWpAmBHER6ULSdiLNj+6X53bDv
+         /a9ZOjMrtgIPj3KFIknKzvysLgJRQ1YOcrncR144=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        stable@vger.kernel.org, Avinash M N <Avinash.M.N@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
         Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 077/112] nvme: fix identify error status silent ignore
-Date:   Tue,  7 Jul 2020 17:17:22 +0200
-Message-Id: <20200707145804.654689887@linuxfoundation.org>
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 078/112] nvme: fix a crash in nvme_mpath_add_disk
+Date:   Tue,  7 Jul 2020 17:17:23 +0200
+Message-Id: <20200707145804.703589351@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,53 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit ea43d9709f727e728e933a8157a7a7ca1a868281 ]
+[ Upstream commit 72d447113bb751ded97b2e2c38f886e4a4139082 ]
 
-Commit 59c7c3caaaf8 intended to only silently ignore non retry-able
-errors (DNR bit set) such that we can still identify misbehaving
-controllers, and in the other hand propagate retry-able errors (DNR bit
-cleared) so we don't wrongly abandon a namespace just because it happens
-to be temporarily inaccessible.
+For private namespaces ns->head_disk is NULL, so add a NULL check
+before updating the BDI capabilities.
 
-The goal remains the same as the original commit where this was
-introduced but unfortunately had the logic backwards.
-
-Fixes: 59c7c3caaaf8 ("nvme: fix possible hang when ns scanning fails during error recovery")
-Reported-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
+Fixes: b2ce4d90690b ("nvme-multipath: set bdi capabilities once")
+Reported-by: Avinash M N <Avinash.M.N@wdc.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/nvme/host/multipath.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 85ce6c682849e..71d63ed62071e 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1120,10 +1120,16 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
- 		dev_warn(ctrl->device,
- 			"Identify Descriptors failed (%d)\n", status);
- 		 /*
--		  * Don't treat an error as fatal, as we potentially already
--		  * have a NGUID or EUI-64.
-+		  * Don't treat non-retryable errors as fatal, as we potentially
-+		  * already have a NGUID or EUI-64.  If we failed with DNR set,
-+		  * we want to silently ignore the error as we can still
-+		  * identify the device, but if the status has DNR set, we want
-+		  * to propagate the error back specifically for the disk
-+		  * revalidation flow to make sure we don't abandon the
-+		  * device just because of a temporal retry-able error (such
-+		  * as path of transport errors).
- 		  */
--		if (status > 0 && !(status & NVME_SC_DNR))
-+		if (status > 0 && (status & NVME_SC_DNR))
- 			status = 0;
- 		goto free_data;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 03bc3aba09871..36db7d2e6a896 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -673,10 +673,11 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
  	}
+ 
+ 	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
+-		struct backing_dev_info *info =
+-					ns->head->disk->queue->backing_dev_info;
++		struct gendisk *disk = ns->head->disk;
+ 
+-		info->capabilities |= BDI_CAP_STABLE_WRITES;
++		if (disk)
++			disk->queue->backing_dev_info->capabilities |=
++					BDI_CAP_STABLE_WRITES;
+ 	}
+ }
+ 
 -- 
 2.25.1
 
