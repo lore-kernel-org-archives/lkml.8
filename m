@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D36C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F37204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F6E20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135998;
-	bh=2b7zMVe6mmI61iDQvqn+sLJjzEjTT4Vn1x0St9mH+Pk=;
+	s=default; t=1594136001;
+	bh=ygIBNeWu8GVUpOQTfqxaNYxa0o9TkRmFkWyiDMbqcDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=buzoBl+1Bg5U51C++U7UrVVnUGnqA0fnVsQo7L29hmin6qR/Wla84TNBAYHd72RbU
-	 yt990FInvdKsc3B7o0pAy9kUXiIGSdZInVMitYNd9cBGn+/KC6rMJ8oQSxr3kEaP24
-	 4sMEXC/T8W7It+YDTzDWSWG7JsdA/YtCbT6sF6Vw=
+	b=iHM0AKRPV65OMxGmU/zK4h/Po2L7PORjsFDcLVujrqyVK7p15gwrR2ioLftCGcTMT
+	 a7UkuUei8/DxSpL737d3qgZYPpFVEO6gJN3ueSKkt+A4y6WlnycN1XtT19S0VPRbc0
+	 eDD4h9F+XPOGbtf7xDFrU1Hf4M3XZRw5/cZRSRw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgGGPdR (ORCPT
+        id S1728459AbgGGPUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:33:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32888 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729609AbgGGPUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:53 -0400
+        id S1728369AbgGGPUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:20:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A8A3206E2;
-        Tue,  7 Jul 2020 15:20:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9122C2065D;
+        Tue,  7 Jul 2020 15:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135253;
-        bh=2b7zMVe6mmI61iDQvqn+sLJjzEjTT4Vn1x0St9mH+Pk=;
+        s=default; t=1594135243;
+        bh=ygIBNeWu8GVUpOQTfqxaNYxa0o9TkRmFkWyiDMbqcDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EcWrcutZWRK1y0Cfc4JnMqDD6915iioeD6ZtnirJ4y71NvLQ8knBRj2PjZVwnESBB
-         Px0dzbieH6RtW+FwdmJA1ni2za78zXD0bd7Q4AjF06FZE14QGstp5C2cmFanGVwvoi
-         GHZyhbD6arYUe7Xplbw2nVR2oHoZOPmzvPD37rgo=
+        b=vrx39c8oAHZruLKkLC1JiakFYZcZ5ZflzvkAZ0ej86nee7zLKw5eRuJeXYGF6f2y6
+         vaxNQkNoWXvgyU3G0o05bdJidcY6ebQpxaRFiZZb+him8jY6MAytcvJNx52amj5nSi
+         7Jayd7eapTdqktbWKanaszeAspVTpyL1MpsQGWRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 05/65] sched/debug: Make sd->flags sysctl read-only
-Date:   Tue,  7 Jul 2020 17:16:44 +0200
-Message-Id: <20200707145752.698910547@linuxfoundation.org>
+Subject: [PATCH 5.4 29/65] cxgb4: fix SGE queue dump destination buffer context
+Date:   Tue,  7 Jul 2020 17:17:08 +0200
+Message-Id: <20200707145753.884263138@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -61,46 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit 9818427c6270a9ce8c52c8621026fe9cebae0f92 ]
+[ Upstream commit 1992ded5d111997877a9a25205976d8d03c46814 ]
 
-Writing to the sysctl of a sched_domain->flags directly updates the value of
-the field, and goes nowhere near update_top_cache_domain(). This means that
-the cached domain pointers can end up containing stale data (e.g. the
-domain pointed to doesn't have the relevant flag set anymore).
+The data in destination buffer is expected to be be parsed in big
+endian. So, use the right context.
 
-Explicit domain walks that check for flags will be affected by
-the write, but this won't be in sync with the cached pointers which will
-still point to the domains that were cached at the last sched_domain
-build.
+Fixes following sparse warning:
+cudbg_lib.c:2041:44: warning: incorrect type in assignment (different
+base types)
+cudbg_lib.c:2041:44:    expected unsigned long long [usertype]
+cudbg_lib.c:2041:44:    got restricted __be64 [usertype]
 
-In other words, writing to this interface is playing a dangerous game. It
-could be made to trigger an update of the cached sched_domain pointers when
-written to, but this does not seem to be worth the trouble. Make it
-read-only.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200415210512.805-3-valentin.schneider@arm.com
+Fixes: 736c3b94474e ("cxgb4: collect egress and ingress SGE queue contexts")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index f7e4579e746c5..c4b702fe1d738 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -258,7 +258,7 @@ sd_alloc_ctl_domain_table(struct sched_domain *sd)
- 	set_table_entry(&table[2], "busy_factor",	  &sd->busy_factor,	    sizeof(int),  0644, proc_dointvec_minmax);
- 	set_table_entry(&table[3], "imbalance_pct",	  &sd->imbalance_pct,	    sizeof(int),  0644, proc_dointvec_minmax);
- 	set_table_entry(&table[4], "cache_nice_tries",	  &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0644, proc_dointvec_minmax);
-+	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0444, proc_dointvec_minmax);
- 	set_table_entry(&table[6], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
- 	set_table_entry(&table[7], "name",		  sd->name,	       CORENAME_MAX_SIZE, 0444, proc_dostring);
- 	/* &table[8] is terminator */
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
+index 7bcdce182ee5c..e26ae298a080a 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
+@@ -1980,7 +1980,6 @@ int cudbg_collect_dump_context(struct cudbg_init *pdbg_init,
+ 	u8 mem_type[CTXT_INGRESS + 1] = { 0 };
+ 	struct cudbg_buffer temp_buff = { 0 };
+ 	struct cudbg_ch_cntxt *buff;
+-	u64 *dst_off, *src_off;
+ 	u8 *ctx_buf;
+ 	u8 i, k;
+ 	int rc;
+@@ -2049,8 +2048,11 @@ int cudbg_collect_dump_context(struct cudbg_init *pdbg_init,
+ 		}
+ 
+ 		for (j = 0; j < max_ctx_qid; j++) {
++			__be64 *dst_off;
++			u64 *src_off;
++
+ 			src_off = (u64 *)(ctx_buf + j * SGE_CTXT_SIZE);
+-			dst_off = (u64 *)buff->data;
++			dst_off = (__be64 *)buff->data;
+ 
+ 			/* The data is stored in 64-bit cpu order.  Convert it
+ 			 * to big endian before parsing.
 -- 
 2.25.1
 
