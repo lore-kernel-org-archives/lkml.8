@@ -2,156 +2,108 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95504C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23314204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C7wu/SDx"
+	by mail.kernel.org (Postfix) with ESMTP id 6C037204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594135936;
+	bh=qgGbNJG4nd3LubWPiEUpdZ0qQCUI8bbZP2/rBN+YpkY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wduUcMLazVqr7rs+be+OTIKzhGuZ9FOw7Au2JB0edKqGdiqN9oYrXTAohdBTcAGWA
+	 YTSh62LanbfOWyN244J1e2lAkeOJ+Ambzh376ZknLPujE1JojtZNKFvH6FZjAZS7ut
+	 xAJXSbMIAdirmUnQ9M7jq+8f0uYVnHTzxIekClBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgGGPcO (ORCPT
+        id S1729617AbgGGPcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:32:14 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32747 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728135AbgGGPcK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:32:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594135928;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MuCscFMzbWSIQnwK8DEFhjyLSkPD2wzH+z7HqKxxVuQ=;
-        b=C7wu/SDxVaWCVlp5eFkOc/2o+HKWh6Li4S4dPc7FCX4U+nSwnxkPUBJwszLEDFQV23nZzA
-        l5djULPS1JRdP/mHN2DZ0vDhynOoSI5XnC9/SVbuR9gnNxoglMWhZvggoG1oVzViEfxk80
-        ZrrxDrxDGgnzhz5d1yYqtgMhbBy42Tw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-bjJEXDCCN2-inYhzImFVYg-1; Tue, 07 Jul 2020 11:32:07 -0400
-X-MC-Unique: bjJEXDCCN2-inYhzImFVYg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 7 Jul 2020 11:32:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729167AbgGGPWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:22:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D017804003;
-        Tue,  7 Jul 2020 15:31:59 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-114-172.phx2.redhat.com [10.3.114.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B775E10013D7;
-        Tue,  7 Jul 2020 15:31:58 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id BAC3C1202DC; Tue,  7 Jul 2020 11:31:57 -0400 (EDT)
-Date:   Tue, 7 Jul 2020 11:31:57 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 5.4 34/65] kthread: save thread function
-Message-ID: <20200707153157.GB171624@pick.fieldses.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id B9DA8207C4;
+        Tue,  7 Jul 2020 15:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594135342;
+        bh=qgGbNJG4nd3LubWPiEUpdZ0qQCUI8bbZP2/rBN+YpkY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ngi27wKPY1FaWC18Ko58gelO/svEdu6sw3SJXVhNAV5IbnHxEZe8HgEKBHUktUoaa
+         IQSlfrwRkLcc3lZwXhU+u67BbTpNUTCZqfFibE2YcIuPNcPXGrQqEVskeC6LNhrMpP
+         r+XWFMRLjTTkk9/g9kq1+TdPIcNlxnlEosUFu3IM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 38/65] drm: sun4i: hdmi: Remove extra HPD polling
+Date:   Tue,  7 Jul 2020 17:17:17 +0200
+Message-Id: <20200707145754.304409925@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
- <20200707145754.124544082@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707145754.124544082@linuxfoundation.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NACK.--b.
+From: Chen-Yu Tsai <wens@csie.org>
 
-On Tue, Jul 07, 2020 at 05:17:13PM +0200, Greg Kroah-Hartman wrote:
-> From: J. Bruce Fields <bfields@redhat.com>
-> 
-> [ Upstream commit 52782c92ac85c4e393eb4a903a62e6c24afa633f ]
-> 
-> It's handy to keep the kthread_fn just as a unique cookie to identify
-> classes of kthreads.  E.g. if you can verify that a given task is
-> running your thread_fn, then you may know what sort of type kthread_data
-> points to.
-> 
-> We'll use this in nfsd to pass some information into the vfs.  Note it
-> will need kthread_data() exported too.
-> 
-> Original-patch-by: Tejun Heo <tj@kernel.org>
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  include/linux/kthread.h |  1 +
->  kernel/kthread.c        | 17 +++++++++++++++++
->  2 files changed, 18 insertions(+)
-> 
-> diff --git a/include/linux/kthread.h b/include/linux/kthread.h
-> index 0f9da966934e2..59bbc63ff8637 100644
-> --- a/include/linux/kthread.h
-> +++ b/include/linux/kthread.h
-> @@ -57,6 +57,7 @@ bool kthread_should_stop(void);
->  bool kthread_should_park(void);
->  bool __kthread_should_park(struct task_struct *k);
->  bool kthread_freezable_should_stop(bool *was_frozen);
-> +void *kthread_func(struct task_struct *k);
->  void *kthread_data(struct task_struct *k);
->  void *kthread_probe_data(struct task_struct *k);
->  int kthread_park(struct task_struct *k);
-> diff --git a/kernel/kthread.c b/kernel/kthread.c
-> index b262f47046ca4..543dff6b576c7 100644
-> --- a/kernel/kthread.c
-> +++ b/kernel/kthread.c
-> @@ -46,6 +46,7 @@ struct kthread_create_info
->  struct kthread {
->  	unsigned long flags;
->  	unsigned int cpu;
-> +	int (*threadfn)(void *);
->  	void *data;
->  	struct completion parked;
->  	struct completion exited;
-> @@ -152,6 +153,20 @@ bool kthread_freezable_should_stop(bool *was_frozen)
->  }
->  EXPORT_SYMBOL_GPL(kthread_freezable_should_stop);
->  
-> +/**
-> + * kthread_func - return the function specified on kthread creation
-> + * @task: kthread task in question
-> + *
-> + * Returns NULL if the task is not a kthread.
-> + */
-> +void *kthread_func(struct task_struct *task)
-> +{
-> +	if (task->flags & PF_KTHREAD)
-> +		return to_kthread(task)->threadfn;
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(kthread_func);
-> +
->  /**
->   * kthread_data - return data value specified on kthread creation
->   * @task: kthread task in question
-> @@ -164,6 +179,7 @@ void *kthread_data(struct task_struct *task)
->  {
->  	return to_kthread(task)->data;
->  }
-> +EXPORT_SYMBOL_GPL(kthread_data);
->  
->  /**
->   * kthread_probe_data - speculative version of kthread_data()
-> @@ -237,6 +253,7 @@ static int kthread(void *_create)
->  		do_exit(-ENOMEM);
->  	}
->  
-> +	self->threadfn = threadfn;
->  	self->data = data;
->  	init_completion(&self->exited);
->  	init_completion(&self->parked);
-> -- 
-> 2.25.1
-> 
-> 
-> 
+[ Upstream commit bda8eaa6dee7525f4dac950810a85a88bf6c2ba0 ]
+
+The HPD sense mechanism in Allwinner's old HDMI encoder hardware is more
+or less an input-only GPIO. Other GPIO-based HPD implementations
+directly return the current state, instead of polling for a specific
+state and returning the other if that times out.
+
+Remove the I/O polling from sun4i_hdmi_connector_detect() and directly
+return a known state based on the current reading. This also gets rid
+of excessive CPU usage by kworker as reported on Stack Exchange [1] and
+Armbian forums [2].
+
+ [1] https://superuser.com/questions/1515001/debian-10-buster-on-cubietruck-with-bug-in-sun4i-drm-hdmi
+ [2] https://forum.armbian.com/topic/14282-headless-systems-and-sun4i_drm_hdmi-a10a20/
+
+Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200629060032.24134-1-wens@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+index 9c3bdfd203373..63b4de81686ac 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -262,9 +262,8 @@ sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
+ 	struct sun4i_hdmi *hdmi = drm_connector_to_sun4i_hdmi(connector);
+ 	unsigned long reg;
+ 
+-	if (readl_poll_timeout(hdmi->base + SUN4I_HDMI_HPD_REG, reg,
+-			       reg & SUN4I_HDMI_HPD_HIGH,
+-			       0, 500000)) {
++	reg = readl(hdmi->base + SUN4I_HDMI_HPD_REG);
++	if (reg & SUN4I_HDMI_HPD_HIGH) {
+ 		cec_phys_addr_invalidate(hdmi->cec_adap);
+ 		return connector_status_disconnected;
+ 	}
+-- 
+2.25.1
+
+
 
