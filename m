@@ -2,87 +2,140 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0EA120775
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12DB206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:26:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p0UhfDYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgGGCZD (ORCPT
+        id S1727942AbgGGC0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 22:25:03 -0400
-Received: from mga11.intel.com ([192.55.52.93]:32345 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgGGCZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 22:25:03 -0400
-IronPort-SDR: 0LqR8Wb5eY8/vl51YwQ8WdLPj5a9ML5aJOeZVRWOYsMtZz8OitYdUeuHs+k/iTwH4lUosIF2Ar
- 4XUiDNYuEwUQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="145629222"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="145629222"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 19:25:02 -0700
-IronPort-SDR: 1wYLUVuTMqVaskelX9SarE9+v2Xj8qmB6QfJkpS20xcYkOdYp971MRD90JjROQ79Dnmj14XuXQ
- 9CnWYz7UHNnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="323392999"
-Received: from pakumpul-mobl.ger.corp.intel.com (HELO localhost) ([10.252.52.16])
-  by orsmga007.jf.intel.com with ESMTP; 06 Jul 2020 19:24:58 -0700
-Date:   Tue, 7 Jul 2020 05:24:57 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v9 2/2] tpm: Add support for event log pointer found in
- TPM2 ACPI table
-Message-ID: <20200707022457.GD112019@linux.intel.com>
-References: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com>
- <20200706181953.3592084-3-stefanb@linux.vnet.ibm.com>
- <20200706230914.GC20770@linux.intel.com>
- <87mu4cjixj.fsf@redhat.com>
+        Mon, 6 Jul 2020 22:26:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgGGC0P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 22:26:15 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8514C061755;
+        Mon,  6 Jul 2020 19:26:14 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B15sJ091Hz9sRK;
+        Tue,  7 Jul 2020 12:26:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594088772;
+        bh=+QRyoY+PF5bX2Z+tL1MEqsiIaaw8+XF1cDa2puZUbyc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=p0UhfDYivkqwP8p4mrTu1kKIHtP8XPbUwZt9lqJzIzzu3Yre0BIft1y+gca2ZweIN
+         w8O+DNrlytL6VKbEoA22Cmd6QqZDMBQ/G1s/zzsWm81be9uP92LVBf0/+XhkxhkhSy
+         5vPgGDcZEKyto7IViibezwFnLDPln+WNqgLx5C02mZbiKVVBU5uDDDpPV3+eeUhy6z
+         emrcUt/unzycGxF3uepqVCPl2FGmYE8MAKcpaK3a/+3G1dZL1rJFVGZY442FJZSiuS
+         emH9iA3Vobl75X3Gz3I2QNYrZpShl9j+wViswDcnyaqq3ugF19RdM7MuVCKuwUHRs0
+         ZJQlIFRlxCCTw==
+Date:   Tue, 7 Jul 2020 12:26:09 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: linux-next: manual merge of the block tree with the gfs2 tree
+Message-ID: <20200707122609.75970e83@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mu4cjixj.fsf@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: multipart/signed; boundary="Sig_/q./GODUFtSqVlQ1GhFU+Tm+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 04:57:28PM -0700, Jerry Snitselaar wrote:
-> 
-> Jarkko Sakkinen @ 2020-07-06 16:09 MST:
-> 
-> > On Mon, Jul 06, 2020 at 02:19:53PM -0400, Stefan Berger wrote:
-> >> From: Stefan Berger <stefanb@linux.ibm.com>
-> >> 
-> >> In case a TPM2 is attached, search for a TPM2 ACPI table when trying
-> >> to get the event log from ACPI. If one is found, use it to get the
-> >> start and length of the log area. This allows non-UEFI systems, such
-> >> as SeaBIOS, to pass an event log when using a TPM2.
-> >> 
-> >> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> >
-> > Do you think that QEMU with TPM 1.2 emulator turned on would be a viable
-> > way to test this?
-> >
-> > I'm anyway more worried about breaking existing TPM 1.2 functionality
-> > and that requires only QEMU without extras.
-> >
-> > /Jarkko
-> 
-> The 1.2 bits should be functionally the same as before, right?
+--Sig_/q./GODUFtSqVlQ1GhFU+Tm+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes. You should be able to read event log with TPM 1.2 as before.
+Hi all,
 
-/Jarkko
+Today's linux-next merge of the block tree got conflicts in:
+
+  include/linux/fs.h
+  mm/filemap.c
+
+between commit:
+
+  00a83a3c014a ("fs: Add IOCB_NOIO flag for generic_file_read_iter")
+
+from the gfs2 tree and commits:
+
+  dd3e6d5039de ("mm: add support for async page locking")
+  2e85abf053b9 ("mm: allow read-ahead with IOCB_NOWAIT set")
+
+from the block tree.
+
+I fixed it up (I think - see below) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/fs.h
+index 90b9f8b4c540,da90323b9f92..000000000000
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@@ -315,7 -318,8 +318,9 @@@ enum rw_hint=20
+  #define IOCB_SYNC		(1 << 5)
+  #define IOCB_WRITE		(1 << 6)
+  #define IOCB_NOWAIT		(1 << 7)
+ +#define IOCB_NOIO		(1 << 8)
++ /* iocb->ki_waitq is valid */
+ -#define IOCB_WAITQ		(1 << 8)
+++#define IOCB_WAITQ		(1 << 9)
+ =20
+  struct kiocb {
+  	struct file		*ki_filp;
+diff --cc mm/filemap.c
+index 10e7eb3aada0,a5b1fa8f7ce4..000000000000
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@@ -2028,8 -2044,6 +2044,8 @@@ find_page
+ =20
+  		page =3D find_get_page(mapping, index);
+  		if (!page) {
+- 			if (iocb->ki_flags & (IOCB_NOWAIT | IOCB_NOIO))
+++			if (iocb->ki_flags & IOCB_NOIO)
+ +				goto would_block;
+  			page_cache_sync_readahead(mapping,
+  					ra, filp,
+  					index, last_index - index);
+
+--Sig_/q./GODUFtSqVlQ1GhFU+Tm+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8D3UEACgkQAVBC80lX
+0GxsLgf5AVWE/uJlguY54VXfGGN4c+jTJz2X/t1uzSGy7ZlMe2g9Vu+tW3psmBEf
+6AHPVVlBfpIDimQ0LnzH0YbzxZokDYt2soRJ1wUweBXYo5AAIrNzeTwLINJw20Zk
+AIYlagy3KgjA32ISfBGLaevbJOdsl9nc6kCD4HOXaQa/RFfIWezex9GLEQwt/ZaT
+BneuSRqk2lMWzaZ3G/qvA9+s4Xl7VErrBJ5YwLERpHuvUhLslOKln0aSdefBixvr
+a9oXpg/8ARyipWUcc8Km8av3SWvImnL8lrw+HsK2o2BduOXFIgdhIaftaADAbDE/
+ex0aa06jH/8KlXQAW5PSffbQMxqaHw==
+=kobP
+-----END PGP SIGNATURE-----
+
+--Sig_/q./GODUFtSqVlQ1GhFU+Tm+--
