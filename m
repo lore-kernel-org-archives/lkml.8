@@ -2,102 +2,169 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00994C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A4DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2BFF206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:27:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExvPVrKc"
+	by mail.kernel.org (Postfix) with ESMTP id B05A9206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGGL1i (ORCPT
+        id S1727116AbgGGLay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726745AbgGGL1i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:27:38 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F68C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:27:38 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t27so30685521ill.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tVUqdWsTuNLDkxLHBnZzusCTDe8EzV8pEJapqN+ipHQ=;
-        b=ExvPVrKc+zzmTf71n6cofGIeFau1D3ip28mvBy3ghohZ/7u5P4DzLQjE1Zb8qGcSnY
-         EQ2kMJbh9sljFy5ZWEK5kgoV2BIuG5Y/IADoPNu1zD6Vlmg0TtNK5V69Zb8lQZ9UVzIu
-         YcOyJSxv0hqQYoGqwKIM8YUeb5QUnSOnU6NzNxqwCXnw8oRA1+Oa8TyqZEvUiljiWKO1
-         umxyRulIcz+Zhe0oJ8kyhtPaaT++bbtomYbrPmI/fbsNmOQ7x5xBYSW0Q9puKRYFO/FF
-         AxrGUJ+AbicuNUCC8rUTFKs3BtsstKJerxcizWsSCwnwoWDhkZbwtblR1S52tg42DR85
-         Lung==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tVUqdWsTuNLDkxLHBnZzusCTDe8EzV8pEJapqN+ipHQ=;
-        b=TKKCwzf4QqwG94UkQHrypaHYf9TLt9qX8PifRjJvSAIqN+e1JQIcUMlwrGKeF5Xz9J
-         IwrnSPXjf/Qz7DW54TBrsT19vpxMMeT7CZT1gqGdPgNOLDSvEFP8vAL2939lJlWS6xp+
-         Jz3gy3TPEmq1r7Dfvnucf1BR6rFCJTLzeeuAJeaL8cZQ/4BKr+4ah7IcZA7IYKD+TZWP
-         +BwvstVTfevHLxBU4pebrle7OHx1YbPUEdTkd7KxSCFuGQSTvzO10hpPrmZP2M2T4ghA
-         Tv3BGsvfbulQe91b9ATaHhLIMUdlJM4NTHohihcWp109fsguqIcmbWafY7bLrsryzllY
-         L0dw==
-X-Gm-Message-State: AOAM530W7bgQDLH0dBs18o1tpQ7wsh4E8Lis+l0Jv42ulS92maNZx0D3
-        REEOgnW/gYf3aMeBqk9LNVf8plLaCD+AQHOYGI/Ix5xr
-X-Google-Smtp-Source: ABdhPJwno6zEi89UhsAhQY5E5gKnOHioVjOqUI8423vztIL4dUcYrHmelA174V9A/uNpzrmjQOK/z19kGnhigS8ibio=
-X-Received: by 2002:a92:d9c4:: with SMTP id n4mr18264119ilq.280.1594121257015;
- Tue, 07 Jul 2020 04:27:37 -0700 (PDT)
+        Tue, 7 Jul 2020 07:30:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:42068 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726540AbgGGLay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:30:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BF831FB;
+        Tue,  7 Jul 2020 04:30:53 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8F6D3F71E;
+        Tue,  7 Jul 2020 04:30:50 -0700 (PDT)
+References: <20200706142839.26629-1-qais.yousef@arm.com> <20200706142839.26629-2-qais.yousef@arm.com> <jhj8sfw8wzk.mognet@arm.com> <20200707093447.4t6eqjy4fkt747fo@e107158-lin.cambridge.arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] sched/uclamp: Add a new sysctl to control RT default boost value
+In-reply-to: <20200707093447.4t6eqjy4fkt747fo@e107158-lin.cambridge.arm.com>
+Date:   Tue, 07 Jul 2020 12:30:48 +0100
+Message-ID: <jhj36638suv.mognet@arm.com>
 MIME-Version: 1.0
-References: <20200611135920.240551-1-stamatis.iliass@gmail.com> <20200612092958.GD4311@linux-b0ei>
-In-Reply-To: <20200612092958.GD4311@linux-b0ei>
-From:   Ilias Stamatis <stamatis.iliass@gmail.com>
-Date:   Tue, 7 Jul 2020 13:27:00 +0200
-Message-ID: <CAAfjAQPGoTdc6Db1wAqDdf9-WRGAutFrX7ObGcZPNPexudnivQ@mail.gmail.com>
-Subject: Re: [PATCH] kthread: remove incorrect comment in kthread_create_on_cpu()
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     tglx@linutronix.de, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        hch@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 11:30 AM Petr Mladek <pmladek@suse.com> wrote:
+
+On 07/07/20 10:34, Qais Yousef wrote:
+> On 07/06/20 16:49, Valentin Schneider wrote:
+>>
+>> On 06/07/20 15:28, Qais Yousef wrote:
+>> > CC: linux-fsdevel@vger.kernel.org
+>> > ---
+>> >
+>> > Peter
+>> >
+>> > I didn't do the
+>> >
+>> >       read_lock(&taslist_lock);
+>> >       smp_mb__after_spinlock();
+>> >       read_unlock(&tasklist_lock);
+>> >
+>> > dance you suggested on IRC as it didn't seem necessary. But maybe I missed
+>> > something.
+>> >
+>>
+>> So the annoying bit with just uclamp_fork() is that it happens *before* the
+>> task is appended to the tasklist. This means without too much care we
+>> would have (if we'd do a sync at uclamp_fork()):
+>>
+>>   CPU0 (sysctl write)                                CPU1 (concurrent forker)
+>>
+>>                                                        copy_process()
+>>                                                          uclamp_fork()
+>>                                                            p.uclamp_min = state
+>>     state = foo
+>>
+>>     for_each_process_thread(p, t)
+>>       update_state(t);
+>>                                                          list_add(p)
+>>
+>> i.e. that newly forked process would entirely sidestep the update. Now,
+>> with Peter's suggested approach we can be in a much better situation. If we
+>> have this in the sysctl update:
+>>
+>>   state = foo;
+>>
+>>   read_lock(&taslist_lock);
+>>   smp_mb__after_spinlock();
+>>   read_unlock(&tasklist_lock);
+>>
+>>   for_each_process_thread(p, t)
+>>     update_state(t);
+>>
+>> While having this in the fork:
+>>
+>>   write_lock(&tasklist_lock);
+>>   list_add(p);
+>>   write_unlock(&tasklist_lock);
+>>
+>>   sched_post_fork(p); // state re-read here; probably wants an mb first
+>>
+>> Then we can no longer miss an update. If the forked p doesn't see the new
+>> value, it *must* have been added to the tasklist before the updater loops
+>> over it, so the loop will catch it. If it sees the new value, we're done.
 >
-> On Thu 2020-06-11 16:59:21, Ilias Stamatis wrote:
-> > Originally kthread_create_on_cpu() parked and woke up the new thread.
-> > However, since commit a65d40961dc7 ("kthread/smpboot: do not park in
-> > kthread_create_on_cpu()") this is no longer the case. This patch removes
-> > the comment that has been left behind and is now incorrect / stale.
-> >
-> > Signed-off-by: Ilias Stamatis <stamatis.iliass@gmail.com>
+> uclamp_fork() has nothing to do with the race. If copy_process() duplicates the
+> task_struct of an RT task, it'll copy the old value.
 >
-> Good catch!
+
+Quite so; my point was if we were to use uclamp_fork() as to re-read the value.
+
+> I'd expect the newly introduced sched_post_fork() (also in copy_process() after
+> the list update) to prevent this race altogether.
 >
-> Fixes: a65d40961dc7 ("kthread/smpboot: do not park in kthread_create_on_cpu()")
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> Now we could end up with a problem if for_each_process_thread() doesn't see the
+> newly forked task _after_ sched_post_fork(). Hence my question to Peter.
 >
-> Best Regards,
-> Petr
 
-Hi,
 
-Thanks for the review!
+>>
+>> AIUI, the above strategy doesn't require any use of RCU. The update_state()
+>> and sched_post_fork() can race, but as per the above they should both be
+>> writing the same value.
+>
+> for_each_process_thread() must be protected by either tasklist_lock or
+> rcu_read_lock().
+>
 
-Will somebody pick this up from the list for merging or should I
-forward it somewhere else?
+Right
 
-I'm new so I'm not sure exactly how the process works.
+> The other RCU logic I added is not to protect against the race above. I
+> describe the other race condition in a comment.
 
-Best,
-Ilias
+I take it that's the one in uclamp_sync_util_min_rt_default()?
+
+__setscheduler_uclamp() can't be preempted as we hold task_rq_lock(). It
+can indeed race with the sync though, but again with the above suggested
+setup it would either:
+- see the old value, but be guaranteed to be iterated over later by the
+  updater
+- see the new value
+
+sched_post_fork() being preempted out is a bit more annoying, but what
+prevents us from making that bit preempt-disabled?
+
+I have to point out I'm assuming here updaters are serialized, which does
+seem to be see the case (cf. uclamp_mutex).
+
+
+> Basically another updater on a
+> different cpu via fork() and sched_setattr() might read an old value and get
+> preempted. The rcu synchronization will ensure concurrent updaters have
+> finished before iterating the list.
+>
+
+> Thanks
