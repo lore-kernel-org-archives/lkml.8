@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F27C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC855C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC22206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20FF206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135260;
-	bh=7wbAdIn4JuRf/Fw3R/IB7vTcBSqfwrL9uQG7lZ47rYA=;
+	s=default; t=1594135262;
+	bh=8s2YqL+W4O6wUd7+uw80P/xTp4oSuBVxXG+1zBaMDiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGwvdrUT0HPlBrzWODqnsJ1ud9HLmrl67KXmdCqr1PfRzL2cGwCMcTgR7+tOhExUT
-	 QuroyA6qr4DYtutvC+K74eSiaFZR6Y8op/qHsAjA1siyBxnl15tpG3uHBFsEQ6um8M
-	 lZ7m3t0L7EX8o+Bcq6E+Qu79Lew0MBQiXJdtI5Zc=
+	b=gTn1KVVrrxDPK6vQVgQYEk6GesnMQUvaRFiJ1nPZVs7U2fVLKoLgV/g06LVI7NJSg
+	 P8Zr/BT8rj392OnzR5tXPish1Q0dEsNY/iULI2pNq9mUf9eZ/09uCOjtfEzT8DKZkP
+	 YsHfREN8F37N/G63TOP1v0dGjOQY3XZY+RCNIhCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgGGPU7 (ORCPT
+        id S1728441AbgGGPU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32962 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:20:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbgGGPU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:20:56 -0400
+        id S1729599AbgGGPUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:20:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1426A206E2;
-        Tue,  7 Jul 2020 15:20:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41FE42065D;
+        Tue,  7 Jul 2020 15:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135255;
-        bh=7wbAdIn4JuRf/Fw3R/IB7vTcBSqfwrL9uQG7lZ47rYA=;
+        s=default; t=1594135250;
+        bh=8s2YqL+W4O6wUd7+uw80P/xTp4oSuBVxXG+1zBaMDiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQbHQcZK1+bS4bAqHSD7PQ01sX63KGGyn8h3qSLeBBdPzcB2vScOop63h6Cmad5QL
-         RPYhUprOBIMAKkF0vkvW8djPvOjeErH2zi2bGh2PaVMhVgAW1h1QlpDx9DCoGSlEjt
-         N1SHqFp78BML8NpEJpz/WVWbt4ZIo4zEMn34Rv9A=
+        b=sjt6Xgzat7Sgp3rUNkXNJmxJ7yIeTIJ21Xx6GgP/GE5HQItTqikP3RIFWY9c8x4B8
+         8I26QfhUR5i5dyoh4pAwqcC68eMfuZVBOKiUXHlzArDC4ocXWFW7sh791nqcmrNvDe
+         sumI1a9RxX2r1NYB3SizZqP+Z6phj4Hg9tmRvVdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joe Jin <joe.jin@oracle.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 06/65] mm/slub.c: fix corrupted freechain in deactivate_slab()
-Date:   Tue,  7 Jul 2020 17:16:45 +0200
-Message-Id: <20200707145752.746214698@linuxfoundation.org>
+Subject: [PATCH 5.4 31/65] hwmon: (acpi_power_meter) Fix potential memory leak in acpi_power_meter_add()
+Date:   Tue,  7 Jul 2020 17:17:10 +0200
+Message-Id: <20200707145753.979609221@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -65,113 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
 
-[ Upstream commit 52f23478081ae0dcdb95d1650ea1e7d52d586829 ]
+[ Upstream commit 8b97f9922211c44a739c5cbd9502ecbb9f17f6d1 ]
 
-The slub_debug is able to fix the corrupted slab freelist/page.
-However, alloc_debug_processing() only checks the validity of current
-and next freepointer during allocation path.  As a result, once some
-objects have their freepointers corrupted, deactivate_slab() may lead to
-page fault.
+Although it rarely happens, we should call free_capabilities()
+if error happens after read_capabilities() to free allocated strings.
 
-Below is from a test kernel module when 'slub_debug=PUF,kmalloc-128
-slub_nomerge'.  The test kernel corrupts the freepointer of one free
-object on purpose.  Unfortunately, deactivate_slab() does not detect it
-when iterating the freechain.
-
-  BUG: unable to handle page fault for address: 00000000123456f8
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  ... ...
-  RIP: 0010:deactivate_slab.isra.92+0xed/0x490
-  ... ...
-  Call Trace:
-   ___slab_alloc+0x536/0x570
-   __slab_alloc+0x17/0x30
-   __kmalloc+0x1d9/0x200
-   ext4_htree_store_dirent+0x30/0xf0
-   htree_dirblock_to_tree+0xcb/0x1c0
-   ext4_htree_fill_tree+0x1bc/0x2d0
-   ext4_readdir+0x54f/0x920
-   iterate_dir+0x88/0x190
-   __x64_sys_getdents+0xa6/0x140
-   do_syscall_64+0x49/0x170
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Therefore, this patch adds extra consistency check in deactivate_slab().
-Once an object's freepointer is corrupted, all following objects
-starting at this object are isolated.
-
-[akpm@linux-foundation.org: fix build with CONFIG_SLAB_DEBUG=n]
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Joe Jin <joe.jin@oracle.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Link: http://lkml.kernel.org/r/20200331031450.12182-1-dongli.zhang@oracle.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: de584afa5e188 ("hwmon driver for ACPI 4.0 power meters")
+Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+Link: https://lore.kernel.org/r/20200625043242.31175-1-misono.tomohiro@jp.fujitsu.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/hwmon/acpi_power_meter.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index fca33abd6c428..5c05a36bb746f 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -644,6 +644,20 @@ static void slab_fix(struct kmem_cache *s, char *fmt, ...)
- 	va_end(args);
- }
+diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+index 4cf25458f0b95..740ac0a1b7265 100644
+--- a/drivers/hwmon/acpi_power_meter.c
++++ b/drivers/hwmon/acpi_power_meter.c
+@@ -883,7 +883,7 @@ static int acpi_power_meter_add(struct acpi_device *device)
  
-+static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
-+			       void *freelist, void *nextfree)
-+{
-+	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
-+	    !check_valid_pointer(s, page, nextfree)) {
-+		object_err(s, page, freelist, "Freechain corrupt");
-+		freelist = NULL;
-+		slab_fix(s, "Isolate corrupted freechain");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static void print_trailer(struct kmem_cache *s, struct page *page, u8 *p)
- {
- 	unsigned int off;	/* Offset of last byte */
-@@ -1379,6 +1393,11 @@ static inline void inc_slabs_node(struct kmem_cache *s, int node,
- static inline void dec_slabs_node(struct kmem_cache *s, int node,
- 							int objects) {}
+ 	res = setup_attrs(resource);
+ 	if (res)
+-		goto exit_free;
++		goto exit_free_capability;
  
-+static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
-+			       void *freelist, void *nextfree)
-+{
-+	return false;
-+}
- #endif /* CONFIG_SLUB_DEBUG */
+ 	resource->hwmon_dev = hwmon_device_register(&device->dev);
+ 	if (IS_ERR(resource->hwmon_dev)) {
+@@ -896,6 +896,8 @@ static int acpi_power_meter_add(struct acpi_device *device)
  
- /*
-@@ -2062,6 +2081,14 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
- 		void *prior;
- 		unsigned long counters;
- 
-+		/*
-+		 * If 'nextfree' is invalid, it is possible that the object at
-+		 * 'freelist' is already corrupted.  So isolate all objects
-+		 * starting at 'freelist'.
-+		 */
-+		if (freelist_corrupted(s, page, freelist, nextfree))
-+			break;
-+
- 		do {
- 			prior = page->freelist;
- 			counters = page->counters;
+ exit_remove:
+ 	remove_attrs(resource);
++exit_free_capability:
++	free_capabilities(resource);
+ exit_free:
+ 	kfree(resource);
+ exit:
 -- 
 2.25.1
 
