@@ -2,166 +2,101 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4043C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84942C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B54B7206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594121812;
-	bh=0NyNP3p9AO30DGaSQbT8qjnRElflhinNpFwpYZSO7z4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=brreN/6UTMVRQFOOoeyZ1giy4jU1LiFomGcuHdojfqJHNPwnrPuYGOW4XTUokQqgi
-	 zp138KgRVQtEYJoz6xE3693gh5IbNzH0yNBVQ1B5UgeZfAIwQpUyFhKHI7tJlksuQx
-	 qwG6S9smmQkoCJgNpb+e0V6VuBPDPze4EoBNA6gY=
+	by mail.kernel.org (Postfix) with ESMTP id 62714206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:37:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZxQBzAmi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgGGLgv (ORCPT
+        id S1728262AbgGGLhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:36:51 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38194 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726745AbgGGLgu (ORCPT
+        Tue, 7 Jul 2020 07:37:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727886AbgGGLhd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:36:50 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z13so44786373wrw.5;
-        Tue, 07 Jul 2020 04:36:49 -0700 (PDT)
+        Tue, 7 Jul 2020 07:37:33 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF53C08C5E1
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:37:32 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t25so44892807lji.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:37:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OnCd1YAPjG2Ik+wSQkHZosL6QWVa11jN4YE6zzRMrv0=;
+        b=ZxQBzAmi25Zp6vi/k2z/1OssFAAw4KoH6gUCTpfVD1ZM+K879D7B1UIQA1+cYHb0vq
+         JmPpN97k3pMzkijiQy9NvqBrQktnRzols67yxfeAVCMCpoKCZVaPuqgGNTTKCs3nyBQ4
+         1wIgcqKPw1dt4fMUp/lBnXTMWSQEu8TbmXzDJVNfwbg3PHoGQ3CrD3qWYQZtHy6WntgD
+         Evd8VHYB+ivGSvcUfOUP5nf82hsdhNVL8Xm2EnOMUWeLuDdllosFDWhirQOjR1wu+4dw
+         auTq2pWgQlkzGmvldemqEllSLI1WT0Hlu4AYAGKL/MuSV4C1t7xqfCVIq1kTnb9Jb+L/
+         YXtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g8eYN4DcaE4cWGmQIJYjXftOZqfTHMZ6RPDgEcxyfN4=;
-        b=PSmZYdUmOKsnB+kTyNp3fcu5M5IJjcno0zdBVaWtiVcZQn8zL2CuqWCxo7LtPHPypi
-         CRtT3+OTskT4e/1jg0V9GwNeq/GA0Zscpoy2jEafT+0YjrZ9clIzbHxLBJbaSw/TKCpU
-         iPBYre8Fak3sfoCwjhhQhI/N4qvBTuWIOpVj4slroCaJg0x+vrG9HP4//hSs415I+sFj
-         tuc/p23AueHA4hiPabVamlXSfY6oqui392yD6BHgVQc2SeRMKVOvyQXIKNJr6PEslmwW
-         yiOuhNSoleJ/zdL/UFpjMI7w5Mor84GUCNGzYSjk7+TwGt81SaCpPj3WZHRPLjh2St9Q
-         oXfQ==
-X-Gm-Message-State: AOAM533fnS/3GheMtzw6p0kWg697ayYcO3eefo/Im6hsdfa/nH6MmWYY
-        JO9iAzWq6Pr25h6fl4FnJeA=
-X-Google-Smtp-Source: ABdhPJwKCEvXtM2zZL2ji1JGazyFrHq5dOKCyuwKbPn7zy2n+xmnz/++1EwOm1VFpfZBrfngSrd0cw==
-X-Received: by 2002:a5d:4991:: with SMTP id r17mr25847697wrq.1.1594121808402;
-        Tue, 07 Jul 2020 04:36:48 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id v24sm764491wrd.92.2020.07.07.04.36.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jul 2020 04:36:47 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 13:36:45 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v3] phy: samsung: Use readl_poll_timeout function
-Message-ID: <20200707113645.GA27280@kozik-lap>
-References: <20200707095908.372-1-linux.amoon@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OnCd1YAPjG2Ik+wSQkHZosL6QWVa11jN4YE6zzRMrv0=;
+        b=ikJOKL9LpKwyakBtnyBZVqaM0tH6vSmkNoZ9b1o/ZfkEpP6gnHnC2SZRs5VxAjwVCu
+         LaR9KlIpqI+0jPyWBvHml+quzbjbPEvOn94y4vqKA+2INJjy3eWBflij/ZWTOpZBa0Vp
+         qSbHaqEtpqFbC4VxKy9wcFNPR7IvnUt/XzRse1dxM10VZBKOJXvSG6Tz7PCbzr+Bctii
+         MxNQumRamw45MVnkr+J6f5C+tnAxAoTegHJ5Ogbki+BZzkk6hmO8Jm0ecQ8c2RdqVvh4
+         STQAceD9lFCNyfdnqLNrvNeNovVdY73bxTDVIwmyxpFO0c4uVWhOIQgbIg5vu1WDMfWK
+         5m3g==
+X-Gm-Message-State: AOAM532Br9VSgnyix+cqr27zreUxjlSgQ163FLT30JzLX0S29eEBUX/u
+        Oo6+h9W2VAwf+mKyszv1sncD6dsxeaGukccw5HAqXw==
+X-Google-Smtp-Source: ABdhPJwP9hKdzcTYu5+7+gkCXic4cOTdr0VXL+Zzwrh1whoWKZc3WZtCAHkFv6JpcmVTdMaJuMYRFm8FqSC3eqGZGt8=
+X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr8538176ljj.283.1594121851218;
+ Tue, 07 Jul 2020 04:37:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200707095908.372-1-linux.amoon@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com> <1592480018-3340-5-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1592480018-3340-5-git-send-email-hanks.chen@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jul 2020 13:37:20 +0200
+Message-ID: <CACRpkdaDVzEjwrRbUjEPdGqVOHrLYaYSA6uVc4t_sY_A-0S-dg@mail.gmail.com>
+Subject: Re: [PATCH v6 4/7] pinctrl: mediatek: add pinctrl support for MT6779 SoC
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, wsd_upstream@mediatek.com,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 09:59:08AM +0000, Anand Moon wrote:
-> Instead of a busy waiting loop while loop using udelay
+On Thu, Jun 18, 2020 at 1:34 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
 
-You doubled "loop".
+> This adds MT6779 pinctrl driver based on MediaTek pinctrl-paris core.
+>
+> Acked-by: Sean Wang <sean.wang@kernel.org>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
 
-> use readl_poll_timeout function to check the condition
-> is met or timeout occurs in crport_handshake function.
+Patch applied.
 
-Still you did not mention that you convert the function to use sleeping
-primitive.  You also did not mention whether it is actually allowed in
-this context and I am not sure if you investigated it.
-
-Best regards,
-Krzysztof
-
-> 
-> Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Changes v3:
-> --Fix the commit message.
-> --Drop the variable, used the value directly.
-> Changes v2:
-> --used the default timeout values.
-> --Added missing Fixed tags.
-> ---
->  drivers/phy/samsung/phy-exynos5-usbdrd.c | 35 +++++++-----------------
->  1 file changed, 10 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> index e510732afb8b..fa75fa88da33 100644
-> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> @@ -16,6 +16,7 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_device.h>
-> +#include <linux/iopoll.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/mutex.h>
-> @@ -556,40 +557,24 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
->  static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
->  			    u32 val, u32 cmd)
->  {
-> -	u32 usec = 100;
->  	unsigned int result;
-> +	int err;
->  
->  	writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
->  
-> -	do {
-> -		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
-> -		if (result & PHYREG1_CR_ACK)
-> -			break;
-> -
-> -		udelay(1);
-> -	} while (usec-- > 0);
-> -
-> -	if (!usec) {
-> -		dev_err(phy_drd->dev,
-> -			"CRPORT handshake timeout1 (0x%08x)\n", val);
-> +	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-> +			result,	(result & PHYREG1_CR_ACK), 1, 100);
-> +	if (err) {
-> +		dev_err(phy_drd->dev, "CRPORT handshake timeout1 (0x%08x)\n", val);
->  		return -ETIME;
->  	}
->  
-> -	usec = 100;
-> -
->  	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
->  
-> -	do {
-> -		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
-> -		if (!(result & PHYREG1_CR_ACK))
-> -			break;
-> -
-> -		udelay(1);
-> -	} while (usec-- > 0);
-> -
-> -	if (!usec) {
-> -		dev_err(phy_drd->dev,
-> -			"CRPORT handshake timeout2 (0x%08x)\n", val);
-> +	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-> +			result,	!(result & PHYREG1_CR_ACK), 1, 100);
-> +	if (err) {
-> +		dev_err(phy_drd->dev, "CRPORT handshake timeout2 (0x%08x)\n", val);
->  		return -ETIME;
->  	}
->  
-> -- 
-> 2.27.0
-> 
+Yours,
+Linus Walleij
