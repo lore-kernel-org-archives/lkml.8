@@ -2,172 +2,108 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF29CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E1F2063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 330B32063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:02:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kmiwBLiG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgGGICB convert rfc822-to-8bit (ORCPT
+        id S1728391AbgGGICW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:02:01 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:52652 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725825AbgGGICB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:02:01 -0400
-Received: from dggemi402-hub.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 0237E19AA39B59FC9F90;
-        Tue,  7 Jul 2020 16:01:59 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.177]) by
- dggemi402-hub.china.huawei.com ([10.3.17.135]) with mapi id 14.03.0487.000;
- Tue, 7 Jul 2020 16:01:53 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Mike Rapoport <rppt@kernel.org>, Roman Gushchin <guro@fb.com>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: RE: [PATCH v2] mm/hugetlb: avoid hardcoding while checking if cma
- is enable
-Thread-Topic: [PATCH v2] mm/hugetlb: avoid hardcoding while checking if cma
- is enable
-Thread-Index: AQHWVAymBZ1xGYd9mEm2J3l6HgJP0Kj68WaAgABDWoCAAIvS8A==
-Date:   Tue, 7 Jul 2020 08:01:52 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD255A513@DGGEMI525-MBS.china.huawei.com>
-References: <20200707031156.29932-1-song.bao.hua@hisilicon.com>
- <20200707033631.GA164297@carbon.dhcp.thefacebook.com>
- <20200707073735.GB9449@kernel.org>
-In-Reply-To: <20200707073735.GB9449@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.200.119]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 7 Jul 2020 04:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728370AbgGGICW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 04:02:22 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83475C08C5DB
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:02:21 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s9so48771351ljm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jtUOyKVPfoqn53IJY34j6NjtojqZ+ul+fKHV5uiQxGk=;
+        b=kmiwBLiGpZZvtNTeKIU15ceN7oNeR238ooJAt0CvbsVCRioMTMtD1x4K9zbkRWKQfj
+         W7RgeINwBObWyC5/fs3l+iztnAPnFlO+7+rT6TlvFxObY1g1gx3t3JQjKxE6FyUa9juo
+         5N8AYr3CY5BYyDuMbcSRhA0X+wn/rOYZ8rkv5KuIj68/y3Xy1IWztOLZ/SwuJntz+jrv
+         Vt9rGJw2piKJn4szUdPZwshV+vMr/O1n7q77GXP+6ZIdII0HAE3ejY83wE1+z2nQ/E+d
+         7uBzrhj0+a6r2uqpZpQ5jycmEYlAqNFMZ6fT6hAcoUqpziWRbqwswmZSjiDqbSu9jA0q
+         nVNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jtUOyKVPfoqn53IJY34j6NjtojqZ+ul+fKHV5uiQxGk=;
+        b=aHt/PMWsuPXNAQlAlr86qEc2/9xNySaLcyoByAX090WoS4GVW6GKqYW/Z2wFqMbaUt
+         kHRBEQ/yOLK2EYd3eXMwUcp2CT0RVyqJyteRwEugmIeh1u/oXXKs1GkjBBRJKrOIgJRu
+         SyRnbzAuGOWzNZiB/YreCpxAsMlwFDtQKBKhfhM1tywmwGl22BFyjGidIg3Tt2e/J8W2
+         hBdzPYapR0azBi6yZ1SCdqVhDx9gCTqByWtdcdSm7WlNhnpT/EL5GAHPb9p7WgQtfhgz
+         tVo7DsroBRx0Gw6Y7WACRqvNfbmQNrkhIdK7UWCpSyEEyL1ORH0LacHiNgdz7YvWLZt+
+         aa5g==
+X-Gm-Message-State: AOAM532DR6q82E+T8sPXV8iVZYmXe89f1OdBGWA0SKqao0iuZLwRALpj
+        XmqdsCuy94u3+T1Eu9sg/+dtxxoB5N0IYjocuQPDSw==
+X-Google-Smtp-Source: ABdhPJyCTsje409P42BtkQ0ytfSdmbTULZn92mJJL2yEDwiZIrlVL3eLoJyeVqyBJtF11vUkJyptRe6bOJBOKNMOG8s=
+X-Received: by 2002:a2e:8046:: with SMTP id p6mr15386545ljg.100.1594108939830;
+ Tue, 07 Jul 2020 01:02:19 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <1592979844-18833-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1592979844-18833-1-git-send-email-Anson.Huang@nxp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jul 2020 10:02:08 +0200
+Message-ID: <CACRpkdYYJfA9uur0R+9ONkEk1pEABJnzrPe7U0VX4-QVQHgLcQ@mail.gmail.com>
+Subject: Re: [PATCH V6 0/9] Support i.MX8 SoCs pinctrl drivers built as module
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 24, 2020 at 8:35 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 
+> There are more and mroe requirements that SoC specific modules should be built
+> as module in order to support generic kernel image, such as Android GKI concept.
+>
+> This patch series supports i.MX8 SoCs pinctrl drivers to be built as module,
+> including i.MX8MQ/MM/MN/MP/QXP/QM/DXL SoCs, i.MX common pinctrl driver and i.MX
+> SCU common pinctrl driver as still built-in.
+>
+> Compared to V5, the changes are as below:
+>         - Keep i.MX common pinctrl libary built in, ONLY i.MX SoC pinctrl driver
+>           support built as module.
+>
+> Anson Huang (9):
+>   pinctrl: imx: Support i.MX8 SoCs pinctrl driver built as module
+>   pinctrl: imx: scu: Support i.MX8 SCU SoCs pinctrl driver built as
+>     module
+>   pinctrl: imx8mm: Support building as module
+>   pinctrl: imx8mn: Support building as module
+>   pinctrl: imx8mq: Support building as module
+>   pinctrl: imx8mp: Support building as module
+>   pinctrl: imx8qxp: Support building as module
+>   pinctrl: imx8qm: Support building as module
+>   pinctrl: imx8dxl: Support building as module
 
-> -----Original Message-----
-> From: Mike Rapoport [mailto:rppt@kernel.org]
-> Sent: Tuesday, July 7, 2020 7:38 PM
-> To: Roman Gushchin <guro@fb.com>
-> Cc: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>;
-> akpm@linux-foundation.org; linux-mm@kvack.org;
-> linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Mike
-> Kravetz <mike.kravetz@oracle.com>; Jonathan Cameron
-> <jonathan.cameron@huawei.com>
-> Subject: Re: [PATCH v2] mm/hugetlb: avoid hardcoding while checking if cma
-> is enable
-> 
-> On Mon, Jul 06, 2020 at 08:36:31PM -0700, Roman Gushchin wrote:
-> > On Tue, Jul 07, 2020 at 03:11:56PM +1200, Barry Song wrote:
-> > > hugetlb_cma[0] can be NULL due to various reasons, for example, node0
-> has
-> > > no memory. so NULL hugetlb_cma[0] doesn't necessarily mean cma is not
-> > > enabled. gigantic pages might have been reserved on other nodes.
-> > >
-> > > Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages
-> using cma")
-> > > Cc: Roman Gushchin <guro@fb.com>
-> > > Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> > > Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > > Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> > > ---
-> > >  -v2: add hugetlb_cma_enabled() helper to improve readability according
-> to Roman
-> > >
-> > >  mm/hugetlb.c | 16 +++++++++++++++-
-> > >  1 file changed, 15 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > > index 57ece74e3aae..d5e98ed86bb9 100644
-> > > --- a/mm/hugetlb.c
-> > > +++ b/mm/hugetlb.c
-> > > @@ -2546,6 +2546,20 @@ static void __init
-> gather_bootmem_prealloc(void)
-> > >  	}
-> > >  }
-> > >
-> > > +bool __init hugetlb_cma_enabled(void)
-> > > +{
-> > > +	if (IS_ENABLED(CONFIG_CMA)) {
-> > > +		int node;
-> > > +
-> > > +		for_each_online_node(node) {
-> > > +			if (hugetlb_cma[node])
-> > > +				return true;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return false;
-> > > +}
-> > > +
-> >
-> > Can you, please, change it to a more canonical
-> >
-> > #ifdef CONFIG_CMA
-> > bool __init hugetlb_cma_enabled(void)
-> > {
-> > 	int node;
-> >
-> > 	for_each_online_node(node)
-> > 		if (hugetlb_cma[node])
-> > 			return true;
-> >
-> > 	return false;
-> > }
-> > #else
-> > bool __init hugetlb_cma_enabled(void)
-> > {
-> > 	return false;
-> > }
-> > #endif
-> >
-> > or maybe just
-> >
-> > bool __init hugetlb_cma_enabled(void)
-> > {
-> > #ifdef CONFIG_CMA
-> > 	int node;
-> >
-> > 	for_each_online_node(node)
-> > 		if (hugetlb_cma[node])
-> > 			return true;
-> > #endif
-> > 	return false;
-> > }
-> 
-> This one please.
+Patches applied to the pinctrl devel branch for v5.9.
 
-Yep. Patch v3 is just the one you prefer:
-https://marc.info/?l=linux-mm&m=159409465228477&w=2
-
-> 
-> > ?
-> >
-> > Please, feel free to add
-> > Acked-by: Roman Gushchin <guro@fb.com> after that.
-> >
-> > Thank you!
-> >
-> 
-> --
-> Sincerely yours,
-> Mike.
-
-Thanks
-Barry
-
+Yours,
+Linus Walleij
