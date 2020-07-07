@@ -2,203 +2,176 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF93C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40702C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46F6C206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1257D206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 06:38:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlIpBGKb"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pZeqwp7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgGGGg4 (ORCPT
+        id S1728140AbgGGGi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgGGGgz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 02:36:55 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A20CC061755;
-        Mon,  6 Jul 2020 23:36:55 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id b15so37412945edy.7;
-        Mon, 06 Jul 2020 23:36:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UqHBVR7AXZDr8T2/3H+3Cgz/DiUUwV80s3AgwVzbVKM=;
-        b=BlIpBGKbjCnSc3zlkfkIV1p6o+uMLbizbKtDJN6h4kwPfMYxqNUqDVKTWYbzw7F630
-         MuJ/OIHpFVBMIyAEQZFcTTU64YBOpNuerg5Zqun6JHoSi10RPLiLdzOd6Yjh69zwnNxq
-         equCfdzFaCFSGeT2knqly3Rw08AzalaJrVYG8sLjiZeU6FspkhlvlZgXsGwEtQ0PUAjW
-         N8vhU60FbnR1eYvr5+02hZ5GQvyZv3S+FWQ7ZbbMezdGmKr3WTEZeuAjNeXcD2MoXbT9
-         LPxxEts1SqPi5GNajwdkYbb/dOSd13HUUC2HvfhCb/VSYNOnqWwMuN83tdRb/IHmsTui
-         UXxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UqHBVR7AXZDr8T2/3H+3Cgz/DiUUwV80s3AgwVzbVKM=;
-        b=gRIeSfe9N+v2AKCrxTqI+A9GwH3tGOZdw692JwvVs+zw2FU8UaHdqCJFhJiU4BLjw3
-         mfIQ1YfuI73ap9qUMZCfuRZR1ns3cU7yi69HAsK8k53xNU1l77oHShJoEiioTHDyVFdb
-         PQwEFh3facdoNM7pCAN+tHz1Dzhl7DyOp5/KesnUgOSSJGw6KWZuBBMVtOtI9VkYnc4E
-         Zq8KFEB+sSWugApngdolRMpMtlhn79DlZEgfiAkn0Is9obQ+K+gPmdCRbYgAz1GmWZz0
-         Zakf/5dC53JL5bmaqljSTTESp9GnTiY61aqMlYiJkr0dy7L5C8FlhKanCG4VTX6exO7r
-         qpAA==
-X-Gm-Message-State: AOAM531pE20EPSDb4g/Cqh5WvRXdpkHvGJr5sNQmrDXq+oknQDdJgUzC
-        J1WnUhq8F0CAjWzpj87k+eE=
-X-Google-Smtp-Source: ABdhPJyOr5m9jp1BfArrJlPJLAfSJgog/3YcIqDdyt4omeI4sskZSBPxp8UVzURxEwT4fNtbo/R/Vw==
-X-Received: by 2002:a05:6402:1246:: with SMTP id l6mr28526205edw.224.1594103813627;
-        Mon, 06 Jul 2020 23:36:53 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id q24sm27226852edg.51.2020.07.06.23.36.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 23:36:53 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 09:36:51 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Sergey Organov <sorganov@gmail.com>
-Cc:     richardcochran@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
- current kernel time
-Message-ID: <20200707063651.zpt6bblizo5r3kir@skbuf>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200706142616.25192-4-sorganov@gmail.com>
- <20200706152721.3j54m73bm673zlnj@skbuf>
- <874kqksdrb.fsf@osv.gnss.ru>
+        Tue, 7 Jul 2020 02:38:29 -0400
+Received: from mail-eopbgr60049.outbound.protection.outlook.com ([40.107.6.49]:32740
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725825AbgGGGi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 02:38:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E1naoUMdEYYQptbYONKSN7bFMky0SRdiKrfPEg7T5VcuV1SD9y2c1/ZAzxgN4pkpoj11ct/el6Zpwg4BB1HfRzd9iTmnYZ/SjMePgNf6O70hFDkxq+70RORUYVjBPm2kOgqeCcrEIKwrCi2129WxJ8NgUsLv1BKu/muThLRiMhGlr1im+yGZmmPSka5b45A2qkNkijTS5Cyow0iaf0qKFupChQknr6a4F5Dzz3/ILiZrpyyKI71l+nlou9yu8lg9GnCAiFQxVGP3JAQDRJWeQ9GB0kk+S6wE+HoDHJBOdYrlvEkQl0UdiaEBCpgdoz8jMjbSwy617vt1wJXhMgBLPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ATw82IjJ78BVElgglhRCwiS1GIi1+nVX2SDlDDehJiY=;
+ b=AZMemt/buKqJ67R9fBeZMv0HBzvg7HUWX1/ppjG9+UGsvu/UwqDCk5tJsZ8ajejdfYGsDbcTaT7KVceGz0ry9PEVnW0gwwyuE3yJolN0Zd6SKr5s6aaY7Q2/KZAXadIG/g+Ciyib4h7ZpSdK+a7EyIv3lSY+f8VBBm/xwfVuYBdI9XTEG/L2pN6fZ5Tignyrwu+zITcz6oNJ+6UqoiLV+lycjKJDUHNbkP6M1DJQIIPZaDSuOk5DZucoR7ZN/Zsl53SouLAamktZ0h+z37gQFKg9rNG7iu1HZo7JcJPDteXgDxKM5QorKqS+63uMbPlPSfKTv8wWsWrFM2sgETsV4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ATw82IjJ78BVElgglhRCwiS1GIi1+nVX2SDlDDehJiY=;
+ b=pZeqwp7UVtWBTjzdN/ek/Yif65YpHwTiM8e5DWRIKDaRGomR9e+9ZEvex7r3SRaXvB013lmnYXJFsqmV0b/nnU37kZI7PmEzERzv2Sedne2oXWkhOVSHk3jcdEz4VTVBULRMB6q8dhjgN/VS1+1fmQVn1xhxqca26MAl9ol9qoY=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM5PR04MB3235.eurprd04.prod.outlook.com (2603:10a6:206:c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Tue, 7 Jul
+ 2020 06:38:26 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
+ 06:38:26 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Pawel Laszczak <pawell@cadence.com>
+CC:     "balbi@kernel.org" <balbi@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rogerq@ti.com" <rogerq@ti.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "jpawar@cadence.com" <jpawar@cadence.com>,
+        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
+        "kurahul@cadence.com" <kurahul@cadence.com>,
+        "sparmar@cadence.com" <sparmar@cadence.com>
+Subject: Re: [PATCH 8/9] usb: cdns3: Improvement: removed overwriting some
+ error code
+Thread-Topic: [PATCH 8/9] usb: cdns3: Improvement: removed overwriting some
+ error code
+Thread-Index: AQHWT3AXAF6F0d6xxE+B5FdDFK9zEqj7s5qA
+Date:   Tue, 7 Jul 2020 06:38:25 +0000
+Message-ID: <20200707063835.GG16073@b29397-desktop>
+References: <20200701062004.29908-1-pawell@cadence.com>
+ <20200701062004.29908-9-pawell@cadence.com>
+In-Reply-To: <20200701062004.29908-9-pawell@cadence.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: cadence.com; dkim=none (message not signed)
+ header.d=none;cadence.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5d6c9410-d09d-4ff1-9c6b-08d822405a4d
+x-ms-traffictypediagnostic: AM5PR04MB3235:
+x-microsoft-antispam-prvs: <AM5PR04MB323577EA093CF36F35F5E89B8B660@AM5PR04MB3235.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1850;
+x-forefront-prvs: 0457F11EAF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PHRe3RuOX7NGi2HJIWCU0KuluvFvK0GZdt3RAtghrcjt3wjuqITwN47QPFuFM3A0JPzCR3H4WfHN/Qz3sRfQCeYjtxJg+eSo1DkQeHjNx1Gull0m/gcH+mgCNT914AnCw04Y0Z4k73CNPa3zOnnmyjdonUanBTjEK11ee3qtaaGo2qN0+rN3uAS1kZbe5YhTYRgCtGYfGX8xycVnl2j5nmKARWvjqLF0gifs3qW4MgP1RbOQE9N77x9dtZr2HPCzWul7eIepyzVY0TukaXdoAIciMyc7h5cV/b6wxBCLx5NtZ77mo//uGMYBdjd2+u7YWwLH042QbiY1RjZiRYPbtw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(136003)(396003)(366004)(346002)(39860400002)(376002)(5660300002)(66946007)(76116006)(33716001)(91956017)(66476007)(66446008)(64756008)(66556008)(33656002)(1076003)(44832011)(86362001)(6486002)(71200400001)(186003)(2906002)(26005)(53546011)(6506007)(6512007)(9686003)(83380400001)(8676002)(478600001)(7416002)(8936002)(4326008)(54906003)(316002)(6916009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 3VOT2k1Fg0kI12FoWRuo4y4mXfXZI0jjoZqwvV+Kh4+aztaw/G2fLbxus9nSwnY7kE+bvDA/ySLEaaIc9canxOyBbXLY+7XT8eDfLEsdpolRHbpRwz3HKqDL3q0nAGow9BmXZWPMagii1yDLc0iRb/W+czstwwiAZC+FrVFsxEK9zoU61MrS+EgvdPiYBX8igs1w9RHyluRJUYvfAYkKH4I3EIk5H/CmhfnxqoOhbF80fpfl7/bO5T6U/+zscgxFY6HrcfntHC194OQjhcmUHn20RpGmFUZfFk/LpISQ3SfI/6KiL146hAY7WAvn3S5FAMvCQjFwUvahHFgfLfi0bHLWc7YmkxtG4/BXVeG+k1mNMBD0TdW4epdO2o1LEgXZZeHISK2GnLfX0Hpqjvh/BIVLwJpL4gEesyW0wOJQ7pCTFhK0R+oZRbv0pXD+7WoYbUu7CgWI/lKqeHwAwCGdtMATxWqr86NsSg9q1eUiI3it+1Bhr9EAYE89y4Tm+IjH
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AB3AED55B69B714DA46789910816E9DD@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kqksdrb.fsf@osv.gnss.ru>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d6c9410-d09d-4ff1-9c6b-08d822405a4d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 06:38:25.9559
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +hBDbXDRU3zyQgy7kNApio7O2011WgN+fvgs04skGHT4SfStorLuwkjzozergO1EtFHmDojDDAsw1OJ96lnR4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3235
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 09:24:24PM +0300, Sergey Organov wrote:
-> Vladimir Oltean <olteanv@gmail.com> writes:
-> 
-> > Hi Sergey,
-> >
-> > On Mon, Jul 06, 2020 at 05:26:14PM +0300, Sergey Organov wrote:
-> >> Initializing with 0 makes it much easier to identify time stamps from
-> >> otherwise uninitialized clock.
-> >> 
-> >> Initialization of PTP clock with current kernel time makes little sense as
-> >> PTP time scale differs from UTC time scale that kernel time represents.
-> >> It only leads to confusion when no actual PTP initialization happens, as
-> >> these time scales differ in a small integer number of seconds (37 at the
-> >> time of writing.)
-> >> 
-> >> Signed-off-by: Sergey Organov <sorganov@gmail.com>
-> >> ---
-> >
-> > Reading your patch, I got reminded of my own attempt of making an
-> > identical change to the ptp_qoriq driver:
-> >
-> > https://www.spinics.net/lists/netdev/msg601625.html
-> >
-> > Could we have some sort of kernel-wide convention, I wonder (even though
-> > it might be too late for that)? After your patch, I can see equal
-> > amounts of confusion of users expecting some boot-time output of
-> > $(phc_ctl /dev/ptp0 get) as it used to be, and now getting something
-> > else.
-> >
-> > There's no correct answer, I'm afraid.
-> 
-> IMHO, the correct answer would be keep non-initialized clock at 0. No
-> ticking.
-> 
+On 20-07-01 08:20:03, Pawel Laszczak wrote:
+> Some error code can be preserved, so we can remove overwriting
+> error code returned by some functions.
 
-What do you mean 'no ticking', and what do you mean by 'non-initialized
-clock' exactly? I don't know if the fec driver is special in any way, do
-you mean that multiple runs of $(phc_ctl /dev/ptp0 get) from user space
-all return 0? That is not at all what is to be expected, I think. The
-PHC is always ticking. Its time is increasing. What would be that
-initialization procedure that makes it tick, and who is doing it (and
-when)?
+Improve the patch title, otherwise:
 
-> > Whatever the default value of the clock may be, it's bound to be
-> > confusing for some reason, _if_ the reason why you're investigating it
-> > in the first place is a driver bug. Also, I don't really see how your
-> > change to use Jan 1st 1970 makes it any less confusing.
-> 
-> When I print the clocks in application, I see seconds and milliseconds
-> part since epoch. With this patch seconds count from 0, that simply
-> match uptime. Easy to tell from any other (malfunctioning) clock.
-> 
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
 
-It doesn't really match uptime (CLOCK_MONOTONIC). Instead, it is just
-initialized with zero. If you have fec built as module and you insmod it
-after a few days of uptime, it will not track CLOCK_MONOTONIC at all.
+Peter
+>=20
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> ---
+>  drivers/usb/cdns3/core.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
+> index 591186987245..01155ab73930 100644
+> --- a/drivers/usb/cdns3/core.c
+> +++ b/drivers/usb/cdns3/core.c
+> @@ -347,7 +347,6 @@ static int cdns3_role_set(struct usb_role_switch *sw,=
+ enum usb_role role)
+>  		case USB_ROLE_HOST:
+>  			break;
+>  		default:
+> -			ret =3D -EPERM;
+>  			goto pm_put;
+>  		}
+>  	}
+> @@ -358,17 +357,14 @@ static int cdns3_role_set(struct usb_role_switch *s=
+w, enum usb_role role)
+>  		case USB_ROLE_DEVICE:
+>  			break;
+>  		default:
+> -			ret =3D -EPERM;
+>  			goto pm_put;
+>  		}
+>  	}
+> =20
+>  	cdns3_role_stop(cdns);
+>  	ret =3D cdns3_role_start(cdns, role);
+> -	if (ret) {
+> +	if (ret)
+>  		dev_err(cdns->dev, "set role %d has failed\n", role);
+> -		ret =3D -EPERM;
+> -	}
+> =20
+>  pm_put:
+>  	pm_runtime_put_sync(cdns->dev);
+> @@ -393,7 +389,7 @@ static int cdns3_probe(struct platform_device *pdev)
+>  	ret =3D dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+>  	if (ret) {
+>  		dev_err(dev, "error setting dma mask: %d\n", ret);
+> -		return -ENODEV;
+> +		return ret;
+>  	}
+> =20
+>  	cdns =3D devm_kzalloc(dev, sizeof(*cdns), GFP_KERNEL);
+> --=20
+> 2.17.1
+>=20
 
-Not to say that there's anything wrong with initializing it with 0. It's
-just that I don't see why it would be objectively better.
+--=20
 
-> Here is the description of confusion and improvement. I spent half a day
-> not realizing that I sometimes get timestamps from the wrong PTP clock.
-
-There is a suite of tests in tools/testing/selftests/ptp/ which is
-useful in debugging problems like this.
-
-Alternatively, you can write to each individual clock using $(phc_ctl
-/dev/ptpN set 0) and check your timestamps again. If the timestamps
-don't nudge, it's clear that the timestamps you're getting are not from
-the PHC you've written to. Much simpler.
-
-> Part of the problem is that kernel time at startup, when it is used for
-> initialization of the PTP clock, is in fact somewhat random, and it
-> could be off by a few seconds.
-
-Yes, the kernel time at startup is exactly random (not traceable to any
-clock reference). And so is the PHC.
-
-> Now, when in application I get time stamp
-> that is almost right, and then another one that is, say, 9 seconds off,
-> what should I think? Right, that I drive PTP clock wrongly.
-> 
-> Now, when one of those timestamps is almost 0, I see immediately I got
-> time from wrong PTP clock, rather than wrong time from correct PTP
-> clock.
-> 
-
-There are 2 points to be made here:
-
-1. There are simpler ways to debug your issue than to leave a patch in
-   the kernel, like the "phc_ctl set 0" I mentioned above. This can be
-   considered a debugging patch which is also going to have consequences
-   for the other users of the driver, if applied. We need to consider
-   whether the change in behavior is useful in general.
-
-2. There are boards out there which don't have any battery-backed RTC,
-   so CLOCK_REALTIME could be ticking in Jan 1970 already, and therefore
-   the PHC would be initialized with a time in 1970. Or your GM might be
-   configured to be ticking in Jan 1970 (there are some applications
-   that only require the network to be synchronized, but not for the
-   time to be traceable to TAI). How does your change make a difference
-   to eliminate confusion there, when all of your clocks are going to be
-   in 1970? It doesn't make a net difference. Bottom line, a clock
-   initialized with 0 doesn't mean it's special in any way. You _could_
-   make that change in your debugging environment, and it _could_ be
-   useful to your debugging, but if it's not universally useful, I
-   wouldn't try to patch the kernel with this change.
-
-Please note that, although my comments appear to be in disagreement with
-your idea, they are in fact not at all. It's just that, if there's a a
-particular answer to "what time to initialize a PHC with" that is more
-favourable than the rest (even though the question itself is a bit
-irrelevant overall), then that answer ought to be enforced kernel-wide,
-I think.
-
-> Thanks,
-> -- Sergey
-
-Cheers,
--Vladimir
+Thanks,
+Peter Chen=
