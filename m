@@ -2,215 +2,102 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67411C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4734C206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="amIbU5He"
+	by mail.kernel.org (Postfix) with ESMTP id C6EED20720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgGGSxv (ORCPT
+        id S1728485AbgGGSyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:53:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37556 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728183AbgGGSxu (ORCPT
+        Tue, 7 Jul 2020 14:54:43 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:58376 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728183AbgGGSyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 14:53:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594148028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qd7GvFWxfTyKmbpo/F2p4KRc33HgtT765IWzuAxWIYI=;
-        b=amIbU5Hen67T1YXf0ewg06Ypcg1FocY2IxneqeZrN6AVDNSsTnoxuVGbc8K6CT2AYFirdf
-        CquM+jdzlLaUkVlzMfO8lP6Vdt7ThwciNudSWGQQTdstIknELnsVtJ14JCX00gYOY63Iq5
-        ziGoXa55u6MFEX0v8eAmhDr/0+fAMG0=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-303-VElsKiqMNwSuGUBqB-2SpA-1; Tue, 07 Jul 2020 14:53:44 -0400
-X-MC-Unique: VElsKiqMNwSuGUBqB-2SpA-1
-Received: by mail-qk1-f197.google.com with SMTP id o26so29216395qko.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 11:53:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Qd7GvFWxfTyKmbpo/F2p4KRc33HgtT765IWzuAxWIYI=;
-        b=Rc/zFXsVjj1BkswYGkQy/Rzrw4OAzZmAAr13PLk4pvawSoFQY7vHyUgVrFss1ywj6v
-         IdDqDTDBOPyq6Ehlnmd2Rgp3+5TlVXWmHy+h4e2iB+cHOiuVPQek+eF0beSRh6JbLE3I
-         gyvVgEcDW7mrOkqcEinvfVXDcjiXnkM6++eoGcFPtJP1iF8xX2wUbD1R5Gm1vvnxjpHn
-         kOPc+zNuTPB3rI2oKXILuet2EBC/G2woyP3/eT73kJneqCqOUlchOnkiWqEnLHdhbA+H
-         SWCgIy0SueCST4Yme7wy5eNn/2FCyfOEtaD9VLrKOleTpN8RV08qDRsOFdqbWRim2Uzd
-         jYsw==
-X-Gm-Message-State: AOAM531IykQvKszpMfNgZPEPCAd4TXGxmqufI4GwMxYK3HJOQthSdJrK
-        l3trE66aL3sXPOl169B31E+YJqaDjnBmuNl/+m0hM0RjPp9DWzPVgAiCW8bKerw+3udqUSEefuO
-        Mnwl4O5ruKglNQbfb/RHskcVO
-X-Received: by 2002:a37:64cd:: with SMTP id y196mr44880289qkb.303.1594148024014;
-        Tue, 07 Jul 2020 11:53:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyR00NCuC+wWsuRVMna6tP+BHj3IB5WxyNjpTX+b7L1EfMmtMFmi7fdb8X2pT7uHkbWKKSCLA==
-X-Received: by 2002:a37:64cd:: with SMTP id y196mr44880268qkb.303.1594148023641;
-        Tue, 07 Jul 2020 11:53:43 -0700 (PDT)
-Received: from [192.168.1.4] (198-84-170-103.cpe.teksavvy.com. [198.84.170.103])
-        by smtp.gmail.com with ESMTPSA id x29sm20420381qtx.74.2020.07.07.11.53.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 11:53:42 -0700 (PDT)
-Subject: Re: [RFC PATCH for 5.8 3/4] rseq: Introduce RSEQ_FLAG_RELIABLE_CPU_ID
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fw@deneb.enyo.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Neel Natu <neelnatu@google.com>
-References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
- <20200706204913.20347-4-mathieu.desnoyers@efficios.com>
- <87fta3zstr.fsf@mid.deneb.enyo.de>
- <2088331919.943.1594118895344.JavaMail.zimbra@efficios.com>
- <874kqjzhkb.fsf@mid.deneb.enyo.de>
- <378862525.1039.1594123580789.JavaMail.zimbra@efficios.com>
-From:   Carlos O'Donell <carlos@redhat.com>
-Organization: Red Hat
-Message-ID: <d6b28b3e-9866-ce6f-659e-2c0dba4cd527@redhat.com>
-Date:   Tue, 7 Jul 2020 14:53:41 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <378862525.1039.1594123580789.JavaMail.zimbra@efficios.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 7 Jul 2020 14:54:43 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R411e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U23IaJm_1594148072;
+Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0U23IaJm_1594148072)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 08 Jul 2020 02:54:39 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     hannes@cmpxchg.org, catalin.marinas@arm.com, will.deacon@arm.com,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, xuyu@linux.alibaba.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [RFC PATCH] mm: avoid access flag update TLB flush for retried page fault
+Date:   Wed,  8 Jul 2020 02:54:32 +0800
+Message-Id: <1594148072-91273-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 8:06 AM, Mathieu Desnoyers wrote:
-> ----- On Jul 7, 2020, at 7:32 AM, Florian Weimer fw@deneb.enyo.de wrote:
-> 
->> * Mathieu Desnoyers:
->>
->>> Those are very good points. One possibility we have would be to let
->>> glibc do the rseq registration without the RSEQ_FLAG_RELIABLE_CPU_ID
->>> flag. On kernels with the bug present, the cpu_id field is still good
->>> enough for typical uses of sched_getcpu() which does not appear to
->>> have a very strict correctness requirement on returning the right
->>> cpu number.
->>>
->>> Then libraries and applications which require a reliable cpu_id
->>> field could check this on their own by calling rseq with the
->>> RSEQ_FLAG_RELIABLE_CPU_ID flag. This would not make the state more
->>> complex in __rseq_abi, and let each rseq user decide about its own
->>> fate: whether it uses rseq or keeps using an rseq-free fallback.
->>>
->>> I am still tempted to allow combining RSEQ_FLAG_REGISTER |
->>> RSEQ_FLAG_RELIABLE_CPU_ID for applications which would not be using
->>> glibc, and want to check this flag on thread registration.
->>
->> Well, you could add a bug fix level field to the __rseq_abi variable.
-> 
-> Even though I initially planned to make the struct rseq_abi extensible,
-> the __rseq_abi variable ends up being fix-sized, so we need to be very
-> careful in choosing what we place in the remaining 12 bytes of padding.
-> I suspect we'd want to keep 8 bytes to express a pointer to an
-> "extended" structure.
-> 
-> I wonder if a bug fix level "version" is the right approach. We could
-> instead have a bitmask of fixes, which the application could independently
-> check. For instance, some applications may care about cpu_id field
-> reliability, and others not.
+Recently we found regression when running will_it_scale/page_fault3 test
+on ARM64.  Over 70% down for the multi processes cases and over 20% down
+for the multi threads cases.  It turns out the regression is caused by commit
+89b15332af7c0312a41e50846819ca6613b58b4c ("mm: drop mmap_sem before
+calling balance_dirty_pages() in write fault").
 
-I agree with Florian.
+The test mmaps a memory size file then write to the mapping, this would
+make all memory dirty and trigger dirty pages throttle, that upstream
+commit would release mmap_sem then retry the page fault.  The retried
+page fault would see correct PTEs installed by the first try then update
+access flags and flush TLBs.  The regression is caused by the excessive
+TLB flush.  It is fine on x86 since x86 doesn't need flush TLB for
+access flag update.
 
-Developers are not interested in a bitmask of fixes.
+The page fault would be retried due to:
+1. Waiting for page readahead
+2. Waiting for page swapped in
+3. Waiting for dirty pages throttling
 
-They want a version they can check and that at a given version everything
-works as expected.
+The first two cases don't have PTEs set up at all, so the retried page
+fault would install the PTEs, so they don't reach there.  But the #3
+case usually has PTEs installed, the retried page fault would reach the
+access flag update.  But it seems not necessary to update access flags
+for #3 since retried page fault is not real "second access", so it
+sounds safe to skip access flag update for retried page fault.
 
-In reality today this is the kernel version.
+With this fix the test result get back to normal.
 
-So rseq is broken from a developer perspective until they can get a new
-kernel or an agreement from their downstream vendor that revision Z of
-the kernel they are using has the fix you've just committed.
+Reported-by: Xu Yu <xuyu@linux.alibaba.com>
+Debugged-by: Xu Yu <xuyu@linux.alibaba.com>
+Tested-by: Xu Yu <xuyu@linux.alibaba.com>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+I'm not sure if this is safe for non-x86 machines, we did some tests on arm64, but
+there may be still corner cases not covered.
 
-Essentially this problem solves itself at level higher than the interfaces
-we're talking about today.
+ mm/memory.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Encoding this as a bitmask of fixes is an overengineered solution for a
-problem that the downstream communities already know how to solve.
-
-I would strongly suggest a "version" or nothing.
-
->> Then applications could check if the kernel has the appropriate level
->> of non-buggyness.  But the same thing could be useful for many other
->> kernel interfaces, and I haven't seen such a fix level value for them.
->> What makes rseq so special?
-> 
-> I guess my only answer is because I care as a user of the system call, and
-> what is a system call without users ? I have real applications which work
-> today with end users deploying them on various kernels, old and new, and I
-> want to take advantage of this system call to speed them up. However, if I
-> have to choose between speed and correctness (in other words, not crashing
-> a critical application), I will choose correctness. So if I cannot detect
-> that I can safely use the system call, it becomes pretty much useless even
-> for my own use-cases.
-
-Yes.
-
-In the case of RHEL we have *tons*  of users in the same predicament.
-
-They just wait until the RHEL kernel team releases a fixed kernel version
-and check for that version and deploy with that version.
-
-Likewise every other user of a kernel. They solve it by asking their
-kernel provider, internal or external, to verify the fix is applied to
-the deployment kernel.
-
-If they are an ISV they have to test and deploy similar strategies for
-multiple kernel version.
-
-By trying to automate this you are encoding into the API some level of
-package management concepts e.g. patch level, revision level, etc.
-
-This is difficult to do without a more generalized API. Why do it just
-for rseq? Why do it with the few bits you have?
-
-It's not a great fit IMO. Just let the kernel version be the arbiter of
-correctness.
- 
->> It won't help with the present bug, but maybe we should add an rseq
->> API sub-call that blocks future rseq registration for the thread.
->> Then we can add a glibc tunable that flips off rseq reliably if people
->> do not want to use it for some reason (and switch to the non-rseq
->> fallback code instead).  But that's going to help with future bugs
->> only.
-> 
-> I don't think it's needed. All I really need is to have _some_ way to
-> let lttng-ust or liburcu query whether the cpu_id field is reliable. This
-> state does not have to be made quickly accessible to other libraries,
-> nor does it have to be shared between libraries. It would allow each
-> user library or application to make its own mind on whether it can use
-> rseq or not.
- 
-That check is "kernel version > x.y.z" :-)
-
-or
-
-"My kernel vendor told me it's fixed."
-
+diff --git a/mm/memory.c b/mm/memory.c
+index 87ec87c..3d4e671 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4241,8 +4241,13 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+ 	if (vmf->flags & FAULT_FLAG_WRITE) {
+ 		if (!pte_write(entry))
+ 			return do_wp_page(vmf);
+-		entry = pte_mkdirty(entry);
+ 	}
++
++	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vmf->flags & FAULT_FLAG_TRIED))
++		entry = pte_mkdirty(entry); 
++	else if (vmf->flags & FAULT_FLAG_TRIED)
++		goto unlock;
++
+ 	entry = pte_mkyoung(entry);
+ 	if (ptep_set_access_flags(vmf->vma, vmf->address, vmf->pte, entry,
+ 				vmf->flags & FAULT_FLAG_WRITE)) {
 -- 
-Cheers,
-Carlos.
+1.8.3.1
 
