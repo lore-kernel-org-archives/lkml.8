@@ -2,162 +2,222 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91061C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1488120720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE1E20720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 19:34:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k7md7ayL"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XyYCfoXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGGTa7 (ORCPT
+        id S1728006AbgGGTem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:30:59 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4127 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgGGTa6 (ORCPT
+        Tue, 7 Jul 2020 15:34:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGGTel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 15:30:58 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f04cd650001>; Tue, 07 Jul 2020 12:30:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jul 2020 12:30:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jul 2020 12:30:58 -0700
-Received: from [10.2.50.36] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jul
- 2020 19:30:57 +0000
-Subject: Re: [PATCH v2 2/3] xen/privcmd: Mark pages as dirty
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>
-CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        <sstabellini@kernel.org>, <xen-devel@lists.xenproject.org>,
-        <linux-kernel@vger.kernel.org>, Paul Durrant <xadimgnik@gmail.com>
-References: <1594059372-15563-1-git-send-email-jrdr.linux@gmail.com>
- <1594059372-15563-3-git-send-email-jrdr.linux@gmail.com>
- <8fdd8c77-27dd-2847-7929-b5d3098b1b45@suse.com>
- <CAFqt6zZRx3oDO+p2e6EiDig9fzKirME-t6fanzDRh6e7gWx+nA@mail.gmail.com>
- <4abc0dd2-655c-16fa-dfc3-95904196c81f@suse.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <4c6e52e7-1d33-132b-1d7e-e57963966dcc@nvidia.com>
-Date:   Tue, 7 Jul 2020 12:30:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 7 Jul 2020 15:34:41 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51C3FC08C5DC
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 12:34:41 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id l6so39295743qkc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 12:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xVt2YK5fz9oFkXUBAkGsBYne4Pd79jtYdQyRepPOP4E=;
+        b=XyYCfoXM1r+N8DwUWlmvDPLAfgaaXeOLfy8C4mRQZYkYvPG6MAbu06xw7R2KfFrbf2
+         QpPdS9/4cRY8r7GCHNdjwKLcFvlmDAW1zk8eI2EGfl27V61Wp2IgJZDOkB2Wtg9Yi+Lw
+         tpavHoYcteHAqlcmnGtrYxOIuFGQPDUReDUUC/KYUdABDh0KTVeT0xmR1nUk/BBdTQUK
+         Ahpn+v3vPLCsce+dJFsewCeqrtt5r2pSMiewHfeJ9MyW5qS7hstGyz9m9o9vk9JRx/EY
+         AKGQ1B/NO92bS7DUmzTH47kc23GpDWSIbymOwI5Y/VaqT2bd5zL199G52/+/3yv36PPF
+         ARHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xVt2YK5fz9oFkXUBAkGsBYne4Pd79jtYdQyRepPOP4E=;
+        b=fqPE94ZNEp3S8vTgVKrcXVc7LWYZxsydULojxo3zNyyzkStuxiyThpTxQcm3GvKZNg
+         2WvrFfHEtGZTG2iPbIJv2kFmepcnsetBKEozNllSahMfBhckTaduPPG5PS25aRT1B3Ih
+         Z//3qvJq/qYbbx3fKW/DidJccja14F1XvDM5nV1zjFUOXObRmc82/0PBsDIOfSSIi2g8
+         NVRRyGYAO3B7RYh4DqdoByJyCo0qy1gydaS5tSqHMw6LOuUEQu05RQpMr8GlrW9EyKwm
+         FvlqjLsyJ/QIiXAmLD/Pt29teD18aQAkHaori40SOgfnGy+UfzxPzYl7jpii8nRCq1F9
+         nc4g==
+X-Gm-Message-State: AOAM530hv/mQSQXWC3jeQxaBFxeCtxXA1ZwOoHCOJ2wdWwadjhPcKqTb
+        Xezsq4Q2IjguQLhZYzy6jJNoaektl6nDvQ==
+X-Google-Smtp-Source: ABdhPJxWnRfHlcB33n2WqGOiUJ8zUyEBAGcI/XOi8NRXNTu75pauGmptq+erFObPZ0B0CEYsYn8y+w==
+X-Received: by 2002:ae9:e809:: with SMTP id a9mr52315940qkg.315.1594150480267;
+        Tue, 07 Jul 2020 12:34:40 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l31sm22808139qtc.33.2020.07.07.12.34.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 12:34:39 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 15:34:37 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Uriel Guajardo <urielguajardo@google.com>
+Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        catalin.marinas@arm.com, akpm@linux-foundation.org,
+        rdunlap@infradead.org, masahiroy@kernel.org, 0x7f454c46@gmail.com,
+        krzk@kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] kunit: kmemleak integration
+Message-ID: <20200707193437.GB992@lca.pw>
+References: <20200706211309.3314644-1-urielguajardojr@gmail.com>
+ <20200706211309.3314644-3-urielguajardojr@gmail.com>
+ <20200706213905.GA1916@lca.pw>
+ <CAG30EeeV0c8vQCdtqPBUNMiN--0K+j5xE+PMwW-godhX1qqwQg@mail.gmail.com>
+ <20200706231730.GA2613@lca.pw>
+ <CAG30EeeJL_LUpZdBYpi4TRhw8pzBxhSrVF-4j1g3z22-ZXTGrw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <4abc0dd2-655c-16fa-dfc3-95904196c81f@suse.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594150245; bh=dpqlDiB4hX+WGF7HO6/5EfWHYhPI+AkkSY6wCIzaoGI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=k7md7ayLM9GOFI11DNbkGz1E86R2aKIrNml3+R0dG1CxEQpyzJwxmDVWz4rsASK/I
-         Tqdu9EMUjsfwzvxkxQfxYOw/cqRVNZH3vST7zs68eD2pn+JZyrRb9s8MHKsB8ODbYn
-         HfgOfBluQzlyPE7gtGVbu740+lonybCMcXoEUlPyVNdwaUB6n1GlppmnknUS6S44pQ
-         53cO71d9AodweLvrmv422MJjRySe+0+CB34gdp7S0Oynv24TjAoeXoijmbpLzTfoNj
-         MKtnXjDMTRCGqioDkQN7Dh+/amw/q/x0JeMhjvatfn/genCs/lSHd/LnBe1976d6Dd
-         uiI+ffTpw6+og==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG30EeeJL_LUpZdBYpi4TRhw8pzBxhSrVF-4j1g3z22-ZXTGrw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-07 04:43, J=C3=BCrgen Gro=C3=9F wrote:
-> On 07.07.20 13:30, Souptick Joarder wrote:
->> On Tue, Jul 7, 2020 at 3:08 PM J=C3=BCrgen Gro=C3=9F <jgross@suse.com> w=
-rote:
-...
->>>> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
->>>> index 33677ea..f6c1543 100644
->>>> --- a/drivers/xen/privcmd.c
->>>> +++ b/drivers/xen/privcmd.c
->>>> @@ -612,8 +612,11 @@ static void unlock_pages(struct page *pages[], un=
-signed int nr_pages)
->>>> =C2=A0=C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int i;
->>>>
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < nr_pages; i++)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < nr_pages; i++) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if (!PageDirty(pages[i]))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_page_dirty_lock(pag=
-es[i]);
->>>
->>> With put_page() directly following I think you should be able to use
->>> set_page_dirty() instead, as there is obviously a reference to the page
->>> existing.
->>
->> Patch [3/3] will convert above codes to use unpin_user_pages_dirty_lock(=
-)
->> which internally do the same check. So I thought to keep linux-stable an=
-d
->> linux-next code in sync. John had a similar concern [1] and later agreed=
- to keep
->> this check.
->>
->> Shall I keep this check ?=C2=A0 No ?
+On Tue, Jul 07, 2020 at 12:26:52PM -0500, Uriel Guajardo wrote:
+> On Mon, Jul 6, 2020 at 6:17 PM Qian Cai <cai@lca.pw> wrote:
+> >
+> > On Mon, Jul 06, 2020 at 05:48:21PM -0500, Uriel Guajardo wrote:
+> > > On Mon, Jul 6, 2020 at 4:39 PM Qian Cai <cai@lca.pw> wrote:
+> > > >
+> > > > On Mon, Jul 06, 2020 at 09:13:09PM +0000, Uriel Guajardo wrote:
+> > > > > From: Uriel Guajardo <urielguajardo@google.com>
+> > > > >
+> > > > > Integrate kmemleak into the KUnit testing framework.
+> > > > >
+> > > > > Kmemleak will now fail the currently running KUnit test case if it finds
+> > > > > any memory leaks.
+> > > > >
+> > > > > The minimum object age for reporting is set to 0 msecs so that leaks are
+> > > > > not ignored if the test case finishes too quickly.
+> > > > >
+> > > > > Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+> > > > > ---
+> > > > >  include/linux/kmemleak.h | 11 +++++++++++
+> > > > >  lib/Kconfig.debug        | 26 ++++++++++++++++++++++++++
+> > > > >  lib/kunit/test.c         | 36 +++++++++++++++++++++++++++++++++++-
+> > > > >  mm/kmemleak.c            | 27 +++++++++++++++++++++------
+> > > > >  4 files changed, 93 insertions(+), 7 deletions(-)
+> > > > >
+> > > > > diff --git a/include/linux/kmemleak.h b/include/linux/kmemleak.h
+> > > > > index 34684b2026ab..0da427934462 100644
+> > > > > --- a/include/linux/kmemleak.h
+> > > > > +++ b/include/linux/kmemleak.h
+> > > > > @@ -35,6 +35,10 @@ extern void kmemleak_free_part_phys(phys_addr_t phys, size_t size) __ref;
+> > > > >  extern void kmemleak_not_leak_phys(phys_addr_t phys) __ref;
+> > > > >  extern void kmemleak_ignore_phys(phys_addr_t phys) __ref;
+> > > > >
+> > > > > +extern ssize_t kmemleak_write(struct file *file,
+> > > > > +                           const char __user *user_buf,
+> > > > > +                           size_t size, loff_t *ppos);
+> > > > > +
+> > > > >  static inline void kmemleak_alloc_recursive(const void *ptr, size_t size,
+> > > > >                                           int min_count, slab_flags_t flags,
+> > > > >                                           gfp_t gfp)
+> > > > > @@ -120,6 +124,13 @@ static inline void kmemleak_ignore_phys(phys_addr_t phys)
+> > > > >  {
+> > > > >  }
+> > > > >
+> > > > > +static inline ssize_t kmemleak_write(struct file *file,
+> > > > > +                                  const char __user *user_buf,
+> > > > > +                                  size_t size, loff_t *ppos)
+> > > > > +{
+> > > > > +     return -1;
+> > > > > +}
+> > > > > +
+> > > > >  #endif       /* CONFIG_DEBUG_KMEMLEAK */
+> > > > >
+> > > > >  #endif       /* __KMEMLEAK_H */
+> > > > > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > > > > index 21d9c5f6e7ec..e9c492cb3f4d 100644
+> > > > > --- a/lib/Kconfig.debug
+> > > > > +++ b/lib/Kconfig.debug
+> > > > > @@ -602,6 +602,32 @@ config DEBUG_KMEMLEAK_MEM_POOL_SIZE
+> > > > >         fully initialised, this memory pool acts as an emergency one
+> > > > >         if slab allocations fail.
+> > > > >
+> > > > > +config DEBUG_KMEMLEAK_MAX_TRACE
+> > > > > +     int "Kmemleak stack trace length"
+> > > > > +     depends on DEBUG_KMEMLEAK
+> > > > > +     default 16
+> > > > > +
+> > > > > +config DEBUG_KMEMLEAK_MSECS_MIN_AGE
+> > > > > +     int "Minimum object age before reporting in msecs"
+> > > > > +     depends on DEBUG_KMEMLEAK
+> > > > > +     default 0 if KUNIT
+> > > > > +     default 5000
+> > > > > +
+> > > > > +config DEBUG_KMEMLEAK_SECS_FIRST_SCAN
+> > > > > +     int "Delay before first scan in secs"
+> > > > > +     depends on DEBUG_KMEMLEAK
+> > > > > +     default 60
+> > > > > +
+> > > > > +config DEBUG_KMEMLEAK_SECS_SCAN_WAIT
+> > > > > +     int "Delay before subsequent auto scans in secs"
+> > > > > +     depends on DEBUG_KMEMLEAK
+> > > > > +     default 600
+> > > > > +
+> > > > > +config DEBUG_KMEMLEAK_MAX_SCAN_SIZE
+> > > > > +     int "Maximum size of scanned block"
+> > > > > +     depends on DEBUG_KMEMLEAK
+> > > > > +     default 4096
+> > > > > +
+> > > >
+> > > > Why do you make those configurable? I don't see anywhere you make use of
+> > > > them except DEBUG_KMEMLEAK_MSECS_MIN_AGE?
+> > > >
+> > >
+> > > That's correct. Strictly speaking, only DEBUG_KMEMLEAK_MSECS_MIN_AGE
+> > > is used to set a default when KUnit is configured.
+> > >
+> > > There is no concrete reason why these other variables need to be
+> > > configurable. At the time of writing this, it seemed to make the most
+> > > sense to configure the other configuration options, given that I was
+> > > already going to make MSECS_MIN_AGE configurable. It can definitely be
+> > > taken out.
+> > >
+> > > > Even then, how setting DEBUG_KMEMLEAK_MSECS_MIN_AGE=0 not giving too
+> > > > many false positives? Kmemleak simply does not work that instantly.
+> > > >
+> > >
+> > > I did not experience this issue, but I see your point.
+> > >
+> > > An alternative that I was thinking about -- and one that is not in
+> > > this patch -- is to wait DEBUG_KMEMLEAK_MSECS_MIN_AGE after each test
+> > > case in a test suite, while leaving kmemleak's default value as is. I
+> > > was hesitant to do this initially because many KUnit test cases run
+> > > quick, so this may result in a lot of time just waiting. But if we
+> > > leave it configurable, the user can change this as needed and deal
+> > > with the possible false positives.
+> >
+> > I doubt that is good idea. We don't really want people to start
+> > reporting those false positives to the MLs just because some kunit tests
+> > starts to flag them. It is wasting everyone's time. Reports from
+> > DEBUG_KMEMLEAK_MSECS_MIN_AGE=0 are simply trustful. I don't think there
+> > is a way around. Kmemleak was designed to have a lot of
+> > waitings/re-scans to be useful not even mentioning kfree_rcu() etc until
+> > it is redesigned...
+> 
+> I agree with your statement about false positives.
+> Is your suggestion to not make MSECS_MIN_AGE configurable and have
+> KUnit wait after each test case? Or are you saying that this will not
+> work entirely?
+> It seems like kmemleak should be able to work in some fashion under
+> KUnit, since it has specific documentation over testing parts of code
+> (https://www.kernel.org/doc/html/latest/dev-tools/kmemleak.html#testing-specific-sections-with-kmemleak).
 
-It doesn't matter *too* much, because patch 3/3 fixes up everything by
-changing it all to unpin_user_pages_dirty_lock(). However, there is somethi=
-ng
-to be said for having correct interim patches, too. :)  Details:
-
->>
->> [1] https://lore.kernel.org/xen-devel/a750e5e5-fd5d-663b-c5fd-261d7c939b=
-a7@nvidia.com/
->=20
-> I wasn't referring to checking PageDirty(), but to the use of
-> set_page_dirty_lock().
->=20
-> Looking at the comment just before the implementation of
-> set_page_dirty_lock() suggests that it is fine to use set_page_dirty()
-> instead (so not calling lock_page()).
-
-
-no no, that's a misreading of the comment. Unless this xen/privcmd code has
-somehow taken a reference on page->mapping->host (which I do *not* think is
-the case), then it is still racy to call set_page_dirty() here. Instead,
-set_page_dirty_lock() should be used.
-
-
->=20
-> Only the transition from get_user_pages_fast() to pin_user_pages_fast()
-> requires to use the locked version IMO.
->=20
-
-That's a different misunderstanding. :) pin_user_pages*() APIs are meant to=
- be
-functionally drop-in replacements for get_user_pages*(). Internally,
-pin_user_pages*() functions do some additional tracking, but from a caller'=
-s
-perspective, it should look the same. In other words, there is nothing
-about pin_user_pages_fast() that requires set_page_dirty_lock() upon releas=
-e.
-The reason set_page_dirty_lock() was chosen is that there are very few
-(none at all?) call sites that need to release and dirty a page, that also =
-meet
-the requirements to safely call set_page_dirty().
-
-That's why there is a unpin_user_pages_dirty_lock(), but there is not a
-corresponding unpin_user_pages_dirty() call: the latter has not been requir=
-ed
-so far, even though the call site conversions are nearly done.
-
-
-thanks,
---=20
-John Hubbard
-NVIDIA
+It is going to be tough. It is normal that sometimes when there is a
+leak. It needs to rescan a few times to make sure it is stable.
+Sometimes, even the real leaks will take quite a while to show up.
