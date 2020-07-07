@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE85C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF1320663
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E10D20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135670;
-	bh=uvUxeg5vGzn6yKdbuMh3DQpaC5PknltZCRUPvJQsp+4=;
+	s=default; t=1594135676;
+	bh=0y18ZHgiz26Tm4pcX6CTElfyBW51TPaISFDBGKZ4z9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J8WssqqlgYFQq2q5eGLm73b/LdZK7AFh4XJyJ4JSTB/Ry/OjRXkmAz1ExnZUpgdKR
-	 sxXPbhWrOOvAiWQYCH/Q81MpBpynkLfoYaGgDK5uP860IokyYhvN4QdGNPWF3+YLNq
-	 yYtwk3eV6SwwJIGhqApQM8QwG5T3G8wKTjv3fVe8=
+	b=q0FcEAmI7MEsdS+b8WMkPvRDDZFK5nw8y+Uvmzcyukf7stZwBVRYaIsU3vLLoYTcA
+	 /KuAuJ8gT+ENwstqEqRDnxgXysu2pLnO8P97fg8LgCAQAdRrkPm9e7xx5c26fMsdRU
+	 EtpRYVwdwtYrTFFQ2YXtUgmQYzmAbyCx2rbz0XAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbgGGP04 (ORCPT
+        id S1729639AbgGGP1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41106 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729721AbgGGP0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:26:48 -0400
+        id S1729613AbgGGP0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:26:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 601C120663;
-        Tue,  7 Jul 2020 15:26:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76A6D2078D;
+        Tue,  7 Jul 2020 15:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135607;
-        bh=uvUxeg5vGzn6yKdbuMh3DQpaC5PknltZCRUPvJQsp+4=;
+        s=default; t=1594135612;
+        bh=0y18ZHgiz26Tm4pcX6CTElfyBW51TPaISFDBGKZ4z9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+r3+yjlXFulr3SbyRyzKCTQny4QPkKAe2gKqv9y7FF0oIHuT4zMtN2Gp4iSfqKHM
-         zrsDe318RUdPS96srCerjLE2oAtC/CAtecEPc62L4PPfPd/5haJsADD1+Bbp/ktPDK
-         fcM6jJAuRQN+ukgis9iTj7AlcVh0gco+PyUlW5pA=
+        b=XDMOxePUAogxwVfTc51jg3b5Ry6zFbo3H0t2NjJqRemCFvDRDJLY3npRCWtntp1Cm
+         GVByeUGAE6xZYMxpGR4Yt80ahdtvLB9pDF8uq98XXEc+/K9+4yx0QR5yZybFTIgLcH
+         2dHKUGFiBzrqzsAFLo6LjhSmc2WlVhSW4NgeQVVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
-        Steve French <stfrench@microsoft.com>,
-        Aurelien Aptel <aaptel@suse.com>
-Subject: [PATCH 5.7 090/112] SMB3: Honor persistent/resilient handle flags for multiuser mounts
-Date:   Tue,  7 Jul 2020 17:17:35 +0200
-Message-Id: <20200707145805.260448796@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 109/112] mm/hugetlb.c: fix pages per hugetlb calculation
+Date:   Tue,  7 Jul 2020 17:17:54 +0200
+Message-Id: <20200707145806.156348388@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -60,36 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Aurich <paul@darkrain42.org>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-commit 00dfbc2f9c61185a2e662f27c45a0bb29b2a134f upstream.
+commit 1139d336fff425f9a20374945cdd28eb44d09fa8 upstream.
 
-Without this:
+The routine hpage_nr_pages() was incorrectly used to calculate the number
+of base pages in a hugetlb page.  hpage_nr_pages is designed to be called
+for THP pages and will return HPAGE_PMD_NR for hugetlb pages of any size.
 
-- persistent handles will only be enabled for per-user tcons if the
-  server advertises the 'Continuous Availabity' capability
-- resilient handles would never be enabled for per-user tcons
+Due to the context in which hpage_nr_pages was called, it is unlikely to
+produce a user visible error.  The routine with the incorrect call is only
+exercised in the case of hugetlb memory error or migration.  In addition,
+this would need to be on an architecture which supports huge page sizes
+less than PMD_SIZE.  And, the vma containing the huge page would also need
+to smaller than PMD_SIZE.
 
-Signed-off-by: Paul Aurich <paul@darkrain42.org>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Fixes: c0d0381ade79 ("hugetlbfs: use i_mmap_rwsem for more pmd sharing synchronization")
+Reported-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200629185003.97202-1-mike.kravetz@oracle.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/connect.c |    2 ++
- 1 file changed, 2 insertions(+)
+ mm/hugetlb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -5306,6 +5306,8 @@ cifs_construct_tcon(struct cifs_sb_info
- 	vol_info->nocase = master_tcon->nocase;
- 	vol_info->nohandlecache = master_tcon->nohandlecache;
- 	vol_info->local_lease = master_tcon->local_lease;
-+	vol_info->resilient = master_tcon->use_resilient;
-+	vol_info->persistent = master_tcon->use_persistent;
- 	vol_info->no_linux_ext = !master_tcon->unix_ext;
- 	vol_info->linux_ext = master_tcon->posix_extensions;
- 	vol_info->sectype = master_tcon->ses->sectype;
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1594,7 +1594,7 @@ static struct address_space *_get_hugetl
+ 
+ 	/* Use first found vma */
+ 	pgoff_start = page_to_pgoff(hpage);
+-	pgoff_end = pgoff_start + hpage_nr_pages(hpage) - 1;
++	pgoff_end = pgoff_start + pages_per_huge_page(page_hstate(hpage)) - 1;
+ 	anon_vma_interval_tree_foreach(avc, &anon_vma->rb_root,
+ 					pgoff_start, pgoff_end) {
+ 		struct vm_area_struct *vma = avc->vma;
 
 
