@@ -7,163 +7,172 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0348C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD04C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B0A2080D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B44AD2080D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qbZF9hTu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L3SIjbQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgGGPvR (ORCPT
+        id S1728765AbgGGPvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36944 "EHLO
+        Tue, 7 Jul 2020 11:51:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728029AbgGGPvP (ORCPT
+        with ESMTP id S1728029AbgGGPvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:51:15 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA378C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:51:15 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id o22so13640931pjw.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:51:15 -0700 (PDT)
+        Tue, 7 Jul 2020 11:51:42 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A07C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 08:51:42 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t25so45891264lji.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 08:51:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6nbLKEvdqqtu0DOxk+RX2NCeuVjz/d5/WDsGYxOKe+A=;
-        b=qbZF9hTub3E6dJOMlijRiMiRkHYkFQubSYFp6P+VnStOU35ksLbT5c2olfLiJpXsF3
-         p3AHOCADz7BlPRcb5xlVfsDuFkpaWzroZytIxmWQMa1Tq9gUpWVZPukI1yqE2KFTHiA3
-         9YlWvV6iIbDdJ+BZAyuKLx1RPuPn/LEcUmBvsAMcz6jJ5yyWtgLEw10Q8wnhLwp1ZVgF
-         o4GGnZfpFXNrCeoFTPW5BteobP+ETyf4GPs6Ui4f/hVYa1npYd2Jb7cBEU2OssXqWPH4
-         auU0losOJLOMYxa1RdqPXWKkY62FkFHARI3LfbFiT0CpoTlE2LZsZ8/SQVRU7EUqTPAC
-         0DtA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y/kOBwO7OLhAG5/zoDioEbhDbIra0ifUwtyOcu+taVE=;
+        b=L3SIjbQ2aGUMKNVOsgYJSH0RyGv1yqE3EspINaDxV4Qp8l0EecCKFOqwnxga/y+h8Y
+         2X0KH3FZOV8/IlyRauMigZhGEIdAaQWWZD+yMxaZDDJrf0UKEJCKQTztAwNoUxcOcoSr
+         8MLugsOwfz0qFWdozatId6q9p//k2M4rt6i+b82/4DZD+KliP8EFP5t2gEeqrOJX9hZL
+         5U+eSXspaw2k59P+sBud1CuBDW7zu5vUC6+vNCHxtZRxVveGPJaXdmkBhF1NZ9SqydwI
+         elgQJT7e7qGxHtzdpoLU8GvAZlD/n7SQevJljznZY23clvyeaem0Qz6xKoorVTHKsPlf
+         +xuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6nbLKEvdqqtu0DOxk+RX2NCeuVjz/d5/WDsGYxOKe+A=;
-        b=pTU772vzKlcr+tfBjvDoBgyceQc4r6FUV3ipVL2ZEGSNOyMoG8/wJ2exEwwLX/Y3X7
-         McsPrAvI8K6SrG17oLrEYRI30UbbQ/IkOAmZxpiskhuUHShFRpRmPjTku1Nd1O3uBsZS
-         URbCgzzzwthmPYvYz5ayaN5AuMrb3qup4gYLnEqCJpQDorObaInmWcdtzASL90sVr72p
-         wCtYfRBWHRxU82AQ15oMHczd+5BkOSfeKKTjB65iK48F7qGQNODs5B7cmXDL3QgGfLUS
-         sRti1/h27sXhlhnVbVmgF/om51kFyufqodOXv5U1eHdLFVJvwVTyXdoqHf6L6NKZ4FRd
-         mcMA==
-X-Gm-Message-State: AOAM532+5npoq85qvRzkP3kDElQR37jSpioGqCco2pnOT1syg7GJlMx+
-        nh4/z3lIVzwXIahqClPTZ584/g==
-X-Google-Smtp-Source: ABdhPJzoBjROrVaJtp6nujXRaXTatw7gwLtR2zb8jqFckSgpuUCpME8ySKJl8GGYK6iDFTRo3tsWzA==
-X-Received: by 2002:a17:90a:a106:: with SMTP id s6mr5003560pjp.53.1594137075030;
-        Tue, 07 Jul 2020 08:51:15 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id b10sm22289026pft.59.2020.07.07.08.51.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 08:51:14 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 08:51:07 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Jiong Wang <jiong.wang@netronome.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200707155107.GA3357035@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com>
- <20200629232059.GA3787278@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y/kOBwO7OLhAG5/zoDioEbhDbIra0ifUwtyOcu+taVE=;
+        b=gG9bs/g8mAFbtixU9fLq2NqHIcgRIJp3K0ON+7le6pcvC/Rw/a2cL52mJ/aqqJo+Qq
+         KTs3gszr7kH//Z4Yiz3e9Einx/8SnZeGco45fp2eEwY3tryX8IxwDo6IHDjqPSKnc5OW
+         e6HI8yiux9LbZjKTVNT4xo8qfkimZ65RPlFiZksJZbZxZlr06mKwmsJ458a8EpLopyxA
+         BZKxBjYxMZHw5/A9wo2+RIRc/QsBM3eZZKqhCNtK4lZa0FRB8HAbaZoBquRlmW7KGVLh
+         ct0L8LI5w5LNjtnZ9PmypwBHYdaOteG09KM50A2mMAk/CiF1o52RlDJjyAGaiP8pEEqq
+         sygg==
+X-Gm-Message-State: AOAM531+iA1fraUTcZNhhEhtke9BNVYaC+O1KSEbwOuMpjFpkPYv0fw+
+        pVCKRdaiJdL54DZaGI2mP95gKhEz9s2oIMS5p+o9xg==
+X-Google-Smtp-Source: ABdhPJyWaoNm3VNK+Rrjg/sAMM/2RSzMf89FEFqIRJwKBh4jHqzLzK0U/GjrgZx+sjtuR+WLH8QN9UOhGSB/bj4TUFY=
+X-Received: by 2002:a2e:8e36:: with SMTP id r22mr31066177ljk.77.1594137100635;
+ Tue, 07 Jul 2020 08:51:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629232059.GA3787278@google.com>
+References: <20200702152222.2630760-1-shakeelb@google.com> <20200703063548.GM18446@dhcp22.suse.cz>
+ <CALvZod5gthVX5m6o50OiYsXa=0_NpXK-tVvjTF42Oj4udr4Nuw@mail.gmail.com>
+ <20200703155021.GB114903@carbon.dhcp.thefacebook.com> <CALvZod5Z4=1CijJp0QRnx+pdH=Me6sYPXASCxVATnshU0RW-Qw@mail.gmail.com>
+ <20200706213404.GA152560@carbon.lan>
+In-Reply-To: <20200706213404.GA152560@carbon.lan>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 7 Jul 2020 08:51:29 -0700
+Message-ID: <CALvZod4PukYDdG2tQZvzW+5rNULYjHrJnJxk=a4t_-udiEdaOA@mail.gmail.com>
+Subject: Re: [RFC PROPOSAL] memcg: per-memcg user space reclaim interface
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 04:20:59PM -0700, Sami Tolvanen wrote:
-> Hi Masahiro,
-> 
-> On Mon, Jun 29, 2020 at 01:56:19AM +0900, Masahiro Yamada wrote:
-> > I also got an error for
-> > ARCH=arm64 allyesconfig + CONFIG_LTO_CLANG=y
-> > 
-> > 
-> > 
-> > $ make ARCH=arm64 LLVM=1 LLVM_IAS=1
-> > CROSS_COMPILE=~/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
-> > -j24
-> > 
-> >   ...
-> > 
-> >   GEN     .version
-> >   CHK     include/generated/compile.h
-> >   UPD     include/generated/compile.h
-> >   CC      init/version.o
-> >   AR      init/built-in.a
-> >   GEN     .tmp_initcalls.lds
-> >   GEN     .tmp_symversions.lds
-> >   LTO     vmlinux.o
-> >   MODPOST vmlinux.symvers
-> >   MODINFO modules.builtin.modinfo
-> >   GEN     modules.builtin
-> >   LD      .tmp_vmlinux.kallsyms1
-> > ld.lld: error: undefined symbol: __compiletime_assert_905
-> > >>> referenced by irqbypass.c
-> > >>>               vmlinux.o:(jeq_imm)
-> > make: *** [Makefile:1161: vmlinux] Error 1
-> 
-> I can reproduce this with ToT LLVM and it's BUILD_BUG_ON_MSG(..., "value
-> too large for the field") in drivers/net/ethernet/netronome/nfp/bpf/jit.c.
-> Specifically, the FIELD_FIT / __BF_FIELD_CHECK macro in ur_load_imm_any.
-> 
-> This compiles just fine with an earlier LLVM revision, so it could be a
-> relatively recent regression. I'll take a look. Thanks for catching this!
+On Mon, Jul 6, 2020 at 2:38 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Fri, Jul 03, 2020 at 09:27:19AM -0700, Shakeel Butt wrote:
+> > On Fri, Jul 3, 2020 at 8:50 AM Roman Gushchin <guro@fb.com> wrote:
+> > >
+> > > On Fri, Jul 03, 2020 at 07:23:14AM -0700, Shakeel Butt wrote:
+> > > > On Thu, Jul 2, 2020 at 11:35 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > >
+> > > > > On Thu 02-07-20 08:22:22, Shakeel Butt wrote:
+> > > > > [...]
+> > > > > > Interface options:
+> > > > > > ------------------
+> > > > > >
+> > > > > > 1) memcg interface e.g. 'echo 10M > memory.reclaim'
+> > > > > >
+> > > > > > + simple
+> > > > > > + can be extended to target specific type of memory (anon, file, kmem).
+> > > > > > - most probably restricted to cgroup v2.
+> > > > > >
+> > > > > > 2) fadvise(PAGEOUT) on cgroup_dir_fd
+> > > > > >
+> > > > > > + more general and applicable to other FSes (actually we are using
+> > > > > > something similar for tmpfs).
+> > > > > > + can be extended in future to just age the LRUs instead of reclaim or
+> > > > > > some new use cases.
+> > > > >
+> > > > > Could you explain why memory.high as an interface to trigger pro-active
+> > > > > memory reclaim is not sufficient. Also memory.low limit to protect
+> > > > > latency sensitve workloads?
+> > >
+> > > I initially liked the proposal, but after some thoughts I've realized
+> > > that I don't know a good use case where memory.high is less useful.
+> > > Shakeel, what's the typical use case you thinking of?
+> > > Who and how will use the new interface?
+> > >
+> > > >
+> > > > Yes, we can use memory.high to trigger [proactive] reclaim in a memcg
+> > > > but note that it can also introduce stalls in the application running
+> > > > in that memcg. Let's suppose the memory.current of a memcg is 100MiB
+> > > > and we want to reclaim 20MiB from it, we can set the memory.high to
+> > > > 80MiB but any allocation attempt from the application running in that
+> > > > memcg can get stalled/throttled. I want the functionality of the
+> > > > reclaim without potential stalls.
+> > >
+> > > But reclaiming some pagecache/swapping out anon pages can always
+> > > generate some stalls caused by pagefaults, no?
+> > >
+> >
+> > Thanks for looking into the proposal. Let me answer both of your
+> > questions together. I have added the two use-cases but let me explain
+> > the proactive reclaim a bit more as we actually use that in our
+> > production.
+> >
+> > We have defined tolerable refault rates for the applications based on
+> > their type (latency sensitive or not). Proactive reclaim is triggered
+> > in the application based on their current refault rates and usage. If
+> > the current refault rate exceeds the tolerable refault rate then
+> > stop/slowdown the proactive reclaim.
+> >
+> > For the second question, yes, each individual refault can induce the
+> > stall as well but we have more control on that stall as compared to
+> > stalls due to reclaim. For us almost all the reclaimable memory is
+> > anon and we use compression based swap, so, the cost of each refault
+> > is fixed and a couple of microseconds.
+> >
+> > I think the next question is what about the refaults from disk or
+> > source with highly variable cost. Usually the latency sensitive
+> > applications remove such uncertainty by mlocking the pages backed by
+> > such backends (e.g. mlocking the executable) or at least that is the
+> > case for us.
+>
+> Got it.
+>
+> It feels like you're suggesting something similar to memory.high with
+> something similar to a different gfp flags. In other words, the
+> difference is only which pages can be reclaimed and which not. I don't
+> have a definitive answer here, but I wonder if we can somehow
+> generalize the existing interface? E.g. if the problem is with artificially
+> induced delays, we can have a config option/sysctl/sysfs knob/something else
+> which would disable it. Otherwise we risk ending up with many different kinds
+> of soft memory limits.
+>
 
-After spending some time debugging this with Nick, it looks like the
-error is caused by a recent optimization change in LLVM, which together
-with the inlining of ur_load_imm_any into jeq_imm, changes a runtime
-check in FIELD_FIT that would always fail, to a compile-time check that
-breaks the build. In jeq_imm, we have:
+It is possible to achieve this functionality with memory.high with
+some config/sysctls e.t.c as you suggested but it can bloat and
+complicate the memory.high interface.
 
-    /* struct bpf_insn: _s32 imm */
-    u64 imm = insn->imm; /* sign extend */
-    ...
-    if (imm >> 32) { /* non-zero only if insn->imm is negative */
-    	/* inlined from ur_load_imm_any */
-	u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
-
-        /*
-	 * __imm has a value known at compile-time, which means
-	 * __builtin_constant_p(__imm) is true and we end up with
-	 * essentially this in __BF_FIELD_CHECK:
-	 */
-	if (__builtin_constant_p(__imm) && __imm <= 255)
-	      __compiletime_assert_N();
-
-The compile-time check comes from the following BUILD_BUG_ON_MSG:
-
-    #define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)		\
-    ...
-	BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?		\
-			 ~((_mask) >> __bf_shf(_mask)) & (_val) : 0, \
-			 _pfx "value too large for the field"); \
-
-While we could stop the compiler from performing this optimization by
-telling it to never inline ur_load_imm_any, we feel like a better fix
-might be to replace FIELD_FIT(UR_REG_IMM_MAX, imm) with a simple imm
-<= UR_REG_IMM_MAX check that won't trip a compile-time assertion even
-when the condition is known to fail.
-
-Jiong, Jakub, do you see any issues here?
-
-Sami
+I understand your concern with different kinds of soft memory limits
+but I see this as a simple interface (i.e. just trigger reclaim) that
+gives users the flexibility to define and (soft) enforce their own
+virtual limits on their jobs. More specifically this interface allows
+reclaiming from a job to keep the usage below some virtual limit which
+can correspond to some user defined metric. In my proactive reclaim
+example, the user defined metric is refault rates. Keep the usage of
+the job at a level where the refault rates are tolerable.
