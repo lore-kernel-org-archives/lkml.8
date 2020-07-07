@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EDDE204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93114204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135871;
-	bh=QAD5qRIIxo3zrtd5no+WXBb73ggzwksH2e1jCZsJYOw=;
+	s=default; t=1594135876;
+	bh=V3MNR6DlO42sbFJ3PN981lOuq0u8IKSRQY/oEhSv9XA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HcRnA6f6mJFdJfTGJeU28/rEve1yPFCxmLFbJG6OkPf3ST+r0aA0YIjGNuvcc638V
-	 J0Um11D/2sNFgg2f8iRN0HtjdIFquuqXhqagoQzW6ogo/0STA1dyhtDw+TL5lItImh
-	 zTB45i7UjwbCTSUR2Mhi+wbaSsbJ9/qRskPNEl/w=
+	b=cU9WnS9OV9bbRgpbja/UoR2vaEpTrfPRJa5J129OsAV6ILVtZTU87my7zTSEUz+Ji
+	 nldSBawvkHzggSkBQx5n16O73YcBO7U0Ovjv/Qcv1RZUV5lz5uki0B4P7s41bPVPRH
+	 QBU4L2rH5kklDzHBrhDLLYS3xg/b/Vbzv/c15dzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbgGGPbJ (ORCPT
+        id S1730077AbgGGPbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36892 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:31:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728758AbgGGPXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:23:40 -0400
+        id S1728553AbgGGPXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:23:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CFB20771;
-        Tue,  7 Jul 2020 15:23:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E2F420771;
+        Tue,  7 Jul 2020 15:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135419;
-        bh=QAD5qRIIxo3zrtd5no+WXBb73ggzwksH2e1jCZsJYOw=;
+        s=default; t=1594135399;
+        bh=V3MNR6DlO42sbFJ3PN981lOuq0u8IKSRQY/oEhSv9XA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ytVssuHwcBD/I05/CCoib+lldBCrY1sOSGKzMYwGPYu+lpJk137ZzRyvjHMt67qp4
-         BFf/NEM2SUsPM4tlYSuOtQamxlN9kJJB8e8P2sAi9FN31oWjL+uux7XXPThAhpHNbT
-         jbLayn+LRCSiizJdeuq7z51oCdpTfth7G5txReN4=
+        b=fa7kQnspRaz2pzzprK3fw5rc6+mBLWkbmhw+z+fjQaoJa/qsttSAMDXql6CyCyGTj
+         ZxL/pEf1X31UOkYZ4TCOLhW7lTbf4clSc2VZnNX7TxOirdtpM1WuvCRSm/UIdCX3rH
+         UnRkFklre/l7Nr/71qZFXwIHVdJYiHD7hFV4qgZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Sungjong Seo <sj1557.seo@samsung.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 034/112] nvme-multipath: set bdi capabilities once
-Date:   Tue,  7 Jul 2020 17:16:39 +0200
-Message-Id: <20200707145802.611687480@linuxfoundation.org>
+Subject: [PATCH 5.7 005/112] exfat: flush dirty metadata in fsync
+Date:   Tue,  7 Jul 2020 17:16:10 +0200
+Message-Id: <20200707145801.192252551@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
 References: <20200707145800.925304888@linuxfoundation.org>
@@ -61,68 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: Sungjong Seo <sj1557.seo@samsung.com>
 
-[ Upstream commit b2ce4d90690bd29ce5b554e203cd03682dd59697 ]
+[ Upstream commit 5267456e953fd8c5abd8e278b1cc6a9f9027ac0a ]
 
-The queues' backing device info capabilities don't change with each
-namespace revalidation. Set it only when each path's request_queue
-is initially added to a multipath queue.
+generic_file_fsync() exfat used could not guarantee the consistency of
+a file because it has flushed not dirty metadata but only dirty data pages
+for a file.
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Instead of that, use exfat_file_fsync() for files and directories so that
+it guarantees to commit both the metadata and data pages for a file.
+
+Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c      | 7 -------
- drivers/nvme/host/multipath.c | 8 ++++++++
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ fs/exfat/dir.c      |  2 +-
+ fs/exfat/exfat_fs.h |  1 +
+ fs/exfat/file.c     | 19 ++++++++++++++++++-
+ 3 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 7b4cbe2c69541..887139f8fa53b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1910,13 +1910,6 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
- 	if (ns->head->disk) {
- 		nvme_update_disk_info(ns->head->disk, ns, id);
- 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
--		if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
--			struct backing_dev_info *info =
--				ns->head->disk->queue->backing_dev_info;
--
--                        info->capabilities |= BDI_CAP_STABLE_WRITES;
--		}
--
- 		revalidate_disk(ns->head->disk);
- 	}
- #endif
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 17f172cf456ad..91a8b1ce5a3a2 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2017-2018 Christoph Hellwig.
-  */
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index 349ca0c282c2c..6db302d76d4c1 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -314,7 +314,7 @@ const struct file_operations exfat_dir_operations = {
+ 	.llseek		= generic_file_llseek,
+ 	.read		= generic_read_dir,
+ 	.iterate	= exfat_iterate,
+-	.fsync		= generic_file_fsync,
++	.fsync		= exfat_file_fsync,
+ };
  
-+#include <linux/backing-dev.h>
- #include <linux/moduleparam.h>
- #include <trace/events/block.h>
- #include "nvme.h"
-@@ -662,6 +663,13 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
- 		ns->ana_state = NVME_ANA_OPTIMIZED; 
- 		nvme_mpath_set_live(ns);
- 	}
-+
-+	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
-+		struct backing_dev_info *info =
-+					ns->head->disk->queue->backing_dev_info;
-+
-+		info->capabilities |= BDI_CAP_STABLE_WRITES;
-+	}
+ int exfat_alloc_new_dir(struct inode *inode, struct exfat_chain *clu)
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index d67fb8a6f770c..d865050fa6cd7 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -424,6 +424,7 @@ void exfat_truncate(struct inode *inode, loff_t size);
+ int exfat_setattr(struct dentry *dentry, struct iattr *attr);
+ int exfat_getattr(const struct path *path, struct kstat *stat,
+ 		unsigned int request_mask, unsigned int query_flags);
++int exfat_file_fsync(struct file *file, loff_t start, loff_t end, int datasync);
+ 
+ /* namei.c */
+ extern const struct dentry_operations exfat_dentry_ops;
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index 5b4ddff187312..b93aa9e6cb16c 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -6,6 +6,7 @@
+ #include <linux/slab.h>
+ #include <linux/cred.h>
+ #include <linux/buffer_head.h>
++#include <linux/blkdev.h>
+ 
+ #include "exfat_raw.h"
+ #include "exfat_fs.h"
+@@ -347,12 +348,28 @@ int exfat_setattr(struct dentry *dentry, struct iattr *attr)
+ 	return error;
  }
  
- void nvme_mpath_remove_disk(struct nvme_ns_head *head)
++int exfat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
++{
++	struct inode *inode = filp->f_mapping->host;
++	int err;
++
++	err = __generic_file_fsync(filp, start, end, datasync);
++	if (err)
++		return err;
++
++	err = sync_blockdev(inode->i_sb->s_bdev);
++	if (err)
++		return err;
++
++	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
++}
++
+ const struct file_operations exfat_file_operations = {
+ 	.llseek		= generic_file_llseek,
+ 	.read_iter	= generic_file_read_iter,
+ 	.write_iter	= generic_file_write_iter,
+ 	.mmap		= generic_file_mmap,
+-	.fsync		= generic_file_fsync,
++	.fsync		= exfat_file_fsync,
+ 	.splice_read	= generic_file_splice_read,
+ 	.splice_write	= iter_file_splice_write,
+ };
 -- 
 2.25.1
 
