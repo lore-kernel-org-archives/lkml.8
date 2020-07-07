@@ -2,224 +2,121 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12B4C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA31C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81C7A206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B631A206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:24:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blUs/jBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgGGAXs (ORCPT
+        id S1727869AbgGGAYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 20:23:48 -0400
-Received: from mga17.intel.com ([192.55.52.151]:60906 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgGGAXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 20:23:46 -0400
-IronPort-SDR: jAME3sbT+EsNp8Fm3A7xlAQ+GFxui8vNYucUhyZTiZkNDpLu3xMcX9QtSk1l1bzijme+amN4+d
- to5PQ0UdzWNQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="127606767"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="127606767"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 17:23:45 -0700
-IronPort-SDR: BDW8/34TOP6tt2FLP+jS0OG2l7KjsVblPEXnCw3279SZVukCArSSajQZm/gWHzrsXtMg1arG5c
- bNWRbyIeCwYw==
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="322512263"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 17:23:44 -0700
-Subject: [PATCH v7 2/2] x86/copy_mc: Introduce copy_mc_generic()
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     x86@kernel.org, stable@vger.kernel.org,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 06 Jul 2020 17:07:29 -0700
-Message-ID: <159408044893.2272533.10383893661682423843.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159408043801.2272533.17485467640602344900.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <159408043801.2272533.17485467640602344900.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Mon, 6 Jul 2020 20:24:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgGGAYQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 20:24:16 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA0AC061755;
+        Mon,  6 Jul 2020 17:24:15 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id s21so19359142ilk.5;
+        Mon, 06 Jul 2020 17:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=VfPSKiDlwbdW5XR5+Adboy9m9ASBVezCedgkiWC3Kf8=;
+        b=blUs/jBjoeaD4aId8u3vk9IMIS4CjuhjiKF4xh4vEl5E26L7Yz1WqR22Zf3se+FfP9
+         tAC422b1UVkZ7D9DtCZUQCoPAsVxckmUTF/acfVJ/Pz+W+pL9JJMprDzl8eXmDkYxeBT
+         BR5PaMbW1vUqDATej1l2A3F6QmfBcMK/wtX8oJ3Hy/aiQAzrts1fOG+WsD27KXJT9sBJ
+         TJSOi8dmLc2k4mQ2wI6lSU+iOjPOZsfMkRq0LWbGmV1LtYl2hvBeP3qZh//F7dan2vvy
+         cIG2RbwrXZwcx/iV9T3kGxel5Zxh3Xewvazu2JNiD28TCjgJW7UtO873XETBwJFNcfsF
+         omqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=VfPSKiDlwbdW5XR5+Adboy9m9ASBVezCedgkiWC3Kf8=;
+        b=TwO9VJeRKscy1SPOOWybJZfVFZ6oFDTKMUAlh9F1QK49mFC9ykloG7mD+nwxXn2d4i
+         5IWG0Lh4XcUULoollwrlrkoTchdRynstOwsgkmWhRkpmgZNqS1UOlTFlyD7UrOUaJFcW
+         uiRL8xU11LZf2oF6Xm8Gjz47Sar7lM7ZchiDPtjktDH1h+Zy/6hP083LP8QJps8/1N8I
+         89o/owTBGJMt5F4HQyWpvDi1TwSq6to3j5zPXYG8Eb4L3A6AW8iQMPhJrQlVhJl2R7BG
+         dXBj+5l2wcV8ukqjlVTJcp5cE5Yk+9gzblDU3Gu0a6zam4JoBJ2NfvK195Stcgkh29hx
+         BEOw==
+X-Gm-Message-State: AOAM532gk67p2ZcPN0qqHn69Tk1TMB3vdHZ0l9G0Dw0lh4ZovvBs5+Rl
+        O6gb3xhu2bB+mlKI6ZbuX6zQ9Az+wtk9PRcmEBY=
+X-Google-Smtp-Source: ABdhPJxMOvIOyqWFqev9TtTG0SM8LjjtHnjhtS9fnd4C/4GFAxmWXWhi5DR6lto4azrt/de/3U0/5mWtfkGaZMutRE8=
+X-Received: by 2002:a92:c78d:: with SMTP id c13mr33303733ilk.85.1594081455336;
+ Mon, 06 Jul 2020 17:24:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Mon, 6 Jul 2020 17:24:04 -0700
+Message-ID: <CAFXsbZoOoOkgkxXNbG5JTXHdJiSoxu2OiHKHh39m3GfYE2jGcg@mail.gmail.com>
+Subject: [PATCH net-next v2] net: sfp: Unique GPIO interrupt names
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original copy_mc_fragile() implementation had negative performance
-implications since it did not use the fast-string instruction sequence
-to perform copies. For this reason copy_mc_to_kernel() fell back to
-plain memcpy() to preserve performance on platform that did not indicate
-the capability to recover from machine check exceptions. However, that
-capability detection was not architectural and now that some platforms
-can recover from fast-string consumption of memory errors the memcpy()
-fallback now causes these more capable platforms to fail.
+Dynamically generate a unique GPIO interrupt name, based on the
+device name and the GPIO name.  For example:
 
-Introduce copy_mc_generic() as the fast default implementation of
-copy_mc_to_kernel() and finalize the transition of copy_mc_fragile() to
-be a platform quirk to indicate 'fragility'. With this in place
-copy_mc_to_kernel() is fast and recovery-ready by default regardless of
-hardware capability.
+103:          0   sx1503q  12 Edge      sff2-los
+104:          0   sx1503q  13 Edge      sff2-tx-fault
 
-Thanks to Vivek for identifying that copy_user_generic() is not suitable
-as the copy_mc_to_user() backend since the #MC handler explicitly checks
-ex_has_fault_handler().
+The sffX indicates the SFP the los and tx-fault are associated with.
 
-Cc: x86@kernel.org
-Cc: <stable@vger.kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reported-by: Erwin Tsaur <erwin.tsaur@intel.com>
-Tested-by: Erwin Tsaur <erwin.tsaur@intel.com>
-Fixes: 92b0729c34ca ("x86/mm, x86/mce: Add memcpy_mcsafe()")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+
+v2:
+- added net-next to PATCH part of subject line
+- switched to devm_kasprintf()
 ---
- arch/x86/include/asm/uaccess.h |    3 +++
- arch/x86/lib/copy_mc.c         |   12 +++++-------
- arch/x86/lib/copy_mc_64.S      |   40 ++++++++++++++++++++++++++++++++++++++++
- tools/objtool/check.c          |    1 +
- 4 files changed, 49 insertions(+), 7 deletions(-)
+ drivers/net/phy/sfp.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 4b2082b61e3e..b038eda58958 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -464,6 +464,9 @@ copy_mc_to_user(void *to, const void *from, unsigned len);
- 
- unsigned long __must_check
- copy_mc_fragile(void *dst, const void *src, unsigned cnt);
-+
-+unsigned long __must_check
-+copy_mc_generic(void *dst, const void *src, unsigned cnt);
- #else
- static inline void enable_copy_mc_fragile(void)
- {
-diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
-index cdb8f5dc403d..9e6fac1ab72e 100644
---- a/arch/x86/lib/copy_mc.c
-+++ b/arch/x86/lib/copy_mc.c
-@@ -23,7 +23,7 @@ void enable_copy_mc_fragile(void)
-  *
-  * Call into the 'fragile' version on systems that have trouble
-  * actually do machine check recovery. Everyone else can just
-- * use memcpy().
-+ * use copy_mc_generic().
-  *
-  * Return 0 for success, or number of bytes not copied if there was an
-  * exception.
-@@ -33,8 +33,7 @@ copy_mc_to_kernel(void *dst, const void *src, unsigned cnt)
- {
- 	if (static_branch_unlikely(&copy_mc_fragile_key))
- 		return copy_mc_fragile(dst, src, cnt);
--	memcpy(dst, src, cnt);
--	return 0;
-+	return copy_mc_generic(dst, src, cnt);
- }
- EXPORT_SYMBOL_GPL(copy_mc_to_kernel);
- 
-@@ -56,11 +55,10 @@ copy_mc_to_user(void *to, const void *from, unsigned len)
- {
- 	unsigned long ret;
- 
--	if (!static_branch_unlikely(&copy_mc_fragile_key))
--		return copy_user_generic(to, from, len);
--
- 	__uaccess_begin();
--	ret = copy_mc_fragile(to, from, len);
-+	if (static_branch_unlikely(&copy_mc_fragile_key))
-+		ret = copy_mc_fragile(to, from, len);
-+	ret = copy_mc_generic(to, from, len);
- 	__uaccess_end();
- 	return ret;
- }
-diff --git a/arch/x86/lib/copy_mc_64.S b/arch/x86/lib/copy_mc_64.S
-index 35a67c50890b..a08e7a4d9e28 100644
---- a/arch/x86/lib/copy_mc_64.S
-+++ b/arch/x86/lib/copy_mc_64.S
-@@ -2,7 +2,9 @@
- /* Copyright(c) 2016-2020 Intel Corporation. All rights reserved. */
- 
- #include <linux/linkage.h>
-+#include <asm/alternative-asm.h>
- #include <asm/copy_mc_test.h>
-+#include <asm/cpufeatures.h>
- #include <asm/export.h>
- #include <asm/asm.h>
- 
-@@ -122,4 +124,42 @@ EXPORT_SYMBOL_GPL(copy_mc_fragile)
- 	_ASM_EXTABLE(.L_write_leading_bytes, .E_leading_bytes)
- 	_ASM_EXTABLE(.L_write_words, .E_write_words)
- 	_ASM_EXTABLE(.L_write_trailing_bytes, .E_trailing_bytes)
-+
-+/*
-+ * copy_mc_generic - memory copy with exception handling
-+ *
-+ * Fast string copy + fault / exception handling. If the CPU does
-+ * support machine check exception recovery, but does not support
-+ * recovering from fast-string exceptions then this CPU needs to be
-+ * added to the copy_mc_fragile_key set of quirks. Otherwise, absent any
-+ * machine check recovery support this version should be no slower than
-+ * standard memcpy.
-+ */
-+SYM_FUNC_START(copy_mc_generic)
-+	ALTERNATIVE "jmp copy_mc_fragile", "", X86_FEATURE_ERMS
-+	movq %rdi, %rax
-+	movq %rdx, %rcx
-+.L_copy:
-+	rep movsb
-+	/* Copy successful. Return zero */
-+	xorl %eax, %eax
-+	ret
-+SYM_FUNC_END(copy_mc_generic)
-+EXPORT_SYMBOL_GPL(copy_mc_generic)
-+
-+	.section .fixup, "ax"
-+.E_copy:
-+	/*
-+	 * On fault %rcx is updated such that the copy instruction could
-+	 * optionally be restarted at the fault position, i.e. it
-+	 * contains 'bytes remaining'. A non-zero return indicates error
-+	 * to copy_mc_generic() users, or indicate short transfers to
-+	 * user-copy routines.
-+	 */
-+	movq %rcx, %rax
-+	ret
-+
-+	.previous
-+
-+	_ASM_EXTABLE_FAULT(.L_copy, .E_copy)
- #endif
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 17cb0933bf42..d2e1f01df10b 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -548,6 +548,7 @@ static const char *uaccess_safe_builtin[] = {
- 	"__ubsan_handle_shift_out_of_bounds",
- 	/* misc */
- 	"csum_partial_copy_generic",
-+	"copy_mc_generic",
- 	"copy_mc_fragile",
- 	"copy_mc_fragile_handle_tail",
- 	"ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
+diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+index 73c2969f11a4..193a124c26c4 100644
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -2239,6 +2239,7 @@ static int sfp_probe(struct platform_device *pdev)
+     const struct sff_data *sff;
+     struct i2c_adapter *i2c;
+     struct sfp *sfp;
++    char *sfp_irq_name;
+     int err, i;
 
+     sfp = sfp_alloc(&pdev->dev);
+@@ -2349,12 +2350,16 @@ static int sfp_probe(struct platform_device *pdev)
+             continue;
+         }
+
++        sfp_irq_name = devm_kasprintf(sfp->dev, GFP_KERNEL,
++                          "%s-%s", dev_name(sfp->dev),
++                          gpio_of_names[i]);
++
+         err = devm_request_threaded_irq(sfp->dev, sfp->gpio_irq[i],
+                         NULL, sfp_irq,
+                         IRQF_ONESHOT |
+                         IRQF_TRIGGER_RISING |
+                         IRQF_TRIGGER_FALLING,
+-                        dev_name(sfp->dev), sfp);
++                        sfp_irq_name, sfp);
+         if (err) {
+             sfp->gpio_irq[i] = 0;
+             sfp->need_poll = true;
+-- 
+2.21.3
