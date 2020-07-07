@@ -2,128 +2,107 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EB2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C2D206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594124067;
-	bh=HKw0Koe6asxAgHCPqsTFwk0HGEWW3757f3wOC/sLtns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H4H0mJFMkRYXH3jhHMf2iFrQ3VZWAFF2OlRipSc5hhWQC2/LHps1hHvmPAQepY+1r
-	 nxBe6urnCFGKdmtodjjSATT27/iyqAHxeCZ8giTuGLXwiQtB9q0+z1kmqsrRZyzcZS
-	 q2nq4PREFG0ZgOBA2PNJ/IXfwW/Un3/W2CmYdDtI=
+	by mail.kernel.org (Postfix) with ESMTP id 55AD220739
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 12:16:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="cMhTetJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgGGMO1 (ORCPT
+        id S1727987AbgGGMQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:14:27 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:33617 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbgGGMO0 (ORCPT
+        Tue, 7 Jul 2020 08:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgGGMQI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 08:14:26 -0400
-Received: by mail-wr1-f54.google.com with SMTP id f18so36831030wrs.0;
-        Tue, 07 Jul 2020 05:14:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=F9LJxovcUSPNZdF3NUzfceGi+J9EyhfzFFKBXy2kNNI=;
-        b=Zv5Oza6aL4nJoxFui8QmkdCuufLbCRP8Mf6zpMX2wFaCmzA/7kjOX1XEUWtI53ew9+
-         z8eTcr2ifhDJAd9/6fQenM4CnpALbVV8moIpE4ChhZ1sJ7DaX3UdoHSECEe6n/Uxa6Ui
-         9vTU5lTI7aICB8VJZmerR0eZbb2AwCUitfTYmZl6O+N8C7IzM9RAoHBBPBGN8NAG6cA4
-         HRJL78oNaY8VOohwh0cdQfSJfFxdCcnnXUAQK7WaW+jp9zSfSH3fpzIvi3V9GxVSpq6x
-         R21DiYISLChyOxnxaOjyl4pO29e5cWAcXG2higBFOWzsV4nRO9d5m2uZeHFUtzay5+Pz
-         ESaw==
-X-Gm-Message-State: AOAM530WckB0dA3GvL9c5RyJ9dreWWLhoLFhIFy++E2lmmybHMJtRXB9
-        uXOk+LbDIq6tZsKvZfN6lMA=
-X-Google-Smtp-Source: ABdhPJx2p62DkvqQJFVgHhS+KncXimRczZEYgd7zQKP9q+v9KXZDitL6TpQ6lQ1nPjic1zaspwIsfA==
-X-Received: by 2002:adf:f504:: with SMTP id q4mr52656042wro.163.1594124064098;
-        Tue, 07 Jul 2020 05:14:24 -0700 (PDT)
-Received: from localhost (ip-37-188-179-51.eurotel.cz. [37.188.179.51])
-        by smtp.gmail.com with ESMTPSA id z16sm749165wrr.35.2020.07.07.05.14.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 05:14:23 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 14:14:22 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Rientjes <rientjes@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>
-Subject: Re: [RFC PROPOSAL] memcg: per-memcg user space reclaim interface
-Message-ID: <20200707121422.GP5913@dhcp22.suse.cz>
-References: <20200702152222.2630760-1-shakeelb@google.com>
- <20200703063548.GM18446@dhcp22.suse.cz>
- <CALvZod5gthVX5m6o50OiYsXa=0_NpXK-tVvjTF42Oj4udr4Nuw@mail.gmail.com>
+        Tue, 7 Jul 2020 08:16:08 -0400
+X-Greylist: delayed 654 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Jul 2020 05:16:08 PDT
+Received: from canardo.mork.no (canardo.mork.no [IPv6:2001:4641::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A3DC061755;
+        Tue,  7 Jul 2020 05:16:07 -0700 (PDT)
+Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id 067C4xPH027462
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 7 Jul 2020 14:05:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1594123500; bh=LpYHzL1Fv+6r+q+/DerBNxWDzKGX9YKvtsmvkogOo+I=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=cMhTetJjnHHTM68v7z/MTjWLOy0iXztNxRx3x3KxRBHdOZRjbDqRmhXwtOyt1gUHq
+         yK4NbRM0DpgXhLGO6+4Jr2LpFABkr90sXKNq7GSKbMxocqGNdt5TM+Jv3dRpgpt5Pu
+         umdNqQCbLEb8vMeh3qls1TyQF0GMv9p+8qrIjf2g=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.94)
+        (envelope-from <bjorn@mork.no>)
+        id 1jsmLK-000PCr-JH; Tue, 07 Jul 2020 14:04:58 +0200
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     AceLan Kao <acelan.kao@canonical.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: usb: qmi_wwan: add support for Quectel EG95 LTE modem
+Organization: m
+References: <20200707081445.1064346-1-acelan.kao@canonical.com>
+Date:   Tue, 07 Jul 2020 14:04:58 +0200
+In-Reply-To: <20200707081445.1064346-1-acelan.kao@canonical.com> (AceLan Kao's
+        message of "Tue, 7 Jul 2020 16:14:45 +0800")
+Message-ID: <873663cyz9.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod5gthVX5m6o50OiYsXa=0_NpXK-tVvjTF42Oj4udr4Nuw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.2 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 03-07-20 07:23:14, Shakeel Butt wrote:
-> On Thu, Jul 2, 2020 at 11:35 PM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Thu 02-07-20 08:22:22, Shakeel Butt wrote:
-> > [...]
-> > > Interface options:
-> > > ------------------
-> > >
-> > > 1) memcg interface e.g. 'echo 10M > memory.reclaim'
-> > >
-> > > + simple
-> > > + can be extended to target specific type of memory (anon, file, kmem).
-> > > - most probably restricted to cgroup v2.
-> > >
-> > > 2) fadvise(PAGEOUT) on cgroup_dir_fd
-> > >
-> > > + more general and applicable to other FSes (actually we are using
-> > > something similar for tmpfs).
-> > > + can be extended in future to just age the LRUs instead of reclaim or
-> > > some new use cases.
-> >
-> > Could you explain why memory.high as an interface to trigger pro-active
-> > memory reclaim is not sufficient. Also memory.low limit to protect
-> > latency sensitve workloads?
-> 
-> Yes, we can use memory.high to trigger [proactive] reclaim in a memcg
-> but note that it can also introduce stalls in the application running
-> in that memcg. Let's suppose the memory.current of a memcg is 100MiB
-> and we want to reclaim 20MiB from it, we can set the memory.high to
-> 80MiB but any allocation attempt from the application running in that
-> memcg can get stalled/throttled. I want the functionality of the
-> reclaim without potential stalls.
+AceLan Kao <acelan.kao@canonical.com> writes:
 
-It would be great if the proposal mention this limitation.
+> Add support for Quectel Wireless Solutions Co., Ltd. EG95 LTE modem
+>
+> T:  Bus=3D01 Lev=3D01 Prnt=3D01 Port=3D02 Cnt=3D02 Dev#=3D  5 Spd=3D480 M=
+xCh=3D 0
+> D:  Ver=3D 2.00 Cls=3Def(misc ) Sub=3D02 Prot=3D01 MxPS=3D64 #Cfgs=3D  1
+> P:  Vendor=3D2c7c ProdID=3D0195 Rev=3D03.18
+> S:  Manufacturer=3DAndroid
+> S:  Product=3DAndroid
+> C:  #Ifs=3D 5 Cfg#=3D 1 Atr=3Da0 MxPwr=3D500mA
+> I:  If#=3D0x0 Alt=3D 0 #EPs=3D 2 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Drive=
+r=3D(none)
+> I:  If#=3D0x1 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3D00 Prot=3D00 Drive=
+r=3D(none)
+> I:  If#=3D0x2 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3D00 Prot=3D00 Drive=
+r=3D(none)
+> I:  If#=3D0x3 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3D00 Prot=3D00 Drive=
+r=3D(none)
+> I:  If#=3D0x4 Alt=3D 0 #EPs=3D 3 Cls=3Dff(vend.) Sub=3Dff Prot=3Dff Drive=
+r=3D(none)
+>
+> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+> ---
+>  drivers/net/usb/qmi_wwan.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+> index 31b1d4b959f6..07c42c0719f5 100644
+> --- a/drivers/net/usb/qmi_wwan.c
+> +++ b/drivers/net/usb/qmi_wwan.c
+> @@ -1370,6 +1370,7 @@ static const struct usb_device_id products[] =3D {
+>  	{QMI_QUIRK_SET_DTR(0x1e0e, 0x9001, 5)},	/* SIMCom 7100E, 7230E, 7600E +=
++ */
+>  	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0121, 4)},	/* Quectel EC21 Mini PCIe */
+>  	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
+> +	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0195, 4)},	/* Quectel EG95 */
+>  	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
+>  	{QMI_QUIRK_SET_DTR(0x2cb7, 0x0104, 4)},	/* Fibocom NL678 series */
+>  	{QMI_FIXED_INTF(0x0489, 0xe0b4, 0)},	/* Foxconn T77W968 LTE */
 
-> The memory.min is for protection against the global reclaim and is
-> unrelated to this discussion.
-
-Well, I was talkingg about memory.low. It is not meant only to protect
-from the global reclaim. It can be used for balancing memory reclaim
-from _any_ external memory pressure source. So it is somehow related to
-the usecase you have mentioned.
-
-What you consider a latency sensitive workload could be protected from
-directly induced reclaim latencies. You could use low events to learn
-about the external memory pressure and update your protection to allow
-for some reclaim. I do understand that this wouldn't solve your problem
-who gets reclaimed and maybe that is the crux on why it is not
-applicable but that should really be mentioned explicitly.
-
--- 
-Michal Hocko
-SUSE Labs
+Acked-by: Bj=C3=B8rn Mork <bjorn@mork.no>
