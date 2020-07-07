@@ -2,52 +2,52 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B8620771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DE82078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135104;
-	bh=XQoYnUCgaMP3oCo8b8n7Dk3WF46jXhEGX70p3V1QGRo=;
+	s=default; t=1594135107;
+	bh=fsPcpWPv1KcnmZ0A+1YF0BjIsP1tJkTQMO0LpTHcD3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dmk7uc8f7dAytVQvEwvv53FKLu7UvhbDEMf5df89x9CrseqqdvI7FeYiqI5I4zm29
-	 bGyyvNXep+Js13B97Hcccw1RwXIEcJSXyGSGiWyDJNMWNmhbxfePrlZnBr14GmuV8q
-	 jnRMlj9l0LIJCZpxF9GDCYCe54YPLt6QY0uoIfOM=
+	b=0DhKw2xc8XActCt2WGMQuqgmO70San1fU5ieT9EE0eJf7mRYsfGzjOJi74CLVBlRu
+	 SczCnq50gTrfhIEwKRhPDvYo6xoGuo3veD/ZUYJgTmfXnHFx+Zm6vj+x3wGkCwQEcx
+	 0YtIw5nt981JNWrjV9b8QcgVf/RiYwm6mr6qzKqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgGGPSX (ORCPT
+        id S1728827AbgGGPS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:18:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57600 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:18:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbgGGPSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:18:21 -0400
+        id S1728414AbgGGPSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:18:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F822065D;
-        Tue,  7 Jul 2020 15:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7548520738;
+        Tue,  7 Jul 2020 15:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135100;
-        bh=XQoYnUCgaMP3oCo8b8n7Dk3WF46jXhEGX70p3V1QGRo=;
+        s=default; t=1594135105;
+        bh=fsPcpWPv1KcnmZ0A+1YF0BjIsP1tJkTQMO0LpTHcD3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nNh8z/a7Q2bLuIBcTgUVIe6rRotleDccfUJYp2R3Ycu9PB3aZwZSDksxLndqsArrw
-         7uPY3sFx54EWl+VdB/tjxbVwYbFAtU8D+RNN+wWwx0oXp6PotahvF57sJbs0GkC3vF
-         cOjfnWvuntQX0b7q0BkhlMkfNj+RzsnuEclK8xN8=
+        b=1ro+EgVAnj8motEjlN09kctN4JNcgmpXoJY7N971J76cXUYO3wySXQXjK8dWqXj0w
+         cidiwUNgwDn35s3hNNaccliDTG6j6/qPgaPbUJMevsplRX18MDfAgGkS7hu0+layzt
+         CxYKUNNmB+NFXyil8umb90hJlFZezYKVEsZmRDKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 11/36] nvme-multipath: fix deadlock between ana_work and scan_work
-Date:   Tue,  7 Jul 2020 17:17:03 +0200
-Message-Id: <20200707145749.677702241@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Moyles <bmoyles@netflix.com>,
+        Mauricio Faria de Oliveira <mfo@canonical.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 13/36] crypto: af_alg - fix use-after-free in af_alg_accept() due to bh_lock_sock()
+Date:   Tue,  7 Jul 2020 17:17:05 +0200
+Message-Id: <20200707145749.760045378@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
 References: <20200707145749.130272978@linuxfoundation.org>
@@ -60,134 +60,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 489dd102a2c7c94d783a35f9412eb085b8da1aa4 ]
+commit 34c86f4c4a7be3b3e35aa48bd18299d4c756064d upstream.
 
-When scan_work calls nvme_mpath_add_disk() this holds ana_lock
-and invokes nvme_parse_ana_log(), which may issue IO
-in device_add_disk() and hang waiting for an accessible path.
-While nvme_mpath_set_live() only called when nvme_state_is_live(),
-a transition may cause NVME_SC_ANA_TRANSITION and requeue the IO.
+The locking in af_alg_release_parent is broken as the BH socket
+lock can only be taken if there is a code-path to handle the case
+where the lock is owned by process-context.  Instead of adding
+such handling, we can fix this by changing the ref counts to
+atomic_t.
 
-In order to recover and complete the IO ana_work on the same ctrl
-should be able to update the path state and remove NVME_NS_ANA_PENDING.
+This patch also modifies the main refcnt to include both normal
+and nokey sockets.  This way we don't have to fudge the nokey
+ref count when a socket changes from nokey to normal.
 
-The deadlock occurs because scan_work keeps holding ana_lock,
-so ana_work hangs [1].
+Credits go to Mauricio Faria de Oliveira who diagnosed this bug
+and sent a patch for it:
 
-Fix:
-Now nvme_mpath_add_disk() uses nvme_parse_ana_log() to obtain a copy
-of the ANA group desc, and then calls nvme_update_ns_ana_state() without
-holding ana_lock.
+https://lore.kernel.org/linux-crypto/20200605161657.535043-1-mfo@canonical.com/
 
-[1]:
-kernel: Workqueue: nvme-wq nvme_scan_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  io_schedule+0x16/0x40
-kernel:  do_read_cache_page+0x438/0x830
-kernel:  read_cache_page+0x12/0x20
-kernel:  read_dev_sector+0x27/0xc0
-kernel:  read_lba+0xc1/0x220
-kernel:  efi_partition+0x1e6/0x708
-kernel:  check_partition+0x154/0x244
-kernel:  rescan_partitions+0xae/0x280
-kernel:  __blkdev_get+0x40f/0x560
-kernel:  blkdev_get+0x3d/0x140
-kernel:  __device_add_disk+0x388/0x480
-kernel:  device_add_disk+0x13/0x20
-kernel:  nvme_mpath_set_live+0x119/0x140 [nvme_core]
-kernel:  nvme_update_ns_ana_state+0x5c/0x60 [nvme_core]
-kernel:  nvme_set_ns_ana_state+0x1e/0x30 [nvme_core]
-kernel:  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
-kernel:  nvme_mpath_add_disk+0x47/0x90 [nvme_core]
-kernel:  nvme_validate_ns+0x396/0x940 [nvme_core]
-kernel:  nvme_scan_work+0x24f/0x380 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x249/0x400
-kernel:  kthread+0x104/0x140
+Reported-by: Brian Moyles <bmoyles@netflix.com>
+Reported-by: Mauricio Faria de Oliveira <mfo@canonical.com>
+Fixes: 37f96694cf73 ("crypto: af_alg - Use bh_lock_sock in...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-kernel: Workqueue: nvme-wq nvme_ana_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  schedule_preempt_disabled+0xe/0x10
-kernel:  __mutex_lock.isra.0+0x182/0x4f0
-kernel:  ? __switch_to_asm+0x34/0x70
-kernel:  ? select_task_rq_fair+0x1aa/0x5c0
-kernel:  ? kvm_sched_clock_read+0x11/0x20
-kernel:  ? sched_clock+0x9/0x10
-kernel:  __mutex_lock_slowpath+0x13/0x20
-kernel:  mutex_lock+0x2e/0x40
-kernel:  nvme_read_ana_log+0x3a/0x100 [nvme_core]
-kernel:  nvme_ana_work+0x15/0x20 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x4d/0x400
-kernel:  kthread+0x104/0x140
-kernel:  ? process_one_work+0x380/0x380
-kernel:  ? kthread_park+0x80/0x80
-kernel:  ret_from_fork+0x35/0x40
-
-Fixes: 0d0b660f214d ("nvme: add ANA support")
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ crypto/af_alg.c         |   26 +++++++++++---------------
+ crypto/algif_aead.c     |    9 +++------
+ crypto/algif_hash.c     |    9 +++------
+ crypto/algif_skcipher.c |    9 +++------
+ include/crypto/if_alg.h |    4 ++--
+ 5 files changed, 22 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 6f584a9515f42..3ad6183c5e6b4 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -496,26 +496,34 @@ static ssize_t ana_state_show(struct device *dev, struct device_attribute *attr,
- }
- DEVICE_ATTR_RO(ana_state);
- 
--static int nvme_set_ns_ana_state(struct nvme_ctrl *ctrl,
-+static int nvme_lookup_ana_group_desc(struct nvme_ctrl *ctrl,
- 		struct nvme_ana_group_desc *desc, void *data)
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -133,21 +133,15 @@ EXPORT_SYMBOL_GPL(af_alg_release);
+ void af_alg_release_parent(struct sock *sk)
  {
--	struct nvme_ns *ns = data;
-+	struct nvme_ana_group_desc *dst = data;
+ 	struct alg_sock *ask = alg_sk(sk);
+-	unsigned int nokey = ask->nokey_refcnt;
+-	bool last = nokey && !ask->refcnt;
++	unsigned int nokey = atomic_read(&ask->nokey_refcnt);
  
--	if (ns->ana_grpid == le32_to_cpu(desc->grpid)) {
--		nvme_update_ns_ana_state(desc, ns);
--		return -ENXIO; /* just break out of the loop */
--	}
-+	if (desc->grpid != dst->grpid)
-+		return 0;
+ 	sk = ask->parent;
+ 	ask = alg_sk(sk);
  
--	return 0;
-+	*dst = *desc;
-+	return -ENXIO; /* just break out of the loop */
+-	local_bh_disable();
+-	bh_lock_sock(sk);
+-	ask->nokey_refcnt -= nokey;
+-	if (!last)
+-		last = !--ask->refcnt;
+-	bh_unlock_sock(sk);
+-	local_bh_enable();
++	if (nokey)
++		atomic_dec(&ask->nokey_refcnt);
+ 
+-	if (last)
++	if (atomic_dec_and_test(&ask->refcnt))
+ 		sock_put(sk);
  }
+ EXPORT_SYMBOL_GPL(af_alg_release_parent);
+@@ -192,7 +186,7 @@ static int alg_bind(struct socket *sock,
  
- void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
- {
- 	if (nvme_ctrl_use_ana(ns->ctrl)) {
-+		struct nvme_ana_group_desc desc = {
-+			.grpid = id->anagrpid,
-+			.state = 0,
-+		};
-+
- 		mutex_lock(&ns->ctrl->ana_lock);
- 		ns->ana_grpid = le32_to_cpu(id->anagrpid);
--		nvme_parse_ana_log(ns->ctrl, ns, nvme_set_ns_ana_state);
-+		nvme_parse_ana_log(ns->ctrl, &desc, nvme_lookup_ana_group_desc);
- 		mutex_unlock(&ns->ctrl->ana_lock);
-+		if (desc.state) {
-+			/* found the group desc: update */
-+			nvme_update_ns_ana_state(&desc, ns);
-+		}
- 	} else {
- 		mutex_lock(&ns->head->lock);
- 		ns->ana_state = NVME_ANA_OPTIMIZED; 
--- 
-2.25.1
-
+ 	err = -EBUSY;
+ 	lock_sock(sk);
+-	if (ask->refcnt | ask->nokey_refcnt)
++	if (atomic_read(&ask->refcnt))
+ 		goto unlock;
+ 
+ 	swap(ask->type, type);
+@@ -241,7 +235,7 @@ static int alg_setsockopt(struct socket
+ 	int err = -EBUSY;
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (atomic_read(&ask->refcnt) != atomic_read(&ask->nokey_refcnt))
+ 		goto unlock;
+ 
+ 	type = ask->type;
+@@ -308,12 +302,14 @@ int af_alg_accept(struct sock *sk, struc
+ 
+ 	sk2->sk_family = PF_ALG;
+ 
+-	if (nokey || !ask->refcnt++)
++	if (atomic_inc_return_relaxed(&ask->refcnt) == 1)
+ 		sock_hold(sk);
+-	ask->nokey_refcnt += nokey;
++	if (nokey) {
++		atomic_inc(&ask->nokey_refcnt);
++		atomic_set(&alg_sk(sk2)->nokey_refcnt, 1);
++	}
+ 	alg_sk(sk2)->parent = sk;
+ 	alg_sk(sk2)->type = type;
+-	alg_sk(sk2)->nokey_refcnt = nokey;
+ 
+ 	newsock->ops = type->ops;
+ 	newsock->state = SS_CONNECTED;
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -388,7 +388,7 @@ static int aead_check_key(struct socket
+ 	struct alg_sock *ask = alg_sk(sk);
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (!atomic_read(&ask->nokey_refcnt))
+ 		goto unlock_child;
+ 
+ 	psk = ask->parent;
+@@ -400,11 +400,8 @@ static int aead_check_key(struct socket
+ 	if (crypto_aead_get_flags(tfm->aead) & CRYPTO_TFM_NEED_KEY)
+ 		goto unlock;
+ 
+-	if (!pask->refcnt++)
+-		sock_hold(psk);
+-
+-	ask->refcnt = 1;
+-	sock_put(psk);
++	atomic_dec(&pask->nokey_refcnt);
++	atomic_set(&ask->nokey_refcnt, 0);
+ 
+ 	err = 0;
+ 
+--- a/crypto/algif_hash.c
++++ b/crypto/algif_hash.c
+@@ -306,7 +306,7 @@ static int hash_check_key(struct socket
+ 	struct alg_sock *ask = alg_sk(sk);
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (!atomic_read(&ask->nokey_refcnt))
+ 		goto unlock_child;
+ 
+ 	psk = ask->parent;
+@@ -318,11 +318,8 @@ static int hash_check_key(struct socket
+ 	if (crypto_ahash_get_flags(tfm) & CRYPTO_TFM_NEED_KEY)
+ 		goto unlock;
+ 
+-	if (!pask->refcnt++)
+-		sock_hold(psk);
+-
+-	ask->refcnt = 1;
+-	sock_put(psk);
++	atomic_dec(&pask->nokey_refcnt);
++	atomic_set(&ask->nokey_refcnt, 0);
+ 
+ 	err = 0;
+ 
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -215,7 +215,7 @@ static int skcipher_check_key(struct soc
+ 	struct alg_sock *ask = alg_sk(sk);
+ 
+ 	lock_sock(sk);
+-	if (ask->refcnt)
++	if (!atomic_read(&ask->nokey_refcnt))
+ 		goto unlock_child;
+ 
+ 	psk = ask->parent;
+@@ -227,11 +227,8 @@ static int skcipher_check_key(struct soc
+ 	if (crypto_skcipher_get_flags(tfm) & CRYPTO_TFM_NEED_KEY)
+ 		goto unlock;
+ 
+-	if (!pask->refcnt++)
+-		sock_hold(psk);
+-
+-	ask->refcnt = 1;
+-	sock_put(psk);
++	atomic_dec(&pask->nokey_refcnt);
++	atomic_set(&ask->nokey_refcnt, 0);
+ 
+ 	err = 0;
+ 
+--- a/include/crypto/if_alg.h
++++ b/include/crypto/if_alg.h
+@@ -34,8 +34,8 @@ struct alg_sock {
+ 
+ 	struct sock *parent;
+ 
+-	unsigned int refcnt;
+-	unsigned int nokey_refcnt;
++	atomic_t refcnt;
++	atomic_t nokey_refcnt;
+ 
+ 	const struct af_alg_type *type;
+ 	void *private;
 
 
