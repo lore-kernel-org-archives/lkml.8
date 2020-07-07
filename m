@@ -2,53 +2,51 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 795532078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004F32078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135363;
-	bh=4IZmwLBc4b1k4DcYWXQa0y3dm3kYmW1EZ2wcvtA/LKM=;
+	s=default; t=1594135366;
+	bh=6WYzOr5brSnp6lfzxUmBTYt5J6ZgXM+oJW8YrfO0Y9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=amEgRY+ng06LxMiDdd4Dt+1H30hfKDHyH3dDEKRLUTTa1/W7FpL0BFH4yVBEJF7yC
-	 1nF3NVdAojXuK3R98GhtGmFv/oQl0XMeq1qjUYvSROwzU9v3RtiYY/NFD0feasdDCc
-	 WYl1H78xhWweGztFRfYSW00jtJl1fqiBT1Gph86o=
+	b=rQg/1WHh4XMQXyXPLptL3F0xOnoWSvkHAsjCKI34DmC/vmgUqgHLrXyXZ47j4+dUA
+	 8h/0ExR2HvtfOT/6cBz3a//OUODW9+MUODqPrJM5DfaXMRbjIUDf5+AjSoSt2ZCmjr
+	 bxJ13mALn56wBrAvuokC22JywaE6Y5imv6UOZmmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbgGGPWm (ORCPT
+        id S1729902AbgGGPWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35166 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:22:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729868AbgGGPWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:22:33 -0400
+        id S1729879AbgGGPWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:22:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F46920773;
-        Tue,  7 Jul 2020 15:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A274C20663;
+        Tue,  7 Jul 2020 15:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135352;
-        bh=4IZmwLBc4b1k4DcYWXQa0y3dm3kYmW1EZ2wcvtA/LKM=;
+        s=default; t=1594135355;
+        bh=6WYzOr5brSnp6lfzxUmBTYt5J6ZgXM+oJW8YrfO0Y9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uS2oHvf5SZRPIfLJS/ldsYXww5eZNVVliQCj6S1N9YI8yhb0LRH6J9G1wY/fRQGbS
-         4nkPvzMXF+iI00Uc4ISfHslQ/78PGSkG4U12WJ4OjiqcuVICmNV1AUiSwb/nAemrHX
-         H4l/Gk0q0mCN0vVkWOvTSUG28dnYoqj3kHQ2d0FY=
+        b=XAZXtn9sFkAhj3FAT+gyu4mlZEbUhR45kJZvNNtOWkFgsaoR5J/FnMn1+RFttWjos
+         n8PJ4oLLwAdWkox1o/JmS0F7K/tgV3XN4c7HeGs+LOJ6Af0oAxITlp7pqyAneP0zh0
+         rhE4NvQefBQSyPhSfdGVI2R7EJprUWmYa5ovoO0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kao <michael.kao@mediatek.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 32/65] thermal/drivers/mediatek: Fix bank number settings on mt8183
-Date:   Tue,  7 Jul 2020 17:17:11 +0200
-Message-Id: <20200707145754.017890334@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Jones <pjones@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 5.4 65/65] efi: Make it possible to disable efivar_ssdt entirely
+Date:   Tue,  7 Jul 2020 17:17:44 +0200
+Message-Id: <20200707145755.613464447@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
 References: <20200707145752.417212219@linuxfoundation.org>
@@ -61,48 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kao <michael.kao@mediatek.com>
+From: Peter Jones <pjones@redhat.com>
 
-[ Upstream commit 14533a5a6c12e8d7de79d309d4085bf186058fe1 ]
+commit 435d1a471598752446a72ad1201b3c980526d869 upstream.
 
-MT8183_NUM_ZONES should be set to 1
-because MT8183 doesn't have multiple banks.
+In most cases, such as CONFIG_ACPI_CUSTOM_DSDT and
+CONFIG_ACPI_TABLE_UPGRADE, boot-time modifications to firmware tables
+are tied to specific Kconfig options.  Currently this is not the case
+for modifying the ACPI SSDT via the efivar_ssdt kernel command line
+option and associated EFI variable.
 
-Fixes: a4ffe6b52d27 ("thermal: mediatek: add support for MT8183")
-Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200323121537.22697-6-michael.kao@mediatek.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch adds CONFIG_EFI_CUSTOM_SSDT_OVERLAYS, which defaults
+disabled, in order to allow enabling or disabling that feature during
+the build.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Peter Jones <pjones@redhat.com>
+Link: https://lore.kernel.org/r/20200615202408.2242614-1-pjones@redhat.com
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/thermal/mtk_thermal.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/Kconfig |   11 +++++++++++
+ drivers/firmware/efi/efi.c   |    2 +-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-index acf4854cbb8b8..d6fabd0a7da69 100644
---- a/drivers/thermal/mtk_thermal.c
-+++ b/drivers/thermal/mtk_thermal.c
-@@ -211,6 +211,9 @@ enum {
- /* The total number of temperature sensors in the MT8183 */
- #define MT8183_NUM_SENSORS	6
- 
-+/* The number of banks in the MT8183 */
-+#define MT8183_NUM_ZONES               1
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -219,3 +219,14 @@ config EFI_EARLYCON
+ 	depends on SERIAL_EARLYCON && !ARM && !IA64
+ 	select FONT_SUPPORT
+ 	select ARCH_USE_MEMREMAP_PROT
 +
- /* The number of sensing points per bank */
- #define MT8183_NUM_SENSORS_PER_ZONE	 6
++config EFI_CUSTOM_SSDT_OVERLAYS
++	bool "Load custom ACPI SSDT overlay from an EFI variable"
++	depends on EFI_VARS && ACPI
++	default ACPI_TABLE_UPGRADE
++	help
++	  Allow loading of an ACPI SSDT overlay from an EFI variable specified
++	  by a kernel command line option.
++
++	  See Documentation/admin-guide/acpi/ssdt-overlays.rst for more
++	  information.
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -217,7 +217,7 @@ static void generic_ops_unregister(void)
+ 	efivars_unregister(&generic_efivars);
+ }
  
-@@ -498,7 +501,7 @@ static const struct mtk_thermal_data mt7622_thermal_data = {
- 
- static const struct mtk_thermal_data mt8183_thermal_data = {
- 	.auxadc_channel = MT8183_TEMP_AUXADC_CHANNEL,
--	.num_banks = MT8183_NUM_SENSORS_PER_ZONE,
-+	.num_banks = MT8183_NUM_ZONES,
- 	.num_sensors = MT8183_NUM_SENSORS,
- 	.vts_index = mt8183_vts_index,
- 	.cali_val = MT8183_CALIBRATION,
--- 
-2.25.1
-
+-#if IS_ENABLED(CONFIG_ACPI)
++#ifdef CONFIG_EFI_CUSTOM_SSDT_OVERLAYS
+ #define EFIVAR_SSDT_NAME_MAX	16
+ static char efivar_ssdt[EFIVAR_SSDT_NAME_MAX] __initdata;
+ static int __init efivar_ssdt_setup(char *str)
 
 
