@@ -2,123 +2,140 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B43C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D89C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3548620720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A705720675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bou7iSLd"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="BzY6t4LZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgGGSX1 (ORCPT
+        id S1728652AbgGGSXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbgGGSX0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 14:23:30 -0400
+Received: from mail-mw2nam12on2050.outbound.protection.outlook.com ([40.107.244.50]:5345
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728232AbgGGSX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 14:23:26 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D81C08C5E1
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 11:23:25 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o2so100919wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 11:23:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=es03veLVFg48Z9+iDAaDW2BOPqfipCtGj49inSKgjemh7XzBfDwinmy2pE6KdfNWZ7rzsNEOj/+FUHde5am+uFJE0kj0puHCuFq1k7WTNyT/XZ0vi2pZGleRtL3oYiUzthgLGBYg1brAp2ol/n9W8yfieqW/qKqIzl9QycqmzdP2Ba7LNbyuaN/v+1dUvO14aAaIFRBFmDVFLxjrkGBQJmSv2MtuMRLt1DeJzL1uIjBgY3BZ/CJhSTNe7rU0h+eECBL4b8X9g12cBsUW0notedU1Hq2ngQMJwj/lCqtcs+NZgL6lsZS/zQcLxzVCO+5IjMASfBGZLSRCGlBsetzLNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2F94W99POqoQSBmxK42um2mHvH+G1yyWqOlK2h/KgV8=;
+ b=PEwsf+288xE45OJ6fyEXqoMZSEK1DyAvz76gXjweHMh/qwxmkoxAL6+IIxfUUhrwhS5G8EYRBpb9oNK2TyIPCLGRukxhA9emQIPkuL95NOji+DZGfET1WLiQXHPheF+xWMD24tVpDCJE5Q2RmIZjf5sIZcG8yt3SYyAaLY5w83wiq3T2t15NE9B0y7N0fHRG+7Eu3nqcD3tNTgUxJzG8I0zW3ev84n8TW17Vj/NKXBA40YmNqIPpbAhXZBG9eomiJTaSrk21TuMZ+Lt8OSMDbbZ5aLd91O+HX8tojdA3OwKaf4Bw62Xq9RZXjfudAAnIIBlDH1l05DLv782KotS2/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alsa-project.org smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZsyQ8jMmYQ+//eOLMX7VRN1oDXj4f3bVCThH0/4XXdI=;
-        b=bou7iSLdxedN67z05Kvhn0bs7V/62M4RXxRpMjNmYppJ6OiFUT3bFt+dlqI9wxOoFd
-         ziojgyBhqT6sjphLhpJOXanj/zqXQY0Nmw+RmdXwtetXmbWNgFKsPf2+2lCda8LhjDlH
-         vweKLhivpqVwBDGPKb+MLxvg+0fGKKu3X3RGU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZsyQ8jMmYQ+//eOLMX7VRN1oDXj4f3bVCThH0/4XXdI=;
-        b=Mtdr7RFlR2uVQeah0DhMEtFEA8lCTAih9TUUARX5O6X5JhcOO16BdCXZO3EHwKSijG
-         5oWSG36neqyC502nw+qSaP4wwOs+5/8FvLNqqE2p5qCg0BqB/MsREAaBFaD7prvaxZm6
-         jDkY5NSRZ3MwThpSVbYL28BCqdLqbAsWTir+p0e6F8EIaC3BBJr7iims0nbzGJfYhbZG
-         z88eX1oUxFcv3aNy9LN/13hnA8FrBCpTT/zTAE1JloYTw6U0OCLGD759CNCrgpq8E4ND
-         geBLu+Iwo1ZXWhw0o8uPkAjNv3spAf0Og46VPKmeB56KgGkeveNeU2rDcbH2iSbg/0oy
-         QqRw==
-X-Gm-Message-State: AOAM533H1FSYaNPqUKohx1HBn5M5YhJ52XHudvVwmcO5ms56qOrGcwVA
-        iZ6NsEzCHtmOU1qtdp0t+L/ABQ==
-X-Google-Smtp-Source: ABdhPJyjT0eHd4DtTyp0akzx5TjoI2cPq4orG1mC4OS1LTjXrelYXyIhn6aUWELC3RkHTK1QvI9Tpg==
-X-Received: by 2002:a1c:9e06:: with SMTP id h6mr5160615wme.45.1594146204616;
-        Tue, 07 Jul 2020 11:23:24 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id p17sm1849785wma.47.2020.07.07.11.23.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 11:23:24 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 18:23:22 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/11] media: exynos4-is: Properly set JPEG options when
- not using CSIS
-Message-ID: <20200707182322.GF2621465@chromium.org>
-References: <20200426022650.10355-1-xc-racer2@live.ca>
- <BN6PR04MB06606F63C7ACE765B57331A1A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2F94W99POqoQSBmxK42um2mHvH+G1yyWqOlK2h/KgV8=;
+ b=BzY6t4LZA7///dCq2kH8nii9tZ96X8m5F/pGmlwetvoo0AH6eTHRfWvoP2337WYRhKuFVWWxYmvDOG8eoLBWubrxf45ATO4dD0CKniN0HlPgA3NZRlzAj10YSSBYWOaD8ON+3guEWLeHGLenqbuePUqNTuB1UqDqwCfBh52VbQs=
+Received: from DM5PR22CA0022.namprd22.prod.outlook.com (2603:10b6:3:101::32)
+ by MWHPR12MB1614.namprd12.prod.outlook.com (2603:10b6:301:f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Tue, 7 Jul
+ 2020 18:23:23 +0000
+Received: from DM6NAM11FT066.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:101:cafe::b2) by DM5PR22CA0022.outlook.office365.com
+ (2603:10b6:3:101::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23 via Frontend
+ Transport; Tue, 7 Jul 2020 18:23:22 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; alsa-project.org; dkim=none (message not signed)
+ header.d=none;alsa-project.org; dmarc=permerror action=none
+ header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ DM6NAM11FT066.mail.protection.outlook.com (10.13.173.179) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3153.24 via Frontend Transport; Tue, 7 Jul 2020 18:23:21 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 7 Jul 2020
+ 13:23:19 -0500
+Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 7 Jul 2020
+ 13:23:19 -0500
+Received: from LinuxHost.amd.com (10.180.168.240) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 7 Jul 2020 13:23:16 -0500
+From:   Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+To:     <alsa-devel@alsa-project.org>
+CC:     <rdunlap@infradead.org>, <perex@perex.cz>,
+        <Alexander.Deucher@amd.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ASoC: amd: fixed kernel warnings
+Date:   Wed, 8 Jul 2020 00:07:11 +0530
+Message-ID: <1594147044-25582-1-git-send-email-Vijendar.Mukunda@amd.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB06606F63C7ACE765B57331A1A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB01.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(376002)(39860400002)(46966005)(5660300002)(186003)(356005)(6666004)(82310400002)(478600001)(82740400003)(81166007)(47076004)(26005)(2906002)(4326008)(6916009)(83380400001)(426003)(8676002)(8936002)(36756003)(86362001)(4744005)(70206006)(2616005)(336012)(316002)(7696005)(54906003)(70586007);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3640dbaf-ee1a-4685-3b4f-08d822a2d49a
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1614:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB161447DED69A1552CE6B9D8997660@MWHPR12MB1614.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:346;
+X-Forefront-PRVS: 0457F11EAF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: S6F3wRXBzutg6xYg1OSf834ekw51tKIpFRYwgQxNjZB3eEyciPrNhaFFAM7hjlWpq2p4b6mtwV59+JsqYZbrYU5C1tIC1Q5ZDP6Zr2dS1EzpOJMkmj2ccbf8JpRWDVW8RSHWse7VjWnZtxvLIaWFMtqD0DsY3+zOHYc40Zpd84+oSZSF9GxwfBQIxGc6usSEjOJLKCJ3LGokZ3IsTt7RusPGn9mFkFxmTvyg+NcUCfEUVHiwiv4ADw5XX4ktiQedcEQsEfIYzDa5xsh9p8AjbNcnPcFuklM+Vogdx5b2+E5/bPPmyLtBLvoTkOaVPAqARTYEqnt1iaBPTg1wmMvMUDE0Rvmq6Qg+pH0s1bIOOwTor3YBNJFa1XCnUzLaZ3ZWHF5gO+dNhmUboxz94hCzRA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2020 18:23:21.9019
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3640dbaf-ee1a-4685-3b4f-08d822a2d49a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT066.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1614
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+This patch will fix unused variables kernel warnings when
+CONFIG_ACPI is disabled.
 
-On Sat, Apr 25, 2020 at 07:26:45PM -0700, Jonathan Bakker wrote:
-> Commit ee7160e57c98 ("[media] s5p-fimc: Add support for JPEG capture")
-> added support for JPEG capture, but missed setting a register when the
-> CSIS device wasn't in use.
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+---
+ sound/soc/amd/renoir/rn-pci-acp3x.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-nit: Since this isn't really about using the CSIS device or not, but
-rather about the interface that the sensor is connected with, could we
-instead say "when a parallel interface is used"?
+diff --git a/sound/soc/amd/renoir/rn-pci-acp3x.c b/sound/soc/amd/renoir/rn-pci-acp3x.c
+index 165c93f..b943e59 100644
+--- a/sound/soc/amd/renoir/rn-pci-acp3x.c
++++ b/sound/soc/amd/renoir/rn-pci-acp3x.c
+@@ -168,8 +168,10 @@ static int snd_rn_acp_probe(struct pci_dev *pci,
+ {
+ 	struct acp_dev_data *adata;
+ 	struct platform_device_info pdevinfo[ACP_DEVS];
++#if defined(CONFIG_ACPI)
+ 	acpi_handle handle;
+ 	acpi_integer dmic_status;
++#endif
+ 	unsigned int irqflags;
+ 	int ret, index;
+ 	u32 addr;
+-- 
+2.7.4
 
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> ---
->  drivers/media/platform/exynos4-is/fimc-reg.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/media/platform/exynos4-is/fimc-reg.c b/drivers/media/platform/exynos4-is/fimc-reg.c
-> index 5ce2bdebd424..269a98fca1e8 100644
-> --- a/drivers/media/platform/exynos4-is/fimc-reg.c
-> +++ b/drivers/media/platform/exynos4-is/fimc-reg.c
-> @@ -606,6 +606,11 @@ int fimc_hw_set_camera_source(struct fimc_dev *fimc,
->  	switch (source->fimc_bus_type) {
->  	case FIMC_BUS_TYPE_ITU_601:
->  	case FIMC_BUS_TYPE_ITU_656:
-> +		if (fimc_fmt_is_user_defined(f->fmt->color)) {
-> +			cfg |= FIMC_REG_CISRCFMT_ITU601_8BIT;
-> +			break;
-> +		}
-> +
->  		for (i = 0; i < ARRAY_SIZE(pix_desc); i++) {
->  			if (vc->ci_fmt.code == pix_desc[i].pixelcode) {
->  				cfg = pix_desc[i].cisrcfmt;
-> @@ -707,6 +712,8 @@ int fimc_hw_set_camera_type(struct fimc_dev *fimc,
->  	case FIMC_BUS_TYPE_ITU_601...FIMC_BUS_TYPE_ITU_656:
->  		if (source->mux_id == 0) /* ITU-A, ITU-B: 0, 1 */
->  			cfg |= FIMC_REG_CIGCTRL_SELCAM_ITU_A;
-> +		if (vid_cap->ci_fmt.code == MEDIA_BUS_FMT_JPEG_1X8)
-> +			cfg |= FIMC_REG_CIGCTRL_CAM_JPEG;
-
-Should we also handle MEDIA_BUS_FMT_S5C_UYVY_JPEG_1X8 as in the CSI
-case? The S5C73M3 sensor supports the parallel interface as well.
-
-Best regards,
-Tomasz
