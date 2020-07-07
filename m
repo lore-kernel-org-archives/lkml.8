@@ -2,529 +2,192 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC783C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE65FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B95F20720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594154426;
-	bh=3m9Ts8ZdNbvP0zw56jNmt12LNCN6IZhjuKJU2GPO4Uo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kYEzMlhLLpVJmwCgctgCMuhxXLFRXZAIMBGp7vLB60VhbSBeXkP6Vz6iGb7bexdzl
-	 vGhqFDwIaEit6hFRHmIlJuXVtgo/XLM4merTFyq4zouDzmSmMK/pYWAZYd8RWycxko
-	 C1m6KR4ESF8h3xhgDb7KmMhwf6x0A6sJT62LFmbw=
+	by mail.kernel.org (Postfix) with ESMTP id CA5E9206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XL1RmgBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgGGUkZ (ORCPT
+        id S1728966AbgGGUl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbgGGUkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:40:25 -0400
-Received: from embeddedor (unknown [200.39.26.250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8ECF20663;
-        Tue,  7 Jul 2020 20:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594154422;
-        bh=3m9Ts8ZdNbvP0zw56jNmt12LNCN6IZhjuKJU2GPO4Uo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ynGCoRUb9wYF/dEEu7ENvzMl35bhUmKW1p7wgjyypz95x6WCwlAGtMxfkivZ6DzKH
-         YhNxuEXa7HJbck1hoLWSAKiB3yYpqd9AUktYD31PwSbuJ2gmAGhdEapbNiub8QL1cR
-         ELdAV/8j2qMebKQ9mu3R39/8MmcP7YwS+92SAYeg=
-Date:   Tue, 7 Jul 2020 15:45:48 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] mac80211: Use fallthrough pseudo-keyword
-Message-ID: <20200707204548.GA9320@embeddedor>
+        Tue, 7 Jul 2020 16:41:29 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9051 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgGGUl2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 16:41:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f04ddeb0003>; Tue, 07 Jul 2020 13:41:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jul 2020 13:41:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jul 2020 13:41:28 -0700
+Received: from [10.2.173.217] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jul
+ 2020 20:41:27 +0000
+Subject: Re: [RFC PATCH v2 11/18] media: tegra-video: Add support for external
+ sensor capture
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <robh+dt@kernel.org>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
+ <50deca28-c198-703c-96e2-82c53f48cd65@xs4all.nl>
+ <6ee18b4d-b63b-8053-1b7e-c3ec7c1d4956@nvidia.com>
+ <6846e5bb-db1d-c2ff-c52c-70a2094c5b50@nvidia.com>
+ <af11cb24-57b2-7326-ca29-e168dcbb8006@xs4all.nl>
+ <c08ea38f-7629-1800-fb74-a2f75daf2eb0@nvidia.com>
+Message-ID: <47134481-1aec-9c1b-0ed2-8e39158d69b5@nvidia.com>
+Date:   Tue, 7 Jul 2020 13:41:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <c08ea38f-7629-1800-fb74-a2f75daf2eb0@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594154475; bh=3JD+cbf92nOCDl9yh0tEY6/KCZDMVIf/ZS8FzKX/Zqo=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=XL1RmgBmV/8i+yhnhYs19d6ZfivjzLT16B06yXpptLXDj7tRGNjKcUcbkXw70R/HV
+         XY9R22fIu5r4na/LLCALERtnK9pLE289TEq1PfhlAbBCO6KOCndOhF0JztIXB4zI3b
+         r8L1+PxjSwiOV6aXmZuwWG02+XH9wHSgcTC033wrMJ3AtHG8vHCxs+8MpZ8ibVs0cN
+         pE+f3HBV4q1AjSyIo8o00p9EDes+Ilr5t03q6qN8XXUQ0MgIz52P5kX3jqMXLfqcRz
+         v2rCf4eZw+dmXgLj65ZrjJ7uFjAtK32ZG3hfaAsRlXMP+nCyRBGQCtB72932TzVKgA
+         x4dqV3eZ17MpQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+On 7/7/20 1:29 PM, Sowjanya Komatineni wrote:
+>
+> On 7/7/20 12:35 PM, Hans Verkuil wrote:
+>> On 07/07/2020 21:25, Sowjanya Komatineni wrote:
+>>> On 7/7/20 12:01 PM, Sowjanya Komatineni wrote:
+>>>>
+>>>> On 7/6/20 2:10 AM, Hans Verkuil wrote:
+>>>>>> +static void tegra_vi_graph_cleanup(struct tegra_vi *vi)
+>>>>>> +{
+>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan;
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 list_for_each_entry(chan, &vi->vi_chans, list) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 video_unregister_device(=
+&chan->video);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&chan->video_=
+lock);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vb2_queue_release(&chan-=
+>queue);
+>>>>> No need for this since this is done in vb2_fop_release().
+>>>>>
+>>>>> In fact, vb2_queue_release should never be called by drivers. Just=20
+>>>>> using
+>>>>> vb2_fop_release or __vb2_fop_release is sufficient.
+>>>>>
+>>>>> The confusion is due to the fact that the name suggests that=20
+>>>>> vb2_queue_release
+>>>>> has to be balanced with vb2_queue_init, but that's not the case.=20
+>>>>> Perhaps
+>>>>> vb2_queue_stop or something like that might be a better name. I'll=20
+>>>>> have to
+>>>>> think about this since I see that a lot of drivers do this wrong.
+>>>>>
+>>>>>> + mutex_unlock(&chan->video_lock);
+>>>>>> + v4l2_async_notifier_unregister(&chan->notifier);
+>>>>>> + v4l2_async_notifier_cleanup(&chan->notifier);
+>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>> +}
+>>>>>> +
+>>>> vb2_queue_release() here is called to stop streaming a head before=20
+>>>> media links are removed in case of when driver unbind happens while
+>>>> userspace application holds video device with active streaming in=20
+>>>> progress.
+>>>>
+>>>> Without vb2_queue_release() here streaming will be active during=20
+>>>> the driver unbind and by the time vb2_queue_release() happens from
+>>>> vb2_fop_release(), async notifiers gets unregistered and media=20
+>>>> links will be removed which causes channel stop stream to crash as=20
+>>>> we can't
+>>>> retrieve sensor subdev=C2=A0 thru media entity pads to execute s_strea=
+m=20
+>>>> on subdev.
+>>>>
+>>> I think we don't need async notifier unbind. Currently media links=20
+>>> are removed during unbind so during notifier unregister all subdevs=20
+>>> gets
+>>> unbind and links removed.
+>>>
+>>> media_device_unregister during video device release callback takes=20
+>>> care of media entity unregister and removing links.
+>>>
+>>> So, will try by removing notifier unbind along with removing=20
+>>> vb2_queue_release during cleanup.
+>>>
+>> I actually wonder if vb2_queue_release shouldn't be called from=20
+>> video_unregister_device.
+>>
+>> I'll look into this tomorrow.
+>>
+>> Regards,
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+>
+> Thanks Hans.
+>
+> Tried without notifier unbind to remove media links and I still see=20
+> crash due to below diff reason now.
+>
+> With userspace app holding video device node with active streaming in=20
+> progress when I do driver unbind, v4l2_device release callback=20
+> tegra_v4l2_dev_release() happens prior to vb2_fops_release() ->=20
+> vb2_queue_release().
+>
+> All channels resources and channel memory is freed during v4l2_device=20
+> release callback.
+>
+> Letting vb2_queue_release() to happen thru vb2_fops_release() causes=20
+> crash as stop streaming tries to retrieve subdev thru channel media=20
+> pads and channel memory is freed by that time.
+>
+> So, doing vb2_queue_release() during driver unbind -> tegra_vi_exit()=20
+> -> tegra_vi_graph_cleanup(), stops subdev stream properly and then on=20
+> v4l2_device release channel memory gets freed and this works which is=20
+> the existing implementation in the patch.
+>
+> I remember adding vb2_queue_release() during graph cleanup for TPG as=20
+> well for the same reason to allow driver unbind while holding video=20
+> device from user space so media pad can be accessible to stop stream=20
+> before channel cleanup.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/mac80211_hwsim.c |    2 +-
- net/mac80211/cfg.c                    |    6 +++---
- net/mac80211/chan.c                   |    2 +-
- net/mac80211/ht.c                     |    4 ++--
- net/mac80211/ibss.c                   |    4 ++--
- net/mac80211/iface.c                  |   10 +++++-----
- net/mac80211/key.c                    |    2 +-
- net/mac80211/mesh.c                   |    4 ++--
- net/mac80211/mesh_hwmp.c              |    2 +-
- net/mac80211/mesh_plink.c             |    2 +-
- net/mac80211/mlme.c                   |    4 ++--
- net/mac80211/offchannel.c             |    4 ++--
- net/mac80211/rx.c                     |    4 ++--
- net/mac80211/tdls.c                   |    8 ++++----
- net/mac80211/tx.c                     |   12 ++++++------
- net/mac80211/util.c                   |   15 +++++++--------
- net/mac80211/wme.c                    |    2 +-
- 17 files changed, 43 insertions(+), 44 deletions(-)
+v4l2_dev release() should definitely happen in the last after=20
+vb2_fops_release(). Will add more debugs and confirm on what I observed=20
+as something happened with timestamps on log on my side so I doubt my=20
+above observation after removing notifier unbind to remove media links.
 
-diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
-index 1356e8cbe617..9dd9d73f4484 100644
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -4334,7 +4334,7 @@ static int __init init_mac80211_hwsim(void)
- 			break;
- 		case HWSIM_REGTEST_STRICT_ALL:
- 			param.reg_strict = true;
--			/* fall through */
-+			fallthrough;
- 		case HWSIM_REGTEST_DRIVER_REG_ALL:
- 			param.reg_alpha2 = hwsim_alpha2s[0];
- 			break;
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index 9b360544ad6f..b4a74064675e 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -608,12 +608,12 @@ static int ieee80211_get_key(struct wiphy *wiphy, struct net_device *dev,
- 	case WLAN_CIPHER_SUITE_BIP_CMAC_256:
- 		BUILD_BUG_ON(offsetof(typeof(kseq), ccmp) !=
- 			     offsetof(typeof(kseq), aes_cmac));
--		/* fall through */
-+		fallthrough;
- 	case WLAN_CIPHER_SUITE_BIP_GMAC_128:
- 	case WLAN_CIPHER_SUITE_BIP_GMAC_256:
- 		BUILD_BUG_ON(offsetof(typeof(kseq), ccmp) !=
- 			     offsetof(typeof(kseq), aes_gmac));
--		/* fall through */
-+		fallthrough;
- 	case WLAN_CIPHER_SUITE_GCMP:
- 	case WLAN_CIPHER_SUITE_GCMP_256:
- 		BUILD_BUG_ON(offsetof(typeof(kseq), ccmp) !=
-@@ -2336,7 +2336,7 @@ static int ieee80211_scan(struct wiphy *wiphy,
- 		 * for now fall through to allow scanning only when
- 		 * beaconing hasn't been configured yet
- 		 */
--		/* fall through */
-+		fallthrough;
- 	case NL80211_IFTYPE_AP:
- 		/*
- 		 * If the scan has been forced (and the driver supports
-diff --git a/net/mac80211/chan.c b/net/mac80211/chan.c
-index e6e192f53e4e..6ff177fb2324 100644
---- a/net/mac80211/chan.c
-+++ b/net/mac80211/chan.c
-@@ -743,7 +743,7 @@ void ieee80211_recalc_smps_chanctx(struct ieee80211_local *local,
- 		default:
- 			WARN_ONCE(1, "Invalid SMPS mode %d\n",
- 				  sdata->smps_mode);
--			/* fall through */
-+			fallthrough;
- 		case IEEE80211_SMPS_OFF:
- 			needed_static = sdata->needed_rx_chains;
- 			needed_dynamic = sdata->needed_rx_chains;
-diff --git a/net/mac80211/ht.c b/net/mac80211/ht.c
-index e32906202575..3d62a80b5790 100644
---- a/net/mac80211/ht.c
-+++ b/net/mac80211/ht.c
-@@ -250,7 +250,7 @@ bool ieee80211_ht_cap_ie_to_sta_ht_cap(struct ieee80211_sub_if_data *sdata,
- 	switch (sdata->vif.bss_conf.chandef.width) {
- 	default:
- 		WARN_ON_ONCE(1);
--		/* fall through */
-+		fallthrough;
- 	case NL80211_CHAN_WIDTH_20_NOHT:
- 	case NL80211_CHAN_WIDTH_20:
- 		bw = IEEE80211_STA_RX_BW_20;
-@@ -517,7 +517,7 @@ int ieee80211_send_smps_action(struct ieee80211_sub_if_data *sdata,
- 	case IEEE80211_SMPS_AUTOMATIC:
- 	case IEEE80211_SMPS_NUM_MODES:
- 		WARN_ON(1);
--		/* fall through */
-+		fallthrough;
- 	case IEEE80211_SMPS_OFF:
- 		action_frame->u.action.u.ht_smps.smps_control =
- 				WLAN_HT_SMPS_CONTROL_DISABLED;
-diff --git a/net/mac80211/ibss.c b/net/mac80211/ibss.c
-index 81d26fef41e9..53632c2f5217 100644
---- a/net/mac80211/ibss.c
-+++ b/net/mac80211/ibss.c
-@@ -791,7 +791,7 @@ ieee80211_ibss_process_chanswitch(struct ieee80211_sub_if_data *sdata,
- 	case NL80211_CHAN_WIDTH_10:
- 	case NL80211_CHAN_WIDTH_20_NOHT:
- 		sta_flags |= IEEE80211_STA_DISABLE_HT;
--		/* fall through */
-+		fallthrough;
- 	case NL80211_CHAN_WIDTH_20:
- 		sta_flags |= IEEE80211_STA_DISABLE_40MHZ;
- 		break;
-@@ -1401,7 +1401,7 @@ ieee80211_ibss_setup_scan_channels(struct wiphy *wiphy,
- 		break;
- 	case NL80211_CHAN_WIDTH_80P80:
- 		cf2 = chandef->center_freq2;
--		/* fall through */
-+		fallthrough;
- 	case NL80211_CHAN_WIDTH_80:
- 		width = 80;
- 		break;
-diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
-index f900c84fb40f..570f818384e8 100644
---- a/net/mac80211/iface.c
-+++ b/net/mac80211/iface.c
-@@ -978,7 +978,7 @@ static void ieee80211_do_stop(struct ieee80211_sub_if_data *sdata,
- 	case NL80211_IFTYPE_P2P_DEVICE:
- 		/* relies on synchronize_rcu() below */
- 		RCU_INIT_POINTER(local->p2p_sdata, NULL);
--		/* fall through */
-+		fallthrough;
- 	default:
- 		cancel_work_sync(&sdata->work);
- 		/*
-@@ -1048,7 +1048,7 @@ static void ieee80211_do_stop(struct ieee80211_sub_if_data *sdata,
- 		if (!(sdata->u.mntr.flags & MONITOR_FLAG_ACTIVE))
- 			break;
- 
--		/* fall through */
-+		fallthrough;
- 	default:
- 		if (going_down)
- 			drv_remove_interface(local, sdata);
-@@ -1497,7 +1497,7 @@ static void ieee80211_setup_sdata(struct ieee80211_sub_if_data *sdata,
- 		type = NL80211_IFTYPE_AP;
- 		sdata->vif.type = type;
- 		sdata->vif.p2p = true;
--		/* fall through */
-+		fallthrough;
- 	case NL80211_IFTYPE_AP:
- 		skb_queue_head_init(&sdata->u.ap.ps.bc_buf);
- 		INIT_LIST_HEAD(&sdata->u.ap.vlans);
-@@ -1507,7 +1507,7 @@ static void ieee80211_setup_sdata(struct ieee80211_sub_if_data *sdata,
- 		type = NL80211_IFTYPE_STATION;
- 		sdata->vif.type = type;
- 		sdata->vif.p2p = true;
--		/* fall through */
-+		fallthrough;
- 	case NL80211_IFTYPE_STATION:
- 		sdata->vif.bss_conf.bssid = sdata->u.mgd.bssid;
- 		ieee80211_sta_setup_sdata(sdata);
-@@ -1703,7 +1703,7 @@ static void ieee80211_assign_perm_addr(struct ieee80211_local *local,
- 				goto out_unlock;
- 			}
- 		}
--		/* fall through */
-+		fallthrough;
- 	default:
- 		/* assign a new address if possible -- try n_addresses first */
- 		for (i = 0; i < local->hw.wiphy->n_addresses; i++) {
-diff --git a/net/mac80211/key.c b/net/mac80211/key.c
-index 8f403c1bb908..9c2888004878 100644
---- a/net/mac80211/key.c
-+++ b/net/mac80211/key.c
-@@ -225,7 +225,7 @@ static int ieee80211_key_enable_hw_accel(struct ieee80211_key *key)
- 		 */
- 		if (sdata->hw_80211_encap)
- 			return -EINVAL;
--		/* Fall through */
-+		fallthrough;
- 
- 	case WLAN_CIPHER_SUITE_AES_CMAC:
- 	case WLAN_CIPHER_SUITE_BIP_CMAC_256:
-diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
-index 5f1ca25b6c97..96f0323c0a3d 100644
---- a/net/mac80211/mesh.c
-+++ b/net/mac80211/mesh.c
-@@ -1094,10 +1094,10 @@ ieee80211_mesh_process_chnswitch(struct ieee80211_sub_if_data *sdata,
- 	switch (sdata->vif.bss_conf.chandef.width) {
- 	case NL80211_CHAN_WIDTH_20_NOHT:
- 		sta_flags |= IEEE80211_STA_DISABLE_HT;
--		/* fall through */
-+		fallthrough;
- 	case NL80211_CHAN_WIDTH_20:
- 		sta_flags |= IEEE80211_STA_DISABLE_40MHZ;
--		/* fall through */
-+		fallthrough;
- 	case NL80211_CHAN_WIDTH_40:
- 		sta_flags |= IEEE80211_STA_DISABLE_VHT;
- 		break;
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index aa5150929996..c71bd612740d 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -1269,7 +1269,7 @@ void mesh_path_tx_root_frame(struct ieee80211_sub_if_data *sdata)
- 		break;
- 	case IEEE80211_PROACTIVE_PREQ_WITH_PREP:
- 		flags |= IEEE80211_PREQ_PROACTIVE_PREP_FLAG;
--		/* fall through */
-+		fallthrough;
- 	case IEEE80211_PROACTIVE_PREQ_NO_PREP:
- 		interval = ifmsh->mshcfg.dot11MeshHWMPactivePathToRootTimeout;
- 		target_flags |= IEEE80211_PREQ_TO_FLAG |
-diff --git a/net/mac80211/mesh_plink.c b/net/mac80211/mesh_plink.c
-index 798e4b6b383f..15f2fc658f70 100644
---- a/net/mac80211/mesh_plink.c
-+++ b/net/mac80211/mesh_plink.c
-@@ -699,7 +699,7 @@ void mesh_plink_timer(struct timer_list *t)
- 			break;
- 		}
- 		reason = WLAN_REASON_MESH_MAX_RETRIES;
--		/* fall through */
-+		fallthrough;
- 	case NL80211_PLINK_CNF_RCVD:
- 		/* confirm timer */
- 		if (!reason)
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index b2a9d47cf86d..1c1b3f6bc415 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -533,7 +533,7 @@ static void ieee80211_add_ht_ie(struct ieee80211_sub_if_data *sdata,
- 	case IEEE80211_SMPS_AUTOMATIC:
- 	case IEEE80211_SMPS_NUM_MODES:
- 		WARN_ON(1);
--		/* fall through */
-+		fallthrough;
- 	case IEEE80211_SMPS_OFF:
- 		cap |= WLAN_HT_CAP_SM_PS_DISABLED <<
- 			IEEE80211_HT_CAP_SM_PS_SHIFT;
-@@ -1529,7 +1529,7 @@ ieee80211_find_80211h_pwr_constr(struct ieee80211_sub_if_data *sdata,
- 	switch (channel->band) {
- 	default:
- 		WARN_ON_ONCE(1);
--		/* fall through */
-+		fallthrough;
- 	case NL80211_BAND_2GHZ:
- 	case NL80211_BAND_60GHZ:
- 		chan_increment = 1;
-diff --git a/net/mac80211/offchannel.c b/net/mac80211/offchannel.c
-index db3b8bf75656..7b842aa903c3 100644
---- a/net/mac80211/offchannel.c
-+++ b/net/mac80211/offchannel.c
-@@ -808,13 +808,13 @@ int ieee80211_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
- 		if (!sdata->vif.bss_conf.ibss_joined)
- 			need_offchan = true;
- #ifdef CONFIG_MAC80211_MESH
--		/* fall through */
-+		fallthrough;
- 	case NL80211_IFTYPE_MESH_POINT:
- 		if (ieee80211_vif_is_mesh(&sdata->vif) &&
- 		    !sdata->u.mesh.mesh_id_len)
- 			need_offchan = true;
- #endif
--		/* fall through */
-+		fallthrough;
- 	case NL80211_IFTYPE_AP:
- 	case NL80211_IFTYPE_AP_VLAN:
- 	case NL80211_IFTYPE_P2P_GO:
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index a88ab6fb16f2..83a6e52ba033 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -3710,7 +3710,7 @@ static void ieee80211_rx_handlers_result(struct ieee80211_rx_data *rx,
- 		I802_DEBUG_INC(rx->sdata->local->rx_handlers_drop);
- 		if (rx->sta)
- 			rx->sta->rx_stats.dropped++;
--		/* fall through */
-+		fallthrough;
- 	case RX_CONTINUE: {
- 		struct ieee80211_rate *rate = NULL;
- 		struct ieee80211_supported_band *sband;
-@@ -4726,7 +4726,7 @@ void ieee80211_rx_napi(struct ieee80211_hw *hw, struct ieee80211_sta *pubsta,
- 			break;
- 		default:
- 			WARN_ON_ONCE(1);
--			/* fall through */
-+			fallthrough;
- 		case RX_ENC_LEGACY:
- 			if (WARN_ON(status->rate_idx >= sband->n_bitrates))
- 				goto drop;
-diff --git a/net/mac80211/tdls.c b/net/mac80211/tdls.c
-index 4b0cff4a07bd..e01e4daeb8cd 100644
---- a/net/mac80211/tdls.c
-+++ b/net/mac80211/tdls.c
-@@ -239,7 +239,7 @@ static enum ieee80211_ac_numbers ieee80211_ac_from_wmm(int ac)
- 	switch (ac) {
- 	default:
- 		WARN_ON_ONCE(1);
--		/* fall through */
-+		fallthrough;
- 	case 0:
- 		return IEEE80211_AC_BE;
- 	case 1:
-@@ -952,7 +952,7 @@ ieee80211_tdls_prep_mgmt_packet(struct wiphy *wiphy, struct net_device *dev,
- 			set_sta_flag(sta, WLAN_STA_TDLS_INITIATOR);
- 			sta->sta.tdls_initiator = false;
- 		}
--		/* fall-through */
-+		fallthrough;
- 	case WLAN_TDLS_SETUP_CONFIRM:
- 	case WLAN_TDLS_DISCOVERY_REQUEST:
- 		initiator = true;
-@@ -967,7 +967,7 @@ ieee80211_tdls_prep_mgmt_packet(struct wiphy *wiphy, struct net_device *dev,
- 			clear_sta_flag(sta, WLAN_STA_TDLS_INITIATOR);
- 			sta->sta.tdls_initiator = true;
- 		}
--		/* fall-through */
-+		fallthrough;
- 	case WLAN_PUB_ACTION_TDLS_DISCOVER_RES:
- 		initiator = false;
- 		break;
-@@ -1222,7 +1222,7 @@ int ieee80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *dev,
- 		 * by the AP.
- 		 */
- 		drv_mgd_protect_tdls_discover(sdata->local, sdata);
--		/* fall-through */
-+		fallthrough;
- 	case WLAN_TDLS_SETUP_CONFIRM:
- 	case WLAN_PUB_ACTION_TDLS_DISCOVER_RES:
- 		/* no special handling */
-diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-index e9ce658141f5..92268501b757 100644
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -1739,7 +1739,7 @@ static bool __ieee80211_tx(struct ieee80211_local *local,
- 	case NL80211_IFTYPE_AP_VLAN:
- 		sdata = container_of(sdata->bss,
- 				     struct ieee80211_sub_if_data, u.ap);
--		/* fall through */
-+		fallthrough;
- 	default:
- 		vif = &sdata->vif;
- 		break;
-@@ -2382,7 +2382,7 @@ int ieee80211_lookup_ra_sta(struct ieee80211_sub_if_data *sdata,
- 		} else if (sdata->wdev.use_4addr) {
- 			return -ENOLINK;
- 		}
--		/* fall through */
-+		fallthrough;
- 	case NL80211_IFTYPE_AP:
- 	case NL80211_IFTYPE_OCB:
- 	case NL80211_IFTYPE_ADHOC:
-@@ -2552,7 +2552,7 @@ static struct sk_buff *ieee80211_build_hdr(struct ieee80211_sub_if_data *sdata,
- 		band = chanctx_conf->def.chan->band;
- 		if (sdata->wdev.use_4addr)
- 			break;
--		/* fall through */
-+		fallthrough;
- 	case NL80211_IFTYPE_AP:
- 		if (sdata->vif.type == NL80211_IFTYPE_AP)
- 			chanctx_conf = rcu_dereference(sdata->vif.chanctx_conf);
-@@ -2999,7 +2999,7 @@ void ieee80211_check_fast_xmit(struct sta_info *sta)
- 			build.hdr_len = 30;
- 			break;
- 		}
--		/* fall through */
-+		fallthrough;
- 	case NL80211_IFTYPE_AP:
- 		fc |= cpu_to_le16(IEEE80211_FCTL_FROMDS);
- 		/* DA BSSID SA */
-@@ -3710,7 +3710,7 @@ struct sk_buff *ieee80211_tx_dequeue(struct ieee80211_hw *hw,
- 	case NL80211_IFTYPE_AP_VLAN:
- 		tx.sdata = container_of(tx.sdata->bss,
- 					struct ieee80211_sub_if_data, u.ap);
--		/* fall through */
-+		fallthrough;
- 	default:
- 		vif = &tx.sdata->vif;
- 		break;
-@@ -4046,7 +4046,7 @@ static bool ieee80211_multicast_to_unicast(struct sk_buff *skb,
- 			return false;
- 		if (sdata->wdev.use_4addr)
- 			return false;
--		/* fall through */
-+		fallthrough;
- 	case NL80211_IFTYPE_AP:
- 		/* check runtime toggle for this bss */
- 		if (!sdata->bss->multicast_to_unicast)
-diff --git a/net/mac80211/util.c b/net/mac80211/util.c
-index 21c94094a699..33dd337de1e9 100644
---- a/net/mac80211/util.c
-+++ b/net/mac80211/util.c
-@@ -2347,10 +2347,10 @@ int ieee80211_reconfig(struct ieee80211_local *local)
- 		case NL80211_IFTYPE_ADHOC:
- 			if (sdata->vif.bss_conf.ibss_joined)
- 				WARN_ON(drv_join_ibss(local, sdata));
--			/* fall through */
-+			fallthrough;
- 		default:
- 			ieee80211_reconfig_stations(sdata);
--			/* fall through */
-+			fallthrough;
- 		case NL80211_IFTYPE_AP: /* AP stations are handled later */
- 			for (i = 0; i < IEEE80211_NUM_ACS; i++)
- 				drv_conf_tx(local, sdata, i,
-@@ -2399,7 +2399,7 @@ int ieee80211_reconfig(struct ieee80211_local *local)
- 			break;
- 		case NL80211_IFTYPE_ADHOC:
- 			changed |= BSS_CHANGED_IBSS;
--			/* fall through */
-+			fallthrough;
- 		case NL80211_IFTYPE_AP:
- 			changed |= BSS_CHANGED_SSID | BSS_CHANGED_P2P_PS;
- 
-@@ -2414,8 +2414,7 @@ int ieee80211_reconfig(struct ieee80211_local *local)
- 				if (rcu_access_pointer(sdata->u.ap.beacon))
- 					drv_start_ap(local, sdata);
- 			}
--
--			/* fall through */
-+			fallthrough;
- 		case NL80211_IFTYPE_MESH_POINT:
- 			if (sdata->vif.bss_conf.enable_beacon) {
- 				changed |= BSS_CHANGED_BEACON |
-@@ -2885,7 +2884,7 @@ void ieee80211_ie_build_he_6ghz_cap(struct ieee80211_sub_if_data *sdata,
- 	case IEEE80211_SMPS_AUTOMATIC:
- 	case IEEE80211_SMPS_NUM_MODES:
- 		WARN_ON(1);
--		/* fall through */
-+		fallthrough;
- 	case IEEE80211_SMPS_OFF:
- 		cap |= u16_encode_bits(WLAN_HT_CAP_SM_PS_DISABLED,
- 				       IEEE80211_HE_6GHZ_CAP_SM_PS);
-@@ -3196,7 +3195,7 @@ bool ieee80211_chandef_vht_oper(struct ieee80211_hw *hw, u32 vht_cap_info,
- 		break;
- 	case 0x01:
- 		support_80_80 = false;
--		/* fall through */
-+		fallthrough;
- 	case 0x02:
- 	case 0x03:
- 		ccf1 = ccfs2;
-@@ -3566,7 +3565,7 @@ u64 ieee80211_calculate_rx_timestamp(struct ieee80211_local *local,
- 		break;
- 	default:
- 		WARN_ON(1);
--		/* fall through */
-+		fallthrough;
- 	case RX_ENC_LEGACY: {
- 		struct ieee80211_supported_band *sband;
- 		int shift = 0;
-diff --git a/net/mac80211/wme.c b/net/mac80211/wme.c
-index 72920d82928c..2fb99325135a 100644
---- a/net/mac80211/wme.c
-+++ b/net/mac80211/wme.c
-@@ -198,7 +198,7 @@ u16 ieee80211_select_queue(struct ieee80211_sub_if_data *sdata,
- 		sta = rcu_dereference(sdata->u.vlan.sta);
- 		if (sta)
- 			break;
--		/* fall through */
-+		fallthrough;
- 	case NL80211_IFTYPE_AP:
- 		ra = skb->data;
- 		break;
+Will check and get back..
 
+>
+> Regards,
+>
+> Sowjanya
+>
