@@ -2,97 +2,217 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB68C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4EFF20771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C84820773
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594152248;
-	bh=lOqxPHD1G7v4ptCDcrU8Zzd0/sIT1tjdxKx6H0SH6CE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vPv/yCL4X7P/FmDumsomQdIYlLXMZDNeIDtNH+rrQcDJ04i+zj7JqlfDb6Oa9KQAJ
-	 8LB0ohABOcymbiTFi718+Z0s0IGlZQI4AhKtdM0LY23AIojshYxO+Ij4ztJxj1FrvT
-	 h6VjAlu7BKpzdleknYfEtmV7FG9n9+jb3BVjwPs8=
+	s=default; t=1594152253;
+	bh=Ed/3Q7E4vJs5EEEvSsgo4t0m6Y1QmUKPsEeCTSlajUw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=xx4ig+hbkVtU8Hi2uKJh/b05r8ugnfOHwp0Pagpvrxi0GJHHHdd3Ja7lqENjW2JHF
+	 JS0Z0VZLAskxILAirTf2BBgve7erQotdW+vdt0zHKcfl9NwPdakxUi4WH5E/HQKLdn
+	 HRE4kKg39rTPLGeyErrGetz9LHrx5aSuiLGpcPBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgGGUEH (ORCPT
+        id S1728595AbgGGUEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:04:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40046 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 16:04:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbgGGUEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:04:07 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        id S1727895AbgGGUEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 16:04:12 -0400
+Received: from embeddedor (unknown [200.39.26.250])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E2C5206F6;
-        Tue,  7 Jul 2020 20:04:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46A9420771;
+        Tue,  7 Jul 2020 20:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594152246;
-        bh=lOqxPHD1G7v4ptCDcrU8Zzd0/sIT1tjdxKx6H0SH6CE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZMH8B4e4BRy7pNzi9c8aXzN6seq1gBHeil+eQ9hiIVQ8URQja30LSG6juVf3BboAK
-         eqmvjEeVsslRYG1GyeqNTPPdk6ri3P0pNFuC3bsDHKCp14dL8DekEVflRRCZM/xDRJ
-         VrscB+AV4GSw6wX0kntnBxGxQ/qOh31JOGMkQXzc=
-Date:   Tue, 7 Jul 2020 13:04:06 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3] mm/vmstat: Add events for THP migration without
- split
-Message-Id: <20200707130406.21ce3d61a4cce25831abb2d1@linux-foundation.org>
-In-Reply-To: <1594080415-27924-1-git-send-email-anshuman.khandual@arm.com>
-References: <1594080415-27924-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1594152251;
+        bh=Ed/3Q7E4vJs5EEEvSsgo4t0m6Y1QmUKPsEeCTSlajUw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NpOwVTRcK4pi9d7+Ph7yi1fSUhNU4/YEm+Fl0RXO8wHxTESFYwqoV1mImsIQ2sM06
+         P9JVxou3jRy9QRV71ZF69o3kZUYknlCsfn2Eb2nIrfkKCEafLBCy+h5jq3jIq4ZiHZ
+         P/6FbXdK5zITYaHFKS/42MdBxKJQEeSQ5IWUJWUg=
+Date:   Tue, 7 Jul 2020 15:09:37 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH] ACPI: Use fallthrough pseudo-keyword
+Message-ID: <20200707200937.GA5056@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 Jul 2020 05:36:55 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-> Add following new vmstat events which will help in validating THP migration
-> without split. Statistics reported through these new VM events will help in
-> performance debugging.
-> 
-> 1. THP_MIGRATION_SUCCESS
-> 2. THP_MIGRATION_FAILURE
-> 3. THP_MIGRATION_SPLIT
-> 
-> In addition, these new events also update normal page migration statistics
-> appropriately via PGMIGRATE_SUCCESS and PGMIGRATE_FAILURE. While here, this
-> updates current trace event 'mm_migrate_pages' to accommodate now available
-> THP statistics.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Patch looks straightforward enough.  It would be nice to see some
-confirmation from others that these metrics are a desirable thing to
-export.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/acpi/ac.c             |    2 +-
+ drivers/acpi/acpi_processor.c |    2 +-
+ drivers/acpi/button.c         |    2 +-
+ drivers/acpi/dock.c           |    2 +-
+ drivers/acpi/evged.c          |    2 +-
+ drivers/acpi/processor_idle.c |    3 +--
+ drivers/acpi/resource.c       |    2 +-
+ drivers/acpi/spcr.c           |    4 ++--
+ drivers/pci/pci-acpi.c        |    6 +++---
+ 9 files changed, 12 insertions(+), 13 deletions(-)
 
-> ...
->
-> -	trace_mm_migrate_pages(nr_succeeded, nr_failed, mode, reason);
-> +	if (nr_thp_succeeded)
-> +		count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
-> +	if (nr_thp_failed)
-> +		count_vm_events(THP_MIGRATION_FAILURE, nr_thp_failed);
-> +	if (nr_thp_split)
-> +		count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
-
-Are these "if"s worthwhile to have?
-
-> +	trace_mm_migrate_pages(nr_succeeded, nr_failed, nr_thp_succeeded,
-> +			       nr_thp_failed, nr_thp_split, mode, reason);
-
+diff --git a/drivers/acpi/ac.c b/drivers/acpi/ac.c
+index 69d2db13886b..2dfa08f939c6 100644
+--- a/drivers/acpi/ac.c
++++ b/drivers/acpi/ac.c
+@@ -236,7 +236,7 @@ static void acpi_ac_notify(struct acpi_device *device, u32 event)
+ 	default:
+ 		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+ 				  "Unsupported event [0x%x]\n", event));
+-	/* fall through */
++		fallthrough;
+ 	case ACPI_AC_NOTIFY_STATUS:
+ 	case ACPI_NOTIFY_BUS_CHECK:
+ 	case ACPI_NOTIFY_DEVICE_CHECK:
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index 5379bc3f275d..b51ddf3bb616 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -79,7 +79,7 @@ static int acpi_processor_errata_piix4(struct pci_dev *dev)
+ 		 * PIIX4 models.
+ 		 */
+ 		errata.piix4.throttle = 1;
+-		/* fall through*/
++		fallthrough;
+ 
+ 	case 2:		/* PIIX4E */
+ 	case 3:		/* PIIX4M */
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index 3c35e57dd854..a4eda7fe50d3 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -405,7 +405,7 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
+ 	switch (event) {
+ 	case ACPI_FIXED_HARDWARE_EVENT:
+ 		event = ACPI_BUTTON_NOTIFY_STATUS;
+-		/* fall through */
++		fallthrough;
+ 	case ACPI_BUTTON_NOTIFY_STATUS:
+ 		input = button->input;
+ 		if (button->type == ACPI_BUTTON_TYPE_LID) {
+diff --git a/drivers/acpi/dock.c b/drivers/acpi/dock.c
+index e3414131bfca..9bd72c26ef46 100644
+--- a/drivers/acpi/dock.c
++++ b/drivers/acpi/dock.c
+@@ -469,7 +469,7 @@ int dock_notify(struct acpi_device *adev, u32 event)
+ 		surprise_removal = 1;
+ 		event = ACPI_NOTIFY_EJECT_REQUEST;
+ 		/* Fall back */
+-		/* fall through */
++		fallthrough;
+ 	case ACPI_NOTIFY_EJECT_REQUEST:
+ 		begin_undock(ds);
+ 		if ((immediate_undock && !(ds->flags & DOCK_IS_ATA))
+diff --git a/drivers/acpi/evged.c b/drivers/acpi/evged.c
+index ccd900690b6f..b1a7f8d6965e 100644
+--- a/drivers/acpi/evged.c
++++ b/drivers/acpi/evged.c
+@@ -106,7 +106,7 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
+ 
+ 		if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		if (ACPI_SUCCESS(acpi_get_handle(handle, "_EVT", &evt_handle)))
+ 			break;
+diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+index 75534c5b5433..9325feaac5f8 100644
+--- a/drivers/acpi/processor_idle.c
++++ b/drivers/acpi/processor_idle.c
+@@ -203,8 +203,7 @@ static void tsc_check_state(int state)
+ 		 */
+ 		if (boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
+ 			return;
+-
+-		/*FALL THROUGH*/
++		fallthrough;
+ 	default:
+ 		/* TSC could halt in idle, so notify users */
+ 		if (state > ACPI_STATE_C1)
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 3b4448972374..ad04824ca3ba 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -373,7 +373,7 @@ unsigned int acpi_dev_get_irq_type(int triggering, int polarity)
+ 	case ACPI_ACTIVE_BOTH:
+ 		if (triggering == ACPI_EDGE_SENSITIVE)
+ 			return IRQ_TYPE_EDGE_BOTH;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		return IRQ_TYPE_NONE;
+ 	}
+diff --git a/drivers/acpi/spcr.c b/drivers/acpi/spcr.c
+index d73b4535e79d..88460bacd5ae 100644
+--- a/drivers/acpi/spcr.c
++++ b/drivers/acpi/spcr.c
+@@ -111,7 +111,7 @@ int __init acpi_parse_spcr(bool enable_earlycon, bool enable_console)
+ 			table->serial_port.access_width))) {
+ 		default:
+ 			pr_err("Unexpected SPCR Access Width.  Defaulting to byte size\n");
+-			/* fall through */
++			fallthrough;
+ 		case 8:
+ 			iotype = "mmio";
+ 			break;
+@@ -128,7 +128,7 @@ int __init acpi_parse_spcr(bool enable_earlycon, bool enable_console)
+ 	switch (table->interface_type) {
+ 	case ACPI_DBG2_ARM_SBSA_32BIT:
+ 		iotype = "mmio32";
+-		/* fall through */
++		fallthrough;
+ 	case ACPI_DBG2_ARM_PL011:
+ 	case ACPI_DBG2_ARM_SBSA_GENERIC:
+ 	case ACPI_DBG2_BCM2835:
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 7224b1e5f2a8..0d85025c55fd 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -527,8 +527,8 @@ static void program_hpx_type3_register(struct pci_dev *dev,
+ 			return;
+ 
+ 		break;
+-	case HPX_CFG_VEND_CAP:	/* Fall through */
+-	case HPX_CFG_DVSEC:	/* Fall through */
++	case HPX_CFG_VEND_CAP:
++	case HPX_CFG_DVSEC:
+ 	default:
+ 		pci_warn(dev, "Encountered _HPX type 3 with unsupported config space location");
+ 		return;
+@@ -1001,7 +1001,7 @@ static int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 			error = -EBUSY;
+ 			break;
+ 		}
+-		/* Fall through */
++		fallthrough;
+ 	case PCI_D0:
+ 	case PCI_D1:
+ 	case PCI_D2:
 
