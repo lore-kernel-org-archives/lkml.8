@@ -2,192 +2,170 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE65FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA5E9206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:41:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XL1RmgBm"
+	by mail.kernel.org (Postfix) with ESMTP id 8F8FF2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594154525;
+	bh=AnGRUUPwqzcwpLs6pEvzN/rJFDFLsWpe3uIVEGqiWr8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=x1yv/KIWDlC+oxAb96wUHk8n1Kn39rUlnZX3TORL/zb0otNWvjtCyejabSFzOKVi9
+	 BwG7oIqMPYkA8UOQ0usQohztWU4pWoHdWZpZvRc3BLGCPgAqwT5FxDxwFiVMUuVrXN
+	 jJskeObKPOI1sqKyxIyqkCGU8Ga9wkBpus17nTF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgGGUl3 (ORCPT
+        id S1728804AbgGGUmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:41:29 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9051 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgGGUl2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:41:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f04ddeb0003>; Tue, 07 Jul 2020 13:41:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jul 2020 13:41:28 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jul 2020 13:41:28 -0700
-Received: from [10.2.173.217] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jul
- 2020 20:41:27 +0000
-Subject: Re: [RFC PATCH v2 11/18] media: tegra-video: Add support for external
- sensor capture
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <robh+dt@kernel.org>, <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
- <50deca28-c198-703c-96e2-82c53f48cd65@xs4all.nl>
- <6ee18b4d-b63b-8053-1b7e-c3ec7c1d4956@nvidia.com>
- <6846e5bb-db1d-c2ff-c52c-70a2094c5b50@nvidia.com>
- <af11cb24-57b2-7326-ca29-e168dcbb8006@xs4all.nl>
- <c08ea38f-7629-1800-fb74-a2f75daf2eb0@nvidia.com>
-Message-ID: <47134481-1aec-9c1b-0ed2-8e39158d69b5@nvidia.com>
-Date:   Tue, 7 Jul 2020 13:41:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 7 Jul 2020 16:42:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726273AbgGGUmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 16:42:03 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 988CC206F6;
+        Tue,  7 Jul 2020 20:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594154523;
+        bh=AnGRUUPwqzcwpLs6pEvzN/rJFDFLsWpe3uIVEGqiWr8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=j2EUy+Xh9X4HarBCOIEDlDUsFtpmrZdVwzS2NDWjlKi4VsuWloS9i5zmnmiW5oSTG
+         K3EXcBM9inuude2+oF3BTJOtX9Gb83ucYZnVtHsEn5l4gxgJAUJaEsBiIF0RN4JuNz
+         ze09c/EdDdu7pfVYHQ39lSmUG5z8HoARoOkS6lfc=
+Date:   Tue, 7 Jul 2020 15:42:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-ide@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] ide: triflex: use generic power management
+Message-ID: <20200707204201.GA382915@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <c08ea38f-7629-1800-fb74-a2f75daf2eb0@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594154475; bh=3JD+cbf92nOCDl9yh0tEY6/KCZDMVIf/ZS8FzKX/Zqo=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=XL1RmgBmV/8i+yhnhYs19d6ZfivjzLT16B06yXpptLXDj7tRGNjKcUcbkXw70R/HV
-         XY9R22fIu5r4na/LLCALERtnK9pLE289TEq1PfhlAbBCO6KOCndOhF0JztIXB4zI3b
-         r8L1+PxjSwiOV6aXmZuwWG02+XH9wHSgcTC033wrMJ3AtHG8vHCxs+8MpZ8ibVs0cN
-         pE+f3HBV4q1AjSyIo8o00p9EDes+Ilr5t03q6qN8XXUQ0MgIz52P5kX3jqMXLfqcRz
-         v2rCf4eZw+dmXgLj65ZrjJ7uFjAtK32ZG3hfaAsRlXMP+nCyRBGQCtB72932TzVKgA
-         x4dqV3eZ17MpQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703081428.1011527-3-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 03, 2020 at 01:44:26PM +0530, Vaibhav Gupta wrote:
+> While upgrading ide_pci_suspend() and ide_pci_resume(), all other source
+> files, using same callbacks, were also updated except
+> drivers/ide/triflex.c. This is because the driver does not want to power
+> off the device during suspend. A quirk was required for the same.
+> 
+> This patch provides the fix. Another driver,
+> drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c, makes use of
+> a quirk for similar goal. Hence a similar quirk has been applied for
+> triflex.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> ---
+>  drivers/ide/triflex.c | 45 +++++++++++--------------------------------
+>  1 file changed, 11 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/ide/triflex.c b/drivers/ide/triflex.c
+> index 1886bbfb9e5d..f707f11c296d 100644
+> --- a/drivers/ide/triflex.c
+> +++ b/drivers/ide/triflex.c
+> @@ -100,48 +100,25 @@ static const struct pci_device_id triflex_pci_tbl[] = {
+>  };
+>  MODULE_DEVICE_TABLE(pci, triflex_pci_tbl);
+>  
+> -#ifdef CONFIG_PM
+> -static int triflex_ide_pci_suspend(struct pci_dev *dev, pm_message_t state)
+> -{
+> -	/*
+> -	 * We must not disable or powerdown the device.
+> -	 * APM bios refuses to suspend if IDE is not accessible.
+> -	 */
+> -	pci_save_state(dev);
+> -	return 0;
+> -}
+> -
+> -static int triflex_ide_pci_resume(struct pci_dev *dev)
+> +/*
+> + * We must not disable or powerdown the device.
+> + * APM bios refuses to suspend if IDE is not accessible.
+> + */
+> +static void triflex_pci_pm_cap_fixup(struct pci_dev *pdev)
+>  {
+> -	struct ide_host *host = pci_get_drvdata(dev);
+> -	int rc;
+> -
+> -	pci_set_power_state(dev, PCI_D0);
+> -
+> -	rc = pci_enable_device(dev);
+> -	if (rc)
+> -		return rc;
+> -
+> -	pci_restore_state(dev);
+> -	pci_set_master(dev);
+> -
+> -	if (host->init_chipset)
+> -		host->init_chipset(dev);
+> -
+> -	return 0;
+> +	dev_info(&pdev->dev, "Disable triflex to be turned off by PCI CORE\n");
 
-On 7/7/20 1:29 PM, Sowjanya Komatineni wrote:
->
-> On 7/7/20 12:35 PM, Hans Verkuil wrote:
->> On 07/07/2020 21:25, Sowjanya Komatineni wrote:
->>> On 7/7/20 12:01 PM, Sowjanya Komatineni wrote:
->>>>
->>>> On 7/6/20 2:10 AM, Hans Verkuil wrote:
->>>>>> +static void tegra_vi_graph_cleanup(struct tegra_vi *vi)
->>>>>> +{
->>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 list_for_each_entry(chan, &vi->vi_chans, list) {
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 video_unregister_device(=
-&chan->video);
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&chan->video_=
-lock);
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vb2_queue_release(&chan-=
->queue);
->>>>> No need for this since this is done in vb2_fop_release().
->>>>>
->>>>> In fact, vb2_queue_release should never be called by drivers. Just=20
->>>>> using
->>>>> vb2_fop_release or __vb2_fop_release is sufficient.
->>>>>
->>>>> The confusion is due to the fact that the name suggests that=20
->>>>> vb2_queue_release
->>>>> has to be balanced with vb2_queue_init, but that's not the case.=20
->>>>> Perhaps
->>>>> vb2_queue_stop or something like that might be a better name. I'll=20
->>>>> have to
->>>>> think about this since I see that a lot of drivers do this wrong.
->>>>>
->>>>>> + mutex_unlock(&chan->video_lock);
->>>>>> + v4l2_async_notifier_unregister(&chan->notifier);
->>>>>> + v4l2_async_notifier_cleanup(&chan->notifier);
->>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>> +}
->>>>>> +
->>>> vb2_queue_release() here is called to stop streaming a head before=20
->>>> media links are removed in case of when driver unbind happens while
->>>> userspace application holds video device with active streaming in=20
->>>> progress.
->>>>
->>>> Without vb2_queue_release() here streaming will be active during=20
->>>> the driver unbind and by the time vb2_queue_release() happens from
->>>> vb2_fop_release(), async notifiers gets unregistered and media=20
->>>> links will be removed which causes channel stop stream to crash as=20
->>>> we can't
->>>> retrieve sensor subdev=C2=A0 thru media entity pads to execute s_strea=
-m=20
->>>> on subdev.
->>>>
->>> I think we don't need async notifier unbind. Currently media links=20
->>> are removed during unbind so during notifier unregister all subdevs=20
->>> gets
->>> unbind and links removed.
->>>
->>> media_device_unregister during video device release callback takes=20
->>> care of media entity unregister and removing links.
->>>
->>> So, will try by removing notifier unbind along with removing=20
->>> vb2_queue_release during cleanup.
->>>
->> I actually wonder if vb2_queue_release shouldn't be called from=20
->> video_unregister_device.
->>
->> I'll look into this tomorrow.
->>
->> Regards,
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0Hans
->
-> Thanks Hans.
->
-> Tried without notifier unbind to remove media links and I still see=20
-> crash due to below diff reason now.
->
-> With userspace app holding video device node with active streaming in=20
-> progress when I do driver unbind, v4l2_device release callback=20
-> tegra_v4l2_dev_release() happens prior to vb2_fops_release() ->=20
-> vb2_queue_release().
->
-> All channels resources and channel memory is freed during v4l2_device=20
-> release callback.
->
-> Letting vb2_queue_release() to happen thru vb2_fops_release() causes=20
-> crash as stop streaming tries to retrieve subdev thru channel media=20
-> pads and channel memory is freed by that time.
->
-> So, doing vb2_queue_release() during driver unbind -> tegra_vi_exit()=20
-> -> tegra_vi_graph_cleanup(), stops subdev stream properly and then on=20
-> v4l2_device release channel memory gets freed and this works which is=20
-> the existing implementation in the patch.
->
-> I remember adding vb2_queue_release() during graph cleanup for TPG as=20
-> well for the same reason to allow driver unbind while holding video=20
-> device from user space so media pad can be accessible to stop stream=20
-> before channel cleanup.
+I would change this message to "Disabling PCI power management" to be
+more like existing messages:
 
-v4l2_dev release() should definitely happen in the last after=20
-vb2_fops_release(). Will add more debugs and confirm on what I observed=20
-as something happened with timestamps on log on my side so I doubt my=20
-above observation after removing notifier unbind to remove media links.
+  "PM disabled\n"
+  "Disabling PCI power management to avoid bug\n"
+  "Disabling PCI power management on camera ISP\n"
 
-Will check and get back..
+> +	pdev->pm_cap = 0;
+>  }
+> -#else
+> -#define triflex_ide_pci_suspend NULL
+> -#define triflex_ide_pci_resume NULL
+> -#endif
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_COMPAQ,
+> +			PCI_DEVICE_ID_COMPAQ_TRIFLEX_IDE,
+> +			triflex_pci_pm_cap_fixup);
 
->
-> Regards,
->
-> Sowjanya
->
+I don't think this needs to be a fixup.  This could be done in the
+probe routine (triflex_init_one()).
+
+Doing it as a fixup means the PCI core will check every PCI device
+to see if it matches PCI_DEVICE_ID_COMPAQ_TRIFLEX_IDE, which is a
+little extra useless overhead and quirks are a little bit magic
+because it's not as obvious how they're called.
+
+But since triflex_init_one() is called only for the devices we care
+about, you can just do:
+
+  static int triflex_init_one(struct pci_dev *dev, const struct pci_device_id *id)
+  {
+        dev->pm_cap = 0;
+	dev_info(...);
+        return ide_pci_init_one(dev, &triflex_device, NULL);
+  }
+
+>  static struct pci_driver triflex_pci_driver = {
+>  	.name		= "TRIFLEX_IDE",
+>  	.id_table	= triflex_pci_tbl,
+>  	.probe		= triflex_init_one,
+>  	.remove		= ide_pci_remove,
+> -	.suspend	= triflex_ide_pci_suspend,
+> -	.resume		= triflex_ide_pci_resume,
+> +	.driver.pm	= &ide_pci_pm_ops,
+>  };
+>  
+>  static int __init triflex_ide_init(void)
+> -- 
+> 2.27.0
+> 
