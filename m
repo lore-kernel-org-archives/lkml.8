@@ -2,121 +2,115 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E68EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F566206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594119546;
-	bh=HgP0jte1uEBp0/EldBW2mmfa/xaCi6WXeXmXNLmIHk0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=M8WpJrBxnTAZuN0/X/8hLUpeSyr2fnuHB/6SbEV7GLMhszKuc37G8vtfuqUiG/ocQ
-	 0e2GSnqzqtR3w0vkDnUIuv+WW543Ju+6OaNHdSXQyiDlwFcOD8INYJheXBvs5KfF8M
-	 5MSjGleXVbUb2ZBXYa/f0LYMdIdtKmMK2LEzti/g=
+	by mail.kernel.org (Postfix) with ESMTP id 7E2D8206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fTRhwpj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgGGK7F (ORCPT
+        id S1728190AbgGGLAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:59:05 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:57372 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgGGK7E (ORCPT
+        Tue, 7 Jul 2020 07:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbgGGLAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:59:04 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 067AwmIs021946
-        for <linux-kernel@vger.kernel.org>; Tue, 7 Jul 2020 19:58:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 067AwmIs021946
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1594119529;
-        bh=Q7blUsQ9JbN98/2v6PmnTU26WzCTrui/OAXxYYFuhio=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dLgZqZOb+1s/K5aLOfNDqded0K4JdophwcRkFTTL4Po8yMixKmG+ezypY5cDyonf4
-         2baAVDsHGf9tXnEbJkwAkUxwBjhzElyQYq6jF71BODCtrwzGkQDlhZK+zV5aJ6muWv
-         Otb0oPc/nL3cgndiZ0BQSAr/9aeG1Sy5JYzIMpNB/HffKJxL+r+fxAQ4oEfCYwL92T
-         LG3UHUJiJIPz3P1f9B/s6n/RGQOyFtSzHitUaiR2rwMA/uy6ZTvGI/rJiRmt5c/B6N
-         KHt92Tf5QfGQkq4D9JeqidL8NYp96aajg4loIh+m7/AT8B96bZbBSJemFzbtDhBEqo
-         ZmPN9LuYqhm5Q==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id e15so22279646vsc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 03:58:49 -0700 (PDT)
-X-Gm-Message-State: AOAM53138caLwGcbytUJ5/LNjbWQQi1rlbAOoXpkCReInYDC5g6kRBKn
-        XFj9IiD2PHoFWeF2AE2tlwheagP2prWSVKJI1mk=
-X-Google-Smtp-Source: ABdhPJx5C6TC1CTC3ZI4pLzUX4bW+vK98tg3hyw8GkksN3pcaONQiKgWX4RJM4Cxt/R3M5Kza1brZQUcvvb5lnQhBNU=
-X-Received: by 2002:a67:6c84:: with SMTP id h126mr35660734vsc.181.1594119527826;
- Tue, 07 Jul 2020 03:58:47 -0700 (PDT)
+        Tue, 7 Jul 2020 07:00:06 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3B2C08C5DF
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:00:06 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e4so49399615ljn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:00:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KYp96ZZSsCMgncArOFXly9s4OIli23NE92mNWgNw4B4=;
+        b=fTRhwpj/hU9LfJzJkArIDCDB06upW6a/C93yjE1K2cuse98pkQSzoA+sYMYtLUzpDf
+         3bp4aEg2xQVvoYioUSQP0uJQAC21hPPGHss9REoOMCDiJiZ5xEBBCNpeUbFG4cvUniMv
+         2TC9aOH9W8eK2nENG0Z49Gl/eIoFu9EfVU7YOlIOqdz27oL0+BEVXQstm2SudjiXJY3+
+         27TOPF9Jb895pl5OdzMSly4xGJ0XrKuF6+ntvUXmtZOdDg2vGf6j8qqtWXaNTbOKnfRC
+         k9bfaV65PgvLITOCEwGD9SdAmApIqfAx76iAQGVkmib6gjtNWscBDAyMLSGqGzdyvUTP
+         y7jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KYp96ZZSsCMgncArOFXly9s4OIli23NE92mNWgNw4B4=;
+        b=Vh26mD7ctdUUQFzUQZHXjBoYgrAr1wvRSiGelKJb3JDvNsl72bkzRu1m/zs5NUS1KQ
+         mapEbgoL63kjahE73yPLlzcQaMvTUVF9HsudJmo4jTG50Sv8XMwXyIzYMm60nEHsrDv7
+         cDCucLH57UbDh+SIR0iFPbSm8FvGIAmS+4CqyvSvGjFpeuXB8sAtetL49EoP3TSiJ+Hf
+         eQVyHAWcTw9lJJX4hTOUdM2i8sMS1MCUhyEk0vN9bCyElxK+hLYx4H/vO5FHeYFSVGdT
+         6iG4ZNJZcRp4Y1EMj76tO3h/OPgKQ1XQVM4+j0hUGl+Qp8LIhpTCcoxKvDPX3exg7vba
+         YlLQ==
+X-Gm-Message-State: AOAM532G+RDGhnv/Goi0AuoKbVEuYZO2xt7VexNoZXyrhR6ho5RWB3xn
+        XPaxMmzDpXfypNXAsBYOhhATuQ/c2ETKUBgG02qvQg==
+X-Google-Smtp-Source: ABdhPJz/EbBwJ1T3GgvyKHSaJPDBjC/885l2Y1IY+hCrikFT6rUcrPXU9Ohp3fztPR4QHzpES5qUG955fZ1BVL9iXNs=
+X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr13896696ljc.104.1594119604328;
+ Tue, 07 Jul 2020 04:00:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200702165901.164100-1-pierre-louis.bossart@linux.intel.com> <20200702165901.164100-9-pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <20200702165901.164100-9-pierre-louis.bossart@linux.intel.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 7 Jul 2020 19:58:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARV9p=TF+5kPx-MBOsGnE9mafndYTEoaWRAaieqeL5a5A@mail.gmail.com>
-Message-ID: <CAK7LNARV9p=TF+5kPx-MBOsGnE9mafndYTEoaWRAaieqeL5a5A@mail.gmail.com>
-Subject: Re: [PATCH 8/8] ASoC: uniphier: aio-core: fix kernel-doc
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "moderated list:ARM/UNIPHIER ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20200701013320.130441-1-drew@beagleboard.org>
+In-Reply-To: <20200701013320.130441-1-drew@beagleboard.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jul 2020 12:59:53 +0200
+Message-ID: <CACRpkdY3mUjczkJhV9BdZhUJGOgrbOMJnciBjOaPg6c9XUt8Ww@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] pinctrl: single: support #pinctrl-cells = 2
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 1:59 AM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
->
-> Fix W=1 warning - wrong parameter description and bad format
->
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
+On Wed, Jul 1, 2020 at 3:33 AM Drew Fustini <drew@beagleboard.org> wrote:
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-
->  sound/soc/uniphier/aio-core.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+> Currently, pinctrl-single only allows #pinctrl-cells = 1.
 >
-> diff --git a/sound/soc/uniphier/aio-core.c b/sound/soc/uniphier/aio-core.c
-> index 9bcba06ba52e..b8195778953e 100644
-> --- a/sound/soc/uniphier/aio-core.c
-> +++ b/sound/soc/uniphier/aio-core.c
-> @@ -93,9 +93,9 @@ void aio_iecout_set_enable(struct uniphier_aio_chip *chip, bool enable)
+> This series will allow pinctrl-single to also support #pinctrl-cells = 2
 >
->  /**
->   * aio_chip_set_pll - set frequency to audio PLL
-> - * @chip  : the AIO chip pointer
-> - * @source: PLL
-> - * @freq  : frequency in Hz, 0 is ignored
-> + * @chip: the AIO chip pointer
-> + * @pll_id: PLL
-> + * @freq: frequency in Hz, 0 is ignored
->   *
->   * Sets frequency of audio PLL. This function can be called anytime,
->   * but it takes time till PLL is locked.
-> @@ -267,7 +267,6 @@ void aio_port_reset(struct uniphier_aio_sub *sub)
->  /**
->   * aio_port_set_ch - set channels of LPCM
->   * @sub: the AIO substream pointer, PCM substream only
-> - * @ch : count of channels
->   *
->   * Set suitable slot selecting to input/output port block of AIO.
->   *
-> --
-> 2.25.1
+> If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
+> pcs_parse_one_pinctrl_entry() does an OR operation on conf and mux to
+> get the value to store in the register.
 >
+> To take advantage of #pinctrl-cells = 2, the AM33XX_PADCONF macro in
+> omap.h is modified to keep pin conf and pin mux values separate.
+>
+> change log:
+> - v4: squash patches 2 and 3 together so that git biesct will not result
+>   in a boot failure
+>
+> - v3: change order of patches to make sure the pinctrl-single.c patch
+>   does not break anything without the dts patches
+>
+> - v2: remove outer parentheses from AM33XX_PADCONF macro as it causes a
+>   compile error in dtc.  I had added it per suggestion from checkpatch
+>   about having parentheses around complex values.
+>
+> Drew Fustini (2):
+>   pinctrl: single: parse #pinctrl-cells = 2
+>   ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
 
+Both patches applied to the pinctrl devel branch for v5.9!
 
--- 
-Best Regards
-Masahiro Yamada
+Please make sure not to create colliding patches in the DTS files merged
+through ARM SoC this merge window.
+
+Yours,
+Linus Walleij
