@@ -2,112 +2,158 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA17C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35882C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0FE21582
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594152937;
-	bh=I9HbhhuzQLNHpA2LIgmLXf0xSkdCv3OLshOfoSE0EIY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0/dYllNiswAN4Fm08U0giYJZp2a8uBI+WA1UBPWEpa0KKyaQ+FJrFsGqZMAZVfxlt
-	 HXK7pGxKZJFpcHJ82TUv/DFlIv9e0cJ69xzYGqmyLGGjaOJyd/1E7O5755vNglCoD3
-	 rn8Qj3VG/iBL9uk0wj6rlfmDb2z9gYa2J3rt+Vkg=
+	by mail.kernel.org (Postfix) with ESMTP id 1815721532
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgGGUPg (ORCPT
+        id S1728507AbgGGUQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:15:36 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42828 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728325AbgGGUPf (ORCPT
+        Tue, 7 Jul 2020 16:16:27 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:41414 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgGGUQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:15:35 -0400
-Received: by mail-io1-f68.google.com with SMTP id c16so44581037ioi.9;
-        Tue, 07 Jul 2020 13:15:34 -0700 (PDT)
+        Tue, 7 Jul 2020 16:16:27 -0400
+Received: by mail-il1-f200.google.com with SMTP id k6so31088551ilg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 13:16:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=K966dzq3887Uzlyy0dRpEQhzNCgkZkq/ZzXqsSsdFE4=;
-        b=l+/w6iL4OQeCt/Gc7j4Pj8KcY7A9KbXxAPGD3UCOmyuObC/KrZuOj1exitXs0P7IFF
-         dN9eAysWQAodsbUo/D961Ou16JjNlOWc3urGI/g/77PBzFvkqkIGx4Kph4Njt3rL8ZZd
-         MzuZX4Zi3FnWBbL3j4xDMGLii0oA7rESj2gV7TqQ56tIIl5oElwO+e8ziwaKRM27NQBh
-         emf5ZiB/7BwrNJ0JT2b0oqMQOJyO8bblJ92eN8tXbO1Q76KG8/e5ApeX4alf2HFPsP3x
-         7MGwV3MaiFrIrMJbD3Rqz2drJgxB6++hS/SjUGFlu80xztZeCpdazv1H4i05iLOVrsnI
-         PS+g==
-X-Gm-Message-State: AOAM5311TnxfBG413LvxKp1TRg4pSRjJKWpfMSPBqsWxClHpTwQgBMH1
-        cp9BNCicya690VPhQdboRQ==
-X-Google-Smtp-Source: ABdhPJyyR0n/NJPHCUOxaun8dycLNdyQs4Era0rW43mycahPjoJooqZYSp6SyU9Cvr6sdhxGu1p8yQ==
-X-Received: by 2002:a05:6638:dd3:: with SMTP id m19mr63316901jaj.106.1594152934274;
-        Tue, 07 Jul 2020 13:15:34 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id d77sm13999482ill.67.2020.07.07.13.15.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 13:15:33 -0700 (PDT)
-Received: (nullmailer pid 558788 invoked by uid 1000);
-        Tue, 07 Jul 2020 20:15:32 -0000
-Date:   Tue, 7 Jul 2020 14:15:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Rob Herring <robh+dt@kernel.org>, Jack Lo <jack.lo@gtsys.com.hk>,
-        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
-Message-ID: <20200707201532.GA558059@bogus>
-References: <20200705034727.1429-1-chris.ruehl@gtsys.com.hk>
- <20200705034727.1429-3-chris.ruehl@gtsys.com.hk>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=dR4bNMUx1r4Ca56TjVMWL41woSnGCncK21qs6HcUUW8=;
+        b=iOd9ujmwH4pE181KAFg0cO5WlzkK5TkYCzr5sxA8wUmqHWrlS4GsHtb4RuDQAP3jEb
+         68+1afusX3Nht+OlbHbABVWxHta7iPh2+6d9iVTARSeF05Bh02/LfKKzh/BeCYScW/43
+         lX9FahTkU6fBT1rM00pPcAxLZnkUNbkJ9fy9JwhiU2X3oTMNQYjBdciW4guOcgMsTYpA
+         jrxX5j9fIKziO7pUhdW9d9LPFIp/clraaTZQStaiwvhzU9oS5jtaTkkWdAtV3g0MdkUy
+         9+ZI4/qbjINskYIgHCj9RgwuplCS6h41zdLlBCwsiYxXdklI0VKd7RWgiGQQNbgtqXNJ
+         2Y2g==
+X-Gm-Message-State: AOAM532HqEzYSTqJut1oWm28FZ8IwqOmeoWgSzC/WFS6WZ2wVzS7pVT6
+        Io4NFtCBXclZ3eJq0elTXe/UEgHMUt3RkA9u0oGhwsNNgdy5
+X-Google-Smtp-Source: ABdhPJz7SsqUs129FfxLBzeUA+omP///IVXqW+HzxrlwzojVITiw3p5ysCjO92SvHBSPQdttjN5gkEQ9s46c/w78AktpAdQTAX9N
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200705034727.1429-3-chris.ruehl@gtsys.com.hk>
+X-Received: by 2002:a02:70d6:: with SMTP id f205mr61992950jac.5.1594152985671;
+ Tue, 07 Jul 2020 13:16:25 -0700 (PDT)
+Date:   Tue, 07 Jul 2020 13:16:25 -0700
+In-Reply-To: <0000000000002c6fbf05a8954afe@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006dbe1005a9dfaa7c@google.com>
+Subject: Re: BUG: sleeping function called from invalid context in do_user_addr_fault
+From:   syzbot <syzbot+7748c5375dc20dfdb92f@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 05 Jul 2020 11:47:26 +0800, Chris Ruehl wrote:
-> Add documentation for the newly added DTS support in the shtc1 driver.
-> To align with the drivers logic to have high precision by default
-> a boolean sensirion,low_precision is used to switch to low precision.
-> 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
->  .../bindings/hwmon/sensirion,shtc1.yaml       | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-> 
+syzbot has found a reproducer for the following crash on:
 
+HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14ed01a3100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=183dd243398ba7ec
+dashboard link: https://syzkaller.appspot.com/bug?extid=7748c5375dc20dfdb92f
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1469d28f100000
 
-My bot found errors running 'make dt_binding_check' on your patch:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7748c5375dc20dfdb92f@syzkaller.appspotmail.com
 
-Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml:  while parsing a flow mapping
-  in "<unicode string>", line 43, column 9
-did not find expected ',' or '}'
-  in "<unicode string>", line 47, column 14
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-
-See https://patchwork.ozlabs.org/patch/1322963
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+BUG: sleeping function called from invalid context at arch/x86/mm/fault.c:1253
+in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 6824, name: syz-executor.2
+1 lock held by syz-executor.2/6824:
+ #0: ffff88809abb82a8 (&mm->mmap_lock#2){++++}-{3:3}, at: mmap_read_trylock include/linux/mmap_lock.h:56 [inline]
+ #0: ffff88809abb82a8 (&mm->mmap_lock#2){++++}-{3:3}, at: do_user_addr_fault+0x344/0xba0 arch/x86/mm/fault.c:1236
+irq event stamp: 190300
+hardirqs last  enabled at (190299): [<ffffffff881efdef>] __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
+hardirqs last  enabled at (190299): [<ffffffff881efdef>] _raw_spin_unlock_irqrestore+0x6f/0xd0 kernel/locking/spinlock.c:191
+hardirqs last disabled at (190300): [<ffffffff810075c2>] __syscall_return_slowpath+0x52/0x180 arch/x86/entry/common.c:328
+softirqs last  enabled at (187494): [<ffffffff88200f0f>] asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+softirqs last disabled at (187473): [<ffffffff88200f0f>] asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+CPU: 0 PID: 6824 Comm: syz-executor.2 Not tainted 5.8.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ ___might_sleep+0x3c0/0x570 kernel/sched/core.c:6899
+ do_user_addr_fault+0x377/0xba0 arch/x86/mm/fault.c:1253
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0x124/0x1f0 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:565
+RIP: 0010:__prepare_exit_to_usermode+0x52/0x1e0 arch/x86/entry/common.c:240
+Code: 24 50 15 00 00 0f 85 8f 01 00 00 f0 41 80 64 24 03 7f 83 3d 9f e9 6c 08 00 74 23 41 83 bc 24 cc 08 00 00 00 75 18 41 83 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc90001607f10 EFLAGS: 00010006
+RAX: 0000000000000000 RBX: 000000000000003d RCX: ffff888095318300
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90001607f58
+RBP: 0000000000000000 R08: ffffffff817a2250 R09: ffffed10128c82ed
+R10: ffffed10128c82ed R11: 0000000000000000 R12: ffff888095318300
+R13: 0000000000000000 R14: ffffc90001607f58 R15: ffffc90001607f58
+ do_syscall_64+0x7f/0xe0 arch/x86/entry/common.c:368
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4169ca
+Code: Bad RIP value.
+RSP: 002b:00007fff61070cd8 EFLAGS: 00000246 ORIG_RAX: 000000000000003d
+RAX: 0000000000000000 RBX: 000000000000e1d1 RCX: 00000000004169ca
+RDX: 0000000040000001 RSI: 00007fff61070d10 RDI: ffffffffffffffff
+RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000001cf2940
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000008
+R13: 00007fff61070d10 R14: 000000000000de93 R15: 00007fff61070d20
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD a7cf1067 P4D a7cf1067 PUD a0728067 PMD 0 
+Oops: 0002 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 6824 Comm: syz-executor.2 Tainted: G        W         5.8.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__prepare_exit_to_usermode+0x52/0x1e0 arch/x86/entry/common.c:240
+Code: 24 50 15 00 00 0f 85 8f 01 00 00 f0 41 80 64 24 03 7f 83 3d 9f e9 6c 08 00 74 23 41 83 bc 24 cc 08 00 00 00 75 18 41 83 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc90001607f10 EFLAGS: 00010006
+RAX: 0000000000000000 RBX: 000000000000003d RCX: ffff888095318300
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90001607f58
+RBP: 0000000000000000 R08: ffffffff817a2250 R09: ffffed10128c82ed
+R10: ffffed10128c82ed R11: 0000000000000000 R12: ffff888095318300
+R13: 0000000000000000 R14: ffffc90001607f58 R15: ffffc90001607f58
+FS:  0000000001cf2940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000a380c000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ do_syscall_64+0x7f/0xe0 arch/x86/entry/common.c:368
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4169ca
+Code: Bad RIP value.
+RSP: 002b:00007fff61070cd8 EFLAGS: 00000246 ORIG_RAX: 000000000000003d
+RAX: 0000000000000000 RBX: 000000000000e1d1 RCX: 00000000004169ca
+RDX: 0000000040000001 RSI: 00007fff61070d10 RDI: ffffffffffffffff
+RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000001cf2940
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000008
+R13: 00007fff61070d10 R14: 000000000000de93 R15: 00007fff61070d20
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace bee8a2ac971d1076 ]---
+RIP: 0010:__prepare_exit_to_usermode+0x52/0x1e0 arch/x86/entry/common.c:240
+Code: 24 50 15 00 00 0f 85 8f 01 00 00 f0 41 80 64 24 03 7f 83 3d 9f e9 6c 08 00 74 23 41 83 bc 24 cc 08 00 00 00 75 18 41 83 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc90001607f10 EFLAGS: 00010006
+RAX: 0000000000000000 RBX: 000000000000003d RCX: ffff888095318300
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90001607f58
+RBP: 0000000000000000 R08: ffffffff817a2250 R09: ffffed10128c82ed
+R10: ffffed10128c82ed R11: 0000000000000000 R12: ffff888095318300
+R13: 0000000000000000 R14: ffffc90001607f58 R15: ffffc90001607f58
+FS:  0000000001cf2940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000a380c000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
