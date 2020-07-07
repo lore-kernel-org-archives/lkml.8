@@ -2,96 +2,203 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7D6220715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 00:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA63820715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 01:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="utZXuTrr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kf/6uRcV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgGGA5A (ORCPT
+        id S1726961AbgGGBCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 20:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40086 "EHLO
+        Mon, 6 Jul 2020 21:02:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgGGA47 (ORCPT
+        with ESMTP id S1725892AbgGGBCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 20:56:59 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBEB0C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 17:56:59 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id r7so9021148vkf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 17:56:59 -0700 (PDT)
+        Mon, 6 Jul 2020 21:02:42 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18EDC061755
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jul 2020 18:02:41 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id m8so13921822qvk.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jul 2020 18:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=s0U+Ae9VUStW4ggEhVdvGzjNMlpXyTeUY/9gfTY0/ec=;
-        b=utZXuTrrhdNVvBHa1uweiJE4wi7wuw2yaj43gZoKVA+qQ/6IXeglgpTFncFc45q4ND
-         xHb/E0aE4+EHzVpKgNpesgrAOJlG3Cecc1+o1aN1nGqNxny5/dSHdSbeNbt8Gx+5Jy4d
-         U0adT/ZKYdmYq5vzD/F7dPXHiYT5Brm13Ur9F1y48aJOToL/HPM5vU7MZ4kMFsPUNFur
-         hNpvFdJlGj/vIa9735IUUtO17dbYeotu04ZtBzAOKp8zrb++93ecNoOrFyLaVZG6kX+J
-         fYAKztNMx7FwrQy9Y+dYCt6e1dHMuSJ/ThTdQ0+C1AAtm18ddSH8UAdBPirsWmTPSgrR
-         rrNw==
+        bh=UPLglurd2bXR8gqpRZ4MDKzwYBPMt0K23wQze9gEJ2c=;
+        b=Kf/6uRcVV0NUzFhvPEALeNNkq22wybhmjgUM0n8ASfuhauZ3HRcOdohgRYpPdAT3Se
+         ihj/wwdmvst7WmznaeiX5G0GYcHiRfob0hNOi+TdAiKCU2Tt4562mr/VIa7g9RQ3sBTs
+         DX0E/+DJ2ZLN6dvN8M2xcMVV6FSGbLBXbgva4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=s0U+Ae9VUStW4ggEhVdvGzjNMlpXyTeUY/9gfTY0/ec=;
-        b=pdlBxVMGXgt6yVpFUtW5sG3I6ep/NZJB09sexS/A8B6kZaQdt7nKubMt2blcQ94fr4
-         g/C7mFP8seWSpqSeC4Re7RkgAQrStWKRzXURDZAeKpTCDmEiR2t26A4tIXCvga7RqBqF
-         i26XKWDXI0+5XSvlrUrauX+qeD2/7AMhAJ0dBOw2DDRuEZNsvsFLU4iUnvomsLdkVYN5
-         A9MmfLx2nhVjl6vDWhN/iCWd6qaAy/a5UV/0DsAZWI+JhzJQiOPxBkYXL+TWvHN4b0C+
-         OPnnAD5t4wTqlNSf8gzNMsNTBUW4N+oUyB7rLE/oWrk374ifc1pjURAWIvNQ7yFKb/UQ
-         Xevw==
-X-Gm-Message-State: AOAM532sa+rZCHcd2HzAu/qOQJW9v3PXT+4bnifAGfCyIT0ov0aqHo4t
-        e4ELakgoN/uvxTQocjRv5qoZUuOILpIbRYCVysaE1Q==
-X-Google-Smtp-Source: ABdhPJypuhUMCtj7x1ckYaC6Q89LU+doEAJ8U+ir85soCY7TokFB47XjJ5t2vzKQFIEK/maz9ZHoQTHnpvT5bIXg0Wo=
-X-Received: by 2002:a1f:978d:: with SMTP id z135mr20253309vkd.86.1594083400343;
- Mon, 06 Jul 2020 17:56:40 -0700 (PDT)
+        bh=UPLglurd2bXR8gqpRZ4MDKzwYBPMt0K23wQze9gEJ2c=;
+        b=UBcFGCxKHsXZX6wlAhiATEnFRbdppvUlDvETAnJ3NEBVi6fH48zY57uHPXk1wcXB4+
+         kGodMXVfY8r2jyA6X9/f7YRTkP/77rD8zllkBq57a3ilcxFxd96RINMbyqo0wd6RKgVs
+         xtKPfdkeW1t51F9422OUVvzXeno7smHng7pgmgmT64QdkT7ubM1RLoZze/eAPeYDWbr+
+         GXDT6jwflefYai39ZTsf58ZdFvSa/+XUz2zUamamSd9Jbr/78WYYU4XbpJhySKb5n1NF
+         AyqPCO+Zh0MAVTMRuSNq+48yBQmQ0cuQlUfyI7KPlQMR8gxc9mfUPv5TfjbDEHK94uml
+         gXeA==
+X-Gm-Message-State: AOAM532jYCK/iMngkhGg8xdRRBwHzVYnExgB3lI+X3skfESloHEpi4Pg
+        njNlj+ZJqhysxY9rjN8PQCNM30LKIQBQfeSjfXGx1780
+X-Google-Smtp-Source: ABdhPJy2ipwIBj8S3tAe2nNhvJM3NpT/pnPppOMqhdYDW5SY1bDEYpke03X5ei47wQmgixJ/twrWZDpDXw1PZbgGO8A=
+X-Received: by 2002:a05:6214:3ac:: with SMTP id m12mr45511839qvy.18.1594083760821;
+ Mon, 06 Jul 2020 18:02:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200707002203.2494094-1-linchuyuan@google.com>
- <20200707002203.2494094-3-linchuyuan@google.com> <1d6c34f5-6da2-a081-3d13-559f9dbbe352@roeck-us.net>
-In-Reply-To: <1d6c34f5-6da2-a081-3d13-559f9dbbe352@roeck-us.net>
-From:   Chu Lin <linchuyuan@google.com>
-Date:   Mon, 6 Jul 2020 17:56:29 -0700
-Message-ID: <CAKCA56AYnkD1gqZQjhJwv6aCTRNV2axB88aD-6QVrJHc=VxBNQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] hwmon:max6697: fixing the type issue where the
- comparison is always true
+References: <20200704142607.171400-1-linux@roeck-us.net> <20200706185230.GA792857@google.com>
+ <20200706194120.GB180826@roeck-us.net> <CACeCKadx5vmqT9dnTTr49T3s-ZG1h3YnKZRvFVB4vrUhnD2faw@mail.gmail.com>
+ <a6567dcc-8360-6537-3147-9da6ea1bcc64@roeck-us.net>
+In-Reply-To: <a6567dcc-8360-6537-3147-9da6ea1bcc64@roeck-us.net>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Mon, 6 Jul 2020 18:02:30 -0700
+Message-ID: <CACeCKafa_Ou_WXSyWs8Agcr=S2H6Gyqdx1dyxieKhJ5VW_MCXg@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: cros_ec_proto: Convert EC error codes to
+ Linux error codes
 To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Kais Belgaied <belgaied@google.com>,
-        Jason Ling <jasonling@google.com>, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zhongqi Li <zhongqil@google.com>,
-        kernel test robot <lkp@intel.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 5:54 PM Guenter Roeck <linux@roeck-us.net> wrote:
+On Mon, Jul 6, 2020 at 2:38 PM Guenter Roeck <linux@roeck-us.net> wrote:
 >
-> On 7/6/20 5:22 PM, Chu Lin wrote:
-> >   - Use reverse christmas tree order convension
-> >   - fix the type issue where comparision is always true
-> >   - Change the line limit to 100 char instead of 80 char
+> On 7/6/20 1:07 PM, Prashant Malani wrote:
+> > On Mon, Jul 6, 2020 at 12:41 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> >>
+> >> On Mon, Jul 06, 2020 at 11:52:30AM -0700, Prashant Malani wrote:
+> >>> Hi Guenter,
+> >>>
+> >>> On Sat, Jul 04, 2020 at 07:26:07AM -0700, Guenter Roeck wrote:
+> >>>> The EC reports a variety of error codes. Most of those, with the exception
+> >>>> of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
+> >>>> error code gets lost. Convert all EC errors to Linux error codes to report
+> >>>> a more meaningful error to the caller to aid debugging.
+> >>>>
+> >>>> Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> >>>> Cc: Prashant Malani <pmalani@chromium.org>
+> >>>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> >>>> ---
+> >>>>  drivers/platform/chrome/cros_ec_proto.c | 37 +++++++++++++++++++------
+> >>>>  1 file changed, 29 insertions(+), 8 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> >>>> index 3e745e0fe092..10aa9e483d35 100644
+> >>>> --- a/drivers/platform/chrome/cros_ec_proto.c
+> >>>> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> >>>> @@ -543,6 +543,29 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+> >>>>  }
+> >>>>  EXPORT_SYMBOL(cros_ec_cmd_xfer);
+> >>>>
+> >>>> +static const int cros_ec_error_map[] = {
+> >>>> +   [EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
+> >>>> +   [EC_RES_ERROR] = -EIO,
+> >>>> +   [EC_RES_INVALID_PARAM] = -EINVAL,
+> >>>> +   [EC_RES_ACCESS_DENIED] = -EACCES,
+> >>>> +   [EC_RES_INVALID_RESPONSE] = -EPROTO,
+> >>>> +   [EC_RES_INVALID_VERSION] = -ENOTSUPP,
+> >>>> +   [EC_RES_INVALID_CHECKSUM] = -EBADMSG,
+> >>>> +   [EC_RES_IN_PROGRESS] = -EINPROGRESS,
+> >>>> +   [EC_RES_UNAVAILABLE] = -ENODATA,
+> >>>> +   [EC_RES_TIMEOUT] = -ETIMEDOUT,
+> >>>> +   [EC_RES_OVERFLOW] = -EOVERFLOW,
+> >>>> +   [EC_RES_INVALID_HEADER] = -EBADR,
+> >>>> +   [EC_RES_REQUEST_TRUNCATED] = -EBADR,
+> >>>> +   [EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
+> >>>> +   [EC_RES_BUS_ERROR] = -EFAULT,
+> >>>> +   [EC_RES_BUSY] = -EBUSY,
+> >>>> +   [EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
+> >>>> +   [EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
+> >>>> +   [EC_RES_INVALID_DATA_CRC] = -EBADMSG,
+> >>>> +   [EC_RES_DUP_UNAVAILABLE] = -ENODATA,
+> >>>> +};
+> >>>> +
+> >>>>  /**
+> >>>>   * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
+> >>>>   * @ec_dev: EC device.
+> >>>> @@ -555,8 +578,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
+> >>>>   *
+> >>>>   * Return:
+> >>>>   * >=0 - The number of bytes transferred
+> >>>> - * -ENOTSUPP - Operation not supported
+> >>>> - * -EPROTO - Protocol error
+> >>>> + * <0 - Linux error code
+> >>>>   */
+> >>>>  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> >>>>                         struct cros_ec_command *msg)
+> >>>> @@ -566,13 +588,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> >>>>     ret = cros_ec_cmd_xfer(ec_dev, msg);
+> >>>>     if (ret < 0) {
+> >>>>             dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
+> >>>> -   } else if (msg->result == EC_RES_INVALID_VERSION) {
+> >>>> -           dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
+> >>>> -                   msg->result);
+> >>>> -           return -ENOTSUPP;
+> >>>>     } else if (msg->result != EC_RES_SUCCESS) {
+> >>>> -           dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
+> >>>> -           return -EPROTO;
+> >>>> +           if (msg->result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[msg->result])
+> >>>
+> >>> Do we expect a case where cros_ec_error_map[msg->result] == 0?
+> >>>
+> >>
+> >> It seemed to be prudent to assume that this code is not going to be
+> >> updated whenever a new EC error code is added. Doing nothing would
+> >> risk returning 0, and addding WARN_ON or dev_warn seemed excessive.
+> >> Having said that, I don't really have a strong opinion one way
+> >> or another, and I'll be happy to change the code to whatever people
+> >> think is appropriate.
 > >
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Chu Lin <linchuyuan@google.com>
+> > Thanks for providing the rationale. I think if a new EC error code is
+> > added (and this array isn't updated),
+> > msg->result < ARRAY_SIZE(cros_ec_error_map) would return false, and
+> > the code block would return -EPROTO.
+> >
 >
-> Unless I am missing something, this patch fixes the first patch
-> of the series. This is not reviewable. Please combine with the
-> first patch.
+> Some scenarios:
 >
+> Developer 1 adds EC_RES_SOME_ERROR, and does not update the array.
+> Developer 2 adds EC_RES_SOME_OTHER_ERROR and updates the array, but
+> does not realize that EC_RES_SOME_ERROR is missing as well, and does
+> not add it.
+> Developer 3 adds two (or more) error codes, and does not update the
+> array. Someone else later finds a -EPROTO return code and adds the
+> necessary translation to the array. That translation happens to be
+> for the last error code. The developer doing that does not realize
+> that other error codes are missing as well, or does not realize
+> the impact, and does not add translations for the other missing
+> error codes.
+>
+> Overall there are too many situations where this can go wrong for me
+> to trust that it never will.
+
+Fair enough.
+>
+> > I'll defer to the maintainer's opinion(s), but I think we can remove
+> > the condition after '&&'.
+> >
+>
+> I thought about it, but I find that I don't feel comfortable with
+> doing that. If that is what is asked for, would you mind providing
+> a separate patch which doesn't have my name on it ?
+>
+
+Thanks again for your explanation. As someone Cc-ed, I find it
+important (for me) to seek clarification behind the code. Thank you
+for providing that.
+As I alluded to earlier, over to the maintainer(s) now :)
+
 > Thanks,
 > Guenter
-Sorry, I will fix it.
-
-Chu
