@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F85520739
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90BC02078D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgGGLsQ (ORCPT
+        id S1728813AbgGGLsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:48:16 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:54178 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728799AbgGGLsO (ORCPT
+        Tue, 7 Jul 2020 07:48:15 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:51824 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728036AbgGGLsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:48:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U20joWQ_1594122436;
+        Tue, 7 Jul 2020 07:48:12 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U20joWQ_1594122436;
 Received: from alexshi-test.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U20joWQ_1594122436)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 07 Jul 2020 19:47:19 +0800
+          Tue, 07 Jul 2020 19:47:21 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
@@ -34,9 +34,9 @@ To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         cgroups@vger.kernel.org, shakeelb@google.com,
         iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>
-Subject: [PATCH v15 06/21] mm/thp: clean up lru_add_page_tail
-Date:   Tue,  7 Jul 2020 19:46:38 +0800
-Message-Id: <1594122412-28057-7-git-send-email-alex.shi@linux.alibaba.com>
+Subject: [PATCH v15 10/21] mm/lru: move lru_lock holding in func lru_note_cost_page
+Date:   Tue,  7 Jul 2020 19:46:42 +0800
+Message-Id: <1594122412-28057-11-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1594122412-28057-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1594122412-28057-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -45,50 +45,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the first parameter is only used by head page, it's better to make
-it explicit.
+It's a clean up patch w/o function changes.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Hugh Dickins <hughd@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org
 ---
- mm/huge_memory.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ mm/memory.c     | 3 ---
+ mm/swap.c       | 2 ++
+ mm/swap_state.c | 2 --
+ mm/workingset.c | 2 --
+ 4 files changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 9e050b13f597..b18f21da4dac 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2340,19 +2340,19 @@ static void remap_page(struct page *page)
- 	}
+diff --git a/mm/memory.c b/mm/memory.c
+index 87ec87cdc1ff..dafc5585517e 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3150,10 +3150,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 				 * XXX: Move to lru_cache_add() when it
+ 				 * supports new vs putback
+ 				 */
+-				spin_lock_irq(&page_pgdat(page)->lru_lock);
+ 				lru_note_cost_page(page);
+-				spin_unlock_irq(&page_pgdat(page)->lru_lock);
+-
+ 				lru_cache_add(page);
+ 				swap_readpage(page, true);
+ 			}
+diff --git a/mm/swap.c b/mm/swap.c
+index dc8b02cdddcb..b88ca630db70 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -298,8 +298,10 @@ void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
+ 
+ void lru_note_cost_page(struct page *page)
+ {
++	spin_lock_irq(&page_pgdat(page)->lru_lock);
+ 	lru_note_cost(mem_cgroup_page_lruvec(page, page_pgdat(page)),
+ 		      page_is_file_lru(page), hpage_nr_pages(page));
++	spin_unlock_irq(&page_pgdat(page)->lru_lock);
  }
  
--static void lru_add_page_tail(struct page *page, struct page *page_tail,
-+static void lru_add_page_tail(struct page *head, struct page *page_tail,
- 				struct lruvec *lruvec, struct list_head *list)
- {
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
--	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
-+	VM_BUG_ON_PAGE(!PageHead(head), head);
-+	VM_BUG_ON_PAGE(PageCompound(page_tail), head);
-+	VM_BUG_ON_PAGE(PageLRU(page_tail), head);
- 	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
+ static void __activate_page(struct page *page, struct lruvec *lruvec)
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index 05889e8e3c97..080be52db6a8 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -440,9 +440,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 	}
  
- 	if (!list)
- 		SetPageLRU(page_tail);
+ 	/* XXX: Move to lru_cache_add() when it supports new vs putback */
+-	spin_lock_irq(&page_pgdat(page)->lru_lock);
+ 	lru_note_cost_page(page);
+-	spin_unlock_irq(&page_pgdat(page)->lru_lock);
  
--	if (likely(PageLRU(page)))
--		list_add_tail(&page_tail->lru, &page->lru);
-+	if (likely(PageLRU(head)))
-+		list_add_tail(&page_tail->lru, &head->lru);
- 	else if (list) {
- 		/* page reclaim is reclaiming a huge page */
- 		get_page(page_tail);
+ 	/* Caller will initiate read into locked page */
+ 	SetPageWorkingset(page);
+diff --git a/mm/workingset.c b/mm/workingset.c
+index 50b7937bab32..337d5b9ad132 100644
+--- a/mm/workingset.c
++++ b/mm/workingset.c
+@@ -372,9 +372,7 @@ void workingset_refault(struct page *page, void *shadow)
+ 	if (workingset) {
+ 		SetPageWorkingset(page);
+ 		/* XXX: Move to lru_cache_add() when it supports new vs putback */
+-		spin_lock_irq(&page_pgdat(page)->lru_lock);
+ 		lru_note_cost_page(page);
+-		spin_unlock_irq(&page_pgdat(page)->lru_lock);
+ 		inc_lruvec_state(lruvec, WORKINGSET_RESTORE);
+ 	}
+ out:
 -- 
 1.8.3.1
 
