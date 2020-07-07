@@ -2,85 +2,116 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4497C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82EA520674
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:00:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TbRHDWpq"
+	by mail.kernel.org (Postfix) with ESMTP id 196AD20738
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 16:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594137650;
+	bh=0BlRynaDNr3hx41psfYOd+ICHIe/RtCgteNSx90K9JE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u2g/sqWgv1r7JoYQmyZOs4ZHkxxYcdDgiri8bY2I0Q0vOJXiAgZRrQ6rPiBmPDlwS
+	 Y4+DcYUFZTM7H0gCTttp28G6xdNz5MFLrWWr1QmyjpzxcvDN+ziPCyI6LOBPdQKw5y
+	 heV7Zllvg6wDq8y+Ia0m2RICzjrWSe573Yh/1OZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgGGQA2 (ORCPT
+        id S1728649AbgGGQAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:00:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728216AbgGGQA2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 12:00:28 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7AC6C061755;
-        Tue,  7 Jul 2020 09:00:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CP3gYZf2kjid72TDwJavn73cb81r67oVs6dPbA5sJrs=; b=TbRHDWpqod5158cU9VcuMxtMl0
-        Z3G0xtpcqzLIuDWWIIcnh9C2kh7CSkV4JSSIDwUSlxfQPTygt0gA5KxoHykWQL/VPT4vSar/6D1cN
-        PMcSCdozGP0IE5ZVMVpYGkR977gY7lsrqkoMBm9jaMYhaXJARQRMx1rid9CVnNEfJUj1vQzKN4wTX
-        7y3w/+jqw3v9t7nHICdR7mfHK4r0EP1k76le37z5fmFaacVj7SkSAzzQt+zdxOGgLowaUoqsgP5gF
-        H75mhPzCgNzP6m6muIchhmbWsuB2N9uFrb53OUci0eYLguPFPhNq0038c46l9d5VckBbvuMQ3n6kU
-        jSLu7JTw==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsq10-0006dx-SQ; Tue, 07 Jul 2020 16:00:14 +0000
-Date:   Tue, 7 Jul 2020 17:00:14 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, Jens Axboe <axboe@kernel.dk>,
-        viro@zeniv.linux.org.uk, bcrl@kvack.org, hch@infradead.org,
-        Damien.LeMoal@wdc.com, asml.silence@gmail.com,
-        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-Message-ID: <20200707160014.GA25189@infradead.org>
-References: <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
- <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200705210947.GW25523@casper.infradead.org>
- <239ee322-9c38-c838-a5b2-216787ad2197@kernel.dk>
- <20200706141002.GZ25523@casper.infradead.org>
- <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
- <20200706143208.GA25523@casper.infradead.org>
- <20200707151105.GA23395@test-zns>
- <20200707155237.GM25523@casper.infradead.org>
+        Tue, 7 Jul 2020 12:00:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728100AbgGGQAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 12:00:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77402206E2;
+        Tue,  7 Jul 2020 16:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594137647;
+        bh=0BlRynaDNr3hx41psfYOd+ICHIe/RtCgteNSx90K9JE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=INE9r+/HdvJPhuASOEkh8ETNgO4NdGufY/na5p6QUOGo4vyNijRYlsww2dwSU4yCz
+         d+HAhNn28aW+s0NJpJ6lOOzlE8bHkIuvfxAPjVaQ4+/9hR9FvR0jvEVdOPWYfjHuMS
+         scppuriDxmSkBf37MeolAGQODZ1035i4wsqBEQGY=
+Date:   Tue, 7 Jul 2020 18:00:45 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     linux-pm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        rafael.j.wysocki@intel.com, swboyd@chromium.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 1/1] power: Emit changed uevent on
+ wakeup_sysfs_add/remove
+Message-ID: <20200707160045.GA118278@kroah.com>
+References: <20200707154905.2763616-1-abhishekpandit@chromium.org>
+ <20200707084857.v3.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200707155237.GM25523@casper.infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200707084857.v3.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 04:52:37PM +0100, Matthew Wilcox wrote:
-> But userspace has to _do_ something with that information anyway.  So
-> it must already have somewhere to put that information.
+On Tue, Jul 07, 2020 at 08:49:05AM -0700, Abhishek Pandit-Subedi wrote:
+> Udev rules that depend on the power/wakeup attribute don't get triggered
+> correctly if device_set_wakeup_capable is called after the device is
+> created. This can happen for several reasons (driver sets wakeup after
+> device is created, wakeup is changed on parent device, etc) and it seems
+> reasonable to emit a changed event when adding or removing attributes on
+> the device.
 > 
-> I do think that interpretation of that field should be a separate flag
-> from WRITE_APPEND so apps which genuinely don't care about where the I/O
-> ended up don't have to allocate some temporary storage.  eg a logging
-> application which just needs to know that it managed to append to the
-> end of the log and doesn't need to do anything if it's successful.
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+> 
+> Changes in v3:
+> - Simplified error handling
+> 
+> Changes in v2:
+> - Add newline at end of bt_dev_err
+> 
+>  drivers/base/power/sysfs.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> index 24d25cf8ab1487..04c82373c8f240 100644
+> --- a/drivers/base/power/sysfs.c
+> +++ b/drivers/base/power/sysfs.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /* sysfs entries for device PM */
+>  #include <linux/device.h>
+> +#include <linux/kobject.h>
+>  #include <linux/string.h>
+>  #include <linux/export.h>
+>  #include <linux/pm_qos.h>
+> @@ -739,12 +740,18 @@ int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+>  
+>  int wakeup_sysfs_add(struct device *dev)
+>  {
+> -	return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> +	int ret = sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+>  }
+>  
+>  void wakeup_sysfs_remove(struct device *dev)
+>  {
+>  	sysfs_unmerge_group(&dev->kobj, &pm_wakeup_attr_group);
+> +	return kobject_uevent(&dev->kobj, KOBJ_CHANGE);
 
-I agree with the concept of a flag for just returning the write
-location.  Because if you don't need that O_APPEND is all you need
-anyway.
+Always test build and hopefully actually test, your patches before
+sending them out :(
+
