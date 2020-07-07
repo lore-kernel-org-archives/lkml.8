@@ -2,172 +2,121 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1882BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECC3A206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6EC206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 09:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgGGJw5 convert rfc822-to-8bit (ORCPT
+        id S1727116AbgGGJxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:52:57 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2433 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727094AbgGGJw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 05:52:57 -0400
-Received: from lhreml705-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 74C4A9A111BCD6BA87D2;
-        Tue,  7 Jul 2020 10:52:55 +0100 (IST)
-Received: from lhreml703-chm.china.huawei.com (10.201.108.52) by
- lhreml705-chm.china.huawei.com (10.201.108.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Tue, 7 Jul 2020 10:52:55 +0100
-Received: from lhreml703-chm.china.huawei.com ([10.201.68.198]) by
- lhreml703-chm.china.huawei.com ([10.201.68.198]) with mapi id 15.01.1913.007;
- Tue, 7 Jul 2020 10:52:55 +0100
-From:   Salil Mehta <salil.mehta@huawei.com>
-To:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     "maz@kernel.org" <maz@kernel.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "christoffer.dall@arm.com" <christoffer.dall@arm.com>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "qemu-arm@nongnu.org" <qemu-arm@nongnu.org>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        "richard.henderson@linaro.org" <richard.henderson@linaro.org>,
-        "imammedo@redhat.com" <imammedo@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "drjones@redhat.com" <drjones@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "gshan@redhat.com" <gshan@redhat.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "mehta.salil.lnk@gmail.com" <mehta.salil.lnk@gmail.com>
-Subject: RE: [PATCH RFC 0/4] Changes to Support *Virtual* CPU Hotplug for
- ARM64
-Thread-Topic: [PATCH RFC 0/4] Changes to Support *Virtual* CPU Hotplug for
- ARM64
-Thread-Index: AQHWSvaqb7PlQuQ2I0aISfnbFH95/aj77kPg
-Date:   Tue, 7 Jul 2020 09:52:54 +0000
-Message-ID: <8efc4efe284641eda3ffeb2301fcca43@huawei.com>
-References: <20200625133757.22332-1-salil.mehta@huawei.com>
-In-Reply-To: <20200625133757.22332-1-salil.mehta@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.76.134]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 7 Jul 2020 05:53:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:35600 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbgGGJxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 05:53:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56DFDC0A;
+        Tue,  7 Jul 2020 02:53:45 -0700 (PDT)
+Received: from [10.37.12.102] (unknown [10.37.12.102])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE1963F718;
+        Tue,  7 Jul 2020 02:53:43 -0700 (PDT)
+Subject: Re: [PATCH V2] arm64/cpufeature: Validate feature bits spacing in
+ arm64_ftr_regs[]
+To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org
+References: <1593581140-4339-1-git-send-email-anshuman.khandual@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <7cfdef28-9710-d08f-58b0-1f414cd741ba@arm.com>
+Date:   Tue, 7 Jul 2020 10:58:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <1593581140-4339-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-A gentle reminder, any comments regarding this series will help us know
-your opinion and also confirm/correct our understanding about the topic
-and will be much appreciated.
+Hi Anshuman,
 
-Thanks in anticipation!
+On 07/01/2020 06:25 AM, Anshuman Khandual wrote:
+> arm64_feature_bits for a register in arm64_ftr_regs[] are in a descending
+> order as per their shift values. Validate that these features bits are
+> defined correctly and do not overlap with each other. This check protects
+> against any inadvertent erroneous changes to the register definitions.
 
-Best regards
-Salil
+The patch looks fine to me. I have a few minor nits on the coding
+style, feel free to ignore.
 
-> From: Salil Mehta
-> Sent: Thursday, June 25, 2020 2:38 PM
-> To: linux-arm-kernel@lists.infradead.org
-> Cc: maz@kernel.org; will@kernel.org; catalin.marinas@arm.com;
-> christoffer.dall@arm.com; andre.przywara@arm.com; james.morse@arm.com;
-> mark.rutland@arm.com; lorenzo.pieralisi@arm.com; sudeep.holla@arm.com;
-> qemu-arm@nongnu.org; peter.maydell@linaro.org; richard.henderson@linaro.org;
-> imammedo@redhat.com; mst@redhat.com; drjones@redhat.com; pbonzini@redhat.com;
-> eric.auger@redhat.com; gshan@redhat.com; david@redhat.com;
-> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; Linuxarm
-> <linuxarm@huawei.com>; mehta.salil.lnk@gmail.com; Salil Mehta
-> <salil.mehta@huawei.com>
-> Subject: [PATCH RFC 0/4] Changes to Support *Virtual* CPU Hotplug for ARM64
-> 
-> Changes to support virtual cpu hotplug in QEMU[1] have been introduced to the
-> community as RFC. These are under review.
-> 
-> To support virtual cpu hotplug guest kernel must:
-> 1. Identify disabled/present vcpus and set/unset the present mask of the vcpu
->    during initialization and hotplug event. It must also set the possible mask
->    (which includes disabled vcpus) during init of guest kernel.
-> 2. Provide architecture specific ACPI hooks, for example to map/unmap the
->    logical cpuid to hwids/MPIDR. Linux kernel already has generic ACPI cpu
->    hotplug framework support.
-> 
-> Changes introduced in this patch-set also ensures that initialization of the
-> cpus when virtual cpu hotplug is not supported remains un-affected.
-> 
-> Repository:
-> (*) Kernel changes are at,
->      https://github.com/salil-mehta/linux.git virt-cpuhp-arm64/rfc-v1
-> (*) QEMU changes for vcpu hotplug could be cloned from below site,
->      https://github.com/salil-mehta/qemu.git virt-cpuhp-armv8/rfc-v1
-> 
-> 
-> THINGS TO DO:
-> 1. Handling of per-cpu variables especially the first-chunk allocations
->    (which are NUMA aware) when the vcpu is hotplugged needs further attention
->    and review.
-> 2. NUMA related stuff has not been fully tested both in QEMU and kernel.
-> 3. Comprehensive Testing including when cpu hotplug is not supported.
-> 4. Docs
-> 
-> DISCLAIMER:
-> This is not a complete work but an effort to present the arm vcpu hotplug
-> implementation to the community. This RFC is being used as a way to verify
-> the idea mentioned above and to support changes presented for QEMU[1] to
-> support vcpu hotplug. As of now this is *not* a production level code and might
-> have bugs. Only a basic testing has been done on HiSilicon Kunpeng920 ARM64
-> based SoC for Servers to verify the proof-of-concept that has been found working!
-> 
-> Best regards
-> Salil.
-> 
-> REFERENCES:
-> [1] https://www.mail-archive.com/qemu-devel@nongnu.org/msg712010.html
-> [2] https://lkml.org/lkml/2019/6/28/1157
-> [3] https://lists.cs.columbia.edu/pipermail/kvmarm/2018-July/032316.html
-> 
-> Organization of Patches:
-> [Patch 1-3]
-> (*) Changes required during guest boot time to support vcpu hotplug
-> (*) Max cpu overflow checks
-> (*) Changes required to pre-setup cpu-operations even for disabled cpus
-> [Patch 4]
-> (*) Arch changes required by guest kernel ACPI CPU Hotplug framework.
-> 
-> 
-> Salil Mehta (4):
->   arm64: kernel: Handle disabled[(+)present] cpus in MADT/GICC during
->     init
->   arm64: kernel: Bound the total(present+disabled) cpus with nr_cpu_ids
->   arm64: kernel: Init cpu operations for all possible vcpus
->   arm64: kernel: Arch specific ACPI hooks(like logical cpuid<->hwid
->     etc.)
-> 
->  arch/arm64/kernel/smp.c | 153 ++++++++++++++++++++++++++++++++--------
->  1 file changed, 123 insertions(+), 30 deletions(-)
-> 
-> --
-> 2.17.1
-> 
 
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Applies on 5.8-rc3.
+> 
+> Changes in V2:
+> 
+> - Replaced WARN_ON() with WARN() dropping the conditional block per Suzuki
+> 
+> Changes in V1: (https://patchwork.kernel.org/patch/11606285/)
+> 
+>   arch/arm64/kernel/cpufeature.c | 45 +++++++++++++++++++++++++++++++---
+>   1 file changed, 42 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 9f63053a63a9..7bd7e6f936a5 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -697,11 +697,50 @@ static s64 arm64_ftr_safe_value(const struct arm64_ftr_bits *ftrp, s64 new,
+>   
+>   static void __init sort_ftr_regs(void)
+>   {
+> -	int i;
+> +	
+
+> +	unsigned int i;
+
+
+> +
+> +	for (i = 0; i < ARRAY_SIZE(arm64_ftr_regs); i++) {
+	 const struct arm64_ftr_reg *ftr_reg = arm64_ftr_regs[i].reg;
+  	 const struct arm64_ftr_bits *ftr_bits = ftr_reg->ftr_bits;
+	 unsigned int j = 0;
+
+> +		/*
+> +		 * Features here must be sorted in descending order with respect
+> +		 * to their shift values and should not overlap with each other.
+> +		 */
+> +		ftr_reg = arm64_ftr_regs[i].reg;
+> +		for (ftr_bits = ftr_reg->ftr_bits,
+> +				ftr_bits->width != 0; ftr_bits++, j++) {
+			unsigned int shift = ftr_bits->shift;
+			unsigned int width = ftr_bits->width;
+			unsigned int prev_shift;
+
+> +			WARN((ftr_bits->shift  + ftr_bits->width) > 64,
+> +				"%s has invalid feature at shift %d\n",
+> +				ftr_reg->name, ftr_bits->shift);
+
+			WARN(shit + width > 64, ....);
+
+
+Either way,
+
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
