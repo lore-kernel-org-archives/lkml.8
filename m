@@ -2,58 +2,58 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D78FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5885C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22AE2206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D04206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZeE/vfgK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LGKeNNtT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgGGITi (ORCPT
+        id S1728140AbgGGITd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:19:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51494 "EHLO
+        Tue, 7 Jul 2020 04:19:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgGGITe (ORCPT
+        with ESMTP id S1727951AbgGGITc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:19:34 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA3BC08C5EE
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:19:34 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m9so7854906pfh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:19:34 -0700 (PDT)
+        Tue, 7 Jul 2020 04:19:32 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D141C08C5E3
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:19:32 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p3so19659308pgh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:19:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oXmMUA+Slmu9lbYRAJIZHSMzlajqISgWM80EG35cNbg=;
-        b=ZeE/vfgK+v1GqxYTXUNDmF5e4/g8r2Ag6iu8mzSJEkdVGm9dB1k7swD0RAVU24nTiG
-         7SBN7HaMbE+vWnkOfjl94jR8dvSapP0o8KaY7KKDOMRjyZ8iu+UduP+5EBnrStRPh/KV
-         8JQXl7MBiiW+TlBbhV6wxfykp90S//DeLS5UM=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0pw/almlOM0nvvqI+5nYmAdy2Yj1U7UMDcdD61C+qaQ=;
+        b=LGKeNNtTd/zC9lyBS5S1OkdT3sNaE+OZVMRG3YUkLIM//s1udvtMwGfcRKkICTDfwX
+         ciRh8xDXHRSFwSI2d++7iFZs2KTVOZj83GEv3CXcpx2PnvTMoeW3qj/VyUi3VUXCJMRk
+         BZDk4YDxdLaSu4NokEYhbyiGlmhzlQzseg27I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oXmMUA+Slmu9lbYRAJIZHSMzlajqISgWM80EG35cNbg=;
-        b=nnYvqfI+LSByNlCjsPeM2r6jFqAg0sYReNGWcE5QGX/lz5C5TsI32PR1gLXjKy4L6D
-         pKfsND0iRJQjQDie53PU0EG1kosN/uQoOuG+Qh8L8lO4I6g6uDy+BDl3KuJ752ty0mgz
-         Ma3i3CEHlAVAMo/CZX1aR4qSYMRTseKx4KKuV4S2a2potg05yYBh81xk5aRvQ9eHB9B5
-         fHU87zImNVwmti4gwr+oUDYdup4gAL5Rk3UhXZ+s2lnvgH1eLKcugVt7NSNlI0qrcE6t
-         MC61PCE9iynwQpSLDQ39iVffhhne9x/qvpDm25y5GNI9GSOH3I2fkGs+hQYBTCKH7DR1
-         x5jA==
-X-Gm-Message-State: AOAM531HTAw8rV3s5PX2/kV2Efq4zOcBXTYm2Vi9WBz7iI3sMEMahNhX
-        Xr17REmpx19Ntu4QK4DQfZwY6A==
-X-Google-Smtp-Source: ABdhPJzNhYHBYnkkxr0IEIYYTJP1XkKnUvqNP/Ht2HIYfP3jBUvPvi3Me6tsEjyrqJal9c9F0sY0kg==
-X-Received: by 2002:aa7:93c3:: with SMTP id y3mr37629502pff.206.1594109973630;
-        Tue, 07 Jul 2020 01:19:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0pw/almlOM0nvvqI+5nYmAdy2Yj1U7UMDcdD61C+qaQ=;
+        b=iQL0Zg7DQQ6Q7MPczDxqx+PnCaiBbYTbsNB0pkdk8czRtrL23sqeauODb7deaMaQUg
+         NytHWe4qGN6XmfpYpy7E1mdjK6DxiApEKEmHB1HIkoyzBFJtROOZx2SdYXUvXOT9Namj
+         8MXpJgAz5IIyBY2adqm8X6d5Z8Fhx2Ugfba9xPGHNl3Acfl3whxMxKkSD2BuZh6gMGmS
+         8kPLrkatJmLA4IjdpYiPn/3F2tcgTa1J+z7aIexZ4HZP3nRgqyXl5Lyx3EuOYf4utJe8
+         585DJQXlxAUTLc1+rIpIvB34pvbIBjScjkyK2NsfV0v1yeNCl8u99gTrfZEnzb8+Iff2
+         9fJA==
+X-Gm-Message-State: AOAM533QzGYdxEUV2q84iOfZV9d3e50Cyl0envX3ho9L4vwxr4KTlEmJ
+        I42qXpxuGrnG6Zw6tkfVt0WYSA==
+X-Google-Smtp-Source: ABdhPJxa9aMEUJ/Mjzn5aqtaRqYpVKuj1envkrNds6yTMeT1CX3sElLVK5gBWNoqrM4QS8Ru/kca3w==
+X-Received: by 2002:a63:2d44:: with SMTP id t65mr33902187pgt.257.1594109971610;
+        Tue, 07 Jul 2020 01:19:31 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b18sm1806653pju.10.2020.07.07.01.19.30
+        by smtp.gmail.com with ESMTPSA id 186sm15400415pfe.1.2020.07.07.01.19.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 07 Jul 2020 01:19:30 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -84,12 +84,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org
-Subject: [PATCH 2/4] fs: Remove FIRMWARE_PREALLOC_BUFFER from kernel_read_file() enums
-Date:   Tue,  7 Jul 2020 01:19:24 -0700
-Message-Id: <20200707081926.3688096-3-keescook@chromium.org>
+Subject: [PATCH 0/4] Fix misused kernel_read_file() enums
+Date:   Tue,  7 Jul 2020 01:19:22 -0700
+Message-Id: <20200707081926.3688096-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200707081926.3688096-1-keescook@chromium.org>
-References: <20200707081926.3688096-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -97,124 +95,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FIRMWARE_PREALLOC_BUFFER is a "how", not a "what", and confuses the LSMs
-that are interested in filtering between types of things. The "how"
-should be an internal detail made uninteresting to the LSMs.
+Hi,
 
-Fixes: a098ecd2fa7d ("firmware: support loading into a pre-allocated buffer")
-Fixes: fd90bc559bfb ("ima: based on policy verify firmware signatures (pre-allocated buffer)")
-Fixes: 4f0496d8ffa3 ("ima: based on policy warn about loading firmware (pre-allocated buffer)")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/base/firmware_loader/main.c | 5 ++---
- fs/exec.c                           | 7 ++++---
- include/linux/fs.h                  | 2 +-
- security/integrity/ima/ima_main.c   | 6 ++----
- 4 files changed, 9 insertions(+), 11 deletions(-)
+In looking for closely at the additions that got made to the
+kernel_read_file() enums, I noticed that FIRMWARE_PREALLOC_BUFFER
+and FIRMWARE_EFI_EMBEDDED were added, but they are not appropriate
+*kinds* of files for the LSM to reason about. They are a "how" and
+"where", respectively. Remove these improper aliases and refactor the
+code to adapt to the changes.
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index ca871b13524e..c2f57cedcd6f 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -465,14 +465,12 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
- 	int i, len;
- 	int rc = -ENOENT;
- 	char *path;
--	enum kernel_read_file_id id = READING_FIRMWARE;
- 	size_t msize = INT_MAX;
- 	void *buffer = NULL;
- 
- 	/* Already populated data member means we're loading into a buffer */
- 	if (!decompress && fw_priv->data) {
- 		buffer = fw_priv->data;
--		id = READING_FIRMWARE_PREALLOC_BUFFER;
- 		msize = fw_priv->allocated_size;
- 	}
- 
-@@ -496,7 +494,8 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
- 
- 		/* load firmware files from the mount namespace of init */
- 		rc = kernel_read_file_from_path_initns(path, &buffer,
--						       &size, msize, id);
-+						       &size, msize,
-+						       READING_FIRMWARE);
- 		if (rc) {
- 			if (rc != -ENOENT)
- 				dev_warn(device, "loading %s failed with error %d\n",
-diff --git a/fs/exec.c b/fs/exec.c
-index e6e8a9a70327..2bf549757ce7 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -927,6 +927,7 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
- {
- 	loff_t i_size, pos;
- 	ssize_t bytes = 0;
-+	void *allocated = NULL;
- 	int ret;
- 
- 	if (!S_ISREG(file_inode(file)->i_mode) || max_size < 0)
-@@ -950,8 +951,8 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
- 		goto out;
- 	}
- 
--	if (id != READING_FIRMWARE_PREALLOC_BUFFER)
--		*buf = vmalloc(i_size);
-+	if (!*buf)
-+		*buf = allocated = vmalloc(i_size);
- 	if (!*buf) {
- 		ret = -ENOMEM;
- 		goto out;
-@@ -980,7 +981,7 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
- 
- out_free:
- 	if (ret < 0) {
--		if (id != READING_FIRMWARE_PREALLOC_BUFFER) {
-+		if (allocated) {
- 			vfree(*buf);
- 			*buf = NULL;
- 		}
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 3f881a892ea7..95fc775ed937 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2993,10 +2993,10 @@ static inline void i_readcount_inc(struct inode *inode)
- #endif
- extern int do_pipe_flags(int *, int);
- 
-+/* This is a list of *what* is being read, not *how*. */
- #define __kernel_read_file_id(id) \
- 	id(UNKNOWN, unknown)		\
- 	id(FIRMWARE, firmware)		\
--	id(FIRMWARE_PREALLOC_BUFFER, firmware)	\
- 	id(FIRMWARE_EFI_EMBEDDED, firmware)	\
- 	id(MODULE, kernel-module)		\
- 	id(KEXEC_IMAGE, kexec-image)		\
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index c1583d98c5e5..f80ee4ce4669 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -611,19 +611,17 @@ void ima_post_path_mknod(struct dentry *dentry)
- int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
- {
- 	/*
--	 * READING_FIRMWARE_PREALLOC_BUFFER
--	 *
- 	 * Do devices using pre-allocated memory run the risk of the
- 	 * firmware being accessible to the device prior to the completion
- 	 * of IMA's signature verification any more than when using two
--	 * buffers?
-+	 * buffers? It may be desirable to include the buffer address
-+	 * in this API and walk all the dma_map_single() mappings to check.
- 	 */
- 	return 0;
- }
- 
- const int read_idmap[READING_MAX_ID] = {
- 	[READING_FIRMWARE] = FIRMWARE_CHECK,
--	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
- 	[READING_MODULE] = MODULE_CHECK,
- 	[READING_KEXEC_IMAGE] = KEXEC_KERNEL_CHECK,
- 	[READING_KEXEC_INITRAMFS] = KEXEC_INITRAMFS_CHECK,
+Additionally adds in missing calls to security_kernel_post_read_file()
+in the platform firmware fallback path (to match the sysfs firmware
+fallback path) and in module loading. I considered entirely removing
+security_kernel_post_read_file() hook since it is technically unused,
+but IMA probably wants to be able to measure EFI-stored firmware images,
+so I wired it up and matched it for modules, in case anyone wants to
+move the module signature checks out of the module core and into an LSM
+to avoid the current layering violations.
+
+This touches several trees, and I suspect it would be best to go through
+James's LSM tree.
+
+Thanks!
+
+-Kees
+
+Kees Cook (4):
+  firmware_loader: EFI firmware loader must handle pre-allocated buffer
+  fs: Remove FIRMWARE_PREALLOC_BUFFER from kernel_read_file() enums
+  fs: Remove FIRMWARE_EFI_EMBEDDED from kernel_read_file() enums
+  module: Add hook for security_kernel_post_read_file()
+
+ drivers/base/firmware_loader/fallback_platform.c | 12 ++++++++++--
+ drivers/base/firmware_loader/main.c              |  5 ++---
+ fs/exec.c                                        |  7 ++++---
+ include/linux/fs.h                               |  3 +--
+ include/linux/lsm_hooks.h                        |  6 +++++-
+ kernel/module.c                                  |  7 ++++++-
+ security/integrity/ima/ima_main.c                |  6 ++----
+ 7 files changed, 30 insertions(+), 16 deletions(-)
+
 -- 
 2.25.1
 
