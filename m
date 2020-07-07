@@ -2,112 +2,131 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC68C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5AC2065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:24:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZObO+C6"
+	by mail.kernel.org (Postfix) with ESMTP id A365F2065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 07:24:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgGGHYA (ORCPT
+        id S1728328AbgGGHYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 03:24:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgGGHYA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 03:24:00 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E1BDC061755;
-        Tue,  7 Jul 2020 00:24:00 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id z63so37231202qkb.8;
-        Tue, 07 Jul 2020 00:24:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TUUobSdNBrJuF1EW+dIJdI5D+Jjq/ev7F+J15Oa8C9Q=;
-        b=YZObO+C6WuoXFjMmxg/9UDWawj60dvqkpoNj4mqu9yFcyqHn4G8vR/bfVzQrtqUCk9
-         /38EPWQQx9oy2h4U2FkCeRn0QXB8RmKe6LOowfQfg/h+5UMUFbjRj87puqupYKKeU2oz
-         8/7Dv7PTAAHGxIzPRZD/Y9mp0TuZJGi284VnX/16uU2EmOhnay0KibNZB8p2UoeIHtqq
-         vJHkapVoo7CBkf33NzoZva098D4yJuetQcEclWlIb/kew10lFcLnA/PZBfW1Nkxu6YeK
-         Ma58lL6pTXP8py5hUi96wSsnQC6gOieWz8GauUihu7Qi2guzXap1/iZkUmEf6ZUmlRIA
-         oOQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TUUobSdNBrJuF1EW+dIJdI5D+Jjq/ev7F+J15Oa8C9Q=;
-        b=steYoq5Ab2/pmyteAJJHe2vIOF1VeY5mQ4mthYUxnoZmA0LiI3d1lv3KzWyQehQ6bl
-         9KDpBIxxH6EjUhgPBrb97IUlOdwnpmSkQNbEE10Oxw2re9gXM4k3ASx3BAG1wM/9DatK
-         nOTGb+inopTh9XcdFn/EJ5rZR/chCvcg/67EsG02QorL+IG/4qlQ47NUalAoEFQP5j0A
-         nvMRcepNbdS9yK+cHNawRuNG0oXdjSfipciiPy7+G2bJlEt4Wia2WzjZCBOkYMlpZWkJ
-         ba3AOmKdXqs54GrUsTHvhUein1CilOeo6a9VmL0aS26AbO/QwtVsxVN9L2Ry2ZcDKRCE
-         Xh1g==
-X-Gm-Message-State: AOAM530+sz5AX1DC1oA7jJUKfF8WQZzPOMJA0jz9R/Ntjw213xepVwRB
-        opJrQTuFdRl6J9prBcq3Ky4LRPIs9SyqgHwEpNY=
-X-Google-Smtp-Source: ABdhPJxBQfF7heAYoEgSKht4+fIfPmJ4ngreCUqxM96ndAYK2PAmq94ztrEuft/Y5So7ikOwEA06muPnntfXkmMjnu8=
-X-Received: by 2002:a37:7683:: with SMTP id r125mr48103373qkc.39.1594106639361;
- Tue, 07 Jul 2020 00:23:59 -0700 (PDT)
+        Tue, 7 Jul 2020 03:24:03 -0400
+Received: from mga06.intel.com ([134.134.136.31]:46333 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbgGGHYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 03:24:02 -0400
+IronPort-SDR: GomxtYGTMp9nhhNCZZgOBmd3uitn0olFRjumTfUJb4fQfWguwGgp4BLrpfq3CgMlY+GvdcnIU2
+ E3m6LIYD6WdA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="209073720"
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="209073720"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 00:24:01 -0700
+IronPort-SDR: 7lweS80P5ckMtp50mbg/VWoNPyMhE1JXIAcCTP7xmfNweRPorTbuXso1wFZuqw7JY7k/BIyFQx
+ XPJxxdHE0MdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,323,1589266800"; 
+   d="scan'208";a="357701412"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.170.85]) ([10.249.170.85])
+  by orsmga001.jf.intel.com with ESMTP; 07 Jul 2020 00:23:58 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Sun, Jian" <jian.sun@intel.com>
+Subject: Re: [Issue]platform/x86: iommu: System can't shutdown because iommu
+ driver keeps checking the status of DMA_GSTS_TES
+To:     Koba Ko <koba.ko@canonical.com>
+References: <CAJB-X+Ww=bZN2qZ=e=4EkN_RUTiZxHxkdnHh50y9iVqZmT_XQg@mail.gmail.com>
+ <111dde48-8018-6d74-5df8-1534143f4de6@linux.intel.com>
+ <CAJB-X+WgjKR3PgoF_tn_g__+agCSGJpyB8sh+A62gs0qztDuVQ@mail.gmail.com>
+ <66cacbab-b04d-33f3-053e-4d554ac7c662@linux.intel.com>
+ <CAJB-X+Uo2yw+SC6X2sfDsG9YusyL9iJAuR0wG_L+KYtSkz=Cmg@mail.gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <1b559268-5bf7-a185-4492-c34023b78689@linux.intel.com>
+Date:   Tue, 7 Jul 2020 15:23:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <159410590190.1093222.8436994742373578091.stgit@firesoul>
-In-Reply-To: <159410590190.1093222.8436994742373578091.stgit@firesoul>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 7 Jul 2020 00:23:48 -0700
-Message-ID: <CAEf4Bzb07mdCQ5DS_gao4b9GSyeg406wpteC9uDaGdfOAHXFVA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next V3 0/2] BPF selftests test runner 'test_progs'
- use proper shell exit codes
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     bpf <bpf@vger.kernel.org>, Hangbin Liu <haliu@redhat.com>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Veronika Kabatova <vkabatov@redhat.com>,
-        Jiri Benc <jbenc@redhat.com>, Yonghong Song <yhs@fb.com>,
-        Martin Lau <kafai@fb.com>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAJB-X+Uo2yw+SC6X2sfDsG9YusyL9iJAuR0wG_L+KYtSkz=Cmg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 12:12 AM Jesper Dangaard Brouer
-<brouer@redhat.com> wrote:
->
-> This patchset makes it easier to use test_progs from shell scripts, by using
-> proper shell exit codes. The process's exit status should be a number
-> between 0 and 255 as defined in man exit(3) else it will be masked to comply.
->
-> Shell exit codes used by programs should be below 127. As 127 and above are
-> used for indicating signals. E.g. 139 means 11=SIGSEGV $((139 & 127))=11.
-> POSIX defines in man wait(3p) signal check if WIFSIGNALED(STATUS) and
-> WTERMSIG(139)=11. (Hint: cmd 'kill -l' list signals and their numbers).
->
-> Using Segmentation fault as an example, as these have happened before with
-> different tests (that are part of test_progs). CI people writing these
-> shell-scripts could pickup these hints and report them, if that makes sense.
->
-> ---
->
-> Jesper Dangaard Brouer (2):
->       selftests/bpf: test_progs use another shell exit on non-actions
->       selftests/bpf: test_progs avoid minus shell exit codes
->
->
->  tools/testing/selftests/bpf/test_progs.c |   13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
->
-> --
->
+Hi Koba KO,
 
-For the series:
+On 2020/7/7 11:27, Koba Ko wrote:
+> Dear Baolu,
+> On Tue, Jun 30, 2020 at 3:52 PM Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>
+>> Hi Koba,
+>>
+>> On 2020/6/30 15:31, Koba Ko wrote:
+>>> On Mon, Jun 15, 2020 at 3:20 PM Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>>>
+>>>> Hi Koba Ko,
+>>>>
+>>>> On 2020/6/15 11:19, Koba Ko wrote:
+>>>>> hi All,
+>>>>> I have a machine and there's only intel gpu.
+>>>>> the secureboot and vt-d is enabled in BIOS.
+>>>>> On the Ubuntu desktop, I do s2idle first and restart the machine.
+>>>>> The machine can't restart successfully, so I need to press the
+>>>>> power button to shutdown.
+>>>>> I tried  each of the following and the issue can't be triggered.
+>>>>> 1. disable secure boot in BIOS.
+>>>>> 2. intel_iommu=off.
+>>>>> 3. intel_iomm=igfx_off.
+>>>>> 4. nomodeset
+>>>>> 5. i915.modeset=0.
+>>>>>
+>>>>> After I investigate further, find inte_iommu keeps checking the status
+>>>>> of DMA_GSTS_TES.
+>>>>> During the procedure of restart, the driver would disable iommu
+>>>>> translation and
+>>>>> check status of DMA_GSTS_TES until status of DMA_GSTS_TES is 0.
+>>>>>
+>>>>> If you need more information, I can provide it.
+>>>>
+>>>> Do you mind telling what platform is it?
+>>>>
+>>>> Best regards,
+>>>> baolu
+>>> Hi Baolu,
+>>> Sorry, i missed your email.
+>>> I'm running on TGL.
+>>> My colleague has reported this on bugzilla.
+>>> Have tested your patch and it works fine.
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=208363
+>>>
+>>> Could you explain more about these patches!? Why do we need  a flag
+>>> for active iommu!?
+>>>
+>>
+>> We're still investigating this issue. If we find out more, I'll let you
+>> know. Thanks a lot for the reporting.
+>>
+>> Best regards,
+>> baolu
+>>
+> Sorry for disturbing,
+> Do you have any updates for this issue?!
+> https://bugzilla.kernel.org/show_bug.cgi?id=208363
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+We are in process of collecting what kind of platforms are affected. I
+will push the workaround patch to the community as soon as we are done.
 
-My preference was shorter EXIT_ERR_SETUP, but it doesn't matter.
+Best regards,
+baolu
