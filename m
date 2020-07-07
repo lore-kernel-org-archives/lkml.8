@@ -2,69 +2,70 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB3FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69467206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78099206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bTBN7lfi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BBeRz/5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgGGITd (ORCPT
+        id S1728266AbgGGITy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:19:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51476 "EHLO
+        Tue, 7 Jul 2020 04:19:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgGGITc (ORCPT
+        with ESMTP id S1728020AbgGGITc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jul 2020 04:19:32 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 057A2C08C5DF
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A61D9C08C5DF
         for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 01:19:32 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id q17so18103945pfu.8
+Received: by mail-pj1-x1044.google.com with SMTP id k5so8634201pjg.3
         for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 01:19:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3/TGGX2kn2NKL/BgEqb75l7336ZUov57vqrEk8SkHU4=;
-        b=bTBN7lfilcJGYJdlbwQDX/rqp45HFb8HgJGAGBOBV9CKgL4pKePubhej06HA9A/RP4
-         GYmlJTS16HrfkuEjFWhk2UBxLPGgXCrjCJm0sfYpW7tUAiCXQijLn14wMx50qyTlAyIa
-         KcmWeWhBMi7HFssd/6ma4MzBpKX5m9i8fZazg=
+        bh=sjDrdoX7gf+4DuKtCmuxAh2Xm2q9yMKpqX8nn9fNlAU=;
+        b=BBeRz/5+VJOp1s5xKW+QB/U7Z61hcEMJy79aFjwf2dJ9rKV8hONmZsPCo5Nhh2N9X+
+         AFYaL+6F5Y74L5ZxmUFHBnaw7KGYEJ/MwF5UAfy1bbvWQL5fIXJHFPyAsl57beknLqxK
+         4bzhDBr2u3/Ej7fNZaSFsox4Us7VvonmVkQpc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3/TGGX2kn2NKL/BgEqb75l7336ZUov57vqrEk8SkHU4=;
-        b=pSx3bMFMx1hlW3X/wMJJXpA92niZx3Y88rQW31sgbm617vtklbM9uegGukofycB2lT
-         RTPD2rcZMr+lHXiNJMNhFQ1/aqbuwnlZd1f/BZnOple5AQYdOijadeBguWaEQmPGl29h
-         Sqj437tpluIbaP9QYwDtN9dXV97Bw26+zcnJaylynEKTzIXFNKNAHQx37yAlIucfcZgs
-         s1BeImIRUr77x44+UaYAsG01IEnMagqpAnI86AzzZXE17cCXTXeZq9M6m20pmU71v3sa
-         Q5yyX9vm/WJP7C38/YcekSOFFMVeAiLpOtb1e/yICHtrHW1d8yZlYH2QVjTpAtcM+rpN
-         4tKQ==
-X-Gm-Message-State: AOAM530jF4EQTIR0f5xN3vSWuCpVSElS8bJDhnQYJ1jF15v2tVoWFbj0
-        NYh/QxPpRGgus/FrTEIpbp7Bfg==
-X-Google-Smtp-Source: ABdhPJziQGymUuXunuRD3Hljwo1v5DLu/Rvol9Qs1TKP88U1Ya5951qLD2hP+Du4ykBwwluuy8bk1A==
-X-Received: by 2002:a63:df54:: with SMTP id h20mr42712026pgj.319.1594109971059;
-        Tue, 07 Jul 2020 01:19:31 -0700 (PDT)
+        bh=sjDrdoX7gf+4DuKtCmuxAh2Xm2q9yMKpqX8nn9fNlAU=;
+        b=nXJN5Gx96J7VKy6lHerfw6WIepm/LwHd5nJrXtNsrYjCds0vjeac/BlvR8pypWZR6H
+         GYmP6FS07xH0KliHeUM3W3e3AVyL2E4HJmMG/4OG3kkuC4GwSACszfRLqTsymCCetciO
+         QX1RisLZzuxADyoW8l5eWZUNtdNAIgs/+UdwiuKLNBoWf3OBnS0IB2zGhh46StsP490J
+         EhHAe+F/MKodZXmpY8NTvKjluCDu+YR1WHHpJX3o3aI0muHGB2Nj3nI/SaYhz4CKQkNO
+         5QfKmIVqxmtjmsOqhbzLdc2qOjH+42yn1SK6uspIn2hUL7FDE7YP/7Vt0Ehxil6TdHtR
+         gnkQ==
+X-Gm-Message-State: AOAM533ifyncy9uk6dxuOIZQjzXfToIrGeDttKjwDn/OGQqwfaUq/h6q
+        p0czYOZplCf20OkDQRBOLxh+Yw==
+X-Google-Smtp-Source: ABdhPJxGDuEjuYScG46HCLyI9wttHYF86/hPhGKgpCUuGKRMHmNSLyc+lzbiBkHquFjKncIjjpHaBg==
+X-Received: by 2002:a17:902:40a:: with SMTP id 10mr20914146ple.180.1594109972200;
+        Tue, 07 Jul 2020 01:19:32 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r8sm20795455pfh.29.2020.07.07.01.19.29
+        by smtp.gmail.com with ESMTPSA id h9sm21361306pfk.155.2020.07.07.01.19.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 07 Jul 2020 01:19:30 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     James Morris <jmorris@namei.org>
-Cc:     Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>,
+Cc:     Kees Cook <keescook@chromium.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Mimi Zohar <zohar@linux.ibm.com>,
         Scott Branden <scott.branden@broadcom.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
         Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
         "Serge E. Hallyn" <serge@hallyn.com>,
         Casey Schaufler <casey@schaufler-ca.com>,
@@ -83,9 +84,9 @@ Cc:     Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>,
         Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org
-Subject: [PATCH 4/4] module: Add hook for security_kernel_post_read_file()
-Date:   Tue,  7 Jul 2020 01:19:26 -0700
-Message-Id: <20200707081926.3688096-5-keescook@chromium.org>
+Subject: [PATCH 3/4] fs: Remove FIRMWARE_EFI_EMBEDDED from kernel_read_file() enums
+Date:   Tue,  7 Jul 2020 01:19:25 -0700
+Message-Id: <20200707081926.3688096-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707081926.3688096-1-keescook@chromium.org>
 References: <20200707081926.3688096-1-keescook@chromium.org>
@@ -96,37 +97,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calls to security_kernel_load_data() should be paired with a call to
-security_kernel_post_read_file() with a NULL file argument. Add the
-missing call so the module contents are visible to the LSMs interested
-in measuring the module content. (This also paves the way for moving
-module signature checking out of the module core and into an LSM.)
+The "FIRMWARE_EFI_EMBEDDED" enum is a "where", not a "what". It
+should not be distinguished separately from just "FIRMWARE", as this
+confuses the LSMs about what is being loaded. Additionally, there was
+no actual validation of the firmware contents happening. Add call to
+security_kernel_post_read_file() so the contents can be measured/verified,
+just as the firmware sysfs fallback does. This would allow for IMA (or
+other LSMs) to validate known-good EFI firmware images.
 
-Cc: Jessica Yu <jeyu@kernel.org>
-Fixes: c77b8cdf745d ("module: replace the existing LSM hook in init_module")
+Fixes: e4c2c0ff00ec ("firmware: Add new platform fallback mechanism and firmware_request_platform()")
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- kernel/module.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/base/firmware_loader/fallback_platform.c | 7 ++++++-
+ include/linux/fs.h                               | 3 +--
+ include/linux/lsm_hooks.h                        | 6 +++++-
+ 3 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 0c6573b98c36..af9679f8e5c6 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2980,7 +2980,12 @@ static int copy_module_from_user(const void __user *umod, unsigned long len,
- 		return -EFAULT;
- 	}
+diff --git a/drivers/base/firmware_loader/fallback_platform.c b/drivers/base/firmware_loader/fallback_platform.c
+index 685edb7dd05a..76e0c4a7835f 100644
+--- a/drivers/base/firmware_loader/fallback_platform.c
++++ b/drivers/base/firmware_loader/fallback_platform.c
+@@ -17,7 +17,7 @@ int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags)
+ 	if (!(opt_flags & FW_OPT_FALLBACK_PLATFORM))
+ 		return -ENOENT;
  
--	return 0;
-+	err = security_kernel_post_read_file(NULL, (char *)info->hdr,
-+					     info->len, READING_MODULE);
-+	if (err)
-+		vfree(info->hdr);
+-	rc = security_kernel_load_data(LOADING_FIRMWARE_EFI_EMBEDDED);
++	rc = security_kernel_load_data(LOADING_FIRMWARE);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -25,6 +25,11 @@ int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags)
+ 	if (rc)
+ 		return rc; /* rc == -ENOENT when the fw was not found */
+ 
++	rc = security_kernel_post_read_file(NULL, (char *)data, size,
++					    READING_FIRMWARE);
++	if (rc)
++		return rc;
 +
-+	return err;
- }
+ 	if (fw_priv->data && size > fw_priv->allocated_size)
+ 		return -ENOMEM;
+ 	if (!fw_priv->data)
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 95fc775ed937..f50a35d54a61 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2993,11 +2993,10 @@ static inline void i_readcount_inc(struct inode *inode)
+ #endif
+ extern int do_pipe_flags(int *, int);
  
- static void free_copy(struct load_info *info)
+-/* This is a list of *what* is being read, not *how*. */
++/* This is a list of *what* is being read, not *how* nor *where*. */
+ #define __kernel_read_file_id(id) \
+ 	id(UNKNOWN, unknown)		\
+ 	id(FIRMWARE, firmware)		\
+-	id(FIRMWARE_EFI_EMBEDDED, firmware)	\
+ 	id(MODULE, kernel-module)		\
+ 	id(KEXEC_IMAGE, kexec-image)		\
+ 	id(KEXEC_INITRAMFS, kexec-initramfs)	\
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 95b7c1d32062..7cfc3166a1e2 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -633,15 +633,19 @@
+  *	@kmod_name name of the module requested by the kernel
+  *	Return 0 if successful.
+  * @kernel_load_data:
+- *	Load data provided by userspace.
++ *	Load data provided by a non-file source (usually userspace buffer).
+  *	@id kernel load data identifier
+  *	Return 0 if permission is granted.
++ *	This may be paired with a kernel_post_read_file() with a NULL
++ *	@file, but contains the actual data loaded.
+  * @kernel_read_file:
+  *	Read a file specified by userspace.
+  *	@file contains the file structure pointing to the file being read
+  *	by the kernel.
+  *	@id kernel read file identifier
+  *	Return 0 if permission is granted.
++ *	This must be paired with a kernel_post_read_file(), which contains
++ *	the actual data read from @file.
+  * @kernel_post_read_file:
+  *	Read a file specified by userspace.
+  *	@file contains the file structure pointing to the file being read
 -- 
 2.25.1
 
