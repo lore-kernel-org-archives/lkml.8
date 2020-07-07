@@ -2,127 +2,96 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66BA72065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1523020702
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594117299;
+	bh=+cBelIs0ehSsds8X4dHmvK2864Wy8QgaOL5fQnupcLk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pYncniMbl5d8cqM3i9Z/OIY8GZ6hsdHuhZkxTLhSMSx/GXcl03li2Y10ChDKLD0La
+	 qdr6WxPH3GTq3rc9V18QvvVGw6X5o+aRJcIjkm/Hd3WOQySKbcrvu7kgF8954DQ0D6
+	 3VKUhauYj3PA8dDjNTnm+OY2vEXH8cE3v5YaXT58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgGGKVP (ORCPT
+        id S1728291AbgGGKVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:21:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:37292 "EHLO foss.arm.com"
+        Tue, 7 Jul 2020 06:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbgGGKU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:20:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 444A1C0A;
-        Tue,  7 Jul 2020 03:20:55 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 295BD3F71E;
-        Tue,  7 Jul 2020 03:20:54 -0700 (PDT)
-References: <20200702171548.GA11813@codemonkey.org.uk> <20200702213627.GF3183@techsingularity.net> <20200703090226.GV4800@hirez.programming.kicks-ass.net> <20200703104033.GK117543@hirez.programming.kicks-ass.net> <20200703205153.GA19901@codemonkey.org.uk> <20200706145952.GB597537@hirez.programming.kicks-ass.net> <jhj5zb08agb.mognet@arm.com> <20200707081719.GK4800@hirez.programming.kicks-ass.net>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dave Jones <davej@codemonkey.org.uk>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linux Kernel <linux-kernel@vger.kernel.org>, mingo@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        paul.gortmaker@windriver.com, paulmck@kernel.org
-Subject: Re: weird loadavg on idle machine post 5.7
-In-reply-to: <20200707081719.GK4800@hirez.programming.kicks-ass.net>
-Date:   Tue, 07 Jul 2020 11:20:49 +0100
-Message-ID: <jhj4kqj8w3i.mognet@arm.com>
+        id S1728135AbgGGKUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:20:50 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E657206F6;
+        Tue,  7 Jul 2020 10:20:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594117249;
+        bh=+cBelIs0ehSsds8X4dHmvK2864Wy8QgaOL5fQnupcLk=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=ZAvb6I9vDb3w6KWUww8p1xAQaAhA2POMmlykCDVLQumMM5h/pWVPlOzvEn2QDf+KP
+         QOx8pEn3NzKUIwSz7/iLevs8Cg2BUcXxvR9e7pzUoo4/UUNnsEHyOtOTM1oKfXlXAV
+         +XdZlgf6w/1mnxL7QlX+4Yax43oPMPgkMNFx/GwU=
+Date:   Tue, 7 Jul 2020 12:20:46 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     Marius Zachmann <mail@mariuszachmann.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v7] hwmon: add Corsair Commander Pro driver
+In-Reply-To: <20200630021642.GA155878@roeck-us.net>
+Message-ID: <nycvar.YFH.7.76.2007071220210.15962@cbobk.fhfr.pm>
+References: <20200626055936.4441-1-mail@mariuszachmann.de> <20200630021642.GA155878@roeck-us.net>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 29 Jun 2020, Guenter Roeck wrote:
 
-On 07/07/20 09:17, Peter Zijlstra wrote:
-> On Tue, Jul 07, 2020 at 12:56:04AM +0100, Valentin Schneider wrote:
->
->> > @@ -2605,8 +2596,20 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
->> >        *
->> >        * Pairs with the LOCK+smp_mb__after_spinlock() on rq->lock in
->> >        * __schedule().  See the comment for smp_mb__after_spinlock().
->> > +	 *
->> > +	 * Form a control-dep-acquire with p->on_rq == 0 above, to ensure
->> > +	 * schedule()'s deactivate_task() has 'happened' and p will no longer
->> > +	 * care about it's own p->state. See the comment in __schedule().
->> >        */
->> > -	smp_rmb();
->> > +	smp_acquire__after_ctrl_dep();
->>
->> Apologies for asking again, but I'm foolishly hopeful I'll someday be able
->> to grok those things without half a dozen tabs open with documentation and
->> Paul McKenney papers.
->>
->> Do I get it right that the 'acquire' part hints this is equivalent to
->> issuing a load-acquire on whatever was needed to figure out whether or not
->> the take the branch (in this case, p->on_rq, amongst other things); IOW
->> ensures any memory access appearing later in program order has to happen
->> after the load?
->>
->> That at least explains to me the load->{load,store} wording in
->> smp_acquire__after_ctrl_dep().
->
-> Yes.
->
-> So the thing is that hardware MUST NOT speculate stores, or rather, if
-> it does, it must take extreme measures to ensure they do not become
-> visible in any way shape or form, since speculative stores lead to
-> instant OOTA problems.
->
-> Therefore we can say that branches order stores and if the branch
-> condition depends on a load, we get a load->store order. IOW the load
-> must complete before we can resolve the branch, which in turn enables
-> the store to become visible/happen.
->
+> On Fri, Jun 26, 2020 at 07:59:36AM +0200, Marius Zachmann wrote:
+> > This is v7 of a driver for the Corsair Commander Pro.
+> > It provides sysfs attributes for:
+> > - Reading fan speed
+> > - Reading temp sensors
+> > - Reading voltage values
+> > - Writing pwm and reading last written pwm
+> > - Reading fan and temp connection status
+> > 
+> > It is an usb driver, so it needs to be ignored by usbhid.
+> > The Corsair Commander Pro is a fan controller and provides
+> > no means for user interaction.
+> > The two device numbers are there, because there is a slightly
+> > different version of the same device. (Only difference
+> > seem to be in some presets.)
+> > 
+> > This is based on the staging/hwmon tree.
+> > 
+> > Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
+> 
+> For my reference:
+> 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> Waiting for Ack from HID maintainer.
 
-Right, I think that point is made clear in memory-barriers.txt.
+Acked-by: Jiri Kosina <jkosina@suse.cz>
 
-> If we then add an smp_rmb() to the branch to order load->load, we end up
-> with a load->{load,store} ordering, which is equivalent to a
-> load-acquire.
->
-> The reason to do it like that, is that load-aquire would otherwise
-> require an smp_mb(), since for many platforms that's the only barrier
-> that has load->store ordering.
->
-> The down-side of doing it like this, as Paul will be quick to point out,
-> is that the C standard doesn't recognise control dependencies and thus
-> the compiler would be in its right to 'optimize' our conditional away.
->
+for the drivers/hid/hid-quirks.c hunk. Thanks,
 
-Yikes!
+-- 
+Jiri Kosina
+SUSE Labs
 
-> We're relying on the compilers not having done this in the past and
-> there being sufficient compiler people interested in compiling Linux to
-> avoid this from happening.
->
->
-> Anyway, this patch is basically:
->
->       LOAD p->state		LOAD-ACQUIRE p->on_rq == 0
->       MB
->       STORE p->on_rq, 0	STORE p->state, TASK_WAKING
->
-> which ensures the TASK_WAKING store happens after the p->state load.
-> Just a wee bit complicated due to not actually adding any barriers while
-> adding additional ordering.
->
-
-Your newer changelog also helped in that regards.
-
-Thanks a ton for the writeup!
-
-> Anyway, let me now endeavour to write a coherent Changelog for this mess
-> :-(
