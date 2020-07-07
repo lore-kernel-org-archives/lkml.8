@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC196C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6036BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCDE2065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B982065D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135058;
-	bh=ij90CH/AMuoBDy4JjRvECaJxQy+UIN+yGTmCd5i+bZM=;
+	s=default; t=1594135067;
+	bh=RuIX7iairByS9vmms37vTUc7xISPXnSus2zIBvT/u58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ztEWUGFmuu6BaCVitME1ZO7JKdxdBEgOKwg/dkKXzSlyqOrJCjc0OpfuKtYtx4r5l
-	 O/XKqkhCN5PCxgpYp/YGxFYt7oZi1E9kC+Q29AP1CMpLecssUKJgxcqTTzcR8WeeRs
-	 tGZFE3sgaz1iHW04HHuLwCfxzuPWvXv0H9yU439I=
+	b=zaVsdWikvmnexGNObXoCohm/aea1wtydXoLzSh9SblMAwfDsqMWc1wvzPtfRYz70Q
+	 R9gRRJr/vltNDRH9+hzAdDcv4iutaBdZ4xWt3DB4KvqtlU2Y4FvA1j6SSfC7ptt9vw
+	 OMNngMPmHaRHGpsCM8EVGEQOYR/AgRMzJbwWCYXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgGGPRh (ORCPT
+        id S1728801AbgGGPRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:17:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56150 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 11:17:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728717AbgGGPQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:16:40 -0400
+        id S1729007AbgGGPQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:16:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 427CC20771;
-        Tue,  7 Jul 2020 15:16:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7F9D2065D;
+        Tue,  7 Jul 2020 15:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594134999;
-        bh=ij90CH/AMuoBDy4JjRvECaJxQy+UIN+yGTmCd5i+bZM=;
+        s=default; t=1594134992;
+        bh=RuIX7iairByS9vmms37vTUc7xISPXnSus2zIBvT/u58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H07Kezxw4H7vb41dXZ+JhD2u49FG8G2420aUqPyQ5nLXfYCSrSnwdFxvVp9k47Zse
-         0o4rz3cLEypZpK2fvGBK7WuvcJGLSX+VuMebEORoKtyd5QvIpRTbFjrHSWbR9qSt8P
-         T35UKUKTVn02l8Lu8q+KWEEiaC8+5yys4NQ19fzA=
+        b=kMl2DYZ5JHgKX1gAOsteOhWgCFUbGkhv2x1a215hkdSSy43NJxIoseRD7M3FyH8gV
+         WUVX4mZJ+kTyFlbx2WRHs0BgyoxxTS6PPKkEmQdT3aobpLOAHVSF0QTKZW4C2IHbEt
+         PCn5dL48/9nUN4ExwO7PMqOsTexDwH5iVObqBL0U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Kyungtae Kim <kt0755@gmail.com>,
-        Zqiang <qiang.zhang@windriver.com>,
+        stable@vger.kernel.org,
+        syzbot+29dc7d4ae19b703ff947@syzkaller.appspotmail.com,
+        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 09/27] usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
-Date:   Tue,  7 Jul 2020 17:15:36 +0200
-Message-Id: <20200707145749.428066714@linuxfoundation.org>
+Subject: [PATCH 4.14 06/27] usbnet: smsc95xx: Fix use-after-free after removal
+Date:   Tue,  7 Jul 2020 17:15:33 +0200
+Message-Id: <20200707145749.265937542@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200707145748.944863698@linuxfoundation.org>
 References: <20200707145748.944863698@linuxfoundation.org>
@@ -61,67 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zqiang <qiang.zhang@windriver.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-[ Upstream commit 28ebeb8db77035e058a510ce9bd17c2b9a009dba ]
+[ Upstream commit b835a71ef64a61383c414d6bf2896d2c0161deca ]
 
-BUG: memory leak
-unreferenced object 0xffff888055046e00 (size 256):
-  comm "kworker/2:9", pid 2570, jiffies 4294942129 (age 1095.500s)
-  hex dump (first 32 bytes):
-    00 70 04 55 80 88 ff ff 18 bb 5a 81 ff ff ff ff  .p.U......Z.....
-    f5 96 78 81 ff ff ff ff 37 de 8e 81 ff ff ff ff  ..x.....7.......
-  backtrace:
-    [<00000000d121dccf>] kmemleak_alloc_recursive
-include/linux/kmemleak.h:43 [inline]
-    [<00000000d121dccf>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000d121dccf>] slab_alloc_node mm/slub.c:2786 [inline]
-    [<00000000d121dccf>] slab_alloc mm/slub.c:2794 [inline]
-    [<00000000d121dccf>] kmem_cache_alloc_trace+0x15e/0x2d0 mm/slub.c:2811
-    [<000000005c3c3381>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000005c3c3381>] usbtest_probe+0x286/0x19d0
-drivers/usb/misc/usbtest.c:2790
-    [<000000001cec6910>] usb_probe_interface+0x2bd/0x870
-drivers/usb/core/driver.c:361
-    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
-    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
-    [<000000003ef66004>] __device_attach_driver+0x1b6/0x240
-drivers/base/dd.c:831
-    [<00000000eee53e97>] bus_for_each_drv+0x14e/0x1e0 drivers/base/bus.c:431
-    [<00000000bb0648d0>] __device_attach+0x1f9/0x350 drivers/base/dd.c:897
-    [<00000000838b324a>] device_initial_probe+0x1a/0x20 drivers/base/dd.c:944
-    [<0000000030d501c1>] bus_probe_device+0x1e1/0x280 drivers/base/bus.c:491
-    [<000000005bd7adef>] device_add+0x131d/0x1c40 drivers/base/core.c:2504
-    [<00000000a0937814>] usb_set_configuration+0xe84/0x1ab0
-drivers/usb/core/message.c:2030
-    [<00000000e3934741>] generic_probe+0x6a/0xe0 drivers/usb/core/generic.c:210
-    [<0000000098ade0f1>] usb_probe_device+0x90/0xd0
-drivers/usb/core/driver.c:266
-    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
-    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
+Syzbot reports an use-after-free in workqueue context:
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Signed-off-by: Zqiang <qiang.zhang@windriver.com>
-Link: https://lore.kernel.org/r/20200612035210.20494-1-qiang.zhang@windriver.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+BUG: KASAN: use-after-free in mutex_unlock+0x19/0x40 kernel/locking/mutex.c:737
+ mutex_unlock+0x19/0x40 kernel/locking/mutex.c:737
+ __smsc95xx_mdio_read drivers/net/usb/smsc95xx.c:217 [inline]
+ smsc95xx_mdio_read+0x583/0x870 drivers/net/usb/smsc95xx.c:278
+ check_carrier+0xd1/0x2e0 drivers/net/usb/smsc95xx.c:644
+ process_one_work+0x777/0xf90 kernel/workqueue.c:2274
+ worker_thread+0xa8f/0x1430 kernel/workqueue.c:2420
+ kthread+0x2df/0x300 kernel/kthread.c:255
+
+It looks like that smsc95xx_unbind() is freeing the structures that are
+still in use by the concurrently running workqueue callback. Thus switch
+to using cancel_delayed_work_sync() to ensure the work callback really
+is no longer active.
+
+Reported-by: syzbot+29dc7d4ae19b703ff947@syzkaller.appspotmail.com
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/usbtest.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/usb/smsc95xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
-index b3fc602b2e247..49476c0304b27 100644
---- a/drivers/usb/misc/usbtest.c
-+++ b/drivers/usb/misc/usbtest.c
-@@ -2769,6 +2769,7 @@ static void usbtest_disconnect(struct usb_interface *intf)
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index fc48da1c702d7..bcb99bee450a5 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -1338,7 +1338,7 @@ static void smsc95xx_unbind(struct usbnet *dev, struct usb_interface *intf)
+ 	struct smsc95xx_priv *pdata = (struct smsc95xx_priv *)(dev->data[0]);
  
- 	usb_set_intfdata(intf, NULL);
- 	dev_dbg(&intf->dev, "disconnect\n");
-+	kfree(dev->buf);
- 	kfree(dev);
- }
- 
+ 	if (pdata) {
+-		cancel_delayed_work(&pdata->carrier_check);
++		cancel_delayed_work_sync(&pdata->carrier_check);
+ 		netif_dbg(dev, ifdown, dev->net, "free pdata\n");
+ 		kfree(pdata);
+ 		pdata = NULL;
 -- 
 2.25.1
 
