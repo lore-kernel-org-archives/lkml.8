@@ -2,294 +2,170 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B81C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADDDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE2CD20771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7F72073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 14:24:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iU/V1lL9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3fLamn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgGGOYB (ORCPT
+        id S1728214AbgGGOYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:24:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26679 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726805AbgGGOYA (ORCPT
+        Tue, 7 Jul 2020 10:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGGOYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:24:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594131838;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zp2IG5IbOsXxFdOeVLTwJeJxqdaehV1v44g65af918s=;
-        b=iU/V1lL9VdQ6DloKR2dwUl5VCU4a3L4BT4f3QtxngAwVYssxskO49itisJzuCQMO4Yfeee
-        Nzwq4EDXqNxTLWYy4vrLecvMMscHZBKW/prfNXIP/G9AYsBi9F93VoI2K6AJKXoAHt5AFD
-        1zYtBfrkr0Q4XuKk2kSnsIpASwhqx5s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-80Fgy1tLMg-yOz25y0yUdQ-1; Tue, 07 Jul 2020 10:23:55 -0400
-X-MC-Unique: 80Fgy1tLMg-yOz25y0yUdQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 373C5107ACF3;
-        Tue,  7 Jul 2020 14:23:54 +0000 (UTC)
-Received: from krava (unknown [10.40.195.209])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6BA505C1B2;
-        Tue,  7 Jul 2020 14:23:52 +0000 (UTC)
-Date:   Tue, 7 Jul 2020 16:23:51 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 11/15] perf stat: implement control commands handling
-Message-ID: <20200707142351.GE3424581@krava>
-References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
- <21669f5a-6220-df0a-09f1-b73b32487f23@linux.intel.com>
- <20200706123436.GD3401866@krava>
- <6cf91811-ea6a-3c7c-8bbf-7f96bfa1fc82@linux.intel.com>
- <20200706193418.GB3424581@krava>
- <b28806b9-b66e-aa2e-5425-4d9f00341387@linux.intel.com>
- <20200707131403.GD3424581@krava>
- <865ad42a-6085-41d6-06d5-730cb9904ce8@linux.intel.com>
+        Tue, 7 Jul 2020 10:24:48 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57317C061755;
+        Tue,  7 Jul 2020 07:24:48 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id y10so46698718eje.1;
+        Tue, 07 Jul 2020 07:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=McOB/0yYDJQ83thcjyemD5c9BdlKzyjDAog3KEfKSkg=;
+        b=o3fLamn66/sQMIHRnVoui2FDdrvygbfj/EJvB9Xw4rIv+X9x15ea1yKUTl/955fnzN
+         ilaKEb8ttIYKv59wL5G/bO46wHEJ9VdVfjJ9hiJOKl977QUGjg4Lf2pxJ3+c+cBdo7qj
+         9cWYbEmJ0jAhS6KOF1mcCJOuaA0rI4YlTAepyHevjsGqCiKKzJ3Id+g6qy6HcrAzgRMy
+         OuF87k/dWiLVPrbDxTo+ontV3+3tl9qTGWQUwmfVKEoEu9xKK70cbuv4fiMG+aXvoLBv
+         MUubXLSuPp/SumMQ9Kn9iV2TGdU4QyxK2sw7Bx1d+C9FOSmta10Wl7OGhkkaIccGlxwy
+         Mifg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=McOB/0yYDJQ83thcjyemD5c9BdlKzyjDAog3KEfKSkg=;
+        b=EYPwY9rixJICPiRPqfM3TXpb5bJYJ6RpsS804bTbUk0Za1bcU87MJxqT2NFKsp6z2Q
+         SVLVKxUO8juLFvjfgdWQF+tcMyVlQOK+LA4/KudbcxEVPDnA3ffNGkJbp6FtxW10aAfU
+         CBmbmjmHupqtyDph7J0qFJQS4oWg2PHGeqkxeJfNsMYN25lPwa0k6eWaikNDJR6cLoBw
+         KqPdYeQzNKurMAWWfHY7lGxWpamgnQSoqMx5ME337vf3jQx1i4nvKq1F4z8RPgmjYYSP
+         eFgRyyr5vt9rkaCZUA4rtxHnuQ6jM6o/TaddRTMBVrYUZBv88qepF6CuGu1MB8GOMtNa
+         5vZg==
+X-Gm-Message-State: AOAM530TFtLwEnM5I8HbwWJKBoWL3EU4T+6nbuxhg8Gy1AHqIr+jD+Kr
+        S/lqrqWV49lEK6vZCGUNLRymhsBKbDp0hXmW36E=
+X-Google-Smtp-Source: ABdhPJwm/0c5b1pm+RO/PcvtbbwfHWJUpLgSJZX4m+kdgXqWpEywCtvCuyEdwfXmE9Q48ukNOV1sECfMMVrbTNnIlGw=
+X-Received: by 2002:a17:906:1187:: with SMTP id n7mr41984337eja.161.1594131887033;
+ Tue, 07 Jul 2020 07:24:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <865ad42a-6085-41d6-06d5-730cb9904ce8@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200626200414.14382-1-jcrouse@codeaurora.org>
+ <20200626200414.14382-3-jcrouse@codeaurora.org> <99ecd948-7476-b9b4-12b4-1ced0084654f@arm.com>
+In-Reply-To: <99ecd948-7476-b9b4-12b4-1ced0084654f@arm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 7 Jul 2020 07:25:18 -0700
+Message-ID: <CAF6AEGv2YXu44r9O0ZRkNM2ny4oMStxn4=GoCS3CLpPAKh_KZw@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v2 2/6] iommu/io-pgtable: Allow a pgtable
+ implementation to skip TLB operations
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Joerg Roedel <jroedel@suse.de>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Yong Wu <yong.wu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 04:24:28PM +0300, Alexey Budankov wrote:
-> 
-> On 07.07.2020 16:14, Jiri Olsa wrote:
-> > On Tue, Jul 07, 2020 at 04:07:42PM +0300, Alexey Budankov wrote:
-> >>
-> >> On 06.07.2020 22:34, Jiri Olsa wrote:
-> >>> On Mon, Jul 06, 2020 at 05:47:54PM +0300, Alexey Budankov wrote:
-> >>>>
-> >>>> On 06.07.2020 15:34, Jiri Olsa wrote:
-> >>>>> On Fri, Jul 03, 2020 at 10:47:22AM +0300, Alexey Budankov wrote:
-> >>>>>>
-> >>>>>> Implement handling of 'enable' and 'disable' control commands
-> >>>>>> coming from control file descriptor. process_evlist() function
-> >>>>>> checks for events on control fds and makes required operations.
-> >>>>>> If poll event splits initiated timeout interval then the reminder
-> >>>>>> is calculated and still waited in the following poll() syscall.
-> >>>>>>
-> >>>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> >>>>>> ---
-> >>>>>>  tools/perf/builtin-stat.c | 75 ++++++++++++++++++++++++++++-----------
-> >>>>>>  1 file changed, 55 insertions(+), 20 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> >>>>>> index 9e4288ecf2b8..5021f7286422 100644
-> >>>>>> --- a/tools/perf/builtin-stat.c
-> >>>>>> +++ b/tools/perf/builtin-stat.c
-> >>>>>> @@ -485,6 +485,31 @@ static bool handle_interval(unsigned int interval, int *times)
-> >>>>>>  	return false;
-> >>>>>>  }
-> >>>>>>  
-> >>>>>> +static bool process_evlist(struct evlist *evlist, unsigned int interval, int *times)
-> >>>>>> +{
-> >>>>>> +	bool stop = false;
-> >>>>>> +	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
-> >>>>>> +
-> >>>>>> +	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
-> >>>>>> +		switch (cmd) {
-> >>>>>> +		case EVLIST_CTL_CMD_ENABLE:
-> >>>>>> +			pr_info(EVLIST_ENABLED_MSG);
-> >>>>>> +			stop = handle_interval(interval, times);
-> >>>>>> +			break;
-> >>>>>> +		case EVLIST_CTL_CMD_DISABLE:
-> >>>>>> +			stop = handle_interval(interval, times);
-> >>>>>
-> >>>>> I still don't understand why you call handle_interval in here
-> >>>>>
-> >>>>> I don't see it being necessary.. you enable events and handle_interval,
-> >>>>> wil be called in the next iteration of dispatch_events, why complicate
-> >>>>> this function with that?
-> >>>>
-> >>>> Printing event counts at the moment of command processing lets scripts
-> >>>> built on top of stat output to provide more plain and accurate metrics.
-> >>>> Otherwise it may get spikes in the beginning of the next time interval
-> >>>> because not all counts lay inside [Events enabled, Events disable]
-> >>>> If -I interval is large tail event count can be also large. Compare the
-> >>>> output below with the output in the cover letter. Either way is possible
-> >>>> but the latter one likely complicates the scripts I mentioned above.
-> >>>>
-> >>>> perf=tools/perf/perf
-> >>>> ${perf} stat -D -1 -e cpu-cycles -a -I 1000       \
-> >>>>              --control fd:${ctl_fd},${ctl_fd_ack} \
-> >>>>              -- sleep 40 &
-> >>>>
-> >>>> Events disabled
-> >>>> #           time             counts unit events
-> >>>>      1.001100723      <not counted>      cpu-cycles                                                  
-> >>>>      2.003146566      <not counted>      cpu-cycles                                                  
-> >>>>      3.005073317      <not counted>      cpu-cycles                                                  
-> >>>>      4.006337062      <not counted>      cpu-cycles                                                  
-> >>>> Events enabled
-> >>>> enable acked(ack)
-> >>>>      5.011182000         54,128,692      cpu-cycles <===                                                 
-> >>>>      6.012300167      3,648,804,827      cpu-cycles                                                  
-> >>>>      7.013631689        590,438,536      cpu-cycles                                                  
-> >>>>      8.015558583        406,935,663      cpu-cycles                                                  
-> >>>>      9.017455505        407,806,862      cpu-cycles                                                  
-> >>>>     10.019300780        399,351,824      cpu-cycles                                                  
-> >>>>     11.021180025        404,584,417      cpu-cycles                                                  
-> >>>>     12.023033661        537,787,981      cpu-cycles                                                  
-> >>>>     13.024422354        699,395,364      cpu-cycles                                                  
-> >>>>     14.026325749        397,871,324      cpu-cycles                                                  
-> >>>> disable acked()
-> >>>> Events disabled
-> >>>>     15.027857981        396,956,159      cpu-cycles <===
-> >>>>     16.029279264      <not counted>      cpu-cycles                                                  
-> >>>>     17.031131311      <not counted>      cpu-cycles                                                  
-> >>>>     18.033010580      <not counted>      cpu-cycles                                                  
-> >>>>     19.034918883      <not counted>      cpu-cycles                                                  
-> >>>> enable acked(ack)
-> >>>> Events enabled
-> >>>>     20.036758793        183,544,975      cpu-cycles <===                                             
-> >>>>     21.038163289        419,054,544      cpu-cycles                                                  
-> >>>>     22.040108245        413,993,309      cpu-cycles                                                  
-> >>>>     23.042042365        403,584,493      cpu-cycles                                                  
-> >>>>     24.043985381        416,512,094      cpu-cycles                                                  
-> >>>>     25.045925682        401,513,429      cpu-cycles                                                  
-> >>>> #           time             counts unit events
-> >>>>     26.047822238        461,205,096      cpu-cycles                                                  
-> >>>>     27.049784263        414,319,162      cpu-cycles                                                  
-> >>>>     28.051745360        403,706,915      cpu-cycles                                                  
-> >>>>     29.053674600        416,502,883      cpu-cycles                                                  
-> >>>> disable acked()
-> >>>> Events disabled
-> >>>>     30.054750685        414,184,409      cpu-cycles <===
-> >>>
-> >>> ok, but we could still take handle_interval out of process_evlist
-> >>> and the interval process will be more clear for me (with some
-> >>> additional comments in the code) ... perhaps something like below?
-> >>>
-> >>> thanks,
-> >>> jirka
-> >>>
-> >>>
-> >>> ---
-> >>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> >>> index 5021f7286422..af83bf6b2db0 100644
-> >>> --- a/tools/perf/builtin-stat.c
-> >>> +++ b/tools/perf/builtin-stat.c
-> >>> @@ -485,19 +485,18 @@ static bool handle_interval(unsigned int interval, int *times)
-> >>>  	return false;
-> >>>  }
-> >>>  
-> >>> -static bool process_evlist(struct evlist *evlist, unsigned int interval, int *times)
-> >>> +static bool process_evlist(struct evlist *evlist)
-> >>>  {
-> >>> -	bool stop = false;
-> >>>  	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
-> >>> +	bool enabled = false;
-> >>>  
-> >>>  	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
-> >>>  		switch (cmd) {
-> >>>  		case EVLIST_CTL_CMD_ENABLE:
-> >>>  			pr_info(EVLIST_ENABLED_MSG);
-> >>> -			stop = handle_interval(interval, times);
-> >>> +			enabled = true;
-> >>>  			break;
-> >>>  		case EVLIST_CTL_CMD_DISABLE:
-> >>> -			stop = handle_interval(interval, times);
-> >>>  			pr_info(EVLIST_DISABLED_MSG);
-> >>>  			break;
-> >>>  		case EVLIST_CTL_CMD_ACK:
-> >>> @@ -507,7 +506,7 @@ static bool process_evlist(struct evlist *evlist, unsigned int interval, int *ti
-> >>>  		}
-> >>>  	}
-> >>>  
-> >>> -	return stop;
-> >>> +	return enabled;
-> >>>  }
-> >>>  
-> >>>  static void enable_counters(void)
-> >>> @@ -618,7 +617,8 @@ static int dispatch_events(bool forks, int timeout, int interval, int *times)
-> >>>  				stop = handle_interval(interval, times);
-> >>>  			time_to_sleep = sleep_time;
-> >>>  		} else { /* fd revent */
-> >>> -			stop = process_evlist(evsel_list, interval, times);
-> >>> +			if (process_evlist(evsel_list))
-> >>> +				stop = handle_interval(interval, times);
-> >>
-> >> It will call only on enable command and lead to artificial spikes in the beginning of interval.
-> >> May be just take handle_interval() out of process_evlist() and have it similar to record case?
-> > 
-> > it can be called also for disable case then
-> 
-> 
-> Made it like this so now times counter is not affected during commands processing:
+On Tue, Jul 7, 2020 at 4:34 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2020-06-26 21:04, Jordan Crouse wrote:
+> > Allow a io-pgtable implementation to skip TLB operations by checking for
+> > NULL pointers in the helper functions. It will be up to to the owner
+> > of the io-pgtable instance to make sure that they independently handle
+> > the TLB correctly.
+>
+> I don't really understand what this is for - tricking the IOMMU driver
+> into not performing its TLB maintenance at points when that maintenance
+> has been deemed necessary doesn't seem like the appropriate way to
+> achieve anything good :/
 
-hm, can't process list just return true
-when the interval needs to be printed?
+No, for triggering the io-pgtable helpers into not performing TLB
+maintenance.  But seriously, since we are creating pgtables ourselves,
+and we don't want to be ioremap'ing the GPU's SMMU instance, the
+alternative is plugging in no-op helpers.  Which amounts to the same
+thing.
 
-jirka
+Currently (in a later patch in the series) we are using
+iommu_flush_tlb_all() when unmapping, which is a bit of a big hammer.
+Although I think we could be a bit more clever and do the TLB ops on
+the GPU (since the GPU knows if pagetables we are unmapping from are
+in-use and could skip the TLB ops otherwise).
 
-> 
-> static void process_evlist(struct evlist *evlist, enum evlist_ctl_cmd *cmd)
-> {
-> 	if (evlist__ctlfd_process(evlist, cmd) > 0) {
-> 		switch (*cmd) {
-> 		case EVLIST_CTL_CMD_ENABLE:
-> 			pr_info(EVLIST_ENABLED_MSG);
-> 			break;
-> 		case EVLIST_CTL_CMD_DISABLE:
-> 			pr_info(EVLIST_DISABLED_MSG);
-> 			break;
-> 		case EVLIST_CTL_CMD_ACK:
-> 		case EVLIST_CTL_CMD_UNSUPPORTED:
-> 		default:
-> 			break;
-> 		}
-> 	}
-> }
-> 
-> ...
-> 
-> 		clock_gettime(CLOCK_MONOTONIC, &time_start);
-> 		if (!(evlist__poll(evsel_list, time_to_sleep) > 0)) { /* poll timeout or EINTR */
-> 			if (timeout)
-> 				break;
-> 			else
-> 				stop = handle_interval(interval, times);
-> 			time_to_sleep = sleep_time;
-> 		} else { /* fd revent */
-> 			process_evlist(evsel_list, &cmd);
-> 			if (interval) {
-> 				switch (cmd) {
-> 				case EVLIST_CTL_CMD_ENABLE:
-> 				case EVLIST_CTL_CMD_DISABLE:
-> 					process_interval();
-> 				case EVLIST_CTL_CMD_ACK:
-> 				case EVLIST_CTL_CMD_UNSUPPORTED:
-> 				default:
-> 					break;
-> 				}
-> 			}
-> 			clock_gettime(CLOCK_MONOTONIC, &time_stop);
-> 			compute_tts(&time_start, &time_stop, &time_to_sleep);
-> 		}
-> 
-> Alexey
-> 
+On the topic, if we are using unique ASID values per set of
+pagetables, how expensive is tlb invalidate for an ASID that has no
+entries in the TLB?
 
+BR,
+-R
+
+>
+> Robin.
+>
+> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > ---
+> >
+> >   include/linux/io-pgtable.h | 11 +++++++----
+> >   1 file changed, 7 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
+> > index 53d53c6c2be9..bbed1d3925ba 100644
+> > --- a/include/linux/io-pgtable.h
+> > +++ b/include/linux/io-pgtable.h
+> > @@ -210,21 +210,24 @@ struct io_pgtable {
+> >
+> >   static inline void io_pgtable_tlb_flush_all(struct io_pgtable *iop)
+> >   {
+> > -     iop->cfg.tlb->tlb_flush_all(iop->cookie);
+> > +     if (iop->cfg.tlb)
+> > +             iop->cfg.tlb->tlb_flush_all(iop->cookie);
+> >   }
+> >
+> >   static inline void
+> >   io_pgtable_tlb_flush_walk(struct io_pgtable *iop, unsigned long iova,
+> >                         size_t size, size_t granule)
+> >   {
+> > -     iop->cfg.tlb->tlb_flush_walk(iova, size, granule, iop->cookie);
+> > +     if (iop->cfg.tlb)
+> > +             iop->cfg.tlb->tlb_flush_walk(iova, size, granule, iop->cookie);
+> >   }
+> >
+> >   static inline void
+> >   io_pgtable_tlb_flush_leaf(struct io_pgtable *iop, unsigned long iova,
+> >                         size_t size, size_t granule)
+> >   {
+> > -     iop->cfg.tlb->tlb_flush_leaf(iova, size, granule, iop->cookie);
+> > +     if (iop->cfg.tlb)
+> > +             iop->cfg.tlb->tlb_flush_leaf(iova, size, granule, iop->cookie);
+> >   }
+> >
+> >   static inline void
+> > @@ -232,7 +235,7 @@ io_pgtable_tlb_add_page(struct io_pgtable *iop,
+> >                       struct iommu_iotlb_gather * gather, unsigned long iova,
+> >                       size_t granule)
+> >   {
+> > -     if (iop->cfg.tlb->tlb_add_page)
+> > +     if (iop->cfg.tlb && iop->cfg.tlb->tlb_add_page)
+> >               iop->cfg.tlb->tlb_add_page(gather, iova, granule, iop->cookie);
+> >   }
+> >
+> >
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
