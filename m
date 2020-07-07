@@ -2,44 +2,80 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A88C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA92DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44652067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914FB206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 08:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgGGIuj (ORCPT
+        id S1727908AbgGGIux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:50:39 -0400
-Received: from verein.lst.de ([213.95.11.211]:57827 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbgGGIuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 04:50:39 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C59CA68AFE; Tue,  7 Jul 2020 10:50:36 +0200 (CEST)
-Date:   Tue, 7 Jul 2020 10:50:36 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        baolin.wang7@gmail.com, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Some cleanups for NVMe-pci driver
-Message-ID: <20200707085036.GB27485@lst.de>
-References: <cover.1593743937.git.baolin.wang@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1593743937.git.baolin.wang@linux.alibaba.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Tue, 7 Jul 2020 04:50:53 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:42582 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727122AbgGGIux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 04:50:53 -0400
+Received: from ticat.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxFupjNwRfLCtRAA--.918S2;
+        Tue, 07 Jul 2020 16:50:44 +0800 (CST)
+From:   Peng Fan <fanpeng@loongson.cn>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] spi: atmel: No need to call spi_master_put() if spi_alloc_master() failed
+Date:   Tue,  7 Jul 2020 16:50:42 +0800
+Message-Id: <1594111842-9468-1-git-send-email-fanpeng@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9AxFupjNwRfLCtRAA--.918S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtF4xJF48GF43Cw1xJr48Xrb_yoW3ZFXEkw
+        48urn7Wr45trsFk3Wag34fZry29a4rXrs29FnIqayfX34Dtr1UJrWDXF1Dua1UZw4xArWD
+        Cr1DWrySkrWfWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbwkYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC2
+        0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+        0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+        14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
+        vaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+        xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8CJmUUUUUU==
+X-CM-SenderInfo: xidq1vtqj6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks,
+There is no need to call spi_master_put() if spi_alloc_master()
+failed, it should return -ENOMEM directly.
 
-applied to nvme-5.9.
+Signed-off-by: Peng Fan <fanpeng@loongson.cn>
+---
+ drivers/spi/spi-atmel.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index 57ee8c3..6ed7abd 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -1546,10 +1546,9 @@ static int atmel_spi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(clk);
+ 
+ 	/* setup spi core then atmel-specific driver state */
+-	ret = -ENOMEM;
+ 	master = spi_alloc_master(&pdev->dev, sizeof(*as));
+ 	if (!master)
+-		goto out_free;
++		return -ENOMEM;
+ 
+ 	/* the spi->mode bits understood by this driver: */
+ 	master->use_gpio_descriptors = true;
+-- 
+2.1.0
+
