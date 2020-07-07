@@ -2,54 +2,54 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A29C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32CA6206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C9F206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 20:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594155226;
-	bh=TjuiSNQ/S1+HAtOktq25UWZCS6KVqNl53nLxfjgvEnE=;
+	s=default; t=1594155229;
+	bh=a6F+8rETmwBIMmxJH4RTNXpUL7QMGz1QhbOxV5EqlGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yN7f1pBREygoLHe14y7sed1fYXFhBDTG9EZGOvUACto8Ay6JqBi6oSx8A6oRptdD4
-	 I/7cWKdTS0ZoWNYKgLTOH5lNYp9ZpTZ7xINVVwxGcFHPtPj/QMo4DE7N964XY6W/oK
-	 Rx39l1PsuAcGtwTdP1cGWJy2s0Sh4ur/fVP9J7gI=
+	b=GC7e7AGuGY3/wFtgoQCTGymUmvutoaRrBTMb+XkKmkXwDp4zfm+IvVoJkmDVZBH4e
+	 ugACDsvXajbyrO4wTcmZTvPbwlPHEQwVcWbvODrnvnoPxfA3DI2djKP6iANoaOI+v0
+	 xaedrw0fGtWsSEtJQboRprLw3bvkoRbAguOpjAGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgGGUxp (ORCPT
+        id S1729096AbgGGUxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 16:53:45 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36799 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729015AbgGGUxk (ORCPT
+        Tue, 7 Jul 2020 16:53:47 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42524 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729066AbgGGUxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 16:53:40 -0400
-Received: by mail-io1-f65.google.com with SMTP id y2so44697065ioy.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 13:53:39 -0700 (PDT)
+        Tue, 7 Jul 2020 16:53:43 -0400
+Received: by mail-io1-f66.google.com with SMTP id c16so44691943ioi.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 13:53:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KhfRFaZ90G0JMwxeaYoDicB01Rayzt9DHGWdTJ6hTJk=;
-        b=rXce85+SvcFTPCikuyS7hiheFWfios3t3Zwr378ArYPNCyF/4j4Ty/GEHtvwHTrzcw
-         lxGKgpJjkhXrVdsDmmArxdQzEFkpgzTxdHETk6BDChI9nYr9UC0XhPFrm8fXsslq9rR9
-         A75jzed3EgErkbXatHFZGEiLB0V/mNaxzkuUIA+aB2hcD8l9CVchSeEe3SvX7xaptR+g
-         16mUD8IKzYAy4Ii0dwDeuYr+yCtNtLTGQmJgDa/msp6LoHBRE4tR74MZ11hZGcIRABMR
-         f0IFEANPw1Tq4oQg4x5ukO5mzeitBvp0W7fk28aWa6WPK8UcX4ITGJAGegDQV2LWhCcX
-         fQIQ==
-X-Gm-Message-State: AOAM531V7bpUkRnH4o/z3OMHvBcWbgeN4tXJjEdSaFfoaCeWstp8ktcJ
-        JmHrDMsQQBSjQwF0SCqSvg==
-X-Google-Smtp-Source: ABdhPJy7I2LPyEAyTZpdH0SmzmLPUX63mNolI2dvixJEtMp/CvGtaOWX4x+HOgYECpSZmcbbLr3ccA==
-X-Received: by 2002:a02:1784:: with SMTP id 126mr63647056jah.53.1594155219446;
-        Tue, 07 Jul 2020 13:53:39 -0700 (PDT)
+        bh=xFUJgAyhgciO3qO3NIBe3KpN6uEMK7G2y/DfqZ12aSM=;
+        b=onUJOSANubrei0GH3BiC9JHy/5h7SRpko/28wC/+O1d+SyLrGjOLy5Jao772FBr+Zm
+         7TOX5c1VNCDUkU+QHQTg/1FzlcBz0wFHZlgspxnbUEbcHElKRA90eFwONcUPpyGFhfCO
+         XhN/KFIN+Ayd3mFSgesH3NpCNUYjnK9QGaBoCplp/+6kbG2rfLB/4p/uL7/igwuGfcRY
+         fxhryzdjQ+9y2c1AKAKLdvWByDib7l5fY9WUaymTp9RWp3Zs0c5fFOYxzMJMfTLzbbfR
+         vyA0t+Tcc6KSE1kw4bpCCZM1xfkd0BbzRxmcshN3W1D7SJkaHJb5Z2lCMbtPXtDDkz90
+         XgUg==
+X-Gm-Message-State: AOAM531c9RYKR1wLKmXTrzTG2yVIXZ6Z2s1/c7s61+oaAn718ZSVoJno
+        kxDQ2KjLGCSVAGZjrtKapQ==
+X-Google-Smtp-Source: ABdhPJyq8kA7O7kSGFmYlRDjz854jV0sdtPUolqUylozJ+GIjwkp7dz+iu/YYzPP4T0XLoHQjar6HQ==
+X-Received: by 2002:a05:6602:2805:: with SMTP id d5mr33101636ioe.124.1594155222095;
+        Tue, 07 Jul 2020 13:53:42 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.254])
-        by smtp.googlemail.com with ESMTPSA id y6sm13110712ila.74.2020.07.07.13.53.38
+        by smtp.googlemail.com with ESMTPSA id y6sm13110712ila.74.2020.07.07.13.53.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 13:53:38 -0700 (PDT)
+        Tue, 07 Jul 2020 13:53:41 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>
@@ -63,9 +63,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Namhyung Kim <namhyung@kernel.org>,
         Raphael Gault <raphael.gault@arm.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 3/5] arm64: pmu: Add function implementation to update event index in userpage
-Date:   Tue,  7 Jul 2020 14:53:31 -0600
-Message-Id: <20200707205333.624938-4-robh@kernel.org>
+Subject: [PATCH 5/5] Documentation: arm64: Document PMU counters access from userspace
+Date:   Tue,  7 Jul 2020 14:53:33 -0600
+Message-Id: <20200707205333.624938-6-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200707205333.624938-1-robh@kernel.org>
 References: <20200707205333.624938-1-robh@kernel.org>
@@ -78,86 +78,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Raphael Gault <raphael.gault@arm.com>
 
-In order to be able to access the counter directly for userspace,
-we need to provide the index of the counter using the userpage.
-We thus need to override the event_idx function to retrieve and
-convert the perf_event index to armv8 hardware index.
-
-Since the arm_pmu driver can be used by any implementation, even
-if not armv8, two components play a role into making sure the
-behaviour is correct and consistent with the PMU capabilities:
-
-* the ARMPMU_EL0_RD_CNTR flag which denotes the capability to access
-counter from userspace.
-* the event_idx call back, which is implemented and initialized by
-the PMU implementation: if no callback is provided, the default
-behaviour applies, returning 0 as index value.
+Add a documentation file to describe the access to the pmu hardware
+counters from userspace
 
 Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/kernel/perf_event.c | 21 +++++++++++++++++++++
- include/linux/perf/arm_pmu.h   |  2 ++
- 2 files changed, 23 insertions(+)
+Changes:
+  - Convert to rSt
+  - Update chained event status
+  - Add section for heterogeneous systems
+---
+ Documentation/arm64/index.rst                 |  1 +
+ .../arm64/perf_counter_user_access.rst        | 52 +++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 Documentation/arm64/perf_counter_user_access.rst
 
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index d4b4fe69fe2c..6c12a6ad36f5 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -795,6 +795,22 @@ static void armv8pmu_clear_event_idx(struct pmu_hw_events *cpuc,
- 		clear_bit(idx - 1, cpuc->used_mask);
- }
-
-+static int armv8pmu_access_event_idx(struct perf_event *event)
-+{
-+	if (!(event->hw.flags & ARMPMU_EL0_RD_CNTR))
-+		return 0;
+diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
+index 09cbb4ed2237..62f45d620180 100644
+--- a/Documentation/arm64/index.rst
++++ b/Documentation/arm64/index.rst
+@@ -14,6 +14,7 @@ ARM64 Architecture
+     hugetlbpage
+     legacy_instructions
+     memory
++    perf_counter_user_access
+     pointer-authentication
+     silicon-errata
+     sve
+diff --git a/Documentation/arm64/perf_counter_user_access.rst b/Documentation/arm64/perf_counter_user_access.rst
+new file mode 100644
+index 000000000000..afbc7acaae66
+--- /dev/null
++++ b/Documentation/arm64/perf_counter_user_access.rst
+@@ -0,0 +1,52 @@
++=============================================
++Access to PMU hardware counter from userspace
++=============================================
 +
-+	/*
-+	 * We remap the cycle counter index to 32 to
-+	 * match the offset applied to the rest of
-+	 * the counter indices.
-+	 */
-+	if (event->hw.idx == ARMV8_IDX_CYCLE_COUNTER)
-+		return 32;
++Overview
++--------
++The perf userspace tool relies on the PMU to monitor events. It offers an
++abstraction layer over the hardware counters since the underlying
++implementation is cpu-dependent.
++Arm64 allows userspace tools to have access to the registers storing the
++hardware counters' values directly.
 +
-+	return event->hw.idx;
-+}
++This targets specifically self-monitoring tasks in order to reduce the overhead
++by directly accessing the registers without having to go through the kernel.
 +
- /*
-  * Add an event filter to a given event.
-  */
-@@ -891,6 +907,9 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
- 	if (armv8pmu_event_is_64bit(event))
- 		event->hw.flags |= ARMPMU_EVT_64BIT;
-
-+	if (!armv8pmu_event_is_chained(event))
-+		event->hw.flags |= ARMPMU_EL0_RD_CNTR;
++How-to
++------
++The focus is set on the armv8 pmuv3 which makes sure that the access to the pmu
++registers is enabled and that the userspace has access to the relevant
++information in order to use them.
 +
- 	/* Only expose micro/arch events supported by this PMU */
- 	if ((hw_event_id > 0) && (hw_event_id < ARMV8_PMUV3_MAX_COMMON_EVENTS)
- 	    && test_bit(hw_event_id, armpmu->pmceid_bitmap)) {
-@@ -1068,6 +1087,8 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
- 	cpu_pmu->set_event_filter	= armv8pmu_set_event_filter;
- 	cpu_pmu->filter_match		= armv8pmu_filter_match;
-
-+	cpu_pmu->pmu.event_idx		= armv8pmu_access_event_idx;
++In order to have access to the hardware counter it is necessary to open the event
++using the perf tool interface: the sys_perf_event_open syscall returns a fd which
++can subsequently be used with the mmap syscall in order to retrieve a page of
++memory containing information about the event.
++The PMU driver uses this page to expose to the user the hardware counter's
++index and other necessary data. Using this index enables the user to access the
++PMU registers using the `mrs` instruction.
 +
- 	cpu_pmu->name			= name;
- 	cpu_pmu->map_event		= map_event;
- 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_EVENTS] = events ?
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 5b616dde9a4c..74fbbbd29dc7 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -26,6 +26,8 @@
-  */
- /* Event uses a 64bit counter */
- #define ARMPMU_EVT_64BIT		1
-+/* Allow access to hardware counter from userspace */
-+#define ARMPMU_EL0_RD_CNTR		2
-
- #define HW_OP_UNSUPPORTED		0xFFFF
- #define C(_x)				PERF_COUNT_HW_CACHE_##_x
++Have a look at `tools/perf/arch/arm64/tests/user-events.c`_ for an example. It
++can be run using the perf tool to check that the access to the registers works
++correctly from userspace:
++
++.. code-block:: sh
++
++  perf test -v user
++
++About heterogeneous systems
++---------------------------
++On heterogeneous systems such as big.LITTLE, userspace PMU counter access can
++only be enabled when the tasks are pinned to a homogeneous subset of cores and
++the corresponding PMU instance is opened by specifying the 'type' attribute.
++The use of generic event types is not supported in this case.
++
++About chained events
++--------------------
++Chained events are not supported in userspace. If a 64-bit counter is requested,
++userspace access will only be enabled if the underlying counter is 64-bit.
++
++.. Links
++.. _tools/perf/arch/arm64/tests/user-events.c:
++   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
 --
 2.25.1
