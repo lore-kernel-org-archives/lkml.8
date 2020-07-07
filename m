@@ -2,90 +2,139 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD54C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED2D220708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F9E20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 04:05:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Eh+OT9gB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgGGEFD (ORCPT
+        id S1728127AbgGGEFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:05:03 -0400
-Received: from mga11.intel.com ([192.55.52.93]:40822 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgGGEFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:05:03 -0400
-IronPort-SDR: to0nG9j4mER0gmtDK4pM3GpY9uPcvyzFbFgCeEvLAcG73RML5sZt+IekfXGgy9TGtQ7BcLm0Km
- cbXk82DfGbjw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="145635551"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="145635551"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 21:05:03 -0700
-IronPort-SDR: THpUsrgwUYlnI/X4OKRrQkntW4jwxt/RY4lDo8NxvYoxTyRudtwZkEym0sBhd3+72X+GhwYliT
- +dzhcWqODgKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="268077692"
-Received: from apiccion-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.45.178])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Jul 2020 21:04:49 -0700
-Date:   Tue, 7 Jul 2020 07:04:48 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v34 12/24] x86/sgx: Add SGX_IOC_ENCLAVE_CREATE
-Message-ID: <20200707040448.GD143804@linux.intel.com>
-References: <20200707030204.126021-1-jarkko.sakkinen@linux.intel.com>
- <20200707030204.126021-13-jarkko.sakkinen@linux.intel.com>
- <20200707032915.GC5208@linux.intel.com>
+        Tue, 7 Jul 2020 00:05:15 -0400
+Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:65198
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726491AbgGGEFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 00:05:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DlcrbRTFZs9dA0WWjsg/1HAY/fAIP94arzrdQlHSU7+DxSEnpsW+/ysJm9LJQldQcDDCkp4p2fcoy7Ht7N+gflHbQnqJHKs2TGC6uMQ7wl5cYo70wlAWfJWWoAVrL+05LNekpi1g/jv3LWZjK7pXypM88qq3MgvpP6RliddW5zeyjJUJghSiluzNp791bIl91rgTsEdqg5MXRUt9pWJYYWOZoByF9GgbxaQmi4CdduWNt1Gwi6EdF1peqmKV0QRLI7K/rRcxArsVAfOkXySne2J2jYNTPp23GbdPLQVByWV6R20GysuXG/eevfdi7DTU6dR11iSABRD7C6gLR/uEIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JPZ7KSYL3EVQGocQfAp0YdyQ7McHmsYOgnx1O4A/sb4=;
+ b=lfQn2ek3dBYUV1DYbC6+/wIVD1PkIqrYxTT8Et4ZTHw21BDkEI5xGK+Dzl/jwXlbG2I3FWyjFZQUtJmGZ34hLcEWVT3V+ke17xmj4LS5rwEthhW+ufSkoEulEzJYyJjaPof7a0ZfYJeOkBOMC6S/kq469Gw83hBpu9YhuAXDfkvjALELGZquX/oTxEdAz/bF66XwleuL4SrdKiIw6AgO0qWoZan8T6HRN7Sb0EpaNvIK5z+i4ynqXu6XsgmCC5bQI2gbhYS8D/GA4kk/6ODTA9nE2H6y3wlHF8YcONsUoq4kV4oTeQM82qZIncK77eZd7YNkNWrII70IXiOqEpYNCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JPZ7KSYL3EVQGocQfAp0YdyQ7McHmsYOgnx1O4A/sb4=;
+ b=Eh+OT9gBTm1y/xVy2PwYC0juLRsUI3Wp3bw2T08guPYYAlY3nfinWDDtaxYvsymh8oUPbDiMtZRJbhkgq6XN9w5hUnN6qWzNBIIqlb4aTJKgKie/d/JVRMlf+0AIvbydjyH0P02X1kTHn4qgV/RhxxvbF1qSHYVUyM6ylInu5wU=
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18) by AM7PR04MB6902.eurprd04.prod.outlook.com
+ (2603:10a6:20b:107::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Tue, 7 Jul
+ 2020 04:05:11 +0000
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::75d9:c8cb:c564:d17f]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::75d9:c8cb:c564:d17f%5]) with mapi id 15.20.3153.029; Tue, 7 Jul 2020
+ 04:05:11 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Sergey Organov <sorganov@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: RE: [EXT] [PATCH  2/5] net: fec: enable to use PPS feature without
+ time stamping
+Thread-Topic: [EXT] [PATCH  2/5] net: fec: enable to use PPS feature without
+ time stamping
+Thread-Index: AQHWU6F3aAODXW9jZUmdteAGjEWX/qj7f+Dw
+Date:   Tue, 7 Jul 2020 04:05:11 +0000
+Message-ID: <AM6PR0402MB360752A10C9529B13051C7F2FF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+ <20200706142616.25192-3-sorganov@gmail.com>
+In-Reply-To: <20200706142616.25192-3-sorganov@gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a09834f2-f82a-4160-344c-08d8222af1b2
+x-ms-traffictypediagnostic: AM7PR04MB6902:
+x-microsoft-antispam-prvs: <AM7PR04MB6902AC57D182F424605B50E7FF660@AM7PR04MB6902.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0457F11EAF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: imnLg/kqJUflSojyuY1xkoZUCwJrUP3ZzVdauk9eSA5GQr5Ykf38ymDB8vkqDz7tBCXH3nzzlUJYGeBEYerxpmH8mXfWiVv453K0pR2jnKSrb7tyjvOyganupe1CQ52RaanTz7RmeE8ywasC0XkV0O+7WIMi+bKTNpizPgbYVNGf6a/hROt0ItamIq+T66rJ1h4knamIgAM9QivzK7P4ydxXK27aPlOvgaqBz3Pyo/U3m+MKVrNijWyrlbgy++U0KGr98MYl/jP4A3/zONM5GLvAh2kpf0xyGlsxxW0xI9rn0/eN0atxSimZvYFKfrGr
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(39860400002)(376002)(396003)(316002)(26005)(186003)(6506007)(110136005)(71200400001)(54906003)(7696005)(478600001)(8936002)(8676002)(4326008)(33656002)(55016002)(2906002)(9686003)(76116006)(83380400001)(52536014)(86362001)(5660300002)(66446008)(64756008)(66556008)(66476007)(66946007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: N037i5KJKcEkbn+hiBvePgpoLlMHozJzwKIy56df/6zfGrYrLiFI3WIeWxLFW329/brCBM1ClntqyBohAhRxb6fBTcncaii4wsAfWDUH+aM+LY7VtKRLdLJ480+5s9gB314MnemluJM+VHwX+Bofm++PXuZxvjSj2wRt08j0cRYt+VHWCYkkgTFPUKx3VhwO/dmkH5C4olXdYdvnlhZE4fJn0M4oYmdXqY7FI9vuUFX815XSrN9vfb18r85mWCcnupaaA9KIo5b0U6kpDQ3vcFZnuw72AT6ojKnrbtKdHGFBawtxl0bsIE5WOPG9r1DbIm1iBwTzmJc6QXkJG5ll6zmIUyJ31WPXH10ZnPlX2UDrTcPm+xLETPvXWlmdrwbdyD41iHG/bnSvBpmzsto9pvEtHWNR59P5C40TFaX5I4oZzS66WEgiRj6mnwXGeVO+5pcCJB7/cB9sQDB+6RxeeYlMxWPDpTeMFHcOpVh2V9w=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707032915.GC5208@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR0402MB3607.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a09834f2-f82a-4160-344c-08d8222af1b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2020 04:05:11.1464
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9bYNHz4MaC8PM8bdFVGsAV0zNbQ41w7fWwaRfpZfz8ve2pMVtCuh/1miOkWlT/Z30A7blJys60poPUYHwffoJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6902
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 08:29:15PM -0700, Sean Christopherson wrote:
-> On Tue, Jul 07, 2020 at 06:01:52AM +0300, Jarkko Sakkinen wrote:
-> > +long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
-> > +{
-> > +	struct sgx_encl *encl = filep->private_data;
-> > +	int ret, encl_flags;
-> > +
-> > +	encl_flags = atomic_fetch_or(SGX_ENCL_IOCTL, &encl->flags);
-> > +	if (encl_flags & SGX_ENCL_IOCTL)
-> > +		return -EBUSY;
-> 
-> As called out in my belated feedback, SGX_ENCL_DEAD needs to be checked
-> here to prevent invoking ENCLS operations on a dead enclave.  If you're
-> splitting hairs, the check could technically be deferred until the next
-> patch, "Add SGX_IOC_ENCLAVE_ADD_PAGES", which is the first usage of
-> sgx_encl_destroy() from an ioctl(), but that seems a bit gratuitous.
+From: Sergey Organov <sorganov@gmail.com> Sent: Monday, July 6, 2020 10:26 =
+PM
+> PPS feature could be useful even when hardware time stamping of network
+> packets is not in use, so remove offending check for this condition from
+> fec_ptp_enable_pps().
 
-This is already fixed in v35.
+If hardware time stamping of network packets is not in use, PPS is based on=
+ local
+clock, what is the use case ?
 
-/Jarkko
+>=20
+> Signed-off-by: Sergey Organov <sorganov@gmail.com>
+> ---
+>  drivers/net/ethernet/freescale/fec_ptp.c | 5 -----
+>  1 file changed, 5 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c
+> b/drivers/net/ethernet/freescale/fec_ptp.c
+> index f8a592c..4a12086 100644
+> --- a/drivers/net/ethernet/freescale/fec_ptp.c
+> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
+> @@ -103,11 +103,6 @@ static int fec_ptp_enable_pps(struct
+> fec_enet_private *fep, uint enable)
+>         u64 ns;
+>         val =3D 0;
+>=20
+> -       if (!(fep->hwts_tx_en || fep->hwts_rx_en)) {
+> -               dev_err(&fep->pdev->dev, "No ptp stack is running\n");
+> -               return -EINVAL;
+> -       }
+> -
+>         if (fep->pps_enable =3D=3D enable)
+>                 return 0;
+>=20
+> --
+> 2.10.0.1.g57b01a3
+
