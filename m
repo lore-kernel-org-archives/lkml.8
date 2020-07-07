@@ -2,126 +2,109 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8CFA206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:48:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m57SDtNZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9E714206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594147856;
+	bh=q1dR/jTPZVK8xl37KWCnPKEDb2AOMCbqOvChW4D47CU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RBuHecflei2HBTYJqTeIm+prvqXyW3kz+lNWf/iyY4QFcHC1lBt+Zh2ygTZCh/Y+e
+	 F2C7NKYbjZuHl/jvCE9CLARqVvVTp36xPTEG4O42x9dfer3HYl+z/Tc0LCJbowM9aY
+	 aXW3vGQzfPVS9RpOxDjnWbr+Nnpl+Gxdivkan2aE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgGGSsL (ORCPT
+        id S1728418AbgGGSuz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:48:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgGGSsK (ORCPT
+        Tue, 7 Jul 2020 14:50:55 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36788 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbgGGSuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 14:48:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79666C08C5E1
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 11:48:10 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z15so35053396wrl.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 11:48:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sz1Hi8LN71IdWVES3Rm3QlYRfh+YKsdF8gF0JiM3gaE=;
-        b=m57SDtNZKCtFUfyMe3NixudgPZws0KiaL4eNZHocOVf7klivgwwS09j3LTW5D2EtFc
-         tzV1xkLMRz9mYiCEUAVFdC1iPN1IxgIHfaNZSXVZewMVDnfFF6ZqKpQdkcEiDmwKT5X2
-         bFoh8H9aZtWv1aaYOqO4rK5jguz1j2+MhNW5Q=
+        Tue, 7 Jul 2020 14:50:55 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 17so193930wmo.1;
+        Tue, 07 Jul 2020 11:50:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sz1Hi8LN71IdWVES3Rm3QlYRfh+YKsdF8gF0JiM3gaE=;
-        b=mCEWpAEVdd4JMTOTdLCJR2owTNyY0VUPINP0kgdQt0W4xg7pXi2ztoASFrboPiJPeo
-         plmyKLf1SxbOpG2RY8RH9krB07FjIT0BMSw0BIjdDcWNsMEKshrbiO/TMwsU21u1WLBg
-         LlfXdWYKxB1NQrsf4s3DHpcvo0olFNf+0yzpD9flJ/kyE1bi9ZrmTvJWApdHBP/s0zN0
-         /mexj+Suvamu/SmhFWKkRnkSWONWR7rHhFbkGTvKjnt5X7sw6YhL7+7tNGTSO7wFg0tD
-         XA+cuIjCRQoLKVvFT323SZESjPv3jJuSz4Y7EMY/wz2BktLWB+xccCwuD0jslcQAbwqc
-         hjHw==
-X-Gm-Message-State: AOAM531plxfWiktIOTQi8tJEirRy51jWDuNRiV4ZpZCG3E1CAPap7ndv
-        kN0FS/qoqo0z06E5NPxoKBXwpA==
-X-Google-Smtp-Source: ABdhPJxUJIVtwy2M2e2+H9SMcZh+a4/o3zUBegF6p+4tc2+h43CG5r/DLgIuUiVzlSGfYPS4GxSZCA==
-X-Received: by 2002:adf:ec88:: with SMTP id z8mr54954998wrn.395.1594147689016;
-        Tue, 07 Jul 2020 11:48:09 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id d13sm2190919wrn.61.2020.07.07.11.48.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 11:48:08 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 18:48:07 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/11] media: exynos4-is: Correct parallel port probing
-Message-ID: <20200707184807.GK2621465@chromium.org>
-References: <20200426022650.10355-1-xc-racer2@live.ca>
- <BN6PR04MB0660A14860692EAB2A658AEFA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=m/t4PDWucGx9E7+lQRxXkI+ujQ2IZO1RtvREvMleNek=;
+        b=XYeRo8UuqhamN5mxrIR+8yPg8YOy2sTA77fV1exURMx1f/eYvCpMashZ6MsTQuuxSq
+         PHZJSmm52aColg3xteJFnkDJf/HgMR8rKdDO5uwJjQUl3+DmssxODEEUiBbj/hqw+oDH
+         QlQgpqq7KITu7HjQZ/ogYmLgJjh8lH4ROPvzW/nfHBLLg8HEEZNGn1umScGjxw6H8E7Z
+         C9uJVG3UtIQsKDk4QDdEYPIBuMEuehWbkYjNkRZf4AvMC7WBw+JnDKY9gf+OT0cr0Xrv
+         VNRax9ytJOk+g1o5+ObsNcyq4uGDUri41NhY338KaaFDOMGTd8KVA+QNGEym3BHNkGd5
+         iFhw==
+X-Gm-Message-State: AOAM532YeTzozaK3JgBFKjDhy69Q02HaFCrToLi2I9r0a19YFQ77p2LN
+        e3iQEYSrkgFqNpc39fkLEhc=
+X-Google-Smtp-Source: ABdhPJyeYxQzWHl3HP96w4mkIZMaje9wIX3EMZDnNv2vf2IMnQnRi6Mcgqa62eD6LSqOcYGyqZ2I6A==
+X-Received: by 2002:a7b:cc08:: with SMTP id f8mr5884261wmh.106.1594147852592;
+        Tue, 07 Jul 2020 11:50:52 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id p25sm1909109wmg.39.2020.07.07.11.50.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jul 2020 11:50:51 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 20:50:49 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v2 1/8] dt-bindings: pwm: samsung: Do not require
+ interrupts on Exynos SoCs
+Message-ID: <20200707185049.GA4698@kozik-lap>
+References: <20200702155149.12854-1-krzk@kernel.org>
+ <20200706094157.kyag7p5df3vo54wx@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660A14860692EAB2A658AEFA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200706094157.kyag7p5df3vo54wx@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
-
-On Sat, Apr 25, 2020 at 07:26:50PM -0700, Jonathan Bakker wrote:
-> According to the binding doc[1], port A should be reg = 0
-> and port B reg = 1.  Unfortunately, the driver was treating 0
-> as invalid and 1 as camera port A.  Match the binding doc and
-> make 0=A and 1=B.
+On Mon, Jul 06, 2020 at 11:41:57AM +0200, Uwe Kleine-König wrote:
+> On Thu, Jul 02, 2020 at 05:51:42PM +0200, Krzysztof Kozlowski wrote:
+> > The bindings required interrupts for all SoCs but actually only the PWM
+> > timer clocksource (for S3C/S5P SoCs) was using them.  This PWM timer
+> > clocksource driver is not used on Exynos SoCs thus the interrupts can be
+> > marked as optional.
+> > 
+> > Reported-by: Alim Akhtar <alim.akhtar@samsung.com>
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> [1] Documentation/devicetree/bindings/media/samsung-fimc.txt
+> LGTM,
 > 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> ---
->  drivers/media/platform/exynos4-is/media-dev.c | 18 +++++++++++++-----
->  drivers/media/platform/exynos4-is/media-dev.h |  1 +
->  include/media/drv-intf/exynos-fimc.h          |  2 +-
->  3 files changed, 15 insertions(+), 6 deletions(-)
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 > 
+> I'd expect it is ok to let this patch go in via whatever way the other
+> patches go. (But it's Thierry who has the authority here.)
 
-Thank you for the patch. Please see my comments inline.
+This patch is independent so it can go either through PWM tree or DT
+bindings.  Usually the latter, so Rob was picking it up.
 
-> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-> index a87ebd7913be..9c4fdf726b92 100644
-> --- a/drivers/media/platform/exynos4-is/media-dev.c
-> +++ b/drivers/media/platform/exynos4-is/media-dev.c
-> @@ -418,13 +418,21 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
->  		return ret;
->  	}
->  
-> -	if (WARN_ON(endpoint.base.port == 0) || *index >= FIMC_MAX_SENSORS) {
-> -		of_node_put(ep);
-> -		return -EINVAL;
-> +	if (fimc_input_is_parallel(endpoint.base.port)) {
-> +		if (WARN_ON(*index >= FIMC_MAX_PARALLEL)) {
-> +			of_node_put(ep);
-> +			return -EINVAL;
-> +		}
-
-This check seems to be generic, so could we just move it above the
-if/else block?
-
-> +		pd->mux_id = endpoint.base.port;
-> +	} else {
-> +		if (WARN_ON(endpoint.base.port == 0 ||
-
-Isn't this impossible, since if port == 0, the 'then' branch would've been
-taken instead?
+Thanks for ack.
 
 Best regards,
-Tomasz
+Krzysztof
+
