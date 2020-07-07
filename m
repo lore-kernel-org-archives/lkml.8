@@ -2,115 +2,140 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2902AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A06C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E516206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83ADD206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 02:52:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s9a3G/NG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgGGCwT (ORCPT
+        id S1727963AbgGGCw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jul 2020 22:52:19 -0400
-Received: from mga07.intel.com ([134.134.136.100]:32557 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbgGGCwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jul 2020 22:52:19 -0400
-IronPort-SDR: Td8kwsKDNqcvyySer+GcRKZ+z1318EsHTs8eM7iXQdFHqVUelUU61faC/28b9vMPxCjl+vgBeE
- luB9PgSOOANg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="212503036"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="212503036"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 19:52:18 -0700
-IronPort-SDR: a8RBZppPu1jANqtiX8SwjiqdFbHckyN1+a1iLVXD7cZEqKi3ZWXTHWItstkNMmYrBk4kDC+pL9
- DXnVJ0WyO8Zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="305502199"
-Received: from km-skylake-client-platform.sc.intel.com ([10.3.52.141])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Jul 2020 19:52:18 -0700
-Message-ID: <89e07361c8f575bc029071a0f7789e19d0431c0b.camel@intel.com>
-Subject: Re: [PATCH v2 2/4] x86/cpufeatures: Enumerate TSX suspend load
- address tracking instructions
-From:   Kyung Min Park <kyung.min.park@intel.com>
-To:     Cathy Zhang <cathy.zhang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, ricardo.neri-calderon@linux.intel.com,
-        jpoimboe@redhat.com, gregkh@linuxfoundation.org,
-        ak@linux.intel.com, dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com
-Date:   Mon, 06 Jul 2020 19:36:27 -0700
-In-Reply-To: <1594088183-7187-3-git-send-email-cathy.zhang@intel.com>
-References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com>
-         <1594088183-7187-3-git-send-email-cathy.zhang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 6 Jul 2020 22:52:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbgGGCw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jul 2020 22:52:58 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CD1C061755;
+        Mon,  6 Jul 2020 19:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=JYHLauFPnWtT+mhbK3luKWopm/oGT2fxXYiZQWZB2cY=; b=s9a3G/NG0zUAZVwjTQwOLUO0LO
+        ++sfl2mBc4bxaft+PLjx9DQep8vUP73F8t5X9XkVumXZ0v1WflITxYhAnkAu+ttf6vhL/Ap6QRKUO
+        U+vzmgSDVscLoPb+pvFB/zLL2W7do0EGuQorKSFUvYkcBrBRLfDZNbmqUDKPuZ7wSuIFGawxV6kHr
+        QV/a63xeXPG90CgVU+y9Lm50AAFnz4H+bJcNNv4ffYN4dfcGHs7T14p8K+rKdOl/xlsfKYC0aFir5
+        ATL7bDhGacBoJMVcjhKMt9BUvhjezGPFi/fp4HyLKUTAHp+ZeogcoNKVPND1iyJlRPpAYP4960jpH
+        XgKqdNMQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jsdj4-0001qH-Ch; Tue, 07 Jul 2020 02:52:55 +0000
+Subject: Re: linux-next: Tree for Jul 6 (mm/memory_failure.c)
+To:     Joonsoo Kim <js1304@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200706174001.2d316826@canb.auug.org.au>
+ <d458c18d-9c5e-9c45-0d65-e317571b6d56@infradead.org>
+ <20200707003500.GA27886@js1304-desktop>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <207e6a52-7ca0-250d-de89-7297285d9d13@infradead.org>
+Date:   Mon, 6 Jul 2020 19:52:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200707003500.GA27886@js1304-desktop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Cathy,
+On 7/6/20 5:35 PM, Joonsoo Kim wrote:
+> On Mon, Jul 06, 2020 at 09:59:06AM -0700, Randy Dunlap wrote:
+>> On 7/6/20 12:40 AM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20200703:
+>>>
+>>
+>> on i386:
+>>
+>> when CONFIG_MIGRATION is not set/enabled:
+>>
+>> ../mm/memory-failure.c: In function ‘new_page’:
+>> ../mm/memory-failure.c:1688:9: error: implicit declaration of function ‘alloc_migration_target’; did you mean ‘alloc_migrate_target’? [-Werror=implicit-function-declaration]
+>>   return alloc_migration_target(p, (unsigned long)&mtc);
+>>          ^~~~~~~~~~~~~~~~~~~~~~
+>>
+>>
+>> -- 
+>> ~Randy
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Hello,
+> 
+> Thanks for reporting.
+> 
+> Below is the fix for this error.
+> Andrew, Could you squash this fix into the patch,
+> "mm-migrate-make-a-standard-target-allocation-function.patch"?
+> 
+> Thanks.
+> 
+> 
+> ------------------->8-------------------
+> From 5fac269125dfb2d03e38a75319305e0e70b23a4b Mon Sep 17 00:00:00 2001
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Date: Tue, 7 Jul 2020 09:16:58 +0900
+> Subject: [PATCH] mm/migrate: fix for
+>  mm-migrate-make-a-standard-target-allocation-function.patch in mm tree
+> 
+> new_page_nodemask() is renamed to alloc_migration_target in
+> mm-migrate-make-a-standard-target-allocation-function.patch, but,
+> one declaration for !CONFIG_MIGRATION case is missed. This patch fixes it.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-On Tue, 2020-07-07 at 10:16 +0800, Cathy Zhang wrote:
-> Intel TSX suspend load tracking instructions aim to give a way to
-> choose which memory accesses do not need to be tracked in the TSX
-> read set. Add TSX suspend load tracking CPUID feature flag TSXLDTRK
-> for enumeration.
-> 
-> A processor supports Intel TSX suspend load address tracking if
-> CPUID.0x07.0x0:EDX[16] is present. Two instructions XSUSLDTRK,
-> XRESLDTRK
-> are available when this feature is present.
-> 
-> The CPU feature flag is shown as "tsxldtrk" in /proc/cpuinfo.
-> 
-> Detailed information on the instructions and CPUID feature flag
-> TSXLDTRK
-> can be found in the latest Intel Architecture Instruction Set
-> Extensions
-> and Future Features Programming Reference and Intel 64 and IA-32
-> Architectures Software Developer's Manual.
-> 
-> Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
-> Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
+Works for me. Thanks.
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+
 > ---
->  arch/x86/include/asm/cpufeatures.h | 1 +
->  1 file changed, 1 insertion(+)
+>  include/linux/migrate.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/cpufeatures.h
-> b/arch/x86/include/asm/cpufeatures.h
-> index adf45cf..34b66d7 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -366,6 +366,7 @@
->  #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU
-> buffers */
->  #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* ""
-> TSX_FORCE_ABORT */
->  #define X86_FEATURE_SERIALIZE		(18*32+14) /* SERIALIZE
-> instruction */
-> +#define X86_FEATURE_TSX_LDTRK           (18*32+16) /* TSX Suspend
-> Load Address Tracking */
+> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+> index 5e9c866..cc56f0d 100644
+> --- a/include/linux/migrate.h
+> +++ b/include/linux/migrate.h
+> @@ -60,8 +60,8 @@ static inline int migrate_pages(struct list_head *l, new_page_t new,
+>  		free_page_t free, unsigned long private, enum migrate_mode mode,
+>  		int reason)
+>  	{ return -ENOSYS; }
+> -static inline struct page *new_page_nodemask(struct page *page,
+> -		int preferred_nid, nodemask_t *nodemask)
+> +static inline struct page *alloc_migration_target(struct page *page,
+> +		unsigned long private)
+>  	{ return NULL; }
+>  static inline int isolate_movable_page(struct page *page, isolate_mode_t mode)
+>  	{ return -EBUSY; }
+> 
 
-Since you are using the flag name to "TSX_LDTRK", the commit message
-needs to be changed accordingly. The commit message is saying
-"tsxldtrk", not "tsx_ldtrk".
 
->  #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
->  #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* ""
-> Speculation Control (IBRS + IBPB) */
->  #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single
-> Thread Indirect Branch Predictors */
-
+-- 
+~Randy
