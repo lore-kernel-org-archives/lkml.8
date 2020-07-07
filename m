@@ -2,119 +2,126 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFD7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B017C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA11D20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC7D20720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 18:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zv4ipbsf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JSXqRKqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgGGSHl (ORCPT
+        id S1728315AbgGGSJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:07:41 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33564 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728036AbgGGSHl (ORCPT
+        Tue, 7 Jul 2020 14:09:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728246AbgGGSJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 14:07:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 067I7dsp122688;
-        Tue, 7 Jul 2020 13:07:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594145259;
-        bh=tcG+3QfvQYtuz+moQPRntRSYLDtYJOO1r/4BMO3+5bI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Zv4ipbsfseRXYHLCKiWPZV5bHcwAJV63dS7QRwA8FLcswu9yTLyci8r5q+NNGzxvp
-         SbD2SzbGUjAwDtbxGfHP6ui2CppuNgxlG4BHspx5HmTAC1CeCwKx+gWqRBGpI/XM30
-         98AWdn7xdQfH8chUr/J7m/Xg0VhUb/FUwWGAgqrg=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 067I7d6J032245
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jul 2020 13:07:39 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 7 Jul
- 2020 13:07:39 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 7 Jul 2020 13:07:39 -0500
-Received: from [10.250.43.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 067I7cGA011289;
-        Tue, 7 Jul 2020 13:07:38 -0500
-Subject: Re: [EXTERNAL] Re: [PATCH v15 2/4] dt-bindings: power: Convert
- battery.txt to battery.yaml
-To:     Rob Herring <robh@kernel.org>
-CC:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Sandeep Patil <sspatil@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Andrew F. Davis" <afd@ti.com>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200701211044.18590-1-r-rivera-matos@ti.com>
- <20200701211044.18590-3-r-rivera-matos@ti.com>
- <20200702205320.GA1672139@bogus>
- <54914eed-4a65-745b-b61b-9515737023e3@ti.com>
- <CAL_JsqKXC1TFFCq6HBqdbHNeWbA=SnCqHkTx+FQXiPYDLb6sNw@mail.gmail.com>
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Message-ID: <50e85766-08d2-f91e-a6a9-c4b4f8858dc4@ti.com>
-Date:   Tue, 7 Jul 2020 13:07:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 7 Jul 2020 14:09:20 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB99C08C5E1
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 11:09:20 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f2so18229206wrp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 11:09:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0m2aoBIP5GJAb10zyANIdy2YC3UULtv1aWEwGmldE04=;
+        b=JSXqRKqzNi8wby85ZOPYM8+WlbCbPrGifr8g3X3OVWXFVbASCxiEVbote2kigrv8wv
+         JQD7OBWXUBKKot5/flogEoaBHkhPsvwOwkfD207E+UwGA7Miz0eMQoJ7zQzwhPL61Rre
+         EuI9y+FhVrM1NKYullsJN25lGamvzcwlqp6z4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0m2aoBIP5GJAb10zyANIdy2YC3UULtv1aWEwGmldE04=;
+        b=kW/rG5Xvt8/UdIcYp5fEtQeIYReUD8k+rgkHoe+Dq1n2d7UqXf8VMuyROepdGB0kRb
+         rCR/CfIga3LxsKhArxtwXo6hd6RrUcC3MuhhNFuvL4a254Zlf6JxsW8qX4zMQQxSh1wz
+         uAnyAryZsHhc71gzovJZSak/3ysDcwKvwHj4WUBGWmY2F/pz/u6ofMzF3fR/xMSS2Q8v
+         kUZ1ko6mGCPABWdeiCO7Cl9hCa34fb9z4j46y71pIBBsmjv7Ar8pKQlLKvaXpxcm5d75
+         zhDJ/L3C8Lb5liENCUOHT7lkuF8LBAo7sdzRn3C161dakRELZK3RFyQAShl/8PsOpYzQ
+         d4xg==
+X-Gm-Message-State: AOAM532XJLu1VsXWO/X6tdEYyxH59NiiQ2WRg9Y70WRwZLRjFxI6Sbw9
+        CRPFR7esQkqXZ1RXWvPR2gOY6Q==
+X-Google-Smtp-Source: ABdhPJyQWxqFc1PHki3J/nn4kM+S8X1Xh3twrKQaB7PZs8HSIA+iXCuj+fKvvuYm4me4y3tj/6LZ2g==
+X-Received: by 2002:a5d:664a:: with SMTP id f10mr54971954wrw.300.1594145359012;
+        Tue, 07 Jul 2020 11:09:19 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id v12sm2026423wrt.31.2020.07.07.11.09.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 11:09:18 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 18:09:17 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
+        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/11] media: exynos4-is: Correct missing entity function
+ initialization
+Message-ID: <20200707180917.GD2621465@chromium.org>
+References: <20200426022650.10355-1-xc-racer2@live.ca>
+ <BN6PR04MB0660E680A4F69E3037D87E70A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKXC1TFFCq6HBqdbHNeWbA=SnCqHkTx+FQXiPYDLb6sNw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB0660E680A4F69E3037D87E70A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jonathan,
 
-On 7/7/20 9:40 AM, Rob Herring wrote:
-> On Mon, Jul 6, 2020 at 12:45 PM Ricardo Rivera-Matos
-> <r-rivera-matos@ti.com> wrote:
->> Rob
->>
->> On 7/2/20 3:53 PM, Rob Herring wrote:
->>> On Wed, 01 Jul 2020 16:10:42 -0500, Ricardo Rivera-Matos wrote:
->>>> From: Dan Murphy <dmurphy@ti.com>
->>>>
->>>> Convert the battery.txt file to yaml and fix up the examples.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>>>    .../bindings/power/supply/battery.txt         |  86 +---------
->>>>    .../bindings/power/supply/battery.yaml        | 157 ++++++++++++++++++
->>>>    2 files changed, 158 insertions(+), 85 deletions(-)
->>>>    create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
->>>>
->>> My bot found errors running 'make dt_binding_check' on your patch:
->>>
->>> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schema/types.yaml'
->>> Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/power/supply/battery.example.dts' failed
->>> make[1]: *** [Documentation/devicetree/bindings/power/supply/battery.example.dts] Error 255
->>> make[1]: *** Waiting for unfinished jobs....
->>> Makefile:1347: recipe for target 'dt_binding_check' failed
->>> make: *** [dt_binding_check] Error 2
->> I think your bot is looking for the types.yaml in the wrong place.
-> Really? Yet it works fine on thousands of other patches?
->
->> '/usr/local/lib/python3.6/dist-packages/dtschema/schema/types.yaml'
->> should be
->> '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/types.yaml'. I
->> renamed might 'schemas' directory to 'schema' and my battery.yaml passed
->> the dt_binding_check.
-> Maybe fix the 'schema/' path in your schema file which is wrong.
-Oh I see. My apologies, Rob.
->
-> Rob
+On Sat, Apr 25, 2020 at 07:26:43PM -0700, Jonathan Bakker wrote:
+> Commit bae4500399c4 ("[media] exynos4-is: Add missing entity function
+> initialization") tried to suppress the warnings such as
+> 
+> s5p-fimc-md camera: Entity type for entity FIMC.0 was not initialized!
+> 
+> However, this didn't work in all cases.  Correct this by calling the set
+> function earlier.
+> 
+> Fixes: bae4500399c4 ("exynos4-is: Add missing entity function initialization")
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> ---
+>  drivers/media/platform/exynos4-is/fimc-capture.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+
+Thank you for the patch. Please see my comments inline.
+
+> diff --git a/drivers/media/platform/exynos4-is/fimc-capture.c b/drivers/media/platform/exynos4-is/fimc-capture.c
+> index 705f182330ca..86c233e2f2c9 100644
+> --- a/drivers/media/platform/exynos4-is/fimc-capture.c
+> +++ b/drivers/media/platform/exynos4-is/fimc-capture.c
+> @@ -1799,7 +1799,6 @@ static int fimc_register_capture_device(struct fimc_dev *fimc,
+>  	vid_cap->wb_fmt.code = fmt->mbus_code;
+>  
+>  	vid_cap->vd_pad.flags = MEDIA_PAD_FL_SINK;
+> -	vfd->entity.function = MEDIA_ENT_F_PROC_VIDEO_SCALER;
+
+Isn't vfd->entity above a different entity than sd->entity below? If so,
+this line must stay.
+
+>  	ret = media_entity_pads_init(&vfd->entity, 1, &vid_cap->vd_pad);
+>  	if (ret)
+>  		goto err_free_ctx;
+> @@ -1898,6 +1897,7 @@ int fimc_initialize_capture_subdev(struct fimc_dev *fimc)
+>  		return ret;
+>  
+>  	sd->entity.ops = &fimc_sd_media_ops;
+> +	sd->entity.function = MEDIA_ENT_F_PROC_VIDEO_SCALER;
+
+My understanding is that this is the capture subdev and not the scaler.
+Looking at the other drivers, MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER
+could be the right function to use here.
+
+Best regards,
+Tomasz
