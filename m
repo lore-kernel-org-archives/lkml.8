@@ -2,177 +2,221 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 927D920720
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F31220674
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:15:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NpttPX4l"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MLUWVlBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgGGVOz (ORCPT
+        id S1729098AbgGGVPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:14:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728201AbgGGVOy (ORCPT
+        Tue, 7 Jul 2020 17:15:16 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9965 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728201AbgGGVPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:14:54 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA78C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 14:14:54 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id l19so17126989qke.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:14:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=bZmyhAdgaKUq3ObPHZGaFsLGtyML3TDUUaEu5ftDn5s=;
-        b=NpttPX4lE/KU7Nm0bJYE/p4jYzLQMfv+GHpHKNOzf6UyPqa0Gp4+76X3XGeuO+SXTV
-         nxXA/QOjtZHr8zrC18uOgoYZPubDfwhPRExz7mV1sSv/WCDVk7rSil8JAKB82C3+PuX/
-         9PA6gy1V4MjX5usNyjtpTu8Ri0XzAEs/n6bkMZizqZtcIrCsTLio07SKKLIygBOPy8B3
-         yU/R2xvDU9Own06aGUtf9wIQtXBICRWwf/gWlmgMcy/4QfzQJ9zZclq/xmahiZEmhQqE
-         Von6X666O+hyizXf2P7+qN4Ufq6EwWt0d9nz8HKmBL2eGXdFpKA2bQH+jmHDAdvaJtTS
-         63SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=bZmyhAdgaKUq3ObPHZGaFsLGtyML3TDUUaEu5ftDn5s=;
-        b=BwGpGNoSmhr/Tvh5Qx9IWQtvd0KyeJC9MXEhGR6YuUdoIRLSTsLvBw348othlxA/+q
-         qpVbvJlS4VFxHEhi0KtMGdMOqq7ghFjQiyEHqSFDaTpXeLaRCZCiTx7xnD0QE0Pzz3ao
-         oDsZgv3xciSfjZRoLFOvPWk4VuaBTDle7luhk5VxzKiedwjOlFc9pGd/JG9BSNl9g5oq
-         UrgeOztCiuAhqCUH4fQjhNVz4N7yte04Z4j1OSHGBsqQR2l8/Oa7bhTmCYfb0tq40/Je
-         0rguWwdgWoToyIx89s3KQJU9XKoh+T6cxZMr11SGu9KducgRyAB253Ns+/ZV0wxAN2My
-         lV7A==
-X-Gm-Message-State: AOAM532lkkJTOJ8kkZzVIgM12P5ekrFmWRfIzrVslqvvxWM+TXYGOZKB
-        J65ntCSm5kCfVWoOnh5uo5wg3lNkhm2t
-X-Google-Smtp-Source: ABdhPJz11nAFayeFkeDlsq5u5viuPaf3vPkR1JHcLuMxQm3bAygcsTZwF4wZeLIxLQEz07pF9vLNjfqglMvx
-X-Received: by 2002:ad4:4c09:: with SMTP id bz9mr20609878qvb.210.1594156493566;
- Tue, 07 Jul 2020 14:14:53 -0700 (PDT)
-Date:   Tue,  7 Jul 2020 14:14:49 -0700
-Message-Id: <20200707211449.3868944-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH] perf parse-events: report bpf errors
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Jul 2020 17:15:16 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f04e5790000>; Tue, 07 Jul 2020 14:13:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 07 Jul 2020 14:15:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 07 Jul 2020 14:15:15 -0700
+Received: from [10.2.173.217] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jul
+ 2020 21:15:14 +0000
+Subject: Re: [RFC PATCH v2 11/18] media: tegra-video: Add support for external
+ sensor capture
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <robh+dt@kernel.org>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
+ <50deca28-c198-703c-96e2-82c53f48cd65@xs4all.nl>
+ <6ee18b4d-b63b-8053-1b7e-c3ec7c1d4956@nvidia.com>
+ <6846e5bb-db1d-c2ff-c52c-70a2094c5b50@nvidia.com>
+ <af11cb24-57b2-7326-ca29-e168dcbb8006@xs4all.nl>
+ <c08ea38f-7629-1800-fb74-a2f75daf2eb0@nvidia.com>
+ <47134481-1aec-9c1b-0ed2-8e39158d69b5@nvidia.com>
+Message-ID: <3e4a467a-7ef8-7b96-58dd-31c7a834acb7@nvidia.com>
+Date:   Tue, 7 Jul 2020 14:15:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <47134481-1aec-9c1b-0ed2-8e39158d69b5@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594156409; bh=UYxjfYM6bnTQ9rahaE5n5SqLSCOzWX15/wpBnNkI5kY=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=MLUWVlBbGnTiKJq4HIq8USESFWh66T39uZXbTMEHnVEzyQkMXqZA3aP5zwezug2UH
+         HUfZsXpRNEMK4ZIiaHc6v6fiLkgpqZDIFRCXfo7RZ6L76R0qDkGkDpBxQyIHPC/Sw8
+         wfcAWaFRkIqIiG4PMOmDCjlzWtUEJroRzfB7CphiQOdSNbisvop4osnS0ogii3xGc9
+         oMQpgsEgdwBz1InT07cg6yjL//vet+WUdP9rblH/iB37iaEGbyn5h9bUHXU+9UctID
+         YWp72l/tu+Eiq3qQ2OeZH8qqBFcr1VRl4+hWMOEyot2VCmacYF3G1Tf3iTYght9usq
+         VJ00nG4Zgt5Mw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setting the parse_events_error directly doesn't increment num_errors
-causing the error message not to be displayed. Use the
-parse_events__handle_error function that sets num_errors and handle
-multiple errors.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.c | 38 ++++++++++++++++++----------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+On 7/7/20 1:41 PM, Sowjanya Komatineni wrote:
+>
+> On 7/7/20 1:29 PM, Sowjanya Komatineni wrote:
+>>
+>> On 7/7/20 12:35 PM, Hans Verkuil wrote:
+>>> On 07/07/2020 21:25, Sowjanya Komatineni wrote:
+>>>> On 7/7/20 12:01 PM, Sowjanya Komatineni wrote:
+>>>>>
+>>>>> On 7/6/20 2:10 AM, Hans Verkuil wrote:
+>>>>>>> +static void tegra_vi_graph_cleanup(struct tegra_vi *vi)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 list_for_each_entry(chan, &vi->vi_chans, list) =
+{
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 video_unregister_device=
+(&chan->video);
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&chan->video=
+_lock);
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vb2_queue_release(&chan=
+->queue);
+>>>>>> No need for this since this is done in vb2_fop_release().
+>>>>>>
+>>>>>> In fact, vb2_queue_release should never be called by drivers.=20
+>>>>>> Just using
+>>>>>> vb2_fop_release or __vb2_fop_release is sufficient.
+>>>>>>
+>>>>>> The confusion is due to the fact that the name suggests that=20
+>>>>>> vb2_queue_release
+>>>>>> has to be balanced with vb2_queue_init, but that's not the case.=20
+>>>>>> Perhaps
+>>>>>> vb2_queue_stop or something like that might be a better name.=20
+>>>>>> I'll have to
+>>>>>> think about this since I see that a lot of drivers do this wrong.
+>>>>>>
+>>>>>>> + mutex_unlock(&chan->video_lock);
+>>>>>>> + v4l2_async_notifier_unregister(&chan->notifier);
+>>>>>>> + v4l2_async_notifier_cleanup(&chan->notifier);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>>> +}
+>>>>>>> +
+>>>>> vb2_queue_release() here is called to stop streaming a head before=20
+>>>>> media links are removed in case of when driver unbind happens while
+>>>>> userspace application holds video device with active streaming in=20
+>>>>> progress.
+>>>>>
+>>>>> Without vb2_queue_release() here streaming will be active during=20
+>>>>> the driver unbind and by the time vb2_queue_release() happens from
+>>>>> vb2_fop_release(), async notifiers gets unregistered and media=20
+>>>>> links will be removed which causes channel stop stream to crash as=20
+>>>>> we can't
+>>>>> retrieve sensor subdev=C2=A0 thru media entity pads to execute s_stre=
+am=20
+>>>>> on subdev.
+>>>>>
+>>>> I think we don't need async notifier unbind. Currently media links=20
+>>>> are removed during unbind so during notifier unregister all subdevs=20
+>>>> gets
+>>>> unbind and links removed.
+>>>>
+>>>> media_device_unregister during video device release callback takes=20
+>>>> care of media entity unregister and removing links.
+>>>>
+>>>> So, will try by removing notifier unbind along with removing=20
+>>>> vb2_queue_release during cleanup.
+>>>>
+>>> I actually wonder if vb2_queue_release shouldn't be called from=20
+>>> video_unregister_device.
+>>>
+>>> I'll look into this tomorrow.
+>>>
+>>> Regards,
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+>>
+>> Thanks Hans.
+>>
+>> Tried without notifier unbind to remove media links and I still see=20
+>> crash due to below diff reason now.
+>>
+>> With userspace app holding video device node with active streaming in=20
+>> progress when I do driver unbind, v4l2_device release callback=20
+>> tegra_v4l2_dev_release() happens prior to vb2_fops_release() ->=20
+>> vb2_queue_release().
+>>
+>> All channels resources and channel memory is freed during v4l2_device=20
+>> release callback.
+>>
+>> Letting vb2_queue_release() to happen thru vb2_fops_release() causes=20
+>> crash as stop streaming tries to retrieve subdev thru channel media=20
+>> pads and channel memory is freed by that time.
+>>
+>> So, doing vb2_queue_release() during driver unbind -> tegra_vi_exit()=20
+>> -> tegra_vi_graph_cleanup(), stops subdev stream properly and then on=20
+>> v4l2_device release channel memory gets freed and this works which is=20
+>> the existing implementation in the patch.
+>>
+>> I remember adding vb2_queue_release() during graph cleanup for TPG as=20
+>> well for the same reason to allow driver unbind while holding video=20
+>> device from user space so media pad can be accessible to stop stream=20
+>> before channel cleanup.
+>
+> v4l2_dev release() should definitely happen in the last after=20
+> vb2_fops_release(). Will add more debugs and confirm on what I=20
+> observed as something happened with timestamps on log on my side so I=20
+> doubt my above observation after removing notifier unbind to remove=20
+> media links.
+>
+> Will check and get back..
+>
+Hi Hans,
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index c4906a6a9f1a..e88e4c7a2a9a 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -767,8 +767,8 @@ int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
- 
- 	return 0;
- errout:
--	parse_state->error->help = strdup("(add -v to see detail)");
--	parse_state->error->str = strdup(errbuf);
-+	parse_events__handle_error(parse_state->error, 0,
-+				strdup(errbuf), strdup("(add -v to see detail)"));
- 	return err;
- }
- 
-@@ -784,36 +784,38 @@ parse_events_config_bpf(struct parse_events_state *parse_state,
- 		return 0;
- 
- 	list_for_each_entry(term, head_config, list) {
--		char errbuf[BUFSIZ];
- 		int err;
- 
- 		if (term->type_term != PARSE_EVENTS__TERM_TYPE_USER) {
--			snprintf(errbuf, sizeof(errbuf),
--				 "Invalid config term for BPF object");
--			errbuf[BUFSIZ - 1] = '\0';
--
--			parse_state->error->idx = term->err_term;
--			parse_state->error->str = strdup(errbuf);
-+			parse_events__handle_error(parse_state->error, term->err_term,
-+						strdup("Invalid config term for BPF object"),
-+						NULL);
- 			return -EINVAL;
- 		}
- 
- 		err = bpf__config_obj(obj, term, parse_state->evlist, &error_pos);
- 		if (err) {
-+			char errbuf[BUFSIZ];
-+			int idx;
-+
- 			bpf__strerror_config_obj(obj, term, parse_state->evlist,
- 						 &error_pos, err, errbuf,
- 						 sizeof(errbuf));
--			parse_state->error->help = strdup(
-+
-+			if (err == -BPF_LOADER_ERRNO__OBJCONF_MAP_VALUE)
-+				idx = term->err_val;
-+			else
-+				idx = term->err_term + error_pos;
-+
-+			parse_events__handle_error(parse_state->error, idx,
-+						strdup(errbuf),
-+						strdup(
- "Hint:\tValid config terms:\n"
- "     \tmap:[<arraymap>].value<indices>=[value]\n"
- "     \tmap:[<eventmap>].event<indices>=[event]\n"
- "\n"
- "     \twhere <indices> is something like [0,3...5] or [all]\n"
--"     \t(add -v to see detail)");
--			parse_state->error->str = strdup(errbuf);
--			if (err == -BPF_LOADER_ERRNO__OBJCONF_MAP_VALUE)
--				parse_state->error->idx = term->err_val;
--			else
--				parse_state->error->idx = term->err_term + error_pos;
-+"     \t(add -v to see detail)"));
- 			return err;
- 		}
- 	}
-@@ -877,8 +879,8 @@ int parse_events_load_bpf(struct parse_events_state *parse_state,
- 						   -err, errbuf,
- 						   sizeof(errbuf));
- 
--		parse_state->error->help = strdup("(add -v to see detail)");
--		parse_state->error->str = strdup(errbuf);
-+		parse_events__handle_error(parse_state->error, 0,
-+					strdup(errbuf), strdup("(add -v to see detail)"));
- 		return err;
- 	}
- 
--- 
-2.27.0.383.g050319c2ae-goog
+Please ignore=C2=A0 above observation on channel cleanup during v4l2_dev=20
+release and vb2_fops_release. I misunderstood from timestamps.
 
+Looking into vdev->dev release callback v4l2_device_release(), it=20
+unregisters media entity and links gets removed.
+
+So, by the time vb2_queue_release() happen thru vb2_fops_release(),=20
+links are removed so subdev can't be retrieve thru media entity pads=20
+unless video driver maintains subdev pointers to use them instead of=20
+retrieving from media entity pads.
+
+To fix this, instead of maintaining subdev pointers in Tegra video=20
+driver channel structure, probably we can leave vb2_queue_release() call=20
+to happen during driver unbind graph cleanup which does stream stop=20
+where Tegra channel stop stream retrieves subdev thru media pad entities=20
+when media links are still present.
+
+
+Thanks
+
+Sowjanya
+
+>>
+>> Regards,
+>>
+>> Sowjanya
+>>
