@@ -2,101 +2,112 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE24C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D50620739
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:39:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NYzj/o6y"
+	by mail.kernel.org (Postfix) with ESMTP id D4CFC206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 11:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgGGLj0 (ORCPT
+        id S1728246AbgGGLjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgGGLj0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 07:39:26 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5EFC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 04:39:25 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z24so24600247ljn.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 04:39:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AB79oSGoei4/jVAVNUIel30W4YNtDlT0qF8qJNgQrv8=;
-        b=NYzj/o6y2s9Z+eCQgmRYfSgsgU7i2HsuCMcPIod16JgB0/R/Bp8K5TCpEG+jy+bcgs
-         ZeWixYF2ok3de8HvQOPk2q8rgIBZzWFC0mNPOVLWT6rbSD+GQswrYk/COzA1BzWJTS0y
-         drlNb9cBsjk6f3wweib0e8CQxPQBi+sIlqBDP8H9T9s4aZi38GCvzy1ivpwPO1RFCqDw
-         TjSHlhqypVPuC7Pb0P50dC7mEjFGIXvCXjSG/GQxWvFPcZ++jU5mQN6Ide3Q+e/v2VlF
-         reom+VCXprUs4I5+pCDFnZNjMgq7tRgBCHRMqtD75VEibK88tGJtAMoDnCZipsfMypao
-         zqzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AB79oSGoei4/jVAVNUIel30W4YNtDlT0qF8qJNgQrv8=;
-        b=ndStCa6BGFg6ZIyCiTSGnm5MnNu4fhscBale5JrLOZzrZDNELKgbYPxJ7/wN/JZix+
-         KhXgWj0ORhJVEVf+9dSEU5/jHn/FYi3nqh4PlEVXJ0k9+qoUx1huSySl/MMG36ym/VF7
-         2HzRzji92lLHI6UO5xrHI5y7AQTbNsVYzw+DjgSYHA661xi2h/m4E/4+2VAv0bFMZ7tH
-         CXVf2mSj6Bt7v5+8ID6uG31Ido1pbz28F/5FPiXQBrCiSzgs10yN0Lg7UXVbiXcrfg1e
-         Y7Oaycbzg+T4T+EG06VG6KeiY8hddZ2zKd879Uso3fXlN64NIRjWeCfbuQowCUsu2ibL
-         ODCg==
-X-Gm-Message-State: AOAM532dawMPCJPLK3tdip24lqRCLdTqlYkIu8GIZm5siifmYZyOKusK
-        NM5llJdC6ADdMz3lL68ogqrcYdWRrav1JpSLiPCp0g==
-X-Google-Smtp-Source: ABdhPJzaNV7qDX5ofVny2CYGichkvvyZwwCuYiY/DXFU9tcXKWyULk7QdWCDcj7Zwb2TtLbaWFduqFOHtHKtVZ06ol4=
-X-Received: by 2002:a2e:8046:: with SMTP id p6mr15946172ljg.100.1594121963989;
- Tue, 07 Jul 2020 04:39:23 -0700 (PDT)
+        Tue, 7 Jul 2020 07:39:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:42780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726805AbgGGLjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 07:39:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFA3E1FB;
+        Tue,  7 Jul 2020 04:39:52 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 878203F71E;
+        Tue,  7 Jul 2020 04:39:50 -0700 (PDT)
+References: <20200706142839.26629-1-qais.yousef@arm.com> <20200706142839.26629-2-qais.yousef@arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] sched/uclamp: Add a new sysctl to control RT default boost value
+In-reply-to: <20200706142839.26629-2-qais.yousef@arm.com>
+Date:   Tue, 07 Jul 2020 12:39:48 +0100
+Message-ID: <jhj1rln8sfv.mognet@arm.com>
 MIME-Version: 1.0
-References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com> <1592480018-3340-3-git-send-email-hanks.chen@mediatek.com>
-In-Reply-To: <1592480018-3340-3-git-send-email-hanks.chen@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 13:39:13 +0200
-Message-ID: <CACRpkdZAjwcHURd6wCQPrjHjEgiEiUApqVUff+70nwjRPyAwBw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/7] pinctrl: mediatek: update pinmux definitions for mt6779
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>, wsd_upstream@mediatek.com,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 1:34 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
 
-> Add devicetree bindings for Mediatek mt6779 SoC Pin Controller.
+On 06/07/20 15:28, Qais Yousef wrote:
+> RT tasks by default run at the highest capacity/performance level. When
+> uclamp is selected this default behavior is retained by enforcing the
+> requested uclamp.min (p->uclamp_req[UCLAMP_MIN]) of the RT tasks to be
+> uclamp_none(UCLAMP_MAX), which is SCHED_CAPACITY_SCALE; the maximum
+> value.
 >
-> Acked-by: Sean Wang <sean.wang@kernel.org>
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> This is also referred to as 'the default boost value of RT tasks'.
+>
+> See commit 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks").
+>
+> On battery powered devices, it is desired to control this default
+> (currently hardcoded) behavior at runtime to reduce energy consumed by
+> RT tasks.
+>
+> For example, a mobile device manufacturer where big.LITTLE architecture
+> is dominant, the performance of the little cores varies across SoCs, and
+> on high end ones the big cores could be too power hungry.
+>
+> Given the diversity of SoCs, the new knob allows manufactures to tune
+> the best performance/power for RT tasks for the particular hardware they
+> run on.
+>
+> They could opt to further tune the value when the user selects
+> a different power saving mode or when the device is actively charging.
+>
+> The runtime aspect of it further helps in creating a single kernel image
+> that can be run on multiple devices that require different tuning.
+>
+> Keep in mind that a lot of RT tasks in the system are created by the
+> kernel. On Android for instance I can see over 50 RT tasks, only
+> a handful of which created by the Android framework.
+>
+> To control the default behavior globally by system admins and device
+> integrator, introduce the new sysctl_sched_uclamp_util_min_rt_default
+> to change the default boost value of the RT tasks.
+>
+> I anticipate this to be mostly in the form of modifying the init script
+> of a particular device.
+>
 
-Patch applied.
+Sorry for going at this again, but I feel like I can squeeze more juice out
+of this.
 
-Yours,
-Linus Walleij
+This being mainly tweaked in init scripts makes me question why we should
+harden this for runtime tweaking. Yes, there's the whole single image
+thing, but there's other ways to have different init-time values on a
+single image (e.g. cmdline, although that one is usually a bit
+controversial).
+
+For instance, Android could set the min to 0 and then go about its life
+tweaking the clamp of individual / all RT tasks at runtime, using the
+existing uclamp API.
