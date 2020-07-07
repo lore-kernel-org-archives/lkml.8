@@ -2,94 +2,186 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F591C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E222C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD74D206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0937A20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 10:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vdnTe3mo"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="S6qsvSa7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="go7AXU4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgGGKTk (ORCPT
+        id S1727916AbgGGKUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:19:40 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:46804 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726681AbgGGKTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 06:19:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594117144; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=U16+debOHtwEq7B+uUcy9cvpCddjmZwXlFWTCLzWx88=; b=vdnTe3moz4HzNN9roX1LHMavuZnaj7LEoAOkkdN5bBgORMtLXsVwZjpnDUZKjxDqVbSM9xi8
- RXG7yubizi7DuH7Eu7saKIC8pspD7jadQ1kZ7VIrfTKgu7D9+EdAYZcch9adBUlCp6j5vbeQ
- 9RI21dPn3JBzHBvdoctqY+lhUqI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-east-1.postgun.com with SMTP id
- 5f044c1819b27ae9cecfb285 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Jul 2020 10:19:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D1B76C43465; Tue,  7 Jul 2020 10:19:02 +0000 (UTC)
-Received: from [192.168.0.15] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 83F8AC4345B;
-        Tue,  7 Jul 2020 10:18:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 83F8AC4345B
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH 2/3] spi: spi-geni-qcom: Set an autosuspend delay of 250
- ms
-To:     Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
-        swboyd@chromium.org, georgi.djakov@linaro.org,
-        ctheegal@codeaurora.org, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20200702004509.2333554-1-dianders@chromium.org>
- <20200701174506.2.I9b8f6bb1e7e6d8847e2ed2cf854ec55678db427f@changeid>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <1638cb01-d0f3-8e19-dc1f-89667da53cd1@codeaurora.org>
-Date:   Tue, 7 Jul 2020 15:48:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 7 Jul 2020 06:20:12 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:40011 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727871AbgGGKTW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:19:22 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 9F308ACC;
+        Tue,  7 Jul 2020 06:19:19 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 07 Jul 2020 06:19:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=4hTmYwJWs3UiuN5nnPv+gaN3eG
+        DOSwKQFpI5Se/4Tg0=; b=S6qsvSa7vwbAhGWVbj2k/hnHW3c6IxoLUWewbt5Hkc
+        jg9S+dgZVYYBNE9tvf8h0xpjeI/Cie0+Ejo7qhJzUEt07Rd5okcFHHgrZq/9Bs80
+        14bM803jIhLnAlwZxzqVMHUUaKzZMrtNFiHqaUt26kW0C9lD8/8k3QMuCKl3yd1b
+        lp1hYN4NV+fVL7XcPMKjzJshpgyxmB5OjMG0YnqZmeKLWwdzZcx1XPE5XzmqFsOJ
+        dHWeUVT2gs7vEDqMzpVT9Wi7j1K8xtFrpF4dU9Lgv8DXvwzEHFi1Uslm8ww8OBeM
+        Do1AsIOlRlQybLutZNc+FOZRg/T+Y/2aygb4IzcYbTNw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=4hTmYwJWs3UiuN5nn
+        Pv+gaN3eGDOSwKQFpI5Se/4Tg0=; b=go7AXU4Rap0ZGn4ZsXOVv+GMktdWyS+uy
+        MlsVSvtOaczJnPHdE+rq13MxJKMI2nmMluWLM8V39YKJaJZhOpSAVswA3nRtwW2j
+        vxFLU/v7lTzCvVZeFc9WEtRKpeDezubZZ2W3fU2zsCrz97tmhePE3Ig1UuCwHOTj
+        J95bvVqvddYfgYUfGLutnZwNoWuk2fKhr7lP6OZKCSOxltab5LnAeU0/Ju05HQfN
+        u8K9nMSniP2+X9/PDmXdK0qYbaZLcv2m95R041F1mWvlaPPayzt/U7H/qTiY4nhc
+        wduZHgkAnu3zCGjEXMV32GO7pHeUnZXMnoVkIqNhyNspVyVVo948w==
+X-ME-Sender: <xms:JkwEX-ZTVMXnSASIHm0rU7JfceOYqC2_H9otGkzMIIhMtArfHaD7OA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehgddvtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucft
+    ihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtthgvrh
+    hnpeejffehuddvvddvlefhgeelleffgfeijedvhefgieejtdeiueetjeetfeeukeejgeen
+    ucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:JkwEXxZ5Rtzbk20ijyipyvBGd8x3aK_QKdaSlnx3XzZ2ZB1XtjQgQQ>
+    <xmx:JkwEX4-qc8bWTW6Dcv5ilYOeqZNTM94FL1tF3YptJeAYsTsJQHMqtg>
+    <xmx:JkwEXwqFM-2QiKVCh2JIUvq6lHtXTRxX7ZGA9vX1We74PwKYw-riLA>
+    <xmx:J0wEX9dULmsWjLRV1GkF8IcR0A-T7K4jGKOfDgKHmG_5DH9VJxVoJbVGplM>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0B595328005E;
+        Tue,  7 Jul 2020 06:19:17 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH] drm/vc4: dsi: Only register our component once a DSI device is attached
+Date:   Tue,  7 Jul 2020 12:19:12 +0200
+Message-Id: <20200707101912.571531-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200701174506.2.I9b8f6bb1e7e6d8847e2ed2cf854ec55678db427f@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If the DSI driver is the last to probe, component_add will try to run all
+the bind callbacks straight away and return the error code.
 
-On 7/2/2020 6:15 AM, Douglas Anderson wrote:
-> In commit 0e3b8a81f5df ("spi: spi-geni-qcom: Add interconnect
-> support") the spi_geni_runtime_suspend() and spi_geni_runtime_resume()
-> became a bit slower.  Measuring on my hardware I see numbers in the
-> hundreds of microseconds now.
->
-> Let's use autosuspend to help avoid some of the overhead.  Now if
-> we're doing a bunch of transfers we won't need to be constantly
-> chruning.
->
-> The number 250 ms for the autosuspend delay was picked a bit
-> arbitrarily, so if someone has measurements showing a better value we
-> could easily change this.
+However, since we depend on a power domain, we're pretty much guaranteed to
+be in that case on the BCM2711, and are just lucky on the previous SoCs
+since the v3d also depends on that power domain and is further in the probe
+order.
 
-Reviewed-by: Akash Asthana<akashast@codeaurora.org>
+In that case, the DSI host will not stick around in the system: the DSI
+bind callback will be executed, will not find any DSI device attached and
+will return EPROBE_DEFER, and we will then remove the DSI host and ask to
+be probed later on.
 
+But since that host doesn't stick around, DSI devices like the RaspberryPi
+touchscreen whose probe is not linked to the DSI host (unlike the usual DSI
+devices that will be probed through the call to mipi_dsi_host_register)
+cannot attach to the DSI host, and we thus end up in a situation where the
+DSI host cannot probe because the panel hasn't probed yet, and the panel
+cannot probe because the DSI host hasn't yet.
+
+In order to break this cycle, let's wait until there's a DSI device that
+attaches to the DSI host to register the component and allow to progress
+further.
+
+Suggested-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ drivers/gpu/drm/vc4/vc4_dsi.c | 25 ++++++++-----------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
+index eaf276978ee7..19aab4e7e209 100644
+--- a/drivers/gpu/drm/vc4/vc4_dsi.c
++++ b/drivers/gpu/drm/vc4/vc4_dsi.c
+@@ -1246,10 +1246,12 @@ static ssize_t vc4_dsi_host_transfer(struct mipi_dsi_host *host,
+ 	return ret;
+ }
+ 
++static const struct component_ops vc4_dsi_ops;
+ static int vc4_dsi_host_attach(struct mipi_dsi_host *host,
+ 			       struct mipi_dsi_device *device)
+ {
+ 	struct vc4_dsi *dsi = host_to_dsi(host);
++	int ret;
+ 
+ 	dsi->lanes = device->lanes;
+ 	dsi->channel = device->channel;
+@@ -1284,6 +1286,12 @@ static int vc4_dsi_host_attach(struct mipi_dsi_host *host,
+ 		return 0;
+ 	}
+ 
++	ret = component_add(&dsi->pdev->dev, &vc4_dsi_ops);
++	if (ret) {
++		mipi_dsi_host_unregister(&dsi->dsi_host);
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1662,7 +1670,6 @@ static int vc4_dsi_dev_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct vc4_dsi *dsi;
+-	int ret;
+ 
+ 	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
+ 	if (!dsi)
+@@ -1670,26 +1677,10 @@ static int vc4_dsi_dev_probe(struct platform_device *pdev)
+ 	dev_set_drvdata(dev, dsi);
+ 
+ 	dsi->pdev = pdev;
+-
+-	/* Note, the initialization sequence for DSI and panels is
+-	 * tricky.  The component bind above won't get past its
+-	 * -EPROBE_DEFER until the panel/bridge probes.  The
+-	 * panel/bridge will return -EPROBE_DEFER until it has a
+-	 * mipi_dsi_host to register its device to.  So, we register
+-	 * the host during pdev probe time, so vc4 as a whole can then
+-	 * -EPROBE_DEFER its component bind process until the panel
+-	 * successfully attaches.
+-	 */
+ 	dsi->dsi_host.ops = &vc4_dsi_host_ops;
+ 	dsi->dsi_host.dev = dev;
+ 	mipi_dsi_host_register(&dsi->dsi_host);
+ 
+-	ret = component_add(&pdev->dev, &vc4_dsi_ops);
+-	if (ret) {
+-		mipi_dsi_host_unregister(&dsi->dsi_host);
+-		return ret;
+-	}
+-
+ 	return 0;
+ }
+ 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+2.26.2
 
