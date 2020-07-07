@@ -2,93 +2,114 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7464BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36576C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50947206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14401206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:31:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uar/WVI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgGGVas (ORCPT
+        id S1729234AbgGGVbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:30:48 -0400
-Received: from mga07.intel.com ([134.134.136.100]:18917 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728357AbgGGVas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:30:48 -0400
-IronPort-SDR: Pjc0Rwb/IUNtckjnpH8ohIK/036ZXoK9hmZ4/4ijV23Gxoc095K1pAXPEPDXJAxYBlJC4axvnA
- RkYB08tgctew==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="212645205"
-X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="212645205"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 14:30:46 -0700
-IronPort-SDR: rwm7lj+DnvL/a1nGsfKY1/7jBpW0zpUQ2Umk8tCEBzRExI+Yqm+0qUJZpUU7FPxDpBzDyT16+x
- cJ0EuuDG1dxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="297521531"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga002.jf.intel.com with ESMTP; 07 Jul 2020 14:30:44 -0700
-Date:   Tue, 7 Jul 2020 14:30:44 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH v5 00/12] x86: tag application address space for devices
-Message-ID: <20200707213043.GG32961@romley-ivt3.sc.intel.com>
-References: <1593560682-40814-1-git-send-email-fenghua.yu@intel.com>
+        Tue, 7 Jul 2020 17:31:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728492AbgGGVbP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 17:31:15 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 210D8C08C5DC
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 14:31:15 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id f16so238814pjt.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2x+L8FUv9bI+crByz6/Ejtn3DTdscAGUJ17rPzAIyTM=;
+        b=Uar/WVI5Uzn3sX7rG1DAuVylL5XgU7OFLcnSATfNdujh9l6dnFFSiueycjbskupllK
+         celMxqY20h+WdblDasjQ1F38BszhI2do0gEHIlktty4KSV0cOnRKxhIon51VNKznyIec
+         dfjSilPFBTh9IwRVFg7h+U0KJJNmXLwLR8y6O5q5t8M7D1nNA8n9EojU8azxptnVypny
+         fv4+hH3JNyOLDCE7T4FTrp4aEYsq9aKCeO71waT+yZ8tQKUjsnBdfCq7T1oxa8kdcdHx
+         +bophkIFyqn/1lEPOQBj6LzZix1MN8GBkXBH9dLEVXOIzFJ6CyTGtpVRVVpiQVnFTjMX
+         BWhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2x+L8FUv9bI+crByz6/Ejtn3DTdscAGUJ17rPzAIyTM=;
+        b=tSbkeqrDHo3BTd3SAW1XiUve0iig+utJmZbw9HAjHSBRrxV8XZpEqvxJlv7N4shhEP
+         lGLGmYw1AlyZ7gkThMRpxP6K2MJCNTH2ZvWgI05Fnvww92U9fwhFb40t/Ke83kSTkIDY
+         /Kskg/WT7O/ZbVfgf+hll3KR612AIX9nnuK5WELQAdPW2RkybnubO7VYci1aO62bNHBN
+         Ii6fN+aI9VR1sUh7QvczHOOX5NKufHuvLdExBpfipBVKJAMJZWG4hkZ3VMrnmtFoyh1G
+         QQe0IT03nj96WPbkM851mbl9f0kXRosiViSCNy03CT0a5x5e20DSWDxMb6WjD8lsmdaU
+         YMcw==
+X-Gm-Message-State: AOAM531Y38zy6ows0gcXXVOx3Upyb4HhWDXr/LkTTu8TQszFHKcUprD4
+        SKXQ2wz816klKJMQpAsCZtepeoj4Kbk=
+X-Google-Smtp-Source: ABdhPJxj36Ux6T1EDbfBl8b9cg/WZBuy2kEOSrmZQ9rkYWPCm3sFJTgo+Y9ZkjXG8JajBiUvgf4rxw==
+X-Received: by 2002:a17:902:a410:: with SMTP id p16mr46001431plq.283.1594157474673;
+        Tue, 07 Jul 2020 14:31:14 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id o128sm23560832pfg.127.2020.07.07.14.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 14:31:14 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org, loic.pallardy@st.com,
+        arnaud.pouliquen@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH v5 00/11] remoteproc: stm32: Add support for attaching to M4
+Date:   Tue,  7 Jul 2020 15:31:01 -0600
+Message-Id: <20200707213112.928383-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593560682-40814-1-git-send-email-fenghua.yu@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Thomas, Joerg, Boris, Ingo, Baolu, and x86/iommu maintainers,
+This set applies on top of [1] and refactors the STM32 platform code in
+order to attach to the M4 remote processor when it has been started by the
+boot loader.
 
-On Tue, Jun 30, 2020 at 04:44:30PM -0700, Fenghua Yu wrote:
-> Typical hardware devices require a driver stack to translate application
-> buffers to hardware addresses, and a kernel-user transition to notify the
-> hardware of new work. What if both the translation and transition overhead
-> could be eliminated? This is what Shared Virtual Address (SVA) and ENQCMD
-> enabled hardware like Data Streaming Accelerator (DSA) aims to achieve.
-> Applications map portals in their local-address-space and directly submit
-> work to them using a new instruction.
-> 
+New to V5:
+1) Added Bjorn's reviewed-by to patch 06.
+2) Removed Loic's reviewed-by from patch 08, it has changed too much.
 
-Any comment on this series? Updated patch 1 with minor changes was sent out
-on the same patch 1 thread and was Acked-by Felix Kuehling. If you want me
-to send the whole series with the minor changes or any other changes, please
-let me know.
+Patches that need to be reviewed: 7, 8, 9 and 10.
 
-Any plan to push the patches into your tree and upstream?
+Tested on ST's mp157c development board.
 
-Thanks.
+Thanks,
+Mathieu
 
--Fenghua
+[1]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=314523
+
+Mathieu Poirier (11):
+  remoteproc: stm32: Decouple rproc from memory translation
+  remoteproc: stm32: Request IRQ with platform device
+  remoteproc: stm32: Decouple rproc from DT parsing
+  remoteproc: stm32: Remove memory translation from DT parsing
+  remoteproc: stm32: Parse syscon that will manage M4 synchronisation
+  remoteproc: stm32: Properly set co-processor state when attaching
+  remoteproc: Make function rproc_resource_cleanup() public
+  remoteproc: stm32: Split function stm32_rproc_parse_fw()
+  remoteproc: stm32: Properly handle the resource table when attaching
+  remoteproc: stm32: Introduce new attach() operation
+  remoteproc: stm32: Update M4 state in stm32_rproc_stop()
+
+ drivers/remoteproc/remoteproc_core.c |   3 +-
+ drivers/remoteproc/stm32_rproc.c     | 214 ++++++++++++++++++++++++---
+ include/linux/remoteproc.h           |   1 +
+ 3 files changed, 198 insertions(+), 20 deletions(-)
+
+-- 
+2.25.1
+
