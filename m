@@ -2,154 +2,138 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7993EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3459C206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52527206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 21:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kXnMCEke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729227AbgGGVsk (ORCPT
+        id S1728926AbgGGVtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:48:40 -0400
-Received: from mga12.intel.com ([192.55.52.136]:55515 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728357AbgGGVsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 17:48:39 -0400
-IronPort-SDR: fBAQCPB2ml5WkV1FzOMhLnX/0jW2tnbd6qw1hTQPV7BS+lTfB3FqXXgE+MWdb9lgspfteZceGN
- FIZsIk6vOsSQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="127297091"
-X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="127297091"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 14:48:39 -0700
-IronPort-SDR: MvfWCAMLMSvaF6Pl5E6Cy0a7vKpQKvvmYdv1ZRk7J6adXo3IqHzTbey0egARtRcQOxz14O2Gbk
- U5vVjOw76KmQ==
-X-IronPort-AV: E=Sophos;i="5.75,325,1589266800"; 
-   d="scan'208";a="457262991"
-Received: from unknown (HELO [10.255.2.196]) ([10.255.2.196])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 14:48:30 -0700
-Subject: Re: [PATCH 2/4] KVM: x86: Introduce paravirt feature CR0/CR4 pinning
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     "Andersen, John" <john.s.andersen@intel.com>, corbet@lwn.net,
-        pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, shuah@kernel.org,
-        liran.alon@oracle.com, drjones@redhat.com,
-        rick.p.edgecombe@intel.com, kristen@linux.intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, mchehab+huawei@kernel.org,
-        gregkh@linuxfoundation.org, paulmck@kernel.org,
-        pawan.kumar.gupta@linux.intel.com, jgross@suse.com,
-        mike.kravetz@oracle.com, oneukum@suse.com, luto@kernel.org,
-        peterz@infradead.org, fenghua.yu@intel.com,
-        reinette.chatre@intel.com, vineela.tummalapalli@intel.com,
-        dave.hansen@linux.intel.com, arjan@linux.intel.com,
-        caoj.fnst@cn.fujitsu.com, bhe@redhat.com, nivedita@alum.mit.edu,
-        keescook@chromium.org, dan.j.williams@intel.com,
-        eric.auger@redhat.com, aaronlewis@google.com, peterx@redhat.com,
-        makarandsonare@google.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-References: <20200617190757.27081-1-john.s.andersen@intel.com>
- <20200617190757.27081-3-john.s.andersen@intel.com>
- <0fa9682e-59d4-75f7-366f-103d6b8e71b8@intel.com>
- <20200618144314.GB23@258ff54ff3c0>
- <124a59a3-a603-701b-e3bb-61e83d70b20d@intel.com>
- <20200707211244.GN20096@linux.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <19b97891-bbb0-1061-5971-549a386f7cfb@intel.com>
-Date:   Tue, 7 Jul 2020 14:48:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 7 Jul 2020 17:49:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728544AbgGGVtt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 17:49:49 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E448C08C5E2
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 14:49:49 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id z5so20622441pgb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 14:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Mpd18shi8GLEcLMxPZWWvNdFFRedl4Y7uuQSPmBzhFo=;
+        b=kXnMCEke8ckvQzbnSwGYSKdBvP77PeU0ZTB8dUWQKCYfEmsKqGvVCAIFkLFUqw/J9k
+         zPdyXNQfxd5evbDSecLwG7iNEVK+rkYwTE/Bx5FW1DBAZPW6/pgjeG6j1nk8racRlVeK
+         F7IJi3FYMrPxxpgm8Ao9AgHxdjZ9CjEJAEof2KeYWlkD87KrCWwfRdXFO0+m0TrbZkC7
+         6UZpU3xpfuhO6rrx0MoEquHkD2V6l3GYnCk58rXNBW1yzz4hLvchS44ukh0D6/51blCw
+         sHCPDVqeVgzbrREIxCySaJSN1v/+mtaL19mvi9+2QJVAVsjSUQvbXxr8mjwXoy63tymT
+         YvIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Mpd18shi8GLEcLMxPZWWvNdFFRedl4Y7uuQSPmBzhFo=;
+        b=IKM4nlMco51DqZAwwjo4rWaPbnWgtcXGutJ8Od5JbAqbFruLbNYsgeSUns3A+ELh3+
+         bUikuWRZN6itTGu36OvgnhKzqoiC+cITxV/C766mJUZbSDGvJdMWlKQPav60eqtIqP5u
+         wdsXEzLv1Wi9Jn73NmiDOp1qzRKLaJ82Qrtv4cBq5bj7vrka1c+1OjUTJ1hJiECd75sk
+         NLz5qPe64GjSvubCkA7i+IIJA5JHrjT2kB0/23iQdIGir8lkmn6wasjjWtsNNaZ0PC+6
+         4Vpb2nVFSj3uncJ6HMBQI5eqK2/LxkQBQndIciIbai5IU45EDDgQHbwgWpLz4L7UGxe4
+         473A==
+X-Gm-Message-State: AOAM5303SRq4Q8oFpLt1Kuz75sL7bJaUJfOLYrnMCYkUqEa6YnYGwbnd
+        2FiuYqLWoZCTAow52fmACs0KQQ==
+X-Google-Smtp-Source: ABdhPJxeP51izVsbYdKGLkHwWWCPzaEWOyEa3CCdyZ/nZhUjxXxfcCCV2AbikppoE4JtYZqnFgHPLg==
+X-Received: by 2002:a62:8489:: with SMTP id k131mr51423400pfd.4.1594158588710;
+        Tue, 07 Jul 2020 14:49:48 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id m16sm24965238pfd.101.2020.07.07.14.49.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 14:49:48 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 14:49:42 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, stable@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, Alex Elder <elder@linaro.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH] bitfield.h: don't compile-time validate _val in FIELD_FIT
+Message-ID: <20200707214942.GA1723912@google.com>
+References: <20200707211642.1106946-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200707211244.GN20096@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707211642.1106946-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 2:12 PM, Sean Christopherson wrote:
->>>> Let's say Intel loses its marbles and adds a CR4 bit that lets userspace
->>>> write to kernel memory.  Linux won't set it, but an attacker would go
->>>> after it, first thing.
-> That's an orthogonal to pinning.  KVM never lets the guest set CR4 bits that
-> are unknown to KVM.  Supporting CR4.NO_MARBLES would require an explicit KVM
-> change to allow it to be set by the guest, and would also require a userspace
-> VMM to expose NO_MARBLES to the guest.
+On Tue, Jul 07, 2020 at 02:16:41PM -0700, Nick Desaulniers wrote:
+> From: Jakub Kicinski <kuba@kernel.org>
 > 
-> That being said, this series should supporting pinning as much as possible,
-> i.e. if the bit can be exposed to the guest and doesn't require special
-> handling in KVM, allow it to be pinned.  E.g. TS is a special case because
-> pinning would require additional emulator support and IMO isn't interesting
-> enough to justify the extra complexity.  At a glance, I don't see anything
-> that would prevent pinning FSGSBASE.
+> When ur_load_imm_any() is inlined into jeq_imm(), it's possible for the
+> compiler to deduce a case where _val can only have the value of -1 at
+> compile time. Specifically,
+> 
+> /* struct bpf_insn: _s32 imm */
+> u64 imm = insn->imm; /* sign extend */
+> if (imm >> 32) { /* non-zero only if insn->imm is negative */
+>   /* inlined from ur_load_imm_any */
+>   u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
+>   if (__builtin_constant_p(__imm) && __imm > 255)
+>     compiletime_assert_XXX()
+> 
+> This can result in tripping a BUILD_BUG_ON() in __BF_FIELD_CHECK() that
+> checks that a given value is representable in one byte (interpreted as
+> unsigned).
+> 
+> FIELD_FIT() should return true or false at runtime for whether a value
+> can fit for not. Don't break the build over a value that's too large for
+> the mask. We'd prefer to keep the inlining and compiler optimizations
+> though we know this case will always return false.
+> 
+> Cc: stable@vger.kernel.org
+> Link: https://lore.kernel.org/kernel-hardening/CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com/
+> Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+> Debugged-by: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+>  include/linux/bitfield.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+> index 48ea093ff04c..4e035aca6f7e 100644
+> --- a/include/linux/bitfield.h
+> +++ b/include/linux/bitfield.h
+> @@ -77,7 +77,7 @@
+>   */
+>  #define FIELD_FIT(_mask, _val)						\
+>  	({								\
+> -		__BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");	\
+> +		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");	\
+>  		!((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
+>  	})
+>  
 
-Thanks for filling in the KVM picture.
+I confirmied that this fixes the issue. Thanks for sending the patch!
 
-If we're supporting as much pinning as possible, can we also add
-something to make it inconvenient for someone to both make a CR4 bit
-known to KVM *and* ignore the pinning aspects?
-
-We should really make folks think about it.  Something like:
-
-#define KVM_CR4_KNOWN 0xff
-#define KVM_CR4_PIN_ALLOWED 0xf0
-#define KVM_CR4_PIN_NOT_ALLOWED 0x0f
-
-BUILD_BUG_ON(KVM_CR4_KNOWN !=
-             (KVM_CR4_PIN_ALLOWED|KVM_CR4_PIN_NOT_ALLOWED));
-
-So someone *MUST* make an active declaration about new bits being pinned
-or not?
+Sami
