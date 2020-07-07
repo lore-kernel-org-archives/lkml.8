@@ -2,308 +2,178 @@ Return-Path: <SRS0=aTFg=AS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F03C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A32572065D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594135273;
-	bh=S3KLbkQ6IOnMwXCM22w0HlZk3j5lz12lCVxAvrXIe6o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X85yKBHhiyuJzITlGEdy/S4Z+7kKYoxmoag+r0dsA8jDp8YjFbbaFEN/M4DuA8kXL
-	 CkvxSs+IwME7n4938cgeeh2/ihWUN+0ia3e1kZvA2dbmEnjJnynyFlH+zsMQJeC+Bp
-	 llbDGxQ9//iPnd07q6juaExAB6/ZeKUGF7bwbQ0E=
+	by mail.kernel.org (Postfix) with ESMTP id 6448820773
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jul 2020 15:21:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbkRyco2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgGGPVL (ORCPT
+        id S1729689AbgGGPVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:21:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729642AbgGGPVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:21:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F044C20663;
-        Tue,  7 Jul 2020 15:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594135265;
-        bh=S3KLbkQ6IOnMwXCM22w0HlZk3j5lz12lCVxAvrXIe6o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ar18+ym8s6wuHi8pEAI8mh63UczRORNYzLIwO0gvepwUTzzM3QMchBqess0RFHYhV
-         a82oGqZpR0iUeIVsqIMDSa7dr1Dvy2Xf/insnCRscCQUJ1cPiMvnATjAyACdLaGK8Y
-         6+tXi0G6hA2L7RpTav1fpSzStmA8Vh6s+wBqKfnI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jaewon Lim <jaewon31.kim@samsung.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kees Kook <keescook@chromium.org>, linux-mm@kvack.org,
-        linux-trace-devel@vger.kernel.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 10/65] tools lib traceevent: Add append() function helper for appending strings
-Date:   Tue,  7 Jul 2020 17:16:49 +0200
-Message-Id: <20200707145752.948683510@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
-References: <20200707145752.417212219@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 7 Jul 2020 11:21:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728870AbgGGPVN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 11:21:13 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD99C061755;
+        Tue,  7 Jul 2020 08:21:12 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id t4so17342843oij.9;
+        Tue, 07 Jul 2020 08:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=loC7QORNa6sw/c6QZZ/kzwrFvD1Ot4fbNHIkDfLK6/s=;
+        b=XbkRyco23qSUV9A1SJ5iYX7Wk13/g9wL+GzsRKTnPj/6jZbXeNoSLlau57LBJhDxG8
+         VoJVNCichUPadtznqbdLRP4jMD21MgajG9gZh0KUc7UKT9bXyra7+HameduAnwiIrnYi
+         eoUBd4AXqK3biOxpbTrzH/fm9dK5XtAKwbfUQPOxX40d7mW6FRm2sqYtsOKetwPqr65s
+         XSOlGkmBDrKMGVqNG03Ut/PPdanrUCOSwmIyqZ5UNTStdhlpjlqJBhU+6KKKu5pnEkNg
+         9xLmE4E6nGBD1tbZAuZnYY6ul4+KepqVNQsargpYklUxTSD/quJLWrL4E3yWRK4cJlvm
+         elhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=loC7QORNa6sw/c6QZZ/kzwrFvD1Ot4fbNHIkDfLK6/s=;
+        b=la2WqVogiy2b7IckwxtDflShCicnKhkygJfvzmvS0kutAnuuwTXPX1TNfmNQH8l5Bh
+         2gq1bpWtpZjQWbrgEQF1qGJQ7q4q95k7AMa9oH3Y86z4ZJT/TG9j1COwjAS9Oi9rtjih
+         Vsu2EsvYEUntWCemoBwMtZd2zR6kUzb0XpS3OllIm3C/EkC07Vt7vugrOHQVEG+MKD31
+         wegTQkM9/P6kIzVLZkuckK3VbiVHIC+WCT21WFeLk2mOybQVY2dGI3tSBLH3cAKk8uVY
+         NoFiU9qe7g8ePE4pR2l21PJNu48bivP1Xn+qs8DyPWPwKrRC8KjzWbF902dJ8PXd0ZKx
+         EjEg==
+X-Gm-Message-State: AOAM531CaK7ufYDf+fkTjckJysLBB3UvFQUV8uZrEnQL++GqqnyPPq2+
+        fF2H0J0d2AfREJTdVE/iENjXp952HM8QwmkdBUg=
+X-Google-Smtp-Source: ABdhPJxIu94TjN3D/r7CA49DLJo7QyTzVKOQlUajvIFmOd73qvLS16meJ3yJbVXAEPBP7NsSU3nrmrtU2oFWimt9VXI=
+X-Received: by 2002:aca:ecc7:: with SMTP id k190mr3534117oih.92.1594135272003;
+ Tue, 07 Jul 2020 08:21:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+ <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
+ <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com>
+ <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAOMZO5ATv9o197pH4O-7DV-ftsP7gGVuF1+r-sGd2j44x+n-Ug@mail.gmail.com>
+ <CAGngYiVeNQits4CXiXmN2ZBWyoN32zqUYtaxKCqwtKztm-Ky8A@mail.gmail.com>
+ <CAGngYiX9Hx413BX-rgaaUjD9umS9hGg=gMLbM+QmdyEt2Nut5A@mail.gmail.com> <AM6PR0402MB36078DBF3B7737B1C3F032AAFF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR0402MB36078DBF3B7737B1C3F032AAFF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 7 Jul 2020 11:21:01 -0400
+Message-ID: <CAGngYiU7HEyZXYN4GxM=w83g1O-NVsmSwvPrbeY6=UxSUW8vCg@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
+ internal routing of clk_enet_ref
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Andy, Fabio,
 
-[ Upstream commit 27d4d336f2872193e90ee5450559e1699fae0f6d ]
+Sounds like we now have a solution which makes logical sense, although it
+requires changes and additions to drivers/clk/imx/. Before I create a patch,
+can you read the plan below and check that it makes sense, please?
 
-There's several locations that open code realloc and strcat() to append
-text to strings. Add an append() function that takes a delimiter and a
-string to append to another string.
+Problem
+=======
+On the imx6q plus, the NXP hw designers introduced an alternative way to clock
+the built-in ethernet (FEC). One single customer (archronix) seems to be
+currently using this functionality, and would like to add mainline support.
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jaewon Lim <jaewon31.kim@samsung.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kees Kook <keescook@chromium.org>
-Cc: linux-mm@kvack.org
-Cc: linux-trace-devel@vger.kernel.org
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Link: http://lore.kernel.org/lkml/20200324200956.515118403@goodmis.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/lib/traceevent/event-parse.c | 98 ++++++++++++------------------
- 1 file changed, 40 insertions(+), 58 deletions(-)
+Changing the ethernet (FEC) driver appears illogical, as this change is
+unrelated to the FEC itself: fundamentally, it's a clock tree change.
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index d948475585ced..4bc3e1b906652 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -1425,6 +1425,19 @@ static unsigned int type_size(const char *name)
- 	return 0;
- }
- 
-+static int append(char **buf, const char *delim, const char *str)
-+{
-+	char *new_buf;
-+
-+	new_buf = realloc(*buf, strlen(*buf) + strlen(delim) + strlen(str) + 1);
-+	if (!new_buf)
-+		return -1;
-+	strcat(new_buf, delim);
-+	strcat(new_buf, str);
-+	*buf = new_buf;
-+	return 0;
-+}
-+
- static int event_read_fields(struct tep_event *event, struct tep_format_field **fields)
- {
- 	struct tep_format_field *field = NULL;
-@@ -1432,6 +1445,7 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 	char *token;
- 	char *last_token;
- 	int count = 0;
-+	int ret;
- 
- 	do {
- 		unsigned int size_dynamic = 0;
-@@ -1490,24 +1504,15 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 					field->flags |= TEP_FIELD_IS_POINTER;
- 
- 				if (field->type) {
--					char *new_type;
--					new_type = realloc(field->type,
--							   strlen(field->type) +
--							   strlen(last_token) + 2);
--					if (!new_type) {
--						free(last_token);
--						goto fail;
--					}
--					field->type = new_type;
--					strcat(field->type, " ");
--					strcat(field->type, last_token);
-+					ret = append(&field->type, " ", last_token);
- 					free(last_token);
-+					if (ret < 0)
-+						goto fail;
- 				} else
- 					field->type = last_token;
- 				last_token = token;
- 				continue;
- 			}
--
- 			break;
- 		}
- 
-@@ -1523,8 +1528,6 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 		if (strcmp(token, "[") == 0) {
- 			enum tep_event_type last_type = type;
- 			char *brackets = token;
--			char *new_brackets;
--			int len;
- 
- 			field->flags |= TEP_FIELD_IS_ARRAY;
- 
-@@ -1536,29 +1539,27 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 				field->arraylen = 0;
- 
- 		        while (strcmp(token, "]") != 0) {
-+				const char *delim;
-+
- 				if (last_type == TEP_EVENT_ITEM &&
- 				    type == TEP_EVENT_ITEM)
--					len = 2;
-+					delim = " ";
- 				else
--					len = 1;
-+					delim = "";
-+
- 				last_type = type;
- 
--				new_brackets = realloc(brackets,
--						       strlen(brackets) +
--						       strlen(token) + len);
--				if (!new_brackets) {
-+				ret = append(&brackets, delim, token);
-+				if (ret < 0) {
- 					free(brackets);
- 					goto fail;
- 				}
--				brackets = new_brackets;
--				if (len == 2)
--					strcat(brackets, " ");
--				strcat(brackets, token);
- 				/* We only care about the last token */
- 				field->arraylen = strtoul(token, NULL, 0);
- 				free_token(token);
- 				type = read_token(&token);
- 				if (type == TEP_EVENT_NONE) {
-+					free(brackets);
- 					do_warning_event(event, "failed to find token");
- 					goto fail;
- 				}
-@@ -1566,13 +1567,11 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 
- 			free_token(token);
- 
--			new_brackets = realloc(brackets, strlen(brackets) + 2);
--			if (!new_brackets) {
-+			ret = append(&brackets, "", "]");
-+			if (ret < 0) {
- 				free(brackets);
- 				goto fail;
- 			}
--			brackets = new_brackets;
--			strcat(brackets, "]");
- 
- 			/* add brackets to type */
- 
-@@ -1582,34 +1581,23 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 			 * the format: type [] item;
- 			 */
- 			if (type == TEP_EVENT_ITEM) {
--				char *new_type;
--				new_type = realloc(field->type,
--						   strlen(field->type) +
--						   strlen(field->name) +
--						   strlen(brackets) + 2);
--				if (!new_type) {
-+				ret = append(&field->type, " ", field->name);
-+				if (ret < 0) {
- 					free(brackets);
- 					goto fail;
- 				}
--				field->type = new_type;
--				strcat(field->type, " ");
--				strcat(field->type, field->name);
-+				ret = append(&field->type, "", brackets);
-+
- 				size_dynamic = type_size(field->name);
- 				free_token(field->name);
--				strcat(field->type, brackets);
- 				field->name = field->alias = token;
- 				type = read_token(&token);
- 			} else {
--				char *new_type;
--				new_type = realloc(field->type,
--						   strlen(field->type) +
--						   strlen(brackets) + 1);
--				if (!new_type) {
-+				ret = append(&field->type, "", brackets);
-+				if (ret < 0) {
- 					free(brackets);
- 					goto fail;
- 				}
--				field->type = new_type;
--				strcat(field->type, brackets);
- 			}
- 			free(brackets);
- 		}
-@@ -2046,19 +2034,16 @@ process_op(struct tep_event *event, struct tep_print_arg *arg, char **tok)
- 		/* could just be a type pointer */
- 		if ((strcmp(arg->op.op, "*") == 0) &&
- 		    type == TEP_EVENT_DELIM && (strcmp(token, ")") == 0)) {
--			char *new_atom;
-+			int ret;
- 
- 			if (left->type != TEP_PRINT_ATOM) {
- 				do_warning_event(event, "bad pointer type");
- 				goto out_free;
- 			}
--			new_atom = realloc(left->atom.atom,
--					    strlen(left->atom.atom) + 3);
--			if (!new_atom)
-+			ret = append(&left->atom.atom, " ", "*");
-+			if (ret < 0)
- 				goto out_warn_free;
- 
--			left->atom.atom = new_atom;
--			strcat(left->atom.atom, " *");
- 			free(arg->op.op);
- 			*arg = *left;
- 			free(left);
-@@ -3151,18 +3136,15 @@ process_arg_token(struct tep_event *event, struct tep_print_arg *arg,
- 		}
- 		/* atoms can be more than one token long */
- 		while (type == TEP_EVENT_ITEM) {
--			char *new_atom;
--			new_atom = realloc(atom,
--					   strlen(atom) + strlen(token) + 2);
--			if (!new_atom) {
-+			int ret;
-+
-+			ret = append(&atom, " ", token);
-+			if (ret < 0) {
- 				free(atom);
- 				*tok = NULL;
- 				free_token(token);
- 				return TEP_EVENT_ERROR;
- 			}
--			atom = new_atom;
--			strcat(atom, " ");
--			strcat(atom, token);
- 			free_token(token);
- 			type = read_token_item(&token);
- 		}
--- 
-2.25.1
+We also need to prevent breaking existing boards with mis-configured FEC
+clocking:
+
+Some board designers indicate in the devicetree that ENET_REF_CLK is connected
+to the FEC ptp clock, but in reality, they are providing an unrelated external
+clock through the pad. This will work in many cases, because the FEC driver
+does not really care where its PTP clock comes from, and the enet ref clock is
+set up to mirror the external clk frequency by the NXP U-Boot fork.
+
+Proposed changes must not break these cases.
+
+Proposed Solution
+=================
+On non-plus imx6q there are no changes. On imx6q plus however:
+
+Create two new clocks (mac_gtx and pad) and a new clock mux:
+
+  enet_ref-o--------->pad----->| \
+           |                   |  |
+           |                   |M1|----mac_gtx --- to FEC
+           |                   |  |
+           o-------------------|_/
+
+The defaults (indicated with ">") are carefully chosen, so these changes will
+not break any existing plus designs.
+
+We then tie the gtx clock to the FEC driver ptp clock, like so:
+
+in imx6qp.dtsi:
+&fec {
+    clocks = <&clks IMX6QDL_CLK_ENET>,
+        <&clks IMX6QDL_CLK_ENET>,
+        <&clks IMX6QDL_CLK_MAC_GTX>;
+};
+
+Mux M1 is controlled by GPR5[9]. This mux can just write to the GPR5 memory
+address. However, the GPR registers are already exposed as a mux controller
+compatible = "mmio-mux". This mux does currently not use GPR5.
+
+So we have to make a choice here: write straight to the memory address (easy),
+or create a new clock mux type, which uses an underlying mux controller.
+
+When that is done, board designers can choose between:
+
+1. internal clocking (GTX clock routed internally)
+
+&fec {
+    assigned-clocks = <&clks IMX6QDL_CLK_MAC_GTX>;
+    assigned-clock-parents = <&clks IMX6QDL_CLK_ENET_REF>;
+};
+
+2. external clocking (GTX clock from pad, pad connected to enet_ref,
+   typically via GPIO_16). This is the default and does not need to be present.
+
+&fec {
+    assigned-clocks = <&clks IMX6QDL_CLK_MAC_GTX>;
+    assigned-clock-parents = <&clks IMX6QDL_CLK_PAD>;
+};
 
 
+3. external clocking (GTX clock from pad, pad connected to external PHY
+   clock or external oscillator).
 
+phy_osc: oscillator {
+#clock-cells = <0>;
+compatible = "fixed-clock";
+clock-frequency = <50000000>;
+};
+
+&fec {
+    clocks = <&clks IMX6QDL_CLK_ENET>,
+        <&clks IMX6QDL_CLK_ENET>,
+        <&phy_osc>;
+};
