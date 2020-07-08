@@ -2,137 +2,74 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D912EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7818720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594240457;
-	bh=zDK5NXXZRSdLUVKIgw4PNxUgvgIS7unDdJHqM90eKH8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kFXoAf34U5afRGrFdS/OvFGcXa0m3FnLVR4U+iEgyUyGmSFgMQVt9Ln2JSzBHNv6K
-	 nqT1EkFzTvQtaaD8wEC129k+l/X/5YyS47QeKFi16dAal5xGZAW5ktruVRGi6i+pUd
-	 MbvwPIWaB0JSw49ICVG7H13X8URkksx8POPOYrUE=
+	by mail.kernel.org (Postfix) with ESMTP id C321820775
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgGHUeN (ORCPT
+        id S1726287AbgGHUef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39756 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 16:34:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:36310 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgGHUeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:34:12 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C08620739;
-        Wed,  8 Jul 2020 20:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594240451;
-        bh=zDK5NXXZRSdLUVKIgw4PNxUgvgIS7unDdJHqM90eKH8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zwFjDrTOyFTMMCbXLVvpwCsAWdyt8k2oQYfhW7sf9rTaJ5slRw+zUWaMZKwda7pNB
-         UHuaDeq7ISwU/NUhtK9hIzqSKb3fLqfIpydeaS3yCbrovgNzjDtF5JTmsoR0O8JJjH
-         fJsKLwclEhtcvO13tweH5wWCMPCeSNSLZMwcKy6E=
-Date:   Wed, 8 Jul 2020 13:34:09 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Alex Elder <elder@linaro.org>, "# 3.4.x" <stable@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH] bitfield.h: don't compile-time validate _val in
- FIELD_FIT
-Message-ID: <20200708133409.72c037bd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <CAKwvOd=PrNG9WqBc4P43-XK7pOD4rQg4FA8Gd27OdUYb2qMDdw@mail.gmail.com>
-References: <20200707211642.1106946-1-ndesaulniers@google.com>
-        <bca8cff8-3ffe-e5ab-07a5-2ab29d5e394a@linaro.org>
-        <CAKwvOdmtv2EdNQz+c_DZm_47EEibkaXfDW8dGPwNPA3OrcoC9g@mail.gmail.com>
-        <20997cd9-91e5-ca83-218d-4fd5af128893@linaro.org>
-        <CAKwvOd=PrNG9WqBc4P43-XK7pOD4rQg4FA8Gd27OdUYb2qMDdw@mail.gmail.com>
+        id S1725848AbgGHUef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 16:34:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9640A1FB;
+        Wed,  8 Jul 2020 13:34:34 -0700 (PDT)
+Received: from bogus (unknown [10.37.8.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 737313F66E;
+        Wed,  8 Jul 2020 13:34:31 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 21:34:28 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Paul Murphy <paul.j.murphy@intel.com>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/7] mailbox: keembay-scmi-mailbox: Add support for Keem
+ Bay mailbox
+Message-ID: <20200708203428.GB31671@bogus>
+References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+ <20200616155613.121242-3-daniele.alessandrelli@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616155613.121242-3-daniele.alessandrelli@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020 10:56:43 -0700 Nick Desaulniers wrote:
-> On Wed, Jul 8, 2020 at 10:34 AM Alex Elder <elder@linaro.org> wrote:
-> >
-> > I understand why something needs to be done to handle that case.
-> > There's fancy macro gymnastics in "bitfield.h" to add convenient
-> > build-time checks for usage problems; I just thought there might
-> > be something we could do to preserve the checking--even in this
-> > case.  But figuring that out takes more time than I was willing
-> > to spend on it yesterday...  
+On Tue, Jun 16, 2020 at 04:56:08PM +0100, Daniele Alessandrelli wrote:
+> From: Paul Murphy <paul.j.murphy@intel.com>
 > 
-> I also find the use of 0U in FIELD_GET sticks out from the use of 0ULL
-> or (0ull) in these macros (hard to notice, but I changed it in my diff
-> to 0ULL).  Are there implicit promotion+conversion bugs here?  I don't
-> know, but I'd rather not think about it by just using types of the
-> same width and signedness.
-
-TBH I just copied the type from other arguments. It doesn't matter
-in practice now in this case. I have no preference.
-
-> > >> A second comment about this is that it might be nice to break
-> > >> __BF_FIELD_CHECK() into the parts that verify the mask (which
-> > >> could be used by FIELD_FIT() here) and the parts that verify
-> > >> other things.  
-> > >
-> > > Like so? Jakub, WDYT? Or do you prefer v1+Alex's suggestion about
-> > > using `(typeof(_mask))0` in place of 0ULL?  
-> >
-> > Yes, very much like that!  But you could do that as a follow-on
-> > instead, so as not to delay or confuse things.  
+> Keem Bay SoC has a ARM trusted firmware-based secure monitor which acts
+> as the SCP for the purposes of power management over SCMI.
 > 
-> No rush; let's get it right.
-> 
-> So I can think of splitting this into maybe 3 patches, based on feedback:
-> 1. there's a bug in compile time validating _val in FIELD_FIT, since
-> we want to be able to call it at runtime with "bad" values.
-> 2. the FIELD_* macros use constants (0ull, 0ULL, 0U) that don't match
-> typeof(_mask).
-> 3. It might be nice to break up __BF_FIELD_CHECK.
+> This driver implements the transport layer for SCMI to function.
 >
-> I don't think anyone's raised an objection to 1.
-> 
-> Assuming Jakub is ok with 3, fixing 3 will actually also address 2.
-> So then we don't need 3 patches; only 2.  But if we don't do 3 first,
-> then I have to resend a v2 of 1 anyways to address 2 (which was Alex's
-> original feedback).
-> 
-> My above diff was all three in one go, but I don't think it would be
-> unreasonable to break it up into 3 then 1.
-> 
-> If we prefer not to do 3, then I can send a v2 of 1 that addresses the
-> inconsistent use of types, as one or two patches.
-> 
-> Jakub, what is your preference?
 
-I don't see much point in breaking up the checking macro. But even less
-in arguing either way :)
+Please use the smc transport support in driver/firmware/arm_scmi/smc.c
+for this. You don't need mailbox support for SMC/HVC. Basically you
+don't need this driver at all and you have everything you need to support
+what you want.
 
-> (Also, noting that I'm sending to David, assuming he'll pick up the
-> patches once we have everyone's buy in? Or is there someone else more
-> appropriate to accept changes to this header? I guess Jakub and David
-> are the listed maintainers for
-> drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c)
+Let me know if you face issues.
 
-Seems reasonable, put [PATCH net] in the subject to make that explicit.
+-- 
+Regards,
+Sudeep
