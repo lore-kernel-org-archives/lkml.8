@@ -2,182 +2,208 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C16C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84590C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEE2020786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:47:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594205244;
-	bh=iri/PepGpXQz22ZI8HXioBgLrMkorexXAcPmHeVNvZY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=v+9bWLVGgatsQwMB34cWA8D0VPiEVtdcYGoJOT7uVyLog3GuyLpW1PGZ3f9jW5IaI
-	 3ftlY42WcDO3Zw6puQQ9FpnlDC6SZwiu98vCjxo1BeoU0qP5P7y4mwop1lkBjLyU3R
-	 gyFq0CrUF1Xo4sC95tkjcEorPVjHNbPiScnfrPm8=
+	by mail.kernel.org (Postfix) with ESMTP id 56BFF2085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:48:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ozbZSuHl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgGHKrX (ORCPT
+        id S1728665AbgGHKsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:47:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgGHKrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:47:23 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30BAF20772;
-        Wed,  8 Jul 2020 10:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594205242;
-        bh=iri/PepGpXQz22ZI8HXioBgLrMkorexXAcPmHeVNvZY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aYYCZK2GEHSnpkv7KzN+EX5MjRK9BtJ6qi/Bba1QuBKJ6iiL8CmELZ+CnTa21jWnn
-         6cDTa79gxnK95p2nB80/rO8rbZBJooPylDdt61NaWmwpa/iu64W0TTkDEpVJYaTWCI
-         DYiEGaOmV83nLapFAf+yDAthegKC1XJg9Mn1654I=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jt7bk-00A3D1-LS; Wed, 08 Jul 2020 11:47:20 +0100
+        Wed, 8 Jul 2020 06:48:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgGHKsB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:48:01 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC964C08C5DC;
+        Wed,  8 Jul 2020 03:48:00 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id rk21so49872986ejb.2;
+        Wed, 08 Jul 2020 03:48:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RrgVo9Yoph6Ph9pZjHhn/teNbRi42NVD4aZq8okezck=;
+        b=ozbZSuHlgNvUn0royS5449Kz59zjfL6zwyEYeS06CQlDmyw8vJXBqgNu3dPcpvEKAW
+         JPnbgauwPtHjLtTAQZIz8+tVDfv1Iuiaryeyh4nOFFTvmAxx2wTG+nJkNT0ZkZ06MgH/
+         p1QxLdrDDVmsK+iOCE3DZ7EWkzDVFzjJb/93yBsTA+t4RMtCPhzeUkXzyfyCJHVUT++s
+         7ZgkLXzLz9rebsjdHHI9yuNFPO0foifVP4qVSgccGLGQ7wG6mIE2b6gLqhkbiJ0lRbZf
+         HtZQCUcBBkC/tdwYRwLiA50pLD6OxeDC5kAVQhj+wAXL8A5wL6euvnGY1bqazZpoe0HT
+         JhnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RrgVo9Yoph6Ph9pZjHhn/teNbRi42NVD4aZq8okezck=;
+        b=IOtgPzuKLEKRTsyBq9CK6zCsuIGnp7BYWEyYQNYuKQrl3u9mX9XvFmpMi77/Z3AaVN
+         2VJS6FjvZlUgWOvEnB6Pn2IcrMbEcbxbNaab0yYyV+pKiJ2qWr666kRmsDZvcd+H5HWG
+         DAzIbXOVPrVJjvtaAbN9DfM4HdjEG2LDpJDBUl5NNsQQRVOnUb1lAezP8Rb+1CcJeAeF
+         oPMYU7sCMA0R8lmZQKHEot2bYH3Zs96SKGhmw+qVdLiBn6xEVkYihaPoV6acAxTBXh7L
+         A/u+NbECuXTV7mlp7IrSeiIx/POPFQtJPKcDY2DeDQmiOOufryGBhrR0oq3+hSPBJaIz
+         vGUw==
+X-Gm-Message-State: AOAM531DwcWdusXb3mcweqREVTTqSdis5m7OtkyO4AMWz4u9G9IRSQ25
+        zbDJAflDTT0x4qYWmu8KCAE=
+X-Google-Smtp-Source: ABdhPJxWhbuv0rjacuXTmpKtsDVemvrvB46zpN3nY5Aslf4uERjwIeSfKC+t/aSUk1O0BpgvVY60nQ==
+X-Received: by 2002:a17:906:95d6:: with SMTP id n22mr51246219ejy.138.1594205279341;
+        Wed, 08 Jul 2020 03:47:59 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id q3sm23700539eds.41.2020.07.08.03.47.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 03:47:58 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 13:47:56 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Heiko Thiery <heiko.thiery@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH net-next v5 2/4] net: dsa: felix: (re)use already
+ existing constants
+Message-ID: <20200708104756.y42eid56w5jspl6u@skbuf>
+References: <20200707212131.15690-1-michael@walle.cc>
+ <20200707212131.15690-3-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 Jul 2020 11:47:20 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net,
-        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
- for PRUSS interrupts
-In-Reply-To: <CAMxfBF6Th+zKOmogA5phkh21tSUzutokCgU+pv0Eh-sDk=1Hbg@mail.gmail.com>
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
- <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org>
- <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
- <12db6d22c12369b6d64f410aa2434b03@kernel.org>
- <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
- <53d39d8fbd63c6638dbf0584c7016ee0@kernel.org>
- <CAMxfBF6Th+zKOmogA5phkh21tSUzutokCgU+pv0Eh-sDk=1Hbg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <f11097c321b62e7f8ba904dc2907d4e0@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com, afd@ti.com, rogerq@ti.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707212131.15690-3-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-08 08:04, Grzegorz Jaszczyk wrote:
-> On Sun, 5 Jul 2020 at 22:45, Marc Zyngier <maz@kernel.org> wrote:
->> 
->> On 2020-07-05 14:26, Grzegorz Jaszczyk wrote:
->> > On Sat, 4 Jul 2020 at 11:39, Marc Zyngier <maz@kernel.org> wrote:
->> >>
->> >> On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
->> 
->> [...]
->> 
->> >> It still begs the question: if the HW can support both edge and level
->> >> triggered interrupts, why isn't the driver supporting this diversity?
->> >> I appreciate that your HW may only have level interrupts so far, but
->> >> what guarantees that this will forever be true? It would imply a
->> >> change
->> >> in the DT binding, which isn't desirable.
->> >
->> > Ok, I've got your point. I will try to come up with something later
->> > on. Probably extending interrupt-cells by one and passing interrupt
->> > type will be enough for now. Extending this driver to actually support
->> > it can be handled later if needed. Hope it works for you.
->> 
->> Writing a set_type callback to deal with this should be pretty easy.
->> Don't delay doing the right thing.
+On Tue, Jul 07, 2020 at 11:21:29PM +0200, Michael Walle wrote:
+> Now that there are USXGMII constants available, drop the old definitions
+> and reuse the generic ones.
 > 
-> Ok.
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  drivers/net/dsa/ocelot/felix_vsc9959.c | 45 +++++++-------------------
+>  1 file changed, 12 insertions(+), 33 deletions(-)
 > 
->> 
->> [...]
->> 
->> >> >> > +             hwirq = hipir & GENMASK(9, 0);
->> >> >> > +             virq = irq_linear_revmap(intc->domain, hwirq);
->> >> >>
->> >> >> And this is where I worry. You seems to have a single irqdomain
->> >> >> for all the muxes. Are you guaranteed that you will have no
->> >> >> overlap between muxes? And please use irq_find_mapping(), as
->> >> >> I have top-secret plans to kill irq_linear_revmap().
->> >> >
->> >> > Regarding irq_find_mapping - sure.
->> >> >
->> >> > Regarding irqdomains:
->> >> > It is a single irqdomain since the hwirq (system event) can be mapped
->> >> > to different irq_host (muxes). Patch #6
->> >> > https://lkml.org/lkml/2020/7/2/616 implements and describes how input
->> >> > events can be mapped to some output host interrupts through 2 levels
->> >> > of many-to-one mapping i.e. events to channel mapping and channels to
->> >> > host interrupts. Mentioned implementation ensures that specific system
->> >> > event (hwirq) can be mapped through PRUSS specific channel into a
->> >> > single host interrupt.
->> >>
->> >> Patch #6 is a nightmare of its own, and I haven't fully groked it yet.
->> >> Also, this driver seems to totally ignore the 2-level routing. Where
->> >> is it set up? map/unmap in this driver do exactly *nothing*, so
->> >> something somewhere must set it up.
->> >
->> > The map/unmap is updated in patch #6 and it deals with those 2-level
->> > routing setup. Map is responsible for programming the Channel Map
->> > Registers (CMRx) and Host-Interrupt Map Registers (HMRx) basing on
->> > provided configuration from the one parsed in the xlate function.
->> > Unmap undo whatever was done on the map. More details can be found in
->> > patch #6.
->> >
->> > Maybe it would be better to squash patch #6 with this one so it would
->> > be less confusing. What is your advice?
->> 
->> So am I right in understanding that without patch #6, this driver does
->> exactly nothing? If so, it has been a waste of review time.
->> 
->> Please split patch #6 so that this driver does something useful
->> for Linux, without any of the PRU interrupt routing stuff. I want
->> to see a Linux-only driver that works and doesn't rely on any other
->> exotic feature.
->> 
+> diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
+> index 19614537b1ba..4310b1527022 100644
+> --- a/drivers/net/dsa/ocelot/felix_vsc9959.c
+> +++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
+> @@ -10,35 +10,15 @@
+>  #include <soc/mscc/ocelot.h>
+>  #include <net/pkt_sched.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/mdio.h>
+>  #include <linux/pci.h>
+>  #include "felix.h"
+>  
+>  #define VSC9959_VCAP_IS2_CNT		1024
+>  #define VSC9959_VCAP_IS2_ENTRY_WIDTH	376
+>  #define VSC9959_VCAP_PORT_CNT		6
+> -
+> -/* TODO: should find a better place for these */
+> -#define USXGMII_BMCR_RESET		BIT(15)
+> -#define USXGMII_BMCR_AN_EN		BIT(12)
+> -#define USXGMII_BMCR_RST_AN		BIT(9)
+> -#define USXGMII_BMSR_LNKS(status)	(((status) & GENMASK(2, 2)) >> 2)
+> -#define USXGMII_BMSR_AN_CMPL(status)	(((status) & GENMASK(5, 5)) >> 5)
+> -#define USXGMII_ADVERTISE_LNKS(x)	(((x) << 15) & BIT(15))
+> -#define USXGMII_ADVERTISE_FDX		BIT(12)
+> -#define USXGMII_ADVERTISE_SPEED(x)	(((x) << 9) & GENMASK(11, 9))
+> -#define USXGMII_LPA_LNKS(lpa)		((lpa) >> 15)
+> -#define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
+> -#define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
+> -
+>  #define VSC9959_TAS_GCL_ENTRY_MAX	63
+>  
+> -enum usxgmii_speed {
+> -	USXGMII_SPEED_10	= 0,
+> -	USXGMII_SPEED_100	= 1,
+> -	USXGMII_SPEED_1000	= 2,
+> -	USXGMII_SPEED_2500	= 4,
+> -};
+> -
+>  static const u32 vsc9959_ana_regmap[] = {
+>  	REG(ANA_ADVLEARN,			0x0089a0),
+>  	REG(ANA_VLANMASK,			0x0089a4),
+> @@ -787,11 +767,10 @@ static void vsc9959_pcs_config_usxgmii(struct phy_device *pcs,
+>  {
+>  	/* Configure device ability for the USXGMII Replicator */
+>  	phy_write_mmd(pcs, MDIO_MMD_VEND2, MII_ADVERTISE,
+> -		      USXGMII_ADVERTISE_SPEED(USXGMII_SPEED_2500) |
+> -		      USXGMII_ADVERTISE_LNKS(1) |
+> +		      MDIO_LPA_USXGMII_2500FULL |
+> +		      MDIO_LPA_USXGMII_LINK |
+>  		      ADVERTISE_SGMII |
+> -		      ADVERTISE_LPACK |
+> -		      USXGMII_ADVERTISE_FDX);
+> +		      ADVERTISE_LPACK);
+>  }
+>  
+>  static void vsc9959_pcs_config(struct ocelot *ocelot, int port,
+> @@ -1005,8 +984,8 @@ static void vsc9959_pcs_link_state_usxgmii(struct phy_device *pcs,
+>  		return;
+>  
+>  	pcs->autoneg = true;
+> -	pcs->autoneg_complete = USXGMII_BMSR_AN_CMPL(status);
+> -	pcs->link = USXGMII_BMSR_LNKS(status);
+> +	pcs->autoneg_complete = status & BMSR_ANEGCOMPLETE;
+> +	pcs->link = status & BMSR_LSTATUS;
+
+These are "unsigned :1" in struct phy_device, and not booleans. I'm not
+sure how the compiler is going to treat this assignment of an integer.
+I have a feeling it may not do the right thing. Could you please do
+this?
+
+	pcs->autoneg_complete = !!(status & BMSR_ANEGCOMPLETE);
+	pcs->link = !!(status & BMSR_LSTATUS);
+
+>  
+>  	if (!pcs->link || !pcs->autoneg_complete)
+>  		return;
+> @@ -1015,24 +994,24 @@ static void vsc9959_pcs_link_state_usxgmii(struct phy_device *pcs,
+>  	if (lpa < 0)
+>  		return;
+>  
+> -	switch (USXGMII_LPA_SPEED(lpa)) {
+> -	case USXGMII_SPEED_10:
+> +	switch (lpa & MDIO_LPA_USXGMII_SPD_MASK) {
+> +	case MDIO_LPA_USXGMII_10:
+>  		pcs->speed = SPEED_10;
+>  		break;
+> -	case USXGMII_SPEED_100:
+> +	case MDIO_LPA_USXGMII_100:
+>  		pcs->speed = SPEED_100;
+>  		break;
+> -	case USXGMII_SPEED_1000:
+> +	case MDIO_LPA_USXGMII_1000:
+>  		pcs->speed = SPEED_1000;
+>  		break;
+> -	case USXGMII_SPEED_2500:
+> +	case MDIO_LPA_USXGMII_2500:
+>  		pcs->speed = SPEED_2500;
+>  		break;
+>  	default:
+>  		break;
+>  	}
+>  
+> -	if (USXGMII_LPA_DUPLEX(lpa))
+> +	if (lpa & MDIO_LPA_USXGMII_FULL_DUPLEX)
+>  		pcs->duplex = DUPLEX_FULL;
+>  	else
+>  		pcs->duplex = DUPLEX_HALF;
+> -- 
+> 2.20.1
 > 
-> Patch #6 provides PRU specific 2-level routing setup. This step is
-> required and it is part of the entire patch-set. Theoretically routing
-> setup could be done by other platform driver (not irq one) or e.g. by
-> PRU firmware. In such case this driver would be functional without
-> patch #6 but I do not think it would be proper.
 
-Then this whole driver is non-functional until the last patch that
-comes with the PRU-specific "value-add".
-
-[...]
-
-> I am open to any suggestion if there is a better way of handling
-> 2-level routing. I will also appreciate if you could elaborate about
-> issues that you see with patch #6.
-
-The two level routing has to be part of this (or another) irqchip
-driver (specially given that it appears to me like another set of
-crossbar). There should only be a *single* binding for all interrupts,
-including those targeting the PRU (you seem to have two).
-
-And the non-CPU interrupt code has to be in its own patch, because
-it is pretty borderline anyway (I'm still not completely convinced
-this is Linux's job).
-
-         N,
--- 
-Jazz is not dead. It just smells funny...
+Thanks,
+-Vladimir
