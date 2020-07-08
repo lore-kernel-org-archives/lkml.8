@@ -2,178 +2,248 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D99C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF0BC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B00720786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:34:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="r6NjhxoH"
+	by mail.kernel.org (Postfix) with ESMTP id A0125206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbgGHPee (ORCPT
+        id S1730232AbgGHPem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:34:34 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52518 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730048AbgGHPee (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:34:34 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708153432euoutp012b9de4bb0af192bdf5fc8ed031bdc1af~f0ORyCE9Y3187931879euoutp01i
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 15:34:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708153432euoutp012b9de4bb0af192bdf5fc8ed031bdc1af~f0ORyCE9Y3187931879euoutp01i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594222472;
-        bh=OCLKFrly7d36k58waRUojkkZYFe/5ehU83mgAj4X/cg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=r6NjhxoH4pz3VXafvQ6e92G7RuyEd11ZGHQ7TqnOnHWs1CHA7Oj8lMoVAmRRjWV6j
-         FQqz2oxwKRNN7JRXnQdTuyJdVq2AH0xqhIZMKgu522oa7bv9xLkiZ8ITHWbMN+t/ej
-         SdgBGIjkPG2sMZimnGoDr8JwNWBRwh2Gwavw3aJ8=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200708153432eucas1p289172299f1a8c51b74300462fe081ec9~f0ORPko6y2760427604eucas1p2I;
-        Wed,  8 Jul 2020 15:34:32 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 49.C9.06318.887E50F5; Wed,  8
-        Jul 2020 16:34:32 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708153431eucas1p2b49c4ebc46107dfa4052fbba81f8063b~f0OQxV2er1260312603eucas1p2L;
-        Wed,  8 Jul 2020 15:34:31 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200708153431eusmtrp1ebd3ead96b36396cf0c2d631168cf94b~f0OQwrP6r1128811288eusmtrp1D;
-        Wed,  8 Jul 2020 15:34:31 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-42-5f05e78830e5
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3C.E5.06017.787E50F5; Wed,  8
-        Jul 2020 16:34:31 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708153430eusmtip2839ff6f4274f3bdafafafdef908ca0b3~f0OP8RA242925229252eusmtip27;
-        Wed,  8 Jul 2020 15:34:30 +0000 (GMT)
-Subject: Re: [PATCH 04/11] media: exynos4-is: Correct missing entity
- function initialization
-To:     Tomasz Figa <tfiga@chromium.org>,
-        Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kyungmin.park@samsung.com, mchehab@kernel.org, kgene@kernel.org,
-        krzk@kernel.org, linux-media@vger.kernel.org,
+        Wed, 8 Jul 2020 11:34:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:47144 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730028AbgGHPel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:34:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36C211045;
+        Wed,  8 Jul 2020 08:34:40 -0700 (PDT)
+Received: from e123648.arm.com (unknown [10.37.12.67])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2FBCE3F237;
+        Wed,  8 Jul 2020 08:34:36 -0700 (PDT)
+From:   Lukasz Luba <lukasz.luba@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <afe50670-2452-2fe6-d0cc-0e1f83497873@samsung.com>
-Date:   Wed, 8 Jul 2020 17:34:29 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200707180917.GD2621465@chromium.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLKsWRmVeSWpSXmKPExsWy7djP87odz1njDX4/ZLLof/ya2eL8+Q3s
-        Fmeb3rBbbHp8jdXi8q45bBY9G7ayWsw4v4/JYtmmP0wWn1v/sVlcnHiXxYHLY3bDRRaPTas6
-        2Tw2L6n3WHTzB4tH35ZVjB6fN8kFsEVx2aSk5mSWpRbp2yVwZUx6U1ywUqji+q31zA2My/m7
-        GDk5JARMJDaeOsrUxcjFISSwglHiX8NZdpCEkMAXRolZ7WEQ9mdGialvxGAaemdMYIZoWM4o
-        8WLPFDYI5yOjxPU/h8G6hQXiJCafX8AEYosIeEpce9AG1sEscI9RYu/XNcwgCTYBQ4neo32M
-        IDavgJ3En1X/WUBsFgEViQldX1lBbFGgQetfbmeCqBGUODnzCVgNJ9AZJ7/dAIszC4hL3Hoy
-        H8qWl9j+dg7YMgmBU+wSX3YfY4K420XixMv/7BC2sMSr41ugbBmJ05N7WCAamhklenbfZodw
-        JjBK3D++gBGiylrizrlfQI9yAK3QlFi/Sx8i7Cjxac9NZpCwhACfxI23ghBH8ElM2jYdKswr
-        0dEmBFGtIvF71XSoc6Qkup/8Z5nAqDQLyWuzkLwzC8k7sxD2LmBkWcUonlpanJueWmycl1qu
-        V5yYW1yal66XnJ+7iRGYqE7/O/51B+O+P0mHGAU4GJV4eF9sYo0XYk0sK67MPcQowcGsJMLr
-        dPZ0nBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe40UvY4UE0hNLUrNTUwtSi2CyTBycUg2M3uvq
-        Wrxy9A9s+cJ956tS6pRF9cejn2QcK6ltO7DWddI698V3d5bf+z73PE9M219zHx+mj0FdDb7L
-        2c/Xz5u8/pZX5Hnt1qVXl6z6PG3qjxdankcSn18OqD2n7PNcuH1xwaashvNbq6MKbnV8sNmq
-        td6Ur1JOVNJ00TvBj8sZ1hjwzjvPolaupsRSnJFoqMVcVJwIAID4XpFQAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xe7rtz1njDdY0KVv0P37NbHH+/AZ2
-        i7NNb9gtNj2+xmpxedccNoueDVtZLWac38dksWzTHyaLz63/2CwuTrzL4sDlMbvhIovHplWd
-        bB6bl9R7LLr5g8Wjb8sqRo/Pm+QC2KL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1j
-        rYxMlfTtbFJSczLLUov07RL0Mia9KS5YKVRx/dZ65gbG5fxdjJwcEgImEr0zJjB3MXJxCAks
-        ZZT4fmcOkMMBlJCSmN+iBFEjLPHnWhcbRM17RokDU86xgiSEBeIkfhy6zQJiiwh4Slx70AY2
-        iFngHqPE0xkNUB3tTBKTb75iBqliEzCU6D3axwhi8wrYSfxZ9R+sm0VARWJC11ewqaJAU5dv
-        mc8OUSMocXLmE7AaTqBTT367wQRiMwuoS/yZd4kZwhaXuPVkPlRcXmL72znMExiFZiFpn4Wk
-        ZRaSlllIWhYwsqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQIjM1tx35u2cHY9S74EKMAB6MS
-        D++LTazxQqyJZcWVuYcYJTiYlUR4nc6ejhPiTUmsrEotyo8vKs1JLT7EaAr03ERmKdHkfGDa
-        yCuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwOjepHayeGrVZEXB
-        +FkawpGlXrrX41df7LxQYvL1CHNG+ceSL5bHm+w3RB5y5TzIc0Ppg4iid/gKvoW31KvC9wvM
-        L15zfKIUqybThJx3L4tU1YIcP9jtf9ol2vua3erskZZtwuKvXr7oerzzqJ1hzM5TF/yNbwjO
-        vvpUJsg37cqymjotUZlUJiWW4oxEQy3mouJEADj1A9/jAgAA
-X-CMS-MailID: 20200708153431eucas1p2b49c4ebc46107dfa4052fbba81f8063b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200707180927eucas1p14bedf7f773c5e86c3e3234928ee347a4
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200707180927eucas1p14bedf7f773c5e86c3e3234928ee347a4
-References: <20200426022650.10355-1-xc-racer2@live.ca>
-        <BN6PR04MB0660E680A4F69E3037D87E70A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-        <CGME20200707180927eucas1p14bedf7f773c5e86c3e3234928ee347a4@eucas1p1.samsung.com>
-        <20200707180917.GD2621465@chromium.org>
+        linux-samsung-soc@vger.kernel.org
+Cc:     lukasz.luba@arm.com, willy.mh.wolff.ml@gmail.com,
+        k.konieczny@samsung.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, krzk@kernel.org, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        s.nawrocki@samsung.com, kgene@kernel.org
+Subject: [PATCH 0/2] Exynos5422 DMC: adjust to new devfreq monitoring mechanism
+Date:   Wed,  8 Jul 2020 16:34:18 +0100
+Message-Id: <20200708153420.29484-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi all,
 
-On 07.07.2020 20:09, Tomasz Figa wrote:
-> On Sat, Apr 25, 2020 at 07:26:43PM -0700, Jonathan Bakker wrote:
->> Commit bae4500399c4 ("[media] exynos4-is: Add missing entity function
->> initialization") tried to suppress the warnings such as
->>
->> s5p-fimc-md camera: Entity type for entity FIMC.0 was not initialized!
->>
->> However, this didn't work in all cases.  Correct this by calling the set
->> function earlier.
->>
->> Fixes: bae4500399c4 ("exynos4-is: Add missing entity function initialization")
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->> ---
->>  drivers/media/platform/exynos4-is/fimc-capture.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
+There have been discussions around devfreq, it's related drivers
+and governors, reporting some issues [1][2]. There are a patch sets
+trying to address these issues [2][3], discussion is still ongoing.
 
-> Thank you for the patch. Please see my comments inline.
+This patch set is a follow up for changes presented in [2]. It moves
+from internal interrupts to devfreq monitoring mechanism with fixed
+polling interval in the memory controller. The value of polling and
+uptreshold have been adjusted in order to get better reaction in the
+benchmark workload [4]. The test workload is specific and I still
+have to spend some more time to understand impact of different CPUs
+or different utilization and governor's decisions. Now, with the patches
+it looks better.
+For other future adjustments, not specific to a particular
+driver's code, I would rather see a different mechanism, which I'll post
+shortly as an RFC.
 
->> diff --git a/drivers/media/platform/exynos4-is/fimc-capture.c b/drivers/media/platform/exynos4-is/fimc-capture.c
->> index 705f182330ca..86c233e2f2c9 100644
->> --- a/drivers/media/platform/exynos4-is/fimc-capture.c
->> +++ b/drivers/media/platform/exynos4-is/fimc-capture.c
->> @@ -1799,7 +1799,6 @@ static int fimc_register_capture_device(struct fimc_dev *fimc,
->>  	vid_cap->wb_fmt.code = fmt->mbus_code;
->>  
->>  	vid_cap->vd_pad.flags = MEDIA_PAD_FL_SINK;
->> -	vfd->entity.function = MEDIA_ENT_F_PROC_VIDEO_SCALER;
+The patch 1/2 needs [2] series, while the patch 2/2 is on top of Krzysztof's
+today next/dt branch [5] (I assume patch 2/2 would go through his tree).
 
-I think we should leave above line as is, or perhaps change the function
-to MEDIA_ENT_F_PROC_VIDEO_COMPOSER and...
+Here are test results for the benchmark from [4], showing some more accurate
+reaction for the benchmark workload (gentle ask to Willy to confirm this):
+simple_ondlemand:
+littles: 1.40374 s (was 4.74308 s)
+bigs: 1.44519 s (was 4.76556 s)
+performance:
+littles: 1.13635 s
+bigs: 1.17349 s
 
-> Isn't vfd->entity above a different entity than sd->entity below? If so,
-> this line must stay.
-> 
->>  	ret = media_entity_pads_init(&vfd->entity, 1, &vid_cap->vd_pad);
->>  	if (ret)
->>  		goto err_free_ctx;
->> @@ -1898,6 +1897,7 @@ int fimc_initialize_capture_subdev(struct fimc_dev *fimc)
->>  		return ret;
->>  
->>  	sd->entity.ops = &fimc_sd_media_ops;
->> +	sd->entity.function = MEDIA_ENT_F_PROC_VIDEO_SCALER;
+-------------------------------8<--------------------------------
+oller/trans_stat /odroid/benchmark# cat /sys/class/devfreq/10c20000.memory-contro
+     From  :   To
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+* 165000000:         0        15        24        13        12         2         0        11   1128580
+  206000000:        12         0         8         7         3         1         0         0      3760
+  275000000:        17         8         0        12        10         2         0         5      6340
+  413000000:        19         5         9         0         7         5         0         9     10290
+  543000000:        18         0         6        13         0        31         1         8      7510
+  633000000:         4         3         3         6        27         0         0         1     11440
+  728000000:         1         0         0         0         0         0         0         0       110
+  825000000:         7         0         4         3        18         3         0         0     23490
+Total transition : 373
+root@odroid:/home/odroid/benchmark# bash source/scripts/test_dvfs_mem.sh
 
-...also add an assignment like this.
 
-vfd->entity and sd->entity are different entities, vfd->entity corresponds to
-the capture video node and sd->entity is the capture subdevice media entity. 
+mem_gov = simple_ondemand at 413000000
 
-> My understanding is that this is the capture subdev and not the scaler.
-> Looking at the other drivers, MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER
-> could be the right function to use here.
+     From  :   To
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+  165000000:         0        15        26        14        12         2         0        11   1134220
+  206000000:        12         0         8         7         3         1         0         0      3760
+  275000000:        18         8         0        13        10         2         0         5      6670
+* 413000000:        20         5         9         0         7         5         0         9     10460
+  543000000:        18         0         6        13         0        31         1         8      7510
+  633000000:         4         3         3         6        27         0         0         1     11440
+  728000000:         1         0         0         0         0         0         0         0       110
+  825000000:         7         0         4         3        18         3         0         0     23490
+Total transition : 379
 
-Scaling can also be configured on that subdev, actually both functions would
-be valid.
+
+ Running on the LITTLE cluster
+
+array_size rounded to fit a CACHE_LINE_SIZE from 33554431 to 33554432
+sizeof(size_t) = 4
+array_size = 33554432
+==> 134217728 b; 131072 Kb; 128 Mb
+stride = 0
+nr_iter = 9722222
+nr_iter_2 = 1
+effective_nr_iter = 9722222
+cpu_freq = 1400000
+==> 1.4 GHz; 1400 MHz; 1400000 KHz
+total time = 1403736317 ns; 1.40374 s
+time per iter 144.384 ns
+estimated cycles per iter 202.138 c
+
+
+ Running on the big cluster
+
+array_size rounded to fit a CACHE_LINE_SIZE from 33554431 to 33554432
+sizeof(size_t) = 4
+array_size = 33554432
+==> 134217728 b; 131072 Kb; 128 Mb
+stride = 0
+nr_iter = 9722222
+nr_iter_2 = 1
+effective_nr_iter = 9722222
+cpu_freq = 2000000
+==> 2 GHz; 2000 MHz; 2000000 KHz
+total time = 1445186489 ns; 1.44519 s
+time per iter 148.648 ns
+estimated cycles per iter 297.296 c
+     From  :   To
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+  165000000:         0        15        26        14        12         2         0        11   1134220
+  206000000:        12         0         8         7         3         1         0         0      3760
+  275000000:        18         8         0        13        15         2         0         5      7220
+  413000000:        20         5        10         0         7         5         0         9     10510
+  543000000:        18         0        10        13         0        32         1         9      8280
+* 633000000:         4         3         3         6        28         0         0         1     14160
+  728000000:         1         0         0         0         0         0         0         0       110
+  825000000:         7         0         4         3        18         4         0         0     23930
+Total transition : 393
+
+
+mem_gov = performance at 825000000
+
+     From  :   To
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+  165000000:         0        15        26        14        12         2         0        11   1134220
+  206000000:        12         0         8         7         3         1         0         0      3760
+  275000000:        18         8         0        13        15         2         0         6      7300
+  413000000:        20         5        10         0         7         5         0         9     10510
+  543000000:        18         0        10        13         0        32         1         9      8280
+  633000000:         4         3         4         6        28         0         0         1     14190
+  728000000:         1         0         0         0         0         0         0         0       110
+* 825000000:         7         0         4         3        18         4         0         0     23980
+Total transition : 395
+
+
+ Running on the LITTLE cluster
+
+array_size rounded to fit a CACHE_LINE_SIZE from 33554431 to 33554432
+sizeof(size_t) = 4
+array_size = 33554432
+==> 134217728 b; 131072 Kb; 128 Mb
+stride = 0
+nr_iter = 9722222
+nr_iter_2 = 1
+effective_nr_iter = 9722222
+cpu_freq = 1400000
+==> 1.4 GHz; 1400 MHz; 1400000 KHz
+total time = 1136350257 ns; 1.13635 s
+time per iter 116.882 ns
+estimated cycles per iter 163.634 c
+
+
+ Running on the big cluster
+
+array_size rounded to fit a CACHE_LINE_SIZE from 33554431 to 33554432
+sizeof(size_t) = 4
+array_size = 33554432
+==> 134217728 b; 131072 Kb; 128 Mb
+stride = 0
+nr_iter = 9722222
+nr_iter_2 = 1
+effective_nr_iter = 9722222
+cpu_freq = 2000000
+==> 2 GHz; 2000 MHz; 2000000 KHz
+total time = 1173486470 ns; 1.17349 s
+time per iter 120.701 ns
+estimated cycles per iter 241.403 c
+     From  :   To
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+  165000000:         0        15        26        14        12         2         0        11   1134220
+  206000000:        12         0         8         7         3         1         0         0      3760
+  275000000:        18         8         0        13        15         2         0         6      7300
+  413000000:        20         5        10         0         7         5         0         9     10510
+  543000000:        18         0        10        13         0        32         1         9      8280
+  633000000:         4         3         4         6        28         0         0         1     14190
+  728000000:         1         0         0         0         0         0         0         0       110
+* 825000000:         7         0         4         3        18         4         0         0     27760
+Total transition : 395
+root@odroid:/home/odroid/benchmark#
+oller/trans_stat /odroid/benchmark# cat /sys/class/devfreq/10c20000.memory-contro
+     From  :   To
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+* 165000000:         0        15        26        14        12         2         0        11   1138930
+  206000000:        12         0         8         7         3         1         0         0      3760
+  275000000:        18         8         0        13        15         2         0         6      7300
+  413000000:        20         5        10         0         7         5         0         9     10510
+  543000000:        19         0        10        13         0        32         1         9      8390
+  633000000:         4         3         4         6        28         0         0         1     14190
+  728000000:         1         0         0         0         0         0         0         0       110
+  825000000:         7         0         4         3        19         4         0         0     28280
+Total transition : 397
+root@odroid:/home/odroid/benchmark#
+----------------------------------------->8--------------------------------------------
+
+Regards,
+Lukasz Luba
+
+[1] https://lore.kernel.org/linux-pm/20200623164733.qbhua7b6cg2umafj@macmini.local/
+[2] https://lore.kernel.org/linux-pm/20200703062622.11773-1-cw00.choi@samsung.com/
+[3] https://lore.kernel.org/linux-pm/20200703100810.12304-1-cw00.choi@samsung.com/
+[4] https://github.com/wwilly/benchmark.git
+[5] https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git/log/?h=next/dt
+
+
+
+
+Lukasz Luba (2):
+  memory: samsung: exynos5422-dmc: Adjust polling interval and
+    uptreshold
+  ARM: dts: exynos: Remove interrupts from DMC controller in Exynos5422
+
+ arch/arm/boot/dts/exynos5420.dtsi       | 3 ---
+ drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
 -- 
-Regards,
-Sylwester
+2.17.1
+
