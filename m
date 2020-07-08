@@ -2,177 +2,205 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A78C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC73C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5D3F20774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:30:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OMVZOszT"
+	by mail.kernel.org (Postfix) with ESMTP id 13B5420774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbgGHFae (ORCPT
+        id S1729500AbgGHFc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:30:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGHFae (ORCPT
+        Wed, 8 Jul 2020 01:32:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31210 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725794AbgGHFc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:30:34 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1106C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 22:30:33 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q4so16956171lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 22:30:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pjfcbpQ6qlNIl6a+q1As3kDpc6/H3HtR3c0f6GQ/eQM=;
-        b=OMVZOszTAYenxDFWn64N4YbyYKC5bxDxhFmh+3jtYRF6riJrPuYqpkuGED2BmvUJju
-         FtuzjgxM8gxmjAfLpjsSaVPU35ol0vYIhYrI2C8nMeR/EzQ6EG+Dreu9tAyzRyl1OsXD
-         uEb/mEvjpZvzxoNqTdHM9+4TZ4QS47XUyyb+GhFB/HGZlbm54xm7N4UQLgEUJOebd7ct
-         MJgMuydVn3ObeKuATJ0i1kRSAhbve4SAoTenvQBqmayF90ugNvIYOlYIRgoG1hnVw8WN
-         a4kPDwRJR0Qnn1eoZYRVa6T258oqRoL0bmQKumDIo3/Vw9qlxtM6J1PltqJHXc0x9Bi9
-         aAnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pjfcbpQ6qlNIl6a+q1As3kDpc6/H3HtR3c0f6GQ/eQM=;
-        b=pUwr1cyufSCMKr+vuSiWmcXRTLiryEI1sJZJgqQHFdjjeUwC7tyO4g/wAIXDooFV9R
-         O7K1dF40g5whE2rTbl5bjyVxN5xiXXUJ904ZJFGUdpPncN3zN1c8yXAze5FoIMTZ6/fa
-         CN+n0LCFWD0Eq3DZjf7vTt13Llx8osa6RcTxBCbLeIXUFn/8kZG4GVlEfp5uQnOCwkDb
-         8cNASQxxVNR488WAoAdcXI8ZRf1UB4yEHoSdv3YpBfkGXg2ymprNJsuZwsiSpArnnjOG
-         3WQZJXnF50OgZ2ZVA19yq79pMFXegzK5o8BPZOkakG9nHwHwuxVnSem1FHCMwfxmd2C3
-         vAxA==
-X-Gm-Message-State: AOAM532ncRKrLp/6DlRYX0qFDUjiTbdlw4P3hDeZDO0iOq8phiuxiZMD
-        23Xkm/SqR0SBHF4TVVGmogYTxZEGJvdkM0E2kLYKXJhUydgeJw==
-X-Google-Smtp-Source: ABdhPJyv6wNkut4gvmrXhE0h3DLfRwAd9I9chL2cKFjhP8p/GyGn3zAdVRT2swcYKt1Zh5eXtKURQIfTh3d3l7b5o0w=
-X-Received: by 2002:a2e:9857:: with SMTP id e23mr29696616ljj.411.1594186232162;
- Tue, 07 Jul 2020 22:30:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200707145752.417212219@linuxfoundation.org>
-In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 8 Jul 2020 11:00:20 +0530
-Message-ID: <CA+G9fYt03DDfX_p9D2SwGi+kzauDAbSWz+EpGVS7Sy680OrCaQ@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/65] 5.4.51-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Wed, 8 Jul 2020 01:32:59 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0685DRBG106742;
+        Wed, 8 Jul 2020 01:32:48 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3257t4rcc5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 01:32:48 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0685EspI109021;
+        Wed, 8 Jul 2020 01:32:48 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3257t4rcad-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 01:32:47 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0685UDNp015496;
+        Wed, 8 Jul 2020 05:32:45 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 322hd7v65b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 05:32:45 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0685WhAu64684260
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Jul 2020 05:32:43 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A2A74203F;
+        Wed,  8 Jul 2020 05:32:43 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 805CE42041;
+        Wed,  8 Jul 2020 05:32:41 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.202.29])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  8 Jul 2020 05:32:41 +0000 (GMT)
+Date:   Wed, 8 Jul 2020 08:32:39 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Justin He <Justin.He@arm.com>, Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Kaly Xin <Kaly.Xin@arm.com>
+Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid as
+ EXPORT_SYMBOL_GPL
+Message-ID: <20200708053239.GC386073@linux.ibm.com>
+References: <20200707055917.143653-1-justin.he@arm.com>
+ <20200707055917.143653-2-justin.he@arm.com>
+ <20200707115454.GN5913@dhcp22.suse.cz>
+ <AM6PR08MB406907F9F2B13DA6DC893AD9F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
+ <CAPcyv4ipu4qwKhk4pzJ8nZB2sp+=AndahS8eCgUvFvVP6dEkeA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4ipu4qwKhk4pzJ8nZB2sp+=AndahS8eCgUvFvVP6dEkeA@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_01:2020-07-08,2020-07-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 spamscore=0 clxscore=1015 malwarescore=0 mlxscore=0
+ mlxlogscore=999 priorityscore=1501 cotscore=-2147483648 phishscore=0
+ bulkscore=0 adultscore=0 suspectscore=1 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007080033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jul 2020 at 20:49, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.51 release.
-> There are 65 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.51-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, Jul 07, 2020 at 08:56:36PM -0700, Dan Williams wrote:
+> On Tue, Jul 7, 2020 at 7:20 PM Justin He <Justin.He@arm.com> wrote:
+> >
+> > Hi Michal and David
+> >
+> > > -----Original Message-----
+> > > From: Michal Hocko <mhocko@kernel.org>
+> > > Sent: Tuesday, July 7, 2020 7:55 PM
+> > > To: Justin He <Justin.He@arm.com>
+> > > Cc: Catalin Marinas <Catalin.Marinas@arm.com>; Will Deacon
+> > > <will@kernel.org>; Dan Williams <dan.j.williams@intel.com>; Vishal Verma
+> > > <vishal.l.verma@intel.com>; Dave Jiang <dave.jiang@intel.com>; Andrew
+> > > Morton <akpm@linux-foundation.org>; Mike Rapoport <rppt@linux.ibm.com>;
+> > > Baoquan He <bhe@redhat.com>; Chuhong Yuan <hslester96@gmail.com>; linux-
+> > > arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+> > > mm@kvack.org; linux-nvdimm@lists.01.org; Kaly Xin <Kaly.Xin@arm.com>
+> > > Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid
+> > > as EXPORT_SYMBOL_GPL
+> > >
+> > > On Tue 07-07-20 13:59:15, Jia He wrote:
+> > > > This exports memory_add_physaddr_to_nid() for module driver to use.
+> > > >
+> > > > memory_add_physaddr_to_nid() is a fallback option to get the nid in case
+> > > > NUMA_NO_NID is detected.
+> > > >
+> > > > Suggested-by: David Hildenbrand <david@redhat.com>
+> > > > Signed-off-by: Jia He <justin.he@arm.com>
+> > > > ---
+> > > >  arch/arm64/mm/numa.c | 5 +++--
+> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> > > > index aafcee3e3f7e..7eeb31740248 100644
+> > > > --- a/arch/arm64/mm/numa.c
+> > > > +++ b/arch/arm64/mm/numa.c
+> > > > @@ -464,10 +464,11 @@ void __init arm64_numa_init(void)
+> > > >
+> > > >  /*
+> > > >   * We hope that we will be hotplugging memory on nodes we already know
+> > > about,
+> > > > - * such that acpi_get_node() succeeds and we never fall back to this...
+> > > > + * such that acpi_get_node() succeeds. But when SRAT is not present,
+> > > the node
+> > > > + * id may be probed as NUMA_NO_NODE by acpi, Here provide a fallback
+> > > option.
+> > > >   */
+> > > >  int memory_add_physaddr_to_nid(u64 addr)
+> > > >  {
+> > > > -   pr_warn("Unknown node for memory at 0x%llx, assuming node 0\n",
+> > > addr);
+> > > >     return 0;
+> > > >  }
+> > > > +EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+> > >
+> > > Does it make sense to export a noop function? Wouldn't make more sense
+> > > to simply make it static inline somewhere in a header? I haven't checked
+> > > whether there is an easy way to do that sanely bu this just hit my eyes.
+> >
+> > Okay, I can make a change in memory_hotplug.h, sth like:
+> > --- a/include/linux/memory_hotplug.h
+> > +++ b/include/linux/memory_hotplug.h
+> > @@ -149,13 +149,13 @@ int add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+> >               struct mhp_params *params);
+> >  #endif /* ARCH_HAS_ADD_PAGES */
+> >
+> > -#ifdef CONFIG_NUMA
+> > -extern int memory_add_physaddr_to_nid(u64 start);
+> > -#else
+> > +#if !defined(CONFIG_NUMA) || !defined(memory_add_physaddr_to_nid)
+> >  static inline int memory_add_physaddr_to_nid(u64 start)
+> >  {
+> >         return 0;
+> >  }
+> > +#else
+> > +extern int memory_add_physaddr_to_nid(u64 start);
+> >  #endif
+> >
+> > And then check the memory_add_physaddr_to_nid() helper on all arches,
+> > if it is noop(return 0), I can simply remove it.
+> > if it is not noop, after the helper,
+> > #define memory_add_physaddr_to_nid
+> >
+> > What do you think of this proposal?
+> 
+> Especially for architectures that use memblock info for numa info
+> (which seems to be everyone except x86) why not implement a generic
+> memory_add_physaddr_to_nid() that does:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+That would be only arm64.
 
-Summary
-------------------------------------------------------------------------
+> int memory_add_physaddr_to_nid(u64 addr)
+> {
+>         unsigned long start_pfn, end_pfn, pfn = PHYS_PFN(addr);
+>         int nid;
+> 
+>         for_each_online_node(nid) {
+>                 get_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
+>                 if (pfn >= start_pfn && pfn <= end_pfn)
+>                         return nid;
+>         }
+>         return NUMA_NO_NODE;
+> }
 
-kernel: 5.4.51-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 47d410b54275a08dfc16b90353866ac1f783c0aa
-git describe: v5.4.49-240-g47d410b54275
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.49-240-g47d410b54275
-
-No regressions (compared to build v5.4.49)
-
-No fixes (compared to build v5.4.49)
-
-Ran 35614 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* install-android-platform-tools-r2800
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-hugetlb-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-open-posix-tests
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Sincerely yours,
+Mike.
