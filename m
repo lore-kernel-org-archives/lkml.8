@@ -2,66 +2,107 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD5DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 430DE20786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9657F20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbgGHL2n (ORCPT
+        id S1728889AbgGHL3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:28:43 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:46910 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728862AbgGHL2m (ORCPT
+        Wed, 8 Jul 2020 07:29:41 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44795 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728385AbgGHL3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:28:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=jkchen@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0U26jOw3_1594207719;
-Received: from localhost(mailfrom:jkchen@linux.alibaba.com fp:SMTPD_---0U26jOw3_1594207719)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 08 Jul 2020 19:28:39 +0800
-From:   Jay Chen <jkchen@linux.alibaba.com>
-To:     will@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Jay Chen <jkchen@linux.alibaba.com>
-Subject: [PATCH] perf/smmuv3: To simplify code for ioremap page in pmcg
-Date:   Wed,  8 Jul 2020 19:27:09 +0800
-Message-Id: <20200708112709.19502-1-jkchen@linux.alibaba.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 8 Jul 2020 07:29:40 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 5so34645064oty.11;
+        Wed, 08 Jul 2020 04:29:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aZWkJZPjmEGu6QkrDQRtpdm9RrmV8YXuY6RJVeoloW8=;
+        b=STCWbR+jcfM8TA721ZniP1oimrI1qnot3QVzWayL41ym8IT+OC6lIHBdRimye2hPi4
+         ILcAIQbucHw4karzYQOuulnXg9WkSqtILho3WayDmSpiGbsSqN8G3kCZnsjtpWxuUWyp
+         9Aeq1+VqLtBaTDb++4PVYJQcL2L1QOdKfAr/jZBC2hYm97mDlzR9sjEEj7aMuHRcU9yP
+         y6mH8hRg+Z7c73Ua80uflv35lQx1VKXtcakxhMH23LFiRhIzlcI4XdceKVIOToLK7kQo
+         vO2228oP9zEi9ePvr3rC1ntiLGceGksg7yZX5nW6rI/aWnF/89kWF0HsBbSa4N6LM/fc
+         p8Ig==
+X-Gm-Message-State: AOAM530Kg9nVeRjQSg2VM/JhSgcj/hzv7NLhDvbjvB5xEq9CDAgImC8I
+        Nm3WY42KLpo89bM0XVALLzdH7SwQPsID1koQTsA=
+X-Google-Smtp-Source: ABdhPJzfw4e0G7JAOL/fQ/heiizmgAtMS6QL3JhbQJM5wIiE1u6EnJgspqcckTPH5Og3nDusyLxev6j7HbyXZXG6Ykg=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr46434915otb.107.1594207779612;
+ Wed, 08 Jul 2020 04:29:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594138692-16816-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594138692-16816-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 8 Jul 2020 13:29:28 +0200
+Message-ID: <CAMuHMdWQHnGJCu6zYQwG16xqQmAaQdBTfyw6T1q2OHF3uR-JQQ@mail.gmail.com>
+Subject: Re: [PATCH 12/14] clk: renesas: cpg-mssr: Add r8a774e1 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the devm_platform_get_and_ioremap_resource to simplify the code
-a bit.
+Hi Prabhakar,
 
-Signed-off-by: Jay Chen <jkchen@linux.alibaba.com>
----
- drivers/perf/arm_smmuv3_pmu.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Add support for the RZ/G2H (R8A774E1) SoC to the Renesas Clock
+> Pulse Generator / Module Standby and Software Reset driver.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index 48e28ef93a70..2d09f3e47d12 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -755,8 +755,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
- 		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
- 	};
- 
--	res_0 = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	smmu_pmu->reg_base = devm_ioremap_resource(dev, res_0);
-+	smmu_pmu->reg_base = devm_platform_get_and_ioremap_resource(pdev, 0, &res_0);
- 	if (IS_ERR(smmu_pmu->reg_base))
- 		return PTR_ERR(smmu_pmu->reg_base);
- 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in clk-renesas-for-v5.9.
+
+> --- /dev/null
+> +++ b/drivers/clk/renesas/r8a774e1-cpg-mssr.c
+
+> +static const unsigned int r8a774e1_crit_mod_clks[] __initconst = {
+
+As per commit f23f1101ad0ef1ac ("clk: renesas: rcar-gen3: Mark RWDT
+clocks as critical"), I'll add a line
+
+    MOD_CLK_ID(402),        /* RWDT */
+
+while applying.
+
+> +       MOD_CLK_ID(408),        /* INTC-AP (GIC) */
+> +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.27.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
