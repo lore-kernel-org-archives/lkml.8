@@ -2,92 +2,92 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3CC20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:04:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="JrkBxlZ5"
+	by mail.kernel.org (Postfix) with ESMTP id C4686206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594231577;
+	bh=3WAxbYcZzMW/TcJX8/XWqMwfUmvub+waRqvFUfmZjCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dvaQdtMNZ5aIJyZHW6/w4SOsfbs34hIXchjH9nVBHEtYsYPm80peRIehiC7mttNEn
+	 gdNgwiQy70XI8EKzm7WGp7Asl2PqswSbJe/xExyMfiTdtdfKDRIkUmsCelAfQQBEwl
+	 2VxaJNn1996+qhh4iIxwGAEv3q8bnof/ubZ3njSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgGHSEX (ORCPT
+        id S1726211AbgGHSGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:04:23 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:35635 "EHLO rere.qmqm.pl"
+        Wed, 8 Jul 2020 14:06:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgGHSEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:04:11 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4B26d556fGzHb;
-        Wed,  8 Jul 2020 20:04:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1594231449; bh=QmkFZ9eFWaDioQbY5TlOYF/cOWllJop5t2LIsaqe1rM=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=JrkBxlZ5jKWUHDm0hXV++Dlk2XK/I2oBoMGhHmhzOgs3LeFkbiDUGKtMARXjl4mCa
-         QJf6hPBpozoCeTK1oeycyVo2/UfeqYH+S7Y2+QxrEXmKROhG6XT1aA4L0isgZL3OED
-         JfWJ8ckX5mlTI5pxvC597tXlBNNCSsaPmmh5EbFib4vyqa4UTqtlxyf/UbZxytxXTF
-         UiYpbO+9qBlTfMdY3uFBJfs3cRU1weXgPxxE2TcjfCqtPF8JZ8kw0zZ6w8NzunWdHf
-         OD9zCdlDQ0ehUtUd+LF66u5dQMh7O2q7529Q2bYPCc1uN5m+XWAMEudgqZJye5Ae0D
-         7LEl+p9MObGlw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.3 at mail
-Date:   Wed, 08 Jul 2020 20:04:09 +0200
-Message-Id: <ab8ef3e2bf15fa75572f9ad51d6e7b10c67cb494.1594231056.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1594231056.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1594231056.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH RESEND 1/3] usb: gadget: udc: atmel: remove outdated comment
- in usba_ep_disable()
+        id S1725949AbgGHSGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 14:06:16 -0400
+Received: from embeddedor (unknown [201.162.240.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 895FB206E2;
+        Wed,  8 Jul 2020 18:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594231576;
+        bh=3WAxbYcZzMW/TcJX8/XWqMwfUmvub+waRqvFUfmZjCI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V08aCCywH2UCy5fEon4akfLyKJL8qZYvSOzwiDHvhO4pvJvnn1oN5FF93pelrboo7
+         Vm4MegbyqJNifecK+zyF/VHZyrcYuqw1axSTxyNGHFbwW4nWKn5cyfrAC/iWZbSBg2
+         6D/7OlD5MLGQw4pvWilxNmQaHcdhDGR2KTBJ1DDw=
+Date:   Wed, 8 Jul 2020 13:11:44 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usbip: Use fallthrough pseudo-keyword
+Message-ID: <20200708181144.GB11533@embeddedor>
+References: <20200707195214.GA3932@embeddedor>
+ <977e88c2-58cb-9507-c889-854e574a8f31@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Songjun Wu <songjun.wu@atmel.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <977e88c2-58cb-9507-c889-854e574a8f31@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed commit removed the offending behaviour from the driver, but missed
-the comment and associated test. Remove them now.
+On Tue, Jul 07, 2020 at 02:06:26PM -0600, Shuah Khan wrote:
+> On 7/7/20 1:52 PM, Gustavo A. R. Silva wrote:
+> > Replace the existing /* fall through */ comments and its variants with
+> > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> > fall-through markings when it is the case.
+> > 
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> > 
+> 
+> Is fallthrough syntax supported on our min gcc version?
+> 
 
-Fixes: 38e58986e6fc ("usb: gadget: udc: atmel: don't disable enpdoints we don't own")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/usb/gadget/udc/atmel_usba_udc.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+The __attribute__((__fallthrough__)) has been supported since GCC 7.1
+and it should be no problem for early versions because fallthrough is
+a macro that also expands to: do {} while (0)  /* fallthrough */
 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index d69f61ff0181..9153e220848d 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -676,13 +676,7 @@ static int usba_ep_disable(struct usb_ep *_ep)
- 
- 	if (!ep->ep.desc) {
- 		spin_unlock_irqrestore(&udc->lock, flags);
--		/* REVISIT because this driver disables endpoints in
--		 * reset_all_endpoints() before calling disconnect(),
--		 * most gadget drivers would trigger this non-error ...
--		 */
--		if (udc->gadget.speed != USB_SPEED_UNKNOWN)
--			DBG(DBG_ERR, "ep_disable: %s not enabled\n",
--					ep->ep.name);
-+		DBG(DBG_ERR, "ep_disable: %s not enabled\n", ep->ep.name);
- 		return -EINVAL;
- 	}
- 	ep->ep.desc = NULL;
--- 
-2.20.1
+> Does checkpatch or coccicheck catch these cases?
+> 
 
+checkpatch does:
+
+https://git.kernel.org/linus/f36d3eb89a43047d3eba222a8132585da25cebfd
+
+> The patch looks good.
+> 
+> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+> 
+
+Thanks
+--
+Gustavo
