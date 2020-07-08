@@ -2,102 +2,155 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53001C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E465FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A49920774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C81D20774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:25:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cGKo3kW3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbgGHNZ1 (ORCPT
+        id S1729389AbgGHNZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgGHNZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:25:26 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFB1820720;
-        Wed,  8 Jul 2020 13:25:22 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 14:25:20 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, justin.he@arm.com, akpm@linux-foundation.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-doc@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 2/3] mm/sparsemem: Enable vmem_altmap support in
- vmemmap_alloc_block_buf()
-Message-ID: <20200708132520.GD6308@gaia>
-References: <1594004178-8861-1-git-send-email-anshuman.khandual@arm.com>
- <1594004178-8861-3-git-send-email-anshuman.khandual@arm.com>
+        Wed, 8 Jul 2020 09:25:32 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:4373 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728148AbgGHNZb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:25:31 -0400
+X-UUID: 88346041bab743b293e7a3a8d908c68d-20200708
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=8MKbH1IX9Wezlb1mLgBVH7giMxWeaQpi+Vzc+0gSWkA=;
+        b=cGKo3kW3IYSKlmYT4j28d6xUrYgMdKii7tGBO0wDzaJyNLW7I9AdjZvi+zVeIVBsiobvgFACOtqZxvAg3dOtvz+Km7j9Y2yAbYj8A4RubWhL4LPuU1aVyuPQSUikF9Hie0goMQaVYoKvwAXIqek1SKGhQbAEvK2IRRZgwm3D/h0=;
+X-UUID: 88346041bab743b293e7a3a8d908c68d-20200708
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 280638738; Wed, 08 Jul 2020 21:25:27 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 8 Jul 2020 21:25:19 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 8 Jul 2020 21:25:22 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v4] kasan: fix KASAN unit tests for tag-based KASAN
+Date:   Wed, 8 Jul 2020 21:25:24 +0800
+Message-ID: <20200708132524.11688-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594004178-8861-3-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 4FE038726111CFDF32B6454EE1B6840009C597B427D47AC810D59EFB2B7294702000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 08:26:17AM +0530, Anshuman Khandual wrote:
-> There are many instances where vmemap allocation is often switched between
-> regular memory and device memory just based on whether altmap is available
-> or not. vmemmap_alloc_block_buf() is used in various platforms to allocate
-> vmemmap mappings. Lets also enable it to handle altmap based device memory
-> allocation along with existing regular memory allocations. This will help
-> in avoiding the altmap based allocation switch in many places. To summarize
-> there are two different methods to call vmemmap_alloc_block_buf().
-> 
-> vmemmap_alloc_block_buf(size, node, NULL)   /* Allocate from system RAM */
-> vmemmap_alloc_block_buf(size, node, altmap) /* Allocate from altmap */
-> 
-> This converts altmap_alloc_block_buf() into a static function, drops it's
+V2UgdXNlIHRhZy1iYXNlZCBLQVNBTiwgdGhlbiBLQVNBTiB1bml0IHRlc3RzIGRvbid0IGRldGVj
+dCBvdXQtb2YtYm91bmRzDQptZW1vcnkgYWNjZXNzLiBUaGV5IG5lZWQgdG8gYmUgZml4ZWQuDQoN
+CldpdGggdGFnLWJhc2VkIEtBU0FOLCB0aGUgc3RhdGUgb2YgZWFjaCAxNiBhbGlnbmVkIGJ5dGVz
+IG9mIG1lbW9yeSBpcw0KZW5jb2RlZCBpbiBvbmUgc2hhZG93IGJ5dGUgYW5kIHRoZSBzaGFkb3cg
+dmFsdWUgaXMgdGFnIG9mIHBvaW50ZXIsIHNvDQp3ZSBuZWVkIHRvIHJlYWQgbmV4dCBzaGFkb3cg
+Ynl0ZSwgdGhlIHNoYWRvdyB2YWx1ZSBpcyBub3QgZXF1YWwgdG8gdGFnDQp2YWx1ZSBvZiBwb2lu
+dGVyLCBzbyB0aGF0IHRhZy1iYXNlZCBLQVNBTiB3aWxsIGRldGVjdCBvdXQtb2YtYm91bmRzDQpt
+ZW1vcnkgYWNjZXNzLg0KDQpTaWduZWQtb2ZmLWJ5OiBXYWx0ZXIgV3UgPHdhbHRlci16aC53dUBt
+ZWRpYXRlay5jb20+DQpTdWdnZXN0ZWQtYnk6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xl
+LmNvbT4NCkFja2VkLWJ5OiBEbWl0cnkgVnl1a292IDxkdnl1a292QGdvb2dsZS5jb20+DQpSZXZp
+ZXdlZC1ieTogQW5kcmV5IEtvbm92YWxvdiA8YW5kcmV5a252bEBnb29nbGUuY29tPg0KQ2M6IEFu
+ZHJleSBSeWFiaW5pbiA8YXJ5YWJpbmluQHZpcnR1b3p6by5jb20+DQpDYzogQWxleGFuZGVyIFBv
+dGFwZW5rbyA8Z2xpZGVyQGdvb2dsZS5jb20+DQpDYzogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhp
+YXMuYmdnQGdtYWlsLmNvbT4NCkNjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5kYXRp
+b24ub3JnPg0KLS0tDQoNCmNoYW5nZXMgc2luY2UgdjE6DQotIFJlZHVjZSBhbW91bnQgb2Ygbm9u
+LWNvbXBpbGVkIGNvZGUuDQotIEtVbml0LUtBU0FOIEludGVncmF0aW9uIHBhdGNoc2V0IGlzIG5v
+dCBtZXJnZWQgeWV0LiBNeSBwYXRjaCBzaG91bGQNCiAgaGF2ZSBjb25mbGljdCB3aXRoIGl0LCBp
+ZiBuZWVkZWQsIHdlIGNhbiBjb250aW51ZSB0byB3YWl0IGl0Lg0KDQpjaGFuZ2VzIHNpbmNlIHYy
+Og0KLSBBZGQgb25lIG1hcmNvIHRvIG1ha2UgdW5pdCB0ZXN0cyBtb3JlIHJlYWRhYmlsaXR5Lg0K
+DQpjaGFuZ2VzIHNpbmNlIHYzOg0KLSB1c2UgS0FTQU5fU0hBRE9XX1NDQUxFX1NJWkUgaW5zdGVh
+ZCBvZiAxMy4NCg0KLS0tDQogbGliL3Rlc3Rfa2FzYW4uYyB8IDQ5ICsrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAzMiBpbnNl
+cnRpb25zKCspLCAxNyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2xpYi90ZXN0X2thc2Fu
+LmMgYi9saWIvdGVzdF9rYXNhbi5jDQppbmRleCA2MWEzY2MxMTU1NmYuLjAwM2VhNWI0OWY0YyAx
+MDA2NDQNCi0tLSBhL2xpYi90ZXN0X2thc2FuLmMNCisrKyBiL2xpYi90ZXN0X2thc2FuLmMNCkBA
+IC0yMyw2ICsyMywxMCBAQA0KIA0KICNpbmNsdWRlIDxhc20vcGFnZS5oPg0KIA0KKyNpbmNsdWRl
+ICIuLi9tbS9rYXNhbi9rYXNhbi5oIg0KKw0KKyNkZWZpbmUgT09CX1RBR19PRkYgKElTX0VOQUJM
+RUQoQ09ORklHX0tBU0FOX0dFTkVSSUMpID8gMCA6IEtBU0FOX1NIQURPV19TQ0FMRV9TSVpFKQ0K
+Kw0KIC8qDQogICogTm90ZTogdGVzdCBmdW5jdGlvbnMgYXJlIG1hcmtlZCBub2lubGluZSBzbyB0
+aGF0IHRoZWlyIG5hbWVzIGFwcGVhciBpbg0KICAqIHJlcG9ydHMuDQpAQCAtNDAsNyArNDQsOCBA
+QCBzdGF0aWMgbm9pbmxpbmUgdm9pZCBfX2luaXQga21hbGxvY19vb2JfcmlnaHQodm9pZCkNCiAJ
+CXJldHVybjsNCiAJfQ0KIA0KLQlwdHJbc2l6ZV0gPSAneCc7DQorCXB0cltzaXplICsgT09CX1RB
+R19PRkZdID0gJ3gnOw0KKw0KIAlrZnJlZShwdHIpOw0KIH0NCiANCkBAIC05Miw3ICs5Nyw4IEBA
+IHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9jX3BhZ2VhbGxvY19vb2JfcmlnaHQo
+dm9pZCkNCiAJCXJldHVybjsNCiAJfQ0KIA0KLQlwdHJbc2l6ZV0gPSAwOw0KKwlwdHJbc2l6ZSAr
+IE9PQl9UQUdfT0ZGXSA9IDA7DQorDQogCWtmcmVlKHB0cik7DQogfQ0KIA0KQEAgLTE2Miw3ICsx
+NjgsOCBAQCBzdGF0aWMgbm9pbmxpbmUgdm9pZCBfX2luaXQga21hbGxvY19vb2Jfa3JlYWxsb2Nf
+bW9yZSh2b2lkKQ0KIAkJcmV0dXJuOw0KIAl9DQogDQotCXB0cjJbc2l6ZTJdID0gJ3gnOw0KKwlw
+dHIyW3NpemUyICsgT09CX1RBR19PRkZdID0gJ3gnOw0KKw0KIAlrZnJlZShwdHIyKTsNCiB9DQog
+DQpAQCAtMTgwLDcgKzE4Nyw5IEBAIHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9j
+X29vYl9rcmVhbGxvY19sZXNzKHZvaWQpDQogCQlrZnJlZShwdHIxKTsNCiAJCXJldHVybjsNCiAJ
+fQ0KLQlwdHIyW3NpemUyXSA9ICd4JzsNCisNCisJcHRyMltzaXplMiArIE9PQl9UQUdfT0ZGXSA9
+ICd4JzsNCisNCiAJa2ZyZWUocHRyMik7DQogfQ0KIA0KQEAgLTIxNiw3ICsyMjUsOCBAQCBzdGF0
+aWMgbm9pbmxpbmUgdm9pZCBfX2luaXQga21hbGxvY19vb2JfbWVtc2V0XzIodm9pZCkNCiAJCXJl
+dHVybjsNCiAJfQ0KIA0KLQltZW1zZXQocHRyKzcsIDAsIDIpOw0KKwltZW1zZXQocHRyICsgNyAr
+IE9PQl9UQUdfT0ZGLCAwLCAyKTsNCisNCiAJa2ZyZWUocHRyKTsNCiB9DQogDQpAQCAtMjMyLDcg
+KzI0Miw4IEBAIHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9jX29vYl9tZW1zZXRf
+NCh2b2lkKQ0KIAkJcmV0dXJuOw0KIAl9DQogDQotCW1lbXNldChwdHIrNSwgMCwgNCk7DQorCW1l
+bXNldChwdHIgKyA1ICsgT09CX1RBR19PRkYsIDAsIDQpOw0KKw0KIAlrZnJlZShwdHIpOw0KIH0N
+CiANCkBAIC0yNDksNyArMjYwLDggQEAgc3RhdGljIG5vaW5saW5lIHZvaWQgX19pbml0IGttYWxs
+b2Nfb29iX21lbXNldF84KHZvaWQpDQogCQlyZXR1cm47DQogCX0NCiANCi0JbWVtc2V0KHB0cisx
+LCAwLCA4KTsNCisJbWVtc2V0KHB0ciArIDEgKyBPT0JfVEFHX09GRiwgMCwgOCk7DQorDQogCWtm
+cmVlKHB0cik7DQogfQ0KIA0KQEAgLTI2NSw3ICsyNzcsOCBAQCBzdGF0aWMgbm9pbmxpbmUgdm9p
+ZCBfX2luaXQga21hbGxvY19vb2JfbWVtc2V0XzE2KHZvaWQpDQogCQlyZXR1cm47DQogCX0NCiAN
+Ci0JbWVtc2V0KHB0cisxLCAwLCAxNik7DQorCW1lbXNldChwdHIgKyAxICsgT09CX1RBR19PRkYs
+IDAsIDE2KTsNCisNCiAJa2ZyZWUocHRyKTsNCiB9DQogDQpAQCAtMjgxLDcgKzI5NCw4IEBAIHN0
+YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9jX29vYl9pbl9tZW1zZXQodm9pZCkNCiAJ
+CXJldHVybjsNCiAJfQ0KIA0KLQltZW1zZXQocHRyLCAwLCBzaXplKzUpOw0KKwltZW1zZXQocHRy
+LCAwLCBzaXplICsgNSArIE9PQl9UQUdfT0ZGKTsNCisNCiAJa2ZyZWUocHRyKTsNCiB9DQogDQpA
+QCAtNDE1LDcgKzQyOSw4IEBAIHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWVtX2NhY2hl
+X29vYih2b2lkKQ0KIAkJcmV0dXJuOw0KIAl9DQogDQotCSpwID0gcFtzaXplXTsNCisJKnAgPSBw
+W3NpemUgKyBPT0JfVEFHX09GRl07DQorDQogCWttZW1fY2FjaGVfZnJlZShjYWNoZSwgcCk7DQog
+CWttZW1fY2FjaGVfZGVzdHJveShjYWNoZSk7DQogfQ0KQEAgLTUxMiwyNSArNTI3LDI1IEBAIHN0
+YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBjb3B5X3VzZXJfdGVzdCh2b2lkKQ0KIAl9DQogDQog
+CXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gY29weV9mcm9tX3VzZXIoKVxuIik7DQotCXVudXNl
+ZCA9IGNvcHlfZnJvbV91c2VyKGttZW0sIHVzZXJtZW0sIHNpemUgKyAxKTsNCisJdW51c2VkID0g
+Y29weV9mcm9tX3VzZXIoa21lbSwgdXNlcm1lbSwgc2l6ZSArIDEgKyBPT0JfVEFHX09GRik7DQog
+DQogCXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gY29weV90b191c2VyKClcbiIpOw0KLQl1bnVz
+ZWQgPSBjb3B5X3RvX3VzZXIodXNlcm1lbSwga21lbSwgc2l6ZSArIDEpOw0KKwl1bnVzZWQgPSBj
+b3B5X3RvX3VzZXIodXNlcm1lbSwga21lbSwgc2l6ZSArIDEgKyBPT0JfVEFHX09GRik7DQogDQog
+CXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gX19jb3B5X2Zyb21fdXNlcigpXG4iKTsNCi0JdW51
+c2VkID0gX19jb3B5X2Zyb21fdXNlcihrbWVtLCB1c2VybWVtLCBzaXplICsgMSk7DQorCXVudXNl
+ZCA9IF9fY29weV9mcm9tX3VzZXIoa21lbSwgdXNlcm1lbSwgc2l6ZSArIDEgKyBPT0JfVEFHX09G
+Rik7DQogDQogCXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gX19jb3B5X3RvX3VzZXIoKVxuIik7
+DQotCXVudXNlZCA9IF9fY29weV90b191c2VyKHVzZXJtZW0sIGttZW0sIHNpemUgKyAxKTsNCisJ
+dW51c2VkID0gX19jb3B5X3RvX3VzZXIodXNlcm1lbSwga21lbSwgc2l6ZSArIDEgKyBPT0JfVEFH
+X09GRik7DQogDQogCXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gX19jb3B5X2Zyb21fdXNlcl9p
+bmF0b21pYygpXG4iKTsNCi0JdW51c2VkID0gX19jb3B5X2Zyb21fdXNlcl9pbmF0b21pYyhrbWVt
+LCB1c2VybWVtLCBzaXplICsgMSk7DQorCXVudXNlZCA9IF9fY29weV9mcm9tX3VzZXJfaW5hdG9t
+aWMoa21lbSwgdXNlcm1lbSwgc2l6ZSArIDEgKyBPT0JfVEFHX09GRik7DQogDQogCXByX2luZm8o
+Im91dC1vZi1ib3VuZHMgaW4gX19jb3B5X3RvX3VzZXJfaW5hdG9taWMoKVxuIik7DQotCXVudXNl
+ZCA9IF9fY29weV90b191c2VyX2luYXRvbWljKHVzZXJtZW0sIGttZW0sIHNpemUgKyAxKTsNCisJ
+dW51c2VkID0gX19jb3B5X3RvX3VzZXJfaW5hdG9taWModXNlcm1lbSwga21lbSwgc2l6ZSArIDEg
+KyBPT0JfVEFHX09GRik7DQogDQogCXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gc3RybmNweV9m
+cm9tX3VzZXIoKVxuIik7DQotCXVudXNlZCA9IHN0cm5jcHlfZnJvbV91c2VyKGttZW0sIHVzZXJt
+ZW0sIHNpemUgKyAxKTsNCisJdW51c2VkID0gc3RybmNweV9mcm9tX3VzZXIoa21lbSwgdXNlcm1l
+bSwgc2l6ZSArIDEgKyBPT0JfVEFHX09GRik7DQogDQogCXZtX211bm1hcCgodW5zaWduZWQgbG9u
+Zyl1c2VybWVtLCBQQUdFX1NJWkUpOw0KIAlrZnJlZShrbWVtKTsNCi0tIA0KMi4xOC4wDQo=
 
-s/it's/its/
-
-> entry from the header and updates Documentation/vm/memory-model.rst.
-> 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-doc@vger.kernel.org
-> Cc: x86@kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Tested-by: Jia He <justin.he@arm.com>
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-
-With the fallback argument dropped, the patch looks fine to me.
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
