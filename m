@@ -2,306 +2,331 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9226C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C05BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F21320771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:46:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2cUH3K4l";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DS+K+d6e"
+	by mail.kernel.org (Postfix) with ESMTP id F1B39206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgGHJqQ (ORCPT
+        id S1728205AbgGHJrM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:46:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728440AbgGHJqP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:46:15 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E5DC08C5DC;
-        Wed,  8 Jul 2020 02:46:14 -0700 (PDT)
-Date:   Wed, 08 Jul 2020 09:46:12 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594201572;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TaBmz5T0gTeKsycZ4iDh9C9kbwRhpKjXaMiaaTz7aMo=;
-        b=2cUH3K4lelhxHTgxALkLotqvSl2FiM8TwUfgRZDxE90MaHpJxbN31hNhs/+0gTHPyDqtqn
-        AFLBvTsrlCY23bK175cxSrACttFWNwixziJbeJMWhT+4eMWsaOUUsrzSguhR9ULDc9L9PO
-        HX4V9Vqp8dOfXcTUovAWHvT5kO1vwgzg5ElZtsdCtXjnGm0A5pMETEBuBGJQ0WOCognoTH
-        42FYuzQ4k1CjEpz/Q7oEnLfjxKA1x3bm0zyfDe32NIfXgpQFq4EZ3ITV1FhIfX/QAG1PS2
-        XNcjXYX2OUF9XmFEgT5/M4RgbZDz5kgXuXLwpU0MIpEnCIluJxaXfU2tTzEGsw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594201572;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TaBmz5T0gTeKsycZ4iDh9C9kbwRhpKjXaMiaaTz7aMo=;
-        b=DS+K+d6eHDxkt4bT+WRyPV36hcegxkfSoXLV7I/jlY+aJmvhJLwWOLe5CqgnnG8MLv6bgM
-        E+C9ur43/jtiykCQ==
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched: Fix loadavg accounting race
-Cc:     Dave Jones <davej@codemonkey.org.uk>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200707102957.GN117543@hirez.programming.kicks-ass.net>
-References: <20200707102957.GN117543@hirez.programming.kicks-ass.net>
+        Wed, 8 Jul 2020 05:47:12 -0400
+Received: from mgw-02.mpynet.fi ([82.197.21.91]:59032 "EHLO mgw-02.mpynet.fi"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727775AbgGHJrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 05:47:12 -0400
+X-Greylist: delayed 1081 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 05:47:07 EDT
+Received: from pps.filterd (mgw-02.mpynet.fi [127.0.0.1])
+        by mgw-02.mpynet.fi (8.16.0.42/8.16.0.42) with SMTP id 0689Mosc093817;
+        Wed, 8 Jul 2020 12:28:45 +0300
+Received: from ex13.tuxera.com (ex13.tuxera.com [178.16.184.72])
+        by mgw-02.mpynet.fi with ESMTP id 322dewmgn7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 12:28:44 +0300
+Received: from tuxera-exch.ad.tuxera.com (10.20.48.11) by
+ tuxera-exch.ad.tuxera.com (10.20.48.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 8 Jul 2020 12:28:44 +0300
+Received: from tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789]) by
+ tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789%12]) with mapi id
+ 15.00.1497.006; Wed, 8 Jul 2020 12:28:44 +0300
+From:   Anton Altaparmakov <anton@tuxera.com>
+To:     Luca Stefani <luca.stefani.ge1@gmail.com>
+CC:     clang-built-linux <clang-built-linux@googlegroups.com>,
+        freak07 <michalechner92@googlemail.com>,
+        "linux-ntfs-dev@lists.sourceforge.net" 
+        <linux-ntfs-dev@lists.sourceforge.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH] ntfs: Fix ntfs_test_inode and ntfs_init_locked_inode
+ function type
+Thread-Topic: [PATCH] ntfs: Fix ntfs_test_inode and ntfs_init_locked_inode
+ function type
+Thread-Index: AQHWTLWIk5EfUBFiEUSTit3kCmYXJajv8dOAgA1Wz4A=
+Date:   Wed, 8 Jul 2020 09:28:43 +0000
+Message-ID: <8CDE123D-68C3-44E9-B8CC-7159E4640762@tuxera.com>
+References: <20200627190230.1191796-1-luca.stefani.ge1@gmail.com>
+ <CAKwvOdk5_tq6hrBMEwssksGniMyAWSMKOSaWbiBsX_bssmmztA@mail.gmail.com>
+In-Reply-To: <CAKwvOdk5_tq6hrBMEwssksGniMyAWSMKOSaWbiBsX_bssmmztA@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [109.157.43.234]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <797207C2DA74744289BFE57326571F92@ex13.tuxera.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Message-ID: <159420157209.4006.10732608050891501703.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_07:2020-07-08,2020-07-08 signatures=0
+X-Proofpoint-Spam-Details: rule=mpy_notspam policy=mpy score=0 suspectscore=0 mlxlogscore=999
+ mlxscore=0 malwarescore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007080068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+Hi Luca,
 
-Commit-ID:     dbfb089d360b1cc623c51a2c7cf9b99eff78e0e7
-Gitweb:        https://git.kernel.org/tip/dbfb089d360b1cc623c51a2c7cf9b99eff78e0e7
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 03 Jul 2020 12:40:33 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 08 Jul 2020 11:38:49 +02:00
+Apologies for taking this long to respond.  I have to admit I was not familiar with CFI...  Your patch looks good but please could you update the commit message as suggested by Nick to include explanation of CFI?  You can then add:
 
-sched: Fix loadavg accounting race
+Acked-by: Anton Altaparmakov <anton@tuxera.com>
 
-The recent commit:
+When resending please CC: Andrew Morton <akpm@linux-foundation.org> so we can get it merged upstream.
 
-  c6e7bd7afaeb ("sched/core: Optimize ttwu() spinning on p->on_cpu")
+Thanks a lot!
 
-moved these lines in ttwu():
+Best regards,
 
-	p->sched_contributes_to_load = !!task_contributes_to_load(p);
-	p->state = TASK_WAKING;
+	Anton
 
-up before:
+> On 29 Jun 2020, at 22:46, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> 
+> On Sat, Jun 27, 2020 at 12:02 PM Luca Stefani
+> <luca.stefani.ge1@gmail.com> wrote:
+>> 
+>> If the kernel is built with CFI we hit a __cfi_check_fail
+>> while mounting a partition
+> 
+> Luca,
+> Since CFI is not yet upstream (is downstream in Android, blocked on
+> LTO patches currently working their way through upstreaming+code
+> review), it might help explain to reviewers what CFI *even is*.
+> Something like:
+> 
+> """
+> Clang's Control Flow Integrity (CFI) is a security mechanism that can
+> help prevent JOP chains, deployed extensively in downstream kernels
+> used in Android.
+> 
+> It's deployment is hindered by mismatches in function signatures.  For
+> this case, we make callbacks match their intended function signature,
+> and cast parameters within them rather than casting the callback when
+> passed as a parameter.
+> 
+> When running `mount -t ntfs ...` we observe the following trace:
+> """
+> 
+> I also always recommend setting an explicit `--to=` when sending
+> patches; some maintainers only know to take a look at patches if
+> they're in the To: list.  Maybe they have email filters on this.  You
+> can you `./script/get_maintainer.pl` on your patch file, or manually
+> check MAINTAINERS.  In this case, it looks like Anton is cc'ed at
+> least.
+> 
+> Since this patch modifies the type signature of callbacks to the
+> expected type, casting the callback's parameters instead; I'm happy
+> with this patch.  The callbacks never get invoked directly (not
+> explicitly called, only invoked indirectly), there is no argument for
+> loss of type safety (the interfaces are already lossy in that the
+> interface uses void* parameters).  I just would like the commit
+> message beefed up before I sign off.  Are you comfortable sending a
+> V2?
+> 
+> More on JOP/CFI:
+> https://www.comp.nus.edu.sg/~liangzk/papers/asiaccs11.pdf
+>> CFI has not seen wide deployment, likely due to concerns over performance, especially in the case of real-time enforcement.
+> 
+>> 
+>> Call trace:
+>> __cfi_check_fail+0x1c/0x24
+>> name_to_dev_t+0x0/0x404
+>> iget5_locked+0x594/0x5e8
+>> ntfs_fill_super+0xbfc/0x43ec
+>> mount_bdev+0x30c/0x3cc
+>> ntfs_mount+0x18/0x24
+>> mount_fs+0x1b0/0x380
+>> vfs_kern_mount+0x90/0x398
+>> do_mount+0x5d8/0x1a10
+>> SyS_mount+0x108/0x144
+>> el0_svc_naked+0x34/0x38
+>> 
+>> Fixing iget5_locked and ilookup5 callers seems enough
+>> 
+>> Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
+>> Tested-by: freak07 <michalechner92@googlemail.com>
+>> ---
+>> fs/ntfs/dir.c   |  2 +-
+>> fs/ntfs/inode.c | 23 ++++++++++++-----------
+>> fs/ntfs/inode.h |  4 +---
+>> fs/ntfs/mft.c   |  4 ++--
+>> 4 files changed, 16 insertions(+), 17 deletions(-)
+>> 
+>> diff --git a/fs/ntfs/dir.c b/fs/ntfs/dir.c
+>> index 3c4811469ae8..e278bfc5ee7f 100644
+>> --- a/fs/ntfs/dir.c
+>> +++ b/fs/ntfs/dir.c
+>> @@ -1503,7 +1503,7 @@ static int ntfs_dir_fsync(struct file *filp, loff_t start, loff_t end,
+>>        na.type = AT_BITMAP;
+>>        na.name = I30;
+>>        na.name_len = 4;
+>> -       bmp_vi = ilookup5(vi->i_sb, vi->i_ino, (test_t)ntfs_test_inode, &na);
+>> +       bmp_vi = ilookup5(vi->i_sb, vi->i_ino, ntfs_test_inode, &na);
+> 
+> Looks like the signature of ilookup5 is:
+> 
+> struct inode *ilookup5(struct super_block *sb, unsigned long hashval,
+>     int (*test)(struct inode *, void *), void *data)
+> 
+> while ntfs_test_inode is:
+> 
+> int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
+> 
+> while test_t is defined way below to:
+> 
+> typedef int (*test_t)(struct inode *, void *);
+> 
+> 
+>>        if (bmp_vi) {
+>>                write_inode_now(bmp_vi, !datasync);
+>>                iput(bmp_vi);
+>> diff --git a/fs/ntfs/inode.c b/fs/ntfs/inode.c
+>> index d4359a1df3d5..a5d3bebe7a85 100644
+>> --- a/fs/ntfs/inode.c
+>> +++ b/fs/ntfs/inode.c
+>> @@ -30,7 +30,7 @@
+>> /**
+>>  * ntfs_test_inode - compare two (possibly fake) inodes for equality
+>>  * @vi:                vfs inode which to test
+>> - * @na:                ntfs attribute which is being tested with
+>> + * @data:              data which is being tested with
+>>  *
+>>  * Compare the ntfs attribute embedded in the ntfs specific part of the vfs
+>>  * inode @vi for equality with the ntfs attribute @na.
+>> @@ -43,8 +43,9 @@
+>>  * NOTE: This function runs with the inode_hash_lock spin lock held so it is not
+>>  * allowed to sleep.
+>>  */
+>> -int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
+>> +int ntfs_test_inode(struct inode *vi, void *data)
+>> {
+>> +       ntfs_attr *na = (ntfs_attr *)data;
+>>        ntfs_inode *ni;
+>> 
+>>        if (vi->i_ino != na->mft_no)
+>> @@ -72,7 +73,7 @@ int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
+>> /**
+>>  * ntfs_init_locked_inode - initialize an inode
+>>  * @vi:                vfs inode to initialize
+>> - * @na:                ntfs attribute which to initialize @vi to
+>> + * @data:              data which to initialize @vi to
+>>  *
+>>  * Initialize the vfs inode @vi with the values from the ntfs attribute @na in
+>>  * order to enable ntfs_test_inode() to do its work.
+>> @@ -87,8 +88,9 @@ int ntfs_test_inode(struct inode *vi, ntfs_attr *na)
+>>  * NOTE: This function runs with the inode->i_lock spin lock held so it is not
+>>  * allowed to sleep. (Hence the GFP_ATOMIC allocation.)
+>>  */
+>> -static int ntfs_init_locked_inode(struct inode *vi, ntfs_attr *na)
+>> +static int ntfs_init_locked_inode(struct inode *vi, void *data)
+>> {
+>> +       ntfs_attr *na = (ntfs_attr *)data;
+>>        ntfs_inode *ni = NTFS_I(vi);
+>> 
+>>        vi->i_ino = na->mft_no;
+>> @@ -131,7 +133,6 @@ static int ntfs_init_locked_inode(struct inode *vi, ntfs_attr *na)
+>>        return 0;
+>> }
+>> 
+>> -typedef int (*set_t)(struct inode *, void *);
+>> static int ntfs_read_locked_inode(struct inode *vi);
+>> static int ntfs_read_locked_attr_inode(struct inode *base_vi, struct inode *vi);
+>> static int ntfs_read_locked_index_inode(struct inode *base_vi,
+>> @@ -164,8 +165,8 @@ struct inode *ntfs_iget(struct super_block *sb, unsigned long mft_no)
+>>        na.name = NULL;
+>>        na.name_len = 0;
+>> 
+>> -       vi = iget5_locked(sb, mft_no, (test_t)ntfs_test_inode,
+>> -                       (set_t)ntfs_init_locked_inode, &na);
+>> +       vi = iget5_locked(sb, mft_no, ntfs_test_inode,
+>> +                       ntfs_init_locked_inode, &na);
+>>        if (unlikely(!vi))
+>>                return ERR_PTR(-ENOMEM);
+>> 
+>> @@ -225,8 +226,8 @@ struct inode *ntfs_attr_iget(struct inode *base_vi, ATTR_TYPE type,
+>>        na.name = name;
+>>        na.name_len = name_len;
+>> 
+>> -       vi = iget5_locked(base_vi->i_sb, na.mft_no, (test_t)ntfs_test_inode,
+>> -                       (set_t)ntfs_init_locked_inode, &na);
+>> +       vi = iget5_locked(base_vi->i_sb, na.mft_no, ntfs_test_inode,
+>> +                       ntfs_init_locked_inode, &na);
+>>        if (unlikely(!vi))
+>>                return ERR_PTR(-ENOMEM);
+>> 
+>> @@ -280,8 +281,8 @@ struct inode *ntfs_index_iget(struct inode *base_vi, ntfschar *name,
+>>        na.name = name;
+>>        na.name_len = name_len;
+>> 
+>> -       vi = iget5_locked(base_vi->i_sb, na.mft_no, (test_t)ntfs_test_inode,
+>> -                       (set_t)ntfs_init_locked_inode, &na);
+>> +       vi = iget5_locked(base_vi->i_sb, na.mft_no, ntfs_test_inode,
+>> +                       ntfs_init_locked_inode, &na);
+>>        if (unlikely(!vi))
+>>                return ERR_PTR(-ENOMEM);
+>> 
+>> diff --git a/fs/ntfs/inode.h b/fs/ntfs/inode.h
+>> index 98e670fbdd31..363e4e820673 100644
+>> --- a/fs/ntfs/inode.h
+>> +++ b/fs/ntfs/inode.h
+>> @@ -253,9 +253,7 @@ typedef struct {
+>>        ATTR_TYPE type;
+>> } ntfs_attr;
+>> 
+>> -typedef int (*test_t)(struct inode *, void *);
+>> -
+>> -extern int ntfs_test_inode(struct inode *vi, ntfs_attr *na);
+>> +extern int ntfs_test_inode(struct inode *vi, void *data);
+>> 
+>> extern struct inode *ntfs_iget(struct super_block *sb, unsigned long mft_no);
+>> extern struct inode *ntfs_attr_iget(struct inode *base_vi, ATTR_TYPE type,
+>> diff --git a/fs/ntfs/mft.c b/fs/ntfs/mft.c
+>> index fbb9f1bc623d..0d62cd5bb7f8 100644
+>> --- a/fs/ntfs/mft.c
+>> +++ b/fs/ntfs/mft.c
+>> @@ -958,7 +958,7 @@ bool ntfs_may_write_mft_record(ntfs_volume *vol, const unsigned long mft_no,
+>>                 * dirty code path of the inode dirty code path when writing
+>>                 * $MFT occurs.
+>>                 */
+>> -               vi = ilookup5_nowait(sb, mft_no, (test_t)ntfs_test_inode, &na);
+>> +               vi = ilookup5_nowait(sb, mft_no, ntfs_test_inode, &na);
+>>        }
+>>        if (vi) {
+>>                ntfs_debug("Base inode 0x%lx is in icache.", mft_no);
+>> @@ -1019,7 +1019,7 @@ bool ntfs_may_write_mft_record(ntfs_volume *vol, const unsigned long mft_no,
+>>                vi = igrab(mft_vi);
+>>                BUG_ON(vi != mft_vi);
+>>        } else
+>> -               vi = ilookup5_nowait(sb, na.mft_no, (test_t)ntfs_test_inode,
+>> +               vi = ilookup5_nowait(sb, na.mft_no, ntfs_test_inode,
+>>                                &na);
+>>        if (!vi) {
+>>                /*
+>> --
+>> 2.26.2
+>> 
+>> --
+>> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+>> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+>> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200627190230.1191796-1-luca.stefani.ge1%40gmail.com.
+> 
+> 
+> 
+> -- 
+> Thanks,
+> ~Nick Desaulniers
 
-	smp_cond_load_acquire(&p->on_cpu, !VAL);
 
-into the 'p->on_rq == 0' block, with the thinking that once we hit
-schedule() the current task cannot change it's ->state anymore. And
-while this is true, it is both incorrect and flawed.
+-- 
+Anton Altaparmakov <anton at tuxera.com> (replace at with @)
+Lead in File System Development, Tuxera Inc., http://www.tuxera.com/
+Linux NTFS maintainer
 
-It is incorrect in that we need at least an ACQUIRE on 'p->on_rq == 0'
-to avoid weak hardware from re-ordering things for us. This can fairly
-easily be achieved by relying on the control-dependency already in
-place.
-
-The second problem, which makes the flaw in the original argument, is
-that while schedule() will not change prev->state, it will read it a
-number of times (arguably too many times since it's marked volatile).
-The previous condition 'p->on_cpu == 0' was sufficient because that
-indicates schedule() has completed, and will no longer read
-prev->state. So now the trick is to make this same true for the (much)
-earlier 'prev->on_rq == 0' case.
-
-Furthermore, in order to make the ordering stick, the 'prev->on_rq = 0'
-assignment needs to he a RELEASE, but adding additional ordering to
-schedule() is an unwelcome proposition at the best of times, doubly so
-for mere accounting.
-
-Luckily we can push the prev->state load up before rq->lock, with the
-only caveat that we then have to re-read the state after. However, we
-know that if it changed, we no longer have to worry about the blocking
-path. This gives us the required ordering, if we block, we did the
-prev->state load before an (effective) smp_mb() and the p->on_rq store
-needs not change.
-
-With this we end up with the effective ordering:
-
-	LOAD p->state           LOAD-ACQUIRE p->on_rq == 0
-	MB
-	STORE p->on_rq, 0       STORE p->state, TASK_WAKING
-
-which ensures the TASK_WAKING store happens after the prev->state
-load, and all is well again.
-
-Fixes: c6e7bd7afaeb ("sched/core: Optimize ttwu() spinning on p->on_cpu")
-Reported-by: Dave Jones <davej@codemonkey.org.uk>
-Reported-by: Paul Gortmaker <paul.gortmaker@windriver.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Dave Jones <davej@codemonkey.org.uk>
-Tested-by: Paul Gortmaker <paul.gortmaker@windriver.com>
-Link: https://lkml.kernel.org/r/20200707102957.GN117543@hirez.programming.kicks-ass.net
----
- include/linux/sched.h |  4 +---
- kernel/sched/core.c   | 67 +++++++++++++++++++++++++++++++-----------
- 2 files changed, 51 insertions(+), 20 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 692e327..6833729 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -114,10 +114,6 @@ struct task_group;
- 
- #define task_is_stopped_or_traced(task)	((task->state & (__TASK_STOPPED | __TASK_TRACED)) != 0)
- 
--#define task_contributes_to_load(task)	((task->state & TASK_UNINTERRUPTIBLE) != 0 && \
--					 (task->flags & PF_FROZEN) == 0 && \
--					 (task->state & TASK_NOLOAD) == 0)
--
- #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
- 
- /*
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index ca5db40..950ac45 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1311,9 +1311,6 @@ static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
- 
- void activate_task(struct rq *rq, struct task_struct *p, int flags)
- {
--	if (task_contributes_to_load(p))
--		rq->nr_uninterruptible--;
--
- 	enqueue_task(rq, p, flags);
- 
- 	p->on_rq = TASK_ON_RQ_QUEUED;
-@@ -1323,9 +1320,6 @@ void deactivate_task(struct rq *rq, struct task_struct *p, int flags)
- {
- 	p->on_rq = (flags & DEQUEUE_SLEEP) ? 0 : TASK_ON_RQ_MIGRATING;
- 
--	if (task_contributes_to_load(p))
--		rq->nr_uninterruptible++;
--
- 	dequeue_task(rq, p, flags);
- }
- 
-@@ -2236,10 +2230,10 @@ ttwu_do_activate(struct rq *rq, struct task_struct *p, int wake_flags,
- 
- 	lockdep_assert_held(&rq->lock);
- 
--#ifdef CONFIG_SMP
- 	if (p->sched_contributes_to_load)
- 		rq->nr_uninterruptible--;
- 
-+#ifdef CONFIG_SMP
- 	if (wake_flags & WF_MIGRATED)
- 		en_flags |= ENQUEUE_MIGRATED;
- #endif
-@@ -2583,7 +2577,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	 * A similar smb_rmb() lives in try_invoke_on_locked_down_task().
- 	 */
- 	smp_rmb();
--	if (p->on_rq && ttwu_remote(p, wake_flags))
-+	if (READ_ONCE(p->on_rq) && ttwu_remote(p, wake_flags))
- 		goto unlock;
- 
- 	if (p->in_iowait) {
-@@ -2592,9 +2586,6 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	}
- 
- #ifdef CONFIG_SMP
--	p->sched_contributes_to_load = !!task_contributes_to_load(p);
--	p->state = TASK_WAKING;
--
- 	/*
- 	 * Ensure we load p->on_cpu _after_ p->on_rq, otherwise it would be
- 	 * possible to, falsely, observe p->on_cpu == 0.
-@@ -2613,8 +2604,20 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	 *
- 	 * Pairs with the LOCK+smp_mb__after_spinlock() on rq->lock in
- 	 * __schedule().  See the comment for smp_mb__after_spinlock().
-+	 *
-+	 * Form a control-dep-acquire with p->on_rq == 0 above, to ensure
-+	 * schedule()'s deactivate_task() has 'happened' and p will no longer
-+	 * care about it's own p->state. See the comment in __schedule().
- 	 */
--	smp_rmb();
-+	smp_acquire__after_ctrl_dep();
-+
-+	/*
-+	 * We're doing the wakeup (@success == 1), they did a dequeue (p->on_rq
-+	 * == 0), which means we need to do an enqueue, change p->state to
-+	 * TASK_WAKING such that we can unlock p->pi_lock before doing the
-+	 * enqueue, such as ttwu_queue_wakelist().
-+	 */
-+	p->state = TASK_WAKING;
- 
- 	/*
- 	 * If the owning (remote) CPU is still in the middle of schedule() with
-@@ -4097,6 +4100,7 @@ static void __sched notrace __schedule(bool preempt)
- {
- 	struct task_struct *prev, *next;
- 	unsigned long *switch_count;
-+	unsigned long prev_state;
- 	struct rq_flags rf;
- 	struct rq *rq;
- 	int cpu;
-@@ -4113,12 +4117,22 @@ static void __sched notrace __schedule(bool preempt)
- 	local_irq_disable();
- 	rcu_note_context_switch(preempt);
- 
-+	/* See deactivate_task() below. */
-+	prev_state = prev->state;
-+
- 	/*
- 	 * Make sure that signal_pending_state()->signal_pending() below
- 	 * can't be reordered with __set_current_state(TASK_INTERRUPTIBLE)
--	 * done by the caller to avoid the race with signal_wake_up().
-+	 * done by the caller to avoid the race with signal_wake_up():
-+	 *
-+	 * __set_current_state(@state)		signal_wake_up()
-+	 * schedule()				  set_tsk_thread_flag(p, TIF_SIGPENDING)
-+	 *					  wake_up_state(p, state)
-+	 *   LOCK rq->lock			    LOCK p->pi_state
-+	 *   smp_mb__after_spinlock()		    smp_mb__after_spinlock()
-+	 *     if (signal_pending_state())	    if (p->state & @state)
- 	 *
--	 * The membarrier system call requires a full memory barrier
-+	 * Also, the membarrier system call requires a full memory barrier
- 	 * after coming from user-space, before storing to rq->curr.
- 	 */
- 	rq_lock(rq, &rf);
-@@ -4129,10 +4143,31 @@ static void __sched notrace __schedule(bool preempt)
- 	update_rq_clock(rq);
- 
- 	switch_count = &prev->nivcsw;
--	if (!preempt && prev->state) {
--		if (signal_pending_state(prev->state, prev)) {
-+	/*
-+	 * We must re-load prev->state in case ttwu_remote() changed it
-+	 * before we acquired rq->lock.
-+	 */
-+	if (!preempt && prev_state && prev_state == prev->state) {
-+		if (signal_pending_state(prev_state, prev)) {
- 			prev->state = TASK_RUNNING;
- 		} else {
-+			prev->sched_contributes_to_load =
-+				(prev_state & TASK_UNINTERRUPTIBLE) &&
-+				!(prev_state & TASK_NOLOAD) &&
-+				!(prev->flags & PF_FROZEN);
-+
-+			if (prev->sched_contributes_to_load)
-+				rq->nr_uninterruptible++;
-+
-+			/*
-+			 * __schedule()			ttwu()
-+			 *   prev_state = prev->state;	  if (READ_ONCE(p->on_rq) && ...)
-+			 *   LOCK rq->lock		    goto out;
-+			 *   smp_mb__after_spinlock();	  smp_acquire__after_ctrl_dep();
-+			 *   p->on_rq = 0;		  p->state = TASK_WAKING;
-+			 *
-+			 * After this, schedule() must not care about p->state any more.
-+			 */
- 			deactivate_task(rq, prev, DEQUEUE_SLEEP | DEQUEUE_NOCLOCK);
- 
- 			if (prev->in_iowait) {
