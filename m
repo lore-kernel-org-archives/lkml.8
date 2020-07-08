@@ -2,205 +2,147 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A46C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F58C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C43F206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:26:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bp+7dUOn"
+	by mail.kernel.org (Postfix) with ESMTP id F3037206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgGHR0I (ORCPT
+        id S1726445AbgGHR3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgGHR0H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:26:07 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB1CC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 10:26:07 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id ga4so51337815ejb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 10:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WYGcMzQopQZDl14XIf4O4aJ8BVHuo25BvGp6Q85HroM=;
-        b=bp+7dUOnLcc5Oi0kcl0BX2Obs1NxiJlDg0C8uv+GcIGbI+HrfNnVyLLtLdkJBjtpDs
-         Jd+7uOpv8tA3ruYnfx2BqlFdsX/EJXgVEMFOodZkUZwppigwcgshzQx/ISW6kWgrllhA
-         a8ZtNTs/E47tyxx2jVnB9rL3SiUbCNQIPy/5yYc7StbQzbe3PTuHRWEY07GomGUD5gBl
-         lVb+9OKBBcf9RW9e2AtaF3ug+7inYhr4QbhN1pj8dFV9muqRZwOqL/flBOekrGs7KVcD
-         aMKpoIphe1iMnM9BnvH1O17VUOD2o4p+lX+RfQvRrZlFEGN4QLrMgLuNWdNuiuhBqbU4
-         hGYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WYGcMzQopQZDl14XIf4O4aJ8BVHuo25BvGp6Q85HroM=;
-        b=jCApOXpuxSN+G9t9d8kwqBXqFw3Fqg4oqMX6fwcij7LCb7R5V1aRXuj2TvnB9Dnedq
-         Ke6YzSf8t05e0ZLpmIso8w/tXyX+jCq8c80dQ74hQzaILxbBLxRkufFy3WARvgNlTuOi
-         kI1hCiFI6elS/vCn5CgkXq5lYDn31u2WKnGXva5zeQcHPyQqG+uHB1NQCmZDUjXqUQQ9
-         IJhilD3NV5Q/ud9jS9ojjBx0LLy87OTqaWfBVfO1mNqiLa5/2Nrg4r3nAxnzxCyfH2ZH
-         WjVwKASZZzMY2Z2GsQVd5xb8dSzkw4mqAq82blMLL+B/rOYKkZydZZgv3ubHJVYbeYqZ
-         Q/Jg==
-X-Gm-Message-State: AOAM531JD9UwSJd8MmpDOKq4gdX0/GYMNIUQKDpaVD/3yNBM5cAxZczy
-        jPWtwSZEDdTWvb9ktldFN5vKVpJoGe0896jIjeipTyIVve28AA==
-X-Google-Smtp-Source: ABdhPJwoV8t4uI2XTaRmyyeDgy9Qsz9XS2zDyH9zjWSg0c/g1+8CPRgzIj+mHgwez+VbOKXbzSXSV3JYOaGJVwNzRHg=
-X-Received: by 2002:a17:906:8316:: with SMTP id j22mr51325891ejx.97.1594229165528;
- Wed, 08 Jul 2020 10:26:05 -0700 (PDT)
+        Wed, 8 Jul 2020 13:29:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbgGHR3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:29:17 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E77D206E9;
+        Wed,  8 Jul 2020 17:29:14 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 18:29:12 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Will Deacon <will@kernel.org>, hannes@cmpxchg.org,
+        will.deacon@arm.com, akpm@linux-foundation.org,
+        xuyu@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH] mm: avoid access flag update TLB flush for retried
+ page fault
+Message-ID: <20200708172912.GE6308@gaia>
+References: <1594148072-91273-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200708075959.GA25498@willie-the-truck>
+ <7cf3b3fe-76bb-edc4-7421-9313ef949d7b@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20200708071117.3070707-1-yuhsuan@chromium.org>
- <f6a0ea44-3805-5901-9864-72d4a3a4562e@collabora.com> <CABXOdTfV_oGgZWbyP3o07obMuYGOLY87fou2h3_gowQkV7QVNw@mail.gmail.com>
- <CAGvk5Po=BcHZ8uQJAp10cYHJcvc6-x613o-0Jj00K23xpeQpaQ@mail.gmail.com>
-In-Reply-To: <CAGvk5Po=BcHZ8uQJAp10cYHJcvc6-x613o-0Jj00K23xpeQpaQ@mail.gmail.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Wed, 8 Jul 2020 10:25:54 -0700
-Message-ID: <CABXOdTf1+nBtau7ujnUVTfNd68D-RijZBPU8XMv=ZQ-RLbpzAg@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: cros_ec_codec: Reset I2S RX when probing
-To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Yicheng Li <yichengli@chromium.org>,
-        ALSA development <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7cf3b3fe-76bb-edc4-7421-9313ef949d7b@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 9:17 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> wrote:
->
-> Guenter Roeck <groeck@google.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=888=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=889:28=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > On Wed, Jul 8, 2020 at 3:16 AM Enric Balletbo i Serra
-> > <enric.balletbo@collabora.com> wrote:
-> > >
-> > > Hi Yu-Hsuan,
-> > >
-> > > Thank you for your patch.
-> > >
-> > > On 8/7/20 9:11, Yu-Hsuan Hsu wrote:
-> > > > It is not guaranteed that I2S RX is disabled when the kernel bootin=
-g.
-> > > > For example, if the kernel crashes while it is enabled, it will kee=
-p
-> > > > enabled until the next time EC reboots. Reset I2S RX when probing t=
-o
-> > > > fix this issue.
-> > > >
-> > > > Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> > > > ---
-> > > >  include/linux/platform_data/cros_ec_commands.h | 1 +
-> > > >  sound/soc/codecs/cros_ec_codec.c               | 7 +++++++
-> > > >  2 files changed, 8 insertions(+)
-> > > >
-> > > > diff --git a/include/linux/platform_data/cros_ec_commands.h b/inclu=
-de/linux/platform_data/cros_ec_commands.h
-> > > > index 69210881ebac8..11ce917ca924c 100644
-> > > > --- a/include/linux/platform_data/cros_ec_commands.h
-> > > > +++ b/include/linux/platform_data/cros_ec_commands.h
-> > > > @@ -4598,6 +4598,7 @@ enum ec_codec_i2s_rx_subcmd {
-> > > >       EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH =3D 0x2,
-> > > >       EC_CODEC_I2S_RX_SET_DAIFMT =3D 0x3,
-> > > >       EC_CODEC_I2S_RX_SET_BCLK =3D 0x4,
-> > > > +     EC_CODEC_I2S_RX_RESET =3D 0x5,
-> > >
-> > > Is this a new command not available in the firmware that is already i=
-n the field?
-> > >
-> > >
-> > > >       EC_CODEC_I2S_RX_SUBCMD_COUNT,
-> > > >  };
-> > > >
-> > > > diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cr=
-os_ec_codec.c
-> > > > index 8d45c628e988e..5495214e73e68 100644
-> > > > --- a/sound/soc/codecs/cros_ec_codec.c
-> > > > +++ b/sound/soc/codecs/cros_ec_codec.c
-> > > > @@ -1034,6 +1034,13 @@ static int cros_ec_codec_platform_probe(stru=
-ct platform_device *pdev)
-> > > >       }
-> > > >       priv->ec_capabilities =3D r.capabilities;
-> > > >
-> > > > +     /* Reset EC codec I2S RX. */
-> > > > +     p.cmd =3D EC_CODEC_I2S_RX_RESET;
-> > > > +     ret =3D send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC=
-_I2S_RX,
-> > > > +                                (uint8_t *)&p, sizeof(p), NULL, 0)=
-;
-> > > > +     if (ret)
-> > > > +             dev_err(dev, "failed to EC_CODEC_I2S_RESET: %d\n", re=
-t);
-> > > > +
-> > >
-> > > With an old firmware I suspect this message will appear on every boot=
-, right?
-> > > So, to solve the issue and get rid of this error you're forced to upg=
-rade the
-> > > firmware. Is that true?
-> > >
-> >
-> > It might possibly make more sense to fail this silently and to send
-> > EC_CODEC_I2S_RX_DISABLE as backup if it is not supported (-ENOTSUPP
-> > can possibly be used as trigger if the call returns it).
-> >
-> > Also, I don't accept dev_err() if the error is ignored for patches in
-> > my scope of responsibility.
-> >
-> > Guenter
-> Thanks for the suggestion. Our plan is to upstream this patch first.
-> And then we will merge it into the kernel after the firmware is
-> updated. Is it feasible? (I'm not sure whether there is the better way
-> if I want to update EC and the kernel at the same time.)
->
-> I think calling EC_CODEC_I2S_RX_DISABLE does not make sense because it
-> checks the value of i2s_rx_enabled first. If i2s_rx_enabled is false,
-> it will skip the function. However, we don't need to reset while the
-> i2s_rx_enabled is already false.
->
-Exactly my point. If i2s_rx_enabled is false, nothing needs to be
-done, and it doesn't hurt if the EC does nothing. If i2s_rx_enabled is
-true, it needs to be set to false, which is accomplished by sending
-EC_CODEC_I2S_RX_DISABLE.
+On Wed, Jul 08, 2020 at 09:40:11AM -0700, Yang Shi wrote:
+> On 7/8/20 1:00 AM, Will Deacon wrote:
+> > On Wed, Jul 08, 2020 at 02:54:32AM +0800, Yang Shi wrote:
+> > > Recently we found regression when running will_it_scale/page_fault3 test
+> > > on ARM64.  Over 70% down for the multi processes cases and over 20% down
+> > > for the multi threads cases.  It turns out the regression is caused by commit
+> > > 89b15332af7c0312a41e50846819ca6613b58b4c ("mm: drop mmap_sem before
+> > > calling balance_dirty_pages() in write fault").
+> > > 
+> > > The test mmaps a memory size file then write to the mapping, this would
+> > > make all memory dirty and trigger dirty pages throttle, that upstream
+> > > commit would release mmap_sem then retry the page fault.  The retried
+> > > page fault would see correct PTEs installed by the first try then update
+> > > access flags and flush TLBs.  The regression is caused by the excessive
+> > > TLB flush.  It is fine on x86 since x86 doesn't need flush TLB for
+> > > access flag update.
+> > > 
+> > > The page fault would be retried due to:
+> > > 1. Waiting for page readahead
+> > > 2. Waiting for page swapped in
+> > > 3. Waiting for dirty pages throttling
+> > > 
+> > > The first two cases don't have PTEs set up at all, so the retried page
+> > > fault would install the PTEs, so they don't reach there.  But the #3
+> > > case usually has PTEs installed, the retried page fault would reach the
+> > > access flag update.  But it seems not necessary to update access flags
+> > > for #3 since retried page fault is not real "second access", so it
+> > > sounds safe to skip access flag update for retried page fault.
 
-> In addition, since it is a sub-command, it will return
-> EC_RES_INVALID_PARAM but not ENOTSUPP if the command is not supported.
-> And then EC_RES_INVALID_PARAM will turn into -EPROTO finally so it's
-> difficult to do other operators basing on the return value.
->
+Is this the access flag or the dirty flag? On arm64 we distinguish
+between the two. Setting the access flag on arm64 doesn't need TLB
+flushing since an inaccessible entry is not allowed to be cached in the
+TLB. However, setting the dirty bit (clearing read-only on arm64) does
+require a TLB flush and ptep_set_access_flags() takes care of this.
 
-You might have to convince Enric to permit another error code to
-translate EC_RES_INVALID_PARAM. After all, that would meet his
-requirement that the error code must be used in the kernel to accept a
-translation.
+> > > With this fix the test result get back to normal.
+> > > 
+> > > Reported-by: Xu Yu <xuyu@linux.alibaba.com>
+> > > Debugged-by: Xu Yu <xuyu@linux.alibaba.com>
+> > > Tested-by: Xu Yu <xuyu@linux.alibaba.com>
+> > > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> > > ---
+> > > I'm not sure if this is safe for non-x86 machines, we did some tests on arm64, but
+> > > there may be still corner cases not covered.
+> > > 
+> > >   mm/memory.c | 7 ++++++-
+> > >   1 file changed, 6 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/mm/memory.c b/mm/memory.c
+> > > index 87ec87c..3d4e671 100644
+> > > --- a/mm/memory.c
+> > > +++ b/mm/memory.c
+> > > @@ -4241,8 +4241,13 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+> > >   	if (vmf->flags & FAULT_FLAG_WRITE) {
+> > >   		if (!pte_write(entry))
+> > >   			return do_wp_page(vmf);
+> > > -		entry = pte_mkdirty(entry);
+> > >   	}
+> > > +
+> > > +	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vmf->flags & FAULT_FLAG_TRIED))
+> > > +		entry = pte_mkdirty(entry);
+> > > +	else if (vmf->flags & FAULT_FLAG_TRIED)
+> > > +		goto unlock;
+> > > +
+> > Can you rewrite this as:
+> > 
+> > 	if (vmf->flags & FAULT_FLAG_TRIED)
+> > 		goto unlock;
+> > 
+> > 	if (vmf->flags & FAULT_FLAG_WRITE)
+> > 		entry = pte_mkdirty(entry);
+> 
+> Yes, it does the same.
+> 
+> > 
+> > ? (I'm half-asleep this morning and there are people screaming and shouting
+> > outside my window, so this might be rubbish)
+> > 
+> > If you _can_make that change, then I don't understand why the existing
+> > pte_mkdirty() line needs to move at all. Couldn't you just add:
+> > 
+> > 	if (vmf->flags & FAULT_FLAG_TRIED)
+> > 		goto unlock;
+> > 
+> > after the existing "vmf->flags & FAULT_FLAG_WRITE" block?
+> 
+> The intention is to not set dirty bit if it is in retried page fault since
+> the bit should be already set in the first try. And, I'm not quite sure if
+> TLB needs to be flushed on non-x86 if dirty bit is set. If it is
+> unnecessary, then the above change does make sense.
 
-Guenter
+It is necessary on arm32/arm64 since pte_mkdirty() clears the read-only
+bit.
 
-> Thanks,
-> Yu-Hsuan
->
-> >
-> > > >       platform_set_drvdata(pdev, priv);
-> > > >
-> > > >       ret =3D devm_snd_soc_register_component(dev, &i2s_rx_componen=
-t_driver,
-> > > >
+But do we have guarantee that every time handle_mm_fault() returns
+VM_FAULT_RETRY, the pte has already been updated?
+
+-- 
+Catalin
