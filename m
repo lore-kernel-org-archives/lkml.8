@@ -2,119 +2,93 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64410C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4570820720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F1520720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgGHJzK (ORCPT
+        id S1728417AbgGHJ4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:55:10 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:39306 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgGHJzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:55:09 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id B7D6DBC0C2;
-        Wed,  8 Jul 2020 09:55:06 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: USB MASS STORAGE DRIVER
-Date:   Wed,  8 Jul 2020 11:55:00 +0200
-Message-Id: <20200708095500.13694-1-grandmaster@al2klimov.de>
+        Wed, 8 Jul 2020 05:56:11 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39994 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgGHJ4K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 05:56:10 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t198so24772139oie.7;
+        Wed, 08 Jul 2020 02:56:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wuZ52/2R2QhpWJLHCV/wGrDxu4may668Ov4P0DPN7go=;
+        b=jWqbpALxf7txcC6DUNhOfsAct/3VMzJvM1yM78IRSwTRbH/DF2S8bzVW1v+w4HdLr6
+         jN8pMLCjZGo6E/UHmA6llO/LOn7RZcF4WxcMm21y+yZE/B7NdrFmDqKHZ1zbCvjKPAhM
+         BPvKzBzcQkMjn2kDh1NHZDJvHqOzC1PYA49RcT4k8vEZ8USyxtjKMYs/FAaKdifBoCzW
+         YFuw+iDKsJ9pmZuWRBySmeoHRI6XSt9yPfiC63jwokXdC+S+9mgNLA++A57ErY67cIrP
+         upKTOA6jXXVVPErc5W86s8M5POy3mfFtqAnWKEugUN1rA4WQzFvR0XQ4SQ5IrF88xEQO
+         jDHA==
+X-Gm-Message-State: AOAM532JSyRVHa6sd6ZwzDsRoMOiIbn+TUgIOn/SCrJ1jv9rVLTGHC/b
+        cCUJa8yj042/yz0c6R+4ZjTUDl/o5z5A9iWwywo=
+X-Google-Smtp-Source: ABdhPJziRItiVHnSBeIux3430KjIvDj8lyVf1dBBml+v4gyc2l5NRtIxrY4n2e1Chzu0gV5BFqwWF3ybNdNI/IJ/wW4=
+X-Received: by 2002:aca:5c41:: with SMTP id q62mr6236480oib.148.1594202168991;
+ Wed, 08 Jul 2020 02:56:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594138692-16816-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594138692-16816-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 8 Jul 2020 11:55:57 +0200
+Message-ID: <CAMuHMdUMnt1VJ6b7=S+5DoDTxbUQ6mRsfEPu2Fu7ZeDUobi8cw@mail.gmail.com>
+Subject: Re: [PATCH 07/14] soc: renesas: rcar-sysc: Add r8a774e1 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Hi Prabhakar,
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Add support for RZ/G2H (R8A774E1) SoC power areas to the R-Car SYSC
+> driver.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+with the Kconfig part moved in, and reordered before 4/14:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Gr{oetje,eeting}s,
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
+                        Geert
 
 
- drivers/usb/storage/Kconfig        | 2 +-
- drivers/usb/storage/freecom.c      | 2 +-
- drivers/usb/storage/unusual_devs.h | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-diff --git a/drivers/usb/storage/Kconfig b/drivers/usb/storage/Kconfig
-index 5335a7ff5d14..d17b60a644ef 100644
---- a/drivers/usb/storage/Kconfig
-+++ b/drivers/usb/storage/Kconfig
-@@ -57,7 +57,7 @@ config USB_STORAGE_FREECOM
- 	tristate "Freecom USB/ATAPI Bridge support"
- 	help
- 	  Support for the Freecom USB to IDE/ATAPI adaptor.
--	  Freecom has a web page at <http://www.freecom.de/>.
-+	  Freecom has a web page at <https://www.freecom.de/>.
- 
- 	  If this driver is compiled as a module, it will be named ums-freecom.
- 
-diff --git a/drivers/usb/storage/freecom.c b/drivers/usb/storage/freecom.c
-index 34e7eaff1174..3d5f7d0ff0f1 100644
---- a/drivers/usb/storage/freecom.c
-+++ b/drivers/usb/storage/freecom.c
-@@ -11,7 +11,7 @@
-  *
-  * This driver was developed with information provided in FREECOM's USB
-  * Programmers Reference Guide.  For further information contact Freecom
-- * (http://www.freecom.de/)
-+ * (https://www.freecom.de/)
-  */
- 
- #include <linux/module.h>
-diff --git a/drivers/usb/storage/unusual_devs.h b/drivers/usb/storage/unusual_devs.h
-index b6a9a7451620..220ae2c356ee 100644
---- a/drivers/usb/storage/unusual_devs.h
-+++ b/drivers/usb/storage/unusual_devs.h
-@@ -44,7 +44,7 @@
-  * mode.  Existing userspace solutions are superior.
-  *
-  * New mode switching devices should instead be added to the database
-- * maintained at http://www.draisberghof.de/usb_modeswitch/
-+ * maintained at https://www.draisberghof.de/usb_modeswitch/
-  */
- 
- #if !defined(CONFIG_USB_STORAGE_SDDR09) && \
--- 
-2.27.0
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
