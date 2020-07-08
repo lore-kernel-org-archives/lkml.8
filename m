@@ -2,108 +2,196 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4733C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDF9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78D37206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16DE2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:55:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBQTnyl5"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="oKv3I7Kc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgGHKzK (ORCPT
+        id S1728652AbgGHKze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgGHKzJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:55:09 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E87C08C5DC;
-        Wed,  8 Jul 2020 03:55:09 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m9so9549135pfh.0;
-        Wed, 08 Jul 2020 03:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PBn0kG772UiRofP2vcjNJnGOHseI8tNLjt18LXfHgfM=;
-        b=gBQTnyl5XQbz7QLwruwhpPZNpRDxt5cQZprhMlwkkb2tOSEoozJD6JurK8F/aIYp9r
-         0FCfhI+IyHfRuVNgfb7PulpmQizTMiuNcV72ITUVpbmneuavA3eOKelwFFIuVQ4MtP0D
-         0mdJNjRYy2ffNeNrCDrkHb0HwpyDx5xFYRj4TtQq/SI86iGLC93JfQs3dXR47omSWz0z
-         WIzrJeGMdrURNQGDykSPdqVTGrGtUwxURq2j2p7/gibqwEMroAlDBXFu4MUwKF5oA62b
-         mAqiyML/Tt3/nf63VpPqtBNil2XFSCdaA7ZnIx6sH6dvXUPpqbKT+//PUMCnCnr7wdey
-         yXMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PBn0kG772UiRofP2vcjNJnGOHseI8tNLjt18LXfHgfM=;
-        b=p5CzGAG4jO+APHHIoT9qlXYE46mBKcWYFL/TEQc7vJmFQcvbZL63wjSSZRPPE45UgI
-         K8dBg5X6m8AI5AFScw6k0ZoMce1kyHqMx8GVIpU9gqnTA3lsuXr2R7nJJqTr0imsJoYm
-         tfTUlVqsR1Ii60Pzn1TadP5lPWO+jJtY6PiGHI9VuSJsvfPKdmB2Uw42aOVZd0YiNdo0
-         kGfxt/ETjhxSlYCuCFpmTW82g9xNK1HdgsE1+rp+Jet5r6iBSyb4jUrdF/D0jSfB9d4G
-         eG3qi/mKyZg/T+B0iMwis4lsux7jCeVThoq+qfo7XEAr5/HD7QUbD0y7+TayRGvpCGGw
-         61WA==
-X-Gm-Message-State: AOAM532yFbDDFXtwkZQ73SRb1Ou+0sHUnhxlwh4u1OT/7m+6vQ7aOrSM
-        OyPP2nYYxUM47oIZXwz5GSQ=
-X-Google-Smtp-Source: ABdhPJxDRRhChhbBwU6WplFG6NNjrSI88JLFqCzRTJ86Tmq94sqixN+4KdDzOUX2GRmEYYB8FFbCQw==
-X-Received: by 2002:a63:5461:: with SMTP id e33mr38807251pgm.321.1594205709230;
-        Wed, 08 Jul 2020 03:55:09 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id f131sm3828328pgc.14.2020.07.08.03.55.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 03:55:08 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 03:55:06 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Sergey Organov <sorganov@gmail.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, andrew@lunn.ch
-Subject: Re: [PATCH  1/5] net: fec: properly support external PTP PHY for
- hardware time stamping
-Message-ID: <20200708105506.GB9080@hoboy>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200706142616.25192-2-sorganov@gmail.com>
- <20200706150814.kba7dh2dsz4mpiuc@skbuf>
- <87zh8cu0rs.fsf@osv.gnss.ru>
- <20200706154728.lfywhchrtaeeda4g@skbuf>
- <87zh8cqyrp.fsf@osv.gnss.ru>
+        Wed, 8 Jul 2020 06:55:34 -0400
+Received: from vps.xff.cz ([195.181.215.36]:48804 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgGHKzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:55:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1594205730; bh=FjQWXkffSauLT4RFe7L3pGAJhRaFdql4N1eA12iukYs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oKv3I7KcWEuiP1EnF+jHL6RAcGQpwZunw9eUecnt8AIhsN144n1mEN+RCAJ+9nq9Q
+         OZJVWzRO12OVKWem8iC/PNSZ+f1Z/B0KsanEZ8+Y2JvYCrotI1vtwuwemuySTUlMwG
+         7qnBmmLwsu9O1SsKNdx1ikc/RupzsSRITxr4gQOE=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-pm@vger.kernel.org (open list:ALLWINNER THERMAL DRIVER),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] thermal: sun8i: Be loud when probe fails
+Date:   Wed,  8 Jul 2020 12:55:27 +0200
+Message-Id: <20200708105527.868987-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zh8cqyrp.fsf@osv.gnss.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 09:33:30PM +0300, Sergey Organov wrote:
-> Vladimir Oltean <olteanv@gmail.com> writes:
-> 
-> > On Mon, Jul 06, 2020 at 06:21:59PM +0300, Sergey Organov wrote:
-> > Both are finicky in their own ways. There is no real way for the user to
-> > select which PHC they want to use. The assumption is that you'd always
-> > want to use the outermost one, and that things in the kernel side always
-> > collaborate towards that end.
+I noticed several mobile Linux distributions failing to enable the
+thermal regulation correctly, because the kernel is silent
+when thermal driver fails to probe. Add enough error reporting
+to debug issues and warn users in case thermal sensor is failing
+to probe.
 
-+1
+Failing to notify users means, that SoC can easily overheat under
+load.
 
-In addition, for PHY time stamping you must enable the costly
-CONFIG_NETWORK_PHY_TIMESTAMPING option at compile time, and so the
-user most definitely wants the "outer" function.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++-------
+ 1 file changed, 43 insertions(+), 12 deletions(-)
 
-> Makes sense, -- thanks for clarification! Indeed, if somebody connected
-> that external thingy, chances are high it was made for a purpose.
+diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+index 74d73be16496..9065e79ae743 100644
+--- a/drivers/thermal/sun8i_thermal.c
++++ b/drivers/thermal/sun8i_thermal.c
+@@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct ths_device *tmdev)
+ 
+ 	calcell = devm_nvmem_cell_get(dev, "calibration");
+ 	if (IS_ERR(calcell)) {
++		dev_err(dev, "Failed to get calibration nvmem cell (%ld)\n",
++			PTR_ERR(calcell));
++
+ 		if (PTR_ERR(calcell) == -EPROBE_DEFER)
+ 			return -EPROBE_DEFER;
++
+ 		/*
+ 		 * Even if the external calibration data stored in sid is
+ 		 * not accessible, the THS hardware can still work, although
+@@ -308,6 +312,8 @@ static int sun8i_ths_calibrate(struct ths_device *tmdev)
+ 	caldata = nvmem_cell_read(calcell, &callen);
+ 	if (IS_ERR(caldata)) {
+ 		ret = PTR_ERR(caldata);
++		dev_err(dev, "Failed to read calibration data (%d)\n",
++			ret);
+ 		goto out;
+ 	}
+ 
+@@ -330,23 +336,35 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+ 		return PTR_ERR(base);
+ 
+ 	tmdev->regmap = devm_regmap_init_mmio(dev, base, &config);
+-	if (IS_ERR(tmdev->regmap))
++	if (IS_ERR(tmdev->regmap)) {
++		dev_err(dev, "Failed to init regmap (%ld)\n",
++			PTR_ERR(tmdev->regmap));
+ 		return PTR_ERR(tmdev->regmap);
++	}
+ 
+ 	if (tmdev->chip->has_bus_clk_reset) {
+ 		tmdev->reset = devm_reset_control_get(dev, NULL);
+-		if (IS_ERR(tmdev->reset))
++		if (IS_ERR(tmdev->reset)) {
++			dev_err(dev, "Failed to get reset (%ld)\n",
++				PTR_ERR(tmdev->reset));
+ 			return PTR_ERR(tmdev->reset);
++		}
+ 
+ 		tmdev->bus_clk = devm_clk_get(&pdev->dev, "bus");
+-		if (IS_ERR(tmdev->bus_clk))
++		if (IS_ERR(tmdev->bus_clk)) {
++			dev_err(dev, "Failed to get bus clock (%ld)\n",
++				PTR_ERR(tmdev->bus_clk));
+ 			return PTR_ERR(tmdev->bus_clk);
++		}
+ 	}
+ 
+ 	if (tmdev->chip->has_mod_clk) {
+ 		tmdev->mod_clk = devm_clk_get(&pdev->dev, "mod");
+-		if (IS_ERR(tmdev->mod_clk))
++		if (IS_ERR(tmdev->mod_clk)) {
++			dev_err(dev, "Failed to get mod clock (%ld)\n",
++				PTR_ERR(tmdev->mod_clk));
+ 			return PTR_ERR(tmdev->mod_clk);
++		}
+ 	}
+ 
+ 	ret = reset_control_deassert(tmdev->reset);
+@@ -471,8 +489,12 @@ static int sun8i_ths_register(struct ths_device *tmdev)
+ 							     i,
+ 							     &tmdev->sensor[i],
+ 							     &ths_ops);
+-		if (IS_ERR(tmdev->sensor[i].tzd))
++		if (IS_ERR(tmdev->sensor[i].tzd)) {
++			dev_err(tmdev->dev,
++				"Failed to register sensor %d (%ld)\n",
++				i, PTR_ERR(tmdev->sensor[i].tzd));
+ 			return PTR_ERR(tmdev->sensor[i].tzd);
++		}
+ 
+ 		if (devm_thermal_add_hwmon_sysfs(tmdev->sensor[i].tzd))
+ 			dev_warn(tmdev->dev,
+@@ -501,19 +523,21 @@ static int sun8i_ths_probe(struct platform_device *pdev)
+ 
+ 	ret = sun8i_ths_resource_init(tmdev);
+ 	if (ret)
+-		return ret;
++		goto err_out;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0)
+-		return irq;
++	if (irq < 0) {
++		ret = irq;
++		goto err_out;
++	}
+ 
+ 	ret = tmdev->chip->init(tmdev);
+ 	if (ret)
+-		return ret;
++		goto err_out;
+ 
+ 	ret = sun8i_ths_register(tmdev);
+ 	if (ret)
+-		return ret;
++		goto err_out;
+ 
+ 	/*
+ 	 * Avoid entering the interrupt handler, the thermal device is not
+@@ -523,10 +547,17 @@ static int sun8i_ths_probe(struct platform_device *pdev)
+ 	ret = devm_request_threaded_irq(dev, irq, NULL,
+ 					sun8i_irq_thread,
+ 					IRQF_ONESHOT, "ths", tmdev);
+-	if (ret)
+-		return ret;
++	if (ret) {
++		dev_err(dev, "Failed to request irq (%d)\n", ret);
++		goto err_out;
++	}
+ 
++	dev_info(dev, "Thermal sensor ready!\n");
+ 	return 0;
++
++err_out:
++	dev_err(dev, "Failed to probe thermal sensor (%d)\n", ret);
++	return ret;
+ }
+ 
+ static int sun8i_ths_remove(struct platform_device *pdev)
+-- 
+2.27.0
 
-Yes, exactly.
-
-Thanks,
-Richard
