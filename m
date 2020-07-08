@@ -7,122 +7,103 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4733C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A607D20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D37206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XChWUnKZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBQTnyl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgGHKyv (ORCPT
+        id S1728664AbgGHKzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:54:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
+        Wed, 8 Jul 2020 06:55:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgGHKyv (ORCPT
+        with ESMTP id S1725972AbgGHKzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:54:51 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9BDC08C5DC;
-        Wed,  8 Jul 2020 03:54:50 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id d21so26594993lfb.6;
-        Wed, 08 Jul 2020 03:54:50 -0700 (PDT)
+        Wed, 8 Jul 2020 06:55:09 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E87C08C5DC;
+        Wed,  8 Jul 2020 03:55:09 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m9so9549135pfh.0;
+        Wed, 08 Jul 2020 03:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=twagDEp7uXq8z35DJ39Z3HkBCRXMKE29CuddS5Pgx5o=;
-        b=XChWUnKZ+z/Z5z1PK/1divkaicO/LV6npjMADhKRxPYqJytgHgUFLk/KIxgsQFO7Pd
-         oDZ51RnSlis9BPZ5B2AVl6nR3gjYI+WDpp1em5WzYQLxnKHm2b2ZDEaky2Oz+Ft5Nmlw
-         kKSZIb9kUQADUXgvjXOjFfZUjSlgGU4WZ6C2dG2qoFJZe+CTyi0268LStKihiJL0RnPn
-         k8jsFmAw0ypOVa8rHnjMgAiMURDtfZbI8b/gE9yKXUxdiiAZyfU67/0ml/xC3E+ZX7VB
-         PNlCqqSVMJn1BN6/T7BkDpA9o4nEd8eHorO8aB5gjAt0lIVlgpIiDMXouZjwpE3clTrM
-         1BBg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PBn0kG772UiRofP2vcjNJnGOHseI8tNLjt18LXfHgfM=;
+        b=gBQTnyl5XQbz7QLwruwhpPZNpRDxt5cQZprhMlwkkb2tOSEoozJD6JurK8F/aIYp9r
+         0FCfhI+IyHfRuVNgfb7PulpmQizTMiuNcV72ITUVpbmneuavA3eOKelwFFIuVQ4MtP0D
+         0mdJNjRYy2ffNeNrCDrkHb0HwpyDx5xFYRj4TtQq/SI86iGLC93JfQs3dXR47omSWz0z
+         WIzrJeGMdrURNQGDykSPdqVTGrGtUwxURq2j2p7/gibqwEMroAlDBXFu4MUwKF5oA62b
+         mAqiyML/Tt3/nf63VpPqtBNil2XFSCdaA7ZnIx6sH6dvXUPpqbKT+//PUMCnCnr7wdey
+         yXMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=twagDEp7uXq8z35DJ39Z3HkBCRXMKE29CuddS5Pgx5o=;
-        b=uMG9ko2B4i07aBnjm+xl8c/ye71nIDOxt+goDNgxWg+2NL02bFfUYlGKILzOiABMQY
-         t8Tg+sVWlZZBz4xYTyFEHPoFKs7WonIw7ZQNYX95wvZiZ1jj6/QAJets9g+J7d/dK2JI
-         Dy5CLtcsmD5bfnRTZ8/pgYUdSgcpmwJ3OrND8TvyP3RWvmnd0HY0BScbw4w/apfci9x/
-         vNolZAa5SzLuBaX/MxKweMvWqZYhzqX0QozllY6uO6wVR36MWJ1HgZAC8+psFgnEWZ30
-         b0/sc03+sX9Lu1ZwzSdZ6g94xf3tPdV2Yfk5E71/jNedAxtQz9Zeu71jBFVGqXJjrH1q
-         heAg==
-X-Gm-Message-State: AOAM532GdOIVRF98+hZdL1Lgk5/ZtbaLyZfIqvUUVv+HbEU9FCmms67a
-        1iSo11VtOQqjBd+uMRjhZyfNQc6y
-X-Google-Smtp-Source: ABdhPJyn246HkXwL6wJP8gCUOR9MyRwPQIe4JsLfHYYmrLKs5pX1SN7KzP2DXlB+WqQI0GrcHrPZUw==
-X-Received: by 2002:a05:6512:3153:: with SMTP id s19mr23969454lfi.25.1594205689103;
-        Wed, 08 Jul 2020 03:54:49 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id c14sm9868812lfb.69.2020.07.08.03.54.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 03:54:48 -0700 (PDT)
-Subject: Re: [PATCH v1 4/5] gpio: max77620: Don't handle disabled interrupts
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200708082634.30191-1-digetx@gmail.com>
- <20200708082634.30191-5-digetx@gmail.com>
- <CAHp75VcqkmywShtOVQhEw3qwbDCHjPKeQDYWxZiq+Cvx2_QCwA@mail.gmail.com>
- <68df4805-daf9-91c5-d755-53abc8823654@gmail.com>
- <CAHp75VcEqTJxPj1pETC9eUsZCLwpv8tyZ7EjKvzzJTQ4wfKJyg@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d39caa8f-816c-5d4d-6f54-99baea3e0d5a@gmail.com>
-Date:   Wed, 8 Jul 2020 13:54:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PBn0kG772UiRofP2vcjNJnGOHseI8tNLjt18LXfHgfM=;
+        b=p5CzGAG4jO+APHHIoT9qlXYE46mBKcWYFL/TEQc7vJmFQcvbZL63wjSSZRPPE45UgI
+         K8dBg5X6m8AI5AFScw6k0ZoMce1kyHqMx8GVIpU9gqnTA3lsuXr2R7nJJqTr0imsJoYm
+         tfTUlVqsR1Ii60Pzn1TadP5lPWO+jJtY6PiGHI9VuSJsvfPKdmB2Uw42aOVZd0YiNdo0
+         kGfxt/ETjhxSlYCuCFpmTW82g9xNK1HdgsE1+rp+Jet5r6iBSyb4jUrdF/D0jSfB9d4G
+         eG3qi/mKyZg/T+B0iMwis4lsux7jCeVThoq+qfo7XEAr5/HD7QUbD0y7+TayRGvpCGGw
+         61WA==
+X-Gm-Message-State: AOAM532yFbDDFXtwkZQ73SRb1Ou+0sHUnhxlwh4u1OT/7m+6vQ7aOrSM
+        OyPP2nYYxUM47oIZXwz5GSQ=
+X-Google-Smtp-Source: ABdhPJxDRRhChhbBwU6WplFG6NNjrSI88JLFqCzRTJ86Tmq94sqixN+4KdDzOUX2GRmEYYB8FFbCQw==
+X-Received: by 2002:a63:5461:: with SMTP id e33mr38807251pgm.321.1594205709230;
+        Wed, 08 Jul 2020 03:55:09 -0700 (PDT)
+Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id f131sm3828328pgc.14.2020.07.08.03.55.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 03:55:08 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 03:55:06 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Sergey Organov <sorganov@gmail.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, andrew@lunn.ch
+Subject: Re: [PATCH  1/5] net: fec: properly support external PTP PHY for
+ hardware time stamping
+Message-ID: <20200708105506.GB9080@hoboy>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+ <20200706142616.25192-2-sorganov@gmail.com>
+ <20200706150814.kba7dh2dsz4mpiuc@skbuf>
+ <87zh8cu0rs.fsf@osv.gnss.ru>
+ <20200706154728.lfywhchrtaeeda4g@skbuf>
+ <87zh8cqyrp.fsf@osv.gnss.ru>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcEqTJxPj1pETC9eUsZCLwpv8tyZ7EjKvzzJTQ4wfKJyg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zh8cqyrp.fsf@osv.gnss.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.07.2020 13:11, Andy Shevchenko пишет:
-> On Wed, Jul 8, 2020 at 12:19 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->> 08.07.2020 11:46, Andy Shevchenko пишет:
->>> On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>>>
->>>> Check whether GPIO IRQ is enabled before proceeding with handling the
->>>> interrupt request. The interrupt handler now returns IRQ_NONE if none
->>>> of interrupts were handled, which is usually a sign of a problem.
->>>
->>> ...
->>>
->>>> -       pending = value;
->>>> +       pending = value & gpio->irq_enb_mask;
->>>
->>>> +       if (!pending)
->>>> +               return IRQ_NONE;
->>>
->>> for_each_set_bit() should take care of it, no?
->>
->> Do you mean that the handle_nested_irq() takes care of handling
->> unrequested interrupts? Actually, looks like it cares. Alright, I'll
->> drop this patch since it should be unnecessary. Thank you for the comment!
+On Mon, Jul 06, 2020 at 09:33:30PM +0300, Sergey Organov wrote:
+> Vladimir Oltean <olteanv@gmail.com> writes:
 > 
-> I think it's still good to have reduced IRQs to handle by dropping not
-> enabled ones, my comment was about the case when pending == 0. Sorry
-> if it was unclear.
+> > On Mon, Jul 06, 2020 at 06:21:59PM +0300, Sergey Organov wrote:
+> > Both are finicky in their own ways. There is no real way for the user to
+> > select which PHC they want to use. The assumption is that you'd always
+> > want to use the outermost one, and that things in the kernel side always
+> > collaborate towards that end.
 
-It should be unnecessary since we now see that the handle_nested_irq()
-checks whether interrupt was requested and if it wasn't, then particular
-GPIO interrupt will be treated as spurious [1]. The pending == 0
-condition is an extreme case, I don't think that there is a need to
-optimize it without any good reason.
++1
 
-[1] https://elixir.bootlin.com/linux/v5.8-rc3/source/kernel/irq/chip.c#L485
+In addition, for PHY time stamping you must enable the costly
+CONFIG_NETWORK_PHY_TIMESTAMPING option at compile time, and so the
+user most definitely wants the "outer" function.
 
-Hence it should be better to drop this patch.
+> Makes sense, -- thanks for clarification! Indeed, if somebody connected
+> that external thingy, chances are high it was made for a purpose.
+
+Yes, exactly.
+
+Thanks,
+Richard
