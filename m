@@ -2,90 +2,85 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD854C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7879C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C68D5204EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64F3204EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgGHLbZ (ORCPT
+        id S1728871AbgGHLcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:31:25 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44288 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbgGHLbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:31:25 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k6so33619667oij.11;
-        Wed, 08 Jul 2020 04:31:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8e4hZ651cVQvM3D1punaVKh1Yt9HoxZQTsJcXMEqkDA=;
-        b=m4CeBAmYjBTwDcD5+n6LdHoOdyrGoKD5rg+xLWEASq3yMMJWNZnsqQex+A1CYd08lB
-         wVuROSHYLeY8QFmTZSIYGQG3ePHI+qSqRY9XyXhcjV+B5opgXTRIdlCW1Kxd4jrvQ/VJ
-         hSiVws5i/5XsME+1TZ4bPSqqfMWEF5/bg4nl8jhL86oCN1f88LOOm93vgE/xQ970chxc
-         s4Pyg8iEvxLTVkE3bgbW+Tp4OxITXkH++TLJ74Zo0FDV+WpT/N7Nyl7UflUN1ypyc9bR
-         xvkXJyVs6VZYTajYUu4jmEZtgZ3py4STQZ8I02glj5jqpVAkPTFDBeJgUZ+AONp3uDYA
-         Qx4g==
-X-Gm-Message-State: AOAM53243vR3RuZw5DwLZ0/WhQ9pHpKr9yx8YqbKL+iRBUnkIr+MOKyV
-        4kp4w+6k1J63Cpgvyud4rOqhAbIhZ8RmlUOfkmQ=
-X-Google-Smtp-Source: ABdhPJwafYtlIK3JfqVod814xS1tHS++kFtnvZz6/F9NZ7RsO086oPA3TeNASTK81u1+qTWjwuY65ewtSNE84DDJois=
-X-Received: by 2002:aca:5c41:: with SMTP id q62mr6476331oib.148.1594207882458;
- Wed, 08 Jul 2020 04:31:22 -0700 (PDT)
+        Wed, 8 Jul 2020 07:32:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:34012 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728410AbgGHLcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 07:32:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8752B31B;
+        Wed,  8 Jul 2020 04:32:52 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2FD373F68F;
+        Wed,  8 Jul 2020 04:32:51 -0700 (PDT)
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     joro@8bytes.org
+Cc:     hch@lst.de, iommu@lists.linux-foundation.org,
+        jonathan.lemon@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, baolu.lu@linux.intel.com,
+        dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/2] iommu/intel: Avoid SAC address trick for PCIe devices
+Date:   Wed,  8 Jul 2020 12:32:41 +0100
+Message-Id: <e583fc6dd1fb4ffc90310ff4372ee776f9cc7a3c.1594207679.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.23.0.dirty
 MIME-Version: 1.0
-References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594138692-16816-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594138692-16816-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 8 Jul 2020 13:31:11 +0200
-Message-ID: <CAMuHMdU92mn8cYT2hb-f=e8ob7M52=uJkEAwAwnGyRKymg=eRA@mail.gmail.com>
-Subject: Re: [PATCH 13/14] dt-bindings: pinctrl: renesas,pfc-pinctrl: Document
- r8a774e1 PFC support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Document PFC support for the RZ/G2H (R8A774E1) SoC.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+For devices stuck behind a conventional PCI bus, saving extra cycles at
+33MHz is probably fairly significant. However since native PCI Express
+is now the norm for high-performance devices, the optimisation to always
+prefer 32-bit addresses for the sake of avoiding DAC is starting to look
+rather anachronistic. Technically 32-bit addresses do have shorter TLPs
+on PCIe, but unless the device is saturating its link bandwidth with
+small transfers it seems unlikely that the difference is appreciable.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in sh-pfc-for-v5.9.
+What definitely is appreciable, however, is that the IOVA allocator
+doesn't behave all that well once the 32-bit space starts getting full.
+As DMA working sets get bigger, this optimisation increasingly backfires
+and adds considerable overhead to the dma_map path for use-cases like
+high-bandwidth networking.
 
-Gr{oetje,eeting}s,
+As such, let's simply take it out of consideration for PCIe devices.
+Technically this might work out suboptimal for a PCIe device stuck
+behind a conventional PCI bridge, or for PCI-X devices that also have
+native 64-bit addressing, but neither of those are likely to be found
+in performance-critical parts of modern systems.
 
-                        Geert
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/iommu/intel/iommu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 9129663a7406..21b11de23a53 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -3348,7 +3348,8 @@ static unsigned long intel_alloc_iova(struct device *dev,
+ 	/* Ensure we reserve the whole size-aligned region */
+ 	nrpages = __roundup_pow_of_two(nrpages);
+ 
+-	if (!dmar_forcedac && dma_mask > DMA_BIT_MASK(32)) {
++	if (!dmar_forcedac && dma_mask > DMA_BIT_MASK(32) &&
++	    dev_is_pci(dev) && !pci_is_pcie(to_pci_dev(dev))) {
+ 		/*
+ 		 * First try to allocate an io virtual address in
+ 		 * DMA_BIT_MASK(32) and if that fails then try allocating
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.23.0.dirty
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
