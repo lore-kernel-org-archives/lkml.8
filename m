@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA02C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2B6206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA95C20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594223066;
-	bh=GEJJCDdVm8pUbVjvqKgHBBMZkXtSqzUnyt6nkVra9C4=;
+	s=default; t=1594223075;
+	bh=ma9ZvKZoF5WtM7bB9wnNI5b3TrDkNcZs7yoCrAsR6v8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6lYn/Kpan68CAkmOlbGINegv35kT85UR2yUGldokaYHYIIC75o/fTz/wZS1Gl1Wd
-	 9oDplVJqpRjLLEFRmdkfIbEAgqxfntdQIpV0cgMPkbnTuEI6Xp/nau9+rxW+vatEp1
-	 rpa8rPAtC2ze/7Dc6jU+LLUARtuEaa4en09jgsoY=
+	b=T9DyUygJAGUpyDEuCHpShjMuWCtCvZ7tvJmji6W3QeomaK7UEUl45CBBA8An2yTqk
+	 +bJTZH+6cBdhjUfOb5vvyDWaxMMfpHkPdwamZC4x9ag6KrqiqlVbwINu3O5Ki3OV7L
+	 l+pT71W5pX67cfypJdYcY/E2oVA0mdr8ytWnD8D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730889AbgGHPoZ (ORCPT
+        id S1730418AbgGHPoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:44:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47842 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:44:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730403AbgGHPlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:41:25 -0400
+        id S1730366AbgGHPlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:41:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA3FC20720;
-        Wed,  8 Jul 2020 15:41:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEF03207C4;
+        Wed,  8 Jul 2020 15:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222885;
-        bh=GEJJCDdVm8pUbVjvqKgHBBMZkXtSqzUnyt6nkVra9C4=;
+        s=default; t=1594222881;
+        bh=ma9ZvKZoF5WtM7bB9wnNI5b3TrDkNcZs7yoCrAsR6v8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ELAHhkgGJptcVpMd7kX0vSvpXs78iTXGMe1SuQJW5NUP30mn8+zduqdESZzIwAzEx
-         MtzNTJ3j4mc5FGXWZo1Bj/+TGJ+TQf+GjIUgoh3wGZ9fps4asY5CiZCitf/uA62ARO
-         kQO+YYdm7X6yd8sTXM1PdWmuyp/d7Dy0BKJPmH5k=
+        b=Lc7kTyVUhaabkaPq0cp3rdRFkukxeEiq5qTfWRlwgPg2v7XZeltCtzNA94MgIpjjj
+         0tVX2x6tj14cO4chyViHQkWT1ZgIlnOE5dEnH3ICeLwy65SZoBT7EwEhN7siK2PsXd
+         aYZy5LnT3KyhdjmQ7rOyMBGiShdWTli0gqdoPSRo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petteri Aimonen <jpa@git.mail.kapsi.fi>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 06/30] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
-Date:   Wed,  8 Jul 2020 11:40:52 -0400
-Message-Id: <20200708154116.3199728-6-sashal@kernel.org>
+Cc:     Maurizio Drocco <maurizio.drocco@ibm.com>,
+        Bruno Meneguele <bmeneg@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 03/30] ima: extend boot_aggregate with kernel measurements
+Date:   Wed,  8 Jul 2020 11:40:49 -0400
+Message-Id: <20200708154116.3199728-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708154116.3199728-1-sashal@kernel.org>
 References: <20200708154116.3199728-1-sashal@kernel.org>
@@ -58,64 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petteri Aimonen <jpa@git.mail.kapsi.fi>
+From: Maurizio Drocco <maurizio.drocco@ibm.com>
 
-[ Upstream commit 7ad816762f9bf89e940e618ea40c43138b479e10 ]
+[ Upstream commit 20c59ce010f84300f6c655d32db2610d3433f85c ]
 
-Previously, kernel floating point code would run with the MXCSR control
-register value last set by userland code by the thread that was active
-on the CPU core just before kernel call. This could affect calculation
-results if rounding mode was changed, or a crash if a FPU/SIMD exception
-was unmasked.
+Registers 8-9 are used to store measurements of the kernel and its
+command line (e.g., grub2 bootloader with tpm module enabled). IMA
+should include them in the boot aggregate. Registers 8-9 should be
+only included in non-SHA1 digests to avoid ambiguity.
 
-Restore MXCSR to the kernel's default value.
-
- [ bp: Carve out from a bigger patch by Petteri, add feature check, add
-   FNINIT call too (amluto). ]
-
-Signed-off-by: Petteri Aimonen <jpa@git.mail.kapsi.fi>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207979
-Link: https://lkml.kernel.org/r/20200624114646.28953-2-bp@alien8.de
+Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+Reviewed-by: Bruno Meneguele <bmeneg@redhat.com>
+Tested-by: Bruno Meneguele <bmeneg@redhat.com>  (TPM 1.2, TPM 2.0)
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/fpu/internal.h | 5 +++++
- arch/x86/kernel/fpu/core.c          | 6 ++++++
- 2 files changed, 11 insertions(+)
+ security/integrity/ima/ima.h        |  2 +-
+ security/integrity/ima/ima_crypto.c | 15 ++++++++++++++-
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 44c48e34d7994..00eac7f1529b0 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -619,6 +619,11 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
-  * MXCSR and XCR definitions:
-  */
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 495e28bd488e6..844a55225ede0 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -30,7 +30,7 @@
  
-+static inline void ldmxcsr(u32 mxcsr)
-+{
-+	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
-+}
-+
- extern unsigned int mxcsr_feature_mask;
+ enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
+ 		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
+-enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
++enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8, TPM_PCR10 = 10 };
  
- #define XCR_XFEATURE_ENABLED_MASK	0x00000000
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 12c70840980e4..cd8839027f66d 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -101,6 +101,12 @@ void kernel_fpu_begin(void)
- 		copy_fpregs_to_fpstate(&current->thread.fpu);
+ /* digest size for IMA, fits SHA1 or MD5 */
+ #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index fb27174806ba4..e0738d1d143d7 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -682,13 +682,26 @@ static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+ 	if (rc != 0)
+ 		return rc;
+ 
+-	/* cumulative sha1 over tpm registers 0-7 */
++	/* cumulative digest over TPM registers 0-7 */
+ 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+ 		ima_pcrread(i, &d);
+ 		/* now accumulate with current aggregate */
+ 		rc = crypto_shash_update(shash, d.digest,
+ 					 crypto_shash_digestsize(tfm));
  	}
- 	__cpu_invalidate_fpregs_state();
-+
-+	if (boot_cpu_has(X86_FEATURE_XMM))
-+		ldmxcsr(MXCSR_DEFAULT);
-+
-+	if (boot_cpu_has(X86_FEATURE_FPU))
-+		asm volatile ("fninit");
- }
- EXPORT_SYMBOL_GPL(kernel_fpu_begin);
- 
++	/*
++	 * Extend cumulative digest over TPM registers 8-9, which contain
++	 * measurement for the kernel command line (reg. 8) and image (reg. 9)
++	 * in a typical PCR allocation. Registers 8-9 are only included in
++	 * non-SHA1 boot_aggregate digests to avoid ambiguity.
++	 */
++	if (alg_id != TPM_ALG_SHA1) {
++		for (i = TPM_PCR8; i < TPM_PCR10; i++) {
++			ima_pcrread(i, &d);
++			rc = crypto_shash_update(shash, d.digest,
++						crypto_shash_digestsize(tfm));
++		}
++	}
+ 	if (!rc)
+ 		crypto_shash_final(shash, digest);
+ 	return rc;
 -- 
 2.25.1
 
