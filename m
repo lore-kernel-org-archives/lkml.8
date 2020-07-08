@@ -2,275 +2,355 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C10EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A72C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384BF206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC77F206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qot4vl7X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X6bJ6Y+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgGHTK6 (ORCPT
+        id S1726437AbgGHTLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:10:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37352 "EHLO
+        Wed, 8 Jul 2020 15:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgGHTK5 (ORCPT
+        with ESMTP id S1725978AbgGHTLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:10:57 -0400
+        Wed, 8 Jul 2020 15:11:07 -0400
 Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C58DC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 12:10:57 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u185so18338464pfu.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:10:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A51C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 12:11:07 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 207so20186735pfu.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:11:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dLXDbdD3tq5gDxGkxbvF5RLU0N3KNJ8yEFdDrQUR7lE=;
-        b=Qot4vl7XmJWCqWjMWIN/aQ3y9aQGIyTYwBtR/40aP7+KkXf9L7mPJoxzzWMgonM52y
-         zbz2srKXuVhETnrA85kx4jlJSBM/f+aeayJO0NJFsegRR8fwCVv0WouKmpNTLXaEaSu0
-         5vKbs0r6+36zo7BtIvUwaKqp0hVy1X+K2rc3CjOmI7q3GYfD2IEO71xzzrJg0hZLC8eY
-         PGxpsbpRQEtBmU+Ir4Z/RNZ67jpPDyfMGWY/BkNmYdxqTXNxpSDGm7+dtqAoYi/CZvdW
-         UlB6LstmGvROCxuVvbh4hnXcDKbgKx9vjnM0oCb9DT222HBF/FWx9Cob1ri0Tw8vTEfF
-         fD5w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yxhJDf/2WXbSmuQPjyjWBq1+qeb8t2AWfb/ta8dv/wE=;
+        b=X6bJ6Y+zHESd4sAZB1W+5dpu1mHoMxRXqPRU56OBgmIDWFWz4dKRRk4E8NRUMh54Bh
+         NchqyBZT5YjUjvhyc4KmbrapEg22XzzfQQp8KlPafMeWbYFWVTphHWHmdgqwdwy0a1Qv
+         IxekbgrXlNlOOXOv49i3cIY8xzPe/Gm5cI625rB4xrOLh+HIRHDcip7O23UzbJCjhl1U
+         xV5ARevVCYzdPLJjhSlo0HNHsO1ehtVIrFdv8d+c8yvLObLfjP1lK8JUBhUcr+IMMd1g
+         MtYfrBKH1jVWwfxFhQbJczH63RW5tg6YFPS41ClxA07ufg1KYa2ftVYZHbsVNV8NQEe9
+         6wLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dLXDbdD3tq5gDxGkxbvF5RLU0N3KNJ8yEFdDrQUR7lE=;
-        b=bBtWraVur6YMa7XQuf4EwpNjkZfrLlxNqudk6v7NKNK6gm30ouIUnsvHrLi0Lo5txf
-         yFm17LrIOCt9Jc9Q362ydRU6o9aPuojf1H7o6SrGL+GEhASWddqU1Bd5Bq8rtREnHVB4
-         yonCDOApQqzb9Gev9FNFGRl/kGzy5D/KNcWc1gmEio2YUWhsoFT8MoBgn0guI3mGt8/2
-         vCJr2gcKUYvnL8/tV7weC3yWdOjZFzJZvwVcWBmPaW44fwpefbnI1tnpVJIHD7w1nMTJ
-         7bgOZn0BDwwn+W6EIQCDvm3EyuyvF/Me7VlOD/S3y0YKjG/u+TMrgEbCtQYUO6HKv5rw
-         2+XQ==
-X-Gm-Message-State: AOAM532nWCYzcjd5JxVLMpBArHbtyV7eeKDLkGiCFXxGRAqnLHhENj1Y
-        OBt8mZmiDGM/RaD7IwVE43Y=
-X-Google-Smtp-Source: ABdhPJzG5cxnpQmzcJpPMpevH07rAuaVG3/ub3qwqnZEJYbDkFoy+eLXIGWJl+6l0teRVkxKSAilgw==
-X-Received: by 2002:a63:5c55:: with SMTP id n21mr48561050pgm.27.1594235456757;
-        Wed, 08 Jul 2020 12:10:56 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q14sm482992pgk.86.2020.07.08.12.10.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 12:10:56 -0700 (PDT)
-Subject: Re: chrome-platform/for-kernelci bisection:
- baseline.bootrr.rockchip-dp-probed on rk3399-gru-kevin
-To:     "kernelci.org bot" <bot@kernelci.org>, gtucker@collabora.com,
-        kernelci-results@groups.io,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <5f06177f.1c69fb81.ed8e4.1a92@mx.google.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <0d0475a1-c042-8025-f215-d81d04748b75@roeck-us.net>
-Date:   Wed, 8 Jul 2020 12:10:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yxhJDf/2WXbSmuQPjyjWBq1+qeb8t2AWfb/ta8dv/wE=;
+        b=cH1mwPZ/cRd8k0SstHUYzzB8E1MvbpUXevPCY6txeZYT1giCHXPAYJagyB8ZYBxugo
+         qkiFWJFH1Bnb2QOBlbdurcRR4y2KRIkadbH1oBtO1HTYkD6h7xb4tuUwvxSD1JBh1lVD
+         rPebxzzlxSa9/zxC/Cc/Er0iMCUNlm5rhhOc4rbGfesk97aDF8Z/IjlF/MveuAqmzJ1W
+         LW2T/QhKVBmAcX8RzuAJMgGTdn9rbdDm7lC95qdgZ4Tt7eV6QeNZ+4YCoMWmjZ4NZFOS
+         VM3nJJTNah+/faIavqjOXVM8rXbCrlVo9vzcT6HiVp2tE4XDHwwfXLSDJ+fmk44b7Z+G
+         SrMw==
+X-Gm-Message-State: AOAM533FZ4lQOUypEEn1W+AIJxQaODX9eLlfrFXlCZl0fTY9MPia8gL8
+        QLR1vKRFZMfJjLnm2YCPrnKMxw3HWQOivLJU39BuK8sdaTs=
+X-Google-Smtp-Source: ABdhPJzScbIeIyVm5D33n96UOwXnL1QGBC14c0cwI37jqyBvUOV53KqDVFWhgwCECWJYlKz3CGDcHc+yKDoFWAzYWh0=
+X-Received: by 2002:a63:a119:: with SMTP id b25mr49600515pgf.10.1594235466163;
+ Wed, 08 Jul 2020 12:11:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5f06177f.1c69fb81.ed8e4.1a92@mx.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200708181905.257691-1-nhuck@google.com>
+In-Reply-To: <20200708181905.257691-1-nhuck@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 8 Jul 2020 12:10:54 -0700
+Message-ID: <CAKwvOdmKsCedU=Vt_SBSGnf4gKc9Ae4sknn_Lj+kw9f0HY5MMA@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile: Add clang-tidy and static analyzer support
+ to makefile
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Tom Roeder <tmroeder@google.com>,
+        Bill Wendling <morbo@google.com>,
+        Pirama Arumuga Nainar <pirama@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 11:59 AM, kernelci.org bot wrote:
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> *                                                               *
-> * If you do send a fix, please include this trailer:            *
-> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> *                                                               *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> 
-> chrome-platform/for-kernelci bisection: baseline.bootrr.rockchip-dp-probed on rk3399-gru-kevin
-> 
-> Summary:
->   Start:      154353417996 KERNELCI: x86_64_defconfig: Enable support for Chromebooks devices
->   Plain log:  https://storage.kernelci.org/chrome-platform/for-kernelci/v5.8-rc1-20-g154353417996/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.txt
->   HTML log:   https://storage.kernelci.org/chrome-platform/for-kernelci/v5.8-rc1-20-g154353417996/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.html
->   Result:     8c9a6ef40bf4 platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
-> 
-> Checks:
->   revert:     PASS
->   verify:     PASS
-> 
-> Parameters:
->   Tree:       chrome-platform
->   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
->   Branch:     for-kernelci
->   Target:     rk3399-gru-kevin
->   CPU arch:   arm64
->   Lab:        lab-collabora
->   Compiler:   gcc-8
->   Config:     defconfig
->   Test case:  baseline.bootrr.rockchip-dp-probed
-> 
-> Breaking commit found:
-> 
-> -------------------------------------------------------------------------------
-> commit 8c9a6ef40bf400c64c9907031bd32b59f9d4aea2
-> Author: Guenter Roeck <linux@roeck-us.net>
-> Date:   Sat Jul 4 07:26:07 2020 -0700
-> 
->     platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
->     
->     The EC reports a variety of error codes. Most of those, with the exception
->     of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
->     error code gets lost. Convert all EC errors to Linux error codes to report
->     a more meaningful error to the caller to aid debugging.
->     
+On Wed, Jul 8, 2020 at 11:21 AM 'Nathan Huckleberry' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> This patch adds clang-tidy and the clang static-analyzer as make
+> targets. The goal of this patch is to make static analysis tools
+> usable and extendable by any developer or researcher who is familiar
+> with basic c++.
+>
+> The current static analysis tools require intimate knowledge of the internal
+> workings of the static analysis.  Clang-tidy and the clang static analyzers
+> expose an easy to use api and allow users unfamiliar with clang to
+> write new checks with relative ease.
+>
+> ===Clang-tidy===
+>
+> Clang-tidy is an easily extendable 'linter' that runs on the AST.
+> Clang-tidy checks are easy to write and understand. A check consists of
+> two parts, a matcher and a checker. The matcher is created using a
+> domain specific language that acts on the AST
+> (https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+> nodes are found by the matcher a callback is made to the checker. The
+> checker can then execute additional checks and issue warnings.
+>
+> Here is an example clang-tidy check to report functions that have calls
+> to local_irq_disable without calls to local_irq_enable and vice-versa.
+> Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+> are ignored for analysis. (https://reviews.llvm.org/D65828)
+>
+> ===Clang static analyzer===
+>
+> The clang static analyzer is a more powerful static analysis tool that
+> uses symbolic execution to find bugs. Currently there is a check that
+> looks for potential security bugs from invalid uses of kmalloc and
+> kfree. There are several more general purpose checks that are useful for
+> the kernel.
+>
+> The clang static analyzer is well documented and designed to be
+> extensible.
+> (https://clang-analyzer.llvm.org/checker_dev_manual.html)
+> (https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+>
+> The main draw of the clang tools is how accessible they are. The clang
+> documentation is very nice and these tools are built specifically to be
+> easily extendable by any developer. They provide an accessible method of
+> bug-finding and research to people who are not overly familiar with the
+> kernel codebase.
+>
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
+> Changes V1 -> V2:
+> * Remove dependencies on GNU Parallel
+> * * Clang-tidy/analyzer now invoked directly from python
+> Link: https://lkml.org/lkml/2019/8/6/941
+>
+>  Makefile                                      |  3 +
+>  scripts/clang-tools/Makefile.clang-tools      | 23 ++++++
+>  .../{ => clang-tools}/gen_compile_commands.py |  0
 
-Interesting. Well, good that the patch was abandoned, so I don't expect this
-to be a problem in practice.
++ Tom for the rename.
 
-Guenter
+I think we should add scripts/clang-tools/ to MAINTAINERS under
+CLANG/LLVM SUPPORT:
+```
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c87b94e6b2f6..42602231929c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4211,6 +4211,7 @@ W:        https://clangbuiltlinux.github.io/
+ B:     https://github.com/ClangBuiltLinux/linux/issues
+ C:     irc://chat.freenode.net/clangbuiltlinux
+ F:     Documentation/kbuild/llvm.rst
++F:     scripts/clang-tools/
+ K:     \b(?i:clang|llvm)\b
 
->     Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
->     Cc: Prashant Malani <pmalani@chromium.org>
->     Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->     Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index 3e745e0fe092..10aa9e483d35 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -543,6 +543,29 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
->  }
->  EXPORT_SYMBOL(cros_ec_cmd_xfer);
->  
-> +static const int cros_ec_error_map[] = {
-> +	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
-> +	[EC_RES_ERROR] = -EIO,
-> +	[EC_RES_INVALID_PARAM] = -EINVAL,
-> +	[EC_RES_ACCESS_DENIED] = -EACCES,
-> +	[EC_RES_INVALID_RESPONSE] = -EPROTO,
-> +	[EC_RES_INVALID_VERSION] = -ENOTSUPP,
-> +	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
-> +	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
-> +	[EC_RES_UNAVAILABLE] = -ENODATA,
-> +	[EC_RES_TIMEOUT] = -ETIMEDOUT,
-> +	[EC_RES_OVERFLOW] = -EOVERFLOW,
-> +	[EC_RES_INVALID_HEADER] = -EBADR,
-> +	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
-> +	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
-> +	[EC_RES_BUS_ERROR] = -EFAULT,
-> +	[EC_RES_BUSY] = -EBUSY,
-> +	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
-> +	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
-> +	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
-> +	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
-> +};
+ CLEANCACHE API
+```
+that way we get cc'ed properly on proposed changes (should folks use
+scripts/get_maintainer.pl).
+
+>  scripts/clang-tools/run-clang-tools.py        | 77 +++++++++++++++++++
+>  4 files changed, 103 insertions(+)
+>  create mode 100644 scripts/clang-tools/Makefile.clang-tools
+>  rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+>  create mode 100755 scripts/clang-tools/run-clang-tools.py
+>
+> diff --git a/Makefile b/Makefile
+> index fe0164a654c7..3e2df010b342 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -747,6 +747,7 @@ KBUILD_CFLAGS       += $(call cc-option,-fno-allow-store-data-races)
+>
+>  include scripts/Makefile.kcov
+>  include scripts/Makefile.gcc-plugins
+> +include scripts/clang-tools/Makefile.clang-tools
+>
+>  ifdef CONFIG_READABLE_ASM
+>  # Disable optimizations that make assembler listings hard to read.
+> @@ -1543,6 +1544,8 @@ help:
+>         @echo  '  export_report   - List the usages of all exported symbols'
+>         @echo  '  headerdep       - Detect inclusion cycles in headers'
+>         @echo  '  coccicheck      - Check with Coccinelle'
+> +       @echo  '  clang-analyzer  - Check with clang static analyzer'
+> +       @echo  '  clang-tidy      - Check with clang-tidy'
+>         @echo  ''
+>         @echo  'Tools:'
+>         @echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+> diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+> new file mode 100644
+> index 000000000000..e09dc1a8efff
+> --- /dev/null
+> +++ b/scripts/clang-tools/Makefile.clang-tools
+> @@ -0,0 +1,23 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +PHONY += clang-tidy
+> +clang-tidy:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
+> +else
+> +       $(error Clang-tidy requires CC=clang)
+
+s/Clang/clang/ to match the case of the target.
+
+> +endif
 > +
->  /**
->   * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
->   * @ec_dev: EC device.
-> @@ -555,8 +578,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
->   *
->   * Return:
->   * >=0 - The number of bytes transferred
-> - * -ENOTSUPP - Operation not supported
-> - * -EPROTO - Protocol error
-> + * <0 - Linux error code
->   */
->  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
->  			    struct cros_ec_command *msg)
-> @@ -566,13 +588,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
->  	ret = cros_ec_cmd_xfer(ec_dev, msg);
->  	if (ret < 0) {
->  		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
-> -	} else if (msg->result == EC_RES_INVALID_VERSION) {
-> -		dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
-> -			msg->result);
-> -		return -ENOTSUPP;
->  	} else if (msg->result != EC_RES_SUCCESS) {
-> -		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
-> -		return -EPROTO;
-> +		if (msg->result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[msg->result])
-> +			ret = cros_ec_error_map[msg->result];
-> +		else
-> +			ret = -EPROTO;
-> +		dev_dbg(ec_dev->dev, "Command result (err: %d [%d])\n", msg->result, ret);
->  	}
->  
->  	return ret;
-> -------------------------------------------------------------------------------
-> 
-> 
-> Git bisection log:
-> 
-> -------------------------------------------------------------------------------
-> git bisect start
-> # good: [b3a9e3b9622ae10064826dccb4f7a52bd88c7407] Linux 5.8-rc1
-> git bisect good b3a9e3b9622ae10064826dccb4f7a52bd88c7407
-> # bad: [15435341799604f20adcbb5f69b7f0beb2a2f964] KERNELCI: x86_64_defconfig: Enable support for Chromebooks devices
-> git bisect bad 15435341799604f20adcbb5f69b7f0beb2a2f964
-> # good: [3c5ca501b46b91e68b935b4bd752a0aba5232208] platform/chrome: cros_ec_spi: Document missing function parameters
-> git bisect good 3c5ca501b46b91e68b935b4bd752a0aba5232208
-> # good: [20b736872f7f324438649a277ec711a646ce8e8d] platform/chrome: cros_ec_typec: Add PM support
-> git bisect good 20b736872f7f324438649a277ec711a646ce8e8d
-> # bad: [8c9a6ef40bf400c64c9907031bd32b59f9d4aea2] platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
-> git bisect bad 8c9a6ef40bf400c64c9907031bd32b59f9d4aea2
-> # good: [e48bc01ed5adec203676c735365373b31c3c7600] platform/chrome: cros_ec_sensorhub: Fix EC timestamp overflow
-> git bisect good e48bc01ed5adec203676c735365373b31c3c7600
-> # first bad commit: [8c9a6ef40bf400c64c9907031bd32b59f9d4aea2] platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
-> -------------------------------------------------------------------------------
-> 
+> +PHONY += clang-analyzer
+> +clang-analyzer:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py static-analyzer compile_commands.json
+> +else
+> +       $(error Clang-analyzer requires CC=clang)
 
+s/Clang/clang/ to match the case of the target.
+
+> +endif
+> diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+> similarity index 100%
+> rename from scripts/gen_compile_commands.py
+> rename to scripts/clang-tools/gen_compile_commands.py
+> diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
+> new file mode 100755
+> index 000000000000..d429a150e23a
+> --- /dev/null
+> +++ b/scripts/clang-tools/run-clang-tools.py
+> @@ -0,0 +1,77 @@
+> +#!/usr/bin/env python
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +"""A helper routine run clang-tidy and the clang static-analyzer on
+> +compile_commands.json."""
+> +
+> +import argparse
+> +import json
+> +import logging
+> +import multiprocessing
+> +import os
+> +import re
+> +import subprocess
+> +
+> +def parse_arguments():
+> +  """Set up and parses command-line arguments.
+> +  Returns:
+> +    args: Dict of parsed args
+> +      Has keys 'file' and 'type'
+> +  """
+> +  usage = """Run clang-tidy or the clang static-analyzer on a
+> +  compilation database."""
+> +  parser = argparse.ArgumentParser(description=usage)
+> +
+> +  type_help = ('Type of analysis to be performed')
+> +  parser.add_argument('type', choices=['clang-tidy', 'static-analyzer'],
+> +                      help=type_help)
+> +  file_path_help = ('Path to the compilation database to parse')
+> +  parser.add_argument('file',  type=str, help=file_path_help)
+
+I don't know if the kernel has a preferred style for Python, but I
+think it would be good to be consistent in the use of single vs double
+quotes for strings.  My preference is for double quotes, but I don't
+know enough about the various PEPs for style or if the kernel has a
+preferred style for these.
+
++ Bill who knows a bit about Python style.
+
+> +
+> +  args = parser.parse_args()
+> +
+> +  return args
+> +
+> +def init(l,t):
+> +  global lock
+> +  global analysis_type
+> +  lock = l
+> +  analysis_type = t
+
+Is this canonical Python?  Maybe wrap these functions into methods of
+an object you construct, that way you can assign these as instance
+variables against `self`, rather than using global variables.
+
+> +
+> +def run_analysis(entry):
+> +  filename = entry['file']
+> +  p = None
+> +  if(analysis_type == "clang-tidy"):
+> +    p = subprocess.run(["clang-tidy", "-p", os.getcwd(),
+> +                        "-checks=-*,linuxkernel-*", filename],
+> +                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+> +  if(analysis_type == "static-analyzer"):
+> +    p = subprocess.run(["clang-tidy", "-p", os.getcwd(),
+> +                        "-checks=-*,clang-analyzer-*", filename],
+> +                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+When you have a fair amount of duplication between two branches of an
+if/else (for instance, same method invocation and number of
+parameters, just slight differences in parameter values), consider if
+you can use a ternary to simplify or make the code more concise. That
+would also help avoid initializing `p` to `None`:
+
+checks = "-checks=-*,linuxkernel-*" if analysis_type == "clang-tidy"
+else "-checks=-*,clang-analyzer-*"
+p = subprocess.run(["clang-tidy", "-p", os.getcwd(), checks,
+    stdout=subprocess.PIPE, stderr=subprocess.PIPE]
+
+then maybe do some validation of the analysis_type when validating
+command line arguments earlier.
+
+> +  lock.acquire()
+> +  print(entry['file'])
+> +  os.write(1, p.stdout)
+> +  os.write(2, p.stderr)
+
+Please use sys.stdout and sys.stderr rather than magic constants for
+their file descriptors.
+
+> +  lock.release()
+> +
+> +
+> +def main():
+> +  args = parse_arguments()
+> +  filename = args.file
+> +
+> +  #Read JSON data into the datastore variable
+> +  if filename:
+
+Isn't there a way to make command line arguments required with
+Argparse? In that case, would you still need the conditional?
+
+> +    with open(filename, 'r') as f:
+> +      datastore = json.load(f)
+> +
+> +      lock = multiprocessing.Lock()
+> +      pool = multiprocessing.Pool(initializer=init, initargs=(lock,args.type,))
+> +      pool.map(run_analysis,datastore)
+
+Please use a space to separate parameters in a parameter list.
+
+> +
+> +if __name__ == '__main__':
+> +    main()
+
+So rather than call a function named main, you could simply construct
+an object, then call a method on it or have the constructor simply
+kick off the analysis (essentially a mix of `main` and `init`).
+
+-- 
+Thanks,
+~Nick Desaulniers
