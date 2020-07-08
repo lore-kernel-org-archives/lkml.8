@@ -2,187 +2,127 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBCAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95A1420674
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A607D20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IOgkAyBe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XChWUnKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgGHKw6 (ORCPT
+        id S1728618AbgGHKyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:52:58 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:54365 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgGHKw5 (ORCPT
+        Wed, 8 Jul 2020 06:54:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgGHKyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:52:57 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708105256euoutp01d8f6f8b293da2f4ff859265de6c4ffb4~fwYZoPl3J1678216782euoutp01L
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 10:52:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708105256euoutp01d8f6f8b293da2f4ff859265de6c4ffb4~fwYZoPl3J1678216782euoutp01L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594205576;
-        bh=8cv3BY8rhZiowdOYtWgygGS3Rx7HHvw149D4xWAek5I=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=IOgkAyBe9rai7kVAAu2QAZFlsXPPukhVQgHPkbFJzDcf6uJ+Djcl0dZL/hQax0ATm
-         rW5KZTWo2yzXYgotabHBzNM+P4blYvn5/fCMRXLHZSmI+KRQ9byDgV1LKg2Gotrkzt
-         8mdstTMz1Rd+0FN8ettgstiPwqxuO4hB9sQhYFeU=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200708105255eucas1p2548e027b63151ddbc3930e14a909af0f~fwYZKwzd51536015360eucas1p2V;
-        Wed,  8 Jul 2020 10:52:55 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 3B.1C.06456.785A50F5; Wed,  8
-        Jul 2020 11:52:55 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708105255eucas1p229180d35b47e4a350fbb72ea5e2df2a9~fwYY45EE11334013340eucas1p2W;
-        Wed,  8 Jul 2020 10:52:55 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200708105255eusmtrp1930ecde1efb1a571e8a06dc715f2a286~fwYY4Lw011950319503eusmtrp1o;
-        Wed,  8 Jul 2020 10:52:55 +0000 (GMT)
-X-AuditID: cbfec7f2-809ff70000001938-ea-5f05a587f0e1
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 5B.6B.06017.785A50F5; Wed,  8
-        Jul 2020 11:52:55 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708105254eusmtip233ca8aacc24a7fc9b0dafeafbd0a6fc0~fwYYRV4Cb0877408774eusmtip2J;
-        Wed,  8 Jul 2020 10:52:54 +0000 (GMT)
-Subject: Re: [RFC PATCH 0/2] PM / devfreq: Add delayed timer for polling
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     lukasz.luba@arm.com, k.konieczny@samsung.com, krzk@kernel.org,
-        kgene@kernel.org, s.nawrocki@samsung.com,
-        willy.mh.wolff.ml@gmail.com, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <bb3a5b29-c90f-5668-e46d-9eeeb5a9b973@samsung.com>
-Date:   Wed, 8 Jul 2020 12:52:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 8 Jul 2020 06:54:51 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9BDC08C5DC;
+        Wed,  8 Jul 2020 03:54:50 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id d21so26594993lfb.6;
+        Wed, 08 Jul 2020 03:54:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=twagDEp7uXq8z35DJ39Z3HkBCRXMKE29CuddS5Pgx5o=;
+        b=XChWUnKZ+z/Z5z1PK/1divkaicO/LV6npjMADhKRxPYqJytgHgUFLk/KIxgsQFO7Pd
+         oDZ51RnSlis9BPZ5B2AVl6nR3gjYI+WDpp1em5WzYQLxnKHm2b2ZDEaky2Oz+Ft5Nmlw
+         kKSZIb9kUQADUXgvjXOjFfZUjSlgGU4WZ6C2dG2qoFJZe+CTyi0268LStKihiJL0RnPn
+         k8jsFmAw0ypOVa8rHnjMgAiMURDtfZbI8b/gE9yKXUxdiiAZyfU67/0ml/xC3E+ZX7VB
+         PNlCqqSVMJn1BN6/T7BkDpA9o4nEd8eHorO8aB5gjAt0lIVlgpIiDMXouZjwpE3clTrM
+         1BBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=twagDEp7uXq8z35DJ39Z3HkBCRXMKE29CuddS5Pgx5o=;
+        b=uMG9ko2B4i07aBnjm+xl8c/ye71nIDOxt+goDNgxWg+2NL02bFfUYlGKILzOiABMQY
+         t8Tg+sVWlZZBz4xYTyFEHPoFKs7WonIw7ZQNYX95wvZiZ1jj6/QAJets9g+J7d/dK2JI
+         Dy5CLtcsmD5bfnRTZ8/pgYUdSgcpmwJ3OrND8TvyP3RWvmnd0HY0BScbw4w/apfci9x/
+         vNolZAa5SzLuBaX/MxKweMvWqZYhzqX0QozllY6uO6wVR36MWJ1HgZAC8+psFgnEWZ30
+         b0/sc03+sX9Lu1ZwzSdZ6g94xf3tPdV2Yfk5E71/jNedAxtQz9Zeu71jBFVGqXJjrH1q
+         heAg==
+X-Gm-Message-State: AOAM532GdOIVRF98+hZdL1Lgk5/ZtbaLyZfIqvUUVv+HbEU9FCmms67a
+        1iSo11VtOQqjBd+uMRjhZyfNQc6y
+X-Google-Smtp-Source: ABdhPJyn246HkXwL6wJP8gCUOR9MyRwPQIe4JsLfHYYmrLKs5pX1SN7KzP2DXlB+WqQI0GrcHrPZUw==
+X-Received: by 2002:a05:6512:3153:: with SMTP id s19mr23969454lfi.25.1594205689103;
+        Wed, 08 Jul 2020 03:54:49 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.googlemail.com with ESMTPSA id c14sm9868812lfb.69.2020.07.08.03.54.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 03:54:48 -0700 (PDT)
+Subject: Re: [PATCH v1 4/5] gpio: max77620: Don't handle disabled interrupts
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-tegra@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200708082634.30191-1-digetx@gmail.com>
+ <20200708082634.30191-5-digetx@gmail.com>
+ <CAHp75VcqkmywShtOVQhEw3qwbDCHjPKeQDYWxZiq+Cvx2_QCwA@mail.gmail.com>
+ <68df4805-daf9-91c5-d755-53abc8823654@gmail.com>
+ <CAHp75VcEqTJxPj1pETC9eUsZCLwpv8tyZ7EjKvzzJTQ4wfKJyg@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d39caa8f-816c-5d4d-6f54-99baea3e0d5a@gmail.com>
+Date:   Wed, 8 Jul 2020 13:54:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200703062622.11773-1-cw00.choi@samsung.com>
+In-Reply-To: <CAHp75VcEqTJxPj1pETC9eUsZCLwpv8tyZ7EjKvzzJTQ4wfKJyg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMKsWRmVeSWpSXmKPExsWy7djP87rtS1njDY7NUrWYeOMKi8X1L89Z
-        LRZ8msFq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XCphZ2i9uNK9gs
-        Dr9pZ7X4duIRowOfx5p5axg9ds66y+6xaVUnm8fmJfUefVtWMXp83iQXwBbFZZOSmpNZllqk
-        b5fAlfH3yU7Wgm/CFWsW/GFuYJwt0MXIySEhYCJxbeVSxi5GLg4hgRWMEntmr2KBcL4wSsx/
-        d58JwvnMKHFg+Sd2mJaTbz5DtSxnlFja8wzKecsoMf3HCmaQKmEBD4m797vBOkQENCRm/r0C
-        VsQscItJ4tThG4wgCTYBK4mJ7avAbF4BO4mFV26CNbMIqEj8P3CVCcQWFYiQ+PTgMCtEjaDE
-        yZlPWEBsTgFriTs999hAbGYBcYlbT+YzQdjyEtvfzmEGWSYh8JZd4veNu8wQd7tIfDnwCuoH
-        YYlXx7dA2TISpyf3sEA0rGOU+NvxAqp7O6PE8sn/2CCqgNad+wVkcwCt0JRYv0sfxJQQcJS4
-        1CUFYfJJ3HgrCHEDn8SkbdOZIcK8Eh1tQhAz1CQ2LNvABrO1a+dK5gmMSrOQfDYLyTezkHwz
-        C2HtAkaWVYziqaXFuempxYZ5qeV6xYm5xaV56XrJ+bmbGIFJ7fS/4592MH69lHSIUYCDUYmH
-        NyORJV6INbGsuDL3EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWlOanFhxilOViUxHmNF72MFRJI
-        TyxJzU5NLUgtgskycXBKNTC6TEhKsdwrlboobJ1PvaLfus16S86funKyW4f5g3DwhLX/7P9M
-        2XMy9Ntua+73r/sUjLTuHLjioWC4ccbFJQwfWNdeOJ29Iyhhe0RV1OygBgfe73NWnfa5sXTB
-        Htf0Sa4Cp9/71V+zSzO7fO51rkZmQswWTU0uwXsXZh86tvD5v7PGl0Jfhn/eqsRSnJFoqMVc
-        VJwIAAvvUe1mAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsVy+t/xe7rtS1njDVZ/F7SYeOMKi8X1L89Z
-        LRZ8msFq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XCphZ2i9uNK9gs
-        Dr9pZ7X4duIRowOfx5p5axg9ds66y+6xaVUnm8fmJfUefVtWMXp83iQXwBalZ1OUX1qSqpCR
-        X1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl/H3yU7Wgm/CFWsW/GFu
-        YJwt0MXIySEhYCJx8s1nxi5GLg4hgaWMEg+XfgJyOIASMhLH15dB1AhL/LnWxQZR85pR4lFH
-        CxtIQljAQ+Lu/W52EFtEQENi5t8rjCA2s8AtJokVr0JB5ggJ9DFKfIoDCbMJWElMbF8FVsIr
-        YCex8MpNZhCbRUBF4v+Bq0wgtqhAhMThHbOgagQlTs58wgJicwpYS9zpuccGMV5d4s+8S8wQ
-        trjErSfzmSBseYntb+cwT2AUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3PbfYSK84Mbe4NC9d
-        Lzk/dxMjMH63Hfu5ZQdj17vgQ4wCHIxKPLwZiSzxQqyJZcWVuYcYJTiYlUR4nc6ejhPiTUms
-        rEotyo8vKs1JLT7EaAr03ERmKdHkfGBqySuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKa
-        nZpakFoE08fEwSnVwJhqd0DUlXGCz9YDIYH1E6eYyzzMPq23TvBdxddJt7OPC0+5bXGhilXM
-        K8hHJeuVRMgsH1/9NPEv5VVp/IaOuyYb/nnx/a2w9AuPn29Xdfv4f7/yksHgJLNAjYdarTz7
-        78P6rS+k/lwQbl2xs0nh2CyFFVHv07aIHZQ7PVEi/FSrILdo+S3PiUosxRmJhlrMRcWJACZW
-        R3/1AgAA
-X-CMS-MailID: 20200708105255eucas1p229180d35b47e4a350fbb72ea5e2df2a9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200703061508epcas1p171aa3c0ab832b77e5837d8bd1e563742
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200703061508epcas1p171aa3c0ab832b77e5837d8bd1e563742
-References: <CGME20200703061508epcas1p171aa3c0ab832b77e5837d8bd1e563742@epcas1p1.samsung.com>
-        <20200703062622.11773-1-cw00.choi@samsung.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Chanwoo,
-
-On 7/3/20 8:26 AM, Chanwoo Choi wrote:
-> Add the delayed timer to devfreq framework in order to support
-> the periodical polling mode without stop caused by CPU idle state.
-
-Thank you, this patchset looks fine to me and is a step in the right
-direction:
-
-Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-
-> Some Non-CPU device must need to monitor the device status like
-> utilization regardless of CPU state.
-
-This is probably true for all devfreq devices using simple_ondemand
-governor by default:
-
-drivers/devfreq/exynos-bus.c
-drivers/devfreq/rk3399_dmc.c
-drivers/devfreq/tegra20-devfreq.c
-drivers/gpu/drm/lima/lima_devfreq.c
-drivers/gpu/drm/msm/msm_gpu.c
-drivers/gpu/drm/panfrost/panfrost_devfreq.c
-drivers/memory/samsung/exynos5422-dmc.c
-drivers/scsi/ufs/ufshcd.c
-
-With devfreq device polling being "coupled" to CPU idle state
-the devfreq subsystem behavior is completely unpredictable and
-unreliable.
-
-It affects both performance (device opp change up happening too
-late) and power consumption (device opp change down happening too
-late).
-
-It also causes hardware usage counters support to report too high
-values (because of CPU idle "coupling" the real polling period
-becomes larger than maximum period supported by the counter and
-the counter becomes fully "saturated") which negatively affects
-power consumption (as has been observed when using Odroid XU3/4).
-
-[ The only upside of using such "coupling" is lowered CPU power
-  usage (in some situations) but at the (unacceptable IMHO) cost
-  of the correctness of operations of devfreq subsystem. ]
-
-Unfortunately this patchset currently fixes only exynos5422-dmc
-devfreq driver. To fix problems for Exynos platforms we need to
-also fix exynos-bus devfreq driver.
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
-> - patch1 explains the detailed reason why the delayed timer is required.
-> - patch2 initializes that exynos5422-dmc device use delayed timer as default
-> instead of deferrable timer.
+08.07.2020 13:11, Andy Shevchenko пишет:
+> On Wed, Jul 8, 2020 at 12:19 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>> 08.07.2020 11:46, Andy Shevchenko пишет:
+>>> On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>
+>>>> Check whether GPIO IRQ is enabled before proceeding with handling the
+>>>> interrupt request. The interrupt handler now returns IRQ_NONE if none
+>>>> of interrupts were handled, which is usually a sign of a problem.
+>>>
+>>> ...
+>>>
+>>>> -       pending = value;
+>>>> +       pending = value & gpio->irq_enb_mask;
+>>>
+>>>> +       if (!pending)
+>>>> +               return IRQ_NONE;
+>>>
+>>> for_each_set_bit() should take care of it, no?
+>>
+>> Do you mean that the handle_nested_irq() takes care of handling
+>> unrequested interrupts? Actually, looks like it cares. Alright, I'll
+>> drop this patch since it should be unnecessary. Thank you for the comment!
 > 
-> Chanwoo Choi (2):
->   PM / devfreq: Add support delayed timer for polling mode
->   memory: samsung: exynos5422-dmc: Use delayed timer as default
-> 
->  Documentation/ABI/testing/sysfs-class-devfreq | 12 +++
->  drivers/devfreq/devfreq.c                     | 83 ++++++++++++++++++-
->  drivers/memory/samsung/exynos5422-dmc.c       |  1 +
->  include/linux/devfreq.h                       |  9 ++
->  4 files changed, 104 insertions(+), 1 deletion(-)
+> I think it's still good to have reduced IRQs to handle by dropping not
+> enabled ones, my comment was about the case when pending == 0. Sorry
+> if it was unclear.
+
+It should be unnecessary since we now see that the handle_nested_irq()
+checks whether interrupt was requested and if it wasn't, then particular
+GPIO interrupt will be treated as spurious [1]. The pending == 0
+condition is an extreme case, I don't think that there is a need to
+optimize it without any good reason.
+
+[1] https://elixir.bootlin.com/linux/v5.8-rc3/source/kernel/irq/chip.c#L485
+
+Hence it should be better to drop this patch.
