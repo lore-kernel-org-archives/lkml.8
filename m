@@ -2,334 +2,205 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8233BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A46C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49481206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C43F206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:26:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eb7RvTho"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bp+7dUOn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgGHRZ2 (ORCPT
+        id S1726425AbgGHR0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:25:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36878 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726006AbgGHRZ2 (ORCPT
+        Wed, 8 Jul 2020 13:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgGHR0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:25:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594229125;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8PCbbzVisIhr1KPzrpNlYgZylablGP1kms5umra293M=;
-        b=Eb7RvTholNn3OfPWcjUlPEqf1fJx+/AZvjsQc8hcqhnieNWqB4amQVrM3yMXfZiUyx0gIc
-        dLBtGi6A/v6FupnkLeby+c3l6MLSMuMVbgX1HRamlKOMAU/Mpyup4aATQ764T3ZkRZ9PPg
-        HDDXlWTxVpbFdPgfq+Eg4cOfD9HMgSU=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-447-RL0WXL7qNUOzyY9a8soCIQ-1; Wed, 08 Jul 2020 13:25:17 -0400
-X-MC-Unique: RL0WXL7qNUOzyY9a8soCIQ-1
-Received: by mail-qk1-f199.google.com with SMTP id q6so22843914qke.21
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 10:25:17 -0700 (PDT)
+        Wed, 8 Jul 2020 13:26:07 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB1CC061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 10:26:07 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id ga4so51337815ejb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 10:26:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WYGcMzQopQZDl14XIf4O4aJ8BVHuo25BvGp6Q85HroM=;
+        b=bp+7dUOnLcc5Oi0kcl0BX2Obs1NxiJlDg0C8uv+GcIGbI+HrfNnVyLLtLdkJBjtpDs
+         Jd+7uOpv8tA3ruYnfx2BqlFdsX/EJXgVEMFOodZkUZwppigwcgshzQx/ISW6kWgrllhA
+         a8ZtNTs/E47tyxx2jVnB9rL3SiUbCNQIPy/5yYc7StbQzbe3PTuHRWEY07GomGUD5gBl
+         lVb+9OKBBcf9RW9e2AtaF3ug+7inYhr4QbhN1pj8dFV9muqRZwOqL/flBOekrGs7KVcD
+         aMKpoIphe1iMnM9BnvH1O17VUOD2o4p+lX+RfQvRrZlFEGN4QLrMgLuNWdNuiuhBqbU4
+         hGYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
-         :in-reply-to:references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=8PCbbzVisIhr1KPzrpNlYgZylablGP1kms5umra293M=;
-        b=oGoynHmlsRIQftAlE5NskuypsU8J69hNIcdK+pS7YaYby26QIgWCE5ZR27BDSpgN1u
-         wTif+8BzdPfJSPlq40lIJE8HyKeFyZBhGGXaYNCUbrDsCPAPRC2Lr8ark59ui3bFwWPq
-         faVb8JKBXLa8EK1DiwYnlDR1J1KWhefsGyl+kDrJCIuUtO3e4ar/oRwiu3DSL1imdZHN
-         2ahXdAhVBWi/de5tvu80485/SHykssgdtPxf0fH3NTNWyGNP5PmcaF4Dfx15yZODBrhV
-         18cjG2ZVBOa1H6jQAQDoh7PQo5Wm2mXhuNuXDyAEJitnkedSYatNUG/GgJx89hX3hY3w
-         rdeQ==
-X-Gm-Message-State: AOAM533t0KrGQlTITxLUM6o19RWxBW0CWRHeeidOZmtiRxU5efd5wbLf
-        YzagAoaxlHNDm2uDULohAjMnCwx+heiiH1k7EYctkqdnentZCu7XZ8LvjRVSuH0zj8XiTWfTqga
-        Q4NS+6wLI5Yvu0YsKfL3CWAne
-X-Received: by 2002:a37:9ed6:: with SMTP id h205mr56839329qke.384.1594229116327;
-        Wed, 08 Jul 2020 10:25:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwl/XksMb0RSfvYaf4zucZwc2ys1sjnbTDpimEgAnoPLgdZ+PPqNjSFY/L+rjmqiFP0gjQoJw==
-X-Received: by 2002:a37:9ed6:: with SMTP id h205mr56839308qke.384.1594229115992;
-        Wed, 08 Jul 2020 10:25:15 -0700 (PDT)
-Received: from Whitewolf.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
-        by smtp.gmail.com with ESMTPSA id u27sm449611qkm.121.2020.07.08.10.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 10:25:15 -0700 (PDT)
-Message-ID: <b8d176ed8838ea0d63b794f5fd5d54b71afc0d69.camel@redhat.com>
-Subject: Re: [PATCH 1/2] drm/probe_helper: Add
- drm_connector_helper_funcs.mode_valid_ctx
-From:   Lyude Paul <lyude@redhat.com>
-Reply-To: lyude@redhat.com
-To:     imre.deak@intel.com
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Lee Shawn C <shawn.c.lee@intel.com>
-Date:   Wed, 08 Jul 2020 13:25:14 -0400
-In-Reply-To: <20200707224036.GA22747@ideak-desk.fi.intel.com>
-References: <20200526182313.4005-1-lyude@redhat.com>
-         <20200526182313.4005-2-lyude@redhat.com>
-         <20200707224036.GA22747@ideak-desk.fi.intel.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WYGcMzQopQZDl14XIf4O4aJ8BVHuo25BvGp6Q85HroM=;
+        b=jCApOXpuxSN+G9t9d8kwqBXqFw3Fqg4oqMX6fwcij7LCb7R5V1aRXuj2TvnB9Dnedq
+         Ke6YzSf8t05e0ZLpmIso8w/tXyX+jCq8c80dQ74hQzaILxbBLxRkufFy3WARvgNlTuOi
+         kI1hCiFI6elS/vCn5CgkXq5lYDn31u2WKnGXva5zeQcHPyQqG+uHB1NQCmZDUjXqUQQ9
+         IJhilD3NV5Q/ud9jS9ojjBx0LLy87OTqaWfBVfO1mNqiLa5/2Nrg4r3nAxnzxCyfH2ZH
+         WjVwKASZZzMY2Z2GsQVd5xb8dSzkw4mqAq82blMLL+B/rOYKkZydZZgv3ubHJVYbeYqZ
+         Q/Jg==
+X-Gm-Message-State: AOAM531JD9UwSJd8MmpDOKq4gdX0/GYMNIUQKDpaVD/3yNBM5cAxZczy
+        jPWtwSZEDdTWvb9ktldFN5vKVpJoGe0896jIjeipTyIVve28AA==
+X-Google-Smtp-Source: ABdhPJwoV8t4uI2XTaRmyyeDgy9Qsz9XS2zDyH9zjWSg0c/g1+8CPRgzIj+mHgwez+VbOKXbzSXSV3JYOaGJVwNzRHg=
+X-Received: by 2002:a17:906:8316:: with SMTP id j22mr51325891ejx.97.1594229165528;
+ Wed, 08 Jul 2020 10:26:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200708071117.3070707-1-yuhsuan@chromium.org>
+ <f6a0ea44-3805-5901-9864-72d4a3a4562e@collabora.com> <CABXOdTfV_oGgZWbyP3o07obMuYGOLY87fou2h3_gowQkV7QVNw@mail.gmail.com>
+ <CAGvk5Po=BcHZ8uQJAp10cYHJcvc6-x613o-0Jj00K23xpeQpaQ@mail.gmail.com>
+In-Reply-To: <CAGvk5Po=BcHZ8uQJAp10cYHJcvc6-x613o-0Jj00K23xpeQpaQ@mail.gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Wed, 8 Jul 2020 10:25:54 -0700
+Message-ID: <CABXOdTf1+nBtau7ujnUVTfNd68D-RijZBPU8XMv=ZQ-RLbpzAg@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: cros_ec_codec: Reset I2S RX when probing
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Yicheng Li <yichengli@chromium.org>,
+        ALSA development <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 8, 2020 at 9:17 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> wrote:
+>
+> Guenter Roeck <groeck@google.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=888=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=889:28=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > On Wed, Jul 8, 2020 at 3:16 AM Enric Balletbo i Serra
+> > <enric.balletbo@collabora.com> wrote:
+> > >
+> > > Hi Yu-Hsuan,
+> > >
+> > > Thank you for your patch.
+> > >
+> > > On 8/7/20 9:11, Yu-Hsuan Hsu wrote:
+> > > > It is not guaranteed that I2S RX is disabled when the kernel bootin=
+g.
+> > > > For example, if the kernel crashes while it is enabled, it will kee=
+p
+> > > > enabled until the next time EC reboots. Reset I2S RX when probing t=
+o
+> > > > fix this issue.
+> > > >
+> > > > Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> > > > ---
+> > > >  include/linux/platform_data/cros_ec_commands.h | 1 +
+> > > >  sound/soc/codecs/cros_ec_codec.c               | 7 +++++++
+> > > >  2 files changed, 8 insertions(+)
+> > > >
+> > > > diff --git a/include/linux/platform_data/cros_ec_commands.h b/inclu=
+de/linux/platform_data/cros_ec_commands.h
+> > > > index 69210881ebac8..11ce917ca924c 100644
+> > > > --- a/include/linux/platform_data/cros_ec_commands.h
+> > > > +++ b/include/linux/platform_data/cros_ec_commands.h
+> > > > @@ -4598,6 +4598,7 @@ enum ec_codec_i2s_rx_subcmd {
+> > > >       EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH =3D 0x2,
+> > > >       EC_CODEC_I2S_RX_SET_DAIFMT =3D 0x3,
+> > > >       EC_CODEC_I2S_RX_SET_BCLK =3D 0x4,
+> > > > +     EC_CODEC_I2S_RX_RESET =3D 0x5,
+> > >
+> > > Is this a new command not available in the firmware that is already i=
+n the field?
+> > >
+> > >
+> > > >       EC_CODEC_I2S_RX_SUBCMD_COUNT,
+> > > >  };
+> > > >
+> > > > diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cr=
+os_ec_codec.c
+> > > > index 8d45c628e988e..5495214e73e68 100644
+> > > > --- a/sound/soc/codecs/cros_ec_codec.c
+> > > > +++ b/sound/soc/codecs/cros_ec_codec.c
+> > > > @@ -1034,6 +1034,13 @@ static int cros_ec_codec_platform_probe(stru=
+ct platform_device *pdev)
+> > > >       }
+> > > >       priv->ec_capabilities =3D r.capabilities;
+> > > >
+> > > > +     /* Reset EC codec I2S RX. */
+> > > > +     p.cmd =3D EC_CODEC_I2S_RX_RESET;
+> > > > +     ret =3D send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC=
+_I2S_RX,
+> > > > +                                (uint8_t *)&p, sizeof(p), NULL, 0)=
+;
+> > > > +     if (ret)
+> > > > +             dev_err(dev, "failed to EC_CODEC_I2S_RESET: %d\n", re=
+t);
+> > > > +
+> > >
+> > > With an old firmware I suspect this message will appear on every boot=
+, right?
+> > > So, to solve the issue and get rid of this error you're forced to upg=
+rade the
+> > > firmware. Is that true?
+> > >
+> >
+> > It might possibly make more sense to fail this silently and to send
+> > EC_CODEC_I2S_RX_DISABLE as backup if it is not supported (-ENOTSUPP
+> > can possibly be used as trigger if the call returns it).
+> >
+> > Also, I don't accept dev_err() if the error is ignored for patches in
+> > my scope of responsibility.
+> >
+> > Guenter
+> Thanks for the suggestion. Our plan is to upstream this patch first.
+> And then we will merge it into the kernel after the firmware is
+> updated. Is it feasible? (I'm not sure whether there is the better way
+> if I want to update EC and the kernel at the same time.)
+>
+> I think calling EC_CODEC_I2S_RX_DISABLE does not make sense because it
+> checks the value of i2s_rx_enabled first. If i2s_rx_enabled is false,
+> it will skip the function. However, we don't need to reset while the
+> i2s_rx_enabled is already false.
+>
+Exactly my point. If i2s_rx_enabled is false, nothing needs to be
+done, and it doesn't hurt if the EC does nothing. If i2s_rx_enabled is
+true, it needs to be set to false, which is accomplished by sending
+EC_CODEC_I2S_RX_DISABLE.
 
-JFYI - found an issue with this patch that wouldn't have shown up on i915, info
-down below: 
+> In addition, since it is a sub-command, it will return
+> EC_RES_INVALID_PARAM but not ENOTSUPP if the command is not supported.
+> And then EC_RES_INVALID_PARAM will turn into -EPROTO finally so it's
+> difficult to do other operators basing on the return value.
+>
 
-On Wed, 2020-07-08 at 01:40 +0300, Imre Deak wrote:
-> Sorry for the delay, the review as I promised:
-> 
-> On Tue, May 26, 2020 at 02:23:09PM -0400, Lyude Paul wrote:
-> > This is just an atomic version of mode_valid, which is intended to be
-> > used for situations where a driver might need to check the atomic state
-> > of objects other than the connector itself. One such example is with
-> > MST, where the maximum possible bandwidth on a connector can change
-> > dynamically irregardless of the display configuration.
-> > 
-> > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > Cc: Lee Shawn C <shawn.c.lee@intel.com>
-> > Tested-by: Lee Shawn C <shawn.c.lee@intel.com>
-> > ---
-> >  drivers/gpu/drm/drm_crtc_helper_internal.h |  6 +-
-> >  drivers/gpu/drm/drm_probe_helper.c         | 65 ++++++++++++++--------
-> >  include/drm/drm_modeset_helper_vtables.h   | 41 ++++++++++++++
-> >  3 files changed, 88 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_crtc_helper_internal.h
-> > b/drivers/gpu/drm/drm_crtc_helper_internal.h
-> > index f0a66ef47e5ad..ca767cba6094d 100644
-> > --- a/drivers/gpu/drm/drm_crtc_helper_internal.h
-> > +++ b/drivers/gpu/drm/drm_crtc_helper_internal.h
-> > @@ -73,8 +73,10 @@ enum drm_mode_status drm_crtc_mode_valid(struct drm_crtc
-> > *crtc,
-> >  					 const struct drm_display_mode *mode);
-> >  enum drm_mode_status drm_encoder_mode_valid(struct drm_encoder *encoder,
-> >  					    const struct drm_display_mode
-> > *mode);
-> > -enum drm_mode_status drm_connector_mode_valid(struct drm_connector
-> > *connector,
-> > -					      struct drm_display_mode *mode);
-> > +enum drm_mode_status
-> > +drm_connector_mode_valid(struct drm_connector *connector,
-> > +			 struct drm_display_mode *mode,
-> > +			 struct drm_modeset_acquire_ctx *ctx);
-> >  
-> >  struct drm_encoder *
-> >  drm_connector_get_single_encoder(struct drm_connector *connector);
-> > diff --git a/drivers/gpu/drm/drm_probe_helper.c
-> > b/drivers/gpu/drm/drm_probe_helper.c
-> > index 466dfbba82564..3132784736841 100644
-> > --- a/drivers/gpu/drm/drm_probe_helper.c
-> > +++ b/drivers/gpu/drm/drm_probe_helper.c
-> > @@ -86,16 +86,17 @@ drm_mode_validate_flag(const struct drm_display_mode
-> > *mode,
-> >  	return MODE_OK;
-> >  }
-> >  
-> > -static enum drm_mode_status
-> > +static int
-> >  drm_mode_validate_pipeline(struct drm_display_mode *mode,
-> > -			    struct drm_connector *connector)
-> > +			   struct drm_connector *connector,
-> > +			   struct drm_modeset_acquire_ctx *ctx)
-> >  {
-> >  	struct drm_device *dev = connector->dev;
-> > -	enum drm_mode_status ret = MODE_OK;
-> >  	struct drm_encoder *encoder;
-> > +	int ret = MODE_OK;
-> >  
-> >  	/* Step 1: Validate against connector */
-> > -	ret = drm_connector_mode_valid(connector, mode);
-> > +	ret = drm_connector_mode_valid(connector, mode, ctx);
-> >  	if (ret != MODE_OK)
-> >  		return ret;
-> >  
-> > @@ -196,16 +197,23 @@ enum drm_mode_status drm_encoder_mode_valid(struct
-> > drm_encoder *encoder,
-> >  	return encoder_funcs->mode_valid(encoder, mode);
-> >  }
-> >  
-> > -enum drm_mode_status drm_connector_mode_valid(struct drm_connector
-> > *connector,
-> > -					      struct drm_display_mode *mode)
-> > +int
-> > +drm_connector_mode_valid(struct drm_connector *connector,
-> > +			 struct drm_display_mode *mode,
-> > +			 struct drm_modeset_acquire_ctx *ctx)
-> >  {
-> >  	const struct drm_connector_helper_funcs *connector_funcs =
-> >  		connector->helper_private;
-> >  
-> > -	if (!connector_funcs || !connector_funcs->mode_valid)
-> > +	if (!connector_funcs)
-> >  		return MODE_OK;
-> >  
-> > -	return connector_funcs->mode_valid(connector, mode);
-> > +	if (connector_funcs->mode_valid_ctx)
-> > +		return connector_funcs->mode_valid_ctx(connector, mode, ctx);
-> > +	else if (connector_funcs->mode_valid)
-> > +		return connector_funcs->mode_valid(connector, mode);
-> > +	else
-> > +		return MODE_OK;
-> >  }
-> >  
-> >  #define DRM_OUTPUT_POLL_PERIOD (10*HZ)
-> > @@ -375,8 +383,9 @@ EXPORT_SYMBOL(drm_helper_probe_detect);
-> >   *      (if specified)
-> >   *    - drm_mode_validate_flag() checks the modes against basic connector
-> >   *      capabilities (interlace_allowed,doublescan_allowed,stereo_allowed)
-> > - *    - the optional &drm_connector_helper_funcs.mode_valid helper can
-> > perform
-> > - *      driver and/or sink specific checks
-> > + *    - the optional &drm_connector_helper_funcs.mode_valid or
-> > + *      &drm_connector_helper_funcs.mode_valid_ctx helpers can perform
-> > driver
-> > + *      and/or sink specific checks
-> >   *    - the optional &drm_crtc_helper_funcs.mode_valid,
-> >   *      &drm_bridge_funcs.mode_valid and
-> > &drm_encoder_helper_funcs.mode_valid
-> >   *      helpers can perform driver and/or source specific checks which are
-> > also
-> > @@ -507,22 +516,34 @@ int drm_helper_probe_single_connector_modes(struct
-> > drm_connector *connector,
-> >  		mode_flags |= DRM_MODE_FLAG_3D_MASK;
-> >  
-> >  	list_for_each_entry(mode, &connector->modes, head) {
-> > -		if (mode->status == MODE_OK)
-> > -			mode->status = drm_mode_validate_driver(dev, mode);
-> > +		if (mode->status != MODE_OK)
-> > +			continue;
-> > +
-> > +		mode->status = drm_mode_validate_driver(dev, mode);
-> > +		if (mode->status != MODE_OK)
-> > +			continue;
-> >  
-> > -		if (mode->status == MODE_OK)
-> > -			mode->status = drm_mode_validate_size(mode, maxX, maxY);
-> > +		mode->status = drm_mode_validate_size(mode, maxX, maxY);
-> > +		if (mode->status != MODE_OK)
-> > +			continue;
-> >  
-> > -		if (mode->status == MODE_OK)
-> > -			mode->status = drm_mode_validate_flag(mode, mode_flags);
-> > +		mode->status = drm_mode_validate_flag(mode, mode_flags);
-> > +		if (mode->status != MODE_OK)
-> > +			continue;
-> >  
-> > -		if (mode->status == MODE_OK)
-> > -			mode->status = drm_mode_validate_pipeline(mode,
-> > -								  connector);
-> > +		ret = drm_mode_validate_pipeline(mode, connector, &ctx);
-> > +		if (ret == -EDEADLK) {
-> > +			drm_modeset_backoff(&ctx);
-> > +			goto retry;
-> > +		} else if (WARN_ON_ONCE(ret < 0)) {
-> > +			mode->status = MODE_BAD;
+You might have to convince Enric to permit another error code to
+translate EC_RES_INVALID_PARAM. After all, that would meet his
+requirement that the error code must be used in the kernel to accept a
+translation.
 
-This check is wrong actually. We define negative values for drm_mode_status
-(MODE_BAD, MODE_ERROR, MODE_STALE) which, at least with how drivers currently
-seem to use them, are something we want to treat as not-unexpected errors and
-not WARN_ON.
+Guenter
 
-This is a bit annoying because it does mean there's some overlap between
-drm_mode_status and some legitimate errno values (EPERM, ENOENT, ESRCH). Luckily
-I can't see any reason why drivers would want to return those, but I think we
-should probably print a debugging message when we get any errno values just so
-developers don't get confused (also going to add a IS_ERR() equivalent for
-drm_mode_status, but with a different name)
-
-> > +		} else {
-> > +			mode->status = ret;
-> > +		}
-> >  
-> > -		if (mode->status == MODE_OK)
-> > -			mode->status = drm_mode_validate_ycbcr420(mode,
-> > -								  connector);
-> > +		if (mode->status != MODE_OK)
-> > +			continue;
-> > +		mode->status = drm_mode_validate_ycbcr420(mode, connector);
-> >  	}
-> >  
-> >  prune:
-> > diff --git a/include/drm/drm_modeset_helper_vtables.h
-> > b/include/drm/drm_modeset_helper_vtables.h
-> > index 421a30f084631..8f020c3424b2b 100644
-> > --- a/include/drm/drm_modeset_helper_vtables.h
-> > +++ b/include/drm/drm_modeset_helper_vtables.h
-> > @@ -968,6 +968,47 @@ struct drm_connector_helper_funcs {
-> >  	 */
-> >  	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
-> >  					   struct drm_display_mode *mode);
-> > +
-> > +	/**
-> > +	 * @mode_valid_ctx:
-> > +	 *
-> > +	 * Callback to validate a mode for a connector, irrespective of the
-> > +	 * specific display configuration.
-> > +	 *
-> > +	 * This callback is used by the probe helpers to filter the mode list
-> > +	 * (which is usually derived from the EDID data block from the sink).
-> > +	 * See e.g. drm_helper_probe_single_connector_modes().
-> > +	 *
-> > +	 * This function is optional, and is the atomic version of
-> > +	 * &drm_connector_funcs.mode_valid.
-> > +	 *
-> > +	 * To allow for accessing the atomic state of modesetting objects, the
-> > +	 * helper libraries always call this with ctx set to a valid context,
-> > +	 * and &drm_mode_config.connection_mutex will always be locked with
-> > +	 * the ctx parameter set to @ctx. This allows for taking additional
-> > +	 * locks as required.
-> > +	 *
-> > +	 * Even though additional locks may be acquired, this callback is
-> > +	 * still expected not to take any constraints into account which would
-> > +	 * be influenced by the currently set display state - such constraints
-> > +	 * should be handled in the driver's atomic check. For example, if a
-> > +	 * connector shares display bandwidth with other connectors then it
-> > +	 * would be ok to validate a mode uses against the maximum possible
->                                      ^mode against?
-> 
-> Reviewed-by: Imre Deak <imre.deak@intel.com>
-> 
-> > +	 * bandwidth of the connector. But it wouldn't be ok to take the
-> > +	 * current bandwidth usage of other connectors into account, as this
-> > +	 * would change depending on the display state.
-> > +	 *
-> > +	 * Returns:
-> > +	 *
-> > +	 * Either &drm_mode_status.MODE_OK, one of the failure reasons in
-> > +	 * &enum drm_mode_status, or -EDEADLK if a deadlock would have
-> > +	 * occurred and we need to backoff.
-> > +	 *
-> > +	 */
-> > +	int (*mode_valid_ctx)(struct drm_connector *connector,
-> > +			      struct drm_display_mode *mode,
-> > +			      struct drm_modeset_acquire_ctx *ctx);
-> > +
-> >  	/**
-> >  	 * @best_encoder:
-> >  	 *
-> > -- 
-> > 2.26.2
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+> Thanks,
+> Yu-Hsuan
+>
+> >
+> > > >       platform_set_drvdata(pdev, priv);
+> > > >
+> > > >       ret =3D devm_snd_soc_register_component(dev, &i2s_rx_componen=
+t_driver,
+> > > >
