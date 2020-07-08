@@ -2,152 +2,139 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E512C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 863DF20786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60276207C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbgGHQkZ (ORCPT
+        id S1730727AbgGHQka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:40:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:51380 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730682AbgGHQkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:40:30 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:33369 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730656AbgGHQkW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jul 2020 12:40:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5D21143B;
-        Wed,  8 Jul 2020 09:40:21 -0700 (PDT)
-Received: from merodach.members.linode.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 450493F68F;
-        Wed,  8 Jul 2020 09:40:20 -0700 (PDT)
-From:   James Morse <james.morse@arm.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        James Morse <james.morse@arm.com>
-Subject: [PATCH v5 10/10] cacheinfo: Move resctrl's get_cache_id() to the cacheinfo header file
-Date:   Wed,  8 Jul 2020 16:39:29 +0000
-Message-Id: <20200708163929.2783-11-james.morse@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200708163929.2783-1-james.morse@arm.com>
-References: <20200708163929.2783-1-james.morse@arm.com>
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U2864MV_1594226412;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0U2864MV_1594226412)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 09 Jul 2020 00:40:16 +0800
+Subject: Re: [RFC PATCH] mm: avoid access flag update TLB flush for retried
+ page fault
+To:     Will Deacon <will@kernel.org>
+Cc:     hannes@cmpxchg.org, catalin.marinas@arm.com, will.deacon@arm.com,
+        akpm@linux-foundation.org, xuyu@linux.alibaba.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1594148072-91273-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200708075959.GA25498@willie-the-truck>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <7cf3b3fe-76bb-edc4-7421-9313ef949d7b@linux.alibaba.com>
+Date:   Wed, 8 Jul 2020 09:40:11 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200708075959.GA25498@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-resctrl/core.c defines get_cache_id() for use in its cpu-hotplug
-callbacks. This gets the id attribute of the cache at the corresponding
-level of a cpu.
 
-Later rework means this private function needs to be shared. Move
-it to the header file.
 
-The name conflicts with a different definition in intel_cacheinfo.c,
-name it get_cpu_cacheinfo_id() to show its relation with
-get_cpu_cacheinfo().
+On 7/8/20 1:00 AM, Will Deacon wrote:
+> On Wed, Jul 08, 2020 at 02:54:32AM +0800, Yang Shi wrote:
+>> Recently we found regression when running will_it_scale/page_fault3 test
+>> on ARM64.  Over 70% down for the multi processes cases and over 20% down
+>> for the multi threads cases.  It turns out the regression is caused by commit
+>> 89b15332af7c0312a41e50846819ca6613b58b4c ("mm: drop mmap_sem before
+>> calling balance_dirty_pages() in write fault").
+>>
+>> The test mmaps a memory size file then write to the mapping, this would
+>> make all memory dirty and trigger dirty pages throttle, that upstream
+>> commit would release mmap_sem then retry the page fault.  The retried
+>> page fault would see correct PTEs installed by the first try then update
+>> access flags and flush TLBs.  The regression is caused by the excessive
+>> TLB flush.  It is fine on x86 since x86 doesn't need flush TLB for
+>> access flag update.
+>>
+>> The page fault would be retried due to:
+>> 1. Waiting for page readahead
+>> 2. Waiting for page swapped in
+>> 3. Waiting for dirty pages throttling
+>>
+>> The first two cases don't have PTEs set up at all, so the retried page
+>> fault would install the PTEs, so they don't reach there.  But the #3
+>> case usually has PTEs installed, the retried page fault would reach the
+>> access flag update.  But it seems not necessary to update access flags
+>> for #3 since retried page fault is not real "second access", so it
+>> sounds safe to skip access flag update for retried page fault.
+>>
+>> With this fix the test result get back to normal.
+>>
+>> Reported-by: Xu Yu <xuyu@linux.alibaba.com>
+>> Debugged-by: Xu Yu <xuyu@linux.alibaba.com>
+>> Tested-by: Xu Yu <xuyu@linux.alibaba.com>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>> I'm not sure if this is safe for non-x86 machines, we did some tests on arm64, but
+>> there may be still corner cases not covered.
+>>
+>>   mm/memory.c | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index 87ec87c..3d4e671 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -4241,8 +4241,13 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+>>   	if (vmf->flags & FAULT_FLAG_WRITE) {
+>>   		if (!pte_write(entry))
+>>   			return do_wp_page(vmf);
+>> -		entry = pte_mkdirty(entry);
+>>   	}
+>> +
+>> +	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vmf->flags & FAULT_FLAG_TRIED))
+>> +		entry = pte_mkdirty(entry);
+>> +	else if (vmf->flags & FAULT_FLAG_TRIED)
+>> +		goto unlock;
+>> +
+> Can you rewrite this as:
+>
+> 	if (vmf->flags & FAULT_FLAG_TRIED)
+> 		goto unlock;
+>
+> 	if (vmf->flags & FAULT_FLAG_WRITE)
+> 		entry = pte_mkdirty(entry);
 
-Now this is visible on other architectures, check the id attribute
-has actually been set.
+Yes, it does the same.
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
----
- arch/x86/kernel/cpu/resctrl/core.c | 17 ++---------------
- include/linux/cacheinfo.h          | 21 +++++++++++++++++++++
- 2 files changed, 23 insertions(+), 15 deletions(-)
+>
+> ? (I'm half-asleep this morning and there are people screaming and shouting
+> outside my window, so this might be rubbish)
+>
+> If you _can_make that change, then I don't understand why the existing
+> pte_mkdirty() line needs to move at all. Couldn't you just add:
+>
+> 	if (vmf->flags & FAULT_FLAG_TRIED)
+> 		goto unlock;
+>
+> after the existing "vmf->flags & FAULT_FLAG_WRITE" block?
 
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 587f9791d2a6..3cc0fe435d19 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -350,19 +350,6 @@ static void rdt_get_cdp_l2_config(void)
- 	rdt_get_cdp_config(RDT_RESOURCE_L2, RDT_RESOURCE_L2CODE);
- }
- 
--static int get_cache_id(int cpu, int level)
--{
--	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
--	int i;
--
--	for (i = 0; i < ci->num_leaves; i++) {
--		if (ci->info_list[i].level == level)
--			return ci->info_list[i].id;
--	}
--
--	return -1;
--}
--
- static void
- mba_wrmsr_amd(struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r)
- {
-@@ -560,7 +547,7 @@ static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_domain *d)
-  */
- static void domain_add_cpu(int cpu, struct rdt_resource *r)
- {
--	int id = get_cache_id(cpu, r->cache_level);
-+	int id = get_cpu_cacheinfo_id(cpu, r->cache_level);
- 	struct list_head *add_pos = NULL;
- 	struct rdt_domain *d;
- 
-@@ -606,7 +593,7 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
- 
- static void domain_remove_cpu(int cpu, struct rdt_resource *r)
- {
--	int id = get_cache_id(cpu, r->cache_level);
-+	int id = get_cpu_cacheinfo_id(cpu, r->cache_level);
- 	struct rdt_domain *d;
- 
- 	d = rdt_find_domain(r, id, NULL);
-diff --git a/include/linux/cacheinfo.h b/include/linux/cacheinfo.h
-index 46b92cd61d0c..4f72b47973c3 100644
---- a/include/linux/cacheinfo.h
-+++ b/include/linux/cacheinfo.h
-@@ -3,6 +3,7 @@
- #define _LINUX_CACHEINFO_H
- 
- #include <linux/bitops.h>
-+#include <linux/cpu.h>
- #include <linux/cpumask.h>
- #include <linux/smp.h>
- 
-@@ -119,4 +120,24 @@ int acpi_find_last_cache_level(unsigned int cpu);
- 
- const struct attribute_group *cache_get_priv_group(struct cacheinfo *this_leaf);
- 
-+/*
-+ * Get the id of the cache associated with @cpu at level @level.
-+ * cpuhp lock must be held.
-+ */
-+static inline int get_cpu_cacheinfo_id(int cpu, int level)
-+{
-+	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
-+	int i;
-+
-+	for (i = 0; i < ci->num_leaves; i++) {
-+		if (ci->info_list[i].level == level) {
-+			if (ci->info_list[i].attributes & CACHE_ID)
-+				return ci->info_list[i].id;
-+			return -1;
-+		}
-+	}
-+
-+	return -1;
-+}
-+
- #endif /* _LINUX_CACHEINFO_H */
--- 
-2.20.1
+The intention is to not set dirty bit if it is in retried page fault 
+since the bit should be already set in the first try. And, I'm not quite 
+sure if TLB needs to be flushed on non-x86 if dirty bit is set. If it is 
+unnecessary, then the above change does make sense.
+
+>
+> Will
 
