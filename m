@@ -2,160 +2,168 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31860C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05F6920774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:34:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VIFynQZM"
+	by mail.kernel.org (Postfix) with ESMTP id EA0D22078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:39:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbgGHFej (ORCPT
+        id S1729581AbgGHFjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:34:39 -0400
-Received: from mail-eopbgr60073.outbound.protection.outlook.com ([40.107.6.73]:63041
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726206AbgGHFej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:34:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=irvzLmJU2cH1yNGOBepN4gUP3jch1gXXBoJIxDlp0/JstifeKp6gMdAeImRgHW6oLSQItUI/X4I+Yyv6oTGzLOvjF43qS79WSRrcb58ukfAHwneIBzltvY+KWBVDyJEUcgwaGUsyyOENjaR4UGgUJQoNGsfzsOPnrJXbwf//l11MaxCrOLZXPtKsz2JZFXl2hais3JUv/g2OsT6KeWObaTgV5lO4krb64ZDxqM8yhIX+of9aeSjx5XY8L3c7xeEKIlzfibyACMzM2Hle70xaV7O8jNs4hYcB09Ahc7NJcZOT6cMHCohgV3htEpJ5pqxvpD/xqPUHTZJ4bpLcCb96WQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8+zaVDVo6C7H1AiBbcp+wk/jgbUP9i7TCRQqh71gxSg=;
- b=jPnROmYgqVYoffRUCa6+14co7s7RG878tp99S1oO2I7btBr3uqjWZ/EAgMPZmEiawrkcV3uGijo3fN88uaQQF3IVd9ozvTx1PpW9KyukpIS6X8/jhcLXReJmD7IE/2OxjphZifWlq44ahIZUqiEd+m5t2XqwG7LtD8FZAQ/xufA8tXLPkU1pPuXH0Q+lQpawFYdIJ+RMkqft/HjgMObR38QHGA/FmAi4+mOcXhuZpkxJtn6SwmLs064xcPdUtb4h07VyRdeJzpbXHP6N3fvd9S5FQr1jHc7ub6qUETF/WLSuCVHz2ShCg4YjyTnRm1EITBz4d1h4AqJX7EKRpIKH6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8+zaVDVo6C7H1AiBbcp+wk/jgbUP9i7TCRQqh71gxSg=;
- b=VIFynQZM8jXljKuA7gRulrhY0G6Nfh2HhpZHXOh00E7gcRXiCXVjJfwB45dQ+ClM+PArBDzzDYz982T47UeAUUXzcHRehbgb8r/IOACpi8Tgk5diRwKhEZvge2Ngn7uVFvKtrVM96l4cxMnsdf6qAiMs0M9EDtKP+Li+B4VHDns=
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18) by AM5PR04MB3074.eurprd04.prod.outlook.com
- (2603:10a6:206:4::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.27; Wed, 8 Jul
- 2020 05:34:36 +0000
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::75d9:c8cb:c564:d17f]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::75d9:c8cb:c564:d17f%5]) with mapi id 15.20.3153.029; Wed, 8 Jul 2020
- 05:34:36 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Sergey Organov <sorganov@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: RE: [EXT] [PATCH  4/5] net: fec: get rid of redundant code in
- fec_ptp_set()
-Thread-Topic: [EXT] [PATCH  4/5] net: fec: get rid of redundant code in
- fec_ptp_set()
-Thread-Index: AQHWU6F5IyIEbIdp8UqiTSGJIl4IMaj7gQmwgACxpduAAPiYUA==
-Date:   Wed, 8 Jul 2020 05:34:35 +0000
-Message-ID: <AM6PR0402MB36074EB7107ACF728134FEB0FF670@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-References: <20200706142616.25192-1-sorganov@gmail.com>
-        <20200706142616.25192-5-sorganov@gmail.com>
-        <AM6PR0402MB3607DE03C3333B9E4C8D3309FF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <87tuyj8jxx.fsf@osv.gnss.ru>
-In-Reply-To: <87tuyj8jxx.fsf@osv.gnss.ru>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7fbd8ee1-2211-4ab7-7f72-08d8230099fb
-x-ms-traffictypediagnostic: AM5PR04MB3074:
-x-microsoft-antispam-prvs: <AM5PR04MB3074D5573E29ACB43A8E0B78FF670@AM5PR04MB3074.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:257;
-x-forefront-prvs: 04583CED1A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BBLa6X6I8dZHEjjdH6NOoYYiawzG0bJFrTRUWsLcslS8rtgUDyCinl9ZRniZpAsUaLafra+NTNyvrXjfz5+Ij4EaV1LEQWsCVs+BdHr7ESGoHw36JGmeHjwWbynSNBQHQl3wcGwblwDWXJWfa7+zWHHp90yTiEWDUYlmbiuSEHps0L3cQ9zmQJyUImHru9PD+a+temd7H40DqrV93LXkYddjSElnbFh6Mr/VVQPix71/VZljauuBgS+aBz3qaInmtKREgif/IAFtBs+5/tzxOXjMpPIoj3dUq4JKPjSjH0Ph0+uDUZirMUt5cKWPXAVXBkhSfr+R7HR3PeY5MmayvnWxg7y8X0tvPPgfjEKRW8UCHoasIB/zkW9XDzpcngWx
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(396003)(39860400002)(136003)(366004)(83380400001)(6916009)(478600001)(86362001)(8676002)(2906002)(6506007)(9686003)(54906003)(8936002)(5660300002)(71200400001)(316002)(55016002)(52536014)(76116006)(33656002)(186003)(66946007)(66556008)(64756008)(66476007)(66446008)(7696005)(26005)(4326008)(26583001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: l/DxhBgnVIRd+VBs1rpP+0I/LyGiTj3kEuo6uEU68EA5WeglPMZWqewytIZFMm33msNIXYyS0RVmIVIhuBmtjslEb4KYVZQrRvOoPiGaox6PcyGhRkfnhYJAiHjFi9kkE7qM09l7+OziC60ASUHpfA5hFHojtuf6xwJolAkatD0ETJtg5OT2MqyzbvA1w83oFdPTln5A5szSl4Kvbd2hGRXWsUYshJ6JT8oJXPfMh87Zw2mTIWdkmdbmd2HELUZdOkX3U9LtD/slpHL8WjhpyXPKcyRSg5q2oqbvwWzz77qOpNqoOZ9fItzchHSkg0ARMZO6ewrwb1p/pA0fh2lIm/RlzLlIDgGs88zibvFR08++aX5hxTZW5+UH5lZ9xEC1TA+8HsoXNk/lIZXTaSIYsDG0e+Yq3tbeTIF3q32oHhZ4dWFePT9AgOhgs+b8Y+0z3TA97TLYzdYFvuEgKk8999ucTI8M6rGwlHka3xf4UI4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 8 Jul 2020 01:39:08 -0400
+Received: from mga01.intel.com ([192.55.52.88]:63996 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726206AbgGHFjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 01:39:07 -0400
+IronPort-SDR: 4yRPXYAm5ycQr5xNA6S1pRlojcsxPBqauQI3gDe2zBq43cFeWbcgMzw7nhPOL1KlVd9rGYOQh1
+ lmgvxD99ZYrw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="165815013"
+X-IronPort-AV: E=Sophos;i="5.75,326,1589266800"; 
+   d="scan'208";a="165815013"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 22:39:06 -0700
+IronPort-SDR: KTy0tDqHhoFS0fWDAcyFXvxGcG+jFkxbJ4bpp1EMn8r++SEEUzETk6+FMjIljcsZIV+N450MaN
+ 2pU7ewO9deBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,326,1589266800"; 
+   d="scan'208";a="305920069"
+Received: from lkp-server01.sh.intel.com (HELO f2047cb89c8e) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 07 Jul 2020 22:39:05 -0700
+Received: from kbuild by f2047cb89c8e with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jt2nQ-0000Yh-N3; Wed, 08 Jul 2020 05:39:04 +0000
+Date:   Wed, 08 Jul 2020 13:38:54 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:lkmm-dev] BUILD SUCCESS
+ 5ce63058b5de1c24d39bfab01ea47c6141dbb275
+Message-ID: <5f055bee.21Gf+/5TBVdJFw65%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR0402MB3607.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fbd8ee1-2211-4ab7-7f72-08d8230099fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2020 05:34:36.0215
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cUiPfsf0CTyxSFj7pevHQHbU9njo6/eA+9KUoQY6r+L7i8ib2CUCsy9jV9IDhEuLH7U+EIuuhO14WN9tYLaQdw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3074
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Organov <sorganov@gmail.com> Sent: Tuesday, July 7, 2020 10:43=
- PM
-> Andy Duan <fugang.duan@nxp.com> writes:
->=20
-> > From: Sergey Organov <sorganov@gmail.com> Sent: Monday, July 6, 2020
-> 10:26 PM
-> >> Code of the form "if(x) x =3D 0" replaced with "x =3D 0".
-> >>
-> >> Code of the form "if(x =3D=3D a) x =3D a" removed.
-> >>
-> >> Signed-off-by: Sergey Organov <sorganov@gmail.com>
-> >> ---
-> >>  drivers/net/ethernet/freescale/fec_ptp.c | 4 +---
-> >>  1 file changed, 1 insertion(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c
-> >> b/drivers/net/ethernet/freescale/fec_ptp.c
-> >> index e455343..4152cae 100644
-> >> --- a/drivers/net/ethernet/freescale/fec_ptp.c
-> >> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
-> >> @@ -485,9 +485,7 @@ int fec_ptp_set(struct net_device *ndev, struct
-> ifreq
-> >> *ifr)
-> >>
-> >>         switch (config.rx_filter) {
-> >>         case HWTSTAMP_FILTER_NONE:
-> >> -               if (fep->hwts_rx_en)
-> >> -                       fep->hwts_rx_en =3D 0;
-> >> -               config.rx_filter =3D HWTSTAMP_FILTER_NONE;
-> > The line should keep according your commit log.
->=20
-> You mean I should fix commit log like this:
->=20
-> Code of the form "switch(x) case a: x =3D a; break" removed.
->=20
-> ?
-Like this:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  lkmm-dev
+branch HEAD: 5ce63058b5de1c24d39bfab01ea47c6141dbb275  tools/memory-model: Use "-unroll 0" to keep --hw runs finite
 
-case HWTSTAMP_FILTER_NONE:
-	fep->hwts_rx_en =3D 0;
-	config.rx_filter =3D HWTSTAMP_FILTER_NONE;
-	break;
->=20
-> I'll do if it's cleaner that way.
->=20
-> Thanks,
-> -- Sergey
->=20
->=20
-> >
-> >> +               fep->hwts_rx_en =3D 0;
-> >>                 break;
-> >>
-> >>         default:
-> >> --
-> >> 2.10.0.1.g57b01a3
+elapsed time: 723m
+
+configs tested: 98
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a001-20200707
+i386                 randconfig-a002-20200707
+i386                 randconfig-a006-20200707
+i386                 randconfig-a004-20200707
+i386                 randconfig-a005-20200707
+i386                 randconfig-a003-20200707
+x86_64               randconfig-a012-20200707
+x86_64               randconfig-a016-20200707
+x86_64               randconfig-a014-20200707
+x86_64               randconfig-a011-20200707
+x86_64               randconfig-a015-20200707
+x86_64               randconfig-a013-20200707
+i386                 randconfig-a011-20200707
+i386                 randconfig-a014-20200707
+i386                 randconfig-a015-20200707
+i386                 randconfig-a016-20200707
+i386                 randconfig-a012-20200707
+i386                 randconfig-a013-20200707
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allmodconfig
+um                               allyesconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
