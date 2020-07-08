@@ -2,77 +2,255 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C553206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4112206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FWHWswvi"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="iZ0b07cQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgGHWkv (ORCPT
+        id S1726081AbgGHWnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 18:40:51 -0400
-Received: from casper.infradead.org ([90.155.50.34]:45958 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGHWkj (ORCPT
+        Wed, 8 Jul 2020 18:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbgGHWlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 18:40:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UNmO82B1L6vK/6Ekgs8DFfG07q3A5V9knSP06sf1Q/Y=; b=FWHWswvitMxH1eY7zuhuceHQZq
-        +Abxb2tnwfDZjH8VHbqMU1EYBiLIqBMGixGi1Yuy8/HkOwOvfhaIniw6VPQXjSo7698mZkAW7hAsV
-        NL/iPMIvgni9YGO6C6n0afY2vSF0PW+eNR6Mh/QWwZJndpNBUMAEdy9G6H4KQzMqoBWRxKC8481Se
-        WLERSQNZf9bUkUT8YiMjiEM9yII18sZLBBC97ehQ2EetwbGvqEiFSWanHIbHdW7XytZtHxbY1V4Pt
-        OVx1BrEuOVhcrDbX9Uzj434S/rMrF4LX5QDsKr3MnvPdNF+P8G6adklo342HXGkaRla2y9exzvNRh
-        nO9/1qvQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtIjy-0006ef-Qq; Wed, 08 Jul 2020 22:40:35 +0000
-Date:   Wed, 8 Jul 2020 23:40:34 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kanchan Joshi <joshi.k@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH 1/2] fs: Abstract calling the kiocb completion function
-Message-ID: <20200708224034.GX25523@casper.infradead.org>
-References: <20200708222637.23046-1-willy@infradead.org>
- <20200708222637.23046-2-willy@infradead.org>
- <983baa4b-55c6-0988-9e43-6860937957b4@kernel.dk>
+        Wed, 8 Jul 2020 18:41:55 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBD0C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 15:41:55 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id lx13so177745ejb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 15:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1dCp/uT5qftUij25bqg/K0arVCo7oHs8eumzECRkOqM=;
+        b=iZ0b07cQfnjpYludbfK6Zlod0gKDYprYg8508JQn4IqqTGx6qYGgY9TxgXLqo7IdKX
+         2/kcoWYjbmByoPMRj8RcwLG956tYBTZetHqbCOaA7zhp+JKRxThTIBjDvfhKPQZL5Qr/
+         NR+R6Ey6BAil34FRs8+Iv0CIIfNFQin3dfXA3LGttRpsvpCjiUDndB1Gamhj+nmQxYT4
+         73+l3RfDNtfYb6TP855QHw4g/Sb3FXVG20klsZ7xash+mquWU+2MivsfVaZa+w8hO2wb
+         Eu2iQJGObNzFkZdrwCJNfjKIFTFE8z0lSQVwL+yHXHRqqTZwpcIcN3wLR2JDf8ViJ3sC
+         ckJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1dCp/uT5qftUij25bqg/K0arVCo7oHs8eumzECRkOqM=;
+        b=Um2i3H1t9l+VrfLxfd2mrdvOG3HpG0WCs0LNBivQJws1ijBHthsEQqUexkn/wvJmUz
+         5dY5fyNUnqlq1RWuW8k8hJ2McGr25oTsN8SVh9IEGlrvn+wDNkQ54x8H1SvVjAv6hJE9
+         venpZzGB15dCvv71DvXE4OEl4LTPO18jarhn8EPXkpNwF3U8QCV3GT/R+LWOst69zfVH
+         mrakKEn4kt6Nh+zPeSK2yDFbx9Eg5TSaFTYrAg15qfDHWDAntT1riQBM5D50LgX4gOoP
+         q8bY9A5HUuCpINYrlHw4jtxH7ZLBLWWFEutgQFzZbPr/xhOizopI3xD2QAXG+TKdQIy3
+         LQKg==
+X-Gm-Message-State: AOAM532L2/1N/9K1ugaLQNNc/rEydCRba5TskzeWlgJMzUqPEwplBenC
+        5f8KAB/GFJighYFJrFYe0E+jgX3qZrLeAAm66sEy
+X-Google-Smtp-Source: ABdhPJz7UoWSz8oqn7+rcBW1/6K3OW/v22bvTrX9IyWmI8VPcvzPYpAxWXitmv+qa8mOZSASHenNOW40xNobLmj+7yM=
+X-Received: by 2002:a17:906:7d86:: with SMTP id v6mr52345580ejo.542.1594248113746;
+ Wed, 08 Jul 2020 15:41:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <983baa4b-55c6-0988-9e43-6860937957b4@kernel.dk>
+References: <20597345545df186f0a287c974c9dc88b5c940a0.1593808662.git.rgb@redhat.com>
+In-Reply-To: <20597345545df186f0a287c974c9dc88b5c940a0.1593808662.git.rgb@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 8 Jul 2020 18:41:42 -0400
+Message-ID: <CAHC9VhQT2O9GnVBhXvzpP+yNNoCqy-XTfMC7OHqz3xvFVaGvdw@mail.gmail.com>
+Subject: Re: [PATCH ghak84 v3] audit: purge audit_log_string from the
+ intra-kernel audit API
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Eric Paris <eparis@parisplace.org>, john.johansen@canonical.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 04:37:21PM -0600, Jens Axboe wrote:
-> On 7/8/20 4:26 PM, Matthew Wilcox (Oracle) wrote:
-> > diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-> > index b1cd3535c525..590dbbcd0e9f 100644
-> > --- a/crypto/af_alg.c
-> > +++ b/crypto/af_alg.c
-> > @@ -1045,7 +1045,7 @@ void af_alg_async_cb(struct crypto_async_request *_req, int err)
-> >  	af_alg_free_resources(areq);
-> >  	sock_put(sk);
-> >  
-> > -	iocb->ki_complete(iocb, err ? err : (int)resultlen, 0);
-> > +	complete_kiocb(iocb, err ? err : (int)resultlen, 0);
-> 
-> I'd prefer having it called kiocb_complete(), seems more in line with
-> what you'd expect in terms of naming for an exported interface.
+On Fri, Jul 3, 2020 at 5:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>
+> audit_log_string() was inteded to be an internal audit function and
+> since there are only two internal uses, remove them.  Purge all external
+> uses of it by restructuring code to use an existing audit_log_format()
+> or using audit_log_format().
+>
+> Please see the upstream issue
+> https://github.com/linux-audit/audit-kernel/issues/84
+>
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+> Passes audit-testsuite.
+>
+> Changelog:
+> v3
+> - fix two warning: non-void function does not return a value in all control paths
+>         Reported-by: kernel test robot <lkp@intel.com>
+>
+> v2
+> - restructure to piggyback on existing audit_log_format() calls, checking quoting needs for each.
+>
+> v1 Vlad Dronov
+> - https://github.com/nefigtut/audit-kernel/commit/dbbcba46335a002f44b05874153a85b9cc18aebf
+>
+>  include/linux/audit.h     |  5 -----
+>  kernel/audit.c            |  4 ++--
+>  security/apparmor/audit.c | 10 ++++------
+>  security/apparmor/file.c  | 25 +++++++------------------
+>  security/apparmor/ipc.c   | 46 +++++++++++++++++++++++-----------------------
+>  security/apparmor/net.c   | 14 ++++++++------
+>  security/lsm_audit.c      |  4 ++--
+>  7 files changed, 46 insertions(+), 62 deletions(-)
 
-Happy to make that change.  It seemed like you preferred the opposite
-way round with is_sync_kiocb() and init_sync_kiocb() already existing.
+...
 
-Should I switch register_kiocb_completion and unregister_kiocb_completion
-to kiocb_completion_register or kiocb_register_completion?
+> diff --git a/security/apparmor/audit.c b/security/apparmor/audit.c
+> index 597732503815..335b5b8d300b 100644
+> --- a/security/apparmor/audit.c
+> +++ b/security/apparmor/audit.c
+> @@ -57,18 +57,16 @@ static void audit_pre(struct audit_buffer *ab, void *ca)
+>         struct common_audit_data *sa = ca;
+>
+>         if (aa_g_audit_header) {
+> -               audit_log_format(ab, "apparmor=");
+> -               audit_log_string(ab, aa_audit_type[aad(sa)->type]);
+> +               audit_log_format(ab, "apparmor=%s",
+> +                                aa_audit_type[aad(sa)->type]);
+>         }
+>
+>         if (aad(sa)->op) {
+> -               audit_log_format(ab, " operation=");
+> -               audit_log_string(ab, aad(sa)->op);
+> +               audit_log_format(ab, " operation=%s", aad(sa)->op);
+>         }
+
+In the case below you've added the quotes around the string, but they
+appear to be missing in the two cases above.
+
+>         if (aad(sa)->info) {
+> -               audit_log_format(ab, " info=");
+> -               audit_log_string(ab, aad(sa)->info);
+> +               audit_log_format(ab, " info=\"%s\"", aad(sa)->info);
+>                 if (aad(sa)->error)
+>                         audit_log_format(ab, " error=%d", aad(sa)->error);
+>         }
+> diff --git a/security/apparmor/file.c b/security/apparmor/file.c
+> index 9a2d14b7c9f8..70f27124d051 100644
+> --- a/security/apparmor/file.c
+> +++ b/security/apparmor/file.c
+> @@ -35,20 +35,6 @@ static u32 map_mask_to_chr_mask(u32 mask)
+>  }
+>
+>  /**
+> - * audit_file_mask - convert mask to permission string
+> - * @buffer: buffer to write string to (NOT NULL)
+> - * @mask: permission mask to convert
+> - */
+> -static void audit_file_mask(struct audit_buffer *ab, u32 mask)
+> -{
+> -       char str[10];
+> -
+> -       aa_perm_mask_to_str(str, sizeof(str), aa_file_perm_chrs,
+> -                           map_mask_to_chr_mask(mask));
+> -       audit_log_string(ab, str);
+> -}
+> -
+> -/**
+>   * file_audit_cb - call back for file specific audit fields
+>   * @ab: audit_buffer  (NOT NULL)
+>   * @va: audit struct to audit values of  (NOT NULL)
+> @@ -57,14 +43,17 @@ static void file_audit_cb(struct audit_buffer *ab, void *va)
+>  {
+>         struct common_audit_data *sa = va;
+>         kuid_t fsuid = current_fsuid();
+> +       char str[10];
+>
+>         if (aad(sa)->request & AA_AUDIT_FILE_MASK) {
+> -               audit_log_format(ab, " requested_mask=");
+> -               audit_file_mask(ab, aad(sa)->request);
+> +               aa_perm_mask_to_str(str, sizeof(str), aa_file_perm_chrs,
+> +                                   map_mask_to_chr_mask(aad(sa)->request));
+> +               audit_log_format(ab, " requested_mask=%s", str);
+>         }
+>         if (aad(sa)->denied & AA_AUDIT_FILE_MASK) {
+> -               audit_log_format(ab, " denied_mask=");
+> -               audit_file_mask(ab, aad(sa)->denied);
+> +               aa_perm_mask_to_str(str, sizeof(str), aa_file_perm_chrs,
+> +                                   map_mask_to_chr_mask(aad(sa)->denied));
+> +               audit_log_format(ab, " denied_mask=%s", str);
+>         }
+
+More missing quotes.
+
+>         if (aad(sa)->request & AA_AUDIT_FILE_MASK) {
+>                 audit_log_format(ab, " fsuid=%d",
+> diff --git a/security/apparmor/ipc.c b/security/apparmor/ipc.c
+> index 4ecedffbdd33..fe431731883f 100644
+> --- a/security/apparmor/ipc.c
+> +++ b/security/apparmor/ipc.c
+> @@ -20,25 +20,23 @@
+>
+>  /**
+>   * audit_ptrace_mask - convert mask to permission string
+> - * @buffer: buffer to write string to (NOT NULL)
+>   * @mask: permission mask to convert
+> + *
+> + * Returns: pointer to static string
+>   */
+> -static void audit_ptrace_mask(struct audit_buffer *ab, u32 mask)
+> +static const char *audit_ptrace_mask(u32 mask)
+>  {
+>         switch (mask) {
+>         case MAY_READ:
+> -               audit_log_string(ab, "read");
+> -               break;
+> +               return "read";
+>         case MAY_WRITE:
+> -               audit_log_string(ab, "trace");
+> -               break;
+> +               return "trace";
+>         case AA_MAY_BE_READ:
+> -               audit_log_string(ab, "readby");
+> -               break;
+> +               return "readby";
+>         case AA_MAY_BE_TRACED:
+> -               audit_log_string(ab, "tracedby");
+> -               break;
+> +               return "tracedby";
+>         }
+> +       return "";
+>  }
+>
+>  /* call back to audit ptrace fields */
+> @@ -47,12 +45,12 @@ static void audit_ptrace_cb(struct audit_buffer *ab, void *va)
+>         struct common_audit_data *sa = va;
+>
+>         if (aad(sa)->request & AA_PTRACE_PERM_MASK) {
+> -               audit_log_format(ab, " requested_mask=");
+> -               audit_ptrace_mask(ab, aad(sa)->request);
+> +               audit_log_format(ab, " requested_mask=%s",
+> +                                audit_ptrace_mask(aad(sa)->request));
+>
+>                 if (aad(sa)->denied & AA_PTRACE_PERM_MASK) {
+> -                       audit_log_format(ab, " denied_mask=");
+> -                       audit_ptrace_mask(ab, aad(sa)->denied);
+> +                       audit_log_format(ab, " denied_mask=%s",
+> +                                        audit_ptrace_mask(aad(sa)->denied));
+>                 }
+
+Quotes.  There are none.
+
+... and it looks like there are more missing too, but I kinda stopped
+seriously reading the patch here, please take a closer look at the
+patch, make the necessary changes, and resubmit.
+
+-- 
+paul moore
+www.paul-moore.com
