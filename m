@@ -2,150 +2,285 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4D7120720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612DA20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:07:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNQXh8fq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqW4PIqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbgGHOGY (ORCPT
+        id S1729650AbgGHOG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:06:24 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50542 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729493AbgGHOGY (ORCPT
+        Wed, 8 Jul 2020 10:06:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729493AbgGHOG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:06:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594217182;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=g1QdAfsz6hOzCxXEuoKjy0120IGcwZSXG6p/fqOOsy0=;
-        b=PNQXh8fq9s5hvQtKPw9D1nvpUvZNNn2fwvMn6Pl1Y2AjVfYwlC1qkiDHuNw1acMVhuQw5H
-        No9CDfhDM1hTg/bajKNq8xVa2O5yKasJr3FX87Hq3kNLQ/V+xcgA8UgxLhMLFqTlrqjMhr
-        Zipw5ytqqSK4ZucejiWJUn1qLdrX6yg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-92-F92jRHhyPVeLB_pmFMEnyA-1; Wed, 08 Jul 2020 10:06:12 -0400
-X-MC-Unique: F92jRHhyPVeLB_pmFMEnyA-1
-Received: by mail-wm1-f72.google.com with SMTP id b13so3070413wme.9
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 07:06:11 -0700 (PDT)
+        Wed, 8 Jul 2020 10:06:58 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA15C061A0B;
+        Wed,  8 Jul 2020 07:06:58 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id o11so49199748wrv.9;
+        Wed, 08 Jul 2020 07:06:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c0RpjaCUMUz6o0HkW/J+nFuyyVve1i61JY9VJVht368=;
+        b=lqW4PIqWfQiWwKnz+W2eTaeQPRyW1yJbvTZi9pJ0M3CEC6b8DhDd4ue1MyrIy0Cs/l
+         MnGklkRXGkKz3LU3+Cv662jtLDcfKROCrMFS4F+UFBwEUzjYKt7IMK+CUZeC08C0KVp6
+         H2MXZR8CwFQPSRealaknGKIQKxnO//Ttu3XlaZfrnE8bWa2/UkzBrkVz5Ado1JA1zn9p
+         0vLwaRWf0PaKnZ7eOjmwcTa/rIrydyFJQpJ1JuMCU/etujF87ccZzRLYmv5SFRwFTX/t
+         QaIbmsuy5Y+ixWPx3kY6JozgDWVxuvhEzJr/5ifzIadgu4ssoZmrerZ5N+fuWiJJeCyp
+         gPeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=g1QdAfsz6hOzCxXEuoKjy0120IGcwZSXG6p/fqOOsy0=;
-        b=pjyfgldsNspsajcZcs0ZL/nh8yuruyIjhrEILphRhlRp7hFN6o0tJOye0RHLEQ7eAD
-         Ias2rp6PRdbww7VNoTwtApZwyT39qwuhWoVgpgrsRQuQNI9kcjuEL0MXaA5MPCCICtlJ
-         o6hcAiUnuQkmQiGMxjSLAoMrjjypl9sArvxxdKEQacpJv0cLB5ROM/bxc/4bV+AVnUop
-         WndxzlKlb+gcGFia6D7H8I+xT9hVDxWNfzED3n4AhMqD5/SZoppRROPcoSxvw/V7ycjg
-         9/thGKtcShiXG/u/8zF6jHYKDES5TUJbQ4gAvDnUYH00A/5ijJgWvKmDMEjqWYicCBYL
-         Fqog==
-X-Gm-Message-State: AOAM531l0CMRNWpO/GLxI3y+olkLV/xrlNx+6fwMsqWhVW9OtpMH4KtT
-        XTJu7Be6B8nCyAH0UgUGwxW33WyrKXiNauCORpNEsoPWpBIriDCgcY4J4xIgIVHqH5sRAILue2V
-        xAvMdq7c+xtviiv6Zp+siio7T
-X-Received: by 2002:adf:828b:: with SMTP id 11mr63226497wrc.58.1594217170529;
-        Wed, 08 Jul 2020 07:06:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyb8D5gvP4RQNaXaJPCmtCzy9nqbwuEvAH6/tWvVOah83zyfRByzJN1GRzgbS9vv8tsP5Y4oA==
-X-Received: by 2002:adf:828b:: with SMTP id 11mr63226478wrc.58.1594217170288;
-        Wed, 08 Jul 2020 07:06:10 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id c20sm40034wrb.65.2020.07.08.07.06.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 07:06:09 -0700 (PDT)
-Subject: Re: [PATCH] KVM: x86: take as_id into account when checking PGD
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-References: <20200708140023.1476020-1-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <88e517df-0887-2687-b3db-0892ac479211@redhat.com>
-Date:   Wed, 8 Jul 2020 16:06:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c0RpjaCUMUz6o0HkW/J+nFuyyVve1i61JY9VJVht368=;
+        b=mLU08oI6zFUpfzs0X42roqVel+8esZ25IOnwKOOJrR4iUGut+k9OOP10A8n+cqaCQY
+         OWo1KjatjLmW7ho+7zAl/Nc5JaNJX/k7hQjS3zAT3nPpczlJUytNkEIFzYwyNKrJiTCT
+         eHc+PfZJzwgrpVEzms1weWAruA9YIJeRUBh9yqInj63AiKCDZzwlMtKCXWowJAYcZlsZ
+         pl2luQEiJCgdLu9jTcAHKZf8QWwSK4OTrgERrKDq58A1TtVS4bqFEpAIOPpcccsO8MO6
+         fLzTOxTCtDIEK1HCjyK8IvxuIJLbtWs4H4OELh2XakueLLSOyaREkhyPoRj/26Eyfz2p
+         800w==
+X-Gm-Message-State: AOAM5320Fa5JQc1KOsiwCImhOxPXsKZ7HJ0V9+t59QmtEK4rjZ69Tk4m
+        DnuW/NCZsLS3sp3yRoAl4CTw3ybSZga+zlUHzHGe79BEtNcm2w==
+X-Google-Smtp-Source: ABdhPJyc/7gbJobUWolD4EV3jhsiVwVBD24Com3m40psFxhlOMB0QKUDUK1y7dIK52QfjrIU3gQSC3DH6f5AtBte8Y8=
+X-Received: by 2002:a5d:6846:: with SMTP id o6mr59235183wrw.370.1594217216838;
+ Wed, 08 Jul 2020 07:06:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200708140023.1476020-1-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200707171515.110818-1-izabela.bakollari@gmail.com> <647a37da-cd95-b84b-bc76-036a813c00e2@gmail.com>
+In-Reply-To: <647a37da-cd95-b84b-bc76-036a813c00e2@gmail.com>
+From:   Izabela Bakollari <izabela.bakollari@gmail.com>
+Date:   Wed, 8 Jul 2020 16:06:45 +0200
+Message-ID: <CAC8tkWAESmBmwYpj7qT0Wc5gD9Lw-2LMHBp2-QGtsJ_eGk7Kdg@mail.gmail.com>
+Subject: Re: [PATCH net-next] dropwatch: Support monitoring of dropped frames
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     nhorman@tuxdriver.com, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/20 16:00, Vitaly Kuznetsov wrote:
-> OVMF booted guest running on shadow pages crashes on TRIPLE FAULT after
-> enabling paging from SMM. The crash is triggered from mmu_check_root() and
-> is caused by kvm_is_visible_gfn() searching through memslots with as_id = 0
-> while vCPU may be in a different context (address space).
-> 
-> Introduce kvm_vcpu_is_visible_gfn() and use it from mmu_check_root().
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c   | 2 +-
->  include/linux/kvm_host.h | 1 +
->  virt/kvm/kvm_main.c      | 8 ++++++++
->  3 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 4fd4b5de8996..309024210a35 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -3668,7 +3668,7 @@ static int mmu_check_root(struct kvm_vcpu *vcpu, gfn_t root_gfn)
->  {
->  	int ret = 0;
->  
-> -	if (!kvm_is_visible_gfn(vcpu->kvm, root_gfn)) {
-> +	if (!kvm_vcpu_is_visible_gfn(vcpu, root_gfn)) {
->  		kvm_make_request(KVM_REQ_TRIPLE_FAULT, vcpu);
->  		ret = 1;
->  	}
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index d564855243d8..f74d2a5afc26 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -774,6 +774,7 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
->  int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
->  struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
->  bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
-> +bool kvm_vcpu_is_visible_gfn(struct kvm_vcpu *vcpu, gfn_t gfn);
->  unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
->  void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
->  
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index a852af5c3214..b131c7da1d12 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -1626,6 +1626,14 @@ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
->  }
->  EXPORT_SYMBOL_GPL(kvm_is_visible_gfn);
->  
-> +bool kvm_vcpu_is_visible_gfn(struct kvm_vcpu *vcpu, gfn_t gfn)
-> +{
-> +	struct kvm_memory_slot *memslot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
-> +
-> +	return kvm_is_visible_memslot(memslot);
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_vcpu_is_visible_gfn);
-> +
->  unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
->  {
->  	struct vm_area_struct *vma;
-> 
+Hi Eric,
 
-Queued, thanks.
+Thank you for reviewing my patch. I understand your comments
+and will be working on correcting what you pointed out.
 
-Paolo
+Best,
+Izabela
 
+
+On Tue, Jul 7, 2020 at 7:52 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>
+>
+>
+> On 7/7/20 10:15 AM, izabela.bakollari@gmail.com wrote:
+> > From: Izabela Bakollari <izabela.bakollari@gmail.com>
+> >
+> > Dropwatch is a utility that monitors dropped frames by having userspace
+> > record them over the dropwatch protocol over a file. This augument
+> > allows live monitoring of dropped frames using tools like tcpdump.
+> >
+> > With this feature, dropwatch allows two additional commands (start and
+> > stop interface) which allows the assignment of a net_device to the
+> > dropwatch protocol. When assinged, dropwatch will clone dropped frames,
+> > and receive them on the assigned interface, allowing tools like tcpdump
+> > to monitor for them.
+> >
+> > With this feature, create a dummy ethernet interface (ip link add dev
+> > dummy0 type dummy), assign it to the dropwatch kernel subsystem, by using
+> > these new commands, and then monitor dropped frames in real time by
+> > running tcpdump -i dummy0.
+> >
+> > Signed-off-by: Izabela Bakollari <izabela.bakollari@gmail.com>
+> > ---
+> >  include/uapi/linux/net_dropmon.h |  3 ++
+> >  net/core/drop_monitor.c          | 79 +++++++++++++++++++++++++++++++-
+> >  2 files changed, 80 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/uapi/linux/net_dropmon.h b/include/uapi/linux/net_dropmon.h
+> > index 67e31f329190..e8e861e03a8a 100644
+> > --- a/include/uapi/linux/net_dropmon.h
+> > +++ b/include/uapi/linux/net_dropmon.h
+> > @@ -58,6 +58,8 @@ enum {
+> >       NET_DM_CMD_CONFIG_NEW,
+> >       NET_DM_CMD_STATS_GET,
+> >       NET_DM_CMD_STATS_NEW,
+> > +     NET_DM_CMD_START_IFC,
+> > +     NET_DM_CMD_STOP_IFC,
+> >       _NET_DM_CMD_MAX,
+> >  };
+> >
+> > @@ -93,6 +95,7 @@ enum net_dm_attr {
+> >       NET_DM_ATTR_SW_DROPS,                   /* flag */
+> >       NET_DM_ATTR_HW_DROPS,                   /* flag */
+> >       NET_DM_ATTR_FLOW_ACTION_COOKIE,         /* binary */
+> > +     NET_DM_ATTR_IFNAME,                     /* string */
+> >
+> >       __NET_DM_ATTR_MAX,
+> >       NET_DM_ATTR_MAX = __NET_DM_ATTR_MAX - 1
+> > diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+> > index 8e33cec9fc4e..8049bff05abd 100644
+> > --- a/net/core/drop_monitor.c
+> > +++ b/net/core/drop_monitor.c
+> > @@ -30,6 +30,7 @@
+> >  #include <net/genetlink.h>
+> >  #include <net/netevent.h>
+> >  #include <net/flow_offload.h>
+> > +#include <net/sock.h>
+> >
+> >  #include <trace/events/skb.h>
+> >  #include <trace/events/napi.h>
+> > @@ -46,6 +47,7 @@
+> >   */
+> >  static int trace_state = TRACE_OFF;
+> >  static bool monitor_hw;
+> > +struct net_device *interface;
+> >
+> >  /* net_dm_mutex
+> >   *
+> > @@ -220,9 +222,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+> >       struct per_cpu_dm_data *data;
+> >       unsigned long flags;
+> >
+> > -     local_irq_save(flags);
+> > +     spin_lock_irqsave(&data->lock, flags);
+> >       data = this_cpu_ptr(&dm_cpu_data);
+> > -     spin_lock(&data->lock);
+> >       dskb = data->skb;
+> >
+> >       if (!dskb)
+> > @@ -255,6 +256,12 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+> >
+> >  out:
+> >       spin_unlock_irqrestore(&data->lock, flags);
+> > +
+>
+> What protects interface from being changed under us by another thread/cpu ?
+>
+> > +     if (interface && interface != skb->dev) {
+> > +             skb = skb_clone(skb, GFP_ATOMIC);
+> > +             skb->dev = interface;
+> > +             netif_receive_skb(skb);
+> > +     }
+> >  }
+> >
+> >  static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb, void *location)
+> > @@ -1315,6 +1322,63 @@ static int net_dm_cmd_trace(struct sk_buff *skb,
+> >       return -EOPNOTSUPP;
+> >  }
+> >
+> > +static int net_dm_interface_start(struct net *net, const char *ifname)
+> > +{
+> > +     struct net_device *nd;
+> > +
+> > +     nd = dev_get_by_name(net, ifname);
+> > +
+> > +     if (nd) {
+> > +             interface = nd;
+>
+> If interface was already set, you forgot to dev_put() it.
+>
+> > +             dev_hold(interface);
+>
+> Note that dev_get_by_name() already did a dev_hold()
+>
+> > +     } else {
+> > +             return -ENODEV;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> > +static int net_dm_interface_stop(struct net *net, const char *ifname)
+> > +{
+> > +     struct net_device *nd;
+> > +
+> > +     nd = dev_get_by_name(net, ifname);
+> > +
+> > +     if (nd) {
+>
+>
+>
+> > +             interface = nd;
+>
+>
+> You probably meant : interface = NULL; ?
+>
+> > +             dev_put(interface);
+>
+>                 and dev_put(nd);
+>
+>
+> > +     } else {
+> > +             return -ENODEV;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> > +static int net_dm_cmd_ifc_trace(struct sk_buff *skb, struct genl_info *info)
+> > +{
+> > +     struct net *net = sock_net(skb->sk);
+> > +     char ifname[IFNAMSIZ];
+> > +     int rc;
+> > +
+> > +     memset(ifname, 0, IFNAMSIZ);
+> > +     nla_strlcpy(ifname, info->attrs[NET_DM_ATTR_IFNAME], IFNAMSIZ - 1);
+> > +
+> > +     switch (info->genlhdr->cmd) {
+> > +     case NET_DM_CMD_START_IFC:
+> > +             rc = net_dm_interface_start(net, ifname);
+> > +             if (rc)
+> > +                     return rc;
+> > +             break;
+> > +     case NET_DM_CMD_STOP_IFC:
+> > +             if (interface) {
+> > +                     rc = net_dm_interface_stop(net, interface->ifname);
+> > +                     return rc;
+> > +             } else {
+> > +                     return -ENODEV;
+> > +             }
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static int net_dm_config_fill(struct sk_buff *msg, struct genl_info *info)
+> >  {
+> >       void *hdr;
+> > @@ -1543,6 +1607,7 @@ static const struct nla_policy net_dm_nl_policy[NET_DM_ATTR_MAX + 1] = {
+> >       [NET_DM_ATTR_QUEUE_LEN] = { .type = NLA_U32 },
+> >       [NET_DM_ATTR_SW_DROPS]  = {. type = NLA_FLAG },
+> >       [NET_DM_ATTR_HW_DROPS]  = {. type = NLA_FLAG },
+> > +     [NET_DM_ATTR_IFNAME] = {. type = NLA_STRING, .len = IFNAMSIZ },
+> >  };
+> >
+> >  static const struct genl_ops dropmon_ops[] = {
+> > @@ -1570,6 +1635,16 @@ static const struct genl_ops dropmon_ops[] = {
+> >               .cmd = NET_DM_CMD_STATS_GET,
+> >               .doit = net_dm_cmd_stats_get,
+> >       },
+> > +     {
+> > +             .cmd = NET_DM_CMD_START_IFC,
+> > +             .validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+> > +             .doit = net_dm_cmd_ifc_trace,
+> > +     },
+> > +     {
+> > +             .cmd = NET_DM_CMD_STOP_IFC,
+> > +             .validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+> > +             .doit = net_dm_cmd_ifc_trace,
+> > +     },
+> >  };
+> >
+> >  static int net_dm_nl_pre_doit(const struct genl_ops *ops,
+> >
