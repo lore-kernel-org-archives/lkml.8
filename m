@@ -2,132 +2,92 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2575DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB69C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0292F2078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:58:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q7a53iOP"
+	by mail.kernel.org (Postfix) with ESMTP id 526B52078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594227535;
+	bh=8M6Yb1CrhNWLMCOcKsgvkbySDSF3ZKzqosp/1DO1Ma4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PKfsewUygcmwI/ExUFVoz+ZHMN7NCMLEb/+j0tB9eNb36hU74jgY+HtAPbanSCiFh
+	 lKDutAe6T9lIL02WFiDiRQigD6R5MCzP0jEVBv+jfOD2bxwaPIcY5thsEIf4Y9aCPW
+	 xVzdcrc7dinV5J3vJ6/vJyZyiqqLZq92lzYGmUeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbgGHQ6d (ORCPT
+        id S1730678AbgGHQ6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:58:33 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11547 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgGHQ6c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:58:32 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f05fb2b0001>; Wed, 08 Jul 2020 09:58:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 08 Jul 2020 09:58:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 08 Jul 2020 09:58:31 -0700
-Received: from [10.26.73.185] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul
- 2020 16:58:29 +0000
-Subject: Re: [PATCH 5.4 00/65] 5.4.51-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-        <akpm@linux-foundation.org>, <linux@roeck-us.net>,
-        <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200707145752.417212219@linuxfoundation.org>
- <6fbcdd30-68d3-e8c5-d762-7b8a8c48d112@nvidia.com>
- <20200708151500.GA710412@kroah.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <14d23282-c871-3f9d-372c-06da693666e1@nvidia.com>
-Date:   Wed, 8 Jul 2020 17:58:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 12:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgGHQ6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:58:54 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 443E8206F6;
+        Wed,  8 Jul 2020 16:58:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594227533;
+        bh=8M6Yb1CrhNWLMCOcKsgvkbySDSF3ZKzqosp/1DO1Ma4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t3ZrTVcMrkNo5HHR+Ex2wNrC6pIbrQtZcYa5wNFeZgy07YdISjO3VhV3TJBYY0ja4
+         GRDAEnbF6LwNVDOtl4YB8KFdSS5SyawLUOIGJQ20k2qU/Y39cKx2ZIDseaBpMT0z71
+         EpYQWAOs8bWJyAvSq1S8mwNi2V37LRL3ZSHD/ag4=
+Date:   Wed, 8 Jul 2020 17:58:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Zhang Qiang <qiang.zhang@windriver.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v2] spi: use kthread_create_worker() helper
+Message-ID: <20200708165848.GA25961@sirena.org.uk>
+References: <CGME20200708123401eucas1p1ec8fe745bb362c56f03798172a18324e@eucas1p1.samsung.com>
+ <20200708123349.6797-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200708151500.GA710412@kroah.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594227499; bh=IpJAqj0DH00PflI4I9sW5sqaACjectpvaylAIhAVG7s=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Q7a53iOPmLs8d9iWm3U6etK1KpSylQuik5UXcVEb2kjWnROGQ2BgNLYHVq8Fz+Yi5
-         Tk7DF0YZyanIm2OdmZ/z4eIrYT/g30WWNQaZXpMsfzGbjwcrvCCEZJddbNMpy3H388
-         DFhnPIu0idJnIzsjC96EghxTyoKki7YCDdGQ25j7pb8xoKNtVU12mJLw7qI0OXek7k
-         leSqzHmUHFxBRalMx/S3tLQjrceSq/NSTJR0WwyJ7ygB8fe6wYA+0uJ5YxlZ97vLcb
-         af+LFRqQAuVcHTWetT7DdmbedQnjX4HTIGhxpimtkUK8Bpsr41CkifXx5bFhSo0/Vs
-         naQ1GJJXmbwaw==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
+Content-Disposition: inline
+In-Reply-To: <20200708123349.6797-1-m.szyprowski@samsung.com>
+X-Cookie: Sign my PETITION.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 08/07/2020 16:15, Greg Kroah-Hartman wrote:
-> On Wed, Jul 08, 2020 at 09:41:33AM +0100, Jon Hunter wrote:
->>
->> On 07/07/2020 16:16, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 5.4.51 release.
->>> There are 65 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
->>> Anything received after that time might be too late.
->>>
->>> The whole patch series can be found in one patch at:
->>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.51-rc1.gz
->>> or in the git tree and branch at:
->>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
->>> and the diffstat can be found below.
->>>
->>> thanks,
->>>
->>> greg k-h
->>
->> All tests are passing for Tegra ...
->>
->> Test results for stable-v5.4:
->>     11 builds:	11 pass, 0 fail
->>     26 boots:	26 pass, 0 fail
->>     56 tests:	56 pass, 0 fail
->>
->> Linux version:	5.4.51-rc1-g47d410b54275
->> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->>                 tegra194-p2972-0000, tegra20-ventana,
->>                 tegra210-p2371-2180, tegra210-p3450-0000,
->>                 tegra30-cardhu-a04
-> 
-> Thanks for testing all of these and letting me know.
+--Qxx1br4bt0+wmkIi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-No problem. For some reason the v5.7 review email never made it to my
-inbox AFAICT. Who knows if it will show up tomorrow, but anyway it all
-looks good to Tegra ...
+On Wed, Jul 08, 2020 at 02:33:49PM +0200, Marek Szyprowski wrote:
+> Use kthread_create_worker() helper to simplify the code. It uses
+> the kthread worker API the right way. It will eventually allow
+> to remove the FIXME in kthread_worker_fn() and add more consistency
+> checks in the future.
 
-Test results for stable-v5.7:
-    11 builds:	11 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    56 tests:	56 pass, 0 fail
+This doesn't apply against current code, please check and resend.
 
-Linux version:	5.7.8-rc1-gb371afd12a48
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
+--Qxx1br4bt0+wmkIi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cheers
-Jon
+-----BEGIN PGP SIGNATURE-----
 
--- 
-nvpublic
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8F+0cACgkQJNaLcl1U
+h9Aj9Qf+JCia7cYZbN/n2MnUsjmNP20nQxIexzHxNRHBu7TH4CS9aGEc0G3AvrUd
+QAAAktyW75uhb3M+yIqDvBBGqdWj8VvKhF6G+RYG5bjPHhcHvuEu3RyLk8vzPDmV
+B48FJljGs3P6l7UNbTtOJyyigDSx99YYeiPvMrWJeBeYca2jjwdgnUkObu79zfsE
+gmHW8CLw79KYXwOrfRAHhGGcFwQWq4rCOEsWKxUdOCtYfIeQ1QNpo5kGCFUdhzTF
+B7JOqreOCTbUKXNcT1dVp6OyGyzgTRkGGXDq9w6vGvIVUsFBQDx8nlyOHkiaOxna
+u1qhHoj5FKDzC8Oe8Dlv72KLAHJSMQ==
+=6m7M
+-----END PGP SIGNATURE-----
+
+--Qxx1br4bt0+wmkIi--
