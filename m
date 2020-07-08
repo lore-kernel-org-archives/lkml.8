@@ -2,193 +2,51 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF421C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64086C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA4B220720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:08:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XBu7iWTx"
+	by mail.kernel.org (Postfix) with ESMTP id 44E7520720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbgGHFIi (ORCPT
+        id S1728683AbgGHFJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:08:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbgGHFIh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:08:37 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2DB0C08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 22:08:36 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h19so52668664ljg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 22:08:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kawOTAEkEA/gvBN+weS6rWDGzfZVxP7i+vpKD4qaf6g=;
-        b=XBu7iWTx4ugHeZ01LQSkB2ll96r4I8os+MSMuQ9V0cYMVUhfIGLQ8RNTa6Pras2ALn
-         bzriGnn4qSUQSTATeaAcmwZFhXXfAmjDW5ScZqyxGn0q3UURd1I23o/Hs/RQDLXWtMc1
-         7XWfUnZ+H6vP28dDsvvIy9TKdvT2u4aGH/8I26UNDqCHrVLjqjK9mYF/QZU+E8Uf70nL
-         iESUG8xplPbamEuIpmExFkCROeonTwFcdCMogqSGzs1YqKX+FesAGj4jI7y/WdlvSGxT
-         1uo7OufEwOgAK8jiRE9+rBbrJb1wK815f5yGf/BE7ULIpReEsPvVTtMgF9BGZxaKHla+
-         ZhjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kawOTAEkEA/gvBN+weS6rWDGzfZVxP7i+vpKD4qaf6g=;
-        b=okQOF4vxYXOVonOp6Wl/Ud73Fvw9xxUCXid7W4u6wJHU7wz4Bubcs/0/UPUp7T+kmO
-         UhFsjWtxrHMVJt2G82w859asADy6zWLxsx8X6jn8eff64ljtjHpKzmGzSZd+H0UqxAJP
-         5BZyRTku7e5YnKt7OVCRuknIJot+iDfJyh+s0+9xBduouaNkranFsDdgRujkaHF9T2OR
-         NqKi5IP84B/8knofR1/2D0n/fm9uWJ9omeSb8b6shRC7lA6XYTEaWREzB4V68bGdUvyR
-         t4Tzp6dOmZMiuH0yzmhAAt7vlWYyYjPqlkuIJwFCSxUUA6qZmQgXMxAU6BmYiZGmUThZ
-         zh6Q==
-X-Gm-Message-State: AOAM5330G/hQWj3yKZieijbu6hfAimhrxxIc+Wo4IW53pLN690d1zsYn
-        oo5rE5ETH0jHC/GLJrvbZ76FmBgnjccqkRv91pPJ0w==
-X-Google-Smtp-Source: ABdhPJwcl1pdNCoyAKkp0kahX0botx9rqJ6vRucpdVhdTiZrM9JClehZShFtu7Pz2kwQMkrX3se8v8fACM6HorPR650=
-X-Received: by 2002:a05:651c:1a6:: with SMTP id c6mr23740917ljn.358.1594184915095;
- Tue, 07 Jul 2020 22:08:35 -0700 (PDT)
+        Wed, 8 Jul 2020 01:09:04 -0400
+Received: from verein.lst.de ([213.95.11.211]:33535 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726517AbgGHFJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 01:09:03 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 00ABF68AFE; Wed,  8 Jul 2020 07:09:00 +0200 (CEST)
+Date:   Wed, 8 Jul 2020 07:09:00 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        baolin.wang7@gmail.com, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme-pci: use standard block status symbolic names to
+ check return value
+Message-ID: <20200708050900.GA3831@lst.de>
+References: <e993c13466075f6dbae1285e4db55fd16276ff14.1594174565.git.baolin.wang@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20200707145800.925304888@linuxfoundation.org>
-In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 8 Jul 2020 10:38:23 +0530
-Message-ID: <CA+G9fYu9bu961J7A3=Pn3-YTwMochWM+rtEkZ74JfQXn52dT3g@mail.gmail.com>
-Subject: Re: [PATCH 5.7 000/112] 5.7.8-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e993c13466075f6dbae1285e4db55fd16276ff14.1594174565.git.baolin.wang@linux.alibaba.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jul 2020 at 20:55, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.7.8 release.
-> There are 112 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.7.8-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.7.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, Jul 08, 2020 at 10:18:01AM +0800, Baolin Wang wrote:
+> It's better to use the same symbol as the return to check return value,
+> and will always work in the unlikely event that the defines are reordered.
+> 
+> Suggested-by: Keith Busch <kbusch@kernel.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.7.8-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.7.y
-git commit: b371afd12a4884e417026e432f135844c56afb05
-git describe: v5.7.6-374-gb371afd12a48
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
-ld/v5.7.6-374-gb371afd12a48
-
-No regressions (compared to build v5.7.6)
-
-No fixes (compared to build v5.7.6)
-
-Ran 31484 total tests in the following environments and test suites.
-
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-math-tests
-* network-basic-tests
-* ltp-controllers-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+I'm really not sure this is worth it.  When designing the blk_status_t
+type keeping 0 as was a deliberate design decision. 
