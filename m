@@ -2,85 +2,229 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6A3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF31C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 932992078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594190885;
-	bh=kWBiWIKzaQU1ClqcogklA0zc73H2h6dcWGP/x4RPWJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OYbkogQuvLpO8xonUCrF+HU/0Rwu0/8UkKl6+Pvm9qoept1EgY1RZVXdwjXAwc9g6
-	 AvwnWJWqteIbS+Q4mj9NpLb8aKgKmAAn1U1L7AoYMnp1IXEhFlEwaDhkO9tKAR3P+L
-	 UZq2HWewfHoQi+qvD5oXH0fCjsTVf/EZTp3Jp7Hc=
+	by mail.kernel.org (Postfix) with ESMTP id 41BBE20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbgGHGsE (ORCPT
+        id S1729824AbgGHGuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 02:48:04 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35181 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgGHGsE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 02:48:04 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so1752620wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 23:48:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Mx5YFMaHMelX0DtCGXWP469pCIpp8WzwmqgqUlByBHU=;
-        b=ixQ4OY231wE/OQAk63hB2aTipApicoaFsp+FafPJg3hz9TXt/Ayo02QeyD61ajqS5h
-         kBbayupgi/TYyu9bfVl9FIM+PKdA5S8jC7cidOfKcIYGtIRcooh5hiv/mm7TBUNWC8uS
-         MA2yQ1QQHkPHVWFGVTyXMF2kGBwDsLdAC9hGA6YkCdZN9Vab/uq3444LOgsK3xv7DMMF
-         Cf3ofrQKgkGd+Hl9xID70mCVq3mKm3FIFybqfLxGRoUBVVVc1EmJJ3gRuL+ruX0BO4bz
-         PxdbG2vqXAbwXTJhrxFscoVZWX0oLyeOBHz+t0YXGGn/O5AhLygS7nUrb6F9sIbgwjIM
-         S7ig==
-X-Gm-Message-State: AOAM533i0gLJnlNzEzS6fU08+7+h3SbM8nYaQ5sD+m3esQk5FKRo8lx+
-        4UOQQJkL9JGSSSQpIG50MVc=
-X-Google-Smtp-Source: ABdhPJzmh2SOej9nVcwgDxP8syQsxOL3KR2YXmfpJVC2muvh0HrHdelu669erL+dRSAV0WM979gbRg==
-X-Received: by 2002:a1c:9c8c:: with SMTP id f134mr7522048wme.142.1594190882655;
-        Tue, 07 Jul 2020 23:48:02 -0700 (PDT)
-Received: from localhost (ip-37-188-179-51.eurotel.cz. [37.188.179.51])
-        by smtp.gmail.com with ESMTPSA id d201sm4120042wmd.34.2020.07.07.23.48.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 23:48:01 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 08:48:00 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v4 04/11] mm/hugetlb: make hugetlb migration callback CMA
- aware
-Message-ID: <20200708064800.GB7271@dhcp22.suse.cz>
-References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594107889-32228-5-git-send-email-iamjoonsoo.kim@lge.com>
- <20200707113116.GH5913@dhcp22.suse.cz>
+        Wed, 8 Jul 2020 02:50:19 -0400
+Received: from verein.lst.de ([213.95.11.211]:33833 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgGHGuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 02:50:18 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 94BAE68AFE; Wed,  8 Jul 2020 08:50:14 +0200 (CEST)
+Date:   Wed, 8 Jul 2020 08:50:14 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Borkmann <daniel@iogearbox.net>, maximmi@mellanox.com,
+        konrad.wilk@oracle.com, jonathan.lemon@gmail.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, davem@davemloft.net,
+        magnus.karlsson@intel.com
+Subject: Re: [PATCH net] xsk: remove cheap_dma optimization
+Message-ID: <20200708065014.GA5694@lst.de>
+References: <20200626134358.90122-1-bjorn.topel@gmail.com> <c60dfb5a-2bf3-20bd-74b3-6b5e215f73f8@iogearbox.net> <20200627070406.GB11854@lst.de> <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com> <878626a2-6663-0d75-6339-7b3608aa4e42@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200707113116.GH5913@dhcp22.suse.cz>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <878626a2-6663-0d75-6339-7b3608aa4e42@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-07-20 13:31:19, Michal Hocko wrote:
-> Btw. you are keeping his acks even
-> after considerable changes to patches which I am not really sure he is
-> ok with.
+On Mon, Jun 29, 2020 at 04:41:16PM +0100, Robin Murphy wrote:
+> On 2020-06-28 18:16, Björn Töpel wrote:
+>>
+>> On 2020-06-27 09:04, Christoph Hellwig wrote:
+>>> On Sat, Jun 27, 2020 at 01:00:19AM +0200, Daniel Borkmann wrote:
+>>>> Given there is roughly a ~5 weeks window at max where this removal could
+>>>> still be applied in the worst case, could we come up with a fix / 
+>>>> proposal
+>>>> first that moves this into the DMA mapping core? If there is something 
+>>>> that
+>>>> can be agreed upon by all parties, then we could avoid re-adding the 9%
+>>>> slowdown. :/
+>>>
+>>> I'd rather turn it upside down - this abuse of the internals blocks work
+>>> that has basically just missed the previous window and I'm not going
+>>> to wait weeks to sort out the API misuse.  But we can add optimizations
+>>> back later if we find a sane way.
+>>>
+>>
+>> I'm not super excited about the performance loss, but I do get
+>> Christoph's frustration about gutting the DMA API making it harder for
+>> DMA people to get work done. Lets try to solve this properly using
+>> proper DMA APIs.
+>>
+>>
+>>> That being said I really can't see how this would make so much of a
+>>> difference.  What architecture and what dma_ops are you using for
+>>> those measurements?  What is the workload?
+>>>
+>>
+>> The 9% is for an AF_XDP (Fast raw Ethernet socket. Think AF_PACKET, but 
+>> faster.) benchmark: receive the packet from the NIC, and drop it. The DMA 
+>> syncs stand out in the perf top:
+>>
+>>    28.63%  [kernel]                   [k] i40e_clean_rx_irq_zc
+>>    17.12%  [kernel]                   [k] xp_alloc
+>>     8.80%  [kernel]                   [k] __xsk_rcv_zc
+>>     7.69%  [kernel]                   [k] xdp_do_redirect
+>>     5.35%  bpf_prog_992d9ddc835e5629  [k] bpf_prog_992d9ddc835e5629
+>>     4.77%  [kernel]                   [k] xsk_rcv.part.0
+>>     4.07%  [kernel]                   [k] __xsk_map_redirect
+>>     3.80%  [kernel]                   [k] dma_direct_sync_single_for_cpu
+>>     3.03%  [kernel]                   [k] dma_direct_sync_single_for_device
+>>     2.76%  [kernel]                   [k] i40e_alloc_rx_buffers_zc
+>>     1.83%  [kernel]                   [k] xsk_flush
+>> ...
+>>
+>> For this benchmark the dma_ops are NULL (dma_is_direct() == true), and
+>> the main issue is that SWIOTLB is now unconditionally enabled [1] for
+>> x86, and for each sync we have to check that if is_swiotlb_buffer()
+>> which involves a some costly indirection.
+>>
+>> That was pretty much what my hack avoided. Instead we did all the checks
+>> upfront, since AF_XDP has long-term DMA mappings, and just set a flag
+>> for that.
+>>
+>> Avoiding the whole "is this address swiotlb" in
+>> dma_direct_sync_single_for_{cpu, device]() per-packet
+>> would help a lot.
+>
+> I'm pretty sure that's one of the things we hope to achieve with the 
+> generic bypass flag :)
+>
+>> Somewhat related to the DMA API; It would have performance benefits for
+>> AF_XDP if the DMA range of the mapped memory was linear, i.e. by IOMMU
+>> utilization. I've started hacking a thing a little bit, but it would be
+>> nice if such API was part of the mapping core.
+>>
+>> Input: array of pages Output: array of dma addrs (and obviously dev,
+>> flags and such)
+>>
+>> For non-IOMMU len(array of pages) == len(array of dma addrs)
+>> For best-case IOMMU len(array of dma addrs) == 1 (large linear space)
+>>
+>> But that's for later. :-)
+>
+> FWIW you will typically get that behaviour from IOMMU-based implementations 
+> of dma_map_sg() right now, although it's not strictly guaranteed. If you 
+> can weather some additional setup cost of calling 
+> sg_alloc_table_from_pages() plus walking the list after mapping to test 
+> whether you did get a contiguous result, you could start taking advantage 
+> of it as some of the dma-buf code in DRM and v4l2 does already (although 
+> those cases actually treat it as a strict dependency rather than an 
+> optimisation).
 
-I am sorry but I have missed the last email from Mike in v3.
--- 
-Michal Hocko
-SUSE Labs
+Yikes.
+
+> I'm inclined to agree that if we're going to see more of these cases, a new 
+> API call that did formally guarantee a DMA-contiguous mapping (either via 
+> IOMMU or bounce buffering) or failure might indeed be handy.
+
+I was planning on adding a dma-level API to add more pages to an
+IOMMU batch, but was waiting for at least the intel IOMMU driver to be
+converted to the dma-iommu code (and preferably arm32 and s390 as well).
+
+Here is my old pseudo-code sketch for what I was aiming for from the
+block/nvme perspective.  I haven't even implemented it yet, so there might
+be some holes in the design:
+
+
+/*
+ * Returns 0 if batching is possible, postitive number of segments required
+ * if batching is not possible, or negatie values on error.
+ */
+int dma_map_batch_start(struct device *dev, size_t rounded_len,
+	enum dma_data_direction dir, unsigned long attrs, dma_addr_t *addr);
+int dma_map_batch_add(struct device *dev, dma_addr_t *addr, struct page *page,
+		unsigned long offset, size_t size);
+int dma_map_batch_end(struct device *dev, int ret, dma_addr_t start_addr);
+
+int blk_dma_map_rq(struct device *dev, struct request *rq, 
+		enum dma_data_direction dir, unsigned long attrs,
+		dma_addr_t *start_addr, size_t *len)
+{
+	struct req_iterator iter;
+	struct bio_vec bvec;
+	dma_addr_t next_addr;
+	int ret;
+
+	if (number_of_segments(req) == 1) {
+		// plain old dma_map_page();
+		return 0;
+	}
+
+	// XXX: block helper for rounded_len?
+	*len = length_of_request(req);
+	ret = dma_map_batch_start(dev, *len, dir, attrs, start_addr);
+	if (ret)
+		return ret;
+
+	next_addr = *start_addr;
+	rq_for_each_segment(bvec, rq, iter) {
+		ret = dma_map_batch_add(dev, &next_addr, bvec.bv_page,
+				bvec.bv_offset, bvev.bv_len);
+		if (ret)
+			break;
+	}
+
+	return dma_map_batch_end(dev, ret, *start_addr);
+}
+
+dma_addr_t blk_dma_map_bvec(struct device *dev, struct bio_vec *bvec,
+		enum dma_data_direction dir, unsigned long attrs)
+{
+	return dma_map_page_attrs(dev, bv_page, bvec.bv_offset, bvev.bv_len,
+			dir, attrs);
+}
+
+int queue_rq()
+{
+	dma_addr_t addr;
+	int ret;
+
+	ret = blk_dma_map_rq(dev, rq, dir, attrs. &addr, &len);
+	if (ret < 0)
+		return ret;
+
+	if (ret == 0) {
+		if (use_sgl()) {
+			nvme_pci_sgl_set_data(&cmd->dptr.sgl, addr, len);
+		} else {
+			set_prps();
+		}
+		return;
+	}
+
+	if (use_sgl()) {
+		alloc_one_sgl_per_segment();
+
+		rq_for_each_segment(bvec, rq, iter) {
+			addr = blk_dma_map_bvec(dev, &bdev, dir, 0);
+			set_one_sgl();
+		}
+	} else {
+		alloc_one_prp_per_page();
+
+		rq_for_each_segment(bvec, rq, iter) {
+			ret = blk_dma_map_bvec(dev, &bdev, dir, 0);
+			if (ret)
+				break;
+			set_prps();
+	}
+}
