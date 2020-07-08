@@ -2,99 +2,89 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14548C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC78C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E63A3221F1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE99221EE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ttqb2LzV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ya9qiXHH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGHIo0 (ORCPT
+        id S1728208AbgGHIpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbgGHIoZ (ORCPT
+        Wed, 8 Jul 2020 04:45:11 -0400
+Received: from casper.infradead.org ([90.155.50.34]:57900 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGHIpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:44:25 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A01A5C08C5DC;
-        Wed,  8 Jul 2020 01:44:25 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 1so1969307pfn.9;
-        Wed, 08 Jul 2020 01:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ONAKYsQcGLB0KWO9KsZT23jzd5EzR7wWWBqrHyYhthU=;
-        b=Ttqb2LzVr4jdMhwS90PiN3eXEZTPMhLRvHAuB7cIMZTaws+zpoVzQazaOYkWsFEqQJ
-         zFGxMgENxCv0AbyM2d7TXvTvjMqTj7vU3ncb5/zhjujcB1uO8OeYXTmzSoSNatzFQ7eg
-         FbEgnX90VjrUmTiVEFW/J0rVFBFMG8bm8Bex/hPbsLW/gmjkqimsIcK1s+vKvxxfnFYG
-         nnt62ZMExM5g0WbuvIgc22NQ2hE2dKTpOlcd0rPWYaOWyAVmVeIwA9epLe5w1F67Whx2
-         1NiwU9mnLZlij2st55r598GKq0mh6DvewpgZZ7o81RW1mHrwahD14jZXuxMQGr+NshuN
-         BaJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ONAKYsQcGLB0KWO9KsZT23jzd5EzR7wWWBqrHyYhthU=;
-        b=Yud1J7eNUAc0nRQlc8sSgCrnL5l+vu91y1psHKo2jlDu4pvic13aTnLtLuaKx8F0k0
-         hhl9hxdJBRiNTTz6llwch4wsAsoquZd7wERn5iMwQAFM0sAUpu1UE08q+lJM5safg5LE
-         L/HW+zq9xR60FvSewK+Qt1Cr2fHL1jnmsyO0vW+HwQNH02Kjtss778sY8SITZaOoblvE
-         lx1JeC0rmQBGZcbcOcjWNWAYhtLWqiTrkWP8ES5kKoSdhPWWS92ustR/KrHhifGY1QcM
-         zGzc1ok/X8bqOtDtN/5YYh8e1SA9qtPS+DSErIr8wNe0Nq2J/Om46VnFvRUwLy21Ry4d
-         Zf9A==
-X-Gm-Message-State: AOAM5335zBOQf7zOIwl1jhfJ8JMPor6paIM6XC/WbOgSOFXmkBV3OsBs
-        0nUZXPLH0XAx81s+BVkUY1w/HLIsgPbm3LGKNQKnNKAK
-X-Google-Smtp-Source: ABdhPJzuScYlOoIVA8NU8tZY3aB6xmD2tggybXIP8XOeUyJDR6i6kYq7rB12dKLxskNo4NfKE1JkQI7FxMR6NILRIzE=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr25429559pgi.203.1594197865186;
- Wed, 08 Jul 2020 01:44:25 -0700 (PDT)
+        Wed, 8 Jul 2020 04:45:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ZJNpnEdpSwAOlQcxfZwII1itlZxmBIrNUFOl9UFQI0s=; b=Ya9qiXHHrdyTWGPp032YRnzFIH
+        6MPYm0BEoMc8ncfqqgb17R+Q1Yuv0iN4WdS/fxjtUiznK3bLbXquZDs7sSVGogtzLN++DsaGuBaJ+
+        qxeWf0cuxdCtPe/HsGMvplOVk4llp07clkobZcvBYbO9+adWvLV/Hbov12TR7dC+IhsmIB0z9Yw2T
+        h9JG4XlquyLth3icw8mMkkAJA+hfeaw90jRoPMbh7DqJSBErC0cwQQ0pwFWtmhCEul0BDB0WstS46
+        RzcRgZc2lOT/SzvFOdYKUM8hfD52L0Dsui/qWIIQ1E2spaJ5v3/tsywLBG9gTevjRjwSFW6I+TOuB
+        k1AQxs/A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jt5VF-0007ob-RZ; Wed, 08 Jul 2020 08:32:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DF5B6300739;
+        Wed,  8 Jul 2020 10:32:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BB50D2BDFCA5B; Wed,  8 Jul 2020 10:32:10 +0200 (CEST)
+Date:   Wed, 8 Jul 2020 10:32:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+        Anton Blanchard <anton@ozlabs.org>,
+        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
+Message-ID: <20200708083210.GD597537@hirez.programming.kicks-ass.net>
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+ <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
+ <1594101082.hfq9x5yact.astroid@bobo.none>
+ <de3ead58-7f81-8ebd-754d-244f6be24af4@redhat.com>
 MIME-Version: 1.0
-References: <20200708082634.30191-1-digetx@gmail.com> <20200708082634.30191-4-digetx@gmail.com>
-In-Reply-To: <20200708082634.30191-4-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 8 Jul 2020 11:44:08 +0300
-Message-ID: <CAHp75Vc56D5QeL2WArUj4OGGk4XgkiK37FnFr=5+XsisLpng1A@mail.gmail.com>
-Subject: Re: [PATCH v1 3/5] gpio: max77620: Replace interrupt-enable array
- with bitmap
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <de3ead58-7f81-8ebd-754d-244f6be24af4@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 11:30 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> There is no need to dedicate an array where a bitmap could be used.
-> Let's replace the interrupt's enable-array with the enable-mask in order
-> to improve the code a tad.
+On Tue, Jul 07, 2020 at 11:33:45PM -0400, Waiman Long wrote:
+> From 5d7941a498935fb225b2c7a3108cbf590114c3db Mon Sep 17 00:00:00 2001
+> From: Waiman Long <longman@redhat.com>
+> Date: Tue, 7 Jul 2020 22:29:16 -0400
+> Subject: [PATCH 2/9] locking/pvqspinlock: Introduce
+>  CONFIG_PARAVIRT_QSPINLOCKS_LITE
+> 
+> Add a new PARAVIRT_QSPINLOCKS_LITE config option that allows
+> architectures to use the PV qspinlock code without the need to use or
+> implement a pv_kick() function, thus eliminating the atomic unlock
+> overhead. The non-atomic queued_spin_unlock() can be used instead.
+> The pv_wait() function will still be needed, but it can be a dummy
+> function.
+> 
+> With that option set, the hybrid PV queued/unfair locking code should
+> still be able to make it performant enough in a paravirtualized
 
-...
+How is this supposed to work? If there is no kick, you have no control
+over who wakes up and fairness goes out the window entirely.
 
-> +#include <linux/bitops.h>
-
->         unsigned int            irq_type[MAX77620_GPIO_NR];
-> -       bool                    irq_enabled[MAX77620_GPIO_NR];
-> +       unsigned long           irq_enb_mask;
-
-I would rather to move to DECLARE_BITMAP()
-(the macro is defined in types.h IIRC)
-
--- 
-With Best Regards,
-Andy Shevchenko
+You don't even begin to explain...
