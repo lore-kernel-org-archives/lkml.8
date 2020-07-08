@@ -2,147 +2,135 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A04C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C481FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B636C2065F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADB420720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:38:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Vj7XMOqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729675AbgGHNh7 (ORCPT
+        id S1729809AbgGHNiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:37:59 -0400
-Received: from mailout1.hostsharing.net ([83.223.95.204]:48223 "EHLO
-        mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729136AbgGHNh7 (ORCPT
+        Wed, 8 Jul 2020 09:38:15 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:39547 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729697AbgGHNiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:37:59 -0400
-X-Greylist: delayed 650 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 09:37:57 EDT
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by mailout1.hostsharing.net (Postfix) with ESMTPS id 14E1010190FA4;
-        Wed,  8 Jul 2020 15:37:57 +0200 (CEST)
-Received: from localhost (pd95be530.dip0.t-ipconnect.de [217.91.229.48])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id B1E906106EC8;
-        Wed,  8 Jul 2020 15:37:56 +0200 (CEST)
-X-Mailbox-Line: From f2d349b5ba67b5ca70cb19577725167642eb69c5 Mon Sep 17 00:00:00 2001
-Message-Id: <f2d349b5ba67b5ca70cb19577725167642eb69c5.1594214103.git.lukas@wunner.de>
-In-Reply-To: <cover.1594214103.git.lukas@wunner.de>
-References: <cover.1594214103.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Wed, 8 Jul 2020 15:27:03 +0200
-Subject: [PATCH 3/3] driver core: Avoid adding children below a dead parent
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
+        Wed, 8 Jul 2020 09:38:14 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708133812euoutp01063530afb651364a0795eb1509e75864~fyosxV1By3273032730euoutp01M
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 13:38:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708133812euoutp01063530afb651364a0795eb1509e75864~fyosxV1By3273032730euoutp01M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594215492;
+        bh=Spljwi04NPz7tPwQDU3ylhpMAcBmPOyA+LcLqOe48yU=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Vj7XMOqi0NxcchXdWTsCeHfGhTFBmBTugLzD6EPfrdpDsIPUI6hYbucJf+auRAzZr
+         2BlktYAI0O6akoR0FElXVBLbjy27eFFloXED8TIVvnH+inQkdppZpYNU3EwzHKVHVt
+         IuxCtttYJ3dUFKDV26BF/QZ1PSdV8gMZ7tDKvjyY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200708133811eucas1p23859cf25cecf8fe7eac4bc597e5354ed~fyosfTTEW0379703797eucas1p2L;
+        Wed,  8 Jul 2020 13:38:11 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 22.86.06456.34CC50F5; Wed,  8
+        Jul 2020 14:38:11 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200708133811eucas1p1df7b92d7e0ba512c5a7ecdb948edbfcf~fyor-LiDI1425514255eucas1p1N;
+        Wed,  8 Jul 2020 13:38:11 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200708133811eusmtrp1e04dd234da5007c86c0c63bcdfd07b28~fyor_lDj93178831788eusmtrp1v;
+        Wed,  8 Jul 2020 13:38:11 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-55-5f05cc436e60
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id F1.36.06314.34CC50F5; Wed,  8
+        Jul 2020 14:38:11 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200708133810eusmtip182b79244efc0f0790829ab647ea4e761~fyorgZg7g1357913579eusmtip1d;
+        Wed,  8 Jul 2020 13:38:10 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH RESEND] phy: exynos5-usbdrd: Calibrating makes sense only
+ for USB2.0 PHY
+Date:   Wed,  8 Jul 2020 15:38:00 +0200
+Message-Id: <20200708133800.3336-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRmVeSWpSXmKPExsWy7djP87rOZ1jjDSbONLTYOGM9q8WFpz1s
+        FufPb2C3uLxrDpvFjPP7mCwWLWtltlh75C67xc47J5gdODw2repk8+jbsorR4/iN7UwenzfJ
+        BbBEcdmkpOZklqUW6dslcGVcOv+bsWAnR8Wzm9/ZGhhXsHcxcnJICJhIXDzQwdjFyMUhJLCC
+        UWLezwY2kISQwBdGiW+LXSASnxkljk+ZAJTgAOu4/jYIIr6cUWLSoXMsEA5Qw48n01hAutkE
+        DCW63naBTRIRcJBYsvQOG0gRs8B3RonuzgtMIAlhgSiJ5T+WgxWxCKhKzP1wkBHE5hWwkfjV
+        c4IZ4j55idUbDjCDNEsI3GaTuPvpECtEwkXi1rGnLBC2sMSr41ugHpKROD25hwWioZlR4uG5
+        tewQTg+jxOWmGYwQVdYSd879AnuIWUBTYv0ufYiwo8SBKUsYIf7kk7jxVhAkzAxkTto2nRki
+        zCvR0SYEUa0mMev4Ori1By9cgrrZQ+J52y1GSDDGSuy/+ZR5AqPcLIRdCxgZVzGKp5YW56an
+        FhvmpZbrFSfmFpfmpesl5+duYgQmg9P/jn/awfj1UtIhRgEORiUe3gkbWOOFWBPLiitzDzFK
+        cDArifA6nT0dJ8SbklhZlVqUH19UmpNafIhRmoNFSZzXeNHLWCGB9MSS1OzU1ILUIpgsEwen
+        FDDqD602vLeQ99fMi7vyfcSl+zaF+d6yN936Y1v+6xNbX4jdDjts+qz+y42H3PnOl00+t82M
+        UwyZ99Z4ad6WlUnBcbdjH07pm7Jyzomntv7Z/xsvRm0sFDov43w6IEipT+ZaWy7Llod57z/W
+        Gc9S4nzZvLs08IU/i7j3jidXly8xzN33sPLF1xluSizFGYmGWsxFxYkA7pFAqAIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsVy+t/xu7rOZ1jjDZ5PkrTYOGM9q8WFpz1s
+        FufPb2C3uLxrDpvFjPP7mCwWLWtltlh75C67xc47J5gdODw2repk8+jbsorR4/iN7UwenzfJ
+        BbBE6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GVc
+        Ov+bsWAnR8Wzm9/ZGhhXsHcxcnBICJhIXH8b1MXIxSEksJRR4uyXu2xdjJxAcRmJk9MaWCFs
+        YYk/17rYIIo+MUpMv3SPHSTBJmAo0fW2C6xBRMBJonPtaTCbWeA3o8SBiYYgtrBAhMSnTcvB
+        BrEIqErM/XCQEcTmFbCR+NVzghligbzE6g0HmCcw8ixgZFjFKJJaWpybnltsqFecmFtcmpeu
+        l5yfu4kRGILbjv3cvIPx0sbgQ4wCHIxKPLwvNrHGC7EmlhVX5h5ilOBgVhLhdTp7Ok6INyWx
+        siq1KD++qDQntfgQoynQ8onMUqLJ+cD4yCuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKa
+        nZpakFoE08fEwSnVwKhcu/hV2OLtD48eNT/Vz/CjQ+dAwNxgl5nukgnlbS1TbmhVPfxeFH+E
+        l+OPzmJvrzMqnz0PHb91i/P4heCjLWtcijZaGdi//VH/cVNmmuPMI+om99Y+L/k5Wfq3ztWV
+        k1YyTp24al9zYrfr/kWsmxbc8pTZumJBqO0DLmEx5jDt8rP/XN3OLYhRYinOSDTUYi4qTgQA
+        atmfnlcCAAA=
+X-CMS-MailID: 20200708133811eucas1p1df7b92d7e0ba512c5a7ecdb948edbfcf
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200708133811eucas1p1df7b92d7e0ba512c5a7ecdb948edbfcf
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200708133811eucas1p1df7b92d7e0ba512c5a7ecdb948edbfcf
+References: <CGME20200708133811eucas1p1df7b92d7e0ba512c5a7ecdb948edbfcf@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_OF_DYNAMIC or CONFIG_ACPI is enabled, SPI devices may be added
-below a controller at runtime by a DeviceTree overlay or DSDT patch.
-But there are no precautions to prevent adding a device below a
-controller that's being removed.
+PHY calibration is needed only for USB2.0 (UTMI) PHY, so skip calling
+calibration code when phy_calibrate() is called for USB3.0 (PIPE3) PHY.
 
-This seems like something that should be guarded against in the driver
-core because it's not specific to SPI:  Adding a child below a parent
-that's going away seems like a bad idea regardless of the bus type.
-
-Take advantage of kill_device() which was added by commit 00289cd87676
-("drivers/base: Introduce kill_device()"), call it upon removal of an
-SPI controller and teach the driver core to refuse device addition below
-a killed parent.  To make this race-free, device_add() needs to take the
-parent's dead_sem before checking its "dead" flag and until the child
-device has been added to the parent's klist_children.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- drivers/base/core.c | 18 ++++++++++++++++--
- drivers/spi/spi.c   |  3 +++
- 2 files changed, 19 insertions(+), 2 deletions(-)
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 057da42b1a660..1d4e39696f996 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2597,6 +2597,14 @@ int device_add(struct device *dev)
- 	pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index 646259bee909..f07edd80d2f3 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -714,7 +714,9 @@ static int exynos5_usbdrd_phy_calibrate(struct phy *phy)
+ 	struct phy_usb_instance *inst = phy_get_drvdata(phy);
+ 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
  
- 	parent = get_device(dev->parent);
-+	if (parent) {
-+		down_read(&parent->p->dead_sem);
-+		if (parent->p->dead) {
-+			error = -ENODEV;
-+			goto parent_error;
-+		}
-+	}
-+
- 	kobj = get_device_parent(dev, parent);
- 	if (IS_ERR(kobj)) {
- 		error = PTR_ERR(kobj);
-@@ -2679,9 +2687,11 @@ int device_add(struct device *dev)
- 	}
+-	return exynos5420_usbdrd_phy_calibrate(phy_drd);
++	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI)
++		return exynos5420_usbdrd_phy_calibrate(phy_drd);
++	return 0;
+ }
  
- 	bus_probe_device(dev);
--	if (parent)
-+	if (parent) {
- 		klist_add_tail(&dev->p->knode_parent,
- 			       &parent->p->klist_children);
-+		up_read(&parent->p->dead_sem);
-+	}
- 
- 	if (dev->class) {
- 		mutex_lock(&dev->class->p->mutex);
-@@ -2722,6 +2732,8 @@ int device_add(struct device *dev)
-  Error:
- 	cleanup_glue_dir(dev, glue_dir);
- parent_error:
-+	if (parent)
-+		up_read(&parent->p->dead_sem);
- 	put_device(parent);
- name_error:
- 	kfree(dev->p);
-@@ -2785,7 +2797,9 @@ EXPORT_SYMBOL_GPL(put_device);
-  * kill_device - declare device dead
-  * @dev: device in question
-  *
-- * Declare @dev dead to prevent it from binding to a driver.
-+ * Declare @dev dead to prevent it from binding to a driver and
-+ * to prevent addition of children.
-+ *
-  * Return true if it was killed or false if it was already dead.
-  */
- bool kill_device(struct device *dev)
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 8158e281f3540..005eca4bae089 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2764,6 +2764,9 @@ void spi_unregister_controller(struct spi_controller *ctlr)
- 	struct spi_controller *found;
- 	int id = ctlr->bus_num;
- 
-+	/* Prevent addition of new children, then remove existing ones */
-+	if (IS_ENABLED(CONFIG_OF_DYNAMIC) || IS_ENABLED(CONFIG_ACPI))
-+		kill_device(&ctlr->dev);
- 	device_for_each_child(&ctlr->dev, NULL, __unregister);
- 
- 	/* First make sure that this controller was ever added */
+ static const struct phy_ops exynos5_usbdrd_phy_ops = {
 -- 
-2.27.0
+2.17.1
 
