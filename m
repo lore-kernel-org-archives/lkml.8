@@ -2,86 +2,131 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70678C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A595C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1D5206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594222087;
-	bh=q6H2MgomFwB1RePMLnNiDwgJsDS/PcygRl+huPQQ0x8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TI5zHVhQnSkoIhcMq7CjpyAlwcAZNYy1BnW7nFJtAyHCGsXMEID+WgFxv2KhN19NG
-	 ymu9C6tmrMBbN074Qv9WoPpEHYjBTC0DB1AQpRZvKz9PhSN4kgoXFDjawLOt4AUyrY
-	 uHO0naruxWAbUMHtjnKaZexW31xKIh2luTsmuwqk=
+	by mail.kernel.org (Postfix) with ESMTP id 34036206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:29:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="viyDx+ee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730072AbgGHP2F (ORCPT
+        id S1730108AbgGHP32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729910AbgGHP2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:28:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8574C20786;
-        Wed,  8 Jul 2020 15:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222085;
-        bh=q6H2MgomFwB1RePMLnNiDwgJsDS/PcygRl+huPQQ0x8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dC6UhLb1AbGooN9jirdPGALczpea5Ixd0NZpTeVsXEp+e/nWOUycm2jtjJPgDH89d
-         wI75Z1xAFStAHh7V2F4eBfSBsCwPJU2uBONQTtU4NwO2dT8kHpHCvIwcWBgeCXiCS3
-         N6rTEZSxdu3uBdHH3YWFCdZzNnou4lzL0fT4UFDM=
-Date:   Wed, 8 Jul 2020 17:28:00 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 000/112] 5.7.8-rc1 review
-Message-ID: <20200708152800.GA714318@kroah.com>
-References: <20200707145800.925304888@linuxfoundation.org>
- <552f9118-eac9-56cc-c321-dd9b97eff09e@linuxfoundation.org>
+        Wed, 8 Jul 2020 11:29:28 -0400
+Received: from casper.infradead.org ([90.155.50.34]:37122 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbgGHP32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:29:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=N8lHywqGbtnmlIc888+bV79uuU+fuqr8NT0KCg3mTcg=; b=viyDx+ee5J2iBJ3SHuhkTe64ex
+        nPggVaOCNbVbq3gLYgaZn/l9njs3icaTSUoD2+VtbEHFctvNdK67a4IcxTeamhz9ucJm5ski4dEO9
+        SUMBENSbNZVJ61wfmqFFiqHdlbUGQXpCZc+u/1FF1jRy62DxPVVzMdSRobfQ4xjGEZu/cciBdvZXu
+        wacHtK8QaMqFAMl3xVXcdP9QTzFIy/Dvafd40JRsN0fjgpoYKuFaDepQybQwX13pVKyXQcnZISmPZ
+        Q5q3+RdAwhwGOaH14t0dGyNhFA6pQpsNfGKTwS7qChg1UbMSaJtGEKdacdn7hZ4CLrnGSFSNGb8EU
+        FA572Rtg==;
+Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtByQ-0002A2-VT; Wed, 08 Jul 2020 15:27:13 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     iommu@lists.linux-foundation.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-kernel@vger.kernel.org
+Subject: generic DMA bypass flag v4
+Date:   Wed,  8 Jul 2020 17:24:44 +0200
+Message-Id: <20200708152449.316476-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <552f9118-eac9-56cc-c321-dd9b97eff09e@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 07:05:12AM -0600, Shuah Khan wrote:
-> On 7/7/20 9:16 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.7.8 release.
-> > There are 112 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.8-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> 
-> Compiled and booted on my test system. No dmesg regressions.
+Hi all,
 
-Thanks for testing all of these and letting me know.
+I've recently beeing chatting with Lu about using dma-iommu and
+per-device DMA ops in the intel IOMMU driver, and one missing feature
+in dma-iommu is a bypass mode where the direct mapping is used even
+when an iommu is attached to improve performance.  The powerpc
+code already has a similar mode, so I'd like to move it to the core
+DMA mapping code.  As part of that I noticed that the current
+powerpc code has a little bug in that it used the wrong check in the
+dma_sync_* routines to see if the direct mapping code is used.
 
-greg k-h
+These two patches just add the generic code and move powerpc over,
+the intel IOMMU bits will require a separate discussion.
+
+The x86 AMD Gart code also has a bypass mode, but it is a lot
+strange, so I'm not going to touch it for now.
+
+Note that as-is this breaks the XSK buffer pool, which unfortunately
+poked directly into DMA internals.  A fix for that is already queued
+up in the netdev tree.
+
+Jesper and XDP gang: this should not regress any performance as
+the dma-direct calls are now inlined into the out of line DMA mapping
+calls.  But if you can verify the performance numbers that would be
+greatly appreciated.
+
+A git tree is available here:
+
+    git://git.infradead.org/users/hch/misc.git dma-bypass.4
+
+Gitweb:
+
+    git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-bypass.4
+
+
+Changes since v3:
+ - add config options for the dma ops bypass and dma ops themselves
+   to not increase the size of tinyconfig builds
+
+Changes since v2:
+ - move the dma mapping helpers out of line
+ - check for possible direct mappings using the dma mask
+
+Changes since v1:
+ - rebased to the current dma-mapping-for-next tree
+
+
+Diffstat:
+ arch/alpha/Kconfig                |    1 
+ arch/arm/Kconfig                  |    1 
+ arch/ia64/Kconfig                 |    1 
+ arch/mips/Kconfig                 |    1 
+ arch/parisc/Kconfig               |    1 
+ arch/powerpc/Kconfig              |    2 
+ arch/powerpc/include/asm/device.h |    5 
+ arch/powerpc/kernel/dma-iommu.c   |   90 +------------
+ arch/s390/Kconfig                 |    1 
+ arch/sparc/Kconfig                |    1 
+ arch/x86/Kconfig                  |    1 
+ drivers/iommu/Kconfig             |    2 
+ drivers/misc/mic/Kconfig          |    1 
+ drivers/vdpa/Kconfig              |    1 
+ drivers/xen/Kconfig               |    1 
+ include/linux/device.h            |   11 +
+ include/linux/dma-direct.h        |  104 +++++++++++++++
+ include/linux/dma-mapping.h       |  251 ++++----------------------------------
+ kernel/dma/Kconfig                |   12 +
+ kernel/dma/Makefile               |    3 
+ kernel/dma/direct.c               |   74 -----------
+ kernel/dma/mapping.c              |  214 ++++++++++++++++++++++++++++++--
+ 22 files changed, 385 insertions(+), 394 deletions(-)
