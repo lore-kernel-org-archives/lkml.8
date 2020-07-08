@@ -2,131 +2,141 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B55C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C085C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E62A2065D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:41:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNbB0R68"
+	by mail.kernel.org (Postfix) with ESMTP id 337D0206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594201329;
+	bh=8qCOXJkpdszHcWBPcw5SYFwFD+A1w2gGZuyFi+QWkq0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vykLYuvUT6lJCNwHB6opiP2byGC0GdN4TVinoKjj5TiaRz6nb3RmvlsnqJmkm/jaK
+	 +sG7ED0zob+f/U6mMERU5SEGJEOVTJF9IcusDOupRwavMHccArNHT1ZMTsV1/IvfVF
+	 JQHoRiyMDNX6ag9QmOnyVfYZvbIGAjYce7upF6mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgGHJlv (ORCPT
+        id S1728224AbgGHJmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:41:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgGHJlu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:41:50 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218AFC08C5DC;
-        Wed,  8 Jul 2020 02:41:50 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s9so53339055ljm.11;
-        Wed, 08 Jul 2020 02:41:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GPMeuDsCXTADuLJLoIy2N9qwDLdeQmuia/lSB8E0qrU=;
-        b=CNbB0R68YWw0Z3iV5ixYR0bUFVXyh6U+fQXyLBCgdqqki7Eq9h09AWBWow9sICgySr
-         317kdeZx6+zS+mmxbjLC3wDx3MuuMUzw3+c4mdUjLVgUoalEdSGZ4Wd+2+uMpL5MsVrd
-         f/jhX7uueYD7h5Owzi+3hqqXl/+Pr70cCKAHWyLaSrPGsNb6ggIDVWCDP+LLpoGunrau
-         a0+xjrqa1QKt63nYDWXvyTYNN7KTrs42EsfFRPg0phHuh5qW4i2315Ptn/gyNQv5LM7T
-         7GfeHkBbJXWLJDwO7bT6k1keNOr8Jiu/0qBAWmlBpLYV+Fk5kMF42POmf9XBu4dRmZtl
-         Vu2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GPMeuDsCXTADuLJLoIy2N9qwDLdeQmuia/lSB8E0qrU=;
-        b=IJW+WQL3dq6YanCZ8G29QxHtBtQ/+IutALXtXCobxihQEllsz13F8lGOE4CN07vUX9
-         UjC9MmvTxU+T3lD6AhzwfKT/DPlQJUjlv2fSh3WPVesuyRzVq8o4zakGrXQHlNgUBX6g
-         0ivUVeD9ceHx1KW5AFAduxj8kPi3JqTwhrE38BssfLRrAC286DS6mf3rPkLxg002gUT4
-         7raybqqulbOEVAckQJF4wItqALQrxoUo783TChJDreWFRWTxXRQ+lzQkTXtXqtg9MdDW
-         zMX/8/pSiY9cpj3esM+t81HlAZs1tPYt8dQFjJRpbHmYO1txwHqDpNlSvhcOL93slMXG
-         wClg==
-X-Gm-Message-State: AOAM530sGXwl1G8YJLN2S9LZ7fy8pSMng66EV1USTtAZJjxAZtdl/dem
-        luF7rLLsU+xqrltyzXRY0bbPOpmg
-X-Google-Smtp-Source: ABdhPJy9FcYqgP1wkWLMBvlayoKZTTo2ZClSUXVd8QkMvWexf7BV4FS5B4cDcY+5HaqBAlAQSa2csQ==
-X-Received: by 2002:a2e:91ca:: with SMTP id u10mr28037948ljg.101.1594201308192;
-        Wed, 08 Jul 2020 02:41:48 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id d25sm780669ljc.103.2020.07.08.02.41.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 02:41:47 -0700 (PDT)
-Subject: Re: [PATCH v1 1/5] gpio: max77620: Initialize interrupts state
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200708082634.30191-1-digetx@gmail.com>
- <20200708082634.30191-2-digetx@gmail.com>
- <CAHp75VdFVGgKxR+n5TUMuFnWDy_uEmEeG=TvR9s7Xbe=jOdObg@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fc3926ec-f8a3-b408-aff6-939f3ce91ce9@gmail.com>
-Date:   Wed, 8 Jul 2020 12:41:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAHp75VdFVGgKxR+n5TUMuFnWDy_uEmEeG=TvR9s7Xbe=jOdObg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Jul 2020 05:42:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725949AbgGHJmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 05:42:07 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEACE2065D;
+        Wed,  8 Jul 2020 09:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594201326;
+        bh=8qCOXJkpdszHcWBPcw5SYFwFD+A1w2gGZuyFi+QWkq0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JW3g5z6jmj6g3hzydhgarDj/QRP5tXjIjUu3pBNgOdQ5kVV/6lRIXq6blcPcTMPBL
+         QHaVbnPV6qWVg3wo5TFM1t6hVcSEiMcG2YMa9lsDJNS68fc+ekYGujGYTMfJ4QIpFM
+         6B+1LoqocSk4pEEfJICkeP4zQplZ7gx1FSZ+lLik=
+Date:   Wed, 8 Jul 2020 18:42:01 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        davem@davemloft.net, corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: kprobes
+Message-Id: <20200708184201.611d929ae6017c87ea98b114@kernel.org>
+In-Reply-To: <20200707194959.52487-1-grandmaster@al2klimov.de>
+References: <20200707194959.52487-1-grandmaster@al2klimov.de>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.07.2020 11:51, Andy Shevchenko пишет:
-> On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> I noticed on Nexus 7 that after rebooting from downstream kernel to
->> upstream, the GPIO interrupt is triggering non-stop despite of interrupts
->> being disabled for all of GPIOs. This happens because Nexus 7 uses a
->> soft-reboot, meaning that bootloader should take care of resetting
->> hardware, but bootloader doesn't do it well. In a result, GPIO interrupt
->> may be left ON at a boot time. Let's mask all GPIO interrupts at the
->> driver's probe time in order to resolve the issue.
+On Tue,  7 Jul 2020 21:49:59 +0200
+"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> ...
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+
+OK, but it seems that some of them are disappeared :(
+
+ http://www-106.ibm.com/developerworks/library/l-kprobes.html?ca=dgr-lnxw42Kprobe
+
+ -> https://www.ibm.com/developerworks/library/l-kprobes/index.html
+
+ http://www.redhat.com/magazine/005mar05/features/kprobes/
+
+ -> I can not find that.
+
+>  - http://www-users.cs.umn.edu/~boutcher/kprobes/
+>  - http://www.linuxsymposium.org/2006/linuxsymposium_procv2.pdf (pages 101-115)
+
+Both are not found.
+
+(OT, it seems http://www.linuxsymposium.org/ has been left from historical
+ Linux Symposium, we must remove it asap)
+
+Thank you,
+
 > 
->> +               err = regmap_update_bits(mgpio->rmap, GPIO_REG_ADDR(i),
->> +                                        MAX77620_CNFG_GPIO_INT_MASK, 0);
->> +               if (err < 0)
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
 > 
-> Does ' < 0' meaningful here?
-
-Not really, although [1] explicitly says that regmap_update_bits()
-returns either 0 or a negative error code. The positive value will be an
-unexpected return code here.
-
-[1]
-https://elixir.bootlin.com/linux/v5.8-rc3/source/drivers/base/regmap/regmap.c#L2910
-
-This variant of ' < 0' is consistent with all other similar occurrences
-in the driver's code, so should be better to keep it as-is, IMO.
-
->> +                       dev_err(mgpio->dev, "failed to disable interrupt: %d\n",
->> +                               err);
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also https://lkml.org/lkml/2020/6/27/64
 > 
-> One line.
+>  If there are any valid, but yet not changed URLs:
+>  See https://lkml.org/lkml/2020/6/26/837
+> 
+>  Documentation/kprobes.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/kprobes.txt b/Documentation/kprobes.txt
+> index 8baab8832c5b..f6990f64154f 100644
+> --- a/Documentation/kprobes.txt
+> +++ b/Documentation/kprobes.txt
+> @@ -693,7 +693,7 @@ process. Here are sample overhead figures (in usec) for x86 architectures::
+>  TODO
+>  ====
+>  
+> -a. SystemTap (http://sourceware.org/systemtap): Provides a simplified
+> +a. SystemTap (https://sourceware.org/systemtap): Provides a simplified
+>     programming interface for probe-based instrumentation.  Try it out.
+>  b. Kernel return probes for sparc64.
+>  c. Support for other architectures.
+> @@ -712,8 +712,8 @@ See samples/kprobes/kretprobe_example.c
+>  
+>  For additional information on Kprobes, refer to the following URLs:
+>  
+> -- http://www-106.ibm.com/developerworks/library/l-kprobes.html?ca=dgr-lnxw42Kprobe
+> -- http://www.redhat.com/magazine/005mar05/features/kprobes/
+> +- https://www-106.ibm.com/developerworks/library/l-kprobes.html?ca=dgr-lnxw42Kprobe
+> +- https://www.redhat.com/magazine/005mar05/features/kprobes/
+>  - http://www-users.cs.umn.edu/~boutcher/kprobes/
+>  - http://www.linuxsymposium.org/2006/linuxsymposium_procv2.pdf (pages 101-115)
+>  
+> -- 
+> 2.27.0
+> 
 
-This will make this line inconsistent with the rest of the driver's code.
 
-Secondly, this line won't fit to display using my multi-file view-edit
-setup.
-
-I know that 80 chars isn't warned by checkpatch anymore, but still it's
-a preferred width for all cases where it doesn't hurt readability, which
-is the case here, IMO.
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
