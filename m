@@ -2,116 +2,92 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB48CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D55B320739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08AC9206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:23:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ERVIiViD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbgGHHXC convert rfc822-to-8bit (ORCPT
+        id S1730349AbgGHHXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:23:02 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:43667 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729887AbgGHHXB (ORCPT
+        Wed, 8 Jul 2020 03:23:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730190AbgGHHXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:23:01 -0400
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MD9Kp-1k1YsS10oD-009Bpy; Wed, 08 Jul 2020 09:22:57 +0200
-Received: by mail-qk1-f174.google.com with SMTP id k18so40595913qke.4;
-        Wed, 08 Jul 2020 00:22:56 -0700 (PDT)
-X-Gm-Message-State: AOAM531Ao9c8bH8WoE5qvjA7oR9rRwnqW6BN5uTxdxQpCeKqNmwjYWvE
-        TX/PfbVyVwlg71qIqb8nZwqe7xuLOc13eRRlVa4=
-X-Google-Smtp-Source: ABdhPJwUBcG/1BpiC+qdY+LuFzWvg9XDNkC9mO5dIZPmuPnsoF/bIile11NCgXsXdn50Udu/UrGJ9q4uKoPO8k6xQnA=
-X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr48812583qko.138.1594192975528;
- Wed, 08 Jul 2020 00:22:55 -0700 (PDT)
+        Wed, 8 Jul 2020 03:23:19 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D430C08C5F5
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:23:18 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id y18so26248398lfh.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:23:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ols8fE88SOECty4ug3M3JHhI6m5+t3LRMsYguz2UCws=;
+        b=ERVIiViD/iI07aPNMiZegbsH2kVCDifsiyM7h9FotGZUkC+BE9yb5iEpRWefKTJnkd
+         jReQfyFSiRV8jK7vXeMOXJeEAOLJT48CLEv3e2jRwzs4+OeYlSQC0NYsZFlvbGBnrDmI
+         XvAq1Puv9oLu2GH99BVBlWbMYhsa4sL/iKLN6isDfuXORZ1GIEzSjU57Wq09WZrx4U3Y
+         y2LPZLVrbECvVf9m+MD7bkPcBzaVrGLesjJhBKT4/FAabPEfAgEU13B+zk4z0+8lUBnk
+         rX2KJK3j1Dt4ttJR41YT2eellrR5IHkjJwEQm6an1VijL05wsIEpFXsancfjD4bYgLQ1
+         mv+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ols8fE88SOECty4ug3M3JHhI6m5+t3LRMsYguz2UCws=;
+        b=D94pl2WWsBojwm8eK/XyIBqCjKNrPYUBp++zg/i+XglpI+5HNc2cYgnvQcQUG59+ie
+         eWYr1KJDu1PnO6USECFT+dQgsJL2WKEFzql5nGKTTZE/u5SKJBmE+asZIR6VR9fvKkUt
+         I4fArL7TCWBB8liCivyVmRsdfbrIdpRRIKOSYKidGN1AQFtKIQPDbYAnjUAe7OSATNqA
+         tM73IC6uctWflk3n98kBzViqs3O4eRPqJbg4HC8Z10gC9DxFrP/THWJTaNzhHTyhW8yu
+         RWrSBHdG/psRZ8mMyXNT5CUP7XRjuAce8JI9vsKLUs2mQYFQ+dqqUNVBT77zmzB08xPv
+         lguA==
+X-Gm-Message-State: AOAM5310DBuhgBAGLVlk/KVMJNX5SPQnKXGgYYgGoIxHufC/CEhyWDgL
+        HYvOmxPwIaH5u4UoReh1dQqt6wi9yui75aAOQ3sSyg==
+X-Google-Smtp-Source: ABdhPJw7rifWiraCKDisMMtwfhzfhSSUEzk6UZkGaSDEQ9v2SD4J/7mMqL1Gdv/j4APtHu5Ifpwdpn20zoEoTGYflcU=
+X-Received: by 2002:a19:e05d:: with SMTP id g29mr35015008lfj.217.1594192997140;
+ Wed, 08 Jul 2020 00:23:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200707180955.53024-1-mic@digikod.net> <20200707180955.53024-10-mic@digikod.net>
-In-Reply-To: <20200707180955.53024-10-mic@digikod.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 8 Jul 2020 09:22:39 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0docCqHkEn9C7=e0GC_ieN1dsYgKQ9PbUmSZYxh9MRnw@mail.gmail.com>
-Message-ID: <CAK8P3a0docCqHkEn9C7=e0GC_ieN1dsYgKQ9PbUmSZYxh9MRnw@mail.gmail.com>
-Subject: Re: [PATCH v19 09/12] arch: Wire up landlock() syscall
-To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        Richard Weinberger <richard@nod.at>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+References: <20200630133345.2232932-1-lee.jones@linaro.org> <20200630133345.2232932-11-lee.jones@linaro.org>
+In-Reply-To: <20200630133345.2232932-11-lee.jones@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 8 Jul 2020 09:23:06 +0200
+Message-ID: <CACRpkdZWeJ=aVR7F2_aLYe-P7ZWGJkSQrcfVUL9vBf8C1nxWfw@mail.gmail.com>
+Subject: Re: [PATCH 10/10] gpio: gpio-mlxbf2.c: Provide __releases()
+ annotation to stop confusing Sparse
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Asmaa Mnebhi <Asmaa@mellanox.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:54NRw1C3ud7yaXwsDrOd/GoWcgIn8PrBSXpNEPKRDJ07a38YjAa
- fRe0DbjudiX//y9B/2Q7TjMkX8N2Pk4mcWoFORSRZnfcYQP0fecoj89KkY5ctbHDoHzjtiJ
- /krwi+bdtt85jBnNon7Wn3P1yIcUbi62dFhyfqEDkJePew/ow9aK3NN75MuWiDBAi6TrW9Q
- QxDnDTzRoOBzQV6IFe1mg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LVeoa5/caPU=:khu0qv2J2g0myi8u7k17ig
- bIYa6+/GI+nu5ZRnN2SU+D7AWzUNS+2ylYksn30ahSpwbech2IX7S43zNgFNtnjUSId+fdCIq
- xSwjC+cyn9z2mzQcSEeDKYoz0RdmkHn8iHQTifNqtFCmd8XyHeA6UNTkSk2kMrv0JN3v64A9O
- brEJLrsdSjMvkl7Mm74s6Lkfq88luCcNbA4nSg/rkDRL3p+MeFUrQbABjo8zkwzWChib7Mf/w
- JzYC/gKGAxxyZYXH4upG/7BZWAF6TCVbs3AFWHiShf3DXagQCA/bnerjss1iVs2DTdod1Qox7
- uKEMEcz+t5PLLPSphTGrV9xttZRLdXqc1DHoeopex4ZbGJXJFDMmD/mEg3iim49XHaoq7WZb1
- 6SAB/ApMXFVQWlArmmIYT1O4z1FG3/trG/OQ+vdUYO+AEIkmxlzcRJC1NLi0cnW7KN6BAkKIg
- szDVYZ8GhVTJMC1Javxfog5QlUGkXmtbJwNFjfVanGoMp017s+6P+823yOfJrBRWVEItshOUm
- VvF1wP5iWhZOMW81ihKMWPPVK25t373uppN42MDNMFANNZpxEBImkIDRXKjlt3QCq93l762aQ
- mbPTTN7YSjYCC+oGvdvJLoT4tpWl2U7ApCkGtG6d226v0xamxhFD9lvJyyWy+1btAkfELlzwk
- GjsdzQHZW6QxsBZe3MTlDpBMp7/QqUvJNkBlL9GEVAId/Rd+kRzEbnNUTzeFQpgy3413ZBuWy
- dRbs4VnRE+Wcp/EHCppclgSw6y7PZbIt1QdH/RgUPC0BMsg/Y1AX4tQvAXKN2sVq6kas7kCor
- tAksJ3UU6OcxIEq0ZSr1H9vPzgYSnMC5eO8Si7tFrOCrPdmvYM0ynk9VZA5BMIFYdolpFi6tV
- KwaMgh8f6vBCJzMZCnMfxs+Eo2FaauwEHBbrN/S0IZ4C4MD5vzjahC5zdvYsjuQXElTMuUslz
- ZDE8LRZFk4/F55oIoPTtu5hSk85FIrVUrQ2MC7P6edfh9X75CsIn3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 8:10 PM Mickaël Salaün <mic@digikod.net> wrote:
+On Tue, Jun 30, 2020 at 3:34 PM Lee Jones <lee.jones@linaro.org> wrote:
 
-> index f4a01305d9a6..a63a411a74d5 100644
-> --- a/include/uapi/asm-generic/unistd.h
-> +++ b/include/uapi/asm-generic/unistd.h
-> @@ -857,9 +857,11 @@ __SYSCALL(__NR_openat2, sys_openat2)
->  __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
->  #define __NR_faccessat2 439
->  __SYSCALL(__NR_faccessat2, sys_faccessat2)
-> +#define __NR_landlock 440
-> +__SYSCALL(__NR_landlock, sys_landlock)
+> Sparse cannot peer into other functions to see when and if locks are
+> acquired and released, thus it simply warns that a 'context imbalance'
+> is detected instead.  Let's be kind to Sparse and let it know that
+> this behaviour is intentional.
 >
->  #undef __NR_syscalls
-> -#define __NR_syscalls 440
-> +#define __NR_syscalls 441
+>  drivers/gpio/gpio-mlxbf2.c:125:12: warning: context imbalance in 'mlxbf2_gpio_lock_acquire' - different lock contexts for basic block
+>  drivers/gpio/gpio-mlxbf2.c:151:13: warning: context imbalance in 'mlxbf2_gpio_lock_release' - unexpected unlock
+>
+> Cc: Asmaa Mnebhi <Asmaa@mellanox.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-In linux-next, we already have:
+Patch applied!
 
-+#define __NR_watch_mount 440
-+#define __NR_watch_sb 441
-+#define __NR_fsinfo 442
-+#define __NR_process_madvise 443
-
-You may want to increase the number again.
-
-      Arnd
+Yours,
+Linus Walleij
