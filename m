@@ -2,145 +2,124 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67613C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA01C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4282220775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:14:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594167256;
-	bh=2L7WP+FH4ge1x8kEWdYfaMjqxWIqNu5qXRk+3MClC9M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vjjqG5N8vNoMUjsOvu3U//KGM9r0E8hz2LVmqfd3I1yAn298Rfr5MoxMSmeKAvftn
-	 Bg5dTrLJb8iXj6LEYb1OV9VxnArVHVa5SUWw21i56i6/BnKKHepsCLPHLqFWjx4+/9
-	 3PA2t5D/9ZouyG8SS95I7QClFOs5WxfsacS1BHIg=
+	by mail.kernel.org (Postfix) with ESMTP id 3C1812067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgGHAOP (ORCPT
+        id S1728762AbgGHAYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 20:14:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbgGHAOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 20:14:14 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9257F20771;
-        Wed,  8 Jul 2020 00:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594167253;
-        bh=2L7WP+FH4ge1x8kEWdYfaMjqxWIqNu5qXRk+3MClC9M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QfQm0CofV3QNZvEH3olHTvHrgD7XQHvllDn6Up+u11+4dp7W22MPY9dg3vmZWGzER
-         XIiCpVWWCkkV+VCDHLhTa8Ym/BUyWS7ON39mcGLvaWfMQbdSPEJgwGPXDWS+65+HBv
-         vl3vI1BfK3voK1Ltv5Bul0yUXBMvW/rDkI2IZmZY=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Matt Jolly <Kangie@footclan.ninja>
-Cc:     Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/2] PCI/AER: Log correctable errors as warning, not error
-Date:   Tue,  7 Jul 2020 19:14:01 -0500
-Message-Id: <20200708001401.405749-2-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200708001401.405749-1-helgaas@kernel.org>
-References: <20200618155511.16009-1-Kangie@footclan.ninja>
- <20200708001401.405749-1-helgaas@kernel.org>
-MIME-Version: 1.0
+        Tue, 7 Jul 2020 20:24:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32518 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728208AbgGHAYz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 20:24:55 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06803DgJ167205;
+        Tue, 7 Jul 2020 20:24:39 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3250bcmryj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 20:24:39 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0680DDAO010229;
+        Wed, 8 Jul 2020 00:24:37 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06fra.de.ibm.com with ESMTP id 322h1g9xm1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 00:24:36 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0680NDRm62980576
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Jul 2020 00:23:13 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55FBE52051;
+        Wed,  8 Jul 2020 00:24:34 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.200.130])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id CA4565204E;
+        Wed,  8 Jul 2020 00:24:31 +0000 (GMT)
+Message-ID: <1594167871.23056.132.camel@linux.ibm.com>
+Subject: Re: [PATCH v10 2/9] fs: introduce kernel_pread_file* support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Tue, 07 Jul 2020 20:24:31 -0400
+In-Reply-To: <202007071642.AA705B2A@keescook>
+References: <20200706232309.12010-1-scott.branden@broadcom.com>
+         <20200706232309.12010-3-scott.branden@broadcom.com>
+         <202007071642.AA705B2A@keescook>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-07_14:2020-07-07,2020-07-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 cotscore=-2147483648 priorityscore=1501 phishscore=0
+ spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
+ impostorscore=0 malwarescore=0 clxscore=1011 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007070158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Jolly <Kangie@footclan.ninja>
+On Tue, 2020-07-07 at 16:56 -0700, Kees Cook wrote:
+> > @@ -951,21 +955,32 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+> >               ret = -EINVAL;
+> >               goto out;
+> >       }
+> > -     if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
+> > +
+> > +     /* Default read to end of file */
+> > +     read_end = i_size;
+> > +
+> > +     /* Allow reading partial portion of file */
+> > +     if ((id == READING_FIRMWARE_PARTIAL_READ) &&
+> > +         (i_size > (pos + max_size)))
+> > +             read_end = pos + max_size;
+> 
+> There's no need to involve "id" here. There are other signals about
+> what's happening (i.e. pos != 0, max_size != i_size, etc).
 
-PCIe correctable errors are recovered by hardware with no need for software
-intervention (PCIe r5.0, sec 6.2.2.1).
+Both the pre and post security kernel_read_file hooks are called here,
+but there isn't enough information being passed to the LSM/IMA to be
+able to different which hook is applicable.  One method of providing
+that additional information is by enumeration.  The other option would
+be to pass some additional information.
 
-Reduce the log level of correctable errors from KERN_ERR to KERN_WARNING.
+For example, on the post kernel_read_file hook, the file is read once
+into memory.  IMA calculates the firmware file hash based on the
+buffer contents.  On the pre kernel_read_file hook, IMA would need to
+read the entire file, calculating the file hash.  Both methods of
+calculating the file hash work, but the post hook is more efficient.
 
-The bug reports below are for correctable error logging.  This doesn't fix
-the cause of those reports, but it may make the messages less alarming.
-
-[bhelgaas: commit log, use pci_printk() to avoid code duplication]
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201517
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=196183
-Link: https://lore.kernel.org/r/20200618155511.16009-1-Kangie@footclan.ninja
-Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pcie/aer.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 9176c8a968b9..ca886bf91fd9 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -673,20 +673,23 @@ static void __aer_print_error(struct pci_dev *dev,
- {
- 	const char **strings;
- 	unsigned long status = info->status & ~info->mask;
--	const char *errmsg;
-+	const char *level, *errmsg;
- 	int i;
- 
--	if (info->severity == AER_CORRECTABLE)
-+	if (info->severity == AER_CORRECTABLE) {
- 		strings = aer_correctable_error_string;
--	else
-+		level = KERN_WARNING;
-+	} else {
- 		strings = aer_uncorrectable_error_string;
-+		level = KERN_ERR;
-+	}
- 
- 	for_each_set_bit(i, &status, 32) {
- 		errmsg = strings[i];
- 		if (!errmsg)
- 			errmsg = "Unknown Error Bit";
- 
--		pci_err(dev, "   [%2d] %-22s%s\n", i, errmsg,
-+		pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
- 				info->first_error == i ? " (First)" : "");
- 	}
- 	pci_dev_aer_stats_incr(dev, info);
-@@ -696,6 +699,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- {
- 	int layer, agent;
- 	int id = ((dev->bus->number << 8) | dev->devfn);
-+	const char *level;
- 
- 	if (!info->status) {
- 		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-@@ -706,13 +710,14 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
- 	agent = AER_GET_AGENT(info->severity, info->status);
- 
--	pci_err(dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
--		aer_error_severity_string[info->severity],
--		aer_error_layer[layer], aer_agent_string[agent]);
-+	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
-+
-+	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-+		   aer_error_severity_string[info->severity],
-+		   aer_error_layer[layer], aer_agent_string[agent]);
- 
--	pci_err(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
--		dev->vendor, dev->device,
--		info->status, info->mask);
-+	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-+		   dev->vendor, dev->device, info->status, info->mask);
- 
- 	__aer_print_error(dev, info);
- 
--- 
-2.25.1
-
+Mimi
