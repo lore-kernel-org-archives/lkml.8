@@ -2,127 +2,168 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF534C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2263BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8E520786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7D6C20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="odQ4u8nw"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ucOznK9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgGHOts (ORCPT
+        id S1729799AbgGHOyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:49:48 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39226 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729206AbgGHOtr (ORCPT
+        Wed, 8 Jul 2020 10:54:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729625AbgGHOyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:49:47 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708144946euoutp01ce219f38917824b631b8e61579340091~fznL_jTUK2871428714euoutp01P
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 14:49:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708144946euoutp01ce219f38917824b631b8e61579340091~fznL_jTUK2871428714euoutp01P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594219786;
-        bh=FvnKpLpfAzSLRUm2zDE6RqfbQeB+7yAT2FnD5DmeapI=;
-        h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=odQ4u8nwo9Jd82INCHGBA3ReWUSALaJ1h1Omrp926IBAnvTSJDu0M9mVVYnE4FDa9
-         6gVsO/a5V7poAspknYNACao/1V02s687eNilcIAUmuJ+n2A3QA8+pKVx0H9P7jhG6P
-         tRc9a0Fzqiy7qIgsyIGHwoqDWvA93gKDP/lTh3cc=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200708144946eucas1p2cdb48155d4c4b27d6aeeb9a5f80e43a0~fznLyXjxp0172401724eucas1p2P;
-        Wed,  8 Jul 2020 14:49:46 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 3A.79.05997.A0DD50F5; Wed,  8
-        Jul 2020 15:49:46 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708144945eucas1p262cbd0aacfb58e0ce579aaa6cd5d3119~fznLhnd9b0283102831eucas1p26;
-        Wed,  8 Jul 2020 14:49:45 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200708144945eusmtrp223856cbb5fd52bdcab3e3d7f6b6203c8~fznLg8IxX2353923539eusmtrp2F;
-        Wed,  8 Jul 2020 14:49:45 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-a0-5f05dd0a7b6c
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id DF.01.06314.90DD50F5; Wed,  8
-        Jul 2020 15:49:45 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708144945eusmtip2712a08ec91f400a7a3cae14cf21b82b8~fznK4YwMv0154601546eusmtip2k;
-        Wed,  8 Jul 2020 14:49:45 +0000 (GMT)
-Subject: Re: [PATCH 03/11] media: exynos4-is: Fix nullptr when no CSIS
- device present
-To:     Jonathan Bakker <xc-racer2@live.ca>, kyungmin.park@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <c4fd36f4-a241-1279-c62b-823a67c05d88@samsung.com>
-Date:   Wed, 8 Jul 2020 16:49:44 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Wed, 8 Jul 2020 10:54:10 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA7CC061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 07:54:10 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id f23so47340162iof.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 07:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cREv3rZvN4Yo/5YgjBmWEsOZvAdLXz7UPWWz2pKlQ9E=;
+        b=ucOznK9IILbhxf+nT10Izgudiaar596unf8NWa0m/o0Jiph3G2hRVDYzB+xxkbCE2M
+         G590FSnAm7skRHO+QkI52tf7ossC1S7j6RBi132SOgfj6eEjsP8GDBCHnNB6o6r5/zOT
+         GbeoE4VsBS22IZmU3o3ERZcFWR1bBvvqYHeoEh0JcHQ0y3PRp67ylDO3ieWC9VXq5PMD
+         HsgG0WgZ9Vk9FMB8LEVGXsM3Cj4Tzz/6lFqgZrlTgR/joLp/dHr5rf7NRjdE2F28iTr0
+         jLrM2gkAuDySNGXgfDswcAcO/8x5/jZz0Aq4JqGnGF4yU9sHRHdH+APOdpunsCNlUCnq
+         ehbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cREv3rZvN4Yo/5YgjBmWEsOZvAdLXz7UPWWz2pKlQ9E=;
+        b=hom6l1KWK5rhx5Yt1Q94rxGNoamXTFvoy+aXl29nuF6cjep1yl1q4ySgXFPXVdkBBH
+         k5I5ALekO7gQXu1haFBkyVPhXF+oSU2Fdc8Ir/fGy5+nBA5L1EByDiwNga1vDLjwGZnI
+         mzQMjIMy2W4o0aeelKLZSIQ6A8KDoGFmwMqPok5M8lpnlB0onHgGSD3hUJ+hcwmCMMVe
+         G336PXQ/coQUC7GRIpqP2XV8E9P5HBYTGCvLfsnUUgci0r1dPBfsc2n5eUV8mpWrhKh4
+         5BpxB64kiAZzf9dN3PnI/ulBxMZa9XMdBxSiSNUMEq1jMXcqnuHePZfelJ/lCCNG+QZ3
+         ee4w==
+X-Gm-Message-State: AOAM532Qs2HVe6+khJ++RCc5CZ8PvOhg3zepVpAyuH1g9yj/bSyezx83
+        QOM+itIkRTs81/ZhDRVzW1j8MgHGeutEXQ==
+X-Google-Smtp-Source: ABdhPJwvxt6/cEh1jwInQ9172/X1P+ZmWFDn2UVC6foDaqaig1JsByh1HsQke/oaidprcVkvcdQ1LQ==
+X-Received: by 2002:a5d:9dc4:: with SMTP id 4mr37851090ioo.172.1594220049556;
+        Wed, 08 Jul 2020 07:54:09 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id k3sm14966359ils.8.2020.07.08.07.54.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 07:54:08 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+To:     Kanchan Joshi <joshi.k@samsung.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <20200706141002.GZ25523@casper.infradead.org>
+ <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
+ <20200706143208.GA25523@casper.infradead.org>
+ <20200707151105.GA23395@test-zns>
+ <20200707155237.GM25523@casper.infradead.org>
+ <20200707202342.GA28364@test-zns>
+ <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
+ <20200707221812.GN25523@casper.infradead.org>
+ <CGME20200707223803epcas5p41814360c764d6b5f67fdbf173a8ba64e@epcas5p4.samsung.com>
+ <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
+ <20200708125805.GA16495@test-zns>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2962cd68-de34-89be-0464-8b102a3f1d0e@kernel.dk>
+Date:   Wed, 8 Jul 2020 08:54:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <BN6PR04MB0660EE7304C2BB2E603A8824A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <20200708125805.GA16495@test-zns>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju287ZjqPJcSq+qBkNkRKvFXRCEYuIQX/CKEFSO+pBLTdl06n1
-        Q0t0Ts3UInUZ3s2moEybNVFqkKO8lmVpitFWqGmWE7xkmfMo+e95n8v3vg98BFekx12JRFkq
-        I5fRSWKeANP3rQ35Cqbw6ADVNJ+6Y/7OpYaH2/nU4K15PqUzj+HUqKGKRxW1P8GpiuFeDtWk
-        2+BQb0qnsFA7iU6r5kk6GrIkdeOrmKS4U4skVp3HeTxCEBzHJCUqGbl/yBVBQlX9HyylEcvo
-        zmnCslEPtwDZEUAeh5/vTPwCJCBEZDOCvNWbGDssI1DX5iF2sCK4a7Wi3cjj2pYd1yMEFXrV
-        Tv4XgrF7D3Gby5EMhw96NccmOJE5HPjWXMmzCTwyEG6/LN5+SkiGgGXkB9+GMdIT1mZbMRt2
-        JqOgbbaLw3oc4FWlZZu3IyPhs350m+eSLjBhqd7BB6FroYprWwakng/r71tx9tYzUL46wGOx
-        I8yZOvksdofNZ9UcNpCDoKj7E58dShBMm2p2mgbB5ND6VprYWnEE2gz+LH0KltQTyEYDaQ8f
-        FxzYI+yhTF/OZWkh5OeJWLcn/NaWc1jsCoWWTYzFEsg3fMFL0CHNnpqaPdU0e6pp/t9QgzAt
-        cmHSFNJ4RnFUxqT7KWipIk0W7xebLNWhrd/U/9e0/BQZNmKMiCSQeL9wRodHi3BaqciUGhEQ
-        XLGT8PRgf5RIGEdnXmfkydHytCRGYURuBCZ2ER6rm40UkfF0KnONYVIY+a7KIexcs5FXvc8F
-        rw5VuE9LIe2u8Uh/MeAbsS8IV84UDK0EBp+9KImzxsa0mxfDyjod+zLuH3BTqlIu5TaqUbZp
-        5cHzpeTensHxlS7n7MWBsFVx7tzkSP+5jli/3IlW5eVikXm69OtoXzm5fOKtNiuw2niD9o46
-        fPWksCFg8/VQzPp8cmikGFMk0IHeXLmC/gfunvO7SQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xe7qcd1njDbqPGFv0P37NbHH+/AZ2
-        i7NNb9gtNj2+xmpxedccNoueDVtZLWac38dksWzTHyaLixPvsjhwemxa1cnmsXlJvceimz9Y
-        PPq2rGL0+LxJLoA1Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUn
-        syy1SN8uQS9jzuK/LAVLWSp2Ny9jaWDcy9zFyMkhIWAisXLhahYQW0hgKaPEoh7lLkYOoLiU
-        xPwWJYgSYYk/17rYuhi5gEreM0qc+P+CESQhLBAusebuZ1aQhIhAM5PE/+XbWCCq7jJKvFo+
-        H2wqm4ChRO/RPrAOXgE7iScX3rGD2CwCKhI/X64BqxEViJNYvmU+O0SNoMTJmU/A4pwCsRIP
-        tl1mArGZBdQl/sy7xAxhi0vcejIfKi4vsf3tHOYJjIKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW
-        56bnFhvqFSfmFpfmpesl5+duYgTG27ZjPzfvYLy0MfgQowAHoxIP74tNrPFCrIllxZW5hxgl
-        OJiVRHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCvTcRGYp0eR8YCrIK4k3NDU0t7A0NDc2Nzaz
-        UBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAaDT7mxPH/DvXP56Z3mD1IFNKJX43k6AZl/u+
-        L+IFektNI88UVFvmr9F0+zr3mfX7jIcVui0HWQo1LIVWGXUcr014H7h8I9/d771mJQkW5sUf
-        7wQ+c/5yXnWG7NmzbDmbFsh6ay9fY9gYq+/woraZ6/vuKZseXpLYx/BhcuM988NXc7k3sF1e
-        rMRSnJFoqMVcVJwIAIWvT8vNAgAA
-X-CMS-MailID: 20200708144945eucas1p262cbd0aacfb58e0ce579aaa6cd5d3119
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200426022730eucas1p12b77bd3e1bb3ee123dcec1eb8b00bc6a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200426022730eucas1p12b77bd3e1bb3ee123dcec1eb8b00bc6a
-References: <20200426022650.10355-1-xc-racer2@live.ca>
-        <CGME20200426022730eucas1p12b77bd3e1bb3ee123dcec1eb8b00bc6a@eucas1p1.samsung.com>
-        <BN6PR04MB0660EE7304C2BB2E603A8824A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.2020 04:26, Jonathan Bakker wrote:
-> Not all devices use the CSIS device, some may use the FIMC directly in
-> which case the CSIS device isn't registered.  This leads to a nullptr
-> exception when starting the stream as the CSIS device is always
-> referenced.  Instead, if getting the CSIS device fails, try getting the
-> FIMC directly to check if we are using the subdev API
+On 7/8/20 6:58 AM, Kanchan Joshi wrote:
+> On Tue, Jul 07, 2020 at 04:37:55PM -0600, Jens Axboe wrote:
+>> On 7/7/20 4:18 PM, Matthew Wilcox wrote:
+>>> On Tue, Jul 07, 2020 at 02:40:06PM -0600, Jens Axboe wrote:
+>>>>>> so we have another 24 bytes before io_kiocb takes up another cacheline.
+>>>>>> If that's a serious problem, I have an idea about how to shrink struct
+>>>>>> kiocb by 8 bytes so struct io_rw would have space to store another
+>>>>>> pointer.
+>>>>> Yes, io_kiocb has room. Cache-locality wise whether that is fine or
+>>>>> it must be placed within io_rw - I'll come to know once I get to
+>>>>> implement this. Please share the idea you have, it can come handy.
+>>>>
+>>>> Except it doesn't, I'm not interested in adding per-request type fields
+>>>> to the generic part of it. Before we know it, we'll blow past the next
+>>>> cacheline.
+>>>>
+>>>> If we can find space in the kiocb, that'd be much better. Note that once
+>>>> the async buffered bits go in for 5.9, then there's no longer a 4-byte
+>>>> hole in struct kiocb.
+>>>
+>>> Well, poot, I was planning on using that.  OK, how about this:
+>>
+>> Figured you might have had your sights set on that one, which is why I
+>> wanted to bring it up upfront :-)
+>>
+>>> +#define IOCB_NO_CMPL		(15 << 28)
+>>>
+>>>  struct kiocb {
+>>> [...]
+>>> -	void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
+>>> +	loff_t __user *ki_uposp;
+>>> -	int			ki_flags;
+>>> +	unsigned int		ki_flags;
+>>>
+>>> +typedef void ki_cmpl(struct kiocb *, long ret, long ret2);
+>>> +static ki_cmpl * const ki_cmpls[15];
+>>>
+>>> +void ki_complete(struct kiocb *iocb, long ret, long ret2)
+>>> +{
+>>> +	unsigned int id = iocb->ki_flags >> 28;
+>>> +
+>>> +	if (id < 15)
+>>> +		ki_cmpls[id](iocb, ret, ret2);
+>>> +}
+>>>
+>>> +int kiocb_cmpl_register(void (*cb)(struct kiocb *, long, long))
+>>> +{
+>>> +	for (i = 0; i < 15; i++) {
+>>> +		if (ki_cmpls[id])
+>>> +			continue;
+>>> +		ki_cmpls[id] = cb;
+>>> +		return id;
+>>> +	}
+>>> +	WARN();
+>>> +	return -1;
+>>> +}
+>>
+>> That could work, we don't really have a lot of different completion
+>> types in the kernel.
 > 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> Thanks, this looks sorted.
 
-Thanks, the change looks good to me.
+Not really, someone still needs to do that work. I took a quick look, and
+most of it looks straight forward. The only potential complication is
+ocfs2, which does a swap of the completion for the kiocb. That would just
+turn into an upper flag swap. And potential sync kiocb with NULL
+ki_complete. The latter should be fine, I think we just need to reserve
+completion nr 0 for being that.
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+-- 
+Jens Axboe
+
