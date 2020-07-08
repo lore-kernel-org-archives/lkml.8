@@ -2,141 +2,101 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88932C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8771EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6192020720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:11:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8TEn2dP"
+	by mail.kernel.org (Postfix) with ESMTP id 5BDE520720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594185300;
+	bh=+mzjqhYU5rQO3nwvQakxHkkMohSQjAaPau32KB6XtgQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FIYvRN611W4/3Qatjsk4yKIgnBGSpYVtDofENAJRokN1IcLdFt+YjValjS3YjOunO
+	 vJs0Z2yCkvW5VQbTnzuA34eFcdnCklettKOqm4ZxelsqbrZGGEkaNmA11hUykowU7k
+	 etmSIXYbsU7Fw84pu8sYUMZbpUou5czIpUwBl51I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgGHFK7 (ORCPT
+        id S1728555AbgGHFO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:10:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgGHFK6 (ORCPT
+        Wed, 8 Jul 2020 01:14:59 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34773 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgGHFO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:10:58 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EAC0C061755;
-        Tue,  7 Jul 2020 22:10:58 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x11so17674845plo.7;
-        Tue, 07 Jul 2020 22:10:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=NBE822KLqldc4RgjTMLNTL7g5oeVKxCy90pB/bhnbqA=;
-        b=M8TEn2dPCMOvBZET4JnaMDMy0lYBY2dVPXjJw8C+E1TwnoBBTuk66pgPu2fJqXKVx1
-         B5vvUPxm8LxCIC+/4HpDyj9eQK+FH+k8I9aySXAuKaiX/IyWQBl6c9oSucY0pJSrHdhk
-         kmKB9L6ekk6XeywFS7Hoy/JAxeOTezXXqTtHJtI9+cpy4/BmerCtU+RNLW1bt+52PMrU
-         Pk0YR8Vd5fowCPr/XR1VDl6eRw8K/yg3l2NMayfyGThwcRjmydMPd/jZW4d43k68o1N9
-         VVe106DV3DoJXbOl4exlvOx0GiUCrvhWLD74gWkyw6keF+43d7HBt78+En6/6Yio7WIE
-         LqLw==
+        Wed, 8 Jul 2020 01:14:58 -0400
+Received: by mail-pj1-f68.google.com with SMTP id cv18so1685275pjb.1;
+        Tue, 07 Jul 2020 22:14:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=NBE822KLqldc4RgjTMLNTL7g5oeVKxCy90pB/bhnbqA=;
-        b=JhmWHhxHnTLLZqVh6MLdbLZsUoEJqjkKkaYICO3X93xJBE+tRD7Rb3a13X5ey4OrdX
-         LiglmSeb6/XlTOfZQNEm26bGG4cNQsdT4+aP8DulXL0SR5ORTqXKPbqZU+oVWsbJ5/FN
-         +QzwB+EYF9q2H7aloJxyHn3bk66GdzmbnK48Ii/3VuoCYjruY8/Nr+82tvhwtVYSvzxZ
-         VKA01lPrOWuasxEtHVapcjvjWmPq48LxPvfGb8pyONzcsJLZ4J4SIv/8bloAIbqzs5wp
-         rDXMFG7ePl2gv91unAPKDS8eQFjLXPxak2PSn53R3eRryR02oaR40cWUt4BAaPDZ+Ut0
-         eo7Q==
-X-Gm-Message-State: AOAM531jaDN9B+Q7f1Hgn0qGmVgOFAQ1K6907Jrc/UE0qek2wnaGIe5j
-        as1grOCoqzduZASsaFgKVcI=
-X-Google-Smtp-Source: ABdhPJy7irHmoUu0ynDnJY978dkucESYFNMabuBQ/Z2GkOluE+v9BuscHayaBiw3xLfuRm15lUcw4A==
-X-Received: by 2002:a17:902:b114:: with SMTP id q20mr23771251plr.266.1594185058097;
-        Tue, 07 Jul 2020 22:10:58 -0700 (PDT)
-Received: from localhost (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id m20sm25080630pfk.52.2020.07.07.22.10.56
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OqVVW0oBTFGuooK5mpqIGnPNuH2j0inEUm18D/YWITE=;
+        b=C+5XmQ4DjwLm6uKyKMliNV9QR10t19L42Y4ymLbtfroZ91vOCM3zSAy/1VSRAdXBsd
+         4MGX8Rtz1BSXDDJ4Tjtq3QugK/DNNkwkgXinlwx1OjyXhS8Gf6THuuIhASNrYTXnc8o3
+         4akC8DQdnwm8Ba0bha5jHB7EUgEHwmvKobw0PWVSyeLHlJOTJENZvGauM9NeSNkZW/pp
+         SmNbQgYRC9LlyO7bLVmVefZivO/El9/oiEk2X8bBOUhiyO10veTsjlig2hVG19GKURUa
+         lULsj7bCkoLs3LbqPFv3WkdupWoQGcbMBSPQ7HztHU35gXjpJvSWjaiCg8aerchCChQe
+         S93Q==
+X-Gm-Message-State: AOAM530lBa+PGKnezy6ELfbJ318WNeuMJirruvc09rfiuOsjr7RqJYqS
+        xJOWLxkeQRSjw1tF30EYXYc=
+X-Google-Smtp-Source: ABdhPJyQx8ZMpcO8bKNNbg4mSfCGoBKklHKtFUJJ+PqPd/73lutAhh1K9WLnEPfuPOJBEPM1jMtFNA==
+X-Received: by 2002:a17:902:778d:: with SMTP id o13mr46710940pll.247.1594185297748;
+        Tue, 07 Jul 2020 22:14:57 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id b18sm4120429pju.10.2020.07.07.22.14.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 22:10:57 -0700 (PDT)
-Date:   Wed, 08 Jul 2020 15:10:52 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
-To:     linuxppc-dev@lists.ozlabs.org, Waiman Long <longman@redhat.com>
-Cc:     Anton Blanchard <anton@ozlabs.org>,
-        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        virtualization@lists.linux-foundation.org,
-        Will Deacon <will@kernel.org>
-References: <20200706043540.1563616-1-npiggin@gmail.com>
-        <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
-        <1594101082.hfq9x5yact.astroid@bobo.none>
-        <de3ead58-7f81-8ebd-754d-244f6be24af4@redhat.com>
-In-Reply-To: <de3ead58-7f81-8ebd-754d-244f6be24af4@redhat.com>
+        Tue, 07 Jul 2020 22:14:56 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id BEAB7400DB; Wed,  8 Jul 2020 05:14:55 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 05:14:55 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file
+ operations
+Message-ID: <20200708051455.GA4332@42.do-not-panic.com>
+References: <20200624162901.1814136-1-hch@lst.de>
+ <20200624162901.1814136-4-hch@lst.de>
+ <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
+ <20200624175548.GA25939@lst.de>
+ <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
+ <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com>
+ <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
 MIME-Version: 1.0
-Message-Id: <1594184204.ncuq7vstsz.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Waiman Long's message of July 8, 2020 1:33 pm:
-> On 7/7/20 1:57 AM, Nicholas Piggin wrote:
->> Yes, powerpc could certainly get more performance out of the slow
->> paths, and then there are a few parameters to tune.
->>
->> We don't have a good alternate patching for function calls yet, but
->> that would be something to do for native vs pv.
->>
->> And then there seem to be one or two tunable parameters we could
->> experiment with.
->>
->> The paravirt locks may need a bit more tuning. Some simple testing
->> under KVM shows we might be a bit slower in some cases. Whether this
->> is fairness or something else I'm not sure. The current simple pv
->> spinlock code can do a directed yield to the lock holder CPU, whereas
->> the pv qspl here just does a general yield. I think we might actually
->> be able to change that to also support directed yield. Though I'm
->> not sure if this is actually the cause of the slowdown yet.
->=20
-> Regarding the paravirt lock, I have taken a further look into the=20
-> current PPC spinlock code. There is an equivalent of pv_wait() but no=20
-> pv_kick(). Maybe PPC doesn't really need that.
+On Sat, Jun 27, 2020 at 09:33:03AM -0700, Linus Torvalds wrote:
+> The real problem with
+> "set_fs()" has been that we've occasionally had bugs where we ended up
+> running odd paths that we really didn't _intend_ to run with kernel
+> pointers. The classic example is the SCSI "write as ioctl" example,
+> where a write to a SCSI generic device would do various odd things and
+> follow pointers and what-not. Then you get into real trouble when
+> "splice()" ends up truiong to write a kernel buffer, and because of
+> "set_fs()" suddenly the sg code started accessing kernel memory
+> willy-nilly.
 
-So powerpc has two types of wait, either undirected "all processors" or=20
-directed to a specific processor which has been preempted by the=20
-hypervisor.
+So the semantics of this interface can create chaos fast if not used
+carefully and conservatively.
 
-The simple spinlock code does a directed wait, because it knows the CPU=20
-which is holding the lock. In this case, there is a sequence that is=20
-used to ensure we don't wait if the condition has become true, and the
-target CPU does not need to kick the waiter it will happen automatically
-(see splpar_spin_yield). This is preferable because we only wait as=20
-needed and don't require the kick operation.
+Christoph, it would be great if you're future series can include some
+version of a verbiage for the motivation for the culling of set_fs().
+Maybe it was just me, but the original motivation wasn't clear at first
+and took some thread digging to get it.
 
-The pv spinlock code I did uses the undirected wait, because we don't
-know the CPU number which we are waiting on. This is undesirable because=20
-it's higher overhead and the wait is not so accurate.
-
-I think perhaps we could change things so we wait on the correct CPU=20
-when queued, which might be good enough (we could also put the lock
-owner CPU in the spinlock word, if we add another format).
-
-> Attached are two=20
-> additional qspinlock patches that adds a CONFIG_PARAVIRT_QSPINLOCKS_LITE=20
-> option to not require pv_kick(). There is also a fixup patch to be=20
-> applied after your patchset.
->=20
-> I don't have access to a PPC LPAR with shared processor at the moment,=20
-> so I can't test the performance of the paravirt code. Would you mind=20
-> adding my patches and do some performance test on your end to see if it=20
-> gives better result?
-
-Great, I'll do some tests. Any suggestions for what to try?
-
-Thanks,
-Nick
+  Luis
