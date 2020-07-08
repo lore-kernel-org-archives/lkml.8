@@ -2,62 +2,66 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27181C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 027D6206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C602920772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e81AHB0M"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pd5fjTGg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgGHXEL (ORCPT
+        id S1726338AbgGHXEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:04:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45242 "EHLO
+        Wed, 8 Jul 2020 19:04:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgGHXEL (ORCPT
+        with ESMTP id S1726311AbgGHXE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:04:11 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E82C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:04:10 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id z7so570141ybz.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:04:10 -0700 (PDT)
+        Wed, 8 Jul 2020 19:04:29 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 376F8C08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:04:29 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id g17so165142qvw.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:04:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=DGZPPrMYqbRCPGw2ruf3jlWhBumhoZFbDjrq5vO0KsU=;
-        b=e81AHB0M7I/PdrDpXEVdir4Vbd2bU0r/si3mFB3blJtI3pLFKCRIMOWgDXge/ue+Pg
-         qYMCtAzEHc/TnYqS3FckXRo4TTLF49ulJwEY9oSO5TF0AfMoEr7V5dcwR1y8wS6lPznS
-         NEvSB5AsHTo7YUNns1DjLZ/1vsDFhzSl9bmksVrTUsc0qIg7jzO5RCUIXC1oxR19td+i
-         38ZWOu8vlpyysjcXSnH6KzmMYAPXHdVWxRLFjLptT9E+Ub2w8o2Prbr6ihRrfsCMarI9
-         r2B7LDw3CtCIWWuwHPXj6kj4yXFmECdBYD9JMQe/ApU1+I5kCFFMmbt+c9OsSGoz0Nsx
-         LzyA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=H30vrOQhccXy2z47QDukRitq+MH3qKUcVxED3fXqq14=;
+        b=pd5fjTGg8IdtNYtO/lHGKAz9d2SZPFouoIpNeSlUCDTLBtIrh2/I8I7U/8irXxQJSU
+         9Tykg5Ogpx5oim6otterHsWP3x9tn0kH6sqxTqHk8Mn49gOqUqYkw2d+eo3Fz5IGHAT7
+         t/CDTKbLZRQb8eSj2P5SxDaCerceRSB0j685tSuk3X5B0iMpmkMYZqnsEnoc3IhlzQjB
+         4zKkb8w6I9zoovm3BdJ2A3zAKPUBFaYZTevK9xF2cXg77/h7lbUA5KyRnbhFr9bO/Vjm
+         7iUrbhU4/oSJ6CvGXEL6oFqoc7jgnrZX2mm7WydBNnNNeCBGs9DR9Hw43PIC1d3i/fNd
+         f2yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=DGZPPrMYqbRCPGw2ruf3jlWhBumhoZFbDjrq5vO0KsU=;
-        b=fzlYPnEsTTMvHoxoetvSHCfDhqH3yppS7eXnKoW62WI2XiAmunk+HhlmqIax6ewBFm
-         SMSETJJnc36WFuvpDPE0OHdPmPwcpHwXsk6jzXdBcwHiFz3HQQqTEvld9Ap4y61lpQ4b
-         wDTcfLGP6w99mjMgp7W8eojEIypyBGxi6drLPjxtfhQcnoL92pXpCmUhUleamLCo/8AG
-         O4icmiWIlgBvizxOc5QFCJyQFoZnMSnw50R8Na7U5yHdA73cKXO07rpZYJxtpJWj5xlu
-         EOxDdCH+lpsWNon3iwh9Wm6lkLs61B5TXBuc0uedRfMKh+RH/N6hJuEQ17aFPAIOOP6Y
-         KSyA==
-X-Gm-Message-State: AOAM530GBLxw9ZqiGDGcJjbAhWkKL6PwHHKEt5NwH6Vqp7xXAkLdwL8M
-        5Jb/lsVDWwl45PfBo/A62AVpYF1mgt3c9ag4ZoM=
-X-Google-Smtp-Source: ABdhPJxeWlmFLpDzIvAFDZA1lYGg5W3qe7GiM9Qo2YujZOQwNNRn0hTf56+Fhu5QUdcxssrXYfAmtZiU8AxSXJ8bTDk=
-X-Received: by 2002:a05:6902:102e:: with SMTP id x14mr46384111ybt.461.1594249450038;
- Wed, 08 Jul 2020 16:04:10 -0700 (PDT)
-Date:   Wed,  8 Jul 2020 16:04:00 -0700
-Message-Id: <20200708230402.1644819-1-ndesaulniers@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=H30vrOQhccXy2z47QDukRitq+MH3qKUcVxED3fXqq14=;
+        b=I6/+ngdiBMUdglKCyYL6zJn3LoIZe0dLv9ENBcgUpgH7ZaT6TKWAd0IH70pTdAQHSk
+         OCvHYvmOxRh1R0J94ompbgYaTWsO+cwPZdcjSLIffb22QLmK0tvGbuJUSkLaD4KNbfE0
+         TIXBlW4uwCMJu7H5h4AJiEvZ6dKezUeG3Xf2SS2bQPi6MPaeJiHvHDIRwcQIzS7K8jaq
+         bjn8duD+y6HZk6y6tbJ5/WXmlUpu/ZU/RbHnKP2YHcB0qL8M93J4qOxvkVzD6uAU+5a7
+         fmBv9chPPpwDfMyP4C3G0Ps94WJboT0aPVayFbk4fnupYlW2VD/uX4Yq3E6lw79weMtY
+         SsMA==
+X-Gm-Message-State: AOAM533ocpQ6XDHno/A8i3e1ZhyfcAmhWlB0fGZxmCHGnifEqGswZYX4
+        x4NSgKc1aPUpXnb46zhHGkNCSsZL+Gz69MyIw34=
+X-Google-Smtp-Source: ABdhPJyCbEpTQo5d8KBsrN2ab+vvAVkwMfY8qhefN9+75WMTnJ3OnbMj5LjWLR3gjKX5dur1iSxAmbU7TJ982n7fJuI=
+X-Received: by 2002:ad4:476a:: with SMTP id d10mr59900422qvx.13.1594249468307;
+ Wed, 08 Jul 2020 16:04:28 -0700 (PDT)
+Date:   Wed,  8 Jul 2020 16:04:01 -0700
+In-Reply-To: <20200708230402.1644819-1-ndesaulniers@google.com>
+Message-Id: <20200708230402.1644819-2-ndesaulniers@google.com>
 Mime-Version: 1.0
+References: <20200708230402.1644819-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH v2 0/2 net] bitfield.h cleanups
+Subject: [PATCH v2 1/2 net] bitfield.h: don't compile-time validate _val in FIELD_FIT
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     "David S . Miller" <davem@davemloft.net>
 Cc:     Alexei Starovoitov <ast@kernel.org>,
@@ -69,7 +73,9 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         KP Singh <kpsingh@chromium.org>, oss-drivers@netronome.com,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jakub Kicinski <kuba@kernel.org>,
-        Alex Elder <elder@linaro.org>,
+        Alex Elder <elder@linaro.org>, stable@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
         Nick Desaulniers <ndesaulniers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,28 +83,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Two patches, one that removes a BUILD_BUG_ON for a case that is not a
-compile time bug (exposed by compiler optimization).
+From: Jakub Kicinski <kuba@kernel.org>
 
-The second is a general cleanup in the area.
+When ur_load_imm_any() is inlined into jeq_imm(), it's possible for the
+compiler to deduce a case where _val can only have the value of -1 at
+compile time. Specifically,
 
-I decided to leave the BUILD_BUG_ON case first, as I hope it will
-simplify being able to backport it to stable, and because I don't think
-there's any type promotion+conversion bugs there.
+/* struct bpf_insn: _s32 imm */
+u64 imm = insn->imm; /* sign extend */
+if (imm >> 32) { /* non-zero only if insn->imm is negative */
+  /* inlined from ur_load_imm_any */
+  u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
+  if (__builtin_constant_p(__imm) && __imm > 255)
+    compiletime_assert_XXX()
 
-Though it would be nice to use consistent types widths and signedness,
-equality against literal zero is not an issue.
+This can result in tripping a BUILD_BUG_ON() in __BF_FIELD_CHECK() that
+checks that a given value is representable in one byte (interpreted as
+unsigned).
 
-Jakub Kicinski (1):
-  bitfield.h: don't compile-time validate _val in FIELD_FIT
+FIELD_FIT() should return true or false at runtime for whether a value
+can fit for not. Don't break the build over a value that's too large for
+the mask. We'd prefer to keep the inlining and compiler optimizations
+though we know this case will always return false.
 
-Nick Desaulniers (1):
-  bitfield.h: split up __BF_FIELD_CHECK macro
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/kernel-hardening/CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com/
+Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+Debugged-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Changes V1->V2:
+* None
 
- .../netronome/nfp/nfpcore/nfp_nsp_eth.c       | 11 ++++----
- include/linux/bitfield.h                      | 26 +++++++++++++------
- 2 files changed, 24 insertions(+), 13 deletions(-)
+ include/linux/bitfield.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 48ea093ff04c..4e035aca6f7e 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -77,7 +77,7 @@
+  */
+ #define FIELD_FIT(_mask, _val)						\
+ 	({								\
+-		__BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");	\
++		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");	\
+ 		!((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
+ 	})
+ 
 -- 
 2.27.0.383.g050319c2ae-goog
 
