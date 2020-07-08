@@ -2,100 +2,89 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C21C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61140C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8B1206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594234959;
-	bh=knjfuE7oCrMT8obCWmXWt1S6HEidHvazM30Kcr9IukY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W1WTNyVpKOFGWTPDMojl51bjWx7R2G8W8iKa5JRD8lgIQI4XFhS+uTMxDo30aEjt1
-	 6jD9GSbzybPE7Adse8WpXgpHgaUPy51fzHvfH1/T+rVhSnuqEh0y7pG+cj3KMENgiC
-	 +RiB02YAVZYOXBAmtPKZng0nX+YliQ/0yVQb7Ldg=
+	by mail.kernel.org (Postfix) with ESMTP id 4046F206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:04:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ai6PKJC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgGHTCh (ORCPT
+        id S1726408AbgGHTE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:02:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36052 "EHLO
+        Wed, 8 Jul 2020 15:04:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgGHTCh (ORCPT
+        with ESMTP id S1725978AbgGHTE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:02:37 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EECF7C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 12:02:36 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id d21so27496432lfb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:02:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5115ImYslKfjMDqc7NsPb4rG8ux/IPuWI7SmA15my20=;
-        b=VfOVxnS8t9jIP6A/PhnDeZTJa6VU7WbTHxuhR/KuXFbik81hMadIMpVWzkQse/TrRV
-         +MzC/V1hjDJAHrNlsTvUw3cgahsgcFeihvGEgdzKHIUgPGGRJvnI7d+frXg5sdTQDDYq
-         oyqRv5ychV87bWZwfT4Kn4zxumanVZ3utiPWg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5115ImYslKfjMDqc7NsPb4rG8ux/IPuWI7SmA15my20=;
-        b=iH9RezpYnNc8QBKiNbTBC+OxMCLeB759WO6RL/whzcVu78Es5uqY3j8vUlNMlB4p/n
-         0c4jRo4jkrONV7efmXFW/RA0eAca4P9UmKdQko9M/uLqt2Feu/0t+iRFp/e8BhMKT65F
-         Fqm3aZmdZF3kDRxmlPoXcDde3pMTah3Z8O1qsaAD7fqejjOFNlmaWcvb6rkKdXw41O+N
-         SzJPNKzp77APum0CPjIAwjmobps/sZchlewjMAwUzOZgS7lzTQ/PcRWZV2422Ts5OLr1
-         M1cdzxjTK073Kmy0Bv00gvfOMtWtXGpIq5QcOFvt7mRufJWoYtUXD38yTeklmll5256I
-         Ynwg==
-X-Gm-Message-State: AOAM530qVF6k6mKd8ECBpEYdaAg1pis9mb2f/TXpv//YthGzwJ9fsxBT
-        rZU08BbsIguoNqbYxeDok/+SjUVuTuQ=
-X-Google-Smtp-Source: ABdhPJwmVGrqR4IKeKUgMd32UXprhFrj4GFlTHSujODruRfGeMOoIVlykmMEJYByd9P8foNGkOBc/g==
-X-Received: by 2002:ac2:5217:: with SMTP id a23mr37647468lfl.115.1594234954849;
-        Wed, 08 Jul 2020 12:02:34 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id r22sm203215lfm.30.2020.07.08.12.02.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 12:02:34 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id q7so42238723ljm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:02:33 -0700 (PDT)
-X-Received: by 2002:a2e:86c4:: with SMTP id n4mr20455243ljj.312.1594234953413;
- Wed, 08 Jul 2020 12:02:33 -0700 (PDT)
+        Wed, 8 Jul 2020 15:04:28 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7E1C061A0B;
+        Wed,  8 Jul 2020 12:04:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=3AzJlAVqai0cEuMOquOSXp3pObZ1zRP/Z2pFW7hrx/g=; b=ai6PKJC+UsG5Jkm6GUeE3ujcur
+        vkNSyvL4i2EilTsWrzZR+gl2c9/n8GiVwdCLLnB8zrAwCKR+8ThdGJLmNXs8jK5zj14Km6EekIgI8
+        q3KDZIjkVO5/sf3PsdV6rh7T/mwdV7pyYJvVpR+lRlD+6Fb65cRiF086q4SsoV0BnwqdH89KDdzRq
+        xyvPbu0veYYampBHlpBU38NR03UCarWi2iDbusbDw7ypxnRa18R/5RwsjRfJwgpWcW5/guqXNmEGu
+        j/KeFEIyOatH7mMW8z+zmQ62l/5NFV+T7LiktQKY9bHo9n+jajW5QNSWP/MFkMi9cNtiJ1Bkszm5B
+        ksBsG1cA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtFMo-0006ar-8a; Wed, 08 Jul 2020 19:04:26 +0000
+Subject: Re: [PATCH] Documentation: update for gcc 4.9 requirement
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+References: <a98e9c26-5405-3894-6197-3f5e388a5698@infradead.org>
+ <CAHk-=whkuOeHvA_ws=usQt=rYq_M2vh448mDxY7kYhUmp_Lomw@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1ac6b3ba-ad54-a227-94d3-06cdf4fa4c91@infradead.org>
+Date:   Wed, 8 Jul 2020 12:04:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200618222620.5069-1-luc.vanoostenryck@gmail.com>
-In-Reply-To: <20200618222620.5069-1-luc.vanoostenryck@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 8 Jul 2020 12:02:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgRDFAkN-KNpVWUbf=1RUGn3=nMx6aZ7z2X9OhH5db-Og@mail.gmail.com>
-Message-ID: <CAHk-=wgRDFAkN-KNpVWUbf=1RUGn3=nMx6aZ7z2X9OhH5db-Og@mail.gmail.com>
-Subject: Re: [PATCH] sparse: use the _Generic() version of __unqual_scalar_typeof()
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marco Elver <elver@google.com>, Borislav Petkov <bp@suse.de>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=whkuOeHvA_ws=usQt=rYq_M2vh448mDxY7kYhUmp_Lomw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 3:26 PM Luc Van Oostenryck
-<luc.vanoostenryck@gmail.com> wrote:
->
-> If the file is being checked with sparse, use the version of
-> __unqual_scalar_typeof() using _Generic(), leaving the unoptimized
-> version only for the oldest versions of GCC.
+On 7/8/20 11:57 AM, Linus Torvalds wrote:
+> On Wed, Jul 8, 2020 at 11:45 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>> - - Make sure you have at least gcc 4.6 available.
+>> + - Make sure you have at least gcc 4.9 available.
+>> -GNU C                  4.8              gcc --version
+>> +GNU C                  4.9              gcc --version
+> 
+> Heh. The docs clearly weren't in sync before either.
+> 
+> Maybe we should add a
+> 
+>   Fixes: 5429ef62bcf3 ("compiler/gcc: Raise minimum GCC version for
+> kernel builds to 4.8")
 
-Side note: for unrelated reasons I decided to try to just raise the
-gcc minimum to 4.9, which then makes this patch redundant. The old
-non-_Generic() case simply doesn't exist any more.
+uh, yes.
+Should I resend it?
 
-Of course, maybe somebody screams about having to use some gcc-4.8
-version in their environment so much that I'll revert it, but I doubt
-it. gcc-4.8 had lots of problems.
+> to your patch too.
+> 
+> I only grepped for the obvious GCC_VERSION string. Which is presumably
+> what everybody else who has ever done this have also grepped for,
+> although in all fairness Will at least caught the one in
+> Documentation/process/changes.rst when he updated it last time.
 
-                Linus
+
+-- 
+~Randy
+
