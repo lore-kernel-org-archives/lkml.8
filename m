@@ -2,109 +2,111 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A92C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B614CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2AB220760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D1C20739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:45:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PfjfV2AM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sM01lxxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgGHHom (ORCPT
+        id S1726910AbgGHHp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:44:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43456 "EHLO
+        Wed, 8 Jul 2020 03:45:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgGHHok (ORCPT
+        with ESMTP id S1726300AbgGHHpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:44:40 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5138C08C5DC;
-        Wed,  8 Jul 2020 00:44:39 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1rtD46Fyz9s1x;
-        Wed,  8 Jul 2020 17:44:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594194277;
-        bh=IxEA/LfDJeITFc3wpIqnPL4My/+fNA0O5G0uCNvx1t4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PfjfV2AMVByLTplVdH2CLU9A5auVoChJoRJqRB2NiMumf2Y2hV0K7RTf1N6rX5THt
-         R9ZOwCjL2beUQ5b8fMF0g/v5ArhMRtFWm1sNe+O0RhGk4K88aUXLyMc9XRbYUG3AHP
-         /odgsGNg1/SPxaQvfF96Q5TbGXUYNCrZ8q6dhZAC5fVlGsZ+8vfteNwF2wsc2oMcix
-         xGtFsCiTt5TN1ofmsOn2GpM1qM/HZdASNdxDCDORslYF74W0pmrRyV+vRCs3o68fbJ
-         Di+CbGkNXenuH+lKN0bx9ukCFwC+IrmCv72UMWYQiDAnrWD1t6f0SmFV9DJve0r3Cs
-         InHW1MZ61St5Q==
-Date:   Wed, 8 Jul 2020 17:44:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Renninger <trenn@suse.de>
-Subject: linux-next: manual merge of the set_fs tree with the pm tree
-Message-ID: <20200708174435.36a8166b@canb.auug.org.au>
+        Wed, 8 Jul 2020 03:45:25 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8333AC08E85B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:45:24 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so1883747wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:45:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=dvqxIY5/h+Hi08QqzkQR4GxWo2uSuz4DSd8Ijo5xAAw=;
+        b=sM01lxxYQ4EfApgBtPAY1tlREhF6Q5nbZBYrqNsF5UEIT5lxaBcV65i8uLFHPMXHw2
+         qBBbTvwQm/uLh+pR1RyhDDIbT9acEqGVIPgjWmTHAHYY27RNK0klDk5+1hd49k60iwoo
+         OQTKcgBMQMTYP6o/jNt5edF10/yPCEb83Wc+S0178PPiSq5CQCuRHwxt63Da4T4v0vZ0
+         OiIqGvRWkt8S1hXD/Lm3uOj+7rNdaiQereDtYK+NxGCm2H8CRtd8tDETWtu76IR67xUq
+         X3FanwL88C0lIQOC9u2uU4XvpNtT0H2S23GeuQe+VQVqFkv/IqYFLsGmuGcBI8/GxgUY
+         UhFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=dvqxIY5/h+Hi08QqzkQR4GxWo2uSuz4DSd8Ijo5xAAw=;
+        b=NzY5woubObn28oy77NN8nnHWWgNAAi8YlFS+p0Wa1ixfVnr2r1GJSxrVMuzbgx+JLO
+         Z7A4ZZxlPmaNNmFCdd0v3Tvjo6L/N7/tMLdGr/pFv6PfatbyLmVKDkynD0vsOsjC4u+V
+         Ru2TpTqDOYTrGIQdvIninAxR5019f2/0sB8/8Cctq55eb8pGGVkJO6hfCwWNaODWX3Im
+         SfCwU2MnhPtB+cfOPACvGXCksRbAR6t2fG+WfLMbg+W0wyQfGHCPlNVAzBD5ryNwATbA
+         rg+HLeETLrkq9CuK2jZ8l952HQbva8wDM7GnWamuZ7ZjGyO8e+xXD051LubkvNLy+0XO
+         w40A==
+X-Gm-Message-State: AOAM531fw8J8gDZinozZBxPZNrJB6sXvxhoXyP+jb8fludIvUOmwHzFX
+        f7TUQBucQe7KXvJ5uLr56OZvtw==
+X-Google-Smtp-Source: ABdhPJyrs9JjcAa1EVpT3YYg0xeBhj7Vs2aNSuxcfo+IdXW371pwsk+hDd+L5UUI6ck9FLQzlHDvzA==
+X-Received: by 2002:a1c:e18a:: with SMTP id y132mr7831817wmg.27.1594194323097;
+        Wed, 08 Jul 2020 00:45:23 -0700 (PDT)
+Received: from dell ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id k18sm4434969wrx.34.2020.07.08.00.45.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 00:45:22 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 08:45:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
+        megous@megous.com, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com
+Subject: Re: [PATCH v3 12/16] dt-bindings: irq: sun7i-nmi: Add binding for
+ A100's NMI controller
+Message-ID: <20200708074520.GQ3500@dell>
+References: <20200708072331.19700-1-frank@allwinnertech.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/V2O2g57U5jKN6mJAWwZLlJb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200708072331.19700-1-frank@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/V2O2g57U5jKN6mJAWwZLlJb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 08 Jul 2020, Frank Lee wrote:
 
-Hi all,
+> Add a binding for A100's nmi controller.
+> 
+> Signed-off-by: Frank Lee <frank@allwinnertech.com>
+> ---
+>  .../bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml      | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Today's linux-next merge of the set_fs tree got a conflict in:
+I'm sure 3/4 of the people in your recipients list have little
+interest in this change.  May of us already have overflowing inboxes.
 
-  drivers/acpi/battery.c
+Please be more restrictive/considerate when posting patches in the
+future.
 
-between commit:
-
-  8830280a69dd ("ACPI: procfs: Remove last dirs after being marked deprecat=
-ed for a decade")
-
-from the pm tree and commit:
-
-  598d0996ea31 ("proc: switch over direct seq_read method calls to seq_read=
-_iter")
-
-from the set_fs tree.
-
-I fixed it up (the former removed the code modified by the latter, so
-I just did that) and can carry the fix as necessary. This is now fixed
-as far as linux-next is concerned, but any non trivial conflicts should
-be mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/V2O2g57U5jKN6mJAWwZLlJb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8FeWMACgkQAVBC80lX
-0GxPowf9FSPeHouhzx0fW1ke6SAFO76rSP4kAVX66jNK39nBgqSyzYbvdcb7fqL7
-yzoP+IbFhXhukUoFgkvbxUqus5UoUiQzNj9PtR+UmPDJBp7V0BcnYV2J4Fefzw2K
-6xXBnJNnI0bZB8ium2DCyYTw5frEAVm52uypw3jYCwpTJ4CaTkn23LVGkr2/QcXP
-tBDGPKnk7zAw0fs8INtParyjycymuLb+J4OudF2Y06SBuCxH8gsFqHLiSlBdkF9d
-upTL+NAgxzdPAAbHcdYQforgQOnakBp/R4D5fs4jFZ0xb0TN0V5ToRx9iCf2Ei9K
-rD3CBpie23hwId+x8GSisV8pW6ThXw==
-=5RYQ
------END PGP SIGNATURE-----
-
---Sig_/V2O2g57U5jKN6mJAWwZLlJb--
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
