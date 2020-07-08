@@ -7,66 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7653BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5088920772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A60820772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DnDSJDuY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BQfkrIML"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgGHMDW (ORCPT
+        id S1729262AbgGHMD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:03:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
+        Wed, 8 Jul 2020 08:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729219AbgGHMDI (ORCPT
+        with ESMTP id S1729203AbgGHMDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:03:08 -0400
+        Wed, 8 Jul 2020 08:03:06 -0400
 Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7407CC08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:03:08 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 22so2732335wmg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:03:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACDAAC08E6DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:03:05 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l2so2759150wmf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3sXxKpQgrnotRyFJvyRPk0Xs+GRdftij+k/kTivXzV0=;
-        b=DnDSJDuY3iQMxIY3ZoXbR8gf2IDWmP9iuqtYX0Ro69doTFbs451srECIXBPTjM4vRz
-         jfzGby1S7dLMvMBAV1tEfIcXHUto6nk5UArtEQldbva/5wZ/W7Qg/XEAFwNRK3hOpAoZ
-         3bNNuFcPStvvmPlkIAp7LDc736Q2vFJGwqmL+1McUykrXjme+1OR1unCiC5E4bexWf6U
-         CJN9j47LLuj1u2A/xcgmsifxrce1xQ6FOAXwsDtAYqT8gcPkG2RCYLBwt+8SRs9vpJcy
-         wz1sP2yu+ba9bZkAjpDXwqyub4JAWZHdphP3daDLoor9sd1y2dhB3caU9iuP4FkHZxv1
-         LHWw==
+        bh=ERoz3fkdfBzQNDlM4+cYEX1ahP8otbMKTg0c52YoDQM=;
+        b=BQfkrIMLhcq2bpyg8GI9z9uvky9LxtnORcYZhT+HkKw3ytxk/0Ay4nbGD7kwBmp1o6
+         N3fxA9DiSNExlEt2oSAxsnQiJkkxThmoA6m7fFYCEu4hI3GrEo8XPwyw/a1Se1oHPz7B
+         eHmAxZnQvSXjYkWZ8xLqfBCeE0BYZTDzM/wnaRamU/If4Or6GkR+V+kR2lznDPNqvYPW
+         91Tyg4okajt6CHPVTLyJ5mjmPV0YNdivt77C2OUVYNqZy6H0sBNFZCVbOOfzq0uwO3o/
+         JTK4tmuz2+WFCkAg3US1BBmXBHYNTM59CcMm+uKePPWUBkA1L9RL0UbMTvL0AHRda0FL
+         qhpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3sXxKpQgrnotRyFJvyRPk0Xs+GRdftij+k/kTivXzV0=;
-        b=Oa4eCEivC4V3UJDhdJRx7Jl2dAsnFuUg5ieQ5R/dW7wLxVKDsGSnylASEZg8tNyRdF
-         5JTTVOU/RYza8Xqnu4yCPgIih4/PFzZq1k7qZMPjU76G5nz7CIWWfr3s6WbCXyLj/og7
-         6GLEuKQPsrRHA1OIUq6MVXloZMQ4nasg6LdF3UfxddubiQv+RqcP96sjJrmNg6TNUYM9
-         eP2oeXVm4QHdFCcLLS0JpNoUSbU3CP94BkU7sC/Zi+N5C2lWKUykO1hGcAVjlRt7OZ81
-         UuqGJzove9H1RgFAFEMbS9p7ghXPbZuWg6X08UgX4+peK5qoTHmVx80R0sYXQpSsVDOF
-         eULg==
-X-Gm-Message-State: AOAM532K3av6ezVwO6STvkp+vfT3JRJ+KC1edKcA2viv7C+cngqZLqye
-        r53FX/A7/Oc+4nep+UspW7sBrw==
-X-Google-Smtp-Source: ABdhPJx/fai7U19D/GJCZpEsSrd9/JyRH2FHRiM3naVNNV8cPY0UhsCV5vBEpN4APbY6ozLX4DIqdA==
-X-Received: by 2002:a1c:2402:: with SMTP id k2mr9021990wmk.138.1594209786967;
-        Wed, 08 Jul 2020 05:03:06 -0700 (PDT)
+        bh=ERoz3fkdfBzQNDlM4+cYEX1ahP8otbMKTg0c52YoDQM=;
+        b=m2Wx4IkyoTU3vwoHpBnYIeJe8/rQOBYPeGXS1e4vh4Yo83JFAJuc7RxXYSDH3B2akb
+         C9QRp+Nlgss4LCZvphz8hpl4IXQIAuHlAdxhuhb0ZJ8x9Dne9vdXlChdsXJqy/dHOiai
+         F2GXgAyNOfi/TkL31t0vy5243dv/G5jSuFNtK0tHpsRdmCMtHboj0brNrdT3EgHd/031
+         cyOML8LZZPFdFGOR2SwgqFWwwyrHVB/8Boy0s5d0V+b9pZsMs+ZrXYksnD+S50EkyOi6
+         Ne8oTvkt+ok5KnFaVh53nxNLxHhrUF/XXM43WRjAMqrXje8wv/Qxj9w5datyJ79ektov
+         wxNA==
+X-Gm-Message-State: AOAM5327EHzWvfBVSmK8Ke8M/kqyh89NRvM8bLqGbweXiYkegc+Qo0Xp
+        VNUrLnV+Rtx5wZVOsXaj8n2K3tAFbsk=
+X-Google-Smtp-Source: ABdhPJzT8YdDaUodEHbCCXJeTOYOV4BqAXnxN0Y2LVKcQ+xGvSsmtq2rXCJSexfhZNek8Wi4fPWdBg==
+X-Received: by 2002:a1c:4d04:: with SMTP id o4mr8741190wmh.132.1594209784342;
+        Wed, 08 Jul 2020 05:03:04 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.03.05
+        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.03.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:03:06 -0700 (PDT)
+        Wed, 08 Jul 2020 05:03:03 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
+        YueHaibing <yuehaibing@huawei.com>,
         Luben Tuikov <luben_tuikov@adaptec.com>
-Subject: [PATCH 28/30] scsi: aic94xx: aic94xx_hwi: Repair kerneldoc formatting error and remove extra param
-Date:   Wed,  8 Jul 2020 13:02:19 +0100
-Message-Id: <20200708120221.3386672-29-lee.jones@linaro.org>
+Subject: [PATCH 26/30] scsi: aic94xx: aic94xx_init: Demote seemingly unintentional kerneldoc header
+Date:   Wed,  8 Jul 2020 13:02:17 +0100
+Message-Id: <20200708120221.3386672-27-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708120221.3386672-1-lee.jones@linaro.org>
 References: <20200708120221.3386672-1-lee.jones@linaro.org>
@@ -77,42 +78,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function parameters need to be documented with format '@.*: '.
-
-'to' is not longer asd_start_timers()'s function parameter.
+This is the only use of kerneldoc in the sourcefile and no
+descriptions are provided.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/aic94xx/aic94xx_hwi.c:589: warning: Function parameter or member 'asd_ha' not described in 'asd_init_ctxmem'
- drivers/scsi/aic94xx/aic94xx_hwi.c:1157: warning: Excess function parameter 'to' description in 'asd_start_scb_timers'
+ drivers/scsi/aic94xx/aic94xx_init.c:538: warning: Function parameter or member 'asd_ha' not described in 'asd_free_edbs'
 
+Cc: YueHaibing <yuehaibing@huawei.com>
 Cc: Luben Tuikov <luben_tuikov@adaptec.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/aic94xx/aic94xx_hwi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/aic94xx/aic94xx_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/aic94xx/aic94xx_hwi.c b/drivers/scsi/aic94xx/aic94xx_hwi.c
-index c5a46c59d4f80..9256ab7b25227 100644
---- a/drivers/scsi/aic94xx/aic94xx_hwi.c
-+++ b/drivers/scsi/aic94xx/aic94xx_hwi.c
-@@ -575,7 +575,7 @@ static int asd_extend_cmdctx(struct asd_ha_struct *asd_ha)
+diff --git a/drivers/scsi/aic94xx/aic94xx_init.c b/drivers/scsi/aic94xx/aic94xx_init.c
+index bef47f38dd0db..a195bfe9eccc0 100644
+--- a/drivers/scsi/aic94xx/aic94xx_init.c
++++ b/drivers/scsi/aic94xx/aic94xx_init.c
+@@ -530,7 +530,7 @@ static int asd_create_ha_caches(struct asd_ha_struct *asd_ha)
+ 	return 0;
+ }
  
- /**
-  * asd_init_ctxmem -- initialize context memory
-- * asd_ha: pointer to host adapter structure
-+ * @asd_ha: pointer to host adapter structure
-  *
-  * This function sets the maximum number of SCBs and
-  * DDBs which can be used by the sequencer.  This is normally
-@@ -1146,7 +1146,6 @@ static void asd_swap_head_scb(struct asd_ha_struct *asd_ha,
- /**
-  * asd_start_timers -- (add and) start timers of SCBs
-  * @list: pointer to struct list_head of the scbs
-- * @to: timeout in jiffies
-  *
-  * If an SCB in the @list has no timer function, assign the default
-  * one,  then start the timer of the SCB.  This function is
+-/**
++/*
+  * asd_free_edbs -- free empty data buffers
+  * asd_ha: pointer to host adapter structure
+  */
 -- 
 2.25.1
 
