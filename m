@@ -2,92 +2,106 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F78C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08AC9206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ERVIiViD"
+	by mail.kernel.org (Postfix) with ESMTP id 6F81B20760
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbgGHHXT (ORCPT
+        id S1730310AbgGHHY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:23:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730190AbgGHHXT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:23:19 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D430C08C5F5
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:23:18 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y18so26248398lfh.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ols8fE88SOECty4ug3M3JHhI6m5+t3LRMsYguz2UCws=;
-        b=ERVIiViD/iI07aPNMiZegbsH2kVCDifsiyM7h9FotGZUkC+BE9yb5iEpRWefKTJnkd
-         jReQfyFSiRV8jK7vXeMOXJeEAOLJT48CLEv3e2jRwzs4+OeYlSQC0NYsZFlvbGBnrDmI
-         XvAq1Puv9oLu2GH99BVBlWbMYhsa4sL/iKLN6isDfuXORZ1GIEzSjU57Wq09WZrx4U3Y
-         y2LPZLVrbECvVf9m+MD7bkPcBzaVrGLesjJhBKT4/FAabPEfAgEU13B+zk4z0+8lUBnk
-         rX2KJK3j1Dt4ttJR41YT2eellrR5IHkjJwEQm6an1VijL05wsIEpFXsancfjD4bYgLQ1
-         mv+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ols8fE88SOECty4ug3M3JHhI6m5+t3LRMsYguz2UCws=;
-        b=D94pl2WWsBojwm8eK/XyIBqCjKNrPYUBp++zg/i+XglpI+5HNc2cYgnvQcQUG59+ie
-         eWYr1KJDu1PnO6USECFT+dQgsJL2WKEFzql5nGKTTZE/u5SKJBmE+asZIR6VR9fvKkUt
-         I4fArL7TCWBB8liCivyVmRsdfbrIdpRRIKOSYKidGN1AQFtKIQPDbYAnjUAe7OSATNqA
-         tM73IC6uctWflk3n98kBzViqs3O4eRPqJbg4HC8Z10gC9DxFrP/THWJTaNzhHTyhW8yu
-         RWrSBHdG/psRZ8mMyXNT5CUP7XRjuAce8JI9vsKLUs2mQYFQ+dqqUNVBT77zmzB08xPv
-         lguA==
-X-Gm-Message-State: AOAM5310DBuhgBAGLVlk/KVMJNX5SPQnKXGgYYgGoIxHufC/CEhyWDgL
-        HYvOmxPwIaH5u4UoReh1dQqt6wi9yui75aAOQ3sSyg==
-X-Google-Smtp-Source: ABdhPJw7rifWiraCKDisMMtwfhzfhSSUEzk6UZkGaSDEQ9v2SD4J/7mMqL1Gdv/j4APtHu5Ifpwdpn20zoEoTGYflcU=
-X-Received: by 2002:a19:e05d:: with SMTP id g29mr35015008lfj.217.1594192997140;
- Wed, 08 Jul 2020 00:23:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200630133345.2232932-1-lee.jones@linaro.org> <20200630133345.2232932-11-lee.jones@linaro.org>
-In-Reply-To: <20200630133345.2232932-11-lee.jones@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 8 Jul 2020 09:23:06 +0200
-Message-ID: <CACRpkdZWeJ=aVR7F2_aLYe-P7ZWGJkSQrcfVUL9vBf8C1nxWfw@mail.gmail.com>
-Subject: Re: [PATCH 10/10] gpio: gpio-mlxbf2.c: Provide __releases()
- annotation to stop confusing Sparse
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Asmaa Mnebhi <Asmaa@mellanox.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 8 Jul 2020 03:24:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:57654 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730049AbgGHHY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:24:29 -0400
+IronPort-SDR: LW+T/ts982h/Rlgj/EIAQsSF7djvHKF6ft1j4U5h9Ibr06WY1Kjkk/H9FTBKKDT1k4txdFWyDV
+ JLlZQxMv+3Fg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="135985885"
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="135985885"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 00:24:28 -0700
+IronPort-SDR: uxgm0yFvNeDoUoEWgV6tb0Cp+SlATvRZc2hMkNp/t8NVtEMRBaa+MTjSpssDf2vzKQg7mUfK46
+ wjsZa2/6nLMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="358024867"
+Received: from pg-nxl3.altera.com ([10.142.129.93])
+  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2020 00:24:25 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>
+Subject: [PATCH v4 00/10] net: eth: altera: tse: Add PTP and mSGDMA prefetcher
+Date:   Wed,  8 Jul 2020 15:23:51 +0800
+Message-Id: <20200708072401.169150-1-joyce.ooi@intel.com>
+X-Mailer: git-send-email 2.13.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 3:34 PM Lee Jones <lee.jones@linaro.org> wrote:
+From: Joyce Ooi <joyce.ooi@intel.com>
 
-> Sparse cannot peer into other functions to see when and if locks are
-> acquired and released, thus it simply warns that a 'context imbalance'
-> is detected instead.  Let's be kind to Sparse and let it know that
-> this behaviour is intentional.
->
->  drivers/gpio/gpio-mlxbf2.c:125:12: warning: context imbalance in 'mlxbf2_gpio_lock_acquire' - different lock contexts for basic block
->  drivers/gpio/gpio-mlxbf2.c:151:13: warning: context imbalance in 'mlxbf2_gpio_lock_release' - unexpected unlock
->
-> Cc: Asmaa Mnebhi <Asmaa@mellanox.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This patch series cleans up the Altera TSE driver and adds support
+for the newer msgdma prefetcher as well as ptp support when using
+the msgdma prefetcher.
 
-Patch applied!
+v2: Rename altera_ptp to intel_fpga_tod, modify msgdma and sgdma tx_buffer
+    functions to be of type netdev_tx_t, and minor suggested edits
+v3: Modify tx_buffer to stop queue before returning NETDEV_TX_BUSY
+v4: Fix build warnings
 
-Yours,
-Linus Walleij
+Dalon Westergreen (10):
+  net: eth: altera: tse_start_xmit ignores tx_buffer call response
+  net: eth: altera: set rx and tx ring size before init_dma call
+  net: eth: altera: fix altera_dmaops declaration
+  net: eth: altera: add optional function to start tx dma
+  net: eth: altera: Move common functions to altera_utils
+  net: eth: altera: Add missing identifier names to function
+    declarations
+  net: eth: altera: change tx functions to type netdev_tx_t
+  net: eth: altera: add support for ptp and timestamping
+  net: eth: altera: add msgdma prefetcher
+  net: eth: altera: update devicetree bindings documentation
+
+ .../devicetree/bindings/net/altera_tse.txt         | 103 ++++-
+ drivers/net/ethernet/altera/Kconfig                |   1 +
+ drivers/net/ethernet/altera/Makefile               |   3 +-
+ drivers/net/ethernet/altera/altera_msgdma.c        |   5 +-
+ drivers/net/ethernet/altera/altera_msgdma.h        |  30 +-
+ .../net/ethernet/altera/altera_msgdma_prefetcher.c | 431 +++++++++++++++++++++
+ .../net/ethernet/altera/altera_msgdma_prefetcher.h |  30 ++
+ .../ethernet/altera/altera_msgdmahw_prefetcher.h   |  87 +++++
+ drivers/net/ethernet/altera/altera_sgdma.c         |  22 +-
+ drivers/net/ethernet/altera/altera_sgdma.h         |  32 +-
+ drivers/net/ethernet/altera/altera_tse.h           |  98 ++---
+ drivers/net/ethernet/altera/altera_tse_ethtool.c   |  29 ++
+ drivers/net/ethernet/altera/altera_tse_main.c      | 216 +++++++++--
+ drivers/net/ethernet/altera/altera_utils.c         |  29 ++
+ drivers/net/ethernet/altera/altera_utils.h         |  51 +++
+ drivers/net/ethernet/altera/intel_fpga_tod.c       | 358 +++++++++++++++++
+ drivers/net/ethernet/altera/intel_fpga_tod.h       |  56 +++
+ 17 files changed, 1428 insertions(+), 153 deletions(-)
+ create mode 100644 drivers/net/ethernet/altera/altera_msgdma_prefetcher.c
+ create mode 100644 drivers/net/ethernet/altera/altera_msgdma_prefetcher.h
+ create mode 100644 drivers/net/ethernet/altera/altera_msgdmahw_prefetcher.h
+ create mode 100644 drivers/net/ethernet/altera/intel_fpga_tod.c
+ create mode 100644 drivers/net/ethernet/altera/intel_fpga_tod.h
+
+-- 
+2.13.0
+
