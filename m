@@ -2,442 +2,130 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7824CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6FD206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA51206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:46:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="CMDmC8LV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Fmz6D0S2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I0bokXCD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgGHRp5 (ORCPT
+        id S1728447AbgGHRqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:45:57 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:33463 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727047AbgGHRna (ORCPT
+        Wed, 8 Jul 2020 13:46:04 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46686 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgGHRqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:43:30 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 1BFC32F9;
-        Wed,  8 Jul 2020 13:43:29 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:43:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=N2HpSoi77GHrm
-        8D3aBLWSlDgIFgPad6DQRwf6FVDtpo=; b=CMDmC8LV11OBD5zRNCe634fFAdEOJ
-        ciwEbmNoOH8kNvmfELoDl5mXvnObK0PCqoWlSQJFnHKBzt5lUZG0KcXa8eo/Gp5c
-        4UDEyd5ttXqE9P6+KMn6ND1qCPGw9SoPCaA5teWxGCgJ8BYHOliVZ4WZ5QHkMWfz
-        qba1e7UeoH40o+L2djbiL9+Xl76PMd+2Iiulq6d3JV/RJE2YZW0JXJE0qZI8yqHM
-        d1ulSpI3yOZJ+4LbiDL2FO++2pPPfWRYNDPb2yUWtEc+Ky8ljmdP3kND930NxJm4
-        LqnccFj31M2P5SuO8X40TEHWvFtPv8Rv95NxWeNRuYsNRoCEdcca4mgfQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=N2HpSoi77GHrm8D3aBLWSlDgIFgPad6DQRwf6FVDtpo=; b=Fmz6D0S2
-        ARVwzIWKj0ULZhz6NTGJt03adPOSQUVtdlJFaNUGXJTBxmyQfrBTWJpVvXop8MK6
-        7aC5pPM42YWa8WU5ITec4CXPCbR1IdyWtporpb3Ecefb4MG/ScRnFXR4ltUAufj+
-        LswYU9vlywHrXSv6sDttYr94sS7d27gefHXyujKksfg6u4Yl4lUpdGJA33z0ouFl
-        uL6sfjuSnfx4bI1uniUgM491G5Ua1OY7BCXv7rG8/+yr+YYDBWNa/vBEqyCjCIIf
-        LVHgny4/V+vujSVHvFvvjnUha6jDiM6pGMfANX/DnhKu6NBoPRKKWeuzThX8OqXZ
-        a2mri1m/0zFbWQ==
-X-ME-Sender: <xms:wAUGX6jR51-q_Q9KsSzrIpSp-6TRIr4SqyoVwDCsqfeUPDOteLng_g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepieeugeefgfeiieelveekheehhedtueetueehkedtfffgvedtvdeijeduieff
-    veevnecuffhomhgrihhnpegshihtvghsrdgurghtrgenucfkphepledtrdekledrieekrd
-    ejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehm
-    rgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:wAUGX7BQ51qvMe54UVO8GwR7NwEQAjEwDR_GuFnXILvsnbwb4JB_BQ>
-    <xmx:wAUGXyHTm4CvpHejviv1cRl5SI5rteRgCGRQxa7iCRoCxheRrUJnfQ>
-    <xmx:wAUGXzT3V0dwjJt9ZdDhAn8x014ifxjZKwxjol-v7IRjSTG-JQd7eg>
-    <xmx:wAUGX-xmhmU4WxzWjXod1QjGQYZzoEs7EZEk_CampUhwemLlJMXwriD1410>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 681DF328005D;
-        Wed,  8 Jul 2020 13:43:28 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 40/78] drm/vc4: hdmi: rework connectors and encoders
-Date:   Wed,  8 Jul 2020 19:41:48 +0200
-Message-Id: <6ff9f5156dd14ab23967fe7357660b3cbf556c22.1594230107.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+        Wed, 8 Jul 2020 13:46:01 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 068HRmiv143784;
+        Wed, 8 Jul 2020 17:45:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=SGcETknvroZPnOEphS/ri5hHqeOz1JhXChmVZzAmGPI=;
+ b=I0bokXCDBqSMX5cA9s+1vma0ijyA+9PpPQmmuUxCgskx6HuvU7hLmDPzvD0VtRL+NPz8
+ 3GUcGntxSOpgCIIZmJDcHVY57HNX18uuWbpcgFtwUvHAI3VQnSVOGVkn5J2EYOyrLeR5
+ 3PMSsunSyGuJ98OGJ//93ZqvKmqNCqp4CzTUyPZlRdRa/2nF51uFy9k8tazUWnLhsNnp
+ B3lfp0vpOU3XKbEZp2cBPQofJ6Eye+waCg5t/blp7FGe6AqRJe1mEIqqlFFUsgNfge5W
+ FgGZgj3g/QrmVr+nsbduLxZMBs1YmXkhhXC+KreL3GOmdc6MH4zcXSIJ+vu9ilLkOQWh EQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 323wacr3q0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 08 Jul 2020 17:45:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 068HTFsr022300;
+        Wed, 8 Jul 2020 17:45:19 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 3233br7db0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jul 2020 17:45:19 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 068HjIUk008256;
+        Wed, 8 Jul 2020 17:45:18 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 08 Jul 2020 10:45:17 -0700
+Subject: Re: [PATCH v3] mm/hugetlb: avoid hardcoding while checking if cma is
+ enable
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Barry Song <song.bao.hua@hisilicon.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Roman Gushchin <guro@fb.com>
+References: <20200707040204.30132-1-song.bao.hua@hisilicon.com>
+ <20200707125641.dbd2ccd63f525aa5870069d8@linux-foundation.org>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <9066e009-5ed2-1992-d70d-fd27b4bf5871@oracle.com>
+Date:   Wed, 8 Jul 2020 10:45:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200707125641.dbd2ccd63f525aa5870069d8@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9676 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007080111
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9676 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 priorityscore=1501
+ phishscore=0 spamscore=0 mlxlogscore=999 adultscore=0 cotscore=-2147483648
+ suspectscore=0 impostorscore=0 bulkscore=0 mlxscore=0 clxscore=1011
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007080111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the vc4_hdmi driver has some custom structures to hold the data it needs to
-associate with the drm_encoder and drm_connector structures.
+On 7/7/20 12:56 PM, Andrew Morton wrote:
+> On Tue, 7 Jul 2020 16:02:04 +1200 Barry Song <song.bao.hua@hisilicon.com> wrote:
+> 
+>> hugetlb_cma[0] can be NULL due to various reasons, for example, node0 has
+>> no memory. so NULL hugetlb_cma[0] doesn't necessarily mean cma is not
+>> enabled. gigantic pages might have been reserved on other nodes.
+> 
+> I'm trying to figure out whether this should be backported into 5.7.1,
+> but the changelog doesn't describe any known user-visible effects of
+> the bug.  Are there any?
 
-However, it allocates them separately from the vc4_hdmi structure which
-makes it more complicated than it needs to be.
+Barry must have missed this email.  He reported the issue so I was hoping
+he would reply.
 
-Move those structures to be contained by vc4_hdmi and update the code
-accordingly.
+Based on the code changes, I believe the following could happen:
+- Someone uses 'hugetlb_cma=' kernel command line parameter to reserve
+  CMA for gigantic pages.
+- The system topology is such that no memory is on node 0.  Therefore,
+  no CMA can be reserved for gigantic pages on node 0.  CMA is reserved
+  on other nodes.
+- The user also specifies a number of gigantic pages to pre-allocate on
+  the command line with hugepagesz=<gigantic_page_size> hugepages=<N>
+- The routine which allocates gigantic pages from the bootmem allocator
+  will not detect CMA has been reserved as there is no memory on node 0.
+  Therefore, pages will be pre-allocated from bootmem allocator as well
+  as reserved in CMA.
 
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- drivers/gpu/drm/vc4/vc4_hdmi.c | 87 ++++++++++++++++-------------------
- drivers/gpu/drm/vc4/vc4_hdmi.h | 64 +++++++++++++-------------
- 2 files changed, 72 insertions(+), 79 deletions(-)
+This double allocation (bootmem and CMA) is the worst case scenario.  Not
+sure if this is what Barry saw, and I suspect this would rarely happen.
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index db79e0d88625..1e2214f24ed7 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -191,20 +191,15 @@ static const struct drm_connector_helper_funcs vc4_hdmi_connector_helper_funcs =
- 	.get_modes = vc4_hdmi_connector_get_modes,
- };
- 
--static struct drm_connector *vc4_hdmi_connector_init(struct drm_device *dev,
--						     struct drm_encoder *encoder,
--						     struct i2c_adapter *ddc)
-+static int vc4_hdmi_connector_init(struct drm_device *dev,
-+				   struct vc4_hdmi *vc4_hdmi,
-+				   struct i2c_adapter *ddc)
- {
--	struct drm_connector *connector;
--	struct vc4_hdmi_connector *hdmi_connector;
-+	struct vc4_hdmi_connector *hdmi_connector = &vc4_hdmi->connector;
-+	struct drm_connector *connector = &hdmi_connector->base;
-+	struct drm_encoder *encoder = &vc4_hdmi->encoder.base.base;
- 	int ret;
- 
--	hdmi_connector = devm_kzalloc(dev->dev, sizeof(*hdmi_connector),
--				      GFP_KERNEL);
--	if (!hdmi_connector)
--		return ERR_PTR(-ENOMEM);
--	connector = &hdmi_connector->base;
--
- 	hdmi_connector->encoder = encoder;
- 
- 	drm_connector_init_with_ddc(dev, connector,
-@@ -216,7 +211,7 @@ static struct drm_connector *vc4_hdmi_connector_init(struct drm_device *dev,
- 	/* Create and attach TV margin props to this connector. */
- 	ret = drm_mode_create_tv_margin_properties(dev);
- 	if (ret)
--		return ERR_PTR(ret);
-+		return ret;
- 
- 	drm_connector_attach_tv_margin_properties(connector);
- 
-@@ -228,7 +223,7 @@ static struct drm_connector *vc4_hdmi_connector_init(struct drm_device *dev,
- 
- 	drm_connector_attach_encoder(connector, encoder);
- 
--	return connector;
-+	return 0;
- }
- 
- static int vc4_hdmi_stop_packet(struct drm_encoder *encoder,
-@@ -298,21 +293,22 @@ static void vc4_hdmi_set_avi_infoframe(struct drm_encoder *encoder)
- 	struct vc4_hdmi_encoder *vc4_encoder = to_vc4_hdmi_encoder(encoder);
- 	struct vc4_dev *vc4 = encoder->dev->dev_private;
- 	struct vc4_hdmi *hdmi = vc4->hdmi;
--	struct drm_connector_state *cstate = hdmi->connector->state;
-+	struct drm_connector *connector = &hdmi->connector.base;
-+	struct drm_connector_state *cstate = connector->state;
- 	struct drm_crtc *crtc = encoder->crtc;
- 	const struct drm_display_mode *mode = &crtc->state->adjusted_mode;
- 	union hdmi_infoframe frame;
- 	int ret;
- 
- 	ret = drm_hdmi_avi_infoframe_from_display_mode(&frame.avi,
--						       hdmi->connector, mode);
-+						       connector, mode);
- 	if (ret < 0) {
- 		DRM_ERROR("couldn't fill AVI infoframe\n");
- 		return;
- 	}
- 
- 	drm_hdmi_avi_infoframe_quant_range(&frame.avi,
--					   hdmi->connector, mode,
-+					   connector, mode,
- 					   vc4_encoder->limited_rgb_range ?
- 					   HDMI_QUANTIZATION_RANGE_LIMITED :
- 					   HDMI_QUANTIZATION_RANGE_FULL);
-@@ -628,7 +624,8 @@ static const struct drm_encoder_helper_funcs vc4_hdmi_encoder_helper_funcs = {
- /* HDMI audio codec callbacks */
- static void vc4_hdmi_audio_set_mai_clock(struct vc4_hdmi *hdmi)
- {
--	struct drm_device *drm = hdmi->encoder->dev;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
-+	struct drm_device *drm = encoder->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 	u32 hsm_clock = clk_get_rate(hdmi->hsm_clock);
- 	unsigned long n, m;
-@@ -647,7 +644,7 @@ static void vc4_hdmi_audio_set_mai_clock(struct vc4_hdmi *hdmi)
- 
- static void vc4_hdmi_set_n_cts(struct vc4_hdmi *hdmi)
- {
--	struct drm_encoder *encoder = hdmi->encoder;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
- 	struct drm_crtc *crtc = encoder->crtc;
- 	struct drm_device *drm = encoder->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(drm);
-@@ -685,7 +682,8 @@ static int vc4_hdmi_audio_startup(struct snd_pcm_substream *substream,
- 				  struct snd_soc_dai *dai)
- {
- 	struct vc4_hdmi *hdmi = dai_to_hdmi(dai);
--	struct drm_encoder *encoder = hdmi->encoder;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
-+	struct drm_connector *connector = &hdmi->connector.base;
- 	struct vc4_dev *vc4 = to_vc4_dev(encoder->dev);
- 	int ret;
- 
-@@ -702,8 +700,7 @@ static int vc4_hdmi_audio_startup(struct snd_pcm_substream *substream,
- 				VC4_HDMI_RAM_PACKET_ENABLE))
- 		return -ENODEV;
- 
--	ret = snd_pcm_hw_constraint_eld(substream->runtime,
--					hdmi->connector->eld);
-+	ret = snd_pcm_hw_constraint_eld(substream->runtime, connector->eld);
- 	if (ret)
- 		return ret;
- 
-@@ -717,7 +714,7 @@ static int vc4_hdmi_audio_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 
- static void vc4_hdmi_audio_reset(struct vc4_hdmi *hdmi)
- {
--	struct drm_encoder *encoder = hdmi->encoder;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
- 	struct drm_device *drm = encoder->dev;
- 	struct device *dev = &hdmi->pdev->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(drm);
-@@ -751,7 +748,7 @@ static int vc4_hdmi_audio_hw_params(struct snd_pcm_substream *substream,
- 				    struct snd_soc_dai *dai)
- {
- 	struct vc4_hdmi *hdmi = dai_to_hdmi(dai);
--	struct drm_encoder *encoder = hdmi->encoder;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
- 	struct drm_device *drm = encoder->dev;
- 	struct device *dev = &hdmi->pdev->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(drm);
-@@ -824,7 +821,7 @@ static int vc4_hdmi_audio_trigger(struct snd_pcm_substream *substream, int cmd,
- 				  struct snd_soc_dai *dai)
- {
- 	struct vc4_hdmi *hdmi = dai_to_hdmi(dai);
--	struct drm_encoder *encoder = hdmi->encoder;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
- 	struct drm_device *drm = encoder->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 
-@@ -868,9 +865,10 @@ static int vc4_hdmi_audio_eld_ctl_info(struct snd_kcontrol *kcontrol,
- {
- 	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
- 	struct vc4_hdmi *hdmi = snd_component_to_hdmi(component);
-+	struct drm_connector *connector = &hdmi->connector.base;
- 
- 	uinfo->type = SNDRV_CTL_ELEM_TYPE_BYTES;
--	uinfo->count = sizeof(hdmi->connector->eld);
-+	uinfo->count = sizeof(connector->eld);
- 
- 	return 0;
- }
-@@ -880,9 +878,10 @@ static int vc4_hdmi_audio_eld_ctl_get(struct snd_kcontrol *kcontrol,
- {
- 	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
- 	struct vc4_hdmi *hdmi = snd_component_to_hdmi(component);
-+	struct drm_connector *connector = &hdmi->connector.base;
- 
--	memcpy(ucontrol->value.bytes.data, hdmi->connector->eld,
--	       sizeof(hdmi->connector->eld));
-+	memcpy(ucontrol->value.bytes.data, connector->eld,
-+	       sizeof(connector->eld));
- 
- 	return 0;
- }
-@@ -1221,7 +1220,7 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	struct drm_device *drm = dev_get_drvdata(master);
- 	struct vc4_dev *vc4 = drm->dev_private;
- 	struct vc4_hdmi *hdmi;
--	struct vc4_hdmi_encoder *vc4_hdmi_encoder;
-+	struct drm_encoder *encoder;
- 	struct device_node *ddc_node;
- 	u32 value;
- 	int ret;
-@@ -1230,14 +1229,10 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	if (!hdmi)
- 		return -ENOMEM;
- 
--	vc4_hdmi_encoder = devm_kzalloc(dev, sizeof(*vc4_hdmi_encoder),
--					GFP_KERNEL);
--	if (!vc4_hdmi_encoder)
--		return -ENOMEM;
--	vc4_hdmi_encoder->base.type = VC4_ENCODER_TYPE_HDMI0;
--	hdmi->encoder = &vc4_hdmi_encoder->base.base;
--
-+	encoder = &hdmi->encoder.base.base;
-+	hdmi->encoder.base.type = VC4_ENCODER_TYPE_HDMI0;
- 	hdmi->pdev = pdev;
-+
- 	hdmi->hdmicore_regs = vc4_ioremap_regs(pdev, 0);
- 	if (IS_ERR(hdmi->hdmicore_regs))
- 		return PTR_ERR(hdmi->hdmicore_regs);
-@@ -1325,15 +1320,13 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	}
- 	pm_runtime_enable(dev);
- 
--	drm_simple_encoder_init(drm, hdmi->encoder, DRM_MODE_ENCODER_TMDS);
--	drm_encoder_helper_add(hdmi->encoder, &vc4_hdmi_encoder_helper_funcs);
-+	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
-+	drm_encoder_helper_add(encoder, &vc4_hdmi_encoder_helper_funcs);
- 
--	hdmi->connector =
--		vc4_hdmi_connector_init(drm, hdmi->encoder, hdmi->ddc);
--	if (IS_ERR(hdmi->connector)) {
--		ret = PTR_ERR(hdmi->connector);
-+	ret = vc4_hdmi_connector_init(drm, hdmi, hdmi->ddc);
-+	if (ret)
- 		goto err_destroy_encoder;
--	}
-+
- #ifdef CONFIG_DRM_VC4_HDMI_CEC
- 	hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
- 					      vc4, "vc4",
-@@ -1343,7 +1336,7 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	if (ret < 0)
- 		goto err_destroy_conn;
- 
--	cec_fill_conn_info_from_drm(&conn_info, hdmi->connector);
-+	cec_fill_conn_info_from_drm(&conn_info, &hdmi->connector.base);
- 	cec_s_conn_info(hdmi->cec_adap, &conn_info);
- 
- 	HDMI_WRITE(VC4_HDMI_CPU_MASK_SET, 0xffffffff);
-@@ -1380,10 +1373,10 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- err_delete_cec_adap:
- 	cec_delete_adapter(hdmi->cec_adap);
- err_destroy_conn:
--	vc4_hdmi_connector_destroy(hdmi->connector);
-+	vc4_hdmi_connector_destroy(&hdmi->connector.base);
- #endif
- err_destroy_encoder:
--	drm_encoder_cleanup(hdmi->encoder);
-+	drm_encoder_cleanup(encoder);
- err_unprepare_hsm:
- 	clk_disable_unprepare(hdmi->hsm_clock);
- 	pm_runtime_disable(dev);
-@@ -1401,8 +1394,8 @@ static void vc4_hdmi_unbind(struct device *dev, struct device *master,
- 	struct vc4_hdmi *hdmi = vc4->hdmi;
- 
- 	cec_unregister_adapter(hdmi->cec_adap);
--	vc4_hdmi_connector_destroy(hdmi->connector);
--	drm_encoder_cleanup(hdmi->encoder);
-+	vc4_hdmi_connector_destroy(&hdmi->connector.base);
-+	drm_encoder_cleanup(&hdmi->encoder.base.base);
- 
- 	clk_disable_unprepare(hdmi->hsm_clock);
- 	pm_runtime_disable(dev);
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-index 5ec5d1f6b1e6..17079a39f1b1 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-@@ -8,6 +8,36 @@
- 
- #include "vc4_drv.h"
- 
-+/* VC4 HDMI encoder KMS struct */
-+struct vc4_hdmi_encoder {
-+	struct vc4_encoder base;
-+	bool hdmi_monitor;
-+	bool limited_rgb_range;
-+};
-+
-+static inline struct vc4_hdmi_encoder *
-+to_vc4_hdmi_encoder(struct drm_encoder *encoder)
-+{
-+	return container_of(encoder, struct vc4_hdmi_encoder, base.base);
-+}
-+
-+/* VC4 HDMI connector KMS struct */
-+struct vc4_hdmi_connector {
-+	struct drm_connector base;
-+
-+	/* Since the connector is attached to just the one encoder,
-+	 * this is the reference to it so we can do the best_encoder()
-+	 * hook.
-+	 */
-+	struct drm_encoder *encoder;
-+};
-+
-+static inline struct vc4_hdmi_connector *
-+to_vc4_hdmi_connector(struct drm_connector *connector)
-+{
-+	return container_of(connector, struct vc4_hdmi_connector, base);
-+}
-+
- /* HDMI audio information */
- struct vc4_hdmi_audio {
- 	struct snd_soc_card card;
-@@ -25,8 +55,8 @@ struct vc4_hdmi_audio {
- struct vc4_hdmi {
- 	struct platform_device *pdev;
- 
--	struct drm_encoder *encoder;
--	struct drm_connector *connector;
-+	struct vc4_hdmi_encoder encoder;
-+	struct vc4_hdmi_connector connector;
- 
- 	struct vc4_hdmi_audio audio;
- 
-@@ -53,34 +83,4 @@ struct vc4_hdmi {
- #define HD_READ(offset) readl(vc4->hdmi->hd_regs + offset)
- #define HD_WRITE(offset, val) writel(val, vc4->hdmi->hd_regs + offset)
- 
--/* VC4 HDMI encoder KMS struct */
--struct vc4_hdmi_encoder {
--	struct vc4_encoder base;
--	bool hdmi_monitor;
--	bool limited_rgb_range;
--};
--
--static inline struct vc4_hdmi_encoder *
--to_vc4_hdmi_encoder(struct drm_encoder *encoder)
--{
--	return container_of(encoder, struct vc4_hdmi_encoder, base.base);
--}
--
--/* VC4 HDMI connector KMS struct */
--struct vc4_hdmi_connector {
--	struct drm_connector base;
--
--	/* Since the connector is attached to just the one encoder,
--	 * this is the reference to it so we can do the best_encoder()
--	 * hook.
--	 */
--	struct drm_encoder *encoder;
--};
--
--static inline struct vc4_hdmi_connector *
--to_vc4_hdmi_connector(struct drm_connector *connector)
--{
--	return container_of(connector, struct vc4_hdmi_connector, base);
--}
--
- #endif /* _VC4_HDMI_H_ */
+After writing this, I started to think that perhaps command line parsing
+should be changed.  If hugetlb_cma= is specified, it makes no sense to
+pre-allocate gigantic pages.  Therefore, the hugepages=<N> paramemter
+should be ignored and flagged with a warning if  hugetlb_cma= is specified.
+This could be checked at parsing time and there would be no need for such
+a check in the allocation code (except for sanity cheching).
+
+Thoughts?  I just cleaned up the parsing code and could make such a change
+quite easily.
 -- 
-git-series 0.9.1
+Mike Kravetz
