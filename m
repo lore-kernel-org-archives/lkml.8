@@ -2,108 +2,109 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F90C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6672EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16DCF2064C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF0D2065D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:12:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ip5z9I12"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L6GJq+Qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgGHJJ6 (ORCPT
+        id S1727038AbgGHJMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:09:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56642 "EHLO
+        Wed, 8 Jul 2020 05:12:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgGHJJ5 (ORCPT
+        with ESMTP id S1726634AbgGHJMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:09:57 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CC64C08C5DC;
-        Wed,  8 Jul 2020 02:09:57 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id d21so26409709lfb.6;
-        Wed, 08 Jul 2020 02:09:57 -0700 (PDT)
+        Wed, 8 Jul 2020 05:12:41 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6171CC08E763
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 02:12:41 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id q5so1321125pjd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 02:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1gdtgViliRja9rqUjgZFjyZIZrgRR3jloFr5I8HG70w=;
-        b=ip5z9I12KRzGsIweFPgXHt4rHPNxM7v+LKq8Ccfit6iua93R/o7sHR6SWiF9qT55KY
-         baowHqHKjtCoRGaRBtiimXNPT1J6pAsMz+spGlVIPkukXDsipVn+EJyQ8COK3CpbqJdI
-         W+LLAmdJyjl0xEmKT3KLEpu7F8mVdy8kVTRlcTbgUsYSemfG416FHVyUtuDVJ5XxTMZw
-         FhHMRVDrZhjgubxxHAZQRlNzhNaLpLA6jteyr0zBE46YxU/fRn0Owbq+Dsi8/hkqkI6Z
-         mc33llo0T1nPRa/RJ4ee+IufykHbgPdRsB0DshqH+2iIMzKc8KVgrgY+ck9P5/hKXLuY
-         caZA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=7bHMgVkDYjjDuKD/FxUCTfJj58TUqovKzQoEEeq5jVQ=;
+        b=L6GJq+QmffCuIO7dqu43ag2+8gyTCJKALyR927sB9QwrDr8ea9dQSlepyzo1/pbivU
+         81VhNFeTc5ba4uNGCOKWwR6NtWw3vTd+Qu+tpL+mhk3YiLgeQ2bQlJ6iQV3e/a7Fjc+a
+         Zima/ekvuWZZS6ASF9jCKBu37/A2Jin6Iy8Wn+pguLOztRhTnk0KTHaPooojcoZ/EuZI
+         sYuiK6cbscTme8vE2a3QaDKbA/ZbUTqQ1RaySTP/XI6ilapmzdSCczpfKItt9bDiD5B5
+         qGfYbnSRxkatzVYIsfGsnlJDgXk4iEpvIVtLpfH8c12B6aY5DEyiILWeDMM0HQEhPPox
+         cUYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1gdtgViliRja9rqUjgZFjyZIZrgRR3jloFr5I8HG70w=;
-        b=SnVQAdq4xA5+PA0QRKDuBMlIM0X1ucY4CVBJuqfbsIn1MkrEFfFehTtwBx12dNDc78
-         IlEwAQIvWJPE5P1wTA6BIprF0JzoQwUcBSpXwb8glDvb9D5qacfnn+IXZ65CWxHseYpK
-         ED7yuvSRxJXx9d2+Ptsizbkg9zoIQmArsfStqNJpn3yrs/uQwEnJ7gz1IbSJEO3qkJ1D
-         oJTkz0xaDUjDlCP5IjWGUaEprNRyWjAPRZgXIBx/7jmsQ6E9q84QGdILuplCRec6uR9a
-         X5OpFx+kWQPMXRjTFELQlKE3bAlAGy4qobQLk6xfveC0c9UrlOl1aWi3Nye/wA/VwMXH
-         Mp+Q==
-X-Gm-Message-State: AOAM533l1o9n7iL4+ZVgt9T1DqZrLY/q3flepibe9bZXqKkbSsaR43HX
-        +cj4bdJZiRFBhYfwJeKIR5/yaqWa
-X-Google-Smtp-Source: ABdhPJwgl/YmckGYFZNlQjZ1UgVGe49toblQoK1n8mLTRkHQcw7zfygG5rxEVSkeKiZRjGLpkkm4Cw==
-X-Received: by 2002:a19:4f11:: with SMTP id d17mr35562511lfb.2.1594199395461;
-        Wed, 08 Jul 2020 02:09:55 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id o201sm10166793lff.8.2020.07.08.02.09.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 02:09:54 -0700 (PDT)
-Subject: Re: [PATCH v1 1/5] gpio: max77620: Initialize interrupts state
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200708082634.30191-1-digetx@gmail.com>
- <20200708082634.30191-2-digetx@gmail.com>
- <CAHp75VdFVGgKxR+n5TUMuFnWDy_uEmEeG=TvR9s7Xbe=jOdObg@mail.gmail.com>
- <CAHp75VdTw87aOGqnjS-jukiHcMACG7-gDDhDWP6hikSLWpDebQ@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e9850c2d-43ea-9c07-19c6-f3e2e096e52a@gmail.com>
-Date:   Wed, 8 Jul 2020 12:09:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAHp75VdTw87aOGqnjS-jukiHcMACG7-gDDhDWP6hikSLWpDebQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=7bHMgVkDYjjDuKD/FxUCTfJj58TUqovKzQoEEeq5jVQ=;
+        b=Yu+Yg1wtH5ebbZGNYYka51vwC4rJ2IgxrLAmZacwCnKosAkwd9zyWbpQhYaJ1TN9YP
+         UoB2WYITXB2d3shHrPwFFQfwL6/oVbHklcdA1YIHGzuDMbvbgLR7GSzE5pkp8FjlWtj8
+         d11gs5RTsxzmORdfl1lxy3Guft2E5aRjdO4gcTntzaEO5WAvrDr+FGsE3jNhUpqNIjuo
+         Nxe8MwD5RHK8bi3ee/F2gK1a0+phkj02zR9VHkv5OudE5ikIa2XUtN2t7YGvrOoA/UIy
+         nNPUhB3ywDj6svRuI1XJRENZfwcbM+Rri5LtITI5tfHwoW3B13MxMY2NKpbR78Lj8Qop
+         Usug==
+X-Gm-Message-State: AOAM5331GUoKYnYpjMpysH5DE5RmRU5sBJX4vcpCrdHMgc+RPGSSoyRh
+        9/93IcXdA3IBN6y262VXtg600d5VdyQ=
+X-Google-Smtp-Source: ABdhPJzFvfpDeyxPhbKxpb3zpnUW+cZnsByq5J9vChYiBZ95cs4wd1HMbcH72CKn2IWI+wWEMSs035Y65Co=
+X-Received: by 2002:a17:90a:7103:: with SMTP id h3mr8662006pjk.34.1594199560750;
+ Wed, 08 Jul 2020 02:12:40 -0700 (PDT)
+Date:   Wed,  8 Jul 2020 02:12:33 -0700
+Message-Id: <20200708091237.3922153-1-drosen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+Subject: [PATCH v12 0/4] Prepare for upcoming Casefolding/Encryption patches
+From:   Daniel Rosenberg <drosen@google.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.07.2020 11:53, Andy Shevchenko пишет:
-> On Wed, Jul 8, 2020 at 11:51 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
-> 
-> ...
-> 
->>> +       max77620_gpio_initialize(mgpio);
->>
->> I guess we have special callback for that, i.e.
->> https://elixir.bootlin.com/linux/v5.8-rc3/C/ident/init_hw.
-> 
-> Sorry, here is correct link
-> 
-> https://elixir.bootlin.com/linux/v5.8-rc3/source/include/linux/gpio/driver.h#L212
-> 
+This lays the ground work for enabling casefolding and encryption at the
+same time for ext4 and f2fs. A future set of patches will enable that
+functionality.
 
-Indeed, I missed the init_hw(), thank you!
+These unify the highly similar dentry_operations that ext4 and f2fs both
+use for casefolding. In addition, they improve d_hash by not requiring a
+new string allocation.
+
+Daniel Rosenberg (4):
+  unicode: Add utf8_casefold_hash
+  fs: Add standard casefolding support
+  f2fs: Use generic casefolding support
+  ext4: Use generic casefolding support
+
+ fs/ext4/dir.c           | 64 +-----------------------------
+ fs/ext4/ext4.h          | 12 ------
+ fs/ext4/hash.c          |  2 +-
+ fs/ext4/namei.c         | 20 ++++------
+ fs/ext4/super.c         | 12 +++---
+ fs/f2fs/dir.c           | 84 +++++----------------------------------
+ fs/f2fs/f2fs.h          |  4 --
+ fs/f2fs/super.c         | 10 ++---
+ fs/f2fs/sysfs.c         | 10 +++--
+ fs/libfs.c              | 87 +++++++++++++++++++++++++++++++++++++++++
+ fs/unicode/utf8-core.c  | 23 ++++++++++-
+ include/linux/f2fs_fs.h |  3 --
+ include/linux/fs.h      | 16 ++++++++
+ include/linux/unicode.h |  3 ++
+ 14 files changed, 165 insertions(+), 185 deletions(-)
+
+-- 
+2.27.0.383.g050319c2ae-goog
+
