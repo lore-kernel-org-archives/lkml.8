@@ -2,137 +2,110 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D643C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45E2E206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D63206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RxkDKFwZ"
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="lvqdmIXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbgGHOZf (ORCPT
+        id S1729595AbgGHOaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:25:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49670 "EHLO
+        Wed, 8 Jul 2020 10:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729468AbgGHOZe (ORCPT
+        with ESMTP id S1729468AbgGHOaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:25:34 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722DAC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 07:25:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+YUe1fHnh8Fc6MZuglb4QKVpoNIXOUgI7dCHoGx1luE=; b=RxkDKFwZoqNTLBBbYfGgGUe4+O
-        5j83xJFKnsJW4vLbLWpzdQQJwqJ+6HP1kWNO3GX1zCgW7es+pDcpixR07wcr1bnkCuiKALYeSaVhY
-        hScSwsKk7WByOKncEwgTCxofH9YZ6+R7ccEwJJEq/wfYnwazkdSv6JjIH/qAYW/auTb0pJ8bz0UAx
-        8CP4L0EthAkXqyuZ0Mh7RNlZbV4I7E4LMaADnJx03SfpBw5rNKtQS3/wJD2aMgiXYVdcutefbIFye
-        ITonfS6BRI+r9t6sVO8ZTyaoTBnitjtANNK44rwMgUfFzR5e6ZYZ8W38RLeqyxKak+6iZckJtqkmq
-        4xzyYt5g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtB0q-0007AN-9E; Wed, 08 Jul 2020 14:25:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DFBD0304D58;
-        Wed,  8 Jul 2020 16:25:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 970BF214ECDC2; Wed,  8 Jul 2020 16:25:26 +0200 (CEST)
-Date:   Wed, 8 Jul 2020 16:25:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 06/20] seqlock: Extend seqcount API with associated
- locks
-Message-ID: <20200708142526.GR117543@hirez.programming.kicks-ass.net>
-References: <20200630054452.3675847-1-a.darwish@linutronix.de>
- <20200630054452.3675847-7-a.darwish@linutronix.de>
- <20200706212148.GE5523@worktop.programming.kicks-ass.net>
- <20200707084024.GA4097637@debian-buster-darwi.lab.linutronix.de>
- <20200707130410.GO4800@hirez.programming.kicks-ass.net>
- <20200707143726.GO117543@hirez.programming.kicks-ass.net>
- <20200708103314.GB4151780@debian-buster-darwi.lab.linutronix.de>
- <20200708122938.GQ4800@hirez.programming.kicks-ass.net>
- <20200708141332.GQ117543@hirez.programming.kicks-ass.net>
+        Wed, 8 Jul 2020 10:30:52 -0400
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC52DC061A0B;
+        Wed,  8 Jul 2020 07:30:51 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4B21tt3ctKzKmbV;
+        Wed,  8 Jul 2020 16:30:46 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1594218644;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kX81NycJZXqFDav0WaAV9dyuGlCyo9ucVS5/FDIjzzs=;
+        b=lvqdmIXuPZ0UF46UgaCL//Sdbd544riT3EyN6lY/8GIyk8uQLZHUOSTrh1VthcbJJFjZlM
+        gko5xwrGOGzRPGT2zOWqrBPtmAoAmJB3tO5kxR/viiNoN1sKggTxLaTPooscm0RcGvIQ4d
+        y3O2soWlcIxYjEBDiZiipcTzH+C6Fv3H5jA5A1LK02G/2at7ITZrH4LNTD16+3/LEqXrsk
+        i0+PaAVpadhNh08rlMO9oKlRFuQ+TfFM/JxrNPSwoqQMDatHbVJAHQZnS3noOarvC+Hak2
+        OAikDiV4gOSg9jOvJBvibZWOde8LYKRH7xmGJihkQs1j+F7JmFb4VqCp8xGejQ==
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id 4sg0785dkFjG; Wed,  8 Jul 2020 16:30:43 +0200 (CEST)
+Subject: Re: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Walle <michael@walle.cc>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+References: <20200705133038.161547-1-mans0n@gorani.run>
+ <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
+ <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com>
+ <15d8ae43-6905-b861-3b50-d1ba780edf2d@gorani.run>
+ <CAHp75VeKUvy9tkoBq=axx9g-2_p3QUqffA1z2WmGO-Uu8oyHHA@mail.gmail.com>
+From:   Sungbo Eo <mans0n@gorani.run>
+Message-ID: <60306316-3dee-3bb8-3f42-7a6258102a42@gorani.run>
+Date:   Wed, 8 Jul 2020 23:30:36 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708141332.GQ117543@hirez.programming.kicks-ass.net>
+In-Reply-To: <CAHp75VeKUvy9tkoBq=axx9g-2_p3QUqffA1z2WmGO-Uu8oyHHA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: 0
+X-Rspamd-Score: -3.05 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 5B421174A
+X-Rspamd-UID: d14524
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 04:13:32PM +0200, Peter Zijlstra wrote:
-> On Wed, Jul 08, 2020 at 02:29:38PM +0200, Peter Zijlstra wrote:
-> 
-> > #define SEQCOUNT_LOCKTYPE(name, locktype, preempt, lockmember)		\
-> > typedef struct seqcount_##name {					\
-> > 	seqcount_t	seqcount;					\
-> > 	__SEQCOUNT_LOCKDEP(locktype *lock);				\
-> > } seqcount_##name##_t;							\
-> > 									\
-> > static __always_inline void						\
-> > seqcount_##name##_init(seqcount_##name##_t *s, locktype *l)		\
-> > {									\
-> > 	seqcount_init(&s->seqcount);					\
-> > 	__SEQCOUNT_LOCKDEP(s->lock = l);				\
-> > }									\
-> > 									\
-> > static __always_inline __seqprop_ptr_t					\
-> > __seqprop_##name##_ptr(seqcount_##name##_t *s)				\
-> > {									\
-> > 	return &s->seqcount;						\
-> > }									\
-> > 									\
-> > static __always_inline __seqprop_preempt_t				\
-> > __seqprop_##name##_preempt(seqcount_##name##_t *s)			\
-> > {									\
-> > 	return preempt;							\
-> > }									\
-> > 									\
-> > static __always_inline __seqprop_assert_t				\
-> > __seqprop_##name##_assert(seqcount_##name##_t *s)			\
-> > {									\
-> > 	__SEQCOUNT_LOCKDEP(lockdep_assert_held(s->lockmember));		\
-> > }
-> 
-> For PREEMPT_RT's magic thing, you can add:
-> 
-> static __always_inline void						\
-> __seqprop_##name##_lock(seqcount_##name##_t *s)				\
-> {									\
-> 	if (!__SEQ_RT || !preempt)					\
-> 		return;							\
-> 									\
-> 	lockbase##_lock(&s->lock);					\
-> 	lockbase##_unlock(&s->lock);					\
-> }
-> 
-> and:
-> 
-> #define __rt_lock_unlock_associated_sleeping_lock(s) __seqprop(s, lock)
+Thanks, it made me think about it deeper...
 
-Or possible have it like:
+On 20. 7. 8. 오전 12:07, Andy Shevchenko wrote:
+> On Tue, Jul 7, 2020 at 5:03 PM Sungbo Eo <mans0n@gorani.run> wrote:
+>> On 20. 7. 6. 오후 9:00, Andy Shevchenko wrote:
+> 
+> ...
+> 
+>> But I don't really understand what mutex does here. The driver does not
+>> need consecutive commands, it only sends/receives only one byte at a
+>> time. And AFAIK each i2c_smbus function is already protected by a mutex.
+>> So what should be exactly inside the lock? Should we protect the output
+>> buffer as well? I'm not an expert on this so please enlighten me.
+> 
+> There are questions, answering them will give you a solution:
+> - Since we have two functions doing i2c communications, can they
+> clash? If so, does the i2c framework guarantee the serialisation?
 
-	if (!__SEQ_RT || !preempt)
-		return smp_cond_load_relaxed(&s->seqcount->sequence, !(VAL & 1));
+I think it does.
 
-	lockbase##_lock(&s->lock);
-	lockbase##_unlock(&s->lock);
+> - Since we have a shared resource (buf), can accessors clash? How do
+> we guarantee serialization?
+> 
 
-	return READ_ONCE(s->seqcount->sequence);
+But the output buffer should be tied to the i2c operations. So I guess 
+it requires a mutex here.
 
-and then replace most of __read_seqcount_begin() with it.
+pca9570_get() does not access gpio->out so it does not need to be locked.
+
+On the other hand, the whole pca9570_set() function should be protected, 
+from reading gpio->out to rewriting to gpio->out. So pca9570_write() 
+error check should be inside the lock as well. Am I right?
+
+Thanks.
