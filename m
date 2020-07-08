@@ -2,186 +2,176 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D190BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A73B7206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:16:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKl2iOue"
+	by mail.kernel.org (Postfix) with ESMTP id 7F353206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgGHMQr (ORCPT
+        id S1729018AbgGHMRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:16:47 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21681 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728790AbgGHMQq (ORCPT
+        Wed, 8 Jul 2020 08:17:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38138 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728790AbgGHMRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:16:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594210604;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=IytwUfkabOOQaPkWmBAwl3owXErFfQxs/p+ghsFbWy4=;
-        b=fKl2iOueVGnm+92syelHuIM7B50e0Orr13qijFXWFDdTUDBfTZVDVKyij5lk9CH10UfFSX
-        KWQJEYP+LwfvTyLCsrJu2ZRcQx8xEpmq8SJa4H4TEeAeMKf/Ur2jS/Npe6xfhaGRo+r4eb
-        +gxzJkqNSCRZV5xydXNCKyhHXxCUFPM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-cUd40XKtMf-9G8H0HBa3rA-1; Wed, 08 Jul 2020 08:16:43 -0400
-X-MC-Unique: cUd40XKtMf-9G8H0HBa3rA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C628D800401;
-        Wed,  8 Jul 2020 12:16:41 +0000 (UTC)
-Received: from [10.36.113.117] (ovpn-113-117.ams2.redhat.com [10.36.113.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3EB4C10016E8;
-        Wed,  8 Jul 2020 12:16:40 +0000 (UTC)
-Subject: Re: [PATCH v1 0/9] s390: implement and optimize vmemmap_free()
-From:   David Hildenbrand <david@redhat.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20200703133917.39045-1-david@redhat.com>
- <20200707120849.GB12303@osiris>
- <f4a87c47-4987-e3f8-8c06-ff6dd60f6a39@redhat.com>
- <51813747-a2d6-03a4-fe61-b8d62dbca05b@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <13549874-c33b-c47a-adbd-d625c83cc87d@redhat.com>
-Date:   Wed, 8 Jul 2020 14:16:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 8 Jul 2020 08:17:04 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068C0eio107900;
+        Wed, 8 Jul 2020 08:16:42 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 325dp70r9k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 08:16:41 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 068CAH8u002721;
+        Wed, 8 Jul 2020 12:16:40 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 322hd7vhgy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 12:16:40 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 068CGbaI36896792
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Jul 2020 12:16:37 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41927AE055;
+        Wed,  8 Jul 2020 12:16:37 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA336AE045;
+        Wed,  8 Jul 2020 12:16:36 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.179.233])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Jul 2020 12:16:36 +0000 (GMT)
+Subject: Re: [PATCH 2/2] KVM: PPC: Book3S HV: rework secure mem slot dropping
+To:     bharata@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        paulus@samba.org, bauerman@linux.ibm.com, sukadev@linux.ibm.com,
+        sathnaga@linux.vnet.ibm.com, Ram Pai <linuxram@us.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>
+References: <20200703155914.40262-1-ldufour@linux.ibm.com>
+ <20200703155914.40262-3-ldufour@linux.ibm.com>
+ <20200708112531.GA7902@in.ibm.com>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Message-ID: <0588d16a-8548-0f55-1132-400807a390a1@linux.ibm.com>
+Date:   Wed, 8 Jul 2020 14:16:36 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <51813747-a2d6-03a4-fe61-b8d62dbca05b@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200708112531.GA7902@in.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_08:2020-07-08,2020-07-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ cotscore=-2147483648 phishscore=0 impostorscore=0 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=3 bulkscore=0
+ spamscore=0 mlxlogscore=779 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007080084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.07.20 08:50, David Hildenbrand wrote:
-> On 07.07.20 14:13, David Hildenbrand wrote:
->> On 07.07.20 14:08, Heiko Carstens wrote:
->>> On Fri, Jul 03, 2020 at 03:39:08PM +0200, David Hildenbrand wrote:
->>>> This series is based on the latest s390/features branch [1]. It implements
->>>> vmemmap_free(), consolidating it with vmem_add_range(), and optimizes it by
->>>> - Freeing empty page tables (now also done for idendity mapping).
->>>> - Handling cases where the vmemmap of a section does not fill huge pages
->>>>   completely.
->>>>
->>>> vmemmap_free() is currently never used, unless adiing standby memory fails
->>>> (unlikely). This is relevant for virtio-mem, which adds/removes memory
->>>> in memory block/section granularity (always removes memory in the same
->>>> granularity it added it).
->>>>
->>>> I gave this a proper test with my virtio-mem prototype (which I will share
->>>> once the basic QEMU implementation is upstream), both with 56 byte memmap
->>>> per page and 64 byte memmap per page, with and without huge page support.
->>>> In both cases, removing memory (routed through arch_remove_memory()) will
->>>> result in
->>>> - all populated vmemmap pages to get removed/freed
->>>> - all applicable page tables for the vmemmap getting removed/freed
->>>> - all applicable page tables for the idendity mapping getting removed/freed
->>>> Unfortunately, I don't have access to bigger and z/VM (esp. dcss)
->>>> environments.
->>>>
->>>> This is the basis for real memory hotunplug support for s390x and should
->>>> complete my journey to s390x vmem/vmemmap code for now :)
->>>>
->>>> What needs double-checking is tlb flushing. AFAIKS, as there are no valid
->>>> accesses, doing a single range flush at the end is sufficient, both when
->>>> removing vmemmap pages and the idendity mapping.
->>>>
->>>> Along, some minor cleanups.
->>>
->>> Hmm.. I really would like to see if there would be only a single page
->>> table walker left in vmem.c, which handles both adding and removing
->>> things.
->>> Now we end up with two different page table walk implementations
->>> within the same file. However not sure if it is worth the effort to
->>> unify them though.
+Le 08/07/2020 à 13:25, Bharata B Rao a écrit :
+> On Fri, Jul 03, 2020 at 05:59:14PM +0200, Laurent Dufour wrote:
+>> When a secure memslot is dropped, all the pages backed in the secure device
+>> (aka really backed by secure memory by the Ultravisor) should be paged out
+>> to a normal page. Previously, this was achieved by triggering the page
+>> fault mechanism which is calling kvmppc_svm_page_out() on each pages.
 >>
->> I tried to unify vmemmap_populate() and vmem_add_range() already and
->> didn't like the end result ... so, unifying these along with the removal
->> part won't be any better - most probably. Open for suggestions :)
+>> This can't work when hot unplugging a memory slot because the memory slot
+>> is flagged as invalid and gfn_to_pfn() is then not trying to access the
+>> page, so the page fault mechanism is not triggered.
 >>
->> (at least arm64 and x86-64 handle it similarly)
+>> Since the final goal is to make a call to kvmppc_svm_page_out() it seems
+>> simpler to directly calling it instead of triggering such a mechanism. This
+>> way kvmppc_uvmem_drop_pages() can be called even when hot unplugging a
+>> memslot.
+> 
+> Yes, this appears much simpler.
+
+Thanks Bharata for reviewing this.
+
+> 
 >>
+>> Since kvmppc_uvmem_drop_pages() is already holding kvm->arch.uvmem_lock,
+>> the call to __kvmppc_svm_page_out() is made.
+>> As __kvmppc_svm_page_out needs the vma pointer to migrate the pages, the
+>> VMA is fetched in a lazy way, to not trigger find_vma() all the time. In
+>> addition, the mmap_sem is help in read mode during that time, not in write
+>> mode since the virual memory layout is not impacted, and
+>> kvm->arch.uvmem_lock prevents concurrent operation on the secure device.
+>>
+>> Cc: Ram Pai <linuxram@us.ibm.com>
+>> Cc: Bharata B Rao <bharata@linux.ibm.com>
+>> Cc: Paul Mackerras <paulus@ozlabs.org>
+>> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+>> ---
+>>   arch/powerpc/kvm/book3s_hv_uvmem.c | 54 ++++++++++++++++++++----------
+>>   1 file changed, 37 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
+>> index 852cc9ae6a0b..479ddf16d18c 100644
+>> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
+>> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
+>> @@ -533,35 +533,55 @@ static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
+>>    * fault on them, do fault time migration to replace the device PTEs in
+>>    * QEMU page table with normal PTEs from newly allocated pages.
+>>    */
+>> -void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *free,
+>> +void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *slot,
+>>   			     struct kvm *kvm, bool skip_page_out)
+>>   {
+>>   	int i;
+>>   	struct kvmppc_uvmem_page_pvt *pvt;
+>> -	unsigned long pfn, uvmem_pfn;
+>> -	unsigned long gfn = free->base_gfn;
+>> +	struct page *uvmem_page;
+>> +	struct vm_area_struct *vma = NULL;
+>> +	unsigned long uvmem_pfn, gfn;
+>> +	unsigned long addr, end;
+>> +
+>> +	down_read(&kvm->mm->mmap_sem);
 > 
-> I'll play with something like
+> You should be using mmap_read_lock(kvm->mm) with recent kernels.
+
+Absolutely, shame on me, I reviewed Michel's series about that!
+
+Paul, Michael, could you fix that when pulling this patch or should I sent a 
+whole new series?
+
 > 
-> static void modify_pagetable(unsigned long start, unsigned long end,
-> 			     bool direct, bool add)
+>> +
+>> +	addr = slot->userspace_addr;
+>> +	end = addr + (slot->npages * PAGE_SIZE);
+>>   
+>> -	for (i = free->npages; i; --i, ++gfn) {
+>> -		struct page *uvmem_page;
+>> +	gfn = slot->base_gfn;
+>> +	for (i = slot->npages; i; --i, ++gfn, addr += PAGE_SIZE) {
+>> +
+>> +		/* Fetch the VMA if addr is not in the latest fetched one */
+>> +		if (!vma || (addr < vma->vm_start || addr >= vma->vm_end)) {
+>> +			vma = find_vma_intersection(kvm->mm, addr, end);
+>> +			if (!vma ||
+>> +			    vma->vm_start > addr || vma->vm_end < end) {
+>> +				pr_err("Can't find VMA for gfn:0x%lx\n", gfn);
+>> +				break;
+>> +			}
+>> +		}
 > 
-> and see how it turns out.
-> 
+> The first find_vma_intersection() was called for the range spanning the
+> entire memslot, but you have code to check if vma remains valid for the
+> new addr in each iteration. Guess you wanted to get vma for one page at
+> a time and use it for subsequent pages until it covers the range?
 
-Did a quick hack. With a single walker (modify_pagetable) I get
-
- arch/s390/mm/vmem.c | 628 ++++++++++++++++++++++++++++++--------------
- 1 file changed, 434 insertions(+), 194 deletions(-)
-
-Overall looks cleaner, only modify_pte_table() and modify_pmd_table()
-are a little more involved ...
-
--- 
-Thanks,
-
-David / dhildenb
-
+That's the goal, fetch the VMA once and no more until we reach its end boundary.
