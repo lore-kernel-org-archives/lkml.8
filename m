@@ -2,100 +2,149 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA27C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1DF92073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:42:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="inEhFPEn"
+	by mail.kernel.org (Postfix) with ESMTP id C4C6C2073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgGHAmu (ORCPT
+        id S1729120AbgGHAru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 20:42:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728061AbgGHAmu (ORCPT
+        Tue, 7 Jul 2020 20:47:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17972 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728184AbgGHArt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 20:42:50 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467A4C061755;
-        Tue,  7 Jul 2020 17:42:50 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id h16so14308915ilj.11;
-        Tue, 07 Jul 2020 17:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ue4EIK0VhUIPtRObeZ3zttXF6R0Ao0zF/3q1pqokQPM=;
-        b=inEhFPEnStHD/Ywc3gvLNoiHq+XKOlw6RgBQNg06T/GFGXVwaTL3DElg3MctaSyQfM
-         6lL/vnfDnogiuVoryb3vftEDddvFbO4/CH3vLBiDa0ehOkN/8edK00DDjyW5cH6zLC8E
-         1nKTyNwesdBhHJZb4ReHMkbyrIefPE1UC+6u/XyfJTYOiUPj1gYN0RvjphoGpZbqqptB
-         ZNtQafGsg5zOTnpoCifsgTeDv6+2GsdKuFAxx57qq9BXssb5DA2wjgZ9TbdCkHmcnw/n
-         n0QZAO9uQwbKHgPVh7eldKClSsQuFAz9x/hKuLGNirnjzavt6HruIx3UXW2iFuoly1hb
-         yuJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ue4EIK0VhUIPtRObeZ3zttXF6R0Ao0zF/3q1pqokQPM=;
-        b=XdHqsx563oCRwbV5pr60eSL/nXpAUssri3Xqb1zDI2LkxmGEdtCADHvZIDtpmZMBOb
-         s+gqiCKsx72olRad/23r0noyXvRTHmWYeXjFF/bu4B7cPWw7Dd75yXnzJBT+6u5Mw3MT
-         IpsMnRggIv66l4LTITLzlkh1ylOCq7GROYRcEiTO+fyc17aeFJjWkJ0GthHTTpM4gxkM
-         GceZfUXehAjR6DbX5FEhGHiKkJQEpNbfkGQ9rtezqTCtvp2HzjGb1KHBB2PuqB24ExE+
-         WBbHyqDjILhQN3uRIFd1MgqOC3KMAe/tEToRfG/cXYk3uvT5MmUFq0XCKgxtBbeH0VGt
-         Zsgg==
-X-Gm-Message-State: AOAM531PAEFVVOiX3FkOeGPDcC1Nfhx6tcH6TQj9axKnH9QOUXQEyuBa
-        pNiRYIS6T4M9SdKQ2cI7BL2N3+2r3Xht3aA0J7o=
-X-Google-Smtp-Source: ABdhPJw89Chg6p49ozpxXXxKixO+Ec9eT77p/qN2LR0pq5SKVnLXCaH6XvOadplfXVQXCE887WnMJ23c22bBOsavkck=
-X-Received: by 2002:a92:aa92:: with SMTP id p18mr38384061ill.199.1594168969758;
- Tue, 07 Jul 2020 17:42:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200708003209.4737-1-cphealy@gmail.com> <CAOMZO5BYDXbVUKad4Cn0fauGMEFu4ZPSOwunrFxMq7+bDYPtMw@mail.gmail.com>
-In-Reply-To: <CAOMZO5BYDXbVUKad4Cn0fauGMEFu4ZPSOwunrFxMq7+bDYPtMw@mail.gmail.com>
-From:   Chris Healy <cphealy@gmail.com>
-Date:   Tue, 7 Jul 2020 17:42:37 -0700
-Message-ID: <CAFXsbZqy8jtNbx-0oZQ=v+7ZuQTN6MUZELW5QVayk3xz=wHcCg@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: zii-ultra: update MDIO speed and preamble device
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Tue, 7 Jul 2020 20:47:49 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0680VUbw086164;
+        Tue, 7 Jul 2020 20:47:29 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3252xwscfn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 20:47:28 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0680fQqY113018;
+        Tue, 7 Jul 2020 20:47:28 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3252xwscf2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 20:47:28 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0680UP1Q012228;
+        Wed, 8 Jul 2020 00:47:26 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 322hd7uy4k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 00:47:26 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0680k2dq61211110
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Jul 2020 00:46:02 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EAD32A4040;
+        Wed,  8 Jul 2020 00:47:23 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD9E5A4051;
+        Wed,  8 Jul 2020 00:47:20 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.200.130])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Jul 2020 00:47:20 +0000 (GMT)
+Message-ID: <1594169240.23056.143.camel@linux.ibm.com>
+Subject: Re: [PATCH 4/4] module: Add hook for
+ security_kernel_post_read_file()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Kees Cook <keescook@chromium.org>, James Morris <jmorris@namei.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Tue, 07 Jul 2020 20:47:20 -0400
+In-Reply-To: <20200707081926.3688096-5-keescook@chromium.org>
+References: <20200707081926.3688096-1-keescook@chromium.org>
+         <20200707081926.3688096-5-keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-07_14:2020-07-07,2020-07-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ impostorscore=0 phishscore=0 cotscore=-2147483648 priorityscore=1501
+ bulkscore=0 clxscore=1015 mlxlogscore=999 adultscore=0 lowpriorityscore=0
+ suspectscore=2 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007070158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 5:41 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Chris,
->
-> On Tue, Jul 7, 2020 at 9:32 PM Chris Healy <cphealy@gmail.com> wrote:
->
-> >                 #address-cells = <1>;
-> >                 #size-cells = <0>;
-> >                 status = "okay";
-> > +               suppress-preamble;
-> > +               clock-frequency = <12500000>;
->
-> Sorry, I missed this in the previous review.
->
-> The recommendation is to have status = okay as the last property.
->
-> Please move suppress-preamble and clock-frequency = <12500000> prior
-> to status = "okay"
+On Tue, 2020-07-07 at 01:19 -0700, Kees Cook wrote:
+> Calls to security_kernel_load_data() should be paired with a call to
+> security_kernel_post_read_file() with a NULL file argument. Add the
+> missing call so the module contents are visible to the LSMs interested
+> in measuring the module content. (This also paves the way for moving
+> module signature checking out of the module core and into an LSM.)
+> 
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Fixes: c77b8cdf745d ("module: replace the existing LSM hook in init_module")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  kernel/module.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 0c6573b98c36..af9679f8e5c6 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -2980,7 +2980,12 @@ static int copy_module_from_user(const void __user *umod, unsigned long len,
+>  		return -EFAULT;
+>  	}
+>  
+> -	return 0;
+> +	err = security_kernel_post_read_file(NULL, (char *)info->hdr,
+> +					     info->len, READING_MODULE);
 
-Will do in the next version.
+There was a lot of push back on calling security_kernel_read_file()
+with a NULL file descriptor here.[1]  The result was defining a new
+security hook - security_kernel_load_data - and enumeration -
+LOADING_MODULE.  I would prefer calling the same pre and post security
+hook.
+
+Mimi
+
+[1] http://kernsec.org/pipermail/linux-security-module-archive/2018-Ma
+y/007110.html
+
+> +	if (err)
+> +		vfree(info->hdr);
+> +
+> +	return err;
+>  }
+>  
+>  static void free_copy(struct load_info *info)
+
