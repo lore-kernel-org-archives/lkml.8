@@ -6,109 +6,91 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58375C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30022C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9B620672
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0152420672
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgGHHvK (ORCPT
+        id S1727848AbgGHHvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:51:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:60487 "EHLO mga02.intel.com"
+        Wed, 8 Jul 2020 03:51:24 -0400
+Received: from mga18.intel.com ([134.134.136.126]:51780 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgGHHvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:51:09 -0400
-IronPort-SDR: yilGhIrU/OP6LOKCuixqzp+yPpl/2UerUc8ktlq9wnx74VDG27KEa3pkGb+mYe40wEUc9pqTf2
- 8kRWlWClAphg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="135988128"
+        id S1725747AbgGHHvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:51:24 -0400
+IronPort-SDR: N7/eE2yzpKPYQbq18JQ7sn2PAGcYIGjdNxo6eTnjA5tDahLvG/gDUgqnF6PG4k/yY2aiq+wECc
+ YgGQ4ChwuuBg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="135218224"
 X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="135988128"
+   d="scan'208";a="135218224"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 00:51:08 -0700
-IronPort-SDR: Ru0rE6Z3RVwUmAkQ9gRuhp36wFoUkPXn8WyFCtuBRuHfvmiL9o5tYOThE5T4SevXJHLongB5Ti
- 5rEHj6aKIF/A==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 00:51:23 -0700
+IronPort-SDR: AgP+MIjK5Ori9WSH1WG1rToNes90VH3gFBrsjMVZWJApQ/eJpMSAcCD5+rQOjUrtaM9FU9XUHi
+ TmZNuU8J9UzA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="268406535"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.171.189]) ([10.249.171.189])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Jul 2020 00:51:06 -0700
-Reply-To: like.xu@intel.com
-Subject: Re: [PATCH] kvm: x86: limit the maximum number of vPMU fixed counters
- to 3
-To:     Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
-References: <20200624015928.118614-1-like.xu@linux.intel.com>
-From:   "Xu, Like" <like.xu@intel.com>
-Organization: Intel OTC
-Message-ID: <8de3f450-7efd-96ab-fdf8-169b3327e5ac@intel.com>
-Date:   Wed, 8 Jul 2020 15:51:05 +0800
+   d="scan'208";a="358030557"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2020 00:51:23 -0700
+Received: from [10.249.226.44] (abudanko-mobl.ccr.corp.intel.com [10.249.226.44])
+        by linux.intel.com (Postfix) with ESMTP id A21925807C9;
+        Wed,  8 Jul 2020 00:51:21 -0700 (PDT)
+Subject: [PATCH v10 07/15] perf stat: move target check to loop control
+ statement
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <4f967823-bbcb-720b-7a70-dd9509587b58@linux.intel.com>
+Date:   Wed, 8 Jul 2020 10:51:20 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200624015928.118614-1-like.xu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kindly ping.
 
-I think we may need this patch, as we limit the maximum vPMU version to 2:
-     eax.split.version_id = min(cap.version, 2);
+Check for target existence in loop control statement jointly
+with external asynchronous 'done' signal.
 
-Thanks,
-Like Xu
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/builtin-stat.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-On 2020/6/24 9:59, Like Xu wrote:
-> Some new Intel platforms (such as TGL) already have the
-> fourth fixed counter TOPDOWN.SLOTS, but it has not been
-> fully enabled on KVM and the host.
->
-> Therefore, we limit edx.split.num_counters_fixed to 3,
-> so that it does not break the kvm-unit-tests PMU test
-> case and bad-handled userspace.
->
-> Signed-off-by: Like Xu <like.xu@linux.intel.com>
-> ---
->   arch/x86/kvm/cpuid.c | 2 +-
->   arch/x86/kvm/pmu.h   | 2 ++
->   2 files changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 8a294f9747aa..0a2c6d2b4650 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -604,7 +604,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->   		eax.split.bit_width = cap.bit_width_gp;
->   		eax.split.mask_length = cap.events_mask_len;
->   
-> -		edx.split.num_counters_fixed = cap.num_counters_fixed;
-> +		edx.split.num_counters_fixed = min(cap.num_counters_fixed, MAX_FIXED_COUNTERS);
->   		edx.split.bit_width_fixed = cap.bit_width_fixed;
->   		edx.split.reserved = 0;
->   
-> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-> index ab85eed8a6cc..067fef51760c 100644
-> --- a/arch/x86/kvm/pmu.h
-> +++ b/arch/x86/kvm/pmu.h
-> @@ -15,6 +15,8 @@
->   #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
->   #define VMWARE_BACKDOOR_PMC_APPARENT_TIME	0x10002
->   
-> +#define MAX_FIXED_COUNTERS	3
-> +
->   struct kvm_event_hw_type_mapping {
->   	u8 eventsel;
->   	u8 unit_mask;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 80aea49e4dac..87eebf3f55ae 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -815,10 +815,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 			psignal(WTERMSIG(status), argv[0]);
+ 	} else {
+ 		enable_counters();
+-		while (!done) {
++		while (!done && is_target_alive(&target, evsel_list->core.threads)) {
+ 			nanosleep(&ts, NULL);
+-			if (!is_target_alive(&target, evsel_list->core.threads))
+-				break;
+ 			if (timeout || handle_interval(interval, &times))
+ 				break;
+ 		}
+-- 
+2.24.1
+
 
