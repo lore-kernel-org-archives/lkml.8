@@ -2,134 +2,127 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD47CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B53A420775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3812F206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jqFRszdp"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Nf9RGT2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgGHMEq (ORCPT
+        id S1728994AbgGHMFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728979AbgGHMC2 (ORCPT
+        Wed, 8 Jul 2020 08:05:31 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9010 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728907AbgGHMFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:02:28 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99599C08E6DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:02:28 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id a6so3831700wmm.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Oudq2oeculi6K4POMA0xfQMiSgZLhEbNGoOFwG0ADmE=;
-        b=jqFRszdpAMk/WEosA8vCIRplw1s1iZVrYBQi444fVIoA249wMXPC1qA438UH/pbuQP
-         Y10ZiE8f7eoJFYP7Cg3TfSow5vMIIKrfp4BoWdH+JPlXnbdl81a5gGetvj1SYKBgNf4F
-         D35LtipJgz5JBrVEq+XnPNNiOHGzFPmjAwzdsQDMSptzo/0L1uaqMjWCMQSk2NEpk//M
-         dZDsHlJINjfzhUqIRcSIdEAIWl/KwTxs3zuFSFQIS6xfqMoPsiLbmJS8520VaOUnJdPl
-         7iYbyatQKg/SdPNXYUQKn0Efp4F0tDOkI3pFXy8P79jDnb/eHuubmfN6cdgpM2dB5H3d
-         FF7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Oudq2oeculi6K4POMA0xfQMiSgZLhEbNGoOFwG0ADmE=;
-        b=BMwyWkcGOxu4k1UkBSjoVvAwFT5yMELf7nHd/oExkCDNEK/4w3+8fjP/FxXB8eG62m
-         mvmEyfv6OsIHfaHOIdb5+5rJcXg0dMKXjY/xnUIZLw/HMkrgRiyNdTwT6WFEtpn0SHot
-         YwYgVFEo4LelcwVBZSBuws4W1mOQxIwFnr77iMxdO3ulVJPtvC1BjM8EL1A0F0dTsRiR
-         X5UL1N1VP5s4i23Tnnl4k4PlsMs2k5NHltIQiC1XOFmLmOBO5Tim/KDLf0ZTq5XShW3F
-         YzbsMdRrGxVwPG4uj1Tpa1ws5LZ17ZyxHreEztAiaOV2Sn24WwYfhyTcix0Lav1KPUVT
-         otJw==
-X-Gm-Message-State: AOAM530jr0R99pWvmfg3bVLiQ7wkgukqZtbQBQplksw6XROdyDJbaL77
-        NyOxjrWHTrs9uHWD9HOXAyYy8Q==
-X-Google-Smtp-Source: ABdhPJzYNIcclovtnQ3AJIvggPGf90KHk3jlI7m3GaG1Us2M/TmmiUx/g/jjRI1O0K985J5D3nwqIQ==
-X-Received: by 2002:a1c:2842:: with SMTP id o63mr8902604wmo.169.1594209747310;
-        Wed, 08 Jul 2020 05:02:27 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:02:26 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 02/30] include: scsi: scsi_transport_fc: Match HBA Attribute Length with HBAAPI V2.0 definitions
-Date:   Wed,  8 Jul 2020 13:01:53 +0100
-Message-Id: <20200708120221.3386672-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200708120221.3386672-1-lee.jones@linaro.org>
-References: <20200708120221.3386672-1-lee.jones@linaro.org>
+        Wed, 8 Jul 2020 08:05:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f05b61f0000>; Wed, 08 Jul 2020 05:03:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 08 Jul 2020 05:05:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 08 Jul 2020 05:05:30 -0700
+Received: from [10.26.73.185] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul
+ 2020 12:05:24 +0000
+Subject: Re: [PATCH v10 1/5] iommu/arm-smmu: move TLB timeout and spin count
+ macros
+To:     Krishna Reddy <vdumpa@nvidia.com>, <joro@8bytes.org>,
+        <will@kernel.org>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
+        <treding@nvidia.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
+        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
+        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
+        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
+        <nicoleotsuka@gmail.com>
+References: <20200708050017.31563-1-vdumpa@nvidia.com>
+ <20200708050017.31563-2-vdumpa@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <f078a879-0779-2bae-19d6-8537493f7124@nvidia.com>
+Date:   Wed, 8 Jul 2020 13:05:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200708050017.31563-2-vdumpa@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594209823; bh=39Xiwm/BPHYEB0uxotS0GtnjIsBpeBmuTtn4lOHl6Js=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Nf9RGT2xJJ493EJfEKuoILphz9FeltPWfENInDfdF38rOvZ8dpqygPuRM3VIE7GQw
+         hg31ELt6ijAW7k7IOl/NTTS4KDPspvb1Q2VlF6WUH4UpgmG2dQ4lJ0bYK/yQTcydDv
+         cFDzQrlgKNbZU4jotTnM+CAzxR2ZVnEIl+JZ/UX9eoABGYkW4B6UAyS++90FjAotqi
+         OGgycWRgcBM3001e9Ryzs49IlxE4FoPAv7+A4FDz6eFBt50n6OvnPToiMHCeMj6W3l
+         pWqg2DdUa76gPBDOTe39cnNJ2n/8j4Bfai/yMISyyj2mTX0xpUS/rsyocDSXkJMJaF
+         /Sokri/GcxGpw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to 'include/scsi/scsi_transport_fc.h':
 
- "Attributes are based on HBAAPI V2.0 definitions"
+On 08/07/2020 06:00, Krishna Reddy wrote:
+> Move TLB timeout and spin count macros to header file to
+> allow using the same from vendor specific implementations.
+> 
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> ---
+>  drivers/iommu/arm-smmu.c | 3 ---
+>  drivers/iommu/arm-smmu.h | 2 ++
+>  2 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 243bc4cb2705..d2054178df35 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -52,9 +52,6 @@
+>   */
+>  #define QCOM_DUMMY_VAL -1
+>  
+> -#define TLB_LOOP_TIMEOUT		1000000	/* 1s! */
+> -#define TLB_SPIN_COUNT			10
+> -
+>  #define MSI_IOVA_BASE			0x8000000
+>  #define MSI_IOVA_LENGTH			0x100000
+>  
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index d172c024be61..c7d0122a7c6c 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -236,6 +236,8 @@ enum arm_smmu_cbar_type {
+>  /* Maximum number of context banks per SMMU */
+>  #define ARM_SMMU_MAX_CBS		128
+>  
+> +#define TLB_LOOP_TIMEOUT		1000000	/* 1s! */
+> +#define TLB_SPIN_COUNT			10
+>  
+>  /* Shared driver definitions */
+>  enum arm_smmu_arch_version {
+> 
 
-... so it seems sane to match the 'HBA Attribute Length' to them.
 
-If we don't, the compiler complains that the copied data will be truncated.
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 
-Fixes the following W=1 kernel build warning(s):
+Thanks!
+Jon
 
- In file included from include/linux/bitmap.h:9,
- from include/linux/cpumask.h:12,
- from include/linux/smp.h:13,
- from include/linux/percpu.h:7,
- from include/scsi/libfc.h:13,
- from drivers/scsi/libfc/fc_elsct.c:17:
- In function ‘strncpy’,
- inlined from ‘fc_ct_ms_fill.constprop’ at include/scsi/fc_encode.h:263:3:
- include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ output may be truncated copying 64 bytes from a string of length  79 [-Wstringop-truncation]
- 297 | #define __underlying_strncpy __builtin_strncpy
- | ^
- include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
- 307 | return __underlying_strncpy(p, q, size);
- | ^~~~~~~~~~~~~~~~~~~~
- In function ‘strncpy’,
- inlined from ‘fc_ct_ms_fill.constprop’ at include/scsi/fc_encode.h:275:3:
- include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ output may be truncated copying 64 bytes from a string of length 79 [-Wstringop-truncation]
- 297 | #define __underlying_strncpy __builtin_strncpy
- | ^
- include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
- 307 | return __underlying_strncpy(p, q, size);
- | ^~~~~~~~~~~~~~~~~~~~
-
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- include/scsi/fc/fc_ms.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/scsi/fc/fc_ms.h b/include/scsi/fc/fc_ms.h
-index 800d53dc94705..9e273fed0a85f 100644
---- a/include/scsi/fc/fc_ms.h
-+++ b/include/scsi/fc/fc_ms.h
-@@ -63,8 +63,8 @@ enum fc_fdmi_hba_attr_type {
-  * HBA Attribute Length
-  */
- #define FC_FDMI_HBA_ATTR_NODENAME_LEN		8
--#define FC_FDMI_HBA_ATTR_MANUFACTURER_LEN	64
--#define FC_FDMI_HBA_ATTR_SERIALNUMBER_LEN	64
-+#define FC_FDMI_HBA_ATTR_MANUFACTURER_LEN	80
-+#define FC_FDMI_HBA_ATTR_SERIALNUMBER_LEN	80
- #define FC_FDMI_HBA_ATTR_MODEL_LEN		256
- #define FC_FDMI_HBA_ATTR_MODELDESCR_LEN		256
- #define FC_FDMI_HBA_ATTR_HARDWAREVERSION_LEN	256
 -- 
-2.25.1
-
+nvpublic
