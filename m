@@ -2,143 +2,247 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D9FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4C3206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34A620720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EIzmcXfU"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FiZM7TTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgGHTdM (ORCPT
+        id S1726733AbgGHTdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgGHTdF (ORCPT
+        Wed, 8 Jul 2020 15:33:18 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:32996 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726478AbgGHTc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:33:05 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 643FAC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 12:33:05 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id q8so48285415iow.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:33:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=slImY14f0rNlEWIkm1VGpH6ry5mubIzN1YXFRSQUYYw=;
-        b=EIzmcXfUjvt2TpgoLMvmOT/1wauSIofM4ahX4qssit2mGp/aZJvZpH0CRIzLFtLSzj
-         6kOGwZNSPgSre7jg2e413VgkxMXoVHdCL2ISAnaA7VDlGOgsOXE67V7PkS+g2IrVAPpM
-         4RDM2PSqPHKBq7sucj1es79e+9iuSaSUercAkwFBm+PTQ/TWXGBAfqkJWSkC7i5fA8EX
-         pdC8XtamtPprKBVLrjxBiPVyfIKH9tNEPD1PeHISshRyle6SIZnT9Aa8V131VZ5g48zs
-         59t53fKWZnIRKv8irTmRNGVXDECNokzdTN08hCWuJgj9+wO5jjZcv85b8NjobvZWHKce
-         xrpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=slImY14f0rNlEWIkm1VGpH6ry5mubIzN1YXFRSQUYYw=;
-        b=cWlMkZ9mNfAz3Tp0m2WlJp2fX54AY2fqSrqjejSTB4znAkMbsKbpt7esWejg18pLin
-         f3l9ov658/kMegLeejydNXJd0r5Ds3XK276UictrEJXkUflFzdAfQZ0rlvlY4F1o/gBz
-         Lij7eneWqfF/KDAPL6X+rWqDf44JFfriyc+Gwn77mzH7K2OwvWDOODZbN9HvV5A0EIKk
-         GMfiab2c/YND18oxmHuPqYt9YUPbkRNh+FZwh18vYnKExLuV2AVxniUWoeaUwskY8Nup
-         j2VKkryx4hdr+QPBmbU1+ruKsHmoHwE5QhdiNWphm74c7VI23kq+D/edF/G2TBJ1CJWB
-         yBfw==
-X-Gm-Message-State: AOAM533XSKF/QoMFdyYNuIC+6xmNfTP/swajTWj3GzxQZHbJZMfFnMr/
-        51uO4iBQsWUIy5eqp9dkmLB+dJu9DHfjr/caU5uBBg==
-X-Google-Smtp-Source: ABdhPJzDCnsVGm3VcsqdzLHzVCHdu3/UfHN/Is45+S8jIg9IrJQNXCoiom79Lh+8ZiI4+GAHi9UzpqcSFOyp8/SmOGg=
-X-Received: by 2002:a5e:cb42:: with SMTP id h2mr37795277iok.43.1594236784442;
- Wed, 08 Jul 2020 12:33:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200702221237.2517080-1-abhishekbh@google.com>
- <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com> <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
- <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com>
- <20200703114037.GD2999146@linux.ibm.com> <CAD=FV=XRbrFqSbR619h+9HXNyrYNbqfBF2e-+iUZco9qQ8Wokg@mail.gmail.com>
- <20200705152304.GE2999146@linux.ibm.com> <5d2ccf3d-b473-cf30-b863-e29bb33b7284@redhat.com>
- <CA+noqojih03kKsWs33EUMV4H6RkWSRSQD=DHa9pAQ03yiz2GtQ@mail.gmail.com>
- <48f82669-f1ff-0f5e-e531-ebbd151205f9@redhat.com> <CA+noqoj70jThJ-N9DhWi8wnCLueJNfYKEU72HaMjSsMhJQEzJA@mail.gmail.com>
- <f8e84764-1cc7-c4e5-4e4f-4b907204a374@redhat.com>
-In-Reply-To: <f8e84764-1cc7-c4e5-4e4f-4b907204a374@redhat.com>
-From:   Abhishek Bhardwaj <abhishekbh@google.com>
-Date:   Wed, 8 Jul 2020 12:32:27 -0700
-Message-ID: <CA+noqoh90h3Mtk_3++bnMGMYyEGmUUq09R1k2WzCUbKX1jgQXQ@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
- cache flush mode
-To:     Waiman Long <longman@redhat.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Doug Anderson <dianders@google.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 8 Jul 2020 15:32:56 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id D2C2830C0C0;
+        Wed,  8 Jul 2020 12:32:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com D2C2830C0C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1594236774;
+        bh=hlRwJ5Po0eNKr6+fczA9EkS8GHnSIb+sMhUIyzrr570=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FiZM7TTaqJeqCb364icTaOB2g+H+ZcyNq8Jn61XBwXSPjZgryq8SDzhiXdNllW0Dg
+         w8V/OaLmBSpO4r2t4Jj1tTQcPSwnIkBJ09ykNct+HManS3BWdLd257WQnlRWVtPxi7
+         2lJ1e91FCHHpl8nezE7KEDuOFaJOEed50cK9c+pw=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 65CA1140069;
+        Wed,  8 Jul 2020 12:32:53 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v7 09/12] PCI: brcmstb: Set additional internal memory DMA viewport sizes
+Date:   Wed,  8 Jul 2020 15:32:02 -0400
+Message-Id: <20200708193219.47134-10-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200708193219.47134-1-james.quinlan@broadcom.com>
+References: <20200708193219.47134-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 8:14 AM Waiman Long <longman@redhat.com> wrote:
->
-> On 7/5/20 5:51 PM, Abhishek Bhardwaj wrote:
->
-> That is why I said a comment will have to be added to highlight this
-> dependency. For instance,
->
-> +/*
-> + * Three of the enums are explicitly assigned as the KVM_VMENTRY_L1D_FLUSH
-> + * config entry in arch/x86/kvm/Kconfig depends on these values.
-> + */
->   enum vmx_l1d_flush_state {
->          VMENTER_L1D_FLUSH_AUTO,
-> -       VMENTER_L1D_FLUSH_NEVER,
-> -       VMENTER_L1D_FLUSH_COND,
-> -       VMENTER_L1D_FLUSH_ALWAYS,
-> +       VMENTER_L1D_FLUSH_NEVER = 1,
-> +       VMENTER_L1D_FLUSH_COND = 2,
-> +       VMENTER_L1D_FLUSH_ALWAYS = 3,
->          VMENTER_L1D_FLUSH_EPT_DISABLED,
->          VMENTER_L1D_FLUSH_NOT_REQUIRED,
->   };
->
-> Of course, this is just a suggestion.
->
-> I'd rather avoid this dependency. However, if people are okay with the
-> CONFIG option then I am happy to oblige with whatever people agree on.
-> Can a maintainer chime in ? Waiman if you're the final authority on
-> this, will you accept the patch if I incorporated your suggestion ?
->
-> It is fine if you think this is not what you want.
->
-> BTW, I am not a maintainer. However, no maintainer will give pre-approval. At least, you have to give the reason why this patch is needed in the patch itself. Before that happens, I don't see how it will get merged upstream.
+The Raspberry Pi (RPI) is currently the only chip using this driver
+(pcie-brcmstb.c).  There, only one memory controller is used, without an
+extension region, and the SCB0 viewport size is set to the size of the
+first and only dma-range region.  Other BrcmSTB SOCs have more complicated
+memory configurations that require setting additional viewport sizes.
 
-I just updated the patch with the reasoning in the commit message -
-https://lkml.org/lkml/2020/7/8/1325
+BrcmSTB PCIe controllers are intimately connected to the memory
+controller(s) on the SOC.  The SOC may have one to three memory
+controllers; they are indicated by the term SCBi.  Each controller has a
+base region and an optional extension region.  In physical memory, the base
+and extension regions of a controller are not adjacent, but in PCIe-space
+they are.
 
+There is a "viewport" for each memory controller that allows DMA from
+endpoint devices.  Each viewport's size must be set to a power of two, and
+that size must be equal to or larger than the amount of memory each
+controller supports which is the sum of base region and its optional
+extension.  Further, the 1-3 viewports are also adjacent in PCIe-space.
 
->
-> Cheers,
-> Longman
+Unfortunately the viewport sizes cannot be ascertained from the
+"dma-ranges" property so they have their own property, "brcm,scb-sizes".
+This is because dma-range information does not indicate what memory
+controller it is associated.  For example, consider the following case
+where the size of one dma-range is 2GB and the second dma-range is 1GB:
 
+    /* Case 1: SCB0 size set to 4GB */
+    dma-range0: 2GB (from memc0-base)
+    dma-range1: 1GB (from memc0-extension)
 
+    /* Case 2: SCB0 size set to 2GB, SCB1 size set to 1GB */
+    dma-range0: 2GB (from memc0-base)
+    dma-range1: 1GB (from memc0-extension)
 
+By just looking at the dma-ranges information, one cannot tell which
+situation applies. That is why an additional property is needed.  Its
+length indicates the number of memory controllers being used and each value
+indicates the viewport size.
+
+Note that the RPI DT does not have a "brcm,scb-sizes" property value,
+as it is assumed that it only requires one memory controller and no
+extension.  So the optional use of "brcm,scb-sizes" will be backwards
+compatible.
+
+One last layer of complexity exists: all of the viewports sizes must be
+added and rounded up to a power of two to determine what the "BAR" size is.
+Further, an offset must be given that indicates the base PCIe address of
+this "BAR".  The use of the term BAR is typically associated with endpoint
+devices, and the term is used here because the PCIe HW may be used as an RC
+or an EP.  In the former case, all of the system memory appears in a single
+"BAR" region in PCIe memory.  As it turns out, BrcmSTB PCIe HW is rarely
+used in the EP role and its system of mapping memory is an artifact that
+requires multiple dma-ranges regions.
+
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++-------
+ 1 file changed, 50 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index bfc2542d54a8..a65ce8d3580f 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -57,6 +57,8 @@
+ #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK	0x300000
+ #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128		0x0
+ #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK		0xf8000000
++#define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK		0x07c00000
++#define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK		0x0000001f
+ 
+ #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
+ #define PCIE_MEM_WIN0_LO(win)	\
+@@ -154,6 +156,7 @@
+ #define SSC_STATUS_OFFSET		0x1
+ #define SSC_STATUS_SSC_MASK		0x400
+ #define SSC_STATUS_PLL_LOCK_MASK	0x800
++#define PCIE_BRCM_MAX_MEMC		3
+ 
+ #define IDX_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_INDEX])
+ #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
+@@ -260,6 +263,8 @@ struct brcm_pcie {
+ 	const int		*reg_field_info;
+ 	enum pcie_type		type;
+ 	struct reset_control	*rescal;
++	int			num_memc;
++	u64			memc_size[PCIE_BRCM_MAX_MEMC];
+ };
+ 
+ /*
+@@ -715,22 +720,44 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+ 							u64 *rc_bar2_offset)
+ {
+ 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+-	struct device *dev = pcie->dev;
+ 	struct resource_entry *entry;
++	struct device *dev = pcie->dev;
++	u64 lowest_pcie_addr = ~(u64)0;
++	int ret, i = 0;
++	u64 size = 0;
+ 
+-	entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
+-	if (!entry)
+-		return -ENODEV;
++	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
++		u64 pcie_beg = entry->res->start - entry->offset;
+ 
++		size += entry->res->end - entry->res->start + 1;
++		if (pcie_beg < lowest_pcie_addr)
++			lowest_pcie_addr = pcie_beg;
++	}
+ 
+-	/*
+-	 * The controller expects the inbound window offset to be calculated as
+-	 * the difference between PCIe's address space and CPU's. The offset
+-	 * provided by the firmware is calculated the opposite way, so we
+-	 * negate it.
+-	 */
+-	*rc_bar2_offset = -entry->offset;
+-	*rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
++	if (lowest_pcie_addr == ~(u64)0) {
++		dev_err(dev, "DT node has no dma-ranges\n");
++		return -EINVAL;
++	}
++
++	ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
++						  PCIE_BRCM_MAX_MEMC);
++
++	if (ret <= 0) {
++		/* Make an educated guess */
++		pcie->num_memc = 1;
++		pcie->memc_size[0] = 1 << fls64(size - 1);
++	} else {
++		pcie->num_memc = ret;
++	}
++
++	/* Each memc is viewed through a "port" that is a power of 2 */
++	for (i = 0, size = 0; i < pcie->num_memc; i++)
++		size += pcie->memc_size[i];
++
++	/* System memory starts at this address in PCIe-space */
++	*rc_bar2_offset = lowest_pcie_addr;
++	/* The sum of all memc views must also be a power of 2 */
++	*rc_bar2_size = 1ULL << fls64(size - 1);
+ 
+ 	/*
+ 	 * We validate the inbound memory view even though we should trust
+@@ -782,12 +809,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	void __iomem *base = pcie->base;
+ 	struct device *dev = pcie->dev;
+ 	struct resource_entry *entry;
+-	unsigned int scb_size_val;
+ 	bool ssc_good = false;
+ 	struct resource *res;
+ 	int num_out_wins = 0;
+ 	u16 nlw, cls, lnksta;
+-	int i, ret;
++	int i, ret, memc;
+ 	u32 tmp, aspm_support;
+ 
+ 	/* Reset the bridge */
+@@ -827,11 +853,17 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	writel(upper_32_bits(rc_bar2_offset),
+ 	       base + PCIE_MISC_RC_BAR2_CONFIG_HI);
+ 
+-	scb_size_val = rc_bar2_size ?
+-		       ilog2(rc_bar2_size) - 15 : 0xf; /* 0xf is 1GB */
+ 	tmp = readl(base + PCIE_MISC_MISC_CTRL);
+-	u32p_replace_bits(&tmp, scb_size_val,
+-			  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
++	for (memc = 0; memc < pcie->num_memc; memc++) {
++		u32 scb_size_val = ilog2(pcie->memc_size[memc]) - 15;
++
++		if (memc == 0)
++			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
++		else if (memc == 1)
++			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK);
++		else if (memc == 2)
++			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK);
++	}
+ 	writel(tmp, base + PCIE_MISC_MISC_CTRL);
+ 
+ 	/*
 -- 
-Abhishek
+2.17.1
+
