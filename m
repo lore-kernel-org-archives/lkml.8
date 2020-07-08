@@ -2,138 +2,92 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6965EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55783C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4616B20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC2820760
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sXH21J65"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="im5l+vpB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgGHHsx (ORCPT
+        id S1727777AbgGHHtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:48:53 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59525 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgGHHsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:48:53 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1rz65Qqxz9s1x;
-        Wed,  8 Jul 2020 17:48:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594194531;
-        bh=OjgZUHAmueWQEFkZkgyauhtaE/8xJdQ/vOjw8B1aDBk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sXH21J65Qj7tNdNfUG/gS3IQP19UMun80NpdXkZ6V0frCJpPUnsgQjCx4imlQ1Vf+
-         VBFZX8UjA64TXJeY0T/XUNUaeZiRh4cDUesMgMJ8osFGx1v1cmc9nKM+/ZFuSykxMa
-         K3E7YEXuoZvk5d4MkRsA0IZkKMHb9MUeJX9HIM0FAqke/cKFVeeSvaD/FAqI4Z0ZXM
-         cz1eH0fEJcWkSnpy0QGMRpxRE+AdmLuf6vCFld48+3KMf0PDoGuAFkkAF/tDenHRVF
-         uqUsgDjCl1Jq0AOz2nq18QKnBCYsV0USL5YVqlxne37h0NQAJ9eChUbew6yzcO5ooj
-         7YRycHphJvWVA==
-Date:   Wed, 8 Jul 2020 17:48:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>, David Sterba <dsterba@suse.cz>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>
-Subject: linux-next: manual merge of the set_fs tree with the btrfs tree
-Message-ID: <20200708174850.7d664e11@canb.auug.org.au>
+        Wed, 8 Jul 2020 03:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgGHHtu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:49:50 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FAC3C08C5DC;
+        Wed,  8 Jul 2020 00:49:50 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q7so39771244ljm.1;
+        Wed, 08 Jul 2020 00:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FUTB6Gj5NIh2r6okp5YAqa694OkQrnNvKWiwMgZTNfY=;
+        b=im5l+vpBXfSW+5v/TNVzMl36mq15su47KPUzHMFSTBTMSApucZOiueGMRS7z/iEmzy
+         WPdWdBsI/N8fEjYnyT/gjixkdrxPo/6sMR0qyt0GMvkPSUDOzq8ehzinKFyipyYV1IOz
+         DQChFnxdM5IY8rhgklEjnGnkMIeB5YNjeNMhllJ+l3Jp30DYGUkOE8aZLRBbOwUK9eB0
+         1x6V51vtvYk0EwwpwhHQMOVD2P2d0tA9mCCWSMyIXBMkvLSb4Kz9V/uLFz/6yZDyhwk0
+         NRDzDrFtfmZYctLbG17z74M189pyg2lwAQF3NBcC85oYJUEEnvMhxmGeh1cz54vJY0wb
+         WKGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FUTB6Gj5NIh2r6okp5YAqa694OkQrnNvKWiwMgZTNfY=;
+        b=I6R8K4Xx9XNreBLNw7A3SKW4Qc17lBgAvm/FBT8GysKPsnTqjzCD8xcOQQz32efLMG
+         h5wEvs+TcImVVlxRvE8lpN2Z/AC0CCD0dI+EOaKAwlqMwv6AOBhvR/Ogp/SjK3NxUHUK
+         ILS7zyhAMfBSRDCUz53TwYeP5Ynrg1MXmZLApU4VYlGICmRWZ1b6QaQouu9Yk9XLR3kP
+         /PvZMAewC0PEAxwUUFt3O1gW3Uu6/zj/Ji2/FieSbg9cvwQS+vqGclYHKrlz49eNQ6Z4
+         VEfVAYV/q+HMzt0pDyFCmmrkRey/jb8CXmp86eTaUPX1ncUs9kGHVanbvEziiMRuzffL
+         FUqw==
+X-Gm-Message-State: AOAM533vG0y6oRSPCzc9bRLH9ooWOovCc6JD8RbXyGGFTEk4sIhJtEDI
+        QnCjDQV8Y/T28+sXcT+sNVNYjpp2
+X-Google-Smtp-Source: ABdhPJx6G982NPkYWEBvtVzULmONwk412bm0ahtXQBXpo7eh8PZW0660IfxNiznHIoCWlVzi6KmTuQ==
+X-Received: by 2002:a2e:9dc6:: with SMTP id x6mr25059652ljj.94.1594194588695;
+        Wed, 08 Jul 2020 00:49:48 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.googlemail.com with ESMTPSA id o1sm10129343lfi.92.2020.07.08.00.49.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 00:49:48 -0700 (PDT)
+Subject: Re: [PATCH v2] clk: tegra: pll: Improve PLLM enable-state detection
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200708074628.18173-1-digetx@gmail.com>
+Message-ID: <e9579336-cb9f-c266-cc6f-5ea877539db2@gmail.com>
+Date:   Wed, 8 Jul 2020 10:49:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0jW6s63NHg=grO/GT/tVjTh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200708074628.18173-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0jW6s63NHg=grO/GT/tVjTh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+08.07.2020 10:46, Dmitry Osipenko пишет:
+> -	return val & PLL_BASE_ENABLE ? 1 : 0;
+> +	return val & PLL_BASE_ENABLE;
 
-Hi all,
-
-Today's linux-next merge of the set_fs tree got a conflict in:
-
-  fs/btrfs/file.c
-
-between commit:
-
-  8d628ca164a3 ("btrfs: switch to iomap_dio_rw() for dio")
-
-from the btrfs tree and commit:
-
-  343f02a47b7e ("fs: default to generic_file_splice_read for files having -=
->read_iter")
-
-from the set_fs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/btrfs/file.c
-index 5dcd61b121cc,322cc65902d1..000000000000
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@@ -3541,27 -3504,9 +3541,26 @@@ static int btrfs_file_open(struct inod
-  	return generic_file_open(inode, filp);
-  }
- =20
- +static ssize_t btrfs_file_read_iter(struct kiocb *iocb, struct iov_iter *=
-to)
- +{
- +	ssize_t ret =3D 0;
- +
- +	if (iocb->ki_flags & IOCB_DIRECT) {
- +		struct inode *inode =3D file_inode(iocb->ki_filp);
- +
- +		inode_lock_shared(inode);
- +		ret =3D btrfs_direct_IO(iocb, to);
- +		inode_unlock_shared(inode);
- +		if (ret < 0)
- +			return ret;
- +	}
- +
- +	return generic_file_buffered_read(iocb, to, ret);
- +}
- +
-  const struct file_operations btrfs_file_operations =3D {
-  	.llseek		=3D btrfs_file_llseek,
- -	.read_iter      =3D generic_file_read_iter,
- +	.read_iter      =3D btrfs_file_read_iter,
-- 	.splice_read	=3D generic_file_splice_read,
-  	.write_iter	=3D btrfs_file_write_iter,
-  	.mmap		=3D btrfs_file_mmap,
-  	.open		=3D btrfs_file_open,
-
---Sig_/0jW6s63NHg=grO/GT/tVjTh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8FemIACgkQAVBC80lX
-0GxqJAf/ZgEM4WrcPWIDU5EeNA8SOTMtWVv3jzRuYVb/UZDJ2kfG3Qp8oxAojYM1
-nH/BeRkV/leJz2X/S7/1WX5Cl08zpR+hLqY51/seSin67H/Mv0EvWKeZ3ArtH06M
-F0NBWUiXzmdG+TZ4yd2k+mBEJP10K2jTszTg8ACehAj4cSzUI85LNhsOnCwlMIOT
-WXwupMiXTYVWx6rwPxc4eB4Zhq5yB6eU3EpHHkH3vZF00CyQYglD7+t6z/l7XIl9
-StHfWIiM5NAkRNc7Qqfes2U55JUsKa2+N2reVM3dJ13gP27xMGkCYoNAD+eUvxxs
-6RkQPijZQFBUk6TitKXXhVGQPml6zQ==
-=86pj
------END PGP SIGNATURE-----
-
---Sig_/0jW6s63NHg=grO/GT/tVjTh--
+This was unintended change that caught my eve only after sending out the
+email, woops :) Please let me make a v3 shortly.
