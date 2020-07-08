@@ -2,104 +2,82 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8A72078A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7262078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgGHGa4 (ORCPT
+        id S1729438AbgGHGcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 02:30:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57244 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbgGHGaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 02:30:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 746C6AC1D;
-        Wed,  8 Jul 2020 06:30:54 +0000 (UTC)
-Subject: Re: [PATCH 09/10] scsi: libfc: fc_disc: Fix-up some incorrectly
- referenced function parameters
-To:     Lee Jones <lee.jones@linaro.org>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20200707140055.2956235-1-lee.jones@linaro.org>
- <20200707140055.2956235-10-lee.jones@linaro.org>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <cd81c7d2-0a65-fb8e-d16f-350e93ed66ea@suse.de>
-Date:   Wed, 8 Jul 2020 08:30:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200707140055.2956235-10-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Jul 2020 02:32:19 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:33968 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726362AbgGHGcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 02:32:18 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-03 (Coremail) with SMTP id rQCowAD3ePioZQVfC8ppAw--.13022S2;
+        Wed, 08 Jul 2020 14:20:24 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, chris@zankel.net,
+        jcmvbkbc@gmail.com, linux-kernel@vger.kernel.org
+Cc:     linux-xtensa@linux-xtensa.org, Xu Wang <vulab@iscas.ac.cn>
+Subject: [PATCH] kernel: perf_event: use for_each_set_bit() to simplify the code
+Date:   Wed,  8 Jul 2020 06:20:23 +0000
+Message-Id: <20200708062023.7986-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: rQCowAD3ePioZQVfC8ppAw--.13022S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruryDCw1rGF18Zr18Jr1rCrg_yoWDJwc_JF
+        4xJa4kWF1Fkan0v34DJr4rtryFq398Ka4ruw1vgayDGr15W345Aw18J34UXrWUursa9w18
+        KF95WFZ8XF129jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb38FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+        Y2ka0xkIwI1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+        b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+        vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI
+        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73UjIFyTuYvjfU589NDUUUU
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCAQLA102YQ9nfwAAsZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 4:00 PM, Lee Jones wrote:
-> Fixes the following W=1 kernel build warning(s):
-> 
->   drivers/scsi/libfc/fc_disc.c:343: warning: Function parameter or member 'disc' not described in 'fc_disc_gpn_ft_req'
->   drivers/scsi/libfc/fc_disc.c:343: warning: Excess function parameter 'lport' description in 'fc_disc_gpn_ft_req'
->   drivers/scsi/libfc/fc_disc.c:380: warning: Function parameter or member 'disc' not described in 'fc_disc_gpn_ft_parse'
->   drivers/scsi/libfc/fc_disc.c:380: warning: Excess function parameter 'lport' description in 'fc_disc_gpn_ft_parse'
->   drivers/scsi/libfc/fc_disc.c:498: warning: Function parameter or member 'disc_arg' not described in 'fc_disc_gpn_ft_resp'
->   drivers/scsi/libfc/fc_disc.c:498: warning: Excess function parameter 'lp_arg' description in 'fc_disc_gpn_ft_resp'
-> 
-> Cc: Hannes Reinecke <hare@suse.de>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->   drivers/scsi/libfc/fc_disc.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
-> index 2b865c6423e29..428f40cfd1c36 100644
-> --- a/drivers/scsi/libfc/fc_disc.c
-> +++ b/drivers/scsi/libfc/fc_disc.c
-> @@ -337,7 +337,7 @@ static void fc_disc_error(struct fc_disc *disc, struct fc_frame *fp)
->   
->   /**
->    * fc_disc_gpn_ft_req() - Send Get Port Names by FC-4 type (GPN_FT) request
-> - * @lport: The discovery context
-> + * @disc: The discovery context
->    */
->   static void fc_disc_gpn_ft_req(struct fc_disc *disc)
->   {
-> @@ -370,7 +370,7 @@ static void fc_disc_gpn_ft_req(struct fc_disc *disc)
->   
->   /**
->    * fc_disc_gpn_ft_parse() - Parse the body of the dNS GPN_FT response.
-> - * @lport: The local port the GPN_FT was received on
-> + * @disc:  The descovery context
->    * @buf:   The GPN_FT response buffer
->    * @len:   The size of response buffer
->    *
-> @@ -488,7 +488,7 @@ static void fc_disc_timeout(struct work_struct *work)
->    * fc_disc_gpn_ft_resp() - Handle a response frame from Get Port Names (GPN_FT)
->    * @sp:	    The sequence that the GPN_FT response was received on
->    * @fp:	    The GPN_FT response frame
-> - * @lp_arg: The discovery context
-> + * @disc_arg: The discovery context
->    *
->    * Locking Note: This function is called without disc mutex held, and
->    *		 should do all its processing with the mutex held
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Using for_each_set_bit() to simplify the code.
 
-Cheers,
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ arch/xtensa/kernel/perf_event.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Hannes
+diff --git a/arch/xtensa/kernel/perf_event.c b/arch/xtensa/kernel/perf_event.c
+index 9bae79f70301..99fcd63ce597 100644
+--- a/arch/xtensa/kernel/perf_event.c
++++ b/arch/xtensa/kernel/perf_event.c
+@@ -362,9 +362,7 @@ irqreturn_t xtensa_pmu_irq_handler(int irq, void *dev_id)
+ 	struct xtensa_pmu_events *ev = this_cpu_ptr(&xtensa_pmu_events);
+ 	unsigned i;
+ 
+-	for (i = find_first_bit(ev->used_mask, XCHAL_NUM_PERF_COUNTERS);
+-	     i < XCHAL_NUM_PERF_COUNTERS;
+-	     i = find_next_bit(ev->used_mask, XCHAL_NUM_PERF_COUNTERS, i + 1)) {
++	for_each_set_bit(i, ev->used_mask, XCHAL_NUM_PERF_COUNTERS) {
+ 		uint32_t v = get_er(XTENSA_PMU_PMSTAT(i));
+ 		struct perf_event *event = ev->event[i];
+ 		struct hw_perf_event *hwc = &event->hw;
 -- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+2.17.1
+
