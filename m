@@ -2,118 +2,160 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE82C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B747AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7471E20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FFFE20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="NuIWqyja"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gwkq4+Hl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgGHE15 (ORCPT
+        id S1728294AbgGHEak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 00:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41172 "EHLO
+        Wed, 8 Jul 2020 00:30:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgGHE14 (ORCPT
+        with ESMTP id S1726313AbgGHEaj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 00:27:56 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F0FDC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 21:27:56 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id w16so48924066ejj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 21:27:56 -0700 (PDT)
+        Wed, 8 Jul 2020 00:30:39 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE0EDC08C5EE
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 21:30:38 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so1496723wml.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 21:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8dNw96B96eIbQP472P+15i/r4t0gFAYtc8zARUaecF0=;
-        b=NuIWqyjaegQ19QFyhYTJ0y36/0eMyFNfJBL+jmN/1SvmxqjSyG5lJHJdWcy9wXyg4M
-         zy7lOCo2bw1cinVxH1l3+0WrbURYr2eYuQNJEMnxBG3T4CgExMU46UqZQixd1aj78OUM
-         78/CptqirWWbUEI84ihTiqSnnw6yzzVair+mKB6+l4zzftMrRjKpPkMugswhpdluXKgJ
-         aoVSiSO57Cu3iMf+t6CNs56lDskou5ghNPRZMbdiMiQ41mUM5Re5Cw+4/KfHHF7dgIxH
-         /pgQXq91bIOxcuCa3VaYk2y7noic6S7FI7vxllIz77rUivHIylJMRIgHQ2C2LMe1MUQQ
-         J9aw==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=9z8AqNAtfLqJboxfTSuy4+9Gg/kN9QYsVqfQLWbeo4w=;
+        b=gwkq4+Hlakm3izkfm3Vx8ZZCM5LOzO3cymjOSh4+vM8T7cBwdjsaTUVd9kq/x6E+Nh
+         LNC4usHx3RpnjI9YfPVuOYlIHMxSq1nB5UkuqJzdB3PaMh+PFXIlNStED6a1DCPIfivL
+         ZGphzvNanNKVijraSFJb+UugoBCX9/HxIAv7Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8dNw96B96eIbQP472P+15i/r4t0gFAYtc8zARUaecF0=;
-        b=KEeze/+LZavv0qFuvvRmxeSQjh/mv922TvqBj2Y5yI3VEEF556Lu0cUw1PiFA/rrof
-         zwQ2eGL3SSJQVHrVieTiReik9+h17AxYjYIyrSdVl2n9GpAOHN6BtCXrUVQ7T9NRUyQV
-         gRsG5yqTmdwF6iCYmyCYJwJcYTs+jTYpdVNLLjLXsRYQeEy5hobkHorDmpiBVU/oOI4l
-         9sACZKuzDYMcujresBs2CaVi3eE3JSU/B2aGeGh1WkdaeKPVwwljZhErVP7/9JT0TmLZ
-         qQyry2wvLCZXyIxemBeEC1ZEoPSEj2VPC8rIVqvdiIo6hbmMTwVGF4O+AmXWUuL+U/Vy
-         LBkw==
-X-Gm-Message-State: AOAM530UjGQWDidEKPd4D9XCPPSIvUOyFZcU9kJdtYQPtYXP3k0/OHD0
-        r2p3Nt1R3ihtzIw5Lxj1P5+xfKyhmbu9vJ6vk/f2lA==
-X-Google-Smtp-Source: ABdhPJxJ12SOUFRzJMHcuTFgGn9kWF+1e1N3sSWVya5gGxKC/lxUJ29HEPrjNkOM8G1dgLBXhTdyibVCZ2vfYDKLGIg=
-X-Received: by 2002:a17:906:da0f:: with SMTP id fi15mr48990019ejb.237.1594182475031;
- Tue, 07 Jul 2020 21:27:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200707055917.143653-1-justin.he@arm.com> <20200707055917.143653-2-justin.he@arm.com>
- <20200707115454.GN5913@dhcp22.suse.cz> <AM6PR08MB406907F9F2B13DA6DC893AD9F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
- <CAPcyv4ipu4qwKhk4pzJ8nZB2sp+=AndahS8eCgUvFvVP6dEkeA@mail.gmail.com> <AM6PR08MB4069D0D1FD8FB31B6A56DDB5F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
-In-Reply-To: <AM6PR08MB4069D0D1FD8FB31B6A56DDB5F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 7 Jul 2020 21:27:43 -0700
-Message-ID: <CAPcyv4ivyJsyzcbkBWcqBYZMx3VdJF7+VPCNs177DU2rYqtz_A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid as EXPORT_SYMBOL_GPL
-To:     Justin He <Justin.He@arm.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=9z8AqNAtfLqJboxfTSuy4+9Gg/kN9QYsVqfQLWbeo4w=;
+        b=XzqAnVWrvlxVKWzcIXkqvR2OPWN/QK8BiPBBkWFQ9UDkudWhFSgJlcieaRQ4DF9K3H
+         iB69lXvke7ZoMfFsjhfzBi7COxNeWK7l8skcHBlpjIP5GsOj+fy083kSYJQPJovnFLEb
+         wMU2qGYuacHgLUk9ZQG0oYLLOi9YnpurQv36IwhZSWoWIM23Z6KeRVybe54mIfdOljdq
+         QLFMTNm+S6Bp4C2tyNk1iHG/sUa+3tY/cVFiLftjtesTC4GLeFpk4SCaXkXnMcRNnJgn
+         JJLSs4hd/dD6GaeKWj1S4+TULEBZi381b962j10oo2qkJUGsFepBmIcsQiPnjDYX05N9
+         WkQg==
+X-Gm-Message-State: AOAM531XulkbAs/9YoIrCQ+PInrmuSPgr78D6yXAJfTtWZw/WNiGMEmT
+        /zrZzO1ICtcR4IfuhxjWbzB01A==
+X-Google-Smtp-Source: ABdhPJxz1HCKFHKGJAHeBxv2ayO0myaozG6pLXUA04b6prEWm0Cz5Rezi42VTrPu7hajJjMaPp0QIA==
+X-Received: by 2002:a7b:cd09:: with SMTP id f9mr7627559wmj.160.1594182637061;
+        Tue, 07 Jul 2020 21:30:37 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id q1sm3577207wro.82.2020.07.07.21.30.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 21:30:36 -0700 (PDT)
+Subject: Re: [PATCH v10 7/9] misc: bcm-vk: add Broadcom VK driver
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Kaly Xin <Kaly.Xin@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Desmond Yan <desmond.yan@broadcom.com>,
+        James Hu <james.hu@broadcom.com>
+References: <20200706232309.12010-1-scott.branden@broadcom.com>
+ <20200706232309.12010-8-scott.branden@broadcom.com>
+ <202007071700.C567BA7B@keescook>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <400ebe0d-6b04-a211-7d80-cc8b0bf4d7df@broadcom.com>
+Date:   Tue, 7 Jul 2020 21:30:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <202007071700.C567BA7B@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 9:08 PM Justin He <Justin.He@arm.com> wrote:
-[..]
-> > Especially for architectures that use memblock info for numa info
-> > (which seems to be everyone except x86) why not implement a generic
-> > memory_add_physaddr_to_nid() that does:
-> >
-> > int memory_add_physaddr_to_nid(u64 addr)
-> > {
-> >         unsigned long start_pfn, end_pfn, pfn = PHYS_PFN(addr);
-> >         int nid;
-> >
-> >         for_each_online_node(nid) {
-> >                 get_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
-> >                 if (pfn >= start_pfn && pfn <= end_pfn)
-> >                         return nid;
-> >         }
-> >         return NUMA_NO_NODE;
-> > }
->
-> Thanks for your suggestion,
-> Could I wrap the codes and let memory_add_physaddr_to_nid simply invoke
-> phys_to_target_node()?
 
-I think it needs to be the reverse. phys_to_target_node() should call
-memory_add_physaddr_to_nid() by default, but fall back to searching
-reserved memory address ranges in memblock. See phys_to_target_node()
-in arch/x86/mm/numa.c. That one uses numa_meminfo instead of memblock,
-but the principle is the same i.e. that a target node may not be
-represented in memblock.memory, but memblock.reserved. I'm working on
-a patch to provide a function similar to get_pfn_range_for_nid() that
-operates on reserved memory.
+
+On 2020-07-07 5:03 p.m., Kees Cook wrote:
+> On Mon, Jul 06, 2020 at 04:23:07PM -0700, Scott Branden wrote:
+>> Add Broadcom VK driver offload engine.
+>> This driver interfaces to the VK PCIe offload engine to perform
+>> should offload functions as video transcoding on multiple streams
+>> in parallel.  VK device is booted from files loaded using
+>> request_firmware_into_buf mechanism.  After booted card status is updated
+>> and messages can then be sent to the card.
+>> Such messages contain scatter gather list of addresses
+>> to pull data from the host to perform operations on.
+>>
+>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>> Signed-off-by: Desmond Yan <desmond.yan@broadcom.com>
+> nit: your S-o-b chain doesn't make sense (I would expect you at the end
+> since you're sending it and showing as the Author). Is it Co-developed-by?
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+Yes, Co-developed-by.  Will adjust.
+>
+>> [...]
+>> +
+>> +		max_buf = SZ_4M;
+>> +		bufp = dma_alloc_coherent(dev,
+>> +					  max_buf,
+>> +					  &boot_dma_addr, GFP_KERNEL);
+>> +		if (!bufp) {
+>> +			dev_err(dev, "Error allocating 0x%zx\n", max_buf);
+>> +			ret = -ENOMEM;
+>> +			goto err_buf_out;
+>> +		}
+>> +
+>> +		bcm_vk_buf_notify(vk, bufp, boot_dma_addr, max_buf);
+>> +	} else {
+>> +		dev_err(dev, "Error invalid image type 0x%x\n", load_type);
+>> +		ret = -EINVAL;
+>> +		goto err_buf_out;
+>> +	}
+>> +
+>> +	ret = request_partial_firmware_into_buf(&fw, filename, dev,
+>> +						bufp, max_buf, 0);
+> Unless I don't understand what's happening here, this needs to be
+> reordered if you're going to keep Mimi happy and disallow the device
+> being able to see the firmware before it has been verified. (i.e. please
+> load the firmware before mapping DMA across the buffer.)
+I don't understand your concern here.  We request partial firmware into 
+a buffer that we allocated.
+After loading it we signal the card the firmware has been loaded into 
+that memory region.
+The card then pulls the data into its internal memory.  And, 
+authenticates it.
+
+Even if the card randomly read and writes to that buffer it shouldn't 
+matter to the linux kernel security subsystem.
+It passed the security check already when placed in the buffer.
+If there is a concern could we add an "nosecurity" 
+request_partial_firmware_into_buf instead as there is no need for any 
+security on this particular request?
+
