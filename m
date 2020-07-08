@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07238C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0822C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBD9F206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC805206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594223039;
-	bh=jWTJMZSpFMXv1eN4iBy7F5NdaPw4rqs4cZcmn3E18Tk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=psRe9YDY61aCEm5aR5XBD0k54zw+A6RQytoeKyqKB69GpYyk65a/6zfZn6ynm3WdZ
-	 453hrAGmwy4piFys0MNrxA287npC+mPJFsWOgP3pdAOkrAkkgy5gdClOIFA5VJf6j1
-	 jVAUJyvWS1qrRmsryp3RVSE3k3YoEcnAV3Om8F0Y=
+	s=default; t=1594223045;
+	bh=cV5vFB3/El2GAgoC0rrFO8na4il1gFH8qOCX0BK2jQY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V49Y3Mn4AljmzWYacVes8gTDU01Kudfp/HgHC35PvSH/Ua1il5CmB3W0KNL+Wpd3V
+	 iI8xvKa6+rSbAGUnKfNx/Zp2dZmbaLys/wIqvq+oPsBGSaWFzqjE4mqcnwV+AzF0ap
+	 9gHQGaLatAkovfjoSEuP1dmU7SziaGYnlEO0gdCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730855AbgGHPn6 (ORCPT
+        id S1730861AbgGHPoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48310 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730478AbgGHPlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:41:37 -0400
+        id S1730451AbgGHPlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:41:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DC6220720;
-        Wed,  8 Jul 2020 15:41:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CE8F206DF;
+        Wed,  8 Jul 2020 15:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222897;
-        bh=jWTJMZSpFMXv1eN4iBy7F5NdaPw4rqs4cZcmn3E18Tk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=T7SYlan+0ox6C6XVd55j1qtgIkdQ58G0VMA0nILqxM/m7spiH+IXBrOPzPQXD8GQZ
-         BisdsHLoJoQYQd6fjtT73tvFO/cFVnvQCY36/hbjQO5N5lBYcTcoFjpbCRoqI6SsxB
-         8QYoJiypzJ/TImqz2sARjsMcDsUqBJeLB7+zArsU=
+        s=default; t=1594222891;
+        bh=cV5vFB3/El2GAgoC0rrFO8na4il1gFH8qOCX0BK2jQY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aKF1q4/w8zFkztZWy4s7QagTgPrcdHMXi3g5Apl601cSdoX2mrHES2kNh97IykUCc
+         20QU0pJJwcANZzJE6h3xoXvFIthbXGzcVHwUfhMtM97ATQUq0rFbpEJ06tvm1KqK1g
+         coPjCrCQL3zyqKsy16niBDr8D27+fH+sh2tvt2ug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bernard Zhao <bernard@vivo.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 01/16] drm/msm: fix potential memleak in error branch
-Date:   Wed,  8 Jul 2020 11:41:20 -0400
-Message-Id: <20200708154135.3199907-1-sashal@kernel.org>
+Cc:     Hou Tao <houtao1@huawei.com>, Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 11/30] blk-mq-debugfs: update blk_queue_flag_name[] accordingly for new flags
+Date:   Wed,  8 Jul 2020 11:40:57 -0400
+Message-Id: <20200708154116.3199728-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200708154116.3199728-1-sashal@kernel.org>
+References: <20200708154116.3199728-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,39 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Zhao <bernard@vivo.com>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit 177d3819633cd520e3f95df541a04644aab4c657 ]
+[ Upstream commit bfe373f608cf81b7626dfeb904001b0e867c5110 ]
 
-In function msm_submitqueue_create, the queue is a local
-variable, in return -EINVAL branch, queue didn`t add to ctx`s
-list yet, and also didn`t kfree, this maybe bring in potential
-memleak.
+Else there may be magic numbers in /sys/kernel/debug/block/*/state.
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
-[trivial commit msg fixup]
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_submitqueue.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ block/blk-mq-debugfs.c | 3 +++
+ include/linux/blkdev.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
-index 001fbf537440a..a1d94be7883a0 100644
---- a/drivers/gpu/drm/msm/msm_submitqueue.c
-+++ b/drivers/gpu/drm/msm/msm_submitqueue.c
-@@ -71,8 +71,10 @@ int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
- 	queue->flags = flags;
+diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+index b3f2ba483992d..121f4c1e0697b 100644
+--- a/block/blk-mq-debugfs.c
++++ b/block/blk-mq-debugfs.c
+@@ -125,6 +125,9 @@ static const char *const blk_queue_flag_name[] = {
+ 	QUEUE_FLAG_NAME(REGISTERED),
+ 	QUEUE_FLAG_NAME(SCSI_PASSTHROUGH),
+ 	QUEUE_FLAG_NAME(QUIESCED),
++	QUEUE_FLAG_NAME(PCI_P2PDMA),
++	QUEUE_FLAG_NAME(ZONE_RESETALL),
++	QUEUE_FLAG_NAME(RQ_ALLOC_TIME),
+ };
+ #undef QUEUE_FLAG_NAME
  
- 	if (priv->gpu) {
--		if (prio >= priv->gpu->nr_rings)
-+		if (prio >= priv->gpu->nr_rings) {
-+			kfree(queue);
- 			return -EINVAL;
-+		}
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 32868fbedc9e9..02809e4dd661e 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -585,6 +585,7 @@ struct request_queue {
+ 	u64			write_hints[BLK_MAX_WRITE_HINTS];
+ };
  
- 		queue->prio = prio;
- 	}
++/* Keep blk_queue_flag_name[] in sync with the definitions below */
+ #define QUEUE_FLAG_STOPPED	0	/* queue is stopped */
+ #define QUEUE_FLAG_DYING	1	/* queue being torn down */
+ #define QUEUE_FLAG_NOMERGES     3	/* disable merge attempts */
 -- 
 2.25.1
 
