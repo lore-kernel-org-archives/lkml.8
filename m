@@ -2,162 +2,130 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2880C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7459C206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:36:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HZr7MO37"
+	by mail.kernel.org (Postfix) with ESMTP id 7F61420720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594201064;
+	bh=FMfBPrKkg56I41HR/oz9HArqZ/nbHhmy/CTSfaxeBGo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jTtKf21vRG8c1rhxNY4ExNPpXznnVr9QXFQKIVlErw0I1KOw4BKDsnYRdR/nEubQ5
+	 opAy6fR/xq4PUyvUuFWqZRG/S0SGtthtGJegPGXBfOPfilIyDVxfjcnIXB3kpwGgUD
+	 HcwMv0b23pQ+lkEhZW+L1ASDn6exy9+nQGtzs5As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgGHJg0 (ORCPT
+        id S1728160AbgGHJhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:36:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37277 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726900AbgGHJgY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:36:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594200982;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kALeRmOWsqvS9H2G8O5iL3YR6FPN8mEcBZ5niY5TzRs=;
-        b=HZr7MO37D5Ofzg9JRLJlWHX4M8ChMTH5Z4YLUutHW8JSIACLeFSQ6WrJ5U54BiF5tfQeZV
-        AHS++rZXVF/1mJQikJ/QPq02H0KJm+QVLDR4ojyUjm+Cd2KH5n9AMXfyEcFRqhxFXWws6d
-        nEUqVzJX7kyoc9EXU/AyqlYdW+VU6SE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-75-xp9Mlz1-P3C9M_UVthjrdg-1; Wed, 08 Jul 2020 05:36:19 -0400
-X-MC-Unique: xp9Mlz1-P3C9M_UVthjrdg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 8 Jul 2020 05:37:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727889AbgGHJhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 05:37:42 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A92E718CB722;
-        Wed,  8 Jul 2020 09:36:17 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 853BD5C221;
-        Wed,  8 Jul 2020 09:36:15 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] KVM: nSVM: split kvm_init_shadow_npt_mmu() from kvm_init_shadow_mmu()
-Date:   Wed,  8 Jul 2020 11:36:09 +0200
-Message-Id: <20200708093611.1453618-2-vkuznets@redhat.com>
-In-Reply-To: <20200708093611.1453618-1-vkuznets@redhat.com>
-References: <20200708093611.1453618-1-vkuznets@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 43645206C3;
+        Wed,  8 Jul 2020 09:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594201061;
+        bh=FMfBPrKkg56I41HR/oz9HArqZ/nbHhmy/CTSfaxeBGo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sbfNACTpkqCbWD5aa302J26Zs8H/6wJy04I81wZIXqHfv+8h6aPihY0skXI9Ws3xT
+         uAQODNbO+TB96nVJfyWxe4AJMxm3KcaEVeT2NPqd0QsMsw08Ymc9EpHUlZBqYUpSVe
+         odhxBTqdT7vgRn7mxOsVMthPOc9wK/pckWYf0oao=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jt6WJ-00A2JK-Qa; Wed, 08 Jul 2020 10:37:39 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 08 Jul 2020 10:37:39 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 05/13] irqchip: add sl28cpld interrupt controller
+ support
+In-Reply-To: <20200706175353.16404-6-michael@walle.cc>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-6-michael@walle.cc>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <30c8a3b40003f8805ba8ebacd328583c@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: michael@walle.cc, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, jdelvare@suse.com, linux@roeck-us.net, lee.jones@linaro.org, thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de, wim@linux-watchdog.org, shawnguo@kernel.org, leoyang.li@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, broonie@kernel.org, gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a preparatory change for moving kvm_mmu_new_pgd() from
-nested_prepare_vmcb_save() to nested_svm_init_mmu_context() split
-kvm_init_shadow_npt_mmu() from kvm_init_shadow_mmu(). This also makes
-the code look more like nVMX (kvm_init_shadow_ept_mmu()).
+On 2020-07-06 18:53, Michael Walle wrote:
+> Add support for the interrupt controller inside the sl28 CPLD 
+> management
+> controller.
+> 
+> The interrupt controller can handle at most 8 interrupts and is really
+> simplistic and consists only of an interrupt mask and an interrupt
+> pending register.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> Changes since v4:
+>  - update copyright year
+>  - don't use "int irq" instead of "unsigne int irq", because
+>    platform_get_irq() might return a negative error code. Found by 
+> "kernel
+>    test robot <lkp@intel.com>
+>  - remove comma in terminator line of the compatible strings list,
+>    suggested by Andy
+>  - use newer devm_regmap_add_irq_chip_fwnode()
+>  - don't use KBUID_MODNAME, suggested by Andy
+>  - remove the platform device table
+> 
+> Changes since v3:
+>  - see cover letter
+> 
+>  drivers/irqchip/Kconfig        |  8 +++
+>  drivers/irqchip/Makefile       |  1 +
+>  drivers/irqchip/irq-sl28cpld.c | 96 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 105 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-sl28cpld.c
 
-No functional change intended.
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/mmu.h        |  3 ++-
- arch/x86/kvm/mmu/mmu.c    | 31 ++++++++++++++++++++++++-------
- arch/x86/kvm/svm/nested.c |  3 ++-
- 3 files changed, 28 insertions(+), 9 deletions(-)
+Given the dependency on the MFD patches, I assume this will
+be routed to that subsystem. Please let me know if you want
+it to be handled differently.
 
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 444bb9c54548..94378ef1df54 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -57,7 +57,8 @@ void
- reset_shadow_zero_bits_mask(struct kvm_vcpu *vcpu, struct kvm_mmu *context);
- 
- void kvm_init_mmu(struct kvm_vcpu *vcpu, bool reset_roots);
--void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer);
-+void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer,
-+			     gpa_t nested_cr3);
- void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
- 			     bool accessed_dirty, gpa_t new_eptp);
- bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 76817d13c86e..167d12ab957a 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4952,14 +4952,10 @@ kvm_calc_shadow_mmu_root_page_role(struct kvm_vcpu *vcpu, bool base_only)
- 	return role;
- }
- 
--void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer)
-+static void shadow_mmu_init_context(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4,
-+				    u32 efer, union kvm_mmu_role new_role)
- {
- 	struct kvm_mmu *context = vcpu->arch.mmu;
--	union kvm_mmu_role new_role =
--		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
--
--	if (new_role.as_u64 == context->mmu_role.as_u64)
--		return;
- 
- 	if (!(cr0 & X86_CR0_PG))
- 		nonpaging_init_context(vcpu, context);
-@@ -4973,7 +4969,28 @@ void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer)
- 	context->mmu_role.as_u64 = new_role.as_u64;
- 	reset_shadow_zero_bits_mask(vcpu, context);
- }
--EXPORT_SYMBOL_GPL(kvm_init_shadow_mmu);
-+
-+static void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer)
-+{
-+	struct kvm_mmu *context = vcpu->arch.mmu;
-+	union kvm_mmu_role new_role =
-+		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
-+
-+	if (new_role.as_u64 != context->mmu_role.as_u64)
-+		shadow_mmu_init_context(vcpu, cr0, cr4, efer, new_role);
-+}
-+
-+void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer,
-+			     gpa_t nested_cr3)
-+{
-+	struct kvm_mmu *context = vcpu->arch.mmu;
-+	union kvm_mmu_role new_role =
-+		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
-+
-+	if (new_role.as_u64 != context->mmu_role.as_u64)
-+		shadow_mmu_init_context(vcpu, cr0, cr4, efer, new_role);
-+}
-+EXPORT_SYMBOL_GPL(kvm_init_shadow_npt_mmu);
- 
- static union kvm_mmu_role
- kvm_calc_shadow_ept_root_page_role(struct kvm_vcpu *vcpu, bool accessed_dirty,
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 6bceafb19108..e424bce13e6c 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -87,7 +87,8 @@ static void nested_svm_init_mmu_context(struct kvm_vcpu *vcpu)
- 	WARN_ON(mmu_is_nested(vcpu));
- 
- 	vcpu->arch.mmu = &vcpu->arch.guest_mmu;
--	kvm_init_shadow_mmu(vcpu, X86_CR0_PG, hsave->save.cr4, hsave->save.efer);
-+	kvm_init_shadow_npt_mmu(vcpu, X86_CR0_PG, hsave->save.cr4, hsave->save.efer,
-+				svm->nested.ctl.nested_cr3);
- 	vcpu->arch.mmu->get_guest_pgd     = nested_svm_get_tdp_cr3;
- 	vcpu->arch.mmu->get_pdptr         = nested_svm_get_tdp_pdptr;
- 	vcpu->arch.mmu->inject_page_fault = nested_svm_inject_npf_exit;
+Thanks,
+
+         M.
 -- 
-2.25.4
-
+Jazz is not dead. It just smells funny...
