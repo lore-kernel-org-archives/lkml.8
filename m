@@ -2,105 +2,128 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A6BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94C5D206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594234681;
-	bh=/HmNAv3VtI6tKUilo3NoJrZomug1fbzlcPoHAeFduEQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GPyMh80Eb92iiYO/sST1JVX9g2uCsgX8k9kr69oHPVSO8mANk56V41mh/nPwZEtu8
-	 nkiz8GwNx68JGWE4O7Tm5H5aAZtPTjQR2I/wWogVImPUGBJ3kj7srONpF5F5VlUItG
-	 9VmbdAS8YxtbmUzdgPOlZ79Ka7TTm6hm81iPDz+Y=
+	by mail.kernel.org (Postfix) with ESMTP id 10026206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgGHS6A (ORCPT
+        id S1726883AbgGHS6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgGHS6A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:58:00 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 955A6C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 11:57:59 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e4so55490346ljn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 11:57:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zWYjYIBe3hb4/4vbCyVaoP887WP+Gp1mlQlCb62YSBA=;
-        b=Vq73d8l+3BMp4JujE6UfEHRqIJvLNGYq5e4nYrdL5IbPLmU/htT7PVHjoWIxLiJoZ5
-         9NrEe5AQIr1t1eXW35yLRMm3OaOnksZ8seDUtp4XFiPXnCQV+/dIDHaZkmRJsOCJnp5w
-         Ptw96Qv96pkFd9dG9w2cOCCXbJZNZvWnlr9ro=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zWYjYIBe3hb4/4vbCyVaoP887WP+Gp1mlQlCb62YSBA=;
-        b=GkeGbjuVAZ1g51LAdeAF+fZka+WV0Xu4PohGwsZR4TJSl5kTizdq7T3ow2wd0WkBy0
-         h6J9lFyrsbUPWCOkFbRKqrG0a5k956jk0awzemxHCyv/onV3gYplm6fP+J2ARIf09j21
-         x+slAn0CHzjaAuPVLIjV4MO5FFHPe8QE6GuAXixSm7bhJ5ZJu/hJZ7XUoEQL04OMfWTL
-         3gPOUK0wyrLM8hqmf+zXCSwvUMNS3r1gd5Sr7a2ZY5QsFWO1V3EBFKZ9vWwswuE9Gtjg
-         GjYWssyLvxKbSTGnYx2USytUUa7BSSXsteWQwJtYVK3MRc+s5KbHV5+X32IjDzfCy47z
-         tkTg==
-X-Gm-Message-State: AOAM533nxEM8hqwI2vYfwz4KUvmVdZTozwt0vAvVMnTdJ9F0GJ6Fyl+F
-        j8eCeQdhjb5GlKSi1iy4HhuL/OB5sSs=
-X-Google-Smtp-Source: ABdhPJxRWD3x4auseQ9befdeLVRI75hflchgmIlM+T5p6LzgJBAvkcPlqDWkQ/NKo1ezBdP8yi8nZg==
-X-Received: by 2002:a2e:3602:: with SMTP id d2mr35975831lja.152.1594234677625;
-        Wed, 08 Jul 2020 11:57:57 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id z23sm156111ljz.3.2020.07.08.11.57.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 11:57:56 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id s16so22032912lfp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 11:57:56 -0700 (PDT)
-X-Received: by 2002:a19:8a07:: with SMTP id m7mr37282593lfd.31.1594234676431;
- Wed, 08 Jul 2020 11:57:56 -0700 (PDT)
+        Wed, 8 Jul 2020 14:58:47 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:44052 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbgGHS6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 14:58:45 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 5CAACBC118;
+        Wed,  8 Jul 2020 18:58:40 +0000 (UTC)
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: XDP (eXpress Data
+ Path)
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com,
+        mchehab+samsung@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+References: <20200708135737.14660-1-grandmaster@al2klimov.de>
+ <20200708080239.2ce729f3@lwn.net>
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Message-ID: <2aefc870-bf17-9528-958e-bc5b76de85dd@al2klimov.de>
+Date:   Wed, 8 Jul 2020 20:58:39 +0200
 MIME-Version: 1.0
-References: <a98e9c26-5405-3894-6197-3f5e388a5698@infradead.org>
-In-Reply-To: <a98e9c26-5405-3894-6197-3f5e388a5698@infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 8 Jul 2020 11:57:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whkuOeHvA_ws=usQt=rYq_M2vh448mDxY7kYhUmp_Lomw@mail.gmail.com>
-Message-ID: <CAHk-=whkuOeHvA_ws=usQt=rYq_M2vh448mDxY7kYhUmp_Lomw@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: update for gcc 4.9 requirement
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200708080239.2ce729f3@lwn.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 11:45 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> - - Make sure you have at least gcc 4.6 available.
-> + - Make sure you have at least gcc 4.9 available.
-> -GNU C                  4.8              gcc --version
-> +GNU C                  4.9              gcc --version
 
-Heh. The docs clearly weren't in sync before either.
 
-Maybe we should add a
+Am 08.07.20 um 16:02 schrieb Jonathan Corbet:
+> On Wed,  8 Jul 2020 15:57:37 +0200
+> "Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+> 
+>>   Documentation/arm/ixp4xx.rst | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> That's not XDP; something went awry in there somewhere.
+RoFL. Now as you said it I... noticed it at all... (*sigh*, the curse of
+automation) and I absolutely agree with you. But I've literally no idea...
 
-  Fixes: 5429ef62bcf3 ("compiler/gcc: Raise minimum GCC version for
-kernel builds to 4.8")
+➜  linux git:(master) perl scripts/get_maintainer.pl --nogit{,-fallback} 
+--nol 0003-Replace-HTTP-links-with-HTTPS-ones-XDP-eXpress-Data-.patch
+Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
+Alexei Starovoitov <ast@kernel.org> (supporter:XDP (eXpress Data Path))
+Daniel Borkmann <daniel@iogearbox.net> (supporter:XDP (eXpress Data Path))
+"David S. Miller" <davem@davemloft.net> (supporter:XDP (eXpress Data Path))
+Jakub Kicinski <kuba@kernel.org> (supporter:XDP (eXpress Data Path))
+Jesper Dangaard Brouer <hawk@kernel.org> (supporter:XDP (eXpress Data Path))
+John Fastabend <john.fastabend@gmail.com> (supporter:XDP (eXpress Data 
+Path))
+➜  linux git:(master) cat 
+0003-Replace-HTTP-links-with-HTTPS-ones-XDP-eXpress-Data-.patch
+ From 40aee4678ab84b925ab21581030a2cc0b988fbf9 Mon Sep 17 00:00:00 2001
+From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Date: Wed, 8 Jul 2020 08:00:39 +0200
+Subject: [PATCH] Replace HTTP links with HTTPS ones: XDP (eXpress Data Path)
 
-to your patch too.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-I only grepped for the obvious GCC_VERSION string. Which is presumably
-what everybody else who has ever done this have also grepped for,
-although in all fairness Will at least caught the one in
-Documentation/process/changes.rst when he updated it last time.
+Deterministic algorithm:
+For each file:
+   If not .svg:
+     For each line:
+       If doesn't contain `\bxmlns\b`:
+         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+             If both the HTTP and HTTPS versions
+             return 200 OK and serve the same content:
+               Replace HTTP with HTTPS.
 
-                 Linus
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+  Documentation/arm/ixp4xx.rst | 4 ++--
+  1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/arm/ixp4xx.rst b/Documentation/arm/ixp4xx.rst
+index a57235616294..d94188b8624f 100644
+--- a/Documentation/arm/ixp4xx.rst
++++ b/Documentation/arm/ixp4xx.rst
+@@ -119,14 +119,14 @@ http://www.gateworks.com/support/overview.php
+     the expansion bus.
+
+  Intel IXDP425 Development Platform
+-http://www.intel.com/design/network/products/npfamily/ixdpg425.htm
++https://www.intel.com/design/network/products/npfamily/ixdpg425.htm
+
+     This is Intel's standard reference platform for the IXDP425 and is
+     also known as the Richfield board. It contains 4 PCI slots, 16MB
+     of flash, two 10/100 ports and one ADSL port.
+
+  Intel IXDP465 Development Platform
+-http://www.intel.com/design/network/products/npfamily/ixdp465.htm
++https://www.intel.com/design/network/products/npfamily/ixdp465.htm
+
+     This is basically an IXDP425 with an IXP465 and 32M of flash instead
+     of just 16.
+--
+2.27.0
+
+➜  linux git:(master)
+
+> 
+> jon
+> 
