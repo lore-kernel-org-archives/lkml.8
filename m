@@ -2,330 +2,91 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1515D206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A03A6206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="go2tyef7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZNmqy6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbgGHPcv (ORCPT
+        id S1730258AbgGHPdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:32:51 -0400
-Received: from casper.infradead.org ([90.155.50.34]:37204 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729858AbgGHPcv (ORCPT
+        Wed, 8 Jul 2020 11:33:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729858AbgGHPdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:32:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=uUUl6/91E4RjY3y2FdTQuf9fNwe4LcxCQPXQPlAagng=; b=go2tyef7UxkXhGCQbSKvJqNsbe
-        CRtr5l8AYmmj9HSsm/+Z1YL23NBX+28KMlqyywl+GfX9Zaey5kTW48Sss42mbVvEN7MTuAxZBBMIa
-        ODrozsDOkltatkBKy4OmTR4afejuF8cVEnqql3NlvRi2cl8yvm7hJRWT9OJth0VJPFSjp+DEcjOvY
-        voSlEB3WO50FHBqG9dAXFB8pdoMxwY8doXNlmtbi3PUEoeqzH0AomqVLaUoYRHzFpSmBv0yvV4t+C
-        Ka/8ElDNDVNcJqHxWpnOPGksVN8Y5LQ+SncoR3fe8uyrSlUZD2nPuI+Q+iNbzBefg4+BOlaSqqrfG
-        WoJEoq3A==;
-Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtC3J-0002LJ-Ol; Wed, 08 Jul 2020 15:32:10 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] dma-mapping: inline the fast path dma-direct calls
-Date:   Wed,  8 Jul 2020 17:24:46 +0200
-Message-Id: <20200708152449.316476-3-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200708152449.316476-1-hch@lst.de>
-References: <20200708152449.316476-1-hch@lst.de>
+        Wed, 8 Jul 2020 11:33:40 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1186C061A0B;
+        Wed,  8 Jul 2020 08:33:40 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id o5so47340826iow.8;
+        Wed, 08 Jul 2020 08:33:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dyLb8SlKlhyAzCJgpUsncV6Hsfp2hFD6rZCRWfST+rQ=;
+        b=OZNmqy6dMexDFVudZkHsNZW7fvX1gWcxLKoITuw/yDAZpr4dcBEr872L7PfpuPv3U5
+         DUoalvVEOKA3yu4m7CFT9Um7UW9ikom7grPoop9+TDpLwXla258d+PoWTOf4iTYsWQea
+         BHr7i76yr4Y5M8TLrMZJ+0XzO26dvrBmHrV9aOq1BXkXs75kL/TFwVsmYO/LM7Fv2SCJ
+         O9eRHij+R/egclYARy4XHW6ZrunNICDVqSHeq1CRP68DcurXEkIE7mUpO0FlUlgxd1Ha
+         g924rp11Ec/hjFQyk4nLj/qpEE3XapSmULAJMABENntKbx7IvX7P8ctnzfao3Q0PSj4w
+         80RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dyLb8SlKlhyAzCJgpUsncV6Hsfp2hFD6rZCRWfST+rQ=;
+        b=tMVtDtS1YK94huE/MP8rE6SdAPQyHrZzXO5cTRfREdEUHOdgxygXoj5AbHkqGiprF0
+         LQoNnfY0Y62H5QEqeztDcvfuAQMFpwP2H1KrvcfPHzhJ8EnG0jwkRvPCkHOg/6H4mrGb
+         N+rVmV+rd6RGIN68HGGepfbTEQoYnGjezRwOiI/T5yVEAyoPgMgwmaMqt2aP6gmsJAEs
+         vvJP+czjwjn7WwqvVsvUM6n+SLkP21gE2Sbn9BhmI2QgB1Vuq+HDXvfHyxxTuruwf/AY
+         3kf789dCfmdvPfiizznZ19rdVxIRIZg7cqJxCnhuWvi15HLbyeEaEUdWI5xZ98+KpyA/
+         AZvQ==
+X-Gm-Message-State: AOAM531tw5aS7FZO01TicoMBbmKg+cRVvn1B+47fbNUu11kGy3dlTTVl
+        IOLVESImHdXvFTjdShg9KmwztJ4iGZp5cIXsVUk=
+X-Google-Smtp-Source: ABdhPJxmN6/ftSrdoJHD0FKGFingv6a4BF2CW23oA1LiWvGaeFrBISVVc9u+FQhR1y3WW4ip6PUKKwEnDzHBTPh5fNM=
+X-Received: by 2002:a05:6602:2c8f:: with SMTP id i15mr37850434iow.45.1594222419991;
+ Wed, 08 Jul 2020 08:33:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200707145800.925304888@linuxfoundation.org>
+In-Reply-To: <20200707145800.925304888@linuxfoundation.org>
+From:   Puranjay Mohan <puranjay12@gmail.com>
+Date:   Wed, 8 Jul 2020 21:03:29 +0530
+Message-ID: <CANk7y0iK9ziBq4wmpzeM6sh2hd8Nw6kN3b=OE7s243L7ZfpFUw@mail.gmail.com>
+Subject: Re: [PATCH 5.7 000/112] 5.7.8-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Inline the single page map/unmap/sync dma-direct calls into the now
-out of line generic wrappers.  This restores the behavior of a single
-function call that we had before moving the generic calls out of line.
-Besides the dma-mapping callers there are just a few callers in IOMMU
-drivers that have a bypass mode, and more of those are going to be
-switched to the generic bypass soon.
+On Tue, Jul 7, 2020 at 9:01 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.7.8 release.
+> There are 112 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+> Anything received after that time might be too late.
+>
+Compiled and booted on my computer running x86_64,
+No dmesg Regressions found.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/dma-direct.h | 92 ++++++++++++++++++++++++++++----------
- kernel/dma/direct.c        | 65 ---------------------------
- 2 files changed, 69 insertions(+), 88 deletions(-)
-
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index 78dc3524adf880..dbb19dd9869054 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -1,10 +1,16 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Internals of the DMA direct mapping implementation.  Only for use by the
-+ * DMA mapping code and IOMMU drivers.
-+ */
- #ifndef _LINUX_DMA_DIRECT_H
- #define _LINUX_DMA_DIRECT_H 1
- 
- #include <linux/dma-mapping.h>
-+#include <linux/dma-noncoherent.h>
- #include <linux/memblock.h> /* for min_low_pfn */
- #include <linux/mem_encrypt.h>
-+#include <linux/swiotlb.h>
- 
- extern unsigned int zone_dma_bits;
- 
-@@ -86,25 +92,17 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
- 		unsigned long attrs);
- int dma_direct_supported(struct device *dev, u64 mask);
- bool dma_direct_need_sync(struct device *dev, dma_addr_t dma_addr);
--dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
--		unsigned long offset, size_t size, enum dma_data_direction dir,
--		unsigned long attrs);
- int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
- 		enum dma_data_direction dir, unsigned long attrs);
- dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
- 		size_t size, enum dma_data_direction dir, unsigned long attrs);
-+size_t dma_direct_max_mapping_size(struct device *dev);
- 
- #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
-     defined(CONFIG_SWIOTLB)
--void dma_direct_sync_single_for_device(struct device *dev,
--		dma_addr_t addr, size_t size, enum dma_data_direction dir);
--void dma_direct_sync_sg_for_device(struct device *dev,
--		struct scatterlist *sgl, int nents, enum dma_data_direction dir);
-+void dma_direct_sync_sg_for_device(struct device *dev, struct scatterlist *sgl,
-+		int nents, enum dma_data_direction dir);
- #else
--static inline void dma_direct_sync_single_for_device(struct device *dev,
--		dma_addr_t addr, size_t size, enum dma_data_direction dir)
--{
--}
- static inline void dma_direct_sync_sg_for_device(struct device *dev,
- 		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
- {
-@@ -114,34 +112,82 @@ static inline void dma_direct_sync_sg_for_device(struct device *dev,
- #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) || \
-     defined(CONFIG_SWIOTLB)
--void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
--		size_t size, enum dma_data_direction dir, unsigned long attrs);
- void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
- 		int nents, enum dma_data_direction dir, unsigned long attrs);
--void dma_direct_sync_single_for_cpu(struct device *dev,
--		dma_addr_t addr, size_t size, enum dma_data_direction dir);
- void dma_direct_sync_sg_for_cpu(struct device *dev,
- 		struct scatterlist *sgl, int nents, enum dma_data_direction dir);
- #else
--static inline void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
--		size_t size, enum dma_data_direction dir, unsigned long attrs)
--{
--}
- static inline void dma_direct_unmap_sg(struct device *dev,
- 		struct scatterlist *sgl, int nents, enum dma_data_direction dir,
- 		unsigned long attrs)
- {
- }
-+static inline void dma_direct_sync_sg_for_cpu(struct device *dev,
-+		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
-+{
-+}
-+#endif
-+
-+static inline void dma_direct_sync_single_for_device(struct device *dev,
-+		dma_addr_t addr, size_t size, enum dma_data_direction dir)
-+{
-+	phys_addr_t paddr = dma_to_phys(dev, addr);
-+
-+	if (unlikely(is_swiotlb_buffer(paddr)))
-+		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_DEVICE);
-+
-+	if (!dev_is_dma_coherent(dev))
-+		arch_sync_dma_for_device(paddr, size, dir);
-+}
-+
- static inline void dma_direct_sync_single_for_cpu(struct device *dev,
- 		dma_addr_t addr, size_t size, enum dma_data_direction dir)
- {
-+	phys_addr_t paddr = dma_to_phys(dev, addr);
-+
-+	if (!dev_is_dma_coherent(dev)) {
-+		arch_sync_dma_for_cpu(paddr, size, dir);
-+		arch_sync_dma_for_cpu_all();
-+	}
-+
-+	if (unlikely(is_swiotlb_buffer(paddr)))
-+		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_CPU);
- }
--static inline void dma_direct_sync_sg_for_cpu(struct device *dev,
--		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
-+
-+static inline dma_addr_t dma_direct_map_page(struct device *dev,
-+		struct page *page, unsigned long offset, size_t size,
-+		enum dma_data_direction dir, unsigned long attrs)
- {
-+	phys_addr_t phys = page_to_phys(page) + offset;
-+	dma_addr_t dma_addr = phys_to_dma(dev, phys);
-+
-+	if (unlikely(swiotlb_force == SWIOTLB_FORCE))
-+		return swiotlb_map(dev, phys, size, dir, attrs);
-+
-+	if (unlikely(!dma_capable(dev, dma_addr, size, true))) {
-+		if (swiotlb_force != SWIOTLB_NO_FORCE)
-+			return swiotlb_map(dev, phys, size, dir, attrs);
-+
-+		dev_WARN_ONCE(dev, 1,
-+			     "DMA addr %pad+%zu overflow (mask %llx, bus limit %llx).\n",
-+			     &dma_addr, size, *dev->dma_mask, dev->bus_dma_limit);
-+		return DMA_MAPPING_ERROR;
-+	}
-+
-+	if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-+		arch_sync_dma_for_device(phys, size, dir);
-+	return dma_addr;
- }
--#endif
- 
--size_t dma_direct_max_mapping_size(struct device *dev);
-+static inline void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
-+		size_t size, enum dma_data_direction dir, unsigned long attrs)
-+{
-+	phys_addr_t phys = dma_to_phys(dev, addr);
- 
-+	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-+		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
-+
-+	if (unlikely(is_swiotlb_buffer(phys)))
-+		swiotlb_tbl_unmap_single(dev, phys, size, size, dir, attrs);
-+}
- #endif /* _LINUX_DMA_DIRECT_H */
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 6d1975c4a26873..3078e36941e6d4 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -10,11 +10,9 @@
- #include <linux/dma-direct.h>
- #include <linux/scatterlist.h>
- #include <linux/dma-contiguous.h>
--#include <linux/dma-noncoherent.h>
- #include <linux/pfn.h>
- #include <linux/vmalloc.h>
- #include <linux/set_memory.h>
--#include <linux/swiotlb.h>
- 
- /*
-  * Most architectures use ZONE_DMA for the first 16 Megabytes, but some use it
-@@ -304,18 +302,6 @@ void dma_direct_free(struct device *dev, size_t size,
- 
- #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
-     defined(CONFIG_SWIOTLB)
--void dma_direct_sync_single_for_device(struct device *dev,
--		dma_addr_t addr, size_t size, enum dma_data_direction dir)
--{
--	phys_addr_t paddr = dma_to_phys(dev, addr);
--
--	if (unlikely(is_swiotlb_buffer(paddr)))
--		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_DEVICE);
--
--	if (!dev_is_dma_coherent(dev))
--		arch_sync_dma_for_device(paddr, size, dir);
--}
--
- void dma_direct_sync_sg_for_device(struct device *dev,
- 		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
- {
-@@ -339,20 +325,6 @@ void dma_direct_sync_sg_for_device(struct device *dev,
- #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) || \
-     defined(CONFIG_SWIOTLB)
--void dma_direct_sync_single_for_cpu(struct device *dev,
--		dma_addr_t addr, size_t size, enum dma_data_direction dir)
--{
--	phys_addr_t paddr = dma_to_phys(dev, addr);
--
--	if (!dev_is_dma_coherent(dev)) {
--		arch_sync_dma_for_cpu(paddr, size, dir);
--		arch_sync_dma_for_cpu_all();
--	}
--
--	if (unlikely(is_swiotlb_buffer(paddr)))
--		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_CPU);
--}
--
- void dma_direct_sync_sg_for_cpu(struct device *dev,
- 		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
- {
-@@ -374,18 +346,6 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
- 		arch_sync_dma_for_cpu_all();
- }
- 
--void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
--		size_t size, enum dma_data_direction dir, unsigned long attrs)
--{
--	phys_addr_t phys = dma_to_phys(dev, addr);
--
--	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
--		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
--
--	if (unlikely(is_swiotlb_buffer(phys)))
--		swiotlb_tbl_unmap_single(dev, phys, size, size, dir, attrs);
--}
--
- void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
- 		int nents, enum dma_data_direction dir, unsigned long attrs)
- {
-@@ -398,31 +358,6 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
- }
- #endif
- 
--dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
--		unsigned long offset, size_t size, enum dma_data_direction dir,
--		unsigned long attrs)
--{
--	phys_addr_t phys = page_to_phys(page) + offset;
--	dma_addr_t dma_addr = phys_to_dma(dev, phys);
--
--	if (unlikely(swiotlb_force == SWIOTLB_FORCE))
--		return swiotlb_map(dev, phys, size, dir, attrs);
--
--	if (unlikely(!dma_capable(dev, dma_addr, size, true))) {
--		if (swiotlb_force != SWIOTLB_NO_FORCE)
--			return swiotlb_map(dev, phys, size, dir, attrs);
--
--		dev_WARN_ONCE(dev, 1,
--			     "DMA addr %pad+%zu overflow (mask %llx, bus limit %llx).\n",
--			     &dma_addr, size, *dev->dma_mask, dev->bus_dma_limit);
--		return DMA_MAPPING_ERROR;
--	}
--
--	if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
--		arch_sync_dma_for_device(phys, size, dir);
--	return dma_addr;
--}
--
- int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
- 		enum dma_data_direction dir, unsigned long attrs)
- {
--- 
-2.26.2
-
+thanks,
+--Puranjay
