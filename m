@@ -4,71 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97695C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9D220720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75AA920720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:33:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zNu+/tGG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dtWyJuBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbgGHNdp (ORCPT
+        id S1729677AbgGHNdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:33:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41598 "EHLO
+        Wed, 8 Jul 2020 09:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729614AbgGHNdo (ORCPT
+        with ESMTP id S1729470AbgGHNds (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:33:44 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1D2DC08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 06:33:44 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id 64so18222916vsl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 06:33:44 -0700 (PDT)
+        Wed, 8 Jul 2020 09:33:48 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE26C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 06:33:48 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id p6so7301275uaq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 06:33:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tk41EF76dWlRas8xsGebAvCJsFIlsbIWNFweh1EZdNo=;
-        b=zNu+/tGGqKUz5/jicyVSrwrbF/04PTgXFDQ2USWpWS6NTz8NHZ0w8hE9jFRlf9QK6n
-         0K/1eDo6121CRDewruVvq8LIjCUi0g3gOeebsfLblRFrWZ1UYhAQJPrfBS9qTM2scVt/
-         r5f6NywoWVtFgzQwidkKEty8UyiaTX9OdvBmwXJatJi1zlKAN/QkjOL0gzfMJaWFXXCQ
-         eaGnNR11jB97WgJSAEqO6kQSLb6ANVdMKc/RfWVvBM/0RLh8AhxOlrPyhOKmCxwuqOOY
-         XTEtkobG85H0bUeU84DLwBeKFRQc8P7tlRGUQC4QGX7xV9hw8F2pzMZxkAPGvIxPqlc5
-         Wzmg==
+        bh=y1GTsvB1sENuLYTitDg+4KJVrg9ZAbmGFqqoF3A8ork=;
+        b=dtWyJuBqyJLR1bSeZKeSipNjWrOFaLi6Et+BtwiwCKDNFw0+FIShvW+J/3Zd9/eNMQ
+         9YJVXSlhQXbXA8jaAqde+sMEJLnyaXWSUoidNhNR+NmVMmPmxA6kF+JBBmh2Ydq8HuEy
+         EmKgvmg8Qjh3GVaZ2Rtl+p2ZbohNCy71uE5htKD2NCCSgiOetnmxfHQyjUYCx3sCvxRe
+         rRoeYQMCKVqz8JnhgKN41bBr3vjWxhJMH0t5Pc0xkEPmQ+UQ+B6D5GMLvfs5XjyqLtt2
+         VnRcoB7+ZHiUYClGpfXYVVTCNBLDg5LARAre3p2R55W91wq/SbA6N2DIn0D5j6l9XqoZ
+         /Dog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tk41EF76dWlRas8xsGebAvCJsFIlsbIWNFweh1EZdNo=;
-        b=QSia3tIi/jC2g9sSEpUXOOnFwDQYntlARcdmmX/46XxGijHUEkpNaK+H+jd9mgMCHZ
-         5cj1DAERVICbtSqfcGai+Z8U30jThrLgt99lr8dHz9RWugrk1EDaXQbZXJQ/T1j5E0LH
-         ePjJtlXKOVXQs2yRxM8ZukOJAABWb8y6ydB5iNJgFufzCeN/eIIUVLf15/4Zdf3FqJXb
-         UgSNjvHzpU5RDJxAXT3dQ9WIDEStXEbzJcC+fMF/WxB2H8ncCXJv0VG7Tca94vAogHW2
-         omtFe45zj2QMsK/e1MzRblIDnkHA8XlwYbPhxJnEgdshqzxeEn8QBjMFKb79kkiuMNQ5
-         vCRA==
-X-Gm-Message-State: AOAM531Gq+x7MwrIXa2ru9LFTJri3LTyew6hVsdwWRRxuGOS+kkUF01g
-        pZwt10nlok7u2hTv4tlo9MT7QeH6R+phailNVA1Vkw==
-X-Google-Smtp-Source: ABdhPJzlaB5vrUOpL/q7Fp7zKcnnR5tcPNCNPyUvHhAG0+ZJ236PkwPb1+9MY0U+f/3ZBJIdGtlyqgQ2DPkCo+gUs1I=
-X-Received: by 2002:a05:6102:126a:: with SMTP id q10mr25135884vsg.35.1594215223731;
- Wed, 08 Jul 2020 06:33:43 -0700 (PDT)
+        bh=y1GTsvB1sENuLYTitDg+4KJVrg9ZAbmGFqqoF3A8ork=;
+        b=FPYSIbMh+DpTIYUipnpqcL6GvonHsKczUM+ZmWpz4hTUxHJ1q3QYzzKqiCk5dL+UNS
+         YYtZrzLs2wTgYBCDP5d7JVPARFiZZx0LuM7lw84Lx9FBKDkXrKFiS1LdYhm/gLV9i/sz
+         CTK3TfROPh4PL2+hUc57JNmaay3Uz2v10Tvk0HrqDAVgRZV2yBvrfJBWcZJtwV2DQWXI
+         rVZ7efjZGMgXTAeokuXxy+alb7pLuF2o55lYcAP+6SCX+VaYLqS1if7w2Z4AW4L0Uq+5
+         QO8k8yNZdUFKduYzKA/THEmc50pz0gTCeNoUYUIhj1VQ43j2d1SVDeNbz1bQKxHT+o30
+         B+BQ==
+X-Gm-Message-State: AOAM533yXulT6/9F5IqxGUoqSzKWCY+gWGci5JiFKF1urVTs5gGVMvlQ
+        90IOXrJ4uuuQObs6niDYd9qWCGNhMIGIO3WhY8QQVA==
+X-Google-Smtp-Source: ABdhPJw+0z3dQW3AcfspoIM8itefwk3QY2ggPT+DFUkCpMKHpkWyXEKW3t8CCIUcJ8Mn3muqMEBQNOiJv4qt/ZeKuu8=
+X-Received: by 2002:ab0:6f0a:: with SMTP id r10mr49334442uah.100.1594215227202;
+ Wed, 08 Jul 2020 06:33:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594213888-2780-1-git-send-email-vbadigan@codeaurora.org> <1594213888-2780-2-git-send-email-vbadigan@codeaurora.org>
-In-Reply-To: <1594213888-2780-2-git-send-email-vbadigan@codeaurora.org>
+References: <1594213888-2780-1-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <1594213888-2780-1-git-send-email-vbadigan@codeaurora.org>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 8 Jul 2020 15:33:07 +0200
-Message-ID: <CAPDyKFq1=Ryeup0WYc2iqGi9vGuWrCvuvvLzBYf-A=K0Fok+6w@mail.gmail.com>
-Subject: Re: [PATCH V1] mmc: sdhci-msm: Set IO pins in low power state during suspend
+Date:   Wed, 8 Jul 2020 15:33:10 +0200
+Message-ID: <CAPDyKFqiAeQYcqkb=Wv2stgTb9yvGwFfHv-BGtd5VuyJxfJXAA@mail.gmail.com>
+Subject: Re: [PATCH V1] mmc: sdhci-msm: Override DLL_CONFIG only if the valid
+ value is supplied
 To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>
+        Andy Gross <agross@kernel.org>,
+        "Bao D. Nguyen" <nguyenb@codeaurora.org>,
+        Sarthak Garg <sartgarg@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -78,63 +81,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Wed, 8 Jul 2020 at 15:12, Veerabhadrarao Badiganti
 <vbadigan@codeaurora.org> wrote:
 >
-> Configure SDHC IO pins with low power configuration when the driver
-> is in suspend state.
+> During DLL initialization, the DLL_CONFIG register value would be
+> updated with the value supplied from the device-tree.
 >
+> Override this register only if a valid value is supplied.
+>
+> Fixes: 03591160ca19 ("mmc: sdhci-msm: Read and use DLL Config property from device tree file")
 > Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-Applied for next, thanks!
+Applied for fixes, thanks!
 
 Kind regards
 Uffe
 
 
 > ---
->  drivers/mmc/host/sdhci-msm.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+>  drivers/mmc/host/sdhci-msm.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 >
 > diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 392d41d57a6e..efd2bae1430c 100644
+> index efd2bae1430c..93d67a3a899f 100644
 > --- a/drivers/mmc/host/sdhci-msm.c
 > +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -15,6 +15,7 @@
->  #include <linux/iopoll.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/interconnect.h>
-> +#include <linux/pinctrl/consumer.h>
+> @@ -626,8 +626,9 @@ static int msm_init_cm_dll(struct sdhci_host *host)
+>         config &= ~CORE_CLK_PWRSAVE;
+>         writel_relaxed(config, host->ioaddr + msm_offset->core_vendor_spec);
 >
->  #include "sdhci-pltfm.h"
->  #include "cqhci.h"
-> @@ -1352,6 +1353,19 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->                 sdhci_msm_hs400(host, &mmc->ios);
->  }
+> -       config = msm_host->dll_config;
+> -       writel_relaxed(config, host->ioaddr + msm_offset->core_dll_config);
+> +       if (msm_host->dll_config)
+> +               writel_relaxed(msm_host->dll_config,
+> +                               host->ioaddr + msm_offset->core_dll_config);
 >
-> +static int sdhci_msm_set_pincfg(struct sdhci_msm_host *msm_host, bool level)
-> +{
-> +       struct platform_device *pdev = msm_host->pdev;
-> +       int ret;
-> +
-> +       if (level)
-> +               ret = pinctrl_pm_select_default_state(&pdev->dev);
-> +       else
-> +               ret = pinctrl_pm_select_sleep_state(&pdev->dev);
-> +
-> +       return ret;
-> +}
-> +
->  static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
->  {
->         if (IS_ERR(mmc->supply.vmmc))
-> @@ -1596,6 +1610,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->                         ret = sdhci_msm_set_vqmmc(msm_host, mmc,
->                                         pwr_state & REQ_BUS_ON);
->                 if (!ret)
-> +                       ret = sdhci_msm_set_pincfg(msm_host,
-> +                                       pwr_state & REQ_BUS_ON);
-> +               if (!ret)
->                         irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
->                 else
->                         irq_ack |= CORE_PWRCTL_BUS_FAIL;
+>         if (msm_host->use_14lpp_dll_reset) {
+>                 config = readl_relaxed(host->ioaddr +
 > --
 > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
 >
