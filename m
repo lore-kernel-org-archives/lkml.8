@@ -2,62 +2,74 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F78C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D169BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B30DD2220E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594198130;
-	bh=v5b+eRpJRjTUvJpoBew9P5DOQzMsw60wsZb0UX7sXXA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mEkBJOw8u9xMQQ0f9P0sEjOqC0T/rtvH/SEZE/5axcCvPeR3p/aO40hS7FJONbTPZ
-	 tP4Q8z4+MCTKgJQm8dqlWlA/ZzmcxwaCZBS4zGeI7ejA/4NwYOBbY5gWhUGSDBphHO
-	 BwSfq5a+zITUOAfL/eurbjydEgrdNtknCnz0xlzQ=
+	by mail.kernel.org (Postfix) with ESMTP id AFF6920772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:51:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5L3nt6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgGHIsu (ORCPT
+        id S1728346AbgGHIvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:48:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbgGHIst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:48:49 -0400
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FFA42220F
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 08:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594198128;
-        bh=v5b+eRpJRjTUvJpoBew9P5DOQzMsw60wsZb0UX7sXXA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cvomhAG0GZfWJanHzzFwzJkezudt5a8yhvVMvUHCAtpPvdULl4qnaVApUqvFRgpSC
-         YeqzgExHoFs0wagB65hJRUaQNYJ54thqnWZrOgh1+Als4gwTjgtB3hnIT2XnA6JIkh
-         mVbX/DyWB5Vz5+EbNshT19F1R/4fpcwzC0f8oRl0=
-Received: by mail-ot1-f48.google.com with SMTP id t18so23566860otq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 01:48:48 -0700 (PDT)
-X-Gm-Message-State: AOAM5301o5KmTtlA1zZxDH/GvckUdU1kTaG77poDbtzs2FQc91gr32MY
-        a9WNYRXt6JsB5Wakkj7jScvL/SVTDEOqHD1Qh2g=
-X-Google-Smtp-Source: ABdhPJxS1ynqKGQAtbpJJ+5ir8RRkw7pnxby6VMxWNh8LxEcJeEGX4RdPUzfAeMdOx0/UT/n81JHpBhxP1bkqzj1EZY=
-X-Received: by 2002:a9d:6e85:: with SMTP id a5mr8243417otr.90.1594198127882;
- Wed, 08 Jul 2020 01:48:47 -0700 (PDT)
+        Wed, 8 Jul 2020 04:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728106AbgGHIvX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 04:51:23 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B0BFC08C5DC;
+        Wed,  8 Jul 2020 01:51:23 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id o1so11330928plk.1;
+        Wed, 08 Jul 2020 01:51:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=57iod+/AMmFtYWql7W5zrmBT/5Ux9h0gFYh2Kf9qnlQ=;
+        b=Q5L3nt6ENaCJd8CkEfatiVZHbNEOLIM5kV0Drj6xugwzZD7ZEGkJSak71IoBxGp9ZL
+         tV+1TPF3MEjp23QOF9afk0QV32eUMzZi5psZPGj3TCUhCs9AR6jYZZdNdHfKIHOf2lZC
+         tuOFTeQ9GqnoKOkG/l8Orqa/JETRcMRAJEyk1R5xCeIsc+6KbfmS2mbb4uk8Be7YhJKq
+         g4+nG+NJVt4jpm89sykmhS+juIpDtcq3KXySFY8bJIHx2a6FvwbH1iVLzOAzUY+kp8nP
+         2Kf3rFXB4qaVZ4/oGhJTm102J4NwD/g5TOjdTQj6GZgQwuuEy+hn2K6XbrAhQ7j1v7ls
+         teUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=57iod+/AMmFtYWql7W5zrmBT/5Ux9h0gFYh2Kf9qnlQ=;
+        b=nDmO0bhrNyKc/jJ8Z4G/O50jKOQRujUrg1NvcvHMZciTjytW177aIbPn2fGTfWEciE
+         MM3JgBzrhtuz+yC4Hj5zfbMzmHc97Zs4Y39ubMUAj1XooqfTYZPRVi4ztzkzffZQ4wwj
+         H8ruIIpXB7+oTVx+8fnUsODOsCYOc0/dRypHFiTVEawMJu8lLsnN38DWRML13ivi8O77
+         BzyM3U8g4zZ24+RFCJ6CH8xBX82bJO1QeCDbqE4Qd5TE5EKXnrLYFhW6XKPgX2Vv6oxZ
+         Te6hkc7L3mEN6VQrpaI4fJKA4YK7pGyG647FX9g+vKwfr6tyJbrbgAgoCn0qTzJk4zX3
+         LCXg==
+X-Gm-Message-State: AOAM530PsPoYoNPdHKwjJArLCnS0GrvZSfakF4U45ZdeURild1cTrSon
+        jOMMCXrGCpK83vYxGY6SdXIUbN8/72Kk62Zn8Hc=
+X-Google-Smtp-Source: ABdhPJyOvpX8n0+Rm6pmPdMqeAC+bPPUIOfhW7TkYsg5uvNSGaiT7Bq8YxNMMJLDvRsGukaIV7gSTocjummqC9hrosc=
+X-Received: by 2002:a17:902:8491:: with SMTP id c17mr40923683plo.262.1594198282725;
+ Wed, 08 Jul 2020 01:51:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200707114608.24197-1-richard.peng@oppo.com> <20200708082519.GA25634@willie-the-truck>
-In-Reply-To: <20200708082519.GA25634@willie-the-truck>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 8 Jul 2020 11:48:36 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXHYODhL0TNrx7F-e4Yt++fCVO7CcL=y99cJLJZ_4zDvzw@mail.gmail.com>
-Message-ID: <CAMj1kXHYODhL0TNrx7F-e4Yt++fCVO7CcL=y99cJLJZ_4zDvzw@mail.gmail.com>
-Subject: Re: [PATCH] arm64/module-plts: Consider the special case where
- plt_max_entries is 0
-To:     Will Deacon <will@kernel.org>
-Cc:     Peng Hao <richard.peng@oppo.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+References: <20200708082634.30191-1-digetx@gmail.com> <20200708082634.30191-2-digetx@gmail.com>
+In-Reply-To: <20200708082634.30191-2-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 8 Jul 2020 11:51:06 +0300
+Message-ID: <CAHp75VdFVGgKxR+n5TUMuFnWDy_uEmEeG=TvR9s7Xbe=jOdObg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] gpio: max77620: Initialize interrupts state
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-tegra@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,40 +77,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020 at 11:25, Will Deacon <will@kernel.org> wrote:
+On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
 >
-> [+Ard]
->
-> On Tue, Jul 07, 2020 at 07:46:08AM -0400, Peng Hao wrote:
-> > If plt_max_entries is 0, a warning is triggered.
-> > WARNING: CPU: 200 PID: 3000 at arch/arm64/kernel/module-plts.c:97 module_emit_plt_entry+0xa4/0x150
->
-> Which kernel are you seeing this with? There is a PLT-related change in
-> for-next/core, and I'd like to rule if out if possible.
->
-> > Signed-off-by: Peng Hao <richard.peng@oppo.com>
-> > ---
-> >  arch/arm64/kernel/module-plts.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
-> > index 65b08a74aec6..1868c9ac13f2 100644
-> > --- a/arch/arm64/kernel/module-plts.c
-> > +++ b/arch/arm64/kernel/module-plts.c
-> > @@ -79,7 +79,8 @@ u64 module_emit_plt_entry(struct module *mod, Elf64_Shdr *sechdrs,
-> >       int i = pltsec->plt_num_entries;
-> >       int j = i - 1;
-> >       u64 val = sym->st_value + rela->r_addend;
-> > -
-> > +     if (pltsec->plt_max_entries == 0)
-> > +             return 0;
->
-> Hmm, but if there aren't any PLTs then how do we end up here?
->
+> I noticed on Nexus 7 that after rebooting from downstream kernel to
+> upstream, the GPIO interrupt is triggering non-stop despite of interrupts
+> being disabled for all of GPIOs. This happens because Nexus 7 uses a
+> soft-reboot, meaning that bootloader should take care of resetting
+> hardware, but bootloader doesn't do it well. In a result, GPIO interrupt
+> may be left ON at a boot time. Let's mask all GPIO interrupts at the
+> driver's probe time in order to resolve the issue.
 
-Indeed. module_emit_plt_entry() is only invoked if we encounter a call
-or jump relocation that is out of range, and so we failed to allocate
-enough PLT entries in module_frob_arch_sections() if you are entering
-module_emit_plt_entry() with max_entries set to 0x0. The only other
-way to trigger this is when the .text section of your module is so
-large that branches go out of range, but PLTs won't help there.
+...
+
+> +               err = regmap_update_bits(mgpio->rmap, GPIO_REG_ADDR(i),
+> +                                        MAX77620_CNFG_GPIO_INT_MASK, 0);
+> +               if (err < 0)
+
+Does ' < 0' meaningful here?
+
+> +                       dev_err(mgpio->dev, "failed to disable interrupt: %d\n",
+> +                               err);
+
+One line.
+
+...
+
+> +       max77620_gpio_initialize(mgpio);
+
+I guess we have special callback for that, i.e.
+https://elixir.bootlin.com/linux/v5.8-rc3/C/ident/init_hw.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
