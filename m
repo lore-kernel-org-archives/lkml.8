@@ -2,104 +2,108 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9089C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DCBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE1D20786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9096206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:58:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LvyPhD7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbgGHP6k (ORCPT
+        id S1730451AbgGHP6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:58:40 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:43534 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730400AbgGHP6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:58:40 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 7D40BBC06F;
-        Wed,  8 Jul 2020 15:58:37 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     krisman@collabora.com, linux-fsdevel@vger.kernel.org,
+        Wed, 8 Jul 2020 11:58:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730400AbgGHP6w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:58:52 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08EABC061A0B;
+        Wed,  8 Jul 2020 08:58:52 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id u25so27221555lfm.1;
+        Wed, 08 Jul 2020 08:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PymXI2wOjT66kV3zrymlinxzdkZ3vrED2iarVtDwUIQ=;
+        b=LvyPhD7wXOjLVYQ21ZILbtO+06VGNx1wV0hhbpEAbd/+7CzkHCyVWmbM8EZiDi4GDX
+         m5+2erOZBYIl6qqATKhFFx7JggiIRpTT+EESxW4tKlShXrdCfNZumySzBM/70PMkbI8U
+         /zRRDWKrcAXhy6uP//LD6tImXnP12Omq8tG/axAMaCVDygVEoz/ovsPkrg3ilp7utXFp
+         2cnHXJ1VT6zao+d+7uzoK0UtQpTZrOZopUfoIztEIqo6NcLNpsN2dLqHCYgbHJJfP3VC
+         YzucbirP/zN3KxWHDzHiRicfTCcL2hLiMIygCEAbQVyHVVFgMZXNS7nUtayXP1MeGLTK
+         +FYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PymXI2wOjT66kV3zrymlinxzdkZ3vrED2iarVtDwUIQ=;
+        b=t0tdNqjMtBOl7xqfpJZWvRWdb6t+S03enXF+UX7iyAszSvWV+KpekNfMP7SrSG2KGk
+         GpZjVRp5drqi1j9eDdZ9IVnpWX67Nqx/Ycl/SBEjkDWnEh8LSLG1RupI8fUaJF1W45Iw
+         fzN3drG107XG3UXFfZmBvbYtl3igZ8hjNxc4+rvfyfkCY4r+37BxuXIVgjjZV8POIxWK
+         K+iDUdaiz53i5pZZMH3mjUVR9u3BqbJGB4YGUIX+3N29LzExVA4oO2HTh+DkFR1eEz+U
+         jhGQ5CPk55k8uO1bc4wUNitsDivxnIhHKSKIqC9YYfENDXO5EWjTHxZHe0e9HWRJSyNs
+         RUoA==
+X-Gm-Message-State: AOAM532UVpORxoV/F6uMyefULMMyia6JHwpjxpOJ81GNrZyXANFNA4Bb
+        PKd9DoTI7scNYEuqlMPzgOg=
+X-Google-Smtp-Source: ABdhPJz2/K0R069srj1tsZChlPH/WE5l9kIfys5eVUZ6ql2aHWsLc5E+Q7/33Y6Kjx5emH8GXzXJjQ==
+X-Received: by 2002:a19:4285:: with SMTP id p127mr35222698lfa.74.1594223930532;
+        Wed, 08 Jul 2020 08:58:50 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.gmail.com with ESMTPSA id 16sm37977ljw.127.2020.07.08.08.58.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 08:58:49 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: UNICODE SUBSYSTEM
-Date:   Wed,  8 Jul 2020 17:58:31 +0200
-Message-Id: <20200708155831.15102-1-grandmaster@al2klimov.de>
+Subject: [PATCH v2 0/2] Improvements for MAX77620 GPIO driver
+Date:   Wed,  8 Jul 2020 18:58:32 +0300
+Message-Id: <20200708155834.19762-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Hello!
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+This series addresses a problem that I discovered on Nexus 7 device where
+GPIO interrupts may be left enabled after bootloader and the driver isn't
+prepared to this, it also makes a small improvement to the code.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Changelog:
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+v2: - Addressed review comment that were made by Andy Shevchenko to v1:
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+        - Generic init_hw() callback is used now for resetting interrupts.
 
- If you apply the patch, please let me know.
+        - These v1 patches are dropped:
 
+           gpio: max77620: Replace interrupt-enable array with bitmap
+           gpio: max77620: Don't handle disabled interrupts
+           gpio: max77620: Move variable declaration
 
- fs/unicode/mkutf8data.c | 2 +-
- fs/unicode/utf8-norm.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Dmitry Osipenko (2):
+  gpio: max77620: Initialize interrupts state
+  gpio: max77620: Replace 8 with MAX77620_GPIO_NR
 
-diff --git a/fs/unicode/mkutf8data.c b/fs/unicode/mkutf8data.c
-index ff2025ac5a32..33b76cbb3db3 100644
---- a/fs/unicode/mkutf8data.c
-+++ b/fs/unicode/mkutf8data.c
-@@ -244,7 +244,7 @@ utf8trie_t *nfdicf;
-  * The shortest sequence requirement was introduced by:
-  *    Corrigendum #1: UTF-8 Shortest Form
-  * It can be found here:
-- *    http://www.unicode.org/versions/corrigendum1.html
-+ *    https://www.unicode.org/versions/corrigendum1.html
-  *
-  */
- 
-diff --git a/fs/unicode/utf8-norm.c b/fs/unicode/utf8-norm.c
-index 1d2d2e5b906a..7978d2b3634c 100644
---- a/fs/unicode/utf8-norm.c
-+++ b/fs/unicode/utf8-norm.c
-@@ -79,7 +79,7 @@ EXPORT_SYMBOL(utf8version_latest);
-  * The shortest sequence requirement was introduced by:
-  *    Corrigendum #1: UTF-8 Shortest Form
-  * It can be found here:
-- *    http://www.unicode.org/versions/corrigendum1.html
-+ *    https://www.unicode.org/versions/corrigendum1.html
-  *
-  */
- 
+ drivers/gpio/gpio-max77620.c | 31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
+
 -- 
-2.27.0
+2.26.0
 
