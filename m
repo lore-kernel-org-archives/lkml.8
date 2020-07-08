@@ -2,138 +2,115 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E21C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31759C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E0E2078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eEYSrpLt"
+	by mail.kernel.org (Postfix) with ESMTP id 0D6382078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgGHFjt (ORCPT
+        id S1729713AbgGHFkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:39:49 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53796 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729218AbgGHFjs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:39:48 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0685cmGR004469;
-        Wed, 8 Jul 2020 00:38:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594186728;
-        bh=LifHd+6VnWqpYV3vbn/ZBl2W0YOQxwd/c5VBQf9Tt30=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eEYSrpLtcBUNQwFoOOwVcKUz/yJUsZy08VTQfBZeIG8fYDlaP5UAJ/zcegsBR7ILJ
-         ah+Jmo/fJjDJJUzdnEs0286zV8bUIF/WqW0GXtv6pOokDIcD7Gfa5CfmnPGM/18dam
-         Fs2z/n+ceQ6JhhKKM2sbndBAHfMZPM/KpR+MGTls=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0685cmLp093876
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jul 2020 00:38:48 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 8 Jul
- 2020 00:38:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 8 Jul 2020 00:38:47 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0685cieM073282;
-        Wed, 8 Jul 2020 00:38:45 -0500
-Subject: Re: [PATCH v3 09/13] ASoC: ti: omap-mcbsp-st: Remove set, but unused
- variable 'w'
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        <alsa-devel@alsa-project.org>
-CC:     <tiwai@suse.de>, <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Samuel Ortiz <samuel.ortiz@nokia.com>,
-        <linux-omap@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200707190612.97799-1-pierre-louis.bossart@linux.intel.com>
- <20200707190612.97799-10-pierre-louis.bossart@linux.intel.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <f386522e-04b3-21e8-bf9b-c5431622693f@ti.com>
-Date:   Wed, 8 Jul 2020 08:39:49 +0300
+        Wed, 8 Jul 2020 01:40:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41964 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbgGHFkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 01:40:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C55DEABE4;
+        Wed,  8 Jul 2020 05:40:15 +0000 (UTC)
+Subject: Re: [PATCH v2 2/3] xen/privcmd: Mark pages as dirty
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        sstabellini@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, Paul Durrant <xadimgnik@gmail.com>
+References: <1594059372-15563-1-git-send-email-jrdr.linux@gmail.com>
+ <1594059372-15563-3-git-send-email-jrdr.linux@gmail.com>
+ <8fdd8c77-27dd-2847-7929-b5d3098b1b45@suse.com>
+ <CAFqt6zZRx3oDO+p2e6EiDig9fzKirME-t6fanzDRh6e7gWx+nA@mail.gmail.com>
+ <4abc0dd2-655c-16fa-dfc3-95904196c81f@suse.com>
+ <4c6e52e7-1d33-132b-1d7e-e57963966dcc@nvidia.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <df0a79be-540a-5f5f-4aa4-41a11131b9b5@suse.com>
+Date:   Wed, 8 Jul 2020 07:40:14 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200707190612.97799-10-pierre-louis.bossart@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <4c6e52e7-1d33-132b-1d7e-e57963966dcc@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07.07.20 21:30, John Hubbard wrote:
+> On 2020-07-07 04:43, Jürgen Groß wrote:
+>> On 07.07.20 13:30, Souptick Joarder wrote:
+>>> On Tue, Jul 7, 2020 at 3:08 PM Jürgen Groß <jgross@suse.com> wrote:
+> ...
+>>>>> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+>>>>> index 33677ea..f6c1543 100644
+>>>>> --- a/drivers/xen/privcmd.c
+>>>>> +++ b/drivers/xen/privcmd.c
+>>>>> @@ -612,8 +612,11 @@ static void unlock_pages(struct page *pages[], 
+>>>>> unsigned int nr_pages)
+>>>>>    {
+>>>>>        unsigned int i;
+>>>>>
+>>>>> -     for (i = 0; i < nr_pages; i++)
+>>>>> +     for (i = 0; i < nr_pages; i++) {
+>>>>> +             if (!PageDirty(pages[i]))
+>>>>> +                     set_page_dirty_lock(pages[i]);
+>>>>
+>>>> With put_page() directly following I think you should be able to use
+>>>> set_page_dirty() instead, as there is obviously a reference to the page
+>>>> existing.
+>>>
+>>> Patch [3/3] will convert above codes to use 
+>>> unpin_user_pages_dirty_lock()
+>>> which internally do the same check. So I thought to keep linux-stable 
+>>> and
+>>> linux-next code in sync. John had a similar concern [1] and later 
+>>> agreed to keep
+>>> this check.
+>>>
+>>> Shall I keep this check ?  No ?
+> 
+> It doesn't matter *too* much, because patch 3/3 fixes up everything by
+> changing it all to unpin_user_pages_dirty_lock(). However, there is 
+> something
+> to be said for having correct interim patches, too. :)  Details:
+> 
+>>>
+>>> [1] 
+>>> https://lore.kernel.org/xen-devel/a750e5e5-fd5d-663b-c5fd-261d7c939ba7@nvidia.com/ 
+>>>
+>>
+>> I wasn't referring to checking PageDirty(), but to the use of
+>> set_page_dirty_lock().
+>>
+>> Looking at the comment just before the implementation of
+>> set_page_dirty_lock() suggests that it is fine to use set_page_dirty()
+>> instead (so not calling lock_page()).
+> 
+> 
+> no no, that's a misreading of the comment. Unless this xen/privcmd code has
+> somehow taken a reference on page->mapping->host (which I do *not* think is
+> the case), then it is still racy to call set_page_dirty() here. Instead,
+> set_page_dirty_lock() should be used.
+
+Ah, okay. Thanks for the clarification.
+
+So you can add my
+
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
 
-On 07/07/2020 22.06, Pierre-Louis Bossart wrote:
-> From: Lee Jones <lee.jones@linaro.org>
->=20
-> Looks like 'w' has remained unchecked since the driver's inception.
->=20
-> Fixes the following W=3D1 kernel build warning(s):
->=20
->  sound/soc/ti/omap-mcbsp-st.c: In function =E2=80=98omap_mcbsp_st_chgai=
-n=E2=80=99:
->  sound/soc/ti/omap-mcbsp-st.c:145:6: warning: variable =E2=80=98w=E2=80=
-=99 set but not used [-Wunused-but-set-variable]
->=20
-> Peter suggested that the whole read can be removed, so that's
-> been done too.
-
-Thank you,
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
->=20
-> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>
-> Cc: Samuel Ortiz <samuel.ortiz@nokia.com>
-> Cc: linux-omap@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.c=
-om>
-> ---
->  sound/soc/ti/omap-mcbsp-st.c | 3 ---
->  1 file changed, 3 deletions(-)
->=20
-> diff --git a/sound/soc/ti/omap-mcbsp-st.c b/sound/soc/ti/omap-mcbsp-st.=
-c
-> index 5a32b54bbf3b..0bc7d26c660a 100644
-> --- a/sound/soc/ti/omap-mcbsp-st.c
-> +++ b/sound/soc/ti/omap-mcbsp-st.c
-> @@ -142,11 +142,8 @@ static void omap_mcbsp_st_fir_write(struct omap_mc=
-bsp *mcbsp, s16 *fir)
-> =20
->  static void omap_mcbsp_st_chgain(struct omap_mcbsp *mcbsp)
->  {
-> -	u16 w;
->  	struct omap_mcbsp_st_data *st_data =3D mcbsp->st_data;
-> =20
-> -	w =3D MCBSP_ST_READ(mcbsp, SSELCR);
-> -
->  	MCBSP_ST_WRITE(mcbsp, SGAINCR, ST_CH0GAIN(st_data->ch0gain) |
->  		       ST_CH1GAIN(st_data->ch1gain));
->  }
->=20
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Juergen
