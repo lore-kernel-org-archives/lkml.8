@@ -2,140 +2,152 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20886C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C98C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0107E206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4006E20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:55:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="spuQzcY+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SawKJOaJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fi54/RK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgGHTxn (ORCPT
+        id S1726343AbgGHTz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:53:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53434 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgGHTxm (ORCPT
+        Wed, 8 Jul 2020 15:55:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55549 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725915AbgGHTz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:53:42 -0400
-Message-Id: <20200708195321.822002354@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594238019;
+        Wed, 8 Jul 2020 15:55:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594238126;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=O37pX8HCMturL+rhqBaE0iWzy5y3hehqvpiNhW/ZQz0=;
-        b=spuQzcY+mFKo78t/CNljjZWO5/ivf9wUU/Lav18NYybvdo1ZlU1x74CJhp0Z9stGohgc9M
-        rBK4Et5MlndlRoHO8o4o66Y0alJgqJjvbCAsMkEGLcMlRkxKqL7HrlBcgOuhBVvVeguR3+
-        13oHqGkIsFyxHCa1tM62mzj3x4NLisLVfv8ZD9GTCBvdo0Lz4xVBp93ZlkFYJCYo9y/EO+
-        BYZB12YSjiwx5pp/AZfX2snSzDGZFQSVCi54vcabFeuBBaRdudlH7S6CMS6imDbdSXU8eF
-        MTp6lcP6JHpq1VIBHaQZPqgrvMyUZudXDaud0zji0JsomwEcB3JZTuFxQMv8GQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594238019;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=O37pX8HCMturL+rhqBaE0iWzy5y3hehqvpiNhW/ZQz0=;
-        b=SawKJOaJBHxztqPVVNApI0Gorktq1IGQCGry/58TZQK/L5PprosVYw6t6YjgBlG/3eVGJb
-        M/8yr3e0XhW4MKBA==
-Date:   Wed, 08 Jul 2020 21:51:55 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        kvm@vger.kernel.org,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>
-Subject: [patch V2 2/7] x86/kvm/vmx: Add hardirq tracing to guest enter/exit
-References: <20200708195153.746357686@linutronix.de>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k4zYLdQwkBISSt97sZJVBWHYyMqX21StTgcEywwSVHM=;
+        b=fi54/RK7YG4KV8Z+hF1d78z964SS9VdGhAlcgi+87U/h94QvF5Kj+NwJifHmmnREADTLTq
+        AOgcC5Rm2KEhVG3dDnb0rj3jgamPQFqkF50hD+R4qzZ8PhvHaMYHYZ277XJrQepDvfqM4W
+        Qe9zs66+Vg95zBkI68CIN8dgSI5hJTE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-7z3WF3iqMRmKuVNARq36Gw-1; Wed, 08 Jul 2020 15:55:22 -0400
+X-MC-Unique: 7z3WF3iqMRmKuVNARq36Gw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E18580BCC7;
+        Wed,  8 Jul 2020 19:55:17 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A5D246FEC4;
+        Wed,  8 Jul 2020 19:54:44 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 13:54:44 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
+ (alloc/free)
+Message-ID: <20200708135444.4eac48a4@x1.home>
+In-Reply-To: <DM5PR11MB1435B159DA10C8301B89A6F0C3670@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
+        <1592988927-48009-7-git-send-email-yi.l.liu@intel.com>
+        <20200702151832.048b44d1@x1.home>
+        <CY4PR11MB1432DD97F44EB8AA5CCC87D8C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
+        <DM5PR11MB1435B159DA10C8301B89A6F0C3670@DM5PR11MB1435.namprd11.prod.outlook.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Wed, 8 Jul 2020 08:16:16 +0000
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
-Entering guest mode is more or less the same as returning to user
-space. From an instrumentation point of view both leave kernel mode and the
-transition to guest or user mode reenables interrupts on the host. In user
-mode an interrupt is served directly and in guest mode it causes a VM exit
-which then handles or reinjects the interrupt.
+> Hi Alex,
+> 
+> > From: Liu, Yi L < yi.l.liu@intel.com>
+> > Sent: Friday, July 3, 2020 2:28 PM
+> > 
+> > Hi Alex,
+> >   
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Friday, July 3, 2020 5:19 AM
+> > >
+> > > On Wed, 24 Jun 2020 01:55:19 -0700
+> > > Liu Yi L <yi.l.liu@intel.com> wrote:
+> > >  
+> > > > This patch allows user space to request PASID allocation/free, e.g.
+> > > > when serving the request from the guest.
+> > > >
+> > > > PASIDs that are not freed by userspace are automatically freed when
+> > > > the IOASID set is destroyed when process exits.  
+> [...]
+> > > > +static int vfio_iommu_type1_pasid_request(struct vfio_iommu *iommu,
+> > > > +					  unsigned long arg)
+> > > > +{
+> > > > +	struct vfio_iommu_type1_pasid_request req;
+> > > > +	unsigned long minsz;
+> > > > +
+> > > > +	minsz = offsetofend(struct vfio_iommu_type1_pasid_request, range);
+> > > > +
+> > > > +	if (copy_from_user(&req, (void __user *)arg, minsz))
+> > > > +		return -EFAULT;
+> > > > +
+> > > > +	if (req.argsz < minsz || (req.flags & ~VFIO_PASID_REQUEST_MASK))
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	if (req.range.min > req.range.max)  
+> > >
+> > > Is it exploitable that a user can spin the kernel for a long time in
+> > > the case of a free by calling this with [0, MAX_UINT] regardless of their actual  
+> > allocations?
+> > 
+> > IOASID can ensure that user can only free the PASIDs allocated to the user. but
+> > it's true, kernel needs to loop all the PASIDs within the range provided by user. it
+> > may take a long time. is there anything we can do? one thing may limit the range
+> > provided by user?  
+> 
+> thought about it more, we have per-VM pasid quota (say 1000), so even if
+> user passed down [0, MAX_UNIT], kernel will only loop the 1000 pasids at
+> most. do you think we still need to do something on it?
 
-The transition from guest mode or user mode to kernel mode disables
-interrupts, which needs to be recorded in instrumentation to set the
-correct state again.
+How do you figure that?  vfio_iommu_type1_pasid_request() accepts the
+user's min/max so long as (max > min) and passes that to
+vfio_iommu_type1_pasid_free(), then to vfio_pasid_free_range()  which
+loops as:
 
-This is important for e.g. latency analysis because otherwise the execution
-time in guest or user mode would be wrongly accounted as interrupt disabled
-and could trigger false positives.
+	ioasid_t pasid = min;
+	for (; pasid <= max; pasid++)
+		ioasid_free(pasid);
 
-Add hardirq tracing to guest enter/exit functions in the same way as it
-is done in the user mode enter/exit code, respecting the RCU requirements.
+A user might only be able to allocate 1000 pasids, but apparently they
+can ask to free all they want.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+It's also not obvious to me that calling ioasid_free() is only allowing
+the user to free their own passid.  Does it?  It would be a pretty
+gaping hole if a user could free arbitrary pasids.  A r-b tree of
+passids might help both for security and to bound spinning in a loop.
+Thanks,
 
-
-
----
- arch/x86/kvm/vmx/vmx.c |   27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
-
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6729,9 +6729,21 @@ static fastpath_t vmx_vcpu_run(struct kv
- 	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
- 
- 	/*
--	 * Tell context tracking that this CPU is about to enter guest mode.
-+	 * VMENTER enables interrupts (host state), but the kernel state is
-+	 * interrupts disabled when this is invoked. Also tell RCU about
-+	 * it. This is the same logic as for exit_to_user_mode().
-+	 *
-+	 * This ensures that e.g. latency analysis on the host observes
-+	 * guest mode as interrupt enabled.
-+	 *
-+	 * guest_enter_irqoff() informs context tracking about the
-+	 * transition to guest mode and if enabled adjusts RCU state
-+	 * accordingly.
- 	 */
-+	trace_hardirqs_on_prepare();
-+	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
- 	guest_enter_irqoff();
-+	lockdep_hardirqs_on(CALLER_ADDR0);
- 
- 	/* L1D Flush includes CPU buffer clear to mitigate MDS */
- 	if (static_branch_unlikely(&vmx_l1d_should_flush))
-@@ -6748,9 +6760,20 @@ static fastpath_t vmx_vcpu_run(struct kv
- 	vcpu->arch.cr2 = read_cr2();
- 
- 	/*
--	 * Tell context tracking that this CPU is back.
-+	 * VMEXIT disables interrupts (host state), but tracing and lockdep
-+	 * have them in state 'on' as recorded before entering guest mode.
-+	 * Same as enter_from_user_mode().
-+	 *
-+	 * guest_exit_irqoff() restores host context and reinstates RCU if
-+	 * enabled and required.
-+	 *
-+	 * This needs to be done before the below as native_read_msr()
-+	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
-+	 * into world and some more.
- 	 */
-+	lockdep_hardirqs_off(CALLER_ADDR0);
- 	guest_exit_irqoff();
-+	trace_hardirqs_off_finish();
- 
- 	/*
- 	 * We do not use IBRS in the kernel. If this vCPU has used the
+Alex
 
