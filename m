@@ -2,168 +2,136 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1134C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0005BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B98C520720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A2B20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:13:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hlwBMhGs"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QJGu3CLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgGHDKi (ORCPT
+        id S1728614AbgGHDNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 23:10:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57474 "EHLO
+        Tue, 7 Jul 2020 23:13:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728614AbgGHDKi (ORCPT
+        with ESMTP id S1728294AbgGHDNI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 23:10:38 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D52DFC08C5E1
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 20:10:37 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z3so10029105pfn.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 20:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=edyXrUUXlucnGHdJkzAqctBsLVZmrijKH7zA9JnE9Qs=;
-        b=hlwBMhGsm2KgPGyCtgedo+zMtJVTl9SEIwqwMo7UolN4lX2fwyUQ7Vbv1FEj92NcM3
-         NGNdx6NXMsjTYmNytJtOZ3gWi7rmCWK8D0Jexm3+W/nDCAPphHj3nPmq/F9roB3r9uBb
-         7FRRPNjqv1E2famw0cCafEHyl0POEhMcEsmn8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=edyXrUUXlucnGHdJkzAqctBsLVZmrijKH7zA9JnE9Qs=;
-        b=YHN0D+NHDvQHWIWmYe46FeI75iL+pmQDPMHYz2XJoapB+pE74yQTfbBlb8UHEECru/
-         4tVsxG+af3wTDimywOS/HKjE1esDxvSRS4ad7ZL0abBQWq+3O3df30IZW9ciMOiH3Jnp
-         tmKCsNyThoZG8kj8cNBGDKaOdMnvVkcm5wMUmKHhbF96iFkH6PWaz1fQWLQ5L4FCxm8j
-         +LBtLbya1UQiaS+YXPgSmQMI8Zk3AcVvB80NEzUNsoMMixjZzj/qfw1PObb+T8Z3xMQH
-         /3pEWjYBsIFqi8usRdQKWVVhMiohEWuIUkA66aGnRWvAd7I75F3PK9+RxhYSTzrLl87i
-         ZIjQ==
-X-Gm-Message-State: AOAM5309IzFLgr0Kop6KSJSOYlJR6MVP5ETd3mwR522WDeocXPVylsfT
-        AWyHxxuo6C5ZKU1VVa7mpDoIaw==
-X-Google-Smtp-Source: ABdhPJz2SITuOpLsf2fKbfCPMhLdYgaGbKpZy5ZObf2Y0s34KANDBCI0SwEXpDtq9tudsC3KYnRTXw==
-X-Received: by 2002:a63:6cd:: with SMTP id 196mr47424478pgg.169.1594177837244;
-        Tue, 07 Jul 2020 20:10:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r17sm23362049pfg.62.2020.07.07.20.10.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 20:10:36 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 20:10:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     James Morris <jmorris@namei.org>, Jessica Yu <jeyu@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <stephen.boyd@linaro.org>,
-        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 4/4] module: Add hook for security_kernel_post_read_file()
-Message-ID: <202007071951.605F38D43@keescook>
-References: <20200707081926.3688096-1-keescook@chromium.org>
- <20200707081926.3688096-5-keescook@chromium.org>
- <1594169240.23056.143.camel@linux.ibm.com>
+        Tue, 7 Jul 2020 23:13:08 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B09C3C061755;
+        Tue,  7 Jul 2020 20:13:07 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1krw16lMz9sSJ;
+        Wed,  8 Jul 2020 13:13:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594177984;
+        bh=l+bxzGYWMcNd3rl1Uz5C1PGATDAm1DMxpOeCPiA0fAI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QJGu3CLbfvxcU7Rs5HLTw0RMTbYkGZbmuEK0WlaUbHc41TxQ/zyKNJB8Ll6G9Slls
+         mBnvPKmTixbh55VNwPSEjhI+JkkSdPC1qgFafcKBDt9ZauKmB64Eg2rdkbc51WGLfR
+         QoFAjKExiXfBuraA4Cn/O3bHIp0Depcx7e8dNHGtgtA9dw6gX5Zuh5lPQ4e89poawW
+         wvwKfHmKoiVOQmYgJveCF1vOlQ6a/Y1cMreBReBC0MYoOjcb0BqBVO7eLMoePlU9nd
+         UuamQn1EYCwrcdYNt2gH9XxoofxAIepjXJGwnPmO7BxMEzdWbDxSzxHVMaXYcy48OP
+         ZohdlL/txatbA==
+Date:   Wed, 8 Jul 2020 13:13:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: linux-next: manual merge of the block tree with the gfs2 tree
+Message-ID: <20200708131300.2bc5585b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1594169240.23056.143.camel@linux.ibm.com>
+Content-Type: multipart/signed; boundary="Sig_/Y_/gem6CuL6FuSahpUv+EJY";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 08:47:20PM -0400, Mimi Zohar wrote:
-> On Tue, 2020-07-07 at 01:19 -0700, Kees Cook wrote:
-> > Calls to security_kernel_load_data() should be paired with a call to
-> > security_kernel_post_read_file() with a NULL file argument. Add the
-> > missing call so the module contents are visible to the LSMs interested
-> > in measuring the module content. (This also paves the way for moving
-> > module signature checking out of the module core and into an LSM.)
-> > 
-> > Cc: Jessica Yu <jeyu@kernel.org>
-> > Fixes: c77b8cdf745d ("module: replace the existing LSM hook in init_module")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  kernel/module.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/module.c b/kernel/module.c
-> > index 0c6573b98c36..af9679f8e5c6 100644
-> > --- a/kernel/module.c
-> > +++ b/kernel/module.c
-> > @@ -2980,7 +2980,12 @@ static int copy_module_from_user(const void __user *umod, unsigned long len,
-> >  		return -EFAULT;
-> >  	}
-> >  
-> > -	return 0;
-> > +	err = security_kernel_post_read_file(NULL, (char *)info->hdr,
-> > +					     info->len, READING_MODULE);
-> 
-> There was a lot of push back on calling security_kernel_read_file()
-> with a NULL file descriptor here.[1]  The result was defining a new
-> security hook - security_kernel_load_data - and enumeration -
-> LOADING_MODULE.  I would prefer calling the same pre and post security
-> hook.
-> 
-> Mimi
-> 
-> [1] http://kernsec.org/pipermail/linux-security-module-archive/2018-May/007110.html
+--Sig_/Y_/gem6CuL6FuSahpUv+EJY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ah yes, thanks for the pointer to the discussion.
+Hi all,
 
-I think we have four cases then, for differing LSM hooks:
+Today's linux-next merge of the block tree got a conflict in:
 
-- no "file", no contents
-	e.g. init_module() before copying user buffer
-	security_kernel_load_data()
-- only a "file" available, no contents
-	e.g. kernel_read_file() before actually reading anything
-	security_kernel_read_file()
-- "file" and contents
-	e.g. kernel_read_file() after reading
-	security_kernel_post_read_file()
-- no "file" available, just the contents
-	e.g. firmware platform fallback from EFI space (no "file")
-	unimplemented!
+  mm/filemap.c
 
-If an LSM wants to be able to examine the contents of firmware, modules,
-kexec, etc, it needs either a "file" or the full contents.
+between commit:
 
-The "file" methods all pass through the kernel_read_file()-family. The
-others happen via blobs coming from userspace or (more recently) the EFI
-universe.
+  f0091f595dee ("fs: Add IOCB_NOIO flag for generic_file_read_iter")
 
-So, if a NULL file is unreasonable, we need, perhaps,
-security_kernel_post_load_data()
+from the gfs2 tree and commits:
 
-?
+  2e85abf053b9 ("mm: allow read-ahead with IOCB_NOWAIT set")
+  dd3e6d5039de ("mm: add support for async page locking")
 
--- 
-Kees Cook
+from the block tree.
+
+The gfs2 tree commit has changed from the previous report.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc mm/filemap.c
+index 6a6ed95e33a2,a5b1fa8f7ce4..000000000000
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@@ -2028,8 -2044,6 +2044,8 @@@ find_page
+ =20
+  		page =3D find_get_page(mapping, index);
+  		if (!page) {
+- 			if (iocb->ki_flags & (IOCB_NOWAIT | IOCB_NOIO))
+++			if (iocb->ki_flags & IOCB_NOIO)
+ +				goto would_block;
+  			page_cache_sync_readahead(mapping,
+  					ra, filp,
+  					index, last_index - index);
+@@@ -2164,7 -2185,7 +2191,7 @@@ page_not_up_to_date_locked
+  		}
+ =20
+  readpage:
+- 		if (iocb->ki_flags & IOCB_NOIO) {
+ -		if (iocb->ki_flags & IOCB_NOWAIT) {
+++		if (iocb->ki_flags & (IOCB_NOWAIT |IOCB_NOIO)) {
+  			unlock_page(page);
+  			put_page(page);
+  			goto would_block;
+
+--Sig_/Y_/gem6CuL6FuSahpUv+EJY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8FObwACgkQAVBC80lX
+0Gxjtwf+OGinXBr/kjjonhis8Ru+rYd+eKn23cmrqZhib794Nvwup9QLoAqxtOWs
+t/ktzEB6kJY9dgJY95QuaE3qSYPYvTdnYkL/D5mCo1tcJptbgVl8ZMIbPsVgicd+
+5LoKNKJWpZ1BkjL6zbYhewKPhin3fCA9mSb61Co+Q+TV4Fe/IBQKM3pQ9l5Zw6bK
+LCYeOpCdW1L9RDCFsHlnRlRw9GGuSXOc8UmA4PGi6C8ggb7zLv98JZYnpjsabWuK
+NXCyd1wrpuaqGS/pDZBb0kkvcSP5nztmb+Plx2QmX/eFlKRH9WxPfclzX/nYjFbY
+IlwSJZ0GniiF3MgRYN28sfLFsl3Dpw==
+=E/jX
+-----END PGP SIGNATURE-----
+
+--Sig_/Y_/gem6CuL6FuSahpUv+EJY--
