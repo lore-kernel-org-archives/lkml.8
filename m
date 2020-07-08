@@ -2,115 +2,73 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3367DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E53C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E150206BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:07:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fCztVvNu"
+	by mail.kernel.org (Postfix) with ESMTP id B236D206BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgGHEHQ (ORCPT
+        id S1729032AbgGHEHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 00:07:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728401AbgGHEHP (ORCPT
+        Wed, 8 Jul 2020 00:07:53 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:45384 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1728401AbgGHEHw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 00:07:15 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF2FFC08C5E2
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 21:07:14 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k6so47398645wrn.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 21:07:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=DmAnW+aNGSPXA4C+WrMJa+vZ8I/2yjEhwhvCqyjrf7Y=;
-        b=fCztVvNuDI1vxwSHFZrzUHl20rgV2FUL9YtFDf6ClChW8eytN1eZvcQPgEg9UkhzrD
-         qTflp5G7V2JknyBoAT2rmvgi7qvLrmQPysDBRPDhcX3y7r1iXblAx3davUCG0hQe/ArX
-         CDzlhKWrcFFyh79S3f5faVfWQayMukqk7b5RE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=DmAnW+aNGSPXA4C+WrMJa+vZ8I/2yjEhwhvCqyjrf7Y=;
-        b=rBvjxawXsU4vkRC6cq7ms7kNEf/kyObBCw78H7ajLrhQ6HgEjeKjvIjShaqk6be3/f
-         hcTSxcj6mid9hkwOEq96pt0dNnZ+g97n2z0n9oQD8194dWr+Jr95ZQq2tmjrZEwiA7U+
-         eeuQz2A89yiiGOIqFXJqbOMx7iObD6GqHl4vDRlXxa5kz8KH7bVGwusoJLIJ1liOTCbh
-         bsxEWn+CjMjtx/IzCYx60T1EFqd8Ad28NLflljh1WRKdWsF336hlbAVAFY/HP2YrMWZn
-         RpF983v/wmxdqwz7ukus5x+2qepquRrcmH/O43d61sy/VaLTKZy7z4l4vVkbSfLyOk2W
-         GoKA==
-X-Gm-Message-State: AOAM532RZwq82ME3mNCiMMRU29+n4X46WjAMranS/ZHbS3DMRLFt+QJW
-        qZZJNsyLTdiMq07znYFmfsfaCw==
-X-Google-Smtp-Source: ABdhPJyzr90jOVAoqFWvMEUHYTnBp5r5AE5rgTXyXvuhrlE1JUT/h/4/UApapPz2oWQxlhwEWPjRgg==
-X-Received: by 2002:a05:6000:1006:: with SMTP id a6mr53961498wrx.332.1594181233107;
-        Tue, 07 Jul 2020 21:07:13 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id 1sm3703411wmf.21.2020.07.07.21.07.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 21:07:12 -0700 (PDT)
-Subject: Re: [PATCH v10 3/9] firmware: add request_partial_firmware_into_buf
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-References: <20200706232309.12010-1-scott.branden@broadcom.com>
- <20200706232309.12010-4-scott.branden@broadcom.com>
- <202007071657.55C2CFA57@keescook>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <0681c21c-b2de-068a-76f3-965cecfbf93c@broadcom.com>
-Date:   Tue, 7 Jul 2020 21:07:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 00:07:52 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 1E8242000305;
+        Wed,  8 Jul 2020 12:07:50 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Kr9PBFrsGXLm; Wed,  8 Jul 2020 12:07:50 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id F1C6D20001F5;
+        Wed,  8 Jul 2020 12:07:49 +0800 (HKT)
+Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
+        by s01.gtsys.com.hk (Postfix) with ESMTP id DA0EBC01B68;
+        Wed,  8 Jul 2020 12:07:49 +0800 (HKT)
+Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
+        id B2D3720031F; Wed,  8 Jul 2020 12:07:49 +0800 (HKT)
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] shtc1: add support for device tree bindings
+Date:   Wed,  8 Jul 2020 12:07:45 +0800
+Message-Id: <20200708040748.9014-1-chris.ruehl@gtsys.com.hk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <202007071657.55C2CFA57@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add support for DTS bindings to the shtc driver
+The patches add the compatible table and of_property_read_bool to the
+shtc1.c. Newly created Yaml document has been released to the
+Documentation/devicetree/hwmon/sensirion,shtc1.yaml
 
-
-On 2020-07-07 4:58 p.m., Kees Cook wrote:
-> On Mon, Jul 06, 2020 at 04:23:03PM -0700, Scott Branden wrote:
->> Add request_partial_firmware_into_buf to allow for portions
->> of firmware file to be read into a buffer.  Necessary where firmware
->> needs to be loaded in portions from file in memory constrained systems.
-> Just tear out the differing "id" and just use FW_OPT_PARTIAL and I think
-> if Luis is happy, you're all set.
->
-I hope so.  Also, I will need to call 
-kernel_pread_file_from_path_initns() if FW_OPT_PARTIAL is set
-and kernel_read_file_from_path_initns() otherwise to avoid a swiss 
-army-knife approach of calling a common function with multiple parameters.
-
-
+Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+---
+ Version 4
+	Fix errors report by make dt_binding_check (devicetree)
+	Set maintainers for the yaml document to my own.
+ Version 3
+	Fix errors report with checkpatch.pl
+	Correct logic, add (!) when check for sensirion,low_precision
+ Version 2
+	remove the #ifdef CONFIG_OF
+	ignore platform data if dev->of_node is valid
+	use boolean only therefor use sensirion,low_precise to fit the logic
+	add missing driver.of_match_table entry
+ Version 1
+	initial version
