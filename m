@@ -2,96 +2,160 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF124C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F910C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C4620739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:33:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594204388;
-	bh=AhnJoMBPbxKfUgHX720jeUrzOme8kKo3MjbmvB/JDAU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gq0OfxezZdh9z0aVr0EXCjLspoeXpDGPFHvVUxqcHjWbbBoyf3CHZ6zHm8FogZWgL
-	 VcQinkvbqCZ1QjLTLOjnirL/nhJ94kuazwrFoIgRovQvkE8z7X46R8/VzsGBip7YiR
-	 extK3TtDzpTMWwsWANiUsb6qaG8jjcHypDAwvIQQ=
+	by mail.kernel.org (Postfix) with ESMTP id EB67F20739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:33:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s1MkS0y5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uXndmB5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgGHKdH (ORCPT
+        id S1728485AbgGHKdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:33:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgGHKdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:33:07 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E852206F6;
-        Wed,  8 Jul 2020 10:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594204386;
-        bh=AhnJoMBPbxKfUgHX720jeUrzOme8kKo3MjbmvB/JDAU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EdfRpI1OCGj1tiJyd4YF76KEhAOKiosCRz6S8D71iqM7NZYRdH3E7SJ+EN0Db1a83
-         yObZEvZN6+2kxF805MnfEGD5K+lUgsguzT6g8yAsnWVZieSmcZ5kh2OfPHQq90fbCh
-         zsvJSp8+oRIWVV6QQicJIi2CVqA3Q4DYLBhXRMNI=
-Date:   Wed, 8 Jul 2020 11:33:01 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rohit kumar <rohitkr@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
-        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ajit Pandey <ajitp@codeaurora.org>
-Subject: Re: [RESEND][PATCH v3 7/8] ASoC: qcom: lpass-sc7180: Add platform
- driver for lpass audio
-Message-ID: <20200708103301.GG4655@sirena.org.uk>
-References: <1594185286-11323-1-git-send-email-rohitkr@codeaurora.org>
+        Wed, 8 Jul 2020 06:33:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgGHKdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:33:17 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8608BC08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 03:33:17 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 12:33:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594204396;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=A3pJuNIU0LykF2PIg+ZxlGqv3aULpQ+rRYQaYlSRZX8=;
+        b=s1MkS0y59k1JFRXkZa8LTa0KDWLKgTQuPwc2dOcKEBeenA/wa+NP7Bxf4VYAkZt+8s9a25
+        40CrEs4nVTg9Luwrt8iFLsGl3AbATjN2XLyowWYVe7WGBBmLssKiJe0iK/ol1RZ5XDg1cr
+        rcMA11ZfO+at3Hbzu6KLLI7GXb8xx73OJdyG3Em+GfJ6TBHDiWXEhxjyJfh7HkvE0iTuRW
+        RyP0+WoCsa/xjpxy1bxYIdOizMhC6aYI/3BNrPTnGFS030op7oyPkqnoiLlgLM7uFwlr5D
+        NdLbe0JTKNs5p6eUmzBHNnXJS5BSoS0Bg3Sx+anVzy37f647PqQmtuDG7DEIZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594204396;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=A3pJuNIU0LykF2PIg+ZxlGqv3aULpQ+rRYQaYlSRZX8=;
+        b=uXndmB5GznbaNs8Dy4fBXBYVozV4kOcWa/TFGlQvlabeh+mmEeuizA1enNEuNmqLzOoBVo
+        0wRHid687OJerZBA==
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/20] seqlock: Extend seqcount API with associated
+ locks
+Message-ID: <20200708103314.GB4151780@debian-buster-darwi.lab.linutronix.de>
+References: <20200630054452.3675847-1-a.darwish@linutronix.de>
+ <20200630054452.3675847-7-a.darwish@linutronix.de>
+ <20200706212148.GE5523@worktop.programming.kicks-ass.net>
+ <20200707084024.GA4097637@debian-buster-darwi.lab.linutronix.de>
+ <20200707130410.GO4800@hirez.programming.kicks-ass.net>
+ <20200707143726.GO117543@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wTWi5aaYRw9ix9vO"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594185286-11323-1-git-send-email-rohitkr@codeaurora.org>
-X-Cookie: Oh Dad!  We're ALL Devo!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200707143726.GO117543@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 07, 2020 at 04:37:26PM +0200, Peter Zijlstra wrote:
+>
+> How's this? it removes a level of indirection and a bunch of repetition.
 
---wTWi5aaYRw9ix9vO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ACK, for the extra level of indirection removed.
 
-On Wed, Jul 08, 2020 at 10:44:46AM +0530, Rohit kumar wrote:
-> From: Ajit Pandey <ajitp@codeaurora.org>
->=20
-> Add platform driver for configuring sc7180 lpass core I2S and
-> DMA configuration to support playback & capture to external codecs
-> connected over primary & secondary MI2S interfaces.
+> It's also more than 200 lines shorter.
+...
+> +#define __to_seqcount_t(s)	(seqcount_t *)(s)
+...
+> +#define read_seqcount_begin(s)	do_read_seqcount_begin(__to_seqcount_t(s))
+> +
+> +static inline unsigned do_read_seqcount_begin(const seqcount_t *s)
+> +{
+...
 
-I only have patch 7 here, no other patches or cover letter.  What is
-going on?
+Hmm, the __to_seqcount_t(s) force cast is not good. It will break the
+arguments type-safety of seqcount macros that do not have either:
 
---wTWi5aaYRw9ix9vO
-Content-Type: application/pgp-signature; name="signature.asc"
+    __associated_lock_is_preemptible() or
+    __assert_associated_lock_held()
 
------BEGIN PGP SIGNATURE-----
+in their path. This basically includes all the read path macros, and
+even some others (e.g. write_seqcount_invalidate()).
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8FoNwACgkQJNaLcl1U
-h9BTIQf+Pzg18KzFR1F83jYFACOsU3RoGhxBsfnTFuUTgZk3ldcDm3SlAKiQ1uwo
-Ol2ArxJ/AJ1llEZO3q3T5yv+Xp59WZWKaGNqIqeksbcSNQIVcmKle48bDspuaq8d
-vrYuPRUmsij4QsaCBO+FZEjIFpMgN1t+hSjneIU4yvbHS5p+uphg8o485E/aqLC1
-KaGwY9njulUK+BYodMNvvLz/MctN5GYaWecf9WonuXHsy0oxg/DLluKqXQpumYWo
-vUgZBasWFJW0uwB/bdB2u0tbTUAH6p2YFuTrHcSfiaiGWXg4P9PD5gjHn3ND3QBp
-EUYKEtftH2KYxmANHezDbVwOBrJt+Q==
-=NjIB
------END PGP SIGNATURE-----
+With the suggested force cast above, I can literally *pass anything* to
+read_seqcount_begin() and friends, and the compiler won't say a thing.
 
---wTWi5aaYRw9ix9vO--
+So, I'll restore __to_seqcount_t(s) that to its original implementation:
+
+/*
+ * @s: pointer to seqcount_t or any of the seqcount_locktype_t variants
+ */
+#define __to_seqcount_t(s)						\
+({									\
+	seqcount_t *seq;						\
+									\
+	if (__same_type(*(s), seqcount_t))				\
+		seq = (seqcount_t *)(s);				\
+	else if (__same_type(*(s), seqcount_spinlock_t))		\
+		seq = &((seqcount_spinlock_t *)(s))->seqcount;		\
+	else if (__same_type(*(s), seqcount_raw_spinlock_t))		\
+		seq = &((seqcount_raw_spinlock_t *)(s))->seqcount;	\
+	else if (__same_type(*(s), seqcount_rwlock_t))			\
+		seq = &((seqcount_rwlock_t *)(s))->seqcount;		\
+	else if (__same_type(*(s), seqcount_mutex_t))			\
+		seq = &((seqcount_mutex_t *)(s))->seqcount;		\
+	else if (__same_type(*(s), seqcount_ww_mutex_t))		\
+		seq = &((seqcount_ww_mutex_t *)(s))->seqcount;		\
+	else								\
+		BUILD_BUG_ON_MSG(1, "Unknown seqcount type");		\
+									\
+	seq;								\
+})
+
+Yes, I know, it's not the prettiest thing in the world, but I'd take
+ugly over breaking the compiler type checks any day.
+
+>
+> It doesn't provide SEQCNT_LOCKTYPE_ZERO() for each LOCKTYPE, but you can
+> use this one macro for any LOCKTYPE.
+>
+
+From call-sites perspectives, SEQCNT_SPINLOCK_ZERO() is much more
+readable than SEQCNT_LOCKTYPE_ZERO() and so on. It only costs us 5 lines
+*for all* the seqcount lock types. IMHO it's worth the trade-off.
+
+>
+> So I applied it all yesterday and tried to make sense of the resulting
+> indirections and couldn't find stuff -- because it was hidding in
+> another file.
+>
+> Specifically I disliked that *seqcount_t* naming and didn't see how it
+> all connected.
+>
+
+Hmm, the idea was that write_seqcount_t_begin() and friends applies only
+to plain old "seqcount_t". But, yes, I agree, it's confusing as hell.
+
+The way you've organized the macros is much more readable, so thanks a
+lot, I'll incorporate that in v4.
+
+Kind regards,
+
+--
+Ahmed S. Darwish
+Linutronix GmbH
