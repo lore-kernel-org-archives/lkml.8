@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7867EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E92AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1E6206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075F0206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="lHwVohXF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sRjgkaBR"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="esDnVTnX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e8cnrg0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgGHRnJ (ORCPT
+        id S1726844AbgGHRnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:43:09 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:58063 "EHLO
+        Wed, 8 Jul 2020 13:43:11 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:52765 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726752AbgGHRnA (ORCPT
+        by vger.kernel.org with ESMTP id S1726794AbgGHRnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:43:00 -0400
+        Wed, 8 Jul 2020 13:43:04 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 2F06F333;
-        Wed,  8 Jul 2020 13:42:59 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:42:59 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 768D02F3;
+        Wed,  8 Jul 2020 13:43:03 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:43:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=V6hB5OZI4p8WU
-        lDnHuuNH5BlEZyzxuf5+jlrv9rSDoo=; b=lHwVohXF5wG+1OhbQYRmmKZt0YaSb
-        /SItRNMFeUNlBbthzyVnB0Y+/78qf4HWzIMujbnwLodGK5s8s35UTl07eE4UGn4G
-        zLbKWBnM5bYDcfwk1C/51SM1xjCCpbHSGJLA2vtE28JWe0jhtH93ziE4P6QprKzb
-        512/XAR3EEslFLHj3z8p6oJDRc7SzxPsj1HeBtilJ4zDO+KRbq3AVE0YhfndrMVW
-        7n+UhSrJuYsw3PRgIWTDh04UP38trzrbYraodFH4Mj1HRjkv5PQA83DDoz8VS6++
-        1jsUzaZASCTobpPT8jXN7iN6Dmf7+rFTFxmFWviYyjUBsUZ8iW+smRvTg==
+        :mime-version:content-transfer-encoding; s=fm3; bh=36UbLzBQ7RjLW
+        xEtt4ofelHXw0uE2Ft29VdIx7RKra8=; b=esDnVTnX3pCTTitKf9lUf+/ntlvjt
+        gJHLDqkBO4L3GCOJOywA9NMelo4oeUd+1Z7nB/QIHSgsxlkVbIOqVEOchfvOn7cw
+        ohi0LMrteaPsdZw4bVs0qOadFPbnyVF9nv4zsvM98ON/HF2A1A+x6S45zyL2NVIP
+        alJrjp4vPtbzcuYDAlWb5Kcb0Yh6HcbmhwW5SlTLBA1UD9WRlbLfoFKN9g1CBPuv
+        WkAGZT4DsueNzKOhvKsEIoMMtUNc29o+j1UfkmzUwbyTmTlVN3IFGdYXuiUtWbVz
+        VaWlS9KCd8idcfpf/oh1yETP2oD5OBznI/e5jDeSyMopTS00YDMRNC3Nw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=V6hB5OZI4p8WUlDnHuuNH5BlEZyzxuf5+jlrv9rSDoo=; b=sRjgkaBR
-        32ag+6IS+rA+w1Huvg5hp5mDpzUha/p2LQsxrNe0o7GKSdpUFVS9lIc1RZ9miPpZ
-        irowmgg1SBSM883LkoxCw67ddnCK7RKm8yCqYLzpRwA06tmOk0NRIwbXLHRaJmHW
-        A+t/Ghf7R5DRVRmeLgsECFcKwsiU/w889mic/DIIiChvtxH90TYNpO05rM29+vs6
-        ujpYs4P6x+R/qZ587ENi+JpOV0L28q7Gv11FQ1wddS7fxQCIIknUAozE90BYSuA/
-        Rgoj++KN3/RbE+F0BrYbdYCZw9GgkoRztILJZ6zNI/JbhDdpFMuuxZInd5edA2ut
-        hgaeEc9EUF6fLA==
-X-ME-Sender: <xms:ogUGX1fvM-OQ3OOpdxbhjUllvxLrgAX5dG4AP_KI4ifLuMAHg4ahKQ>
+        fm3; bh=36UbLzBQ7RjLWxEtt4ofelHXw0uE2Ft29VdIx7RKra8=; b=e8cnrg0H
+        x/BIORGpVMUN+by7N6FjQW+3fWYa+h5a1v4Z3BA/d1FGOCVd/ef+Oa2Q8lEZyuOs
+        cYrLg3QGPDk74UQ4aTazLZeC0DdYCAL0dGidUYZgR9qJ7ADqWEGBPsLu8ia550vA
+        OclCEvHv8sBWy8Ug3Q3m0bJR8hm+ORzwvYsnBhxhtXIOSQW/x9uojB6V7uDvhahP
+        YhGOwv3i/RyYlZyzrYBjbFv7+ICnWCW/lbjAFf6WMyOrkpJVdY8jtFLv5sFJLhV1
+        p04wlpFAfKJ0C+NcuTaCGPA6vQzC0jvMf9UNRoWH9mlHwyiu5/Qp7NTnw4FGmurh
+        JRpk9ySX4Enh7A==
+X-ME-Sender: <xms:pgUGXyoh4ZCOIPUnT6KgdMR_c98ku9dK3I7YAFh-ERd8ZN2a9-dBeQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudehne
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudelne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:ogUGXzMuT8RHqWRwSqEhB2kpSf4qXZ-VUN5XqWH3wG6xeAcyyWwS0Q>
-    <xmx:ogUGX-jVnIFX-LgVwQkXYFQJoyPvUvXOYgbiRIid3FGXZB3BkAmFPg>
-    <xmx:ogUGX-_vuL6vtgIX1Kg8SGYg0rjNxbWf6UH3IzZf938_aqK9b1kpow>
-    <xmx:ogUGXy-r_HfoJDcbKqcPdN0Qu2k6GbKpnCPyXEzgAjdbBOlGGNUHp9GTPBI>
+X-ME-Proxy: <xmx:pgUGXwr3VDoe1thV6OrHlAlaDMPmqcPrUwmvCwWgIPf4hP6Ex1Hvog>
+    <xmx:pgUGX3ODuIxL3alG7XmtRcotKEKNjr-33f1BLunIZ_XyaGS26UM43w>
+    <xmx:pgUGXx62kN0oY0PmrJnAjMSLshvbL5vmngLiseQxWJWc1Ek7F1JehA>
+    <xmx:pwUGX8ZXchy7QTsdZ_dzJkkhXnto-qvMjYaFoh5gH5OI-jAMtp667Kh9i1w>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6CB2330600A9;
-        Wed,  8 Jul 2020 13:42:58 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id AB0A8328005E;
+        Wed,  8 Jul 2020 13:43:02 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 19/78] drm/vc4: crtc: Disable color management for HVS5
-Date:   Wed,  8 Jul 2020 19:41:27 +0200
-Message-Id: <968564f69e9ec5ea14a18e1b46b598f67b0bd044.1594230107.git-series.maxime@cerno.tech>
+Subject: [PATCH v4 22/78] drm/vc4: crtc: Move HVS init and close to a function
+Date:   Wed,  8 Jul 2020 19:41:30 +0200
+Message-Id: <840cb5324364e431b15d4105c85cebf8d12257f0.1594230107.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
 References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
@@ -89,64 +89,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HVS5 uses different color matrices. Disable color management support
-for now.
+In order to make further refactoring easier, let's move the HVS channel
+setup / teardown to their own function.
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 17 +++++++++++------
- drivers/gpu/drm/vc4/vc4_hvs.c  |  2 +-
- 2 files changed, 12 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/vc4/vc4_hvs.c | 104 +++++++++++++++++++----------------
+ 1 file changed, 58 insertions(+), 46 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index 04744223460a..41bc61d5a61f 100644
---- a/drivers/gpu/drm/vc4/vc4_crtc.c
-+++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -874,6 +874,7 @@ int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
- 		  const struct drm_crtc_funcs *crtc_funcs,
- 		  const struct drm_crtc_helper_funcs *crtc_helper_funcs)
- {
-+	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 	struct drm_crtc *crtc = &vc4_crtc->base;
- 	struct drm_plane *primary_plane;
- 	unsigned int i;
-@@ -893,13 +894,17 @@ int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
- 	drm_crtc_init_with_planes(drm, crtc, primary_plane, NULL,
- 				  crtc_funcs, NULL);
- 	drm_crtc_helper_add(crtc, crtc_helper_funcs);
--	drm_mode_crtc_set_gamma_size(crtc, ARRAY_SIZE(vc4_crtc->lut_r));
--	drm_crtc_enable_color_mgmt(crtc, 0, false, crtc->gamma_size);
- 
--	/* We support CTM, but only for one CRTC at a time. It's therefore
--	 * implemented as private driver state in vc4_kms, not here.
--	 */
--	drm_crtc_enable_color_mgmt(crtc, 0, true, crtc->gamma_size);
-+	if (!vc4->hvs->hvs5) {
-+		drm_mode_crtc_set_gamma_size(crtc, ARRAY_SIZE(vc4_crtc->lut_r));
-+
-+		drm_crtc_enable_color_mgmt(crtc, 0, false, crtc->gamma_size);
-+
-+		/* We support CTM, but only for one CRTC at a time. It's therefore
-+		 * implemented as private driver state in vc4_kms, not here.
-+		 */
-+		drm_crtc_enable_color_mgmt(crtc, 0, true, crtc->gamma_size);
-+	}
- 
- 	for (i = 0; i < crtc->gamma_size; i++) {
- 		vc4_crtc->lut_r[i] = i;
 diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
-index 50e88f634799..50f9a9674a7e 100644
+index 50f9a9674a7e..78bb1c0b0b76 100644
 --- a/drivers/gpu/drm/vc4/vc4_hvs.c
 +++ b/drivers/gpu/drm/vc4/vc4_hvs.c
-@@ -443,7 +443,7 @@ void vc4_hvs_mode_set_nofb(struct drm_crtc *crtc)
+@@ -196,6 +196,62 @@ static void vc4_hvs_update_gamma_lut(struct drm_crtc *crtc)
+ 	vc4_hvs_lut_load(crtc);
+ }
  
- 	HVS_WRITE(SCALER_DISPBKGNDX(vc4_state->assigned_channel),
- 		  SCALER_DISPBKGND_AUTOHS |
--		  SCALER_DISPBKGND_GAMMA |
-+		  ((!vc4->hvs->hvs5) ? SCALER_DISPBKGND_GAMMA : 0) |
- 		  (interlace ? SCALER_DISPBKGND_INTERLACE : 0));
++static int vc4_hvs_init_channel(struct vc4_dev *vc4, struct drm_crtc *crtc,
++				struct drm_display_mode *mode, bool oneshot)
++{
++	struct vc4_crtc_state *vc4_crtc_state = to_vc4_crtc_state(crtc->state);
++	unsigned int chan = vc4_crtc_state->assigned_channel;
++	u32 dispctrl;
++
++	/* Turn on the scaler, which will wait for vstart to start
++	 * compositing.
++	 * When feeding the transposer, we should operate in oneshot
++	 * mode.
++	 */
++	dispctrl = SCALER_DISPCTRLX_ENABLE;
++
++	if (!vc4->hvs->hvs5)
++		dispctrl |= VC4_SET_FIELD(mode->hdisplay,
++					  SCALER_DISPCTRLX_WIDTH) |
++			    VC4_SET_FIELD(mode->vdisplay,
++					  SCALER_DISPCTRLX_HEIGHT) |
++			    (oneshot ? SCALER_DISPCTRLX_ONESHOT : 0);
++	else
++		dispctrl |= VC4_SET_FIELD(mode->hdisplay,
++					  SCALER5_DISPCTRLX_WIDTH) |
++			    VC4_SET_FIELD(mode->vdisplay,
++					  SCALER5_DISPCTRLX_HEIGHT) |
++			    (oneshot ? SCALER5_DISPCTRLX_ONESHOT : 0);
++
++	HVS_WRITE(SCALER_DISPCTRLX(chan), dispctrl);
++
++	return 0;
++}
++
++static void vc4_hvs_stop_channel(struct drm_device *dev, unsigned int chan)
++{
++	struct vc4_dev *vc4 = to_vc4_dev(dev);
++
++	if (HVS_READ(SCALER_DISPCTRLX(chan)) & SCALER_DISPCTRLX_ENABLE)
++		return;
++
++	HVS_WRITE(SCALER_DISPCTRLX(chan),
++		  HVS_READ(SCALER_DISPCTRLX(chan)) | SCALER_DISPCTRLX_RESET);
++	HVS_WRITE(SCALER_DISPCTRLX(chan),
++		  HVS_READ(SCALER_DISPCTRLX(chan)) & ~SCALER_DISPCTRLX_ENABLE);
++
++	/* Once we leave, the scaler should be disabled and its fifo empty. */
++	WARN_ON_ONCE(HVS_READ(SCALER_DISPCTRLX(chan)) & SCALER_DISPCTRLX_RESET);
++
++	WARN_ON_ONCE(VC4_GET_FIELD(HVS_READ(SCALER_DISPSTATX(chan)),
++				   SCALER_DISPSTATX_MODE) !=
++		     SCALER_DISPSTATX_MODE_DISABLED);
++
++	WARN_ON_ONCE((HVS_READ(SCALER_DISPSTATX(chan)) &
++		      (SCALER_DISPSTATX_FULL | SCALER_DISPSTATX_EMPTY)) !=
++		     SCALER_DISPSTATX_EMPTY);
++}
++
+ int vc4_hvs_atomic_check(struct drm_crtc *crtc,
+ 			 struct drm_crtc_state *state)
+ {
+@@ -268,63 +324,19 @@ void vc4_hvs_atomic_enable(struct drm_crtc *crtc,
+ 	struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(crtc->state);
+ 	struct drm_display_mode *mode = &crtc->state->adjusted_mode;
+ 	bool oneshot = vc4_state->feed_txp;
+-	u32 dispctrl;
  
- 	/* Reload the LUT, since the SRAMs would have been disabled if
+ 	vc4_hvs_update_dlist(crtc);
+-
+-	/* Turn on the scaler, which will wait for vstart to start
+-	 * compositing.
+-	 * When feeding the transposer, we should operate in oneshot
+-	 * mode.
+-	 */
+-	dispctrl = SCALER_DISPCTRLX_ENABLE;
+-
+-	if (!vc4->hvs->hvs5)
+-		dispctrl |= VC4_SET_FIELD(mode->hdisplay,
+-					  SCALER_DISPCTRLX_WIDTH) |
+-			    VC4_SET_FIELD(mode->vdisplay,
+-					  SCALER_DISPCTRLX_HEIGHT) |
+-			    (oneshot ? SCALER_DISPCTRLX_ONESHOT : 0);
+-	else
+-		dispctrl |= VC4_SET_FIELD(mode->hdisplay,
+-					  SCALER5_DISPCTRLX_WIDTH) |
+-			    VC4_SET_FIELD(mode->vdisplay,
+-					  SCALER5_DISPCTRLX_HEIGHT) |
+-			    (oneshot ? SCALER5_DISPCTRLX_ONESHOT : 0);
+-
+-	HVS_WRITE(SCALER_DISPCTRLX(vc4_state->assigned_channel), dispctrl);
++	vc4_hvs_init_channel(vc4, crtc, mode, oneshot);
+ }
+ 
+ void vc4_hvs_atomic_disable(struct drm_crtc *crtc,
+ 			    struct drm_crtc_state *old_state)
+ {
+ 	struct drm_device *dev = crtc->dev;
+-	struct vc4_dev *vc4 = to_vc4_dev(dev);
+ 	struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(old_state);
+ 	unsigned int chan = vc4_state->assigned_channel;
+ 
+-	if (HVS_READ(SCALER_DISPCTRLX(chan)) &
+-	    SCALER_DISPCTRLX_ENABLE) {
+-		HVS_WRITE(SCALER_DISPCTRLX(chan),
+-			  SCALER_DISPCTRLX_RESET);
+-
+-		/* While the docs say that reset is self-clearing, it
+-		 * seems it doesn't actually.
+-		 */
+-		HVS_WRITE(SCALER_DISPCTRLX(chan), 0);
+-	}
+-
+-	/* Once we leave, the scaler should be disabled and its fifo empty. */
+-
+-	WARN_ON_ONCE(HVS_READ(SCALER_DISPCTRLX(chan)) & SCALER_DISPCTRLX_RESET);
+-
+-	WARN_ON_ONCE(VC4_GET_FIELD(HVS_READ(SCALER_DISPSTATX(chan)),
+-				   SCALER_DISPSTATX_MODE) !=
+-		     SCALER_DISPSTATX_MODE_DISABLED);
+-
+-	WARN_ON_ONCE((HVS_READ(SCALER_DISPSTATX(chan)) &
+-		      (SCALER_DISPSTATX_FULL | SCALER_DISPSTATX_EMPTY)) !=
+-		     SCALER_DISPSTATX_EMPTY);
++	vc4_hvs_stop_channel(dev, chan);
+ }
+ 
+ void vc4_hvs_atomic_flush(struct drm_crtc *crtc,
 -- 
 git-series 0.9.1
