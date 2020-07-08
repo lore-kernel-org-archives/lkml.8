@@ -2,168 +2,130 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE48AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C90FF20656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B1F20656
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="oVO3nZeZ"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pCl9L/5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgGHLkl (ORCPT
+        id S1728850AbgGHLnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:40:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728742AbgGHLkl (ORCPT
+        Wed, 8 Jul 2020 07:43:47 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1651 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728592AbgGHLnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:40:41 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7EDDC08C5DC;
-        Wed,  8 Jul 2020 04:40:40 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 26C6A23068;
-        Wed,  8 Jul 2020 13:40:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1594208439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nhbzphc6s/8yq5nZ/x51u8ir0EyNta3CXB0NHXBNL44=;
-        b=oVO3nZeZvIULdQSkQc4xBlzwi81fGG7by7fvH4hp/qrBXeSMaziHJRSQ3UjJJcQQ6PIG4h
-        /Qmk8QWW8Fvi4/Ie8rlb/omJlwhk+OGPlf913fsZ+mobVk4OW8HVTRzcHGiYu4Rk4Ie+cH
-        HOuIV/cVIOcNFIuX12m6e/SKOFRGsXk=
+        Wed, 8 Jul 2020 07:43:46 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068BDggv010076;
+        Wed, 8 Jul 2020 13:43:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=6ckmkQk8+QiiCG6bsKaHAQ9FdAGOnyaXYUue5dZsFvg=;
+ b=pCl9L/5cv2JgF3Gq94BXZJB8HPpS5mz+Vp199r6vkbneJHPGG7wpKe6efh76+v6sHYbx
+ 7tAvwRJBjOysfghCcCgTV5tSKKqk6vk2bVgDlLWkdcmu5Desf/+N5rP1QkXRJ0ywKPiQ
+ a9bUAtiQGnwLMvTEmwZFoiBz1yNqNmUuneCCByi30J96o69hkWeeGTNVsjzpG2OzF5Tw
+ BioGq1RZ0ahuq6+CjJ3FhybG2GDLPARVtzNwtkrEPlf+0BW02q136NLlvI9hD1nGNZ+h
+ SDE4IzYGNr07AjY9So5Tc5YksPFFhCT+Y4Gz7zzHijfDrFl9SGstks8Nt3eC6q8QT1Kj Tw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 322fhv781s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 13:43:35 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 96AED100034;
+        Wed,  8 Jul 2020 13:43:34 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8804D2B4D31;
+        Wed,  8 Jul 2020 13:43:34 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG6NODE3.st.com (10.75.127.18)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul 2020 13:43:33
+ +0200
+From:   Patrick Delaunay <patrick.delaunay@st.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Patrick Delaunay <patrick.delaunay@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] ARM: dts: stm32: Correct spi4 pins in stm32mp15-pinctrl.dtsi
+Date:   Wed, 8 Jul 2020 13:43:24 +0200
+Message-ID: <20200708114324.7309-1-patrick.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 Jul 2020 13:40:38 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH net-next v5 2/4] net: dsa: felix: (re)use already existing
- constants
-In-Reply-To: <20200708104756.y42eid56w5jspl6u@skbuf>
-References: <20200707212131.15690-1-michael@walle.cc>
- <20200707212131.15690-3-michael@walle.cc>
- <20200708104756.y42eid56w5jspl6u@skbuf>
-User-Agent: Roundcube Webmail/1.4.6
-Message-ID: <381859c567b9786f0320eb2a3a68c748@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG6NODE3.st.com
+ (10.75.127.18)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_08:2020-07-08,2020-07-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-07-08 12:47, schrieb Vladimir Oltean:
-> On Tue, Jul 07, 2020 at 11:21:29PM +0200, Michael Walle wrote:
->> Now that there are USXGMII constants available, drop the old 
->> definitions
->> and reuse the generic ones.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  drivers/net/dsa/ocelot/felix_vsc9959.c | 45 
->> +++++++-------------------
->>  1 file changed, 12 insertions(+), 33 deletions(-)
->> 
->> diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c 
->> b/drivers/net/dsa/ocelot/felix_vsc9959.c
->> index 19614537b1ba..4310b1527022 100644
->> --- a/drivers/net/dsa/ocelot/felix_vsc9959.c
->> +++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
->> @@ -10,35 +10,15 @@
->>  #include <soc/mscc/ocelot.h>
->>  #include <net/pkt_sched.h>
->>  #include <linux/iopoll.h>
->> +#include <linux/mdio.h>
->>  #include <linux/pci.h>
->>  #include "felix.h"
->> 
->>  #define VSC9959_VCAP_IS2_CNT		1024
->>  #define VSC9959_VCAP_IS2_ENTRY_WIDTH	376
->>  #define VSC9959_VCAP_PORT_CNT		6
->> -
->> -/* TODO: should find a better place for these */
->> -#define USXGMII_BMCR_RESET		BIT(15)
->> -#define USXGMII_BMCR_AN_EN		BIT(12)
->> -#define USXGMII_BMCR_RST_AN		BIT(9)
->> -#define USXGMII_BMSR_LNKS(status)	(((status) & GENMASK(2, 2)) >> 2)
->> -#define USXGMII_BMSR_AN_CMPL(status)	(((status) & GENMASK(5, 5)) >> 
->> 5)
->> -#define USXGMII_ADVERTISE_LNKS(x)	(((x) << 15) & BIT(15))
->> -#define USXGMII_ADVERTISE_FDX		BIT(12)
->> -#define USXGMII_ADVERTISE_SPEED(x)	(((x) << 9) & GENMASK(11, 9))
->> -#define USXGMII_LPA_LNKS(lpa)		((lpa) >> 15)
->> -#define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
->> -#define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
->> -
->>  #define VSC9959_TAS_GCL_ENTRY_MAX	63
->> 
->> -enum usxgmii_speed {
->> -	USXGMII_SPEED_10	= 0,
->> -	USXGMII_SPEED_100	= 1,
->> -	USXGMII_SPEED_1000	= 2,
->> -	USXGMII_SPEED_2500	= 4,
->> -};
->> -
->>  static const u32 vsc9959_ana_regmap[] = {
->>  	REG(ANA_ADVLEARN,			0x0089a0),
->>  	REG(ANA_VLANMASK,			0x0089a4),
->> @@ -787,11 +767,10 @@ static void vsc9959_pcs_config_usxgmii(struct 
->> phy_device *pcs,
->>  {
->>  	/* Configure device ability for the USXGMII Replicator */
->>  	phy_write_mmd(pcs, MDIO_MMD_VEND2, MII_ADVERTISE,
->> -		      USXGMII_ADVERTISE_SPEED(USXGMII_SPEED_2500) |
->> -		      USXGMII_ADVERTISE_LNKS(1) |
->> +		      MDIO_LPA_USXGMII_2500FULL |
->> +		      MDIO_LPA_USXGMII_LINK |
->>  		      ADVERTISE_SGMII |
->> -		      ADVERTISE_LPACK |
->> -		      USXGMII_ADVERTISE_FDX);
->> +		      ADVERTISE_LPACK);
->>  }
->> 
->>  static void vsc9959_pcs_config(struct ocelot *ocelot, int port,
->> @@ -1005,8 +984,8 @@ static void vsc9959_pcs_link_state_usxgmii(struct 
->> phy_device *pcs,
->>  		return;
->> 
->>  	pcs->autoneg = true;
->> -	pcs->autoneg_complete = USXGMII_BMSR_AN_CMPL(status);
->> -	pcs->link = USXGMII_BMSR_LNKS(status);
->> +	pcs->autoneg_complete = status & BMSR_ANEGCOMPLETE;
->> +	pcs->link = status & BMSR_LSTATUS;
-> 
-> These are "unsigned :1" in struct phy_device, and not booleans. I'm not
-> sure how the compiler is going to treat this assignment of an integer.
-> I have a feeling it may not do the right thing.
+Move spi4_pins_a nodes from pinctrl_z to pinctrl
+as the associated pins are not in BANK Z.
 
-Yeah I checked the same and assumed the compiler will convert/cast it, 
-so
-I deliberatly didn't do the "!!". But thinking about it again; there 
-seems
-to be no way this could work.
+Fixes: 498a7014989dfdd9a47864b55704dc829ed0dc90
+Signed-off-by: Patrick Delaunay <patrick.delaunay@st.com>
+---
 
-> Could you please do this?
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 28 ++++++++++++------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-sure.
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 7eb858732d6d..6aedbd7077ff 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -1574,6 +1574,20 @@
+ 		};
+ 	};
+ 
++	spi4_pins_a: spi4-0 {
++		pins {
++			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
++				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
++			bias-disable;
++		};
++	};
++
+ 	usart2_pins_a: usart2-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
+@@ -1776,18 +1790,4 @@
+ 			bias-disable;
+ 		};
+ 	};
+-
+-	spi4_pins_a: spi4-0 {
+-		pins {
+-			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
+-				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
+-			bias-disable;
+-			drive-push-pull;
+-			slew-rate = <1>;
+-		};
+-		pins2 {
+-			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
+-			bias-disable;
+-		};
+-	};
+ };
+-- 
+2.17.1
 
--michael
