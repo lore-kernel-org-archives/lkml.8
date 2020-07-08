@@ -2,198 +2,93 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A85C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A24C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D12BD20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACEF820720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594211592;
+	bh=sMyKz+hZNLZFQOQTIXP/42xxCS+2xANLITbp1rbBVm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nNu9M0nzNxrh3Qk/VPS8EQcSWtPupKd0jDxYExgfw5OosSi4lJwp6gTuv/s7fCA4N
+	 VMGUSubhlf7RcB7anVT066I+A9IlOXyDdfWhLE6wnTJaXXtt0oKrvzLkDHY0EQFPCY
+	 MdoCpE4x/pUjHHPuNQxH8AU8oc8X67o0bvKUQarQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgGHMdH (ORCPT
+        id S1729120AbgGHMdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:33:07 -0400
-Received: from mga11.intel.com ([192.55.52.93]:38021 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728640AbgGHMdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:33:07 -0400
-IronPort-SDR: DwYAoFeSuXk5NUGoZADacIFaIvTnp3w7iuMacRX9jtukZHpaWwrbZq+rVm2gKbu9z/JIqzxXig
- g/2wPzJk8Oeg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="145885069"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="145885069"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 05:33:06 -0700
-IronPort-SDR: HIAIFa9v/XAYHeClCKH6CS3u6NI8+l7br6DnuxSmUh00xYbbK5VmFheMBHdZglaG/ao1TBHtkI
- JJxHuJmZDdjg==
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="283782976"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.184]) ([10.255.31.184])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 05:33:03 -0700
-Subject: Re: [PATCH v3 4/8] KVM: X86: Split kvm_update_cpuid()
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200708065054.19713-1-xiaoyao.li@intel.com>
- <20200708065054.19713-5-xiaoyao.li@intel.com>
- <ad349b28-bc62-e478-c610-e829974a8342@redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <92184f05-ca27-268c-ea72-f939fb1a0ab2@intel.com>
-Date:   Wed, 8 Jul 2020 20:33:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 8 Jul 2020 08:33:11 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43476 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728987AbgGHMdJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 08:33:09 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d15so41670947edm.10;
+        Wed, 08 Jul 2020 05:33:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DhieJsQuOEwSP81dBdl01exBUOB4h6MMR09/FyCdqmQ=;
+        b=YVCvV4MN3N2tL0HKzC96nnjQaH6/IDXO4hRNbeRAlpejGVkma+D0XmufKGWzhdN+HD
+         ffohPw837EGoEaeQzX+7M7JndF7rZ8y2OmQbyU1WKsRKygyNBsW9neYZll4ikRPKwzgM
+         I3H6iyp/FxgGRVJ4faQ9gbOPx/bgPiY9PY/2cRtfgoq4N6BBptwYtzn8ZneFG6pQV1Ka
+         hWVrswjypRbt5zo2ax9xDPnoLi3dVeyjYIC3jiE1D+fokLRLNu4XBRn4ck4rCF3EZjR2
+         AOufotVMPTe++p+otloGTpk+26odJ25TKCCg/qil71hjbDZn4ZtyWn69gtxxEDMzA4DJ
+         MMiA==
+X-Gm-Message-State: AOAM5328c+DXaJIux0SeF2fc91HngnGAeexGJRwsa7JiCYrTqjyWQZU/
+        awBKC7nf3sZZ1Wqen5aIDTw=
+X-Google-Smtp-Source: ABdhPJwu6Uv1QKLJxfMUiLAIi03G94R2XS09hZ5lEYX5Hc7T85mzMl53BpuQKvDyP6DYQMjvb7M+nQ==
+X-Received: by 2002:a05:6402:31bb:: with SMTP id dj27mr2097888edb.387.1594211586998;
+        Wed, 08 Jul 2020 05:33:06 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id a1sm1893441ejk.125.2020.07.08.05.33.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jul 2020 05:33:06 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 14:33:03 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     lukasz.luba@arm.com, k.konieczny@samsung.com, kgene@kernel.org,
+        s.nawrocki@samsung.com, willy.mh.wolff.ml@gmail.com,
+        b.zolnierkie@samsung.com, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 2/2] memory: samsung: exynos5422-dmc: Use delayed
+ timer as default
+Message-ID: <20200708123303.GB29033@kozik-lap>
+References: <20200703062622.11773-1-cw00.choi@samsung.com>
+ <CGME20200703061509epcas1p3e338b614c44f5d8b566dae92f11cc8cb@epcas1p3.samsung.com>
+ <20200703062622.11773-3-cw00.choi@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <ad349b28-bc62-e478-c610-e829974a8342@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200703062622.11773-3-cw00.choi@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/2020 8:06 PM, Paolo Bonzini wrote:
-> On 08/07/20 08:50, Xiaoyao Li wrote:
->> Split the part of updating vcpu model out of kvm_update_cpuid(), and put
->> it into a new kvm_update_vcpu_model(). So it's more clear that
->> kvm_update_cpuid() is to update guest CPUID settings, while
->> kvm_update_vcpu_model() is to update vcpu model (settings) based on the
->> updated CPUID settings.
->>
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+On Fri, Jul 03, 2020 at 03:26:22PM +0900, Chanwoo Choi wrote:
+> Use delayed timer as default instead of deferrable timer
+> in order to monitor the DMC status regardless of CPU idle.
 > 
-> I would prefer to keep the kvm_update_cpuid name for what you called
-> kvm_update_vcpu_model(), and rename the rest to kvm_update_cpuid_runtime().
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  drivers/memory/samsung/exynos5422-dmc.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-But there is no CPUID being updated in kvm_update_cpuid(), after 
-kvm_update_cpuid_runtime() is split out. This is confusing, IMO.
+If you want to take this through devfreq tree, I'm fine:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> Paolo
-> 
->> ---
->>   arch/x86/kvm/cpuid.c | 38 ++++++++++++++++++++++++--------------
->>   arch/x86/kvm/cpuid.h |  1 +
->>   arch/x86/kvm/x86.c   |  1 +
->>   3 files changed, 26 insertions(+), 14 deletions(-)
->>
->> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->> index a825878b7f84..001f5a94880e 100644
->> --- a/arch/x86/kvm/cpuid.c
->> +++ b/arch/x86/kvm/cpuid.c
->> @@ -76,7 +76,6 @@ static int kvm_check_cpuid(struct kvm_vcpu *vcpu)
->>   void kvm_update_cpuid(struct kvm_vcpu *vcpu)
->>   {
->>   	struct kvm_cpuid_entry2 *best;
->> -	struct kvm_lapic *apic = vcpu->arch.apic;
->>   
->>   	best = kvm_find_cpuid_entry(vcpu, 1, 0);
->>   	if (best) {
->> @@ -89,26 +88,14 @@ void kvm_update_cpuid(struct kvm_vcpu *vcpu)
->>   			   vcpu->arch.apic_base & MSR_IA32_APICBASE_ENABLE);
->>   	}
->>   
->> -	if (best && apic) {
->> -		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
->> -			apic->lapic_timer.timer_mode_mask = 3 << 17;
->> -		else
->> -			apic->lapic_timer.timer_mode_mask = 1 << 17;
->> -	}
->> -
->>   	best = kvm_find_cpuid_entry(vcpu, 7, 0);
->>   	if (best && boot_cpu_has(X86_FEATURE_PKU) && best->function == 0x7)
->>   		cpuid_entry_change(best, X86_FEATURE_OSPKE,
->>   				   kvm_read_cr4_bits(vcpu, X86_CR4_PKE));
->>   
->>   	best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
->> -	if (!best) {
->> -		vcpu->arch.guest_supported_xcr0 = 0;
->> -	} else {
->> -		vcpu->arch.guest_supported_xcr0 =
->> -			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
->> +	if (best)
->>   		best->ebx = xstate_required_size(vcpu->arch.xcr0, false);
->> -	}
->>   
->>   	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
->>   	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
->> @@ -127,6 +114,27 @@ void kvm_update_cpuid(struct kvm_vcpu *vcpu)
->>   					   vcpu->arch.ia32_misc_enable_msr &
->>   					   MSR_IA32_MISC_ENABLE_MWAIT);
->>   	}
->> +}
->> +
->> +void kvm_update_vcpu_model(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_lapic *apic = vcpu->arch.apic;
->> +	struct kvm_cpuid_entry2 *best;
->> +
->> +	best = kvm_find_cpuid_entry(vcpu, 1, 0);
->> +	if (best && apic) {
->> +		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
->> +			apic->lapic_timer.timer_mode_mask = 3 << 17;
->> +		else
->> +			apic->lapic_timer.timer_mode_mask = 1 << 17;
->> +	}
->> +
->> +	best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
->> +	if (!best)
->> +		vcpu->arch.guest_supported_xcr0 = 0;
->> +	else
->> +		vcpu->arch.guest_supported_xcr0 =
->> +			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
->>   
->>   	/* Note, maxphyaddr must be updated before tdp_level. */
->>   	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
->> @@ -218,6 +226,7 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
->>   	kvm_apic_set_version(vcpu);
->>   	kvm_x86_ops.cpuid_update(vcpu);
->>   	kvm_update_cpuid(vcpu);
->> +	kvm_update_vcpu_model(vcpu);
->>   
->>   	kvfree(cpuid_entries);
->>   out:
->> @@ -247,6 +256,7 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
->>   	kvm_apic_set_version(vcpu);
->>   	kvm_x86_ops.cpuid_update(vcpu);
->>   	kvm_update_cpuid(vcpu);
->> +	kvm_update_vcpu_model(vcpu);
->>   out:
->>   	return r;
->>   }
->> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
->> index f136de1debad..45e3643e2fba 100644
->> --- a/arch/x86/kvm/cpuid.h
->> +++ b/arch/x86/kvm/cpuid.h
->> @@ -10,6 +10,7 @@ extern u32 kvm_cpu_caps[NCAPINTS] __read_mostly;
->>   void kvm_set_cpu_caps(void);
->>   
->>   void kvm_update_cpuid(struct kvm_vcpu *vcpu);
->> +void kvm_update_vcpu_model(struct kvm_vcpu *vcpu);
->>   struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
->>   					      u32 function, u32 index);
->>   int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 09ee54f5e385..6f376392e6e6 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -8184,6 +8184,7 @@ static void enter_smm(struct kvm_vcpu *vcpu)
->>   #endif
->>   
->>   	kvm_update_cpuid(vcpu);
->> +	kvm_update_vcpu_model(vcpu);
->>   	kvm_mmu_reset_context(vcpu);
->>   }
->>   
->>
-> 
+Otherwise I could grab it through samsung-soc after devfreq change ends
+in mainline.
 
+Best regards,
+Krzysztof
