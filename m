@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97711C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56998C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B6120786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336212078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594214908;
-	bh=tJ6fc5RcuF5jbuGKpc5fAqO8Uz1v2tADclOlEjLXGQ4=;
+	s=default; t=1594214913;
+	bh=Asm/7hdVVy9foo9+ooUHC1IjpqNSr3EIkQe1fuY60FU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vPHEALzYgK7CLAS98jw3Iipwtj58v/sTT9zuMm3MXL46vdz+x4jTIGbRzA9Re8SBm
-	 CIYbURcrX1Kb7DlUh/xlJgtCL4JrGuDj3WJWXuesOw50Q2HrXyn/z7Jnc5UlZ+bvqG
-	 68yHJIG048gut/N/wNuc4irNdNln0Z+shJVhuv6E=
+	b=uGOi5bIOuWW2zXzgAjL1KCpdDnHKPwuk1LMIfYnA4bE5elG4anu7cfzGHC8RxMQTB
+	 0puMV4z/Wp/7u+ajmjO7P2dMvCaMbXFe9Y4PSGPLS/RLFv6wvNTg3ahMrs84IFS3NJ
+	 c7MjiOHi3n4RtATRvP4a/urE4oh3Fm0aSGPs+8/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbgGHN21 (ORCPT
+        id S1729525AbgGHN2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:28:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35502 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 09:28:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728364AbgGHN20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:28:26 -0400
+        id S1728210AbgGHN2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:28:30 -0400
 Received: from localhost.localdomain (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECB152078D;
-        Wed,  8 Jul 2020 13:28:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE5DE20774;
+        Wed,  8 Jul 2020 13:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594214905;
-        bh=tJ6fc5RcuF5jbuGKpc5fAqO8Uz1v2tADclOlEjLXGQ4=;
+        s=default; t=1594214910;
+        bh=Asm/7hdVVy9foo9+ooUHC1IjpqNSr3EIkQe1fuY60FU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FUPB+vK8kcGhAvAvkXEHM5iYkJCNE6uLPBdyRh2mB/VJzZ1u4BPzH+LVV3CaRsXGq
-         npVCfMtJvdOIcyqu+ohfIu2HhdpKmvgjQ8b3rap8RTSWlksS576aR0Q5TGaoGsxCVv
-         fL6L6noJQzHQmiJAdiZYPqUVjMrayRUAx8pp+5fU=
+        b=oxPX3v6ZTeE3iLG/SYYSfJChh1qDtTNTeY/al5tudYDK5Dwg/F/BMmCkbBcfHEKkL
+         chdfcSJeAZgWPgERJ0sRZB1wW9OTdfd5CWiyHffTviIdrP2096e/oXLVErS5zYuE5R
+         J0d79h6+E6inH3ST6YEvvkXqww7NdvgrAti8c/rs=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 2/6] phy: mapphone-mdm6600: Add missing description for some structure fields
-Date:   Wed,  8 Jul 2020 18:58:05 +0530
-Message-Id: <20200708132809.265967-2-vkoul@kernel.org>
+        Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH 4/6] phy: rockchip-typec: use correct format for structure description
+Date:   Wed,  8 Jul 2020 18:58:07 +0530
+Message-Id: <20200708132809.265967-4-vkoul@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200708132809.265967-1-vkoul@kernel.org>
 References: <20200708132809.265967-1-vkoul@kernel.org>
@@ -57,40 +57,31 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 We get warning with W=1 build:
-drivers/phy/motorola/phy-mapphone-mdm6600.c:185: warning: Function
-parameter or member 'val' not described in 'phy_mdm6600_cmd'
-drivers/phy/motorola/phy-mapphone-mdm6600.c:200: warning: Function
-parameter or member 'work' not described in 'phy_mdm6600_status'
+drivers/phy/rockchip/phy-rockchip-typec.c:360: warning: cannot
+understand function prototype: 'struct rockchip_usb3phy_port_cfg '
 
-Fix that by adding description for 'val' and 'work'
+The 'struct rockchip_usb3phy_port_cfg ' is commented properly but uses
+wrong format, so fix that up
 
-Cc: Tony Lindgren <tony@atomide.com>
+Cc: Chris Zhong <zyw@rock-chips.com>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/phy/motorola/phy-mapphone-mdm6600.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/phy/rockchip/phy-rockchip-typec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/motorola/phy-mapphone-mdm6600.c b/drivers/phy/motorola/phy-mapphone-mdm6600.c
-index 94a34cf75eb3..5172971f4c36 100644
---- a/drivers/phy/motorola/phy-mapphone-mdm6600.c
-+++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
-@@ -178,6 +178,7 @@ static const struct phy_ops gpio_usb_ops = {
- /**
-  * phy_mdm6600_cmd() - send a command request to mdm6600
-  * @ddata: device driver data
-+ * @val: value of cmd to be set
-  *
-  * Configures the three command request GPIOs to the specified value.
-  */
-@@ -194,7 +195,7 @@ static void phy_mdm6600_cmd(struct phy_mdm6600 *ddata, int val)
+diff --git a/drivers/phy/rockchip/phy-rockchip-typec.c b/drivers/phy/rockchip/phy-rockchip-typec.c
+index 24563160197f..70a31251b202 100644
+--- a/drivers/phy/rockchip/phy-rockchip-typec.c
++++ b/drivers/phy/rockchip/phy-rockchip-typec.c
+@@ -347,7 +347,7 @@ struct usb3phy_reg {
+ };
  
  /**
-  * phy_mdm6600_status() - read mdm6600 status lines
-- * @ddata: device driver data
-+ * @work: work structure
-  */
- static void phy_mdm6600_status(struct work_struct *work)
- {
+- * struct rockchip_usb3phy_port_cfg: usb3-phy port configuration.
++ * struct rockchip_usb3phy_port_cfg - usb3-phy port configuration.
+  * @reg: the base address for usb3-phy config.
+  * @typec_conn_dir: the register of type-c connector direction.
+  * @usb3tousb2_en: the register of type-c force usb2 to usb2 enable.
 -- 
 2.26.2
 
