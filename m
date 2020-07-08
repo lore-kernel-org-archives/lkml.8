@@ -2,169 +2,155 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14319C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF60C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA24020774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2CA20774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:38:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbxCs0Xh"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IT2uQZXV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbgGHEiF (ORCPT
+        id S1729142AbgGHEiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 00:38:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42718 "EHLO
+        Wed, 8 Jul 2020 00:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgGHEiF (ORCPT
+        with ESMTP id S1726185AbgGHEiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 00:38:05 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC5F7C061755;
-        Tue,  7 Jul 2020 21:38:04 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id m9so9148305pfh.0;
-        Tue, 07 Jul 2020 21:38:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pGbaCoMke0eHVeVRLkTlHstsJU5HzwWe4OVKEnmf1ZQ=;
-        b=sbxCs0Xh2GFQxQ+jOOqUDA4ATECZXZ2LYdmSyQjvs7devdjXaMII5lDZiIUTSCJY0X
-         U7UCVgT7t1OcdgWbf9oY1ilqODpu70WpY1ItakeeQmoerMUy/LMhjq5iJWq5rSbtdejy
-         xbvIMeKzFf6x7fmtlSHMpjB7hXA3OvGR1LN1mHVnowtPTVUmRyrn9ozfCjk+sbS4E+Dt
-         st1okfrv4p7vrDbRRB7EgbaQRl86CQoSa0BlRByLqKjrz4kYwlSSvXj0OBuZcJOMocpW
-         mAVyxhpQ1C/JAouRcBrBWG4pOqMhKdWUZO2moH/xqvObFvLjpRo+QkTlUZiH60M+V64Q
-         LhJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pGbaCoMke0eHVeVRLkTlHstsJU5HzwWe4OVKEnmf1ZQ=;
-        b=UOeqvUaYOChqQxfyTtAbewQT/Wka2Z4c4HniEkChI1ca8hfQhlzv0fcQkSODZLXeNM
-         bL1pK+fcaY4JFJtsjS1iauZrfj6yL+EM40araeyRtlrg1PkEHyFSCarY9Mgpo8eImvAP
-         L/N8IoOI9Z/3MqRnTpgsIu9qwarJzxaL8P4H+dhWjNchtzpTNRUoZyUkuKBi/PXwdPKj
-         XMulAlf0lxNpu4E4Zci8UWlNxW+LVAvtPGA9TNb1h7+gi3gksKGr7RPGcJF4XQYniI+k
-         0eZk1vnAwcE/Y5eUBvu/keLvMX6ryAdLMr1nJX9bnzL50d2sBrbTaxVhDYDsXF0Ok4JW
-         YYrQ==
-X-Gm-Message-State: AOAM533OUdw2RYvpeIXRTKA/RKUJDOIQQ3aBfK9J9BAv9P7AhnnXVwLC
-        0+EUCmMpIygqw4ck/KplQD0=
-X-Google-Smtp-Source: ABdhPJyueUvBUwFB5CkcsW7TctjCVGF9ROFxbj4AKt5/+V3u8yHu6Y7DuT1FOCV6MrMPQqKXKnknFg==
-X-Received: by 2002:aa7:9736:: with SMTP id k22mr50226247pfg.62.1594183083354;
-        Tue, 07 Jul 2020 21:38:03 -0700 (PDT)
-Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:4dfb:86a6:10aa:1756])
-        by smtp.gmail.com with ESMTPSA id f6sm26191724pfe.174.2020.07.07.21.38.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 21:38:02 -0700 (PDT)
-From:   Xie He <xie.he.0141@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Shannon Nelson <snelson@pensando.io>,
-        Martin Habets <mhabets@solarflare.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Xie He <xie.he.0141@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
-Subject: [PATCH] drivers/net/wan/x25_asy: Fix to make it work
-Date:   Tue,  7 Jul 2020 21:37:54 -0700
-Message-Id: <20200708043754.46554-1-xie.he.0141@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 8 Jul 2020 00:38:07 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4EB5C061755;
+        Tue,  7 Jul 2020 21:38:06 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1mkx3glbz9sDX;
+        Wed,  8 Jul 2020 14:38:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594183083;
+        bh=ZsMcG70EzyVoGxShgO4kLHS/DyIAqpINTFPJBiPhCWU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=IT2uQZXV3/7XQNOLkkYoasFrMKQLzR4jB3xm7wNtSFUhxgGcZWfjwcwZ1zzpoZ4wE
+         iXaFlujqV4ZoGC4eSVX0frW/TRpB5BGo0MicIUHHPJZIBZpN1jaRxzAc7FqKO/BdKs
+         ztKtwOcBDIEeHrw7g9SlUitpPjfjcKkwKlpZnSIJSJjaSlTEfzmEa0yhkUV/sdSG5L
+         vUpfsPGhgHCdcVLpUotau2j/j9UH0H7nxCy2lYpMCnTIyty2QzMaT/rfiXn7LvT/wX
+         AV/XSJX9mnVGgQHpo2pv1NQiSb+rjfHPJHebvf175skl1aTbnh5DEjXWDDGRgP12SN
+         +SdaMfVps7Zeg==
+Date:   Wed, 8 Jul 2020 14:37:59 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Richard Weinberger <richard.weinberger@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christophe Kerello <christophe.kerello@st.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: linux-next: manual merge of the spi tree with the mtd tree
+Message-ID: <20200708143759.50246487@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/oy0nep/YG9.oD.7jA5usSxT";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver is not working because of problems of its receiving code.
-This patch fixes it to make it work.
+--Sig_/oy0nep/YG9.oD.7jA5usSxT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-When the driver receives an LAPB frame, it should first pass the frame
-to the LAPB module to process. After processing, the LAPB module passes
-the data (the packet) back to the driver, the driver should then add a
-one-byte pseudo header and pass the data to upper layers.
+Hi all,
 
-The changes to the "x25_asy_bump" function and the
-"x25_asy_data_indication" function are to correctly implement this
-procedure.
+Today's linux-next merge of the spi tree got conflicts in:
 
-Also, the "x25_asy_unesc" function ignores any frame that is shorter
-than 3 bytes. However the shortest frames are 2-byte long. So we need
-to change it to allow 2-byte frames to pass.
+  drivers/memory/Kconfig
+  drivers/memory/Makefile
 
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
----
- drivers/net/wan/x25_asy.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+between commit:
 
-diff --git a/drivers/net/wan/x25_asy.c b/drivers/net/wan/x25_asy.c
-index 69773d228ec1..3fd8938e591b 100644
---- a/drivers/net/wan/x25_asy.c
-+++ b/drivers/net/wan/x25_asy.c
-@@ -183,7 +183,7 @@ static inline void x25_asy_unlock(struct x25_asy *sl)
- 	netif_wake_queue(sl->dev);
- }
- 
--/* Send one completely decapsulated IP datagram to the IP layer. */
-+/* Send an LAPB frame to the LAPB module to process. */
- 
- static void x25_asy_bump(struct x25_asy *sl)
- {
-@@ -195,13 +195,12 @@ static void x25_asy_bump(struct x25_asy *sl)
- 	count = sl->rcount;
- 	dev->stats.rx_bytes += count;
- 
--	skb = dev_alloc_skb(count+1);
-+	skb = dev_alloc_skb(count);
- 	if (skb == NULL) {
- 		netdev_warn(sl->dev, "memory squeeze, dropping packet\n");
- 		dev->stats.rx_dropped++;
- 		return;
- 	}
--	skb_push(skb, 1);	/* LAPB internal control */
- 	skb_put_data(skb, sl->rbuff, count);
- 	skb->protocol = x25_type_trans(skb, sl->dev);
- 	err = lapb_data_received(skb->dev, skb);
-@@ -209,7 +208,6 @@ static void x25_asy_bump(struct x25_asy *sl)
- 		kfree_skb(skb);
- 		printk(KERN_DEBUG "x25_asy: data received err - %d\n", err);
- 	} else {
--		netif_rx(skb);
- 		dev->stats.rx_packets++;
- 	}
- }
-@@ -356,12 +354,16 @@ static netdev_tx_t x25_asy_xmit(struct sk_buff *skb,
-  */
- 
- /*
-- *	Called when I frame data arrives. We did the work above - throw it
-- *	at the net layer.
-+ *	Called when I frame data arrives. We add a pseudo header for upper
-+ *	layers and pass it to upper layers.
-  */
- 
- static int x25_asy_data_indication(struct net_device *dev, struct sk_buff *skb)
- {
-+	skb_push(skb, 1);
-+	skb->data[0] = X25_IFACE_DATA;
-+	skb->protocol = x25_type_trans(skb, dev);
-+
- 	return netif_rx(skb);
- }
- 
-@@ -657,7 +659,7 @@ static void x25_asy_unesc(struct x25_asy *sl, unsigned char s)
- 	switch (s) {
- 	case X25_END:
- 		if (!test_and_clear_bit(SLF_ERROR, &sl->flags) &&
--		    sl->rcount > 2)
-+		    sl->rcount >= 2)
- 			x25_asy_bump(sl);
- 		clear_bit(SLF_ESCAPE, &sl->flags);
- 		sl->rcount = 0;
--- 
-2.25.1
+  66b8173a197f ("memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driv=
+er")
 
+from the mtd tree and commit:
+
+  ca7d8b980b67 ("memory: add Renesas RPC-IF driver")
+
+from the spi tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/memory/Kconfig
+index be69c07b8941,e438d79857da..000000000000
+--- a/drivers/memory/Kconfig
++++ b/drivers/memory/Kconfig
+@@@ -174,16 -174,15 +174,25 @@@ config PL353_SM
+  	  This driver is for the ARM PL351/PL353 Static Memory
+  	  Controller(SMC) module.
+ =20
++ config RENESAS_RPCIF
++ 	tristate "Renesas RPC-IF driver"
++ 	depends on ARCH_RENESAS
++ 	select REGMAP_MMIO
++ 	help
++ 	  This supports Renesas R-Car Gen3 RPC-IF which provides either SPI
++ 	  host or HyperFlash. You'll have to select individual components
++ 	  under the corresponding menu.
++=20
+ +config STM32_FMC2_EBI
+ +	tristate "Support for FMC2 External Bus Interface on STM32MP SoCs"
+ +	depends on MACH_STM32MP157 || COMPILE_TEST
+ +	select MFD_SYSCON
+ +	help
+ +	  Select this option to enable the STM32 FMC2 External Bus Interface
+ +	  controller. This driver configures the transactions with external
+ +	  devices (like SRAM, ethernet adapters, FPGAs, LCD displays, ...) on
+ +	  SOCs containing the FMC2 External Bus Interface.
+ +
+  source "drivers/memory/samsung/Kconfig"
+  source "drivers/memory/tegra/Kconfig"
+ =20
+diff --cc drivers/memory/Makefile
+index d3d8d6ced342,d105f8ebe8b8..000000000000
+--- a/drivers/memory/Makefile
++++ b/drivers/memory/Makefile
+@@@ -22,7 -22,7 +22,8 @@@ obj-$(CONFIG_JZ4780_NEMC)	+=3D jz4780-nem
+  obj-$(CONFIG_MTK_SMI)		+=3D mtk-smi.o
+  obj-$(CONFIG_DA8XX_DDRCTL)	+=3D da8xx-ddrctl.o
+  obj-$(CONFIG_PL353_SMC)		+=3D pl353-smc.o
++ obj-$(CONFIG_RENESAS_RPCIF)	+=3D renesas-rpc-if.o
+ +obj-$(CONFIG_STM32_FMC2_EBI)	+=3D stm32-fmc2-ebi.o
+ =20
+  obj-$(CONFIG_SAMSUNG_MC)	+=3D samsung/
+  obj-$(CONFIG_TEGRA_MC)		+=3D tegra/
+
+--Sig_/oy0nep/YG9.oD.7jA5usSxT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8FTacACgkQAVBC80lX
+0GxCUQf+IA49MSifIWTN1d90F+RjckUEh8j/Ovj98n29ZkzaWB9z7jVu4TUwEPS5
+AiqCVV4WBruEusSVwoW3+Hxxn34v2ZZ0VEs0dex68F1qf4MO60FfIjARPsq74U0u
+8LU3GJ73P7L9f4bqIhUZH4iwu34oYgSIqH+yASNSnZuIybzbaNyUV0nXcjqp40ZF
+Pe0OZ+d36RYukuRNfCdfoKoThScBZT4PwgnsO1u/KwF4LlLyruy/izAIbmrKPYtA
+WkPnjzS6zgjk7rXcdBHE7m4s8zJ8rv7aoKae+9HH69Mij3PT5hfErXbte/3ylpbf
+UyNDC6L2//e0KLEI7WsuV5wLRDQBAw==
+=m89a
+-----END PGP SIGNATURE-----
+
+--Sig_/oy0nep/YG9.oD.7jA5usSxT--
