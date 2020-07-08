@@ -2,95 +2,92 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6658C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22A9920708
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92CCB20708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rSxp4nAM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rTjGSjVl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgGHXNY (ORCPT
+        id S1726313AbgGHXOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46666 "EHLO
+        Wed, 8 Jul 2020 19:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgGHXNX (ORCPT
+        with ESMTP id S1725903AbgGHXOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:13:23 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 788BCC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:13:23 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id x14so56463pln.18
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:13:23 -0700 (PDT)
+        Wed, 8 Jul 2020 19:14:08 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A3CC061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:14:08 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id k71so238909pje.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:14:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=3so1mFadbtJsUTXuNrmPVizuAsNzcgxZm5LS3qXi3TY=;
-        b=rSxp4nAM5Hran/YIW3CTiosFlC9HRJGR/31njKW8D7cCTy/VwpZqgzZLc659iPN5jI
-         9Ak08ysPN4VhObGPu3Nt6Q6OhARBwZGyhXjF9PzewnBLPvTKZ2TuMWyNsOfATimW3U2/
-         y0P7tbQf+HN/4Cbo6A9mIdWH6lUf+PGcCS+5+FUMGM22vtHH4CxuZR1Swa0Mcv5c2Nbp
-         JjONGvGCQ0VynZlDAdouU0WHS1pCbLYQNpF4MZgJfFRI8rsY02jbYavcnbkda15gStuN
-         xOAtMzETruCdxwXQJ+gMyFpj4xL8OKl4+PgzBUFj21lsMSSOs2ZPQl3PZM180sWe9P+I
-         y25Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IYR6IzEE3oz+7wpFFvhpcTfqtHDsZd22LZz7dy8Rcrs=;
+        b=rTjGSjVlJBB4jdk6XG0IoWtkdWEPchWM3kX0LUZqK+QG3RfYTKSh1HcjjG4R+e1Age
+         9wC+YLJjGetare/KcKfoZRMy2G7Y3XktJSg/EvKyT2Y0Dcj6NrjWSPA3QJfX794lFLzJ
+         /msYFXN5tisnhghC2UgmzFTKkbh1sgTrRsEiNGAcG3Uu/ZH9rLBvjuVi0wkFfGqOpbiZ
+         uHMwi/tUA3/BNrV9msotuLeSv/cUDRmQHtepVUmJNx/XBEjS8IXDLT3Y00kUUV8DB5yG
+         /S6aAefIn9xwlJazqRIwL8sg67hvU9nQHC4L5U4IHQpVEsnQvNVfDnU+IltJjtCZYmap
+         aL2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=3so1mFadbtJsUTXuNrmPVizuAsNzcgxZm5LS3qXi3TY=;
-        b=VH8hr57arqAKa5cLNZrw1OXb4U1Ey/VInfXJyKOSBfPnDPDHI8LxKuL3maSuNgboAl
-         +KQcmqYtjZpTvHWxYL0CzSDTwa1gTgTlp7dthE92sXlxDLiesjULLyRxFjfDvlARuA/5
-         2QuF5tXcQF4uZPxDby+J1BUQW6DsqnbqttYfCTjnLbqC5/s5b4JHaMivoByfk1xlnGtE
-         LWskOrySnYmPICnBqIbN1bPFCfOHRzvhHuuMTGVtiHTBVOOeE8TrAZRbpCpiM6D/kVPT
-         rbQ9aGi+YeWU8XnHqNiQtEU6cxTjS6GViWQTLnAQqla6erbhGAxY0oPF5AK1KsRjEtb9
-         sWaQ==
-X-Gm-Message-State: AOAM530jS1kXLMSM8sc6kupLulr5uSMFZexCa0014gNxv8zL4G2SWdrb
-        NTzrFqFOJqxj65/BSPLkKHM9EWoHYNE=
-X-Google-Smtp-Source: ABdhPJwUUjvR9+6X3a7xnWuKhYRG45zejhz1YQmyd/QqF2x0fticaMmVRRzSGrfco3a0PfX8sNHB/Ls8J1k=
-X-Received: by 2002:a17:902:c24a:: with SMTP id 10mr47123134plg.82.1594250002817;
- Wed, 08 Jul 2020 16:13:22 -0700 (PDT)
-Date:   Wed,  8 Jul 2020 16:12:53 -0700
-Message-Id: <20200708231253.3831497-1-surenb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH 1/1] MAINTAINERS: add Hridya and myself into Android driver
- maintainers list
-From:   Suren Baghdasaryan <surenb@google.com>
-To:     surenb@google.com
-Cc:     hridya@google.com, gregkh@linuxfoundation.org, tkjos@google.com,
-        christian@brauner.io, arve@android.com, maco@android.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IYR6IzEE3oz+7wpFFvhpcTfqtHDsZd22LZz7dy8Rcrs=;
+        b=IZj9jOsVGjb1jszOqRhTxhdnA6pG0dsxSnmyKL19gEtZhDTVy0iREGsT0AnEiFCtZw
+         rRXwTN15PmZpTYgnGzHYuAgdA48oFyNUIXMMIcGNrl6MjyxaW6NwMLxabdDfrWa2sWCH
+         TBokE5QpkLfdmY79YjhZLkq/K5YhhTQBSs29RtWj/oXMBkGF54I0l9gXt0hu1u6zRzHp
+         pDIDkAYxcBtMGXPx+sM4TDZc8k/cLAhgWQ7l+MzoMUztu/b84y0AxgaiU7q/2aGG8w0m
+         YibBKyqKNwAAJIMsTpdnWkUZztrYQstcpFGkzPmHqxlUWu4+jzo1UHe8cLt3zKx9qo9y
+         Luzw==
+X-Gm-Message-State: AOAM531TspvZYv4ahO87MWS4Nlo5S1r6w3AKLGL///hIToB+eHBVb974
+        Lg888qlNNRrXsePsnqVwkwM9SEzGBnPRGhliJMiBPA==
+X-Google-Smtp-Source: ABdhPJyWcE2sHGr6AH9cytVw+nIBQUYGxbilZCX6xRQxheRVwQBKF7gOxauthBDHsPRnr2wxHNeDZOCqINBLQjHgsZ4=
+X-Received: by 2002:a17:90a:21ef:: with SMTP id q102mr12309187pjc.101.1594250046373;
+ Wed, 08 Jul 2020 16:14:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200622231536.7jcshis5mdn3vr54@google.com> <20200625184752.73095-1-ndesaulniers@google.com>
+ <CAKwvOd=cum+BNHOk2djXx5JtAcCBwq2Bxy=j5ucRd2RcLWwDZQ@mail.gmail.com>
+ <CAK8P3a1mBCC=hBMzxZVukHhrWhv=LiPOfV6Mgnw1QpNg=MpONg@mail.gmail.com> <202007020856.78DDE23F4A@keescook>
+In-Reply-To: <202007020856.78DDE23F4A@keescook>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 8 Jul 2020 16:13:54 -0700
+Message-ID: <CAKwvOd=NeOodb=ebbodd278=ErRSmPxFNVABQS3ZO=D00yFWGw@mail.gmail.com>
+Subject: Re: [PATCH v2] vmlinux.lds: add PGO and AutoFDO input sections
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
+        Jian Cai <jiancai@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new maintainers for ashmem driver to handle related issues.
+On Thu, Jul 2, 2020 at 8:57 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> This looks good to me. Do you want me to carry it as part of the orphan
+> series? (It doesn't look like it'll collide, so that's not needed, but I
+> can if that makes things easier.)
+>
+> Acked-by: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1d4aa7f942de..8b2f139b196d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1170,6 +1170,8 @@ M:	Todd Kjos <tkjos@android.com>
- M:	Martijn Coenen <maco@android.com>
- M:	Joel Fernandes <joel@joelfernandes.org>
- M:	Christian Brauner <christian@brauner.io>
-+M:	Hridya Valsaraju <hridya@google.com>
-+M:	Suren Baghdasaryan <surenb@google.com>
- L:	devel@driverdev.osuosl.org
- S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
+If you would be so kind, I'd owe you yet another beer!
 -- 
-2.27.0.383.g050319c2ae-goog
-
+Thanks,
+~Nick Desaulniers
