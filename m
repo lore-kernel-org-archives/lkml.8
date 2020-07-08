@@ -6,45 +6,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24408C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2F5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 028D6207DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C74F207DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730209AbgGHPTQ (ORCPT
+        id S1730192AbgGHPTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 8 Jul 2020 11:19:16 -0400
-Received: from mga01.intel.com ([192.55.52.88]:64928 "EHLO mga01.intel.com"
+Received: from mga01.intel.com ([192.55.52.88]:64868 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730152AbgGHPTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729022AbgGHPTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jul 2020 11:19:15 -0400
-IronPort-SDR: 2jECS6T9/TbuI0c3BqDPDkfGbXH0Kj5r6+pNBPzg/waZutwtfJn1gitJqgpDWNhkau3jc77QjU
- IKqu7gOCbpiw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="165929601"
+IronPort-SDR: orgXKM0ubBzlIvKoPVEgMjIdsmQOm31znvIKqw1cFkM31s+iPvk6ZD1RuE91pdM10J/7Z64Wxi
+ WS5VM/jnSnEw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="165929591"
 X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="165929601"
+   d="scan'208";a="165929591"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 08:16:54 -0700
-IronPort-SDR: cbaPfcc0g5diPBcn0nXeUAfCJbAJ89BEK+nFKj7EuvK2305bILnj3pNXJuKvzVynSUFyc/1yJ7
- K3ORVgQZLLNg==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 08:16:52 -0700
+IronPort-SDR: pP+sLT+2z0Lg6Uaugp5k5B1KPH93QawhY9jKSVIHo+xMC+0AhsSKkDquRToajkg3d4LSy5Tiwc
+ MwBz981nBA/g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="283827413"
+   d="scan'208";a="283827393"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 08 Jul 2020 08:16:52 -0700
+  by orsmga006.jf.intel.com with ESMTP; 08 Jul 2020 08:16:49 -0700
 From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
 To:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
         Jiri Olsa <jolsa@kernel.org>, alexey.budankov@linux.intel.com,
         adrian.hunter@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 2/2] perf record: Support closing siblings' file descriptors
-Date:   Wed,  8 Jul 2020 18:16:35 +0300
-Message-Id: <20200708151635.81239-3-alexander.shishkin@linux.intel.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 1/2] perf: Add closing sibling events' file descriptors
+Date:   Wed,  8 Jul 2020 18:16:34 +0300
+Message-Id: <20200708151635.81239-2-alexander.shishkin@linux.intel.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
 References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
@@ -55,396 +56,280 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This changes perf record to close siblings' file descriptors after they
-are created, to reduce the number of open files. The trick is setting up
-mappings and applying ioctls to these guys before they get closed, which
-means a slight rework to allow these things to happen in the same loop as
-evsel creation.
+Currently, perf requires one file descriptor per event. In large groups,
+this may mean running into the limit on open file descriptors. However,
+the sibling events in a group only need file descriptors for the initial
+configuration stage, after which they may not be needed any more.
 
-Before:
-
-> $ perf record -e '{dummy,syscalls:*}' -o before.data uname
-> Error:
-> Too many events are opened.
-> Probably the maximum number of open file descriptors has been reached.
-> Hint: Try again after reducing the number of events.
-> Hint: Try increasing the limit with 'ulimit -n <limit>'
-
-After:
-
-> $ perf record -e '{dummy,syscalls:*}' -o after.data uname
-> Couldn't synthesize cgroup events.
-> Linux
-> [ perf record: Woken up 5 times to write data ]
-> [ perf record: Captured and wrote 0.118 MB after.data (62 samples) ]
+This adds an opt-in flag to the perf_event_open() syscall to retain
+sibling events after their file descriptors are closed. In this case, the
+actual events will be closed with the group leader.
 
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Suggested-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/include/uapi/linux/perf_event.h   |  1 +
- tools/lib/perf/evlist.c                 | 30 +++++++++++++++-
- tools/lib/perf/evsel.c                  | 21 +++++++++++
- tools/lib/perf/include/internal/evsel.h |  4 +++
- tools/perf/builtin-record.c             | 48 +++++++++++++++++++------
- tools/perf/util/cpumap.c                |  4 +++
- tools/perf/util/evlist.c                |  4 ++-
- tools/perf/util/evsel.c                 | 17 ++++++++-
- tools/perf/util/evsel.h                 |  3 ++
- 9 files changed, 119 insertions(+), 13 deletions(-)
+ include/linux/perf_event.h      |   7 ++
+ include/uapi/linux/perf_event.h |   1 +
+ kernel/events/core.c            | 149 +++++++++++++++++++++++---------
+ 3 files changed, 115 insertions(+), 42 deletions(-)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 7b2d6fc9e6ed..90238b8ee2ae 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -1069,6 +1069,7 @@ enum perf_callchain_context {
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 3b22db08b6fb..46666ce2c303 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -623,6 +623,11 @@ struct perf_event {
+ 	 * either sufficies for read.
+ 	 */
+ 	struct list_head		sibling_list;
++	/*
++	 * ALLOW_CLOSED siblings that were actually closed; when the group
++	 * leader goes, so should they.
++	 */
++	struct list_head		closed_list;
+ 	struct list_head		active_list;
+ 	/*
+ 	 * Node on the pinned or flexible tree located at the event context;
+@@ -644,6 +649,8 @@ struct perf_event {
+ 	int				event_caps;
+ 	/* The cumulative AND of all event_caps for events in this group. */
+ 	int				group_caps;
++	unsigned			allow_close	: 1,
++					closed		: 1;
+ 
+ 	struct perf_event		*group_leader;
+ 	struct pmu			*pmu;
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index 52ca2093831c..69823c0e3cbd 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1093,6 +1093,7 @@ enum perf_callchain_context {
  #define PERF_FLAG_FD_OUTPUT		(1UL << 1)
  #define PERF_FLAG_PID_CGROUP		(1UL << 2) /* pid=cgroup id, per-cpu mode only */
  #define PERF_FLAG_FD_CLOEXEC		(1UL << 3) /* O_CLOEXEC */
-+#define PERF_FLAG_ALLOW_CLOSE		(1UL << 4) /* XXX */
++#define PERF_FLAG_ALLOW_CLOSE		(1UL << 4) /* retain the event past fd close */
  
  #if defined(__LITTLE_ENDIAN_BITFIELD)
  union perf_mem_data_src {
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 6a875a0f01bb..8aeb5634bc61 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -403,6 +403,7 @@ perf_evlist__mmap_cb_get(struct perf_evlist *evlist, bool overwrite, int idx)
- }
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7c436d705fbd..e61be9cfce98 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -352,7 +352,8 @@ static void event_function_local(struct perf_event *event, event_f func, void *d
+ #define PERF_FLAG_ALL (PERF_FLAG_FD_NO_GROUP |\
+ 		       PERF_FLAG_FD_OUTPUT  |\
+ 		       PERF_FLAG_PID_CGROUP |\
+-		       PERF_FLAG_FD_CLOEXEC)
++		       PERF_FLAG_FD_CLOEXEC |\
++		       PERF_FLAG_ALLOW_CLOSE)
  
- #define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
-+#define OUTPUT(e, x, y) (*(int *)xyarray__entry(e->output, x, y))
- 
- static int
- perf_evlist__mmap_cb_mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
-@@ -433,6 +434,11 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
- 		bool overwrite = evsel->attr.write_backward;
- 		struct perf_mmap *map;
- 		int *output, fd, cpu;
-+		bool do_close = false;
-+
-+		/* Skip over not yet opened evsels */
-+		if (!evsel->fd)
-+			continue;
- 
- 		if (evsel->system_wide && thread)
- 			continue;
-@@ -454,6 +460,10 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
- 		}
- 
- 		fd = FD(evsel, cpu, thread);
-+		if (OUTPUT(evsel, cpu, thread) >= 0) {
-+			*output = OUTPUT(evsel, cpu, thread);
-+			continue;
-+		}
- 
- 		if (*output == -1) {
- 			*output = fd;
-@@ -479,6 +489,10 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
- 			if (!idx)
- 				perf_evlist__set_mmap_first(evlist, map, overwrite);
- 		} else {
-+			if (fd < 0) {
-+				fd = -fd;
-+				do_close = true;
-+			}
- 			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
- 				return -1;
- 
-@@ -487,7 +501,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
- 
- 		revent = !overwrite ? POLLIN : 0;
- 
--		if (!evsel->system_wide &&
-+		if (!evsel->system_wide && !do_close &&
- 		    perf_evlist__add_pollfd(evlist, fd, map, revent) < 0) {
- 			perf_mmap__put(map);
- 			return -1;
-@@ -500,6 +514,13 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
- 			perf_evlist__set_sid_idx(evlist, evsel, idx, cpu,
- 						 thread);
- 		}
-+
-+		if (do_close) {
-+			close(fd);
-+			perf_mmap__put(map);
-+			FD(evsel, cpu, thread) = -1; /* *output */
-+		}
-+		OUTPUT(evsel, cpu, thread) = *output;
- 	}
- 
- 	return 0;
-@@ -587,10 +608,17 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 	evlist->nr_mmaps = perf_evlist__nr_mmaps(evlist);
- 
- 	perf_evlist__for_each_entry(evlist, evsel) {
-+		/* Skip over not yet opened evsels */
-+		if (!evsel->fd)
-+			continue;
-+
- 		if ((evsel->attr.read_format & PERF_FORMAT_ID) &&
- 		    evsel->sample_id == NULL &&
- 		    perf_evsel__alloc_id(evsel, perf_cpu_map__nr(cpus), threads->nr) < 0)
- 			return -ENOMEM;
-+		if (evsel->output == NULL &&
-+		    perf_evsel__alloc_output(evsel, perf_cpu_map__nr(cpus), threads->nr) < 0)
-+			return -ENOMEM;
- 	}
- 
- 	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 4dc06289f4c7..6661145ca673 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -55,6 +55,21 @@ int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
- 	return evsel->fd != NULL ? 0 : -ENOMEM;
- }
- 
-+int perf_evsel__alloc_output(struct perf_evsel *evsel, int ncpus, int nthreads)
-+{
-+	evsel->output = xyarray__new(ncpus, nthreads, sizeof(int));
-+
-+	if (evsel->output) {
-+		int cpu, thread;
-+		for (cpu = 0; cpu < ncpus; cpu++) {
-+			for (thread = 0; thread < nthreads; thread++)
-+				*(int *)xyarray__entry(evsel->output, cpu, thread) = -1;
-+		}
-+	}
-+
-+	return evsel->output != NULL ? 0 : -ENOMEM;
-+}
-+
- static int
- sys_perf_event_open(struct perf_event_attr *attr,
- 		    pid_t pid, int cpu, int group_fd,
-@@ -139,6 +154,12 @@ void perf_evsel__free_fd(struct perf_evsel *evsel)
- 	evsel->fd = NULL;
- }
- 
-+void perf_evsel__free_output(struct perf_evsel *evsel)
-+{
-+	xyarray__delete(evsel->output);
-+	evsel->output = NULL;
-+}
-+
- void perf_evsel__close(struct perf_evsel *evsel)
- {
- 	if (evsel->fd == NULL)
-diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
-index 1ffd083b235e..9bbbec7d92b1 100644
---- a/tools/lib/perf/include/internal/evsel.h
-+++ b/tools/lib/perf/include/internal/evsel.h
-@@ -42,6 +42,7 @@ struct perf_evsel {
- 	struct perf_thread_map	*threads;
- 	struct xyarray		*fd;
- 	struct xyarray		*sample_id;
-+	struct xyarray		*output;
- 	u64			*id;
- 	u32			 ids;
- 
-@@ -60,4 +61,7 @@ int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter);
- int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads);
- void perf_evsel__free_id(struct perf_evsel *evsel);
- 
-+int perf_evsel__alloc_output(struct perf_evsel *evsel, int ncpus, int nthreads);
-+void perf_evsel__free_output(struct perf_evsel *evsel);
-+
- #endif /* __LIBPERF_INTERNAL_EVSEL_H */
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index e108d90ae2ed..7dd7db4ff37a 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -837,6 +837,21 @@ static int record__mmap(struct record *rec)
- 	return record__mmap_evlist(rec, rec->evlist);
- }
- 
-+static int record__apply_filters(struct record *rec)
-+{
-+	struct evsel *pos;
-+	char msg[BUFSIZ];
-+
-+	if (perf_evlist__apply_filters(rec->evlist, &pos)) {
-+		pr_err("failed to set filter \"%s\" on event %s with %d (%s)\n",
-+		       pos->filter, evsel__name(pos), errno,
-+		       str_error_r(errno, msg, sizeof(msg)));
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
- static int record__open(struct record *rec)
- {
- 	char msg[BUFSIZ];
-@@ -844,6 +859,7 @@ static int record__open(struct record *rec)
- 	struct evlist *evlist = rec->evlist;
- 	struct perf_session *session = rec->session;
- 	struct record_opts *opts = &rec->opts;
-+	bool late_mmap = true;
- 	int rc = 0;
- 
- 	/*
-@@ -894,6 +910,21 @@ static int record__open(struct record *rec)
- 		}
- 
- 		pos->supported = true;
-+
-+		if (pos->allow_close) {
-+			rc = record__mmap(rec);
-+			if (rc)
-+				goto out;
-+			rc = record__apply_filters(rec);
-+			if (rc)
-+				goto out;
-+			late_mmap = false;
-+		}
-+	}
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		if (pos->core.output)
-+			perf_evsel__free_output(&pos->core);
- 	}
- 
- 	if (symbol_conf.kptr_restrict && !perf_evlist__exclude_kernel(evlist)) {
-@@ -907,18 +938,15 @@ static int record__open(struct record *rec)
- "even with a suitable vmlinux or kallsyms file.\n\n");
- 	}
- 
--	if (perf_evlist__apply_filters(evlist, &pos)) {
--		pr_err("failed to set filter \"%s\" on event %s with %d (%s)\n",
--			pos->filter, evsel__name(pos), errno,
--			str_error_r(errno, msg, sizeof(msg)));
--		rc = -1;
--		goto out;
-+	if (late_mmap) {
-+		rc = record__mmap(rec);
-+		if (rc)
-+			goto out;
-+		rc = record__apply_filters(rec);
-+		if (rc)
-+			goto out;
- 	}
- 
--	rc = record__mmap(rec);
--	if (rc)
--		goto out;
--
- 	session->evlist = evlist;
- 	perf_session__set_id_hdr_size(session);
- out:
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index dc5c5e6fc502..2eac58ada5ab 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -432,6 +432,10 @@ int cpu__setup_cpunode_map(void)
- 	const char *mnt;
- 	int n;
- 
-+	/* Only do this once */
-+	if (cpunode_map)
-+		return 0;
-+
- 	/* initialize globals */
- 	if (init_cpunode_map())
- 		return -1;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 173b4f0e0e6e..776a8339df99 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -977,7 +977,7 @@ int perf_evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel)
- 	int err = 0;
- 
- 	evlist__for_each_entry(evlist, evsel) {
--		if (evsel->filter == NULL)
-+		if (evsel->filter == NULL || evsel->filter_applied)
- 			continue;
- 
- 		/*
-@@ -989,6 +989,8 @@ int perf_evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel)
- 			*err_evsel = evsel;
- 			break;
- 		}
-+
-+		evsel->filter_applied = true;
- 	}
- 
- 	return err;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 96e5171dce41..696c5d7190e2 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1172,6 +1172,7 @@ int evsel__set_filter(struct evsel *evsel, const char *filter)
- 	if (new_filter != NULL) {
- 		free(evsel->filter);
- 		evsel->filter = new_filter;
-+		evsel->filter_applied = false;
- 		return 0;
- 	}
- 
-@@ -1632,6 +1633,9 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		pid = evsel->cgrp->fd;
- 	}
- 
-+	if (evsel->leader != evsel)
-+		flags |= PERF_FLAG_ALLOW_CLOSE;
-+
- fallback_missing_features:
- 	if (perf_missing_features.clockid_wrong)
- 		evsel->core.attr.clockid = CLOCK_MONOTONIC; /* should always work */
-@@ -1641,6 +1645,8 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	}
- 	if (perf_missing_features.cloexec)
- 		flags &= ~(unsigned long)PERF_FLAG_FD_CLOEXEC;
-+	if (perf_missing_features.allow_close)
-+		flags &= ~(unsigned long)PERF_FLAG_ALLOW_CLOSE;
- 	if (perf_missing_features.mmap2)
- 		evsel->core.attr.mmap2 = 0;
- 	if (perf_missing_features.exclude_guest)
-@@ -1729,6 +1735,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 				err = -EINVAL;
- 				goto out_close;
- 			}
-+
-+			if (flags & PERF_FLAG_ALLOW_CLOSE) {
-+				FD(evsel, cpu, thread) = -fd;
-+				evsel->allow_close = true;
-+			}
- 		}
- 	}
- 
-@@ -1766,7 +1777,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	 * Must probe features in the order they were added to the
- 	 * perf_event_attr interface.
+ /*
+  * branch priv levels that need permission checks
+@@ -2165,6 +2166,15 @@ static void perf_group_detach(struct perf_event *event)
+ 	 * to whatever list we are on.
  	 */
--        if (!perf_missing_features.cgroup && evsel->core.attr.cgroup) {
-+	if (!perf_missing_features.allow_close && (flags & PERF_FLAG_ALLOW_CLOSE)) {
-+		perf_missing_features.allow_close = true;
-+		pr_debug2("switching off ALLOW_CLOSE support\n");
-+		goto fallback_missing_features;
-+	} else if (!perf_missing_features.cgroup && evsel->core.attr.cgroup) {
- 		perf_missing_features.cgroup = true;
- 		pr_debug2_peo("Kernel has no cgroup sampling support, bailing out\n");
- 		goto out_close;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 0f963c2a88a5..076a541bb274 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -77,6 +77,8 @@ struct evsel {
- 	bool			forced_leader;
- 	bool			use_uncore_alias;
- 	bool			is_libpfm_event;
-+	bool			filter_applied;
-+	bool			allow_close;
- 	/* parse modifier helper */
- 	int			exclude_GH;
- 	int			sample_read;
-@@ -130,6 +132,7 @@ struct perf_missing_features {
- 	bool aux_output;
- 	bool branch_hw_idx;
- 	bool cgroup;
-+	bool allow_close;
- };
+ 	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
++		if (sibling->closed) {
++			list_move(&sibling->sibling_list, &event->closed_list);
++			event->nr_siblings--;
++			continue;
++		}
++
++		/* Proceed as if it was an ordinary sibling */
++		if (sibling->allow_close)
++			sibling->allow_close = 0;
  
- extern struct perf_missing_features perf_missing_features;
+ 		sibling->group_leader = sibling;
+ 		list_del_init(&sibling->sibling_list);
+@@ -2313,6 +2323,7 @@ __perf_remove_from_context(struct perf_event *event,
+ 			   void *info)
+ {
+ 	unsigned long flags = (unsigned long)info;
++	struct perf_event *sibling;
+ 
+ 	if (ctx->is_active & EVENT_TIME) {
+ 		update_context_time(ctx);
+@@ -2332,6 +2343,10 @@ __perf_remove_from_context(struct perf_event *event,
+ 			cpuctx->task_ctx = NULL;
+ 		}
+ 	}
++
++	flags &= ~DETACH_GROUP;
++	list_for_each_entry(sibling, &event->closed_list, sibling_list)
++		__perf_remove_from_context(sibling, cpuctx, ctx, (void *)flags);
+ }
+ 
+ /*
+@@ -4906,51 +4921,12 @@ static void put_event(struct perf_event *event)
+ 	_free_event(event);
+ }
+ 
+-/*
+- * Kill an event dead; while event:refcount will preserve the event
+- * object, it will not preserve its functionality. Once the last 'user'
+- * gives up the object, we'll destroy the thing.
+- */
+-int perf_event_release_kernel(struct perf_event *event)
++static void perf_event_free_children(struct perf_event *event)
+ {
+-	struct perf_event_context *ctx = event->ctx;
+ 	struct perf_event *child, *tmp;
++	struct perf_event_context *ctx;
+ 	LIST_HEAD(free_list);
+ 
+-	/*
+-	 * If we got here through err_file: fput(event_file); we will not have
+-	 * attached to a context yet.
+-	 */
+-	if (!ctx) {
+-		WARN_ON_ONCE(event->attach_state &
+-				(PERF_ATTACH_CONTEXT|PERF_ATTACH_GROUP));
+-		goto no_ctx;
+-	}
+-
+-	if (!is_kernel_event(event))
+-		perf_remove_from_owner(event);
+-
+-	ctx = perf_event_ctx_lock(event);
+-	WARN_ON_ONCE(ctx->parent_ctx);
+-	perf_remove_from_context(event, DETACH_GROUP);
+-
+-	raw_spin_lock_irq(&ctx->lock);
+-	/*
+-	 * Mark this event as STATE_DEAD, there is no external reference to it
+-	 * anymore.
+-	 *
+-	 * Anybody acquiring event->child_mutex after the below loop _must_
+-	 * also see this, most importantly inherit_event() which will avoid
+-	 * placing more children on the list.
+-	 *
+-	 * Thus this guarantees that we will in fact observe and kill _ALL_
+-	 * child events.
+-	 */
+-	event->state = PERF_EVENT_STATE_DEAD;
+-	raw_spin_unlock_irq(&ctx->lock);
+-
+-	perf_event_ctx_unlock(event, ctx);
+-
+ again:
+ 	mutex_lock(&event->child_mutex);
+ 	list_for_each_entry(child, &event->child_list, child_list) {
+@@ -5016,6 +4992,82 @@ int perf_event_release_kernel(struct perf_event *event)
+ 		smp_mb(); /* pairs with wait_var_event() */
+ 		wake_up_var(var);
+ 	}
++}
++
++/*
++ * Kill an event dead; while event:refcount will preserve the event
++ * object, it will not preserve its functionality. Once the last 'user'
++ * gives up the object, we'll destroy the thing.
++ */
++int perf_event_release_kernel(struct perf_event *event)
++{
++	struct perf_event_context *ctx = event->ctx;
++	struct perf_event *sibling;
++
++	/*
++	 * If we got here through err_file: fput(event_file); we will not have
++	 * attached to a context yet.
++	 */
++	if (!ctx) {
++		WARN_ON_ONCE(event->attach_state &
++				(PERF_ATTACH_CONTEXT|PERF_ATTACH_GROUP));
++		goto no_ctx;
++	}
++
++	if (!is_kernel_event(event))
++		perf_remove_from_owner(event);
++
++	ctx = perf_event_ctx_lock(event);
++	WARN_ON_ONCE(ctx->parent_ctx);
++
++	if (event->allow_close && !event->closed) {
++		event->closed = 1;
++		perf_event_ctx_unlock(event, ctx);
++		return 0;
++	}
++
++	/*
++	 * The below will also move all closed siblings to the closed_list,
++	 * so that we can reap their children and remove them from the owner.
++	 */
++	perf_remove_from_context(event, DETACH_GROUP);
++
++	raw_spin_lock_irq(&ctx->lock);
++	/*
++	 * Mark this event as STATE_DEAD, there is no external reference to it
++	 * anymore.
++	 *
++	 * Anybody acquiring event->child_mutex after the below loop _must_
++	 * also see this, most importantly inherit_event() which will avoid
++	 * placing more children on the list. It will also skip over closed
++	 * siblings, as they are also going away together with their leader.
++	 *
++	 * Thus this guarantees that we will in fact observe and kill _ALL_
++	 * child events.
++	 */
++	event->state = PERF_EVENT_STATE_DEAD;
++	raw_spin_unlock_irq(&ctx->lock);
++
++	perf_event_ctx_unlock(event, ctx);
++
++	perf_event_free_children(event);
++
++	/*
++	 * The events on the closed_list are former closed siblings; they
++	 * don't have file descriptors, so this is their teardown.
++	 */
++	list_for_each_entry(sibling, &event->closed_list, sibling_list) {
++		if (!is_kernel_event(sibling))
++			perf_remove_from_owner(sibling);
++		perf_event_free_children(sibling);
++		/*
++		 * The below may be last, or it may be raced for it
++		 * by the perf_event_exit_event() path; we can do better
++		 * and ensure one way or the other, but it doesn't matter,
++		 * the other path is fully equipped to free events.
++		 */
++		put_event(sibling);
++	}
+ 
+ no_ctx:
+ 	put_event(event); /* Must be the 'last' reference */
+@@ -11118,6 +11170,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 
+ 	INIT_LIST_HEAD(&event->event_entry);
+ 	INIT_LIST_HEAD(&event->sibling_list);
++	INIT_LIST_HEAD(&event->closed_list);
+ 	INIT_LIST_HEAD(&event->active_list);
+ 	init_event_group(event);
+ 	INIT_LIST_HEAD(&event->rb_entry);
+@@ -11718,6 +11771,14 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		}
+ 	}
+ 
++	if (flags & PERF_FLAG_ALLOW_CLOSE) {
++		if (!group_leader || group_leader->group_leader != group_leader) {
++			err = -EINVAL;
++			goto err_task;
++		}
++		event->allow_close = 1;
++	}
++
+ 	/*
+ 	 * Special case software events and allow them to be part of
+ 	 * any hardware group.
+@@ -12498,6 +12559,10 @@ inherit_event(struct perf_event *parent_event,
+ 	if (parent_event->parent)
+ 		parent_event = parent_event->parent;
+ 
++	/* If group leader is getting closed, ignore its closed siblings */
++	if (!group_leader && parent_event->closed)
++		return NULL;
++
+ 	child_event = perf_event_alloc(&parent_event->attr,
+ 					   parent_event->cpu,
+ 					   child,
 -- 
 2.27.0
 
