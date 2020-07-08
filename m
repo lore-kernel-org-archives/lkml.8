@@ -2,103 +2,99 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B4FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDDBA20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:15:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGGZKRPV"
+	by mail.kernel.org (Postfix) with ESMTP id B703220739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgGHLPV (ORCPT
+        id S1728790AbgGHLPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:15:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgGHLPV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:15:21 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EE6C08C5DC;
-        Wed,  8 Jul 2020 04:15:21 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id w2so20711657pgg.10;
-        Wed, 08 Jul 2020 04:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x8CzCNCVY2DEFkmEo9x47ULwFWJK87T1/eVz2vgJvtc=;
-        b=pGGZKRPVLWhXkxQyhu202FK1t/DHwD6KvHlcedJwlR+AT3oBF2senhHisRpi+/sFxQ
-         VOVleXcjeU4/mvq5mIW4+tPMbZx1YLUmua1wrcXzcAyeo0jU85WN7E12tKwOHelJcttf
-         uvv+UkLOo2NVWTZzZ1ZgSLdE8bAimmrXTUXkkIBfgq84XpiQ96QuOAcSQMAJm8m8cto5
-         VrwJge2/7w8WZW6gsbOmVG+U6iSZNb8XaFVZ7GRtOrVYHgCZP8gpn5cxMCavGkBIyw52
-         Fx9VTUdOqYt6NJ6vaLgrLtU7YVVgN3LCmM+Xn1DPh8NiOmbXTazETk53+1D8PeDJ9aj7
-         MKgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x8CzCNCVY2DEFkmEo9x47ULwFWJK87T1/eVz2vgJvtc=;
-        b=lKEczzJFhINcpqYHjprGcfGXBOngjlXB+sDsJxoTptucvqmOE56p84ihKuA6nO1swQ
-         q0wsWOvMYd47wVepG2kMr17y9hrhl8MM7TGbg5v7Fpws2IhEdwZ6RRDvMo/dFrhwMJV7
-         Qrm3tq2k67cY8M7dXNox/HHaW+i4y+uflDVIPfsuxbWMiwXJbtPXCICTTdX5G01Q7KKk
-         0D1Pkg7BF4aWbDo0VopCQJKJ67ehTyXwieOKDQknsphQ2yUEyaFWGUQ1arnsPo4PR2d2
-         vHA636YW8VvFIi8iGbvN1AWGcOGmgb7OAdK9ZAykDPNwceeuvqmaUuEZSN8U57LyvSFK
-         KI8w==
-X-Gm-Message-State: AOAM531/T5sR8mOUDD+M1CUon5GtUtD+Sw4sxvc9EA8BTcyTEixjUPpv
-        Qi9pjfNu6d9kOGW0DxyUBAA=
-X-Google-Smtp-Source: ABdhPJwqHcvbEmt6GIaYgHDCndZvhyku4OdMSPqRUpWN7nzz3X1cjRdWKtIL1vykrYTQw0ikP14Dog==
-X-Received: by 2002:a63:d40d:: with SMTP id a13mr48854602pgh.225.1594206920643;
-        Wed, 08 Jul 2020 04:15:20 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id d22sm24858203pfd.105.2020.07.08.04.15.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 04:15:20 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 04:15:18 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Sergey Organov <sorganov@gmail.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
- current kernel time
-Message-ID: <20200708111518.GF9080@hoboy>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200706142616.25192-4-sorganov@gmail.com>
- <20200706152721.3j54m73bm673zlnj@skbuf>
- <874kqksdrb.fsf@osv.gnss.ru>
- <20200707063651.zpt6bblizo5r3kir@skbuf>
- <87sge371hv.fsf@osv.gnss.ru>
- <20200707164329.pm4p73nzbsda3sfv@skbuf>
- <87sge345ho.fsf@osv.gnss.ru>
- <20200707171233.et6zrwfqq7fddz2r@skbuf>
- <87zh8b1a5i.fsf@osv.gnss.ru>
+        Wed, 8 Jul 2020 07:15:47 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:38744 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgGHLPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 07:15:47 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id BD6ECBC06E;
+        Wed,  8 Jul 2020 11:15:44 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     ysato@users.sourceforge.jp, uclinux-h8-devel@lists.sourceforge.jp,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: H8/300 ARCHITECTURE
+Date:   Wed,  8 Jul 2020 13:15:38 +0200
+Message-Id: <20200708111538.14063-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zh8b1a5i.fsf@osv.gnss.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 08:56:41PM +0300, Sergey Organov wrote:
-> It won't. Supposedly it'd force clock (that doesn't tick by default and
-> stays at 0) to start ticking.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-No existing clockid_t has this behavior.  Consider CLOCK_REALTIME or
-CLOCK_MONOTONIC.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+
+ arch/h8300/Kconfig.cpu | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/h8300/Kconfig.cpu b/arch/h8300/Kconfig.cpu
+index b5e14d513e62..be08431087c5 100644
+--- a/arch/h8300/Kconfig.cpu
++++ b/arch/h8300/Kconfig.cpu
+@@ -66,7 +66,7 @@ config H8300H_SIM
+ 	help
+ 	  GDB Simulator Support
+ 	  More Information.
+-	  <http://sourceware.org/sid/>
++	  <https://sourceware.org/sid/>
  
-The PHC must act the same as the other POSIX clocks.
-
-Thanks,
-Richard
-
+ config H8S_EDOSK2674
+ 	bool "EDOSK-2674"
+@@ -85,7 +85,7 @@ config H8S_SIM
+ 	help
+ 	  GDB Simulator Support
+ 	  More Information.
+-	  <http://sourceware.org/sid/>
++	  <https://sourceware.org/sid/>
+ 
+ endchoice
+ 
+-- 
+2.27.0
 
