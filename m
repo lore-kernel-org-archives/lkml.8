@@ -2,47 +2,49 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 035F2206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B47206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:36:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NYTpSPuZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NeXKN7MV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgGHJgU (ORCPT
+        id S1728349AbgGHJg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:36:20 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55031 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726973AbgGHJgU (ORCPT
+        Wed, 8 Jul 2020 05:36:28 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33076 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728269AbgGHJgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:36:20 -0400
+        Wed, 8 Jul 2020 05:36:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594200978;
+        s=mimecast20190719; t=1594200984;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=EXLv6hsZ/QhTdQkzMIaq3BPH71+im/fXOsDOYnL4M9A=;
-        b=NYTpSPuZNOHy5/IdoAEL+IymiW4MC1Tm7p/WOA4MKm2tD8FBDdZJe9aE+ydCXExny6IlDR
-        LIgH4UX52QOFXREreN8mZsONpQk2HjQxLupMukOLE1EzSlBJHzh4pGSRUWFmB4sh/eRuCV
-        y/f0NUy53Et4Y7e4ruayL3k9MMUEEzg=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oAXL7efwWQ65Jbeb4ZcetX33ECLslAvkcqVWVq+hHRs=;
+        b=NeXKN7MVEblnl9FD2dL3szLn93lqjlknbutJP41IZE+E94tCJHODKj09jlpGWAiFjAwLRI
+        t5ddysiCoJLKFa0ELCnjtZTRg5iHeCzE5+tnvwXYDAkajocB/I2UQBu5jGbaXt3Gl4qjdE
+        zdKD+uwGICRlwTxQ0XF3+HPg97tinSM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-440-Z9U-hLTZOPGhlVyBIK_szg-1; Wed, 08 Jul 2020 05:36:17 -0400
-X-MC-Unique: Z9U-hLTZOPGhlVyBIK_szg-1
+ us-mta-16-th7ubrwaOKKdO8MRqOJn4A-1; Wed, 08 Jul 2020 05:36:23 -0400
+X-MC-Unique: th7ubrwaOKKdO8MRqOJn4A-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 32429461;
-        Wed,  8 Jul 2020 09:36:15 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DEC2F107ACCA;
+        Wed,  8 Jul 2020 09:36:21 +0000 (UTC)
 Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0EF215C221;
-        Wed,  8 Jul 2020 09:36:12 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23D865C1D6;
+        Wed,  8 Jul 2020 09:36:19 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -50,9 +52,11 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Junaid Shahid <junaids@google.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] KVM: nSVM: fix #TF from CR3 switch when entering guest
-Date:   Wed,  8 Jul 2020 11:36:08 +0200
-Message-Id: <20200708093611.1453618-1-vkuznets@redhat.com>
+Subject: [PATCH v2 3/3] KVM: x86: drop superfluous mmu_check_root() from fast_pgd_switch()
+Date:   Wed,  8 Jul 2020 11:36:11 +0200
+Message-Id: <20200708093611.1453618-4-vkuznets@redhat.com>
+In-Reply-To: <20200708093611.1453618-1-vkuznets@redhat.com>
+References: <20200708093611.1453618-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
@@ -61,32 +65,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a succesor of "[PATCH] KVM: x86: drop erroneous mmu_check_root()
-from fast_pgd_switch()".
+The mmu_check_root() check in fast_pgd_switch() seems to be
+superfluous: when GPA is outside of the visible range
+cached_root_available() will fail for non-direct roots
+(as we can't have a matching one on the list) and we don't
+seem to care for direct ones.
 
-Undesired triple fault gets injected to L1 guest on SVM when L2 is
-launched with certain CR3 values. #TF is raised by mmu_check_root()
-check in fast_pgd_switch() and the root cause is that when
-kvm_set_cr3() is called from nested_prepare_vmcb_save() with NPT
-enabled CR3 points to a nGPA so we can't check it with
-kvm_is_visible_gfn().
+Also, raising #TF immediately when a non-existent GFN is written to CR3
+doesn't seem to mach architectural behavior. Drop the check.
 
-Fix the issue by moving kvm_mmu_new_pgd() to the right place when switching
-to nested guest and drop the unneeded mmu_check_root() check from
-fast_pgd_switch().
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Vitaly Kuznetsov (3):
-  KVM: nSVM: split kvm_init_shadow_npt_mmu() from kvm_init_shadow_mmu()
-  KVM: nSVM: properly call kvm_mmu_new_pgd() upon switching to guest
-  KVM: x86: drop superfluous mmu_check_root() from fast_pgd_switch()
-
- arch/x86/include/asm/kvm_host.h |  7 ++++++-
- arch/x86/kvm/mmu.h              |  3 ++-
- arch/x86/kvm/mmu/mmu.c          | 36 ++++++++++++++++++++++++---------
- arch/x86/kvm/svm/nested.c       |  5 +++--
- arch/x86/kvm/x86.c              |  8 +++++---
- 5 files changed, 43 insertions(+), 16 deletions(-)
-
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index ebf0cb3f1ce0..16c7701f1741 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4277,8 +4277,7 @@ static bool fast_pgd_switch(struct kvm_vcpu *vcpu, gpa_t new_pgd,
+ 	 */
+ 	if (mmu->shadow_root_level >= PT64_ROOT_4LEVEL &&
+ 	    mmu->root_level >= PT64_ROOT_4LEVEL)
+-		return !mmu_check_root(vcpu, new_pgd >> PAGE_SHIFT) &&
+-		       cached_root_available(vcpu, new_pgd, new_role);
++		return cached_root_available(vcpu, new_pgd, new_role);
+ 
+ 	return false;
+ }
 -- 
 2.25.4
 
