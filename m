@@ -2,93 +2,317 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B144C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF8CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3432064B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:45:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CsFSfEo0"
+	by mail.kernel.org (Postfix) with ESMTP id E5FDA2065D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgGHSpH (ORCPT
+        id S1726629AbgGHSp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGHSpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:45:06 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58516C061A0B;
-        Wed,  8 Jul 2020 11:45:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=X5sU3Y5k7l2zx5kjwIM6nayHkuGkr91LnvbglkYd9lI=; b=CsFSfEo04Q3L53He7i0fyJ9Brb
-        SFAZ2fXipfdBoRl9NQlrDcJGwq/174xvbrf2xGycN/H4Kw4uQJLDvofeJ5QyrSinSbrLbhI3TC8+T
-        wUrCQvZkmLlQ7i7tW+3Oj8qeLwY1MDcJBVyUJwI8+nR1l7N8PaUuKah+Oy2MqCsn1Cxw/uw9wgGcK
-        8IvHtocnt/JOWWbXMic0krhLmYaHyzrOASQLgsJ/EFrkPhKHr80qe6jm80SKmIIlUL5b8sRxqYCO1
-        OmeoQErek4er5x+76761nLwbDKu5BbE4n6UFcMCiIe5H+lkqQy8MxGUzCkpXs1aoagCoWfXRZQP4s
-        dEOVOWCw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtF42-00045C-V0; Wed, 08 Jul 2020 18:45:03 +0000
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] Documentation: update for gcc 4.9 requirement
-Message-ID: <a98e9c26-5405-3894-6197-3f5e388a5698@infradead.org>
-Date:   Wed, 8 Jul 2020 11:44:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 8 Jul 2020 14:45:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60774 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbgGHSp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 14:45:29 -0400
+IronPort-SDR: Vou0g69t7zYbuD3w2fRfvSXgXE9sLznISKF1FzkK0m2Xooh8bIMaXU4b90j57bNETNayN36VVm
+ bZu5rSXSdDiA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="136121183"
+X-IronPort-AV: E=Sophos;i="5.75,328,1589266800"; 
+   d="scan'208";a="136121183"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 11:45:26 -0700
+IronPort-SDR: 6I9X6m+Z61OZ8Atkmrna7xxMRQP1yGd6+RImi/UozIiV1cdsHkepI0iXwZLJKTsebq1bn4HcWs
+ kkG1UOH0M/fg==
+X-IronPort-AV: E=Sophos;i="5.75,328,1589266800"; 
+   d="scan'208";a="457610227"
+Received: from ideak-desk.fi.intel.com ([10.237.68.147])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 11:45:25 -0700
+Date:   Wed, 8 Jul 2020 21:45:21 +0300
+From:   Imre Deak <imre.deak@intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Lee Shawn C <shawn.c.lee@intel.com>
+Subject: Re: [PATCH 1/2] drm/probe_helper: Add
+ drm_connector_helper_funcs.mode_valid_ctx
+Message-ID: <20200708184521.GC21536@ideak-desk.fi.intel.com>
+Reply-To: imre.deak@intel.com
+References: <20200526182313.4005-1-lyude@redhat.com>
+ <20200526182313.4005-2-lyude@redhat.com>
+ <20200707224036.GA22747@ideak-desk.fi.intel.com>
+ <b8d176ed8838ea0d63b794f5fd5d54b71afc0d69.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8d176ed8838ea0d63b794f5fd5d54b71afc0d69.camel@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Wed, Jul 08, 2020 at 01:25:14PM -0400, Lyude Paul wrote:
+> 
+> JFYI - found an issue with this patch that wouldn't have shown up on i915, info
+> down below: 
+> 
+> On Wed, 2020-07-08 at 01:40 +0300, Imre Deak wrote:
+> > Sorry for the delay, the review as I promised:
+> > 
+> > On Tue, May 26, 2020 at 02:23:09PM -0400, Lyude Paul wrote:
+> > > This is just an atomic version of mode_valid, which is intended to be
+> > > used for situations where a driver might need to check the atomic state
+> > > of objects other than the connector itself. One such example is with
+> > > MST, where the maximum possible bandwidth on a connector can change
+> > > dynamically irregardless of the display configuration.
+> > > 
+> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > Cc: Lee Shawn C <shawn.c.lee@intel.com>
+> > > Tested-by: Lee Shawn C <shawn.c.lee@intel.com>
+> > > ---
+> > >  drivers/gpu/drm/drm_crtc_helper_internal.h |  6 +-
+> > >  drivers/gpu/drm/drm_probe_helper.c         | 65 ++++++++++++++--------
+> > >  include/drm/drm_modeset_helper_vtables.h   | 41 ++++++++++++++
+> > >  3 files changed, 88 insertions(+), 24 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/drm_crtc_helper_internal.h
+> > > b/drivers/gpu/drm/drm_crtc_helper_internal.h
+> > > index f0a66ef47e5ad..ca767cba6094d 100644
+> > > --- a/drivers/gpu/drm/drm_crtc_helper_internal.h
+> > > +++ b/drivers/gpu/drm/drm_crtc_helper_internal.h
+> > > @@ -73,8 +73,10 @@ enum drm_mode_status drm_crtc_mode_valid(struct drm_crtc
+> > > *crtc,
+> > >  					 const struct drm_display_mode *mode);
+> > >  enum drm_mode_status drm_encoder_mode_valid(struct drm_encoder *encoder,
+> > >  					    const struct drm_display_mode
+> > > *mode);
+> > > -enum drm_mode_status drm_connector_mode_valid(struct drm_connector
+> > > *connector,
+> > > -					      struct drm_display_mode *mode);
+> > > +enum drm_mode_status
+> > > +drm_connector_mode_valid(struct drm_connector *connector,
+> > > +			 struct drm_display_mode *mode,
+> > > +			 struct drm_modeset_acquire_ctx *ctx);
+> > >  
+> > >  struct drm_encoder *
+> > >  drm_connector_get_single_encoder(struct drm_connector *connector);
+> > > diff --git a/drivers/gpu/drm/drm_probe_helper.c
+> > > b/drivers/gpu/drm/drm_probe_helper.c
+> > > index 466dfbba82564..3132784736841 100644
+> > > --- a/drivers/gpu/drm/drm_probe_helper.c
+> > > +++ b/drivers/gpu/drm/drm_probe_helper.c
+> > > @@ -86,16 +86,17 @@ drm_mode_validate_flag(const struct drm_display_mode
+> > > *mode,
+> > >  	return MODE_OK;
+> > >  }
+> > >  
+> > > -static enum drm_mode_status
+> > > +static int
+> > >  drm_mode_validate_pipeline(struct drm_display_mode *mode,
+> > > -			    struct drm_connector *connector)
+> > > +			   struct drm_connector *connector,
+> > > +			   struct drm_modeset_acquire_ctx *ctx)
+> > >  {
+> > >  	struct drm_device *dev = connector->dev;
+> > > -	enum drm_mode_status ret = MODE_OK;
+> > >  	struct drm_encoder *encoder;
+> > > +	int ret = MODE_OK;
+> > >  
+> > >  	/* Step 1: Validate against connector */
+> > > -	ret = drm_connector_mode_valid(connector, mode);
+> > > +	ret = drm_connector_mode_valid(connector, mode, ctx);
+> > >  	if (ret != MODE_OK)
+> > >  		return ret;
+> > >  
+> > > @@ -196,16 +197,23 @@ enum drm_mode_status drm_encoder_mode_valid(struct
+> > > drm_encoder *encoder,
+> > >  	return encoder_funcs->mode_valid(encoder, mode);
+> > >  }
+> > >  
+> > > -enum drm_mode_status drm_connector_mode_valid(struct drm_connector
+> > > *connector,
+> > > -					      struct drm_display_mode *mode)
+> > > +int
+> > > +drm_connector_mode_valid(struct drm_connector *connector,
+> > > +			 struct drm_display_mode *mode,
+> > > +			 struct drm_modeset_acquire_ctx *ctx)
+> > >  {
+> > >  	const struct drm_connector_helper_funcs *connector_funcs =
+> > >  		connector->helper_private;
+> > >  
+> > > -	if (!connector_funcs || !connector_funcs->mode_valid)
+> > > +	if (!connector_funcs)
+> > >  		return MODE_OK;
+> > >  
+> > > -	return connector_funcs->mode_valid(connector, mode);
+> > > +	if (connector_funcs->mode_valid_ctx)
+> > > +		return connector_funcs->mode_valid_ctx(connector, mode, ctx);
+> > > +	else if (connector_funcs->mode_valid)
+> > > +		return connector_funcs->mode_valid(connector, mode);
+> > > +	else
+> > > +		return MODE_OK;
+> > >  }
+> > >  
+> > >  #define DRM_OUTPUT_POLL_PERIOD (10*HZ)
+> > > @@ -375,8 +383,9 @@ EXPORT_SYMBOL(drm_helper_probe_detect);
+> > >   *      (if specified)
+> > >   *    - drm_mode_validate_flag() checks the modes against basic connector
+> > >   *      capabilities (interlace_allowed,doublescan_allowed,stereo_allowed)
+> > > - *    - the optional &drm_connector_helper_funcs.mode_valid helper can
+> > > perform
+> > > - *      driver and/or sink specific checks
+> > > + *    - the optional &drm_connector_helper_funcs.mode_valid or
+> > > + *      &drm_connector_helper_funcs.mode_valid_ctx helpers can perform
+> > > driver
+> > > + *      and/or sink specific checks
+> > >   *    - the optional &drm_crtc_helper_funcs.mode_valid,
+> > >   *      &drm_bridge_funcs.mode_valid and
+> > > &drm_encoder_helper_funcs.mode_valid
+> > >   *      helpers can perform driver and/or source specific checks which are
+> > > also
+> > > @@ -507,22 +516,34 @@ int drm_helper_probe_single_connector_modes(struct
+> > > drm_connector *connector,
+> > >  		mode_flags |= DRM_MODE_FLAG_3D_MASK;
+> > >  
+> > >  	list_for_each_entry(mode, &connector->modes, head) {
+> > > -		if (mode->status == MODE_OK)
+> > > -			mode->status = drm_mode_validate_driver(dev, mode);
+> > > +		if (mode->status != MODE_OK)
+> > > +			continue;
+> > > +
+> > > +		mode->status = drm_mode_validate_driver(dev, mode);
+> > > +		if (mode->status != MODE_OK)
+> > > +			continue;
+> > >  
+> > > -		if (mode->status == MODE_OK)
+> > > -			mode->status = drm_mode_validate_size(mode, maxX, maxY);
+> > > +		mode->status = drm_mode_validate_size(mode, maxX, maxY);
+> > > +		if (mode->status != MODE_OK)
+> > > +			continue;
+> > >  
+> > > -		if (mode->status == MODE_OK)
+> > > -			mode->status = drm_mode_validate_flag(mode, mode_flags);
+> > > +		mode->status = drm_mode_validate_flag(mode, mode_flags);
+> > > +		if (mode->status != MODE_OK)
+> > > +			continue;
+> > >  
+> > > -		if (mode->status == MODE_OK)
+> > > -			mode->status = drm_mode_validate_pipeline(mode,
+> > > -								  connector);
+> > > +		ret = drm_mode_validate_pipeline(mode, connector, &ctx);
+> > > +		if (ret == -EDEADLK) {
+> > > +			drm_modeset_backoff(&ctx);
+> > > +			goto retry;
+> > > +		} else if (WARN_ON_ONCE(ret < 0)) {
+> > > +			mode->status = MODE_BAD;
+> 
+> This check is wrong actually. We define negative values for drm_mode_status
+> (MODE_BAD, MODE_ERROR, MODE_STALE) which, at least with how drivers currently
+> seem to use them, are something we want to treat as not-unexpected errors and
+> not WARN_ON.
 
-Update Documentation for the gcc v4.9 upgrade requirement.
+Ah, yes, missed that.
 
-Fixes: 6ec4476ac825 ("Raise gcc version requirement to 4.9")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
----
- Documentation/admin-guide/README.rst |    2 +-
- Documentation/process/changes.rst    |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> This is a bit annoying because it does mean there's some overlap between
+> drm_mode_status and some legitimate errno values (EPERM, ENOENT, ESRCH). Luckily
+> I can't see any reason why drivers would want to return those, but I think we
+> should probably print a debugging message when we get any errno values just so
+> developers don't get confused (also going to add a IS_ERR() equivalent for
+> drm_mode_status, but with a different name)
 
---- linux-next-20200708.orig/Documentation/admin-guide/README.rst
-+++ linux-next-20200708/Documentation/admin-guide/README.rst
-@@ -258,7 +258,7 @@ Configuring the kernel
- Compiling the kernel
- --------------------
- 
-- - Make sure you have at least gcc 4.6 available.
-+ - Make sure you have at least gcc 4.9 available.
-    For more information, refer to :ref:`Documentation/process/changes.rst <changes>`.
- 
-    Please note that you can still run a.out user programs with this kernel.
---- linux-next-20200708.orig/Documentation/process/changes.rst
-+++ linux-next-20200708/Documentation/process/changes.rst
-@@ -29,7 +29,7 @@ you probably needn't concern yourself wi
- ====================== ===============  ========================================
-         Program        Minimal version       Command to check the version
- ====================== ===============  ========================================
--GNU C                  4.8              gcc --version
-+GNU C                  4.9              gcc --version
- GNU make               3.81             make --version
- binutils               2.23             ld -v
- flex                   2.5.35           flex --version
+Maybe I'm missing something, but having negative values in
+drm_mode_status doesn't make sense to me, as all the non-zero values
+there just mean the mode is incorrect for some reason and should be
+pruned.
 
+Would it make sense to better separate the mode-status value and any
+error return value from mode_valid_ctx(), by adding a drm_mode_status *
+parameter to the hook and drm_mode_validate_pipeline()?
+
+> 
+> > > +		} else {
+> > > +			mode->status = ret;
+> > > +		}
+> > >  
+> > > -		if (mode->status == MODE_OK)
+> > > -			mode->status = drm_mode_validate_ycbcr420(mode,
+> > > -								  connector);
+> > > +		if (mode->status != MODE_OK)
+> > > +			continue;
+> > > +		mode->status = drm_mode_validate_ycbcr420(mode, connector);
+> > >  	}
+> > >  
+> > >  prune:
+> > > diff --git a/include/drm/drm_modeset_helper_vtables.h
+> > > b/include/drm/drm_modeset_helper_vtables.h
+> > > index 421a30f084631..8f020c3424b2b 100644
+> > > --- a/include/drm/drm_modeset_helper_vtables.h
+> > > +++ b/include/drm/drm_modeset_helper_vtables.h
+> > > @@ -968,6 +968,47 @@ struct drm_connector_helper_funcs {
+> > >  	 */
+> > >  	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
+> > >  					   struct drm_display_mode *mode);
+> > > +
+> > > +	/**
+> > > +	 * @mode_valid_ctx:
+> > > +	 *
+> > > +	 * Callback to validate a mode for a connector, irrespective of the
+> > > +	 * specific display configuration.
+> > > +	 *
+> > > +	 * This callback is used by the probe helpers to filter the mode list
+> > > +	 * (which is usually derived from the EDID data block from the sink).
+> > > +	 * See e.g. drm_helper_probe_single_connector_modes().
+> > > +	 *
+> > > +	 * This function is optional, and is the atomic version of
+> > > +	 * &drm_connector_funcs.mode_valid.
+> > > +	 *
+> > > +	 * To allow for accessing the atomic state of modesetting objects, the
+> > > +	 * helper libraries always call this with ctx set to a valid context,
+> > > +	 * and &drm_mode_config.connection_mutex will always be locked with
+> > > +	 * the ctx parameter set to @ctx. This allows for taking additional
+> > > +	 * locks as required.
+> > > +	 *
+> > > +	 * Even though additional locks may be acquired, this callback is
+> > > +	 * still expected not to take any constraints into account which would
+> > > +	 * be influenced by the currently set display state - such constraints
+> > > +	 * should be handled in the driver's atomic check. For example, if a
+> > > +	 * connector shares display bandwidth with other connectors then it
+> > > +	 * would be ok to validate a mode uses against the maximum possible
+> >                                      ^mode against?
+> > 
+> > Reviewed-by: Imre Deak <imre.deak@intel.com>
+> > 
+> > > +	 * bandwidth of the connector. But it wouldn't be ok to take the
+> > > +	 * current bandwidth usage of other connectors into account, as this
+> > > +	 * would change depending on the display state.
+> > > +	 *
+> > > +	 * Returns:
+> > > +	 *
+> > > +	 * Either &drm_mode_status.MODE_OK, one of the failure reasons in
+> > > +	 * &enum drm_mode_status, or -EDEADLK if a deadlock would have
+> > > +	 * occurred and we need to backoff.
+> > > +	 *
+> > > +	 */
+> > > +	int (*mode_valid_ctx)(struct drm_connector *connector,
+> > > +			      struct drm_display_mode *mode,
+> > > +			      struct drm_modeset_acquire_ctx *ctx);
+> > > +
+> > >  	/**
+> > >  	 * @best_encoder:
+> > >  	 *
+> > > -- 
+> > > 2.26.2
+> > > 
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
