@@ -2,94 +2,124 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5130120774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9631B20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mCsupB04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgGHNCi (ORCPT
+        id S1729102AbgGHNEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:02:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2442 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728918AbgGHNCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:02:37 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 6303BD8543793A5CD515;
-        Wed,  8 Jul 2020 14:02:36 +0100 (IST)
-Received: from [127.0.0.1] (10.210.171.111) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Wed, 8 Jul 2020
- 14:02:35 +0100
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 0/4] iommu/arm-smmu-v3: Improve cmdq lock efficiency
-To:     <will@kernel.org>, <robin.murphy@arm.com>
-CC:     <joro@8bytes.org>, <trivial@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <maz@kernel.org>
-References: <1592846920-45338-1-git-send-email-john.garry@huawei.com>
-Message-ID: <a5f98ff2-2d93-7306-9af9-a7bfc347757e@huawei.com>
-Date:   Wed, 8 Jul 2020 14:00:54 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 8 Jul 2020 09:04:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728997AbgGHNEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:04:24 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED41C08E6DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 06:04:24 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g75so2984536wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 06:04:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RxFZ0mM04Szq9whPZ3GL7Mk7ZTkZD0uYPWryvuVTQqY=;
+        b=mCsupB04au9clciRuxVrDhmV/yk5CdYxDbfWAKUEqRFL8HrNjxFEsv0/7Obek98xVH
+         /9C4GfH+bCFayzILNsMztA+i5/rN8b5+s5217riicElmsJIMnYAmrpNECDTTV1EJEGor
+         RwJSHj/wSTRE7zJHK2gqKcQRa5Yhfx6rW08a5khnZoy4ho2Xzam1QjcFS00BOQTZaxUO
+         4vKDnfegwxZ1ETmjpXWpWweTk/LamA34ohy6W9sjJbj4OaWfS4Le/aKq+AaVDRqTO+V6
+         r9xd0hmcqJMy385gyxHt/uj3aCq5gsCEdnvXK67fNvjI9eELE1VwBOvQXWC6Rrag8PI3
+         d2rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RxFZ0mM04Szq9whPZ3GL7Mk7ZTkZD0uYPWryvuVTQqY=;
+        b=XpQ9o5nu+VrE26oUHoPYVjluFXH1zt6i3mHyzY3HXwCxs7fzVbWofY1ThwcLaR/CYb
+         arhvQAA8LkfznGCZUALSJyoFedljuiKJjtmbJiYvENwla67W8KUDaCiPd+JTu/8YCms+
+         wcc9ssSEj5LeXMxOui5NNUm8YKKRvLGhmzTNMXGNva8LUXZC0F+HXClPhbavzpODC2oJ
+         8I5l14oLmcP2WhRNqqkDORXKiXELsCVx08vilpkwFvWz+fpBulnQoXZQWTM9T+3jtzs2
+         pPLTGOYvpcLOQezJunMHiKtyPayS2P7lvcP27lYWUnOJJAGpaC96sgiWpL3zV2BaJagu
+         yQFg==
+X-Gm-Message-State: AOAM533FdjruS18sRaYIvJGYRoH3AjZrDK6rciqhQh1GS3Ti0NG1d4Tn
+        e/GntZi9Rcj2QZZjvzdEuQGqFA==
+X-Google-Smtp-Source: ABdhPJwkcRNPg0c+ui6qXxBzepuHHCjRwvrxhO3Qpq0Zdau5H9yd/UNhobH+cvwIzFKwffnbfXPm2A==
+X-Received: by 2002:a1c:7311:: with SMTP id d17mr9078596wmb.60.1594213462831;
+        Wed, 08 Jul 2020 06:04:22 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id q3sm5767129wmq.22.2020.07.08.06.04.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 06:04:22 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     lee.jones@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Gyungoh Yoo <jack.yoo@skyworksinc.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH 1/1] video: backlight: sky81452-backlight: Fix some kerneldoc issues
+Date:   Wed,  8 Jul 2020 14:04:19 +0100
+Message-Id: <20200708130419.3445042-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <1592846920-45338-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.171.111]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/06/2020 18:28, John Garry wrote:
+Firstly, all lines must begin with a '*'.  Secondly, arg descriptions
+must be spelt correctly, so fix misspelling of 'gpioD_enable' and
+'short_detecTion_threshold'
 
-Hi, Can you guys let me know if this is on the radar at all?
+Fixes the following W=1 kernel build warning(s):
 
-I have been talking about this performance issue since Jan, and not 
-getting anything really.
+ drivers/video/backlight/sky81452-backlight.c:46: warning: bad line:                 If it is not defined, default name is lcd-backlight.
+ drivers/video/backlight/sky81452-backlight.c:64: warning: Function parameter or member 'gpiod_enable' not described in 'sky81452_bl_platform_data'
+ drivers/video/backlight/sky81452-backlight.c:64: warning: Function parameter or member 'short_detection_threshold' not described in 'sky81452_bl_platform_data'
 
-thanks
+Cc: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/video/backlight/sky81452-backlight.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> As mentioned in [0], the CPU may consume many cycles processing
-> arm_smmu_cmdq_issue_cmdlist(). One issue we find is the cmpxchg() loop to
-> get space on the queue takes approx 25% of the cycles for this function.
-> 
-> This series removes that cmpxchg().
-> 
-> For my NVMe test with 3x NVMe SSDs, I'm getting a ~24% throughput
-> increase:
-> Before: 1310 IOPs
-> After: 1630 IOPs
-> 
-> I also have a test harness to check the rate of DMA map+unmaps we can
-> achieve:
-> 
-> CPU count	32	64	128
-> Before:		63187	19418	10169
-> After:		93287	44789	15862
-> 
-> (unit is map+unmaps per CPU per second)
-> 
-> [0] https://lore.kernel.org/linux-iommu/B926444035E5E2439431908E3842AFD24B86DB@DGGEMI525-MBS.china.huawei.com/T/#ma02e301c38c3e94b7725e685757c27e39c7cbde3
-> 
-> John Garry (4):
->    iommu/arm-smmu-v3: Fix trivial typo
->    iommu/arm-smmu-v3: Calculate bits for prod and owner
->    iommu/arm-smmu-v3: Always issue a CMD_SYNC per batch
->    iommu/arm-smmu-v3: Remove cmpxchg() in arm_smmu_cmdq_issue_cmdlist()
-> 
->   drivers/iommu/arm-smmu-v3.c | 233 +++++++++++++++++++++++-------------
->   1 file changed, 151 insertions(+), 82 deletions(-)
-> 
+diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/backlight/sky81452-backlight.c
+index 83ccb3d940fae..0ce1815850080 100644
+--- a/drivers/video/backlight/sky81452-backlight.c
++++ b/drivers/video/backlight/sky81452-backlight.c
+@@ -43,13 +43,13 @@
+ /**
+  * struct sky81452_platform_data
+  * @name:	backlight driver name.
+-		If it is not defined, default name is lcd-backlight.
+- * @gpios_enable:GPIO descriptor which control EN pin
++ *		If it is not defined, default name is lcd-backlight.
++ * @gpiod_enable:GPIO descriptor which control EN pin
+  * @enable:	Enable mask for current sink channel 1, 2, 3, 4, 5 and 6.
+  * @ignore_pwm:	true if DPWMI should be ignored.
+  * @dpwm_mode:	true is DPWM dimming mode, otherwise Analog dimming mode.
+  * @phase_shift:true is phase shift mode.
+- * @short_detecion_threshold:	It should be one of 4, 5, 6 and 7V.
++ * @short_detection_threshold:	It should be one of 4, 5, 6 and 7V.
+  * @boost_current_limit:	It should be one of 2300, 2750mA.
+  */
+ struct sky81452_bl_platform_data {
+-- 
+2.25.1
 
