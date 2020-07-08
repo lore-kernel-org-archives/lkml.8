@@ -2,110 +2,77 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB40C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AFBC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE2A520774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC5620786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgGHEtg (ORCPT
+        id S1729176AbgGHEuM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 00:49:36 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:7856 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgGHEtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 00:49:36 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4B1n0C4zc4z9v12f;
-        Wed,  8 Jul 2020 06:49:31 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id WuA_H24l4QZ1; Wed,  8 Jul 2020 06:49:31 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4B1n0C42Y8z9v12h;
-        Wed,  8 Jul 2020 06:49:31 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 788828B77C;
-        Wed,  8 Jul 2020 06:49:32 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id PdPoikqdbpGg; Wed,  8 Jul 2020 06:49:32 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 471658B76B;
-        Wed,  8 Jul 2020 06:49:30 +0200 (CEST)
-Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with
- __put_user()/__get_user()
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
-        segher@kernel.crashing.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
- <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
- <878sg6862r.fsf@mpe.ellerman.id.au> <875zb98i5a.fsf@mpe.ellerman.id.au>
- <8b751738-a9d1-8f55-8f9b-9264c8ac7ed8@csgroup.eu>
- <faa6759a-8188-104b-a9f9-a5ff3b060cfa@csgroup.eu>
-Message-ID: <c827fd9b-984d-ca86-67e9-512ca10d118f@csgroup.eu>
-Date:   Wed, 8 Jul 2020 06:49:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <faa6759a-8188-104b-a9f9-a5ff3b060cfa@csgroup.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Jul 2020 00:50:12 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:36097 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgGHEuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 00:50:11 -0400
+Received: from [192.168.1.91] (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 51BEACECF6;
+        Wed,  8 Jul 2020 07:00:06 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH][next] Bluetooth: Use fallthrough pseudo-keyword
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200707203541.GA8972@embeddedor>
+Date:   Wed, 8 Jul 2020 06:49:39 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <AA68478E-A46A-4914-BE62-3AC9989E358D@holtmann.org>
+References: <20200707203541.GA8972@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Gustavo,
 
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> fall-through markings when it is the case.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> drivers/bluetooth/bcm203x.c     |  2 +-
+> drivers/bluetooth/bluecard_cs.c |  2 --
+> drivers/bluetooth/hci_ll.c      |  2 +-
+> drivers/bluetooth/hci_qca.c     |  8 +-------
+> net/bluetooth/hci_event.c       |  4 ++--
+> net/bluetooth/hci_sock.c        |  3 +--
+> net/bluetooth/l2cap_core.c      | 19 +++++++++----------
+> net/bluetooth/l2cap_sock.c      |  4 ++--
+> net/bluetooth/mgmt.c            |  4 ++--
+> net/bluetooth/rfcomm/core.c     |  2 +-
+> net/bluetooth/rfcomm/sock.c     |  2 +-
+> net/bluetooth/smp.c             |  2 +-
+> 12 files changed, 22 insertions(+), 32 deletions(-)
 
-Le 07/07/2020 à 21:02, Christophe Leroy a écrit :
-> 
-> 
-> Le 07/07/2020 à 14:44, Christophe Leroy a écrit :
->>
->>
->> Le 30/06/2020 à 03:19, Michael Ellerman a écrit :
->>> Michael Ellerman <mpe@ellerman.id.au> writes:
->>>> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
->>>>> Hi Michael,
->>>>>
->>>>> I see this patch is marked as "defered" in patchwork, but I can't see
->>>>> any related discussion. Is it normal ?
->>>>
->>>> Because it uses the "m<>" constraint which didn't work on GCC 4.6.
->>>>
->>>> https://github.com/linuxppc/issues/issues/297
->>>>
->>>> So we should be able to pick it up for v5.9 hopefully.
->>>
->>> It seems to break the build with the kernel.org 4.9.4 compiler and
->>> corenet64_smp_defconfig:
->>
->> Most likely a GCC bug ?
->>
->> It seems the problem vanishes with patch 
->> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/173de3b659fa3a5f126a0eb170522cccd909950f.1594125164.git.christophe.leroy@csgroup.eu/ 
->>
-> 
-> Same kind of issue in signal_64.c now.
-> 
-> The following patch fixes it: 
-> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/810bd8840ef990a200f58c9dea9abe767ca02a3a.1594146723.git.christophe.leroy@csgroup.eu/ 
-> 
-> 
+can we split these a little bit between drivers, core and rfcomm. Thanks.
 
-This time I confirm, with the two above mentioned patches, it builds OK 
-with 4.9, see 
-http://kisskb.ellerman.id.au/kisskb/head/810bd8840ef990a200f58c9dea9abe767ca02a3a/
+Regards
 
-Christophe
+Marcel
+
