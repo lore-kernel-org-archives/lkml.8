@@ -2,122 +2,104 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E8CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E39172065C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HcEJA8WD"
+	by mail.kernel.org (Postfix) with ESMTP id B2DCE2065C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgGHMDc (ORCPT
+        id S1729045AbgGHMDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:03:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729198AbgGHMDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:03:04 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F5E7C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:03:04 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b6so48661763wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oQ4WvRwPDFUcNrh06O2K9jOUxxfeZulaKjQ0ybDc5os=;
-        b=HcEJA8WDl4WeJ2vXIx9y7tBCth1cotVU/SGVBEDKeoxBy/vHIVkUEVxUdRO0FHSzuR
-         ibKIsFFbEhwKcXgsnSy5GbgBrKsb3JMgHrxW2eiAPh28qoXxbmBoNF6JAP3Qe3fZLW2c
-         XSEoh/x0mVS5KNb/8Lu7uVYR8fx3X1830tDuS+dj0Tn7BXba7wJhtiX2qIyLLFZR3dwd
-         /BBfXElqsVR1A/f5KJTzaJJE3SvCKvuYKRf/p58LaYkTV6MrdtawQiS6bgqW30VLM2Gt
-         unrA4NE6cx7pEQkdDtUkkOSQVeJNjKUhnp20MnowWCLVVKURPzHppVzG1gQfciGp+VhC
-         +l5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oQ4WvRwPDFUcNrh06O2K9jOUxxfeZulaKjQ0ybDc5os=;
-        b=U2XN2UMFPfA68HMZGzZzbUX2vuWydLXVPK/zbwxmgtct1bGk36XOHNAJizWll7p9jh
-         kypo9+OWceHz1lzWGcpiJ02LK1wgnCzOBsST2KWRRGF3nDc4nlk9YZWhhiBZJcDqHBi2
-         QHUu047Gkk2hLkkXN8XlR+HeWiEm/DQG/S/4aaVGMKEOFk7fvOqZ8jVxfD25TIwvFO3Y
-         x7B2lRe3VLIGPCanyDfYcE96tAFumhqQttp8BQJVLSE8pr/ldU1tMhRIrf7i+JDD10hY
-         7WmQ+baROdLzSz4wRqQ2OMxrxadMw0kMZ+PRRYp4Ribjpc6tgtnsDVCLCRMwQxRjyrU5
-         UP2A==
-X-Gm-Message-State: AOAM532QYI4lgiJBbJE38Qrfc1IERMrxSdUcVw2nQNRRdx0lLIt2n1ha
-        huF1UHsc7rLRBzmgUDZ4kkKYvg==
-X-Google-Smtp-Source: ABdhPJwVLbtlb7LCz9yj2ORin0ecR6yZcKzsnIjqiqxEm/K74D5PXILyHP5nAyq2AdzFCvfsEY1XSA==
-X-Received: by 2002:adf:82e1:: with SMTP id 88mr37664379wrc.376.1594209782309;
-        Wed, 08 Jul 2020 05:03:02 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.03.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:03:00 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
-Subject: [PATCH 25/30] scsi: aacraid: linit: Fix a couple of small kerneldoc issues
-Date:   Wed,  8 Jul 2020 13:02:16 +0100
-Message-Id: <20200708120221.3386672-26-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200708120221.3386672-1-lee.jones@linaro.org>
-References: <20200708120221.3386672-1-lee.jones@linaro.org>
+        Wed, 8 Jul 2020 08:03:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729265AbgGHMDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 08:03:33 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0567820772;
+        Wed,  8 Jul 2020 12:03:30 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 13:03:28 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     syzbot <syzbot+dec34b033b3479b9ef13@syzkaller.appspotmail.com>,
+        amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: memory leak in inotify_update_watch
+Message-ID: <20200708120327.GB6308@gaia>
+References: <000000000000a47ace05a9c7b825@google.com>
+ <20200707152411.GD25069@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707152411.GD25069@quack2.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most likely caused by bitrot (docs not keeping in sync with API).
+On Tue, Jul 07, 2020 at 05:24:11PM +0200, Jan Kara wrote:
+> On Mon 06-07-20 08:42:24, syzbot wrote:
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17644c05100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5ee23b9caef4e07a
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=dec34b033b3479b9ef13
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1478a67b100000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+dec34b033b3479b9ef13@syzkaller.appspotmail.com
+> > 
+> > BUG: memory leak
+> > unreferenced object 0xffff888115db8480 (size 576):
+> >   comm "systemd-udevd", pid 11037, jiffies 4295104591 (age 56.960s)
+> >   hex dump (first 32 bytes):
+> >     00 04 00 00 00 00 00 00 80 fd e8 15 81 88 ff ff  ................
+> >     a0 02 dd 20 81 88 ff ff b0 81 d0 09 81 88 ff ff  ... ............
+> >   backtrace:
+> >     [<00000000288c0066>] radix_tree_node_alloc.constprop.0+0xc1/0x140 lib/radix-tree.c:252
+> >     [<00000000f80ba6a7>] idr_get_free+0x231/0x3b0 lib/radix-tree.c:1505
+> >     [<00000000ec9ab938>] idr_alloc_u32+0x91/0x120 lib/idr.c:46
+> >     [<00000000aea98d29>] idr_alloc_cyclic+0x84/0x110 lib/idr.c:125
+> >     [<00000000dbad44a4>] inotify_add_to_idr fs/notify/inotify/inotify_user.c:365 [inline]
+> >     [<00000000dbad44a4>] inotify_new_watch fs/notify/inotify/inotify_user.c:578 [inline]
+> >     [<00000000dbad44a4>] inotify_update_watch+0x1af/0x2d0 fs/notify/inotify/inotify_user.c:617
+> >     [<00000000e141890d>] __do_sys_inotify_add_watch fs/notify/inotify/inotify_user.c:755 [inline]
+> >     [<00000000e141890d>] __se_sys_inotify_add_watch fs/notify/inotify/inotify_user.c:698 [inline]
+> >     [<00000000e141890d>] __x64_sys_inotify_add_watch+0x12f/0x180 fs/notify/inotify/inotify_user.c:698
+> >     [<00000000d872d7cc>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
+> >     [<000000005c62d8da>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> I've been looking into this for a while and I don't think this is related
+> to inotify at all. Firstly the reproducer looks totally benign:
+> 
+> prlimit64(0x0, 0xe, &(0x7f0000000280)={0x9, 0x8d}, 0x0)
+> sched_setattr(0x0, &(0x7f00000000c0)={0x38, 0x2, 0x0, 0x0, 0x9}, 0x0)
+> vmsplice(0xffffffffffffffff, 0x0, 0x0, 0x0)
+> perf_event_open(0x0, 0x0, 0xffffffffffffffff, 0xffffffffffffffff, 0x0)
+> clone(0x20000103, 0x0, 0xfffffffffffffffe, 0x0, 0xffffffffffffffff)
+> syz_mount_image$vfat(0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+> 
+> So we seem to set SCHED_RR class and prio 9 to itself, the rest of syscalls
+> seem to be invalid and should fail. Secondly, the kernel log shows that we
+> hit OOM killer frequently and after one of these kills, many leaked objects
+> (among them this radix tree node from inotify idr) are reported. I'm not
+> sure if it could be the leak detector getting confused (e.g. because it got
+> ENOMEM at some point) or something else... Catalin, any idea?
 
-Fixes the following W=1 kernel build warning(s):
+Just wondering, if this leak is reproducible, could we have some
+condition where inotify_remove_from_idr() is not called in case of a
+forced exit triggered by the OOM kill? Also, can the leak be reproduced
+without the OOM?
 
- drivers/scsi/aacraid/linit.c: In function ‘aac_biosparm’:
- drivers/scsi/aacraid/linit.c:368:41: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
- drivers/scsi/aacraid/linit.c:243: warning: Function parameter or member 'shost' not described in 'aac_queuecommand'
- drivers/scsi/aacraid/linit.c:243: warning: Excess function parameter 'done' description in 'aac_queuecommand'
- drivers/scsi/aacraid/linit.c:1176: warning: Excess function parameter 'inode' description in 'aac_cfg_ioctl'
-
-Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/scsi/aacraid/linit.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
-index 734dd6e67246d..f043e378652c1 100644
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -230,8 +230,8 @@ static struct aac_driver_ident aac_drivers[] = {
- 
- /**
-  *	aac_queuecommand	-	queue a SCSI command
-+ *	@shost:		Scsi host to queue command on
-  *	@cmd:		SCSI command to queue
-- *	@done:		Function to call on command completion
-  *
-  *	Queues a command for execution by the associated Host Adapter.
-  *
-@@ -1160,7 +1160,6 @@ static int aac_cfg_open(struct inode *inode, struct file *file)
- 
- /**
-  *	aac_cfg_ioctl		-	AAC configuration request
-- *	@inode: inode of device
-  *	@file: file handle
-  *	@cmd: ioctl command code
-  *	@arg: argument
 -- 
-2.25.1
-
+Catalin
