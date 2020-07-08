@@ -2,194 +2,122 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72434C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405AC206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87492064B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:00:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="fc99Lu1u";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BFrD/y18"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KLwi9sL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgGHN5z (ORCPT
+        id S1729690AbgGHOAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:57:55 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:60971 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729517AbgGHN5x (ORCPT
+        Wed, 8 Jul 2020 10:00:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34936 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729656AbgGHOAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:57:53 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id D7958B4F;
-        Wed,  8 Jul 2020 09:57:51 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 09:57:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=9
-        kajBv5LcN6biHj10xmYWD6ww0blwUZJfRS7upFl4XQ=; b=fc99Lu1uzhuM1p1vU
-        iIbsKFvLRPRM9bvgqxieS26g783ug572WeI5tc5eSLdUSp3qyVkfmIqvFC9yOgiv
-        iE4zFV5hHpEQPKZoFN2NWQ5rQbMFo0aNMDNIFnIxkc1g0iEUlYNRlERXse0Bcikt
-        hfNl5vDImfUKRh/zzftkAUeLLha7j2N+7iKyQUPKMNn/YN6E95o8TRzoA3Vt/l1Y
-        TtrEy1uT66yN5IqhZI8eO7b3tBPH1/XLNU8PNz7aWT5oH1W3hYvH65hOzQuQLblE
-        P/Mmc4jd/GKVrmLUpLs5RGA94oqSAiJkTKOwCA+aCRl/wBigRZXjFP9Ie/iHzRey
-        81a9w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=9kajBv5LcN6biHj10xmYWD6ww0blwUZJfRS7upFl4
-        XQ=; b=BFrD/y18Ac2osQkM5/6/8wiCLccoMvDH7criw+vfc2cV+iY8bk4r5LEjV
-        ZTWlQu5SIK6JgKEoRWdlFVpbBHKaAN3Do/b2l3I/DpPp3OXzmlX3GGMXCmVNS/9o
-        Rd/jjIvtm7mZNt5EvIiJ6khQnVYXUqsUmghK1IS0l8ceXgKgt0mDDZxfEbslQupw
-        YmkamluN43P/ioOHBb2+ctQKz63bAdzSNFzYesQugt1+EPRvqS7lIt6tknYmhWvY
-        rciXWCIYv/4bTK6zeXJMkG2dEa6ydrjz1RIfcPXxhmg+WYlpMR3CXieF6QGqllBp
-        otpn85mRGlNtnvmV2wOIaRd3Yym8g==
-X-ME-Sender: <xms:3tAFX35Ldk0fdHbqNZKI7f1ZA5ZfCSy0iPJrUUC796SRnDTXGH45vw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdejvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttdejnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepgfejjeekjedttdethedtfeelteefffduvdevvdfhtdeiudetleejgeelfeef
-    uedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:3tAFX850T2eREUR0hiEjRgCenhvAg50LsSwbMQgXCe6F5JvRC_HBeg>
-    <xmx:3tAFX-cnDqk98TCuEUfrpO8ENZotQtJPnXx1oXLm3iQKIsdSJUvlhA>
-    <xmx:3tAFX4LztxLrkynpBUHglls3XONSrYLcD1Eb7OeFEH-IM-NyuhYVTg>
-    <xmx:39AFX4rO1_k_RntAi3iPyyZ0wGKvQqEY02raZjvR6neHclmVkY0h9KSgONQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3001B328006D;
-        Wed,  8 Jul 2020 09:57:50 -0400 (EDT)
-Date:   Wed, 8 Jul 2020 15:57:48 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-sunxi@googlegroups.com,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
-Message-ID: <20200708135748.l4zncodhhggurp6s@gilmour.lan>
-References: <20200708105527.868987-1-megous@megous.com>
- <20200708122542.73o3lbhgvbdw5c4z@gilmour.lan>
- <20200708132924.r6f5id2evprhybec@core.my.home>
- <20200708133654.fp7k4whl2qmn5ygy@gilmour.lan>
- <20200708134441.4lfuh7nwtqnkkg2a@core.my.home>
+        Wed, 8 Jul 2020 10:00:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594216838;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=qPr0eL60h+DsRpfuaobt35zdISOXizza2r3opqrQCz0=;
+        b=KLwi9sL37dbgYv0VA6tG9WfUosYBtuqJRDgYD/HoP4MidTC/LKSJGMuUhIKLQSUyQ09hm/
+        tnnEMxqy88AnLg/pMm9vKAeeAAevzlx745fS4WQfKlt5CVsUiA2JouSQ3JW0hbAWEPxUgM
+        ldWkgSIz6yK+5Kz2ynIvz3yBjYghSbA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-EiqG4VkKOCG6ODFfeWtUJg-1; Wed, 08 Jul 2020 10:00:37 -0400
+X-MC-Unique: EiqG4VkKOCG6ODFfeWtUJg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DA8E8015F7;
+        Wed,  8 Jul 2020 14:00:34 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3AE6078493;
+        Wed,  8 Jul 2020 14:00:25 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: x86: take as_id into account when checking PGD
+Date:   Wed,  8 Jul 2020 16:00:23 +0200
+Message-Id: <20200708140023.1476020-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200708134441.4lfuh7nwtqnkkg2a@core.my.home>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 03:44:41PM +0200, Ond=C5=99ej Jirman wrote:
-> On Wed, Jul 08, 2020 at 03:36:54PM +0200, Maxime Ripard wrote:
-> > On Wed, Jul 08, 2020 at 03:29:24PM +0200, Ond=C5=99ej Jirman wrote:
-> > > Hello Maxime,
-> > >=20
-> > > On Wed, Jul 08, 2020 at 02:25:42PM +0200, Maxime Ripard wrote:
-> > > > Hi,
-> > > >=20
-> > > > On Wed, Jul 08, 2020 at 12:55:27PM +0200, Ondrej Jirman wrote:
-> > > > > I noticed several mobile Linux distributions failing to enable the
-> > > > > thermal regulation correctly, because the kernel is silent
-> > > > > when thermal driver fails to probe. Add enough error reporting
-> > > > > to debug issues and warn users in case thermal sensor is failing
-> > > > > to probe.
-> > > > >=20
-> > > > > Failing to notify users means, that SoC can easily overheat under
-> > > > > load.
-> > > > >=20
-> > > > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > > > ---
-> > > > >  drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++-=
-------
-> > > > >  1 file changed, 43 insertions(+), 12 deletions(-)
-> > > > >=20
-> > > > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/su=
-n8i_thermal.c
-> > > > > index 74d73be16496..9065e79ae743 100644
-> > > > > --- a/drivers/thermal/sun8i_thermal.c
-> > > > > +++ b/drivers/thermal/sun8i_thermal.c
-> > > > > @@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct ths_de=
-vice *tmdev)
-> > > > > =20
-> > > > >  	calcell =3D devm_nvmem_cell_get(dev, "calibration");
-> > > > >  	if (IS_ERR(calcell)) {
-> > > > > +		dev_err(dev, "Failed to get calibration nvmem cell (%ld)\n",
-> > > > > +			PTR_ERR(calcell));
-> > > > > +
-> > > > >  		if (PTR_ERR(calcell) =3D=3D -EPROBE_DEFER)
-> > > > >  			return -EPROBE_DEFER;
-> > > > > +
-> > > >=20
-> > > > The rest of the patch makes sense, but we should probably put the e=
-rror
-> > > > message after the EPROBE_DEFER return so that we don't print any ex=
-tra
-> > > > noise that isn't necessarily useful
-> > >=20
-> > > I thought about that, but in this case this would have helped, see my=
- other
-> > > e-mail. Though lack of "probe success" message may be enough for me, =
-to
-> > > debug the issue, I'm not sure the user will notice that a message is =
-missing, while
-> > > he'll surely notice if there's a flood of repeated EPROBE_DEFER messa=
-ges.
-> >=20
-> > Yeah, but on the other hand, we regularly have people that come up and
-> > ask if a "legitimate" EPROBE_DEFER error message (as in: the driver
-> > wasn't there on the first attempt but was there on the second) is a
-> > cause of concern or not.
->=20
-> That's why I also added a success message, to distinguish this case.=20
+OVMF booted guest running on shadow pages crashes on TRIPLE FAULT after
+enabling paging from SMM. The crash is triggered from mmu_check_root() and
+is caused by kvm_is_visible_gfn() searching through memslots with as_id = 0
+while vCPU may be in a different context (address space).
 
-That doesn't really help though. We have plenty of drivers that have
-some sort of success message and people will still ask about that error
-message earlier.
+Introduce kvm_vcpu_is_visible_gfn() and use it from mmu_check_root().
 
-> > > And people run several distros for 3-4 months without anyone noticing=
- any
-> > > issues and that thermal regulation doesn't work. So it seems that lac=
-k of a
-> > > success message is not enough.
-> >=20
-> > I understand what the issue is, but do you really expect phone users to
-> > monitor the kernel logs every time they boot their phone to see if the
-> > thermal throttling is enabled?
->=20
-> Not phone users, but people making their own kernels/distributions. Those=
- people
-> monitor dmesg, and out of 4 distros or more nobody noticed there was an i=
-ssue
-> (despite the complaints of overheating by their users).
->=20
-> So I thought some warning may be in order, so that distro people more eas=
-ily
-> notice they have misconfigured the kernel or sometging.
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/mmu/mmu.c   | 2 +-
+ include/linux/kvm_host.h | 1 +
+ virt/kvm/kvm_main.c      | 8 ++++++++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-I mean, then there's nothing we can do to properly address that then.
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 4fd4b5de8996..309024210a35 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -3668,7 +3668,7 @@ static int mmu_check_root(struct kvm_vcpu *vcpu, gfn_t root_gfn)
+ {
+ 	int ret = 0;
+ 
+-	if (!kvm_is_visible_gfn(vcpu->kvm, root_gfn)) {
++	if (!kvm_vcpu_is_visible_gfn(vcpu, root_gfn)) {
+ 		kvm_make_request(KVM_REQ_TRIPLE_FAULT, vcpu);
+ 		ret = 1;
+ 	}
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index d564855243d8..f74d2a5afc26 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -774,6 +774,7 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
+ int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
+ struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
+ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
++bool kvm_vcpu_is_visible_gfn(struct kvm_vcpu *vcpu, gfn_t gfn);
+ unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
+ void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
+ 
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index a852af5c3214..b131c7da1d12 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1626,6 +1626,14 @@ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
+ }
+ EXPORT_SYMBOL_GPL(kvm_is_visible_gfn);
+ 
++bool kvm_vcpu_is_visible_gfn(struct kvm_vcpu *vcpu, gfn_t gfn)
++{
++	struct kvm_memory_slot *memslot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
++
++	return kvm_is_visible_memslot(memslot);
++}
++EXPORT_SYMBOL_GPL(kvm_vcpu_is_visible_gfn);
++
+ unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+ 	struct vm_area_struct *vma;
+-- 
+2.25.4
 
-The configuration system is a gun, we can point at the target, but
-anyone is definitely free to shot themself in the foot.
-
-You would have exactly the same result if you left the thermal driver
-disabled, or if you didn't have cpufreq support.
-
-Maxime
