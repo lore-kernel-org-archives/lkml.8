@@ -2,119 +2,90 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD93C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3EC0206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53152206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:49:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wf7knxLW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgGHRtP (ORCPT
+        id S1728787AbgGHRtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:49:15 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:54780 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728763AbgGHRtK (ORCPT
+        Wed, 8 Jul 2020 13:49:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728721AbgGHRtJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:49:10 -0400
-X-IronPort-AV: E=Sophos;i="5.75,328,1589209200"; 
-   d="scan'208";a="51641789"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 09 Jul 2020 02:49:08 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 918F24005E3D;
-        Thu,  9 Jul 2020 02:49:04 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 8/8] arm64: dts: renesas: Add HiHope RZ/G2H sub board support
-Date:   Wed,  8 Jul 2020 18:48:31 +0100
-Message-Id: <1594230511-24790-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 8 Jul 2020 13:49:09 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26640C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 10:49:09 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id d17so40522790ljl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 10:49:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bhowNbJuV356oFdiSTzabdZB1J+dSIh5y7YWbXkVY2Q=;
+        b=Wf7knxLWk7qOaIH8aOWRD28F+E1eDaRcllXSUdNMF4E0ItMOATRQAgxeALRSgrKmkV
+         Eba9/ww36+r+1KS5krZIUFljxrtm1gIf/j41574CgdgiCAlVMv1EPxnF8cLuz3h9Kdwd
+         Ixpozzln58qGQjgtRoaOy3smHCkLJ247j66KN6qwo7h2lASuXyvuvWjV2PDQzbiKqe55
+         fzYwNGf8ke6c5XMun507OWWsnI8xv/TFx3z0b7R9XXlmxXNbMYjQvtFZivwyTg8J+Xln
+         XnChoWPsX9GXm4PEWVmPDihpwhTM9x5+ke2RFBm75fKGj1eYZUpz0EpOrFP9SWgmRByv
+         4HDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bhowNbJuV356oFdiSTzabdZB1J+dSIh5y7YWbXkVY2Q=;
+        b=Mz5YCAs5g1jMS1U9vVrOuXhWbxkT+flhXROOOqMssnPOwC1KFy0aef9u8UUpNuBCaR
+         1EpU7nBkQkLkgxp7cD7957jd/059jxtY8f4qYhSdJ24VFtir/9+Ne/S9FcX66BaWCd8b
+         kcFPFJoWN5McUNy1lwIfpsIbgSyEudS42VVZKRBWTje5/RfJ3RDkvKDr2iJQChrQt2yi
+         a3/uEeYeo+eqfsbS26sIHnNjnXgRgvLQOV6d71l8Wdt/xDQtEbhiA1T4QDlGX/K6xMUt
+         H9lNQDY0gQcWifUuMPL9JrIndqOYaytTskob5qH3BuiUDfYq9LQqRnT81YOKTkZ0+uOw
+         Ekkw==
+X-Gm-Message-State: AOAM530EpTN4gC9Fjm03Q4BfvT1BgxmSReh09LSwpELNg4Vcv0Y3mGLm
+        RmhDdCapbZMGxv8M3+1OHpFwM1QpQmW7sQJUxnc=
+X-Google-Smtp-Source: ABdhPJyK31rnONgRQ4xLjluvVcQNMLo+jfRoVczIGoEX71ohC46z3bYeEV76nRiYiTJiIemoWeswDy2kGmMBMezSRQ8=
+X-Received: by 2002:a2e:808d:: with SMTP id i13mr31426488ljg.452.1594230547595;
+ Wed, 08 Jul 2020 10:49:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <1594025081-2353-1-git-send-email-hongxing.zhu@nxp.com>
+In-Reply-To: <1594025081-2353-1-git-send-email-hongxing.zhu@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 8 Jul 2020 14:48:56 -0300
+Message-ID: <CAOMZO5CGDzzADq6yC1FMStc1ZcuLS5mVahf_EOe1RNfdki9+Jw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl: only enable pcie in the pcie dts file
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Hi Richard,
 
-The HiHope RZ/G2H sub board sits below the HiHope RZ/G2H main board.
-These boards are identical with the ones for RZ/G2M[N].
+On Mon, Jul 6, 2020 at 5:49 AM Richard Zhu <hongxing.zhu@nxp.com> wrote:
+>
+> Since iMX6Q/DL PCIe has the PM limitation (ERR005723 "PCIe PCIe does
+> not support L2 Power Down").
+> System suspend/resume would be broken by PCIe, if PCIe is enabled.
+> Only enable PCIe in the xxx-pcie.dts files to avoid the brokens when
+> other xxx.dtb files are used on sabresd and sabreauto boards.
 
-Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/Makefile              |  3 ++-
- arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi   |  2 +-
- .../boot/dts/renesas/r8a774e1-hihope-rzg2h-ex.dts | 15 +++++++++++++++
- 3 files changed, 18 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h-ex.dts
+We have several imx6 dts files that currently enable pcie.
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 0688125f8fbf..19b7d7cfa22f 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -14,7 +14,8 @@ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex-idk-1110wr.dtb \
- dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
- 			       r8a774c0-ek874-idk-2121wr.dtb \
- 			       r8a774c0-ek874-mipi-2.1.dtb
--dtb-$(CONFIG_ARCH_R8A774E1) += r8a774e1-hihope-rzg2h.dtb
-+dtb-$(CONFIG_ARCH_R8A774E1) += r8a774e1-hihope-rzg2h.dtb \
-+			       r8a774e1-hihope-rzg2h-ex.dtb
- dtb-$(CONFIG_ARCH_R8A77950) += r8a77950-salvator-x.dtb
- dtb-$(CONFIG_ARCH_R8A77950) += r8a77950-ulcb.dtb r8a77950-ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A77951) += r8a77951-salvator-x.dtb r8a77951-salvator-xs.dtb
-diff --git a/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-index acfcfd050a6c..178401a34cbf 100644
---- a/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-+++ b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Device Tree Source for the RZ/G2[MN] HiHope sub board common parts
-+ * Device Tree Source for the RZ/G2[HMN] HiHope sub board common parts
-  *
-  * Copyright (C) 2019 Renesas Electronics Corp.
-  */
-diff --git a/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h-ex.dts b/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h-ex.dts
-new file mode 100644
-index 000000000000..265355e0de5f
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h-ex.dts
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the HiHope RZ/G2H sub board
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+#include "r8a774e1-hihope-rzg2h.dts"
-+#include "hihope-rzg2-ex.dtsi"
-+
-+/ {
-+	model = "HopeRun HiHope RZ/G2H with sub board";
-+	compatible = "hoperun,hihope-rzg2-ex", "hoperun,hihope-rzg2h",
-+		     "renesas,r8a774e1";
-+};
--- 
-2.17.1
+Can't we have a proper software workaround for this issue instead?
 
+Thanks
