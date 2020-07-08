@@ -2,157 +2,122 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8630CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58984C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66167206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="V9fWo4fu"
+	by mail.kernel.org (Postfix) with ESMTP id 145C2206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgGHNoo (ORCPT
+        id S1729720AbgGHNot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:44:44 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52146 "EHLO vps.xff.cz"
+        Wed, 8 Jul 2020 09:44:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50728 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729288AbgGHNoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:44:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1594215881; bh=m5N5EKsEYiWdipmJshuL2ZNQFzFFa5BIjVuaSql6fQU=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=V9fWo4fub+/jaUPMFn1CZ3J/auzdwkPbCVuj6tjqtv3mA1VTW2crqFCRhc7itDvTK
-         cOgfo/pd3fqAHXsv2MNzYSiLg9wbKcYB+trS13XAwUeH+bszFw7r74hzcR6dkrxJD7
-         Lx6RWlQU5gr8TnS46u4hlIQPoSasdJPxT20oZLdQ=
-Date:   Wed, 8 Jul 2020 15:44:41 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-sunxi@googlegroups.com,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
-Message-ID: <20200708134441.4lfuh7nwtqnkkg2a@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Maxime Ripard <maxime@cerno.tech>, linux-sunxi@googlegroups.com,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200708105527.868987-1-megous@megous.com>
- <20200708122542.73o3lbhgvbdw5c4z@gilmour.lan>
- <20200708132924.r6f5id2evprhybec@core.my.home>
- <20200708133654.fp7k4whl2qmn5ygy@gilmour.lan>
+        id S1729288AbgGHNos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:44:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CC0F8AD25;
+        Wed,  8 Jul 2020 13:44:46 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 17A531E12BF; Wed,  8 Jul 2020 15:44:46 +0200 (CEST)
+Date:   Wed, 8 Jul 2020 15:44:46 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Keyur Patel <iamkeyur96@gmail.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ext4: fix spelling mistakes in extents.c
+Message-ID: <20200708134446.GA5288@quack2.suse.cz>
+References: <20200611031947.165079-1-iamkeyur96@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200708133654.fp7k4whl2qmn5ygy@gilmour.lan>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200611031947.165079-1-iamkeyur96@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 03:36:54PM +0200, Maxime Ripard wrote:
-> On Wed, Jul 08, 2020 at 03:29:24PM +0200, Ondřej Jirman wrote:
-> > Hello Maxime,
-> > 
-> > On Wed, Jul 08, 2020 at 02:25:42PM +0200, Maxime Ripard wrote:
-> > > Hi,
-> > > 
-> > > On Wed, Jul 08, 2020 at 12:55:27PM +0200, Ondrej Jirman wrote:
-> > > > I noticed several mobile Linux distributions failing to enable the
-> > > > thermal regulation correctly, because the kernel is silent
-> > > > when thermal driver fails to probe. Add enough error reporting
-> > > > to debug issues and warn users in case thermal sensor is failing
-> > > > to probe.
-> > > > 
-> > > > Failing to notify users means, that SoC can easily overheat under
-> > > > load.
-> > > > 
-> > > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > > ---
-> > > >  drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++-------
-> > > >  1 file changed, 43 insertions(+), 12 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> > > > index 74d73be16496..9065e79ae743 100644
-> > > > --- a/drivers/thermal/sun8i_thermal.c
-> > > > +++ b/drivers/thermal/sun8i_thermal.c
-> > > > @@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct ths_device *tmdev)
-> > > >  
-> > > >  	calcell = devm_nvmem_cell_get(dev, "calibration");
-> > > >  	if (IS_ERR(calcell)) {
-> > > > +		dev_err(dev, "Failed to get calibration nvmem cell (%ld)\n",
-> > > > +			PTR_ERR(calcell));
-> > > > +
-> > > >  		if (PTR_ERR(calcell) == -EPROBE_DEFER)
-> > > >  			return -EPROBE_DEFER;
-> > > > +
-> > > 
-> > > The rest of the patch makes sense, but we should probably put the error
-> > > message after the EPROBE_DEFER return so that we don't print any extra
-> > > noise that isn't necessarily useful
-> > 
-> > I thought about that, but in this case this would have helped, see my other
-> > e-mail. Though lack of "probe success" message may be enough for me, to
-> > debug the issue, I'm not sure the user will notice that a message is missing, while
-> > he'll surely notice if there's a flood of repeated EPROBE_DEFER messages.
+On Wed 10-06-20 23:19:46, Keyur Patel wrote:
+> Fix spelling issues over the comments in the code.
 > 
-> Yeah, but on the other hand, we regularly have people that come up and
-> ask if a "legitimate" EPROBE_DEFER error message (as in: the driver
-> wasn't there on the first attempt but was there on the second) is a
-> cause of concern or not.
-
-That's why I also added a success message, to distinguish this case. 
-
-> > And people run several distros for 3-4 months without anyone noticing any
-> > issues and that thermal regulation doesn't work. So it seems that lack of a
-> > success message is not enough.
+> requsted ==> requested
+> deterimined ==> determined
+> insde ==> inside
+> neet ==> need
+> somthing ==> something
 > 
-> I understand what the issue is, but do you really expect phone users to
-> monitor the kernel logs every time they boot their phone to see if the
-> thermal throttling is enabled?
+> Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
 
-Not phone users, but people making their own kernels/distributions. Those people
-monitor dmesg, and out of 4 distros or more nobody noticed there was an issue
-(despite the complaints of overheating by their users).
+Thanks. The fixes look good. You can add:
 
-So I thought some warning may be in order, so that distro people more easily
-notice they have misconfigured the kernel or sometging.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-End users really don't care about dmesg.
+Ted, I think this patch has fallen through the cracks...
 
-regards,
-	o.
-
-> If anything, it looks like a distro problem, and the notification /
-> policy to deal with that should be implemented in userspace.
+								Honza
+> ---
+>  fs/ext4/extents.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> > Other solution may be to select CONFIG_NVMEM_SUNXI_SID if this driver
-> > is enabled. That may get rid of this error scenario of waiting infinitely
-> > for calibration data with EPROBE_DEFER. And other potential EPROBE_DEFER sources
-> > will probably be quite visible even without this driver telling the user.
-> > So this message may not be necessary in that case.
+> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+> index 7d088ff1e902..8028e1aae8de 100644
+> --- a/fs/ext4/extents.c
+> +++ b/fs/ext4/extents.c
+> @@ -1915,7 +1915,7 @@ static unsigned int ext4_ext_check_overlap(struct ext4_sb_info *sbi,
+>  
+>  /*
+>   * ext4_ext_insert_extent:
+> - * tries to merge requsted extent into the existing extent or
+> + * tries to merge requested extent into the existing extent or
+>   * inserts requested extent as new one into the tree,
+>   * creating new leaf in the no-space case.
+>   */
+> @@ -3125,7 +3125,7 @@ static int ext4_ext_zeroout(struct inode *inode, struct ext4_extent *ex)
+>   *
+>   *
+>   * Splits extent [a, b] into two extents [a, @split) and [@split, b], states
+> - * of which are deterimined by split_flag.
+> + * of which are determined by split_flag.
+>   *
+>   * There are two cases:
+>   *  a> the extent are splitted into two extent.
+> @@ -3650,7 +3650,7 @@ static int ext4_split_convert_extents(handle_t *handle,
+>  		eof_block = map->m_lblk + map->m_len;
+>  	/*
+>  	 * It is safe to convert extent to initialized via explicit
+> -	 * zeroout only if extent is fully insde i_size or new_size.
+> +	 * zeroout only if extent is fully inside i_size or new_size.
+>  	 */
+>  	depth = ext_depth(inode);
+>  	ex = path[depth].p_ext;
+> @@ -4495,7 +4495,7 @@ static long ext4_zero_range(struct file *file, loff_t offset,
+>  	}
+>  
+>  	/*
+> -	 * Round up offset. This is not fallocate, we neet to zero out
+> +	 * Round up offset. This is not fallocate, we need to zero out
+>  	 * blocks, so convert interior block aligned part of the range to
+>  	 * unwritten and possibly manually zero out unaligned parts of the
+>  	 * range.
+> @@ -5579,7 +5579,7 @@ ext4_swap_extents(handle_t *handle, struct inode *inode1,
+>  		}
+>  		ex1 = path1[path1->p_depth].p_ext;
+>  		ex2 = path2[path2->p_depth].p_ext;
+> -		/* Do we have somthing to swap ? */
+> +		/* Do we have something to swap ? */
+>  		if (unlikely(!ex2 || !ex1))
+>  			goto finish;
+>  
+> -- 
+> 2.26.2
 > 
-> That would only partially solve your issue. If the nvmem driver doesn't
-> load for some reason, you would end up in a similar situation.
-> 
-> Maxime
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
