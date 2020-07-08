@@ -2,129 +2,106 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E40C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3584120786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C61320786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J+G840SU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbgGHQSB convert rfc822-to-8bit (ORCPT
+        id S1730551AbgGHQSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:18:01 -0400
-Received: from mailoutvs24.siol.net ([185.57.226.215]:40617 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730093AbgGHQSA (ORCPT
+        Wed, 8 Jul 2020 12:18:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730093AbgGHQSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:18:00 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 4A96C524C57;
-        Wed,  8 Jul 2020 18:17:58 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id oLEpCQVAM4I0; Wed,  8 Jul 2020 18:17:57 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id D452E524C76;
-        Wed,  8 Jul 2020 18:17:57 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 47E03524BD7;
-        Wed,  8 Jul 2020 18:17:57 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 08/16] arm64: dts: allwinner: h6: Add HDMI audio node
-Date:   Wed, 08 Jul 2020 18:17:57 +0200
-Message-ID: <4073007.RJdR9ZcIkj@jernej-laptop>
-In-Reply-To: <20200706052937.ygjjllrsj7rvynkq@gilmour.lan>
-References: <20200704113902.336911-1-peron.clem@gmail.com> <20200704113902.336911-9-peron.clem@gmail.com> <20200706052937.ygjjllrsj7rvynkq@gilmour.lan>
+        Wed, 8 Jul 2020 12:18:06 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CFDDC061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 09:18:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=i483IMQSRtR6J+n94GaZZET/X/lONTUJSH/4pcYK8jY=; b=J+G840SUfei8u8CJZHruj5Kw3p
+        3y3+AoKYPTFfOxz+GtgBh8qi5jW2iVlbQtmMzRgMr8RoWJGpSOD3lE/c6dMxbVmcyfqLr9DeNlura
+        II877bwwbuswXMUl+ISOTvxAZYOiL3Orzu68MXsAaeIazcS9JkP9PTjoHGOTIDypClGe+hKmJMDW6
+        A6CxpOLrhZNabtMyC9ytQN/33EdSvvx3maKfW4G2qYb98v9IOvS5F8XSlYG8hYnIhvYg4rR74i+PC
+        bz21rFdzdPwUxh+AxTCFWQx34PXItOHPW6s+4udZK6FsVezO/xdoP52liLVhHV+wYvnm+ONGHGpWP
+        DWRPLizw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtCll-0000lM-Bq; Wed, 08 Jul 2020 16:18:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2E4EE3006D0;
+        Wed,  8 Jul 2020 18:18:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1C3C4214ECDA9; Wed,  8 Jul 2020 18:18:00 +0200 (CEST)
+Date:   Wed, 8 Jul 2020 18:18:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/20] seqlock: Extend seqcount API with associated
+ locks
+Message-ID: <20200708161800.GT4800@hirez.programming.kicks-ass.net>
+References: <20200630054452.3675847-7-a.darwish@linutronix.de>
+ <20200706212148.GE5523@worktop.programming.kicks-ass.net>
+ <20200707084024.GA4097637@debian-buster-darwi.lab.linutronix.de>
+ <20200707130410.GO4800@hirez.programming.kicks-ass.net>
+ <20200707143726.GO117543@hirez.programming.kicks-ass.net>
+ <20200708103314.GB4151780@debian-buster-darwi.lab.linutronix.de>
+ <20200708122938.GQ4800@hirez.programming.kicks-ass.net>
+ <20200708150930.GA147323@debian-buster-darwi.lab.linutronix.de>
+ <20200708153522.GR4800@hirez.programming.kicks-ass.net>
+ <20200708155813.GA147953@debian-buster-darwi.lab.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708155813.GA147953@debian-buster-darwi.lab.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-Dne ponedeljek, 06. julij 2020 ob 07:29:37 CEST je Maxime Ripard napisal(a):
-> Hi,
+On Wed, Jul 08, 2020 at 05:58:13PM +0200, Ahmed S. Darwish wrote:
+> > I even considered:
+> >
+> > #define __SEQPROP(name, prop, expr) \
+> > static __always_inline __seqprop_##prop##_t \
+> > __seqprop##name##_##prop(seqcount##name##_t *s) \
+> > { \
+> > 	expr; \
+> > }
+> >
+> > Such that we could write:
+> >
+> > __SEQPROP(, ptr, return s)
+> > __SEQPROP(, preempt, return false)
+> > __SEQPROP(, assert, )
+> >
+> > __SEQPROP(_##locktype, ptr, return &s->seqcount) \
+> > __SEQPROP(_##locktype, preempt, return preempt) \
+> > __SEQPROP(_##locktype, assert, __SEQCOUNT_LOCKDEP(lockdep_assert_held(s->lockmember))) \
+> >
+> > But I figured _that_ might've been one step too far ;-)
 > 
-> On Sat, Jul 04, 2020 at 01:38:54PM +0200, Clément Péron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > 
-> > Add a simple-soundcard to link audio between HDMI and I2S.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > ---
-> > 
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 33 ++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
-> > 78b1361dfbb9..ae169d07b939 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -67,6 +67,25 @@ de: display-engine {
-> > 
-> >  		status = "disabled";
-> >  	
-> >  	};
-> > 
-> > +	hdmi_sound: hdmi-sound {
-> > +		compatible = "simple-audio-card";
-> > +		simple-audio-card,format = "i2s";
-> > +		simple-audio-card,name = "sun50i-h6-hdmi";
-> > +		simple-audio-card,mclk-fs = <128>;
-> > +		simple-audio-card,frame-inversion;
-> 
-> Have you figured that one out?
-> 
-> > +		status = "disabled";
-> > +
-> > +		simple-audio-card,codec {
-> > +			sound-dai = <&hdmi>;
-> > +		};
-> > +
-> > +		simple-audio-card,cpu {
-> > +			sound-dai = <&i2s1>;
-> > +			dai-tdm-slot-num = <2>;
-> > +			dai-tdm-slot-width = <32>;
-> 
-> I'm not sure why you need to use the TDM stuff here. IIRC the HDMI
-> controller can output on up to 6 channels, so how would that work out?
+> Initially I implemented something like this during internal,
+> pre-upstream, versions of this patch series. We've decided afterwards
+> that the macro compression level is so high that the whole thing is not
+> so easily understandable.
 
-dai-tdm-slot-width is needed to override automatic slot width selection. It 
-should always be 32 for HDMI, no matter what is actual physical sample width. 
-In this case this property is abused to set width also for I2S mode of 
-operation. IMO there is no sense to duplicate code because I2S variant would 
-work exactly the same, except name would be different.
-
-I'm not sure about dai-tdm-slot-num. Marcus, can you explain the need for this 
-property?
-
-Would it be better to implement separate link driver instead of using simple-
-card to hide all this properties into the code?
-
-Best regards,
-Jernej
-
-
-
+I've been reading too much tracing code lately... :-) This is only 2
+levels of expansion and fits on a single screen.
