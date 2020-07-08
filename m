@@ -2,116 +2,79 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CEBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04604C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC69C206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD00E20760
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gedCFhC+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HvTkT3Yz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgGHSQ7 (ORCPT
+        id S1726320AbgGHSTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:16:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49137 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726072AbgGHSQ7 (ORCPT
+        Wed, 8 Jul 2020 14:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgGHSTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:16:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594232218;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iAQg13RIc/6fdgwYC3LjOS6qKUgfGuA+h5I0+AO5bfM=;
-        b=gedCFhC+dsOd8J2wsomTQOYAxWsNj4YjbxJk3lMuZrUxiodeRO3AHZ7ff1N6BAtbL7bZ+S
-        TrEUtG52b5qxpDNzq59FIy6iF74oxhD7UlieqiNlSmIfnFYfqQc3GYAOCPfecoC2toTeQY
-        5yzLjoUonvCgCOMIb1Fo7ElEIrIPrxk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-nqZOZTZQPemOdt1FTRxOpw-1; Wed, 08 Jul 2020 14:16:54 -0400
-X-MC-Unique: nqZOZTZQPemOdt1FTRxOpw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B6A8F1800D42;
-        Wed,  8 Jul 2020 18:16:52 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EDD8C5BAC3;
-        Wed,  8 Jul 2020 18:16:45 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 20:16:44 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     bpf <bpf@vger.kernel.org>, Hangbin Liu <haliu@redhat.com>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Veronika Kabatova <vkabatov@redhat.com>,
-        Jiri Benc <jbenc@redhat.com>, Yonghong Song <yhs@fb.com>,
-        Martin Lau <kafai@fb.com>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>, brouer@redhat.com
-Subject: Re: [PATCH bpf-next V3 0/2] BPF selftests test runner 'test_progs'
- use proper shell exit codes
-Message-ID: <20200708201644.0a02602a@carbon>
-In-Reply-To: <CAEf4Bzb07mdCQ5DS_gao4b9GSyeg406wpteC9uDaGdfOAHXFVA@mail.gmail.com>
-References: <159410590190.1093222.8436994742373578091.stgit@firesoul>
-        <CAEf4Bzb07mdCQ5DS_gao4b9GSyeg406wpteC9uDaGdfOAHXFVA@mail.gmail.com>
+        Wed, 8 Jul 2020 14:19:47 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 666F4C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 11:19:47 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id t4so26761439iln.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 11:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2AmuLZJMHQPQccZytV7kXET82/Y66cEHC380oWy4s+g=;
+        b=HvTkT3Yzc+0sTy17VDvyFLHX9Wj+cV76L6dXw4jSkrFRuyw3gSp896FKevhO1L3c9R
+         fHd36gJSizxoIEumauz8Wy3XzIsdXqsUbcdJZI5WkFVKo/cXMjDyF8/jSVuSsRB3nKbH
+         6APHT/fZlZXTW2VneKfsRJ2kROoeMk2gGZPWyQCYP8sRmcl5SabIsQv7dVyxposgyuf0
+         Obbkl92Nv+E1gH5NztzVcHLOxShYy+UxUJegvH0CLI0kNI8SW5RNSZzT9S+UXixj0Bep
+         d6S6Ue4thjNfSVM7mM1NadWauaUT4GLq5mZv3q2c64MfGzdxqgXVG3UJAlm1CGVnqBIx
+         2nDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2AmuLZJMHQPQccZytV7kXET82/Y66cEHC380oWy4s+g=;
+        b=q98HxGafP+Aw70OnJINnVPtHnGv25N45yqVbLkbEsTOzfYjWnFj4ximHLyZnVxpjkt
+         UndfSrr1XIcjI8uD7xdRVxKHkBv1y0LyV7kiAtkKkl2mr9O8doLcHw7VJUOrYBoP++ik
+         OhT/fE9lpb5ghzrEZEzeqhNBfbRqN4rBRjJt0Qf5tzZ3cPjCnoENSQ2zW+XtOu1WYcbb
+         xXPfQdc7Bi2pcZznVhJdM0CGhac1Xax/oTQZXhsZmw7lGf0wgYPDo67y79X4UQnm/u7a
+         UrUxzQ05pl2mEE2WlH32FfTHZ6HAP+B8uc7nHhw0YzmxocjttJ3fksV3DjXaLgPhidBf
+         zmGg==
+X-Gm-Message-State: AOAM531wUWWN70D6y1W5594YXKUUGpn+qW7B3nx03zp3NYpFIcdLs1L4
+        BzexPuu6xCCpwABcbTMTaFEPHuCNvJf7fD8l59GnHk1x
+X-Google-Smtp-Source: ABdhPJyfCtMLGGsfTHzFRlVI1nhUOBxQmw2RuTyIuZQncCXntViBnqgrCAyRcBfK6wBySUQVUCLe5suQwBXZAhsHuJM=
+X-Received: by 2002:a92:b685:: with SMTP id m5mr43222431ill.118.1594232386468;
+ Wed, 08 Jul 2020 11:19:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200708110350.848997-1-pbonzini@redhat.com>
+In-Reply-To: <20200708110350.848997-1-pbonzini@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 8 Jul 2020 11:19:35 -0700
+Message-ID: <CALMp9eQGgDJE9kYA6vGM67iCdtfgYqPHxBXGSCGfEtqo858pmw@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86: Make CR4.VMXE reserved for the guest
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm list <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jul 2020 00:23:48 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-
-> On Tue, Jul 7, 2020 at 12:12 AM Jesper Dangaard Brouer
-> <brouer@redhat.com> wrote:
-> >
-> > This patchset makes it easier to use test_progs from shell scripts, by using
-> > proper shell exit codes. The process's exit status should be a number
-> > between 0 and 255 as defined in man exit(3) else it will be masked to comply.
-> >
-> > Shell exit codes used by programs should be below 127. As 127 and above are
-> > used for indicating signals. E.g. 139 means 11=SIGSEGV $((139 & 127))=11.
-> > POSIX defines in man wait(3p) signal check if WIFSIGNALED(STATUS) and
-> > WTERMSIG(139)=11. (Hint: cmd 'kill -l' list signals and their numbers).
-> >
-> > Using Segmentation fault as an example, as these have happened before with
-> > different tests (that are part of test_progs). CI people writing these
-> > shell-scripts could pickup these hints and report them, if that makes sense.
-> >
-> > ---
-> >
-> > Jesper Dangaard Brouer (2):
-> >       selftests/bpf: test_progs use another shell exit on non-actions
-> >       selftests/bpf: test_progs avoid minus shell exit codes
-> >
-> >
-> >  tools/testing/selftests/bpf/test_progs.c |   13 ++++++++-----
-> >  1 file changed, 8 insertions(+), 5 deletions(-)
-> >
-> > --
-> >  
-> 
-> For the series:
-> 
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> 
-> My preference was shorter EXIT_ERR_SETUP, but it doesn't matter.
-
-I can just resend the patchset, if you prefer?
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+On Wed, Jul 8, 2020 at 4:04 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> CR4.VMXE is reserved unless the VMX CPUID bit is set.  On Intel,
+> it is also tested by vmx_set_cr4, but AMD relies on kvm_valid_cr4,
+> so fix it.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
