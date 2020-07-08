@@ -2,208 +2,255 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6254FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53244C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D81E20672
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E5A20672
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:59:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OakzlWJA"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="NyPhQkDn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgGHUyA (ORCPT
+        id S1726116AbgGHU7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:54:00 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:23189 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgGHUyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:54:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594241638; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=JXEjENLH7MbraRA/pMvTjsju07jH8KL7dOAaR98y5WU=;
- b=OakzlWJACtL+f3gMtkppoRF7Stu3tJCB39Xpxuqpxs8Grc9I+2dZUd6AMpoL17wkYFBvD2sY
- H78lfCLmUhCFlxm1mtiznfp3ti3zz2neTseg6eukapd4qIN9VcVOY8E9dDHJVCeYfNfIHqDB
- sILv/EHGc+oKFU3eAWMhBfTlc4U=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
- 5f06325da33b1a3dd42fe752 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 20:53:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D11E1C433CA; Wed,  8 Jul 2020 20:53:49 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1A121C433C8;
-        Wed,  8 Jul 2020 20:53:49 +0000 (UTC)
+        Wed, 8 Jul 2020 16:59:52 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:37778 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbgGHU7v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 16:59:51 -0400
+X-Greylist: delayed 1324 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 16:59:49 EDT
+Received: from pps.filterd (m0050096.ppops.net [127.0.0.1])
+        by m0050096.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 068KXW8c005852;
+        Wed, 8 Jul 2020 21:33:41 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ mime-version; s=jan2016.eng;
+ bh=mO1wrjyV2OelH5OHTYA7XXlXVYLVkAVK9u1Dp65QdR8=;
+ b=NyPhQkDn8QocS20oiq2lo+xvHQr+Fbvh7t9Gh8smmqhKB4p3OK+vZRxyyJC1moafh5dE
+ xdoCf34m7+nICmvMr8x9YnnDAn6gRmjGzu41Rg+smv925L0W3dDEcUISmRlPuCP9BqNS
+ +7V2NmIUcBFP5ANFdlKiuOpiBaqTZBsm6j/6pSrKwyeIpCgjj2EbrCCsHXdSVCDcAqZT
+ 3qRlJe78yRNvFPr50XgHLfaqSSzpPPE6ei92fYB+RFxJT7LEg9fxOXszH6vqzl0/PzV4
+ g25jFQEWsDqXy+SL7IV7FGOWbVdzSHwzcO/5dNeX/EsDss0rEJjirbTCQcWP8Irf2zW3 HQ== 
+Received: from prod-mail-ppoint4 (a72-247-45-32.deploy.static.akamaitechnologies.com [72.247.45.32] (may be forged))
+        by m0050096.ppops.net-00190b01. with ESMTP id 325k1xs74d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 21:33:41 +0100
+Received: from pps.filterd (prod-mail-ppoint4.akamai.com [127.0.0.1])
+        by prod-mail-ppoint4.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 068K6dhp008309;
+        Wed, 8 Jul 2020 16:33:40 -0400
+Received: from email.msg.corp.akamai.com ([172.27.165.118])
+        by prod-mail-ppoint4.akamai.com with ESMTP id 325k4w8y5u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 16:33:40 -0400
+Received: from ustx2ex-dag3mb5.msg.corp.akamai.com (172.27.165.129) by
+ USTX2EX-DAG3MB4.msg.corp.akamai.com (172.27.165.128) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Wed, 8 Jul 2020 13:33:39 -0700
+Received: from ustx2ex-dag3mb5.msg.corp.akamai.com ([172.27.165.129]) by
+ ustx2ex-dag3mb5.msg.corp.akamai.com ([172.27.165.129]) with mapi id
+ 15.00.1497.006; Wed, 8 Jul 2020 16:33:39 -0400
+From:   "Zhivich, Michael" <mzhivich@akamai.com>
+To:     "Hunt, Joshua" <johunt@akamai.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jonas Bonn <jonas.bonn@netrounds.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+CC:     David Miller <davem@davemloft.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Linux Kernel Network Developers" <netdev@vger.kernel.org>
+Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
+Thread-Topic: Packet gets stuck in NOLOCK pfifo_fast qdisc
+Thread-Index: AQHWTxK75CELHL4wL0WHx+6+Dg4FAKjzJ9qAgABBHICAAKwPAIAAOwkAgACMfoCACVNtAA==
+Date:   Wed, 8 Jul 2020 20:33:39 +0000
+Message-ID: <9DDC4F99-3133-47F7-A107-E9E5F9E1ADD0@akamai.com>
+References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+ <20200623134259.8197-1-mzhivich@akamai.com>
+ <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
+ <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
+ <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
+ <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com>
+ <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
+ <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
+In-Reply-To: <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [172.19.47.76]
+Content-Type: multipart/signed; protocol="application/pkcs7-signature";
+        micalg=sha256; boundary="B_3677070818_351846658"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 Jul 2020 13:53:49 -0700
-From:   bbhatt@codeaurora.org
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] bus: mhi: core: Use helper API to trigger a
- non-blocking host resume
-In-Reply-To: <20200704144714.GC3066@Mani-XPS-13-9360>
-References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
- <1593448782-8385-4-git-send-email-bbhatt@codeaurora.org>
- <20200704144714.GC3066@Mani-XPS-13-9360>
-Message-ID: <ed30fd4330863c9743a019b6bd89aabd@codeaurora.org>
-X-Sender: bbhatt@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_17:2020-07-08,2020-07-08 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ phishscore=0 mlxscore=0 adultscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007080119
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_17:2020-07-08,2020-07-08 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 adultscore=0
+ phishscore=0 clxscore=1011 mlxscore=0 mlxlogscore=999 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007080124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-04 07:47, Manivannan Sadhasivam wrote:
-> On Mon, Jun 29, 2020 at 09:39:36AM -0700, Bhaumik Bhatt wrote:
->> Autonomous low power mode support requires the MHI host to resume from
->> multiple places and post a wakeup source to exit system suspend. This
->> needs to be done in a non-blocking manner. Introduce a helper API to
->> trigger the host resume for data transfers and other non-blocking use
->> cases while supporting implementation of autonomous low power modes.
->> 
-> 
-> Why can't you use pm_wakeup_event() as done in __mhi_device_get_sync()?
-> 
-> Thanks,
-> Mani
-> 
+--B_3677070818_351846658
+Content-type: text/plain;
+	charset="UTF-8"
+Content-transfer-encoding: 7bit
 
-I forgot to address the __mhi_device_get_sync() function. Thanks for 
-pointing out.
+On 7/2/20, 2:08 PM, "Josh Hunt" <johunt@akamai.com> wrote:
+>
+> On 7/2/20 2:45 AM, Paolo Abeni wrote:
+> > Hi all,
+> > 
+> > On Thu, 2020-07-02 at 08:14 +0200, Jonas Bonn wrote:
+> >> Hi Cong,
+> >>
+> >> On 01/07/2020 21:58, Cong Wang wrote:
+> >>> On Wed, Jul 1, 2020 at 9:05 AM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> >>>> On Tue, Jun 30, 2020 at 2:08 PM Josh Hunt <johunt@akamai.com> wrote:
+> >>>>> Do either of you know if there's been any development on a fix for this
+> >>>>> issue? If not we can propose something.
+> >>>>
+> >>>> If you have a reproducer, I can look into this.
+> >>>
+> >>> Does the attached patch fix this bug completely?
+> >>
+> >> It's easier to comment if you inline the patch, but after taking a quick
+> >> look it seems too simplistic.
+> >>
+> >> i)  Are you sure you haven't got the return values on qdisc_run reversed?
+> > 
+> > qdisc_run() returns true if it was able to acquire the seq lock. We
+> > need to take special action in the opposite case, so Cong's patch LGTM
+> > from a functional PoV.
+> > 
+> >> ii) There's a "bypass" path that skips the enqueue/dequeue operation if
+> >> the queue is empty; that needs a similar treatment:  after releasing
+> >> seqlock it needs to ensure that another packet hasn't been enqueued
+> >> since it last checked.
+> > 
+> > That has been reverted with
+> > commit 379349e9bc3b42b8b2f8f7a03f64a97623fff323
+> > 
+> > ---
+> >> diff --git a/net/core/dev.c b/net/core/dev.c
+> >> index 90b59fc50dc9..c7e48356132a 100644
+> >> --- a/net/core/dev.c
+> >> +++ b/net/core/dev.c
+> >> @@ -3744,7 +3744,8 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
+> >>
+> >>   	if (q->flags & TCQ_F_NOLOCK) {
+> >>   		rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+> >> -		qdisc_run(q);
+> >> +		if (!qdisc_run(q) && rc == NET_XMIT_SUCCESS)
+> >> +			__netif_schedule(q);
+> > 
+> > I fear the __netif_schedule() call may cause performance regression to
+> > the point of making a revert of TCQ_F_NOLOCK preferable. I'll try to
+> > collect some data.
+>
+> Initial results with Cong's patch look promising, so far no stalls. We 
+> will let it run over the long weekend and report back on Tuesday.
+>
+> Paolo - I have concerns about possible performance regression with the 
+> change as well. If you can gather some data that would be great. If 
+> things look good with our low throughput test over the weekend we can 
+> also try assessing performance next week.
+>
+> Josh
 
-Is it preferable to always post wakeup source with hard boolean set?
-We do want to wakeup from Suspend-to-Idle if system suspend happens to 
-go that route.
+After running our reproducer over the long weekend, we've observed several more packets getting stuck.
+The behavior is order of magnitude better *with* the patch (that is, only a few packets get stuck),
+but the patch does not completely resolve the issue.
 
-As of now, we just by default do regular wakeup event and not hard.
-I figured at some point we might need to distinguish between hard vs 
-regular, hence the option but
-it can be eliminated in favor of one or another.
+I have a nagging suspicion that the same race that we observed between consumer/producer threads can occur with
+softirq processing in net_tx_action() as well (as triggered by __netif_schedule()), since both rely on the same semantics of qdisc_run().  
+Unfortunately, in such a case, we cannot just punt to __netif_schedule() again.
 
-Thanks,
-Bhaumik
+Regards,
+~ Michael
 
->> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
->> ---
->>  drivers/bus/mhi/core/internal.h |  8 ++++++++
->>  drivers/bus/mhi/core/main.c     | 21 +++++++--------------
->>  drivers/bus/mhi/core/pm.c       |  6 ++----
->>  3 files changed, 17 insertions(+), 18 deletions(-)
->> 
->> diff --git a/drivers/bus/mhi/core/internal.h 
->> b/drivers/bus/mhi/core/internal.h
->> index bcfa7b6..cb32eaf 100644
->> --- a/drivers/bus/mhi/core/internal.h
->> +++ b/drivers/bus/mhi/core/internal.h
->> @@ -599,6 +599,14 @@ int mhi_queue_state_transition(struct 
->> mhi_controller *mhi_cntrl,
->>  int mhi_send_cmd(struct mhi_controller *mhi_cntrl, struct mhi_chan 
->> *mhi_chan,
->>  		 enum mhi_cmd_type cmd);
->> 
->> +static inline void mhi_trigger_resume(struct mhi_controller 
->> *mhi_cntrl,
->> +				      bool hard_wakeup)
->> +{
->> +	pm_wakeup_dev_event(&mhi_cntrl->mhi_dev->dev, 0, hard_wakeup);
->> +	mhi_cntrl->runtime_get(mhi_cntrl);
->> +	mhi_cntrl->runtime_put(mhi_cntrl);
->> +}
->> +
->>  /* Register access methods */
->>  void mhi_db_brstmode(struct mhi_controller *mhi_cntrl, struct db_cfg 
->> *db_cfg,
->>  		     void __iomem *db_addr, dma_addr_t db_val);
->> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
->> index 1f622ce..8d6ec34 100644
->> --- a/drivers/bus/mhi/core/main.c
->> +++ b/drivers/bus/mhi/core/main.c
->> @@ -909,8 +909,7 @@ void mhi_ctrl_ev_task(unsigned long data)
->>  		 * process it since we are probably in a suspended state,
->>  		 * so trigger a resume.
->>  		 */
->> -		mhi_cntrl->runtime_get(mhi_cntrl);
->> -		mhi_cntrl->runtime_put(mhi_cntrl);
->> +		mhi_trigger_resume(mhi_cntrl, false);
->> 
->>  		return;
->>  	}
->> @@ -971,10 +970,8 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, 
->> enum dma_data_direction dir,
->>  	}
->> 
->>  	/* we're in M3 or transitioning to M3 */
->> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
->> -		mhi_cntrl->runtime_get(mhi_cntrl);
->> -		mhi_cntrl->runtime_put(mhi_cntrl);
->> -	}
->> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
->> +		mhi_trigger_resume(mhi_cntrl, false);
->> 
->>  	/* Toggle wake to exit out of M2 */
->>  	mhi_cntrl->wake_toggle(mhi_cntrl);
->> @@ -1032,10 +1029,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, 
->> enum dma_data_direction dir,
->>  	}
->> 
->>  	/* we're in M3 or transitioning to M3 */
->> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
->> -		mhi_cntrl->runtime_get(mhi_cntrl);
->> -		mhi_cntrl->runtime_put(mhi_cntrl);
->> -	}
->> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
->> +		mhi_trigger_resume(mhi_cntrl, false);
->> 
->>  	/* Toggle wake to exit out of M2 */
->>  	mhi_cntrl->wake_toggle(mhi_cntrl);
->> @@ -1147,10 +1142,8 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, 
->> enum dma_data_direction dir,
->>  	read_lock_irqsave(&mhi_cntrl->pm_lock, flags);
->> 
->>  	/* we're in M3 or transitioning to M3 */
->> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
->> -		mhi_cntrl->runtime_get(mhi_cntrl);
->> -		mhi_cntrl->runtime_put(mhi_cntrl);
->> -	}
->> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
->> +		mhi_trigger_resume(mhi_cntrl, false);
->> 
->>  	/* Toggle wake to exit out of M2 */
->>  	mhi_cntrl->wake_toggle(mhi_cntrl);
->> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
->> index 661d704..5e3994e 100644
->> --- a/drivers/bus/mhi/core/pm.c
->> +++ b/drivers/bus/mhi/core/pm.c
->> @@ -1139,10 +1139,8 @@ void mhi_device_put(struct mhi_device *mhi_dev)
->> 
->>  	mhi_dev->dev_wake--;
->>  	read_lock_bh(&mhi_cntrl->pm_lock);
->> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
->> -		mhi_cntrl->runtime_get(mhi_cntrl);
->> -		mhi_cntrl->runtime_put(mhi_cntrl);
->> -	}
->> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
->> +		mhi_trigger_resume(mhi_cntrl, false);
->> 
->>  	mhi_cntrl->wake_put(mhi_cntrl, false);
->>  	read_unlock_bh(&mhi_cntrl->pm_lock);
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
+--B_3677070818_351846658
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+
+MIINnwYJKoZIhvcNAQcCoIINkDCCDYwCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0B
+BwGgggt6MIIFOzCCBOGgAwIBAgITFwAFsq0YpJgVeLyblAAAAAWyrTAKBggqhkjOPQQDAjA8
+MSEwHwYDVQQKExhBa2FtYWkgVGVjaG5vbG9naWVzIEluYy4xFzAVBgNVBAMTDkFrYW1haUNs
+aWVudENBMB4XDTIwMDQyMjE5MjkwNFoXDTIxMDQxNzE5MjkwNFowbjEcMBoGA1UEChMTQWth
+bWFpIFRlY2hub2xvZ2llczEXMBUGA1UECxMOQVVUTy1ib3MtbXBtemIxETAPBgNVBAMTCG16
+aGl2aWNoMSIwIAYJKoZIhvcNAQkBFhNtemhpdmljaEBha2FtYWkuY29tMIIBIjANBgkqhkiG
+9w0BAQEFAAOCAQ8AMIIBCgKCAQEA85hjQdbJU0nEaTTqdWMg579D2wvMb8oAZ137qn6F0Yak
+m2Qb4T0cCuQKM5oUYIFuyfSlnqhlvSnou8FEhbYc//0Ljic0eedA3WaIgTtRAOAA+qQBZrWN
+qXzOt3362zZIqU7fbsLaHVpTBVMq1EiNjv2cCpKvQ1f5GllM494nH+vI6yX89YCB1uwXTjaC
+fBBvB5aCqzfocAiYX+d0D4nP3IJRNBXx1wK5zujWqkoWRohH4L6WgSmgeKBAfiqC3uIBtkhh
+sUGvSTrlA353GRHpqH3s2Ue2kvnWSFspp2fyfqAknwvdUDcIgmE/AQkgtMIsnllhTbh88M1b
+UxYocv/fmwIDAQABo4ICwzCCAr8wCwYDVR0PBAQDAgWgMDMGA1UdJQQsMCoGCCsGAQUFBwMH
+BggrBgEFBQcDAgYKKwYBBAGCNwoDBAYIKwYBBQUHAwQwMwYDVR0RBCwwKqAoBgorBgEEAYI3
+FAIDoBoMGG16aGl2aWNoQGNvcnAuYWthbWFpLmNvbTAdBgNVHQ4EFgQU+lcC2GdBNGvDLr1v
+LmhIiCy/0YwwHwYDVR0jBBgwFoAUk4erMWaQ2spNFgOM5MMPveYNLAwwegYDVR0fBHMwcTBv
+oG2ga4YuaHR0cDovL2FrYW1haWNybC5ha2FtYWkuY29tL0FrYW1haUNsaWVudENBLmNybIY5
+aHR0cDovL2FrYW1haWNybC5kZncwMS5jb3JwLmFrYW1haS5jb20vQWthbWFpQ2xpZW50Q0Eu
+Y3JsMIHCBggrBgEFBQcBAQSBtTCBsjA6BggrBgEFBQcwAoYuaHR0cDovL2FrYW1haWNybC5h
+a2FtYWkuY29tL0FrYW1haUNsaWVudENBLmNydDBFBggrBgEFBQcwAoY5aHR0cDovL2FrYW1h
+aWNybC5kZncwMS5jb3JwLmFrYW1haS5jb20vQWthbWFpQ2xpZW50Q0EuY3J0MC0GCCsGAQUF
+BzABhiFodHRwOi8vYWthbWFpb2NzcC5ha2FtYWkuY29tL29jc3AwPAYJKwYBBAGCNxUHBC8w
+LQYlKwYBBAGCNxUIgs7lOoe41C2BhYsHouMhhtIPgUmE5N8FgZD6FAIBZAIBGzBBBgkrBgEE
+AYI3FQoENDAyMAoGCCsGAQUFBwMHMAoGCCsGAQUFBwMCMAwGCisGAQQBgjcKAwQwCgYIKwYB
+BQUHAwQwRAYJKoZIhvcNAQkPBDcwNTAOBggqhkiG9w0DAgICAIAwDgYIKoZIhvcNAwQCAgCA
+MAcGBSsOAwIHMAoGCCqGSIb3DQMHMAoGCCqGSM49BAMCA0gAMEUCIQDq8FxcUc1l8H94tebZ
+wPgr2nFPgFNzPSA+/vITyCILAAIgQITrjM1LM8tNk9cK67MPFiEyOSI7cE4Mzooqkwzu4Ucw
+ggRmMIIEC6ADAgECAhM+AAAACuqzGxBold1TAAAAAAAKMAoGCCqGSM49BAMCMD8xITAfBgNV
+BAoTGEFrYW1haSBUZWNobm9sb2dpZXMgSW5jLjEaMBgGA1UEAxMRQWthbWFpQ29ycFJvb3Qt
+RzEwHhcNMTUwNjA0MTQ0NjA3WhcNMjUwNjA0MTQ1NjA3WjA8MSEwHwYDVQQKExhBa2FtYWkg
+VGVjaG5vbG9naWVzIEluYy4xFzAVBgNVBAMTDkFrYW1haUNsaWVudENBMFkwEwYHKoZIzj0C
+AQYIKoZIzj0DAQcDQgAEpuPNNA/ZEjWEkhjgWrKAipOQ72FwxtH8l6tvtbIFC5IfpXFiAN5Y
+B//ydeR3aM1Xk9l/JOQlbwOuOtNP7UgZoqOCAucwggLjMBAGCSsGAQQBgjcVAQQDAgEAMB0G
+A1UdDgQWBBSTh6sxZpDayk0WA4zkww+95g0sDDCBsAYDVR0gBIGoMIGlMIGiBgsqAwSPTgEJ
+CQgBATCBkjBYBggrBgEFBQcCAjBMHkoAQQBrAGEAbQBhAGkAIABDAGUAcgB0AGkAZgBpAGMA
+YQB0AGUAIABQAHIAYQBjAHQAaQBjAGUAIABTAHQAYQB0AGUAbQBlAG4AdDA2BggrBgEFBQcC
+ARYqaHR0cDovL2FrYW1haWNybC5ha2FtYWkuY29tL0FrYW1haUNQUy5wZGYAMFUGA1UdJQRO
+MEwGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYKKwYBBAGC
+NwoDDAYIKwYBBQUHAwcGCCsGAQUFBwMJMBkGCSsGAQQBgjcUAgQMHgoAUwB1AGIAQwBBMAsG
+A1UdDwQEAwIBhjAPBgNVHRMBAf8EBTADAQH/MB8GA1UdIwQYMBaAFK0Bh+rcWa6xEzmVTQ9X
+oCSGi3u9MIGABgNVHR8EeTB3MHWgc6BxhjFodHRwOi8vYWthbWFpY3JsLmFrYW1haS5jb20v
+QWthbWFpQ29ycFJvb3QtRzEuY3JshjxodHRwOi8vYWthbWFpY3JsLmRmdzAxLmNvcnAuYWth
+bWFpLmNvbS9Ba2FtYWlDb3JwUm9vdC1HMS5jcmwwgcgGCCsGAQUFBwEBBIG7MIG4MC0GCCsG
+AQUFBzABhiFodHRwOi8vYWthbWFpb2NzcC5ha2FtYWkuY29tL29jc3AwPQYIKwYBBQUHMAKG
+MWh0dHA6Ly9ha2FtYWljcmwuYWthbWFpLmNvbS9Ba2FtYWlDb3JwUm9vdC1HMS5jcnQwSAYI
+KwYBBQUHMAKGPGh0dHA6Ly9ha2FtYWljcmwuZGZ3MDEuY29ycC5ha2FtYWkuY29tL0FrYW1h
+aUNvcnBSb290LUcxLmNydDAKBggqhkjOPQQDAgNJADBGAiEAxb2BDEI5u7VpG4TgR0KbsktK
+aQOiFL6T6KtkAx7D8xACIQDJXMn85cVLMHcRe3wdfR/6Nr0ofAejZ6IaKj34qkK5KzCCAc0w
+ggFzoAMCAQICEBWwiAMHXDS7Q8DxTR/GKBEwCgYIKoZIzj0EAwIwPzEhMB8GA1UEChMYQWth
+bWFpIFRlY2hub2xvZ2llcyBJbmMuMRowGAYDVQQDExFBa2FtYWlDb3JwUm9vdC1HMTAeFw0x
+NTA1MDUxODA5MjBaFw00MDA1MDUxODE5MjBaMD8xITAfBgNVBAoTGEFrYW1haSBUZWNobm9s
+b2dpZXMgSW5jLjEaMBgGA1UEAxMRQWthbWFpQ29ycFJvb3QtRzEwWTATBgcqhkjOPQIBBggq
+hkjOPQMBBwNCAARlk5NoCPduAuWtjE9cFFfGYSzz6+kqS2Ys/LckQf2pPv6ZBFThRFEZhdbH
+6JqzeS9Kdz/zOm3WPOOEa01s2l6Zo1EwTzALBgNVHQ8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB
+/zAdBgNVHQ4EFgQUrQGH6txZrrETOZVND1egJIaLe70wEAYJKwYBBAGCNxUBBAMCAQAwCgYI
+KoZIzj0EAwIDSAAwRQIgKY8PO2tJ89kGAIPZLEJXCa0fVRPBYoF9LGIEQGBDQjECIQDlbB4a
+rnvZHK7HN0fpn72P1/DsFpmhjVXhJMmX3Ev4hTGCAekwggHlAgEBMFMwPDEhMB8GA1UEChMY
+QWthbWFpIFRlY2hub2xvZ2llcyBJbmMuMRcwFQYDVQQDEw5Ba2FtYWlDbGllbnRDQQITFwAF
+sq0YpJgVeLyblAAAAAWyrTANBglghkgBZQMEAgEFAKBpMC8GCSqGSIb3DQEJBDEiBCBXYyOs
+svvLedPzG+Cgvqg5vJdBkdwejct2NXku3QCnvjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yMDA3MDgyMDMzMzhaMA0GCSqGSIb3DQEBAQUABIIBAKIU/0Up
+g7Wa1y1467TKSUEvU207mGRegu1bROl7tSaxcTzB6Cu28Uc1ZvByo95+p3LgfWz7qTSyhRzz
+ZCcT3hUMCMnnC7Vo4BnEr/wJolfEYwOGdkJA5pAccT00t5vfr1cZ4vxSa85BOoG/4O4PG2H3
+U1/TYxmoTSH3QjkKvDDwmgJkDLn9xWEOpjv5KedIqEUtpBZXqgafT9dAW1GzVzKBtjELsoWL
+hEQ6DrGQG0EpkY1BwevF8wNvsF2bG9+XkQ27W3WaXZW75/KjsnwUKO1IQTZG6k842UsFJR9y
+9ZmApDrxEtpx60LdrAGG8fHVwFzCVDhTdueuQtEU4/9+27E=
+
+--B_3677070818_351846658--
