@@ -2,171 +2,67 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35E9D2065D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:30:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gas97tBR"
+	by mail.kernel.org (Postfix) with ESMTP id B5996206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgGHTaI (ORCPT
+        id S1726169AbgGHTcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:30:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28641 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726213AbgGHTaB (ORCPT
+        Wed, 8 Jul 2020 15:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgGHTcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:30:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594236600;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UJjkq/41DYBOCSHo3nTf+zUI4aMZSKM39jLWG6kR/zY=;
-        b=Gas97tBRq2VmgRA9lWCmxibWy+rA2YBpeE1hBU2Eq6EoySIJrk37REDecRPoVLTzaA/skZ
-        gJICwsJenHdJlUizC6WXjBya25XDplXEWC0L7n4Wm1Bkgq6NdA90oN/rv4BqS33nc1p+u2
-        xjCK+7olvWmRTQ9nr1U+MLm0MN39fSc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-fQ7c72TkN5irDaNSzxo8Vw-1; Wed, 08 Jul 2020 15:29:57 -0400
-X-MC-Unique: fQ7c72TkN5irDaNSzxo8Vw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 165AF107ACF3;
-        Wed,  8 Jul 2020 19:29:55 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 686162DE60;
-        Wed,  8 Jul 2020 19:29:48 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 13:29:47 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     Auger Eric <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "stefanha@gmail.com" <stefanha@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 04/15] vfio/type1: Report iommu nesting info to
- userspace
-Message-ID: <20200708132947.5b7ee954@x1.home>
-In-Reply-To: <DM5PR11MB143531E2B54ED82FB0649F8CC3670@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1593861989-35920-1-git-send-email-yi.l.liu@intel.com>
-        <1593861989-35920-5-git-send-email-yi.l.liu@intel.com>
-        <d434cbcc-d3b1-d11d-0304-df2d2c93efa0@redhat.com>
-        <DM5PR11MB1435290B6CD561EC61027892C3690@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <94b4e5d3-8d24-9a55-6bee-ed86f3846996@redhat.com>
-        <DM5PR11MB14357A5953EB630A58FF568EC3660@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <DM5PR11MB143531E2B54ED82FB0649F8CC3670@DM5PR11MB1435.namprd11.prod.outlook.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 8 Jul 2020 15:32:09 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1831FC061A0B;
+        Wed,  8 Jul 2020 12:32:09 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 84B271275C905;
+        Wed,  8 Jul 2020 12:32:06 -0700 (PDT)
+Date:   Wed, 08 Jul 2020 12:32:03 -0700 (PDT)
+Message-Id: <20200708.123203.1079684608829711523.davem@davemloft.net>
+To:     alobakin@marvell.com
+Cc:     kuba@kernel.org, irusskikh@marvell.com, dbezrukov@marvell.com,
+        mstarovoitov@marvell.com, dbogdanov@marvell.com,
+        epomozov@marvell.com, sergey.samoilenko@marvell.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: atlantic: fix ip dst and ipv6 address filters
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200708141710.758-1-alobakin@marvell.com>
+References: <20200708141710.758-1-alobakin@marvell.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 08 Jul 2020 12:32:06 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020 08:08:40 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+From: Alexander Lobakin <alobakin@marvell.com>
+Date: Wed, 8 Jul 2020 17:17:10 +0300
 
-> Hi Alex,
+> From: Dmitry Bogdanov <dbogdanov@marvell.com>
 > 
-> Eric asked if we will to have data strcut other than struct iommu_nesting_info
-> type in the struct vfio_iommu_type1_info_cap_nesting @info[] field. I'm not
-> quit sure on it. I guess the answer may be not as VFIO's nesting support should
-> based on IOMMU UAPI. how about your opinion?
+> This patch fixes ip dst and ipv6 address filters.
+> There were 2 mistakes in the code, which led to the issue:
+> * invalid register was used for ipv4 dst address;
+> * incorrect write order of dwords for ipv6 addresses.
 > 
-> +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
-> +
-> +/*
-> + * Reporting nesting info to user space.
-> + *
-> + * @info:	the nesting info provided by IOMMU driver. Today
-> + *		it is expected to be a struct iommu_nesting_info
-> + *		data.
-> + */
-> +struct vfio_iommu_type1_info_cap_nesting {
-> +	struct	vfio_info_cap_header header;
-> +	__u32	flags;
-> +	__u32	padding;
-> +	__u8	info[];
-> +};
+> Fixes: 23e7a718a49b ("net: aquantia: add rx-flow filter definitions")
+> Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+> Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
+> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
 
-It's not a very useful uAPI if the user can't be sure what they're
-getting out of it.  Info capabilities are "cheap", they don't need to
-be as extensible as an ioctl.  It's not clear that we really even need
-the flags (and therefore the padding), just define it to return the
-IOMMU uAPI structure with no extensibility.  If we need to expose
-something else, create a new capability.  Thanks,
-
-Alex
-
-> 
-> https://lore.kernel.org/linux-iommu/DM5PR11MB1435290B6CD561EC61027892C3690@DM5PR11MB1435.namprd11.prod.outlook.com/
-> 
-> Regards,
-> Yi Liu
-> 
-> > From: Liu, Yi L
-> > Sent: Tuesday, July 7, 2020 5:32 PM
-> >   
-> [...]
-> > > >  
-> > > >>> +
-> > > >>> +/*
-> > > >>> + * Reporting nesting info to user space.
-> > > >>> + *
-> > > >>> + * @info:	the nesting info provided by IOMMU driver. Today
-> > > >>> + *		it is expected to be a struct iommu_nesting_info
-> > > >>> + *		data.  
-> > > >> Is it expected to change?  
-> > > >
-> > > > honestly, I'm not quite sure on it. I did considered to embed struct
-> > > > iommu_nesting_info here instead of using info[]. but I hesitated as
-> > > > using info[] may leave more flexibility on this struct. how about
-> > > > your opinion? perhaps it's fine to embed the struct
-> > > > iommu_nesting_info here as long as VFIO is setup nesting based on
-> > > > IOMMU UAPI.
-> > > >  
-> > > >>> + */
-> > > >>> +struct vfio_iommu_type1_info_cap_nesting {
-> > > >>> +	struct	vfio_info_cap_header header;
-> > > >>> +	__u32	flags;  
-> > > >> You may document flags.  
-> > > >
-> > > > sure. it's reserved for future.
-> > > >
-> > > > Regards,
-> > > > Yi Liu
-> > > >  
-> > > >>> +	__u32	padding;
-> > > >>> +	__u8	info[];
-> > > >>> +};
-> > > >>> +
-> > > >>>  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
-> > > >>>
-> > > >>>  /**
-> > > >>>  
-> > > >> Thanks
-> > > >>
-> > > >> Eric  
-> > > >  
-> 
-
+Applied and queued up for -stable, thanks.
