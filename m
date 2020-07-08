@@ -2,63 +2,63 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFA5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF65C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23EB420772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:07:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wnBdaEiA"
+	by mail.kernel.org (Postfix) with ESMTP id A2B1C20708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbgGHCHB (ORCPT
+        id S1729240AbgGHCLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 22:07:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgGHCHA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 22:07:00 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5395DC061755;
-        Tue,  7 Jul 2020 19:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=oZ1wi+7uHNuUUIBU7goeg2UU39JnVBSO8YHVEy7NPfE=; b=wnBdaEiAPmmeWlboDbZ15587bF
-        ag/SDQFJChoE6vL6twLTGH9Bh7dQmFughFdlxevIYwCn08/BRhcMN7x3OqFs0ZAoKXTrLXq3ZyG6J
-        N8GmJ+nsMpk9JbXGRwlBZ5xpWeMoVTDwcZHqhW6ieRfgErorzAYYKwlZ7FUr8s1dhdBQDvuvevZFb
-        i6w6W/p4lc2zpVXE9w8erokwO1Xrpo4D4x5gbUJiMp7EZqQdi4CZc95lOV3XDgbGh7hRtoQto5ARb
-        7S1XzDAozY5UlZgmaV6KnywMJGjRcmHlhmwclMKRHBi0UvKBcOV6oJsKBGhioHsuUrIm/DQgfMPz5
-        +VgyWB+A==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jszU9-0003Vd-66; Wed, 08 Jul 2020 02:06:57 +0000
-Subject: Re: [PATCH -next] Documentation/vm: fix tables in
- arch_pgtable_helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Tue, 7 Jul 2020 22:11:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64610 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729120AbgGHCLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 22:11:46 -0400
+IronPort-SDR: 6LKigIpTux0CaRgMcXsjUGs+OEpjDDHWxkKQtJH3T7d8GQvH//KSkZs7j/IVPCnc2aPjgHjtLM
+ JpgWSVjpoL6A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="209256245"
+X-IronPort-AV: E=Sophos;i="5.75,326,1589266800"; 
+   d="scan'208";a="209256245"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 19:11:46 -0700
+IronPort-SDR: 9NjUpd+YjYPydnz78S631g5TyybmpyA9HfJmR8+sUT1YXVleW1KorRBhS3nAGU35G6NSN5j5NP
+ f8CGEd3cQDdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,326,1589266800"; 
+   d="scan'208";a="457322804"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by orsmga005.jf.intel.com with ESMTP; 07 Jul 2020 19:11:42 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
         Jonathan Corbet <corbet@lwn.net>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-References: <02ee60d0-e836-2237-4881-5c57ccac5551@infradead.org>
- <b9dfad77-8dee-4628-a9f3-43417568a0e5@arm.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <13943665-f1c8-dc34-37cc-a1f56ae57a5b@infradead.org>
-Date:   Tue, 7 Jul 2020 19:06:52 -0700
+Subject: Re: [PATCH v4 1/5] docs: IOMMU user API
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <1594165429-20075-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1594165429-20075-2-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <6d01dac0-aa9d-e22b-9baf-28c2f538871a@linux.intel.com>
+Date:   Wed, 8 Jul 2020 10:07:13 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <b9dfad77-8dee-4628-a9f3-43417568a0e5@arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1594165429-20075-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,99 +66,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 6:22 PM, Anshuman Khandual wrote:
-> 
-> 
-> On 07/08/2020 06:37 AM, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Make the tables be presented as tables in the generated output files
->> (the line drawing did not present well).
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Jonathan Corbet <corbet@lwn.net>
->> Cc: linux-doc@vger.kernel.org
->> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
->> Cc: Mike Rapoport <rppt@kernel.org>
->> Cc: linux-arch@vger.kernel.org
->> Cc: linux-mm@kvack.org
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> ---
->>  Documentation/vm/arch_pgtable_helpers.rst |  333 ++++++--------------
->>  1 file changed, 116 insertions(+), 217 deletions(-)
-> 
-> Do you have a git URL some where to see these new output ? This
-> documentation is also useful when reading from a terminal where
-> these manual line drawing tables make sense.
-> 
+Hi,
 
-No, I don't have a git URL.
-You can go to
-https://drive.google.com/file/d/1FO6lCRKldzESwLdylvY8tw10dOBvwz84/view?usp=sharing
+On 7/8/20 7:43 AM, Jacob Pan wrote:
+> +For UAPIs that are shared with in-kernel users, a wrapper function
+> +is provided to distinguish the callers. For example,
+> +
+> +Userspace caller ::
+> +
+> +  int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+> +  void __user *udata)
+> +
+> +In-kernel caller ::
+> +
+> +  int __iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+> +  struct iommu_gpasid_bind_data *data)
 
-I had to Download the file and then view it locally. I couldn't get Google Drive
-to display it for me as html (only as text).
+iommu_page_response() may have the same needs. Can we reach an agreement
+on the naming rules?
 
-I understand about reading tables at a terminal.
-This file could have been a txt file for that, but it's not. It's a RsT file.
-
-If you want to leave it as is, please fix these warnings:
-
-Documentation/vm/arch_pgtable_helpers.rst:24: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:28: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:32: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:36: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:40: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:44: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:48: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:52: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:56: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:60: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:64: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:68: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:72: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:76: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:88: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:92: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:96: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:100: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:104: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:108: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:112: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:116: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:120: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:124: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:128: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:132: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:136: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:140: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:144: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:148: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:152: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:162: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:166: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:170: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:174: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:178: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:182: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:186: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:190: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:194: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:198: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:202: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:206: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:218: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:222: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:226: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:230: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:234: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:244: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:248: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:252: WARNING: Line block ends without a blank line.
-Documentation/vm/arch_pgtable_helpers.rst:256: WARNING: Line block ends without a blank line.
-
-
-thanks.
--- 
-~Randy
-
+Best regards,
+baolu
