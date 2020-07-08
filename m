@@ -2,84 +2,93 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D07DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8908BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB462064B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A432206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:20:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbgGHQUT (ORCPT
+        id S1728148AbgGHQUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:20:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:49976 "EHLO foss.arm.com"
+        Wed, 8 Jul 2020 12:20:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:21896 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730260AbgGHQUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:20:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33BB831B;
-        Wed,  8 Jul 2020 09:20:18 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5F663F68F;
-        Wed,  8 Jul 2020 09:20:16 -0700 (PDT)
-Subject: Re: [PATCH] dma-pool: use single atomic pool for both DMA zones
-To:     Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        David Rientjes <rientjes@google.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20200707122804.21262-1-nsaenzjulienne@suse.de>
- <e6504dc5-4169-edf9-d08e-17a378a1ef7a@arm.com>
- <21a7276e98ae245404d82537ac1ee597a92f9150.camel@suse.de>
- <20200708153635.GB26743@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <304053c7-9f88-8830-3287-2496a4cb48cd@arm.com>
-Date:   Wed, 8 Jul 2020 17:20:16 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1730278AbgGHQUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:20:22 -0400
+IronPort-SDR: OC2kW4fLquX+oPNMLHJf/9msQBZDYEEqnWInFz4Vtsh91B42yP65AU5hJAS/h+bVU7VN3XINJC
+ Y9phUg9/4qqQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="209379719"
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="209379719"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 09:20:22 -0700
+IronPort-SDR: gNf7C9Z2YX16Oxep5C8FDryKYcNh04YCXz9q1EE5RqNXBD0PzTqhyFoji8C62lK+bDl3ZWfBux
+ m0qh6WBLiqrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="283846524"
+Received: from jschirra-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.201])
+  by orsmga006.jf.intel.com with ESMTP; 08 Jul 2020 09:20:18 -0700
+Date:   Wed, 8 Jul 2020 19:20:17 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Masahisa Kojima <masahisa.kojima@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ardb@kernel.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: Re: [PATCH v3 0/2] synquacer: add TPM support
+Message-ID: <20200708162017.GB549022@linux.intel.com>
+References: <20200708131424.18729-1-masahisa.kojima@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200708153635.GB26743@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708131424.18729-1-masahisa.kojima@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-08 16:36, Christoph Hellwig wrote:
-> On Wed, Jul 08, 2020 at 12:35:34PM +0200, Nicolas Saenz Julienne wrote:
->>> Which allows me to switch between ACPI/DT on the machine. In DT mode it
->>> works fine now,
->>
->> Nice, would that count as a Tested-by from you?
->>
->>> but with ACPI I continue to have failures unless I
->>> disable CMA via cma=0 on the kernel command line.
->>
->> Yes, I see why, in atomic_pool_expand() memory is allocated from CMA without
->> checking its correctness. That calls for a separate fix. I'll try to think of
->> something.
+On Wed, Jul 08, 2020 at 10:14:22PM +0900, Masahisa Kojima wrote:
+> This adds support for driving the TPM on Socionext SynQuacer platform
+> using the driver for a memory mapped TIS frame.
 > 
-> I think we need a dma_coherent_ok for the allocations from the
-> pool and then fall back to the next better one to get started.  And
-> yes, CMA is a bit of a mess, that generally needs better checks.
+> v3:
+> - prepare new module to handle TPM MMIO access on SynQuacer platform
+> 
+> v2:
+> - don't use read/write_bytes() to implement read/write16/32 since that uses
+>   the wrong address
+> 
+> Cc: jarkko.sakkinen@linux.intel.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: ardb@kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-integrity@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: peterhuewe@gmx.de
+> Cc: jgg@ziepe.ca
+> 
+> Masahisa Kojima (2):
+>   tpm: tis: add support for MMIO TPM on SynQuacer
+>   dt-bindings: Add SynQucer TPM MMIO as a trivial device
+> 
+>  .../devicetree/bindings/trivial-devices.yaml  |   2 +
+>  drivers/char/tpm/Kconfig                      |  12 ++
+>  drivers/char/tpm/Makefile                     |   1 +
+>  drivers/char/tpm/tpm_tis_synquacer.c          | 196 ++++++++++++++++++
+>  4 files changed, 211 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
+> 
+> -- 
+> 2.20.1
+> 
 
-Yeah, another thought that came to mind later is that iommu-dma can use 
-pages from any pool regardless of the device's DMA mask, so we could 
-stand to be a lot less restrictive in that case too.
+Overally the code looks great. You've run it through checkpatch.pl?
 
-Perhaps it is better to just bite the bullet, keep the straightforward 
-one-pool-per-zone setup, and implement the dma_coherent_ok() type 
-fallback logic. More complexity for dma_alloc_from_pool(), but 
-everything else stays nice and simple - lose the assumption that 
-dev_to_pool() can work for this and and just let callers pass an 
-allocation mask directly, and have dma_free_from_pool() simply check all 
-available pools.
-
-Robin.
+/Jarkko
