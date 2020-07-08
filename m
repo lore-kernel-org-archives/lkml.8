@@ -2,117 +2,333 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE51C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C06C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0442078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C72206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594232590;
+	bh=C3Gg8Xh5/GKU63Aih3Db7PKPQN75HGOuicquAhDPVeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VrQ4NGlIpaWa/73VeDbMrYO1uZNezb0SbLw1xvbNfWCBCyxo6PxrQfrrMXx6w6Wgk
+	 tmer/bgaswav4I8eJXvrUwCjNK6REIlZ15pNRFheolYAl56+up80eXAww9iQtguGkw
+	 +v6eZZrMAQlnwTUKzgAWxHxL13V3fYzSGesoJoNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgGHSWH (ORCPT
+        id S1726281AbgGHSXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:22:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgGHSWG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:22:06 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 801D9C061A0B;
-        Wed,  8 Jul 2020 11:22:06 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 0842FBC0D4;
-        Wed,  8 Jul 2020 18:22:03 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: YAMA SECURITY MODULE
-To:     Kees Cook <keescook@chromium.org>
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        Wed, 8 Jul 2020 14:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbgGHSXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 14:23:08 -0400
+Received: from embeddedor (unknown [201.162.240.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AE05206F6;
+        Wed,  8 Jul 2020 18:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594232587;
+        bh=C3Gg8Xh5/GKU63Aih3Db7PKPQN75HGOuicquAhDPVeg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vBsIOnjOUMAOWgWN76b+ljOM9BEq/FtEMKiFm7PszidjdT1wQ3x2iwa5Wf0lEZmlo
+         tXwujwYcR79rC3z19OcWo7gIivfenvNe0MyAeo2QbtxMU1tvnC4JztD/Ka3jnTKNmJ
+         PDC3yeotegDsXp5gv2eHqJn8kayzoZh+zRb4ZtEw=
+Date:   Wed, 8 Jul 2020 13:28:35 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200708073346.13177-1-grandmaster@al2klimov.de>
- <202007080103.2DAD857D4C@keescook>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <2c05c0c3-e72a-7cc6-3391-2e0d3bdf6b2c@al2klimov.de>
-Date:   Wed, 8 Jul 2020 20:22:03 +0200
+Subject: Re: [PATCH][next] IB/hfi1: Use fallthrough pseudo-keyword
+Message-ID: <20200708182835.GF11533@embeddedor>
+References: <20200707173942.GA29814@embeddedor>
+ <20200708054703.GR207186@unreal>
 MIME-Version: 1.0
-In-Reply-To: <202007080103.2DAD857D4C@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708054703.GR207186@unreal>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Leon,
 
+On Wed, Jul 08, 2020 at 08:47:03AM +0300, Leon Romanovsky wrote:
+> On Tue, Jul 07, 2020 at 12:39:42PM -0500, Gustavo A. R. Silva wrote:
+> > Replace the existing /* fall through */ comments and its variants with
+> > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> > fall-through markings when it is the case.
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> >
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> >  drivers/infiniband/hw/hfi1/chip.c     |    8 ++++----
+> >  drivers/infiniband/hw/hfi1/firmware.c |   16 ----------------
+> >  drivers/infiniband/hw/hfi1/mad.c      |    9 ++++-----
+> >  drivers/infiniband/hw/hfi1/pio.c      |    2 +-
+> >  drivers/infiniband/hw/hfi1/pio_copy.c |   12 ++++++------
+> >  drivers/infiniband/hw/hfi1/platform.c |   10 +++++-----
+> >  drivers/infiniband/hw/hfi1/qp.c       |    2 +-
+> >  drivers/infiniband/hw/hfi1/qsfp.c     |    4 ++--
+> >  drivers/infiniband/hw/hfi1/rc.c       |   25 ++++++++++++-------------
+> >  drivers/infiniband/hw/hfi1/sdma.c     |    9 ++++-----
+> >  drivers/infiniband/hw/hfi1/tid_rdma.c |    4 ++--
+> >  drivers/infiniband/hw/hfi1/uc.c       |    8 ++++----
+> >  12 files changed, 45 insertions(+), 64 deletions(-)
+> >
+> > diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+> > index 15f9c635f292..132f1df6f23b 100644
+> > --- a/drivers/infiniband/hw/hfi1/chip.c
+> > +++ b/drivers/infiniband/hw/hfi1/chip.c
+> > @@ -7320,7 +7320,7 @@ static u16 link_width_to_bits(struct hfi1_devdata *dd, u16 width)
+> >  	default:
+> >  		dd_dev_info(dd, "%s: invalid width %d, using 4\n",
+> >  			    __func__, width);
+> > -		/* fall through */
+> > +		fallthrough;
+> >  	case 4: return OPA_LINK_WIDTH_4X;
+> 
+> "case ..:" after "default:" ???
+> IMHO, it should be written in more standard way.
+> 
 
-Am 08.07.20 um 10:05 schrieb Kees Cook:
-> On Wed, Jul 08, 2020 at 09:33:46AM +0200, Alexander A. Klimov wrote:
->> Rationale:
->> Reduces attack surface on kernel devs opening the links for MITM
->> as HTTPS traffic is much harder to manipulate.
->>
->> Deterministic algorithm:
->> For each file:
->>    If not .svg:
->>      For each line:
->>        If doesn't contain `\bxmlns\b`:
->>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->>              If both the HTTP and HTTPS versions
->>              return 200 OK and serve the same content:
->>                Replace HTTP with HTTPS.
->>
->> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->> ---
->>   Continuing my work started at 93431e0607e5.
->>   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->>   (Actually letting a shell for loop submit all this stuff for me.)
->>
->>   If there are any URLs to be removed completely or at least not HTTPSified:
->>   Just clearly say so and I'll *undo my change*.
-As written here...
+I agree. However, that piece of code, and the other below, does not
+concern to this patch.
 
->>   See also: https://lkml.org/lkml/2020/6/27/64
->>
->>   If there are any valid, but yet not changed URLs:
->>   See: https://lkml.org/lkml/2020/6/26/837
->>
->>   If you apply the patch, please let me know.
->>
->>
->>   Documentation/admin-guide/LSM/Yama.rst | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/admin-guide/LSM/Yama.rst b/Documentation/admin-guide/LSM/Yama.rst
->> index d0a060de3973..64fd62507ae5 100644
->> --- a/Documentation/admin-guide/LSM/Yama.rst
->> +++ b/Documentation/admin-guide/LSM/Yama.rst
->> @@ -21,7 +21,7 @@ of their attack without resorting to user-assisted phishing.
->>   
->>   This is not a theoretical problem. SSH session hijacking
->>   (http://www.storm.net.nz/projects/7) and arbitrary code injection
-> 
-> This link is dead. It is likely best replaced by:
-... I'd undo this change.
-But as it's the only one here, just forget this patch.
+I will address the rest of the comments and send v2.
 
-> https://www.blackhat.com/presentations/bh-usa-05/bh-us-05-boileau.pdf
-> (this is the same person, but it seems storm.net.nz is gone)
+Thanks!
+--
+Gustavo
+
+> >  	}
+> >  }
+> > @@ -7380,7 +7380,7 @@ static void get_link_widths(struct hfi1_devdata *dd, u16 *tx_width,
+> >  			dd_dev_err(dd,
+> >  				   "%s: unexpected max rate %d, using 25Gb\n",
+> >  				   __func__, (int)max_rate);
+> > -			/* fall through */
+> > +			fallthrough;
+> >  		case 1:
+> >  			dd->pport[0].link_speed_active = OPA_LINK_SPEED_25G;
+> >  			break;
+> > @@ -12882,7 +12882,7 @@ static u32 chip_to_opa_lstate(struct hfi1_devdata *dd, u32 chip_lstate)
+> >  		dd_dev_err(dd,
+> >  			   "Unknown logical state 0x%x, reporting IB_PORT_DOWN\n",
+> >  			   chip_lstate);
+> > -		/* fall through */
+> > +		fallthrough;
+> >  	case LSTATE_DOWN:
+> >  		return IB_PORT_DOWN;
+> >  	case LSTATE_INIT:
+> > @@ -12901,7 +12901,7 @@ u32 chip_to_opa_pstate(struct hfi1_devdata *dd, u32 chip_pstate)
+> >  	default:
+> >  		dd_dev_err(dd, "Unexpected chip physical state of 0x%x\n",
+> >  			   chip_pstate);
+> > -		/* fall through */
+> > +		fallthrough;
+> >  	case PLS_DISABLED:
+> >  		return IB_PORTPHYSSTATE_DISABLED;
+> >  	case PLS_OFFLINE:
 > 
->> -(http://c-skills.blogspot.com/2007/05/injectso.html) attacks already
->> +(https://c-skills.blogspot.com/2007/05/injectso.html) attacks already
->>   exist and remain possible if ptrace is allowed to operate as before.
->>   Since ptrace is not commonly used by non-developers and non-admins, system
->>   builders should be allowed the option to disable this debugging system.
+> same comment.
 > 
-> With that change:
 > 
-> Acked-by: Kees Cook <keescook@chromium.org>
+> > diff --git a/drivers/infiniband/hw/hfi1/firmware.c b/drivers/infiniband/hw/hfi1/firmware.c
+> > index 2b57ba70ddd6..0e83d4b61e46 100644
+> > --- a/drivers/infiniband/hw/hfi1/firmware.c
+> > +++ b/drivers/infiniband/hw/hfi1/firmware.c
+> > @@ -1868,11 +1868,8 @@ int parse_platform_config(struct hfi1_devdata *dd)
+> >  									2;
+> >  				break;
+> >  			case PLATFORM_CONFIG_RX_PRESET_TABLE:
+> > -				/* fall through */
+> >  			case PLATFORM_CONFIG_TX_PRESET_TABLE:
+> > -				/* fall through */
+> >  			case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
+> > -				/* fall through */
+> >  			case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
+> >  				pcfgcache->config_tables[table_type].num_table =
+> >  							table_length_dwords;
+> > @@ -1890,15 +1887,10 @@ int parse_platform_config(struct hfi1_devdata *dd)
+> >  			/* metadata table */
+> >  			switch (table_type) {
+> >  			case PLATFORM_CONFIG_SYSTEM_TABLE:
+> > -				/* fall through */
+> >  			case PLATFORM_CONFIG_PORT_TABLE:
+> > -				/* fall through */
+> >  			case PLATFORM_CONFIG_RX_PRESET_TABLE:
+> > -				/* fall through */
+> >  			case PLATFORM_CONFIG_TX_PRESET_TABLE:
+> > -				/* fall through */
+> >  			case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
+> > -				/* fall through */
+> >  			case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
+> >  				break;
+> >  			default:
+> > @@ -2027,15 +2019,10 @@ static int get_platform_fw_field_metadata(struct hfi1_devdata *dd, int table,
+> >
+> >  	switch (table) {
+> >  	case PLATFORM_CONFIG_SYSTEM_TABLE:
+> > -		/* fall through */
+> >  	case PLATFORM_CONFIG_PORT_TABLE:
+> > -		/* fall through */
+> >  	case PLATFORM_CONFIG_RX_PRESET_TABLE:
+> > -		/* fall through */
+> >  	case PLATFORM_CONFIG_TX_PRESET_TABLE:
+> > -		/* fall through */
+> >  	case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
+> > -		/* fall through */
+> >  	case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
+> >  		if (field && field < platform_config_table_limits[table])
+> >  			src_ptr =
+> > @@ -2138,11 +2125,8 @@ int get_platform_config_field(struct hfi1_devdata *dd,
+> >  			pcfgcache->config_tables[table_type].table;
+> >  		break;
+> >  	case PLATFORM_CONFIG_RX_PRESET_TABLE:
+> > -		/* fall through */
+> >  	case PLATFORM_CONFIG_TX_PRESET_TABLE:
+> > -		/* fall through */
+> >  	case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
+> > -		/* fall through */
+> >  	case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
+> >  		src_ptr = pcfgcache->config_tables[table_type].table;
+> >
+> > diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
+> > index 7073f237a949..3222e3acb79c 100644
+> > --- a/drivers/infiniband/hw/hfi1/mad.c
+> > +++ b/drivers/infiniband/hw/hfi1/mad.c
+> > @@ -721,7 +721,7 @@ static int check_mkey(struct hfi1_ibport *ibp, struct ib_mad_hdr *mad,
+> >  			/* Bad mkey not a violation below level 2 */
+> >  			if (ibp->rvp.mkeyprot < 2)
+> >  				break;
+> > -			/* fall through */
+> > +			fallthrough;
+> >  		case IB_MGMT_METHOD_SET:
+> >  		case IB_MGMT_METHOD_TRAP_REPRESS:
+> >  			if (ibp->rvp.mkey_violations != 0xFFFF)
+> > @@ -1272,7 +1272,7 @@ static int set_port_states(struct hfi1_pportdata *ppd, struct opa_smp *smp,
+> >  	case IB_PORT_NOP:
+> >  		if (phys_state == IB_PORTPHYSSTATE_NOP)
+> >  			break;
+> > -		/* FALLTHROUGH */
+> > +		fallthrough;
+> >  	case IB_PORT_DOWN:
+> >  		if (phys_state == IB_PORTPHYSSTATE_NOP) {
+> >  			link_state = HLS_DN_DOWNDEF;
+> > @@ -2300,7 +2300,6 @@ static int __subn_set_opa_vl_arb(struct opa_smp *smp, u32 am, u8 *data,
+> >  	 * can be changed from the default values
+> >  	 */
+> >  	case OPA_VLARB_PREEMPT_ELEMENTS:
+> > -		/* FALLTHROUGH */
+> >  	case OPA_VLARB_PREEMPT_MATRIX:
+> >  		smp->status |= IB_SMP_UNSUP_METH_ATTR;
+> >  		break;
+> > @@ -4170,7 +4169,7 @@ static int subn_get_opa_sma(__be16 attr_id, struct opa_smp *smp, u32 am,
+> >  			return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_CONSUMED;
+> >  		if (ibp->rvp.port_cap_flags & IB_PORT_SM)
+> >  			return IB_MAD_RESULT_SUCCESS;
+> > -		/* FALLTHROUGH */
+> > +		fallthrough;
+> >  	default:
+> >  		smp->status |= IB_SMP_UNSUP_METH_ATTR;
+> >  		ret = reply((struct ib_mad_hdr *)smp);
+> > @@ -4240,7 +4239,7 @@ static int subn_set_opa_sma(__be16 attr_id, struct opa_smp *smp, u32 am,
+> >  			return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_CONSUMED;
+> >  		if (ibp->rvp.port_cap_flags & IB_PORT_SM)
+> >  			return IB_MAD_RESULT_SUCCESS;
+> > -		/* FALLTHROUGH */
+> > +		fallthrough;
+> >  	default:
+> >  		smp->status |= IB_SMP_UNSUP_METH_ATTR;
+> >  		ret = reply((struct ib_mad_hdr *)smp);
+> > diff --git a/drivers/infiniband/hw/hfi1/pio.c b/drivers/infiniband/hw/hfi1/pio.c
+> > index 79126b2b14ab..ff864f6f0266 100644
+> > --- a/drivers/infiniband/hw/hfi1/pio.c
+> > +++ b/drivers/infiniband/hw/hfi1/pio.c
+> > @@ -86,7 +86,7 @@ void pio_send_control(struct hfi1_devdata *dd, int op)
+> >  	switch (op) {
+> >  	case PSC_GLOBAL_ENABLE:
+> >  		reg |= SEND_CTRL_SEND_ENABLE_SMASK;
+> > -	/* Fall through */
+> > +		fallthrough;
+> >  	case PSC_DATA_VL_ENABLE:
+> >  		mask = 0;
+> >  		for (i = 0; i < ARRAY_SIZE(dd->vld); i++)
+> > diff --git a/drivers/infiniband/hw/hfi1/pio_copy.c b/drivers/infiniband/hw/hfi1/pio_copy.c
+> > index 03024cec78dd..b12e4665c9ab 100644
+> > --- a/drivers/infiniband/hw/hfi1/pio_copy.c
+> > +++ b/drivers/infiniband/hw/hfi1/pio_copy.c
+> > @@ -191,22 +191,22 @@ static inline void jcopy(u8 *dest, const u8 *src, u32 n)
+> >  	switch (n) {
+> >  	case 7:
+> >  		*dest++ = *src++;
+> > -		/* fall through */
+> > +		fallthrough;
+> >  	case 6:
+> >  		*dest++ = *src++;
+> > -		/* fall through */
+> > +		fallthrough;
+> >  	case 5:
+> >  		*dest++ = *src++;
+> > -		/* fall through */
+> > +		fallthrough;
+> >  	case 4:
+> >  		*dest++ = *src++;
+> > -		/* fall through */
+> > +		fallthrough;
+> >  	case 3:
+> >  		*dest++ = *src++;
+> > -		/* fall through */
+> > +		fallthrough;
+> >  	case 2:
+> >  		*dest++ = *src++;
+> > -		/* fall through */
+> > +		fallthrough;
+> >  	case 1:
+> >  		*dest++ = *src++;
+> >  		/* fall through */
 > 
-> for the docs tree.
+> This is missed and it seems that one memcpy will do the same.
 > 
+> > diff --git a/drivers/infiniband/hw/hfi1/platform.c b/drivers/infiniband/hw/hfi1/platform.c
+> > index 36593f2efe26..4642d6ceb890 100644
+> > --- a/drivers/infiniband/hw/hfi1/platform.c
+> > +++ b/drivers/infiniband/hw/hfi1/platform.c
+> > @@ -668,8 +668,8 @@ static u8 aoc_low_power_setting(struct hfi1_pportdata *ppd)
+> >
+> >  	/* active optical cables only */
+> >  	switch ((cache[QSFP_MOD_TECH_OFFS] & 0xF0) >> 4) {
+> > -	case 0x0 ... 0x9: /* fallthrough */
+> > -	case 0xC: /* fallthrough */
+> > +	case 0x0 ... 0x9: fallthrough;
+> > +	case 0xC: fallthrough;
+> 
+> fallthrough is not needed.
+> 
+> >  	case 0xE:
+> >  		/* active AOC */
+> >  		power_class = get_qsfp_power_class(cache[QSFP_MOD_PWR_OFFS]);
+> > @@ -899,8 +899,8 @@ static int tune_qsfp(struct hfi1_pportdata *ppd,
+> >
+> >  		*ptr_tuning_method = OPA_PASSIVE_TUNING;
+> >  		break;
+> > -	case 0x0 ... 0x9: /* fallthrough */
+> > -	case 0xC: /* fallthrough */
+> > +	case 0x0 ... 0x9: fallthrough;
+> > +	case 0xC: fallthrough;
+> 
+> same
+> 
+> Thanks
