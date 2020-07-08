@@ -2,189 +2,131 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D56C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0582C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51ED820708
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16FA20775
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:16:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZzxSL3jE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgGHXQV (ORCPT
+        id S1726538AbgGHXQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:16:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:44424 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbgGHXQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:16:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 147CB31B;
-        Wed,  8 Jul 2020 16:16:20 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0FB23F71E;
-        Wed,  8 Jul 2020 16:16:19 -0700 (PDT)
-Subject: Re: [PATCH] dma-pool: use single atomic pool for both DMA zones
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Rientjes <rientjes@google.com>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20200707122804.21262-1-nsaenzjulienne@suse.de>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <3ee7f5ec-46e3-6d36-820b-011e359e759d@arm.com>
-Date:   Wed, 8 Jul 2020 18:16:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 19:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbgGHXQl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 19:16:41 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87DC3C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:16:41 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x11so19923plo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=Xz83zbMBS1ciMi4HP8F5AMInxsp8lIOMa2E1ookzEnM=;
+        b=ZzxSL3jE8TfZozJ+lUu5EWR8aD1tJwnYAK9Rn7Z7nImkfg7B/XXRCmyi8+tK0R92N1
+         /Stwcle6e+18anI9CK//KGt1cZmJd0DyMHlEP4hTTwuOuq7nExSNEYQsGsrBeGlQ7C/b
+         1hJ6p9N0VQwEZpNtgSUyrG6baMnNJ9biO4ikg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=Xz83zbMBS1ciMi4HP8F5AMInxsp8lIOMa2E1ookzEnM=;
+        b=lFNn5j5dn++z6/3Ar6fWWW7qvIAR5Z/9bAbwOQt916SqCDBpLAdOas+z8BEYWKmmsI
+         SN9/bX3+brhItg0qXOyV4AMejb/l3bERg0HQDz8/thr/1xTUL92g4O6ONKVGmtzs3IZc
+         HAoQKoKY2qfw/i0pfVaKgwkO8j6DiBcal4XNb0gDRcU8+5147PcXtyo9MUVL81UbmiXV
+         aKI34eu1iZhc7Gbyt0CpLKra+pIldm0XQitImDd2VwBfMM/xXjI8wMQsYItRmCGcdjj1
+         EOnSH9q+UQGQ5jj2dud5BAw8lnm0Cq8V1ZDXUTCPWcOKynbHrSfq+6/k7cgRdAwI+JFg
+         D/Zg==
+X-Gm-Message-State: AOAM531IQ8gtwnPWUFxgTEDtInDP3/Hl38SbGlavBNzyz9K1WofmP2uz
+        xUeeGrOJ1sq18CWWvDcp2PGIzg==
+X-Google-Smtp-Source: ABdhPJyo85bWfKc7dmUbm6uwAqu7RbmKNA71lY/V6RFecIv5/ryA0rj3xviymXs4MMndMmbtr18M+Q==
+X-Received: by 2002:a17:902:6544:: with SMTP id d4mr9149663pln.138.1594250201062;
+        Wed, 08 Jul 2020 16:16:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z62sm734522pfb.47.2020.07.08.16.16.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 16:16:40 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 16:16:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Dominik Czarnota <dominik.czarnota@trailofbits.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [GIT PULL] kallsyms_show_value() refactoring for v5.8-rc5
+Message-ID: <202007081608.AB6F0E96@keescook>
 MIME-Version: 1.0
-In-Reply-To: <20200707122804.21262-1-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Linus,
 
-On 7/7/20 7:28 AM, Nicolas Saenz Julienne wrote:
-> When allocating atomic DMA memory for a device, the dma-pool core
-> queries __dma_direct_optimal_gfp_mask() to check which atomic pool to
-> use. It turns out the GFP flag returned is only an optimistic guess.
-> The pool selected might sometimes live in a zone higher than the
-> device's view of memory.
-> 
-> As there isn't a way to grantee a mapping between a device's DMA
-> constraints and correct GFP flags this unifies both DMA atomic pools.
-> The resulting pool is allocated in the lower DMA zone available, if any,
-> so as for devices to always get accessible memory while having the
-> flexibility of using dma_pool_kernel for the non constrained ones.
+Please pull this kallsyms_show_value() refactoring for v5.8-rc5. I'm not
+delighted by the timing of getting these changes to you, but it does fix
+a handful of kernel address exposures, and no one has screamed yet at the
+patches nor their existence in -next for a few days. Folks have reviewed
+(and even tested!) the series. :)
 
-With the follow-on patch "dma-pool: Do not allocate pool memory from 
-CMA" everything seems to be working fine now.
+(I'm leaving the more experimental current_cred() WARN() stuff for
+later, obviously.)
 
-tested-by: Jeremy Linton <jeremy.linton@arm.com>
+Thanks!
 
-Thanks for fixing this!
+-Kees
 
+The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
 
-> 
-> Fixes: c84dc6e68a1d ("dma-pool: add additional coherent pools to map to gfp mask")
-> Reported-by: Jeremy Linton <jeremy.linton@arm.com>
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->   kernel/dma/pool.c | 47 +++++++++++++++++++----------------------------
->   1 file changed, 19 insertions(+), 28 deletions(-)
-> 
-> diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-> index 8cfa01243ed2..883f7a583969 100644
-> --- a/kernel/dma/pool.c
-> +++ b/kernel/dma/pool.c
-> @@ -13,10 +13,11 @@
->   #include <linux/slab.h>
->   #include <linux/workqueue.h>
->   
-> +#define GFP_ATOMIC_POOL_DMA	(IS_ENABLED(CONFIG_ZONE_DMA) ? GFP_DMA : \
-> +				 IS_ENABLED(CONFIG_ZONE_DMA32) ? GFP_DMA32 : 0)
-> +
->   static struct gen_pool *atomic_pool_dma __ro_after_init;
->   static unsigned long pool_size_dma;
-> -static struct gen_pool *atomic_pool_dma32 __ro_after_init;
-> -static unsigned long pool_size_dma32;
->   static struct gen_pool *atomic_pool_kernel __ro_after_init;
->   static unsigned long pool_size_kernel;
->   
-> @@ -42,16 +43,13 @@ static void __init dma_atomic_pool_debugfs_init(void)
->   		return;
->   
->   	debugfs_create_ulong("pool_size_dma", 0400, root, &pool_size_dma);
-> -	debugfs_create_ulong("pool_size_dma32", 0400, root, &pool_size_dma32);
->   	debugfs_create_ulong("pool_size_kernel", 0400, root, &pool_size_kernel);
->   }
->   
->   static void dma_atomic_pool_size_add(gfp_t gfp, size_t size)
->   {
-> -	if (gfp & __GFP_DMA)
-> +	if (gfp & GFP_ATOMIC_POOL_DMA)
->   		pool_size_dma += size;
-> -	else if (gfp & __GFP_DMA32)
-> -		pool_size_dma32 += size;
->   	else
->   		pool_size_kernel += size;
->   }
-> @@ -132,12 +130,11 @@ static void atomic_pool_resize(struct gen_pool *pool, gfp_t gfp)
->   
->   static void atomic_pool_work_fn(struct work_struct *work)
->   {
-> -	if (IS_ENABLED(CONFIG_ZONE_DMA))
-> -		atomic_pool_resize(atomic_pool_dma,
-> -				   GFP_KERNEL | GFP_DMA);
-> -	if (IS_ENABLED(CONFIG_ZONE_DMA32))
-> -		atomic_pool_resize(atomic_pool_dma32,
-> -				   GFP_KERNEL | GFP_DMA32);
-> +	gfp_t dma_gfp = GFP_ATOMIC_POOL_DMA;
-> +
-> +	if (dma_gfp)
-> +		atomic_pool_resize(atomic_pool_dma, GFP_KERNEL | dma_gfp);
-> +
->   	atomic_pool_resize(atomic_pool_kernel, GFP_KERNEL);
->   }
->   
-> @@ -168,6 +165,7 @@ static __init struct gen_pool *__dma_atomic_pool_init(size_t pool_size,
->   
->   static int __init dma_atomic_pool_init(void)
->   {
-> +	gfp_t dma_gfp = GFP_ATOMIC_POOL_DMA;
->   	int ret = 0;
->   
->   	/*
-> @@ -185,18 +183,13 @@ static int __init dma_atomic_pool_init(void)
->   						    GFP_KERNEL);
->   	if (!atomic_pool_kernel)
->   		ret = -ENOMEM;
-> -	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
-> +
-> +	if (dma_gfp) {
->   		atomic_pool_dma = __dma_atomic_pool_init(atomic_pool_size,
-> -						GFP_KERNEL | GFP_DMA);
-> +							 GFP_KERNEL | dma_gfp);
->   		if (!atomic_pool_dma)
->   			ret = -ENOMEM;
->   	}
-> -	if (IS_ENABLED(CONFIG_ZONE_DMA32)) {
-> -		atomic_pool_dma32 = __dma_atomic_pool_init(atomic_pool_size,
-> -						GFP_KERNEL | GFP_DMA32);
-> -		if (!atomic_pool_dma32)
-> -			ret = -ENOMEM;
-> -	}
->   
->   	dma_atomic_pool_debugfs_init();
->   	return ret;
-> @@ -206,14 +199,12 @@ postcore_initcall(dma_atomic_pool_init);
->   static inline struct gen_pool *dev_to_pool(struct device *dev)
->   {
->   	u64 phys_mask;
-> -	gfp_t gfp;
-> -
-> -	gfp = dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
-> -					  &phys_mask);
-> -	if (IS_ENABLED(CONFIG_ZONE_DMA) && gfp == GFP_DMA)
-> -		return atomic_pool_dma;
-> -	if (IS_ENABLED(CONFIG_ZONE_DMA32) && gfp == GFP_DMA32)
-> -		return atomic_pool_dma32;
-> +
-> +	if (atomic_pool_dma &&
-> +	    dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
-> +					&phys_mask))
-> +			return atomic_pool_dma;
-> +
->   	return atomic_pool_kernel;
->   }
->   
-> 
+  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
 
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/kallsyms_show_value-v5.8-rc5
+
+for you to fetch changes up to 2c79583927bb8154ecaa45a67dde97661d895ecd:
+
+  selftests: kmod: Add module address visibility test (2020-07-08 16:01:36 -0700)
+
+----------------------------------------------------------------
+Refactor kallsyms_show_value() users for correct cred
+
+Several users of kallsyms_show_value() were performing checks not
+during "open". Refactor everything needed to gain proper checks against
+file->f_cred for modules, kprobes, and bpf.
+
+----------------------------------------------------------------
+Kees Cook (6):
+      kallsyms: Refactor kallsyms_show_value() to take cred
+      module: Refactor section attr into bin attribute
+      module: Do not expose section addresses to non-CAP_SYSLOG
+      kprobes: Do not expose probe addresses to non-CAP_SYSLOG
+      bpf: Check correct cred for CAP_SYSLOG in bpf_dump_raw_ok()
+      selftests: kmod: Add module address visibility test
+
+ include/linux/filter.h               |  4 +--
+ include/linux/kallsyms.h             |  5 ++--
+ kernel/bpf/syscall.c                 | 37 +++++++++++++++-----------
+ kernel/kallsyms.c                    | 17 +++++++-----
+ kernel/kprobes.c                     |  4 +--
+ kernel/module.c                      | 51 +++++++++++++++++++-----------------
+ net/core/sysctl_net_core.c           |  2 +-
+ tools/testing/selftests/kmod/kmod.sh | 36 +++++++++++++++++++++++++
+ 8 files changed, 103 insertions(+), 53 deletions(-)
+
+-- 
+Kees Cook
