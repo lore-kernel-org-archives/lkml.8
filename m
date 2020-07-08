@@ -2,110 +2,126 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C87C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52285C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61A4420708
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:20:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8ED5p0w"
+	by mail.kernel.org (Postfix) with ESMTP id 31F8020708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgGHEUx (ORCPT
+        id S1726275AbgGHEVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 00:20:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgGHEUw (ORCPT
+        Wed, 8 Jul 2020 00:21:53 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:49779 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgGHEVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 00:20:52 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF01BC061755;
-        Tue,  7 Jul 2020 21:20:51 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t6so21062631pgq.1;
-        Tue, 07 Jul 2020 21:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=egk+b4CpekAWqka2nnTyP0i/HLlHstZqWKBVVCAFgOw=;
-        b=Z8ED5p0wPKOE2B9FZBZrGFuJ42CqwOXGrDF9EGZKa3dP6wBx6evE1eomArA4ipTfYj
-         zVjMtoTf24ukjgsVT/DqSLU8fPZZu8AFURtosfCqn5u4Btu7KPTI9dLzAm3lZU7EfEA3
-         pacbPPtu17xs+txtYl2FTNxpc2hd9abpHYne03eqD4wiY3agMO188f3IvdPvdDNyZOVC
-         i/SfaND2TLucgpejQCopHtxFRXRohQtSEiE2sy4TSbTABH7gzzyKGGmOTBZzoG/J6i4A
-         zM2w7+1jx9q6aW5OWqW/NSlYel1wAgCunbds1jiGLAfZXV5GbyFm64wxDX1bK2D+XHMv
-         zbPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=egk+b4CpekAWqka2nnTyP0i/HLlHstZqWKBVVCAFgOw=;
-        b=C/+etWUoX7aJpAC/ryocSud7NUMuFVnIdV+oL6PMxoYcKQO2FNYia9LOQlh4hTpjO9
-         Pv80FEfJH9dtfqGdMORb0UavtyMTKspSDE+FEQAL6oED5GUY4WrQ/KuNFJ6tM3yRtovq
-         TduUPZORfpZqtX/qPl5pw6Ua96txo7il+eZqy7Eo745kdEwSghDK8tI1H4i/E/e5+Usn
-         o69O0mJGZ6gQ6l2bZutjOWVIfshnqeNzBdcL4bea4V/t42p4K90bPlBmy76fRlh2Isjo
-         WrdH8wAHsk7gkq3AyIASxij8D3RMl2kcUqassEyttBMJHOo2kAT2TWQuvLk5hcKSsRVa
-         PLWQ==
-X-Gm-Message-State: AOAM530+BazsbJMppzxq5EoQd8OcqLFODPZ55qNCHP9dK3FAn9k03YSS
-        5fVJ0JYXBRBNxAKrQXY9cFkcZoqP
-X-Google-Smtp-Source: ABdhPJwckR3poTs2P1cQ2XQvhbyLS2/XfcJpqyI9gauer+gWsJapxPSfMNRZ66PscqeVwCFiYCfRkg==
-X-Received: by 2002:aa7:9e5c:: with SMTP id z28mr39520244pfq.49.1594182051118;
-        Tue, 07 Jul 2020 21:20:51 -0700 (PDT)
-Received: from sol.lan (106-69-191-222.dyn.iinet.net.au. [106.69.191.222])
-        by smtp.gmail.com with ESMTPSA id gx23sm3821951pjb.39.2020.07.07.21.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 21:20:50 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 17/17] tools: gpio: fix spurious close warning in gpio-event-mon
-Date:   Wed,  8 Jul 2020 12:16:00 +0800
-Message-Id: <20200708041600.768775-18-warthog618@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200708041600.768775-1-warthog618@gmail.com>
-References: <20200708041600.768775-1-warthog618@gmail.com>
+        Wed, 8 Jul 2020 00:21:52 -0400
+X-Originating-IP: 90.112.45.105
+Received: from [192.168.1.11] (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id C642C60003;
+        Wed,  8 Jul 2020 04:21:42 +0000 (UTC)
+Subject: Re: [PATCH v5 0/4] vmalloc kernel mapping and relocatable kernel
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Zong Li <zong.li@sifive.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org
+References: <20200607075949.665-1-alex@ghiti.fr>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <8f47d523-5c01-1614-dbb0-d938f07be65f@ghiti.fr>
+Date:   Wed, 8 Jul 2020 00:21:42 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200607075949.665-1-alex@ghiti.fr>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix bogus close warning that occurs when opening the character device
-fails.
+Hi Palmer,
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpio/gpio-event-mon.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Le 6/7/20 à 3:59 AM, Alexandre Ghiti a écrit :
+> This patchset originally implemented relocatable kernel support but now
+> also moves the kernel mapping into the vmalloc zone.
+>                                                                                   
+> The first patch explains why we need to move the kernel into vmalloc
+> zone (instead of memcpying it around). That patch should ease KASLR
+> implementation a lot.
+>                                                                                   
+> The second patch allows to build relocatable kernels but is not selected
+> by default.
+>                                                                                   
+> The third and fourth patches take advantage of an already existing powerpc
+> script that checks relocations at compile-time, and uses it for riscv.
+>                                                                                   
+> Changes in v5:
+>    * Add "static __init" to create_kernel_page_table function as reported by
+>      Kbuild test robot
+>    * Add reviewed-by from Zong
+>    * Rebase onto v5.7
+> 
+> Changes in v4:
+>    * Fix BPF region that overlapped with kernel's as suggested by Zong
+>    * Fix end of module region that could be larger than 2GB as suggested by Zong
+>    * Fix the size of the vm area reserved for the kernel as we could lose
+>      PMD_SIZE if the size was already aligned on PMD_SIZE
+>    * Split compile time relocations check patch into 2 patches as suggested by Anup
+>    * Applied Reviewed-by from Zong and Anup
+>                                                                                   
+> Changes in v3:
+>    * Move kernel mapping to vmalloc
+>                                                                                   
+> Changes in v2:
+>    * Make RELOCATABLE depend on MMU as suggested by Anup
+>    * Rename kernel_load_addr into kernel_virt_addr as suggested by Anup
+>    * Use __pa_symbol instead of __pa, as suggested by Zong
+>    * Rebased on top of v5.6-rc3
+>    * Tested with sv48 patchset
+>    * Add Reviewed/Tested-by from Zong and Anup
+> 
+> Alexandre Ghiti (4):
+>    riscv: Move kernel mapping to vmalloc zone
+>    riscv: Introduce CONFIG_RELOCATABLE
+>    powerpc: Move script to check relocations at compile time in scripts/
+>    riscv: Check relocations at compile time
+> 
+>   arch/powerpc/tools/relocs_check.sh |  18 +----
+>   arch/riscv/Kconfig                 |  12 +++
+>   arch/riscv/Makefile                |   5 +-
+>   arch/riscv/Makefile.postlink       |  36 +++++++++
+>   arch/riscv/boot/loader.lds.S       |   3 +-
+>   arch/riscv/include/asm/page.h      |  10 ++-
+>   arch/riscv/include/asm/pgtable.h   |  38 ++++++---
+>   arch/riscv/kernel/head.S           |   3 +-
+>   arch/riscv/kernel/module.c         |   4 +-
+>   arch/riscv/kernel/vmlinux.lds.S    |   9 ++-
+>   arch/riscv/mm/Makefile             |   4 +
+>   arch/riscv/mm/init.c               | 121 +++++++++++++++++++++++++----
+>   arch/riscv/mm/physaddr.c           |   2 +-
+>   arch/riscv/tools/relocs_check.sh   |  26 +++++++
+>   scripts/relocs_check.sh            |  20 +++++
+>   15 files changed, 259 insertions(+), 52 deletions(-)
+>   create mode 100644 arch/riscv/Makefile.postlink
+>   create mode 100755 arch/riscv/tools/relocs_check.sh
+>   create mode 100755 scripts/relocs_check.sh
+> 
 
-diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
-index 30ed0e06f52a..1a303a81aeef 100644
---- a/tools/gpio/gpio-event-mon.c
-+++ b/tools/gpio/gpio-event-mon.c
-@@ -45,7 +45,7 @@ int monitor_device(const char *device_name,
- 	if (fd == -1) {
- 		ret = -errno;
- 		fprintf(stderr, "Failed to open %s\n", chrdev_name);
--		goto exit_close_error;
-+		goto exit_free_name;
- 	}
- 
- 	req.lineoffset = line;
-@@ -117,6 +117,7 @@ int monitor_device(const char *device_name,
- exit_close_error:
- 	if (close(fd) == -1)
- 		perror("Failed to close GPIO character device file");
-+exit_free_name:
- 	free(chrdev_name);
- 	return ret;
- }
--- 
-2.27.0
+Do you have any remark regarding this series ?
 
+Thanks,
+
+Alex
