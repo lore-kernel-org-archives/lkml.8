@@ -2,100 +2,78 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A753C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 450ED207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594225927;
-	bh=H0Wu/BAz8vnX6yWwkCd9GCUvAWjGhNdK2uh35x2F+gY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TAhsf19KPmKMjQIOvCqAyz55JQTooYO4WF9ne8FqL6Hv92bCFAJ3kEGbq/0AHCHHo
-	 W+ZfEWdg2wLEqEJ5vFBLt7NXmIMgHgFcqnVkbxvfbuZyQhsYlGLpeMvqLsVXJLUjtb
-	 3lsFjNN417mtFrwnecvotbMvmr59M1KCkRnFEWuY=
+	by mail.kernel.org (Postfix) with ESMTP id 0B98D206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:34:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vIphRYn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgGHQcG (ORCPT
+        id S1730299AbgGHQeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730093AbgGHQcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:32:05 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1726206DF;
-        Wed,  8 Jul 2020 16:32:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594225925;
-        bh=H0Wu/BAz8vnX6yWwkCd9GCUvAWjGhNdK2uh35x2F+gY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Vt/puv9WSgcAFnQCevVazOFMWEdNIStzG0eLIdImPSn2pTYfN9LfWO4TavwlYO8+5
-         PcL9lHHK02+gd38OxHtt47Zqt4w45KXH4mk/pigiMmtBe44UDTiN4EbGNZZiUFwZOV
-         tH7un04276lBm9oRAe3U6rcafKhgOCGHkKSIlyfo=
-Date:   Wed, 8 Jul 2020 09:32:03 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     linux-mediatek@lists.infradead.org,
-        =?UTF-8?B?UmVuw6k=?= van Dorst <opensource@vdorst.com>,
-        Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: ethernet: mtk_eth_soc: fix mtu warning
-Message-ID: <20200708093203.347bad78@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200708154634.9565-1-frank-w@public-files.de>
-References: <20200708154634.9565-1-frank-w@public-files.de>
+        Wed, 8 Jul 2020 12:34:15 -0400
+Received: from casper.infradead.org ([90.155.50.34]:38610 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730093AbgGHQeP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:34:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=qY6qQtV+RgCEurwG2BoPG2eey7E6vwCZ+tcxz+4mtsc=; b=vIphRYn3Ms8Y+PgK1VbYORSeEX
+        9aTR+bTeOo54fy0z9g5RofAfva+jdv8BbHmdp2rPvhk19vWT/NkkyeiTFLcX5ppvOC/1jrqgUpOHh
+        0RGGbtAlP3g2r3ZDfk1eMTgBODeHpMUikcErc4HIbvDjkg44oRHFrifRJ1VCoubjnJmOMrgjlUFZ9
+        9MW5r/tqirI8P8OC79dRYWg0/o5bh6tdOC1YKXncmbXe2s/+cJpQkt1SAWAyWieQNiiH4mLnyfHap
+        BraJtjc+LQGRCNIeTjoMGkDbZKWxVVyHnWb4+/iDv3Tx3X+cSFLTqlY9PJjCxrOIhJ5imOpuOxlYj
+        NiYBIn4A==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtD0i-0005Xc-AF; Wed, 08 Jul 2020 16:33:34 +0000
+Date:   Wed, 8 Jul 2020 17:33:27 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier@javigon.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Kanchan Joshi <joshi.k@samsung.com>,
+        viro@zeniv.linux.org.uk, bcrl@kvack.org, hch@infradead.org,
+        damien.lemoal@wdc.com, asml.silence@gmail.com,
+        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+Message-ID: <20200708163327.GU25523@casper.infradead.org>
+References: <33b9887b-eaba-c7be-5dfd-fc7e7d416f48@kernel.dk>
+ <36C0AD99-0D75-40D4-B704-507A222AEB81@javigon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <36C0AD99-0D75-40D4-B704-507A222AEB81@javigon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  8 Jul 2020 17:46:34 +0200 Frank Wunderlich wrote:
-> From: Ren=C3=A9 van Dorst <opensource@vdorst.com>
->=20
-> in recent Kernel-Versions there are warnings about incorrect MTU-Size
-> like these:
->=20
-> mt7530 mdio-bus:00: nonfatal error -95 setting MTU on port x
-> eth0: mtu greater than device maximum
-> mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA =
-overhead
->=20
-> Signed-off-by: Ren=C3=A9 van Dorst <opensource@vdorst.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
->=20
-> Fixes: bfcb813203 ("net: dsa: configure the MTU for switch ports")
-> Fixes: 72579e14a1 ("net: dsa: don't fail to probe if we couldn't set the =
-MTU")
-> Fixes: 7a4c53bee3 ("net: report invalid mtu value via netlink extack")
+On Wed, Jul 08, 2020 at 06:08:12PM +0200, Javier González wrote:
+> > I just wanted to get clarification there, because to me it sounded like
+> > you expected Kanchan to do it, and Kanchan assuming it "was sorted". I'd
+> > consider that a prerequisite for the append series as far as io_uring is
+> > concerned, hence _someone_ needs to actually do it ;-)
 
-Fixes tag: Fixes: bfcb813203 ("net: dsa: configure the MTU for switch ports=
-")
-Has these problem(s):
-	- SHA1 should be at least 12 digits long
-	  Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-	  or later) just making sure it is not set (or set to "auto").
-Fixes tag: Fixes: 72579e14a1 ("net: dsa: don't fail to probe if we couldn't=
- set the MTU")
-Has these problem(s):
-	- SHA1 should be at least 12 digits long
-	  Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-	  or later) just making sure it is not set (or set to "auto").
-Fixes tag: Fixes: 7a4c53bee3 ("net: report invalid mtu value via netlink ex=
-tack")
-Has these problem(s):
-	- SHA1 should be at least 12 digits long
-	  Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-	  or later) just making sure it is not set (or set to "auto").
+I don't know that it's a prerequisite in terms of the patches actually
+depend on it.  I appreciate you want it first to ensure that we don't bloat
+the kiocb.
+
+> I believe Kanchan meant that now the trade-off we were asking to clear out is sorted. 
+> 
+> We will send a new version shortly for the current functionality - we can see what we are missing on when the uring interface is clear. 
+
+I've started work on a patch series for this.  Mostly just waiting for
+compilation now ... should be done in the next few hours.
+
