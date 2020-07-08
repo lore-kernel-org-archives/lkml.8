@@ -2,133 +2,94 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6119FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40CE42078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4F220786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:16:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sp5vy7rm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z4AU5VEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgGHQPK (ORCPT
+        id S1730531AbgGHQQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:15:10 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:33603 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbgGHQPJ (ORCPT
+        Wed, 8 Jul 2020 12:16:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730141AbgGHQQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:15:09 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708161507euoutp0169811a0d917fca1ea26ea35f96c2f3e6~f0xtl1vqD2919629196euoutp01Y
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:15:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708161507euoutp0169811a0d917fca1ea26ea35f96c2f3e6~f0xtl1vqD2919629196euoutp01Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594224907;
-        bh=vJfvmVF8vcAgmxnCgS3wKbE10DIPei7sXr/YrJ17xYQ=;
-        h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=sp5vy7rmCCJgX0gCZB6VfD7gA/lWbc7ck5IDxS6Yuko8uvfkL7ohgEVwt1uPOgU/n
-         OAP/KxES3e5qAMTUxFu6iYIYZ4Pclq9xPPr4r/t7ZSVKfgjANK2Wa8NHdSoBEFz0Lb
-         I05JJCOMWnCJjFllz4g605uheFjcWFC5VMefH5S8=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200708161507eucas1p286d8adcbcff18ae68b0ae189cbc5e5df~f0xtNr1VY3193831938eucas1p2O;
-        Wed,  8 Jul 2020 16:15:07 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 50.AD.06318.B01F50F5; Wed,  8
-        Jul 2020 17:15:07 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708161506eucas1p2273cb7bd714705ff2d0a99d7394b6baf~f0xsvvxU10142801428eucas1p2Z;
-        Wed,  8 Jul 2020 16:15:06 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200708161506eusmtrp1356dceb2c2b3c89ab2cc2819b88bf8f8~f0xsvDZti0476504765eusmtrp1s;
-        Wed,  8 Jul 2020 16:15:06 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-86-5f05f10b2b78
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 8B.2A.06314.A01F50F5; Wed,  8
-        Jul 2020 17:15:06 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200708161506eusmtip17cfa99d68b1fe2018a5a5a5bbb86de61~f0xsLkASF1337513375eusmtip1e;
-        Wed,  8 Jul 2020 16:15:06 +0000 (GMT)
-Subject: Re: [PATCH 11/11] media: exynos4-is: Correct parallel port probing
-To:     Jonathan Bakker <xc-racer2@live.ca>, kyungmin.park@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <05381b4a-3581-e57d-3ecc-43eaafd9d527@samsung.com>
-Date:   Wed, 8 Jul 2020 18:15:05 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Wed, 8 Jul 2020 12:16:17 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30807C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 09:16:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=egaKUCkqm/F8Lgo+G+BbyrSEcoTM/F4vaLTAZkfOYLI=; b=Z4AU5VErCCxwC9Veqb25AFvDkM
+        /0L54C/QHYwu9Q6rzceSamw1O+pAgfVCFUShkR4eCIEITaWktFY7zY1xRKANlPSChTSWhyKgJtX0E
+        0ktNksfjJk8o/J8ePcA330r41mnqI8yjrATlUAay61b3IZp9kn6MyIKU6jNS775no69yJxHcRVZBd
+        VDPbnOuBRQVReQWoW2xJl+HZFnIlipoa2JDPWHl0scWEKqDiWpB1ZveEwox7SCNSrXsvatwRhZ159
+        QJ0tigVE0x4ytWorRDWklz79lHnhZ9YMM4bY5Tg0zBkg5RA9nvOxF4ljux+88i0sizyx8IIl6OVmh
+        YXbfp3EQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtCk0-0000KU-9v; Wed, 08 Jul 2020 16:16:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 627493006D0;
+        Wed,  8 Jul 2020 18:16:09 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E68BF214ECDAA; Wed,  8 Jul 2020 18:16:08 +0200 (CEST)
+Date:   Wed, 8 Jul 2020 18:16:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/20] seqlock: Extend seqcount API with associated
+ locks
+Message-ID: <20200708161608.GS4800@hirez.programming.kicks-ass.net>
+References: <20200630054452.3675847-7-a.darwish@linutronix.de>
+ <20200706212148.GE5523@worktop.programming.kicks-ass.net>
+ <20200707084024.GA4097637@debian-buster-darwi.lab.linutronix.de>
+ <20200707130410.GO4800@hirez.programming.kicks-ass.net>
+ <20200707143726.GO117543@hirez.programming.kicks-ass.net>
+ <20200708103314.GB4151780@debian-buster-darwi.lab.linutronix.de>
+ <20200708122938.GQ4800@hirez.programming.kicks-ass.net>
+ <20200708150930.GA147323@debian-buster-darwi.lab.linutronix.de>
+ <20200708153522.GR4800@hirez.programming.kicks-ass.net>
+ <20200708155813.GA147953@debian-buster-darwi.lab.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <BN6PR04MB0660A14860692EAB2A658AEFA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+d3H7t1s4zqtnUwyl3+Y5CtLLhaS1R+DiB4ghaFz6U1NnWNX
-        LSvwRWJq5gNZzlATKVuYunyUopFRUqJiopgm/eEQpy0zK8zUcl4r//uc8/0ezvfAoXF5M+lC
-        x2mTOb1Wk6AUSYjW1z/7vR3mSbVfU4Eje3tyFmcHBhopti/rE8WaJ0dIdqj9rogtaGwh2TsD
-        XRh737yMsYPFE8RhscpsuilSPalNV9W8XyRUhc0mpFow7zxFhkkORXMJcamc3jc4UhK7sOqu
-        sxJX2rPnyAw0jechMQ3MfljJyUV5SELLmToE9RU9uFB8Q1BnyBYJxQKCRzWj/0Y+Z81QgvAA
-        wfCXJcIuyJl5BNXjWjs7McehruQxZjc5M9kYTNWVi+yCiPGHW68KkZ2lTDDY6hsxOxOMBzwc
-        HKXsvJWJgAZrGyZ4HOFNuWV9gZgJh6bn0+uMMwoYs1RhArtBm+3uem5gWikozCjDhKjHIH9p
-        ZCO2E8z0NFMCu0JvaQEhDGQjKOgYp4SiCMHHnmokuA7Ch/6ltdj02oo90NDuK7RDoNTylbK3
-        gZHBqM1RCCGDklYDLrSlkJsjF9we8Mtk2IjjAvmW34TAKvgx8ZIqQu7GTWcaN51m3HSa8X+G
-        akSYkIJL4RNjOD5Ay1324TWJfIo2xicqKdGM1n6pd7Xn+1PUtXyhGzE0Um6RTptJtZzUpPJp
-        id0IaFzpLD3S1xshl0Zr0q5y+iS1PiWB47vRDppQKqQBNdZwOROjSebiOU7H6f+qGC12yUCX
-        9J1USQ1+zt3mfSOUlc3Fh4Xw+1zjFbNMtEw3lDkW3PG2uuXF3u08fibFAzewXYFDnelu245K
-        V67tjhuOLAv0Ok0PVuqcO6iTVSc8w2Os9WL1xGzG9QOZ9/wWi4lhIx3UFfouTbar4pmnQ0uH
-        RUK619JnLxrORwRVNsxETSkJPlbj74Xrec0f8Y8LfEcDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xu7pcH1njDfrfGlj0P37NbHH+/AZ2
-        i7NNb9gtNj2+xmpxedccNoueDVtZLWac38dksWzTHyaLixPvsjhwemxa1cnmsXlJvceimz9Y
-        PPq2rGL0+LxJLoA1Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUn
-        syy1SN8uQS/j8z/FgpcsFbua37M2ML5g7mLk5JAQMJF41/SKvYuRi0NIYCmjxJ5z7SxdjBxA
-        CSmJ+S1KEDXCEn+udbFB1LxnlLjyrYkNJCEs4C2xYtI6JpCEiEAzk8T/5dtYIKruMkqcPbwK
-        rIpNwFCi92gfI4jNK2An8XbtBiYQm0VARWLlxRvsILaoQJzE8i3z2SFqBCVOznzCAmJzCsRK
-        bNz/AsxmFlCX+DPvEjOELS5x68l8JghbXmL72znMExgFZyFpn4WkZRaSlllIWhYwsqxiFEkt
-        Lc5Nzy021CtOzC0uzUvXS87P3cQIjLdtx35u3sF4aWPwIUYBDkYlHt4Xm1jjhVgTy4orcw8x
-        SnAwK4nwOp09HSfEm5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cBUkFcSb2hqaG5haWhubG5s
-        ZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgTHzsWAtT92l7S+amPt0doYEapeZFmSJ+Kur
-        ZYXuS3Rv1T7yLEl0T+epu0EnuPf1HLNsCWR591Op4cOk1S+t1/05JFZXGabos8Pr140p3dFR
-        4hZq92O3/PerOxJ8SFy5emPDjpQtx7aoOtc5LX60ep37Iy67U7vendAw4LjJuHTfB27x9O8T
-        spVYijMSDbWYi4oTAelXiffNAgAA
-X-CMS-MailID: 20200708161506eucas1p2273cb7bd714705ff2d0a99d7394b6baf
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200426022757eucas1p2d10b653b3d974a1226560ccceed0d120
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200426022757eucas1p2d10b653b3d974a1226560ccceed0d120
-References: <20200426022650.10355-1-xc-racer2@live.ca>
-        <CGME20200426022757eucas1p2d10b653b3d974a1226560ccceed0d120@eucas1p2.samsung.com>
-        <BN6PR04MB0660A14860692EAB2A658AEFA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708155813.GA147953@debian-buster-darwi.lab.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 26.04.2020 04:26, Jonathan Bakker wrote:
-> According to the binding doc[1], port A should be reg = 0
-> and port B reg = 1.  Unfortunately, the driver was treating 0
-> as invalid and 1 as camera port A.  Match the binding doc and
-> make 0=A and 1=B.
+On Wed, Jul 08, 2020 at 05:58:13PM +0200, Ahmed S. Darwish wrote:
+> On Wed, Jul 08, 2020 at 05:35:22PM +0200, Peter Zijlstra wrote:
+> ...
+> >
+> > And while the gcc-4.8 code is horrendous crap, the rest should be pretty
+> > straight forward and concentrates on the pieces where there are
+> > differences.
+> >
 > 
-> [1] Documentation/devicetree/bindings/media/samsung-fimc.txt
+> Is there any possibility of upgrading the minimum gcc version to 4.9? Is
+> there any supported architecture that is still stuck on 4.8?
 
-Thank you for correcting this. I would prefer to correct the binding
-documentation instead, so it says reg=1 for A and reg=2 for B. 
-Then it would also match what we have in dts for Goni and 
-enum fimc_input in include/media/drv-intf/exynos-fimc.h.
+Upgrading also got mention here:
 
+  https://lkml.kernel.org/r/CAHk-=wgD+q+oDdtukYC74_cDX5i0Ynf0GLhuNe2Faaokejj6fQ@mail.gmail.com
 
--- 
-Regards,
-Sylwester
+But it didn't get much response.
