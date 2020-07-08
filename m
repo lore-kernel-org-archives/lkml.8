@@ -2,233 +2,94 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5446AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB003C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 338F52067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D00320739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:26:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="utMXir49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbgGHH0U (ORCPT
+        id S1730525AbgGHH0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:26:20 -0400
-Received: from mga03.intel.com ([134.134.136.65]:15287 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730279AbgGHH0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:26:19 -0400
-IronPort-SDR: O/Zj2jhczkMT+IPYKJbJ8lydDTB12RJQbgbOdBGksUTf/aWpNIkgJJHSPW8ub9XsTQKcij18uo
- ObtV1atO0B1Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="147759450"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="147759450"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 00:26:18 -0700
-IronPort-SDR: CByh53ZrPYft6rgu4wbs/3b47Nhg62pvQHmCrzrbS8h48mg30/3rTZWZT+sgEkTpkxinwS1ycE
- +3sXROn1fXkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="358025287"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2020 00:26:15 -0700
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     Thor Thayer <thor.thayer@linux.intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v4 10/10] net: eth: altera: update devicetree bindings documentation
-Date:   Wed,  8 Jul 2020 15:24:01 +0800
-Message-Id: <20200708072401.169150-11-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
-In-Reply-To: <20200708072401.169150-1-joyce.ooi@intel.com>
-References: <20200708072401.169150-1-joyce.ooi@intel.com>
+        Wed, 8 Jul 2020 03:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730253AbgGHH0Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:26:24 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D971C08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:26:24 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id m22so10875032pgv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:26:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pKFUgFUqW5gpKv/bMbAh9j1l3R9X9P0qKmhMZ59xEwQ=;
+        b=utMXir49D0P9akytQzu1StGbltgpgfN9ZuZBKD6fgZgD44VQTaNsGnhXcWFm+cGs/0
+         nLMiGFHj0bFHrWS3IfMivAIsfnWj7DOvzD5wLAeDWygtxU3KVV/sKMxvuRp9f/NxM1Uy
+         v4QeHIDA8EstrT57e413u0CMg12c77PUAoD5EWFyA/k2fTm1p86t0F55VabnwnVIXHuX
+         OEMNtUgOZCNV3jhL1NnbK+30VCEotUhb6gPBcc3DpBYHBMeqNH+ashBDXhQRyF40GMnw
+         XrWp9DO69UcVvLyPI7Q1R13c9hciBo11yes84IMUDj1ehnt41VneVHag6hRmzTnv7Y56
+         jz3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pKFUgFUqW5gpKv/bMbAh9j1l3R9X9P0qKmhMZ59xEwQ=;
+        b=i8QQ6GI3XWkU0hb9EqSuIeU28W4u8wazlaWiyJPIDSsmVZ0nX43JctIlpM5A3xEMkp
+         MrHwty6ajY++AbRUjj4viVsXsUuFXy355ElMXZ16RknyGdyxNg8exYgkL+f23aJCtyOO
+         KN8/FzyBpYjfjiDR6cbRnm+r+prAs3hf3IsZTwfDb1eRtrf2T3aueGi135GA9UTZ0u+o
+         NQJTFoXF0Zt3rsQuaJ4zHg19C9NQZw+VQ2vW8hpFneO0CsEzp7GnCBCUJWs7WRqoR42J
+         H8dogJSf25MU92F4rudgMhyaLw9UheQ16zcB+8fh3T29X/gPTmL7a9qy1f0CVXutPAlr
+         mbDg==
+X-Gm-Message-State: AOAM5306vjvP2kw9gia1JjKGIGk96Ct8xIPlhJF+yqUbtVqNPS8GcMOb
+        nm+qul163J4WtBmlQZcqHUH7vpRnZgAsmX+3tsmX/36M
+X-Google-Smtp-Source: ABdhPJwHuFHFrEqatHcREKGCAo7pP2ZEllY6EBfxvZHdqxG5bxutXfNX+a5k34Ll+QndpGLNkB+RiIpzBpAVp7akwDA=
+X-Received: by 2002:a62:cfc1:: with SMTP id b184mr15025586pfg.153.1594193183635;
+ Wed, 08 Jul 2020 00:26:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200708062023.7986-1-vulab@iscas.ac.cn>
+In-Reply-To: <20200708062023.7986-1-vulab@iscas.ac.cn>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Wed, 8 Jul 2020 00:26:12 -0700
+Message-ID: <CAMo8BfJ5jCXmenR6Hnsw4QffYFLRQh7-ZrKp8OuZVu7mwKT2Ng@mail.gmail.com>
+Subject: Re: [PATCH] kernel: perf_event: use for_each_set_bit() to simplify
+ the code
+To:     Xu Wang <vulab@iscas.ac.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, Chris Zankel <chris@zankel.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dalon Westergreen <dalon.westergreen@intel.com>
+On Tue, Jul 7, 2020 at 11:59 PM Xu Wang <vulab@iscas.ac.cn> wrote:
+>
+> Using for_each_set_bit() to simplify the code.
+>
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> ---
+>  arch/xtensa/kernel/perf_event.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 
-Update devicetree bindings documentation to include msgdma
-prefetcher and ptp bindings.
+Thanks! Applied to my xtensa tree with a slightly edited commit message.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v2: no change
-v3: no change
-v4: no change
----
- .../devicetree/bindings/net/altera_tse.txt         | 103 +++++++++++++++++----
- 1 file changed, 84 insertions(+), 19 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
-index 0b7d4d3758ea..2f2d12603907 100644
---- a/Documentation/devicetree/bindings/net/altera_tse.txt
-+++ b/Documentation/devicetree/bindings/net/altera_tse.txt
-@@ -2,53 +2,86 @@
- 
- Required properties:
- - compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
--		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
-+		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE,
-+		and "altr,tse-msgdma-2.0" for MSGDMA with prefetcher based
-+		implementations.
- 		ALTR is supported for legacy device trees, but is deprecated.
- 		altr should be used for all new designs.
- - reg: Address and length of the register set for the device. It contains
-   the information of registers in the same order as described by reg-names
- - reg-names: Should contain the reg names
--  "control_port": MAC configuration space region
--  "tx_csr":       xDMA Tx dispatcher control and status space region
--  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
--  "rx_csr" :      xDMA Rx dispatcher control and status space region
--  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
--  "rx_resp":      MSGDMA Rx dispatcher response space region
--  "s1":		  SGDMA descriptor memory
- - interrupts: Should contain the TSE interrupts and it's mode.
- - interrupt-names: Should contain the interrupt names
--  "rx_irq":       xDMA Rx dispatcher interrupt
--  "tx_irq":       xDMA Tx dispatcher interrupt
-+  "rx_irq":       DMA Rx dispatcher interrupt
-+  "tx_irq":       DMA Tx dispatcher interrupt
- - rx-fifo-depth: MAC receive FIFO buffer depth in bytes
- - tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
- - phy-mode: See ethernet.txt in the same directory.
- - phy-handle: See ethernet.txt in the same directory.
- - phy-addr: See ethernet.txt in the same directory. A configuration should
- 		include phy-handle or phy-addr.
--- altr,has-supplementary-unicast:
--		If present, TSE supports additional unicast addresses.
--		Otherwise additional unicast addresses are not supported.
--- altr,has-hash-multicast-filter:
--		If present, TSE supports a hash based multicast filter.
--		Otherwise, hash-based multicast filtering is not supported.
--
- - mdio device tree subnode: When the TSE has a phy connected to its local
- 		mdio, there must be device tree subnode with the following
- 		required properties:
--
- 	- compatible: Must be "altr,tse-mdio".
- 	- #address-cells: Must be <1>.
- 	- #size-cells: Must be <0>.
- 
- 	For each phy on the mdio bus, there must be a node with the following
- 	fields:
--
- 	- reg: phy id used to communicate to phy.
- 	- device_type: Must be "ethernet-phy".
- 
- The MAC address will be determined using the optional properties defined in
- ethernet.txt.
- 
-+- altr,has-supplementary-unicast:
-+		If present, TSE supports additional unicast addresses.
-+		Otherwise additional unicast addresses are not supported.
-+- altr,has-hash-multicast-filter:
-+		If present, TSE supports a hash based multicast filter.
-+		Otherwise, hash-based multicast filtering is not supported.
-+- altr,has-ptp:
-+		If present, TSE supports 1588 timestamping.  Currently only
-+		supported with the msgdma prefetcher.
-+- altr,tx-poll-cnt:
-+		Optional cycle count for Tx prefetcher to poll descriptor
-+		list.  If not present, defaults to 128, which at 125MHz is
-+		roughly 1usec. Only for "altr,tse-msgdma-2.0".
-+- altr,rx-poll-cnt:
-+		Optional cycle count for Tx prefetcher to poll descriptor
-+		list.  If not present, defaults to 128, which at 125MHz is
-+		roughly 1usec. Only for "altr,tse-msgdma-2.0".
-+
-+Required registers by compatibility string:
-+ - "altr,tse-1.0"
-+	"control_port": MAC configuration space region
-+	"tx_csr":       DMA Tx dispatcher control and status space region
-+	"rx_csr" :      DMA Rx dispatcher control and status space region
-+	"s1":		DMA descriptor memory
-+
-+ - "altr,tse-msgdma-1.0"
-+	"control_port": MAC configuration space region
-+	"tx_csr":       DMA Tx dispatcher control and status space region
-+	"tx_desc":      DMA Tx dispatcher descriptor space region
-+	"rx_csr" :      DMA Rx dispatcher control and status space region
-+	"rx_desc":      DMA Rx dispatcher descriptor space region
-+	"rx_resp":      DMA Rx dispatcher response space region
-+
-+ - "altr,tse-msgdma-2.0"
-+	"control_port": MAC configuration space region
-+	"tx_csr":       DMA Tx dispatcher control and status space region
-+	"tx_pref":      DMA Tx prefetcher configuration space region
-+	"rx_csr" :      DMA Rx dispatcher control and status space region
-+	"rx_pref":      DMA Rx prefetcher configuration space region
-+	"tod_ctrl":     Time of Day Control register only required when
-+			timestamping support is enabled.  Timestamping is
-+			only supported with the msgdma-2.0 implementation.
-+
-+Optional properties:
-+- local-mac-address: See ethernet.txt in the same directory.
-+- max-frame-size: See ethernet.txt in the same directory.
-+
- Example:
- 
- 	tse_sub_0_eth_tse_0: ethernet@1,00000000 {
-@@ -86,6 +119,11 @@ Example:
- 				device_type = "ethernet-phy";
- 			};
- 
-+			phy2: ethernet-phy@2 {
-+				reg = <0x2>;
-+				device_type = "ethernet-phy";
-+			};
-+
- 		};
- 	};
- 
-@@ -111,3 +149,30 @@ Example:
- 		altr,has-hash-multicast-filter;
- 		phy-handle = <&phy1>;
- 	};
-+
-+
-+	tse_sub_2_eth_tse_0: ethernet@1,00002000 {
-+		compatible = "altr,tse-msgdma-2.0";
-+		reg = 	<0x00000001 0x00002000 0x00000400>,
-+			<0x00000001 0x00002400 0x00000020>,
-+			<0x00000001 0x00002420 0x00000020>,
-+			<0x00000001 0x00002440 0x00000020>,
-+			<0x00000001 0x00002460 0x00000020>,
-+			<0x00000001 0x00002480 0x00000040>;
-+		reg-names = "control_port", "rx_csr", "rx_pref","tx_csr", "tx_pref", "tod_ctrl";
-+		interrupt-parent = <&hps_0_arm_gic_0>;
-+		interrupts = <0 45 4>, <0 44 4>;
-+		interrupt-names = "rx_irq", "tx_irq";
-+		rx-fifo-depth = <2048>;
-+		tx-fifo-depth = <2048>;
-+		address-bits = <48>;
-+		max-frame-size = <1500>;
-+		local-mac-address = [ 00 00 00 00 00 00 ];
-+		phy-mode = "sgmii";
-+		altr,has-supplementary-unicast;
-+		altr,has-hash-multicast-filter;
-+		altr,has-ptp;
-+		altr,tx-poll-cnt = <128>;
-+		altr,rx-poll-cnt = <32>;
-+		phy-handle = <&phy2>;
-+	};
 -- 
-2.13.0
-
+Thanks.
+-- Max
