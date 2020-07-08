@@ -2,114 +2,171 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7972DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52B5520720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:29:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="kewKNCCY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fOf9EPcx"
+	by mail.kernel.org (Postfix) with ESMTP id 775D720720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594215009;
+	bh=E0hq2U0wEuujHirOut7IN5il5KrFWDowKeNQnvbS0u4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LjYi38mAAD7yxRhkS2WYGMLmVH6DUSZqsH3NaI12wAJ9kOn4S882MoYQ/3cO5NN8h
+	 pcp8XHmW789zGFAUYtMHRobGXYHMYN0joWkhwWODuJJ72/hk14RU+6geT5OKPyCI6D
+	 HpR8LU36gFOZmUPPT0U1n/04fk8O+ghT4HGhhBbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgGHN3w (ORCPT
+        id S1729593AbgGHNaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:29:52 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:59809 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728148AbgGHN3w (ORCPT
+        Wed, 8 Jul 2020 09:30:08 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40809 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728148AbgGHNaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:29:52 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 75059B4A;
-        Wed,  8 Jul 2020 09:29:50 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 09:29:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=J
-        gqM+l7NWg3T7iC7VFNhEk0S3/jtNUOXIDLh0bXRuPI=; b=kewKNCCYBt56UwdbX
-        zn044rAYxmzBJCeLQQNYNx/m9SG5nut+WSWsNX5vxS8FTmHXC3SeY4ER3oj9d9h9
-        xe2O07Y5Wu7UDKJpEATK8NOUkxjXDjx7TpIwtlhnDVhgoZ4qUB+I9gnrtGECiYK5
-        bqWFvgVUYXW+G/+O+fbnE7BsUFDmfBXRZCm61cQh+fUmjXueVLS/J/73h7OueIDw
-        wsid/eB3Q8o11vx6tcvAsiOHr1rV/CTlIXYzUM+ChdtyvsX1wqN1pRITjPDKRZkR
-        uU+615lNx1XSRjxaLPjfra8VuSB7Fhe0DRi+6ecallrGWm2LIy2uCZvDVje360tB
-        s/YPQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=JgqM+l7NWg3T7iC7VFNhEk0S3/jtNUOXIDLh0bXRu
-        PI=; b=fOf9EPcxN5J7ynthXkbJPdNJO/1BGgVihQjEkUiqzXckLxoaUEj5sDbVT
-        /BNC1wdMsuj4lB4X/rBAbhWAg10DN5y6xyHpRAxYboL6LhZJj38KG0+CyVobLVKT
-        nH6XnWQjQ4x/C04NHL/HF8PEr7XN9zzEnMMr2z5hmh85Up/EswW1V6iG0C9bKmF3
-        KyplaGdTlBbwFLsAKXgII4t2Ryll2RsNQ4p/tgvNAreohqZeQmukmsSt4zsAcTPV
-        d+ciO/VxoMb9oVWbAlzoBAAMuf3GCSrgnGvuwz4YVRjm8lAq7gS2vY0gD8cDqPkA
-        5asGg7vcEt4Xy7un0vr/l2ueER5uw==
-X-ME-Sender: <xms:TcoFX-dzCiiMKARQniK_Gw03jjY1aIF51uZ4yRzPGoz52M6e6G1eyg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdeiiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepgfejtedtjefggfffvdetuedthedtheegheeuteekfeeghfdtteejkeeludeg
-    vddunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:TcoFX4P_fuOmUd6qlOAcZlEDBZV08JYlRqf6-1xo0FrfdgoKwgnBRw>
-    <xmx:TcoFX_jUxhRXpkQIlw5JpcTEMC9iqk462LdouhftMmQJ8wYY1Mq5EA>
-    <xmx:TcoFX7_pgiWplmI427ydtAcQKaGQ4G1J3WpzSHsO_3th5f22jDaEOw>
-    <xmx:TsoFX39wA5uCrKhSFtWpjEP_v7gfnYoxNTyHw1MYManT7Pp9lKu42U9i9Ag>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F3E61328006A;
-        Wed,  8 Jul 2020 09:29:48 -0400 (EDT)
-Date:   Wed, 8 Jul 2020 15:29:47 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
-Message-ID: <20200708132947.6rsgsqychmtzvuhr@gilmour.lan>
-References: <20200708105527.868987-1-megous@megous.com>
+        Wed, 8 Jul 2020 09:30:07 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e18so21675335pgn.7;
+        Wed, 08 Jul 2020 06:30:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=e2kkDUoiBt2aGKTCH92DsaO6ZhZViiUD4MWP53eNHvI=;
+        b=n39aKhQotuqV5MKXJG0SQUzSwwhsAioRVl8qIKBI6leBlkcbcq3FL+pctYWCg1t9Dv
+         kjRAO0PbB6+51BCVCkjS3By1JrWiA3lHDbOHsKJF8IaMfwNT14Ahz/+tePd/0rkHBsgb
+         EWAS4iRunOh3YBMbxPbxCgYuPOGsWnm5diB1WrF/2KhzDmYvQ7e/d79KeQdZDT0VLZFC
+         jawLO64TaLxGGsEZR1n93xetrqtcSwcqsvApZ4MtZ/N76XfHabVvSG6QY96kdHTcFJhq
+         hLP6LSARpNx4pn3eQGiKrugayWoCJaq9BDMdODhrxLj3yh9BcVwY5OGpWrPBnujET7Pc
+         Pq3A==
+X-Gm-Message-State: AOAM531rGsw2F0NERbskBqSzckQrD8QsfYtISNsrNrJotCp8FkHDQjrl
+        I9+60mZFYNjrHvy9XPeNCIlCKYudSZJ5ag==
+X-Google-Smtp-Source: ABdhPJxSxcf0S3mL5z7oE5TQe5Mvk7Tyg32/V7abTnu44JkQ60gIudJMaEJycQ3MeccACXD/uLdy3w==
+X-Received: by 2002:aa7:848b:: with SMTP id u11mr38991115pfn.72.1594215006485;
+        Wed, 08 Jul 2020 06:30:06 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id g63sm5672881pje.14.2020.07.08.06.30.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 06:30:04 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 2C8AA401AE; Wed,  8 Jul 2020 13:30:04 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 13:30:04 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        James Morris <jmorris@namei.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 0/4] Fix misused kernel_read_file() enums
+Message-ID: <20200708133004.GG4332@42.do-not-panic.com>
+References: <20200707081926.3688096-1-keescook@chromium.org>
+ <3c01073b-c422-dd97-0677-c16fe1158907@redhat.com>
+ <f5e65f73-2c94-3614-2479-69b2bfda9775@redhat.com>
+ <20200708115517.GF4332@42.do-not-panic.com>
+ <8766279d-0ebe-1f64-c590-4a71a733609b@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200708105527.868987-1-megous@megous.com>
+In-Reply-To: <8766279d-0ebe-1f64-c590-4a71a733609b@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 12:55:27PM +0200, Ondrej Jirman wrote:
-> @@ -523,10 +547,17 @@ static int sun8i_ths_probe(struct platform_device *=
-pdev)
->  	ret =3D devm_request_threaded_irq(dev, irq, NULL,
->  					sun8i_irq_thread,
->  					IRQF_ONESHOT, "ths", tmdev);
-> -	if (ret)
-> -		return ret;
-> +	if (ret) {
-> +		dev_err(dev, "Failed to request irq (%d)\n", ret);
-> +		goto err_out;
-> +	}
-> =20
-> +	dev_info(dev, "Thermal sensor ready!\n");
->  	return 0;
+On Wed, Jul 08, 2020 at 01:58:47PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 7/8/20 1:55 PM, Luis Chamberlain wrote:
+> > On Wed, Jul 08, 2020 at 01:37:41PM +0200, Hans de Goede wrote:
+> > > Hi,
+> > > 
+> > > On 7/8/20 1:01 PM, Hans de Goede wrote:
+> > > > Hi,
+> > > > 
+> > > > On 7/7/20 10:19 AM, Kees Cook wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > In looking for closely at the additions that got made to the
+> > > > > kernel_read_file() enums, I noticed that FIRMWARE_PREALLOC_BUFFER
+> > > > > and FIRMWARE_EFI_EMBEDDED were added, but they are not appropriate
+> > > > > *kinds* of files for the LSM to reason about. They are a "how" and
+> > > > > "where", respectively. Remove these improper aliases and refactor the
+> > > > > code to adapt to the changes.
+> > > > > 
+> > > > > Additionally adds in missing calls to security_kernel_post_read_file()
+> > > > > in the platform firmware fallback path (to match the sysfs firmware
+> > > > > fallback path) and in module loading. I considered entirely removing
+> > > > > security_kernel_post_read_file() hook since it is technically unused,
+> > > > > but IMA probably wants to be able to measure EFI-stored firmware images,
+> > > > > so I wired it up and matched it for modules, in case anyone wants to
+> > > > > move the module signature checks out of the module core and into an LSM
+> > > > > to avoid the current layering violations.
+> > > > > 
+> > > > > This touches several trees, and I suspect it would be best to go through
+> > > > > James's LSM tree.
+> > > > > 
+> > > > > Thanks!
+> > > > 
+> > > > 
+> > > > I've done some quick tests on this series to make sure that
+> > > > the efi embedded-firmware support did not regress.
+> > > > That still works fine, so this series is;
+> > > > 
+> > > > Tested-by: Hans de Goede <hdegoede@redhat.com>
+> > > 
+> > > I made a mistake during testing I was not actually running the
+> > > kernel with the patches added.
+> > > 
+> > > After fixing that I did find a problem, patch 4/4:
+> > > "module: Add hook for security_kernel_post_read_file()"
+> > > 
+> > > Breaks module-loading for me. This is with the 4 patches
+> > > on top of 5.8.0-rc4, so this might just be because I'm
+> > > not using the right base.
+> > > 
+> > > With patch 4/4 reverted things work fine for me.
+> > > 
+> > > So, please only add my Tested-by to patches 1-3.
+> > 
+> > BTW is there any testing covered by the selftests for the firmware
+> > laoder which would have caputured this? If not can you extend
+> > it with something to capture this case you ran into?
+> 
+> This was not a firmware-loading issue. For me in my tests,
+> which were limited to 1 device, patch 4/4, which only touches
+> the module-loading code, stopped module loading from working.
+> 
+> Since my test device has / on an eMMC and the kernel config
+> I'm using has mmc-block as a module, things just hung in the
+> initrd since no modules could be loaded, so I did not debug
+> this any further. Dropping  patch 4/4 from my local tree
+> solved this.
 
-I missed that in my first mail, but I'm not sure we want to print
-anything on success. This doesn't bring any value and that will only
-make it harder to find errors in other drivers.
+Thanks Hans!
 
-Maxime
+Kees, would test_kmod.c and the respective selftest would have picked
+this issue up?
+
+  Luis
