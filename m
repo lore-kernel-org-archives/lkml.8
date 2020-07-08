@@ -2,160 +2,132 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F910C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AD2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB67F20739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s1MkS0y5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uXndmB5G"
+	by mail.kernel.org (Postfix) with ESMTP id 69C47206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:34:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgGHKdS (ORCPT
+        id S1728495AbgGHKeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:33:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgGHKdR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:33:17 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8608BC08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 03:33:17 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 12:33:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594204396;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=A3pJuNIU0LykF2PIg+ZxlGqv3aULpQ+rRYQaYlSRZX8=;
-        b=s1MkS0y59k1JFRXkZa8LTa0KDWLKgTQuPwc2dOcKEBeenA/wa+NP7Bxf4VYAkZt+8s9a25
-        40CrEs4nVTg9Luwrt8iFLsGl3AbATjN2XLyowWYVe7WGBBmLssKiJe0iK/ol1RZ5XDg1cr
-        rcMA11ZfO+at3Hbzu6KLLI7GXb8xx73OJdyG3Em+GfJ6TBHDiWXEhxjyJfh7HkvE0iTuRW
-        RyP0+WoCsa/xjpxy1bxYIdOizMhC6aYI/3BNrPTnGFS030op7oyPkqnoiLlgLM7uFwlr5D
-        NdLbe0JTKNs5p6eUmzBHNnXJS5BSoS0Bg3Sx+anVzy37f647PqQmtuDG7DEIZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594204396;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=A3pJuNIU0LykF2PIg+ZxlGqv3aULpQ+rRYQaYlSRZX8=;
-        b=uXndmB5GznbaNs8Dy4fBXBYVozV4kOcWa/TFGlQvlabeh+mmEeuizA1enNEuNmqLzOoBVo
-        0wRHid687OJerZBA==
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Wed, 8 Jul 2020 06:34:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:59170 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgGHKeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:34:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11F6731B;
+        Wed,  8 Jul 2020 03:34:17 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFB313F71E;
+        Wed,  8 Jul 2020 03:34:15 -0700 (PDT)
+References: <20200702144258.19326-1-vincent.guittot@linaro.org> <jhjh7up99ss.mognet@arm.com> <CAKfTPtCxki8E=9DqistC32xZJ4ozufb9jUOR=ro34BNNNJtJiw@mail.gmail.com> <CAKfTPtA2RNc+XYMn0z_JyCgFswkUxHTS83uN_sJ8pjU7XPE4aA@mail.gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 06/20] seqlock: Extend seqcount API with associated
- locks
-Message-ID: <20200708103314.GB4151780@debian-buster-darwi.lab.linutronix.de>
-References: <20200630054452.3675847-1-a.darwish@linutronix.de>
- <20200630054452.3675847-7-a.darwish@linutronix.de>
- <20200706212148.GE5523@worktop.programming.kicks-ass.net>
- <20200707084024.GA4097637@debian-buster-darwi.lab.linutronix.de>
- <20200707130410.GO4800@hirez.programming.kicks-ass.net>
- <20200707143726.GO117543@hirez.programming.kicks-ass.net>
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched/fair: handle case of task_h_load() returning 0
+In-reply-to: <CAKfTPtA2RNc+XYMn0z_JyCgFswkUxHTS83uN_sJ8pjU7XPE4aA@mail.gmail.com>
+Date:   Wed, 08 Jul 2020 11:34:10 +0100
+Message-ID: <jhjzh8a70t9.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707143726.GO117543@hirez.programming.kicks-ass.net>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 04:37:26PM +0200, Peter Zijlstra wrote:
+
+On 07/07/20 14:30, Vincent Guittot wrote:
+> On Thu, 2 Jul 2020 at 18:28, Vincent Guittot <vincent.guittot@linaro.org> wrote:
+>>
+>> On Thu, 2 Jul 2020 at 18:11, Valentin Schneider
+>> <valentin.schneider@arm.com> wrote:
+>> >
+>> >
+>> > On 02/07/20 15:42, Vincent Guittot wrote:
+>> > > task_h_load() can return 0 in some situations like running stress-ng
+>> > > mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+>> > > system. The load balance doesn't handle this correctly because
+>> > > env->imbalance never decreases and it will stop pulling tasks only after
+>> > > reaching loop_max, which can be equal to the number of running tasks of
+>> > > the cfs. Make sure that imbalance will be decreased by at least 1.
+>> > >
+>> > > misfit task is the other feature that doesn't handle correctly such
+>> > > situation although it's probably more difficult to face the problem
+>> > > because of the smaller number of CPUs and running tasks on heterogenous
+>> > > system.
+>> > >
+>> > > We can't simply ensure that task_h_load() returns at least one because it
+>> > > would imply to handle underrun in other places.
+>> >
+>> > Nasty one, that...
+>> >
+>> > Random thought: isn't that the kind of thing we have scale_load() and
+>> > scale_load_down() for? There's more uses of task_h_load() than I would like
+>> > for this, but if we upscale its output (or introduce an upscaled variant),
+>> > we could do something like:
+>> >
+>> > ---
+>> > detach_tasks()
+>> > {
+>> >         long imbalance = env->imbalance;
+>> >
+>> >         if (env->migration_type == migrate_load)
+>> >                 imbalance = scale_load(imbalance);
+>> >
+>> >         while (!list_empty(tasks)) {
+>> >                 /* ... */
+>> >                 switch (env->migration_type) {
+>> >                 case migrate_load:
+>> >                         load = task_h_load_upscaled(p);
+>> >                         /* ... usual bits here ...*/
+>> >                         lsub_positive(&env->imbalance, load);
+>> >                         break;
+>> >                         /* ... */
+>> >                 }
+>> >
+>> >                 if (!scale_load_down(env->imbalance))
+>> >                         break;
+>> >         }
+>> > }
+>> > ---
+>> >
+>> > It's not perfect, and there's still the misfit situation to sort out -
+>> > still, do you think this is something we could go towards?
+>>
+>> This will not work for 32bits system.
+>>
+>> For 64bits, I have to think a bit more if the upscale would fix all
+>> cases and support propagation across a hierarchy. And in this case we
+>> could also consider to make scale_load/scale_load_down a nop all the
+>> time
 >
-> How's this? it removes a level of indirection and a bunch of repetition.
-
-ACK, for the extra level of indirection removed.
-
-> It's also more than 200 lines shorter.
-...
-> +#define __to_seqcount_t(s)	(seqcount_t *)(s)
-...
-> +#define read_seqcount_begin(s)	do_read_seqcount_begin(__to_seqcount_t(s))
-> +
-> +static inline unsigned do_read_seqcount_begin(const seqcount_t *s)
-> +{
-...
-
-Hmm, the __to_seqcount_t(s) force cast is not good. It will break the
-arguments type-safety of seqcount macros that do not have either:
-
-    __associated_lock_is_preemptible() or
-    __assert_associated_lock_held()
-
-in their path. This basically includes all the read path macros, and
-even some others (e.g. write_seqcount_invalidate()).
-
-With the suggested force cast above, I can literally *pass anything* to
-read_seqcount_begin() and friends, and the compiler won't say a thing.
-
-So, I'll restore __to_seqcount_t(s) that to its original implementation:
-
-/*
- * @s: pointer to seqcount_t or any of the seqcount_locktype_t variants
- */
-#define __to_seqcount_t(s)						\
-({									\
-	seqcount_t *seq;						\
-									\
-	if (__same_type(*(s), seqcount_t))				\
-		seq = (seqcount_t *)(s);				\
-	else if (__same_type(*(s), seqcount_spinlock_t))		\
-		seq = &((seqcount_spinlock_t *)(s))->seqcount;		\
-	else if (__same_type(*(s), seqcount_raw_spinlock_t))		\
-		seq = &((seqcount_raw_spinlock_t *)(s))->seqcount;	\
-	else if (__same_type(*(s), seqcount_rwlock_t))			\
-		seq = &((seqcount_rwlock_t *)(s))->seqcount;		\
-	else if (__same_type(*(s), seqcount_mutex_t))			\
-		seq = &((seqcount_mutex_t *)(s))->seqcount;		\
-	else if (__same_type(*(s), seqcount_ww_mutex_t))		\
-		seq = &((seqcount_ww_mutex_t *)(s))->seqcount;		\
-	else								\
-		BUILD_BUG_ON_MSG(1, "Unknown seqcount type");		\
-									\
-	seq;								\
-})
-
-Yes, I know, it's not the prettiest thing in the world, but I'd take
-ugly over breaking the compiler type checks any day.
-
->
-> It doesn't provide SEQCNT_LOCKTYPE_ZERO() for each LOCKTYPE, but you can
-> use this one macro for any LOCKTYPE.
->
-
-From call-sites perspectives, SEQCNT_SPINLOCK_ZERO() is much more
-readable than SEQCNT_LOCKTYPE_ZERO() and so on. It only costs us 5 lines
-*for all* the seqcount lock types. IMHO it's worth the trade-off.
-
->
-> So I applied it all yesterday and tried to make sense of the resulting
-> indirections and couldn't find stuff -- because it was hidding in
-> another file.
->
-> Specifically I disliked that *seqcount_t* naming and didn't see how it
-> all connected.
+> In addition that problem remains on 32bits, the problem can still
+> happen after extending the scale so this current patch still makes
+> sense.
 >
 
-Hmm, the idea was that write_seqcount_t_begin() and friends applies only
-to plain old "seqcount_t". But, yes, I agree, it's confusing as hell.
+Right, I think we'd want to have that at the very least for 32bit anyway. I
+haven't done the math, but doesn't it require an obscene amount of tasks
+for that to still happen on 64bit with the increased resolution?
 
-The way you've organized the macros is much more readable, so thanks a
-lot, I'll incorporate that in v4.
+> Then if we want to reduce the cases where task_h_load returns 0, we
+> should better make scale_load_down a nop otherwise we will have to
+> maintain 2 values h_load and scale_h_load across the hierarchy
+>
 
-Kind regards,
+I don't fully grasp yet how much surgery that would require, but it does
+sound like something we've been meaning to do, see e.g. se_weight:
 
---
-Ahmed S. Darwish
-Linutronix GmbH
+ * XXX we want to get rid of these helpers and use the full load resolution.
