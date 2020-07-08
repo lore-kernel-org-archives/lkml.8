@@ -2,81 +2,211 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D13CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88F59206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:39:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gup3UjF+"
+	by mail.kernel.org (Postfix) with ESMTP id 6E47320720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgGHMjo (ORCPT
+        id S1729243AbgGHMky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:39:44 -0400
-Received: from casper.infradead.org ([90.155.50.34]:33940 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgGHMjo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:39:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=GkrkQYGdmQJutQEhdY7I3KafDobNvEk6jvWbehB6Yvo=; b=gup3UjF+a9lZXCFX1oFt0a0yT/
-        vOFSQWZPV7z0jSBaBnjGdFxv4Wp0R/VWpOardAZN6Du3P2Pn0a1PPkG4gASM9GFzSGF5qFMMEMx+a
-        7TDzUU2cSoMGOe0J1FIdKx4hyvINKP3Z2jQFmUr+5GkS79X+xFT/oM6QIGB2BVVOqB7x5vHl4MQGX
-        lL/yyxMZA0NDJPm90i6e1lVgTqfgRqzZWB45IcpQ8cc4QXCqPLORbvXgXSmBtaZtEmBkSxl+tIH+r
-        Hb12BFJuWwp14y4Pgt6c4qOqcs0fAf4zDFwYXU7hwD5FoxUpGPcIYDpJj+Q1r+klFjx/2ooMBZhci
-        PL1pxk7A==;
-Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jt9MF-0002M4-QH; Wed, 08 Jul 2020 12:39:34 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Song Liu <song@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 5/6] xtensa/simdisk: remove the call to check_disk_change
-Date:   Wed,  8 Jul 2020 14:25:45 +0200
-Message-Id: <20200708122546.214579-6-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200708122546.214579-1-hch@lst.de>
-References: <20200708122546.214579-1-hch@lst.de>
+        Wed, 8 Jul 2020 08:40:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34680 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728918AbgGHMkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 08:40:53 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 18210E1EC47F2B394025;
+        Wed,  8 Jul 2020 20:40:51 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.174.186.75) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 8 Jul 2020 20:40:40 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
+        <guohanjun@huawei.com>, <olof@lixom.net>
+CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+Subject: [RFC PATCH v5 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
+Date:   Wed, 8 Jul 2020 20:40:31 +0800
+Message-ID: <20200708124031.1414-3-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
+In-Reply-To: <20200708124031.1414-1-yezhenyu2@huawei.com>
+References: <20200708124031.1414-1-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.186.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The simdisk driver doesn't support event notifications, which means
-that check_disk_change is a no-op.
+Add __TLBI_VADDR_RANGE macro and rewrite __flush_tlb_range().
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+In this patch, we only use the TLBI RANGE feature if the stride == PAGE_SIZE,
+because when stride > PAGE_SIZE, usually only a small number of pages need
+to be flushed and classic tlbi intructions are more effective.
+
+We can also use 'end - start < threshold number' to decide which way
+to go, however, different hardware may have different thresholds, so
+I'm not sure if this is feasible.
+
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
 ---
- arch/xtensa/platforms/iss/simdisk.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm64/include/asm/tlbflush.h | 104 ++++++++++++++++++++++++++----
+ 1 file changed, 90 insertions(+), 14 deletions(-)
 
-diff --git a/arch/xtensa/platforms/iss/simdisk.c b/arch/xtensa/platforms/iss/simdisk.c
-index 5107140dbb7edc..3447556d276d32 100644
---- a/arch/xtensa/platforms/iss/simdisk.c
-+++ b/arch/xtensa/platforms/iss/simdisk.c
-@@ -127,8 +127,6 @@ static int simdisk_open(struct block_device *bdev, fmode_t mode)
- 	struct simdisk *dev = bdev->bd_disk->private_data;
+diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+index bc3949064725..30975ddb8f06 100644
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -50,6 +50,16 @@
+ 		__tlbi(op, (arg) | USER_ASID_FLAG);				\
+ } while (0)
  
- 	spin_lock(&dev->lock);
--	if (!dev->users)
--		check_disk_change(bdev);
- 	++dev->users;
- 	spin_unlock(&dev->lock);
- 	return 0;
++#define __tlbi_last_level(op1, op2, arg, last_level) do {		\
++	if (last_level)	{						\
++		__tlbi(op1, arg);					\
++		__tlbi_user(op1, arg);					\
++	} else {							\
++		__tlbi(op2, arg);					\
++		__tlbi_user(op2, arg);					\
++	}								\
++} while (0)
++
+ /* This macro creates a properly formatted VA operand for the TLBI */
+ #define __TLBI_VADDR(addr, asid)				\
+ 	({							\
+@@ -59,6 +69,60 @@
+ 		__ta;						\
+ 	})
+ 
++/*
++ * Get translation granule of the system, which is decided by
++ * PAGE_SIZE.  Used by TTL.
++ *  - 4KB	: 1
++ *  - 16KB	: 2
++ *  - 64KB	: 3
++ */
++static inline unsigned long get_trans_granule(void)
++{
++	switch (PAGE_SIZE) {
++	case SZ_4K:
++		return 1;
++	case SZ_16K:
++		return 2;
++	case SZ_64K:
++		return 3;
++	default:
++		return 0;
++	}
++}
++
++/*
++ * This macro creates a properly formatted VA operand for the TLBI RANGE.
++ * The value bit assignments are:
++ *
++ * +----------+------+-------+-------+-------+----------------------+
++ * |   ASID   |  TG  | SCALE |  NUM  |  TTL  |        BADDR         |
++ * +-----------------+-------+-------+-------+----------------------+
++ * |63      48|47  46|45   44|43   39|38   37|36                   0|
++ *
++ * The address range is determined by below formula:
++ * [BADDR, BADDR + (NUM + 1) * 2^(5*SCALE + 1) * PAGESIZE)
++ *
++ */
++#define __TLBI_VADDR_RANGE(addr, asid, scale, num, ttl)		\
++	({							\
++		unsigned long __ta = (addr) >> PAGE_SHIFT;	\
++		__ta &= GENMASK_ULL(36, 0);			\
++		__ta |= (unsigned long)(ttl) << 37;		\
++		__ta |= (unsigned long)(num) << 39;		\
++		__ta |= (unsigned long)(scale) << 44;		\
++		__ta |= get_trans_granule() << 46;		\
++		__ta |= (unsigned long)(asid) << 48;		\
++		__ta;						\
++	})
++
++/* These macros are used by the TLBI RANGE feature. */
++#define __TLBI_RANGE_PAGES(num, scale)	(((num) + 1) << (5 * (scale) + 1))
++#define MAX_TLBI_RANGE_PAGES		__TLBI_RANGE_PAGES(31, 3)
++
++#define TLBI_RANGE_MASK			GENMASK_ULL(4, 0)
++#define __TLBI_RANGE_NUM(range, scale)	\
++	(((range) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK)
++
+ /*
+  *	TLB Invalidation
+  *	================
+@@ -181,32 +245,44 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+ 				     unsigned long start, unsigned long end,
+ 				     unsigned long stride, bool last_level)
+ {
++	int num = 0;
++	int scale = 0;
+ 	unsigned long asid = ASID(vma->vm_mm);
+ 	unsigned long addr;
++	unsigned long range_pages;
+ 
+ 	start = round_down(start, stride);
+ 	end = round_up(end, stride);
++	range_pages = (end - start) >> PAGE_SHIFT;
+ 
+-	if ((end - start) >= (MAX_TLBI_OPS * stride)) {
++	if ((!cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
++	    (end - start) >= (MAX_TLBI_OPS * stride)) ||
++	    range_pages >= MAX_TLBI_RANGE_PAGES) {
+ 		flush_tlb_mm(vma->vm_mm);
+ 		return;
+ 	}
+ 
+-	/* Convert the stride into units of 4k */
+-	stride >>= 12;
+-
+-	start = __TLBI_VADDR(start, asid);
+-	end = __TLBI_VADDR(end, asid);
+-
+ 	dsb(ishst);
+-	for (addr = start; addr < end; addr += stride) {
+-		if (last_level) {
+-			__tlbi(vale1is, addr);
+-			__tlbi_user(vale1is, addr);
+-		} else {
+-			__tlbi(vae1is, addr);
+-			__tlbi_user(vae1is, addr);
++	while (range_pages > 0) {
++		if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
++		    stride == PAGE_SIZE && range_pages % 2 == 0) {
++			num = __TLBI_RANGE_NUM(range_pages, scale) - 1;
++			if (num >= 0) {
++				addr = __TLBI_VADDR_RANGE(start, asid, scale,
++							  num, 0);
++				__tlbi_last_level(rvale1is, rvae1is, addr,
++						  last_level);
++				start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT;
++				range_pages -= __TLBI_RANGE_PAGES(num, scale);
++			}
++			scale++;
++			continue;
+ 		}
++
++		addr = __TLBI_VADDR(start, asid);
++		__tlbi_last_level(vale1is, vae1is, addr, last_level);
++		start += stride;
++		range_pages -= stride >> PAGE_SHIFT;
+ 	}
+ 	dsb(ish);
+ }
 -- 
-2.26.2
+2.19.1
+
 
