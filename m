@@ -2,126 +2,112 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FF0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 688FB20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7BD420720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:24:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gPz3zvQU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwWyabp3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgGHMYU (ORCPT
+        id S1729080AbgGHMY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58812 "EHLO
+        Wed, 8 Jul 2020 08:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728932AbgGHMYT (ORCPT
+        with ESMTP id S1728962AbgGHMY4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:24:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6533C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:24:19 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z13so48756940wrw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:24:19 -0700 (PDT)
+        Wed, 8 Jul 2020 08:24:56 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55150C08C5DC;
+        Wed,  8 Jul 2020 05:24:56 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id y18so26754179lfh.11;
+        Wed, 08 Jul 2020 05:24:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=fOlHxGSRj06P9BZIF8Kv7DAI1DiEsA0q4WltzXak3yw=;
-        b=gPz3zvQU0WZtncU/3eUeWCNpU9g0Ks8PoxQeRPsXfvxCSwQNsqLkQd35HIZ0tPPRc+
-         4Eg+qtfjnhP6J107ISH8lQHSwdCDqIoCynWRwz1P8WL2EoBch8GkljgTa5XcKRXNhUzv
-         o8wdZ/NqScC99jGoywmam8XNmTxO9zMz5NhqEy5tlFUTvBEN70wC8FlJQrDfD+Vfvtf1
-         SWBJlbHhJtZJP+vUbANgPUc7JZ3U3hyeZMNzjjpKY5bXForcdaRNo76u2tv5qy53HReS
-         Arftqmr60WfO7YFdnE/WZS2ahtoavPOk75OhKfAfy+tRGE3o5/S/ahTC4pqPAuGDJcq2
-         puCw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=wRfYf9+0jNfHxoYYxZ5ja9edb0dG8oz4UcCO/asf8rc=;
+        b=uwWyabp3SiFKU2xwDTEGmDd5ys6f+Vq7OCW0EpPtzKf9aG0qyLNpNhxM4icWTKy6FF
+         Un9rEZtgEP7tetjEiAGkQ9jjzNFR5j3UumjcAPBpZ31MSvuK49WMdbmpmDnyXlEJjpWV
+         eNAzr9eZBFVCQjn01MvBlu+HsOEQi877BSkMnQCepaosLCc0LF+8zbdye6t4HWEOfVgO
+         cJIzG9MUhxnImmHN0Sqa0dazarBU2/3oDcLXI4AUUPGlQC2ZNI7Sfc7yhUs7CzWHqlXR
+         ZYXZRu3qyxhgmwt5o6nTCln9yf9nigl4KMGcLizqLSuk31a5QU3s1p5+Z+TsC5gLVgDl
+         GXSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=fOlHxGSRj06P9BZIF8Kv7DAI1DiEsA0q4WltzXak3yw=;
-        b=jEXSnXjH11pvb71ZeD6Xrp8Jo/i99uybDtgsV9c3TyvOq3X05gUyV117mPcLaw3acL
-         pHkU6WctJ/gM91dyXKNFSzCF8kGi0UEQZZm8Tgt4o9Y6ka8jFrZaH61H86Z1j2pyFYoR
-         1Lvv9A7kf712lXzg+B/OKNSVfs6HJPKKe2kgPMuCrCoNxrqRxzh8GrnMmLUTVL7WXn4I
-         kHqKdXpaAqs3wd4MB+iJoKfryix/atSjC/3lVMOb7kc8WEGclRWfWzxwWD/PTlDzXVhz
-         wGkdz1FVN7i3mLpgV6vdzYDcCKRku959+9+GwetttRQuUxZkKOTPCUcCNdWBtdm35uCk
-         t3MA==
-X-Gm-Message-State: AOAM530LhQAzrcMzWJM2REc4cbGSP7qkx1OYu9pBS93nbxX40jKNjjb0
-        rD+TKm5zgRazphmbsueAKheZ4g==
-X-Google-Smtp-Source: ABdhPJzV6hwPkr3yVGxrp+dEtiQGc4oEE5HySdPNkm60AIPhpWAm/innAVpEssqKfWXzUwzLwSnTiQ==
-X-Received: by 2002:a5d:5388:: with SMTP id d8mr57509451wrv.35.1594211058441;
-        Wed, 08 Jul 2020 05:24:18 -0700 (PDT)
-Received: from dell ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id 69sm2446679wma.16.2020.07.08.05.24.17
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=wRfYf9+0jNfHxoYYxZ5ja9edb0dG8oz4UcCO/asf8rc=;
+        b=i9lxebmitMQaY7wjMi8rWXuO/BN2iL9VqaqAvqvy3ssrUMwkB3Fh9V0AeGy1NL7wKi
+         Py3DgcRRcbxbAfiBLPDs/mbY4iKr1pCCFVcWlUhvtdWltl39fO7oH6Ja0cXmn8qEw4kH
+         Q/hn+FVNGc6Cs6k2srTLTkZeFx+GQbOa2y8INZiIwcKAnWALY0/DKyRhabH0bLN82ZTI
+         1ex7QQIlAdo+E3+vmB5du2h9Z4Xsa4ixlSi05edFM3W46hGoZY6ZYBfZwgk0fB3dCV77
+         vQRKDMsjNKB8alr92XtwzUlVnQ7xD3ytZnX2nC72ep4odU9hDDYP8Mos4Gb+SFCFf0p3
+         nBMQ==
+X-Gm-Message-State: AOAM530MADd0AC9Qklw43HhDPktrRXGh48sGa7nTXmn+RRvVOTg/fZCE
+        bvG/5kz6Wfaep2fEv5VMA0YJp+fV
+X-Google-Smtp-Source: ABdhPJz/erzMJubNiiU6rpmxuhAY5hO2iSwH7s0PcBwYwad2yhmmdkm07bRVeEGarVCNn0VmeXrw2g==
+X-Received: by 2002:ac2:44cd:: with SMTP id d13mr35691627lfm.13.1594211094853;
+        Wed, 08 Jul 2020 05:24:54 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id p1sm881595lji.93.2020.07.08.05.24.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:24:17 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 13:24:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc:     "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH 13/30] scsi: libfc: fc_rport: Fix bitrotted function
- parameter and copy/paste error
-Message-ID: <20200708122416.GU3500@dell>
-References: <20200708120221.3386672-1-lee.jones@linaro.org>
- <20200708120221.3386672-14-lee.jones@linaro.org>
- <SN4PR0401MB3598A5AF95715606071A64939B670@SN4PR0401MB3598.namprd04.prod.outlook.com>
+        Wed, 08 Jul 2020 05:24:53 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
+ current kernel time
+References: <20200706142616.25192-1-sorganov@gmail.com>
+        <20200706142616.25192-4-sorganov@gmail.com>
+        <20200706152721.3j54m73bm673zlnj@skbuf> <20200708110444.GD9080@hoboy>
+Date:   Wed, 08 Jul 2020 15:24:52 +0300
+In-Reply-To: <20200708110444.GD9080@hoboy> (Richard Cochran's message of "Wed,
+        8 Jul 2020 04:04:44 -0700")
+Message-ID: <87sge2b3e3.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SN4PR0401MB3598A5AF95715606071A64939B670@SN4PR0401MB3598.namprd04.prod.outlook.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Jul 2020, Johannes Thumshirn wrote:
+Richard Cochran <richardcochran@gmail.com> writes:
 
-> On 08/07/2020 14:04, Lee Jones wrote:
-> > Description should state 'remote' port, not 'local'.
-> > 
-> > Fixes the following W=1 kernel build warning(s):
-> > 
-> >  drivers/scsi/libfc/fc_rport.c:1452: warning: Function parameter or member 'rdata_arg' not described in 'fc_rport_logo_resp'
-> >  drivers/scsi/libfc/fc_rport.c:1452: warning: Excess function parameter 'rport_arg' description in 'fc_rport_logo_resp'
-> > 
-> > Cc: Hannes Reinecke <hare@suse.de>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/scsi/libfc/fc_rport.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/scsi/libfc/fc_rport.c b/drivers/scsi/libfc/fc_rport.c
-> > index ea99e69d4d89c..18663a82865f9 100644
-> > --- a/drivers/scsi/libfc/fc_rport.c
-> > +++ b/drivers/scsi/libfc/fc_rport.c
-> > @@ -1445,7 +1445,7 @@ static void fc_rport_recv_rtv_req(struct fc_rport_priv *rdata,
-> >   * fc_rport_logo_resp() - Handler for logout (LOGO) responses
-> >   * @sp:	       The sequence the LOGO was on
-> >   * @fp:	       The LOGO response frame
-> > - * @rport_arg: The local port
-> > + * @rdata_arg: The remote port
-> >   */
-> >  static void fc_rport_logo_resp(struct fc_seq *sp, struct fc_frame *fp,
-> >  			       void *rdata_arg)
-> > 
-> 
-> 
-> Please fold this into patch 11
+> On Mon, Jul 06, 2020 at 06:27:21PM +0300, Vladimir Oltean wrote:
+>> There's no correct answer, I'm afraid. Whatever the default value of the
+>> clock may be, it's bound to be confusing for some reason, _if_ the
+>> reason why you're investigating it in the first place is a driver bug.
+>> Also, I don't really see how your change to use Jan 1st 1970 makes it
+>> any less confusing.
+>
+> +1
+>
+> For a PHC, the user of the clock must check the PTP stack's
+> synchronization flags via the management interface to know the status
+> of the time signal.
 
-Yes, will do.
+Sorry, but I'm looking at it from the POV of PTP stack, so I don't have
+another one to check.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+If PTP clock itself had some means of checking for its quality (like
+last time is was synchronized, skew and offset estimations at that time,
+etc.), then it'd render its initial value mostly unimportant indeed.
+
+But even then, the original problem was that Ethernet packets were time
+stamped with the wrong (different) PTP clock, and there is no any flags
+or clock ID in the time stamp of Ethernet packet, so any flags attached
+to PTP clock are still useless.
+
+Thanks,
+-- Sergey
