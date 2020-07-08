@@ -2,60 +2,60 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B965C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B66DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7500920708
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DDE420708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgGHC5q (ORCPT
+        id S1728945AbgGHDBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 22:57:46 -0400
-Received: from mga01.intel.com ([192.55.52.88]:49034 "EHLO mga01.intel.com"
+        Tue, 7 Jul 2020 23:01:43 -0400
+Received: from mga06.intel.com ([134.134.136.31]:4545 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgGHC5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 22:57:45 -0400
-IronPort-SDR: OKbL1/TCwglT8Q9ZG4G+pz0je+FL7LktRmZhpap1dBCNrT0DeSDZXLIOF0pc0qQQ0lsj0gS09E
- N4yHcOi2NS/w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="165802807"
+        id S1727090AbgGHDBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 23:01:42 -0400
+IronPort-SDR: ywg8kFMVeHRaBPsbtyBImv8Yt9+kf3pCRtnyotr8raXpvLSj/wRhf7bKb0rOnXjoiwuAznpFfs
+ DKPyvdCFNEWQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="209262496"
 X-IronPort-AV: E=Sophos;i="5.75,326,1589266800"; 
-   d="scan'208";a="165802807"
+   d="scan'208";a="209262496"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 19:57:44 -0700
-IronPort-SDR: NWBGavxXZ0Y2OEfeOpa5yL3dbxWEkLftrQJ1t6KHDS/S4/wLSkPMlMJ/7R0rlPEJGtpdkhJq4B
- C2UnIQJWPqPw==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 20:01:41 -0700
+IronPort-SDR: 53MXg6JC8/ldzupZuZGVwXnLxqSk67uBstvzQd1c3wfwjTER94izOmkRamS0VnjsQm2vyHA1F+
+ iBkP7NG/GuNA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,326,1589266800"; 
-   d="scan'208";a="457339798"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by orsmga005.jf.intel.com with ESMTP; 07 Jul 2020 19:57:41 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] iommu: iommu_aux_at(de)tach_device() extension
-To:     Alex Williamson <alex.williamson@redhat.com>
-References: <20200707013957.23672-1-baolu.lu@linux.intel.com>
- <20200707013957.23672-2-baolu.lu@linux.intel.com>
- <20200707150408.474d81f1@x1.home>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <dc98a109-7121-36b7-0854-f899b09692a4@linux.intel.com>
-Date:   Wed, 8 Jul 2020 10:53:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+   d="scan'208";a="279808812"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 07 Jul 2020 20:01:41 -0700
+Received: from [10.251.29.218] (kliang2-mobl.ccr.corp.intel.com [10.251.29.218])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 0DC7B5805A3;
+        Tue,  7 Jul 2020 20:01:39 -0700 (PDT)
+Subject: Re: [PATCH 1/7] PCI/portdrv: Create a platform device for the perf
+ uncore driver
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     peterz@infradead.org, bhelgaas@google.com, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        jeffrey.t.kirsher@intel.com, olof@lixom.net,
+        dan.j.williams@intel.com, ak@linux.intel.com,
+        Stephane Eranian <eranian@google.com>
+References: <20200707194830.GA372615@bjorn-Precision-5520>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <59a4eb9f-3956-1788-33ed-5cc9911b5b1e@linux.intel.com>
+Date:   Tue, 7 Jul 2020 23:01:38 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200707150408.474d81f1@x1.home>
+In-Reply-To: <20200707194830.GA372615@bjorn-Precision-5520>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -64,97 +64,206 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
 
-Thanks a lot for your comments. Please check my reply inline.
 
-On 7/8/20 5:04 AM, Alex Williamson wrote:
-> On Tue,  7 Jul 2020 09:39:56 +0800
-> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+On 7/7/2020 3:48 PM, Bjorn Helgaas wrote:
+> [+cc Stephane in case he has thoughts on the perf driver claim issue]
 > 
->> The hardware assistant vfio mediated device is a use case of iommu
->> aux-domain. The interactions between vfio/mdev and iommu during mdev
->> creation and passthr are:
+> On Thu, Jul 02, 2020 at 10:05:11AM -0700, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
 >>
->> - Create a group for mdev with iommu_group_alloc();
->> - Add the device to the group with
->>          group = iommu_group_alloc();
->>          if (IS_ERR(group))
->>                  return PTR_ERR(group);
+>> On Snow Ridge server, several performance monitoring counters are added
+>> in the Root Port Configuration Space of CPU Complex PCIe Root Ports A,
+>> which can be used to collect the performance data between the PCIe
+>> devices and the components (in M2IOSF) which are responsible for
+>> translating and managing the requests to/from the device. The
+>> performance data is very useful for analyzing the performance of the
+>> PCIe devices.
 >>
->>          ret = iommu_group_add_device(group, &mdev->dev);
->>          if (!ret)
->>                  dev_info(&mdev->dev, "MDEV: group_id = %d\n",
->>                           iommu_group_id(group));
->> - Allocate an aux-domain
->>          iommu_domain_alloc()
->> - Attach the aux-domain to the physical device from which the mdev is
->>    created.
->>          iommu_aux_attach_device()
+>> However, the perf uncore driver cannot be loaded to register a
+>> performance monitoring unit (PMU) for the counters, because the PCIe
+>> Root Ports device already has a bonded driver portdrv_pci.
 >>
->> In the whole process, an iommu group was allocated for the mdev and an
->> iommu domain was attached to the group, but the group->domain leaves
->> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
+>> To enable the uncore PMU support for these counters on the uncore
+>> driver, a new solution should be introduced, which has to meet the
+>> requirements as below:
+>> - must have a reliable way to find the PCIe Root Port device from the
+>>    uncore driver;
+>> - must be able to access the uncore counters of the PCIe Root Port
+>>    device from the uncore driver;
+>> - must support hotplug. When the PCIe Root Port device is removed, the
+>>    uncore driver has to be notified and unregisters the uncore PMU.
 >>
->> The iommu_get_domain_for_dev() is a necessary interface for device
->> drivers that want to support aux-domain. For example,
->>
->>          struct iommu_domain *domain;
->>          struct device *dev = mdev_dev(mdev);
->>          unsigned long pasid;
->>
->>          domain = iommu_get_domain_for_dev(dev);
->>          if (!domain)
->>                  return -ENODEV;
->>
->>          pasid = iommu_aux_get_pasid(domain, dev->parent);
-> How did we know this was an aux domain? ie. How did we know we could
-> use it with iommu_aux_get_pasid()?
-
-Yes. It's a bit confusing if iommu_get_domain_for_dev() is reused here
-for aux-domain.
-
+>> A new platform device 'perf_uncore_pcieport' is introduced as part of
+>> the new solution, which can facilitate the enabling of the uncore PMU in
+>> the uncore driver. The new platform device
+>> - is a child device of the PCIe Root Port device. It's allocated when
+>>    the PCIe Root Ports A device is probed. (For SNR, the PMU counters are
+>>    only located in the configuration space of the PCIe Root Ports A.)
+>> - stores its pdev as the private driver data pointer of the PCIe Root
+>>    Ports A. The pdev can be easily retrieved to check the existence of
+>>    the platform device when removing the PCIe Root Ports A.
+>> - is unregistered when the PCIe Root Port A is removed. The remove()
+>>    method which is provided in the uncore driver will be invoked. The
+>>    uncore PMU will be unregistered as well.
+>> - doesn't share any memory and IRQ resources. The uncore driver will
+>>    only touch the PMU counters in the configuration space of the PCIe
+>>    Root Port A.
 > 
-> Why did we assume the parent device is the iommu device for the aux
-> domain?  Should that level of detail be already known by the aux domain?
+> I have to admit this is clever.  I don't really *like* it, but we
+> don't have any very good alternatives at the moment.
 > 
-> Nits - The iomu device of an mdev device is found via
-> mdev_get_iommu_device(dev), it should not be assumed to be the parent.
-> The parent of an mdev device is found via mdev_parent_dev(mdev).
+> I don't like the idea of a list of PCI IDs
+> (perf_uncore_pcieport_ids[]) below that must be updated for every
+> device that needs something like this.  That PCI ID information is
+> normally in the drivers themselves, not in bus-level code like this.
+>
 
-My bad. The driver should use mdev_get_iommu_device() instead.
+I don't want to create a platform device for every single device. So I 
+added a check here. Yes, it doesn't look pretty, but I don't have a 
+better solution for now.
 
+> And I don't like the way this subverts the device ownership model.
+> Now we have several drivers (pciehp, aer, dpc, etc, plus this new perf
+> driver) that share the same PCI device.  And we rely on the assumption
+> that none of these drivers interferes with the others.
 > 
-> The leaps in logic here make me wonder if we should instead be exposing
-> more of an aux domain API rather than blurring the differences between
-> these domains.  Thanks,
+> I think the best way to deal with this would be to incorporate the
+> existing portdrv users (pciehp, aer, dpc, etc) directly into the PCI
+> core so portdrv would not use pci_register_driver(), leaving the Root
+> Port device available for the perf driver to claim it the normal way.
+> But realistically I don't know when or even whether this will be done.
+> 
+> I think Stephane has worked around this problem in a different way,
+> IIRC by using pci_get_device() in a perf driver to find Ports of
+> interest.  That also subverts the device ownership model, and it
+> doesn't work naturally with hotplug, but at least it gets the device
+> IDs out of the PCI core and into the driver where they belong.  And
+> there's value in solving the same problem in the same way.
+> 
+> Wait a minute!  You've already used the pci_get_device() strategy
+> several times:
+> 
+>    2b3b76b5ec67 ("perf/x86/intel/uncore: Add Ice Lake server uncore support")
+>    fdb64822443e ("perf/x86: Add Intel Tiger Lake uncore support")
+>    ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
+> 
+> So what's really different about *this* situation?  Why would you not
+> just continue using the same strategy?
+>
 
-How about add below API?
+There are three different methods (MSR, PCICFG, and MMIO) to access the 
+uncore counter, while each counter can only accessed using one of the 
+method. Many devices have uncore counters. All counters on the same 
+device must be accessed using the same method.
 
-/**
-  * iommu_aux_get_domain_for_dev - get aux domain for a device
-  * @dev: the accessory device
-  *
-  * The caller should pass a valid @dev to iommu_aux_attach_device() before
-  * calling this api. Return an attached aux-domain, or NULL otherwise.
-  */
-struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
-{
-         struct iommu_domain *domain = NULL;
-         struct iommu_group *group;
+The perf uncore driver abstracts three code paths for the above three 
+different methods. Each code path is shared among the devices which have 
+the corresponding access method.
 
-         group = iommu_group_get(dev);
-         if (!group)
-                 return NULL;
+The pci_get_device() strategy is used by the device in which counters 
+can be accessed by MMIO. Currently, the only such device is the IMC 
+(Integrated Memory Controller) device. The problem is that the BAR 
+address of the IMC counters is located in the PCI Configuration Space of 
+the Configuration Agent (Ubox) device. The perf driver is not supposed 
+to bind the Ubox device while accessing the counters in another device, 
+the IMC device. So the pci_get_device() is used to retrieve the pci_dev 
+of the Ubox. The perf driver reads the BAR address from the Ubox and 
+maps it to access the IMC counters.
 
-         if (group->aux_domain_attached)
-                 domain = group->domain;
+The counters in the Root Port device are in the PCI configuration space 
+of the device. For a device whose counters are in the PCI configuration 
+space of itself, the perf driver should probe and bind the device. 
+However, the Root Port device is already bound by the portdrv driver.
+To maximize the code reuse in the perf driver, a platform device is 
+introduced as a child of the Root Port device. So the perf driver can 
+probe and bind the platform device in a similar method.
 
-         iommu_group_put(group);
+The pci_get_device() strategy may work for the case, but from the 
+perspective of the perf driver, I don't thing it's a good solution. We 
+have to specially handle the pci_get_device() strategy in the code path 
+of the PCICFG access method. Also, it's not a complete solution, e.g. as 
+you said it doesn't work naturally with hotplug.
 
-         return domain;
-}
-EXPORT_SYMBOL_GPL(iommu_aux_get_domain_for_dev);
 
-Best regards,
-baolu
+Thanks,
+Kan
+
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>   drivers/pci/pcie/portdrv_pci.c | 38 ++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 38 insertions(+)
+>>
+>> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+>> index 3acf151..47e33b2 100644
+>> --- a/drivers/pci/pcie/portdrv_pci.c
+>> +++ b/drivers/pci/pcie/portdrv_pci.c
+>> @@ -15,6 +15,7 @@
+>>   #include <linux/init.h>
+>>   #include <linux/aer.h>
+>>   #include <linux/dmi.h>
+>> +#include <linux/platform_device.h>
+>>   
+>>   #include "../pci.h"
+>>   #include "portdrv.h"
+>> @@ -90,6 +91,40 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
+>>   #define PCIE_PORTDRV_PM_OPS	NULL
+>>   #endif /* !PM */
+>>   
+>> +static const struct pci_device_id perf_uncore_pcieport_ids[] = {
+>> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a) },
+>> +	{ },
+>> +};
+>> +
+>> +static void perf_platform_device_register(struct pci_dev *dev)
+>> +{
+>> +	struct platform_device *pdev;
+>> +
+>> +	if (!pci_match_id(perf_uncore_pcieport_ids, dev))
+>> +		return;
+>> +
+>> +	pdev = platform_device_alloc("perf_uncore_pcieport", PLATFORM_DEVID_AUTO);
+>> +	if (!pdev)
+>> +		return;
+>> +
+>> +	pdev->dev.parent = &dev->dev;
+>> +
+>> +	if (platform_device_add(pdev)) {
+>> +		platform_device_put(pdev);
+>> +		return;
+>> +	}
+>> +
+>> +	pci_set_drvdata(dev, pdev);
+>> +}
+>> +
+>> +static void perf_platform_device_unregister(struct pci_dev *dev)
+>> +{
+>> +	struct platform_device *pdev = pci_get_drvdata(dev);
+>> +
+>> +	if (pdev)
+>> +		platform_device_unregister(pdev);
+>> +}
+>> +
+>>   /*
+>>    * pcie_portdrv_probe - Probe PCI-Express port devices
+>>    * @dev: PCI-Express port device being probed
+>> @@ -113,6 +148,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>>   	if (status)
+>>   		return status;
+>>   
+>> +	perf_platform_device_register(dev);
+>> +
+>>   	pci_save_state(dev);
+>>   
+>>   	dev_pm_set_driver_flags(&dev->dev, DPM_FLAG_NO_DIRECT_COMPLETE |
+>> @@ -142,6 +179,7 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+>>   		pm_runtime_dont_use_autosuspend(&dev->dev);
+>>   	}
+>>   
+>> +	perf_platform_device_unregister(dev);
+>>   	pcie_port_device_remove(dev);
+>>   }
+>>   
+>> -- 
+>> 2.7.4
+>>
