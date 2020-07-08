@@ -2,141 +2,183 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAB3E206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E23206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:38:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="EvVxKg8S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LMu6SvHE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbgGHGhF (ORCPT
+        id S1729780AbgGHGiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 02:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32816 "EHLO
+        Wed, 8 Jul 2020 02:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729741AbgGHGhE (ORCPT
+        with ESMTP id S1729465AbgGHGiQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 02:37:04 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D8CC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 23:37:04 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id a14so14951781pfi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 23:37:04 -0700 (PDT)
+        Wed, 8 Jul 2020 02:38:16 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D37E2C08C5DC
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 23:38:15 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id s16so20733168lfp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 23:38:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ck5aijhNng/ZXTjfuRPiw9zt4tyG0HNHaHu36lpohaw=;
-        b=EvVxKg8SmOXYYxSKF0LAEHL0ilmOXKMGIk1SJmXFRrW0410UUsrxxXjefx2ki89rM/
-         Eo9IeiL0prPgsHdgFNteVzXwGzVqYHK92zbKquNTwJgewAKQzoLMsTys4SwAa0tzWNCy
-         cebRZ8igu6gkcDkgemmQo4AHIAH4sV19lyVU8=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zRtYHN/dFZrk1ux8vnWM3v0UCwP4oOiGgHpRqcmPS8o=;
+        b=LMu6SvHENu7qAl7iaQKssVUVU2fFV3prwXleYo8OZ2YOskTY+Uy0M+ixE/GbHKxR7g
+         ee3lviZXot7ELUA0D4XSVDI2xfGleAqvtT6ZE3PKLhLX/5npgA0X5wOyxWJy9UlX3btl
+         hbcdOSQRFMoYsGYT7CACpZElXQHC/kC/S3MxpuQj03ZMZjYLnBoN7tPwRkGFsfP23F6a
+         zlrKPqp1k6UuQDS/gwon4SUlk9yyROrIMjWBY5KJ54xH5DN/b9QhGUKtobLqJTFuYMwJ
+         N8HUvZnjFzLZezCFsj7ude6JfO9qGstU5mswlgmNyLvm74Q2BYBODXJ4XcwkRVI4Ydj6
+         yFrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ck5aijhNng/ZXTjfuRPiw9zt4tyG0HNHaHu36lpohaw=;
-        b=DsXTJenr5kysAWZNtxhKtVCIIYir+6iLGdtT8sV+NVVbqAI4NRcTz9HdepVSsNpyj5
-         YTktw0VQP0A/Y8K1FMFnA3E/eO4MpV4n/1VhVbHmcm7FdIOrguL+V8MgIhfzI4uyk1VF
-         bpMJ+rXIjaFHxcKhj7a1PT2tmO9U9dTfa3sCGah9wr1e/bbEg+on6n+6aaBNXeuN6auN
-         oL1q5gXvR7WVrV/4dSRY0txskyPoPHZqY+i9PWK2rj+KW3XNtUB8Hl3mzg/+nXRKvjGN
-         HLeQCzQUYoTAOEGy4v1GZtUYi6Q7Y5ItO6cBxeM11Xst59iVLCx7CPPb+u1dEnguVz6R
-         0DSw==
-X-Gm-Message-State: AOAM532XvgghFSAAtNMjavQ+LR5R0LbmsmHr7rIR6gUMBgadfPmbMX7S
-        9lmw6dHoVyD9Z5b1Lo1TXfBB9Q==
-X-Google-Smtp-Source: ABdhPJzBHlW3PuvdsPhv5uf7FnA7hzZ/I3s16xAlnqqWmp4EsuILLYatSDBXsuBboI189BH4yRuRDQ==
-X-Received: by 2002:a63:a84d:: with SMTP id i13mr46447892pgp.342.1594190223800;
-        Tue, 07 Jul 2020 23:37:03 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:ade2:f5f3:8cc0:52f9])
-        by smtp.gmail.com with ESMTPSA id c12sm24587898pfn.162.2020.07.07.23.36.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 23:37:03 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc:     Tom Cubie <tom@radxa.com>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v4 4/4] ARM: dts: rockchip: Add Radxa Rock Pi N8 initial support
-Date:   Wed,  8 Jul 2020 12:06:27 +0530
-Message-Id: <20200708063627.8365-5-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200708063627.8365-1-jagan@amarulasolutions.com>
-References: <20200708063627.8365-1-jagan@amarulasolutions.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zRtYHN/dFZrk1ux8vnWM3v0UCwP4oOiGgHpRqcmPS8o=;
+        b=tx+aQkR9zPmRbN3Tc+rHGZnwXf8P3R3x+ZEOAFEXuXiymstK6/k65O+l7Mi9hKuSKq
+         e3Csc4YSh+IXMJGMrv5yy9NaK3fLC9rhJyN7KXSKziUffZRgxrGYVh56C2V9W0AkrwTo
+         3blW6XdCij/WtxvNsIHJBeJ4wp7vSO9y9tO0EVFzbSJqpIwZEWpF/SRrbN+pQIJoHaKW
+         gk+15hn8xAMwuGHOH7+g1aYzC+NapIm6kYX7pBWw/ZZObrv/wC3IBlzFAnppZBOsSxJ6
+         ENNnm/p1616A6Y+wkNM38cXDgz9YfnB92kGx7mkKQ1Ckf+cevSLoQGAe3p2L3H7toYTL
+         YhJQ==
+X-Gm-Message-State: AOAM530WMzeWGysICDIawEcem2U97PqdS1Scfrixwg6nP1/5hS2HPyXN
+        R5HvEoLEutSCo0Wm4rNtBeJjsIZwyqSnrlOCgRkE1A==
+X-Google-Smtp-Source: ABdhPJzrkBGWtHi5o2PCNj9XiCxc9fb7q7vMDN/uRp8F/piv6Qisru2h127HtJyN67/Syt+A8/DzyYEwHyYU4ujWjaI=
+X-Received: by 2002:ac2:4db2:: with SMTP id h18mr35539733lfe.167.1594190294100;
+ Tue, 07 Jul 2020 23:38:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200707145748.952502272@linuxfoundation.org>
+In-Reply-To: <20200707145748.952502272@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 8 Jul 2020 12:08:02 +0530
+Message-ID: <CA+G9fYuBk3qCrMv295RrzsXYYjR8ASz+fAeU3g70OzQmOpP_3Q@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/24] 4.9.230-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rock Pi N8 is a Rockchip RK3288 based SBC, which has
-- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
-- Compatible carrier board from Radxa.
+On Tue, 7 Jul 2020 at 20:44, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.230 release.
+> There are 24 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.230-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-VAMRC RK3288 SOM need to mount on top of radxa dalang
-carrier board for making Rock Pi N8 SBC.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-So, add initial support for Rock Pi N8 by including rk3288,
-rk3288 vamrc-som and raxda dalang carrier board dtsi files.
+Summary
+------------------------------------------------------------------------
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v4, v3:
-- none
-Changes for v2:
-- reorder dtsi include so-that common properties will
-  visible to main dts.
+kernel: 4.9.230-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: e3bed594af79a41cf71d9942b412663a8c6b4fad
+git describe: v4.9.228-216-ge3bed594af79
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.228-216-ge3bed594af79
 
- arch/arm/boot/dts/Makefile              |  1 +
- arch/arm/boot/dts/rk3288-rock-pi-n8.dts | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-rock-pi-n8.dts
+No regressions (compared to build v4.9.228)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..1d1b6ac26394 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -964,6 +964,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3288-popmetal.dtb \
- 	rk3288-r89.dtb \
- 	rk3288-rock2-square.dtb \
-+	rk3288-rock-pi-n8.dtb \
- 	rk3288-tinker.dtb \
- 	rk3288-tinker-s.dtb \
- 	rk3288-veyron-brain.dtb \
-diff --git a/arch/arm/boot/dts/rk3288-rock-pi-n8.dts b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-new file mode 100644
-index 000000000000..b19593021713
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Vamrs Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
-+
-+/dts-v1/;
-+#include "rk3288.dtsi"
-+#include <arm/rockchip-radxa-dalang-carrier.dtsi>
-+#include "rk3288-vmarc-som.dtsi"
-+
-+/ {
-+	model = "Radxa ROCK Pi N8";
-+	compatible = "radxa,rockpi-n8", "vamrs,rk3288-vmarc-som",
-+		     "rockchip,rk3288";
-+};
--- 
-2.25.1
+No fixes (compared to build v4.9.228)
 
+Ran 29962 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kselftest/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
