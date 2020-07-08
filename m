@@ -2,107 +2,122 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3893FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10662C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FAE12078A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C89206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="D3FVXjRV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZHppF9kI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbgGHCdc (ORCPT
+        id S1729326AbgGHCqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 22:33:32 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:9550 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728530AbgGHCdc (ORCPT
+        Tue, 7 Jul 2020 22:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728479AbgGHCqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 22:33:32 -0400
-Received: from pps.filterd (m0170389.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0682W6N8011832;
-        Tue, 7 Jul 2020 22:33:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=453WNEVLFenePlfQdxY9hmxsb8VTxEZMoti+bi0oWcA=;
- b=D3FVXjRVRIlT5kpdJcHZ62eTEIdMg7M6KZbZ9J5nh20YsALPvdhKbUJ44DZVLIcDiGDX
- AVkg//kdiqysVIW4lZd8DT3wUH6/ihKlT+IdtnRYcx3QcoIYXGu+XSTEuhZTsHHL0Z72
- pfUbQOP/dikj4OEM5DMNutlK42PyYkzosxvlM4HQkEAl+LB2uT6gzqeinXIhD7WDas9d
- WiocjcXUq8CGCAtWHHUKVPsqU/RvtAMTiWg9kDhB7XcTrtf6m9FJh14eVXdt3LVQYjuU
- zvXQ5ZXQObCPS/IK6gdV8pPVmdhz1PpfV/M212Yuri6gGeJM26Qit7yamBNUwgI2Ahvw aQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 322nskk4x9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jul 2020 22:33:31 -0400
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0682UfrB071097;
-        Tue, 7 Jul 2020 22:33:31 -0400
-Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
-        by mx0a-00154901.pphosted.com with ESMTP id 3255dr811n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jul 2020 22:33:31 -0400
-X-LoopCount0: from 10.166.132.55
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="518766826"
-From:   <Crag.Wang@dell.com>
-To:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sre@kernel.org>
-CC:     <mathewk@chromium.org>, <Mario.Limonciello@dell.com>,
-        <crag0715@gmail.com>
-Subject: RE: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
- charging mode
-Thread-Topic: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
- charging mode
-Thread-Index: AQHWSTdLlppOCCC6Bki6k0A/v494M6jlsVIAgACTARD//8PXAIABEw/wgBXu6sA=
-Date:   Wed, 8 Jul 2020 02:33:26 +0000
-Message-ID: <2bb356e814f74fcc9ea6e86a50cc7c1e@KULX13MDC113.APAC.DELL.COM>
-References: <20200623082016.23188-1-crag_wang@dell.com>
- <6a804505400e4109906fadcf945edf76@AUSX13MPC105.AMER.DELL.COM>
- <ecda5d3852af4a1a8c08e0dc07983f35@KULX13MDC113.APAC.DELL.COM>
- <05bbf37785bd44ce8cc8777f107b16ff@AUSX13MPC105.AMER.DELL.COM>
- <23e76b5eda0849fdb4e1ef8b81807558@KULX13MDC113.APAC.DELL.COM>
-In-Reply-To: <23e76b5eda0849fdb4e1ef8b81807558@KULX13MDC113.APAC.DELL.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-23T13:48:06.9996956Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=f22c6ecd-fc33-4d94-beba-f01c0a6f3fa5;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.93.131.111]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 7 Jul 2020 22:46:12 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6907BC061755;
+        Tue,  7 Jul 2020 19:46:12 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id w6so48797671ejq.6;
+        Tue, 07 Jul 2020 19:46:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XuQXgKfjhRPfHlI6CUS9W8MpPRXyJFXM/VMcVD9TWSg=;
+        b=ZHppF9kI4mXLPuSLMpLIZJIATEcKJyXFvjR+sgZlNQVkPpRF7/UQTAW3e3oCFUefSZ
+         ZmtO5jwWdkEuY4gEkjAHdOR4nOrFhs2xLcPFyZCLFl4FibCkmmUv8TDU8of1bN2lFET5
+         UQT2mnqTzsQT5mVhSfwfs9uABpRRfYSopCH49SVJSDJXmKfshxVWJTGJZXvGz2Pd8sLB
+         rhbK/BSxfB86gfl/7qnIBnoUPUoIne9egWs1BbscFuF5I+cw9YspYJC1hS5gmPS+Okta
+         xkw2i3TcD18rjgrEPvg5UkGbReMo+p6CcJ6p+/R0AzTYz2ZINiEmkfhBe3gvP2p2B7UY
+         HGDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XuQXgKfjhRPfHlI6CUS9W8MpPRXyJFXM/VMcVD9TWSg=;
+        b=WPaDhUZ24TrpNuuQwQkWR49zBfBOhd4ChoFZOti9woh/g+3f6owQSjDiFYKME2tQfg
+         bBl8pjRrzl+NsBHw5hmAMaeladKqO+7tj3M8QpAPvBKt99p23PgSiaRAMCxl7jXs9a9V
+         oXUp8rd+ii8b0XYfO/wLVaQ1p8HcDInuOCm2wJBmSH2fan/C88AAMNxZWPCXQdOJI6OQ
+         bNY/LwvWFsWSiBGMpMBfHlfFEuMKrU/Kf3yZgS71n774EiUnrJ+TO+l23JUoMcAL9xFy
+         44MOzTmY+aF6j2uFackowPxpnW0Hhdr7M2AI0saB04DAnANYzVNITcKyLtiSCRr4rFBO
+         vRxQ==
+X-Gm-Message-State: AOAM531xfvo2jx2pcC7T/rc4E51lUlQPhfGq6hf/ejapg/GNMzv+6sfo
+        KJVIF0Hh75N0l1yJHzHRQSV4V8NVBvq49pKt1Oc=
+X-Google-Smtp-Source: ABdhPJxYdhLRcy744oW+MNtiCcL1RmFwk3vsdiHmDMArMFLyhT1qlrWXymL9oHuKbRVyql22v0GBVdidoxnHGMqGO+0=
+X-Received: by 2002:a17:906:31c8:: with SMTP id f8mr38085963ejf.269.1594176371013;
+ Tue, 07 Jul 2020 19:46:11 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-07_15:2020-07-07,2020-07-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 impostorscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 cotscore=-2147483648 spamscore=0 clxscore=1015
- phishscore=0 mlxlogscore=627 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007080015
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 mlxscore=0
- spamscore=0 mlxlogscore=688 malwarescore=0 adultscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007080015
+References: <20200707180800.549b561b@canb.auug.org.au> <2f85f3c4-a58b-f225-a533-86e209a4651c@infradead.org>
+ <7ae1c7e3-ce8d-836b-1ae7-d4d00bd8f95c@broadcom.com>
+In-Reply-To: <7ae1c7e3-ce8d-836b-1ae7-d4d00bd8f95c@broadcom.com>
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Wed, 8 Jul 2020 08:16:00 +0530
+Message-ID: <CAOh2x=nGvuzicr77y-X5u8FWP7_G_UGosvdmtns01VCgtM_s=g@mail.gmail.com>
+Subject: Re: linux-next: Tree for Jul 7 (scsi/lpfc/lpfc_init.c)
+To:     James Smart <james.smart@broadcom.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        dick kennedy <dick.kennedy@broadcom.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi kernel maintainers,=20
-I'd like to request a code review for this patch accepted, thanks.
+Hi James,
 
-Crag
+On Tue, Jul 7, 2020 at 11:43 PM James Smart <james.smart@broadcom.com> wrote:
+>
+> On 7/7/2020 10:09 AM, Randy Dunlap wrote:
+> > On 7/7/20 1:08 AM, Stephen Rothwell wrote:
+> >> Hi all,
+> >>
+> >> Changes since 20200706:
+> >>
+> > on i386:
+> >
+> > when CONFIG_ACPI is not set/enabled:
+> >
+> >
+> > ../drivers/scsi/lpfc/lpfc_init.c:1265:15: error: implicit declaration of function 'get_cpu_idle_time'; did you mean 'get_cpu_device'? [-Werror=implicit-function-declaration]
+> >
+> >
+> > The cpufreq people want justification for using
 
+I am one of cpufreq people :)
+
+> > get_cpu_idle_time().  Please see
+> > https://lore.kernel.org/linux-scsi/20200707030943.xkocccy6qy2c3hrx@vireshk-i7/
+> >
+>
+> The driver is using cpu utilization in order to choose between softirq
+> or work queues in handling an interrupt. Less-utilized, softirq is used.
+> higher utilized, work queue is used.  The utilization is checked
+> periodically via a heartbeat.
+
+I understand that you need to use this functionality, what I was
+rather asking was
+why do you need to use a routine that is for cpufreq related stuff only.
+
+I also see that drivers/macintosh/rack-meter.c has its own
+implementation for this.
+
+What I would suggest is that, if required, we should add/move a
+generic implementation
+of this to another file (which is available to all) and then let
+everyone use it.
+
+--
+viresh
