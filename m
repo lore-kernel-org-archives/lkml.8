@@ -2,151 +2,228 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 200C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA87C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7FF920720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844E320760
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WhewwSnE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UXxEHP+l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fdlauXTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgGHHkW (ORCPT
+        id S1726509AbgGHHk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:40:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46380 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbgGHHkW (ORCPT
+        Wed, 8 Jul 2020 03:40:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47161 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726325AbgGHHk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:40:22 -0400
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594194019;
+        Wed, 8 Jul 2020 03:40:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594194025;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=deFGfHxYZYgFx9JerGX/g9w6hxTKxOGElkA7QsAXZ3w=;
-        b=WhewwSnEfGMkGBbezfukKi28AdipCum2wKduadjzvIOk+jrBL5e8y8T/hYFJrBJ+6crdbZ
-        hZhqae76KBRhQWKvIxiM8/+G45D4bahl9w/EYMDqDpkVQ2n+vxEDXK2UJXFa1omIr6NdPu
-        GZKDdu4SipOERb1v/l0216WfWacWodvOFRRtEAU0kEExQuAa1Ix5fRIfNqbBLiqKWeiuT2
-        Jz+EPJuMsU135R+GllJirrGDxQe+WncXbgf9TA4e3/mK2mIV/GalUazXC4deue7wiiRtbB
-        jDsYrPgLMilJ7eBOR2s747Hf8EUipgTePQQFaP6K8r556E+W+a+WnWpsW6zfCQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594194019;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=deFGfHxYZYgFx9JerGX/g9w6hxTKxOGElkA7QsAXZ3w=;
-        b=UXxEHP+lGDBaQFgs7Dq8HysuTS86gLQtlL8hTV3eNdK6Lhb0uGEaSsAfsiAqRrmv0JfK+L
-        1c6panhvNY28iIAA==
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Raul Rangel <rrangel@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "S\, Shirish" <Shirish.S@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: UART/TTY console deadlock
-In-Reply-To: <20200706144314.GB1485@jagdpanzerIV.localdomain>
-References: <20200630102141.GA11587@alley> <20200630105512.GA530@jagdpanzerIV.localdomain> <20200630122239.GD6173@alley> <20200630130534.GB145027@jagdpanzerIV.localdomain> <20200630180255.GD37466@atomide.com> <20200702051213.GB3450@jagdpanzerIV.localdomain> <20200702160514.GK37466@atomide.com> <20200703103241.GB182102@jagdpanzerIV.localdomain> <CAHp75VdvNi_LWv7QhEsm1vQikeiMpi68qmCwoVttjnp7oq0ahg@mail.gmail.com> <877dvg6ft6.fsf@kurt> <20200706144314.GB1485@jagdpanzerIV.localdomain>
-Date:   Wed, 08 Jul 2020 09:40:17 +0200
-Message-ID: <87o8oqa1zy.fsf@kurt>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=drYQyQX+Nofw7uVrCP7O4HC2kQmlWvgu/J9xJfIai0g=;
+        b=fdlauXToGCCapnQ/OKfm2tZjvglgapfb0erN7x/st1o3M4Y0Kj3D+6FCoxm/xYFZ9jc9rS
+        gi8UOxaCXjrZD93OYx3udIVNE1xGK0tM656vYSsi+An1KI1Btp0HiSQPrHlCwe+xzH6R0B
+        J2wF9QtM9F7m2sxC3zuQ6UzPLg+X5a4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-90-jo9eU07OPS2KFxDIVh-fvA-1; Wed, 08 Jul 2020 03:40:23 -0400
+X-MC-Unique: jo9eU07OPS2KFxDIVh-fvA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1EB351009610;
+        Wed,  8 Jul 2020 07:40:21 +0000 (UTC)
+Received: from [10.36.113.117] (ovpn-113-117.ams2.redhat.com [10.36.113.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFF57B3A65;
+        Wed,  8 Jul 2020 07:40:17 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid as
+ EXPORT_SYMBOL_GPL
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>, Jia He <justin.he@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Kaly Xin <Kaly.Xin@arm.com>
+References: <20200707055917.143653-1-justin.he@arm.com>
+ <20200707055917.143653-2-justin.he@arm.com>
+ <20200707115454.GN5913@dhcp22.suse.cz> <20200707121302.GB9411@linux.ibm.com>
+ <474f93e7-c709-1a13-5418-29f1777f614c@redhat.com>
+ <20200707180043.GA386073@linux.ibm.com>
+ <CAPcyv4iB-vP8U4pH_3jptfODbiNqJZXoTmA6+7EHoddk9jBgEQ@mail.gmail.com>
+ <20200708052626.GB386073@linux.ibm.com>
+ <9a009cf6-6c30-91ca-a1a5-9aa090c66631@redhat.com>
+ <20200708073826.GF386073@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <c73c6a63-f3f4-921c-4c3a-c6c0ff52607f@redhat.com>
+Date:   Wed, 8 Jul 2020 09:40:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+In-Reply-To: <20200708073826.GF386073@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 08.07.20 09:38, Mike Rapoport wrote:
+> On Wed, Jul 08, 2020 at 09:21:25AM +0200, David Hildenbrand wrote:
+>> On 08.07.20 07:27, Mike Rapoport wrote:
+>>> On Tue, Jul 07, 2020 at 03:05:48PM -0700, Dan Williams wrote:
+>>>> On Tue, Jul 7, 2020 at 11:01 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>>>>>
+>>>>> On Tue, Jul 07, 2020 at 02:26:08PM +0200, David Hildenbrand wrote:
+>>>>>> On 07.07.20 14:13, Mike Rapoport wrote:
+>>>>>>> On Tue, Jul 07, 2020 at 01:54:54PM +0200, Michal Hocko wrote:
+>>>>>>>> On Tue 07-07-20 13:59:15, Jia He wrote:
+>>>>>>>>> This exports memory_add_physaddr_to_nid() for module driver to use.
+>>>>>>>>>
+>>>>>>>>> memory_add_physaddr_to_nid() is a fallback option to get the nid in case
+>>>>>>>>> NUMA_NO_NID is detected.
+>>>>>>>>>
+>>>>>>>>> Suggested-by: David Hildenbrand <david@redhat.com>
+>>>>>>>>> Signed-off-by: Jia He <justin.he@arm.com>
+>>>>>>>>> ---
+>>>>>>>>>  arch/arm64/mm/numa.c | 5 +++--
+>>>>>>>>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+>>>>>>>>> index aafcee3e3f7e..7eeb31740248 100644
+>>>>>>>>> --- a/arch/arm64/mm/numa.c
+>>>>>>>>> +++ b/arch/arm64/mm/numa.c
+>>>>>>>>> @@ -464,10 +464,11 @@ void __init arm64_numa_init(void)
+>>>>>>>>>
+>>>>>>>>>  /*
+>>>>>>>>>   * We hope that we will be hotplugging memory on nodes we already know about,
+>>>>>>>>> - * such that acpi_get_node() succeeds and we never fall back to this...
+>>>>>>>>> + * such that acpi_get_node() succeeds. But when SRAT is not present, the node
+>>>>>>>>> + * id may be probed as NUMA_NO_NODE by acpi, Here provide a fallback option.
+>>>>>>>>>   */
+>>>>>>>>>  int memory_add_physaddr_to_nid(u64 addr)
+>>>>>>>>>  {
+>>>>>>>>> - pr_warn("Unknown node for memory at 0x%llx, assuming node 0\n", addr);
+>>>>>>>>>   return 0;
+>>>>>>>>>  }
+>>>>>>>>> +EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+>>>>>>>>
+>>>>>>>> Does it make sense to export a noop function? Wouldn't make more sense
+>>>>>>>> to simply make it static inline somewhere in a header? I haven't checked
+>>>>>>>> whether there is an easy way to do that sanely bu this just hit my eyes.
+>>>>>>>
+>>>>>>> We'll need to either add a CONFIG_ option or arch specific callback to
+>>>>>>> make both non-empty (x86, powerpc, ia64) and empty (arm64, sh)
+>>>>>>> implementations coexist ...
+>>>>>>
+>>>>>> Note: I have a similar dummy (return 0) patch for s390x lying around here.
+>>>>>
+>>>>> Then we'll call it a tie - 3:3 ;-)
+>>>>
+>>>> So I'd be happy to jump on the train of people wanting to export the
+>>>> ARM stub for this (and add a new ARM stub for phys_to_target_node()),
+>>>> but Will did have a plausibly better idea that I have been meaning to
+>>>> circle back to:
+>>>>
+>>>> http://lore.kernel.org/r/20200325111039.GA32109@willie-the-truck
+>>>>
+>>>> ...i.e. iterate over node data to do the lookup. This would seem to
+>>>> work generically for multiple archs unless I am missing something?
+>>
+>> IIRC, only memory assigned to/onlined to a ZONE is represented in the
+>> pgdat node span. E.g., not offline memory blocks.
+>>
+>> Esp., when hotplugging + onlining consecutive memory, there won't really
+>> be any intersections in most cases if I am not wrong. It would not be
+>> "intersection" but rather "closest fit".
+>>
+>> With overlapping nodes it's even more unclear. Which one to pick?
+>>
+>>>
+>>> I think it would work on arm64, power and, most propbably on s390
+>>
+>> With only a single dummy node I guess it should work (searching when
+>> there is only a single node does not make too much sense).
+>>
+>>> (David?), but not on x86. x86 does not have reserved memory in pgdat,
+>>> it's never memblock_add()'ed (see e820__memblock_setup()).
+>>
+>> Can you enlighten me why that is relevant for the memory hotplug path?
+>> (or is it just a general comment to make the function as accurate as
+>> possible for all addresses?)
+> 
+> phys_to_target_node() on x86 falls back to numa_reserved_meminfo which
+> holds memory that is never listed in a node.
+> 
 
-On Mon Jul 06 2020, Sergey Senozhatsky wrote:
-> On (20/07/06 13:31), Kurt Kanzenbach wrote:
->> >> @@ -2275,6 +2275,7 @@ int serial8250_do_startup(struct uart_port *por=
-t)
->> >>
->> >>         if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
->> >>                 unsigned char iir1;
->> >> +
->> >>                 /*
->> >>                  * Test for UARTs that do not reassert THRE when the
->> >>                  * transmitter is idle and the interrupt has already
->> >> @@ -2284,8 +2285,6 @@ int serial8250_do_startup(struct uart_port *por=
-t)
->> >>                  * allow register changes to become visible.
->> >>                  */
->> >>                 spin_lock_irqsave(&port->lock, flags);
->> >> -               if (up->port.irqflags & IRQF_SHARED)
->> >> -                       disable_irq_nosync(port->irq);
->> >>
->> >>                 wait_for_xmitr(up, UART_LSR_THRE);
->> >>                 serial_port_out_sync(port, UART_IER, UART_IER_THRI);
->> >> @@ -2297,8 +2296,6 @@ int serial8250_do_startup(struct uart_port *por=
-t)
->> >>                 iir =3D serial_port_in(port, UART_IIR);
->> >>                 serial_port_out(port, UART_IER, 0);
->> >>
->> >> -               if (port->irqflags & IRQF_SHARED)
->> >> -                       enable_irq(port->irq);
->> >>                 spin_unlock_irqrestore(&port->lock, flags);
->> >>
->> >>                 /*
->> >
->> > ...which effectively is a revert of
->> >
->> > 768aec0b5bcc ("serial: 8250: fix shared interrupts issues with SMP and
->> > RT kernels")
->>=20
->> Please, don't revert that commit. I've faced the same issue as described
->> in the commit log. There is hardware available with shared UART
->> interrupt lines.
->
-> Will this patch break that hardware?
-> https://lore.kernel.org/lkml/20200702051213.GB3450@jagdpanzerIV.localdoma=
-in/
+Ah, I see - thanks.
 
-I'm not sure how this patch will help with the situation. Because at the
-point of that THRE test the irq handler isn't registered. It's
-registered a few lines below (up->ops->setup_irq()) meaning the irq line
-has to be disabled if shared. Otherwise the kernel might detect a
-spurious irq and disables it. That's at least my understanding of the
-problem (see commit message from 54e53b2e8081 ("tty: serial: 8250: pass
-IRQ shared flag to UART ports")).
 
+-- 
 Thanks,
-Kurt
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+David / dhildenb
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8FeGEACgkQeSpbgcuY
-8KZFuw//cx3Oy+/kFOtj/m/GQiBhw+JVAJ4ixZ92RmC564AEcTZoGGwpqXE7an70
-FIUvBNKAzmk6w5LR628Mx29Qee4e35n6YMgPcAjbaCwwDiMq5In5tpnkowPEvNwi
-IY5J3dnaLR+MkQxg3NjYu5LBDArW0MugDqOnj1RefUIToqQCQgMb4wEskUlaDvFC
-e7gv9NeOTXMg4etj5MFnWiTRTcdCCBV1HjzZ9NRFeLCm/mKm2Q/KR1MIkZxmM22/
-dGzhrD15Ly7hDyXYoPJY9g4P2+pJsY3kqrZb5FsVrYhjR5ZlGB8DOIVHwJ/f98YV
-bolld/ntOqWlzEeOwrmjYbSgVcW56lBMA+5HV4pOUbq6EcXyEAzWcVa4FaYsZdvJ
-iRxMuC3JjRRve3mBOrITv2egPCktZeSeZExpAXzyuYbQpNwurvVQjjVL+RPJrkpx
-2RnAikQtz5E2EcyxbZmNcS687sweUFRsGhlT/zE7dJ+cOd+pfM0kvrJSnNbdxNC5
-/w//o5y75M5pV2CbNhvfpgB6I/aik/SxATHG6NMF3IojM/SO/gb7lmdFWpYLwP6f
-k45gcwC9FZoTNHmyYzlitbs45kMfgqPQAnKAqYnRJAfl/CgOCnJZhO5DvjiX671K
-32NlT5V0x/5bPcnkkgn1tYK1x68ivgeXDSjj244lns5a7KknF5A=
-=lDDH
------END PGP SIGNATURE-----
---=-=-=--
