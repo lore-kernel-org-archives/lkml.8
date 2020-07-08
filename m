@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB77EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFD920786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630BB20708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbgGHBZt (ORCPT
+        id S1729354AbgGHBZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 21:25:49 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:52644 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728208AbgGHBZs (ORCPT
+        Tue, 7 Jul 2020 21:25:51 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:44225 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729303AbgGHBZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 21:25:48 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0U24OO8d_1594171544;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U24OO8d_1594171544)
+        Tue, 7 Jul 2020 21:25:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0U243BE7_1594171543;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U243BE7_1594171543)
           by smtp.aliyun-inc.com(127.0.0.1);
           Wed, 08 Jul 2020 09:25:44 +0800
 From:   Wei Yang <richard.weiyang@linux.alibaba.com>
@@ -33,9 +33,9 @@ To:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
         aneesh.kumar@linux.ibm.com, willy@infradead.org,
         thellstrom@vmware.com
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, digetx@gmail.com
-Subject: [Patch v3 2/4] mm/mremap: calculate extent in one place
-Date:   Wed,  8 Jul 2020 09:24:51 +0800
-Message-Id: <20200708012453.36588-3-richard.weiyang@linux.alibaba.com>
+Subject: [Patch v3 1/4] mm/mremap: it is sure to have enough space when extent meets requirement
+Date:   Wed,  8 Jul 2020 09:24:50 +0800
+Message-Id: <20200708012453.36588-2-richard.weiyang@linux.alibaba.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200708012453.36588-1-richard.weiyang@linux.alibaba.com>
 References: <20200708012453.36588-1-richard.weiyang@linux.alibaba.com>
@@ -46,48 +46,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Page tables is moved on the base of PMD. This requires both source
-and destination range should meet the requirement.
+old_end is passed to these two function to check whether there is enough
+space to do the move, while this check is done before invoking these
+functions.
 
-Current code works well since move_huge_pmd() and move_normal_pmd()
-would check old_addr and new_addr again. And then return to move_ptes()
-if the either of them is not aligned.
+These two functions only would be invoked when extent meets the
+requirement and there is one check before invoking these functions:
 
-In stead of calculating the extent separately, it is better to calculate
-in one place, so we know it is not necessary to try move pmd. By doing
-so, the logic seems a little clear.
+    if (extent > old_end - old_addr)
+        extent = old_end - old_addr;
+
+This implies (old_end - old_addr) won't fail the check in these two
+functions.
 
 Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
 Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- mm/mremap.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/huge_mm.h |  2 +-
+ mm/huge_memory.c        |  7 ++-----
+ mm/mremap.c             | 10 ++++------
+ 3 files changed, 7 insertions(+), 12 deletions(-)
 
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 71f20776b06c..17c4c4975145 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -42,7 +42,7 @@ extern int mincore_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+ 			unsigned long addr, unsigned long end,
+ 			unsigned char *vec);
+ extern bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+-			 unsigned long new_addr, unsigned long old_end,
++			 unsigned long new_addr,
+ 			 pmd_t *old_pmd, pmd_t *new_pmd);
+ extern int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+ 			unsigned long addr, pgprot_t newprot,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 78c84bee7e29..1e580fdad4d0 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1722,17 +1722,14 @@ static pmd_t move_soft_dirty_pmd(pmd_t pmd)
+ }
+ 
+ bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+-		  unsigned long new_addr, unsigned long old_end,
+-		  pmd_t *old_pmd, pmd_t *new_pmd)
++		  unsigned long new_addr, pmd_t *old_pmd, pmd_t *new_pmd)
+ {
+ 	spinlock_t *old_ptl, *new_ptl;
+ 	pmd_t pmd;
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	bool force_flush = false;
+ 
+-	if ((old_addr & ~HPAGE_PMD_MASK) ||
+-	    (new_addr & ~HPAGE_PMD_MASK) ||
+-	    old_end - old_addr < HPAGE_PMD_SIZE)
++	if ((old_addr & ~HPAGE_PMD_MASK) || (new_addr & ~HPAGE_PMD_MASK))
+ 		return false;
+ 
+ 	/*
 diff --git a/mm/mremap.c b/mm/mremap.c
-index de27b12c8a5a..a30b3e86cc99 100644
+index 5dd572d57ca9..de27b12c8a5a 100644
 --- a/mm/mremap.c
 +++ b/mm/mremap.c
-@@ -258,6 +258,9 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
- 		extent = next - old_addr;
- 		if (extent > old_end - old_addr)
- 			extent = old_end - old_addr;
-+		next = (new_addr + PMD_SIZE) & PMD_MASK;
-+		if (extent > next - new_addr)
-+			extent = next - new_addr;
- 		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
- 		if (!old_pmd)
- 			continue;
-@@ -301,9 +304,6 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+@@ -193,15 +193,13 @@ static void move_ptes(struct vm_area_struct *vma, pmd_t *old_pmd,
  
- 		if (pte_alloc(new_vma->vm_mm, new_pmd))
- 			break;
--		next = (new_addr + PMD_SIZE) & PMD_MASK;
--		if (extent > next - new_addr)
--			extent = next - new_addr;
- 		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
- 			  new_pmd, new_addr, need_rmap_locks);
- 	}
+ #ifdef CONFIG_HAVE_MOVE_PMD
+ static bool move_normal_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+-		  unsigned long new_addr, unsigned long old_end,
+-		  pmd_t *old_pmd, pmd_t *new_pmd)
++		  unsigned long new_addr, pmd_t *old_pmd, pmd_t *new_pmd)
+ {
+ 	spinlock_t *old_ptl, *new_ptl;
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	pmd_t pmd;
+ 
+-	if ((old_addr & ~PMD_MASK) || (new_addr & ~PMD_MASK)
+-	    || old_end - old_addr < PMD_SIZE)
++	if ((old_addr & ~PMD_MASK) || (new_addr & ~PMD_MASK))
+ 		return false;
+ 
+ 	/*
+@@ -273,7 +271,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+ 				if (need_rmap_locks)
+ 					take_rmap_locks(vma);
+ 				moved = move_huge_pmd(vma, old_addr, new_addr,
+-						    old_end, old_pmd, new_pmd);
++						      old_pmd, new_pmd);
+ 				if (need_rmap_locks)
+ 					drop_rmap_locks(vma);
+ 				if (moved)
+@@ -293,7 +291,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+ 			if (need_rmap_locks)
+ 				take_rmap_locks(vma);
+ 			moved = move_normal_pmd(vma, old_addr, new_addr,
+-					old_end, old_pmd, new_pmd);
++						old_pmd, new_pmd);
+ 			if (need_rmap_locks)
+ 				drop_rmap_locks(vma);
+ 			if (moved)
 -- 
 2.20.1 (Apple Git-117)
 
