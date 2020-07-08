@@ -2,89 +2,226 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C82EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3414120739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473B620786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:55:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6yF1QCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgGHSyc (ORCPT
+        id S1726780AbgGHSzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:54:32 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:16811 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725978AbgGHSyb (ORCPT
+        Wed, 8 Jul 2020 14:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgGHSzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:54:31 -0400
-X-IronPort-AV: E=Sophos;i="5.75,328,1589209200"; 
-   d="scan'208";a="51643897"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 09 Jul 2020 03:54:30 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id C28BC40CC766;
-        Thu,  9 Jul 2020 03:54:28 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] arm64: defconfig: Enable R-Car PCIe endpoint driver
-Date:   Wed,  8 Jul 2020 19:53:43 +0100
-Message-Id: <1594234423-30914-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 8 Jul 2020 14:55:00 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA6EC061A0B;
+        Wed,  8 Jul 2020 11:55:00 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u185so18320470pfu.1;
+        Wed, 08 Jul 2020 11:55:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XYyhFadv6jcxuvO1GDSe2+Q+rr3i8d41ZQJ8Z5mT2yE=;
+        b=D6yF1QCvaGUv9XXQaKTSdELkYvA2sai8HnnWsCQeTep2zELOCFXHOubl9Rm9WfPUrn
+         NbVD20Zqdnups1GfAVIE53ErV3yOROk5827Kmt4B5gXjy7H6bMEJq8sgEatN3hCYJFo2
+         7/zpu3hdAme34HTUQoX7FaXjjYaOF93+1FofRN3C7WUmb6bd5QzS1XXaTfq0MZC201x2
+         1tYSnAv6GauqmVKfg6Kbw/H0T1BYl9WpKxroreCWVwx+sURcIlFAq8VEzu1hoVUOtveI
+         eoTWvEqnyFqbqIgY3xe4RfJouPTdN3eUxdSK7P0YXuq/A3t0K6LeYui/rN7Dc9qwl4vR
+         FNtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XYyhFadv6jcxuvO1GDSe2+Q+rr3i8d41ZQJ8Z5mT2yE=;
+        b=THv37SgpLFAXUHjxMuRfsSGT04DH29Ee3mDV8XGBUKCvR450LPV4eWmgb1bWOsa9Lx
+         CacGJejgZ9X8OCP8Ba9Y0gtiSG5rONfn15Yyhf2EjmyxH+4GbW/OHt0Y7BO6axnjrlf6
+         oP6hM5EW7N9jXgYWDUqpWwRhxGT+0hrVDLsCb/ysISkaog+V8CmMzULSkIkc5I7BXoF0
+         NE9jX8mj4f9I9LDQV0kcCh/I1LXo7yd68n7S1pMpZDwFWn+7W7oa3tN0wwobuyjZKPbZ
+         18eKAseLb0LF+MvdSeFad2kdFUKsnZ5HGG9CieCUtizymbbrk+O9SFwGg0G+DRaVrh90
+         Cgqg==
+X-Gm-Message-State: AOAM530YMNwn8abPhbRdXtqSEHKHiUSS8ND3c7ag8Zhqz92ugbzpmpO9
+        86vfSg8vbTmHga9cXMCN0g0=
+X-Google-Smtp-Source: ABdhPJwDSevOtq9vWg/3Lx9i23j6UPeG/NlZDV7nBYOjxOfM0C/v9KQhCSE7zlwupjQNp5eCi54mLg==
+X-Received: by 2002:a63:ec05:: with SMTP id j5mr51832333pgh.109.1594234499797;
+        Wed, 08 Jul 2020 11:54:59 -0700 (PDT)
+Received: from nickserv.localdomain (c-98-33-101-203.hsd1.ca.comcast.net. [98.33.101.203])
+        by smtp.gmail.com with ESMTPSA id c132sm485606pfb.112.2020.07.08.11.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 11:54:59 -0700 (PDT)
+From:   Nick Terrell <nickrterrell@gmail.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>, Nick Terrell <terrelln@fb.com>
+Subject: [GIT PULL][PATCH v7 0/7] Add support for ZSTD-compressed kernel and initramfs
+Date:   Wed,  8 Jul 2020 11:50:17 -0700
+Message-Id: <20200708185024.2767937-1-nickrterrell@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable R-Car PCIe endpoint driver on RZ/G2E board, including enabling
-endpoint configurations CONFIG_PCI_ENDPOINT, CONFIG_PCI_ENDPOINT_CONFIGFS,
-CONFIG_PCI_EPF_TEST and CONFIG_PCI_ENDPOINT_TEST required to use and test
-the driver.
+From: Nick Terrell <terrelln@fb.com>
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- This patch is re-based on https://patchwork.kernel.org/patch/11549899/
----
- arch/arm64/configs/defconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+Please pull from
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e578650..7cfeb0a 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -196,6 +196,7 @@ CONFIG_HOTPLUG_PCI_ACPI=y
- CONFIG_PCI_AARDVARK=y
- CONFIG_PCI_TEGRA=y
- CONFIG_PCIE_RCAR_HOST=y
-+CONFIG_PCIE_RCAR_EP=y
- CONFIG_PCI_HOST_GENERIC=y
- CONFIG_PCI_XGENE=y
- CONFIG_PCIE_ALTERA=y
-@@ -212,6 +213,9 @@ CONFIG_PCIE_ARMADA_8K=y
- CONFIG_PCIE_KIRIN=y
- CONFIG_PCIE_HISI_STB=y
- CONFIG_PCIE_TEGRA194_HOST=m
-+CONFIG_PCI_ENDPOINT=y
-+CONFIG_PCI_ENDPOINT_CONFIGFS=y
-+CONFIG_PCI_EPF_TEST=y
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_FW_LOADER_USER_HELPER=y
-@@ -242,6 +246,7 @@ CONFIG_BLK_DEV_NBD=m
- CONFIG_VIRTIO_BLK=y
- CONFIG_BLK_DEV_NVME=m
- CONFIG_SRAM=y
-+CONFIG_PCI_ENDPOINT_TEST=y
- CONFIG_EEPROM_AT24=m
- CONFIG_EEPROM_AT25=m
- CONFIG_UACCE=m
+  git@github.com:terrelln/linux.git tags/v7-zstd
+
+to get these changes. Alternatively the patchset is included.
+
+Hi all,
+
+This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+are supported on all architectures. The ZSTD-compressed kernel is only
+hooked up to x86 in this patch set.
+
+Zstandard requires slightly more memory during the kernel decompression
+on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+window size.
+
+Zstandard requires memory proprortional to the window size used during
+compression for decompressing the ramdisk image, since streaming mode is
+used. Newer versions of zstd (1.3.2+) list the window size of a file
+with `zstd -lv <file>'. The absolute maximum amount of memory required
+is just over 8 MB, but it can be controlled at compression time.
+
+This patch set has been boot tested with buildroot and QEMU based off
+of linux-5.6-rc6.
+
+On i386 and x86_64 I have tested the following configurations:
+* zstd compressed kernel and a separate zstd compressed initramfs
+* zstd compressed kernel and a built-in zstd compressed initramfs
+* gzip compressed kernel and a separate gzip compressed initramfs
+* gzip compressed kernel and a built-in gzip compressed initramfs
+
+On arm and aarch64 I tested the same configurations, except that the kernel is
+always gzip compressed.
+
+Facebook has been using v1 of these patches on x86_64 devices for more than 6
+months. When we switched from a xz compressed initramfs to a zstd compressed
+initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+seconds of boot time.
+
+Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+decompression time shrunk from 27 seconds to 8 seconds.
+
+The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+than the xz or lzma compressed kernels, and it decompresses faster than
+everything except lz4. See the table below for the measurement of an x86_64
+kernel ordered by compressed size:
+
+algo	size
+xz  	 6,509,792
+lzma	 6,856,576
+zstd	 7,399,157
+gzip	 8,522,527
+bzip	 8,629,603
+lzo 	 9,808,035
+lz4 	10,705,570
+none	32,565,672
+
+Alex Xu ran benchmarks in https://lkml.org/lkml/2020/7/1/722.
+
+v1 -> v2:
+- Rebase
+  - usr/Makefile and init/Kconfig were changed so the patches were updated
+- No functional changes except to rebase
+- Split the patches up into smaller chunks
+
+v2 -> v3:
+- Add *.zst to the .gitignore in patch 8
+- Style nits in patch 3
+- Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+  1 through 3
+
+v3 -> v4:
+- Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
+  With this change I switch from malloc() to large_malloc() for the
+  buffers.
+- Increase the maximum allowed window size from 8 MB to 128 MB, which is
+  the max that zstd in the kernel supports.
+
+v4 -> v5:
+- Update commit message for patch 6 in response to comments
+- Rebase onto next-20200408
+
+v5 -> v6:
+- Rebase onto v5.8-rc4
+
+v6 -> v7:
+- (1/7) Don't define or use 'ZSTD_PREBOOT' to hide exports
+- (2/8) Drop 'lib: prepare xxhash for preboot environment'
+- (2/7) Use '__DISABLE_EXPORTS' in unzstd to hide exports
+- (3/7) Update zstd compression cmd to follow other compressors
+- (3/7) Add zstd22 cmd
+- (6/7) Use zstd -22 --ultra (zstd22) for x86 kernel compression
+
+Best,
+Nick Terrell
+
+Adam Borowski (1):
+  .gitignore: add ZSTD-compressed files
+
+Nick Terrell (6):
+  lib: prepare zstd for preboot environment
+  lib: add zstd support to decompress
+  init: add support for zstd compressed kernel
+  usr: add support for zstd compressed initramfs
+  x86: bump ZO_z_extra_bytes margin for zstd
+  x86: Add support for ZSTD compressed kernel
+
+ .gitignore                        |   1 +
+ Documentation/x86/boot.rst        |   6 +-
+ Makefile                          |   3 +-
+ arch/x86/Kconfig                  |   1 +
+ arch/x86/boot/compressed/Makefile |   5 +-
+ arch/x86/boot/compressed/misc.c   |   4 +
+ arch/x86/boot/header.S            |   8 +-
+ arch/x86/include/asm/boot.h       |   6 +-
+ include/linux/decompress/unzstd.h |  11 +
+ init/Kconfig                      |  15 +-
+ lib/Kconfig                       |   4 +
+ lib/Makefile                      |   1 +
+ lib/decompress.c                  |   5 +
+ lib/decompress_unzstd.c           | 345 ++++++++++++++++++++++++++++++
+ lib/zstd/fse_decompress.c         |   9 +-
+ lib/zstd/zstd_internal.h          |  14 +-
+ scripts/Makefile.lib              |  22 ++
+ usr/Kconfig                       |  20 ++
+ usr/Makefile                      |   1 +
+ 19 files changed, 462 insertions(+), 19 deletions(-)
+ create mode 100644 include/linux/decompress/unzstd.h
+ create mode 100644 lib/decompress_unzstd.c
+
 -- 
-2.7.4
+2.27.0
 
