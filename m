@@ -2,200 +2,236 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B02FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67C8920774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB1420774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="DRqLZb6e"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WQ5jST+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgGHMd4 (ORCPT
+        id S1729030AbgGHMeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:33:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728980AbgGHMdy (ORCPT
+        Wed, 8 Jul 2020 08:34:04 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:48643 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729266AbgGHMeD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:33:54 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D84EC08E6DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:33:54 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id l6so41276976qkc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=a9k7anVARO5a2XjKh+ZNLzlqgc+LtzUHtnvpewyB1Z8=;
-        b=DRqLZb6ewBAysZ55gFQdSenqYp72lWdjRsGapaa2heeC47bgvqui0/x65ObyDLbtiP
-         2VG/dEd4qgcTEf0W3Y+/ePGQ3pHI1C/afzlWYUFyQL/lHaA7I1M7+g3TpDkeV58G2RAU
-         NQJekmf7lMv86oJrZS+akJQBOQDcDhvoVmOJQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=a9k7anVARO5a2XjKh+ZNLzlqgc+LtzUHtnvpewyB1Z8=;
-        b=YFDOLhhK3BBD4qc74O3EEubsJ0JgSoSazbpVbof6ZCV211sUPF8/fP3VQRX8tXem+i
-         mfVXDR0gtUNTq2pl1QxPyk5SNZ74kAgJmY0eYFUPsg3fbTtXjeqbUX9ywSF/bLVIartD
-         /GlGLZzc3sATfZ41tum3W0rCZoC8ZBx59XgHMsKeJQHRMd/r7jk2tXlIdz7sGE0dUMqb
-         TdHZ5YT91EwDlzlY1sI2PMWv2esPAt/bNyt7X17aubg9b5mpdlGaXRRUgags2nEqp7bc
-         fPIdvPM153BhNTzOde7t/KiJI7FIYzFtkyEPlweFHPHrrMomLm5K6nu0pDS36lkYvSKq
-         /y+w==
-X-Gm-Message-State: AOAM530w1OCIC6KLBjqUDiAH2R8ndPtVDxNyT1ObeyCUPspzOv1I+bm1
-        DVuWRTIAgbxW2H0FbI+A68X8thHjAYc=
-X-Google-Smtp-Source: ABdhPJxO0/iKeUOep8yCrb9tA1qJ5XpHSPOncUJMspEAax3PNjskz+MfK1OhikWwvzNHUeBt9LEcWA==
-X-Received: by 2002:a05:620a:2f4:: with SMTP id a20mr57833576qko.227.1594211633648;
-        Wed, 08 Jul 2020 05:33:53 -0700 (PDT)
-Received: from [192.168.1.19] (c-71-62-121-229.hsd1.va.comcast.net. [71.62.121.229])
-        by smtp.gmail.com with ESMTPSA id o4sm1759988qtf.92.2020.07.08.05.33.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 05:33:52 -0700 (PDT)
-Date:   Wed, 08 Jul 2020 08:33:49 -0400
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200703140828.7016-1-madhuparnabhowmik10@gmail.com>
-References: <20200703140828.7016-1-madhuparnabhowmik10@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] rculist : Introduce list/hlist_for_each_entry_srcu() macros
-To:     madhuparnabhowmik10@gmail.com, paulmck@kernel.org
-CC:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, frextrite@gmail.com,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-From:   joel@joelfernandes.org
-Message-ID: <D24A0BBD-9A1A-4480-B36A-691C3AD1ADD5@joelfernandes.org>
+        Wed, 8 Jul 2020 08:34:03 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200708123402euoutp025b28ad765909b9a87d5b1cd65d950013~fxwrDobI52804728047euoutp02N
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 12:34:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200708123402euoutp025b28ad765909b9a87d5b1cd65d950013~fxwrDobI52804728047euoutp02N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594211642;
+        bh=98CYmnkDTVOfaOG1u5p7KAx+dV2GLzhU1PBKvT4mFRs=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=WQ5jST+so0NODaqZpsE0s7qiom3oys89eW0axuwCrbA61ZrrnJNQTeaJxvlEDta3W
+         AzRRdbOmAaY/TsCfLSc9AdNCJqFPPcQqlVYkl1PDVe1YyUe4r6ivsPmS+qO/iOp0bI
+         gTeDLQuOwiMTh1txMzkZw3FozMjqeoFHslzuF+qQ=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200708123401eucas1p1b8bdec909fc65380febbed545f8e8fd7~fxwq3IBOJ2809828098eucas1p16;
+        Wed,  8 Jul 2020 12:34:01 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 0A.CB.06456.93DB50F5; Wed,  8
+        Jul 2020 13:34:01 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200708123401eucas1p1ec8fe745bb362c56f03798172a18324e~fxwqeoKcF2512225122eucas1p19;
+        Wed,  8 Jul 2020 12:34:01 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200708123401eusmtrp118ca0952083f04dda37e754315c8b620~fxwqd-WtJ2185921859eusmtrp1A;
+        Wed,  8 Jul 2020 12:34:01 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-42-5f05bd39e56c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C9.BA.06017.93DB50F5; Wed,  8
+        Jul 2020 13:34:01 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200708123401eusmtip272d607a440c14d723bf338019d9f5eb9~fxwqDHNos1393713937eusmtip2C;
+        Wed,  8 Jul 2020 12:34:01 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Zhang Qiang <qiang.zhang@windriver.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH v2] spi: use kthread_create_worker() helper
+Date:   Wed,  8 Jul 2020 14:33:49 +0200
+Message-Id: <20200708123349.6797-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEIsWRmVeSWpSXmKPExsWy7djPc7qWe1njDW4usLDYOGM9q8XUh0/Y
+        LC7vmsNmMeP8PiaLxo832S3WHrnLbvH/8VdWi1sr/rI7cHhsWtXJ5tG3ZRWjx/otV1k8Pm+S
+        AzK2MgWwRnHZpKTmZJalFunbJXBldFx9xlTwVrWid85e1gbGB/JdjBwcEgImEgcOmnQxcnEI
+        CaxglNj48hsLhPOFUeL0lXOMEM5nRomD63aydTFygnUsuXgTqmo5o8S3r1fZ4FomXZzPCFLF
+        JmAo0fW2C6xDRMBa4tuMacwgNrPAD0aJx3dkQWxhoHjLmeuMIHewCKhKHF+QCxLmFbCRmPa3
+        jRFimbzE6g0HmEHmSwjcZ5OY8/IKO0TCReL3ojYoW1ji1fEtULaMxOnJPSwQDc2MEg/PrWWH
+        cHoYJS43zYAaay1x59wvNpDNzAKaEut36UOEHSWePnrICAkYPokbbwUhbuaTmLRtOjNEmFei
+        o00IolpNYtbxdXBrD164BFXiIdH/xQMkLCQQK3H+1ELGCYxysxBWLWBkXMUonlpanJueWmyY
+        l1quV5yYW1yal66XnJ+7iRGYEk7/O/5pB+PXS0mHGAU4GJV4eCdsYI0XYk0sK67MPcQowcGs
+        JMLrdPZ0nBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe40UvY4UE0hNLUrNTUwtSi2CyTBycUg2M
+        0RqHliU5uTfWLo5+8OaDyrlFeQd6696d7j67Ptm+vFTpJE+wh0eB+LeXkmvLJ+gmfXOv2x0+
+        yfd8VOjJeymT7m/97cXwhOdrsPE2oSeTvu0rS/y5J9zY5u23DaxZ0fUea4w5TjJH+53bq7Xv
+        Ud/krMCILb8mqz5lP6+whUlNME3xRMXsDL8kJZbijERDLeai4kQAP1mv3AUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsVy+t/xe7qWe1njDQ5elbHYOGM9q8XUh0/Y
+        LC7vmsNmMeP8PiaLxo832S3WHrnLbvH/8VdWi1sr/rI7cHhsWtXJ5tG3ZRWjx/otV1k8Pm+S
+        AzK2MgWwRunZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunb
+        JehldFx9xlTwVrWid85e1gbGB/JdjJwcEgImEksu3mTpYuTiEBJYyihx9/8+NoiEjMTJaQ2s
+        ELawxJ9rXWwQRZ8YJTrOTWcBSbAJGEp0ve0CaxARsJWY//4FK0gRs8AfRolHk56CdQsLWEu0
+        nLnO2MXIwcEioCpxfEEuSJhXwEZi2t82RogF8hKrNxxgnsDIs4CRYRWjSGppcW56brGRXnFi
+        bnFpXrpecn7uJkZgOG479nPLDsaud8GHGAU4GJV4eF9sYo0XYk0sK67MPcQowcGsJMLrdPZ0
+        nBBvSmJlVWpRfnxRaU5q8SFGU6DdE5mlRJPzgbGSVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZI
+        ID2xJDU7NbUgtQimj4mDU6qBcZ238yr3c5eSdp7/teLjr6W9ZpH/7ma01y6TeqlSq/loVv/P
+        l57FT/ZK5/xnKH7+VZ5JKSt35uf0c7/PtLEz/L61u/iiGMv9mCVaF3Yoxu0RmeLVKJeW9MEq
+        a4L7hevcFradQcc+nT5w6e4OU3bLrzPMyuzF3r99ol5dxHFf+GCZ9dIQR9bY20osxRmJhlrM
+        RcWJAESRfeldAgAA
+X-CMS-MailID: 20200708123401eucas1p1ec8fe745bb362c56f03798172a18324e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200708123401eucas1p1ec8fe745bb362c56f03798172a18324e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200708123401eucas1p1ec8fe745bb362c56f03798172a18324e
+References: <CGME20200708123401eucas1p1ec8fe745bb362c56f03798172a18324e@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use kthread_create_worker() helper to simplify the code. It uses
+the kthread worker API the right way. It will eventually allow
+to remove the FIXME in kthread_worker_fn() and add more consistency
+checks in the future.
 
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+v2:
+- changed patch description, removed stack dump
+---
+ drivers/spi/spi.c       | 26 ++++++++++++--------------
+ include/linux/spi/spi.h |  6 ++----
+ 2 files changed, 14 insertions(+), 18 deletions(-)
 
-On July 3, 2020 10:08:28 AM EDT, madhuparnabhowmik10@gmail=2Ecom wrote:
->From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail=2Ecom>
->
->list/hlist_for_each_entry_rcu() provides an optional cond argument
->to specify the lock held in the updater side=2E
->However for SRCU read side, not providing the cond argument results
->into false positive as whether srcu_read_lock is held or not is not
->checked implicitly=2E Therefore, on read side the lockdep expression
->srcu_read_lock_held(srcu struct) can solve this issue=2E
->
->However, the function still fails to check the cases where srcu
->protected list is traversed with rcu_read_lock() instead of
->srcu_read_lock()=2E Therefore, to remove the false negative,
->this patch introduces two new list traversal primitives :
->list_for_each_entry_srcu() and hlist_for_each_entry_srcu()=2E
->
->Both of the functions have non-optional cond argument
->as it is required for both read and update side, and simply checks
->if the cond is true=2E
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 805a51b6f54c..19a03a8d6199 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1368,7 +1368,7 @@ static void __spi_pump_messages(struct spi_controller *ctlr, bool in_kthread)
+ 
+ 	/* If another context is idling the device then defer */
+ 	if (ctlr->idling) {
+-		kthread_queue_work(&ctlr->kworker, &ctlr->pump_messages);
++		kthread_queue_work(ctlr->kworker, &ctlr->pump_messages);
+ 		spin_unlock_irqrestore(&ctlr->queue_lock, flags);
+ 		return;
+ 	}
+@@ -1382,7 +1382,7 @@ static void __spi_pump_messages(struct spi_controller *ctlr, bool in_kthread)
+ 
+ 		/* Only do teardown in the thread */
+ 		if (!in_kthread) {
+-			kthread_queue_work(&ctlr->kworker,
++			kthread_queue_work(ctlr->kworker,
+ 					   &ctlr->pump_messages);
+ 			spin_unlock_irqrestore(&ctlr->queue_lock, flags);
+ 			return;
+@@ -1616,7 +1616,7 @@ static void spi_set_thread_rt(struct spi_controller *ctlr)
+ {
+ 	dev_info(&ctlr->dev,
+ 		"will run message pump with realtime priority\n");
+-	sched_set_fifo(ctlr->kworker_task);
++	sched_set_fifo(ctlr->kworker->task);
+ }
+ 
+ static int spi_init_queue(struct spi_controller *ctlr)
+@@ -1624,13 +1624,12 @@ static int spi_init_queue(struct spi_controller *ctlr)
+ 	ctlr->running = false;
+ 	ctlr->busy = false;
+ 
+-	kthread_init_worker(&ctlr->kworker);
+-	ctlr->kworker_task = kthread_run(kthread_worker_fn, &ctlr->kworker,
+-					 "%s", dev_name(&ctlr->dev));
+-	if (IS_ERR(ctlr->kworker_task)) {
+-		dev_err(&ctlr->dev, "failed to create message pump task\n");
+-		return PTR_ERR(ctlr->kworker_task);
++	ctlr->kworker = kthread_create_worker(0, dev_name(&ctlr->dev));
++	if (IS_ERR(ctlr->kworker)) {
++		dev_err(&ctlr->dev, "failed to create message pump kworker\n");
++		return PTR_ERR(ctlr->kworker);
+ 	}
++
+ 	kthread_init_work(&ctlr->pump_messages, spi_pump_messages);
+ 
+ 	/*
+@@ -1714,7 +1713,7 @@ void spi_finalize_current_message(struct spi_controller *ctlr)
+ 	ctlr->cur_msg = NULL;
+ 	ctlr->cur_msg_prepared = false;
+ 	ctlr->fallback = false;
+-	kthread_queue_work(&ctlr->kworker, &ctlr->pump_messages);
++	kthread_queue_work(ctlr->kworker, &ctlr->pump_messages);
+ 	spin_unlock_irqrestore(&ctlr->queue_lock, flags);
+ 
+ 	trace_spi_message_done(mesg);
+@@ -1740,7 +1739,7 @@ static int spi_start_queue(struct spi_controller *ctlr)
+ 	ctlr->cur_msg = NULL;
+ 	spin_unlock_irqrestore(&ctlr->queue_lock, flags);
+ 
+-	kthread_queue_work(&ctlr->kworker, &ctlr->pump_messages);
++	kthread_queue_work(ctlr->kworker, &ctlr->pump_messages);
+ 
+ 	return 0;
+ }
+@@ -1796,8 +1795,7 @@ static int spi_destroy_queue(struct spi_controller *ctlr)
+ 		return ret;
+ 	}
+ 
+-	kthread_flush_worker(&ctlr->kworker);
+-	kthread_stop(ctlr->kworker_task);
++	kthread_destroy_worker(ctlr->kworker);
+ 
+ 	return 0;
+ }
+@@ -1820,7 +1818,7 @@ static int __spi_queued_transfer(struct spi_device *spi,
+ 
+ 	list_add_tail(&msg->queue, &ctlr->queue);
+ 	if (!ctlr->busy && need_pump)
+-		kthread_queue_work(&ctlr->kworker, &ctlr->pump_messages);
++		kthread_queue_work(ctlr->kworker, &ctlr->pump_messages);
+ 
+ 	spin_unlock_irqrestore(&ctlr->queue_lock, flags);
+ 	return 0;
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 0e67a9a3a1d3..5fcf5da13fdb 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -358,8 +358,7 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
+  * @cleanup: frees controller-specific state
+  * @can_dma: determine whether this controller supports DMA
+  * @queued: whether this controller is providing an internal message queue
+- * @kworker: thread struct for message pump
+- * @kworker_task: pointer to task for message pump kworker thread
++ * @kworker: pointer to thread struct for message pump
+  * @pump_messages: work struct for scheduling work to the message pump
+  * @queue_lock: spinlock to syncronise access to message queue
+  * @queue: message queue
+@@ -593,8 +592,7 @@ struct spi_controller {
+ 	 * Over time we expect SPI drivers to be phased over to this API.
+ 	 */
+ 	bool				queued;
+-	struct kthread_worker		kworker;
+-	struct task_struct		*kworker_task;
++	struct kthread_worker		*kworker;
+ 	struct kthread_work		pump_messages;
+ 	spinlock_t			queue_lock;
+ 	struct list_head		queue;
+-- 
+2.17.1
 
-Looks ok to me=2E Could you update the comment below to also clarify that =
-in regular read side usage, the traversal can be done by also passing the e=
-xpression srcu_read_lock_held which is also a lockdep expression=2E
-
-Could you post the user-patches along with it? That gives more context to =
-reviewers=2E
-
-Thanks!
-
-- Joel
-
-
->
->Suggested-by: Paolo Bonzini <pbonzini@redhat=2Ecom>
->Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail=2Ecom>
->---
-> include/linux/rculist=2Eh | 44 +++++++++++++++++++++++++++++++++++++++++
-> 1 file changed, 44 insertions(+)
->
->diff --git a/include/linux/rculist=2Eh b/include/linux/rculist=2Eh
->index df587d181844=2E=2E04a7e5791c39 100644
->--- a/include/linux/rculist=2Eh
->+++ b/include/linux/rculist=2Eh
->@@ -63,9 +63,17 @@ static inline void INIT_LIST_HEAD_RCU(struct
->list_head *list)
-> 	RCU_LOCKDEP_WARN(!(cond) && !rcu_read_lock_any_held(),		\
-> 			 "RCU-list traversed in non-reader section!");	\
-> 	})
->+
->+#define __list_check_srcu(cond)					 \
->+	({								 \
->+	RCU_LOCKDEP_WARN(!(cond),					 \
->+		"RCU-list traversed without holding the required lock!");\
->+	})
-> #else
-> #define __list_check_rcu(dummy, cond, extra=2E=2E=2E)				\
-> 	({ check_arg_count_one(extra); })
->+
->+#define __list_check_srcu(cond)
-> #endif
->=20
-> /*
->@@ -383,6 +391,23 @@ static inline void
->list_splice_tail_init_rcu(struct list_head *list,
-> 		&pos->member !=3D (head);					\
-> 		pos =3D list_entry_rcu(pos->member=2Enext, typeof(*pos), member))
->=20
->+/**
->+ * list_for_each_entry_srcu	-	iterate over rcu list of given type
->+ * @pos:	the type * to use as a loop cursor=2E
->+ * @head:	the head for your list=2E
->+ * @member:	the name of the list_head within the struct=2E
->+ * @cond:	lockdep expression for the lock required to traverse the
->list=2E
->+ *
->+ * This list-traversal primitive may safely run concurrently with
->+ * the _rcu list-mutation primitives such as list_add_rcu()
->+ * as long as the traversal is guarded by srcu_read_lock()=2E
->+ */
->+#define list_for_each_entry_srcu(pos, head, member, cond)		\
->+	for (__list_check_srcu(cond),					\
->+	     pos =3D list_entry_rcu((head)->next, typeof(*pos), member);	\
->+		&pos->member !=3D (head);					\
->+		pos =3D list_entry_rcu(pos->member=2Enext, typeof(*pos), member))
->+
-> /**
->  * list_entry_lockless - get the struct for this entry
->  * @ptr:        the &struct list_head pointer=2E
->@@ -681,6 +706,25 @@ static inline void hlist_add_behind_rcu(struct
->hlist_node *n,
-> 		pos =3D hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
-> 			&(pos)->member)), typeof(*(pos)), member))
->=20
->+/**
->+ * hlist_for_each_entry_srcu - iterate over rcu list of given type
->+ * @pos:	the type * to use as a loop cursor=2E
->+ * @head:	the head for your list=2E
->+ * @member:	the name of the hlist_node within the struct=2E
->+ * @cond:	lockdep expression for the lock required to traverse the
->list=2E
->+ *
->+ * This list-traversal primitive may safely run concurrently with
->+ * the _rcu list-mutation primitives such as hlist_add_head_rcu()
->+ * as long as the traversal is guarded by srcu_read_lock()=2E
->+ */
->+#define hlist_for_each_entry_srcu(pos, head, member, cond)		\
->+	for (__list_check_srcu(cond),					\
->+	     pos =3D
->hlist_entry_safe(rcu_dereference_raw(hlist_first_rcu(head)),\
->+			typeof(*(pos)), member);			\
->+		pos;							\
->+		pos =3D hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
->+			&(pos)->member)), typeof(*(pos)), member))
->+
-> /**
->* hlist_for_each_entry_rcu_notrace - iterate over rcu list of given
->type (for tracing)
->  * @pos:	the type * to use as a loop cursor=2E
-
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
