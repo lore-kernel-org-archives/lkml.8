@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA26C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA38C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1571E20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EF2206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgGHRu6 (ORCPT
+        id S1727061AbgGHRvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:50:58 -0400
+        Wed, 8 Jul 2020 13:51:03 -0400
 Received: from mga05.intel.com ([192.55.52.43]:31336 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbgGHRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:50:57 -0400
-IronPort-SDR: pOr1ab1oPu2rxiI7OswnYmBHVCtM4Gq34Td1fJzWo9PU0WrZp0Wo3d0dDV1yjG8anrS/fhzsEU
- KnukIHzFYYjA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="232753567"
+        id S1725937AbgGHRvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:51:02 -0400
+IronPort-SDR: J8/mDWqOxbWMFJuVzUozd+5AGSvgKfP9hRBYoF8QQdv77VK2P4jqCAWpzeuQXDdK61cIrq0d79
+ CyLBrAgSZwsw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="232753577"
 X-IronPort-AV: E=Sophos;i="5.75,328,1589266800"; 
-   d="scan'208";a="232753567"
+   d="scan'208";a="232753577"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 10:50:57 -0700
-IronPort-SDR: hQqu/5M6q4nS/e14LAVyoT9Jl2/HL/XMHI5+al7gkntaeU8cIWSarqjxPsXnj+BSFkjrLKHFf5
- ZfxZ72M8rZjA==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 10:51:01 -0700
+IronPort-SDR: QGueSo69Rneunb1hXeQgL4SMrjBiL8w+qWm/2W2VPReUojcNXFAh+Z+5zPFA+DNfeZDI5BbBuT
+ 56f1rJwTG5vQ==
 X-IronPort-AV: E=Sophos;i="5.75,328,1589266800"; 
-   d="scan'208";a="457591975"
+   d="scan'208";a="457592062"
 Received: from sgyanama-mobl1.gar.corp.intel.com (HELO dalessan-mobl1.ir.intel.com) ([10.252.5.67])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 10:50:53 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 10:50:57 -0700
 From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
 List-Id: <soc.lore.kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
@@ -46,9 +46,9 @@ Cc:     devicetree@vger.kernel.org,
         Paul Murphy <paul.j.murphy@intel.com>,
         Will Deacon <will@kernel.org>,
         Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-Subject: [PATCH v2 4/5] arm64: dts: keembay: Add device tree for Keem Bay SoC
-Date:   Wed,  8 Jul 2020 18:50:19 +0100
-Message-Id: <20200708175020.194436-5-daniele.alessandrelli@linux.intel.com>
+Subject: [PATCH v2 5/5] arm64: dts: keembay: Add device tree for Keem Bay EVM board
+Date:   Wed,  8 Jul 2020 18:50:20 +0100
+Message-Id: <20200708175020.194436-6-daniele.alessandrelli@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200708175020.194436-1-daniele.alessandrelli@linux.intel.com>
 References: <20200708175020.194436-1-daniele.alessandrelli@linux.intel.com>
@@ -61,161 +61,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
 
-Add initial device tree for Intel Movidius SoC code-named Keem Bay.
-
-This initial DT includes nodes for Cortex-A53 cores, UARTs, GIC, PSCI,
-and PMU.
+Add initial device tree for Keem Bay EVM board. With this minimal device
+tree the board boots fine using an initramfs image.
 
 Reviewed-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
 ---
- MAINTAINERS                                |   1 +
- arch/arm64/boot/dts/intel/keembay-soc.dtsi | 125 +++++++++++++++++++++
- 2 files changed, 126 insertions(+)
- create mode 100644 arch/arm64/boot/dts/intel/keembay-soc.dtsi
+ MAINTAINERS                               |  1 +
+ arch/arm64/boot/dts/intel/Makefile        |  1 +
+ arch/arm64/boot/dts/intel/keembay-evm.dts | 39 +++++++++++++++++++++++
+ 3 files changed, 41 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/intel/keembay-evm.dts
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index ceb833fa04dd..53d2f8d0976a 100644
+index 53d2f8d0976a..d7dcb3a86201 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -1959,6 +1959,7 @@ M:	Paul J. Murphy <paul.j.murphy@intel.com>
  M:	Daniele Alessandrelli <daniele.alessandrelli@intel.com>
  S:	Maintained
  F:	Documentation/devicetree/bindings/arm/keembay.yaml
-+F:	arch/arm64/boot/dts/intel/keembay-soc.dtsi
++F:	arch/arm64/boot/dts/intel/keembay-evm.dts
+ F:	arch/arm64/boot/dts/intel/keembay-soc.dtsi
  F:	include/dt-bindings/clock/keembay-clocks.h
  F:	include/dt-bindings/power/keembay-power.h
- 
-diff --git a/arch/arm64/boot/dts/intel/keembay-soc.dtsi b/arch/arm64/boot/dts/intel/keembay-soc.dtsi
+diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
+index 40cb16e8c814..296eceec4276 100644
+--- a/arch/arm64/boot/dts/intel/Makefile
++++ b/arch/arm64/boot/dts/intel/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ dtb-$(CONFIG_ARCH_AGILEX) += socfpga_agilex_socdk.dtb \
+ 			     socfpga_agilex_socdk_nand.dtb
++dtb-$(CONFIG_ARCH_KEEMBAY) += keembay-evm.dtb
+diff --git a/arch/arm64/boot/dts/intel/keembay-evm.dts b/arch/arm64/boot/dts/intel/keembay-evm.dts
 new file mode 100644
-index 000000000000..4aaf543f3ad1
+index 000000000000..92a7500efc61
 --- /dev/null
-+++ b/arch/arm64/boot/dts/intel/keembay-soc.dtsi
-@@ -0,0 +1,125 @@
++++ b/arch/arm64/boot/dts/intel/keembay-evm.dts
+@@ -0,0 +1,39 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Copyright (C) 2020, Intel Corporation.
++ * Copyright (C) 2020, Intel Corporation
 + *
-+ * Device tree describing Keem Bay SoC.
++ * Device tree describing Keem Bay EVM board.
 + */
 +
-+#include <dt-bindings/clock/keembay-clocks.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/keembay-power.h>
++/dts-v1/;
++
++#include "keembay-soc.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
 +
 +/ {
-+	interrupt-parent = <&gic>;
++	model = "Keem Bay EVM";
++	compatible = "intel,keembay-evm", "intel,keembay";
++
 +	#address-cells = <2>;
 +	#size-cells = <2>;
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@2 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@3 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x3>;
-+			enable-method = "psci";
-+		};
++	aliases {
++		serial0 = &uart3;
 +	};
 +
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
++	chosen {
++		stdout-path = "serial0:115200n8";
 +	};
 +
-+	gic: interrupt-controller@20500000 {
-+		compatible = "arm,gic-v3";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		reg = <0x0 0x20500000 0x0 0x20000>,	/* GICD */
-+		      <0x0 0x20580000 0x0 0x80000>;	/* GICR */
-+		/* VGIC maintenance interrupt */
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++	memory@80000000 {
++		device_type = "memory";
++		/* 2GB of DDR memory. */
++		reg = <0x0 0x80000000 0x0 0x80000000>;
 +	};
 +
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		/* Secure, non-secure, virtual, and hypervisor */
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+	};
++};
 +
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 0x7 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		uart0: serial@20150000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20150000 0x0 0x100>;
-+			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <24000000>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@20160000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20160000 0x0 0x100>;
-+			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <24000000>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@20170000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20170000 0x0 0x100>;
-+			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <24000000>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@20180000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20180000 0x0 0x100>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <24000000>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+	};
++&uart3 {
++	status = "okay";
 +};
 -- 
 2.26.2
