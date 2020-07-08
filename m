@@ -2,114 +2,150 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C74C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF92C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15A1C20739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2ACD20771
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594209210;
-	bh=E+EUipXnOwiceYUQyD8gaieTahdEDGfXPzYwNDoTWCU=;
+	s=default; t=1594209322;
+	bh=22nTINdPpRrgqNKP5ovEptQ7G99aXclGvmXlCKBzrEI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ByGa+Fx+XYpAZDpisv1Fb3N/wGWlYv6lLMI/KERiE0WccuKw01jzIC7pcKdgRyuHG
-	 0JUd2F9Es+OFnKYvi/ALaI1Yd5CIZ/rfoO5sBt7irW0uFQOfPoIjQsRlvZjnAAYwwN
-	 BOPZ92h/TLTMP9FoPKY+Iga7TeL/7VUnotpZrt3A=
+	b=C2USvChQP4I/XYN+qX3NNVc+M6fIsTQWM6G1S1E1WAEM6HaJ5N6HaI1C50Y3jC1yj
+	 jVx860dXm9ulSSyA3f1jnEXSt1hAbZGKlWS7/L7kJlx7TmlM2Snde/z8eODfeoIRrq
+	 YSsCJkhYlz0yq9+vjBGJOpCMoaxD51vRHsWcSPZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbgGHLx2 (ORCPT
+        id S1728936AbgGHLzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:53:28 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36433 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728598AbgGHLx2 (ORCPT
+        Wed, 8 Jul 2020 07:55:22 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:51891 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728592AbgGHLzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:53:28 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d10so6052130pll.3;
-        Wed, 08 Jul 2020 04:53:28 -0700 (PDT)
+        Wed, 8 Jul 2020 07:55:21 -0400
+Received: by mail-pj1-f66.google.com with SMTP id ls15so434307pjb.1;
+        Wed, 08 Jul 2020 04:55:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Sa8n1TRJl8q0W3/65oG3rXoiqfk7+dLp1Myv9f9hyk0=;
-        b=LF063OQiMTO+ZVsKMRzbLjt9c3j1UWV0rQsv47aQCNGSdiXlDknth9QJUmCJplkFwv
-         OkI140aryqPgV27evGkx0AztsrtgeS13gKL2keKT2nYYHBj8ILY73ORSPeNwKZah9qtI
-         PRchJZS8NPVXvafslx+ml+09d80aKoYUucr02dH8V1xFqyV4DdZK9ucSGKmf583Q4x0w
-         YtpI23l5oPGqsGG/pv4EmMAPPis4yLhtLBEJfwiAS20szsMjG4rqVYz/qBUwYom8z/eu
-         6VdOfnZEBwOjq2V6q4Eo0BwkKxjaGM1y2r8PT610LCes7u4b8EEdF7X0HhEULIJIHYyx
-         N2Jw==
-X-Gm-Message-State: AOAM5324kSu97CGNX9KLBGyvh2QTdnNzd+Ba1walutANR0Mb3afegAhO
-        d66e5vslkRKpgtB+oOx4SG4=
-X-Google-Smtp-Source: ABdhPJxjHXf1yB+wkqMfjw38cNqjbu5cvN3h2X2giW8Tg6UVZvLPEsbiaOISZ/qPNmEY+x69Z7lFLw==
-X-Received: by 2002:a17:902:6b86:: with SMTP id p6mr49774517plk.47.1594209207638;
-        Wed, 08 Jul 2020 04:53:27 -0700 (PDT)
+        bh=jTBZMKlUFpNmWtFn4HrVodPcCTzQQGJkYgOfgBAYscY=;
+        b=QbWYJMRC1FMBssFToN6lX3FN3Z1KfD1XTPJw9e2bZ+S/oxwWPIW2H4htJ8Vyi3bfMn
+         vRlBj/Lh2nbCGBKA32qcbY4yWqjCXk1qgS0TXuDjxWyXAZu/mhPms5NlkSIAKDSesiZD
+         akXY8SQexPtwibggcsrhBW7B9pdYe8tExmkX/bzB7r7D09ZSRJF4RIs6AIAw4vx+wxMu
+         IyXDAp/8rJsVd9fx/C1XRIACjppI4t8sCCU75AzGoLNsfAEII/M3SNpOgrRKIRo/NmPx
+         QFd/c+gTV07e8eh1XyCnxJk6JGE7GtBcu5oYAQIZfCHi98I5vTBWb3Sdm7LuEaajkHPW
+         XOpQ==
+X-Gm-Message-State: AOAM533OWBpHHWoS1zGcOervFLmOtG4SBM/AJyeQoUKpA8NjIo7nIWYM
+        20Yh5hZQZNfpT8b8i5NnS94=
+X-Google-Smtp-Source: ABdhPJxdjdl5pXFLkToBY02YEqh8lbtVQNFTH37/2AyToUDE4A78TloW0lF97T9BOE0kCq5Z4IZ50w==
+X-Received: by 2002:a17:902:20a:: with SMTP id 10mr22378243plc.127.1594209320371;
+        Wed, 08 Jul 2020 04:55:20 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id j2sm6092410pjy.1.2020.07.08.04.53.25
+        by smtp.gmail.com with ESMTPSA id 17sm23498716pfv.16.2020.07.08.04.55.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 04:53:25 -0700 (PDT)
+        Wed, 08 Jul 2020 04:55:18 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id F151D401AE; Wed,  8 Jul 2020 11:53:24 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 11:53:24 +0000
+        id 07E68401AE; Wed,  8 Jul 2020 11:55:18 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 11:55:17 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>, shuah@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: KMOD KERNEL MODULE
- LOADER - USERMODE HELPER
-Message-ID: <20200708115324.GE4332@42.do-not-panic.com>
-References: <20200708071337.13108-1-grandmaster@al2klimov.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        James Morris <jmorris@namei.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jessica Yu <jeyu@kernel.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
+        Peter Jones <pjones@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <stephen.boyd@linaro.org>,
+        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 0/4] Fix misused kernel_read_file() enums
+Message-ID: <20200708115517.GF4332@42.do-not-panic.com>
+References: <20200707081926.3688096-1-keescook@chromium.org>
+ <3c01073b-c422-dd97-0677-c16fe1158907@redhat.com>
+ <f5e65f73-2c94-3614-2479-69b2bfda9775@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708071337.13108-1-grandmaster@al2klimov.de>
+In-Reply-To: <f5e65f73-2c94-3614-2479-69b2bfda9775@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 09:13:37AM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On Wed, Jul 08, 2020 at 01:37:41PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+> On 7/8/20 1:01 PM, Hans de Goede wrote:
+> > Hi,
+> > 
+> > On 7/7/20 10:19 AM, Kees Cook wrote:
+> > > Hi,
+> > > 
+> > > In looking for closely at the additions that got made to the
+> > > kernel_read_file() enums, I noticed that FIRMWARE_PREALLOC_BUFFER
+> > > and FIRMWARE_EFI_EMBEDDED were added, but they are not appropriate
+> > > *kinds* of files for the LSM to reason about. They are a "how" and
+> > > "where", respectively. Remove these improper aliases and refactor the
+> > > code to adapt to the changes.
+> > > 
+> > > Additionally adds in missing calls to security_kernel_post_read_file()
+> > > in the platform firmware fallback path (to match the sysfs firmware
+> > > fallback path) and in module loading. I considered entirely removing
+> > > security_kernel_post_read_file() hook since it is technically unused,
+> > > but IMA probably wants to be able to measure EFI-stored firmware images,
+> > > so I wired it up and matched it for modules, in case anyone wants to
+> > > move the module signature checks out of the module core and into an LSM
+> > > to avoid the current layering violations.
+> > > 
+> > > This touches several trees, and I suspect it would be best to go through
+> > > James's LSM tree.
+> > > 
+> > > Thanks!
+> > 
+> > 
+> > I've done some quick tests on this series to make sure that
+> > the efi embedded-firmware support did not regress.
+> > That still works fine, so this series is;
+> > 
+> > Tested-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> I made a mistake during testing I was not actually running the
+> kernel with the patches added.
+> 
+> After fixing that I did find a problem, patch 4/4:
+> "module: Add hook for security_kernel_post_read_file()"
+> 
+> Breaks module-loading for me. This is with the 4 patches
+> on top of 5.8.0-rc4, so this might just be because I'm
+> not using the right base.
+> 
+> With patch 4/4 reverted things work fine for me.
+> 
+> So, please only add my Tested-by to patches 1-3.
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-
-Shuah, can this go through your tree?
+BTW is there any testing covered by the selftests for the firmware
+laoder which would have caputured this? If not can you extend
+it with something to capture this case you ran into?
 
   Luis
-
-> ---
->  tools/testing/selftests/kmod/kmod.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-> index 3702dbcc90a7..84409020a40f 100755
-> --- a/tools/testing/selftests/kmod/kmod.sh
-> +++ b/tools/testing/selftests/kmod/kmod.sh
-> @@ -128,7 +128,7 @@ test_reqs()
->  	if [[ $KMOD_VERSION  -le 19 ]]; then
->  		echo "$0: You need at least kmod 20" >&2
->  		echo "kmod <= 19 is buggy, for details see:" >&2
-> -		echo "http://git.kernel.org/cgit/utils/kernel/kmod/kmod.git/commit/libkmod/libkmod-module.c?id=fd44a98ae2eb5eb32161088954ab21e58e19dfc4" >&2
-> +		echo "https://git.kernel.org/cgit/utils/kernel/kmod/kmod.git/commit/libkmod/libkmod-module.c?id=fd44a98ae2eb5eb32161088954ab21e58e19dfc4" >&2
->  		exit $ksft_skip
->  	fi
->  
-> -- 
-> 2.27.0
-> 
