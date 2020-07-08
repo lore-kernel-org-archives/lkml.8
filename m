@@ -2,103 +2,83 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E365C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6EE2222D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346E72222B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgGHJBX (ORCPT
+        id S1727075AbgGHJBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:01:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58014 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725789AbgGHJBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:01:22 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5B526176F74C11234AA2;
-        Wed,  8 Jul 2020 17:01:19 +0800 (CST)
-Received: from [127.0.0.1] (10.174.186.75) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Wed, 8 Jul 2020
- 17:01:09 +0800
-Subject: Re: [RFC PATCH v4 2/2] arm64: tlb: Use the TLBI RANGE feature in
- arm64
-To:     Catalin Marinas <catalin.marinas@arm.com>
-CC:     <will@kernel.org>, <suzuki.poulose@arm.com>, <maz@kernel.org>,
-        <steven.price@arm.com>, <guohanjun@huawei.com>, <olof@lixom.net>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-References: <20200601144713.2222-1-yezhenyu2@huawei.com>
- <20200601144713.2222-3-yezhenyu2@huawei.com> <20200707173617.GA32331@gaia>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <f362680d-b16f-e713-153d-2e026fa8bfd4@huawei.com>
-Date:   Wed, 8 Jul 2020 17:01:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 8 Jul 2020 05:01:42 -0400
+Received: from www62.your-server.de ([213.133.104.62]:36960 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgGHJBm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 05:01:42 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jt5xQ-0002sR-Fr; Wed, 08 Jul 2020 11:01:36 +0200
+Received: from [178.196.57.75] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jt5xQ-000Xy5-8p; Wed, 08 Jul 2020 11:01:36 +0200
+Subject: Re: add an API to check if a streamming mapping needs sync calls
+To:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
+Cc:     Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200629130359.2690853-1-hch@lst.de>
+ <b97104e1-433c-8e35-59c6-b4dad047464c@intel.com>
+ <20200708074418.GA6815@lst.de>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <ce7dc444-534e-636b-81d8-dbad249ad6aa@iogearbox.net>
+Date:   Wed, 8 Jul 2020 11:01:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200707173617.GA32331@gaia>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.186.75]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200708074418.GA6815@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.3/25866/Tue Jul  7 15:47:52 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
-
-On 2020/7/8 1:36, Catalin Marinas wrote:
-> On Mon, Jun 01, 2020 at 10:47:13PM +0800, Zhenyu Ye wrote:
->> @@ -59,6 +69,47 @@
->>  		__ta;						\
->>  	})
->>  
->> +/*
->> + * __TG defines translation granule of the system, which is decided by
->> + * PAGE_SHIFT.  Used by TTL.
->> + *  - 4KB	: 1
->> + *  - 16KB	: 2
->> + *  - 64KB	: 3
->> + */
->> +#define __TG	((PAGE_SHIFT - 12) / 2 + 1)
+On 7/8/20 9:44 AM, Christoph Hellwig wrote:
+> On Mon, Jun 29, 2020 at 03:39:01PM +0200, Björn Töpel wrote:
+>> On 2020-06-29 15:03, Christoph Hellwig wrote:
+>>> Hi all,
+>>>
+>>> this series lifts the somewhat hacky checks in the XSK code if a DMA
+>>> streaming mapping needs dma_sync_single_for_{device,cpu} calls to the
+>>> DMA API.
+>>>
+>>
+>> Thanks a lot for working on, and fixing this, Christoph!
+>>
+>> I took the series for a spin, and there are (obviously) no performance
+>> regressions.
+>>
+>> Would the patches go through the net/bpf trees or somewhere else?
 > 
-> Nitpick: maybe something like __TLBI_TG to avoid clashes in case someone
-> else defines a __TG macro.
-> 
+> Where did this end up?  I still don't see it in Linus' tree and this
+> is getting urgent now.
 
-Thanks for your review. According to Marc and Robin's suggestion, I will remove this
-macro.
-I'd like implement this in a function beacause it's used in both TTL and TLB RANGE.
+It was merged into bpf tree and we sent the PR to DaveM which was merged into
+net tree around a week ago [0]; I assume the PR for net might go to Linus soon
+this week.
 
->> -	for (addr = start; addr < end; addr += stride) {
->> -		if (last_level) {
->> -			__tlbi(vale1is, addr);
->> -			__tlbi_user(vale1is, addr);
->> -		} else {
->> -			__tlbi(vae1is, addr);
->> -			__tlbi_user(vae1is, addr);
->> +	while (range_pages > 0) {
->> +		if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
->> +		    stride == PAGE_SIZE) {
-> 
-> I think we could have the odd range_pages check here:
-> 
-> 		if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
-> 		    stride == PAGE_SIZE && range_pages % 2 == 0) {
-> 
-> and avoid the one outside the loop.
-> 
-
-This may need some other necessary changes to do this. See in next version series.
-
-Thanks,
-Zhenyu
-
+   [0] https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=e708e2bd55c921f5bb554fa5837d132a878951cf
