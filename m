@@ -2,195 +2,119 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1884CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A21FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEAD620772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 002A420775
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qBuqwOKV"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="q+Qn5/TO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgGHXEo (ORCPT
+        id S1726275AbgGHXGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
+        Wed, 8 Jul 2020 19:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726311AbgGHXEn (ORCPT
+        with ESMTP id S1726044AbgGHXGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:04:43 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 376BAC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:04:43 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id u64so533378ybf.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:04:43 -0700 (PDT)
+        Wed, 8 Jul 2020 19:06:30 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F7A8C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:06:30 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id lx13so226344ejb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Jny5Jx5rRXxMy/sC2H9QJqimOZ5hbGj1rz6/5Fw+2UM=;
-        b=qBuqwOKV7bQlTsZUh6QG8X200PnhiWCcbV0CYfl/19ebuoYpaCjHciGfnwc4xpERiT
-         oGPwUKczb7e640dhE0Aetn212ws5ZrUM3c/EQj5xTcSKYbcE5ExNgxomuuDJ+acfv71V
-         MJaEaoZJycaKvBSrcwpO2oNt5soZHpkv881Iu5Jf4BTm7TVwPgMQVIrq+Y4batucKEz6
-         on/7aQN4fzu871sdsToAy7qBev0UAp1EEg6tXuHsLfTp/e15QD/vrV5NTyRXFtj7HfMI
-         xA8Kz5pTqUGoY7ZjHluAxocSkJAJtR+nFsshyr1oRyruKJ0sXpixnNJIo2xRa0f9R5Ar
-         REyA==
+        bh=2jApHR8WZLOFE/3qde/qPD8ZtCUTqk+p5HMCDcm4XcE=;
+        b=q+Qn5/TO5qyj1SaFlPI7928PUOSkBfuzrAV+iYm14zPwybCFy3PMOcolKsCPzShBd4
+         pEs9F0B1JDt/lqiFdctP7GUOMvrKAhDSyEePNbSH+2B9VUeTiSPWwU5sGak2AtFFqUBY
+         m71JTIDwWnSJeTGeLgl8AHhD8Vjbx7yDhfn3OwNPc+vvRdJHHvit47FaiLztOVYW7B3z
+         AU2ENBu+1fT04qgSa5oLRjWvc3LHdZQOIVW7u1JJoK6ta2hdRo7vttBZnoA2lWJHXsAd
+         EUPwatFGjpSR6r6lbJvP13kUBeyizOL8nPpcsuN39CEplK5j+IWt08kAjq4Q47J2os3d
+         oDcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Jny5Jx5rRXxMy/sC2H9QJqimOZ5hbGj1rz6/5Fw+2UM=;
-        b=LdlgirgPs4ZqmovhvzPmCSWDTIoZExFlS8cHRfIOTcnkDS29sn+SwYd9sTHF5NhjE0
-         6S5lA7yoR6IXulNQRuG9NFZp9RQffedv+6CXwkKVYL45ZTI8YE+XMob9VYLA3ZrUYSMs
-         VyvVdOhXe75uZ016+5zle4z3qjOQrf+Ay/HwGWeZb09yBBdng/O7jyW54u7SVuXFaGJn
-         30SeafZ1XmDMCETgcSx6ZwaCEjo26l0+pMtvUXQ4n+iQQbZRpnkc5ap2c8lXwPTNeyQD
-         jfQqOJ04S2P5i1Iyns1+/PsTXuZROGqQpaq9s7MIeYiP/AOwCDO8uklN2TKmw1m3NB2j
-         2pvA==
-X-Gm-Message-State: AOAM533KTqjZpU7EiA4qKkgG2VF7OKVsijIueUvnvJSnPJyJi7LeYbIn
-        Udt3dKwvNKobsS+vGQceVrMYCXAW54UvpDFVd3c=
-X-Google-Smtp-Source: ABdhPJx6jLZ9Y3bCf7Mw+P2PyuwSU2tVMYJaFk4lhhD9G80zH3tVnFyX+9w1cgH2JUvzLVddrT8iwMoEC8RM5uAoVTs=
-X-Received: by 2002:a25:bf8c:: with SMTP id l12mr106119503ybk.447.1594249482233;
- Wed, 08 Jul 2020 16:04:42 -0700 (PDT)
-Date:   Wed,  8 Jul 2020 16:04:02 -0700
-In-Reply-To: <20200708230402.1644819-1-ndesaulniers@google.com>
-Message-Id: <20200708230402.1644819-3-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20200708230402.1644819-1-ndesaulniers@google.com>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH v2 2/2] bitfield.h: split up __BF_FIELD_CHECK macro
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, oss-drivers@netronome.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alex Elder <elder@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2jApHR8WZLOFE/3qde/qPD8ZtCUTqk+p5HMCDcm4XcE=;
+        b=NlhW9O8yz+CGHFvWYINrQ1F/pfNOXUlJdtWfcKg3j4Wr7T87BAHEBE1fK7mAW0WBfI
+         Nezy7YHRQ3ov6c5Up+3PfJY0ZkdoyE4MzOZGfIHmQunvQDvGnXf/u8F9dGm3vEeWWQgX
+         BMur3TV/oEtJ7JzVco2xMnb0jQI69uBZ1sd3Ck6sXmoShJnPN26tzO5YYG0pecb+cY0f
+         fkmOCDmymS8M15xAfc36vD+LxSiimgpQ2ipJ+EVRczGBUhzVmBGXVBoIZabkZ0Bvkw+j
+         3GVc3xfFChc8I+SOoAKudIE+Ck4wDwfKKw+MOdZKmG48mj7V7ksT9zi0oonw0Mp4ZkWo
+         liFA==
+X-Gm-Message-State: AOAM533elbVnFzhgdrizeEUDxaVy7PMEmfzjWJrnLjQvp3Vik1mky7KP
+        pL8Qn+G96aZ+w9Dn7MbkaFJEmV5kFzdxhBDu7q1s
+X-Google-Smtp-Source: ABdhPJxEI74qZhwUWSKk0hFFl180ExVWBpR6pJlwatkcRmWOeQZ+z2OKCc+DEzr4Hd0AhJGNQUM5Ky2Op4P28Eh4efw=
+X-Received: by 2002:a17:906:456:: with SMTP id e22mr47815401eja.178.1594249589239;
+ Wed, 08 Jul 2020 16:06:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <878ac79163e31142963f1cd4f743599c35b6754a.1593691408.git.rgb@redhat.com>
+In-Reply-To: <878ac79163e31142963f1cd4f743599c35b6754a.1593691408.git.rgb@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 8 Jul 2020 19:06:18 -0400
+Message-ID: <CAHC9VhT59qkGZar0wUkNK7uVsKvHVQL4-P-gmw+99F8eTKkz-w@mail.gmail.com>
+Subject: Re: [PATCH ghak96 v3] audit: issue CWD record to accompany
+ LSM_AUDIT_DATA_* records
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Eric Paris <eparis@parisplace.org>, john.johansen@canonical.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This macro has a few expansion sites that pass literal 0s as parameters.
-Split these up so that we do the precise checks where we care about
-them.
+On Fri, Jul 3, 2020 at 12:56 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>
+> The LSM_AUDIT_DATA_* records for PATH, FILE, IOCTL_OP, DENTRY and INODE
+> are incomplete without the task context of the AUDIT Current Working
+> Directory record.  Add it.
+>
+> This record addition can't use audit_dummy_context to determine whether
+> or not to store the record information since the LSM_AUDIT_DATA_*
+> records are initiated by various LSMs independent of any audit rules.
+> context->in_syscall is used to determine if it was called in user
+> context like audit_getname.
+>
+> Please see the upstream issue
+> https://github.com/linux-audit/audit-kernel/issues/96
+>
+> Adapted from Vladis Dronov's v2 patch.
+>
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+> Passes audit-testsuite.
+>
+> Changelog:
+> v3
+> - adapt and refactor__audit_getname, don't key on dummy
+>
+> v2
+> 2020-04-02 vdronov https://www.redhat.com/archives/linux-audit/2020-April/msg00004.html
+> - convert to standalone CWD record
+>
+> v1:
+> 2020-03-24 vdronov https://github.com/nefigtut/audit-kernel/commit/df0b55b7ab84e1c9faa588b08e547e604bf25c87
+> - add cwd= field to LSM record
+>
+>  include/linux/audit.h |  9 ++++++++-
+>  kernel/auditsc.c      | 17 +++++++++++++++--
+>  security/lsm_audit.c  |  5 +++++
+>  3 files changed, 28 insertions(+), 3 deletions(-)
 
-Suggested-by: Alex Elder <elder@linaro.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V1-V2:
-* New patch in v2.
-* Rebased on 0001.
+Merged into audit/next, thanks.
 
- .../netronome/nfp/nfpcore/nfp_nsp_eth.c       | 11 ++++----
- include/linux/bitfield.h                      | 26 +++++++++++++------
- 2 files changed, 24 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c
-index 311a5be25acb..938fc733fccb 100644
---- a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c
-@@ -492,11 +492,12 @@ nfp_eth_set_bit_config(struct nfp_nsp *nsp, unsigned int raw_idx,
- 	return 0;
- }
- 
--#define NFP_ETH_SET_BIT_CONFIG(nsp, raw_idx, mask, val, ctrl_bit)	\
--	({								\
--		__BF_FIELD_CHECK(mask, 0ULL, val, "NFP_ETH_SET_BIT_CONFIG: "); \
--		nfp_eth_set_bit_config(nsp, raw_idx, mask, __bf_shf(mask), \
--				       val, ctrl_bit);			\
-+#define NFP_ETH_SET_BIT_CONFIG(nsp, raw_idx, mask, val, ctrl_bit)		\
-+	({									\
-+		__BF_FIELD_CHECK_MASK(mask, "NFP_ETH_SET_BIT_CONFIG: ");	\
-+		__BF_FIELD_CHECK_VAL(mask, val, "NFP_ETH_SET_BIT_CONFIG: ");	\
-+		nfp_eth_set_bit_config(nsp, raw_idx, mask, __bf_shf(mask),	\
-+				       val, ctrl_bit);				\
- 	})
- 
- /**
-diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-index 4e035aca6f7e..79651867beb3 100644
---- a/include/linux/bitfield.h
-+++ b/include/linux/bitfield.h
-@@ -41,18 +41,26 @@
- 
- #define __bf_shf(x) (__builtin_ffsll(x) - 1)
- 
--#define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)			\
-+#define __BF_FIELD_CHECK_MASK(_mask, _pfx)				\
- 	({								\
- 		BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),		\
- 				 _pfx "mask is not constant");		\
- 		BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");	\
-+		__BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +			\
-+					      (1ULL << __bf_shf(_mask))); \
-+	})
-+
-+#define __BF_FIELD_CHECK_VAL(_mask, _val, _pfx)				\
-+	({								\
- 		BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?		\
- 				 ~((_mask) >> __bf_shf(_mask)) & (_val) : 0, \
- 				 _pfx "value too large for the field"); \
--		BUILD_BUG_ON_MSG((_mask) > (typeof(_reg))~0ull,		\
-+	})
-+
-+#define __BF_FIELD_CHECK_REG(_mask, _reg, _pfx)				\
-+	({								\
-+		BUILD_BUG_ON_MSG((_mask) > (typeof(_reg))~0ULL,		\
- 				 _pfx "type of reg too small for mask"); \
--		__BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +			\
--					      (1ULL << __bf_shf(_mask))); \
- 	})
- 
- /**
-@@ -64,7 +72,7 @@
-  */
- #define FIELD_MAX(_mask)						\
- 	({								\
--		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_MAX: ");	\
-+		__BF_FIELD_CHECK_MASK(_mask, "FIELD_MAX: ");		\
- 		(typeof(_mask))((_mask) >> __bf_shf(_mask));		\
- 	})
- 
-@@ -77,7 +85,7 @@
-  */
- #define FIELD_FIT(_mask, _val)						\
- 	({								\
--		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");	\
-+		__BF_FIELD_CHECK_MASK(_mask, "FIELD_FIT: ");		\
- 		!((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
- 	})
- 
-@@ -91,7 +99,8 @@
-  */
- #define FIELD_PREP(_mask, _val)						\
- 	({								\
--		__BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");	\
-+		__BF_FIELD_CHECK_MASK(_mask, "FIELD_PREP: ");		\
-+		__BF_FIELD_CHECK_VAL(_mask, _val, "FIELD_PREP: ");	\
- 		((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask);	\
- 	})
- 
-@@ -105,7 +114,8 @@
-  */
- #define FIELD_GET(_mask, _reg)						\
- 	({								\
--		__BF_FIELD_CHECK(_mask, _reg, 0U, "FIELD_GET: ");	\
-+		__BF_FIELD_CHECK_MASK(_mask, "FIELD_GET: ");		\
-+		__BF_FIELD_CHECK_REG(_mask, _reg,  "FIELD_GET: ");	\
- 		(typeof(_mask))(((_reg) & (_mask)) >> __bf_shf(_mask));	\
- 	})
- 
 -- 
-2.27.0.383.g050319c2ae-goog
-
+paul moore
+www.paul-moore.com
