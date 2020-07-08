@@ -2,111 +2,93 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E92EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 787992065D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594234052;
-	bh=VyvvbSgAag63GaUfjZkW851Wh7/Lb8x2jp8VxZfY5jw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NQC15c0UoStBOUYJyD5zh/34U5dieHgCfLFQrrPRsnBZh1QxnUSBvn2SgQB/Jf4ER
-	 tAdTLqV7KHbqhHkS5EReSpp9DP43DDbgp0oytflHuTBuL9owcn7kMueRb4FE3c+lWV
-	 wbbYMlqOujeDFZqo/tdSywiiY9DTLJIOYDO/qjiQ=
+	by mail.kernel.org (Postfix) with ESMTP id 604762065D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:47:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g3sMSZfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgGHSrb (ORCPT
+        id S1726425AbgGHSrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgGHSra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:47:30 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 8 Jul 2020 14:47:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23360 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726325AbgGHSrp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 14:47:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594234064;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fcsHqKvyEn+7TUlrftNO7s3T6e7eg/prGJp2vr2tLls=;
+        b=g3sMSZfu2QI791LF/HUR8RVvOUob4km53kYKE0ZV+ZloRtXvXWEjv7P0W8r+O2IId35zgl
+        A8RgsNZPcE6akXAnG7YLT+q/BaYQctDr5ZEs5JFp5pEQJ5OTRps+x15HJfhsHu33hHEgWX
+        /FLPfI5p7BpSu90DcK8Y33ZqgIU1xkQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-l8cy0SDLO6CVRyfWjFLFnw-1; Wed, 08 Jul 2020 14:47:40 -0400
+X-MC-Unique: l8cy0SDLO6CVRyfWjFLFnw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B9E82065D;
-        Wed,  8 Jul 2020 18:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594234050;
-        bh=VyvvbSgAag63GaUfjZkW851Wh7/Lb8x2jp8VxZfY5jw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DPNPFGsXMbvpqOr76YYQYvYqkUVdWpspHLoO6hD72tLY0PynOMh/Dn6Z6u67dlnvm
-         k3QaqTEB/pg03r1hcOggKiaAzPQcK2gtHOn7HiRU2EveAJ0fd7UOBs7A3AVxQYLJBR
-         29z3qoFUxE7782enGYHOUom6ug4TmSimtqVfdzTI=
-Date:   Wed, 8 Jul 2020 21:47:26 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] IB/hfi1: Use fallthrough pseudo-keyword
-Message-ID: <20200708184726.GB1276673@unreal>
-References: <20200707173942.GA29814@embeddedor>
- <20200708054703.GR207186@unreal>
- <20200708182835.GF11533@embeddedor>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9521719057A0;
+        Wed,  8 Jul 2020 18:47:37 +0000 (UTC)
+Received: from krava (unknown [10.40.195.124])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 358367F8A7;
+        Wed,  8 Jul 2020 18:47:33 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 20:47:32 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf parse-events: report bpf errors
+Message-ID: <20200708184732.GC3581918@krava>
+References: <20200707211449.3868944-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708182835.GF11533@embeddedor>
+In-Reply-To: <20200707211449.3868944-1-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 01:28:35PM -0500, Gustavo A. R. Silva wrote:
-> Hi Leon,
->
-> On Wed, Jul 08, 2020 at 08:47:03AM +0300, Leon Romanovsky wrote:
-> > On Tue, Jul 07, 2020 at 12:39:42PM -0500, Gustavo A. R. Silva wrote:
-> > > Replace the existing /* fall through */ comments and its variants with
-> > > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> > > fall-through markings when it is the case.
-> > >
-> > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> > >
-> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > > ---
-> > >  drivers/infiniband/hw/hfi1/chip.c     |    8 ++++----
-> > >  drivers/infiniband/hw/hfi1/firmware.c |   16 ----------------
-> > >  drivers/infiniband/hw/hfi1/mad.c      |    9 ++++-----
-> > >  drivers/infiniband/hw/hfi1/pio.c      |    2 +-
-> > >  drivers/infiniband/hw/hfi1/pio_copy.c |   12 ++++++------
-> > >  drivers/infiniband/hw/hfi1/platform.c |   10 +++++-----
-> > >  drivers/infiniband/hw/hfi1/qp.c       |    2 +-
-> > >  drivers/infiniband/hw/hfi1/qsfp.c     |    4 ++--
-> > >  drivers/infiniband/hw/hfi1/rc.c       |   25 ++++++++++++-------------
-> > >  drivers/infiniband/hw/hfi1/sdma.c     |    9 ++++-----
-> > >  drivers/infiniband/hw/hfi1/tid_rdma.c |    4 ++--
-> > >  drivers/infiniband/hw/hfi1/uc.c       |    8 ++++----
-> > >  12 files changed, 45 insertions(+), 64 deletions(-)
-> > >
-> > > diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-> > > index 15f9c635f292..132f1df6f23b 100644
-> > > --- a/drivers/infiniband/hw/hfi1/chip.c
-> > > +++ b/drivers/infiniband/hw/hfi1/chip.c
-> > > @@ -7320,7 +7320,7 @@ static u16 link_width_to_bits(struct hfi1_devdata *dd, u16 width)
-> > >  	default:
-> > >  		dd_dev_info(dd, "%s: invalid width %d, using 4\n",
-> > >  			    __func__, width);
-> > > -		/* fall through */
-> > > +		fallthrough;
-> > >  	case 4: return OPA_LINK_WIDTH_4X;
-> >
-> > "case ..:" after "default:" ???
-> > IMHO, it should be written in more standard way.
-> >
->
-> I agree. However, that piece of code, and the other below, does not
-> concern to this patch.
+On Tue, Jul 07, 2020 at 02:14:49PM -0700, Ian Rogers wrote:
+> Setting the parse_events_error directly doesn't increment num_errors
+> causing the error message not to be displayed. Use the
+> parse_events__handle_error function that sets num_errors and handle
+> multiple errors.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-I'm not super excited about such half-baked solutions. Let's fix all at
-once by pre-patch or post-patch to this change.
+looks good
 
-Thanks
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
