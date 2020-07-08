@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F084C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38368206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56582206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Je+yLH12"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9adpdB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbgGHQrb (ORCPT
+        id S1730789AbgGHQri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        Wed, 8 Jul 2020 12:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730697AbgGHQr3 (ORCPT
+        with ESMTP id S1730349AbgGHQrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:47:29 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC42C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 09:47:29 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d194so18565031pga.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 09:47:29 -0700 (PDT)
+        Wed, 8 Jul 2020 12:47:37 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D81C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 09:47:37 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id gc9so1465246pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 09:47:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o82Zvh6Hgen3bWDeyS1g4rUnFVSbW1aNfis2E0RKOpU=;
-        b=Je+yLH126BXY35ZTh5Qn1U115VjMXt4P4aPxJxvkYCpxhFT7z+tNlIQ2iV/08DWEna
-         10Jicp+Pl8Qr9oHDmCQKiy7srkeDT4m+pdkMCEvERT4WZhzZ8Q9H0/9BPqHROhnU/OmG
-         ssh7PRO0xCUVLphOIURv31oso8nFrHYxhBLMDIvE+rxFw5HJAPSDQSn/YhMjnzkH1d7H
-         LJyxI5eKhgD3lPJYKqDIJTZhs/k8CMk6t/txuZ3pNXM2HbzrXemFK4P+a5oy9eV+FkVD
-         OqX972ND2WkPTvhTRuMqzFcgBR9hf5V8DQgK2eVf47iODtwlK9fhKBRKjtlPyaZzI1k8
-         O4vw==
+        bh=s45sz+Z8KdGsC2ioG3kBV+tM8Qtg7G2jwvxo8x0+od0=;
+        b=g9adpdB2KUE0/2J/XBeus8WExt+IJ3lERYY9+yyJm7DSo5z0n6sj/hSJRQRC2oE4DT
+         YfjeUeUmmycRmXbM/SXsMJ++n7eEV3vrxds3rChIVw3Xb50vINZWwI6SzrHLG/Mw9J+M
+         FNhVRTKEN8UWuSExoM7HDqDxwCLiIYR6HHcCekKamvpOGcHWpy5YKvMzDIdguH6koD2X
+         fR0KXLOOrJ/+E02GKoA2FjV28OZpbDLDEmJvT49/OSFHtQm3hlISqZgYw1J0AQ3oZ7Qu
+         2O3PZajRDR2kHhjT2hMtLlVSdjXSBmK6/9UhyxW85XFaqTn/vazbhbRaJrJDx6K71pCt
+         IaEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o82Zvh6Hgen3bWDeyS1g4rUnFVSbW1aNfis2E0RKOpU=;
-        b=Wx+MhPVS/2vgYMNZQzly07R6bWqGICAIuIqXDNqiRVrwNF+gct6X1GxFLtTHamu7tT
-         1vsAQIFKCFcKhGTU2SByFbSh9OikcF7ttb0/b/9QGVgMiEAKk6dkxdnFwAMaDQ5ErQvG
-         wr8E0bi+6r8TsLOQRL6TFOHACzrcISXuzDZleU5zSyN2+Xb/6AF08rSaRjudw/9adn7q
-         EIqV3FQcUPMEUF96HvZ/UI8S3FMB+uogm0Vj1QLwobOZ5xcgJLvAX6It9DvK1E2ES/dA
-         9NuxbS5irdfFPboajURAY4sV3ZzwjdaSfYOc9O42BsUMyGRTouMjz7MLmw1IcOvhS2Cr
-         uXYQ==
-X-Gm-Message-State: AOAM533H/Ferv2q19DYMHUR1nhsRO7SXYjIrXYc0Yv991HZmxPMxHDH/
-        Dnxr6lgS6AgBYAQRgCmmwpk=
-X-Google-Smtp-Source: ABdhPJz79Yfr08Y8C35vMKSErGBPZSlUaWpGM7JgfUZKE/ymYWwoI4Rz2kwuo7Imgj0LzrcUISqNsg==
-X-Received: by 2002:a62:158d:: with SMTP id 135mr45620140pfv.254.1594226848654;
-        Wed, 08 Jul 2020 09:47:28 -0700 (PDT)
+        bh=s45sz+Z8KdGsC2ioG3kBV+tM8Qtg7G2jwvxo8x0+od0=;
+        b=dpMuFrk0bUTzNPwsvezJhq4NUl7fDlVHE+7ZuQnp+uGpZrQPBZrmxEaGa/bBbx3sLO
+         +6VrnRp04ANxf19/InHMizWQG23kdHh287rQdAOcvI6PvHaiwq6WRoBcxzl3XOd4Kjvw
+         48nrkbwQTthN+YjmuLbAVulIKGG3XtZD6/8DP1ujGgnRPkkRR5kLrbNRnhMMXYzaeJY+
+         QHnsUqUo4z/Wifpbgco2D8rfDxK6Dj+PV6mF1d08GkZe5469NJzVcVVzwTGTJi7X1t0b
+         3qiAivQ70RtsCA/u5A0IoGAfBoQqUA/hXwu57hkEYXBPZx5L68Zg4y8O21ZHYsk6CaH9
+         jR9A==
+X-Gm-Message-State: AOAM530n02R/7noA5ej6ZRQtz4sIQWLdI1LxwUKIoDdmD4yNDBqRTjUQ
+        kHOg9JTuTxVe+MFjaQevRIM=
+X-Google-Smtp-Source: ABdhPJxYTYe9KyFfJwqKVbhCJEHYcUVJlgxXsE33QimYCptIWlOfaoAgjNJT+HL7O3C/zzQCHyQZjA==
+X-Received: by 2002:a17:90a:b901:: with SMTP id p1mr9665049pjr.134.1594226856858;
+        Wed, 08 Jul 2020 09:47:36 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id r8sm310803pfg.147.2020.07.08.09.47.18
+        by smtp.gmail.com with ESMTPSA id r8sm310803pfg.147.2020.07.08.09.47.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 09:47:27 -0700 (PDT)
+        Wed, 08 Jul 2020 09:47:36 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v3 06/17] perf ftrace: add option '-m/--buffer-size' to set per-cpu buffer size
-Date:   Thu,  9 Jul 2020 00:45:54 +0800
-Message-Id: <20200708164605.31245-7-changbin.du@gmail.com>
+Subject: [PATCH v3 07/17] perf ftrace: show trace column header
+Date:   Thu,  9 Jul 2020 00:45:55 +0800
+Message-Id: <20200708164605.31245-8-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708164605.31245-1-changbin.du@gmail.com>
 References: <20200708164605.31245-1-changbin.du@gmail.com>
@@ -81,136 +81,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds an option '-m/--buffer-size' to allow us set the size of per-cpu
-tracing buffer.
+This makes perf-ftrace display column header before printing trace.
+
+  $ sudo perf ftrace
+  # tracer: function
+  #
+  # entries-in-buffer/entries-written: 0/0   #P:8
+  #
+  #            TASK-PID     CPU#   TIMESTAMP  FUNCTION
+  #              | |         |       |         |
+             <...>-9246  [006]  10726.262760: mutex_unlock <-rb_simple_write
+             <...>-9246  [006]  10726.262764: __fsnotify_parent <-vfs_write
+             <...>-9246  [006]  10726.262765: fsnotify <-vfs_write
+             <...>-9246  [006]  10726.262766: __sb_end_write <-vfs_write
+             <...>-9246  [006]  10726.262767: fpregs_assert_state_consistent <-do_syscall_64
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
-
 ---
-v2: support units as a suffix.
----
- tools/perf/Documentation/perf-ftrace.txt |  5 +++
- tools/perf/builtin-ftrace.c              | 56 +++++++++++++++++++++++-
- 2 files changed, 60 insertions(+), 1 deletion(-)
+ tools/perf/builtin-ftrace.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-index fd1776deebd7..a26593dbdd76 100644
---- a/tools/perf/Documentation/perf-ftrace.txt
-+++ b/tools/perf/Documentation/perf-ftrace.txt
-@@ -60,6 +60,11 @@ OPTIONS
- 	Ranges of CPUs are specified with -: 0-2.
- 	Default is to trace on all online CPUs.
- 
-+-m::
-+--buffer-size::
-+	Set the size of per-cpu tracing buffer, <size> is expected to
-+	be a number with appended unit character - B/K/M/G.
-+
- -T::
- --trace-funcs=::
- 	Only trace functions given by the argument.  Multiple functions
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 7eb41f7027c8..66cdfe42b1fe 100644
+index 66cdfe42b1fe..885d11f369fc 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -26,7 +26,7 @@
- #include "thread_map.h"
- #include "util/cap.h"
- #include "util/config.h"
--
-+#include "util/units.h"
+@@ -431,6 +431,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 	fcntl(trace_fd, F_SETFL, O_NONBLOCK);
+ 	pollfd.fd = trace_fd;
  
- struct perf_ftrace {
- 	struct evlist		*evlist;
-@@ -39,6 +39,7 @@ struct perf_ftrace {
- 	struct list_head	nograph_funcs;
- 	int			graph_depth;
- 	unsigned		initial_delay;
-+	unsigned long		percpu_buffer_size;
- };
- 
- struct filter_entry {
-@@ -321,6 +322,21 @@ static int set_tracing_depth(struct perf_ftrace *ftrace)
- 	return 0;
- }
- 
-+static int set_tracing_percpu_buffer_size(struct perf_ftrace *ftrace)
-+{
-+	int ret;
++	/* display column headers */
++	read_tracing_file_to_stdout("trace");
 +
-+	if (ftrace->percpu_buffer_size == 0)
-+		return 0;
-+
-+	ret = write_tracing_file_int("buffer_size_kb",
-+				     ftrace->percpu_buffer_size / 1024);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- {
- 	char *trace_file;
-@@ -385,6 +401,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		goto out_reset;
- 	}
- 
-+	if (set_tracing_percpu_buffer_size(ftrace) < 0) {
-+		pr_err("failed to set tracing per-cpu buffer size\n");
-+		goto out_reset;
-+	}
-+
- 	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
- 		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
- 		goto out_reset;
-@@ -514,6 +535,37 @@ static void delete_filter_func(struct list_head *head)
- 	}
- }
- 
-+static int parse_buffer_size(const struct option *opt,
-+			     const char *str, int unset)
-+{
-+	unsigned long *s = (unsigned long *)opt->value;
-+	static struct parse_tag tags_size[] = {
-+		{ .tag  = 'B', .mult = 1       },
-+		{ .tag  = 'K', .mult = 1 << 10 },
-+		{ .tag  = 'M', .mult = 1 << 20 },
-+		{ .tag  = 'G', .mult = 1 << 30 },
-+		{ .tag  = 0 },
-+	};
-+	unsigned long val;
-+
-+	if (unset) {
-+		*s = 0;
-+		return 0;
-+	}
-+
-+	val = parse_tag_value(str, tags_size);
-+	if (val != (unsigned long) -1) {
-+		if (val < 1024) {
-+			pr_err("buffer size too small, must larger than 1KB.");
-+			return -1;
-+		}
-+		*s = val;
-+		return 0;
-+	}
-+
-+	return -1;
-+}
-+
- int cmd_ftrace(int argc, const char **argv)
- {
- 	int ret;
-@@ -555,6 +607,8 @@ int cmd_ftrace(int argc, const char **argv)
- 		    "Max depth for function graph tracer"),
- 	OPT_UINTEGER('d', "delay", &ftrace.initial_delay,
- 		     "ms to wait before starting tracing after program start"),
-+	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
-+		     "size of per cpu buffer", parse_buffer_size),
- 	OPT_END()
- 	};
- 
+ 	if (!ftrace->initial_delay) {
+ 		if (write_tracing_file("tracing_on", "1") < 0) {
+ 			pr_err("can't enable tracing\n");
 -- 
 2.25.1
 
