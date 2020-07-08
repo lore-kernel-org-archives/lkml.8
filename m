@@ -2,268 +2,109 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B66DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDE420708
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886E320786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:05:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jvxGSCDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgGHDBn (ORCPT
+        id S1729226AbgGHDF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 23:01:43 -0400
-Received: from mga06.intel.com ([134.134.136.31]:4545 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgGHDBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 23:01:42 -0400
-IronPort-SDR: ywg8kFMVeHRaBPsbtyBImv8Yt9+kf3pCRtnyotr8raXpvLSj/wRhf7bKb0rOnXjoiwuAznpFfs
- DKPyvdCFNEWQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="209262496"
-X-IronPort-AV: E=Sophos;i="5.75,326,1589266800"; 
-   d="scan'208";a="209262496"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 20:01:41 -0700
-IronPort-SDR: 53MXg6JC8/ldzupZuZGVwXnLxqSk67uBstvzQd1c3wfwjTER94izOmkRamS0VnjsQm2vyHA1F+
- iBkP7NG/GuNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,326,1589266800"; 
-   d="scan'208";a="279808812"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 07 Jul 2020 20:01:41 -0700
-Received: from [10.251.29.218] (kliang2-mobl.ccr.corp.intel.com [10.251.29.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 0DC7B5805A3;
-        Tue,  7 Jul 2020 20:01:39 -0700 (PDT)
-Subject: Re: [PATCH 1/7] PCI/portdrv: Create a platform device for the perf
- uncore driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     peterz@infradead.org, bhelgaas@google.com, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        jeffrey.t.kirsher@intel.com, olof@lixom.net,
-        dan.j.williams@intel.com, ak@linux.intel.com,
-        Stephane Eranian <eranian@google.com>
-References: <20200707194830.GA372615@bjorn-Precision-5520>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <59a4eb9f-3956-1788-33ed-5cc9911b5b1e@linux.intel.com>
-Date:   Tue, 7 Jul 2020 23:01:38 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200707194830.GA372615@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 7 Jul 2020 23:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728657AbgGHDF5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 23:05:57 -0400
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C4D5C08C5E2
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 20:05:57 -0700 (PDT)
+Received: by mail-pg1-x54a.google.com with SMTP id p8so33926370pgj.14
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 20:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=sxoy6q+HxdTygJctVhkj+Ncax7HD8YrVRDBUHbmI/GA=;
+        b=jvxGSCDzgqCSzD3A5CZ6zoxEY3HwELi8FObL00AmNlxQWLpvrUeBFZBc3B9zB5etbX
+         mYEpJX0jRgUUJ4S9ot+BQk61eRDjpYkKZjXS5FkMSOUavjWBlMPiA5+LW/699y0iXpQC
+         s8ynNf8lIHMTPkHzVRmSAVfDowYI++DiMfl/exKk9l+l/8eEG3w0s91A1Ycqqyju5MfB
+         hrssrkk130gtKV4YYHCQ2dycaO4RT4XQHdC+kpGmlUYHSXN8zNcGMq9fWspZLGH9mYPU
+         dePpa1pDLmtFFKbvxkZX6SahRyc7gjEHircUdtQBKPXrVPw+ESEA+mxA7Fqh1xXzohzl
+         +nKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=sxoy6q+HxdTygJctVhkj+Ncax7HD8YrVRDBUHbmI/GA=;
+        b=YgDZ23/8ZGW4GfZ1P8qBQqOZ0R4Bj/IfHlURJyUtQHk05IRa3OJrha7qJn6vIOw4P/
+         E2Jx70WEAGN7Kwb4yaJaSkVx8ZmCTuSXPWY0vL1VVz9HKyzvRMhsFRgHANR0Tvx+jzhJ
+         FbBrLp8MECxN/kX3puCfXgK44Tem4joPaMKwRFwuYDjJvmIaOH/uDB3jA35Vyd2cpf+e
+         MjMA6EJY0InZEYOnHQ2PaMNM4WWBu++6WyatHkf9eShl3P75COBWMuAwA1G65FUZmfdR
+         Oiob0kzpD3i1X3gpZMIPdELtoADA67MEV9DiwEntQfnT9bwRvH60UCmILWqYEMxqsa/B
+         65og==
+X-Gm-Message-State: AOAM531KQeFT/KiU38jB0X8h2S/uHjH6u6n/uP/am5GINti5r9b4+zrv
+        imCqtuKm6SWEYfcjLqx0NfQL10Avmk8=
+X-Google-Smtp-Source: ABdhPJxHc+FKhRyKZRaUpdsFwS/kCIg/eIMdmz1LxIxSnZIjP9Kv5YSfmEOlULOG9PgVuLCQSbtYJSctP7g=
+X-Received: by 2002:a17:90a:1fcb:: with SMTP id z11mr1032734pjz.1.1594177556279;
+ Tue, 07 Jul 2020 20:05:56 -0700 (PDT)
+Date:   Tue,  7 Jul 2020 20:05:48 -0700
+Message-Id: <20200708030552.3829094-1-drosen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+Subject: [PATCH v11 0/4] Prepare for upcoming Casefolding/Encryption patches
+From:   Daniel Rosenberg <drosen@google.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This lays the ground work for enabling casefolding and encryption at the
+same time for ext4 and f2fs. A future set of patches will enable that
+functionality.
 
+These unify the highly similar dentry_operations that ext4 and f2fs both
+use for casefolding. In addition, they improve d_hash by not requiring a
+new string allocation.
 
-On 7/7/2020 3:48 PM, Bjorn Helgaas wrote:
-> [+cc Stephane in case he has thoughts on the perf driver claim issue]
-> 
-> On Thu, Jul 02, 2020 at 10:05:11AM -0700, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> On Snow Ridge server, several performance monitoring counters are added
->> in the Root Port Configuration Space of CPU Complex PCIe Root Ports A,
->> which can be used to collect the performance data between the PCIe
->> devices and the components (in M2IOSF) which are responsible for
->> translating and managing the requests to/from the device. The
->> performance data is very useful for analyzing the performance of the
->> PCIe devices.
->>
->> However, the perf uncore driver cannot be loaded to register a
->> performance monitoring unit (PMU) for the counters, because the PCIe
->> Root Ports device already has a bonded driver portdrv_pci.
->>
->> To enable the uncore PMU support for these counters on the uncore
->> driver, a new solution should be introduced, which has to meet the
->> requirements as below:
->> - must have a reliable way to find the PCIe Root Port device from the
->>    uncore driver;
->> - must be able to access the uncore counters of the PCIe Root Port
->>    device from the uncore driver;
->> - must support hotplug. When the PCIe Root Port device is removed, the
->>    uncore driver has to be notified and unregisters the uncore PMU.
->>
->> A new platform device 'perf_uncore_pcieport' is introduced as part of
->> the new solution, which can facilitate the enabling of the uncore PMU in
->> the uncore driver. The new platform device
->> - is a child device of the PCIe Root Port device. It's allocated when
->>    the PCIe Root Ports A device is probed. (For SNR, the PMU counters are
->>    only located in the configuration space of the PCIe Root Ports A.)
->> - stores its pdev as the private driver data pointer of the PCIe Root
->>    Ports A. The pdev can be easily retrieved to check the existence of
->>    the platform device when removing the PCIe Root Ports A.
->> - is unregistered when the PCIe Root Port A is removed. The remove()
->>    method which is provided in the uncore driver will be invoked. The
->>    uncore PMU will be unregistered as well.
->> - doesn't share any memory and IRQ resources. The uncore driver will
->>    only touch the PMU counters in the configuration space of the PCIe
->>    Root Port A.
-> 
-> I have to admit this is clever.  I don't really *like* it, but we
-> don't have any very good alternatives at the moment.
-> 
-> I don't like the idea of a list of PCI IDs
-> (perf_uncore_pcieport_ids[]) below that must be updated for every
-> device that needs something like this.  That PCI ID information is
-> normally in the drivers themselves, not in bus-level code like this.
->
+Daniel Rosenberg (4):
+  unicode: Add utf8_casefold_hash
+  fs: Add standard casefolding support
+  f2fs: Use generic casefolding support
+  ext4: Use generic casefolding support
 
-I don't want to create a platform device for every single device. So I 
-added a check here. Yes, it doesn't look pretty, but I don't have a 
-better solution for now.
+ fs/ext4/dir.c           | 64 +---------------------------
+ fs/ext4/ext4.h          | 12 ------
+ fs/ext4/hash.c          |  2 +-
+ fs/ext4/namei.c         | 20 ++++-----
+ fs/ext4/super.c         | 12 +++---
+ fs/f2fs/dir.c           | 84 ++++--------------------------------
+ fs/f2fs/f2fs.h          |  4 --
+ fs/f2fs/super.c         | 10 ++---
+ fs/f2fs/sysfs.c         | 10 +++--
+ fs/libfs.c              | 94 +++++++++++++++++++++++++++++++++++++++++
+ fs/unicode/utf8-core.c  | 23 +++++++++-
+ include/linux/f2fs_fs.h |  3 --
+ include/linux/fs.h      | 16 +++++++
+ include/linux/unicode.h |  3 ++
+ 14 files changed, 172 insertions(+), 185 deletions(-)
 
-> And I don't like the way this subverts the device ownership model.
-> Now we have several drivers (pciehp, aer, dpc, etc, plus this new perf
-> driver) that share the same PCI device.  And we rely on the assumption
-> that none of these drivers interferes with the others.
-> 
-> I think the best way to deal with this would be to incorporate the
-> existing portdrv users (pciehp, aer, dpc, etc) directly into the PCI
-> core so portdrv would not use pci_register_driver(), leaving the Root
-> Port device available for the perf driver to claim it the normal way.
-> But realistically I don't know when or even whether this will be done.
-> 
-> I think Stephane has worked around this problem in a different way,
-> IIRC by using pci_get_device() in a perf driver to find Ports of
-> interest.  That also subverts the device ownership model, and it
-> doesn't work naturally with hotplug, but at least it gets the device
-> IDs out of the PCI core and into the driver where they belong.  And
-> there's value in solving the same problem in the same way.
-> 
-> Wait a minute!  You've already used the pci_get_device() strategy
-> several times:
-> 
->    2b3b76b5ec67 ("perf/x86/intel/uncore: Add Ice Lake server uncore support")
->    fdb64822443e ("perf/x86: Add Intel Tiger Lake uncore support")
->    ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
-> 
-> So what's really different about *this* situation?  Why would you not
-> just continue using the same strategy?
->
+-- 
+2.27.0.383.g050319c2ae-goog
 
-There are three different methods (MSR, PCICFG, and MMIO) to access the 
-uncore counter, while each counter can only accessed using one of the 
-method. Many devices have uncore counters. All counters on the same 
-device must be accessed using the same method.
-
-The perf uncore driver abstracts three code paths for the above three 
-different methods. Each code path is shared among the devices which have 
-the corresponding access method.
-
-The pci_get_device() strategy is used by the device in which counters 
-can be accessed by MMIO. Currently, the only such device is the IMC 
-(Integrated Memory Controller) device. The problem is that the BAR 
-address of the IMC counters is located in the PCI Configuration Space of 
-the Configuration Agent (Ubox) device. The perf driver is not supposed 
-to bind the Ubox device while accessing the counters in another device, 
-the IMC device. So the pci_get_device() is used to retrieve the pci_dev 
-of the Ubox. The perf driver reads the BAR address from the Ubox and 
-maps it to access the IMC counters.
-
-The counters in the Root Port device are in the PCI configuration space 
-of the device. For a device whose counters are in the PCI configuration 
-space of itself, the perf driver should probe and bind the device. 
-However, the Root Port device is already bound by the portdrv driver.
-To maximize the code reuse in the perf driver, a platform device is 
-introduced as a child of the Root Port device. So the perf driver can 
-probe and bind the platform device in a similar method.
-
-The pci_get_device() strategy may work for the case, but from the 
-perspective of the perf driver, I don't thing it's a good solution. We 
-have to specially handle the pci_get_device() strategy in the code path 
-of the PCICFG access method. Also, it's not a complete solution, e.g. as 
-you said it doesn't work naturally with hotplug.
-
-
-Thanks,
-Kan
-
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>   drivers/pci/pcie/portdrv_pci.c | 38 ++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 38 insertions(+)
->>
->> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
->> index 3acf151..47e33b2 100644
->> --- a/drivers/pci/pcie/portdrv_pci.c
->> +++ b/drivers/pci/pcie/portdrv_pci.c
->> @@ -15,6 +15,7 @@
->>   #include <linux/init.h>
->>   #include <linux/aer.h>
->>   #include <linux/dmi.h>
->> +#include <linux/platform_device.h>
->>   
->>   #include "../pci.h"
->>   #include "portdrv.h"
->> @@ -90,6 +91,40 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
->>   #define PCIE_PORTDRV_PM_OPS	NULL
->>   #endif /* !PM */
->>   
->> +static const struct pci_device_id perf_uncore_pcieport_ids[] = {
->> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a) },
->> +	{ },
->> +};
->> +
->> +static void perf_platform_device_register(struct pci_dev *dev)
->> +{
->> +	struct platform_device *pdev;
->> +
->> +	if (!pci_match_id(perf_uncore_pcieport_ids, dev))
->> +		return;
->> +
->> +	pdev = platform_device_alloc("perf_uncore_pcieport", PLATFORM_DEVID_AUTO);
->> +	if (!pdev)
->> +		return;
->> +
->> +	pdev->dev.parent = &dev->dev;
->> +
->> +	if (platform_device_add(pdev)) {
->> +		platform_device_put(pdev);
->> +		return;
->> +	}
->> +
->> +	pci_set_drvdata(dev, pdev);
->> +}
->> +
->> +static void perf_platform_device_unregister(struct pci_dev *dev)
->> +{
->> +	struct platform_device *pdev = pci_get_drvdata(dev);
->> +
->> +	if (pdev)
->> +		platform_device_unregister(pdev);
->> +}
->> +
->>   /*
->>    * pcie_portdrv_probe - Probe PCI-Express port devices
->>    * @dev: PCI-Express port device being probed
->> @@ -113,6 +148,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->>   	if (status)
->>   		return status;
->>   
->> +	perf_platform_device_register(dev);
->> +
->>   	pci_save_state(dev);
->>   
->>   	dev_pm_set_driver_flags(&dev->dev, DPM_FLAG_NO_DIRECT_COMPLETE |
->> @@ -142,6 +179,7 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
->>   		pm_runtime_dont_use_autosuspend(&dev->dev);
->>   	}
->>   
->> +	perf_platform_device_unregister(dev);
->>   	pcie_port_device_remove(dev);
->>   }
->>   
->> -- 
->> 2.7.4
->>
