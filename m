@@ -2,123 +2,71 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE694C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB3820760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:53:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="TK82CEOe"
+	by mail.kernel.org (Postfix) with ESMTP id 473832075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgGHGxw (ORCPT
+        id S1729937AbgGHGzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 02:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729535AbgGHGxw (ORCPT
+        Wed, 8 Jul 2020 02:55:18 -0400
+Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:58095 "EHLO
+        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726194AbgGHGzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 02:53:52 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3E93C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 23:53:51 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id a8so39515017edy.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 23:53:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=keyDLeonC8frLPJK5duQJ259ChXYsKspJF9lGM2JwDk=;
-        b=TK82CEOeB8wUtoFdmxlPl9goWXQTwmwz3fiSr8+4rT8AzSHNNgiyKr9SzOXy/lyYf8
-         gqaMKeXD87fSS3J+6QJP0+LSHMNW0ZGFc9up4RMVAmkS4jbaTwovaSj/bnXzH5YYTWw8
-         XDbmrRbTJiWIB6TpHSeyaFpbpeKezLxVoHr4En1ZhFpTOC5hVD4ag6e27mzPFkzqDcUx
-         fEwcJ3G7I38S0Hb6/vmtLJwq8ZclIrr/MY4Had/T7LOflv0eZNJVb/E797gXA1c3dP4I
-         Y/LThtVQmuHWyMFoNWoxzJDPdam4biTa84cBlq8Ei4ajOKFco76rSfRzlkdhbIUINB4G
-         kbMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=keyDLeonC8frLPJK5duQJ259ChXYsKspJF9lGM2JwDk=;
-        b=qc0mB35J7usOWDWzl3gf8Vl8CnudtvKrYLPQRBnpAymw+geyxxqWzJyGJYuxoiVywK
-         gVtK46qJCsjto/IRI9L46A//FCkA3V8aFhdhh6VE7BOn+wcZyUUiqqcdvlG+C97mpCWu
-         QOLf5UGKgrQWLCj2Qx8rvpVls1SHHTWXgJDvJk11N/27mBG3PG7cGlu/w+IeV/kaffFf
-         EuArSYSVloVfQ89wV6V1hpgLf/pBtDDjQKr9WlowtQ2Yt1sOESRU/i6Lkt9CkUXyqdbd
-         /QXAOZ2CQVIquzLCTnhZZ+QvyBdAYQZIncSlvpjjFkjNsErT2l1FzlYCPLK0pIP0GhQq
-         mALA==
-X-Gm-Message-State: AOAM530Qo56aj2eguWqP00AGyYyScu8+il7OiHxsdbRCxLD3zrlViGNq
-        rXTKR2GxLOj/fpKliibfDZ6NtGoRKGpGPHHTIaG+tQ==
-X-Google-Smtp-Source: ABdhPJzWDULeQmA4RbfXyV27OZ4z7CGs9yHTVKdJ+99n4xIaX6QB9r7/8SCU1NxsX0FBfErjajvE/E1jaCZYv8t+S6M=
-X-Received: by 2002:a50:d9cb:: with SMTP id x11mr62677191edj.93.1594191230511;
- Tue, 07 Jul 2020 23:53:50 -0700 (PDT)
+        Wed, 8 Jul 2020 02:55:17 -0400
+Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
+        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 799B3D59974;
+        Wed,  8 Jul 2020 16:55:13 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jt3z6-0003hJ-1d; Wed, 08 Jul 2020 16:55:12 +1000
+Date:   Wed, 8 Jul 2020 16:55:12 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Use fallthrough pseudo-keyword
+Message-ID: <20200708065512.GN2005@dread.disaster.area>
+References: <20200707200504.GA4796@embeddedor>
+ <20200707205036.GL7606@magnolia>
+ <96f58df8a489093fb239cea8d36768b921269056.camel@perches.com>
 MIME-Version: 1.0
-References: <20200707055917.143653-1-justin.he@arm.com> <20200707055917.143653-2-justin.he@arm.com>
- <20200707115454.GN5913@dhcp22.suse.cz> <AM6PR08MB406907F9F2B13DA6DC893AD9F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
- <CAPcyv4ipu4qwKhk4pzJ8nZB2sp+=AndahS8eCgUvFvVP6dEkeA@mail.gmail.com>
- <AM6PR08MB4069D0D1FD8FB31B6A56DDB5F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
- <CAPcyv4ivyJsyzcbkBWcqBYZMx3VdJF7+VPCNs177DU2rYqtz_A@mail.gmail.com> <20200708062217.GE386073@linux.ibm.com>
-In-Reply-To: <20200708062217.GE386073@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 7 Jul 2020 23:53:39 -0700
-Message-ID: <CAPcyv4iiHz7rofPKpKhiYMyPpf1ySQBW2HMwHcCtjb2wLiK7ZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid as EXPORT_SYMBOL_GPL
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Justin He <Justin.He@arm.com>, Michal Hocko <mhocko@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Kaly Xin <Kaly.Xin@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96f58df8a489093fb239cea8d36768b921269056.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
+        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=7-415B0cAAAA:8
+        a=AdeI-h9QSvwSZK6rD4QA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 11:22 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
-[..]
-> > > Thanks for your suggestion,
-> > > Could I wrap the codes and let memory_add_physaddr_to_nid simply invoke
-> > > phys_to_target_node()?
-> >
-> > I think it needs to be the reverse. phys_to_target_node() should call
-> > memory_add_physaddr_to_nid() by default, but fall back to searching
-> > reserved memory address ranges in memblock. See phys_to_target_node()
-> > in arch/x86/mm/numa.c. That one uses numa_meminfo instead of memblock,
-> > but the principle is the same i.e. that a target node may not be
-> > represented in memblock.memory, but memblock.reserved. I'm working on
-> > a patch to provide a function similar to get_pfn_range_for_nid() that
-> > operates on reserved memory.
->
-> Do we really need yet another memblock iterator?
-> I think only x86 has memory that is not in memblock.memory but only in
-> memblock.reserved.
+On Tue, Jul 07, 2020 at 06:48:29PM -0700, Joe Perches wrote:
+> On Tue, 2020-07-07 at 13:50 -0700, Darrick J. Wong wrote:
+> > On Tue, Jul 07, 2020 at 03:05:04PM -0500, Gustavo A. R. Silva wrote:
+> > > Replace the existing /* fall through */ comments and its variants with
+> > > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> > > fall-through markings when it is the case.
+> []
+> > I don't get it, what's the point?  Are gcc/clang
+> > refusing to support -Wimplicit-fallthrough=[1-4] past a certain date?
+> 
+> clang doesn't support comments
 
-Well, that's what led me here. EFI has introduced a memory attribute
-called "EFI Special Purpose Memory". I mapped it to a new Linux
-concept called Soft Reserved memory (commit b617c5266eed "efi: Common
-enable/disable infrastructure for EFI soft reservation"). The driver I
-want to claim that memory, device-dax, wants to be able to look up
-numa information for an address range that is marked reserved in
-memblock. The device-dax facility has the ability to either let
-userspace map a device, or assign the memory backing that device to
-the page allocator. In both scenarios the driver needs numa info to
-either populate the 'numa_node' property of the device in sysfs, or to
-pass an node-id to add_memory_resource() when it is hot-plugged.
+So fix the damn compiler.
 
-I was thwarted by the lack of phys_to_target_node() on arm64, and
-rather than add another stub like memory_add_physaddr_to_nid() I
-wanted to see if it could be solved properly / generically with
-memblock data.
+-Dave
+-- 
+Dave Chinner
+david@fromorbit.com
