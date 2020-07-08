@@ -2,127 +2,164 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3966C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0CA2065D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:44:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ej7On6D1"
+	by mail.kernel.org (Postfix) with ESMTP id 9FFEB2078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgGHJok (ORCPT
+        id S1728379AbgGHJpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:44:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgGHJoj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:44:39 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF77C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 02:44:39 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f2so20170355wrp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 02:44:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=v9AIm6DN48ankAafEBRPujrUBGThinGUo487AT2ZYnI=;
-        b=Ej7On6D1FjUedjzUMWW8M4FOFnY9gQuR2ByeadVXAG2kPNiLojZdHlwzjz0XdshZnr
-         TquPfnDH5gTteLy0VV3GHyLVY+dGw8skM9V39sn5f8e+8A4QIZYNAZA3x0fILIhMrHr8
-         e6ddlq7L0hr0FLqsKLwDXXLyHsKwmATfwN2s4fV/zFCrbJFXkm9rTENAlDwftT5i44U1
-         SqqiC7BQS3v+GZkvdiJdt+HvW/fGrb5ZpOt09BaIbbWBfzOjVqs59IP3c0QN1irq9DID
-         SHgo56RnjEnNQvTYEgtGLbw7z6ID8KIBl1argXOU3AfFqfICVwvjXKvSGESE3jJVvZv5
-         gT/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v9AIm6DN48ankAafEBRPujrUBGThinGUo487AT2ZYnI=;
-        b=SfBaKd0tAP6KU1hL6E7FWO10Bh7l+FkfOPENUEbL4zT3kfqdyGcO4Fh4MrcoK42U+C
-         QJqGnWQib3lUYgIiYujMxQzWJlRlk38BK58bHLzO/IS3j7sySCW+9yiiL/JWHhyJ//Pl
-         XDjOL/nK+UlmAvRXEGLBbn+ep24oLkRpxT+MaY15PyOfY0LhUXC4wWpbEnhBIKW3Pw3z
-         OZiFdUg2AtBhesO31cKOeGLqdUiM27FHOLkhU1tVMaHDCMD325nhwRFuXSxMqlTxkayT
-         beWNP7z7q3FCVxs8mL8YzNElfs47oO1DeP8r/JH3qnUbCfDsEooecdicv6muCWcOTSGE
-         /+/w==
-X-Gm-Message-State: AOAM531+cTabyqXj/Mn2Lps5vDScKfDIykbNuZRDPvdynVUAbafpPGWe
-        JkjD1505nYuZTMDSp54Zldbpsw==
-X-Google-Smtp-Source: ABdhPJwB1mMz13fdwTdLFRo94oXfjU9s2n7IjStxG+8rt5MiF3WPL9xa7EiW5xM+AuxznQKTH5Do/g==
-X-Received: by 2002:a5d:504b:: with SMTP id h11mr56401217wrt.160.1594201477900;
-        Wed, 08 Jul 2020 02:44:37 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id q7sm5567838wrs.27.2020.07.08.02.44.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jul 2020 02:44:37 -0700 (PDT)
-Subject: Re: [PATCH 10/11] ASoC: qdsp6-dai: add gapless support
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
-        tiwai@suse.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org
-References: <20200707163641.17113-1-srinivas.kandagatla@linaro.org>
- <20200707163641.17113-11-srinivas.kandagatla@linaro.org>
- <62af11d3-db26-a31b-00c8-9d78b11862cc@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <04a7f696-e23d-5563-7cc3-aedfaf2c7636@linaro.org>
-Date:   Wed, 8 Jul 2020 10:44:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 8 Jul 2020 05:45:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:56600 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgGHJpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 05:45:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F29FC0A;
+        Wed,  8 Jul 2020 02:45:01 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 844343F718;
+        Wed,  8 Jul 2020 02:44:59 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: handle case of task_h_load() returning 0
+To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
+        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     valentin.schneider@arm.com
+References: <20200702144258.19326-1-vincent.guittot@linaro.org>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <4198cf3d-308e-feee-91c3-2edfd1748b4c@arm.com>
+Date:   Wed, 8 Jul 2020 11:44:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <62af11d3-db26-a31b-00c8-9d78b11862cc@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200702144258.19326-1-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Pierre for review,
+On 02/07/2020 16:42, Vincent Guittot wrote:
+> task_h_load() can return 0 in some situations like running stress-ng
+> mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+> system. The load balance doesn't handle this correctly because
 
-On 07/07/2020 18:07, Pierre-Louis Bossart wrote:
+I guess the issue here is that 'cfs_rq->h_load' in 
+
+task_h_load() {
+    struct cfs_rq *cfs_rq = task_cfs_rq(p);
+    ...   
+    return div64_ul(p->se.avg.load_avg * cfs_rq->h_load,
+                    cfs_rq_load_avg(cfs_rq) + 1);
+}
+
+is still ~0 (or at least pretty small) compared to se.avg.load_avg being
+1024 and cfs_rq_load_avg(cfs_rq) n*1024 in these lb occurrences.
+ 
+> env->imbalance never decreases and it will stop pulling tasks only after
+> reaching loop_max, which can be equal to the number of running tasks of
+> the cfs. Make sure that imbalance will be decreased by at least 1.
 > 
+> misfit task is the other feature that doesn't handle correctly such
+> situation although it's probably more difficult to face the problem
+> because of the smaller number of CPUs and running tasks on heterogenous
+> system.
 > 
-> On 7/7/20 11:36 AM, Srinivas Kandagatla wrote:
->> Add support to gapless playback by implementing metadata,
->> next_track, drain and partial drain support.
->>
->> Gapless on Q6ASM is implemented by opening 2 streams in a single asm 
->> stream
+> We can't simply ensure that task_h_load() returns at least one because it
+> would imply to handle underrun in other places.
 > 
-> What does 'in a single asm stream' means?
-
-
-So in QDSP6 ASM (Audio Stream Manager) terminology we have something 
-called "asm session" for each ASoC FE DAI, Each asm session can be 
-connected with multiple streams (upto 8 I think). However there will be 
-only one active stream at anytime. Also there only single data buffer 
-associated with each asm session.
-
-For Gapless usecase, we can keep two streams open for one asm-session, 
-allowing us to fill in data on second stream while first stream is playing.
-
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  kernel/sched/fair.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 > 
->> and toggling them on next track.
-> 
-> It really seems to me that you have two streams at the lowest level, 
-> along with the knowledge of how many samples to remove/insert and hence 
-> could do a much better job - including gapless support between unrelated 
-> profiles and cross-fading - without the partial drain and next_track 
-> mechanism that was defined assuming a single stream/profile.
-At the end of the day its a single session with one data buffer but with 
-multiple streams.
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 6fab1d17c575..62747c24aa9e 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4049,7 +4049,13 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+>  		return;
+>  	}
+>  
+> -	rq->misfit_task_load = task_h_load(p);
+> +	/*
+> +	 * Make sure that misfit_task_load will not be null even if
+> +	 * task_h_load() returns 0. misfit_task_load is only used to select
+> +	 * rq with highest load so adding 1 will not modify the result
+> +	 * of the comparison.
+> +	 */
+> +	rq->misfit_task_load = task_h_load(p) + 1;
+>  }
+>  
+>  #else /* CONFIG_SMP */
+> @@ -7664,6 +7670,16 @@ static int detach_tasks(struct lb_env *env)
+>  			    env->sd->nr_balance_failed <= env->sd->cache_nice_tries)
+>  				goto next;
+>  
+> +			/*
+> +			 * Depending of the number of CPUs and tasks and the
+> +			 * cgroup hierarchy, task_h_load() can return a null
+> +			 * value. Make sure that env->imbalance decreases
+> +			 * otherwise detach_tasks() will stop only after
+> +			 * detaching up to loop_max tasks.
+> +			 */
+> +			if (!load)
+> +				load = 1;
+> +
+>  			env->imbalance -= load;
+>  			break;
 
-Achieving cross fade should be easy with this design.
+I assume that this is related to the LKP mail
 
-We need those hooks for partial drain and next track to allow us to 
-switch between streams and pass silence information to respective stream 
-ids.
+https://lkml.kernel.org/r/20200421004749.GC26573@shao2-debian ?
 
---srini
-> 
+I ran the test (5.8.0-rc4 w/o vs. w/ your patch) on 'Intel(R) Xeon(R)
+CPU E5-2690 v2 @ 3.00GHz' (2*2*10, 40 CPUs).
+I can't see the changes in the magnitude shown in the email above (they
+used a 96 CPU system though).
+I used only scheduler stressor mmapfork in taskgroup /A/B/C:
+
+ stress-ng --timeout 1 --times --verify --metrics-brief --sequential 40 --class scheduler --exclude (all except mmapfork)
+
+5.8.0-rc4-custom-dieegg01-stress-ng-base
+
+stress-ng: info:  [3720]  stressor      bogo ops real time  usr time  sys time   bogo ops/s   bogo ops/s
+stress-ng: info:  [3720]                           (secs)    (secs)    (secs)   (real time) (usr+sys time)
+stress-ng: info:  [3720]  mmapfork            40      1.98     12.53     71.12        20.21         0.48
+stress-ng: info:  [5201]  mmapfork            40      2.50     13.10     98.61        16.01         0.36
+stress-ng: info:  [6682]  mmapfork            40      2.58     14.80     98.63        15.88         0.36
+stress-ng: info:  [8195]  mmapfork            40      1.79     12.57     61.61        22.31         0.54
+stress-ng: info:  [9679]  mmapfork            40      2.20     12.17     82.66        18.20         0.42
+stress-ng: info:  [11164] mmapfork            40      2.61     15.09    102.86        16.86         0.37
+stress-ng: info:  [12773] mmapfork            40      1.89     12.32     65.09        21.15         0.52
+stress-ng: info:  [3883]  mmapfork            40      2.14     12.90     76.73        18.68         0.45
+stress-ng: info:  [6845]  mmapfork            40      2.25     11.83     84.06        17.80         0.42
+stress-ng: info:  [8326]  mmapfork            40      1.76     12.93     56.65        22.70         0.57
+
+                                                                                Mean: 18.98 (σ: 2.369)
+5.8.0-rc4-custom-dieegg01-stress-ng
+
+stress-ng: info:  [3895]  mmapfork            40      2.40     13.56     92.83        16.67         0.38
+stress-ng: info:  [5379]  mmapfork            40      2.08     13.65     74.11        19.23         0.46
+stress-ng: info:  [6860]  mmapfork            40      2.15     13.72     80.24        18.62         0.43
+stress-ng: info:  [8341]  mmapfork            40      2.37     13.74     90.93        16.85         0.38
+stress-ng: info:  [9822]  mmapfork            40      2.10     12.48     83.85        19.09         0.42
+stress-ng: info:  [13816] mmapfork            40      2.05     12.13     77.64        19.49         0.45
+stress-ng: info:  [15297] mmapfork            40      2.53     13.16    100.26        15.84         0.35
+stress-ng: info:  [16780] mmapfork            40      2.00     12.10     71.25        20.02         0.48
+stress-ng: info:  [18262] mmapfork            40      1.73     12.24     57.69        23.09         0.57
+stress-ng: info:  [19743] mmapfork            40      1.78     12.51     57.89        22.48         0.57
+
+                                                                                Mean: 19.14 (σ: 2.239)
+
+
+
+
+
