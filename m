@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A979C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2E520760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B40720874
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="OYqHmPG3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bY4sCLTI"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MdxNv077";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lp6j9SpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgGHRnu (ORCPT
+        id S1727865AbgGHRnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:43:50 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:60701 "EHLO
+        Wed, 8 Jul 2020 13:43:52 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:42565 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726112AbgGHRnm (ORCPT
+        by vger.kernel.org with ESMTP id S1727820AbgGHRnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:43:42 -0400
+        Wed, 8 Jul 2020 13:43:47 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id ABB7F2F3;
-        Wed,  8 Jul 2020 13:43:40 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 889D12F2;
+        Wed,  8 Jul 2020 13:43:46 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:43:41 -0400
+  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:43:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=CC/Otr7Y6PbfV
-        uPCW3DgsSHckJZy/W27cAHYjHfNMjc=; b=OYqHmPG3gyYdhDSlBLVjMcx9tgu+b
-        BLbDzuG4FK4Tsf9kVL0TGvuR+3WdKtO2f3fBJtp4m61thrvkI9bq6kiiiTEAssDt
-        3Zwg6W0dtXyZF27ejO80zawUxKeLZh8RrFM/HZaK6bHlIzSwBikrY/qH1KcFRDOu
-        uDKfBLF+gAgsx4tOq9K33nqxLS+GloMzgD9aKEPa7vGVZBUzq/75fzeI+3s5bR6n
-        ZbnSXWsh6Cd9drQDEHoRgqZBIYMrHXDf4EZO6JKwlZMJNrntD1DgT2HDgBjnlkeU
-        /VBCWWU5n0ynUD0RI36RLJ0YOBeWqDlUQCVBuat8vTDBDUjs77BszJ2+Q==
+        :mime-version:content-transfer-encoding; s=fm3; bh=de0mF+VjX2q6u
+        xMlPlcBcexMCkVgd8GF6/Q5G21dgxU=; b=MdxNv07736/c5yjumaS2Cpwh9F8P3
+        9gjJ7FdQCxmhVf0IntpcjfVO7odpLTAnP27ar4vuqnroPigJfoNrKl2z7u6CxBBH
+        bND2Ba+a3sPIHAlCk5Vf3niqFgtPffQRNoe0kqmcOagA/eUwrlQVvG//jIuFV77J
+        Wfb03MDAKABcdqpo8NcIYDPJ0jQxsIEvIwXc8eN933SRG6+QQJElmEMVlQ98o4ET
+        IkpSiNU6cdK4fCoTvRzC+eVs3O0qmdUQ0RgDs7xu1lRnR/MVtidTJUKDNNBJETAe
+        fagOs+9aQq6YZ+hHF31Cw4tCBPQeRRZhlY2y8LI9IfROebqS4qbl6alKg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=CC/Otr7Y6PbfVuPCW3DgsSHckJZy/W27cAHYjHfNMjc=; b=bY4sCLTI
-        AhdIjXGcy7IZ8zTUSYSc9A/i4iBturjU38m5cw7FsNb8Lf2UEkVQC6zOTscNqJdN
-        rSnfs/R+XKtHyUgC6sPN1f4+36z+rb1GWjTvuTtAMrN/WJYdKRGF+AmTrbltUitP
-        RluGXD/ommNJUVY2Zvdg/500c7V3bznPNBR7ZWzeY4ndRKZpfdeQAeGl37EesN3m
-        +w3mORui5fC6a3+G9z2ZnSorxxTVa8ej+JlvYYZa2ErHlJcpGRVZgH7ws1+fAG3W
-        +PLeWRvRO4zm8AXGkKh7uXNk8FdkDMwuBHT3qT+DVSW5Yqi3cTSwSnemwEDXQ2lD
-        UI7F7VXWDRPxWA==
-X-ME-Sender: <xms:zAUGX1qB5jGJMM6I2lXgGqj_9UF2yu_2Qo99G1H3cDzJqQfuDsjSyA>
+        fm3; bh=de0mF+VjX2q6uxMlPlcBcexMCkVgd8GF6/Q5G21dgxU=; b=lp6j9SpF
+        YbKxXFOCIeZnRWdHdv56RTumbvWmDytVhK2Bb3fABHzNxONNbUyrY4c6BnuzDiGq
+        544ahJ7Q0J+lL0pZzgXYKEmR850v8lUqcVOfmGa7T8j14H3V4WeYcxgnN19rXUBb
+        VEGOl1zoxaxRDzCdPLb87VydhW+0bZuJ9BH0BQjg9iCAVyEkc88vhzHGDKghr00l
+        exqH9smHzGnAehEPvZlvD+B5T8Gebpguv+o0aK/SrAo9abBPRpWWByGjcaiQN8Oq
+        B/+VPzRXfIe6Wv8RaBj6sgioip++kagw0N/c6HeLxdcRBOXLklVuYHMbUNLzu6V9
+        u8P2QA50qGc5zw==
+X-ME-Sender: <xms:0gUGXy0KMyP_Roz8DJ5XXhMpy17rUhSB75r_Jbpc3jg_GEpy2wMAIw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepgeefne
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepgeeine
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:zAUGX3oLSuqVheucouI_6rGGB9zMK-S52PM2ynYcBdjeh5WGNXCONQ>
-    <xmx:zAUGXyPXrp-aplSdesSA2lcyOENj1VnXhNlLmfKjDV0B7HLleu2xAA>
-    <xmx:zAUGXw544gXdu6AA0tjB0MoJsIjx71IdNH4xK_JbdG-2w-z-14IKvQ>
-    <xmx:zAUGXzZolfY7SUVn0hS8Q74ShvHGqaP19xMHKVhGPCJNAz_kK96dPY2rqWI>
+X-ME-Proxy: <xmx:0gUGX1HfUYfvK-3kq3JMTPWVZ65-LJdT3Wtl1W1DtAR2gcnV26z-EA>
+    <xmx:0gUGX64zi0CxtAKQ_lVWN0faIT_ZJgnJjLMUf_63cOq_DoBNQ6DhFQ>
+    <xmx:0gUGXz3B_ljWC0O2EF5UHxEu0GjFGHfFWlrBt1lkWAkcnindmJFecA>
+    <xmx:0gUGX83fpYKQ8C1foaqehVN-o8MDQTZr_rFbiK_Dkj5iBcIJj8WNy04WwKI>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E8CB13280059;
-        Wed,  8 Jul 2020 13:43:39 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id BF14D328005D;
+        Wed,  8 Jul 2020 13:43:45 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 48/78] drm/vc4: hdmi: Remove vc4_dev hdmi pointer
-Date:   Wed,  8 Jul 2020 19:41:56 +0200
-Message-Id: <8cd23a0bf1f2b6cf6ebbd19f1cdd8cbc574c3878.1594230107.git-series.maxime@cerno.tech>
+Subject: [PATCH v4 52/78] drm/vc4: hdmi: Add reset callback
+Date:   Wed,  8 Jul 2020 19:42:00 +0200
+Message-Id: <ab00cc4655224f26d74c307a410bbca8d67dbbbb.1594230107.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
 References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
@@ -89,65 +89,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we don't have any users anymore, we can kill that pointer.
+The BCM2711 and BCM283x HDMI controllers use a slightly different reset
+sequence, so let's add a callback to reset the controller.
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_drv.h  | 1 -
- drivers/gpu/drm/vc4/vc4_hdmi.c | 7 -------
- 2 files changed, 8 deletions(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 31 ++++++++++++++++++-------------
+ drivers/gpu/drm/vc4/vc4_hdmi.h |  3 +++
+ 2 files changed, 21 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 1a97545b9244..501a48a714d3 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -73,7 +73,6 @@ struct vc4_perfmon {
- struct vc4_dev {
- 	struct drm_device *dev;
- 
--	struct vc4_hdmi *hdmi;
- 	struct vc4_hvs *hvs;
- 	struct vc4_v3d *v3d;
- 	struct vc4_dpi *dpi;
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 7cd1394c10fa..c5c9f7bf5dee 100644
+index a4fed1439bf3..80bc3dd9d4a8 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -1189,7 +1189,6 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- #endif
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct drm_device *drm = dev_get_drvdata(master);
--	struct vc4_dev *vc4 = drm->dev_private;
- 	struct vc4_hdmi *vc4_hdmi;
- 	struct drm_encoder *encoder;
- 	struct device_node *ddc_node;
-@@ -1280,8 +1279,6 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+@@ -69,6 +69,21 @@ static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
+ 	return 0;
+ }
+ 
++static void vc4_hdmi_reset(struct vc4_hdmi *vc4_hdmi)
++{
++	HDMI_WRITE(HDMI_M_CTL, VC4_HD_M_SW_RST);
++	udelay(1);
++	HDMI_WRITE(HDMI_M_CTL, 0);
++
++	HDMI_WRITE(HDMI_M_CTL, VC4_HD_M_ENABLE);
++
++	HDMI_WRITE(HDMI_SW_RESET_CONTROL,
++		   VC4_HDMI_SW_RESET_HDMI |
++		   VC4_HDMI_SW_RESET_FORMAT_DETECT);
++
++	HDMI_WRITE(HDMI_SW_RESET_CONTROL, 0);
++}
++
+ static enum drm_connector_status
+ vc4_hdmi_connector_detect(struct drm_connector *connector, bool force)
+ {
+@@ -363,11 +378,8 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+ 		return;
+ 	}
+ 
+-	HDMI_WRITE(HDMI_SW_RESET_CONTROL,
+-		   VC4_HDMI_SW_RESET_HDMI |
+-		   VC4_HDMI_SW_RESET_FORMAT_DETECT);
+-
+-	HDMI_WRITE(HDMI_SW_RESET_CONTROL, 0);
++	if (vc4_hdmi->variant->reset)
++		vc4_hdmi->variant->reset(vc4_hdmi);
+ 
+ 	/* PHY should be in reset, like
+ 	 * vc4_hdmi_encoder_disable() does.
+@@ -1292,14 +1304,6 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
  		vc4_hdmi->hpd_active_low = hpd_gpio_flags & OF_GPIO_ACTIVE_LOW;
  	}
  
--	vc4->hdmi = vc4_hdmi;
+-	/* HDMI core must be enabled. */
+-	if (!(HDMI_READ(HDMI_M_CTL) & VC4_HD_M_ENABLE)) {
+-		HDMI_WRITE(HDMI_M_CTL, VC4_HD_M_SW_RST);
+-		udelay(1);
+-		HDMI_WRITE(HDMI_M_CTL, 0);
 -
- 	/* HDMI core must be enabled. */
- 	if (!(HD_READ(VC4_HD_M_CTL) & VC4_HD_M_ENABLE)) {
- 		HD_WRITE(VC4_HD_M_CTL, VC4_HD_M_SW_RST);
-@@ -1361,8 +1358,6 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- static void vc4_hdmi_unbind(struct device *dev, struct device *master,
- 			    void *data)
- {
--	struct drm_device *drm = dev_get_drvdata(master);
--	struct vc4_dev *vc4 = drm->dev_private;
- 	struct vc4_hdmi *vc4_hdmi;
+-		HDMI_WRITE(HDMI_M_CTL, VC4_HD_M_ENABLE);
+-	}
+ 	pm_runtime_enable(dev);
  
- 	/*
-@@ -1394,8 +1389,6 @@ static void vc4_hdmi_unbind(struct device *dev, struct device *master,
- 	pm_runtime_disable(dev);
+ 	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
+@@ -1428,6 +1432,7 @@ static const struct vc4_hdmi_variant bcm2835_variant = {
+ 	.num_registers		= ARRAY_SIZE(vc4_hdmi_fields),
  
- 	put_device(&vc4_hdmi->ddc->dev);
--
--	vc4->hdmi = NULL;
- }
+ 	.init_resources		= vc4_hdmi_init_resources,
++	.reset			= vc4_hdmi_reset,
+ };
  
- static const struct component_ops vc4_hdmi_ops = {
+ static const struct of_device_id vc4_hdmi_dt_match[] = {
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
+index b36e0210671f..17a30589f39c 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.h
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
+@@ -35,6 +35,9 @@ struct vc4_hdmi_variant {
+ 	 * clocks, etc) for that variant.
+ 	 */
+ 	int (*init_resources)(struct vc4_hdmi *vc4_hdmi);
++
++	/* Callback to reset the HDMI block */
++	void (*reset)(struct vc4_hdmi *vc4_hdmi);
+ };
+ 
+ /* HDMI audio information */
 -- 
 git-series 0.9.1
