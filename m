@@ -2,137 +2,119 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42490C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE793C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDEB206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF66206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQSJPXvA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QBtBrpjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgGHRgA (ORCPT
+        id S1727003AbgGHRgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:36:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
+        Wed, 8 Jul 2020 13:36:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgGHRgA (ORCPT
+        with ESMTP id S1726963AbgGHRgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:36:00 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E49BC061A0B;
-        Wed,  8 Jul 2020 10:35:59 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id t9so27337677lfl.5;
-        Wed, 08 Jul 2020 10:35:59 -0700 (PDT)
+        Wed, 8 Jul 2020 13:36:51 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B273C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 10:36:51 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id h17so38499333oie.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 10:36:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0go/Ywd9NLu2fQFwy7ITgscW8Fvhwb0kSSx94KkN6qQ=;
-        b=AQSJPXvAehcaC6E4s4aEzDy10L+p17B130aW8NNx4YZdGEkzM1Hm7TRl1HCmco1kVW
-         oeLIBgPLnbk2C21kAmouftX+4+gaDSSwAo0BnwkRe3yzRFZsTOsSRxzLGbMTUYxpgXts
-         JMV8H4HQ4soaV9okb3GTZP9Nt2gQvuGzWuNxhwuGpOoLwJ2PH+5Yl1eu+w+M/lZBeSmr
-         HPzcdV/8B8/8QAeW27HL+bSXhLQ3haKjhWYMSupwIYZpABjs4O1Wh6T2lABRxl+JObao
-         i8lta6o8p6v1RKWxE6yO2pmtietemN+jGZp58K2kloMS1D8WQFNuGfT+Rqa63ai9t+M6
-         osnQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xIPxHFNL2iAKNO6TfsfK5i3c3GAB1DsvCug2FocHVtY=;
+        b=QBtBrpjdEAaDgN/nY2WU1E7mnTl0LdGw45K2oFN6eGJYyIsG9ugEteWhqxsSpzq2GW
+         ReZkIkMN/gB9YQl0SS01Uwl3q5rXHR3G/28TB4+hvWifUg3fXDlrcs/J3/lkovvNWR/z
+         8Hx5UVU3acMZxZl4sazyYM+tNHZjosg8iYKGDgF0N1xNEyQCGOJtyGpQCuDn8ktQ/40g
+         gYUobTJR11Ho1MUk0ayZvLJ14uZZSB5////Dd34xOBhxWQ24H11heE9J6s4O3AZLaKdH
+         YP2w9UhijAGa26TfnVXw3p5EZ/yVBc3jnMLEIVaHEbJ5O4aWYiojSmebaryi+YYsV/Hq
+         +RKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0go/Ywd9NLu2fQFwy7ITgscW8Fvhwb0kSSx94KkN6qQ=;
-        b=Ns/omrmLfaGblZYZXd9Mp0h9E+h4U9QBuc5MJNALzzc+hi+iISKSBjjwTouA015jln
-         NEWL/Iz3tG118Ii1+4PZiELVGIjSyuXyt7gatuDzXS14FRRSdIrmte03Q4iY5zQOQMCP
-         dq3x9QgSZ4twZWy5Gs4WnBvPsQ2nkExHPG6GI0rJzL4WvMO+NO/CAQqxtvis+60JU1wQ
-         ojcf7vRZr75u41JxBY2POzBONv1bCDAksYo13lfAVoIMEMog8/1B4XPJCsaXXRkDIt73
-         g5r82QSJuRYtwpUtvM9uzL3mWYErybKGMQrQ2KT8mCDI683ROpwDKpMuiOoRP/K5yKY6
-         z5KA==
-X-Gm-Message-State: AOAM532/1DoxYAShwv5hvcyBq/r1L1UtUcDukwtPG4Ts8UKF5wrysBfp
-        72ciP9Jd9U64tEaVSL6U/Rr7V5w6
-X-Google-Smtp-Source: ABdhPJx2dKgAODQ81t/pTzKZAGIlcurXRdTe/cXHYFlicjssRadZkxC98kXpYUjJhWiF8cPtkOd82w==
-X-Received: by 2002:a19:8a07:: with SMTP id m7mr37060035lfd.31.1594229757359;
-        Wed, 08 Jul 2020 10:35:57 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id n10sm141266lfb.82.2020.07.08.10.35.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 10:35:55 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] gpio: max77620: Initialize interrupts state
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200708155834.19762-1-digetx@gmail.com>
- <20200708155834.19762-2-digetx@gmail.com>
- <CAHp75VcFG3oK7C8Y7RZKoEvwPo9+hKMMucnDhtpqLDmLGoPmJw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2f61f759-81fc-c429-8181-508368c4f091@gmail.com>
-Date:   Wed, 8 Jul 2020 20:35:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xIPxHFNL2iAKNO6TfsfK5i3c3GAB1DsvCug2FocHVtY=;
+        b=GSz+cljz2Nj2vBMiuaUEn5ce/kgonzD1DCmskClj1jUqMCIAX4VYv3j7hcnkqYyq1c
+         3PCtK0/yuQUfJ2xLRLetTSO6ELBPQf7/uWPoVTajU2w5V91Wrp0wJNgR4Kybpo16mkKF
+         T4X5RbhlsQcXmxeZ6WlQos9OiF8zZvuJIxscsqofm2e81Fr3CiJCrTYtFMe2qg7f7NU5
+         d9wO+5PZm/cSxhAuGTp02ZVlVlLjjG3YhWY5GlTNGiIQ9lo+vyoCrWCQCVG7XWEL02vk
+         5RQnb0q8fpsHu95t0AZmnXHT2AHswzoNVMg3ef0TwUg1W2XpsMU/7XbcTXC6aBdy4eqr
+         vlBg==
+X-Gm-Message-State: AOAM532kyBBuU2s7oSjKKhXNhdqeZIoD/UZv+LXozTnvYTlBOh2rzB+H
+        jBN0rPa51JbT91Cn44tsHT5jRm+WQ84v25uSplBm2Q==
+X-Google-Smtp-Source: ABdhPJyWOqIT8y4BnHhXxpTPX2k9Z252XO3U9PSnCYIeYLF77r6UaNqlEEbfud/bKiN6dVw2TwUs6UYwZ7wNGXbTR/k=
+X-Received: by 2002:aca:a983:: with SMTP id s125mr8215567oie.30.1594229810224;
+ Wed, 08 Jul 2020 10:36:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcFG3oK7C8Y7RZKoEvwPo9+hKMMucnDhtpqLDmLGoPmJw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200701194259.3337652-1-saravanak@google.com>
+ <CAJZ5v0gPKHSpC+9BNt_n_wP+8Lmekb1VapfgHPwenHopekHV=w@mail.gmail.com> <CAMuHMdW+dqCCqKjtxgZAAG-sFiMpbsEs_GoVGeKq6__A7EDBxg@mail.gmail.com>
+In-Reply-To: <CAMuHMdW+dqCCqKjtxgZAAG-sFiMpbsEs_GoVGeKq6__A7EDBxg@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 8 Jul 2020 10:36:14 -0700
+Message-ID: <CAGETcx-dcvsWDJPbM_c1O4ScJmPu97+WWRkygmF1g-grdAha9A@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Fix dpm_list ordering issue due to fw_devlink optimization
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.07.2020 19:58, Andy Shevchenko пишет:
-> On Wed, Jul 8, 2020 at 6:58 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> I noticed on Nexus 7 that after rebooting from downstream kernel to
->> upstream, the GPIO interrupt is triggering non-stop despite of interrupts
-> 
-> despite interrupts
-> 
->> being disabled for all of GPIOs. This happens because Nexus 7 uses a
->> soft-reboot, meaning that bootloader should take care of resetting
->> hardware, but bootloader doesn't do it well. In a result, GPIO interrupt
-> 
-> but the bootloader
-> 
-> As a result
+On Wed, Jul 8, 2020 at 1:16 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Rafael,
+>
+> On Tue, Jul 7, 2020 at 5:56 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > On Wed, Jul 1, 2020 at 9:43 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > When commit 93d2e4322aa7 ("of: platform: Batch fwnode parsing when
+> > > adding all top level devices") enabled batch processing of fw_devlink to
+> > > optimize the parsing time, it caused a suspend/resume regression due to
+> > > the use of deferred probing early on at boot.
+> > >
+> > > This series fixes the regression by avoiding the use of deferred probing
+> > > when optimizing fw_devlink parsing.
+> > >
+> > > Saravana Kannan (3):
+> > >   driver core: Don't do deferred probe in parallel with kernel_init
+> > >     thread
+> > >   driver core: Rename dev_links_info.defer_sync to defer_hook
+> > >   driver core: Avoid deferred probe due to fw_devlink_pause/resume()
+> > >
+> > >  drivers/base/base.h    |  1 -
+> > >  drivers/base/core.c    | 44 ++++++++++++++++++++++++++++++------------
+> > >  drivers/base/dd.c      |  5 -----
+> > >  include/linux/device.h |  5 +++--
+> > >  4 files changed, 35 insertions(+), 20 deletions(-)
+> > >
+> > > --
+> >
+> > Geert, any chance to test this series on top of 5.8-rc?  It is
+> > expected to fix the suspend/resume regression reported by you.
+>
+> Sorry, I had completely forgotten I hadn't tested this iteration of
+> the fix(es) yet. Thanks for the reminder!
+>
+> Works fine when applied on top of v5.8-rc4.
+> Tested on r8a7740/armadillo, sh73a0/kzm9g, r8a7791/koelsch,
+>  and r8a77951/salvator-xs.
+>
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks!
+Great! Thanks!
 
->> may be left ON at a boot time. Let's mask all GPIO interrupts at the
->> driver's initialization time in order to resolve the issue.
-> 
-> ...
-> 
->>         mgpio->gpio_chip.ngpio = MAX77620_GPIO_NR;
->>         mgpio->gpio_chip.can_sleep = 1;
->>         mgpio->gpio_chip.base = -1;
->> +       mgpio->gpio_chip.irq.init_hw = max77620_gpio_irq_init_hw,
-> 
-> Now this seems a bit awkward. Perhaps you need first to switch to use
-> GPIO IRQ chip structure?
-> It's also in the TODO of the GPIO subsystem ;-)
-
-Alright, I'll try to switch it to use the GPIO IRQ chip struct in v3!
-
-> ...
-> 
->>  #ifdef CONFIG_OF_GPIO
->>         mgpio->gpio_chip.of_node = pdev->dev.parent->of_node;
->>  #endif
-> 
-> This seems to be done by GPIO library.
-
-Indeed!
-
-> Also point to improve: don't shadow error from platform_get_irq().
-> 
-
-Good catch!
+-Saravana
