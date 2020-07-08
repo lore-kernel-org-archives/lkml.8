@@ -2,69 +2,69 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 752CB206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809D4206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:45:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jWGhCJXw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kZHHYt5V"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="L2gYQS6w";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ECISMku+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgGHRpp (ORCPT
+        id S1727075AbgGHRnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:45:45 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:60527 "EHLO
+        Wed, 8 Jul 2020 13:43:33 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:54565 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727080AbgGHRnf (ORCPT
+        by vger.kernel.org with ESMTP id S1726006AbgGHRn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:43:35 -0400
+        Wed, 8 Jul 2020 13:43:26 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 93C162F3;
-        Wed,  8 Jul 2020 13:43:33 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id D2A77109A;
+        Wed,  8 Jul 2020 13:43:24 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:43:34 -0400
+  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:43:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=xjRAKYXJlr75H
-        eNKtRmO3ag0JBfeTFTn89R8oF4KPXc=; b=jWGhCJXwHCSYRqd+P9U6bViCBINP7
-        wVeDSJPPvCSlCHZygc2auYq1+fCAV6p37V6KqNFlaQjmJzQsYdpMseGjtAji7Xas
-        41SpfMqcQ80WX5KefXrTy5iN1r0zcXH7pQ7NVgBw3wY+O/KlIPe7zso4TL8xcfMu
-        ZxAiMurrC7QKZGu3h4rUAqSE2FevJLXD4YtPwewKxEUVUKVVP+qgN4kLXcJrEflD
-        a0eZPU7mOzPgH+fF8NU+HZgscN9YVs0jUEBzlvxX4dFhhAoFVDeylDd6oa95P674
-        5924Ug8QCZqJWKYhP9pOPBIAQaUGPltvm2l16PsdVrNnws1ev18KW3zvg==
+        :mime-version:content-transfer-encoding; s=fm3; bh=FRK1ghnZ/A34m
+        +fO1TWrTG3gwS4qPkDUufypdd78rhw=; b=L2gYQS6wFkzeKlyqWPFdqlaGI9e36
+        YGXhTN9taVRNyJrlU4LJlVDiUzgOxOwffUzuRAIfIoG57GB9o92rY9DyFg4+B5ea
+        n3uGdsx6xkF6lhkKJGJ1r7poC0nniBB13mY+a9wdTHw4XwWi0QnTwLollryNcUuP
+        JD+35o4UG6+Cf5YEQ6aPuljyp+38w1QUSj//UPmREQB3+7D8FPCPh0J+q5HRXHiA
+        1MbwPruP0QIsipTfqSfBlj8ibXRXp/ugBhLpfYMh8jeSdil/6Mh3gpVc8GDGcF1B
+        XugKfDDZe4Tgj4nk0LImc7kxxRMsfF4wSXNOeeWiBk3Pp4JLsFECXJuLg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=xjRAKYXJlr75HeNKtRmO3ag0JBfeTFTn89R8oF4KPXc=; b=kZHHYt5V
-        r0jKncpdfBaCzR4CBOciY62HWdncGY+VymKC67Z82yJHaMP+4WO5l8yEHA8pxWAe
-        eiCSlklhkOO8FZ6s/SEFBv9KGHzMlVSePckYrZMmIqe8uKxHm17X6JaR/3JnjwqZ
-        k3zld9tEfdw/a9EHgCvH6YKgKiOl0E4TK99KKhJj68cLGp5KfqFobSfgoCrn0agB
-        Ru8gDMR05nqiTtYnz5PlrFWRvujqPY0kiYW9Ft7eZ6oWho2NG+YTyqKazjMLoDA/
-        R6gVKSJs0lBpPIdz/MCH+IArwvQbzZfsPDB2zbiOp2Fo5iHmyC0YQY25pG700Oq/
-        wQ5L9BbF/NJdyw==
-X-ME-Sender: <xms:xQUGXz-XMPz2Jf3a725DUHlB7r0cZG1F3eW4_owlbu5lwfOUMLiilg>
+        fm3; bh=FRK1ghnZ/A34m+fO1TWrTG3gwS4qPkDUufypdd78rhw=; b=ECISMku+
+        phk22sBhqHhnTTgAzGxQ4lApyjy5uWXgzltMm/AdhcrqtJZgp3eGHCQ8aMvam+/8
+        xuOXF0Ga2lbfi5U5OiOCMResMxuhEBMXBmnx4Sify+S3Lae3IWol6V3Kkk91H7hE
+        8J6QGN5YwCJaIi+2dde7CLqdv0fwS2gUNjmKzF/blwwIrbSbOqk1SeP6p6BemBz7
+        JYEU+qq/+6157KCXZmP7O3/xNUh/V48crP/qxF5BvBxmLzq3RG4m3gowY2iz3k62
+        vuAx0ypJp5E0wkBJJokqMzHVUWt27gyeIQi6LW0BNEPXhmlUQvFsRgoO9g2AnuL2
+        2/0ufoUPfq+W9g==
+X-ME-Sender: <xms:vAUGXxBkAn_TWA1Nnd_4xgBKvmTUUF288KM9um4KqlfXXYu9Awr_9w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepfeelne
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepfeeine
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:xQUGX_sbnWA4vuqvTWB5Vf0Y0iS7GrnKqGJS_so-ipLeAGfdTLKdzg>
-    <xmx:xQUGXxDEzLbD5IPacq5aDy8oSuvFTh3AZk4UhQSRe-LUET_ztfwy0w>
-    <xmx:xQUGX_dG-bBuB3KboGVQ37WXFWzefzI8YaHJwMwtju8khZlgSPU3JA>
-    <xmx:xQUGX_eaQYKYjJDTKNxcsOZ8e2lg-fOZse8qDGmd80q2p1zhRxPoxv-4z0M>
+X-ME-Proxy: <xmx:vAUGX_gWoaBeG6Cw9OiCFqBiAPMLHiTCoOuYjdxA2YwGd31_L7RClw>
+    <xmx:vAUGX8nvOVPW89_v6LmIMX-awxcMoRgBlP24gQeLAH3R8Hgf9Z1QmQ>
+    <xmx:vAUGX7waSR00OY442nymTEz8QGTkq1uFo7r5lfjvwtW3Fl0jgx55cQ>
+    <xmx:vAUGXzRP3mWeH-_FaL3cJFE7DDCVZ5l3_5O9Zii4ZO_eUnS2sT1SNfQf7Kc>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CEC70306005F;
-        Wed,  8 Jul 2020 13:43:32 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2A0E630600B1;
+        Wed,  8 Jul 2020 13:43:24 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 43/78] drm/vc4: hdmi: Move accessors to vc4_hdmi
-Date:   Wed,  8 Jul 2020 19:41:51 +0200
-Message-Id: <a1482fbb46efce4f453cb0919efa8e3c2714a515.1594230107.git-series.maxime@cerno.tech>
+Subject: [PATCH v4 37/78] drm/vc4: crtc: Add BCM2711 pixelvalves
+Date:   Wed,  8 Jul 2020 19:41:45 +0200
+Message-Id: <f45d5249575d28a5ace6fd7cef1f856fa8d703ac.1594230107.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
 References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
@@ -89,157 +89,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current driver only supports a single HDMI controller, and part of
-the issue is that the main vc4_dev structure holds a pointer to its
-(only) HDMI controller, and the HDMI registers accessors will use it to
-retrieve the mapped addresses.
-
-Let's modify those accessors to use directly the vc4_hdmi structure so
-that we can eventually get rid of that single global pointer.
+The BCM2711 has 5 pixelvalves, so now that our driver is ready, let's add
+support for them.
 
 Reviewed-by: Eric Anholt <eric@anholt.net>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 22 ++++++++--------------
- drivers/gpu/drm/vc4/vc4_hdmi.h |  8 ++++----
- 2 files changed, 12 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 95 ++++++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/vc4/vc4_regs.h |  7 +++-
+ 2 files changed, 100 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 5b7202f97883..8955b0cf76ed 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -123,6 +123,7 @@ vc4_hdmi_connector_detect(struct drm_connector *connector, bool force)
- {
- 	struct drm_device *dev = connector->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(dev);
-+	struct vc4_hdmi *vc4_hdmi = vc4->hdmi;
+diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+index a8bc3b26a0fb..c19687eabaf6 100644
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -208,6 +208,7 @@ void vc4_crtc_destroy(struct drm_crtc *crtc)
  
- 	if (vc4->hdmi->hpd_gpio) {
- 		if (gpio_get_value_cansleep(vc4->hdmi->hpd_gpio) ^
-@@ -230,6 +231,7 @@ static int vc4_hdmi_stop_packet(struct drm_encoder *encoder,
+ static u32 vc4_get_fifo_full_level(struct vc4_crtc *vc4_crtc, u32 format)
  {
- 	struct drm_device *dev = encoder->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(dev);
-+	struct vc4_hdmi *vc4_hdmi = vc4->hdmi;
- 	u32 packet_id = type - 0x80;
++	const struct vc4_crtc_data *crtc_data = vc4_crtc_to_vc4_crtc_data(vc4_crtc);
+ 	const struct vc4_pv_data *pv_data = vc4_crtc_to_vc4_pv_data(vc4_crtc);
+ 	u32 fifo_len_bytes = pv_data->fifo_depth;
  
- 	HDMI_WRITE(VC4_HDMI_RAM_PACKET_CONFIG,
-@@ -244,6 +246,7 @@ static void vc4_hdmi_write_infoframe(struct drm_encoder *encoder,
+@@ -230,6 +231,13 @@ static u32 vc4_get_fifo_full_level(struct vc4_crtc *vc4_crtc, u32 format)
+ 	case PV_CONTROL_FORMAT_24:
+ 	case PV_CONTROL_FORMAT_DSIV_24:
+ 	default:
++		/*
++		 * For some reason, the pixelvalve4 doesn't work with
++		 * the usual formula and will only work with 32.
++		 */
++		if (crtc_data->hvs_output == 5)
++			return 32;
++
+ 		return fifo_len_bytes - 3 * HVS_FIFO_LATENCY_PIX;
+ 	}
+ }
+@@ -238,9 +246,13 @@ static u32 vc4_crtc_get_fifo_full_level_bits(struct vc4_crtc *vc4_crtc,
+ 					     u32 format)
  {
- 	struct drm_device *dev = encoder->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(dev);
-+	struct vc4_hdmi *vc4_hdmi = vc4->hdmi;
- 	u32 packet_id = frame->any.type - 0x80;
- 	u32 packet_reg = VC4_HDMI_RAM_PACKET(packet_id);
- 	uint8_t buffer[VC4_HDMI_PACKET_STRIDE];
-@@ -623,9 +626,6 @@ static const struct drm_encoder_helper_funcs vc4_hdmi_encoder_helper_funcs = {
- /* HDMI audio codec callbacks */
- static void vc4_hdmi_audio_set_mai_clock(struct vc4_hdmi *vc4_hdmi)
- {
--	struct drm_encoder *encoder = &vc4_hdmi->encoder.base.base;
--	struct drm_device *drm = encoder->dev;
--	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 	u32 hsm_clock = clk_get_rate(vc4_hdmi->hsm_clock);
- 	unsigned long n, m;
+ 	u32 level = vc4_get_fifo_full_level(vc4_crtc, format);
++	u32 ret = 0;
++
++	ret |= VC4_SET_FIELD((level >> 6),
++			     PV5_CONTROL_FIFO_LEVEL_HIGH);
  
-@@ -645,8 +645,6 @@ static void vc4_hdmi_set_n_cts(struct vc4_hdmi *vc4_hdmi)
- {
- 	struct drm_encoder *encoder = &vc4_hdmi->encoder.base.base;
- 	struct drm_crtc *crtc = encoder->crtc;
--	struct drm_device *drm = encoder->dev;
--	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 	const struct drm_display_mode *mode = &crtc->state->adjusted_mode;
- 	u32 samplerate = vc4_hdmi->audio.samplerate;
- 	u32 n, cts;
-@@ -683,7 +681,6 @@ static int vc4_hdmi_audio_startup(struct snd_pcm_substream *substream,
- 	struct vc4_hdmi *vc4_hdmi = dai_to_hdmi(dai);
- 	struct drm_encoder *encoder = &vc4_hdmi->encoder.base.base;
- 	struct drm_connector *connector = &vc4_hdmi->connector.base;
--	struct vc4_dev *vc4 = to_vc4_dev(encoder->dev);
- 	int ret;
+-	return VC4_SET_FIELD(level & 0x3f,
+-			     PV_CONTROL_FIFO_LEVEL);
++	return ret | VC4_SET_FIELD(level & 0x3f,
++				   PV_CONTROL_FIFO_LEVEL);
+ }
  
- 	if (vc4_hdmi->audio.substream && vc4_hdmi->audio.substream != substream)
-@@ -714,9 +711,7 @@ static int vc4_hdmi_audio_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- static void vc4_hdmi_audio_reset(struct vc4_hdmi *vc4_hdmi)
- {
- 	struct drm_encoder *encoder = &vc4_hdmi->encoder.base.base;
--	struct drm_device *drm = encoder->dev;
- 	struct device *dev = &vc4_hdmi->pdev->dev;
--	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 	int ret;
+ /*
+@@ -278,6 +290,8 @@ static void vc4_crtc_pixelvalve_reset(struct drm_crtc *crtc)
  
- 	ret = vc4_hdmi_stop_packet(encoder, HDMI_INFOFRAME_TYPE_AUDIO);
-@@ -747,10 +742,7 @@ static int vc4_hdmi_audio_hw_params(struct snd_pcm_substream *substream,
- 				    struct snd_soc_dai *dai)
+ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
  {
- 	struct vc4_hdmi *vc4_hdmi = dai_to_hdmi(dai);
--	struct drm_encoder *encoder = &vc4_hdmi->encoder.base.base;
--	struct drm_device *drm = encoder->dev;
- 	struct device *dev = &vc4_hdmi->pdev->dev;
--	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 	u32 audio_packet_config, channel_mask;
- 	u32 channel_map, i;
++	struct drm_device *dev = crtc->dev;
++	struct vc4_dev *vc4 = to_vc4_dev(dev);
+ 	struct drm_encoder *encoder = vc4_get_crtc_encoder(crtc);
+ 	struct vc4_encoder *vc4_encoder = to_vc4_encoder(encoder);
+ 	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
+@@ -358,6 +372,11 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ 	if (is_dsi)
+ 		CRTC_WRITE(PV_HACT_ACT, mode->hdisplay * pixel_rep);
  
-@@ -821,8 +813,6 @@ static int vc4_hdmi_audio_trigger(struct snd_pcm_substream *substream, int cmd,
- {
- 	struct vc4_hdmi *vc4_hdmi = dai_to_hdmi(dai);
- 	struct drm_encoder *encoder = &vc4_hdmi->encoder.base.base;
--	struct drm_device *drm = encoder->dev;
--	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
-@@ -1083,7 +1073,8 @@ static irqreturn_t vc4_cec_irq_handler_thread(int irq, void *priv)
- 
- static void vc4_cec_read_msg(struct vc4_dev *vc4, u32 cntrl1)
- {
--	struct cec_msg *msg = &vc4->hdmi->cec_rx_msg;
-+	struct vc4_hdmi *vc4_hdmi = vc4->hdmi;
-+	struct cec_msg *msg = &vc4_hdmi->cec_rx_msg;
- 	unsigned int i;
- 
- 	msg->len = 1 + ((cntrl1 & VC4_HDMI_CEC_REC_WRD_CNT_MASK) >>
-@@ -1129,6 +1120,7 @@ static irqreturn_t vc4_cec_irq_handler(int irq, void *priv)
- static int vc4_hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
- {
- 	struct vc4_dev *vc4 = cec_get_drvdata(adap);
-+	struct vc4_hdmi *vc4_hdmi = vc4->hdmi;
- 	/* clock period in microseconds */
- 	const u32 usecs = 1000000 / CEC_CLOCK_FREQ;
- 	u32 val = HDMI_READ(VC4_HDMI_CEC_CNTRL_5);
-@@ -1172,6 +1164,7 @@ static int vc4_hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
- static int vc4_hdmi_cec_adap_log_addr(struct cec_adapter *adap, u8 log_addr)
- {
- 	struct vc4_dev *vc4 = cec_get_drvdata(adap);
-+	struct vc4_hdmi *vc4_hdmi = vc4->hdmi;
- 
- 	HDMI_WRITE(VC4_HDMI_CEC_CNTRL_1,
- 		   (HDMI_READ(VC4_HDMI_CEC_CNTRL_1) & ~VC4_HDMI_CEC_ADDR_MASK) |
-@@ -1183,6 +1176,7 @@ static int vc4_hdmi_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
- 				      u32 signal_free_time, struct cec_msg *msg)
- {
- 	struct vc4_dev *vc4 = cec_get_drvdata(adap);
-+	struct vc4_hdmi *vc4_hdmi = vc4->hdmi;
- 	u32 val;
- 	unsigned int i;
- 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-index 17079a39f1b1..cdc9d90f62ac 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-@@ -78,9 +78,9 @@ struct vc4_hdmi {
- 	struct debugfs_regset32 hd_regset;
++	if (vc4->hvs->hvs5)
++		CRTC_WRITE(PV_MUX_CFG,
++			   VC4_SET_FIELD(PV_MUX_CFG_RGB_PIXEL_MUX_MODE_NO_SWAP,
++					 PV_MUX_CFG_RGB_PIXEL_MUX_MODE));
++
+ 	CRTC_WRITE(PV_CONTROL, PV_CONTROL_FIFO_CLR |
+ 		   vc4_crtc_get_fifo_full_level_bits(vc4_crtc, format) |
+ 		   VC4_SET_FIELD(format, PV_CONTROL_FORMAT) |
+@@ -891,10 +910,82 @@ static const struct vc4_pv_data bcm2835_pv2_data = {
+ 	},
  };
  
--#define HDMI_READ(offset) readl(vc4->hdmi->hdmicore_regs + offset)
--#define HDMI_WRITE(offset, val) writel(val, vc4->hdmi->hdmicore_regs + offset)
--#define HD_READ(offset) readl(vc4->hdmi->hd_regs + offset)
--#define HD_WRITE(offset, val) writel(val, vc4->hdmi->hd_regs + offset)
-+#define HDMI_READ(offset) readl(vc4_hdmi->hdmicore_regs + offset)
-+#define HDMI_WRITE(offset, val) writel(val, vc4_hdmi->hdmicore_regs + offset)
-+#define HD_READ(offset) readl(vc4_hdmi->hd_regs + offset)
-+#define HD_WRITE(offset, val) writel(val, vc4_hdmi->hd_regs + offset)
++static const struct vc4_pv_data bcm2711_pv0_data = {
++	.base = {
++		.hvs_available_channels = BIT(0),
++		.hvs_output = 0,
++	},
++	.debugfs_name = "crtc0_regs",
++	.fifo_depth = 64,
++	.pixels_per_clock = 1,
++	.encoder_types = {
++		[0] = VC4_ENCODER_TYPE_DSI0,
++		[1] = VC4_ENCODER_TYPE_DPI,
++	},
++};
++
++static const struct vc4_pv_data bcm2711_pv1_data = {
++	.base = {
++		.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
++		.hvs_output = 3,
++	},
++	.debugfs_name = "crtc1_regs",
++	.fifo_depth = 64,
++	.pixels_per_clock = 1,
++	.encoder_types = {
++		[0] = VC4_ENCODER_TYPE_DSI1,
++		[1] = VC4_ENCODER_TYPE_SMI,
++	},
++};
++
++static const struct vc4_pv_data bcm2711_pv2_data = {
++	.base = {
++		.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
++		.hvs_output = 4,
++	},
++	.debugfs_name = "crtc2_regs",
++	.fifo_depth = 256,
++	.pixels_per_clock = 2,
++	.encoder_types = {
++		[0] = VC4_ENCODER_TYPE_HDMI0,
++	},
++};
++
++static const struct vc4_pv_data bcm2711_pv3_data = {
++	.base = {
++		.hvs_available_channels = BIT(1),
++		.hvs_output = 1,
++	},
++	.debugfs_name = "crtc3_regs",
++	.fifo_depth = 64,
++	.pixels_per_clock = 1,
++	.encoder_types = {
++		[0] = VC4_ENCODER_TYPE_VEC,
++	},
++};
++
++static const struct vc4_pv_data bcm2711_pv4_data = {
++	.base = {
++		.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
++		.hvs_output = 5,
++	},
++	.debugfs_name = "crtc4_regs",
++	.fifo_depth = 64,
++	.pixels_per_clock = 2,
++	.encoder_types = {
++		[0] = VC4_ENCODER_TYPE_HDMI1,
++	},
++};
++
+ static const struct of_device_id vc4_crtc_dt_match[] = {
+ 	{ .compatible = "brcm,bcm2835-pixelvalve0", .data = &bcm2835_pv0_data },
+ 	{ .compatible = "brcm,bcm2835-pixelvalve1", .data = &bcm2835_pv1_data },
+ 	{ .compatible = "brcm,bcm2835-pixelvalve2", .data = &bcm2835_pv2_data },
++	{ .compatible = "brcm,bcm2711-pixelvalve0", .data = &bcm2711_pv0_data },
++	{ .compatible = "brcm,bcm2711-pixelvalve1", .data = &bcm2711_pv1_data },
++	{ .compatible = "brcm,bcm2711-pixelvalve2", .data = &bcm2711_pv2_data },
++	{ .compatible = "brcm,bcm2711-pixelvalve3", .data = &bcm2711_pv3_data },
++	{ .compatible = "brcm,bcm2711-pixelvalve4", .data = &bcm2711_pv4_data },
+ 	{}
+ };
  
- #endif /* _VC4_HDMI_H_ */
+diff --git a/drivers/gpu/drm/vc4/vc4_regs.h b/drivers/gpu/drm/vc4/vc4_regs.h
+index 7fbac68b6fe1..c0031ab19689 100644
+--- a/drivers/gpu/drm/vc4/vc4_regs.h
++++ b/drivers/gpu/drm/vc4/vc4_regs.h
+@@ -129,6 +129,8 @@
+ #define V3D_ERRSTAT  0x00f20
+ 
+ #define PV_CONTROL				0x00
++# define PV5_CONTROL_FIFO_LEVEL_HIGH_MASK	VC4_MASK(26, 25)
++# define PV5_CONTROL_FIFO_LEVEL_HIGH_SHIFT	25
+ # define PV_CONTROL_FORMAT_MASK			VC4_MASK(23, 21)
+ # define PV_CONTROL_FORMAT_SHIFT		21
+ # define PV_CONTROL_FORMAT_24			0
+@@ -208,6 +210,11 @@
+ 
+ #define PV_HACT_ACT				0x30
+ 
++#define PV_MUX_CFG				0x34
++# define PV_MUX_CFG_RGB_PIXEL_MUX_MODE_MASK	VC4_MASK(5, 2)
++# define PV_MUX_CFG_RGB_PIXEL_MUX_MODE_SHIFT	2
++# define PV_MUX_CFG_RGB_PIXEL_MUX_MODE_NO_SWAP	8
++
+ #define SCALER_CHANNELS_COUNT			3
+ 
+ #define SCALER_DISPCTRL                         0x00000000
 -- 
 git-series 0.9.1
