@@ -2,124 +2,123 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF430C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D651C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C779221D80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A31A21532
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:32:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HxawSnpd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgGHIbj convert rfc822-to-8bit (ORCPT
+        id S1727046AbgGHIc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:31:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgGHIbj (ORCPT
+        Wed, 8 Jul 2020 04:32:57 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48568 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgGHIc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:31:39 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC05EC08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 01:31:38 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jt5UL-0008CP-Vq; Wed, 08 Jul 2020 10:31:33 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jt5UL-0006jo-Ge; Wed, 08 Jul 2020 10:31:33 +0200
-Message-ID: <a55b91f01a2e795fe2dd38d860e63a63c8c8871c.camel@pengutronix.de>
-Subject: Re: [PATCH] drm: imx: Fix occasional screen corruption on modeset.
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date:   Wed, 08 Jul 2020 10:31:33 +0200
-In-Reply-To: <1594137527-15201-1-git-send-email-martin.fuzzey@flowbird.group>
-References: <1594137527-15201-1-git-send-email-martin.fuzzey@flowbird.group>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 8 Jul 2020 04:32:56 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0688Wjrg052399;
+        Wed, 8 Jul 2020 03:32:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594197166;
+        bh=im48yA+Olpa0PxVY1qxOgHlM9ULgxzinTKCtMKJsIRM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HxawSnpd0qA2WEzkWEjO+vSQPr2aYWM5RkDw8OZvq1IK8Uc72dYdqjt71qknpM0uG
+         ORM7v6ehUlxb7AX/cBAx73xdBZu0UDy4xpt5XB0XoJReGJ+yF7mlZGVqTv2Iede7cS
+         3iHgolg+qxlIsNcsnI3jjecK4Zajs+1E8ikeYekg=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0688WjpO088024
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jul 2020 03:32:45 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 8 Jul
+ 2020 03:32:45 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 8 Jul 2020 03:32:45 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0688WhqR095672;
+        Wed, 8 Jul 2020 03:32:43 -0500
+Subject: Re: [PATCH next 0/6] soc: ti: k3-ringacc: updates
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <dmaengine@vger.kernel.org>
+References: <20200701103030.29684-1-grygorii.strashko@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <c281a799-6a56-ff1d-fb87-a54f85fa125a@ti.com>
+Date:   Wed, 8 Jul 2020 11:33:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200701103030.29684-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
 
-On Tue, 2020-07-07 at 17:56 +0200, Martin Fuzzey wrote:
-> When performing a modeset the atomic core calls
-> ipu_crtc_atomic_disable() which switches off the DC and DI.
-> 
-> When we immediately restart as in the modeset case this sometimes
-> leads to corruption at the bottom of the screen looking like a mirror
-> image of the top.
 
-Could this be just a panel getting confused because the pixel clock is
-disabled, or is there really an issue with the IPU? Have you tried just
-keeping clk_di_pixel enabled in ipu_di_disable(), but continuing
-to disable DI and DC?
+On 01/07/2020 13.30, Grygorii Strashko wrote:
+> Hi Santosh,
+>=20
+> This series is a set of non critical  updates for The TI K3 AM654x/J721=
+E
+> Ring Accelerator driver.
+>=20
+> Patch 1 - convert bindings to json-schema
+> Patches 2,3,5 - code reworking
+> Patch 4 - adds new API to request pair of rings k3_ringacc_request_ring=
+s_pair()
+> Patch 6 - updates K3 UDMA to use new API
 
-> The exact reason isn't understood but it seems timing related.
-> 
-> This was observed on i.MX6DL on a system that does 2 mode
-> transitions on boot (fbcon->android boot animation->android homescreen)
-> then no more during normal operation resulting in corruption
-> about once every 10 boots that lasted for variable durations
-> from a few seconds to several hours.
-> 
-> Dumping the buffers confirmed that they were correct in memory,
-> just the display was wrong.
-> 
-> For tests the problem was reproduced systematically by forcing
-> a full modeset every 10 frames even if when not required.
-> 
-> Leaving the DC and DI on if the CRTC is staying on fixes this.
-> 
-> Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-> ---
->  drivers/gpu/drm/imx/ipuv3-crtc.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
-> index 63c0284..9137b64 100644
-> --- a/drivers/gpu/drm/imx/ipuv3-crtc.c
-> +++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
-> @@ -84,8 +84,15 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
->  	struct ipu_crtc *ipu_crtc = to_ipu_crtc(crtc);
->  	struct ipu_soc *ipu = dev_get_drvdata(ipu_crtc->dev->parent);
->  
-> -	ipu_dc_disable_channel(ipu_crtc->dc);
-> -	ipu_di_disable(ipu_crtc->di);
-> +	/*
-> +	 * If we are just doing a modeset don't disable dc/di as that
-> +	 * sometimes leads to corruption at the bottom of the screen
-> +	 */
-> +	if (!crtc->state->active) {
-> +		ipu_dc_disable_channel(ipu_crtc->dc);
-> +		ipu_di_disable(ipu_crtc->di);
+Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-Just removing ipu_di_disable() leaks a clk_prepare_enable refcount on
-the di->clk_di_pixel clock.
+> Grygorii Strashko (4):
+>   dt-bindings: soc: ti: k3-ringacc: convert bindings to json-schema
+>   soc: ti: k3-ringacc: add ring's flags to dump
+>   soc: ti: k3-ringacc: add request pair of rings api.
+>   soc: ti: k3-ringacc: separate soc specific initialization
+>=20
+> Peter Ujfalusi (2):
+>   soc: ti: k3-ringacc: Move state tracking variables under a struct
+>   dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair
+>=20
+>  .../devicetree/bindings/soc/ti/k3-ringacc.txt |  59 ------
+>  .../bindings/soc/ti/k3-ringacc.yaml           | 102 +++++++++
+>  drivers/dma/ti/k3-udma-glue.c                 |  40 ++--
+>  drivers/dma/ti/k3-udma.c                      |  34 +--
+>  drivers/soc/ti/k3-ringacc.c                   | 194 ++++++++++++------=
 
-Also this is followed by an ipu_dc_disable(), which should remove the DC
-module's clock if this is the only display. So the DC should be disabled
-anyway.
+>  include/linux/soc/ti/k3-ringacc.h             |   4 +
+>  6 files changed, 261 insertions(+), 172 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc=
+=2Etxt
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc=
+=2Eyaml
+>=20
 
-> +	}
-> +
->  	/*
->  	 * Planes must be disabled before DC clock is removed, as otherwise the
->  	 * attached IDMACs will be left in undefined state, possibly hanging
+- P=C3=A9ter
 
-regards
-Philipp
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
