@@ -2,183 +2,116 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E409D206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CAA206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gJ9bHysi"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="CJ4D1tZM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gC6OIWuW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgGHRrE (ORCPT
+        id S1726634AbgGHRrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:47:04 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57155 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727774AbgGHRqw (ORCPT
+        Wed, 8 Jul 2020 13:47:20 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:48929 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726823AbgGHRnK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:46:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594230411;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Os4K120anUXrDwQjbfDJHVlMkw60r/Vo+SDW/vSPhzg=;
-        b=gJ9bHysiBrxyubPvh41PuxfrMm1ZoTQRqoKzrt7N5pAEGbMXHKlsz0b5kDdMumVG3wv5/7
-        ZkVHMA86P7HuCZtzLMXCtoMK8glmNuCDiZifIyTuRapOFt1jm31SNTYaP51jcTJ8bAOn1H
-        K8joj191jRi2sRCdcEkulMFMe4MH1xo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-xdu2Hyo9OcK0JA85iGKAOg-1; Wed, 08 Jul 2020 13:46:49 -0400
-X-MC-Unique: xdu2Hyo9OcK0JA85iGKAOg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F7B988C799;
-        Wed,  8 Jul 2020 17:46:47 +0000 (UTC)
-Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0391C5C1B2;
-        Wed,  8 Jul 2020 17:46:42 +0000 (UTC)
-From:   Jarod Wilson <jarod@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jarod Wilson <jarod@redhat.com>, Huy Nguyen <huyn@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org
-Subject: [PATCH net-next] bonding: deal with xfrm state in all modes and add more error-checking
-Date:   Wed,  8 Jul 2020 13:46:31 -0400
-Message-Id: <20200708174631.15286-1-jarod@redhat.com>
+        Wed, 8 Jul 2020 13:43:10 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 2747B2F3;
+        Wed,  8 Jul 2020 13:43:09 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:43:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=7LPK87dqKcyIS
+        7piXBp22WH1e0PljQiexcrFqlswqVc=; b=CJ4D1tZMtX9ki8jFo0TEWgM3bjwH4
+        qGttCQzLGh0oPhJ6IDvH63LbzoVtPmtyr3m/mhueQNwnowHmH5uIQQiul1bBbwVU
+        de9tw6nK5RafK9q0zmLMVgvrieiUAOhRfMaO/nKlOcLRxtuuP03oxbRO1NEo1rRQ
+        MlSrLA7oVbM3a/18l2ITuwqiD0hZniEx6KsPWsbm+PbCOIaLNveEIfqstBLObjIB
+        0onjDJGIlx6hOcUt4GxNw2UN1kzo36wnps73MMK13FTg0Q4ME41aolhICPRweAdR
+        VHZW02S/BAJB7L/g3qUAV0PTJlagRE044SovImX5In1hGbl7fYfne/e8w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=7LPK87dqKcyIS7piXBp22WH1e0PljQiexcrFqlswqVc=; b=gC6OIWuW
+        ATsJd1Svd1oHB4uAhEXq63tOwviL/7BRYoDiC2J9/IA3ahKpkezJFyazo+8QY21w
+        LX2AjhT5u9RIYkWs/FsEjaxBjt1A7BDigBsUKGK0cEZl7U6gZA2p+kIprUYalmub
+        zgzSJaG0Mpf2TZ2i7vV+C9LmTwRic2YzngeRvZkZfMhQNBtTGcWCnBQhSZ6JsRi+
+        4DzZDIOHPrlvdudY6w6+ivwaFQSXlBRq4tRKmQ8Uj/m7L4idxCyzIeQNtMiNrpcn
+        tjNjE/Q3aBCfktGX322j62dwXjFnLwokRsk2QTCLUginr+6JwDLfDx6efhsIeRwy
+        LoredBVzEkAQCg==
+X-ME-Sender: <xms:rAUGX2RDY3XWpCStBo4hQyC9XLBbWY73k-kgjm6JFtQ8Nn98lH5C2Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdegne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:rAUGX7yl9UknUFllXZZSl0SLZfvw6LP88ltfXao3URDfgtc3a_smNQ>
+    <xmx:rAUGXz3RLvki4gpBUndpamRTvA1LIEbb5K9rfZBAJHh8b1vO5btvqw>
+    <xmx:rAUGXyBRCzjZ4aQAKDMmfW3D4-z-cTQvK3TOpbV8nshPXjqA-Hc5Iw>
+    <xmx:rAUGX_gWRD6j3j5o9gkOSU8gRZTjgrMXDiZ51LyxN63d4JuPKsfGIVVhfVc>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 65749328005E;
+        Wed,  8 Jul 2020 13:43:08 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH v4 26/78] drm/vc4: crtc: Remove redundant pixelvalve reset
+Date:   Wed,  8 Jul 2020 19:41:34 +0200
+Message-Id: <35c955e88914f4d22f5bfba5b060489850b764ba.1594230107.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's possible that device removal happens when the bond is in non-AB mode,
-and addition happens in AB mode, so bond_ipsec_del_sa() never gets called,
-which leaves security associations in an odd state if bond_ipsec_add_sa()
-then gets called after switching the bond into AB. Just call add and
-delete universally for all modes to keep things consistent.
+Since we moved the pixelvalve configuration to atomic_enable, we're now
+first calling the function that resets the pixelvalve and then the one that
+configures it.
 
-However, it's also possible that this code gets called when the system is
-shutting down, and the xfrm subsystem has already been disconnected from
-the bond device, so we need to do some error-checking and bail, lest we
-hit a null ptr deref.
+However, the first thing the latter is doing is calling the reset function,
+meaning that we reset twice our pixelvalve. Let's remove the first call.
 
-Fixes: a3b658cfb664 ("bonding: allow xfrm offload setup post-module-load")
-CC: Huy Nguyen <huyn@mellanox.com>
-CC: Saeed Mahameed <saeedm@mellanox.com>
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-CC: Jakub Kicinski <kuba@kernel.org>
-CC: Steffen Klassert <steffen.klassert@secunet.com>
-CC: Herbert Xu <herbert@gondor.apana.org.au>
-CC: netdev@vger.kernel.org
-CC: intel-wired-lan@lists.osuosl.org
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/net/bonding/bond_main.c | 39 +++++++++++++++++++++------------
- 1 file changed, 25 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 2adf6ce20a38..f886d97c4359 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -383,9 +383,14 @@ static int bond_vlan_rx_kill_vid(struct net_device *bond_dev,
- static int bond_ipsec_add_sa(struct xfrm_state *xs)
- {
- 	struct net_device *bond_dev = xs->xso.dev;
--	struct bonding *bond = netdev_priv(bond_dev);
--	struct slave *slave = rtnl_dereference(bond->curr_active_slave);
-+	struct bonding *bond;
-+	struct slave *slave;
+diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+index 2eda2e6429ec..2c5ff45dc315 100644
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -427,7 +427,6 @@ static void vc4_crtc_atomic_enable(struct drm_crtc *crtc,
  
-+	if (!bond_dev)
-+		return -EINVAL;
-+
-+	bond = netdev_priv(bond_dev);
-+	slave = rtnl_dereference(bond->curr_active_slave);
- 	xs->xso.real_dev = slave->dev;
- 	bond->xs = xs;
+ 	require_hvs_enabled(dev);
  
-@@ -405,8 +410,14 @@ static int bond_ipsec_add_sa(struct xfrm_state *xs)
- static void bond_ipsec_del_sa(struct xfrm_state *xs)
- {
- 	struct net_device *bond_dev = xs->xso.dev;
--	struct bonding *bond = netdev_priv(bond_dev);
--	struct slave *slave = rtnl_dereference(bond->curr_active_slave);
-+	struct bonding *bond;
-+	struct slave *slave;
-+
-+	if (!bond_dev)
-+		return;
-+
-+	bond = netdev_priv(bond_dev);
-+	slave = rtnl_dereference(bond->curr_active_slave);
+-	vc4_crtc_pixelvalve_reset(crtc);
+ 	vc4_crtc_config_pv(crtc);
  
- 	if (!slave)
- 		return;
-@@ -960,12 +971,12 @@ void bond_change_active_slave(struct bonding *bond, struct slave *new_active)
- 	if (old_active == new_active)
- 		return;
- 
--	if (new_active) {
- #ifdef CONFIG_XFRM_OFFLOAD
--		if ((BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP) && bond->xs)
--			bond_ipsec_del_sa(bond->xs);
-+	if (old_active && bond->xs)
-+		bond_ipsec_del_sa(bond->xs);
- #endif /* CONFIG_XFRM_OFFLOAD */
- 
-+	if (new_active) {
- 		new_active->last_link_up = jiffies;
- 
- 		if (new_active->link == BOND_LINK_BACK) {
-@@ -1028,13 +1039,6 @@ void bond_change_active_slave(struct bonding *bond, struct slave *new_active)
- 					bond_should_notify_peers(bond);
- 			}
- 
--#ifdef CONFIG_XFRM_OFFLOAD
--			if (old_active && bond->xs) {
--				xfrm_dev_state_flush(dev_net(bond->dev), bond->dev, true);
--				bond_ipsec_add_sa(bond->xs);
--			}
--#endif /* CONFIG_XFRM_OFFLOAD */
--
- 			call_netdevice_notifiers(NETDEV_BONDING_FAILOVER, bond->dev);
- 			if (should_notify_peers) {
- 				bond->send_peer_notif--;
-@@ -1044,6 +1048,13 @@ void bond_change_active_slave(struct bonding *bond, struct slave *new_active)
- 		}
- 	}
- 
-+#ifdef CONFIG_XFRM_OFFLOAD
-+	if (new_active && bond->xs) {
-+		xfrm_dev_state_flush(dev_net(bond->dev), bond->dev, true);
-+		bond_ipsec_add_sa(bond->xs);
-+	}
-+#endif /* CONFIG_XFRM_OFFLOAD */
-+
- 	/* resend IGMP joins since active slave has changed or
- 	 * all were sent on curr_active_slave.
- 	 * resend only if bond is brought up with the affected
+ 	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) | PV_CONTROL_EN);
 -- 
-2.20.1
-
+git-series 0.9.1
