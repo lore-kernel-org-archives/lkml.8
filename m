@@ -2,104 +2,82 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BEEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7A3820775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF774206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwMrtEAd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cOohz1de"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgGHMhd (ORCPT
+        id S1729298AbgGHMht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:37:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728998AbgGHMhd (ORCPT
+        Wed, 8 Jul 2020 08:37:49 -0400
+Received: from casper.infradead.org ([90.155.50.34]:33904 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728920AbgGHMhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:37:33 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A39DFC08C5DC;
-        Wed,  8 Jul 2020 05:37:32 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id r19so2993906ljn.12;
-        Wed, 08 Jul 2020 05:37:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=LDeWTEvkuS1/QhAV7zh4F+ok/kij8xM7tE+g5IT2QsA=;
-        b=rwMrtEAdih6Ym82MQBl7+Gc4CndgHIxLSbra1TY8UCiscntDudMdupm+1E5sGNWnzv
-         Idg0gptRmGK72ge6eT/uykFuVjKm4PKrvBO3jbhRQ5rmfC+sWXg8JudiN/lKO37CJiwm
-         lKXkki6274fYAeYPGIz421SR8RJOnL1RuQLmAmyrsH6O93kFr+Wz1nWJAV+VBp8szz5u
-         u1Tyd16X+ksS5seUz9qNkiQGNXf4klZDO462rKSZp52XWB7gBu2xUxewLDRWaPRSdL+L
-         oX9GsouxeM4XoIv8lp3qEauFjpzKTJ0tJS2T4tlCf6dhAhxo6JHsJbKMye4oeV+vo0jx
-         3Hag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=LDeWTEvkuS1/QhAV7zh4F+ok/kij8xM7tE+g5IT2QsA=;
-        b=UIU52V1+ImND23EMaHjXldiYandSi6dDMM31Fxu9AC1aOh3IsrW8v3OoXFTIvDA07b
-         3tyDUsMUD6OmOS9Zp8oQK0MxGwHgW0tRU+uhMR45HITNDlkcoZITWTyFzvWLIYOi+Z9W
-         lWbzG6uk8wMd6s1tFxVvdDacqhOSfCLH7XPB7d+mT4W8vvz+VVWNoYMV4f5g76sBqzdh
-         1p3v5g9JdNymmDK+zAQ48R386e2sf0+J4h4YlNXpF+I+r13T7z5M1GGPi7uA1QjmweUH
-         4OAtvq32y5cgt448+nHchPvxMSFJKJwt5axq8tnMQyMBqtE2vRgpQrqUcwI9RTFWmBHO
-         zCiw==
-X-Gm-Message-State: AOAM5302d6lu9WRUF2tEt6+8koNQ15AOzcZMYoC1jTkajw/h3R25c+IZ
-        ESENQrA83w2k92uGMcrNArQN3ipd
-X-Google-Smtp-Source: ABdhPJzE/jSq7zp7eBoTaHTEEqiSaP986/SMtXBvEttSuHbEQayU/ql4SPwWt3FVs22VqwSaoCVMuA==
-X-Received: by 2002:a2e:8954:: with SMTP id b20mr31637166ljk.262.1594211851205;
-        Wed, 08 Jul 2020 05:37:31 -0700 (PDT)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id v24sm10344753lfo.4.2020.07.08.05.37.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:37:30 -0700 (PDT)
-From:   Sergey Organov <sorganov@gmail.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
- current kernel time
-References: <20200706142616.25192-1-sorganov@gmail.com>
-        <20200706142616.25192-4-sorganov@gmail.com>
-        <20200706152721.3j54m73bm673zlnj@skbuf> <20200708110444.GD9080@hoboy>
-Date:   Wed, 08 Jul 2020 15:37:29 +0300
-In-Reply-To: <20200708110444.GD9080@hoboy> (Richard Cochran's message of "Wed,
-        8 Jul 2020 04:04:44 -0700")
-Message-ID: <87mu4a9o8m.fsf@osv.gnss.ru>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Wed, 8 Jul 2020 08:37:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=eRYeofupNTAg/hMagEXpMB0U80BJt/uEJfgiybjPcNs=; b=cOohz1deWmiTukpTMOvRxjYkSC
+        FlpE7v6s71YH+r89i7WhAB1eRC6X7Wyeu3vWEBebMxiDpVy4J/hwl7fjN3pMz+4NLAKBZSd4L8+Az
+        bbw81HjNoRag9LCrtloVUR39LdORU9gy/0c6s5rbCjoWSDYA6Z9HM4tyE6BhNWXRlV5COxT19H7UW
+        +zJgjE3ye8ekvfsAqy7m65No5mPVx9JNFTd7wdKktW35PU+qcPw0MHROFMcUVVNq069PQTZbchnLm
+        WjS13dO3u4DM6Ky+9v1AbDaW+9lM3N6Y8GhAZLU66aKPYfeVJj3LBGabpR4KfGtc3JvQPANvFMBHQ
+        LToSj//g==;
+Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jt9Jp-0002JP-Mv; Wed, 08 Jul 2020 12:37:14 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Song Liu <song@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 4/6] isofs: remove a stale comment
+Date:   Wed,  8 Jul 2020 14:25:44 +0200
+Message-Id: <20200708122546.214579-5-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200708122546.214579-1-hch@lst.de>
+References: <20200708122546.214579-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Richard Cochran <richardcochran@gmail.com> writes:
+check_disk_change isn't for consumers of the block layer, so remove
+the comment mentioning it.
 
-> On Mon, Jul 06, 2020 at 06:27:21PM +0300, Vladimir Oltean wrote:
->> There's no correct answer, I'm afraid. Whatever the default value of the
->> clock may be, it's bound to be confusing for some reason, _if_ the
->> reason why you're investigating it in the first place is a driver bug.
->> Also, I don't really see how your change to use Jan 1st 1970 makes it
->> any less confusing.
->
-> +1
->
-> For a PHC, the user of the clock must check the PTP stack's
-> synchronization flags via the management interface to know the status
-> of the time signal.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/isofs/inode.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Actually, as I just realized, the right solution for my original problem
-would rather be adding PTP clock ID that time stamped Ethernet packet to
-the Ethernet hardware time stamp (see my previous reply as well).
+diff --git a/fs/isofs/inode.c b/fs/isofs/inode.c
+index d634561f871a56..78f5c96c76f31e 100644
+--- a/fs/isofs/inode.c
++++ b/fs/isofs/inode.c
+@@ -612,9 +612,6 @@ static bool rootdir_empty(struct super_block *sb, unsigned long block)
+ 
+ /*
+  * Initialize the superblock and read the root inode.
+- *
+- * Note: a check_disk_change() has been done immediately prior
+- * to this call, so we don't need to check again.
+  */
+ static int isofs_fill_super(struct super_block *s, void *data, int silent)
+ {
+-- 
+2.26.2
 
-Thanks,
--- Sergey
