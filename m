@@ -2,82 +2,92 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9DA2078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594220692;
-	bh=hLP2/GbBFgfdVhvj6P1NYzA1KWm5EFznsdxxGWJH0BU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=MiW+xUIyu3bKYeHCDePW1RICoFEWLNO++ceYFPfSYtVQ3i9QGNzDtNP9j+cVIaMx3
-	 4+lY6xXsqBlfRVho+lBf3sepGc/8iUyTil8EB195fbuz9qtx5dePsVh93fpzgdsBiL
-	 GiJCnJhgBW7CaBPDuD2CNpBBRo/GHokiv5/NMctk=
+	by mail.kernel.org (Postfix) with ESMTP id 9A791206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:06:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="DU3Ygtsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730048AbgGHPEv (ORCPT
+        id S1729815AbgGHPGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:04:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55778 "EHLO
+        Wed, 8 Jul 2020 11:06:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbgGHPEu (ORCPT
+        with ESMTP id S1729022AbgGHPGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:04:50 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A798CC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 08:04:50 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id c25so19552845otf.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 08:04:50 -0700 (PDT)
+        Wed, 8 Jul 2020 11:06:51 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F90C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 08:06:51 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id i4so47292703iov.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 08:06:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qAxRhOVTsHpW8y+9qH3bw+T9CM43zkyDmvr5lDcILZg=;
-        b=Q0PaE52LKHUSyakI1IMAGkOYy77ckAvd47pas+mtZs0+gJYxQm8Bme/8rp6wvaKYhg
-         /Ie4EanJit7+tCWnWHHXTX6q+28io2zNYlrzPFHDLPFRvMCc+M7KU68CtxE7Xv0F+C7D
-         cIacLbLGu71ef+aPHkOao4RLriE6cmdr93PHQ=
+        bh=QRr8IaIUSsGD3CeeBoEgXqxqpXOnhIwjY7NBGxGQZyo=;
+        b=DU3Ygtsctl26AMlkTp4CMraQH0A+FA5vOVnNO0UIcYo9nxfYiCGy/ymLFOrzpSIPvq
+         /CEOf6eB2iHMuxO2Uj9c0aYHbwNJ1koOfPwBQdxhbZrmEaBWTDcDovMfnMGuY7DQcBSl
+         /59aWWLJ+6nNzZru72U0sGqPquAoF2yyEAtIyDRj97tm1CKkmn7DmgaPYWmycBfkGRdp
+         5HtQzvJXXi6Iy+ALPgddlkzwEo8R8hBRrz1sJuxfBm8lVmmwg3bJZMt12DHYs3qwlyPS
+         rbB21x+49LQLxypL1cXpHtPNH1vD6NNvIYALazA0x6rwFXpzq1MciHcfiOlzuO9qSWGr
+         iI2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qAxRhOVTsHpW8y+9qH3bw+T9CM43zkyDmvr5lDcILZg=;
-        b=Py9b/4PnQMKKr8QJEapYcF7lzz6YQlQWJaf/ldt2GTxjpcP+GQvx6UmEUsDaHF8HQL
-         iQIO9FI5DaUs67Ff9+Ve5XDKUM8oMXR8dD99gdsW1krVDyGhK4fA9pog47qRfPBVg61z
-         eoNdyTCZVGJ7Wp3QAnYNNH7IQCjx3sTld/vkcl7Gw6dQ2sNOlC1NFwP3RJZUowe9tUsl
-         w3Rtz5VQpliVyoTG1b5GWloobpDgggKfVA8E3GzWfWqe922LB1ZaNWNXVAliLGJkTqf4
-         ulv7+AplDenTT6Zb4FdUDn3HUTcLYwrNrUjtS7OMZHWx0E0SlxL+t6gR8SAZiyCIaNj/
-         fFQA==
-X-Gm-Message-State: AOAM533dinmHV0TY7Zh7h77ZMdofq2jn1ERol/ATxH/u8cuI3sg3QNUe
-        bpIipPqN4c/3z4Q5EtPRrxlunA==
-X-Google-Smtp-Source: ABdhPJx5BOOY4zlhbKbICdwG2WXtcJnsE3cai+2+f8I5p5GtkBQnSYmo49sufjqBR0L6PyWQJVAV6Q==
-X-Received: by 2002:a9d:2f0a:: with SMTP id h10mr16227167otb.314.1594220690094;
-        Wed, 08 Jul 2020 08:04:50 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id y7sm20360oov.26.2020.07.08.08.04.48
+        bh=QRr8IaIUSsGD3CeeBoEgXqxqpXOnhIwjY7NBGxGQZyo=;
+        b=KJ6Z7rFYNrCqMC3QVxTZxjgbzCCE03VbqxyYTsKd7gmoWgwI5VIJhycTLQFLpXVQ5w
+         fcuucK0ppRDKUnlt700R8jL3eE00bG6kEDflD6hImCx0y+4yN9FPGVQ7ldyQmPQ01c6j
+         wCQJy9DH7RZqmNMCFXBNB0N3tScQj2DaNMiw3UjP5+acL2mNgb84PuNTS327/Annq5lW
+         w/rVnZkfCESgOMoirj6B34cVWT422ILyal2H6PbK96qqSebuOHHTlAi20/5L/WpwGliP
+         v5dKa24MRkL2xgprGtkzWyi4FUpB0HJYbxQSCHYZE6mQ5OVIiA/wv2L8LgWcyuEUn5Zi
+         eJWQ==
+X-Gm-Message-State: AOAM532VO3XzUKcxf9wCABpyUX4KVepG5MCHOiM5OtvcF5HZ+1LS4UWv
+        QYG8UlCmu5zNLsUYRsmmMT8izA==
+X-Google-Smtp-Source: ABdhPJxSNOJIwdG5M6/DgmtTZGq3z2ZwA8+OmZqthv4xlv2bxnbw+dF3KP0JkUjr+YWL22OnfN4/RQ==
+X-Received: by 2002:a05:6638:2591:: with SMTP id s17mr15513952jat.23.1594220810484;
+        Wed, 08 Jul 2020 08:06:50 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id h11sm15046512ilh.69.2020.07.08.08.06.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 08:04:49 -0700 (PDT)
-Subject: Re: [PATCH 4.19 00/36] 4.19.132-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, skhan@linuxfoundation.org
-References: <20200707145749.130272978@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <43dbed05-5481-1ca7-6f1b-2354e166d474@linuxfoundation.org>
-Date:   Wed, 8 Jul 2020 09:04:48 -0600
+        Wed, 08 Jul 2020 08:06:49 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <20200707155237.GM25523@casper.infradead.org>
+ <20200707202342.GA28364@test-zns>
+ <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
+ <20200707221812.GN25523@casper.infradead.org>
+ <CGME20200707223803epcas5p41814360c764d6b5f67fdbf173a8ba64e@epcas5p4.samsung.com>
+ <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
+ <20200708125805.GA16495@test-zns>
+ <2962cd68-de34-89be-0464-8b102a3f1d0e@kernel.dk>
+ <20200708145826.GS25523@casper.infradead.org>
+ <b1c58211-496a-ed85-a9bb-0d0cc56e250c@kernel.dk>
+ <20200708150240.GT25523@casper.infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <33b9887b-eaba-c7be-5dfd-fc7e7d416f48@kernel.dk>
+Date:   Wed, 8 Jul 2020 09:06:48 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200708150240.GT25523@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,27 +95,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 9:16 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.132 release.
-> There are 36 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 7/8/20 9:02 AM, Matthew Wilcox wrote:
+> On Wed, Jul 08, 2020 at 08:59:50AM -0600, Jens Axboe wrote:
+>> On 7/8/20 8:58 AM, Matthew Wilcox wrote:
+>>> On Wed, Jul 08, 2020 at 08:54:07AM -0600, Jens Axboe wrote:
+>>>> On 7/8/20 6:58 AM, Kanchan Joshi wrote:
+>>>>>>> +#define IOCB_NO_CMPL		(15 << 28)
+>>>>>>>
+>>>>>>>  struct kiocb {
+>>>>>>> [...]
+>>>>>>> -	void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
+>>>>>>> +	loff_t __user *ki_uposp;
+>>>>>>> -	int			ki_flags;
+>>>>>>> +	unsigned int		ki_flags;
+>>>>>>>
+>>>>>>> +typedef void ki_cmpl(struct kiocb *, long ret, long ret2);
+>>>>>>> +static ki_cmpl * const ki_cmpls[15];
+>>>>>>>
+>>>>>>> +void ki_complete(struct kiocb *iocb, long ret, long ret2)
+>>>>>>> +{
+>>>>>>> +	unsigned int id = iocb->ki_flags >> 28;
+>>>>>>> +
+>>>>>>> +	if (id < 15)
+>>>>>>> +		ki_cmpls[id](iocb, ret, ret2);
+>>>>>>> +}
+>>>>>>>
+>>>>>>> +int kiocb_cmpl_register(void (*cb)(struct kiocb *, long, long))
+>>>>>>> +{
+>>>>>>> +	for (i = 0; i < 15; i++) {
+>>>>>>> +		if (ki_cmpls[id])
+>>>>>>> +			continue;
+>>>>>>> +		ki_cmpls[id] = cb;
+>>>>>>> +		return id;
+>>>>>>> +	}
+>>>>>>> +	WARN();
+>>>>>>> +	return -1;
+>>>>>>> +}
+>>>>>>
+>>>>>> That could work, we don't really have a lot of different completion
+>>>>>> types in the kernel.
+>>>>>
+>>>>> Thanks, this looks sorted.
+>>>>
+>>>> Not really, someone still needs to do that work. I took a quick look, and
+>>>> most of it looks straight forward. The only potential complication is
+>>>> ocfs2, which does a swap of the completion for the kiocb. That would just
+>>>> turn into an upper flag swap. And potential sync kiocb with NULL
+>>>> ki_complete. The latter should be fine, I think we just need to reserve
+>>>> completion nr 0 for being that.
+>>>
+>>> I was reserving completion 15 for that ;-)
+>>>
+>>> +#define IOCB_NO_CMPL		(15 << 28)
+>>> ...
+>>> +	if (id < 15)
+>>> +		ki_cmpls[id](iocb, ret, ret2);
+>>>
+>>> Saves us one pointer in the array ...
+>>
+>> That works. Are you going to turn this into an actual series of patches,
+>> adding the functionality and converting users?
 > 
-> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.132-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> I was under the impression Kanchan was going to do that, but I can run it
+> off quickly ...
 
-Compiled and booted on my test system. No dmesg regressions.
+I just wanted to get clarification there, because to me it sounded like
+you expected Kanchan to do it, and Kanchan assuming it "was sorted". I'd
+consider that a prerequisite for the append series as far as io_uring is
+concerned, hence _someone_ needs to actually do it ;-)
 
-thanks,
--- Shuah
+-- 
+Jens Axboe
+
