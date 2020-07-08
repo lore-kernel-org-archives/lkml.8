@@ -2,104 +2,113 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AC6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A135C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2DCE2065C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3170A2065C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V7YTg/Nu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbgGHMDf (ORCPT
+        id S1729200AbgGHMDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:03:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729265AbgGHMDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:03:33 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0567820772;
-        Wed,  8 Jul 2020 12:03:30 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 13:03:28 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     syzbot <syzbot+dec34b033b3479b9ef13@syzkaller.appspotmail.com>,
-        amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: memory leak in inotify_update_watch
-Message-ID: <20200708120327.GB6308@gaia>
-References: <000000000000a47ace05a9c7b825@google.com>
- <20200707152411.GD25069@quack2.suse.cz>
+        Wed, 8 Jul 2020 08:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728995AbgGHMDC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 08:03:02 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B519BC08E6DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:03:01 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f2so20693040wrp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:03:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EfL+TnTwzrxBs3OWsbVJ1u2HNp81yr5D58y8jJwfHCg=;
+        b=V7YTg/NuT1ipSiphL7EvNRuTDaXv8eq0KaXXKKSKjl/mC+jCiU36KNbNpr6xipISRd
+         qWZWOid3XF/HdL7CtyOkvOVNsRM4xkEX+fjQAovODTP/W0CIuJkkHlFIFykYxRI9Qvo2
+         qE8RJ0nwah9EwAlJFf+GPBkJRk63xtzmgOt4P6iT0iahUYwp1gIlsl3MCWmaGO79N5bN
+         y1DSQnGFHBZLQ2sIPBPi+E2ieP2vvs1eA/maPioucGFRuBDhYQtQrlppYxc8xu68qIFj
+         L6IHtoeUfefWuAax+TghGhwH9LCZf0l5eps2R/cZBZljKcjvX9KvozXCeIy4iILmYgId
+         Awwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EfL+TnTwzrxBs3OWsbVJ1u2HNp81yr5D58y8jJwfHCg=;
+        b=PmzikLjkrwILgCl5B7i4fNJel0C5CODdDNsFjd/M+kKjKjj0MWoidPSfodVDVwyaIo
+         1NlVe9AOxwCyX86CUXWnyoEmx1J3FynbBmFSJc+QFVdbOPX/MxmY/ra7F30Tl9r7CnNb
+         mW3hfNtVGzTdR8yLF8FgDuA/ad9KAVnwNXqAqDJgOzcMPwdSxnasnBtiitr8mVtAx4nF
+         Z8M3q8ESp5Wic/GlXcf2CjzR9/4B6ovAIB5BgcG+m7ZnHEK5y9tfkSaZpWupbotNQcN/
+         1S1ulX+qciIbfjohTdu+OkTyrG+yJl4XPR79g5O3VdwKtyQbs+5pveoWAO9cAEibDlYq
+         4msg==
+X-Gm-Message-State: AOAM531NcV9+4tTO7NkgSoEqoElx8nki7OzZ7r6qoe/LH1H2bsYW1gGq
+        8VBYIOXLKyDIuQ/TyfXVd+OH7Q==
+X-Google-Smtp-Source: ABdhPJwDfd21b5LkVyddx+3HtwmIG7Pf/brq+tML6qftxXPRLFkk5Zh6X+F0E5Q2tUlt/E8YIAo/KQ==
+X-Received: by 2002:a5d:5549:: with SMTP id g9mr61834625wrw.419.1594209780204;
+        Wed, 08 Jul 2020 05:03:00 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.02.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 05:02:59 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Subject: [PATCH 24/30] scsi: aacraid: linit: Provide suggested curly braces around empty body of if()
+Date:   Wed,  8 Jul 2020 13:02:15 +0100
+Message-Id: <20200708120221.3386672-25-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200708120221.3386672-1-lee.jones@linaro.org>
+References: <20200708120221.3386672-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707152411.GD25069@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 05:24:11PM +0200, Jan Kara wrote:
-> On Mon 06-07-20 08:42:24, syzbot wrote:
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=17644c05100000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5ee23b9caef4e07a
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=dec34b033b3479b9ef13
-> > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1478a67b100000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+dec34b033b3479b9ef13@syzkaller.appspotmail.com
-> > 
-> > BUG: memory leak
-> > unreferenced object 0xffff888115db8480 (size 576):
-> >   comm "systemd-udevd", pid 11037, jiffies 4295104591 (age 56.960s)
-> >   hex dump (first 32 bytes):
-> >     00 04 00 00 00 00 00 00 80 fd e8 15 81 88 ff ff  ................
-> >     a0 02 dd 20 81 88 ff ff b0 81 d0 09 81 88 ff ff  ... ............
-> >   backtrace:
-> >     [<00000000288c0066>] radix_tree_node_alloc.constprop.0+0xc1/0x140 lib/radix-tree.c:252
-> >     [<00000000f80ba6a7>] idr_get_free+0x231/0x3b0 lib/radix-tree.c:1505
-> >     [<00000000ec9ab938>] idr_alloc_u32+0x91/0x120 lib/idr.c:46
-> >     [<00000000aea98d29>] idr_alloc_cyclic+0x84/0x110 lib/idr.c:125
-> >     [<00000000dbad44a4>] inotify_add_to_idr fs/notify/inotify/inotify_user.c:365 [inline]
-> >     [<00000000dbad44a4>] inotify_new_watch fs/notify/inotify/inotify_user.c:578 [inline]
-> >     [<00000000dbad44a4>] inotify_update_watch+0x1af/0x2d0 fs/notify/inotify/inotify_user.c:617
-> >     [<00000000e141890d>] __do_sys_inotify_add_watch fs/notify/inotify/inotify_user.c:755 [inline]
-> >     [<00000000e141890d>] __se_sys_inotify_add_watch fs/notify/inotify/inotify_user.c:698 [inline]
-> >     [<00000000e141890d>] __x64_sys_inotify_add_watch+0x12f/0x180 fs/notify/inotify/inotify_user.c:698
-> >     [<00000000d872d7cc>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
-> >     [<000000005c62d8da>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> I've been looking into this for a while and I don't think this is related
-> to inotify at all. Firstly the reproducer looks totally benign:
-> 
-> prlimit64(0x0, 0xe, &(0x7f0000000280)={0x9, 0x8d}, 0x0)
-> sched_setattr(0x0, &(0x7f00000000c0)={0x38, 0x2, 0x0, 0x0, 0x9}, 0x0)
-> vmsplice(0xffffffffffffffff, 0x0, 0x0, 0x0)
-> perf_event_open(0x0, 0x0, 0xffffffffffffffff, 0xffffffffffffffff, 0x0)
-> clone(0x20000103, 0x0, 0xfffffffffffffffe, 0x0, 0xffffffffffffffff)
-> syz_mount_image$vfat(0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
-> 
-> So we seem to set SCHED_RR class and prio 9 to itself, the rest of syscalls
-> seem to be invalid and should fail. Secondly, the kernel log shows that we
-> hit OOM killer frequently and after one of these kills, many leaked objects
-> (among them this radix tree node from inotify idr) are reported. I'm not
-> sure if it could be the leak detector getting confused (e.g. because it got
-> ENOMEM at some point) or something else... Catalin, any idea?
+Fixes the following W=1 kernel build warning(s):
 
-Just wondering, if this leak is reproducible, could we have some
-condition where inotify_remove_from_idr() is not called in case of a
-forced exit triggered by the OOM kill? Also, can the leak be reproduced
-without the OOM?
+ drivers/scsi/aacraid/linit.c: In function ‘aac_biosparm’:
+ drivers/scsi/aacraid/linit.c:368:41: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+ 368 | param->heads, param->sectors, num));
+ | ^
 
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/scsi/aacraid/linit.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
+index a308e86a97f19..734dd6e67246d 100644
+--- a/drivers/scsi/aacraid/linit.c
++++ b/drivers/scsi/aacraid/linit.c
+@@ -363,9 +363,10 @@ static int aac_biosparm(struct scsi_device *sdev, struct block_device *bdev,
+ 
+ 		param->cylinders = cap_to_cyls(capacity, param->heads * param->sectors);
+ 		if (num < 4 && end_sec == param->sectors) {
+-			if (param->cylinders != saved_cylinders)
++			if (param->cylinders != saved_cylinders) {
+ 				dprintk((KERN_DEBUG "Adopting geometry: heads=%d, sectors=%d from partition table %d.\n",
+ 					param->heads, param->sectors, num));
++			}
+ 		} else if (end_head > 0 || end_sec > 0) {
+ 			dprintk((KERN_DEBUG "Strange geometry: heads=%d, sectors=%d in partition table %d.\n",
+ 				end_head + 1, end_sec, num));
 -- 
-Catalin
+2.25.1
+
