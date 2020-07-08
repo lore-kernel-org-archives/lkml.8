@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0620FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CACC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D637920E65
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C7020DD4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifSh42uk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlyWPfUg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbgGHI2D (ORCPT
+        id S1728094AbgGHI2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50122 "EHLO
+        Wed, 8 Jul 2020 04:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgGHI1y (ORCPT
+        with ESMTP id S1727818AbgGHI1v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:27:54 -0400
+        Wed, 8 Jul 2020 04:27:51 -0400
 Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CF1C08C5DC;
-        Wed,  8 Jul 2020 01:27:53 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id j11so4392949ljo.7;
-        Wed, 08 Jul 2020 01:27:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2EAC08C5DC;
+        Wed,  8 Jul 2020 01:27:50 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h19so53170738ljg.13;
+        Wed, 08 Jul 2020 01:27:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZQKJ7Gcwme/d26+LQ1Wsw5gxfvCSqjg+JdK4sM2LYPw=;
-        b=ifSh42uk1ltrAupYkU4/2bRNxklEhIIQRdQ4tq0LR2Z+LgulrQN3QoQANFTLeHzEZt
-         C/4/BkItkMxzHDrcn3rpn0gDv+en0bShckJTWnCgHH6fUK0RE2vLnrU6EIf/BDjF2g7Y
-         QTK3RxeDNE6UKTac+Z8kJiannXfoXcsB8DxgWXw9g40oGXRfMhcI8W22jQJnyLWmE9Ik
-         TwUTTzeQDi29BJaq9UVfPV7y6PM1NWhWsib71/pR7rEJs+xNTTGqJ2+5FTqpdlxJHtVH
-         ozqwqxPeGxRgR3cTUDQLvk5RVcCNSCmhtTtUUwwqwDPXrmVVVaTJe0ju3Lo55pUNI7N0
-         mVew==
+        bh=U7a3U3FWt+2vvGq/4SeXOH+9VZAL84/sZqX5NPLbxHY=;
+        b=YlyWPfUgHqncBUEyzjMnqeQFBBJS/y2jCMlcsMj+NCY2iCQ2jJxoCDHGVYfHmdg4s9
+         CuVT+pQ79H9pc94xSZZCHjx98YTkpeWFjdm8KE96EAGw36y+aX7Ctx9OVJVm90bkxcJB
+         KAdc+QOlrWyqA21hj58kNm2J9x7AWm8SldLYXug2s6oOAsxmgv1MSfOQ4Bw0zPc1luB5
+         9LwYYuDWtsjs8GjGr4ETxqsp6314HtFwqgqZ6gCrANwcXlO2QH/sOZDJLFAdXqs89GCx
+         AfirMWrU99lMo+Qvk2FiFjwrmWVTf4GSsqxcOeXy6ScmtKVwmOB6kKJcOQ49YVOU/8WA
+         4ylw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZQKJ7Gcwme/d26+LQ1Wsw5gxfvCSqjg+JdK4sM2LYPw=;
-        b=ibqG6e+LKCWz8OdZ3mDlT0MulGiXGkBBVlI6WWWr6mWQpGouvV/dzrQK6ggAKux6De
-         QvQKzfUbfP3pA/2kSg/g+VzMAmysNsc9KHLjjJ0P82i1dFdkOLbeBSs2ddHQTp3UhF/t
-         tA3gZwgY0RjtJyvCz1te9uclLubsy6G+A6MoS7fYFJHwV+VgyWxPcwSPcN/vjzbagyQ4
-         QSDmo5EMzjqEZH0kk6CcjER5wllVzmjc5x6eC3CDn/pZ9dsEmNQ6V6M57KzcV1IqnQ7N
-         Da69miqcJ5R9iPJfCzLNmNtSZfdbAKYrnHEmWi+2ire2I8NgQS6WULJLO0o6JdiLLW9m
-         hsLg==
-X-Gm-Message-State: AOAM530p6Av74EV22rsRvlPdPl+zft01yVaKh48t/CL8MANjbQB5aiJC
-        F0AliWtu6oGZmRWDaJTXCTM=
-X-Google-Smtp-Source: ABdhPJyxKOuwzCAeZmbQC45AUlpmAxUlyQhOJVbjrTA6Nysp51PqkESQZMITJXp7GiYRPZhCmoSJMA==
-X-Received: by 2002:a2e:3010:: with SMTP id w16mr31831123ljw.449.1594196872399;
-        Wed, 08 Jul 2020 01:27:52 -0700 (PDT)
+        bh=U7a3U3FWt+2vvGq/4SeXOH+9VZAL84/sZqX5NPLbxHY=;
+        b=WzScEBTCGFtNjMMTjybkvqpXGscOAFKkyaXxcaoOOAmXx0kmFeJyA7nCTGj8Bfuuj3
+         pA93ZsYF19pSSLcfvgOLcTS2vbIAarOqrLqMPKEmC96cd5FQPTM4OaojIWBgNNme3Bjo
+         gxwSZR4J66H371pmX+2RSAEOXynjpGTOxNpoAbM84s2cHDtXtFa/RHcfvKYcJK1udydD
+         q/TEhKrld3Ot1uXM28zfxy5B0MX72RxGCclv7oo/qU0qTzWpPDN5YXe6ZDcgI+4zKXpW
+         mRU2bWXMGZqd9vh9y9qjxVH1YvyAeLydZI/Xxvy68qHq/+Kp6j9imuiv5Te0N8jEjmxG
+         PudQ==
+X-Gm-Message-State: AOAM531CqBWmQ7CVPG8G6jj0yUNZ6vs3c6GtzjQzuz0r0yLX05ARHwkR
+        PZLQSEZ5eFBnba9hNZw0paI=
+X-Google-Smtp-Source: ABdhPJxPK2ha7FsL8Jach3PIhvFCcx7Ep3E9QChRmE1gbuo2S6y+JJUMSbF62Iq/aVEL2ymidTnlDg==
+X-Received: by 2002:a2e:8794:: with SMTP id n20mr14091674lji.359.1594196869189;
+        Wed, 08 Jul 2020 01:27:49 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.gmail.com with ESMTPSA id d2sm737555ljg.6.2020.07.08.01.27.51
+        by smtp.gmail.com with ESMTPSA id d2sm737555ljg.6.2020.07.08.01.27.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 01:27:51 -0700 (PDT)
+        Wed, 08 Jul 2020 01:27:48 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -68,9 +68,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 5/5] gpio: max77620: Move variable declaration
-Date:   Wed,  8 Jul 2020 11:26:34 +0300
-Message-Id: <20200708082634.30191-6-digetx@gmail.com>
+Subject: [PATCH v1 2/5] gpio: max77620: Replace 8 with MAX77620_GPIO_NR
+Date:   Wed,  8 Jul 2020 11:26:31 +0300
+Message-Id: <20200708082634.30191-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200708082634.30191-1-digetx@gmail.com>
 References: <20200708082634.30191-1-digetx@gmail.com>
@@ -81,36 +81,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's move the virq variable declaration to a top-level scope just to
-make the code a bit more visually appealing.
+The MAX77620_GPIO_NR enum value represents the total number of GPIOs,
+let's use it instead of a raw value in order to improve the code's
+readability a tad.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpio/gpio-max77620.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpio/gpio-max77620.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index 8d54bc4307c2..6861980da0d8 100644
+index 473b4e900bbb..6a7ede6b8b74 100644
 --- a/drivers/gpio/gpio-max77620.c
 +++ b/drivers/gpio/gpio-max77620.c
-@@ -27,7 +27,7 @@ struct max77620_gpio {
+@@ -19,8 +19,8 @@ struct max77620_gpio {
+ 	struct regmap		*rmap;
+ 	struct device		*dev;
+ 	struct mutex		buslock; /* irq_bus_lock */
+-	unsigned int		irq_type[8];
+-	bool			irq_enabled[8];
++	unsigned int		irq_type[MAX77620_GPIO_NR];
++	bool			irq_enabled[MAX77620_GPIO_NR];
+ };
+ 
  static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
- {
- 	struct max77620_gpio *gpio = data;
--	unsigned int value, offset;
-+	unsigned int value, offset, virq;
- 	unsigned long pending;
- 	int err;
+@@ -38,7 +38,7 @@ static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
  
-@@ -42,8 +42,6 @@ static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
- 		return IRQ_NONE;
+ 	pending = value;
  
- 	for_each_set_bit(offset, &pending, MAX77620_GPIO_NR) {
--		unsigned int virq;
--
+-	for_each_set_bit(offset, &pending, 8) {
++	for_each_set_bit(offset, &pending, MAX77620_GPIO_NR) {
+ 		unsigned int virq;
+ 
  		virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
- 		handle_nested_irq(virq);
- 	}
 -- 
 2.26.0
 
