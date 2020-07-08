@@ -2,98 +2,121 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4821BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF389C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14566206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CFDC206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:49:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxTHC5rL"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ubQ7QgPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730266AbgGHPsi (ORCPT
+        id S1730324AbgGHPtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:48:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728777AbgGHPsi (ORCPT
+        Wed, 8 Jul 2020 11:49:08 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:37194 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728777AbgGHPtH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:48:38 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 251C1C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 08:48:38 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id j18so3768377wmi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 08:48:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=mCGlXJbPz29nuSuX3AsD3+lrQ3NSO5N9mbtfPf6Q12A=;
-        b=fxTHC5rLWr4pv2K/FclgqkgW+EsmDkMo02gBnq/UclXkEnbt1+YMqRF1s8g0I/rtcC
-         uq0IZ8t0o5wWwiU8zYK3MZgkp5mUVqT2mhK7loqVsg8ojgJkBjHu1zpuV5BVH9pDnnX1
-         xqSdFFqWYolDNiqy77wS7aTgo0JMPp93jTETKGBC6AN9z6CBXP+F+HfO6Vr3N7+MlU55
-         024Hqhe7igvxKVoz2kwLSmj+b/g7eVC+52u+IbU64OnIC/9QO8nl0R7DB09P8m9xgV8T
-         7tJsZ6UxISl27hOIP8ZFjMe4xSIYRamw737u3ryYU7TPy/3wjNIHEpDAwBtIT9fnn7AV
-         jYCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=mCGlXJbPz29nuSuX3AsD3+lrQ3NSO5N9mbtfPf6Q12A=;
-        b=BObafB8Xd48bQuwopwfyacUG8JAr1Ohzn4vbH0EJkUHQogoQJnEP2kYMdG9NcCTC7z
-         iRlLWEqM9vxhw4zhFsMGQaBnEYU1B0JWZC6leISblxBcR+6zha8RgBqdC9Je0WiFCWTv
-         9FW9YEaMfHAhZ/gg0mt4Mbmt+LB/gGAX0Dxi0ycoEx1DmOA5p70R5m0lmueOL4y2pUbe
-         2ltfu8QDKS9pa27PHupnL2SIeSPEKw/zkL1ZNnqGZh63Ara93e7tAW/DYaZDC9aN/Bp3
-         wS4umUhJQgfQ8u55IuzCOKkIwYroxQPVEHmzfbN8R0IfmATG+DSb2bBnaDhotLNJz3Mo
-         uRGg==
-X-Gm-Message-State: AOAM5323925M65O2S7C7hIAlSTaM0c4uMocEMlWYhQbXXWntZ5PAE31U
-        tJQazdUsLimG8R/qgCDhEKCFW/mn
-X-Google-Smtp-Source: ABdhPJy1BP6aRMyI4ALwwd8TO9LqG2ZoJGkKfB/kJyRiaqED9vf7VHvWR/OHiyWFI7rWd7oEPeo1Kw==
-X-Received: by 2002:a1c:cc0c:: with SMTP id h12mr10618301wmb.140.1594223316604;
-        Wed, 08 Jul 2020 08:48:36 -0700 (PDT)
-Received: from [192.168.1.64] (bl8-158-27.dsl.telepac.pt. [85.241.158.27])
-        by smtp.gmail.com with ESMTPSA id k185sm204577wmk.47.2020.07.08.08.48.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 08:48:35 -0700 (PDT)
-To:     linux-kernel@vger.kernel.org
-From:   Andre Coelho <andrealbergaria@gmail.com>
-Subject: linux code
-Message-ID: <3e091370-53d7-563e-1b6f-3a6febb50533@gmail.com>
-Date:   Wed, 8 Jul 2020 16:48:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 8 Jul 2020 11:49:07 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200708154906euoutp02adfd47d406ff61846289728e5645b168~f0a-hw19s2529425294euoutp027
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 15:49:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200708154906euoutp02adfd47d406ff61846289728e5645b168~f0a-hw19s2529425294euoutp027
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594223346;
+        bh=e47WUtElI6NLP2XC8SW6uhTopwHfPoZ79ohPTaIjU74=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=ubQ7QgPR+WO2FCPoCTEljPo00kuEqPPs82Kd2zLYmW9kt8b2OA4FWpkshzJ+212RO
+         J7oBchgTib4Ucr+vCibmZgVcOphiSkll5+zI5qnq9FOpEf+GiS+/OJ6ceBV90VLBHr
+         3JZ8PcdqoPrYUIh4hZ7y66ArXlmlQfJM3iNK3gJo=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200708154906eucas1p2ecaf88c8a196c97367658706dce62c38~f0a-PSoVF2185821858eucas1p2p;
+        Wed,  8 Jul 2020 15:49:06 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 6B.5B.06318.2FAE50F5; Wed,  8
+        Jul 2020 16:49:06 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200708154905eucas1p17c549a663b60afe6553a5e36fc79529f~f0a_6oCi41669116691eucas1p1N;
+        Wed,  8 Jul 2020 15:49:05 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200708154905eusmtrp15917e249f0b245d805ba99b11c91db73~f0a_0Kl1h2084320843eusmtrp1Q;
+        Wed,  8 Jul 2020 15:49:05 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-5f-5f05eaf2203f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 98.F7.06314.1FAE50F5; Wed,  8
+        Jul 2020 16:49:05 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200708154904eusmtip23d1da2cec441403b409b918e6dbcf5fa~f0a_JbAFp0494704947eusmtip2J;
+        Wed,  8 Jul 2020 15:49:04 +0000 (GMT)
+Subject: Re: [PATCH 09/11] media: exynos4-is: Remove unused struct member
+ input_index
+To:     Jonathan Bakker <xc-racer2@live.ca>, kyungmin.park@samsung.com,
+        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <273bc27c-666c-3469-131a-b6663cd99913@samsung.com>
+Date:   Wed, 8 Jul 2020 17:49:04 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <BN6PR04MB0660C45D4EA577F9D5BD6434A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUhUYRTte9s8l7HPUfGiZjUZqJRmJjwypMRgfvYjEMylKV9qOmrz1Fx+
+        ZCmWuyY0OgrFpGWCKS83jCyFlHCZNpcWS1DLbUzToFQyx6fkv3PPOfe791w+llSItBMbE5/E
+        a+PVcUrGkmrp/mM8/HOGjjgylctwxeOzJGc0Nsq4/htzMk4cH6K5d+1VDFfQ2Exz5cYOgnsg
+        rhHcm9JR6qSFSqzLZVRPqq+pDB9+U6qipjqkWhJdz9Ahlici+biYFF7rHXDeMvrt5HVZ4ghK
+        NXW7Z6JmlIcsWMDHoKyvks5DlqwC1yIYrv1CmgUFXkbQWekhCUsIdFN3iO2OrIVqQjI9RNA0
+        clkyLSLIWRjceJZl7XAw6AZkZt4eZxHwrbaCMTcw2AcKXxZtjpbjAOisebyJKewGndmlmx4H
+        HA4N062E5LGFVxUTlBlb4DAo7xjd9JDYET5O3CUkvBdaTVWkeRjgFhk8f7HKSJsGgdhTLpOw
+        Hcz0NG1hF+gtK6CkhiwEBU8/yaSiBMHXnntbl/GHzwMrjDkOiT2god1bok9B8f1BmZkGbAMj
+        JltpCRu43aIjJVoOt3IUktsNVut0W4dzgvyJdUrCKihr6SNL0H79jpj6HdH0O6Lp/+9wD1F1
+        yJFPFjRRvOAbz1/1EtQaITk+yutigkZEGz+p92/PrzbUsXahC2EWKa3lUyIdoaDVKUKapgsB
+        Syrt5YH9veEKeaQ6LZ3XJkRok+N4oQs5s5TSUe5rmA5T4Ch1Eh/L84m8dlslWAunTJQiWp0d
+        DgkIPD1/bjQx+FAesrLLcBG8lCnpFTPCGLgOtc1Priwu+zmbdjfAmMFndWTfvHei6ZnHrL7J
+        JReY4fz3RGixwfFAc216ao2bLmadzjLsCU7wy5gr9GRnHR4VXVr5EYrrx0rqs/sPfo/014a/
+        DtrlHntzYtxaOH70ipISotU+nqRWUP8D8lqlfUUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsVy+t/xe7ofX7HGGyxerGbR//g1s8X58xvY
+        Lc42vWG32PT4GqvF5V1z2Cx6NmxltZhxfh+TxbJNf5gsLk68y+LA6bFpVSebx+Yl9R6Lbv5g
+        8ejbsorR4/MmuQDWKD2bovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSc
+        zLLUIn27BL2MS08b2QtuMFa8PabRwLiVsYuRk0NCwESi+cMSJhBbSGApo8SeT0ldjBxAcSmJ
+        +S1KECXCEn+udbF1MXIBlbxnlFjSNo0NpEZYIFxi+jl2kLiIQDOTxP/l21ggiu4ySrzY+5oF
+        pJtNwFCi92gf2DJeATuJg0vXgdksAioSB1smsoHYogJxEsu3zGeHqBGUODnzCVgvp0CsxIx9
+        d8FqmAXUJf7Mu8QMYYtL3HoynwnClpfY/nYO8wRGwVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz
+        03OLDfWKE3OLS/PS9ZLzczcxAmNt27Gfm3cwXtoYfIhRgINRiYf3xSbWeCHWxLLiytxDjBIc
+        zEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYjQFem4is5Rocj4wDeSVxBuaGppbWBqaG5sbm1ko
+        ifN2CByMERJITyxJzU5NLUgtgulj4uCUamAUv2ycevXE8qsBjDM53D4nVMy5773jotSLX/sO
+        bLJdlppyM7790uEYNuGgu/q1fIEhgvOS/pb+vl9p48z27vKupb1ZzIafMi4vW2FXKF24pi7j
+        3rq4uH8lP+q4T1ddzJ759OXpnpWH/Zg7BWQyzy/98PLp1OubTM3Pbrjd4Rw+59Jsc6EiOaaD
+        SizFGYmGWsxFxYkA/asPbssCAAA=
+X-CMS-MailID: 20200708154905eucas1p17c549a663b60afe6553a5e36fc79529f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200426022746eucas1p1960766a3b9a7caee4e83afbb3d8c3e8c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200426022746eucas1p1960766a3b9a7caee4e83afbb3d8c3e8c
+References: <20200426022650.10355-1-xc-racer2@live.ca>
+        <CGME20200426022746eucas1p1960766a3b9a7caee4e83afbb3d8c3e8c@eucas1p1.samsung.com>
+        <BN6PR04MB0660C45D4EA577F9D5BD6434A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+On 26.04.2020 04:26, Jonathan Bakker wrote:
+> This is no longer used since the conversion to DT
+> 
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 
-i had an idea to implement functions as "raw" and not use libs...for 
-instance
-
-strcpy(); (instead of calling the function, write the instructions on 
-the source code)
-
-
-what do you think of this?
-
-I would like to get messages and comments (cc)
-
-
-Thanks
-
-
--- 
-André Albergaria Coelho
-andrealbergaria@gmail.com
-
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
