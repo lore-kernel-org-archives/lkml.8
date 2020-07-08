@@ -2,102 +2,134 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C91C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE80CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA24620772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A90EA20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:58:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="thXBgxs7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XvDMFGN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgGHX6H (ORCPT
+        id S1726251AbgGHX6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:58:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGHX6G (ORCPT
+        Wed, 8 Jul 2020 19:58:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35571 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726117AbgGHX6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:58:06 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F99EC061A0B;
-        Wed,  8 Jul 2020 16:58:06 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 8 Jul 2020 19:58:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594252725;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bnQ0NpLgUMhM2rS/Fc950+H8OU2zboSJSf+KmCP3N40=;
+        b=XvDMFGN9fhBJj9NmbHmXIqnwmtVP4K03a8/xmfbov2UhVBy1BAzxpXA6C6w+5PWuIN2Ch2
+        MFV1UZQcTvlTGiDZxQq6Dgd5UFEiVptOX/UKPHiNZFvZzzcwXeFC3oc/MBOPU2JGJc+WHA
+        yNVlnDmCzguYibwzTkRk6IcFImleYcw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-342-OX3HluVBObG5NMo_XcEqww-1; Wed, 08 Jul 2020 19:58:43 -0400
+X-MC-Unique: OX3HluVBObG5NMo_XcEqww-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2GTR2SSHz9s1x;
-        Thu,  9 Jul 2020 09:58:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594252683;
-        bh=aACpkRZuaA4Csy55/by9u4B8Fn5cLKtpvLyatcv1DCM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=thXBgxs7lVVyW8KbxVCoxDWGsYAecAw5PBuFKgeGib3nChAS0B+DHaSEiwVctYQCq
-         rpYgVTY7AANEmu7pooQXXLMiUYqq3eWpFhiW7FzUUxkXAHoJqbdQnSNxFMhNZRuAnX
-         urpzRQZPDQYHBQ/iUpa13D4u0EsqFVPZ9Y9vNooPDD4d6IQNIeio6Sey/KzFsAMGdX
-         ef+1PBgjQJiH/gN97CzOKfpyweoVsF6J8LAZGPEJgkF5XA4HShOL0hxYsLFBVlvxlI
-         i8Oz6sODV5aYMEQdSiwuM7IT2Z9SVrAauXpJwCtei3pZYDvMWgkM3XXh/M2FHVVYSp
-         PGiPz+y3hUmuQ==
-Date:   Thu, 9 Jul 2020 09:58:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the scmi tree
-Message-ID: <20200709095802.43bdd86a@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D26521005504;
+        Wed,  8 Jul 2020 23:58:41 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-116-205.rdu2.redhat.com [10.10.116.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A75C61001925;
+        Wed,  8 Jul 2020 23:58:40 +0000 (UTC)
+Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
+From:   Waiman Long <longman@redhat.com>
+To:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     Anton Blanchard <anton@ozlabs.org>,
+        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        virtualization@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+ <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
+ <1594101082.hfq9x5yact.astroid@bobo.none>
+ <de3ead58-7f81-8ebd-754d-244f6be24af4@redhat.com>
+ <1594184204.ncuq7vstsz.astroid@bobo.none>
+ <62fa6343-e084-75c3-01c9-349a4617e67c@redhat.com>
+Organization: Red Hat
+Message-ID: <808a262d-8863-5986-082d-1088b66714df@redhat.com>
+Date:   Wed, 8 Jul 2020 19:58:40 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4o0/i.NRMjkWQoYcn4vR2CB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <62fa6343-e084-75c3-01c9-349a4617e67c@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4o0/i.NRMjkWQoYcn4vR2CB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 7/8/20 7:50 PM, Waiman Long wrote:
+> On 7/8/20 1:10 AM, Nicholas Piggin wrote:
+>> Excerpts from Waiman Long's message of July 8, 2020 1:33 pm:
+>>> On 7/7/20 1:57 AM, Nicholas Piggin wrote:
+>>>> Yes, powerpc could certainly get more performance out of the slow
+>>>> paths, and then there are a few parameters to tune.
+>>>>
+>>>> We don't have a good alternate patching for function calls yet, but
+>>>> that would be something to do for native vs pv.
+>>>>
+>>>> And then there seem to be one or two tunable parameters we could
+>>>> experiment with.
+>>>>
+>>>> The paravirt locks may need a bit more tuning. Some simple testing
+>>>> under KVM shows we might be a bit slower in some cases. Whether this
+>>>> is fairness or something else I'm not sure. The current simple pv
+>>>> spinlock code can do a directed yield to the lock holder CPU, whereas
+>>>> the pv qspl here just does a general yield. I think we might actually
+>>>> be able to change that to also support directed yield. Though I'm
+>>>> not sure if this is actually the cause of the slowdown yet.
+>>> Regarding the paravirt lock, I have taken a further look into the
+>>> current PPC spinlock code. There is an equivalent of pv_wait() but no
+>>> pv_kick(). Maybe PPC doesn't really need that.
+>> So powerpc has two types of wait, either undirected "all processors" or
+>> directed to a specific processor which has been preempted by the
+>> hypervisor.
+>>
+>> The simple spinlock code does a directed wait, because it knows the CPU
+>> which is holding the lock. In this case, there is a sequence that is
+>> used to ensure we don't wait if the condition has become true, and the
+>> target CPU does not need to kick the waiter it will happen automatically
+>> (see splpar_spin_yield). This is preferable because we only wait as
+>> needed and don't require the kick operation.
+> Thanks for the explanation.
+>>
+>> The pv spinlock code I did uses the undirected wait, because we don't
+>> know the CPU number which we are waiting on. This is undesirable because
+>> it's higher overhead and the wait is not so accurate.
+>>
+>> I think perhaps we could change things so we wait on the correct CPU
+>> when queued, which might be good enough (we could also put the lock
+>> owner CPU in the spinlock word, if we add another format).
+>
+> The LS byte of the lock word is used to indicate locking status. If we 
+> have less than 255 cpus, we can put the (cpu_nr + 1) into the lock 
+> byte. The special 0xff value can be used to indicate a cpu number >= 
+> 255 for indirect yield. The required change to the qspinlock code will 
+> be minimal, I think. 
 
-Hi all,
+BTW, we can also keep track of the previous cpu in the waiting queue. 
+Due to lock stealing, that may not be the cpu that is holding the lock. 
+Maybe we can use this, if available, in case the cpu number is >= 255.
 
-After merging the scmi tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Regards,
+Longman
 
-drivers/clk/clk-scmi.c: In function 'scmi_clk_ops_init':
-drivers/clk/clk-scmi.c:126:39: error: expected ';' before 'max_rate'
-  126 |   min_rate =3D sclk->info->list.rates[0]
-      |                                       ^
-      |                                       ;
-  127 |   max_rate =3D sclk->info->list.rates[num_rates - 1];
-      |   ~~~~~~~~                            =20
-
-Caused by commit
-
-  2a3dd29cd558 ("clk: scmi: Fix min and max rate when registering clocks wi=
-th discrete rates")
-
-I have used the scmi tree from next-20200708 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/4o0/i.NRMjkWQoYcn4vR2CB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8GXYoACgkQAVBC80lX
-0GwC/gf/ZnyVJS4u2ZWoojdpy+8fluzcdSaYlBgQTu0TO5WURShmMK3iPK40xx5/
-aJGqh/YdP5iolU+VsrSkAvVwM2SxHr4480b7sMMnb9CowNFkcDmnUEGdcpK8Gv6b
-7dZgLReeTJ99CrrStMT4trvDGqmNg6MjPQYR27ghib4HY8EfUKqlXmCAy5jcoBTA
-O+t0PXFNqsOeLxOBZgU7y6EVWfQnG9PbqQoyG2Zurt+/w2dD0uZy5axJUJ8B1gy8
-U1xYH5LnOez5G86PGgEDy6FpzhPzHbvBgkuKmLqQIPw1mwfpiTRHU4TEnaj1HRrC
-yWDcuh1DKN6p6rlcwUCrBVQSwUDbPQ==
-=/YsI
------END PGP SIGNATURE-----
-
---Sig_/4o0/i.NRMjkWQoYcn4vR2CB--
