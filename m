@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AE0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB075C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6BA420772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D2520772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:27:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="psSPiJcI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JkySrmxz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726286AbgGHU1B (ORCPT
+        id S1726323AbgGHU1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49204 "EHLO
+        Wed, 8 Jul 2020 16:27:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgGHU07 (ORCPT
+        with ESMTP id S1726163AbgGHU1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:26:59 -0400
+        Wed, 8 Jul 2020 16:27:01 -0400
 Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 320CBC08C5C1;
-        Wed,  8 Jul 2020 13:26:59 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so55690462ljv.5;
-        Wed, 08 Jul 2020 13:26:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E23CC061A0B;
+        Wed,  8 Jul 2020 13:27:01 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id b25so52151269ljp.6;
+        Wed, 08 Jul 2020 13:27:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=G7SHiILJ/999/a4ZIPPB905VEFL70YihjnFlwnMCLEE=;
-        b=psSPiJcInXe6zKfPBT+oOrrq3Y13BlguPnlUA9FMF813Z/YdEg0pQK+daNIAS9KJoI
-         BNO021HQnDkLaNqP8OPHY/tRAkiY0fcKTMEzXsM0+Zzl5SYCpOEaK2Yt04uaQf78FcBf
-         4oTPScQEse36nqh/5UQSfjhXiqI+ekLv745g11QrIGiaH/lYziPPOleD4UIqaZVaZTSz
-         K1I9BixHRxqEffsd499lyG/Lo8U1jKEBkE5OjpMK2r/zmt/iKktVMxvumWHY2tHaluCw
-         2u/CmCwh5jUPdL0UkdN/fSeTF0liPJniEMFUPieCkd0bqzsnorLJ1wjlFa2cm9HZcb8G
-         +jew==
+        bh=MQQoHIbvJW5EDg7H0+gJpKf4aGk7u+oklTpgjOewH2I=;
+        b=JkySrmxz2dzfwq6SrvWCWbbFIySR57ahieVlkp0VsHp0PXJWKij6qn1rkMOVC0s1Og
+         RHmJClSXFneSZvOplFmccnGw7oZzhh1z+/CUBBtjdWU1blwVKPYVw8/eEmZOxE4Ko2AT
+         po17D8mFZ4rp1hZwJ3vPFMBpcmnjVzoPfQoiVWdq4ZsMbu+hw6994+ud6CMUvpor8cx4
+         hwc2z7EzNybRsdbAGpqL3uFxvVVK0kal917fezSCbSjvq364dh96r8XQSBfzVhPGuH4L
+         H2PZ9CsKzIuTAhipb4q3AQPqHA5q1EFns6UeLnp7Is/4avydc5g9HskhYDLyB86ZsB6q
+         h6Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=G7SHiILJ/999/a4ZIPPB905VEFL70YihjnFlwnMCLEE=;
-        b=OqxAQs6/xYLMqOxTLGtjIX5s6TpVID8x7dKB0lTpEqPUVFiJZEPSaiqFEKmfm2pPbG
-         AjpoEVhNDsHlFawlliiWuvMVMWn+UlPMs48nMj9gKF4vlvL96wQFcY6+IrwmVV9FSr8B
-         oowGNzxbX8IBA3UBT18tB5gQNJiy9jdtZe8HA+7sEd6P3nqmTyHb55U//K1gtWFPgMmR
-         IfU3E8NdDliPaWrhYMviCg10yYu+Z/8Qu7wUPLubrGS9fKFwbUtVdwoinPQFkUxOo8cm
-         oenIzXfUG2QltB0skRfSfsgghj+cHfr12Vmfe3oze8tsAS0RQ6B66Obe7Llw+z6LGctY
-         Y/zA==
-X-Gm-Message-State: AOAM533usUj6q9nrVPwmH7CbWMJ+oglYzcFNGqyYjsZVBVR/o1U2Oq2N
-        +aLG68CRTgwAoJmTytT5Owc=
-X-Google-Smtp-Source: ABdhPJw1M9JrZh0MzzvAYGzqkxtV3RMKqWWnqGhpKyavyCutyckHlBgH99/JSbF2m+nyA6oqx/98OA==
-X-Received: by 2002:a2e:8e36:: with SMTP id r22mr34890424ljk.77.1594240017678;
-        Wed, 08 Jul 2020 13:26:57 -0700 (PDT)
+        bh=MQQoHIbvJW5EDg7H0+gJpKf4aGk7u+oklTpgjOewH2I=;
+        b=Kh4txpplwMF37/J28+UHmP+hpvGfnDa5eKfyMfL7dgY6piRtEE080hz0K+jfzeSFKN
+         yQvYQHWqnWA7Ae3rNuJ6ufPyKHFBWoVQUsrLFFEPysp17w2L0S/YDEwYmIvd4CCmmY5/
+         7Dz6/0XyZm6fOvaS2gi758FZ3KhBj/nwM3R89rgwDvS73CudZgIFKqJn0g12MRozZNj/
+         iCe5Ee7zsKMs5l4ZgIw1H6Z9QAjU8xhbF9C/gikEDTLWjuiCMCqcuk8LLbow7TprHph8
+         oOfQE5JKfh/3NCnrp0NT/Cqudbx/VnCoD8RMKtcsdmXbJthnEbXMipWRjjDa8xJySWUY
+         vkPQ==
+X-Gm-Message-State: AOAM531mypGMjhk2iqgqlC4JB785uBbLcxECxCN+zbUYCJX52duOxnQg
+        LM74AHxT/bziAS/HxLLmh0A=
+X-Google-Smtp-Source: ABdhPJwLrkA4LrPtHV1k2KRKaym/NQJZ91PW/ZuXesCvPLtwl7zOQlA8IMmdqf6cubnjH4Q8FQ7qjQ==
+X-Received: by 2002:a2e:919a:: with SMTP id f26mr3771836ljg.244.1594240019863;
+        Wed, 08 Jul 2020 13:26:59 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.gmail.com with ESMTPSA id e29sm252568lfc.51.2020.07.08.13.26.56
+        by smtp.gmail.com with ESMTPSA id e29sm252568lfc.51.2020.07.08.13.26.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 13:26:57 -0700 (PDT)
+        Wed, 08 Jul 2020 13:26:59 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,9 +69,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/6] gpio: max77620: Fix missing release of interrupt
-Date:   Wed,  8 Jul 2020 23:23:51 +0300
-Message-Id: <20200708202355.28507-3-digetx@gmail.com>
+Subject: [PATCH v3 4/6] gpio: max77620: Don't shadow error code of platform_get_irq()
+Date:   Wed,  8 Jul 2020 23:23:53 +0300
+Message-Id: <20200708202355.28507-5-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200708202355.28507-1-digetx@gmail.com>
 References: <20200708202355.28507-1-digetx@gmail.com>
@@ -82,31 +82,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The requested interrupt is never released by the driver. Fix this by
-using the resource-managed variant of request_threaded_irq().
+The platform_get_irq() returns a positive interrupt number on success and
+negative error code on failure (zero shouldn't ever happen in practice, it
+would produce a noisy warning). Hence let's return the error code directly
+instead of overriding it with -ENODEV.
 
-Fixes: ab3dd9cc24d4 ("gpio: max77620: Fix interrupt handling")
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpio/gpio-max77620.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-max77620.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index 4c0c9ec2587d..7f7e8d4bf0d3 100644
+index 39d431da2dbc..9121d2507f60 100644
 --- a/drivers/gpio/gpio-max77620.c
 +++ b/drivers/gpio/gpio-max77620.c
-@@ -305,8 +305,9 @@ static int max77620_gpio_probe(struct platform_device *pdev)
- 	gpiochip_irqchip_add_nested(&mgpio->gpio_chip, &max77620_gpio_irqchip,
- 				    0, handle_edge_irq, IRQ_TYPE_NONE);
+@@ -264,12 +264,14 @@ static int max77620_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct max77620_chip *chip =  dev_get_drvdata(pdev->dev.parent);
+ 	struct max77620_gpio *mgpio;
+-	int gpio_irq;
++	unsigned int gpio_irq;
+ 	int ret;
  
--	ret = request_threaded_irq(gpio_irq, NULL, max77620_gpio_irqhandler,
--				   IRQF_ONESHOT, "max77620-gpio", mgpio);
-+	ret = devm_request_threaded_irq(&pdev->dev, gpio_irq, NULL,
-+					max77620_gpio_irqhandler, IRQF_ONESHOT,
-+					"max77620-gpio", mgpio);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to request IRQ: %d\n", ret);
- 		return ret;
+-	gpio_irq = platform_get_irq(pdev, 0);
+-	if (gpio_irq <= 0)
+-		return -ENODEV;
++	ret = platform_get_irq(pdev, 0);
++	if (ret < 0)
++		return ret;
++
++	gpio_irq = ret;
+ 
+ 	mgpio = devm_kzalloc(&pdev->dev, sizeof(*mgpio), GFP_KERNEL);
+ 	if (!mgpio)
 -- 
 2.26.0
 
