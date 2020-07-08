@@ -2,118 +2,107 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63851C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0540AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35269206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE84206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:25:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="axyEP3Qx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiV/nhyz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbgGHXVj (ORCPT
+        id S1726171AbgGHXZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:21:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47942 "EHLO
+        Wed, 8 Jul 2020 19:25:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgGHXVi (ORCPT
+        with ESMTP id S1725903AbgGHXZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:21:38 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CBD5C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:21:38 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id i14so136675pfu.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:21:38 -0700 (PDT)
+        Wed, 8 Jul 2020 19:25:22 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD69C061A0B;
+        Wed,  8 Jul 2020 16:25:22 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id m22so83938pgv.9;
+        Wed, 08 Jul 2020 16:25:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aWbEsQ54hjjSOfJj7PQhDsC6GNOyST30pEElPtE2K0Q=;
-        b=axyEP3QxBfqQyEv9X2FCuSp03HkD7jBoS5PeshAW+/HPgWeJyf70rB3+wl+gNsvL4z
-         OFhXfmS9p2HHWFWbT6keuWPM581K76MKzFcl5aZm9ncPSpKj9nOmfqzNPgZqoe9kikWg
-         ZH1SeW27U4goZRxSItFv5LyG711am+m7a3hd0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KEmBmUTwNSBWXMQPRmc67sBv10v3F7YWKTzYVbw+TgA=;
+        b=SiV/nhyzb7anGw/Bm/QPEtl58g1GiRRq7kwSQbaLqnpoaX8iFL3SXXvZnDxaAudfHF
+         vX+neNUcu2/PdQaEzEd0IhCY2s4aBPr9vMIDNA0LenxXh1VXbgHlhEZm+TrrJ0Appk88
+         +gTS9K+c7KHSFWSu0eSKjTjSrWuPIp3D3UCTU/6dk4bFQW/cPJhQhPdbcb2VbEsdG92A
+         nrqp4rQ3odgYcThIO5VJJtuUCv2R92WQ50h/eOVEK3mq4M6a6QQe2/XrXtySrC0/HGMF
+         l3dxHw4F3mmK9E0Ew0SRluMsaFpxi93eLWwkusyX/wKQhFVozLoA+NsIa91DZZowEu9N
+         bXYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aWbEsQ54hjjSOfJj7PQhDsC6GNOyST30pEElPtE2K0Q=;
-        b=JlM4ecpmJqbOGuc3OyZZI6/TPy7k0dWJPFYFUavYw5wJGhUma8fLyA8QAHnvcoUDIX
-         sT3kpn53yTosmEiD6PgPl8BpS2LZaPIis8NVpKZKjyHROImQ7TH3UMCRKdenz4PA8Svx
-         skjMmybD2TdCFSwm4Xfax89eUUT/+YACIHuWqOoIUFF4nXzpKY08KhuEtvwhwOrzE79I
-         mUpJQXtP3J0ojOF/XLDiyVZtLQg8Wc4MErXL9AjqIaMoxuwE+RT98sHmMCLOiN3jdqux
-         T1N/I7X4Yw/T+QlbG1+tSImac+zNQFg4M1xCCoiDzAMA3c52979+mLJU8T0TBT8yh4Dp
-         q8WQ==
-X-Gm-Message-State: AOAM530VDmFNf91URIiiyIMx2d95nHu+GxEtYfZdzLAx13Y7eaPBJJUR
-        XNAPjA5euu9N7+IQ+fTpC1mAaw==
-X-Google-Smtp-Source: ABdhPJwvMUAhxUfcwwUAmLp0XxTDFXEUcQ7x0gVaGJAbtyOUVE5rAUl6MbmzKSY9U6JBjKNN4941iQ==
-X-Received: by 2002:aa7:8283:: with SMTP id s3mr56731226pfm.90.1594250497690;
-        Wed, 08 Jul 2020 16:21:37 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:a28c:fdff:fef0:49dd])
-        by smtp.gmail.com with ESMTPSA id 64sm782880pgb.63.2020.07.08.16.21.36
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KEmBmUTwNSBWXMQPRmc67sBv10v3F7YWKTzYVbw+TgA=;
+        b=o1GcpShgZ9sbJjVD8IthExL0+UKGkpwvqK6w7RbRtLI3meqP+rLvYXyEzW2QLclsLK
+         3OS8ng+EJ00H8nmZRfCuxEBqul/QWiE1lnL4BZS826Z/SxmLARaoyyCWntA8AGZ+tqZc
+         e1Tkp7WpoUEmtoTEEi3uTrrC6LsOBOuvoj2A5giAOfRCmhCHQNpp8gBybcy4WqrhRAy4
+         FRDYdm7NUk3iyCTYrpy1wfi9dkrcwlpBQujmXDnhpuhGshd81KKEBYjRKruYQfBexxO5
+         2v8kuMMOyF3vg1hDJDcSIlMeivFfoXgoofvVbo8InqEQXmZWmpvoA/U+5g9VhIZm03mG
+         6p1Q==
+X-Gm-Message-State: AOAM530Y9rpslBynwWJAVfbAezgGc548kTEGi5Hqk1/FJZrqnSku+iu/
+        w3WIXd0CvghZyffUTif24WH9FwupEuVsDw==
+X-Google-Smtp-Source: ABdhPJyBQJ7OXv/v/Ze/KPFjhaUgP0nBJ6UaCo3UtgwndeQt3s7FwziqvRWMeNcIO39g1QeMT5oTgw==
+X-Received: by 2002:a62:c584:: with SMTP id j126mr31916695pfg.213.1594250721699;
+        Wed, 08 Jul 2020 16:25:21 -0700 (PDT)
+Received: from localhost.localdomain.com ([2605:e000:160b:911f:a2ce:c8ff:fe03:6cb0])
+        by smtp.gmail.com with ESMTPSA id b4sm487793pjo.57.2020.07.08.16.25.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 16:21:37 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 16:21:36 -0700
-From:   Prashant Malani <pmalani@chromium.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
+        Wed, 08 Jul 2020 16:25:21 -0700 (PDT)
+From:   Chris Healy <cphealy@gmail.com>
+To:     festevam@gmail.com, andrew@lunn.ch, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, stefan@agner.ch, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/chrome: cros_ec_typec: USB4 support
-Message-ID: <20200708232136.GB68629@google.com>
-References: <20200703081703.87720-1-heikki.krogerus@linux.intel.com>
+Cc:     Chris Healy <cphealy@gmail.com>
+Subject: [PATCH v2] ARM: dts: vf610-zii-dev-rev-c: Configure fiber port to 1000BaseX
+Date:   Wed,  8 Jul 2020 16:25:01 -0700
+Message-Id: <20200708232501.6200-1-cphealy@gmail.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703081703.87720-1-heikki.krogerus@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The SFF soldered onto the board expects the port to use 1000BaseX.  It
+makes no sense to have the port set to SGMII, since it doesn't even
+support that mode.
 
-On Fri, Jul 03, 2020 at 11:17:03AM +0300, Heikki Krogerus wrote:
-> +static int cros_typec_enable_usb4(struct cros_typec_data *typec,
-> +				  int port_num,
-> +				  struct ec_response_usb_pd_control_v2 *pd_ctrl)
-> +{
-> +	struct cros_typec_port *port = typec->ports[port_num];
-> +	struct enter_usb_data data;
-> +
-> +
-> +	/* REVISIT: Cable Current? */
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+---
+v2:
+- convert spaces back to tabs
+- remove .dts from subject line
 
-Since we don't pull this data out of the EC currently, I think we can just drop
-this for now (the "Mux" drivers aren't using this data at the moment
-either).
+ arch/arm/boot/dts/vf610-zii-dev-rev-c.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +
-> +	/* REVISIT: Claiming unconditionally that all tunnels are supported. */
-> +	data.eudo |= EUDO_PCIE_SUPPORT;
-> +	data.eudo |= EUDO_DP_SUPPORT;
-> +
-> +	data.eudo |= EUDO_TBT_SUPPORT;
-> +	data.eudo |= EUDO_HOST_PRESENT;
+diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
+index 778e02c000d1..de79dcfd32e6 100644
+--- a/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
++++ b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
+@@ -164,7 +164,7 @@
+ 					port@9 {
+ 						reg = <9>;
+ 						label = "sff2";
+-						phy-mode = "sgmii";
++						phy-mode = "1000base-x";
+ 						managed = "in-band-status";
+ 						sfp = <&sff2>;
+ 					};
+-- 
+2.21.3
 
-I think it's fine to drop this block altogether. I don't think any of
-the current "Mux" drivers parse this information, and we aren't surfacing
-it from the Chrome EC.
-
-> +
->  	} else if (mux_flags & USB_PD_MUX_DP_ENABLED) {
->  		ret = cros_typec_enable_dp(typec, port_num, pd_ctrl);
-> -- 
-> 2.27.0
-> 
-
-I'll wait for a day for any comments for the maintainers, and if not,
-I'll upload v2 of this patch with the "REVISIT" comments omitted.
-
-Thanks,
-
--Prashant
