@@ -2,98 +2,125 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85309C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA3F20708
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9845520774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:27:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594171649;
+	bh=/7pCaqefr9jo0aoJVKw/0wOb++ZXKm19cVeKnE9mCvo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pyu+8jr0729lMVctlgrV4lYpm4QN6vSe96J/wSeaHsvldONe45F0alXpqM9fpNhnW
+	 OvbExYuhKXfl7zUnzUmRiIUdvCKsDLrYsCDfqWMLF+8ERkG1dSxluQTMBhpNrpblZ2
+	 +UlYpMqAfAQrZnkVO1G9u3UniN67b62V2e93N6HM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbgGHBZ5 (ORCPT
+        id S1729188AbgGHB12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 21:25:57 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:51002 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729325AbgGHBZv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 21:25:51 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0U23pI3U_1594171545;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U23pI3U_1594171545)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 08 Jul 2020 09:25:45 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        vbabka@suse.cz, yang.shi@linux.alibaba.com, thomas_os@shipmail.org,
-        anshuman.khandual@arm.com, sean.j.christopherson@intel.com,
-        richard.weiyang@linux.alibaba.com, peterx@redhat.com,
-        aneesh.kumar@linux.ibm.com, willy@infradead.org,
-        thellstrom@vmware.com
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, digetx@gmail.com
-Subject: [Patch v3 4/4] mm/mremap: use pmd_addr_end to simplify the calculate of extent
-Date:   Wed,  8 Jul 2020 09:24:53 +0800
-Message-Id: <20200708012453.36588-5-richard.weiyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20200708012453.36588-1-richard.weiyang@linux.alibaba.com>
-References: <20200708012453.36588-1-richard.weiyang@linux.alibaba.com>
+        Tue, 7 Jul 2020 21:27:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727945AbgGHB11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 21:27:27 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B77020708;
+        Wed,  8 Jul 2020 01:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594171647;
+        bh=/7pCaqefr9jo0aoJVKw/0wOb++ZXKm19cVeKnE9mCvo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qHRW7YN0Nlb2+aagrXIdgt1BRs2O/ElEgTA8SeDY58ttcpFjV2WMguBka5e0D14/6
+         eII1Utr6Zyf7C+j8nqJKF6oIyPa7Lvr7IX+95hdHWJfLY6SYii6lxG8/9KTCfZj1j0
+         lMNMPiLdrNgHwelooIlKFukdniOyCGAXm4jCeDcE=
+Date:   Tue, 7 Jul 2020 18:27:25 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v10 2/4] fs: Add standard casefolding support
+Message-ID: <20200708012725.GE839@sol.localdomain>
+References: <20200707113123.3429337-1-drosen@google.com>
+ <20200707113123.3429337-3-drosen@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707113123.3429337-3-drosen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of this code is to calculate the smaller extent in old and
-new range. Let's leverage pmd_addr_end() to do the calculation.
+On Tue, Jul 07, 2020 at 04:31:21AM -0700, Daniel Rosenberg wrote:
+> +/*
+> + * Determine if the name of a dentry should be casefolded. It does not make
+> + * sense to casefold the no-key token of an encrypted filename.
+> + *
+> + * Return: if names will need casefolding
+> + */
+> +static bool needs_casefold(const struct inode *dir, const struct dentry *dentry)
+> +{
+> +	return IS_CASEFOLDED(dir) && dir->i_sb->s_encoding &&
+> +			!(dentry->d_flags & DCACHE_ENCRYPTED_NAME);
+> +}
+> +
+[...]
+> +/**
+> + * generic_ci_d_hash - generic d_hash implementation for casefolding filesystems
+> + * @dentry:	dentry whose name we are hashing
+> + * @str:	qstr of name whose hash we should fill in
+> + *
+> + * Return: 0 if hash was successful, or -ERRNO
+> + */
+> +int generic_ci_d_hash(const struct dentry *dentry, struct qstr *str)
+> +{
+> +	const struct inode *inode = READ_ONCE(dentry->d_inode);
+> +	struct super_block *sb = dentry->d_sb;
+> +	const struct unicode_map *um = sb->s_encoding;
+> +	int ret = 0;
+> +
+> +	if (!inode || !needs_casefold(inode, dentry))
+> +		return 0;
+> +
+> +	ret = utf8_casefold_hash(um, dentry, str);
+> +	if (ret < 0)
+> +		goto err;
+> +
+> +	return 0;
+> +err:
+> +	if (sb_has_strict_encoding(sb))
+> +		ret = -EINVAL;
+> +	else
+> +		ret = 0;
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(generic_ci_d_hash);
 
-Hope this would make the code easier to read.
+I thought this was discussed before, but the 'dentry' passed to ->d_hash() is
+the parent dentry, not the one being hashed.
 
-Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
----
- mm/mremap.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+Therefore checking DCACHE_ENCRYPTED_NAME on 'dentry' is wrong here.  Instead we
+need to use !fscrypt_has_encryption_key() here.  (IOW, while checking
+DCACHE_ENCRYPTED_NAME is better *when possible*, it's not possible here.)
 
-diff --git a/mm/mremap.c b/mm/mremap.c
-index f5f17d050617..76e7fdf567c3 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -237,11 +237,12 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
- 		unsigned long new_addr, unsigned long len,
- 		bool need_rmap_locks)
- {
--	unsigned long extent, next, old_end;
-+	unsigned long extent, old_next, new_next, old_end, new_end;
- 	struct mmu_notifier_range range;
- 	pmd_t *old_pmd, *new_pmd;
- 
- 	old_end = old_addr + len;
-+	new_end = new_addr + len;
- 	flush_cache_range(vma, old_addr, old_end);
- 
- 	mmu_notifier_range_init(&range, MMU_NOTIFY_UNMAP, 0, vma, vma->vm_mm,
-@@ -250,14 +251,11 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
- 
- 	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
- 		cond_resched();
--		next = (old_addr + PMD_SIZE) & PMD_MASK;
--		/* even if next overflowed, extent below will be ok */
--		extent = next - old_addr;
--		if (extent > old_end - old_addr)
--			extent = old_end - old_addr;
--		next = (new_addr + PMD_SIZE) & PMD_MASK;
--		if (extent > next - new_addr)
--			extent = next - new_addr;
-+
-+		old_next = pmd_addr_end(old_addr, old_end);
-+		new_next = pmd_addr_end(new_addr, new_end);
-+		extent = min((old_next - old_addr), (new_next - new_addr));
-+
- 		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
- 		if (!old_pmd)
- 			continue;
--- 
-2.20.1 (Apple Git-117)
+Note that the whole point of ->d_hash() is to hash the filename so that the VFS
+can find the dentry.  If the VFS already had the dentry, there would be no need
+for ->d_hash().
 
+Also, did you consider my suggestion to not handle encrypt+casefold in this
+patch?  I'd like to get this series in as a refactoring for 5.9.  The encryption
+handling (which is new) might better belong in a later patch series.
+
+- Eric
