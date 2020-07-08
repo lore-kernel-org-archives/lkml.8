@@ -2,174 +2,147 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0946C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A04C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99C4120720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:37:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ibfDKMW5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dM+0P6Xx"
+	by mail.kernel.org (Postfix) with ESMTP id B636C2065F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbgGHNhB (ORCPT
+        id S1729675AbgGHNh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:37:01 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:37443 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729675AbgGHNg6 (ORCPT
+        Wed, 8 Jul 2020 09:37:59 -0400
+Received: from mailout1.hostsharing.net ([83.223.95.204]:48223 "EHLO
+        mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729136AbgGHNh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:36:58 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 5D6D860B;
-        Wed,  8 Jul 2020 09:36:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 09:36:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=P
-        zfHrV4iVkzRgQmQMk6+h0X/sLAgn8pIAagUpIuv7T8=; b=ibfDKMW5rhD3yq18L
-        mVyxmP6EvZnkoJNyNrBpNE9yx2xASmoO7f7L4kcxiUxrTIMjrdprJi5ugbAzHSnp
-        zu56n8+ERDsNyJD1xO9DiWkCB+dHE26NEMzZCHerkSVjgEYesbjiHjmZqelkyRTN
-        dF7yzqYpaxPIcnt0/GQaD7xavAkF4pAKyb8nSVr3DP7S0In6M5OhBpmCqwL6lT+t
-        Wi7Lp7aRp/46KKGwOyLjwNL50rIhXC7dEMVQ1ZiyO9hCH4Vntu/WxFVGlM6bsZto
-        TL5XTSfC28TPSiq1INbkTxli97CfzeSNFE31JhkW3kByg5ETQg+PMxuOWx0djayQ
-        bXUfA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=PzfHrV4iVkzRgQmQMk6+h0X/sLAgn8pIAagUpIuv7
-        T8=; b=dM+0P6Xxl9ilZqNgMIcgwrZuBICK2Bc/91Z+O+JfrhiOFQrU3VqcVso29
-        4twjdjqqPbY25acHFg/oWOKUWQ6//o/cxeaXQKB+5fm5vsP6pbKUX3Nbv+fiFw6G
-        1XM5QZd/ZzStzXOH23fBRWmXL/gfO1vYN0vtHcl40wwLn+2HxYBQj9a7Ow63qnBC
-        pMbfiAAKq6p4JAZuNmp1Z1dfHvFqd0X8+cw3maCWsFZQ0afCwfl2wpWumkh+V5k4
-        CRCoxVOtLfKWsxjTjexZt1AxEZodty0hSUh7gvUIaBwgXor41OHSNpDaeoa4RXAs
-        /spyWCfxtFNi2KOe33qghTiAL5uHQ==
-X-ME-Sender: <xms:-MsFX0kC14Lb2YaTS8fbpH2EEi2tF_YfoZ5KuRuLWd26pZ6EigocyA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdeijecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttdejnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepgfejjeekjedttdethedtfeelteefffduvdevvdfhtdeiudetleejgeelfeef
-    uedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:-MsFXz2r25JtN-kfFjqzz0h7L02SC76IytdNN3oJdVM-Gc_gDUFL8g>
-    <xmx:-MsFXyoP_ZyKegWdOiaWkvDwWXFnCfjHYMN1h4Xj8lj1IvGSlCRYRA>
-    <xmx:-MsFXwmd-t4utxh0vLwOvmy0If57qZQOWLM0B8J8XegndvuZZVpOQw>
-    <xmx:-csFX7l-KmszxWZ6mANu4EnjnITWbJc3DSUN5HcyFMAtJd5eMg1t3Qj3ooU>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C4592328005A;
-        Wed,  8 Jul 2020 09:36:55 -0400 (EDT)
-Date:   Wed, 8 Jul 2020 15:36:54 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-sunxi@googlegroups.com,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
-Message-ID: <20200708133654.fp7k4whl2qmn5ygy@gilmour.lan>
-References: <20200708105527.868987-1-megous@megous.com>
- <20200708122542.73o3lbhgvbdw5c4z@gilmour.lan>
- <20200708132924.r6f5id2evprhybec@core.my.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200708132924.r6f5id2evprhybec@core.my.home>
+        Wed, 8 Jul 2020 09:37:59 -0400
+X-Greylist: delayed 650 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 09:37:57 EDT
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by mailout1.hostsharing.net (Postfix) with ESMTPS id 14E1010190FA4;
+        Wed,  8 Jul 2020 15:37:57 +0200 (CEST)
+Received: from localhost (pd95be530.dip0.t-ipconnect.de [217.91.229.48])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by h08.hostsharing.net (Postfix) with ESMTPSA id B1E906106EC8;
+        Wed,  8 Jul 2020 15:37:56 +0200 (CEST)
+X-Mailbox-Line: From f2d349b5ba67b5ca70cb19577725167642eb69c5 Mon Sep 17 00:00:00 2001
+Message-Id: <f2d349b5ba67b5ca70cb19577725167642eb69c5.1594214103.git.lukas@wunner.de>
+In-Reply-To: <cover.1594214103.git.lukas@wunner.de>
+References: <cover.1594214103.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Wed, 8 Jul 2020 15:27:03 +0200
+Subject: [PATCH 3/3] driver core: Avoid adding children below a dead parent
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 03:29:24PM +0200, Ond=C5=99ej Jirman wrote:
-> Hello Maxime,
->=20
-> On Wed, Jul 08, 2020 at 02:25:42PM +0200, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > On Wed, Jul 08, 2020 at 12:55:27PM +0200, Ondrej Jirman wrote:
-> > > I noticed several mobile Linux distributions failing to enable the
-> > > thermal regulation correctly, because the kernel is silent
-> > > when thermal driver fails to probe. Add enough error reporting
-> > > to debug issues and warn users in case thermal sensor is failing
-> > > to probe.
-> > >=20
-> > > Failing to notify users means, that SoC can easily overheat under
-> > > load.
-> > >=20
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > ---
-> > >  drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++-----=
---
-> > >  1 file changed, 43 insertions(+), 12 deletions(-)
-> > >=20
-> > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_=
-thermal.c
-> > > index 74d73be16496..9065e79ae743 100644
-> > > --- a/drivers/thermal/sun8i_thermal.c
-> > > +++ b/drivers/thermal/sun8i_thermal.c
-> > > @@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct ths_device=
- *tmdev)
-> > > =20
-> > >  	calcell =3D devm_nvmem_cell_get(dev, "calibration");
-> > >  	if (IS_ERR(calcell)) {
-> > > +		dev_err(dev, "Failed to get calibration nvmem cell (%ld)\n",
-> > > +			PTR_ERR(calcell));
-> > > +
-> > >  		if (PTR_ERR(calcell) =3D=3D -EPROBE_DEFER)
-> > >  			return -EPROBE_DEFER;
-> > > +
-> >=20
-> > The rest of the patch makes sense, but we should probably put the error
-> > message after the EPROBE_DEFER return so that we don't print any extra
-> > noise that isn't necessarily useful
->=20
-> I thought about that, but in this case this would have helped, see my oth=
-er
-> e-mail. Though lack of "probe success" message may be enough for me, to
-> debug the issue, I'm not sure the user will notice that a message is miss=
-ing, while
-> he'll surely notice if there's a flood of repeated EPROBE_DEFER messages.
+If CONFIG_OF_DYNAMIC or CONFIG_ACPI is enabled, SPI devices may be added
+below a controller at runtime by a DeviceTree overlay or DSDT patch.
+But there are no precautions to prevent adding a device below a
+controller that's being removed.
 
-Yeah, but on the other hand, we regularly have people that come up and
-ask if a "legitimate" EPROBE_DEFER error message (as in: the driver
-wasn't there on the first attempt but was there on the second) is a
-cause of concern or not.
+This seems like something that should be guarded against in the driver
+core because it's not specific to SPI:  Adding a child below a parent
+that's going away seems like a bad idea regardless of the bus type.
 
-> And people run several distros for 3-4 months without anyone noticing any
-> issues and that thermal regulation doesn't work. So it seems that lack of=
- a
-> success message is not enough.
+Take advantage of kill_device() which was added by commit 00289cd87676
+("drivers/base: Introduce kill_device()"), call it upon removal of an
+SPI controller and teach the driver core to refuse device addition below
+a killed parent.  To make this race-free, device_add() needs to take the
+parent's dead_sem before checking its "dead" flag and until the child
+device has been added to the parent's klist_children.
 
-I understand what the issue is, but do you really expect phone users to
-monitor the kernel logs every time they boot their phone to see if the
-thermal throttling is enabled?
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+ drivers/base/core.c | 18 ++++++++++++++++--
+ drivers/spi/spi.c   |  3 +++
+ 2 files changed, 19 insertions(+), 2 deletions(-)
 
-If anything, it looks like a distro problem, and the notification /
-policy to deal with that should be implemented in userspace.
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 057da42b1a660..1d4e39696f996 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2597,6 +2597,14 @@ int device_add(struct device *dev)
+ 	pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
+ 
+ 	parent = get_device(dev->parent);
++	if (parent) {
++		down_read(&parent->p->dead_sem);
++		if (parent->p->dead) {
++			error = -ENODEV;
++			goto parent_error;
++		}
++	}
++
+ 	kobj = get_device_parent(dev, parent);
+ 	if (IS_ERR(kobj)) {
+ 		error = PTR_ERR(kobj);
+@@ -2679,9 +2687,11 @@ int device_add(struct device *dev)
+ 	}
+ 
+ 	bus_probe_device(dev);
+-	if (parent)
++	if (parent) {
+ 		klist_add_tail(&dev->p->knode_parent,
+ 			       &parent->p->klist_children);
++		up_read(&parent->p->dead_sem);
++	}
+ 
+ 	if (dev->class) {
+ 		mutex_lock(&dev->class->p->mutex);
+@@ -2722,6 +2732,8 @@ int device_add(struct device *dev)
+  Error:
+ 	cleanup_glue_dir(dev, glue_dir);
+ parent_error:
++	if (parent)
++		up_read(&parent->p->dead_sem);
+ 	put_device(parent);
+ name_error:
+ 	kfree(dev->p);
+@@ -2785,7 +2797,9 @@ EXPORT_SYMBOL_GPL(put_device);
+  * kill_device - declare device dead
+  * @dev: device in question
+  *
+- * Declare @dev dead to prevent it from binding to a driver.
++ * Declare @dev dead to prevent it from binding to a driver and
++ * to prevent addition of children.
++ *
+  * Return true if it was killed or false if it was already dead.
+  */
+ bool kill_device(struct device *dev)
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 8158e281f3540..005eca4bae089 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2764,6 +2764,9 @@ void spi_unregister_controller(struct spi_controller *ctlr)
+ 	struct spi_controller *found;
+ 	int id = ctlr->bus_num;
+ 
++	/* Prevent addition of new children, then remove existing ones */
++	if (IS_ENABLED(CONFIG_OF_DYNAMIC) || IS_ENABLED(CONFIG_ACPI))
++		kill_device(&ctlr->dev);
+ 	device_for_each_child(&ctlr->dev, NULL, __unregister);
+ 
+ 	/* First make sure that this controller was ever added */
+-- 
+2.27.0
 
-> Other solution may be to select CONFIG_NVMEM_SUNXI_SID if this driver
-> is enabled. That may get rid of this error scenario of waiting infinitely
-> for calibration data with EPROBE_DEFER. And other potential EPROBE_DEFER =
-sources
-> will probably be quite visible even without this driver telling the user.
-> So this message may not be necessary in that case.
-
-That would only partially solve your issue. If the nvmem driver doesn't
-load for some reason, you would end up in a similar situation.
-
-Maxime
