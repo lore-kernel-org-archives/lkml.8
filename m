@@ -2,297 +2,86 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C77AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C421206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:39:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Awv94X5L"
+	by mail.kernel.org (Postfix) with ESMTP id 71D66206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbgGHPjo (ORCPT
+        id S1730302AbgGHPkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:39:44 -0400
-Received: from casper.infradead.org ([90.155.50.34]:37414 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbgGHPjo (ORCPT
+        Wed, 8 Jul 2020 11:40:02 -0400
+Received: from smtprelay0189.hostedemail.com ([216.40.44.189]:47886 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729022AbgGHPkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:39:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=YWMW3K2J8IUvzI1kP8IohAug+CmpewPJUfdbnh0Wntw=; b=Awv94X5LC0od1aO6iiqfINx41h
-        2ztg70rY1xevKISNu8a6NNpryEMxwzKMDhpZNrUz6cW3Zzki2SpLb7SW1pjbnB7fN+89XrPwHbUEI
-        F2+9CQ+b1aSn1ueXLovk8LBQ00lAQdvLuVZ24glSD1MkAUNFDZyBISY4AiT5gAYobVJLW/TdI0uW6
-        iaxu7eGXc5ldvemq9ZchE9XZk12GnQL01sBY+XIFwIse/zuPtE/7V4gyEVVcFuFr5/Dgu9G5wgtUK
-        mEiz6s6MG0By+PY7KJX8TQYrbBgHVGXeLFuBIOOP7CNoZ7B9KThLVw6WWY1sQE35duApqGEDQ7X4K
-        cLAq4RrA==;
-Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtCAB-0002eQ-Vl; Wed, 08 Jul 2020 15:39:13 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] powerpc: use the generic dma_ops_bypass mode
-Date:   Wed,  8 Jul 2020 17:24:49 +0200
-Message-Id: <20200708152449.316476-6-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200708152449.316476-1-hch@lst.de>
-References: <20200708152449.316476-1-hch@lst.de>
+        Wed, 8 Jul 2020 11:40:01 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id CCC8B181D3026;
+        Wed,  8 Jul 2020 15:40:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wood85_2f12d7c26ebe
+X-Filterd-Recvd-Size: 2129
+Received: from perches-mx.perches.com (imap-ext [216.40.42.5])
+        (Authenticated sender: webmail@joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  8 Jul 2020 15:40:00 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 08 Jul 2020 08:39:59 -0700
+From:   Joe Perches <joe@perches.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH] usbip: Use fallthrough pseudo-keyword
+In-Reply-To: <1b6b83f7-c749-6e0a-0001-2febbf01b603@linuxfoundation.org>
+References: <20200707195214.GA3932@embeddedor>
+ <977e88c2-58cb-9507-c889-854e574a8f31@linuxfoundation.org>
+ <8e08240671d65f1e92dbf5e1e066190149e0d074.camel@perches.com>
+ <1b6b83f7-c749-6e0a-0001-2febbf01b603@linuxfoundation.org>
+User-Agent: Roundcube Webmail/1.4-rc2
+Message-ID: <dd532813cc28b6f27b2d0ed6bd3529f2@perches.com>
+X-Sender: joe@perches.com
+X-Originating-IP: [172.58.16.106]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the DMA API bypass mechanism for direct window mappings.  This uses
-common code and speed up the direct mapping case by avoiding indirect
-calls just when not using dma ops at all.  It also fixes a problem where
-the sync_* methods were using the bypass check for DMA allocations, but
-those are part of the streaming ops.
+On 2020-07-08 07:35, Shuah Khan wrote:
+> On 7/7/20 7:56 PM, Joe Perches wrote:
+>> On Tue, 2020-07-07 at 14:06 -0600, Shuah Khan wrote:
+>>> On 7/7/20 1:52 PM, Gustavo A. R. Silva wrote:
+>>>> Replace the existing /* fall through */ comments and its variants 
+>>>> with
+>>>> the new pseudo-keyword macro fallthrough[1]. Also, remove 
+>>>> unnecessary
+>>>> fall-through markings when it is the case.
+>>>> 
+>>>> [1] 
+>>>> https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+>>>> 
+>>> 
+>>> Is fallthrough syntax supported on our min gcc version?
+>> 
+>> No.  Introduced in gcc 7.
+>> 
+> 
+> Gustavo,
+> 
+> In which case, this patch would break usbip build on older gcc
+> revisions.
 
-Note that this patch loses the DMA_ATTR_WEAK_ORDERING override, which
-has never been well defined, as is only used by a few drivers, which
-IIRC never showed up in the typical Cell blade setups that are affected
-by the ordering workaround.
-
-Fixes: efd176a04bef ("powerpc/pseries/dma: Allow SWIOTLB")
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/powerpc/Kconfig              |  1 +
- arch/powerpc/include/asm/device.h |  5 --
- arch/powerpc/kernel/dma-iommu.c   | 90 ++++---------------------------
- 3 files changed, 10 insertions(+), 86 deletions(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index e9b091d3587222..be868bfbe76ecf 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -152,6 +152,7 @@ config PPC
- 	select CLONE_BACKWARDS
- 	select DCACHE_WORD_ACCESS		if PPC64 && CPU_LITTLE_ENDIAN
- 	select DMA_OPS				if PPC64
-+	select DMA_OPS_BYPASS			if PPC64
- 	select DYNAMIC_FTRACE			if FUNCTION_TRACER
- 	select EDAC_ATOMIC_SCRUB
- 	select EDAC_SUPPORT
-diff --git a/arch/powerpc/include/asm/device.h b/arch/powerpc/include/asm/device.h
-index 266542769e4bd1..452402215e1210 100644
---- a/arch/powerpc/include/asm/device.h
-+++ b/arch/powerpc/include/asm/device.h
-@@ -18,11 +18,6 @@ struct iommu_table;
-  * drivers/macintosh/macio_asic.c
-  */
- struct dev_archdata {
--	/*
--	 * Set to %true if the dma_iommu_ops are requested to use a direct
--	 * window instead of dynamically mapping memory.
--	 */
--	bool			iommu_bypass : 1;
- 	/*
- 	 * These two used to be a union. However, with the hybrid ops we need
- 	 * both so here we store both a DMA offset for direct mappings and
-diff --git a/arch/powerpc/kernel/dma-iommu.c b/arch/powerpc/kernel/dma-iommu.c
-index e486d1d78de288..569fecd7b5b234 100644
---- a/arch/powerpc/kernel/dma-iommu.c
-+++ b/arch/powerpc/kernel/dma-iommu.c
-@@ -14,23 +14,6 @@
-  * Generic iommu implementation
-  */
- 
--/*
-- * The coherent mask may be smaller than the real mask, check if we can
-- * really use a direct window.
-- */
--static inline bool dma_iommu_alloc_bypass(struct device *dev)
--{
--	return dev->archdata.iommu_bypass && !iommu_fixed_is_weak &&
--		dma_direct_supported(dev, dev->coherent_dma_mask);
--}
--
--static inline bool dma_iommu_map_bypass(struct device *dev,
--		unsigned long attrs)
--{
--	return dev->archdata.iommu_bypass &&
--		(!iommu_fixed_is_weak || (attrs & DMA_ATTR_WEAK_ORDERING));
--}
--
- /* Allocates a contiguous real buffer and creates mappings over it.
-  * Returns the virtual address of the buffer and sets dma_handle
-  * to the dma address (mapping) of the first page.
-@@ -39,8 +22,6 @@ static void *dma_iommu_alloc_coherent(struct device *dev, size_t size,
- 				      dma_addr_t *dma_handle, gfp_t flag,
- 				      unsigned long attrs)
- {
--	if (dma_iommu_alloc_bypass(dev))
--		return dma_direct_alloc(dev, size, dma_handle, flag, attrs);
- 	return iommu_alloc_coherent(dev, get_iommu_table_base(dev), size,
- 				    dma_handle, dev->coherent_dma_mask, flag,
- 				    dev_to_node(dev));
-@@ -50,11 +31,7 @@ static void dma_iommu_free_coherent(struct device *dev, size_t size,
- 				    void *vaddr, dma_addr_t dma_handle,
- 				    unsigned long attrs)
- {
--	if (dma_iommu_alloc_bypass(dev))
--		dma_direct_free(dev, size, vaddr, dma_handle, attrs);
--	else
--		iommu_free_coherent(get_iommu_table_base(dev), size, vaddr,
--				dma_handle);
-+	iommu_free_coherent(get_iommu_table_base(dev), size, vaddr, dma_handle);
- }
- 
- /* Creates TCEs for a user provided buffer.  The user buffer must be
-@@ -67,9 +44,6 @@ static dma_addr_t dma_iommu_map_page(struct device *dev, struct page *page,
- 				     enum dma_data_direction direction,
- 				     unsigned long attrs)
- {
--	if (dma_iommu_map_bypass(dev, attrs))
--		return dma_direct_map_page(dev, page, offset, size, direction,
--				attrs);
- 	return iommu_map_page(dev, get_iommu_table_base(dev), page, offset,
- 			      size, dma_get_mask(dev), direction, attrs);
- }
-@@ -79,11 +53,8 @@ static void dma_iommu_unmap_page(struct device *dev, dma_addr_t dma_handle,
- 				 size_t size, enum dma_data_direction direction,
- 				 unsigned long attrs)
- {
--	if (!dma_iommu_map_bypass(dev, attrs))
--		iommu_unmap_page(get_iommu_table_base(dev), dma_handle, size,
--				direction,  attrs);
--	else
--		dma_direct_unmap_page(dev, dma_handle, size, direction, attrs);
-+	iommu_unmap_page(get_iommu_table_base(dev), dma_handle, size, direction,
-+			 attrs);
- }
- 
- 
-@@ -91,8 +62,6 @@ static int dma_iommu_map_sg(struct device *dev, struct scatterlist *sglist,
- 			    int nelems, enum dma_data_direction direction,
- 			    unsigned long attrs)
- {
--	if (dma_iommu_map_bypass(dev, attrs))
--		return dma_direct_map_sg(dev, sglist, nelems, direction, attrs);
- 	return ppc_iommu_map_sg(dev, get_iommu_table_base(dev), sglist, nelems,
- 				dma_get_mask(dev), direction, attrs);
- }
-@@ -101,11 +70,8 @@ static void dma_iommu_unmap_sg(struct device *dev, struct scatterlist *sglist,
- 		int nelems, enum dma_data_direction direction,
- 		unsigned long attrs)
- {
--	if (!dma_iommu_map_bypass(dev, attrs))
--		ppc_iommu_unmap_sg(get_iommu_table_base(dev), sglist, nelems,
-+	ppc_iommu_unmap_sg(get_iommu_table_base(dev), sglist, nelems,
- 			   direction, attrs);
--	else
--		dma_direct_unmap_sg(dev, sglist, nelems, direction, attrs);
- }
- 
- static bool dma_iommu_bypass_supported(struct device *dev, u64 mask)
-@@ -113,8 +79,9 @@ static bool dma_iommu_bypass_supported(struct device *dev, u64 mask)
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct pci_controller *phb = pci_bus_to_host(pdev->bus);
- 
--	return phb->controller_ops.iommu_bypass_supported &&
--		phb->controller_ops.iommu_bypass_supported(pdev, mask);
-+	if (iommu_fixed_is_weak || !phb->controller_ops.iommu_bypass_supported)
-+		return false;
-+	return phb->controller_ops.iommu_bypass_supported(pdev, mask);
- }
- 
- /* We support DMA to/from any memory page via the iommu */
-@@ -123,7 +90,7 @@ int dma_iommu_dma_supported(struct device *dev, u64 mask)
- 	struct iommu_table *tbl = get_iommu_table_base(dev);
- 
- 	if (dev_is_pci(dev) && dma_iommu_bypass_supported(dev, mask)) {
--		dev->archdata.iommu_bypass = true;
-+		dev->dma_ops_bypass = true;
- 		dev_dbg(dev, "iommu: 64-bit OK, using fixed ops\n");
- 		return 1;
- 	}
-@@ -141,7 +108,7 @@ int dma_iommu_dma_supported(struct device *dev, u64 mask)
- 	}
- 
- 	dev_dbg(dev, "iommu: not 64-bit, using default ops\n");
--	dev->archdata.iommu_bypass = false;
-+	dev->dma_ops_bypass = false;
- 	return 1;
- }
- 
-@@ -153,47 +120,12 @@ u64 dma_iommu_get_required_mask(struct device *dev)
- 	if (!tbl)
- 		return 0;
- 
--	if (dev_is_pci(dev)) {
--		u64 bypass_mask = dma_direct_get_required_mask(dev);
--
--		if (dma_iommu_bypass_supported(dev, bypass_mask))
--			return bypass_mask;
--	}
--
- 	mask = 1ULL < (fls_long(tbl->it_offset + tbl->it_size) - 1);
- 	mask += mask - 1;
- 
- 	return mask;
- }
- 
--static void dma_iommu_sync_for_cpu(struct device *dev, dma_addr_t addr,
--		size_t size, enum dma_data_direction dir)
--{
--	if (dma_iommu_alloc_bypass(dev))
--		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
--}
--
--static void dma_iommu_sync_for_device(struct device *dev, dma_addr_t addr,
--		size_t sz, enum dma_data_direction dir)
--{
--	if (dma_iommu_alloc_bypass(dev))
--		dma_direct_sync_single_for_device(dev, addr, sz, dir);
--}
--
--extern void dma_iommu_sync_sg_for_cpu(struct device *dev,
--		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
--{
--	if (dma_iommu_alloc_bypass(dev))
--		dma_direct_sync_sg_for_cpu(dev, sgl, nents, dir);
--}
--
--extern void dma_iommu_sync_sg_for_device(struct device *dev,
--		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
--{
--	if (dma_iommu_alloc_bypass(dev))
--		dma_direct_sync_sg_for_device(dev, sgl, nents, dir);
--}
--
- const struct dma_map_ops dma_iommu_ops = {
- 	.alloc			= dma_iommu_alloc_coherent,
- 	.free			= dma_iommu_free_coherent,
-@@ -203,10 +135,6 @@ const struct dma_map_ops dma_iommu_ops = {
- 	.map_page		= dma_iommu_map_page,
- 	.unmap_page		= dma_iommu_unmap_page,
- 	.get_required_mask	= dma_iommu_get_required_mask,
--	.sync_single_for_cpu	= dma_iommu_sync_for_cpu,
--	.sync_single_for_device	= dma_iommu_sync_for_device,
--	.sync_sg_for_cpu	= dma_iommu_sync_sg_for_cpu,
--	.sync_sg_for_device	= dma_iommu_sync_sg_for_device,
- 	.mmap			= dma_common_mmap,
- 	.get_sgtable		= dma_common_get_sgtable,
- };
--- 
-2.26.2
-
+No it will not.  Comment fall through was introduced in gcc 7 and this 
+devolved into a do while 0
+> thanks,
+> -- Shuah
