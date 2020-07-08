@@ -5,75 +5,77 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A40AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77B12206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95609206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:47:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bATwOvAg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G11va7FU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgGHQrQ (ORCPT
+        id S1730738AbgGHQrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43332 "EHLO
+        Wed, 8 Jul 2020 12:47:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730687AbgGHQrL (ORCPT
+        with ESMTP id S1728148AbgGHQrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jul 2020 12:47:11 -0400
 Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF271C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 09:47:11 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j19so15068841pgm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 09:47:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D34C061A0B;
+        Wed,  8 Jul 2020 09:47:11 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o13so18975654pgf.0;
+        Wed, 08 Jul 2020 09:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MWmf4GbZC/L6jfD+gr6Dtqltxu8YDgGBQoZIgH7qAxQ=;
-        b=bATwOvAgK11OMZDCB79zFJc0pg+DtqVJFf3mguxnu/02mU34MYr0gxNklFr4b9BuYg
-         PbkU9qM3MfZQzlanXAjA/jXtcc51AkXtz8dKouiQGriSpSx2ZPCXLTjChJQTpYxugMht
-         amyKB7vpiO8D7PJJr3Vwx7aIraY+JPIzP4DG89lLdEd3T0NmkkulRuMGPZEo+3cBIEAx
-         21Q44W5Z6CPVavPULIZT0oAQ3D8WLHTkmHWvNGOWCvQTMwBZsP8wAMl1k6S4APq2FKxC
-         U94VOuTtR9AacH+C9ZjPz/dsXUIIOppU+d+P/105aRSTMVlp4RfN50G4Defk0jdyIET8
-         u4cw==
+        bh=YIDdAQlGjsYvw19XCWPwW9U4WErJ5y9VgVOeXoVK1us=;
+        b=G11va7FUDKfWeBeqi6lGDaRx2Vw+F/d9Zo2//sAZscPnyg3Bwj4toMNtnG4h9EJgVC
+         E3CoIqiDC0iSejUHPJZyaWEBHZTSU7GPdeI0NqNfbEdwhoJE1D0DOUmKxd4tw4vjdmUj
+         e2r6e+WlfrHnnHAnlWOSUN8GhMgrPvliZdN3moO32o4P16jv6v4kVleQoCchazDH7YHh
+         mNJdxNl6ZdUh7KGHhP+cU8xPJKmNDsbijaJ9dznFAKpYOEfHCxVWOXv5fk4TFb2kwTUY
+         APla+redE3iWT4pDhtkmrU8/m7lN66RB+YTrHDOr4lmQ7UBqteBFrxougiNSJswmaTXI
+         xsow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MWmf4GbZC/L6jfD+gr6Dtqltxu8YDgGBQoZIgH7qAxQ=;
-        b=PZguHxQ0gkWS8nOmhQ58/2uTOHBB890iQJYY75JWxqiryrd/6JD86eIMXRRGeSdn9i
-         PzOx/25QImsZw8GV/Nq58G4HYhWrO89Q4f/QB40LY92eb/PQ1eQOtopypjFMt9i1vr9a
-         Nx9JRvtGVzsPfFEDPv7dFDAzhGD65pTkX9PMdl+oMp06gaYcCst6W9Yv+YpPYEFXejSy
-         Y7k9bBxRUK0Fzez4E20aNAxT0BG4169hfolrb863/qDc5lIrG/fBklR3+lHQ8ZBhrfzE
-         w+bMBTVd2aSOBlsPLNiMpACVJhz3X1Bt2uXe+w7xaIFnE+M/wNPDnZ6FZNCIsONNcBQq
-         YQMw==
-X-Gm-Message-State: AOAM531/DuWf/qIyNcmLvoOdzuw5kv12ERq5gHNe9SjhyISXYsZOkx1g
-        IcudZSTPVNK6+SrGOmp67LQ=
-X-Google-Smtp-Source: ABdhPJzjvbIOUOpPOpbAjqXq/Qosmi9q9zC1dbH+jGumGfIJ8wqvVyOqvrl0fDTkTXVxjZSuF11Y+g==
-X-Received: by 2002:a63:3e09:: with SMTP id l9mr51756259pga.235.1594226831291;
-        Wed, 08 Jul 2020 09:47:11 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id r8sm310803pfg.147.2020.07.08.09.47.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=YIDdAQlGjsYvw19XCWPwW9U4WErJ5y9VgVOeXoVK1us=;
+        b=kRIRIza9jTofw1dLcbor9ow/9qxo3DztsdWkehr2jYb3hCHByZoaIfWSo2CKFNLCf9
+         0frRX6ke8tQFnhjnWpMFj2DsSCglaJSzpE4EoXi6n8dROT8hr/uSqTaOqrncfNmeTkAY
+         iAxDQxsKKbYW3KIMqktrHpK17xQZ2Yra7GAyQl/blVIjhJPkwoUZwaDv7dR5HkteDk57
+         yaJDqfdM0/DrtmvyVgKpEKbQlkavc1QcUA1kwtozLb33JhHJvtysXBQa46y1d9d8K+Ji
+         ttjXq94ehCg4Op6P1b1dweY+INhwbfqvS28s2U366G1fibLVm1iAIdh2b3N+O+rdMyjU
+         5tCQ==
+X-Gm-Message-State: AOAM532ZgtB/ZlGLaB6e5dXMvaSbvLiNM7Iq7B3sbIUN0axwQm7LXj4U
+        j0BmjVZ7pnEnONuk/KXRENlKiKM/
+X-Google-Smtp-Source: ABdhPJyYUkRXoVQKF7q9AoaEDHNzoJiNA2nwr3NQB4m3KfpHyiCQvWhd1TVdUmLZg0n/T86FXyuufw==
+X-Received: by 2002:a63:5619:: with SMTP id k25mr30455983pgb.139.1594226830495;
         Wed, 08 Jul 2020 09:47:10 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v3 04/17] perf ftrace: add option -d/--delay to delay tracing
-Date:   Thu,  9 Jul 2020 00:45:52 +0800
-Message-Id: <20200708164605.31245-5-changbin.du@gmail.com>
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id x22sm356247pfr.11.2020.07.08.09.47.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 09:47:09 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next 1/2] net: phy: Define PHY statistics ethtool_phy_ops
+Date:   Wed,  8 Jul 2020 09:46:24 -0700
+Message-Id: <20200708164625.40180-2-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200708164605.31245-1-changbin.du@gmail.com>
-References: <20200708164605.31245-1-changbin.du@gmail.com>
+In-Reply-To: <20200708164625.40180-1-f.fainelli@gmail.com>
+References: <20200708164625.40180-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,78 +83,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds an option '-d/--delay' to allow us to start tracing some
-times later after workload is launched.
+Extend ethtool_phy_ops to include the 3 function pointers necessary for
+implementing PHY statistics. In a subsequent change we will uninline
+those functions.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- tools/perf/Documentation/perf-ftrace.txt |  4 ++++
- tools/perf/builtin-ftrace.c              | 19 ++++++++++++++++---
- 2 files changed, 20 insertions(+), 3 deletions(-)
+ drivers/net/phy/phy_device.c | 3 +++
+ include/linux/ethtool.h      | 7 +++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-index e204bf6d50d8..fd1776deebd7 100644
---- a/tools/perf/Documentation/perf-ftrace.txt
-+++ b/tools/perf/Documentation/perf-ftrace.txt
-@@ -42,6 +42,10 @@ OPTIONS
- --tid=::
- 	Trace on existing thread id (comma separated list).
- 
-+-d::
-+--delay::
-+	Time (ms) to wait before starting tracing after program start.
-+
- -a::
- --all-cpus::
- 	Force system-wide collection.  Scripts run without a <command>
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 1188b82c6541..7793c3d083e0 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -38,6 +38,7 @@ struct perf_ftrace {
- 	struct list_head	graph_funcs;
- 	struct list_head	nograph_funcs;
- 	int			graph_depth;
-+	unsigned		initial_delay;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 233334406f0f..7cda95330aea 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -3028,6 +3028,9 @@ static struct phy_driver genphy_driver = {
  };
  
- struct filter_entry {
-@@ -402,13 +403,23 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 	fcntl(trace_fd, F_SETFL, O_NONBLOCK);
- 	pollfd.fd = trace_fd;
+ static const struct ethtool_phy_ops phy_ethtool_phy_ops = {
++	.get_sset_count		= phy_ethtool_get_sset_count,
++	.get_strings		= phy_ethtool_get_strings,
++	.get_stats		= phy_ethtool_get_stats,
+ 	.start_cable_test	= phy_start_cable_test,
+ 	.start_cable_test_tdr	= phy_start_cable_test_tdr,
+ };
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index 0c139a93b67a..969a80211df6 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -508,6 +508,9 @@ struct phy_tdr_config;
  
--	if (write_tracing_file("tracing_on", "1") < 0) {
--		pr_err("can't enable tracing\n");
--		goto out_close_fd;
-+	if (!ftrace->initial_delay) {
-+		if (write_tracing_file("tracing_on", "1") < 0) {
-+			pr_err("can't enable tracing\n");
-+			goto out_close_fd;
-+		}
- 	}
- 
- 	perf_evlist__start_workload(ftrace->evlist);
- 
-+	if (ftrace->initial_delay) {
-+		usleep(ftrace->initial_delay * 1000);
-+		if (write_tracing_file("tracing_on", "1") < 0) {
-+			pr_err("can't enable tracing\n");
-+			goto out_close_fd;
-+		}
-+	}
-+
- 	while (!done) {
- 		if (poll(&pollfd, 1, -1) < 0)
- 			break;
-@@ -535,6 +546,8 @@ int cmd_ftrace(int argc, const char **argv)
- 		     "Set nograph filter on given functions", parse_filter_func),
- 	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
- 		    "Max depth for function graph tracer"),
-+	OPT_UINTEGER('d', "delay", &ftrace.initial_delay,
-+		     "ms to wait before starting tracing after program start"),
- 	OPT_END()
- 	};
- 
+ /**
+  * struct ethtool_phy_ops - Optional PHY device options
++ * @get_sset_count: Get number of strings that @get_strings will write.
++ * @get_strings: Return a set of strings that describe the requested objects
++ * @get_stats: Return extended statistics about the PHY device.
+  * @start_cable_test - Start a cable test
+  * @start_cable_test_tdr - Start a Time Domain Reflectometry cable test
+  *
+@@ -515,6 +518,10 @@ struct phy_tdr_config;
+  * and callers must take this into account. Callers must hold the RTNL lock.
+  */
+ struct ethtool_phy_ops {
++	int (*get_sset_count)(struct phy_device *dev);
++	int (*get_strings)(struct phy_device *dev, u8 *data);
++	int (*get_stats)(struct phy_device *dev,
++			 struct ethtool_stats *stats, u64 *data);
+ 	int (*start_cable_test)(struct phy_device *phydev,
+ 				struct netlink_ext_ack *extack);
+ 	int (*start_cable_test_tdr)(struct phy_device *phydev,
 -- 
 2.25.1
 
