@@ -2,144 +2,103 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D064C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F78C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65653221FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:48:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnvJQ/F8"
+	by mail.kernel.org (Postfix) with ESMTP id B30DD2220E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594198130;
+	bh=v5b+eRpJRjTUvJpoBew9P5DOQzMsw60wsZb0UX7sXXA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mEkBJOw8u9xMQQ0f9P0sEjOqC0T/rtvH/SEZE/5axcCvPeR3p/aO40hS7FJONbTPZ
+	 tP4Q8z4+MCTKgJQm8dqlWlA/ZzmcxwaCZBS4zGeI7ejA/4NwYOBbY5gWhUGSDBphHO
+	 BwSfq5a+zITUOAfL/eurbjydEgrdNtknCnz0xlzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgGHIso (ORCPT
+        id S1728357AbgGHIsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGHIsn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:48:43 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C00C08C5DC;
-        Wed,  8 Jul 2020 01:48:43 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id u25so26422993lfm.1;
-        Wed, 08 Jul 2020 01:48:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=JEdvc9/856Brx/sBJ8Yam9emFnm/wF/Hn2AcTak3ns0=;
-        b=rnvJQ/F8yY5c5p7JR9DqPQybweabq5ZZ0x8RO0cpWyic1yTrJ1NssYrkg0hVz13Y/O
-         oNjICdRK/+Y/rVb+h0oLZSa6kz0eBQ32h+qe2PuGVsdFvvp57SJ1Vuh44zTUhlnphkEt
-         gBuwyxc3KLxaFd79SgN/+kmMeDqpO0qEiPzJMFaivfCvsYVD+9d7GW0RR+uQ5jiCNFZd
-         ysop0BwKUkbE+Rr7bYg3UUsvpEzWl9gABaYqelmbkw0Sk6y5vcHzlpBmJ/xQqHONtNkC
-         sZXSNYeqVhZFEr+mjnCjnlke6G+AXEBjgytlNBAZvsg8IZicvVhoMRPlMTQaHZQLwHG2
-         i4Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=JEdvc9/856Brx/sBJ8Yam9emFnm/wF/Hn2AcTak3ns0=;
-        b=cR5CRhaXttk/9MVCFgVaX33F7uE+/9VxOGLrgwH/gKFFY/pTejPfln0foqmDkHlVL4
-         UD6v/k8dFG7U3+PmBoGFAoP/vPr8Z+SNGOP4U1FwqOedu9o9y5YVzt9d32Jbvt4NBZev
-         XmiTtDzKm5eRbZuV9z05ByVh1I4yyry4bxrSnyiNyILUWij6AGe96SMlQkg5TjZUHlIb
-         9QbjRq+RVFTwG0UsFO+j6+JlL8BWkR/Yvfn/T28AMdtlVMUHtyiOBo7lVfAqZLi1rodv
-         cuUdi5sexQeXM3KlNOgYuWViwroJJC0TkUOLrY9gHGz9KMlKSZwP2A5joZkwgFjuFxgz
-         UhJg==
-X-Gm-Message-State: AOAM532tdRrfnWnR5h/KeKckiGTZa6pF9Ed/iTt/2VD4u+uGMMffOPDY
-        kI0FEfzqDdPuWf1CTblOcJY=
-X-Google-Smtp-Source: ABdhPJzsaTUJ/3P+9MRxfwbKU9eGeKrNZmSJcRae09Q9ycb3vCviRFLC7WfW0HS+4qxjWT8qcFGj0g==
-X-Received: by 2002:a19:8b8a:: with SMTP id n132mr35131491lfd.45.1594198121573;
-        Wed, 08 Jul 2020 01:48:41 -0700 (PDT)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id t4sm750545ljg.11.2020.07.08.01.48.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 01:48:40 -0700 (PDT)
-From:   Sergey Organov <sorganov@gmail.com>
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [EXT] [PATCH  4/5] net: fec: get rid of redundant code in
- fec_ptp_set()
-References: <20200706142616.25192-1-sorganov@gmail.com>
-        <20200706142616.25192-5-sorganov@gmail.com>
-        <AM6PR0402MB3607DE03C3333B9E4C8D3309FF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-        <87tuyj8jxx.fsf@osv.gnss.ru>
-        <AM6PR0402MB36074EB7107ACF728134FEB0FF670@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-Date:   Wed, 08 Jul 2020 11:48:30 +0300
-In-Reply-To: <AM6PR0402MB36074EB7107ACF728134FEB0FF670@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-        (Andy Duan's message of "Wed, 8 Jul 2020 05:34:35 +0000")
-Message-ID: <87y2nue6jl.fsf@osv.gnss.ru>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Wed, 8 Jul 2020 04:48:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728346AbgGHIst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 04:48:49 -0400
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FFA42220F
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 08:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594198128;
+        bh=v5b+eRpJRjTUvJpoBew9P5DOQzMsw60wsZb0UX7sXXA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cvomhAG0GZfWJanHzzFwzJkezudt5a8yhvVMvUHCAtpPvdULl4qnaVApUqvFRgpSC
+         YeqzgExHoFs0wagB65hJRUaQNYJ54thqnWZrOgh1+Als4gwTjgtB3hnIT2XnA6JIkh
+         mVbX/DyWB5Vz5+EbNshT19F1R/4fpcwzC0f8oRl0=
+Received: by mail-ot1-f48.google.com with SMTP id t18so23566860otq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 01:48:48 -0700 (PDT)
+X-Gm-Message-State: AOAM5301o5KmTtlA1zZxDH/GvckUdU1kTaG77poDbtzs2FQc91gr32MY
+        a9WNYRXt6JsB5Wakkj7jScvL/SVTDEOqHD1Qh2g=
+X-Google-Smtp-Source: ABdhPJxS1ynqKGQAtbpJJ+5ir8RRkw7pnxby6VMxWNh8LxEcJeEGX4RdPUzfAeMdOx0/UT/n81JHpBhxP1bkqzj1EZY=
+X-Received: by 2002:a9d:6e85:: with SMTP id a5mr8243417otr.90.1594198127882;
+ Wed, 08 Jul 2020 01:48:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200707114608.24197-1-richard.peng@oppo.com> <20200708082519.GA25634@willie-the-truck>
+In-Reply-To: <20200708082519.GA25634@willie-the-truck>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 8 Jul 2020 11:48:36 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXHYODhL0TNrx7F-e4Yt++fCVO7CcL=y99cJLJZ_4zDvzw@mail.gmail.com>
+Message-ID: <CAMj1kXHYODhL0TNrx7F-e4Yt++fCVO7CcL=y99cJLJZ_4zDvzw@mail.gmail.com>
+Subject: Re: [PATCH] arm64/module-plts: Consider the special case where
+ plt_max_entries is 0
+To:     Will Deacon <will@kernel.org>
+Cc:     Peng Hao <richard.peng@oppo.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Duan <fugang.duan@nxp.com> writes:
-
-> From: Sergey Organov <sorganov@gmail.com> Sent: Tuesday, July 7, 2020 10:43 PM
->> Andy Duan <fugang.duan@nxp.com> writes:
->> 
->> > From: Sergey Organov <sorganov@gmail.com> Sent: Monday, July 6, 2020
->> 10:26 PM
->> >> Code of the form "if(x) x = 0" replaced with "x = 0".
->> >>
->> >> Code of the form "if(x == a) x = a" removed.
->> >>
->> >> Signed-off-by: Sergey Organov <sorganov@gmail.com>
->> >> ---
->> >>  drivers/net/ethernet/freescale/fec_ptp.c | 4 +---
->> >>  1 file changed, 1 insertion(+), 3 deletions(-)
->> >>
->> >> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c
->> >> b/drivers/net/ethernet/freescale/fec_ptp.c
->> >> index e455343..4152cae 100644
->> >> --- a/drivers/net/ethernet/freescale/fec_ptp.c
->> >> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
->> >> @@ -485,9 +485,7 @@ int fec_ptp_set(struct net_device *ndev, struct
->> ifreq
->> >> *ifr)
->> >>
->> >>         switch (config.rx_filter) {
->> >>         case HWTSTAMP_FILTER_NONE:
->> >> -               if (fep->hwts_rx_en)
->> >> -                       fep->hwts_rx_en = 0;
->> >> -               config.rx_filter = HWTSTAMP_FILTER_NONE;
->> > The line should keep according your commit log.
->> 
->> You mean I should fix commit log like this:
->> 
->> Code of the form "switch(x) case a: x = a; break" removed.
->> 
->> ?
-> Like this:
+On Wed, 8 Jul 2020 at 11:25, Will Deacon <will@kernel.org> wrote:
 >
-> case HWTSTAMP_FILTER_NONE:
-> 	fep->hwts_rx_en = 0;
-> 	config.rx_filter = HWTSTAMP_FILTER_NONE;
+> [+Ard]
+>
+> On Tue, Jul 07, 2020 at 07:46:08AM -0400, Peng Hao wrote:
+> > If plt_max_entries is 0, a warning is triggered.
+> > WARNING: CPU: 200 PID: 3000 at arch/arm64/kernel/module-plts.c:97 module_emit_plt_entry+0xa4/0x150
+>
+> Which kernel are you seeing this with? There is a PLT-related change in
+> for-next/core, and I'd like to rule if out if possible.
+>
+> > Signed-off-by: Peng Hao <richard.peng@oppo.com>
+> > ---
+> >  arch/arm64/kernel/module-plts.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
+> > index 65b08a74aec6..1868c9ac13f2 100644
+> > --- a/arch/arm64/kernel/module-plts.c
+> > +++ b/arch/arm64/kernel/module-plts.c
+> > @@ -79,7 +79,8 @@ u64 module_emit_plt_entry(struct module *mod, Elf64_Shdr *sechdrs,
+> >       int i = pltsec->plt_num_entries;
+> >       int j = i - 1;
+> >       u64 val = sym->st_value + rela->r_addend;
+> > -
+> > +     if (pltsec->plt_max_entries == 0)
+> > +             return 0;
+>
+> Hmm, but if there aren't any PLTs then how do we end up here?
+>
 
-This last line is redundant, as it's part of the switch that reads:
-
-switch (config.rx_filter) {
- case HWTSTAMP_FILTER_NONE: config.rx_filter = HWTSTAMP_FILTER_NONE;
-
-that effectively reduces to:
-
-if(x == a) x = a;
-
-that is a no-op (provided 'x' is a usual memory reference),
-and that is exactly what I've described in the commit log.
-
-What do I miss?
-
-Thanks,
--- Sergey
+Indeed. module_emit_plt_entry() is only invoked if we encounter a call
+or jump relocation that is out of range, and so we failed to allocate
+enough PLT entries in module_frob_arch_sections() if you are entering
+module_emit_plt_entry() with max_entries set to 0x0. The only other
+way to trigger this is when the .text section of your module is so
+large that branches go out of range, but PLTs won't help there.
