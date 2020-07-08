@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E14C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6615DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCAE420786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4892320663
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbgGHQkN (ORCPT
+        id S1730659AbgGHQkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:40:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:51246 "EHLO foss.arm.com"
+        Wed, 8 Jul 2020 12:40:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:51294 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730630AbgGHQkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:40:08 -0400
+        id S1730643AbgGHQkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:40:13 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D8F711B3;
-        Wed,  8 Jul 2020 09:40:08 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3F491396;
+        Wed,  8 Jul 2020 09:40:12 -0700 (PDT)
 Received: from merodach.members.linode.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A62783F68F;
-        Wed,  8 Jul 2020 09:40:06 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C8D03F68F;
+        Wed,  8 Jul 2020 09:40:11 -0700 (PDT)
 From:   James Morse <james.morse@arm.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org
 Cc:     Fenghua Yu <fenghua.yu@intel.com>,
@@ -34,9 +34,9 @@ Cc:     Fenghua Yu <fenghua.yu@intel.com>,
         H Peter Anvin <hpa@zytor.com>,
         Babu Moger <Babu.Moger@amd.com>,
         James Morse <james.morse@arm.com>
-Subject: [PATCH v5 04/10] x86/resctrl: use container_of() in delayed_work handlers
-Date:   Wed,  8 Jul 2020 16:39:23 +0000
-Message-Id: <20200708163929.2783-5-james.morse@arm.com>
+Subject: [PATCH v5 06/10] x86/resctrl: Use is_closid_match() in more places
+Date:   Wed,  8 Jul 2020 16:39:25 +0000
+Message-Id: <20200708163929.2783-7-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200708163929.2783-1-james.morse@arm.com>
 References: <20200708163929.2783-1-james.morse@arm.com>
@@ -47,56 +47,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mbm_handle_overflow() and cqm_handle_limbo() are both provided with
-the domain's work_struct when called, but use get_domain_from_cpu()
-to find the domain, along with the appropriate error handling.
+rdtgroup_tasks_assigned() and show_rdt_tasks() loop over threads testing
+for a CTRL/MON group match by closid/rmid with the provided rdtgrp.
+Further down the file are helpers to do this, move these further up and
+make use of them here.
 
-container_of() saves some list walking and bitmap testing, use that
-instead.
+These helpers additionally check for alloc/mon capable. This is harmless
+as rdtgroup_mkdir() tests these capable flags before allowing the config
+directories to be created.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/monitor.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 30 ++++++++++++--------------
+ 1 file changed, 14 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index d6b92d7487a7..54dffe574e67 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -477,19 +477,13 @@ void cqm_handle_limbo(struct work_struct *work)
- 	mutex_lock(&rdtgroup_mutex);
- 
- 	r = &rdt_resources_all[RDT_RESOURCE_L3];
--	d = get_domain_from_cpu(cpu, r);
--
--	if (!d) {
--		pr_warn_once("Failure to get domain for limbo worker\n");
--		goto out_unlock;
--	}
-+	d = container_of(work, struct rdt_domain, cqm_limbo.work);
- 
- 	__check_limbo(d, false);
- 
- 	if (has_busy_rmid(r, d))
- 		schedule_delayed_work_on(cpu, &d->cqm_limbo, delay);
- 
--out_unlock:
- 	mutex_unlock(&rdtgroup_mutex);
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 0398769b90f1..5ec0cf27b426 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -592,6 +592,18 @@ static int __rdtgroup_move_task(struct task_struct *tsk,
+ 	return ret;
  }
  
-@@ -519,10 +513,7 @@ void mbm_handle_overflow(struct work_struct *work)
- 		goto out_unlock;
++static bool is_closid_match(struct task_struct *t, struct rdtgroup *r)
++{
++	return (rdt_alloc_capable &&
++	       (r->type == RDTCTRL_GROUP) && (t->closid == r->closid));
++}
++
++static bool is_rmid_match(struct task_struct *t, struct rdtgroup *r)
++{
++	return (rdt_mon_capable &&
++	       (r->type == RDTMON_GROUP) && (t->rmid == r->mon.rmid));
++}
++
+ /**
+  * rdtgroup_tasks_assigned - Test if tasks have been assigned to resource group
+  * @r: Resource group
+@@ -607,8 +619,7 @@ int rdtgroup_tasks_assigned(struct rdtgroup *r)
  
- 	r = &rdt_resources_all[RDT_RESOURCE_L3];
+ 	rcu_read_lock();
+ 	for_each_process_thread(p, t) {
+-		if ((r->type == RDTCTRL_GROUP && t->closid == r->closid) ||
+-		    (r->type == RDTMON_GROUP && t->rmid == r->mon.rmid)) {
++		if (is_closid_match(t, r) || is_rmid_match(t, r)) {
+ 			ret = 1;
+ 			break;
+ 		}
+@@ -706,8 +717,7 @@ static void show_rdt_tasks(struct rdtgroup *r, struct seq_file *s)
+ 
+ 	rcu_read_lock();
+ 	for_each_process_thread(p, t) {
+-		if ((r->type == RDTCTRL_GROUP && t->closid == r->closid) ||
+-		    (r->type == RDTMON_GROUP && t->rmid == r->mon.rmid))
++		if (is_closid_match(t, r) || is_rmid_match(t, r))
+ 			seq_printf(s, "%d\n", t->pid);
+ 	}
+ 	rcu_read_unlock();
+@@ -2244,18 +2254,6 @@ static int reset_all_ctrls(struct rdt_resource *r)
+ 	return 0;
+ }
+ 
+-static bool is_closid_match(struct task_struct *t, struct rdtgroup *r)
+-{
+-	return (rdt_alloc_capable &&
+-		(r->type == RDTCTRL_GROUP) && (t->closid == r->closid));
+-}
 -
--	d = get_domain_from_cpu(cpu, r);
--	if (!d)
--		goto out_unlock;
-+	d = container_of(work, struct rdt_domain, mbm_over.work);
- 
- 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
- 		mbm_update(r, d, prgrp->mon.rmid);
+-static bool is_rmid_match(struct task_struct *t, struct rdtgroup *r)
+-{
+-	return (rdt_mon_capable &&
+-		(r->type == RDTMON_GROUP) && (t->rmid == r->mon.rmid));
+-}
+-
+ /*
+  * Move tasks from one to the other group. If @from is NULL, then all tasks
+  * in the systems are moved unconditionally (used for teardown).
 -- 
 2.20.1
 
