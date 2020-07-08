@@ -2,311 +2,204 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1530AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7318120739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3C720786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="jJ/rnnMu"
+	dkim=pass (2048-bit key) header.d=linux-powerpc-org.20150623.gappssmtp.com header.i=@linux-powerpc-org.20150623.gappssmtp.com header.b="NWaxEzch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgGHKlj (ORCPT
+        id S1728518AbgGHKnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:41:39 -0400
-Received: from mail-eopbgr1410092.outbound.protection.outlook.com ([40.107.141.92]:3616
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728346AbgGHKlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:41:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e2XUlpHXKROb/ifSHE3Gw8x3/T9ah30xMz7LqurV/BHTw1h3VU1Zu392+VpiTKo4BvS68vvK/XMOacYozBQmng068ZISsv3D5rv7ySsEaSG7ibxBJNDXSFPymoPt7jfMAPQUHzCx/ucBaK8kKT1SPg1YvaTTUZGmMkKB5jGOdAZnx5ZMbdsx0Or6on3hGqSGHGq6yc6ANSjNGzjLIycHEvb/XZfWWZzffmU/xZP0qbXenV+52F9lgXYMKlzF0Whl4Cn5DZmmR5TKEglcoV9owmi1iZwApxvLSE9OtppAOsArZH6Yfu0paAorUOExacG8WUE8qO/VkZCs5WqmfJaWBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UVSfXzLIZ+N0xxOLE5bbxUF5+co/YUJHkEGkSUopIVU=;
- b=hi0LWfoYk9C5ZrvOHY6ddW2st0YaaKQIHrYOyFiHpSjmxjjxX4od6z+QSior1H4zKCGeVOfy4WlAxd4GJZPXuGkeXALGJYVnpK99z2ixV4tauREyP54GL1/JF7tJQ32gNYdQqmqzBHqV6lS05Lg/Jjj69NsmPI6jAv4kbaOSAXEdMxbPvWiUFxMZbUOqQxc0rE8qQ1kt1McYTOO6Wp+LhNeYHutyU+YqomZ9XI9gCcctK3s7xyp4eiSRBtz5AsgFcpFez2EuN7+XrFH22VdowzAIf8U1XJH6Jl3Lyg8PCKqj35zeYFmiI4kGK7ijvlQ/60hf2D2cclMyme+NrNNYoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Wed, 8 Jul 2020 06:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbgGHKnR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:43:17 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 222F1C08E6DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 03:43:17 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id d18so35625955edv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 03:43:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UVSfXzLIZ+N0xxOLE5bbxUF5+co/YUJHkEGkSUopIVU=;
- b=jJ/rnnMucHP/c/lCyst0MS8PAe3d3wCW4TpSiPjqNXPyaXQocgfdBXlQ+gelxiT2GKl8DezYAWUXoVL+1M7IELwKYaP9Eu7x3+WACYtek544KBoxRRx7IUWsM6wMYU5DhphtsTxoPnlCtgD2CXeSfo9Ci7/doARv7UuFSJ4gxRA=
-Received: from OSAPR01MB2385.jpnprd01.prod.outlook.com (2603:1096:603:37::20)
- by OSBPR01MB1750.jpnprd01.prod.outlook.com (2603:1096:603:8::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.29; Wed, 8 Jul
- 2020 10:41:35 +0000
-Received: from OSAPR01MB2385.jpnprd01.prod.outlook.com
- ([fe80::c44c:5473:6b95:d9fd]) by OSAPR01MB2385.jpnprd01.prod.outlook.com
- ([fe80::c44c:5473:6b95:d9fd%6]) with mapi id 15.20.3174.021; Wed, 8 Jul 2020
- 10:41:35 +0000
-From:   Chris Paterson <Chris.Paterson2@renesas.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 4.19 00/36] 4.19.132-rc1 review
-Thread-Topic: [PATCH 4.19 00/36] 4.19.132-rc1 review
-Thread-Index: AQHWVHHiWyG8AtL2Nkaj1mj/4h8uAaj9fuVA
-Date:   Wed, 8 Jul 2020 10:41:35 +0000
-Message-ID: <OSAPR01MB238589153016EE2B686404A9B7670@OSAPR01MB2385.jpnprd01.prod.outlook.com>
-References: <20200707145749.130272978@linuxfoundation.org>
-In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=renesas.com;
-x-originating-ip: [5.68.48.83]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 206044da-cd43-4691-54a0-08d8232b7c87
-x-ms-traffictypediagnostic: OSBPR01MB1750:
-x-microsoft-antispam-prvs: <OSBPR01MB1750FA3DA110E91D83824F33B7670@OSBPR01MB1750.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 04583CED1A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cbmDncMvjXT37nuMSV3lpd82ulGkjsKIk78PUbq4LyHZpWPydr61JxCEEAuBOuZ9SKWe2jn++dGNT/qLQ3JQgZh3rkhkZzoJu3e8SwKvJP9qVIWcLfSqX9S5v6+oOAIwYnRYArtVYGaKfxtGnbvF8seG009kJOdYqUlR1kFe/ASzPnO6jkWsjD2TuDMpCAjQlWyJa5mPo/pYyrLiAWMY3PBZ/9LJwq2Q4V12WtR6FIosrTpNw9a4V/AuV3mTtrnp9HtmGX9nOb1g48dgEjW0B3jICSOmHHhnBquTYXWIhWXgmrqmkn4TVdqPss3Dvoe58SaiQDesDKcHHLD50m9HLj+XXVURZl9B/02TtkyOMi4=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB2385.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(136003)(346002)(366004)(396003)(6506007)(7416002)(26005)(52536014)(55236004)(55016002)(186003)(71200400001)(66556008)(66946007)(76116006)(86362001)(83380400001)(64756008)(66476007)(66446008)(966005)(5660300002)(8936002)(4326008)(478600001)(8676002)(110136005)(7696005)(33656002)(316002)(9686003)(2906002)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: B2EgREOnbyEqPyUq4Jp4CtMOvfvrGXgRxze0qdbvyZiXuHBDg/HRUfPzXYqsJ/+tLbx+aMrqGc9jUuS2wCICQ1VyUh7tfqWngkqg86Ydu9IDLVhrBWI5dHO8EdbC8EKywqkr8vRvfsDIw/+Hre6fOxUDG1UQV02PyYqvMGlReuQViDjs+nG+p0rTBYTyxelk6zVXBms1la2Rs4WXu23EqIedtNbDrEhR/fvy/ylQIxBN+vI0VefNMXQzMUgjujEoKGTn2kLSvKppmMNfZWUxmWnCpUj+WzSHhAJVK2tRt9HDvVnCIQRLw3PtemgLnAqdDcHSvAsZMFeJpHshKEFpvgp49SDSvx/AnzK9U58dmuA4UebNCEv+8ZY7nv6Mr2QUQELEBhN5thkuzMdgA4jG0gbfUEcTbBD6fMHcY0Wip+S6/pdpd7a9sVbPIvpblU1ZTjCEf1ZNtas5f3DEz9JgchS++1oRYJ3koFbSo8h1LqI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        d=linux-powerpc-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=qQUw/m5dPWqaUtm1QGUmKPUd6rNgSK3c1WDMgadyuQU=;
+        b=NWaxEzchKzL2dyCGJv3mBTmPqwKK3A/r8gcuZAvYNI+CNBOxlyEhWv0d56OBP61wKj
+         FJwUjDEcolsFp6PxkFymeCoXzPhoaDum+rmLoQ/B//DPUKH29e0YjKCoD+63IB/Jusdy
+         GUnUP2fpF4vVJ0Ab5u88g5Jtx0e3bEoJb0uOfPnG2+cMiYbkgHkbd74NbCxWBAuKNPr8
+         4ul5rjsHNGr047LizKndHxju/mEJYzljDS5/sOuIYUenxR6qSo9RfTINtMOASZpgpdy1
+         v7F4fiexnXwZs4zVhZgsPkpoCPnOR7tLULSbpmNgKtvtpjK6D9Fdr5h+H9IZ1XRky6yJ
+         A8aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=qQUw/m5dPWqaUtm1QGUmKPUd6rNgSK3c1WDMgadyuQU=;
+        b=K0MeF4VPnTihgNl+8Vr5jZFd//GhMaa51L+dUhyjXHF1IZAH610dcAg9mD1EUTFU26
+         pJAl7x6MdO5JfqV4zif3cCnvMYmGXKEv6geUAybdI7VGusxxCgUf6wpjG5NTZ/eJ3UYa
+         rZm7zuP554LGzuiPP8AsGAgYOPWLoTiOVPz/iQAI7dkGNj1SKduTTMbHzd9v0Mj8qTRT
+         nXm8eS+siQ5U9085JmlI7notupxtiZpovbDBux3Mg9I/jMzM2AeCvENvF07ZCkeXaH5r
+         U92TyDZpsNnppkBwJdo+OU6IpUs9DjxTpk5DzEEwEN3q8540Th5BGfBfojX0SYZccmM6
+         +9AA==
+X-Gm-Message-State: AOAM5332CiZRhOHm8789aZkd182gx1qL65BRhP69aUGgJ3kn15DpsKUM
+        d5gRnlh5/QzPe7HfLKw0dv6R7F3IE7+Vq83zua2bl+gLxAE=
+X-Google-Smtp-Source: ABdhPJzEa9ajUiJz23roTV6kpHpX1754dz4EdyYOHi1EqT8HZ++9AzZ5w67qZnJM0hCUvBCyXyVsyOUl6/cpW7fdBW0=
+X-Received: by 2002:aa7:d446:: with SMTP id q6mr66669945edr.218.1594204995887;
+ Wed, 08 Jul 2020 03:43:15 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB2385.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 206044da-cd43-4691-54a0-08d8232b7c87
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2020 10:41:35.0953
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q3gDxVuJLfFEN4MPpG1i2TSaxLKjuBP2xHA4Z/QomOGA7PW9WkLmZVBJBEpUe/aEStf2HgkapIXcodmQ8K8M1x+vl0Az1+cpgUKLMd0k/xo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB1750
+Received: by 2002:a50:3a1b:0:0:0:0:0 with HTTP; Wed, 8 Jul 2020 03:43:15 -0700 (PDT)
+X-Originating-IP: [5.35.13.201]
+In-Reply-To: <CAOJe8K0aYeba0fOpSz6dzgWUwAP8FTyOpQc8rckWO=RPTKiprw@mail.gmail.com>
+References: <20200701165057.667799-1-vaibhavgupta40@gmail.com>
+ <20200701165057.667799-7-vaibhavgupta40@gmail.com> <CAOJe8K0aYeba0fOpSz6dzgWUwAP8FTyOpQc8rckWO=RPTKiprw@mail.gmail.com>
+From:   Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Wed, 8 Jul 2020 13:43:15 +0300
+Message-ID: <CAOJe8K3j=FJ2-J+CqeG-hUXApi+UgqX83U20m-2YpgD+tEvgPg@mail.gmail.com>
+Subject: Re: [PATCH v2 06/11] sundance: use generic power management
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Dillow <dave@thedillows.org>,
+        Ion Badulescu <ionut@badula.org>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        Guy Tzalik <gtzalik@amazon.com>,
+        Saeed Bishara <saeedb@amazon.com>,
+        Zorik Machulsky <zorik@amazon.com>,
+        Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>,
+        Ajit Khaparde <ajit.khaparde@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Jon Mason <jdmason@kudzu.us>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Greg,
+On 7/3/20, Denis Kirjanov <kda@linux-powerpc.org> wrote:
+> On 7/1/20, Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
+>> With legacy PM, drivers themselves were responsible for managing the
+>> device's power states and takes care of register states.
+>>
+>> After upgrading to the generic structure, PCI core will take care of
+>> required tasks and drivers should do only device-specific operations.
+>>
+>> Thus, there is no need to call the PCI helper functions like
+>> pci_enable/disable_device(), pci_save/restore_sate() and
+>> pci_set_power_state().
+>>
+>> Compile-tested only.
+>>
+>> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+>
+> Should be fine. I'll try to test it in the upcoming weekend
 
-> From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> Behalf Of Greg Kroah-Hartman
-> Sent: 07 July 2020 16:17
->=20
-> This is the start of the stable review cycle for the 4.19.132 release.
-> There are 36 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-> Anything received after that time might be too late.
+Unfortunately the suspend mode is broken on my test machine so I will
+take some time :/
 
-No build/boot issues seen for CIP configs with Linux 4.19.132-rc1 (168e2945=
-aaf5).
-
-Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/linux-=
-stable-rc-ci/-/pipelines/164002971
-GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-cip-pi=
-pelines/-/blob/master/trees/linux-4.19.y.yml
-Relevant LAVA jobs: https://lava.ciplatform.org/scheduler/alljobs?length=3D=
-25&search=3D168e29#table
-
-Kind regards, Chris
-
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-
-> review/patch-4.19.132-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-
-> rc.git linux-4.19.y
-> and the diffstat can be found below.
->=20
-> thanks,
->=20
-> greg k-h
->=20
-> -------------
-> Pseudo-Shortlog of commits:
->=20
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->     Linux 4.19.132-rc1
->=20
-> Peter Jones <pjones@redhat.com>
->     efi: Make it possible to disable efivar_ssdt entirely
->=20
-> Hou Tao <houtao1@huawei.com>
->     dm zoned: assign max_io_len correctly
->=20
-> Marc Zyngier <maz@kernel.org>
->     irqchip/gic: Atomically update affinity
->=20
-> Hauke Mehrtens <hauke@hauke-m.de>
->     MIPS: Add missing EHB in mtc0 -> mfc0 sequence for DSPen
->=20
-> Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
->     cifs: Fix the target file was deleted when rename failed.
->=20
-> Paul Aurich <paul@darkrain42.org>
->     SMB3: Honor lease disabling for multiuser mounts
->=20
-> Paul Aurich <paul@darkrain42.org>
->     SMB3: Honor persistent/resilient handle flags for multiuser mounts
->=20
-> Paul Aurich <paul@darkrain42.org>
->     SMB3: Honor 'seal' flag for multiuser mounts
->=20
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->     Revert "ALSA: usb-audio: Improve frames size computation"
->=20
-> J. Bruce Fields <bfields@redhat.com>
->     nfsd: apply umask on fs without ACL support
->=20
-> Wolfram Sang <wsa+renesas@sang-engineering.com>
->     i2c: mlxcpld: check correct size of maximum RECV_LEN packet
->=20
-> Chris Packham <chris.packham@alliedtelesis.co.nz>
->     i2c: algo-pca: Add 0x78 as SCL stuck low status for PCA9665
->=20
-> Christoph Hellwig <hch@lst.de>
->     nvme: fix a crash in nvme_mpath_add_disk
->=20
-> Paul Aurich <paul@darkrain42.org>
->     SMB3: Honor 'posix' flag for multiuser mounts
->=20
-> Hou Tao <houtao1@huawei.com>
->     virtio-blk: free vblk-vqs in error path of virtblk_probe()
->=20
-> Chen-Yu Tsai <wens@csie.org>
->     drm: sun4i: hdmi: Remove extra HPD polling
->=20
-> Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
->     hwmon: (acpi_power_meter) Fix potential memory leak in
-> acpi_power_meter_add()
->=20
-> Chu Lin <linchuyuan@google.com>
->     hwmon: (max6697) Make sure the OVERT mask is set correctly
->=20
-> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
->     cxgb4: fix SGE queue dump destination buffer context
->=20
-> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
->     cxgb4: use correct type for all-mask IP address comparison
->=20
-> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
->     cxgb4: parse TC-U32 key values and masks natively
->=20
-> Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
->     cxgb4: use unaligned conversion for fetching timestamp
->=20
-> Chen Tao <chentao107@huawei.com>
->     drm/msm/dpu: fix error return code in dpu_encoder_init
->=20
-> Herbert Xu <herbert@gondor.apana.org.au>
->     crypto: af_alg - fix use-after-free in af_alg_accept() due to bh_lock=
-_sock()
->=20
-> Douglas Anderson <dianders@chromium.org>
->     kgdb: Avoid suspicious RCU usage warning
->=20
-> Anton Eidelman <anton@lightbitslabs.com>
->     nvme-multipath: fix deadlock between ana_work and scan_work
->=20
-> Sagi Grimberg <sagi@grimberg.me>
->     nvme: fix possible deadlock when I/O is blocked
->=20
-> Keith Busch <kbusch@kernel.org>
->     nvme-multipath: set bdi capabilities once
->=20
-> Christian Borntraeger <borntraeger@de.ibm.com>
->     s390/debug: avoid kernel warning on too large number of pages
->=20
-> Zqiang <qiang.zhang@windriver.com>
->     usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
->=20
-> Qian Cai <cai@lca.pw>
->     mm/slub: fix stack overruns with SLUB_STATS
->=20
-> Dongli Zhang <dongli.zhang@oracle.com>
->     mm/slub.c: fix corrupted freechain in deactivate_slab()
->=20
-> Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
->     usbnet: smsc95xx: Fix use-after-free after removal
->=20
-> Borislav Petkov <bp@suse.de>
->     EDAC/amd64: Read back the scrub rate PCI register on F15h
->=20
-> Hugh Dickins <hughd@google.com>
->     mm: fix swap cache node allocation mask
->=20
-> Filipe Manana <fdmanana@suse.com>
->     btrfs: fix a block group ref counter leak after failure to remove blo=
-ck group
->=20
->=20
-> -------------
->=20
-> Diffstat:
->=20
->  Makefile                                           |   4 +-
->  arch/mips/kernel/traps.c                           |   1 +
->  arch/s390/kernel/debug.c                           |   3 +-
->  crypto/af_alg.c                                    |  26 ++---
->  crypto/algif_aead.c                                |   9 +-
->  crypto/algif_hash.c                                |   9 +-
->  crypto/algif_skcipher.c                            |   9 +-
->  drivers/block/virtio_blk.c                         |   1 +
->  drivers/edac/amd64_edac.c                          |   2 +
->  drivers/firmware/efi/Kconfig                       |  11 ++
->  drivers/firmware/efi/efi.c                         |   2 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |   2 +-
->  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c             |   5 +-
->  drivers/hwmon/acpi_power_meter.c                   |   4 +-
->  drivers/hwmon/max6697.c                            |   7 +-
->  drivers/i2c/algos/i2c-algo-pca.c                   |   3 +-
->  drivers/i2c/busses/i2c-mlxcpld.c                   |   4 +-
->  drivers/irqchip/irq-gic.c                          |  14 +--
->  drivers/md/dm-zoned-target.c                       |   2 +-
->  drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c     |   6 +-
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c  |  10 +-
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.c  |  18 +--
->  .../ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h    | 122
-> ++++++++++++++-------
->  drivers/net/ethernet/chelsio/cxgb4/sge.c           |   2 +-
->  drivers/net/usb/smsc95xx.c                         |   2 +-
->  drivers/nvme/host/core.c                           |   1 -
->  drivers/nvme/host/multipath.c                      |  33 ++++--
->  drivers/usb/misc/usbtest.c                         |   1 +
->  fs/btrfs/extent-tree.c                             |  19 ++--
->  fs/cifs/connect.c                                  |   9 +-
->  fs/cifs/inode.c                                    |  10 +-
->  fs/nfsd/vfs.c                                      |   6 +
->  include/crypto/if_alg.h                            |   4 +-
->  kernel/debug/debug_core.c                          |   4 +
->  mm/slub.c                                          |  30 ++++-
->  mm/swap_state.c                                    |   3 +-
->  sound/usb/card.h                                   |   4 -
->  sound/usb/endpoint.c                               |  43 +-------
->  sound/usb/endpoint.h                               |   1 -
->  sound/usb/pcm.c                                    |   2 -
->  40 files changed, 256 insertions(+), 192 deletions(-)
->=20
-
+>
+>> ---
+>>  drivers/net/ethernet/dlink/sundance.c | 27 ++++++++-------------------
+>>  1 file changed, 8 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/dlink/sundance.c
+>> b/drivers/net/ethernet/dlink/sundance.c
+>> index dc566fcc3ba9..ca97e321082d 100644
+>> --- a/drivers/net/ethernet/dlink/sundance.c
+>> +++ b/drivers/net/ethernet/dlink/sundance.c
+>> @@ -1928,11 +1928,9 @@ static void sundance_remove1(struct pci_dev *pdev)
+>>  	}
+>>  }
+>>
+>> -#ifdef CONFIG_PM
+>> -
+>> -static int sundance_suspend(struct pci_dev *pci_dev, pm_message_t state)
+>> +static int __maybe_unused sundance_suspend(struct device *dev_d)
+>>  {
+>> -	struct net_device *dev = pci_get_drvdata(pci_dev);
+>> +	struct net_device *dev = dev_get_drvdata(dev_d);
+>>  	struct netdev_private *np = netdev_priv(dev);
+>>  	void __iomem *ioaddr = np->base;
+>>
+>> @@ -1942,30 +1940,24 @@ static int sundance_suspend(struct pci_dev
+>> *pci_dev,
+>> pm_message_t state)
+>>  	netdev_close(dev);
+>>  	netif_device_detach(dev);
+>>
+>> -	pci_save_state(pci_dev);
+>>  	if (np->wol_enabled) {
+>>  		iowrite8(AcceptBroadcast | AcceptMyPhys, ioaddr + RxMode);
+>>  		iowrite16(RxEnable, ioaddr + MACCtrl1);
+>>  	}
+>> -	pci_enable_wake(pci_dev, pci_choose_state(pci_dev, state),
+>> -			np->wol_enabled);
+>> -	pci_set_power_state(pci_dev, pci_choose_state(pci_dev, state));
+>> +
+>> +	device_set_wakeup_enable(dev_d, np->wol_enabled);
+>>
+>>  	return 0;
+>>  }
+>>
+>> -static int sundance_resume(struct pci_dev *pci_dev)
+>> +static int __maybe_unused sundance_resume(struct device *dev_d)
+>>  {
+>> -	struct net_device *dev = pci_get_drvdata(pci_dev);
+>> +	struct net_device *dev = dev_get_drvdata(dev_d);
+>>  	int err = 0;
+>>
+>>  	if (!netif_running(dev))
+>>  		return 0;
+>>
+>> -	pci_set_power_state(pci_dev, PCI_D0);
+>> -	pci_restore_state(pci_dev);
+>> -	pci_enable_wake(pci_dev, PCI_D0, 0);
+>> -
+>>  	err = netdev_open(dev);
+>>  	if (err) {
+>>  		printk(KERN_ERR "%s: Can't resume interface!\n",
+>> @@ -1979,17 +1971,14 @@ static int sundance_resume(struct pci_dev
+>> *pci_dev)
+>>  	return err;
+>>  }
+>>
+>> -#endif /* CONFIG_PM */
+>> +static SIMPLE_DEV_PM_OPS(sundance_pm_ops, sundance_suspend,
+>> sundance_resume);
+>>
+>>  static struct pci_driver sundance_driver = {
+>>  	.name		= DRV_NAME,
+>>  	.id_table	= sundance_pci_tbl,
+>>  	.probe		= sundance_probe1,
+>>  	.remove		= sundance_remove1,
+>> -#ifdef CONFIG_PM
+>> -	.suspend	= sundance_suspend,
+>> -	.resume		= sundance_resume,
+>> -#endif /* CONFIG_PM */
+>> +	.driver.pm	= &sundance_pm_ops,
+>>  };
+>>
+>>  static int __init sundance_init(void)
+>> --
+>> 2.27.0
+>>
+>>
+>
