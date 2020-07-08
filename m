@@ -2,129 +2,85 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A94C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F089020739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:38:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EoqZw538"
+	by mail.kernel.org (Postfix) with ESMTP id 6C5DF20775
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594204774;
+	bh=VWPhC4Gq7pX7sjLhrLhoCa8iCMdRCFzbp0T4IOiWh8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=biOcmJA+8LppLSyYsQzXC1d2Y0uD9MNrISDfE4wK8/CFTb8xL6mNB7D/Gb98ygNWA
+	 ba4F4/eLRvvkl+v3jhnwFpqKp5O1OJAGtIPT962cjNQ/N0/eIXRSIoUfaRC438Zp6l
+	 B7k5n9+d+a4gxi2CZA5CfX2kpRCcsBVmXnF7pP74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgGHKip (ORCPT
+        id S1728518AbgGHKjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:38:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728104AbgGHKip (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:38:45 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384B9C08C5DC;
-        Wed,  8 Jul 2020 03:38:45 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id y2so46442192ioy.3;
-        Wed, 08 Jul 2020 03:38:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6qWNT5vkRAAUNzv0WOBodcpzUwaDLty7hLhEuvqFBkc=;
-        b=EoqZw5382zK9BTlSQNE7IE941IXXEIXheKUVzhVejDBsW0CLb24j6RFlb//YN3eepJ
-         ut+3Ox+0EYt2s4Cjbo4nbwb+pmnNvE7VW1eZG5sz54ysRX35/osZzBC90qrt3CzgR1/V
-         WT1FUZby+pRU8vVKIzHxHb+8K8qus+B4hmVHOyZhBVoSP0mAvtUEk9jk6TYYq/hKTo93
-         nKwdCrEFkxgtG6HStMKLKZOaWlTCdDU5lrL8mRaOiAepfQlfaWrbQ3JBPEfsxmWnxbaD
-         c/9cUw8anxgR6ZcgOIqyzadyyxP2o6nVX3Kdnpf7KuZ8rkDzYK+gHoXatziHp8cSidhV
-         xTkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6qWNT5vkRAAUNzv0WOBodcpzUwaDLty7hLhEuvqFBkc=;
-        b=nXcrsBBUP6BTsEvUrGvpCMl+5Pt/ixDg8SRtVqnxtwPAleza7hJxLFF/Czrm2mqyRu
-         tMf4q7m5otCSzpJJ5bGJ1HaPptaaegIE58YCbp8NgEAnT+jQzQrI7SIW2dVAjuo2VzEG
-         wgOy0Q0sLZjcZ/I4wnZTRdkVE/d8JrPamf1+dOTNMJ7ng9QQL4dL9aOICIX9GfxtdZGv
-         o+zFpF6RSuKUQhwwdUqawyUSiQehjdlGxiWcievsbFsNI1wY6kar+io3fECZW1iNzo7t
-         nL0SBZSN4Pt7kGj53izFnAq7WcwHsy0E06K+kwQtdSu3jAEYzuXYhC4Sp1/ZM949GVlC
-         5ccg==
-X-Gm-Message-State: AOAM532ITNRAju2GZ999rSSWdINlTF6nVyN/aabKKIWaRzW6pp8nFR8h
-        Ag6lxBUV1ZwIoQQZMcZ2TdIryWcVOFmol6qo2aM=
-X-Google-Smtp-Source: ABdhPJz/oUUfmOWTOBNWon1k8pdhutv1qQxNda1lvQi+wUp9zsIDxgzT4dmhRBhTg7sKsYDOxsN9HugxU14qxHkFZAQ=
-X-Received: by 2002:a05:6602:164c:: with SMTP id y12mr36358432iow.143.1594204724534;
- Wed, 08 Jul 2020 03:38:44 -0700 (PDT)
+        Wed, 8 Jul 2020 06:39:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728104AbgGHKjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:39:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D130D20739;
+        Wed,  8 Jul 2020 10:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594204772;
+        bh=VWPhC4Gq7pX7sjLhrLhoCa8iCMdRCFzbp0T4IOiWh8k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LUVVW7UKQebpZCxfAj/yfH0JqmWyqZimy2Nlld785FUp7uDteMXJs8RhnWUzwrCYH
+         Nywyx1PO0sK2W/w981QVWvsVP8WdV7uzOMY8T2DfJKGS/89ejltpW0w5fFBhGdkUe3
+         uh0F/75gJB+K4sYTOj83VFq+UrIBtnOGi3cEnUPM=
+Date:   Wed, 8 Jul 2020 12:39:28 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: USB MASS STORAGE
+ DRIVER
+Message-ID: <20200708103928.GC585606@kroah.com>
+References: <20200708095500.13694-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200708070322.30695-1-vulab@iscas.ac.cn>
-In-Reply-To: <20200708070322.30695-1-vulab@iscas.ac.cn>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Wed, 8 Jul 2020 12:38:53 +0200
-Message-ID: <CAOi1vP-+raGXYPkumWSbO-YdcMw_hw7VR=K2npPc3NAQC1_J2A@mail.gmail.com>
-Subject: Re: [PATCH] fs: ceph: Remove unnecessary cast in kfree()
-To:     Xu Wang <vulab@iscas.ac.cn>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708095500.13694-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 9:27 AM Xu Wang <vulab@iscas.ac.cn> wrote:
->
-> Remove unnecassary casts in the argument to kfree.
->
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-> ---
->  fs/ceph/xattr.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-> index 71ee34d160c3..3a733ac33d9b 100644
-> --- a/fs/ceph/xattr.c
-> +++ b/fs/ceph/xattr.c
-> @@ -497,10 +497,10 @@ static int __set_xattr(struct ceph_inode_info *ci,
->                 kfree(*newxattr);
->                 *newxattr = NULL;
->                 if (xattr->should_free_val)
-> -                       kfree((void *)xattr->val);
-> +                       kfree(xattr->val);
->
->                 if (update_xattr) {
-> -                       kfree((void *)name);
-> +                       kfree(name);
->                         name = xattr->name;
->                 }
->                 ci->i_xattrs.names_size -= xattr->name_len;
-> @@ -566,9 +566,9 @@ static void __free_xattr(struct ceph_inode_xattr *xattr)
->         BUG_ON(!xattr);
->
->         if (xattr->should_free_name)
-> -               kfree((void *)xattr->name);
-> +               kfree(xattr->name);
->         if (xattr->should_free_val)
-> -               kfree((void *)xattr->val);
-> +               kfree(xattr->val);
->
->         kfree(xattr);
->  }
-> @@ -582,9 +582,9 @@ static int __remove_xattr(struct ceph_inode_info *ci,
->         rb_erase(&xattr->node, &ci->i_xattrs.index);
->
->         if (xattr->should_free_name)
-> -               kfree((void *)xattr->name);
-> +               kfree(xattr->name);
->         if (xattr->should_free_val)
-> -               kfree((void *)xattr->val);
-> +               kfree(xattr->val);
->
->         ci->i_xattrs.names_size -= xattr->name_len;
->         ci->i_xattrs.vals_size -= xattr->val_len;
+On Wed, Jul 08, 2020 at 11:55:00AM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-Applied.
+Your subject lines are very odd compared to all patches for this
+subsystem, as well as all other kernel subsystems.  Any reason you are
+doing it this way and not the normal and standard method of:
+	USB: storage: replace http links with https
 
-Thanks,
+That would look more uniform as well as not shout at anyone.
 
-                Ilya
+thanks,
+
+greg k-h
