@@ -2,110 +2,225 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E5AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C792078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E44C20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:21:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kwOuGr/+"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Yc33ukwU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgGHNVP (ORCPT
+        id S1729518AbgGHNV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:21:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbgGHNVO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:21:14 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF2C4C061A0B;
-        Wed,  8 Jul 2020 06:21:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=+RqR1kYT0E+mIwb2z3JHix29G2Tjj0bnkWavGGFqh3k=; b=kwOuGr/+r/Cs6PkNR64wAQevbo
-        9QK6VPYIdyKLt3Fus84356sLfucme8iCE/fu6eVrl2bWzIUyfVI5tfYwV1UanXw8PHSxl47KyGZ78
-        QpCwAKRR7gOwGjBHe77cRWfATtKBJ28l+xfNCKRzObd3Qomw0Ci9EdDMFiBbBZw+UrjH8Vs2KBw7I
-        vPXygGRTkKQ1D+Xrnm9m4d04i0Y70SVVH3dF+QQQc0l/E/Vucg+psM6bF5gK+r3Ypl61zVFFV5tKU
-        QmsLrPVsWRdYqHk2Axf1T2M/+5W68WLrHxsZzi3jZ4XNc2PEzoxH7Y05w1amXllv3xfVNj4sApJnc
-        nGPBPHEQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtA0b-0006b0-EQ; Wed, 08 Jul 2020 13:21:09 +0000
-Subject: Re: [PATCH -next] Documentation/vm: fix tables in
- arch_pgtable_helpers
-To:     Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-References: <02ee60d0-e836-2237-4881-5c57ccac5551@infradead.org>
- <20200708064332.GD128651@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7d43f116-51f0-8cab-f8ee-ea9387039d1d@infradead.org>
-Date:   Wed, 8 Jul 2020 06:21:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 8 Jul 2020 09:21:28 -0400
+Received: from vps.xff.cz ([195.181.215.36]:51474 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729147AbgGHNV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:21:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1594214485; bh=U0WR2nFkpJx01kvx97N0svEG1PoUvQLse/Iz6UEIF6o=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=Yc33ukwUgxe3p/96KYESmRhcx5gU501uy7YW/oh+rAfvjilZRBXvapbETWR/8CTfu
+         qWlEM2h9+rYSdSCB9HuS5hck5XGd/fbmPrC6/YWALp6YS7uS3NSJPUqkmKi/Qz29vH
+         MyM/a3yOixCKCaHURD2NS2gr5gGI2NmflX2frvXE=
+Date:   Wed, 8 Jul 2020 15:21:24 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
+Message-ID: <20200708132124.3b3iaavms43o622g@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Frank Lee <tiny.windzz@gmail.com>, linux-sunxi@googlegroups.com,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200708105527.868987-1-megous@megous.com>
+ <CAEExFWvR4QnAQsXBnxk3V776P+YVJzs4PU-HWJ7dfo4B6cdtkg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200708064332.GD128651@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEExFWvR4QnAQsXBnxk3V776P+YVJzs4PU-HWJ7dfo4B6cdtkg@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 11:43 PM, Mike Rapoport wrote:
-> Hi Randy,
+On Wed, Jul 08, 2020 at 07:55:40PM +0800, Frank Lee wrote:
+> HI Ondrej,
+> On Wed, Jul 8, 2020 at 6:55 PM Ondrej Jirman <megous@megous.com> wrote:
+> >
+> > I noticed several mobile Linux distributions failing to enable the
+> > thermal regulation correctly, because the kernel is silent
+> > when thermal driver fails to probe. Add enough error reporting
+> > to debug issues and warn users in case thermal sensor is failing
+> > to probe.
+> >
+> > Failing to notify users means, that SoC can easily overheat under
+> > load.
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++-------
+> >  1 file changed, 43 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> > index 74d73be16496..9065e79ae743 100644
+> > --- a/drivers/thermal/sun8i_thermal.c
+> > +++ b/drivers/thermal/sun8i_thermal.c
+> > @@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct ths_device *tmdev)
+> >
+> >         calcell = devm_nvmem_cell_get(dev, "calibration");
+> >         if (IS_ERR(calcell)) {
+> > +               dev_err(dev, "Failed to get calibration nvmem cell (%ld)\n",
+> > +                       PTR_ERR(calcell));
+> > +
+> >                 if (PTR_ERR(calcell) == -EPROBE_DEFER)
+> >                         return -EPROBE_DEFER;
+> > +
+> >                 /*
+> >                  * Even if the external calibration data stored in sid is
+> >                  * not accessible, the THS hardware can still work, although
+> > @@ -308,6 +312,8 @@ static int sun8i_ths_calibrate(struct ths_device *tmdev)
+> >         caldata = nvmem_cell_read(calcell, &callen);
+> >         if (IS_ERR(caldata)) {
+> >                 ret = PTR_ERR(caldata);
+> > +               dev_err(dev, "Failed to read calibration data (%d)\n",
+> > +                       ret);
+> >                 goto out;
+> >         }
+> >
+> > @@ -330,23 +336,35 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+> >                 return PTR_ERR(base);
+> >
+> >         tmdev->regmap = devm_regmap_init_mmio(dev, base, &config);
+> > -       if (IS_ERR(tmdev->regmap))
+> > +       if (IS_ERR(tmdev->regmap)) {
+> > +               dev_err(dev, "Failed to init regmap (%ld)\n",
+> > +                       PTR_ERR(tmdev->regmap));
+> >                 return PTR_ERR(tmdev->regmap);
+> > +       }
+> >
+> >         if (tmdev->chip->has_bus_clk_reset) {
+> >                 tmdev->reset = devm_reset_control_get(dev, NULL);
+> > -               if (IS_ERR(tmdev->reset))
+> > +               if (IS_ERR(tmdev->reset)) {
+> > +                       dev_err(dev, "Failed to get reset (%ld)\n",
+> > +                               PTR_ERR(tmdev->reset));
+> >                         return PTR_ERR(tmdev->reset);
+> > +               }
+> >
+> >                 tmdev->bus_clk = devm_clk_get(&pdev->dev, "bus");
+> > -               if (IS_ERR(tmdev->bus_clk))
+> > +               if (IS_ERR(tmdev->bus_clk)) {
+> > +                       dev_err(dev, "Failed to get bus clock (%ld)\n",
+> > +                               PTR_ERR(tmdev->bus_clk));
+> >                         return PTR_ERR(tmdev->bus_clk);
+> > +               }
+> >         }
+> >
+> >         if (tmdev->chip->has_mod_clk) {
+> >                 tmdev->mod_clk = devm_clk_get(&pdev->dev, "mod");
+> > -               if (IS_ERR(tmdev->mod_clk))
+> > +               if (IS_ERR(tmdev->mod_clk)) {
+> > +                       dev_err(dev, "Failed to get mod clock (%ld)\n",
+> > +                               PTR_ERR(tmdev->mod_clk));
+> >                         return PTR_ERR(tmdev->mod_clk);
+> > +               }
+> >         }
+> >
+> >         ret = reset_control_deassert(tmdev->reset);
+> > @@ -471,8 +489,12 @@ static int sun8i_ths_register(struct ths_device *tmdev)
+> >                                                              i,
+> >                                                              &tmdev->sensor[i],
+> >                                                              &ths_ops);
+> > -               if (IS_ERR(tmdev->sensor[i].tzd))
+> > +               if (IS_ERR(tmdev->sensor[i].tzd)) {
+> > +                       dev_err(tmdev->dev,
+> > +                               "Failed to register sensor %d (%ld)\n",
+> > +                               i, PTR_ERR(tmdev->sensor[i].tzd));
+> >                         return PTR_ERR(tmdev->sensor[i].tzd);
+> > +               }
+> >
+> >                 if (devm_thermal_add_hwmon_sysfs(tmdev->sensor[i].tzd))
+> >                         dev_warn(tmdev->dev,
+> > @@ -501,19 +523,21 @@ static int sun8i_ths_probe(struct platform_device *pdev)
+> >
+> >         ret = sun8i_ths_resource_init(tmdev);
+> >         if (ret)
+> > -               return ret;
+> > +               goto err_out;
+> >
+> >         irq = platform_get_irq(pdev, 0);
+> > -       if (irq < 0)
+> > -               return irq;
+> > +       if (irq < 0) {
+> > +               ret = irq;
+> > +               goto err_out;
+> > +       }
+> >
+> >         ret = tmdev->chip->init(tmdev);
+> >         if (ret)
+> > -               return ret;
+> > +               goto err_out;
+> >
+> >         ret = sun8i_ths_register(tmdev);
+> >         if (ret)
+> > -               return ret;
+> > +               goto err_out;
+> >
+> >         /*
+> >          * Avoid entering the interrupt handler, the thermal device is not
+> > @@ -523,10 +547,17 @@ static int sun8i_ths_probe(struct platform_device *pdev)
+> >         ret = devm_request_threaded_irq(dev, irq, NULL,
+> >                                         sun8i_irq_thread,
+> >                                         IRQF_ONESHOT, "ths", tmdev);
+> > -       if (ret)
+> > -               return ret;
+> > +       if (ret) {
+> > +               dev_err(dev, "Failed to request irq (%d)\n", ret);
+> > +               goto err_out;
+> > +       }
+> >
+> > +       dev_info(dev, "Thermal sensor ready!\n");
+> >         return 0;
+> > +
+> > +err_out:
+> > +       dev_err(dev, "Failed to probe thermal sensor (%d)\n", ret);
 > 
-> On Tue, Jul 07, 2020 at 06:07:40PM -0700, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Make the tables be presented as tables in the generated output files
->> (the line drawing did not present well).
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Jonathan Corbet <corbet@lwn.net>
->> Cc: linux-doc@vger.kernel.org
->> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
->> Cc: Mike Rapoport <rppt@kernel.org>
->> Cc: linux-arch@vger.kernel.org
->> Cc: linux-mm@kvack.org
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> ---
->>  Documentation/vm/arch_pgtable_helpers.rst |  333 ++++++--------------
->>  1 file changed, 116 insertions(+), 217 deletions(-)
->>
->> --- linux-next-20200707.orig/Documentation/vm/arch_pgtable_helpers.rst
->> +++ linux-next-20200707/Documentation/vm/arch_pgtable_helpers.rst
->> @@ -17,242 +17,141 @@ test need to be in sync.
->>  PTE Page Table Helpers
->>  ======================
->>  
->> ---------------------------------------------------------------------------------
->> -| pte_same                  | Tests whether both PTE entries are the same      |
->> ---------------------------------------------------------------------------------
+> When the driver fails, there will be this print. Isn't it superfluous
+> for you to add these？
 > 
-> According to ReST docs [1] we can use +---+---+ as row delimiter and
-> than we can keep | as column delimiter.
-> 
-> @Andrew, can you please fold the below patch into Anshuman's original
-> patch?
-> 
-> [1] https://docutils.sourceforge.io/docs/user/rst/quickref.html#tables
+> sun8i-thermal: probe of 5070400.thermal-sensor failed with error
 
-Works for me. Thanks.
+There's no such failure message in the case I investigated, which is
+EPROBE_DEFER failure waiting for nvmem driver that never loads,
+because it's not configured by the user to build.
 
--- 
-~Randy
+regards,
+	o.
 
+> 
+> Yangtao
