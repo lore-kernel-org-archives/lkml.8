@@ -2,212 +2,177 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB5C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A78C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 792C820774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D3F20774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:30:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ob7wYewf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OMVZOszT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbgGHF3k (ORCPT
+        id S1729469AbgGHFae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:29:40 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:33115 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725848AbgGHF3j (ORCPT
+        Wed, 8 Jul 2020 01:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgGHFae (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:29:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594186178; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=H1KsZiKBnQeUBGPkmSKwKU0/CScTk+WjfjB+xahfqhQ=; b=Ob7wYewfwrN2/T/k3Pj9lZkmW4zAETVZgyPwFXkFIF/ChLtMqR/P3THAS2hl22p1uEAXhmdb
- ASyyfEuFvW+w3013QNw6RFxO8gdNvOR6EhWyS2//ZlyvcJPudW607vEJ6F4OpX9yx0oGVEbL
- /HEh74OVho0OGKqCOpuT9gdYR08=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f0559c155886724ff59e799 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 05:29:37
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 81348C433C8; Wed,  8 Jul 2020 05:29:37 +0000 (UTC)
-Received: from [192.168.29.129] (unknown [49.36.73.132])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94AA5C433C6;
-        Wed,  8 Jul 2020 05:29:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94AA5C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v2] pinctrl: qcom: sc7180: Make gpio28 non wakeup capable
- for google,lazor
-To:     Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>
-References: <1593762506-32680-1-git-send-email-rnayak@codeaurora.org>
- <CAD=FV=WyhJ6g0DZS=ysT-AyXJoiRX=UFE9fXY2NEHfuUHYUXCQ@mail.gmail.com>
- <20200706203805.GS388985@builder.lan>
- <c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org>
- <CAD=FV=Xs9Z37hv=CPgLEALoSoX=Uyir0s=ker=YKecA+Lhy1Qg@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <56fb02df-372d-935a-cc39-c13289d65c0d@codeaurora.org>
-Date:   Wed, 8 Jul 2020 10:59:30 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 8 Jul 2020 01:30:34 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1106C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 22:30:33 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q4so16956171lji.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 22:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pjfcbpQ6qlNIl6a+q1As3kDpc6/H3HtR3c0f6GQ/eQM=;
+        b=OMVZOszTAYenxDFWn64N4YbyYKC5bxDxhFmh+3jtYRF6riJrPuYqpkuGED2BmvUJju
+         FtuzjgxM8gxmjAfLpjsSaVPU35ol0vYIhYrI2C8nMeR/EzQ6EG+Dreu9tAyzRyl1OsXD
+         uEb/mEvjpZvzxoNqTdHM9+4TZ4QS47XUyyb+GhFB/HGZlbm54xm7N4UQLgEUJOebd7ct
+         MJgMuydVn3ObeKuATJ0i1kRSAhbve4SAoTenvQBqmayF90ugNvIYOlYIRgoG1hnVw8WN
+         a4kPDwRJR0Qnn1eoZYRVa6T258oqRoL0bmQKumDIo3/Vw9qlxtM6J1PltqJHXc0x9Bi9
+         aAnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pjfcbpQ6qlNIl6a+q1As3kDpc6/H3HtR3c0f6GQ/eQM=;
+        b=pUwr1cyufSCMKr+vuSiWmcXRTLiryEI1sJZJgqQHFdjjeUwC7tyO4g/wAIXDooFV9R
+         O7K1dF40g5whE2rTbl5bjyVxN5xiXXUJ904ZJFGUdpPncN3zN1c8yXAze5FoIMTZ6/fa
+         CN+n0LCFWD0Eq3DZjf7vTt13Llx8osa6RcTxBCbLeIXUFn/8kZG4GVlEfp5uQnOCwkDb
+         8cNASQxxVNR488WAoAdcXI8ZRf1UB4yEHoSdv3YpBfkGXg2ymprNJsuZwsiSpArnnjOG
+         3WQZJXnF50OgZ2ZVA19yq79pMFXegzK5o8BPZOkakG9nHwHwuxVnSem1FHCMwfxmd2C3
+         vAxA==
+X-Gm-Message-State: AOAM532ncRKrLp/6DlRYX0qFDUjiTbdlw4P3hDeZDO0iOq8phiuxiZMD
+        23Xkm/SqR0SBHF4TVVGmogYTxZEGJvdkM0E2kLYKXJhUydgeJw==
+X-Google-Smtp-Source: ABdhPJyv6wNkut4gvmrXhE0h3DLfRwAd9I9chL2cKFjhP8p/GyGn3zAdVRT2swcYKt1Zh5eXtKURQIfTh3d3l7b5o0w=
+X-Received: by 2002:a2e:9857:: with SMTP id e23mr29696616ljj.411.1594186232162;
+ Tue, 07 Jul 2020 22:30:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=Xs9Z37hv=CPgLEALoSoX=Uyir0s=ker=YKecA+Lhy1Qg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+References: <20200707145752.417212219@linuxfoundation.org>
+In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 8 Jul 2020 11:00:20 +0530
+Message-ID: <CA+G9fYt03DDfX_p9D2SwGi+kzauDAbSWz+EpGVS7Sy680OrCaQ@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/65] 5.4.51-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 7 Jul 2020 at 20:49, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.51 release.
+> There are 65 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.51-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-On 7/8/2020 4:33 AM, Doug Anderson wrote:
-> Hi,
->
-> On Mon, Jul 6, 2020 at 9:52 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->>
->> []..
->>
->>>>> @@ -1151,6 +1168,10 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
->>>>>
->>>>>    static int sc7180_pinctrl_probe(struct platform_device *pdev)
->>>>>    {
->>>>> +       if (of_machine_is_compatible("google,lazor")) {
->>>>> +               sc7180_pinctrl.wakeirq_map = sc7180_lazor_pdc_map;
->>>>> +               sc7180_pinctrl.nwakeirq_map = ARRAY_SIZE(sc7180_lazor_pdc_map);
->>>>> +       }
->>>> As much as I want patches landed and things working, the above just
->>>> doesn't feel like a viable solution.  I guess it could work as a short
->>>> term hack but it's going to become untenable pretty quickly.
->>> I second that.
->>>
->>>> As we
->>>> have more variants of this we're going to have to just keep piling
->>>> more machines in here, right?  ...this is also already broken for us
->>>> because not all boards will have the "google,lazor" compatible.  From
->>>> the current Chrome OS here are the compatibles for various revs/SKUs
->>>>
->>>> compatible = "google,lazor-rev0", "qcom,sc7180";
->>>> compatible = "google,lazor-rev0-sku0", "qcom,sc7180";
->>>> compatible = "google,lazor", "qcom,sc7180";
->>>> compatible = "google,lazor-sku0", "qcom,sc7180";
->>>> compatible = "google,lazor-rev2", "qcom,sc7180";
->>>>
->>>> ...so of the 5 boards you'll only match one of them.
->>>>
->>>>
->>>> Maybe I'm jumping into a situation again where I'm ignorant since I
->>>> haven't followed all the prior conversation, but is it really that
->>>> hard to just add dual edge support to the PDC irqchip driver?  ...or
->> FWIK, this is really a PDC hardware issue (with the specific IP rev that exists
->> on sc7180) so working it around in SW could get ugly.
-> Ugh.  I guess it's ugly because the workaround would need to be in the
-> PDC driver but to properly do the workaround you need to be able to
-> read the state of the pin from the PDC driver?  ...and I guess you
-> can't do that with the PDC register space so you'd either need to
-> violate a layer or 3 of abstraction and snarf into the GPIO register
-> space from the PDC driver or you'd have to provide some sort of API
-> access from the PDC back down to the GPIO driver?
->
-> --
->
-> Actually, though, I'm still not sure why this would need to be in the
-> PDC driver.  Sure, you can't just magically re-use the existing
-> dual-edge emulation in pinctrl-msm.c, but you can add some new
-> dual-edge emulation for when your parent handles your interrupts,
-> can't you?  As per usually, I'm talking out of my rear end, but I
-> sorta imagine:
->
-> 1. At the head of msm_gpio_irq_set_type() if you detect that
-> "skip_wake_irqs" is set and you're on an SoC with this hardware errata
-> then you do a loop much like the one in
-> msm_gpio_update_dual_edge_pos() except that instead of changing the
-> polarity with msm_writel_intr_cfg() you change the polarity with
-> "irq_chip_set_type_parent()".
->
-> 2. At the head of msm_gpio_irq_ack() you make the same function call
-> if "skip_wake_irqs" is set and you're on an SoC with this hardware
-> errata.
->
-> It doesn't feel all that ugly to me, assuming I'm understanding it
-> correctly.  ...or maybe you can tell me why it'd be harder than that?
->
->
->>>> maybe it's just easier to change the pinctrl driver to emulate dual
->>>> edge itself and that can work around the problem in the PDC?  There
->>>> seem to be a few samples you could copy from:
->>>>
->>>> $ git log --oneline --no-merges --grep=emulate drivers/pinctrl/
->>>> 3221f40b7631 pinctrl: mediatek: emulate GPIO interrupt on both-edges
->>>> 5a92750133ff pinctrl: rockchip: emulate both edge triggered interrupts
->>>>
->>> pinctrl-msm already supports emulating dual edge, but my understanding
->>> was that the problem lies in that somehow this emulation would have to
->>> be tied to or affect the PDC driver?
->> yes, thats correct, pinctrl-msm already supports it, the problem lies
->> in the fact that PDC does not. This patch, infact was trying to fix the
->> issue by removing all PDC involvement for gpio28 and making pinctrl-msm
->> in charge of it.
-> If we're going to try to do this, I think we're stuck with one of these:
->
-> 1. A really really long list that we keep jamming more boards into.
->
-> 2. Add an entry at the top-level device tree compatible to all
-> affected boards _just_ for this purpose.  Seems ugly since we don't
-> need it for any other reasons.
->
-> 3. Add some sort of property to the pinctrl node on these boards.
-> Seems ugly since conceivably this _could_ be worked around in
-> software.
->
-> I don't really like any of those options, so I'm really hoping we can
-> find out how to get a workaround in...
-Hi Doug,
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-The client driver here never uses/needs both the edges at a given time.
-Another option (clean & correct IMO) is to update the driver to request 
-proper irq type its expecting.
+Summary
+------------------------------------------------------------------------
 
-Lets take SD card detect GPIO for example, which uses dual edge interrupt.
-one edge (rising type) can be used as a card insert detect interrupt and 
-another edge (falling type) may be used for card removal detect.
+kernel: 5.4.51-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 47d410b54275a08dfc16b90353866ac1f783c0aa
+git describe: v5.4.49-240-g47d410b54275
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.49-240-g47d410b54275
 
-The sequence of operations, IMO should be..
-1. Driver request a rising type irq to start with (the one that detects 
-card insertion)
-2. once card insertion irq comes in, the driver should change the type 
-to falling which is expected (to detect the card removal)
-3. once card removal irq comes in, it can change type to rising edge (to 
-detect another insertion)
-4. above steps (2,3) continues
+No regressions (compared to build v5.4.49)
 
-if above sequence is followed from drivers using dual edge IRQ, we don't 
-need any workaround.
+No fixes (compared to build v5.4.49)
 
-Thanks,
-Maulik
->
-> -Doug
+Ran 35614 total tests in the following environments and test suites.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
 
+Test Suites
+-----------
+* install-android-platform-tools-r2800
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-hugetlb-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-containers-tests
+* ltp-controllers-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-open-posix-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
