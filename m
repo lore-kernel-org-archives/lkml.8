@@ -2,276 +2,117 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F52C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B67C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B58BF206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF5C206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:46:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=moxa.com header.i=@moxa.com header.b="PMTwEesk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgGHJpS convert rfc822-to-8bit (ORCPT
+        id S1728414AbgGHJqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:45:18 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:41400 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgGHJpS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:45:18 -0400
-Received: by mail-yb1-f194.google.com with SMTP id a15so7145332ybs.8;
-        Wed, 08 Jul 2020 02:45:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Z+Hv0F2P4n1XVQheQtChcgxf0BXLLqGWuYKeMgWau8Q=;
-        b=VsL9TocYv82BCKJIesnEwlQYhc8mop/AjwUKGxG3rlMcj/TKP5+NmB/9ZC1garq3IN
-         N8jwUmjW2WRaXFt+9YSErT7PZYHgjhlN9t03DYRRgS3bI+IXVIij24TUvNqgZepC2tl8
-         iWnDV07uBOh3pGI5gDPxhciXi3zWoezvrcvUOXbTwKwrBsIRBep1knHOynUHqYIaOFXn
-         X2Q2Kt6rUHZgXhRaTyFVhNmvRW6g7VVz4gvwktl9RFpYMMZKm95wmxyAaCVdZ1oJglfC
-         bo058XQ3jLVy+ZY6dyyuapzh5rfMCDHNQ5bU6MRLvG63skIpuUn/V60mxVqoz7Tb1Kw/
-         mN2g==
-X-Gm-Message-State: AOAM532HV6x1dt6V7WFRsaLJdkHAsTCS/A1i6ezEet4fLLp/FILp20dV
-        Ck5F1RNgEJJXH2jbV1n8BfBUFaCixpQ5b4J5BMc=
-X-Google-Smtp-Source: ABdhPJzOwfIqr+4z/7B9QDoGIw0IEy7189/mZtWkbnaPZC9pAhoY64cG82Pw+MExWaL250djHHLKXcKLhtQsvCLXlkg=
-X-Received: by 2002:a25:4603:: with SMTP id t3mr85348810yba.471.1594201516575;
- Wed, 08 Jul 2020 02:45:16 -0700 (PDT)
+        Wed, 8 Jul 2020 05:46:01 -0400
+Received: from mail-eopbgr1310073.outbound.protection.outlook.com ([40.107.131.73]:38196
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728041AbgGHJqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 05:46:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A1ozSssE5jHsfCRSSARqi/XXCe8dsPVXepGEtnNpeyFM2MwK2H6hxujIfuQms7Vpi9LP+MtRv5yYTKavjLaweWST1Coq/smkkPD+1oBg6B1jZ234iFp66GQfHSYn9Ccu4z8NtoE1ywxmkFKUVFtD2FSDaIFO3x7JlQ+nRn+G9cCZ5QRu2xXgVhN8pOz7c0ILZU4FxwOhrbdxYh19q2r9pPwckVkq61UTleyj8THBqbz54d96K2OnFdKLkdgFrpX6hDUdCr0SpRL5ZxNOiFHHTntAeNrWZCa1c3q2NyMwfErGkTjRgg3pOOFqgsY+FseGia+A3leNWj8VFkk/YwWKeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xe7DPebEyz9uzBOgAvDp5r3SLssuuMtuJLUR5qSm6sw=;
+ b=PF0G3RIe7bShiX0xmdmMPYkrtLB3fbYghCTJuAO1KiXsGsEmenoMQ750kOwaRsjJ7YdwIDOycr5jSUSauB7m9ajtwMpV/H8sYGynduBiwFVT3LL6woInZUnASBPRvrY/6o/kBMNen70yBGV9yBtOokUqbpM+DbMgGhrXxN7WDQ3/kalKjth+8NhzMniKvCaQOGWM+Bzv9c7MfLFuSWNH7NHlbxDiQhqOan5hhbPpu9/UE4cQqOanm3/ACPO89oj5yVRSeRUP4Zuqb8fwc5EEQHNQk4+yb7j+co1Umd4Cd0pNvi0arhg0GQ0z3bE8OK3g1JxtiVDPPjiu3fXDuK+Few==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=moxa.com; dmarc=pass action=none header.from=moxa.com;
+ dkim=pass header.d=moxa.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=moxa.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xe7DPebEyz9uzBOgAvDp5r3SLssuuMtuJLUR5qSm6sw=;
+ b=PMTwEesk/CIf98z6Wn7Ouc1p3CYmwKvZmWo9P7T04v1ZfZ4pqAd4WFZu5dzTJZ/cgcRR+hUWe//w5vwrNtKH8444CeuC0zqYrpRgzfgdOJvRAGkitrDZX9c+1tUk1IlSYCSoKtWXioPiyDQjW6icvxoRvZ1eWAmh0U2OEFoOjgU=
+Received: from HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ (2603:1096:202:22::12) by HKAPR01MB3570.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:c6::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Wed, 8 Jul
+ 2020 09:45:56 +0000
+Received: from HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ ([fe80::dce:9650:6c58:8b77]) by HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ ([fe80::dce:9650:6c58:8b77%4]) with mapi id 15.20.3153.030; Wed, 8 Jul 2020
+ 09:45:56 +0000
+From:   =?utf-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
+        <JohnsonCH.Chen@moxa.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] ARM: dts: am335x: add support for Moxa UC-8100A-ME
+ open platform
+Thread-Topic: [PATCH 2/2] ARM: dts: am335x: add support for Moxa UC-8100A-ME
+ open platform
+Thread-Index: AQHWVIgIYQwC0/nPRUKB94S+FbD0mqj9bd7A
+Date:   Wed, 8 Jul 2020 09:45:56 +0000
+Message-ID: <HK2PR01MB32816EAA7257124DD4A4CB6EFA670@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+References: <HK2PR01MB328129CEA1A9294A8715CE28FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+ <20200707175655.GA5849@atomide.com>
+In-Reply-To: <20200707175655.GA5849@atomide.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: atomide.com; dkim=none (message not signed)
+ header.d=none;atomide.com; dmarc=none action=none header.from=moxa.com;
+x-originating-ip: [123.51.145.16]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 067b3221-7153-4a61-c883-08d82323b65a
+x-ms-traffictypediagnostic: HKAPR01MB3570:
+x-microsoft-antispam-prvs: <HKAPR01MB357032EDB9291EB57C5C61A0FA670@HKAPR01MB3570.apcprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 04583CED1A
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Wm8t3pT+MdQmF4VpcLdcZYXLkxXf9RmrwvNrExrnP2E/Lzkopoj6luUwm3hHropvIU0yz/F3aF8ge6LzQszgl8hCelVMCVpWjVE0WY/b1yGwv3DHycjPdZjHAGItHOJmmN9Xc6upsoK6YQJQTXxpdyTbhb655knfOuIEoQAY2z0p0UziD4SkCq+ilWYI4b5piAe8VLYA7cmWTTjgJ8FrdkEtBeZ0Xszy6Kzic7U1P/fCSlYXVLtvgA3UIM0ThELwrOOVImFUcdEe1OamYqvgRf2etYRIyRCzIc2e/tFVIG2+Slq43h2wXVMKmA49Bdvd2amKrZIYlCRvpSS6sRouFQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK2PR01MB3281.apcprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39850400004)(346002)(366004)(376002)(4744005)(7696005)(26005)(52536014)(186003)(85182001)(478600001)(8936002)(8676002)(2906002)(4326008)(6916009)(55016002)(33656002)(316002)(54906003)(6506007)(9686003)(76116006)(71200400001)(66476007)(86362001)(66446008)(66556008)(64756008)(5660300002)(66946007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: p3eWaLdwgTGu8PV00gTbuuOMzAU7TWa2sit7VgBxvRVAagKyVp3vKUXowqz4UKkP/MdvkF7RANM9ZBw4NugHT3eyFvu7TnNZKl9mM7KIk6lGsh67oj7jSnEyO4LoD80H88eiDxSLGWXNfanzrcsYxJMD6aihLC+eSEyX/PUfR83TOzzJ9RhI3AZc+JXEEPK32R+w9vsT624lVhzGjXlV/bsGCZ9+cI86wn+PGMVr/NbR06vtZhtw95Dry6d1MziRycM8/g4dvUywxnbHBk6kF4EabBjM+3PRj37NzINfSkQR2SIn1MpoBYWa1jVPc/81TNBCITSEpitrK5oZeGYO1CnynWnpZXp3B2BDkBAyjpTy41vv227//H0jioxxccNG6Xn6pJUSHlRlQ7xLilYMnkTJa7rOKfXP2WysiixGFYvS2oKEFtJO3azjmYwItGLj/Eo1frweaKoheZd/sw86V0C4zZho6s9ay3ZsGfisnkY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200707150748.14651-1-kernel@esmil.dk> <CAJ+HfNhYPQByOPu+07v5vstADZPtqakuMeK79_1etJjbV1vBLw@mail.gmail.com>
-In-Reply-To: <CAJ+HfNhYPQByOPu+07v5vstADZPtqakuMeK79_1etJjbV1vBLw@mail.gmail.com>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Wed, 8 Jul 2020 11:45:05 +0200
-Message-ID: <CANBLGcxXmZbK7eoa_M5U0vTOFFQQqiQPJOcXK70y0HdWPC+CqQ@mail.gmail.com>
-Subject: Re: [PATCH v1] riscv: Add jump-label implementation
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-OriginatorOrg: moxa.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 067b3221-7153-4a61-c883-08d82323b65a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2020 09:45:56.1766
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5571c7d4-286b-47f6-9dd5-0aa688773c8e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g3AVsQ/9Dxh8VHP/2UXq1bUwC4bpeiFUhp3Wx4rz8Pee1+f4c2IaD0/NYt9oX3SC97bkSdSq0zUJ/1861Th84w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HKAPR01MB3570
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020 at 09:42, Björn Töpel <bjorn.topel@gmail.com> wrote:
->
-> On Tue, 7 Jul 2020 at 17:08, Emil Renner Berthing <kernel@esmil.dk> wrote:
-> >
-> > Add jump-label implementation based on the ARM64 version.
-> >
-> > Tested on the HiFive Unleashed board.
-> >
->
-> I took your patch for a spin on qemu. The boot selftest
-> (CONFIG_STATIC_KEYS_SELFTEST=y) passes, but the module test
-> (CONFIG_TEST_STATIC_KEYS=m) does not.
->
-> When I run the in "test tools/testing/selftests/static_keys" (this
-> simply loads the test_static_key_base.ko and test_static_keys.ko
-> modules) I get:
->
-> [  134.090464] test_static_keys: Unknown relocation type 36
->
-> 36 is the relocation type R_RISCV_ADD64, which is not handled in
-> arch/riscv/kernel/module.c.
->
-> If you dump the relocation entries for test_static_keys.ko
-> (riscv64-linux-gnu-objdump -r test_static_keys.ko), you'll see that:
->
-> RELOCATION RECORDS FOR [__jump_table]:
-> OFFSET           TYPE              VALUE
-> 0000000000000000 R_RISCV_ADD32     .L1^B1
-> 0000000000000000 R_RISCV_SUB32     .L0
-> 0000000000000004 R_RISCV_ADD32     .L3
-> 0000000000000004 R_RISCV_SUB32     .L0
-> 0000000000000008 R_RISCV_ADD64     old_true_key+0x0000000000000001
-> 0000000000000008 R_RISCV_SUB64     .L0
-> ...
->
-> It would be great if you could add a patch for that as well (separate,
-> same series). R_RISCV_ADD64 *and* R_RISCV_SUB64 are currently
-> unhandled by module.c.
-
-On it! I'll also add the CONFIG_JUMP_LABEL to defconfig to the next version.
->
-> Cheers,
-> Björn
->
-> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> > ---
-> >
-> > Changes since RFC:
-> > - Use RISCV_PTR and RISCV_LGPTR macros to match struct jump_table
-> >   also in 32bit kernels.
-> > - Remove unneeded branch ? 1 : 0, thanks Björn
-> > - Fix \n\n instead of \n\t mistake
-> >
-> >  .../core/jump-labels/arch-support.txt         |  2 +-
-> >  arch/riscv/Kconfig                            |  2 +
-> >  arch/riscv/include/asm/jump_label.h           | 59 +++++++++++++++++++
-> >  arch/riscv/kernel/Makefile                    |  2 +
-> >  arch/riscv/kernel/jump_label.c                | 44 ++++++++++++++
-> >  5 files changed, 108 insertions(+), 1 deletion(-)
-> >  create mode 100644 arch/riscv/include/asm/jump_label.h
-> >  create mode 100644 arch/riscv/kernel/jump_label.c
-> >
-> > diff --git a/Documentation/features/core/jump-labels/arch-support.txt b/Documentation/features/core/jump-labels/arch-support.txt
-> > index 632a1c7aefa2..760243d18ed7 100644
-> > --- a/Documentation/features/core/jump-labels/arch-support.txt
-> > +++ b/Documentation/features/core/jump-labels/arch-support.txt
-> > @@ -23,7 +23,7 @@
-> >      |    openrisc: | TODO |
-> >      |      parisc: |  ok  |
-> >      |     powerpc: |  ok  |
-> > -    |       riscv: | TODO |
-> > +    |       riscv: |  ok  |
-> >      |        s390: |  ok  |
-> >      |          sh: | TODO |
-> >      |       sparc: |  ok  |
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index fd639937e251..d2f5c53fdc19 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -46,6 +46,8 @@ config RISCV
-> >         select GENERIC_TIME_VSYSCALL if MMU && 64BIT
-> >         select HANDLE_DOMAIN_IRQ
-> >         select HAVE_ARCH_AUDITSYSCALL
-> > +       select HAVE_ARCH_JUMP_LABEL
-> > +       select HAVE_ARCH_JUMP_LABEL_RELATIVE
-> >         select HAVE_ARCH_KASAN if MMU && 64BIT
-> >         select HAVE_ARCH_KGDB
-> >         select HAVE_ARCH_KGDB_QXFER_PKT
-> > diff --git a/arch/riscv/include/asm/jump_label.h b/arch/riscv/include/asm/jump_label.h
-> > new file mode 100644
-> > index 000000000000..d5fb342bfccf
-> > --- /dev/null
-> > +++ b/arch/riscv/include/asm/jump_label.h
-> > @@ -0,0 +1,59 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright (C) 2020 Emil Renner Berthing
-> > + *
-> > + * Based on arch/arm64/include/asm/jump_label.h
-> > + */
-> > +#ifndef __ASM_JUMP_LABEL_H
-> > +#define __ASM_JUMP_LABEL_H
-> > +
-> > +#ifndef __ASSEMBLY__
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +#define JUMP_LABEL_NOP_SIZE 4
-> > +
-> > +static __always_inline bool arch_static_branch(struct static_key *key,
-> > +                                              bool branch)
-> > +{
-> > +       asm_volatile_goto(
-> > +               "       .option push                            \n\t"
-> > +               "       .option norelax                         \n\t"
-> > +               "       .option norvc                           \n\t"
-> > +               "1:     nop                                     \n\t"
-> > +               "       .option pop                             \n\t"
-> > +               "       .pushsection    __jump_table, \"aw\"    \n\t"
-> > +               "       .align          " RISCV_LGPTR "         \n\t"
-> > +               "       .long           1b - ., %l[label] - .   \n\t"
-> > +               "       " RISCV_PTR "   %0 - .                  \n\t"
-> > +               "       .popsection                             \n\t"
-> > +               :  :  "i"(&((char *)key)[branch]) :  : label);
-> > +
-> > +       return false;
-> > +label:
-> > +       return true;
-> > +}
-> > +
-> > +static __always_inline bool arch_static_branch_jump(struct static_key *key,
-> > +                                                   bool branch)
-> > +{
-> > +       asm_volatile_goto(
-> > +               "       .option push                            \n\t"
-> > +               "       .option norelax                         \n\t"
-> > +               "       .option norvc                           \n\t"
-> > +               "1:     jal             zero, %l[label]         \n\t"
-> > +               "       .option pop                             \n\t"
-> > +               "       .pushsection    __jump_table, \"aw\"    \n\t"
-> > +               "       .align          " RISCV_LGPTR "         \n\t"
-> > +               "       .long           1b - ., %l[label] - .   \n\t"
-> > +               "       " RISCV_PTR "   %0 - .                  \n\t"
-> > +               "       .popsection                             \n\t"
-> > +               :  :  "i"(&((char *)key)[branch]) :  : label);
-> > +
-> > +       return false;
-> > +label:
-> > +       return true;
-> > +}
-> > +
-> > +#endif  /* __ASSEMBLY__ */
-> > +#endif /* __ASM_JUMP_LABEL_H */
-> > diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> > index b355cf485671..a5287ab9f7f2 100644
-> > --- a/arch/riscv/kernel/Makefile
-> > +++ b/arch/riscv/kernel/Makefile
-> > @@ -53,4 +53,6 @@ endif
-> >  obj-$(CONFIG_HOTPLUG_CPU)      += cpu-hotplug.o
-> >  obj-$(CONFIG_KGDB)             += kgdb.o
-> >
-> > +obj-$(CONFIG_JUMP_LABEL)       += jump_label.o
-> > +
-> >  clean:
-> > diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_label.c
-> > new file mode 100644
-> > index 000000000000..55b2d742efe1
-> > --- /dev/null
-> > +++ b/arch/riscv/kernel/jump_label.c
-> > @@ -0,0 +1,44 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (C) 2020 Emil Renner Berthing
-> > + *
-> > + * Based on arch/arm64/kernel/jump_label.c
-> > + */
-> > +#include <linux/kernel.h>
-> > +#include <linux/jump_label.h>
-> > +#include <asm/patch.h>
-> > +
-> > +#define RISCV_INSN_NOP 0x00000013
-> > +#define RISCV_INSN_JAL 0x0000006f
-> > +
-> > +void arch_jump_label_transform(struct jump_entry *entry,
-> > +                              enum jump_label_type type)
-> > +{
-> > +       void *addr = (void *)jump_entry_code(entry);
-> > +       u32 insn;
-> > +
-> > +       if (type == JUMP_LABEL_JMP) {
-> > +               u32 offset = jump_entry_target(entry) - jump_entry_code(entry);
-> > +
-> > +               insn = RISCV_INSN_JAL |
-> > +                       ((offset & GENMASK(19, 12)) << (12 - 12)) |
-> > +                       ((offset & GENMASK(11, 11)) << (20 - 11)) |
-> > +                       ((offset & GENMASK(10,  1)) << (21 -  1)) |
-> > +                       ((offset & GENMASK(20, 20)) << (31 - 20));
-> > +       } else
-> > +               insn = RISCV_INSN_NOP;
-> > +
-> > +       patch_text_nosync(addr, &insn, sizeof(insn));
-> > +}
-> > +
-> > +void arch_jump_label_transform_static(struct jump_entry *entry,
-> > +                                     enum jump_label_type type)
-> > +{
-> > +       /*
-> > +        * We use the same instructions in the arch_static_branch and
-> > +        * arch_static_branch_jump inline functions, so there's no
-> > +        * need to patch them up here.
-> > +        * The core will call arch_jump_label_transform  when those
-> > +        * instructions need to be replaced.
-> > +        */
-> > +}
-> > --
-> > 2.27.0
-> >
+SGksDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzJdIEFSTTogZHRzOiBhbTMzNXg6IGFkZCBz
+dXBwb3J0IGZvciBNb3hhDQo+IFVDLTgxMDBBLU1FIG9wZW4gcGxhdGZvcm0NCj4gDQo+ICogSm9o
+bnNvbiBDSCBDaGVuICjpmbPmmK3li7MpIDxKb2huc29uQ0guQ2hlbkBtb3hhLmNvbT4gWzIwMDcw
+NyAwMzoyNF06DQo+ID4gVUMtODEwMEEtTUUgaXMgYWR2YW5jZWQgb2YgVUMtODEwMC1NRS1ULCBh
+bmQgVUMtODEwMC1NRS1UIGlzDQo+IGRlcHJlY2F0ZWQuDQo+ID4NCj4gPiBVQy04MTAwQS1NRSBw
+cm92aWRlcyBsYXJnZXIgUkFNIGFuZCBlTU1DLCBiZXR0ZXIgaW5wdXQgY3VycmVudCB0aGFuDQo+
+ID4gVUMtODEwMC1NRS1UJ3MsIGFuZCBpdCBzdXBwb3J0cyBzZWxlY3RhYmxlIExURSBtb2R1bGUg
+Zm9yIFVTL0VVL0FQQUMuDQo+IA0KPiBTbyB3aGF0IGFib3V0IHRoZSBleGlzdGluZyB1c2VycyBv
+ZiBVQy04MTAwLU1FLVQ/DQo+IA0KPiBUbyBtZSBpdCBzZWVtcyB5b3Ugc2hvdWxkIGp1c3QgYWRk
+IGFtMzM1eC1tb3hhLXVjLTgxMDAtY29tbW9uLmR0c2kgb3INCj4gc2ltaWxhci4gQW5kIHRoZW4g
+aGF2ZSBtaW5pbWFsIGR0cyBmaWxlcyBmb3IgZWFjaCBtb2RlbC4gVGhhdCB3YXkgeW91IGNhbg0K
+PiBlYXNpbHkga2VlcCB0aGUgc3VwcG9ydCBVQy04MTAwLU1FLVQgYXJvdW5kLg0KDQpUaGFua3Mg
+Zm9yIHlvdXIgZ29vZCBzdWdnZXN0aW9uLCBJJ2xsIHRha2UgdGhpcyBpbmZvIGZvciBvdXIgaW50
+ZXJuYWwgZGlzY3Vzc2lvbi4NCg0KQmVzdCByZWdhcmRzLA0KSm9obnNvbg0KDQo+IA0KPiBSZWdh
+cmRzLA0KPiANCj4gVG9ueQ0K
