@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56998C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 336212078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AA8C20786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594214913;
-	bh=Asm/7hdVVy9foo9+ooUHC1IjpqNSr3EIkQe1fuY60FU=;
+	s=default; t=1594214916;
+	bh=Z8i8kZRHYSfnform4ND6CgkWhvdYpt/R9KGxNDEf+ZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGOi5bIOuWW2zXzgAjL1KCpdDnHKPwuk1LMIfYnA4bE5elG4anu7cfzGHC8RxMQTB
-	 0puMV4z/Wp/7u+ajmjO7P2dMvCaMbXFe9Y4PSGPLS/RLFv6wvNTg3ahMrs84IFS3NJ
-	 c7MjiOHi3n4RtATRvP4a/urE4oh3Fm0aSGPs+8/4=
+	b=1WhT/rqJbJEfh6betd4/3gd27s5pLWeCdoDIg9kCQ70uwPbFwdjK1uG+1etX/N3/s
+	 ICTP8XrWkPAARHpLSuZfxybJFAir8Yz8jr9VVzF7DWAvj/4iFomk/ug1zdhYDEqqlB
+	 yWfFsjc+rQSpdFhibh1o3U8FrAbWB1OspV5AC/sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgGHN2c (ORCPT
+        id S1729540AbgGHN2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:28:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 09:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728210AbgGHN2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:28:30 -0400
+        id S1729529AbgGHN2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:28:33 -0400
 Received: from localhost.localdomain (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE5DE20774;
-        Wed,  8 Jul 2020 13:28:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 212D220786;
+        Wed,  8 Jul 2020 13:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594214910;
-        bh=Asm/7hdVVy9foo9+ooUHC1IjpqNSr3EIkQe1fuY60FU=;
+        s=default; t=1594214912;
+        bh=Z8i8kZRHYSfnform4ND6CgkWhvdYpt/R9KGxNDEf+ZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oxPX3v6ZTeE3iLG/SYYSfJChh1qDtTNTeY/al5tudYDK5Dwg/F/BMmCkbBcfHEKkL
-         chdfcSJeAZgWPgERJ0sRZB1wW9OTdfd5CWiyHffTviIdrP2096e/oXLVErS5zYuE5R
-         J0d79h6+E6inH3ST6YEvvkXqww7NdvgrAti8c/rs=
+        b=EYX2l3M7NiZwn49tXB/YkeEWpNs0X4VeKRT7mgDLXDUjLc0R05y01CR2Wt5c42n+T
+         4dmSU0glE5EI5z9vW+EpnEgX0zkT1D00hqEE04R0g5gw6ulpz3SCEQoon3sSYqqbsq
+         rBbl3VYaA/p/rSqrz51P4viI9xn7G6w0LhN/4beM=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH 4/6] phy: rockchip-typec: use correct format for structure description
-Date:   Wed,  8 Jul 2020 18:58:07 +0530
-Message-Id: <20200708132809.265967-4-vkoul@kernel.org>
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH 5/6] phy: exynos5-usbdrd: use correct format for structure description
+Date:   Wed,  8 Jul 2020 18:58:08 +0530
+Message-Id: <20200708132809.265967-5-vkoul@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200708132809.265967-1-vkoul@kernel.org>
 References: <20200708132809.265967-1-vkoul@kernel.org>
@@ -57,31 +57,44 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 We get warning with W=1 build:
-drivers/phy/rockchip/phy-rockchip-typec.c:360: warning: cannot
-understand function prototype: 'struct rockchip_usb3phy_port_cfg '
+drivers/phy/samsung/phy-exynos5-usbdrd.c:211: warning: Function
+parameter or member 'phys' not described in 'exynos5_usbdrd_phy'
+drivers/phy/samsung/phy-exynos5-usbdrd.c:211: warning: Function
+parameter or member 'vbus' not described in 'exynos5_usbdrd_phy'
+drivers/phy/samsung/phy-exynos5-usbdrd.c:211: warning: Function
+parameter or member 'vbus_boost' not described in 'exynos5_usbdrd_phy'
 
-The 'struct rockchip_usb3phy_port_cfg ' is commented properly but uses
-wrong format, so fix that up
+These members are provided with description but format is not quite
+right resulting in above warnings
 
-Cc: Chris Zhong <zyw@rock-chips.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/phy/rockchip/phy-rockchip-typec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-typec.c b/drivers/phy/rockchip/phy-rockchip-typec.c
-index 24563160197f..70a31251b202 100644
---- a/drivers/phy/rockchip/phy-rockchip-typec.c
-+++ b/drivers/phy/rockchip/phy-rockchip-typec.c
-@@ -347,7 +347,7 @@ struct usb3phy_reg {
- };
- 
- /**
-- * struct rockchip_usb3phy_port_cfg: usb3-phy port configuration.
-+ * struct rockchip_usb3phy_port_cfg - usb3-phy port configuration.
-  * @reg: the base address for usb3-phy config.
-  * @typec_conn_dir: the register of type-c connector direction.
-  * @usb3tousb2_en: the register of type-c force usb2 to usb2 enable.
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index eb06ce9f748f..bfb0e8914103 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -180,14 +180,14 @@ struct exynos5_usbdrd_phy_drvdata {
+  * @utmiclk: clock for utmi+ phy
+  * @itpclk: clock for ITP generation
+  * @drv_data: pointer to SoC level driver data structure
+- * @phys[]: array for 'EXYNOS5_DRDPHYS_NUM' number of PHY
++ * @phys: array for 'EXYNOS5_DRDPHYS_NUM' number of PHY
+  *	    instances each with its 'phy' and 'phy_cfg'.
+  * @extrefclk: frequency select settings when using 'separate
+  *	       reference clocks' for SS and HS operations
+  * @ref_clk: reference clock to PHY block from which PHY's
+  *	     operational clocks are derived
+- * vbus: VBUS regulator for phy
+- * vbus_boost: Boost regulator for VBUS present on few Exynos boards
++ * @vbus: VBUS regulator for phy
++ * @vbus_boost: Boost regulator for VBUS present on few Exynos boards
+  */
+ struct exynos5_usbdrd_phy {
+ 	struct device *dev;
 -- 
 2.26.2
 
