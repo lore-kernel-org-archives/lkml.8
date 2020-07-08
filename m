@@ -2,159 +2,160 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB00C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA50C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5861F2078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4l4YxNU"
+	by mail.kernel.org (Postfix) with ESMTP id 9E2F020772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbgGHLZ2 (ORCPT
+        id S1728866AbgGHLZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:25:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728688AbgGHLZ2 (ORCPT
+        Wed, 8 Jul 2020 07:25:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27150 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728666AbgGHLZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:25:28 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02CEFC08C5DC;
-        Wed,  8 Jul 2020 04:25:28 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id t27so33770619ill.9;
-        Wed, 08 Jul 2020 04:25:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7ROJmAmlrv2K7BTumTUPVQDyi0qWehgUULex/JMDOtg=;
-        b=T4l4YxNUQK6zjbqIgyyPtPtZPhbJWv5nwD043lVas5RIHsEkMkqLf18GCAo456tjCY
-         pgIUPDiCZ29hNKcbB+hZHNz2IWLNnE9pPWGP6eL3UStzgv658p7s6m1QkOKSwxX5lA0c
-         ce8gKWBj4/qIG6CjeFJvv7qRoZJ0Q/8oeGY6F82dHYI+kHL7tmmN4T0zkT8dbgSHYOxe
-         peD7J79Dr01tgJb9WzCeZjMgJN3gTuv8N05wUGJO8GdFSFqxKG7k//APWJyxnF9dZv3Q
-         SB+uQySi+sQqWqqhKASLHLbR9+q07gokqztvN4K/9qtDMNOtlUUsuhK3Mm58fN0ScW3V
-         by9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7ROJmAmlrv2K7BTumTUPVQDyi0qWehgUULex/JMDOtg=;
-        b=PFPgFWGGlKvNcgeKmAUgyQrqg+17GOMaCIsiYCPXj1kCPbMehSs6WFJdxV5T7/mRF7
-         ku0hUPm3hh9Ynlb8CNHURmIRXvh590evuKWzqYGrivMLMTomfirG4C85nXW9NFU8NFnu
-         +ZU7v4oMIXhghEulvEgxs1Zq8hN/AUoYGwYJth+ZU//pJS59b1TGPnZoChXAFdPM7Lk3
-         HjBm1764anpXkGvWDB2aAG+wkdVxRpUeaduwoY12lEj4Eh7QjwPgI4TnCyvsFVp6kkPH
-         Uvy9KaqWfxehzfTc/h7SJ8VBSY25HixZTevbHt/RN5Vda+f5jSDUtTJ0K03zhcpNOboY
-         OSAg==
-X-Gm-Message-State: AOAM532CaPNDV8uu8qTw1QwAZH9GGQcBZU9FTp2BAKIw1OY2EU3o1fLe
-        D58Klchuvnp36Q4FeG6YOyuqpp1hulGQ+y5AnkqsccUMTHo=
-X-Google-Smtp-Source: ABdhPJyxDeLrfCflP+Xy4iTpQCHzKv+AsR6M56vWlh6bN5a1kfAxmpQpB1A3ivVpGAbrlZ4kYCjZG9sLcHwA0nTcuFQ=
-X-Received: by 2002:a05:6e02:970:: with SMTP id q16mr30878956ilt.112.1594207526418;
- Wed, 08 Jul 2020 04:25:26 -0700 (PDT)
+        Wed, 8 Jul 2020 07:25:59 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068B20DW094805;
+        Wed, 8 Jul 2020 07:25:41 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3251mva5hh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 07:25:41 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 068BAkuR015452;
+        Wed, 8 Jul 2020 11:25:39 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06ams.nl.ibm.com with ESMTP id 322h1h4d4m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 11:25:39 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 068BOFMb60424510
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Jul 2020 11:24:15 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 752655204E;
+        Wed,  8 Jul 2020 11:25:36 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.85.75.251])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 5857052051;
+        Wed,  8 Jul 2020 11:25:34 +0000 (GMT)
+Date:   Wed, 8 Jul 2020 16:55:31 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        paulus@samba.org, bauerman@linux.ibm.com, sukadev@linux.ibm.com,
+        sathnaga@linux.vnet.ibm.com, Ram Pai <linuxram@us.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>
+Subject: Re: [PATCH 2/2] KVM: PPC: Book3S HV: rework secure mem slot dropping
+Message-ID: <20200708112531.GA7902@in.ibm.com>
+Reply-To: bharata@linux.ibm.com
+References: <20200703155914.40262-1-ldufour@linux.ibm.com>
+ <20200703155914.40262-3-ldufour@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200708065328.13031-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200708065328.13031-1-grandmaster@al2klimov.de>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Wed, 8 Jul 2020 13:25:35 +0200
-Message-ID: <CAOi1vP_vS-nNMXuo4n8njx=pRVUQd-C8LAeSTpVTufqiHsCS-g@mail.gmail.com>
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: CEPH COMMON CODE (LIBCEPH)
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703155914.40262-3-ldufour@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_07:2020-07-08,2020-07-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ mlxscore=0 malwarescore=0 adultscore=0 suspectscore=5 cotscore=-2147483648
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=886 priorityscore=1501
+ phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007080075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 8:53 AM Alexander A. Klimov
-<grandmaster@al2klimov.de> wrote:
->
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+On Fri, Jul 03, 2020 at 05:59:14PM +0200, Laurent Dufour wrote:
+> When a secure memslot is dropped, all the pages backed in the secure device
+> (aka really backed by secure memory by the Ultravisor) should be paged out
+> to a normal page. Previously, this was achieved by triggering the page
+> fault mechanism which is calling kvmppc_svm_page_out() on each pages.
+> 
+> This can't work when hot unplugging a memory slot because the memory slot
+> is flagged as invalid and gfn_to_pfn() is then not trying to access the
+> page, so the page fault mechanism is not triggered.
+> 
+> Since the final goal is to make a call to kvmppc_svm_page_out() it seems
+> simpler to directly calling it instead of triggering such a mechanism. This
+> way kvmppc_uvmem_drop_pages() can be called even when hot unplugging a
+> memslot.
+
+Yes, this appears much simpler.
+
+> 
+> Since kvmppc_uvmem_drop_pages() is already holding kvm->arch.uvmem_lock,
+> the call to __kvmppc_svm_page_out() is made.
+> As __kvmppc_svm_page_out needs the vma pointer to migrate the pages, the
+> VMA is fetched in a lazy way, to not trigger find_vma() all the time. In
+> addition, the mmap_sem is help in read mode during that time, not in write
+> mode since the virual memory layout is not impacted, and
+> kvm->arch.uvmem_lock prevents concurrent operation on the secure device.
+> 
+> Cc: Ram Pai <linuxram@us.ibm.com>
+> Cc: Bharata B Rao <bharata@linux.ibm.com>
+> Cc: Paul Mackerras <paulus@ozlabs.org>
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 > ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
->
->  If there are any URLs to be removed completely or at least not HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
->
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
->
->  If you apply the patch, please let me know.
->
->
->  net/ceph/ceph_hash.c    | 2 +-
->  net/ceph/crush/hash.c   | 2 +-
->  net/ceph/crush/mapper.c | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/net/ceph/ceph_hash.c b/net/ceph/ceph_hash.c
-> index 9a5850f264ed..81e1e006c540 100644
-> --- a/net/ceph/ceph_hash.c
-> +++ b/net/ceph/ceph_hash.c
-> @@ -4,7 +4,7 @@
->
->  /*
->   * Robert Jenkin's hash function.
-> - * http://burtleburtle.net/bob/hash/evahash.html
-> + * https://burtleburtle.net/bob/hash/evahash.html
->   * This is in the public domain.
+>  arch/powerpc/kvm/book3s_hv_uvmem.c | 54 ++++++++++++++++++++----------
+>  1 file changed, 37 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
+> index 852cc9ae6a0b..479ddf16d18c 100644
+> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
+> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
+> @@ -533,35 +533,55 @@ static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
+>   * fault on them, do fault time migration to replace the device PTEs in
+>   * QEMU page table with normal PTEs from newly allocated pages.
 >   */
->  #define mix(a, b, c)                                           \
-> diff --git a/net/ceph/crush/hash.c b/net/ceph/crush/hash.c
-> index e5cc603cdb17..fe79f6d2d0db 100644
-> --- a/net/ceph/crush/hash.c
-> +++ b/net/ceph/crush/hash.c
-> @@ -7,7 +7,7 @@
->
->  /*
->   * Robert Jenkins' function for mixing 32-bit values
-> - * http://burtleburtle.net/bob/hash/evahash.html
-> + * https://burtleburtle.net/bob/hash/evahash.html
->   * a, b = random bits, c = input and output
->   */
->  #define crush_hashmix(a, b, c) do {                    \
-> diff --git a/net/ceph/crush/mapper.c b/net/ceph/crush/mapper.c
-> index 3f323ed9df52..07e5614eb3f1 100644
-> --- a/net/ceph/crush/mapper.c
-> +++ b/net/ceph/crush/mapper.c
-> @@ -298,7 +298,7 @@ static __u64 crush_ln(unsigned int xin)
->   *
->   * for reference, see:
->   *
-> - * http://en.wikipedia.org/wiki/Exponential_distribution#Distribution_of_the_minimum_of_exponential_random_variables
-> + * https://en.wikipedia.org/wiki/Exponential_distribution#Distribution_of_the_minimum_of_exponential_random_variables
->   *
->   */
->
+> -void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *free,
+> +void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *slot,
+>  			     struct kvm *kvm, bool skip_page_out)
+>  {
+>  	int i;
+>  	struct kvmppc_uvmem_page_pvt *pvt;
+> -	unsigned long pfn, uvmem_pfn;
+> -	unsigned long gfn = free->base_gfn;
+> +	struct page *uvmem_page;
+> +	struct vm_area_struct *vma = NULL;
+> +	unsigned long uvmem_pfn, gfn;
+> +	unsigned long addr, end;
+> +
+> +	down_read(&kvm->mm->mmap_sem);
 
-Applied with a couple more link fixes folded in.
+You should be using mmap_read_lock(kvm->mm) with recent kernels.
 
-Thanks,
+> +
+> +	addr = slot->userspace_addr;
+> +	end = addr + (slot->npages * PAGE_SIZE);
+>  
+> -	for (i = free->npages; i; --i, ++gfn) {
+> -		struct page *uvmem_page;
+> +	gfn = slot->base_gfn;
+> +	for (i = slot->npages; i; --i, ++gfn, addr += PAGE_SIZE) {
+> +
+> +		/* Fetch the VMA if addr is not in the latest fetched one */
+> +		if (!vma || (addr < vma->vm_start || addr >= vma->vm_end)) {
+> +			vma = find_vma_intersection(kvm->mm, addr, end);
+> +			if (!vma ||
+> +			    vma->vm_start > addr || vma->vm_end < end) {
+> +				pr_err("Can't find VMA for gfn:0x%lx\n", gfn);
+> +				break;
+> +			}
+> +		}
 
-                Ilya
+The first find_vma_intersection() was called for the range spanning the
+entire memslot, but you have code to check if vma remains valid for the
+new addr in each iteration. Guess you wanted to get vma for one page at
+a time and use it for subsequent pages until it covers the range?
+
+Regards,
+Bharata.
