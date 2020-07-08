@@ -2,119 +2,86 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF54C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8009C206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:46:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="RlNUnYwY"
+	by mail.kernel.org (Postfix) with ESMTP id 19CA820720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:48:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594216086;
+	bh=F7hFqet0dWFdsxJInIBmI9Ut0a+5omlYIZGBvK9CiY8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=howfiTsfGN2zo1FmOrDNtd22/R2HK1GnKYAIiw+bDm4stcTBAGJi94W5I9P7cDQbc
+	 rtQyGeGso/L1csbBWfsnkbpti0Zhp49peRTch1WBruaC+U3E62HPSMtW5iSkePbXKU
+	 eUwNz2gS//5OlDzrZ2oTP2zKkEtjAF5iF5oVE4vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbgGHNq0 (ORCPT
+        id S1729576AbgGHNsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:46:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729288AbgGHNqZ (ORCPT
+        Wed, 8 Jul 2020 09:48:04 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39412 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729288AbgGHNsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:46:25 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7F8C08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 06:46:25 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id y18so26910017lfh.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 06:46:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yokX6/GqNfCJVra9vogfMzW7oEaeEABdbokc5LYRIwI=;
-        b=RlNUnYwYCZObU1qK4ULsAxSxIXkTG7mMUyf77VNDSVZC4Xi6DQ4dCOW2m4BXHu+HCL
-         nwfiJhi9CyF7hG35p4U+XBd8E71/Fl/59SCIYtqWsNfPTf5d1rHJSZxd/SYHEHZ8XxPY
-         2rDi6EuVbK0iMGwhD2fvX8QpM5iO9TsO6sUDMGQq0FXnC0MhfaW8NgV+kEABTllp3BKf
-         4n4ZUFiG1Zfj2vk7+ooDH9kOeaugMGbqOzT1unF1S9ydZ/6CWuWeUcbE8l59bZxQiCuR
-         FuMJD9nTgSZ7bN2O5sU1ctPUWsjcmKeDp43MghNoo8oKtgoFYt6OE1wcGaNFhau9/FcW
-         RJUA==
+        Wed, 8 Jul 2020 09:48:03 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d18so36231986edv.6;
+        Wed, 08 Jul 2020 06:48:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yokX6/GqNfCJVra9vogfMzW7oEaeEABdbokc5LYRIwI=;
-        b=oxyBoXctaq79c4yQjC3iS+RQndtfWejJjGtBnA6pDaoLHgnjupC+hyegcLLWkYDiTi
-         mtSmrYUnIipuA0s6o8tBXckzaDnR3DoCb+G4drpBGjvvcs2MekCibvMFiZrpLSiFarDT
-         3fWfo+0FFfj6LaJwCyU9GIrZHCa0sojXrUQnPHOaVRV9EZQ+yW3ngfZSML8/tdh5RAm2
-         RBjDj4dhy56jrtaLQL2nTTIgTSoeEtlQ0fyhjodc+aGXdURg5biLWFjfn/N1YJmcAHVe
-         hJT6mB3EDqTbHUkb7O7JFLOx5Dl8+VBqIqezAjthTOZMR+MbFT3fXY4Z0I6wE0xysPMv
-         BnOA==
-X-Gm-Message-State: AOAM531og+9fnURR4wwcb7R2WpHuOGYowJpxJDOOHnpH0S3h0DRZXMvY
-        pFXz3TXhgoRCmP+7wFB6oc4XYg==
-X-Google-Smtp-Source: ABdhPJyWX/2LEyXuL3gCobpVJKTemEzBK880Mx2uxw2/QqlMJrw22x14dTEHFtlA6zdr2cVdoqvECQ==
-X-Received: by 2002:ac2:47e7:: with SMTP id b7mr36026094lfp.68.1594215983911;
-        Wed, 08 Jul 2020 06:46:23 -0700 (PDT)
-Received: from fedora.toya.net.pl (staticline-31-182-130-176.toya.net.pl. [31.182.130.176])
-        by smtp.gmail.com with ESMTPSA id i22sm924902ljb.19.2020.07.08.06.46.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 06:46:23 -0700 (PDT)
-From:   Bartosz Szczepanek <bsz@semihalf.com>
-To:     Matthew Garrett <mjg59@google.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Pandruvada Srinivas <srinivas.pandruvada@linux.intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Radoslaw Biernacki <rad@semihalf.com>,
-        Alex Levin <levinale@google.com>,
-        Bartosz Szczepanek <bsz@semihalf.com>
-Subject: [PATCH] thermal/int340x_thermal: Prevent page fault on .set_mode() op
-Date:   Wed,  8 Jul 2020 15:46:13 +0200
-Message-Id: <20200708134613.131555-1-bsz@semihalf.com>
-X-Mailer: git-send-email 2.25.4
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wyUXf/Z3LcTCSm83RuiDQ8lmWVjeAVDbwuZYQmWJr+E=;
+        b=eafc9omeFQ1Wbn5gANJkMAbZO+nvlegxp2APCreQpYBujwE9ngbaIz5aG56pgtGqRs
+         puR/dqVNVNPQhDpp5e0adRYaiImD1KZf1B98+SD3GiZhiNzbsqCkiH5GHtQ8ZLPfYcqN
+         dvtMmCTFg87VB6PTchGul8P/yM0jL0I3K3LsxDk93DVesRLFJ/mtnSj8MIfFJGLEN1eO
+         8hyGw+Ga3YjeRRUnBEW3Btn0IowmhdJv55+YEjlaK/MuGRITW+evMlPijElKc/jobnRI
+         WgksL1DQC99yqZtqydPCR7cluMhhRXnd6SAcZ8nFpAqOBRwtbhnV/yWo0am9W91XDuEV
+         BqHg==
+X-Gm-Message-State: AOAM530dwBUx8D6004OUzEPjwbSD7T4lheSenxG2lWe075B9gyklMlkH
+        qeo54pvKHmE0g28mF+dBabwm0a2O
+X-Google-Smtp-Source: ABdhPJzwXfeEilY43pqV9jsF2ZDwSoyFRMe7FBLUUPhwJYjNsfclijWF+S0YyS3tu97JHuZx/91TYw==
+X-Received: by 2002:a05:6402:337:: with SMTP id q23mr68252323edw.63.1594216081602;
+        Wed, 08 Jul 2020 06:48:01 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id v25sm19466613edr.74.2020.07.08.06.48.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jul 2020 06:48:00 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 15:47:58 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH RESEND] phy: exynos5-usbdrd: Calibrating makes sense only
+ for USB2.0 PHY
+Message-ID: <20200708134758.GA32497@kozik-lap>
+References: <CGME20200708133811eucas1p1df7b92d7e0ba512c5a7ecdb948edbfcf@eucas1p1.samsung.com>
+ <20200708133800.3336-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200708133800.3336-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Starting from commit "thermal/int340x_thermal: Don't require IDSP to
-exist", priv->current_uuid_index is initialized to -1. This value may
-be passed to int3400_thermal_run_osc() from int3400_thermal_set_mode,
-contributing to page fault when accessing int3400_thermal_uuids array
-at index -1.
+On Wed, Jul 08, 2020 at 03:38:00PM +0200, Marek Szyprowski wrote:
+> PHY calibration is needed only for USB2.0 (UTMI) PHY, so skip calling
+> calibration code when phy_calibrate() is called for USB3.0 (PIPE3) PHY.
+> 
+> Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/phy/samsung/phy-exynos5-usbdrd.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-This commit adds a check on uuid value to int3400_thermal_run_osc.
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Signed-off-by: Bartosz Szczepanek <bsz@semihalf.com>
----
- drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-index 0b3a62655843..12448ccd27f1 100644
---- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-@@ -216,11 +216,16 @@ static int int3400_thermal_run_osc(acpi_handle handle,
- 	acpi_status status;
- 	int result = 0;
- 	struct acpi_osc_context context = {
--		.uuid_str = int3400_thermal_uuids[uuid],
-+		.uuid_str = NULL,
- 		.rev = 1,
- 		.cap.length = 8,
- 	};
- 
-+	if (uuid < 0 || uuid >= INT3400_THERMAL_MAXIMUM_UUID)
-+		return -EINVAL;
-+
-+	context.uuid_str = int3400_thermal_uuids[uuid];
-+
- 	buf[OSC_QUERY_DWORD] = 0;
- 	buf[OSC_SUPPORT_DWORD] = enable;
- 
--- 
-2.17.1
-
+Best regards,
+Krzysztof
