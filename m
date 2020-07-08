@@ -2,102 +2,71 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC83DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BACC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 938F520708
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:37:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hr0vTbH1"
+	by mail.kernel.org (Postfix) with ESMTP id 55DF0206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgGHWhZ (ORCPT
+        id S1726291AbgGHWiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 18:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41070 "EHLO
+        Wed, 8 Jul 2020 18:38:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgGHWhY (ORCPT
+        with ESMTP id S1726081AbgGHWhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 18:37:24 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6243AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 15:37:24 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so41784pgb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 15:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=q3UqSSyfIBC1rMGV9nALdXLQBVwoBmKfCFkzwkHahg8=;
-        b=hr0vTbH1eQaQ1QoG8hJBW0VhUzgNK9r1JU5JPnbDRf7spnrKmRRaTpXgkfCXRgGT4e
-         ttHdOXPDA7oT50viySeZXBWYZlf5vQXnoRWq6G7T3YreUxQQcwmYrXoNxo3TT51uMiV4
-         2nnNWi7fxP2lbgQPd38h6FV3S7Ne+QtXv1WMORY++W0EhXFk0wNtaV5w9nP+rAqoggiZ
-         gwX+RJBFBMEYzYW9vq+VU8asY5SAl0TOc4gndrjF5Mn6O5f1L5tJ2TYlPuai0iDT2Kdw
-         Y1zGB/0UTFfXk1ZPoG97VKxJWFLHLb0Asuavx/6GM1V1AwwYWUF69q+DDRXVVxyhx84U
-         9OfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=q3UqSSyfIBC1rMGV9nALdXLQBVwoBmKfCFkzwkHahg8=;
-        b=BiN0ZgRZtJ8EQV7IaaCf2XQRemk85YWEhZZ2gpqRQ/4XjCaTHrPeC/nrjOi/IwG1n9
-         EngtIp2aFVYbyIrPC+sc5fC27RusHd1kRZu0T04zNf5V+ltTLQTXb1LpfWrKDbFgLGTJ
-         wNMgFyqX37JdoVpJopn8sTDjlOXhRBdCIAZndtOqRs2Yqr07axxwcsCa8iXkPexTpUn1
-         jblhurJpGJOQq+c+i5A1Q/AZeMTB17M/3gtT1dRliaIoRFM1RW1mSKDEsU5WrROUU2EE
-         cz/vGS6GmJdLQ0HPkefN2V2I7VptTUEYcs+AgpK50KRwlJ4/UdncU0HMWB9rHwUdXfkA
-         SEzA==
-X-Gm-Message-State: AOAM5332eZS30Q+VQ37UCTvy7jNtCykW2C82vK0nB338fdSK4jmdFMyh
-        valvXs8qBJc9myLz9amUovOIbA==
-X-Google-Smtp-Source: ABdhPJyKN5K8/iz33QUVfw+r+Vu8IJVeHNQDzaI5DOkexKvPwmp1jilnyQIzwi64s/K7n4mQx72hWA==
-X-Received: by 2002:a63:380d:: with SMTP id f13mr49658491pga.16.1594247843851;
-        Wed, 08 Jul 2020 15:37:23 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id k2sm742530pgm.11.2020.07.08.15.37.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 15:37:22 -0700 (PDT)
-Subject: Re: [PATCH 1/2] fs: Abstract calling the kiocb completion function
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kanchan Joshi <joshi.k@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <20200708222637.23046-1-willy@infradead.org>
- <20200708222637.23046-2-willy@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <983baa4b-55c6-0988-9e43-6860937957b4@kernel.dk>
-Date:   Wed, 8 Jul 2020 16:37:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200708222637.23046-2-willy@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 8 Jul 2020 18:37:31 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58258C061A0B;
+        Wed,  8 Jul 2020 15:37:31 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 65BDA1277ED54;
+        Wed,  8 Jul 2020 15:37:30 -0700 (PDT)
+Date:   Wed, 08 Jul 2020 15:37:29 -0700 (PDT)
+Message-Id: <20200708.153729.1570943134510183928.davem@davemloft.net>
+To:     jarod@redhat.com
+Cc:     linux-kernel@vger.kernel.org, huyn@mellanox.com,
+        saeedm@mellanox.com, j.vosburgh@gmail.com, vfalico@gmail.com,
+        andy@greyhouse.net, jeffrey.t.kirsher@intel.com, kuba@kernel.org,
+        steffen.klassert@secunet.com, herbert@gondor.apana.org.au,
+        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org
+Subject: Re: [PATCH net-next] bonding: deal with xfrm state in all modes
+ and add more error-checking
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200708174631.15286-1-jarod@redhat.com>
+References: <20200708174631.15286-1-jarod@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 08 Jul 2020 15:37:30 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 4:26 PM, Matthew Wilcox (Oracle) wrote:
-> diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-> index b1cd3535c525..590dbbcd0e9f 100644
-> --- a/crypto/af_alg.c
-> +++ b/crypto/af_alg.c
-> @@ -1045,7 +1045,7 @@ void af_alg_async_cb(struct crypto_async_request *_req, int err)
->  	af_alg_free_resources(areq);
->  	sock_put(sk);
->  
-> -	iocb->ki_complete(iocb, err ? err : (int)resultlen, 0);
-> +	complete_kiocb(iocb, err ? err : (int)resultlen, 0);
+From: Jarod Wilson <jarod@redhat.com>
+Date: Wed,  8 Jul 2020 13:46:31 -0400
 
-I'd prefer having it called kiocb_complete(), seems more in line with
-what you'd expect in terms of naming for an exported interface.
+> It's possible that device removal happens when the bond is in non-AB mode,
+> and addition happens in AB mode, so bond_ipsec_del_sa() never gets called,
+> which leaves security associations in an odd state if bond_ipsec_add_sa()
+> then gets called after switching the bond into AB. Just call add and
+> delete universally for all modes to keep things consistent.
+> 
+> However, it's also possible that this code gets called when the system is
+> shutting down, and the xfrm subsystem has already been disconnected from
+> the bond device, so we need to do some error-checking and bail, lest we
+> hit a null ptr deref.
+> 
+> Fixes: a3b658cfb664 ("bonding: allow xfrm offload setup post-module-load")
+> Signed-off-by: Jarod Wilson <jarod@redhat.com>
 
--- 
-Jens Axboe
-
+Applied, thanks Jarod.
