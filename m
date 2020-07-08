@@ -2,110 +2,207 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9603DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8DF206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CB1E20786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:56:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HUtCnCT7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbwrULrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730238AbgGHPys (ORCPT
+        id S1730298AbgGHP4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:54:48 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22135 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729022AbgGHPys (ORCPT
+        Wed, 8 Jul 2020 11:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730048AbgGHP4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:54:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594223686;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=E2JylkmGqvhoOcb/shtzMuVZZ0krZeWRN5Y+vX9FU0o=;
-        b=HUtCnCT7+WnP2DmE+ihkloBrVV+LNmpL4y9a5uL0HTsZ4qLAGo17vyoPP+REffP1OCyrfs
-        E/zDbhguEmyJgXmvvmN24o/Ec6qdqpUdpY68JnzMXd5hxK3POVAVGfaVPS4l1RXboF7qtt
-        1MGI3BUXk3/zLjkn13Epeg1m3hsdbHo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-478-reOxbTyyMyi6zy7FfF1JHQ-1; Wed, 08 Jul 2020 11:54:44 -0400
-X-MC-Unique: reOxbTyyMyi6zy7FfF1JHQ-1
-Received: by mail-wm1-f71.google.com with SMTP id o138so3412686wme.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 08:54:44 -0700 (PDT)
+        Wed, 8 Jul 2020 11:56:24 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F5FC061A0B;
+        Wed,  8 Jul 2020 08:56:23 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id k27so5786962pgm.2;
+        Wed, 08 Jul 2020 08:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=aTnB75vtOiMnbJqaXMvvz8L2JnWzPT1EaDAz7nDE03Y=;
+        b=QbwrULrpg+PmMdPzqkDQfzuOdRcVMM0J3kkOHTf9KV5F6X81uJgGRL1DRuOfE7YYLy
+         KQRrNu+8BMYuJHI4Bla08kX/ordNvUCa82r+1oZ5ZJa+CQJNM9zXNm938oU9YsflLMRF
+         LLLkAT4D0VZsEQsVZNUdX2HmSwLDYTam8wFZ3QLpcbNUPjwiQWhyf//Swwi0t9M/2fFt
+         Km6XNqVKQSHoKEbkRzJAGGnhtsARCGHhqvw43+bRXBQ92VjNHw6Jgs5IqeiBoa8kIGAC
+         RjCP1uVdmTwXWRlIDwHpXhU7AcPRsPs+kaHm8qn3rW8izjbv7cuf9garpWuipYUTBhOF
+         bgLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=E2JylkmGqvhoOcb/shtzMuVZZ0krZeWRN5Y+vX9FU0o=;
-        b=CYJnXbIhiOl2kAdKz2wTa6/Fp9TvTEhG7C14AxPiVP+dpZGKxtYmWL83AtrBRPAdCI
-         RH4+GDmVt0dbkO3HOVtGxqtbUlVEL5j3yoh04G+ecffAZy6Lgi6r5F74r+f9KaJWzGxl
-         FyMaQVuhA8TFh4SYF+soIwXwydCdV4PQZOc/XNEB2/GbLiON7yT0knGee2/YGpGaJJB4
-         8gmPg5/gFvuk2Dfm4Iz3S00UurC7Q9fDpfp3l+qsMFbVc4cz255S/YyfZKrfpJnfBFmS
-         GqUmZiPzemf5FCYZSs+Y1gQBxsCdf3OCTQArI3uRr2cJ0bYzmfhLJ4L+3f/y4Uy1IE9T
-         jrvQ==
-X-Gm-Message-State: AOAM533sMdH7JHX54qcl+n4yhFdd6u7tpyu1GqZ3SbRbyVFwFfMr+iLg
-        nDm4keSHq3UQf452rtX1zTBAckjoOzsv1zr40uZPZ0IGps/s6iAEeGqAh0B6qMWkzaZPZGMvhKp
-        DiBWHN6ribLKhaeng1DV7QOBT
-X-Received: by 2002:a5d:6987:: with SMTP id g7mr58593721wru.79.1594223683450;
-        Wed, 08 Jul 2020 08:54:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyvVvPOE+KvsNAqExWUNOScSfevZpgbIsZWtSGnOuPcU9AGUIfgYqRiH7oZg2skleOLHt0eXA==
-X-Received: by 2002:a5d:6987:: with SMTP id g7mr58593709wru.79.1594223683271;
-        Wed, 08 Jul 2020 08:54:43 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id n5sm253364wmi.34.2020.07.08.08.54.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 08:54:42 -0700 (PDT)
-Subject: Re: [PATCH] KVM/x86: pmu: Fix #GP condition check for RDPMC emulation
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Like Xu <like.xu@linux.intel.com>, kvm@vger.kernel.org,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
-References: <20200708074409.39028-1-like.xu@linux.intel.com>
- <20200708151824.GA22737@linux.intel.com>
- <e285ccb3-29bd-dcb8-73d1-eeee11d72198@redhat.com>
- <20200708154520.GB22737@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <face99cd-f19d-afb3-8f5f-ac5206ba39b4@redhat.com>
-Date:   Wed, 8 Jul 2020 17:54:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aTnB75vtOiMnbJqaXMvvz8L2JnWzPT1EaDAz7nDE03Y=;
+        b=RPX381jX0KdJzxtJWrv6p4zqaR0OV/GIxj4Gk4D+bLm14mOJ5TvsebhH2MrvpkWb6V
+         krBP+mWgus4W7vQ9VMMqWWBaCXqTE/iLOIaLqA7D/Yx+S0VXOxBuPo+S7oqVYqwLJDZh
+         hIT9zu3YLYKuSJOSaTPa5/YzyTI/kkwe9CB2W0MVrrBsqyLh/fPOr+XWBfZ0IVqmsSIF
+         c24esEx98UExxwPGaq0DlLcZuVyppGPr/mgXA7DDbBt/1YoJG4NPDoDKB6PBoOaMQ62H
+         /S0UrT+IdpIvY811q0M59sMffViF5lFqU3OfN3aTTYihxMU0NpAok+gFV1xGFsPTwRfX
+         qWhw==
+X-Gm-Message-State: AOAM533JuTgXLIGuaOL1TSoplZOTyJo4DVcUJNqbSEdpmGOzHdzgey+B
+        HKQSGVWKGWJzhtJiJGJiWYk=
+X-Google-Smtp-Source: ABdhPJz06Vl6GCUNpLi+sFeMwoYs4LZGc0RPijejxvNKqSbOK+voGeoXsqXro3kDQQshV6k8IlIN1w==
+X-Received: by 2002:a62:52d2:: with SMTP id g201mr1028079pfb.57.1594223782761;
+        Wed, 08 Jul 2020 08:56:22 -0700 (PDT)
+Received: from localhost ([89.208.244.139])
+        by smtp.gmail.com with ESMTPSA id e6sm227698pfh.176.2020.07.08.08.56.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jul 2020 08:56:22 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     jingoohan1@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, kgene@kernel.org, krzk@kernel.org,
+        thomas.petazzoni@bootlin.com, f.fainelli@gmail.com,
+        linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v2] PCI: controller: convert to devm_platform_ioremap_resource()
+Date:   Wed,  8 Jul 2020 23:56:14 +0800
+Message-Id: <20200708155614.308-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200526160110.31898-1-zhengdejin5@gmail.com>
+References: 
 MIME-Version: 1.0
-In-Reply-To: <20200708154520.GB22737@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/20 17:45, Sean Christopherson wrote:
-> On Wed, Jul 08, 2020 at 05:31:14PM +0200, Paolo Bonzini wrote:
->> The order follows the SDM.  I'm tempted to remove the CR0 check
->> altogether, since non-protected-mode always runs at CPL0 AFAIK, but let's
->> keep it close to what the manual says.
-> 
-> Heh, it wouldn't surprise me in the least if there's a way to get the SS
-> arbyte to hold a non-zero DPL in real mode :-).
+use devm_platform_ioremap_resource() to simplify code, it
+contains platform_get_resource() and devm_ioremap_resource().
 
-I'm not sure if SMM lets you set non-zero SS.DPL in real mode.  It's one
-of the few things that are checked with unrestricted guest mode so
-there's hope; on the other hand I know for sure that in the past RSM
-could get you to VM86 mode with CPL=0, while in VMX it causes vmentry to
-fail.
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v1 -> v2:
+	- rebase to pci/misc branch
+	- add Rob Reviewed tag and Thanks for Bob's help.
 
-It would be an interesting testcase to write for KVM, to see if you get
-a vmentry failure after you set the hidden AR bytes that way and RSM...
+ drivers/pci/controller/dwc/pci-exynos.c | 4 +---
+ drivers/pci/controller/pci-aardvark.c   | 5 ++---
+ drivers/pci/controller/pci-ftpci100.c   | 4 +---
+ drivers/pci/controller/pci-versatile.c  | 6 ++----
+ drivers/pci/controller/pcie-brcmstb.c   | 4 +---
+ 5 files changed, 7 insertions(+), 16 deletions(-)
 
-Paolo
+diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+index c5043d951e80..5791039d6a54 100644
+--- a/drivers/pci/controller/dwc/pci-exynos.c
++++ b/drivers/pci/controller/dwc/pci-exynos.c
+@@ -84,14 +84,12 @@ static int exynos5440_pcie_get_mem_resources(struct platform_device *pdev,
+ {
+ 	struct dw_pcie *pci = ep->pci;
+ 	struct device *dev = pci->dev;
+-	struct resource *res;
+ 
+ 	ep->mem_res = devm_kzalloc(dev, sizeof(*ep->mem_res), GFP_KERNEL);
+ 	if (!ep->mem_res)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	ep->mem_res->elbi_base = devm_ioremap_resource(dev, res);
++	ep->mem_res->elbi_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(ep->mem_res->elbi_base))
+ 		return PTR_ERR(ep->mem_res->elbi_base);
+ 
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 90ff291c24f0..0d98f9b04daa 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -1105,7 +1105,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct advk_pcie *pcie;
+-	struct resource *res, *bus;
++	struct resource *bus;
+ 	struct pci_host_bridge *bridge;
+ 	int ret, irq;
+ 
+@@ -1116,8 +1116,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->pdev = pdev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pcie->base = devm_ioremap_resource(dev, res);
++	pcie->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pcie->base))
+ 		return PTR_ERR(pcie->base);
+ 
+diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+index 1b67564de7af..221dfc9dc81b 100644
+--- a/drivers/pci/controller/pci-ftpci100.c
++++ b/drivers/pci/controller/pci-ftpci100.c
+@@ -422,7 +422,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	const struct faraday_pci_variant *variant =
+ 		of_device_get_match_data(dev);
+-	struct resource *regs;
+ 	struct resource_entry *win;
+ 	struct faraday_pci *p;
+ 	struct resource *io;
+@@ -465,8 +464,7 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	p->base = devm_ioremap_resource(dev, regs);
++	p->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(p->base))
+ 		return PTR_ERR(p->base);
+ 
+diff --git a/drivers/pci/controller/pci-versatile.c b/drivers/pci/controller/pci-versatile.c
+index e90f0cc65c73..a8d361f6c5d9 100644
+--- a/drivers/pci/controller/pci-versatile.c
++++ b/drivers/pci/controller/pci-versatile.c
+@@ -76,13 +76,11 @@ static int versatile_pci_probe(struct platform_device *pdev)
+ 	if (!bridge)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	versatile_pci_base = devm_ioremap_resource(dev, res);
++	versatile_pci_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(versatile_pci_base))
+ 		return PTR_ERR(versatile_pci_base);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	versatile_cfg_base[0] = devm_ioremap_resource(dev, res);
++	versatile_cfg_base[0] = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(versatile_cfg_base[0]))
+ 		return PTR_ERR(versatile_cfg_base[0]);
+ 
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 15c747c1390a..91a4b7f3ee45 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -933,7 +933,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	struct pci_host_bridge *bridge;
+ 	struct device_node *fw_np;
+ 	struct brcm_pcie *pcie;
+-	struct resource *res;
+ 	int ret;
+ 
+ 	/*
+@@ -958,8 +957,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	pcie->dev = &pdev->dev;
+ 	pcie->np = np;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pcie->base = devm_ioremap_resource(&pdev->dev, res);
++	pcie->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pcie->base))
+ 		return PTR_ERR(pcie->base);
+ 
+-- 
+2.25.0
 
