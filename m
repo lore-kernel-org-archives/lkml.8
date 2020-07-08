@@ -2,116 +2,92 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC112063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:08:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrpjEioW"
+	by mail.kernel.org (Postfix) with ESMTP id D2BF62063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgGHJII (ORCPT
+        id S1726898AbgGHJIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:08:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgGHJIG (ORCPT
+        Wed, 8 Jul 2020 05:08:07 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37975 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgGHJIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:08:06 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C796DC08C5DC;
-        Wed,  8 Jul 2020 02:08:05 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id s16so20945590lfp.12;
+        Wed, 8 Jul 2020 05:08:05 -0400
+Received: by mail-oi1-f195.google.com with SMTP id r8so37219670oij.5;
         Wed, 08 Jul 2020 02:08:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8vrM7hTRpKdzeQsBDUGOGiFhO9KbY2xs+nqLJ5TqqjM=;
-        b=rrpjEioWfto0pCCURutcSD1sx6k0SJyxgqz0ggrNvtwTub7XcIv0RPl5g49CNpSspr
-         Ny5W6RKdoLKN0OIIB55VzjoOxhncJOwvrUT8gSh6J9eCOMYDE6JpjAfdj3Ae8mox7d9m
-         Bjyj2OUPLshsq2tAT1Fj6CBXeDxGgO6Vx8bJ4sJZpgYameUgh3ak3ZIiA9pbao0uHDaF
-         h68IDzdEsYafPnrEOSgLndiiAT8D1bZHF6glkc6oxbqQiZoc2fBJP1uouLW6L5sw5kZ1
-         zgCSFz0iEpyWkPqI5ofmXN+KxqN5IoQKI8729EDGi473ivPG6/GdNSFHv+sAgB0gs3Ue
-         9vdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8vrM7hTRpKdzeQsBDUGOGiFhO9KbY2xs+nqLJ5TqqjM=;
-        b=Fur4iQGAJykWxAtKEU2mHti4vOLeK0Gy/u5XL14H+VXOHfqYS2dm4aC1m/izm7RDbe
-         SgtElpbBNjCKevd0zwW5wf1Ab7mYgPWUtQSsWe2uQSDQ2346mkoUlvqSBM1KwwkM3M3E
-         A4Fp5bjk2yJ+OnD/KupwOHXWToPsE7gWVIJubiv2SWjvLjPeaQ37ljuMgCHYWUrBvlWK
-         YEpBEGyE9r1cNaF5L8X5tmdzS+rMiW7Y2L/rlhLM2KyKXi1eVThwUqggwmXv6YUcHjnd
-         ZYkTcHsDsZpjKEjjbQ5oBvuRNXZwRQuAzRbNdkY2+3f4mWFq7EfjYqBKULwjPeHgGqXv
-         4fUw==
-X-Gm-Message-State: AOAM53224D0A9kcPUYlFF7Oo7QGwQghXGjz0PqQDt49zwszpZFxiDrDD
-        MBH7qgCn1Z0N5+nDxFnRhvwxokm6
-X-Google-Smtp-Source: ABdhPJw1E33uomRbtkL7t7n99pBlhOsxY+dYwbKBX6rimfjlZVxvteERnSyN/fu++WfDQK78tvdMHw==
-X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr35947527lfn.30.1594199283821;
-        Wed, 08 Jul 2020 02:08:03 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id b6sm760739ljj.89.2020.07.08.02.08.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 02:08:03 -0700 (PDT)
-Subject: Re: [PATCH v1 3/5] gpio: max77620: Replace interrupt-enable array
- with bitmap
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200708082634.30191-1-digetx@gmail.com>
- <20200708082634.30191-4-digetx@gmail.com>
- <CAHp75Vc56D5QeL2WArUj4OGGk4XgkiK37FnFr=5+XsisLpng1A@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c201575a-ab2a-d74d-9791-3fde7844eb01@gmail.com>
-Date:   Wed, 8 Jul 2020 12:08:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+ifhTbenHl4MBKv4jBLn2jEdTHksRw2S6+cnmDHE1U4=;
+        b=UV02i6C6Qp3XK7gdGefrk3V/02ouj1GbecjPdyNZ+DFwsdiRkkkhhy+CD+se70RbHl
+         pOvnQ7DGJqfJGtwxJrqmSL0bgzNgJs9FDvya/+WZ9GJ6xW+Lyks3rLBgupj3E37+H0hr
+         oc8vHEQl5MEBPTwqDtavZjUCS+hrPFecwCyEln6SmlC2CvnNqDxQVOr0QyAxRhTVzwUk
+         TJFWv0QyM6E1sDrrz3l+3IjCrxoF0T41e+9O6m13QPOdZpq535ip8+PTaeviL71b3G/J
+         MZFTX27QUq1r4J8MQYjH2ebE7J5RMGxOREChf6ym0A5yPMeyBbL7KDqSJWAKkXb06aju
+         a1FQ==
+X-Gm-Message-State: AOAM531WF7+8bamp2IXkugKtmFJtkx/Bgy9VWjgUO1EZjoHswXySR3So
+        iq2Zm4LZVey1ha66qsrhMq4hfxt4WKpYO+xX4Lg=
+X-Google-Smtp-Source: ABdhPJwwWyEJLxoYPh5RcN1bL2Wsn47wKpNZSb2k3Td2MU09jjQfJ9847L9jUzg5coiVRc1bcKgI9oGBm2HZFLW42vs=
+X-Received: by 2002:aca:5c41:: with SMTP id q62mr6127594oib.148.1594199284723;
+ Wed, 08 Jul 2020 02:08:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vc56D5QeL2WArUj4OGGk4XgkiK37FnFr=5+XsisLpng1A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1594138368-16449-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594138368-16449-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594138368-16449-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 8 Jul 2020 11:07:53 +0200
+Message-ID: <CAMuHMdWLp+KHD=kco=AoM94a_D+qAiscyJkv57WoyDGGZM6WXA@mail.gmail.com>
+Subject: Re: [PATCH 01/14] dt-bindings: arm: renesas: Document RZ/G2H SoC DT bindings
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.07.2020 11:44, Andy Shevchenko пишет:
-> On Wed, Jul 8, 2020 at 11:30 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> There is no need to dedicate an array where a bitmap could be used.
->> Let's replace the interrupt's enable-array with the enable-mask in order
->> to improve the code a tad.
-> 
-> ...
-> 
->> +#include <linux/bitops.h>
-> 
->>         unsigned int            irq_type[MAX77620_GPIO_NR];
->> -       bool                    irq_enabled[MAX77620_GPIO_NR];
->> +       unsigned long           irq_enb_mask;
-> 
-> I would rather to move to DECLARE_BITMAP()
-> (the macro is defined in types.h IIRC)
-> 
+On Tue, Jul 7, 2020 at 6:14 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Add device tree binding documentation for the Renesas RZ/G2H (r8a774e1)
+> SoC.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hello, Andy! I know about DECLARE_BITMAP(), it is a very useful macro
-for bitmaps that are over 32 bits, which is absolutely not the case
-here. This macro will make code more difficult to read and then we will
-have to use the bitmap API, which is unnecessary overhead for this case,
-and thus, it won't be an improvement anymore, IMO.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-I'd either keep this patch as-is or drop it.
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
