@@ -2,151 +2,129 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F85C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F3DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06BFB206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:22:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="mwJ98NNs";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="heIpfoiv"
+	by mail.kernel.org (Postfix) with ESMTP id 555A22067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbgGHQWp (ORCPT
+        id S1730670AbgGHQW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:22:45 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:21241 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730278AbgGHQWp (ORCPT
+        Wed, 8 Jul 2020 12:22:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59137 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730278AbgGHQW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:22:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594225363; x=1625761363;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=ix4gTCSof5dy+v+Gil0mgVSTSi2mz8M767Bp24baUS8=;
-  b=mwJ98NNsAUS5OamX4PsNu5jFZnZ8iCGkfxahc62ZXb7edAHcOsHFf0io
-   WA4edfvic2EYzK1XHc2ZfS6vEbKhCDFQKKqwP+zpdWe66lI13jTCsTMIq
-   Eum1qP3ymn1WmyonmD4ZCKdvdFdnanGw2+gZSbhpr0evngkG6f5z3EEGb
-   3vCFKT68IDp7Ig2+TN/l/HbJaFqCM5OdqKNeunfd7XdWikENPwjLFLnun
-   nWeXBLJggpCjPyzjEhyEuX5+/IrYS5KsSiq1mjtab5e0zVRHNEAa+5pSh
-   XYjDFHFLF3XOZV/g/RuNpEpnFbbJ6FVCNHaEHqve2H/FK8gQNbZV2DDr+
-   w==;
-IronPort-SDR: URNNe5lIz8bdugS41XkoCIJPARLTvqbAX2MUUXa5Uf1EKr1TIqNwFzY4nZWAhKMQYolb6J9aFC
- QXLk3E7nxbNrzgfD6eujPxQZHM9aOvV1kf03BMlc/RnCTwomXjg8tp7JsyBcO4dxmjMBMl+na7
- TQ8r6UwDiKN8l+4OqDdTpk1VrU+7+j3yqAVsG3/MWX73MbDNrmNzchZ3g4x/2tMgUQ/R92F2x/
- R0+JtomnQ9HqkH5VBfDC2yKhGjwcUTmtONwNaWS/qeUko54JNmNdxG/Yqnl3Us5y7jrqoqXoyF
- J4c=
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="79173523"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jul 2020 09:22:43 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 8 Jul 2020 09:22:43 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Wed, 8 Jul 2020 09:22:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EeCKkEUnpWO4onYLIHJMhc8najPI+7egm03AnRQokZPoaFDtAjG3iO3YszfuCwtwArK5OwLFhPoOAMb2LtQHc+Dkjw2gLwprkPlfbgJw6Gs31GZNAc0X+f3tTfj2VD+s1TL/f6QQFLCoeL71Nr2a1a9Z2H22gUJwj5wR9BIUZrZkpyrRody6wBGu63n5FeN2T5vCTL4MBS8wJmv2HVALilTQRv8zdO6hjX+KZcqm1fDeT+o1w+ewclflL0AhBC5+j4vXxQpqa8QdmkgCI5tCi3z3S6SDiOekIXYKxLUAc/nAPuXHT9EXn6kJYZbG/IX1Lf+Kc2MsvL6MNarBdlH7bA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ix4gTCSof5dy+v+Gil0mgVSTSi2mz8M767Bp24baUS8=;
- b=KyIQM8xPC7ks8ZykKla4b4urbnVxk2OTsZVvm5WPr7iSyIbUlrgihBcck+ULaQ8iTGY+vqyg7+2e2X9/rzLpNsCNf5cQw/WCEoAGJ8KkBWAOsqylTudVdQDn+6GHtZKB8Snld8hnp+mzfCm6Rpf7P65vFumBOfCnQIkbbe6pd2sL3lEJrxyPJqedJy3kYfVZ5gTukUkPN3f1+ywehQI7frW6h4dejFeZRDwLEllHnw6AL3O84A6onDZpZOdW3utoq1xOUHfv6o0sEwpQ1peY6THjX0Mx6guDRqSnxySjpRsQsLYXRyXQiWKNK9JIYMV9962vKayuCG3kDtFXbbj2tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ix4gTCSof5dy+v+Gil0mgVSTSi2mz8M767Bp24baUS8=;
- b=heIpfoivxn/cmfB6q4saJ8D3LQS2piVilPZysPkAsn5iGcu6LFoEwZ8R7jQRcFLzEgMr5rv1CuJ7sh847+aUuuqLrMxV4j9ckXq/bFaquAWyp+MMdjqJ3L+rEI2J068jEPtlPWvcEH7ZE2HFSj8HXh8BSN6oZ2DTnwKKVML4YUE=
-Received: from BYAPR11MB2856.namprd11.prod.outlook.com (2603:10b6:a02:bd::11)
- by BYAPR11MB2870.namprd11.prod.outlook.com (2603:10b6:a02:cb::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Wed, 8 Jul
- 2020 16:22:41 +0000
-Received: from BYAPR11MB2856.namprd11.prod.outlook.com
- ([fe80::f1d5:60ca:d163:c1b3]) by BYAPR11MB2856.namprd11.prod.outlook.com
- ([fe80::f1d5:60ca:d163:c1b3%3]) with mapi id 15.20.3153.030; Wed, 8 Jul 2020
- 16:22:41 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <p.yadav@ti.com>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <vigneshr@ti.com>, <broonie@kernel.org>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <matthias.bgg@gmail.com>,
-        <michal.simek@xilinx.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     <nsekhar@ti.com>, <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v10 01/17] spi: spi-mem: allow specifying whether an op is
- DTR or not
-Thread-Topic: [PATCH v10 01/17] spi: spi-mem: allow specifying whether an op
- is DTR or not
-Thread-Index: AQHWVUQAL5FGGK8980aliLC/F11sVA==
-Date:   Wed, 8 Jul 2020 16:22:41 +0000
-Message-ID: <c795bdfb-2acb-1496-9d40-045e00556346@microchip.com>
-References: <20200623183030.26591-1-p.yadav@ti.com>
- <20200623183030.26591-2-p.yadav@ti.com>
-In-Reply-To: <20200623183030.26591-2-p.yadav@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-authentication-results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c27ad3d8-b2eb-40b7-1279-08d8235b2381
-x-ms-traffictypediagnostic: BYAPR11MB2870:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR11MB28703FEBEFA37B3E7397B155F0670@BYAPR11MB2870.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:530;
-x-forefront-prvs: 04583CED1A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: s3vrfTBJU9cIk4zrY9odxDYdFL5l6tF+Ncr1crnAmrddi3KDCcx34hQVbpkyEZT6xBdoj3MhqH+IBQubGQqpwDfOLmXED+epkexRr+XSXSSff6ddhHMDnwqCk29vYA6yb0KXWiOoC4ujFjMMpAhT0l0QPSqKSjGpucutVg7Kt6hahJqMo/y3dcxATJV4FDE+mGrtmUZWB2WSMq3PmilaxDBxUd3VnWjl6HfT0E0x7iJa0ZaKDrM+cUaC0ezWNNzMnC6NyERyHkxKk21yrlVU19kTOM3vAxgukk/63HrpHWZZSxw/IOVY+1hXKJS7URzUiTowtI1ib95aBMXt4wHrpwghgiHhvRc+p5lr+xkat+Qb2Ay/qheVUabR5x4IfeT1rUFp4XyORAT9K5IObTYC+A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2856.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(39860400002)(396003)(346002)(376002)(31696002)(66446008)(6512007)(66556008)(36756003)(6486002)(110136005)(7416002)(54906003)(4326008)(5660300002)(86362001)(76116006)(2616005)(66946007)(316002)(8936002)(31686004)(8676002)(66476007)(478600001)(186003)(53546011)(6506007)(26005)(64756008)(4744005)(91956017)(71200400001)(2906002)(921003)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: EzmseE/hKiptJbykOfo8N5tv+ihQWaX+pxLh0ObTIPlXttUlV1IRtnnmlQ8XLZ/lqG/jp50VVR4L9whyaRWsumSqzTPw6je1Jprw6Ra31MRcnCd1tLkcfp976Trj0dOub2Eb/+lGfIfB31PFrfwvd63W7qixdFDTLljT1sS1dRh0dyosmV6YYk2NWF+goM32H5rpzZwMvpsvJf9Ew9qKfpFCYh7aKh+o4aXnPtU6FJK5oViESETRkAJOovCAboeZwSftAYWzcTlfWEmT24MldhDksDuvinPOWk43Z1mtuBHc+yz4p1qe3K81fzhvi3whqvN1cBPQ7q5818S1ohlPCPzKxgm6T4QC5TFuehhkXww0vIO+BMOjHPBRg6cDOFDifgpGvbREFJkydSbJ1fKTduJ3MiCplZiS0i3+milI6G1zlunEvhLcFzTbANBd6PjW8QHV8TCYK5G6izDzl5HdbNmqueK/A/LI9MC+sV+B0fo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <52435D2550C6564695CAE7098AB19FAD@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 8 Jul 2020 12:22:58 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jtCqO-0003Mm-3u; Wed, 08 Jul 2020 16:22:48 +0000
+Date:   Wed, 8 Jul 2020 18:22:47 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Florian Weimer <fw@deneb.enyo.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        carlos <carlos@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>
+Subject: Re: [RFC PATCH for 5.8 3/4] rseq: Introduce RSEQ_FLAG_RELIABLE_CPU_ID
+Message-ID: <20200708162247.txdleelcalxkrfjy@wittgenstein>
+References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
+ <20200706204913.20347-4-mathieu.desnoyers@efficios.com>
+ <87fta3zstr.fsf@mid.deneb.enyo.de>
+ <2088331919.943.1594118895344.JavaMail.zimbra@efficios.com>
+ <874kqjzhkb.fsf@mid.deneb.enyo.de>
+ <378862525.1039.1594123580789.JavaMail.zimbra@efficios.com>
+ <d6b28b3e-9866-ce6f-659e-2c0dba4cd527@redhat.com>
+ <87zh8bw158.fsf@mid.deneb.enyo.de>
+ <1448906726.3717.1594222431276.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2856.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c27ad3d8-b2eb-40b7-1279-08d8235b2381
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2020 16:22:41.6553
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: d2f5uPbHCZFE+sa2vivsosBWKPbAgL0sKYJz9f4YNWFE8GtABTA50r3j9Kw+yZkt6uX8dZn+9av1/Orq+Jr4nYmk2r/0rhs71BrXDKtIENQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2870
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1448906726.3717.1594222431276.JavaMail.zimbra@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNi8yMy8yMCA5OjMwIFBNLCBQcmF0eXVzaCBZYWRhdiB3cm90ZToNCj4gRVhURVJOQUwgRU1B
-SUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3Uga25v
-dyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBFYWNoIHBoYXNlIGlzIGdpdmVuIGEgc2VwYXJh
-dGUgJ2R0cicgZmllbGQgc28gbWl4ZWQgcHJvdG9jb2xzIGxpa2UNCj4gNFMtNEQtNEQgY2FuIGJl
-IHN1cHBvcnRlZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFByYXR5dXNoIFlhZGF2IDxwLnlhZGF2
-QHRpLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNAbWlj
-cm9jaGlwLmNvbT4NCg0KPiAtLS0NCj4gIGRyaXZlcnMvc3BpL3NwaS1tZW0uYyAgICAgICB8IDMg
-KysrDQo+ICBpbmNsdWRlL2xpbnV4L3NwaS9zcGktbWVtLmggfCA4ICsrKysrKysrDQo+ICAyIGZp
-bGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykNCj4NCg0K
+On Wed, Jul 08, 2020 at 11:33:51AM -0400, Mathieu Desnoyers wrote:
+> [ Context for Linus: I am dropping this RFC patch, but am curious to
+>   hear your point of view on exposing to user-space which system call
+>   behavior fixes are present in the kernel, either through feature
+>   flags or system-call versioning. The intent is to allow user-space
+>   to make better decisions on whether it should use a system call or
+>   rely on fallback behavior. ]
+> 
+> ----- On Jul 7, 2020, at 3:55 PM, Florian Weimer fw@deneb.enyo.de wrote:
+> 
+> > * Carlos O'Donell:
+> > 
+> >> It's not a great fit IMO. Just let the kernel version be the arbiter of
+> >> correctness.
+> > 
+> > For manual review, sure.  But checking it programmatically does not
+> > yield good results due to backports.  Even those who use the stable
+> > kernel series sometimes pick up critical fixes beforehand, so it's not
+> > reliable possible for a program to say, “I do not want to run on this
+> > kernel because it has a bad version”.  We had a recent episode of this
+> > with the Go runtime, which tried to do exactly this.
+> 
+> FWIW, the kernel fix backport issue would also be a concern if we exposed
+> a numeric "fix level version" with specific system calls: what should
+> we do if a distribution chooses to include one fix in the sequence,
+> but not others ? Identifying fixes are "feature flags" allow
+> cherry-picking specific fixes in a backport, but versions would not
+> allow that.
+> 
+> That being said, maybe it's not such a bad thing to _require_ the
+> entire series of fixes to be picked in backports, which would be a
+> fortunate side-effect of the per-syscall-fix-version approach.
+> 
+> But I'm under the impression that such a scheme ends up versioning
+> a system call, which I suspect will be a no-go from Linus' perspective.
+
+I've been following this a little bit. The kernel version itself doesn't
+really mean anything and the kernel version is imho not at all
+interesting to userspace applications. Especially for cross-distro
+programs. We can't go around and ask Red Hat, SUSE, Ubuntu, Archlinux,
+openSUSE and god knows who what other distro what their fixed kernel
+version is. That's not feasible at all and not how must programs do it.
+Sure, a lot of programs name a minimal kernel version they require but
+realistically we can't keep bumping it all the time. So the best
+strategy for userspace imho has been to introduce a re-versioned flag or
+enum that indicates the fixed behavior.
+
+So I would suggest to just introduce
+RSEQ_FLAG_REGISTER_2                      = (1 << 2),
+that's how these things are usually done (Netlink etc.). So not
+introducing a fix bit or whatever but simply reversion your flag/enum.
+We already deal with this today.
+
+(Also, as a side-note. I see that you're passing struct rseq *rseq with
+a length argument but you are not versioning by size. Is that
+intentional? That basically somewhat locks you to the current struct
+rseq layout and means users might run into problems when you extend
+struct rseq in the future as they can't pass the new struct down to
+older kernels. The way we deal with this is now - rseq might preceed
+this - is copy_struct_from_user() (for example in sched_{get,set}attr(),
+openat2(), bpf(), clone3(), etc.). Maybe you want to switch to that to
+keep rseq extensible? Users can detect the new rseq version by just
+passing a larger struct down to the kernel with the extra bytes set to 0
+and if rseq doesn't complain they know they're dealing with an rseq that
+knows larger struct sizes. Might be worth it if you have any reason to
+belive that struct rseq might need to grow.)
+
+Christian
