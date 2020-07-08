@@ -2,83 +2,98 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95032C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC97206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400C62067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:04:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZNnzLjcr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LR39heqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgGHLDz (ORCPT
+        id S1728730AbgGHLEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:03:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41711 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726110AbgGHLDy (ORCPT
+        Wed, 8 Jul 2020 07:04:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728589AbgGHLEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:03:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594206234;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=X7JqGrX6+FRCRSoYELtArJatwC752X2T97lt6/es+Gg=;
-        b=ZNnzLjcr1WJMYz5qNvBlcrHtqJymhlP64CopFAXQ6ixHKgQk0nuiWWG3CZZXLkoHTrTMRG
-        rqx31CGwyHMwLmurdxDpW3qSwgKwMCqPhsgwXDciWEsKsNIpDVJxleurG3byS22Y0/Cmfe
-        9G+GVe7599b1wvxa54I1rfhYKnYIL4c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-449-89poVGgePnqb6q3haNmrDw-1; Wed, 08 Jul 2020 07:03:52 -0400
-X-MC-Unique: 89poVGgePnqb6q3haNmrDw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91EDD8015F5;
-        Wed,  8 Jul 2020 11:03:51 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 402DB7848A;
-        Wed,  8 Jul 2020 11:03:51 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] KVM: x86: Make CR4.VMXE reserved for the guest
-Date:   Wed,  8 Jul 2020 07:03:50 -0400
-Message-Id: <20200708110350.848997-1-pbonzini@redhat.com>
+        Wed, 8 Jul 2020 07:04:47 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E364C08C5DC;
+        Wed,  8 Jul 2020 04:04:47 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id z5so21501394pgb.6;
+        Wed, 08 Jul 2020 04:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x5Oz9T0/nlpWj7gcRwNRrBgun+HLR/g5S659t05tKAk=;
+        b=LR39heqMav7WHvZ4pKnrJQ31+4CyEVw+2hGuDisH+j9n1gkJwVc2/K6mxG1EQjfVil
+         LIGEYplcDD5qpXFPV8tgnl3KRw8fbxbycvmGyxMWqGiq9Q3ph4o5oRCLRWDrKdWli+by
+         K2ivVVunWUo+RHTwLF6uZtpR3HuqutuT1+xRXDuNSnW5Cy5Uwsy6qT8XR+16J4XQi1pb
+         JpvHS3+4fBTNk6cV0cehgvv2T8it1xEcJ1UEMhQXNnAwEadlHIUJX7Re5TNCGBmLQ14e
+         Szcu1XewElo2h5mjv/uqNISLi0pICRMI7+Cw5Zshlsz9/d92OMWqo6gCKvlaQ14N7krb
+         2DxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x5Oz9T0/nlpWj7gcRwNRrBgun+HLR/g5S659t05tKAk=;
+        b=bnGlypUo+N9hlMU6KzzAR1+oypsZWGRplZuP3gf4mUwxppKH6l/8ygr1tTyimIcLbP
+         GHdOAq/7zxniqq0xyFrHXxcJpDoCGGDD+gpz+wrD72lRQJtl7NQwlUmH1I2s6uVBNNsy
+         vbDoN4twklOX0V1zV2SxXnCgZyRB3q56+7A2yJNEkXU/zYauD8r2Fl29ElwV1CMdHvxh
+         iLDUoquaNf7bydPxJMDwvSgJf401s2CPzmJeHQRsRGMGdwkdwvx1fqI++C2kX/pzLNZm
+         aO2+fLose0tXCMEDODU/Dv+iHqsFnxut4sfZC5QFurWkOib1Z3fiTaQWFiIs57OPtwqf
+         D6Bg==
+X-Gm-Message-State: AOAM531Ca0WbvngjNp+Xio1H5cnQs52w0tm0uBNrRKzECMxi+Wop9gV9
+        PUgdxzwxS4fuiSyQk1bXvmA=
+X-Google-Smtp-Source: ABdhPJxb5ozr+JWoQl+Jz5jWG6SYLjXBLp6JNhv89WOi4DyJQNDOmtFEPYGpDsnU7XuR0T9m4Cl2xw==
+X-Received: by 2002:a62:64ce:: with SMTP id y197mr31491046pfb.19.1594206286983;
+        Wed, 08 Jul 2020 04:04:46 -0700 (PDT)
+Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id d18sm5092249pjz.11.2020.07.08.04.04.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 04:04:46 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 04:04:44 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Sergey Organov <sorganov@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
+ current kernel time
+Message-ID: <20200708110444.GD9080@hoboy>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+ <20200706142616.25192-4-sorganov@gmail.com>
+ <20200706152721.3j54m73bm673zlnj@skbuf>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706152721.3j54m73bm673zlnj@skbuf>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CR4.VMXE is reserved unless the VMX CPUID bit is set.  On Intel,
-it is also tested by vmx_set_cr4, but AMD relies on kvm_valid_cr4,
-so fix it.
+On Mon, Jul 06, 2020 at 06:27:21PM +0300, Vladimir Oltean wrote:
+> There's no correct answer, I'm afraid. Whatever the default value of the
+> clock may be, it's bound to be confusing for some reason, _if_ the
+> reason why you're investigating it in the first place is a driver bug.
+> Also, I don't really see how your change to use Jan 1st 1970 makes it
+> any less confusing.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/x86.h | 2 ++
- 1 file changed, 2 insertions(+)
++1
 
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 56975c6c1e15..224670d7c245 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -392,6 +392,8 @@ bool kvm_vcpu_exit_request(struct kvm_vcpu *vcpu);
- 		__reserved_bits |= X86_CR4_LA57;        \
- 	if (!__cpu_has(__c, X86_FEATURE_UMIP))          \
- 		__reserved_bits |= X86_CR4_UMIP;        \
-+	if (!__cpu_has(__c, X86_FEATURE_VMX))           \
-+		__reserved_bits |= X86_CR4_VMXE;        \
- 	__reserved_bits;                                \
- })
- 
--- 
-2.26.2
+For a PHC, the user of the clock must check the PTP stack's
+synchronization flags via the management interface to know the status
+of the time signal.
 
+Thanks,
+Richard
