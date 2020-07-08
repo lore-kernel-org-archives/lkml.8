@@ -2,103 +2,84 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A36AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D07DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E78520786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB462064B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730542AbgGHQSs (ORCPT
+        id S1730349AbgGHQUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:18:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbgGHQSs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:18:48 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D67C061A0B;
-        Wed,  8 Jul 2020 09:18:48 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id B948FBC116;
-        Wed,  8 Jul 2020 16:18:45 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     oberpar@linux.ibm.com, corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: GCOV BASED KERNEL PROFILING
-Date:   Wed,  8 Jul 2020 18:18:39 +0200
-Message-Id: <20200708161839.15170-1-grandmaster@al2klimov.de>
+        Wed, 8 Jul 2020 12:20:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:49976 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730260AbgGHQUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:20:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33BB831B;
+        Wed,  8 Jul 2020 09:20:18 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5F663F68F;
+        Wed,  8 Jul 2020 09:20:16 -0700 (PDT)
+Subject: Re: [PATCH] dma-pool: use single atomic pool for both DMA zones
+To:     Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Jeremy Linton <jeremy.linton@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        David Rientjes <rientjes@google.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20200707122804.21262-1-nsaenzjulienne@suse.de>
+ <e6504dc5-4169-edf9-d08e-17a378a1ef7a@arm.com>
+ <21a7276e98ae245404d82537ac1ee597a92f9150.camel@suse.de>
+ <20200708153635.GB26743@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <304053c7-9f88-8830-3287-2496a4cb48cd@arm.com>
+Date:   Wed, 8 Jul 2020 17:20:16 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+In-Reply-To: <20200708153635.GB26743@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On 2020-07-08 16:36, Christoph Hellwig wrote:
+> On Wed, Jul 08, 2020 at 12:35:34PM +0200, Nicolas Saenz Julienne wrote:
+>>> Which allows me to switch between ACPI/DT on the machine. In DT mode it
+>>> works fine now,
+>>
+>> Nice, would that count as a Tested-by from you?
+>>
+>>> but with ACPI I continue to have failures unless I
+>>> disable CMA via cma=0 on the kernel command line.
+>>
+>> Yes, I see why, in atomic_pool_expand() memory is allocated from CMA without
+>> checking its correctness. That calls for a separate fix. I'll try to think of
+>> something.
+> 
+> I think we need a dma_coherent_ok for the allocations from the
+> pool and then fall back to the next better one to get started.  And
+> yes, CMA is a bit of a mess, that generally needs better checks.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Yeah, another thought that came to mind later is that iommu-dma can use 
+pages from any pool regardless of the device's DMA mask, so we could 
+stand to be a lot less restrictive in that case too.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Perhaps it is better to just bite the bullet, keep the straightforward 
+one-pool-per-zone setup, and implement the dma_coherent_ok() type 
+fallback logic. More complexity for dma_alloc_from_pool(), but 
+everything else stays nice and simple - lose the assumption that 
+dev_to_pool() can work for this and and just let callers pass an 
+allocation mask directly, and have dma_free_from_pool() simply check all 
+available pools.
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
-
- Documentation/dev-tools/gcov.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/dev-tools/gcov.rst b/Documentation/dev-tools/gcov.rst
-index 7bd013596217..9e989baae154 100644
---- a/Documentation/dev-tools/gcov.rst
-+++ b/Documentation/dev-tools/gcov.rst
-@@ -22,7 +22,7 @@ Possible uses:
- * minimizing kernel configurations (do I need this option if the
-   associated code is never run?)
- 
--.. _gcov: http://gcc.gnu.org/onlinedocs/gcc/Gcov.html
-+.. _gcov: https://gcc.gnu.org/onlinedocs/gcc/Gcov.html
- .. _lcov: http://ltp.sourceforge.net/coverage/lcov.php
- 
- 
-@@ -171,7 +171,7 @@ Note on compilers
- GCC and LLVM gcov tools are not necessarily compatible. Use gcov_ to work with
- GCC-generated .gcno and .gcda files, and use llvm-cov_ for Clang.
- 
--.. _gcov: http://gcc.gnu.org/onlinedocs/gcc/Gcov.html
-+.. _gcov: https://gcc.gnu.org/onlinedocs/gcc/Gcov.html
- .. _llvm-cov: https://llvm.org/docs/CommandGuide/llvm-cov.html
- 
- Build differences between GCC and Clang gcov are handled by Kconfig. It
--- 
-2.27.0
-
+Robin.
