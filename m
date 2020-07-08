@@ -2,88 +2,144 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D064C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC38F221FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65653221FA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BPMCOPSp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnvJQ/F8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgGHIre (ORCPT
+        id S1728341AbgGHIso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53180 "EHLO
+        Wed, 8 Jul 2020 04:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgGHIre (ORCPT
+        with ESMTP id S1726144AbgGHIsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:47:34 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE02C08C5DC;
-        Wed,  8 Jul 2020 01:47:34 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z3so10382370pfn.12;
-        Wed, 08 Jul 2020 01:47:34 -0700 (PDT)
+        Wed, 8 Jul 2020 04:48:43 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C00C08C5DC;
+        Wed,  8 Jul 2020 01:48:43 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id u25so26422993lfm.1;
+        Wed, 08 Jul 2020 01:48:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+XW73svL4q3Y8sbhEmtW8nKZf1N04yzjCmqa1n2bim8=;
-        b=BPMCOPSpEGQkjR63xGqcQgEt5jgS/XT8omj77nPL8ucAD11ZrIW/7zHyw/e1BBlOpb
-         Hl7mQ4M9fbSeTuFbbUEcwublb0IZ2ck613GHy9ulyNbCKSb4RlSUzfKFoOM1dAo+6IWq
-         ut8tfW0cJ/cVQjsSOUJOnJ1dN53YusOIIF7fUU+gtBolEbqw3RU9LEsOESQkuImNbCw2
-         n5uhjxpkkIplzCK904sU+P1BEPNS0aMhaYqSin5ZZHa5PQyPxfe6GJeyNH/tea1BDUvs
-         ROyIFNRqi1IYoUjBL2cX48oK7H723JM3qgNqYXzwSSj9ieW8JAwDHNxOBTwy+YMIwZOx
-         B2pQ==
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=JEdvc9/856Brx/sBJ8Yam9emFnm/wF/Hn2AcTak3ns0=;
+        b=rnvJQ/F8yY5c5p7JR9DqPQybweabq5ZZ0x8RO0cpWyic1yTrJ1NssYrkg0hVz13Y/O
+         oNjICdRK/+Y/rVb+h0oLZSa6kz0eBQ32h+qe2PuGVsdFvvp57SJ1Vuh44zTUhlnphkEt
+         gBuwyxc3KLxaFd79SgN/+kmMeDqpO0qEiPzJMFaivfCvsYVD+9d7GW0RR+uQ5jiCNFZd
+         ysop0BwKUkbE+Rr7bYg3UUsvpEzWl9gABaYqelmbkw0Sk6y5vcHzlpBmJ/xQqHONtNkC
+         sZXSNYeqVhZFEr+mjnCjnlke6G+AXEBjgytlNBAZvsg8IZicvVhoMRPlMTQaHZQLwHG2
+         i4Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+XW73svL4q3Y8sbhEmtW8nKZf1N04yzjCmqa1n2bim8=;
-        b=lirx0fUQ6BW2Wq6SzGkaI6GvnzZjuOnI4+QG2cZJhDuu2R0yZ3mbEr3ciY5RDjZKxq
-         4RYdZYPVpivVA4f5rcbVJ/1gQ0XSw06C1Hb4SBbwYA1la+KsctzuaL/kzGORGix1wpmf
-         rrhWT4jPUcx09pEW9jYNBqAiiH6qUt56XeFR6j3N2eqvpvGYd+5GkmTVo4rrYX/mV89v
-         g7sck9xJgo5DhQbOiiyQBOFXtViqEpUGf3xWqg5uTabe6rbN+VtT+A7fDLzm2hlXM0OT
-         +SKiijv6zjN0JxVbUtJbaM4DYF55xocyGHXzjsD51qnHP4GCqcNH8wtjAo1qiXZI0ht4
-         YMgQ==
-X-Gm-Message-State: AOAM530oCV1SBkEovjkqq3v+YY6eHvlyLgrLbg6fV8ZupumX+d4j0Whm
-        +UxZttBHLx1G0kQT+TiwPV4AAKiYMrJb2fDrfr4=
-X-Google-Smtp-Source: ABdhPJxLozmIrntF8OwxLdnSULpe8zTIXamQeHqp89Arx+qe2C7k/dD47TaCIh2MUY0iy2W/6u/Sq/wo1xfYHCIXIu0=
-X-Received: by 2002:a63:a05f:: with SMTP id u31mr41948590pgn.4.1594198053920;
- Wed, 08 Jul 2020 01:47:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=JEdvc9/856Brx/sBJ8Yam9emFnm/wF/Hn2AcTak3ns0=;
+        b=cR5CRhaXttk/9MVCFgVaX33F7uE+/9VxOGLrgwH/gKFFY/pTejPfln0foqmDkHlVL4
+         UD6v/k8dFG7U3+PmBoGFAoP/vPr8Z+SNGOP4U1FwqOedu9o9y5YVzt9d32Jbvt4NBZev
+         XmiTtDzKm5eRbZuV9z05ByVh1I4yyry4bxrSnyiNyILUWij6AGe96SMlQkg5TjZUHlIb
+         9QbjRq+RVFTwG0UsFO+j6+JlL8BWkR/Yvfn/T28AMdtlVMUHtyiOBo7lVfAqZLi1rodv
+         cuUdi5sexQeXM3KlNOgYuWViwroJJC0TkUOLrY9gHGz9KMlKSZwP2A5joZkwgFjuFxgz
+         UhJg==
+X-Gm-Message-State: AOAM532tdRrfnWnR5h/KeKckiGTZa6pF9Ed/iTt/2VD4u+uGMMffOPDY
+        kI0FEfzqDdPuWf1CTblOcJY=
+X-Google-Smtp-Source: ABdhPJzsaTUJ/3P+9MRxfwbKU9eGeKrNZmSJcRae09Q9ycb3vCviRFLC7WfW0HS+4qxjWT8qcFGj0g==
+X-Received: by 2002:a19:8b8a:: with SMTP id n132mr35131491lfd.45.1594198121573;
+        Wed, 08 Jul 2020 01:48:41 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id t4sm750545ljg.11.2020.07.08.01.48.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 01:48:40 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [EXT] [PATCH  4/5] net: fec: get rid of redundant code in
+ fec_ptp_set()
+References: <20200706142616.25192-1-sorganov@gmail.com>
+        <20200706142616.25192-5-sorganov@gmail.com>
+        <AM6PR0402MB3607DE03C3333B9E4C8D3309FF660@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+        <87tuyj8jxx.fsf@osv.gnss.ru>
+        <AM6PR0402MB36074EB7107ACF728134FEB0FF670@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+Date:   Wed, 08 Jul 2020 11:48:30 +0300
+In-Reply-To: <AM6PR0402MB36074EB7107ACF728134FEB0FF670@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+        (Andy Duan's message of "Wed, 8 Jul 2020 05:34:35 +0000")
+Message-ID: <87y2nue6jl.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-References: <20200708082634.30191-1-digetx@gmail.com> <20200708082634.30191-6-digetx@gmail.com>
-In-Reply-To: <20200708082634.30191-6-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 8 Jul 2020 11:47:17 +0300
-Message-ID: <CAHp75VeMhb6BH9LnZxM+_-6nNzDErKN70T_QuuuW_dmLwcpoHg@mail.gmail.com>
-Subject: Re: [PATCH v1 5/5] gpio: max77620: Move variable declaration
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+Andy Duan <fugang.duan@nxp.com> writes:
+
+> From: Sergey Organov <sorganov@gmail.com> Sent: Tuesday, July 7, 2020 10:43 PM
+>> Andy Duan <fugang.duan@nxp.com> writes:
+>> 
+>> > From: Sergey Organov <sorganov@gmail.com> Sent: Monday, July 6, 2020
+>> 10:26 PM
+>> >> Code of the form "if(x) x = 0" replaced with "x = 0".
+>> >>
+>> >> Code of the form "if(x == a) x = a" removed.
+>> >>
+>> >> Signed-off-by: Sergey Organov <sorganov@gmail.com>
+>> >> ---
+>> >>  drivers/net/ethernet/freescale/fec_ptp.c | 4 +---
+>> >>  1 file changed, 1 insertion(+), 3 deletions(-)
+>> >>
+>> >> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c
+>> >> b/drivers/net/ethernet/freescale/fec_ptp.c
+>> >> index e455343..4152cae 100644
+>> >> --- a/drivers/net/ethernet/freescale/fec_ptp.c
+>> >> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
+>> >> @@ -485,9 +485,7 @@ int fec_ptp_set(struct net_device *ndev, struct
+>> ifreq
+>> >> *ifr)
+>> >>
+>> >>         switch (config.rx_filter) {
+>> >>         case HWTSTAMP_FILTER_NONE:
+>> >> -               if (fep->hwts_rx_en)
+>> >> -                       fep->hwts_rx_en = 0;
+>> >> -               config.rx_filter = HWTSTAMP_FILTER_NONE;
+>> > The line should keep according your commit log.
+>> 
+>> You mean I should fix commit log like this:
+>> 
+>> Code of the form "switch(x) case a: x = a; break" removed.
+>> 
+>> ?
+> Like this:
 >
-> Let's move the virq variable declaration to a top-level scope just to
-> make the code a bit more visually appealing.
+> case HWTSTAMP_FILTER_NONE:
+> 	fep->hwts_rx_en = 0;
+> 	config.rx_filter = HWTSTAMP_FILTER_NONE;
 
-To me it sounds like unneeded churn, but it's up to maintainers.
+This last line is redundant, as it's part of the switch that reads:
 
--- 
-With Best Regards,
-Andy Shevchenko
+switch (config.rx_filter) {
+ case HWTSTAMP_FILTER_NONE: config.rx_filter = HWTSTAMP_FILTER_NONE;
+
+that effectively reduces to:
+
+if(x == a) x = a;
+
+that is a no-op (provided 'x' is a usual memory reference),
+and that is exactly what I've described in the commit log.
+
+What do I miss?
+
+Thanks,
+-- Sergey
