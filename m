@@ -2,84 +2,110 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6352AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E18DA2065D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD792065D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgGHTVx (ORCPT
+        id S1726117AbgGHTZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:21:53 -0400
-Received: from mail.monom.org ([188.138.9.77]:52584 "EHLO mail.monom.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgGHTVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:21:53 -0400
-X-Greylist: delayed 343 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 15:21:52 EDT
-Received: from mail.monom.org (localhost [127.0.0.1])
-        by filter.mynetwork.local (Postfix) with ESMTP id D8687500626;
-        Wed,  8 Jul 2020 21:16:07 +0200 (CEST)
-Received: from localhost (b9168f17.cgn.dg-w.de [185.22.143.23])
-        by mail.monom.org (Postfix) with ESMTPSA id 2E67C5004C4;
-        Wed,  8 Jul 2020 21:16:07 +0200 (CEST)
-From:   Daniel Wagner <dwagner@suse.de>
-Subject: [ANNOUNCE] 4.4.229-rt200
-Date:   Wed, 08 Jul 2020 18:44:02 -0000
-Message-ID: <159423384250.24491.10602573106875114227@beryllium>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>,
-        Pavel Machek <pavel@denx.de>
+        Wed, 8 Jul 2020 15:25:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgGHTZX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 15:25:23 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50A6C061A0B;
+        Wed,  8 Jul 2020 12:25:22 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 3A466BC070;
+        Wed,  8 Jul 2020 19:25:20 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] remoteproc: Replace HTTP links with HTTPS ones
+Date:   Wed,  8 Jul 2020 21:25:13 +0200
+Message-Id: <20200708192513.18629-1-grandmaster@al2klimov.de>
+In-Reply-To: <f41ac867-e653-940d-374a-41e27f2697c3@ti.com>
+References: <f41ac867-e653-940d-374a-41e27f2697c3@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT-list!
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-I'm pleased to announce the 4.4.229-rt200 stable release.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-This release is just an update to the new stable 4.4.215 version.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ drivers/remoteproc/da8xx_remoteproc.c    | 2 +-
+ drivers/remoteproc/keystone_remoteproc.c | 2 +-
+ drivers/remoteproc/omap_remoteproc.c     | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Note: This update required dealing with a conflict in net/core/dev.c, where
-devnet_rename_seq was moved from a seqence count to an RWSEM and renamed
-to devnet_rename_sem. If you encounter runtime issues that show tracebacks
-in net/core/dev.c, please let me know.
+diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
+index 98e0be9476a4..9a4938c3025f 100644
+--- a/drivers/remoteproc/da8xx_remoteproc.c
++++ b/drivers/remoteproc/da8xx_remoteproc.c
+@@ -27,7 +27,7 @@ MODULE_PARM_DESC(da8xx_fw_name,
+ 
+ /*
+  * OMAP-L138 Technical References:
+- * http://www.ti.com/product/omap-l138
++ * https://www.ti.com/product/omap-l138
+  */
+ #define SYSCFG_CHIPSIG0 BIT(0)
+ #define SYSCFG_CHIPSIG1 BIT(1)
+diff --git a/drivers/remoteproc/keystone_remoteproc.c b/drivers/remoteproc/keystone_remoteproc.c
+index cd266163a65f..252ac6e2f653 100644
+--- a/drivers/remoteproc/keystone_remoteproc.c
++++ b/drivers/remoteproc/keystone_remoteproc.c
+@@ -2,7 +2,7 @@
+ /*
+  * TI Keystone DSP remoteproc driver
+  *
+- * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2015-2017 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #include <linux/module.h>
+diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+index 6955fab0a78b..d191610454d9 100644
+--- a/drivers/remoteproc/omap_remoteproc.c
++++ b/drivers/remoteproc/omap_remoteproc.c
+@@ -2,7 +2,7 @@
+ /*
+  * OMAP Remote Processor driver
+  *
+- * Copyright (C) 2011-2020 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011-2020 Texas Instruments Incorporated - https://www.ti.com/
+  * Copyright (C) 2011 Google, Inc.
+  *
+  * Ohad Ben-Cohen <ohad@wizery.com>
+-- 
+2.27.0
 
-Patch "net: Add a mutex around devnet_rename_seq" dropped in favour of
-602c47fbf46b ("net: core: device_rename: Use rwsem instead of a seqcount")
-
-Known issues:
-
-  sigwaittest with hackbench as workload is able to trigger a crash on x86_64,
-  the same as reported for the v4.4.220-rt196 release. The crash seems to
-  be triggered by a BPF program. IIRC, BPF was never supported in v4.4-rt
-  and I just forgot to disable in my configuration.
-
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v4.4-rt
-  Head SHA1: dd9655ee04bfb54f781974e3074a0caeb2423623
-
-Or to build 4.4.229-rt200 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.4.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.4.229.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.4/patch-4.4.229-rt200.patch.xz
-
-Enjoy!
-Daniel
