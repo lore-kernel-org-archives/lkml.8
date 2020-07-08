@@ -2,317 +2,183 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1892C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85B1220774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594187230;
-	bh=y5Us1HqIHD1WPViC3KU99w5PgmbZa+aOYly3kvCGC+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fYYAAn9tj7UoG7AVhDYlqRp7AUilR7IiBlsgI/RPWYmMWoqyk5lIcQf12uNaMwEIq
-	 JNJ9GwFO28MzwbiKcxuD8AyZM9pEgEsn6CvP43UEikw5TVeq0mHMQ2brf2hxYMthn9
-	 9DfJFdVbsCKlh56TcVL1QfNUnzM/lX+cifxXcn7A=
+	by mail.kernel.org (Postfix) with ESMTP id 9497B20774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:48:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="C/0f3tzm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbgGHFrJ (ORCPT
+        id S1729591AbgGHFsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:47:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbgGHFrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:47:08 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8B6420774;
-        Wed,  8 Jul 2020 05:47:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594187227;
-        bh=y5Us1HqIHD1WPViC3KU99w5PgmbZa+aOYly3kvCGC+8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HYo1xvRtj3Af3dgPeHSZt80E6woHjuhrdfz5ZD92nFuSwaZcqBidMes1bEpT2r6Js
-         u56YdVxYedaqtebkOiAk/t4FUzIcHnvro24vP3d598U1EDqFSYWoxogAmt3EEAeUWG
-         A/XueEBjx6BxdoUCfdIlbb94FR3H8ZPAEnRjhdTM=
-Date:   Wed, 8 Jul 2020 08:47:03 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] IB/hfi1: Use fallthrough pseudo-keyword
-Message-ID: <20200708054703.GR207186@unreal>
-References: <20200707173942.GA29814@embeddedor>
+        Wed, 8 Jul 2020 01:48:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgGHFsc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 01:48:32 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C60EC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 22:48:32 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id a8so39398371edy.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 22:48:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sH1vNvX+feajcnCsvdAreoIiJv5hsHTyp2OTCZ6kbJY=;
+        b=C/0f3tzmRBBx7Vg+YwRX/xLuDoujMD5WD2U9zm6TwnXK7bz3Y0scDy3NrKlGxrt4dt
+         CPSXnq85gbf+oan7E6kU8D2KexWrl9DaA/91tbHPSK7w3EMdaaw+idj35XP+k+8JvzwM
+         THBkm3zxP/Pir+7MDn2HW5LgkC9NyWTAGyINlouyVCJHV0dthE23lDDwsrbqQLCZ0PW1
+         nm/byJb3l0XVvKTqmhMFI7rGXOPFYblzFMMYmzkw+/kpyViR3OopzYYJQgc6pMX6R3/v
+         WV5R8XuBqWcrJmqDyOja9AzUxIYm7Skco2oBtv08ExW/YW0HdGSgG4fnpAX9RFpENabo
+         RFqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sH1vNvX+feajcnCsvdAreoIiJv5hsHTyp2OTCZ6kbJY=;
+        b=PU/8/Nq/ClwS6xPiLWDIx0BuODqxqa4fGMPYvhdd2fS8esxMHFTgs8TH+hsyGipjI/
+         3qcvTQyZ/QG2d35D/OOEtIXewBaTvMTOjZQhQRcl5RO0a4nYUDAN4vpK2CFEK1WyHXoO
+         d71gLaWnAVL3TnggzUlhG2cvwirrPBRux3ptllCOX6V0fzDfqO+RlvpQdr6MDI0cIEWV
+         y9iUTTJQxqAty3wUfi+S0tjVqrSKwFhThgrOJJMQy4Pe5O9y2d9wOGmHZVflqexJvmGx
+         psQw583TjqRMyg84mB7PTHC9tbc2VwIA/HwnhBEfzY/eSL3HlhZOAH9+5NQCnFbvBUo3
+         AnKg==
+X-Gm-Message-State: AOAM530/NCJDpGnzfjOfPMWSBFHF2lsc2nVG6yWQ53snpppE4+Al5Ndd
+        oGKJsPrO6ENia4uOsH/2icvf4i5rtA+gbiC4tCTkOA==
+X-Google-Smtp-Source: ABdhPJx46o9+pkuePT9sA7zg+ZJfHTWmUfr0lvtngh+DBcpmZeXU7z8whxlFETGvWd7DkVFim7svR/m0UBFwiuCyhME=
+X-Received: by 2002:aa7:c24d:: with SMTP id y13mr68029408edo.123.1594187311235;
+ Tue, 07 Jul 2020 22:48:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707173942.GA29814@embeddedor>
+References: <20200707055917.143653-1-justin.he@arm.com> <20200707055917.143653-2-justin.he@arm.com>
+ <20200707115454.GN5913@dhcp22.suse.cz> <AM6PR08MB406907F9F2B13DA6DC893AD9F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
+ <CAPcyv4ipu4qwKhk4pzJ8nZB2sp+=AndahS8eCgUvFvVP6dEkeA@mail.gmail.com> <20200708053239.GC386073@linux.ibm.com>
+In-Reply-To: <20200708053239.GC386073@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 7 Jul 2020 22:48:19 -0700
+Message-ID: <CAPcyv4i2gnrugO5n715WsDoj+gxV9Mjt-49zNnv+ROMLYy79LQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid as EXPORT_SYMBOL_GPL
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Justin He <Justin.He@arm.com>, Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Kaly Xin <Kaly.Xin@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 12:39:42PM -0500, Gustavo A. R. Silva wrote:
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> fall-through markings when it is the case.
+On Tue, Jul 7, 2020 at 10:33 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
 >
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> On Tue, Jul 07, 2020 at 08:56:36PM -0700, Dan Williams wrote:
+> > On Tue, Jul 7, 2020 at 7:20 PM Justin He <Justin.He@arm.com> wrote:
+> > >
+> > > Hi Michal and David
+> > >
+> > > > -----Original Message-----
+> > > > From: Michal Hocko <mhocko@kernel.org>
+> > > > Sent: Tuesday, July 7, 2020 7:55 PM
+> > > > To: Justin He <Justin.He@arm.com>
+> > > > Cc: Catalin Marinas <Catalin.Marinas@arm.com>; Will Deacon
+> > > > <will@kernel.org>; Dan Williams <dan.j.williams@intel.com>; Vishal Verma
+> > > > <vishal.l.verma@intel.com>; Dave Jiang <dave.jiang@intel.com>; Andrew
+> > > > Morton <akpm@linux-foundation.org>; Mike Rapoport <rppt@linux.ibm.com>;
+> > > > Baoquan He <bhe@redhat.com>; Chuhong Yuan <hslester96@gmail.com>; linux-
+> > > > arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+> > > > mm@kvack.org; linux-nvdimm@lists.01.org; Kaly Xin <Kaly.Xin@arm.com>
+> > > > Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid
+> > > > as EXPORT_SYMBOL_GPL
+> > > >
+> > > > On Tue 07-07-20 13:59:15, Jia He wrote:
+> > > > > This exports memory_add_physaddr_to_nid() for module driver to use.
+> > > > >
+> > > > > memory_add_physaddr_to_nid() is a fallback option to get the nid in case
+> > > > > NUMA_NO_NID is detected.
+> > > > >
+> > > > > Suggested-by: David Hildenbrand <david@redhat.com>
+> > > > > Signed-off-by: Jia He <justin.he@arm.com>
+> > > > > ---
+> > > > >  arch/arm64/mm/numa.c | 5 +++--
+> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> > > > > index aafcee3e3f7e..7eeb31740248 100644
+> > > > > --- a/arch/arm64/mm/numa.c
+> > > > > +++ b/arch/arm64/mm/numa.c
+> > > > > @@ -464,10 +464,11 @@ void __init arm64_numa_init(void)
+> > > > >
+> > > > >  /*
+> > > > >   * We hope that we will be hotplugging memory on nodes we already know
+> > > > about,
+> > > > > - * such that acpi_get_node() succeeds and we never fall back to this...
+> > > > > + * such that acpi_get_node() succeeds. But when SRAT is not present,
+> > > > the node
+> > > > > + * id may be probed as NUMA_NO_NODE by acpi, Here provide a fallback
+> > > > option.
+> > > > >   */
+> > > > >  int memory_add_physaddr_to_nid(u64 addr)
+> > > > >  {
+> > > > > -   pr_warn("Unknown node for memory at 0x%llx, assuming node 0\n",
+> > > > addr);
+> > > > >     return 0;
+> > > > >  }
+> > > > > +EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+> > > >
+> > > > Does it make sense to export a noop function? Wouldn't make more sense
+> > > > to simply make it static inline somewhere in a header? I haven't checked
+> > > > whether there is an easy way to do that sanely bu this just hit my eyes.
+> > >
+> > > Okay, I can make a change in memory_hotplug.h, sth like:
+> > > --- a/include/linux/memory_hotplug.h
+> > > +++ b/include/linux/memory_hotplug.h
+> > > @@ -149,13 +149,13 @@ int add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+> > >               struct mhp_params *params);
+> > >  #endif /* ARCH_HAS_ADD_PAGES */
+> > >
+> > > -#ifdef CONFIG_NUMA
+> > > -extern int memory_add_physaddr_to_nid(u64 start);
+> > > -#else
+> > > +#if !defined(CONFIG_NUMA) || !defined(memory_add_physaddr_to_nid)
+> > >  static inline int memory_add_physaddr_to_nid(u64 start)
+> > >  {
+> > >         return 0;
+> > >  }
+> > > +#else
+> > > +extern int memory_add_physaddr_to_nid(u64 start);
+> > >  #endif
+> > >
+> > > And then check the memory_add_physaddr_to_nid() helper on all arches,
+> > > if it is noop(return 0), I can simply remove it.
+> > > if it is not noop, after the helper,
+> > > #define memory_add_physaddr_to_nid
+> > >
+> > > What do you think of this proposal?
+> >
+> > Especially for architectures that use memblock info for numa info
+> > (which seems to be everyone except x86) why not implement a generic
+> > memory_add_physaddr_to_nid() that does:
 >
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/infiniband/hw/hfi1/chip.c     |    8 ++++----
->  drivers/infiniband/hw/hfi1/firmware.c |   16 ----------------
->  drivers/infiniband/hw/hfi1/mad.c      |    9 ++++-----
->  drivers/infiniband/hw/hfi1/pio.c      |    2 +-
->  drivers/infiniband/hw/hfi1/pio_copy.c |   12 ++++++------
->  drivers/infiniband/hw/hfi1/platform.c |   10 +++++-----
->  drivers/infiniband/hw/hfi1/qp.c       |    2 +-
->  drivers/infiniband/hw/hfi1/qsfp.c     |    4 ++--
->  drivers/infiniband/hw/hfi1/rc.c       |   25 ++++++++++++-------------
->  drivers/infiniband/hw/hfi1/sdma.c     |    9 ++++-----
->  drivers/infiniband/hw/hfi1/tid_rdma.c |    4 ++--
->  drivers/infiniband/hw/hfi1/uc.c       |    8 ++++----
->  12 files changed, 45 insertions(+), 64 deletions(-)
+> That would be only arm64.
 >
-> diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-> index 15f9c635f292..132f1df6f23b 100644
-> --- a/drivers/infiniband/hw/hfi1/chip.c
-> +++ b/drivers/infiniband/hw/hfi1/chip.c
-> @@ -7320,7 +7320,7 @@ static u16 link_width_to_bits(struct hfi1_devdata *dd, u16 width)
->  	default:
->  		dd_dev_info(dd, "%s: invalid width %d, using 4\n",
->  			    __func__, width);
-> -		/* fall through */
-> +		fallthrough;
->  	case 4: return OPA_LINK_WIDTH_4X;
 
-"case ..:" after "default:" ???
-IMHO, it should be written in more standard way.
-
->  	}
->  }
-> @@ -7380,7 +7380,7 @@ static void get_link_widths(struct hfi1_devdata *dd, u16 *tx_width,
->  			dd_dev_err(dd,
->  				   "%s: unexpected max rate %d, using 25Gb\n",
->  				   __func__, (int)max_rate);
-> -			/* fall through */
-> +			fallthrough;
->  		case 1:
->  			dd->pport[0].link_speed_active = OPA_LINK_SPEED_25G;
->  			break;
-> @@ -12882,7 +12882,7 @@ static u32 chip_to_opa_lstate(struct hfi1_devdata *dd, u32 chip_lstate)
->  		dd_dev_err(dd,
->  			   "Unknown logical state 0x%x, reporting IB_PORT_DOWN\n",
->  			   chip_lstate);
-> -		/* fall through */
-> +		fallthrough;
->  	case LSTATE_DOWN:
->  		return IB_PORT_DOWN;
->  	case LSTATE_INIT:
-> @@ -12901,7 +12901,7 @@ u32 chip_to_opa_pstate(struct hfi1_devdata *dd, u32 chip_pstate)
->  	default:
->  		dd_dev_err(dd, "Unexpected chip physical state of 0x%x\n",
->  			   chip_pstate);
-> -		/* fall through */
-> +		fallthrough;
->  	case PLS_DISABLED:
->  		return IB_PORTPHYSSTATE_DISABLED;
->  	case PLS_OFFLINE:
-
-same comment.
-
-
-> diff --git a/drivers/infiniband/hw/hfi1/firmware.c b/drivers/infiniband/hw/hfi1/firmware.c
-> index 2b57ba70ddd6..0e83d4b61e46 100644
-> --- a/drivers/infiniband/hw/hfi1/firmware.c
-> +++ b/drivers/infiniband/hw/hfi1/firmware.c
-> @@ -1868,11 +1868,8 @@ int parse_platform_config(struct hfi1_devdata *dd)
->  									2;
->  				break;
->  			case PLATFORM_CONFIG_RX_PRESET_TABLE:
-> -				/* fall through */
->  			case PLATFORM_CONFIG_TX_PRESET_TABLE:
-> -				/* fall through */
->  			case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
-> -				/* fall through */
->  			case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
->  				pcfgcache->config_tables[table_type].num_table =
->  							table_length_dwords;
-> @@ -1890,15 +1887,10 @@ int parse_platform_config(struct hfi1_devdata *dd)
->  			/* metadata table */
->  			switch (table_type) {
->  			case PLATFORM_CONFIG_SYSTEM_TABLE:
-> -				/* fall through */
->  			case PLATFORM_CONFIG_PORT_TABLE:
-> -				/* fall through */
->  			case PLATFORM_CONFIG_RX_PRESET_TABLE:
-> -				/* fall through */
->  			case PLATFORM_CONFIG_TX_PRESET_TABLE:
-> -				/* fall through */
->  			case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
-> -				/* fall through */
->  			case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
->  				break;
->  			default:
-> @@ -2027,15 +2019,10 @@ static int get_platform_fw_field_metadata(struct hfi1_devdata *dd, int table,
->
->  	switch (table) {
->  	case PLATFORM_CONFIG_SYSTEM_TABLE:
-> -		/* fall through */
->  	case PLATFORM_CONFIG_PORT_TABLE:
-> -		/* fall through */
->  	case PLATFORM_CONFIG_RX_PRESET_TABLE:
-> -		/* fall through */
->  	case PLATFORM_CONFIG_TX_PRESET_TABLE:
-> -		/* fall through */
->  	case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
-> -		/* fall through */
->  	case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
->  		if (field && field < platform_config_table_limits[table])
->  			src_ptr =
-> @@ -2138,11 +2125,8 @@ int get_platform_config_field(struct hfi1_devdata *dd,
->  			pcfgcache->config_tables[table_type].table;
->  		break;
->  	case PLATFORM_CONFIG_RX_PRESET_TABLE:
-> -		/* fall through */
->  	case PLATFORM_CONFIG_TX_PRESET_TABLE:
-> -		/* fall through */
->  	case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
-> -		/* fall through */
->  	case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
->  		src_ptr = pcfgcache->config_tables[table_type].table;
->
-> diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
-> index 7073f237a949..3222e3acb79c 100644
-> --- a/drivers/infiniband/hw/hfi1/mad.c
-> +++ b/drivers/infiniband/hw/hfi1/mad.c
-> @@ -721,7 +721,7 @@ static int check_mkey(struct hfi1_ibport *ibp, struct ib_mad_hdr *mad,
->  			/* Bad mkey not a violation below level 2 */
->  			if (ibp->rvp.mkeyprot < 2)
->  				break;
-> -			/* fall through */
-> +			fallthrough;
->  		case IB_MGMT_METHOD_SET:
->  		case IB_MGMT_METHOD_TRAP_REPRESS:
->  			if (ibp->rvp.mkey_violations != 0xFFFF)
-> @@ -1272,7 +1272,7 @@ static int set_port_states(struct hfi1_pportdata *ppd, struct opa_smp *smp,
->  	case IB_PORT_NOP:
->  		if (phys_state == IB_PORTPHYSSTATE_NOP)
->  			break;
-> -		/* FALLTHROUGH */
-> +		fallthrough;
->  	case IB_PORT_DOWN:
->  		if (phys_state == IB_PORTPHYSSTATE_NOP) {
->  			link_state = HLS_DN_DOWNDEF;
-> @@ -2300,7 +2300,6 @@ static int __subn_set_opa_vl_arb(struct opa_smp *smp, u32 am, u8 *data,
->  	 * can be changed from the default values
->  	 */
->  	case OPA_VLARB_PREEMPT_ELEMENTS:
-> -		/* FALLTHROUGH */
->  	case OPA_VLARB_PREEMPT_MATRIX:
->  		smp->status |= IB_SMP_UNSUP_METH_ATTR;
->  		break;
-> @@ -4170,7 +4169,7 @@ static int subn_get_opa_sma(__be16 attr_id, struct opa_smp *smp, u32 am,
->  			return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_CONSUMED;
->  		if (ibp->rvp.port_cap_flags & IB_PORT_SM)
->  			return IB_MAD_RESULT_SUCCESS;
-> -		/* FALLTHROUGH */
-> +		fallthrough;
->  	default:
->  		smp->status |= IB_SMP_UNSUP_METH_ATTR;
->  		ret = reply((struct ib_mad_hdr *)smp);
-> @@ -4240,7 +4239,7 @@ static int subn_set_opa_sma(__be16 attr_id, struct opa_smp *smp, u32 am,
->  			return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_CONSUMED;
->  		if (ibp->rvp.port_cap_flags & IB_PORT_SM)
->  			return IB_MAD_RESULT_SUCCESS;
-> -		/* FALLTHROUGH */
-> +		fallthrough;
->  	default:
->  		smp->status |= IB_SMP_UNSUP_METH_ATTR;
->  		ret = reply((struct ib_mad_hdr *)smp);
-> diff --git a/drivers/infiniband/hw/hfi1/pio.c b/drivers/infiniband/hw/hfi1/pio.c
-> index 79126b2b14ab..ff864f6f0266 100644
-> --- a/drivers/infiniband/hw/hfi1/pio.c
-> +++ b/drivers/infiniband/hw/hfi1/pio.c
-> @@ -86,7 +86,7 @@ void pio_send_control(struct hfi1_devdata *dd, int op)
->  	switch (op) {
->  	case PSC_GLOBAL_ENABLE:
->  		reg |= SEND_CTRL_SEND_ENABLE_SMASK;
-> -	/* Fall through */
-> +		fallthrough;
->  	case PSC_DATA_VL_ENABLE:
->  		mask = 0;
->  		for (i = 0; i < ARRAY_SIZE(dd->vld); i++)
-> diff --git a/drivers/infiniband/hw/hfi1/pio_copy.c b/drivers/infiniband/hw/hfi1/pio_copy.c
-> index 03024cec78dd..b12e4665c9ab 100644
-> --- a/drivers/infiniband/hw/hfi1/pio_copy.c
-> +++ b/drivers/infiniband/hw/hfi1/pio_copy.c
-> @@ -191,22 +191,22 @@ static inline void jcopy(u8 *dest, const u8 *src, u32 n)
->  	switch (n) {
->  	case 7:
->  		*dest++ = *src++;
-> -		/* fall through */
-> +		fallthrough;
->  	case 6:
->  		*dest++ = *src++;
-> -		/* fall through */
-> +		fallthrough;
->  	case 5:
->  		*dest++ = *src++;
-> -		/* fall through */
-> +		fallthrough;
->  	case 4:
->  		*dest++ = *src++;
-> -		/* fall through */
-> +		fallthrough;
->  	case 3:
->  		*dest++ = *src++;
-> -		/* fall through */
-> +		fallthrough;
->  	case 2:
->  		*dest++ = *src++;
-> -		/* fall through */
-> +		fallthrough;
->  	case 1:
->  		*dest++ = *src++;
->  		/* fall through */
-
-This is missed and it seems that one memcpy will do the same.
-
-> diff --git a/drivers/infiniband/hw/hfi1/platform.c b/drivers/infiniband/hw/hfi1/platform.c
-> index 36593f2efe26..4642d6ceb890 100644
-> --- a/drivers/infiniband/hw/hfi1/platform.c
-> +++ b/drivers/infiniband/hw/hfi1/platform.c
-> @@ -668,8 +668,8 @@ static u8 aoc_low_power_setting(struct hfi1_pportdata *ppd)
->
->  	/* active optical cables only */
->  	switch ((cache[QSFP_MOD_TECH_OFFS] & 0xF0) >> 4) {
-> -	case 0x0 ... 0x9: /* fallthrough */
-> -	case 0xC: /* fallthrough */
-> +	case 0x0 ... 0x9: fallthrough;
-> +	case 0xC: fallthrough;
-
-fallthrough is not needed.
-
->  	case 0xE:
->  		/* active AOC */
->  		power_class = get_qsfp_power_class(cache[QSFP_MOD_PWR_OFFS]);
-> @@ -899,8 +899,8 @@ static int tune_qsfp(struct hfi1_pportdata *ppd,
->
->  		*ptr_tuning_method = OPA_PASSIVE_TUNING;
->  		break;
-> -	case 0x0 ... 0x9: /* fallthrough */
-> -	case 0xC: /* fallthrough */
-> +	case 0x0 ... 0x9: fallthrough;
-> +	case 0xC: fallthrough;
-
-same
-
-Thanks
+Darn, I saw ARCH_KEEP_MEMBLOCK and had delusions of grandeur that it
+could solve my numa api woes. At least for x86 the problem is already
+solved with reserved numa_meminfo, but now I'm trying to write generic
+drivers that use those apis and finding these gaps on other archs.
