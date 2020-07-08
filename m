@@ -2,29 +2,29 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C51BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0229320720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71EE420663
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgGHQjn (ORCPT
+        id S1730603AbgGHQkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:39:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:51130 "EHLO foss.arm.com"
+        Wed, 8 Jul 2020 12:40:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:51178 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730157AbgGHQjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:39:43 -0400
+        id S1730157AbgGHQkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:40:01 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBC4C31B;
-        Wed,  8 Jul 2020 09:39:42 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A4311045;
+        Wed,  8 Jul 2020 09:40:01 -0700 (PDT)
 Received: from merodach.members.linode.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62B9F3F68F;
-        Wed,  8 Jul 2020 09:39:41 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C71563F68F;
+        Wed,  8 Jul 2020 09:39:59 -0700 (PDT)
 From:   James Morse <james.morse@arm.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org
 Cc:     Fenghua Yu <fenghua.yu@intel.com>,
@@ -34,10 +34,12 @@ Cc:     Fenghua Yu <fenghua.yu@intel.com>,
         H Peter Anvin <hpa@zytor.com>,
         Babu Moger <Babu.Moger@amd.com>,
         James Morse <james.morse@arm.com>
-Subject: [PATCH v5 00/10] x86/resctrl: Misc cleanup
-Date:   Wed,  8 Jul 2020 16:39:19 +0000
-Message-Id: <20200708163929.2783-1-james.morse@arm.com>
+Subject: [PATCH v5 01/10] x86/resctrl: Nothing uses struct mbm_state chunks_bw
+Date:   Wed,  8 Jul 2020 16:39:20 +0000
+Message-Id: <20200708163929.2783-2-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200708163929.2783-1-james.morse@arm.com>
+References: <20200708163929.2783-1-james.morse@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,67 +47,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Nothing reads struct mbm_states's chunks_bw value, its a copy of
+chunks. Remove it.
 
-These are the miscellaneous cleanup patches that floated to the top of
-the MPAM tree.
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+ arch/x86/kernel/cpu/resctrl/internal.h | 2 --
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 3 +--
+ 2 files changed, 1 insertion(+), 4 deletions(-)
 
-The only interesting thing are the patches to make the AMD/Intel
-differences something resctrl understands, instead of just 'happening'
-because of the different function pointers.
-This will become more important once MPAM support is added. parse_bw()
-and friends are what enforces resctrl's ABI. Allowing an
-architecture/platform to provide a subtly different function here would
-be bad for user-space.
-
-MPAM would set arch_has_sparse_bitmaps and arch_has_empty_bitmap, but
-not arch_needs_linear.
-
-Since [v4], its just been rebased (retested) and had the tags collected.
-
-Since [v3], some spurious brackets have disappears, comments have moved to
-the correct order, and tags collected.
-
-Since [v2], arch_has_empty_bitmap has been added, and some typos fixed.
-
-Since [v1], I've picked up all the review feedback and collected the
-tags.
-
-Nothing in this series should change any behaviour.
-
-
-Thanks,
-
-James
-
-[v4] https://lore.kernel.org/lkml/20200526134059.1690-1-james.morse@arm.com/
-[v3] https://lore.kernel.org/lkml/20200518131924.7741-1-james.morse@arm.com/
-[v2] https://lore.kernel.org/lkml/20200430170400.21501-1-james.morse@arm.com/
-[v1] https://lore.kernel.org/lkml/20200214182401.39008-1-james.morse@arm.com/
-
-
-James Morse (10):
-  x86/resctrl: Nothing uses struct mbm_state chunks_bw
-  x86/resctrl: Remove max_delay
-  x86/resctrl: Fix stale comment
-  x86/resctrl: use container_of() in delayed_work handlers
-  x86/resctrl: Include pid.h
-  x86/resctrl: Use is_closid_match() in more places
-  x86/resctrl: Add arch_needs_linear to explain AMD/Intel MBA difference
-  x86/resctrl: Merge AMD/Intel parse_bw() calls
-  x86/resctrl: Add arch_has_{sparse,empty}_bitmaps to explain CAT
-    differences
-  cacheinfo: Move resctrl's get_cache_id() to the cacheinfo header file
-
- arch/x86/kernel/cpu/resctrl/core.c        | 45 +++++------
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 92 ++++-------------------
- arch/x86/kernel/cpu/resctrl/internal.h    | 21 ++----
- arch/x86/kernel/cpu/resctrl/monitor.c     | 16 +---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 32 ++++----
- include/linux/cacheinfo.h                 | 21 ++++++
- include/linux/resctrl.h                   |  2 +
- 7 files changed, 80 insertions(+), 149 deletions(-)
-
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index f20a47d120b1..1bb81cbdad5f 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -282,7 +282,6 @@ struct rftype {
+  * struct mbm_state - status for each MBM counter in each domain
+  * @chunks:	Total data moved (multiply by rdt_group.mon_scale to get bytes)
+  * @prev_msr	Value of IA32_QM_CTR for this RMID last time we read it
+- * @chunks_bw	Total local data moved. Used for bandwidth calculation
+  * @prev_bw_msr:Value of previous IA32_QM_CTR for bandwidth counting
+  * @prev_bw	The most recent bandwidth in MBps
+  * @delta_bw	Difference between the current and previous bandwidth
+@@ -291,7 +290,6 @@ struct rftype {
+ struct mbm_state {
+ 	u64	chunks;
+ 	u64	prev_msr;
+-	u64	chunks_bw;
+ 	u64	prev_bw_msr;
+ 	u32	prev_bw;
+ 	u32	delta_bw;
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index 837d7d012b7b..d6b92d7487a7 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -279,8 +279,7 @@ static void mbm_bw_count(u32 rmid, struct rmid_read *rr)
+ 		return;
+ 
+ 	chunks = mbm_overflow_count(m->prev_bw_msr, tval, rr->r->mbm_width);
+-	m->chunks_bw += chunks;
+-	m->chunks = m->chunks_bw;
++	m->chunks += chunks;
+ 	cur_bw = (chunks * r->mon_scale) >> 20;
+ 
+ 	if (m->delta_comp)
 -- 
 2.20.1
 
