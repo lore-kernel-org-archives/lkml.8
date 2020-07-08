@@ -2,92 +2,82 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E13C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6958B2078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:59:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="J6Mu+tQo"
+	by mail.kernel.org (Postfix) with ESMTP id 36C3E2078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594220446;
+	bh=g8RTQ64Xlt02pBDQhtHdvTqOce4Ju3qEnWb9BCZtP3o=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=bIU/+4Zo0fEHFa64NZgZpSBp0uUNg9qHz3l6FLUffZr+BfpHv1gK/DfyD+LXRVlqA
+	 4iz7+miEoOXOyUZnh5UOGLtW45c0ZB6dQWBrGPP5fJh9wOs93t54y1K46as7ZFD2ni
+	 DBLQ0qVw8zkMuGuMumbRvuClvx07Br1eYH638NQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730034AbgGHO74 (ORCPT
+        id S1730048AbgGHPAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54984 "EHLO
+        Wed, 8 Jul 2020 11:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729921AbgGHO7y (ORCPT
+        with ESMTP id S1729880AbgGHPAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:59:54 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DABC08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 07:59:53 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id h16so15985828ilj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 07:59:53 -0700 (PDT)
+        Wed, 8 Jul 2020 11:00:43 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C08C08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 08:00:41 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k22so26718426oib.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 08:00:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        d=linuxfoundation.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tOY5WWCurwXjUIdxuXnE2O00KAaJIFSGqD8NNrWHd48=;
-        b=J6Mu+tQo2VKTqNJY50vJGPEqgC2Hv2aO92KQYyUke8OoZ31C2NM3Uy7BOsMKJ19i+b
-         FsZ+fS8EG0HEEzm9wMnX/88vLlZrLyIwGfMVOomLJO6ZuTg6C4UC/1jA5DqgJ79OuKWh
-         wDtqW0c3HvdgHjm4+ZPTC653WUHfhOwIxvkevNULcfj8BacfLzKL9G9TfHZNt0NBcnzI
-         2Wn1MTlzuFtMvQ9TcRRYi4oLArSc26gYcZOvwMSNZbipCBe1WQYV4tU6G0g5BPXX+pTq
-         mtp2eou8bi3zeegoHKAZ1DbCm4/m4ExV1/lw+3CVBjqu47X75ckXC+LMgE2TuA+7YCGZ
-         FQ+Q==
+        bh=0GZgF/SyAhnMOXZCKoaQ1p6yjE2XQ72Ure/u4JzjEMg=;
+        b=aWuWIcLFQ46VvdRzCVzqrfCzNUTmGcEQ8EsHJSBJ68MGVCHEvauLRtPXkri8BbADKj
+         Z1UHksgZTXONRXDVSJzG48ExfRw7pMPjkGuaer+1aYJ6YQwTlRRgRvv8CIEQ7wTlGd9B
+         srfARCjoO0QI52xSLXR/utQJ0ABCBjUgT8Abw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=tOY5WWCurwXjUIdxuXnE2O00KAaJIFSGqD8NNrWHd48=;
-        b=q4gv7rPmF9zSdQeQLO3Oa5Xgf676O0k52ZxAHl/A0SwW1bzKv+zu3oV+VIcFMPXgAN
-         iZR9D39d71IXV0pL5EIJNw6GRrJPmn/xYACw9k7hn8UR6HoQKpsRSFdXpDuACjBI2qKp
-         NTjF8mRk77nD0KM9Pl7Keo7mVusZsgbGiPFvbLOTnRfp3WAwVUMgQLRv+0LlF4zopeub
-         1ljWLUg/YM59ckDF5EBN4UOQkAGXbW/skVLIzG7mvcNTSsIf7Ku7wbmJbInCLS2cvutX
-         YIaXYppc0a1EUgX+YOAaUjvEAUem+Ad59oFOtEd0hQsP0XwxuWLCgnmuuvdA+YCdR1sh
-         Ptdg==
-X-Gm-Message-State: AOAM530wIOSRRmdoyxp+2AEINP5rsbAW6dA9F5W+WGHsu4Fw+TQ3rhgy
-        S8uscCxHOrrCMy540IOFIyYkzg==
-X-Google-Smtp-Source: ABdhPJzW1SMwnOLpN7lFVQUfbRGF1gkxnasd9s/n2z/WxcfCHkKq5ESuknHV13j9k73vJICdlC1Zlg==
-X-Received: by 2002:a92:d6d2:: with SMTP id z18mr40514146ilp.272.1594220392530;
-        Wed, 08 Jul 2020 07:59:52 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id m16sm13933887ili.26.2020.07.08.07.59.51
+        bh=0GZgF/SyAhnMOXZCKoaQ1p6yjE2XQ72Ure/u4JzjEMg=;
+        b=NwAxDskfNg3GAAuPt439dyea/0L9eDYicmifE0oflQUoegDxlSCa9w2f1AXOpd7L8C
+         btrhhxo4LfdoVZ94yoDeg34tvrP8a7JUvT8iB72wxfzFtMiMqNQ18TMXl7QrgwsMAf44
+         xFpADs5qASoS890Qzo2XVQbOFVbSE9ihITIcnsl05EQ3WD0S3BLdOO35cwKIoRYx31g0
+         Wdilr1sH1mBZu9nSa/IqFumMGSbuVqTQ/kShUcMyKeNbrzA3n0ioW9fxQSQM8LfgtznZ
+         TDzX5csRNSm2bYiPnnipNUVJhsW99DZAmhU6Os2bhu/yWCbWwpsMaEB7yve10MJxJkX9
+         QoTA==
+X-Gm-Message-State: AOAM531gY5jpT0yXdb+S3GgqfgF8x1OMxRnZlXETNjaj/WijtCieAU2z
+        qjpaw2vpnSvot5ffg1cOVvskJA==
+X-Google-Smtp-Source: ABdhPJxXSRc4vYONf0j91kT5lMWUgUpWTXL5LI/rgNjA97TZzv3YXY47t5H6qFbT/QfSD1RD423Kxw==
+X-Received: by 2002:aca:5c03:: with SMTP id q3mr7779580oib.132.1594220441078;
+        Wed, 08 Jul 2020 08:00:41 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id c26sm6433809otr.26.2020.07.08.08.00.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 07:59:51 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <20200706143208.GA25523@casper.infradead.org>
- <20200707151105.GA23395@test-zns>
- <20200707155237.GM25523@casper.infradead.org>
- <20200707202342.GA28364@test-zns>
- <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
- <20200707221812.GN25523@casper.infradead.org>
- <CGME20200707223803epcas5p41814360c764d6b5f67fdbf173a8ba64e@epcas5p4.samsung.com>
- <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
- <20200708125805.GA16495@test-zns>
- <2962cd68-de34-89be-0464-8b102a3f1d0e@kernel.dk>
- <20200708145826.GS25523@casper.infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b1c58211-496a-ed85-a9bb-0d0cc56e250c@kernel.dk>
-Date:   Wed, 8 Jul 2020 08:59:50 -0600
+        Wed, 08 Jul 2020 08:00:40 -0700 (PDT)
+Subject: Re: [PATCH 5.4 00/65] 5.4.51-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20200707145752.417212219@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <cf5d63dc-cf72-81b6-f76a-b27ebaff13fd@linuxfoundation.org>
+Date:   Wed, 8 Jul 2020 09:00:39 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200708145826.GS25523@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -95,65 +85,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 8:58 AM, Matthew Wilcox wrote:
-> On Wed, Jul 08, 2020 at 08:54:07AM -0600, Jens Axboe wrote:
->> On 7/8/20 6:58 AM, Kanchan Joshi wrote:
->>>>> +#define IOCB_NO_CMPL		(15 << 28)
->>>>>
->>>>>  struct kiocb {
->>>>> [...]
->>>>> -	void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
->>>>> +	loff_t __user *ki_uposp;
->>>>> -	int			ki_flags;
->>>>> +	unsigned int		ki_flags;
->>>>>
->>>>> +typedef void ki_cmpl(struct kiocb *, long ret, long ret2);
->>>>> +static ki_cmpl * const ki_cmpls[15];
->>>>>
->>>>> +void ki_complete(struct kiocb *iocb, long ret, long ret2)
->>>>> +{
->>>>> +	unsigned int id = iocb->ki_flags >> 28;
->>>>> +
->>>>> +	if (id < 15)
->>>>> +		ki_cmpls[id](iocb, ret, ret2);
->>>>> +}
->>>>>
->>>>> +int kiocb_cmpl_register(void (*cb)(struct kiocb *, long, long))
->>>>> +{
->>>>> +	for (i = 0; i < 15; i++) {
->>>>> +		if (ki_cmpls[id])
->>>>> +			continue;
->>>>> +		ki_cmpls[id] = cb;
->>>>> +		return id;
->>>>> +	}
->>>>> +	WARN();
->>>>> +	return -1;
->>>>> +}
->>>>
->>>> That could work, we don't really have a lot of different completion
->>>> types in the kernel.
->>>
->>> Thanks, this looks sorted.
->>
->> Not really, someone still needs to do that work. I took a quick look, and
->> most of it looks straight forward. The only potential complication is
->> ocfs2, which does a swap of the completion for the kiocb. That would just
->> turn into an upper flag swap. And potential sync kiocb with NULL
->> ki_complete. The latter should be fine, I think we just need to reserve
->> completion nr 0 for being that.
+On 7/7/20 9:16 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.51 release.
+> There are 65 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I was reserving completion 15 for that ;-)
+> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+> Anything received after that time might be too late.
 > 
-> +#define IOCB_NO_CMPL		(15 << 28)
-> ...
-> +	if (id < 15)
-> +		ki_cmpls[id](iocb, ret, ret2);
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.51-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
 > 
-> Saves us one pointer in the array ...
+> thanks,
+> 
+> greg k-h
+> 
 
-That works. Are you going to turn this into an actual series of patches,
-adding the functionality and converting users?
+Compiled and booted on my test system. No dmesg regressions.
 
--- 
-Jens Axboe
-
+thanks,
+-- Shuah
