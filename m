@@ -2,127 +2,113 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 160DD20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6627320720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="xL8tvX5Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OQcW7xbi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbgGHOSC (ORCPT
+        id S1729780AbgGHOSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:18:02 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:63318 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729468AbgGHOSB (ORCPT
+        Wed, 8 Jul 2020 10:18:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729758AbgGHOSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:18:01 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068EFu9J014410;
-        Wed, 8 Jul 2020 07:17:56 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=pfpt0818; bh=D6nmSWfWy5bSBQT2UH7xqHuqon/tMiiTzK5HS5iA6VQ=;
- b=xL8tvX5YfJC3U0OwoLSMyiLLY+M0SGwUYHxDpBdPL4Sp1PlDwDdz6GHDvHo2bNuId+L5
- ZKtpaougK0tSWtAGbfBpRXPjWj2gh4QtSHrwSpU8qblh0lzI9nEoeVqvmN+hC9GBMHmS
- nzguzueEQ/zzjXH/NQ4L09+FqSua45fnqEWM2PJ4Fbkfr/fvTwY7qTwqTof11aEacEqx
- z6yhSZyOzlu+7HsQmnGyE3UYulb7IHtZBgN5hE95ELIHalyT8gRls6b5GajUucdxWA7W
- C9A/e3auaeLQzdrVoLl3qG+E16lZq2zQMAwmKWLcZIS6f9BtyiOTHs1x0SOix11mF7eT EQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 322s9ng6a9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 07:17:56 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 8 Jul
- 2020 07:17:54 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 8 Jul 2020 07:17:54 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 6388F3F703F;
-        Wed,  8 Jul 2020 07:17:51 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Igor Russkikh <irusskikh@marvell.com>,
-        Dmitry Bezrukov <dbezrukov@marvell.com>,
-        Mark Starovoytov <mstarovoitov@marvell.com>,
-        "Dmitry Bogdanov" <dbogdanov@marvell.com>,
-        Egor Pomozov <epomozov@marvell.com>,
-        "Sergey Samoilenko" <sergey.samoilenko@marvell.com>,
-        Alexander Lobakin <alobakin@marvell.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] net: atlantic: fix ip dst and ipv6 address filters
-Date:   Wed, 8 Jul 2020 17:17:10 +0300
-Message-ID: <20200708141710.758-1-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 8 Jul 2020 10:18:04 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE5DC03541F
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 07:18:04 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id j186so2571258vsd.10
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 07:18:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JRR2oJR1zyC/uavTh/YxuWLenLZLmhhz/A0r+ZwnaDk=;
+        b=OQcW7xbioXHtmAbx/ip/Tlfp4h7QPUYO95fu9t2pWRbGgWlJdeUbVjfnhrlkb8WbDo
+         DuEeB1lMqRZ90j75hQHwVuJhH1GgDEM+TvRUdOlwKpT1wkHK+PCrx4V0ZGYCHmPI+tfN
+         UjLCSsrzM3cM8PCZhcfsK7i12HkvY2TIurjbLgTAttoIL23Ns9/mRuf/CWrbyebP+2kV
+         qm/QnDQEOKyTcB+HUcFdeDJ/vQfWklXSC7fP+5pxnZvWonHtUicImN5rmgxwg57I3UIl
+         nL7HbmxzTse5SSMZ9AoRMyqYF5kLVbJcZ0IFdjtwJa9eMX5SmLx5Qc8Ky0tFlbYpzU2X
+         E2qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JRR2oJR1zyC/uavTh/YxuWLenLZLmhhz/A0r+ZwnaDk=;
+        b=s95ZBUeT6FooFJxujrbrDco2Q0HsmQZnspjGaUNuLxPsNd4awn0iLLXuIxxZoY+7tD
+         E9q+cYPYBawDy4wUJ4KiSS7fg4xULS4EH4ZOR34UKgAjBDul4bbUbnQreM8HsDJkmbhO
+         f5X9qlj9Tzed4/srBav257Wbl1GoLzmi/TyD1JMpSNJFBlQF5LdVIi4kaRO+t7g9iuKW
+         RrzoWy1lCpPWSFm+8T5NbcQUIN9TjIhmUtLlG1dNUxgesyrMbBvqz4F/Voh87MHkNZ9y
+         esCuCzS2AqGQshuy31htCKpXxQ+Co8sERSfzCfEQtOTIa011cy6Cxv/R9T9cQmqB2FA4
+         5eFA==
+X-Gm-Message-State: AOAM532YDvlg2OlaKUenWcqoYhYYDWJACTJSOTpUqW6riCuYKVGNMTFU
+        FMuZ6ZMwvP09Sv9P7DQiTOgJ/XTjE6y8u7/RvkOeQq6sFA4=
+X-Google-Smtp-Source: ABdhPJxQJp92VWdX5KqTmVPfmOl1A/gpaTfKOYLxSE9CCWw6fdiJ4zs2Ef7rqDQv+aFRiUZRPmlsdiPFBfzPND4QOJE=
+X-Received: by 2002:a67:f888:: with SMTP id h8mr23246530vso.165.1594217883238;
+ Wed, 08 Jul 2020 07:18:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-08_13:2020-07-08,2020-07-08 signatures=0
+References: <20200708122546.214579-1-hch@lst.de> <20200708122546.214579-7-hch@lst.de>
+In-Reply-To: <20200708122546.214579-7-hch@lst.de>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 8 Jul 2020 16:17:26 +0200
+Message-ID: <CAPDyKFr5+LRRGMYhWM2At=O9LQSPmFAp0YuQiwmRiV1a6Tx6=g@mail.gmail.com>
+Subject: Re: [PATCH 6/6] mmc: remove the call to check_disk_change
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-raid@vger.kernel.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Bogdanov <dbogdanov@marvell.com>
+On Wed, 8 Jul 2020 at 14:41, Christoph Hellwig <hch@lst.de> wrote:
+>
+> The mmc driver doesn't support event notifications, which means
+> that check_disk_change is a no-op.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-This patch fixes ip dst and ipv6 address filters.
-There were 2 mistakes in the code, which led to the issue:
-* invalid register was used for ipv4 dst address;
-* incorrect write order of dwords for ipv6 addresses.
+I can queue this via my mmc tree, but perhaps you have plans for some
+additional cleanups on top? In such a case, it may be better that this
+goes through Jens' tree?
 
-Fixes: 23e7a718a49b ("net: aquantia: add rx-flow filter definitions")
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
-Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
----
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh.c    | 4 ++--
- .../ethernet/aquantia/atlantic/hw_atl/hw_atl_llh_internal.h   | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Kind regards
+Uffe
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh.c
-index 3c8e8047ea1e..d775b23025c1 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh.c
-@@ -1700,7 +1700,7 @@ void hw_atl_rpfl3l4_ipv6_src_addr_set(struct aq_hw_s *aq_hw, u8 location,
- 	for (i = 0; i < 4; ++i)
- 		aq_hw_write_reg(aq_hw,
- 				HW_ATL_RPF_L3_SRCA_ADR(location + i),
--				ipv6_src[i]);
-+				ipv6_src[3 - i]);
- }
- 
- void hw_atl_rpfl3l4_ipv6_dest_addr_set(struct aq_hw_s *aq_hw, u8 location,
-@@ -1711,7 +1711,7 @@ void hw_atl_rpfl3l4_ipv6_dest_addr_set(struct aq_hw_s *aq_hw, u8 location,
- 	for (i = 0; i < 4; ++i)
- 		aq_hw_write_reg(aq_hw,
- 				HW_ATL_RPF_L3_DSTA_ADR(location + i),
--				ipv6_dest[i]);
-+				ipv6_dest[3 - i]);
- }
- 
- u32 hw_atl_sem_ram_get(struct aq_hw_s *self)
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh_internal.h b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh_internal.h
-index 06220792daf1..7430ff025134 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh_internal.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_llh_internal.h
-@@ -1360,7 +1360,7 @@
-  */
- 
-  /* Register address for bitfield pif_rpf_l3_da0_i[31:0] */
--#define HW_ATL_RPF_L3_DSTA_ADR(filter) (0x000053B0 + (filter) * 0x4)
-+#define HW_ATL_RPF_L3_DSTA_ADR(filter) (0x000053D0 + (filter) * 0x4)
- /* Bitmask for bitfield l3_da0[1F:0] */
- #define HW_ATL_RPF_L3_DSTA_MSK 0xFFFFFFFFu
- /* Inverted bitmask for bitfield l3_da0[1F:0] */
--- 
-2.25.1
-
+> ---
+>  drivers/mmc/core/block.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+> index 4791c82f8f7c78..fa313b63413547 100644
+> --- a/drivers/mmc/core/block.c
+> +++ b/drivers/mmc/core/block.c
+> @@ -312,10 +312,7 @@ static int mmc_blk_open(struct block_device *bdev, fmode_t mode)
+>
+>         mutex_lock(&block_mutex);
+>         if (md) {
+> -               if (md->usage == 2)
+> -                       check_disk_change(bdev);
+>                 ret = 0;
+> -
+>                 if ((mode & FMODE_WRITE) && md->read_only) {
+>                         mmc_blk_put(md);
+>                         ret = -EROFS;
+> --
+> 2.26.2
+>
