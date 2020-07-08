@@ -2,122 +2,86 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58984C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA75C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 145C2206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DDA206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:45:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vz1Ro+du"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbgGHNot (ORCPT
+        id S1729766AbgGHNpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:44:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50728 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729288AbgGHNos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:44:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CC0F8AD25;
-        Wed,  8 Jul 2020 13:44:46 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 17A531E12BF; Wed,  8 Jul 2020 15:44:46 +0200 (CEST)
-Date:   Wed, 8 Jul 2020 15:44:46 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Keyur Patel <iamkeyur96@gmail.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ext4: fix spelling mistakes in extents.c
-Message-ID: <20200708134446.GA5288@quack2.suse.cz>
-References: <20200611031947.165079-1-iamkeyur96@gmail.com>
+        Wed, 8 Jul 2020 09:45:08 -0400
+Received: from casper.infradead.org ([90.155.50.34]:35430 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729288AbgGHNpH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:45:07 -0400
+X-Greylist: delayed 1266 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 09:45:06 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ALoTRUWpyoJ5TLvh/u0ihRx9QLx7mqPr8euUVwU9fWg=; b=vz1Ro+dufJWwWA7UmwzBycaTV9
+        /0RiH/WHQ+aVbPep3jyOFfC+FP1u5tkkrzFk3s7JyMNkln5i3pV7RpQjenFkFTWyUGqMRVwvT//JA
+        7Ln8LUzELu+B67MOLF21c7RKpsTDp0q2wmslj7Ntk3r4uH00aI6JobFDMismYfceQWmV8votbz/S4
+        ZQt9RxMwIp7yniwMoRc8Yt83jF6EcSNpJy6aQnT765vpDWP5Pteo+uRvy+NPp2rx6eaewh0NRee7v
+        XZWFjNktt65gVlkKlUHpxi37RmmbPgb+4++oEwChZy60usK+sCyjg2DVm/YCEOAtnEF7FdFI3hTee
+        WeMGORlw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtA31-0004Tm-CW; Wed, 08 Jul 2020 13:23:41 +0000
+Date:   Wed, 8 Jul 2020 14:23:38 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Song Liu <song@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/6] md: switch to ->check_events for media change
+ notifications
+Message-ID: <20200708132338.GO25523@casper.infradead.org>
+References: <20200708122546.214579-1-hch@lst.de>
+ <20200708122546.214579-2-hch@lst.de>
+ <09cd4827-52ae-0e7c-c3d3-e9a6cd27ff2b@cloud.ionos.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611031947.165079-1-iamkeyur96@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <09cd4827-52ae-0e7c-c3d3-e9a6cd27ff2b@cloud.ionos.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 10-06-20 23:19:46, Keyur Patel wrote:
-> Fix spelling issues over the comments in the code.
+On Wed, Jul 08, 2020 at 03:17:31PM +0200, Guoqing Jiang wrote:
+> On 7/8/20 2:25 PM, Christoph Hellwig wrote:
+> > -static int md_media_changed(struct gendisk *disk)
+> > -{
+> > -	struct mddev *mddev = disk->private_data;
+> > -
+> > -	return mddev->changed;
+> > -}
 > 
-> requsted ==> requested
-> deterimined ==> determined
-> insde ==> inside
-> neet ==> need
-> somthing ==> something
-> 
-> Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
+> Maybe we can remove "changed" from struct mddev since no one reads it
+> after the change.
 
-Thanks. The fixes look good. You can add:
+You missed this hunk:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
++static unsigned int md_check_events(struct gendisk *disk, unsigned int clearing)
+ {
+        struct mddev *mddev = disk->private_data;
++	unsigned int ret = 0;
 
-Ted, I think this patch has fallen through the cracks...
++	if (mddev->changed)
++               ret = DISK_EVENT_MEDIA_CHANGE;
+        mddev->changed = 0;
+-	return 0;
++	return ret;
+ }
 
-								Honza
-> ---
->  fs/ext4/extents.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-> index 7d088ff1e902..8028e1aae8de 100644
-> --- a/fs/ext4/extents.c
-> +++ b/fs/ext4/extents.c
-> @@ -1915,7 +1915,7 @@ static unsigned int ext4_ext_check_overlap(struct ext4_sb_info *sbi,
->  
->  /*
->   * ext4_ext_insert_extent:
-> - * tries to merge requsted extent into the existing extent or
-> + * tries to merge requested extent into the existing extent or
->   * inserts requested extent as new one into the tree,
->   * creating new leaf in the no-space case.
->   */
-> @@ -3125,7 +3125,7 @@ static int ext4_ext_zeroout(struct inode *inode, struct ext4_extent *ex)
->   *
->   *
->   * Splits extent [a, b] into two extents [a, @split) and [@split, b], states
-> - * of which are deterimined by split_flag.
-> + * of which are determined by split_flag.
->   *
->   * There are two cases:
->   *  a> the extent are splitted into two extent.
-> @@ -3650,7 +3650,7 @@ static int ext4_split_convert_extents(handle_t *handle,
->  		eof_block = map->m_lblk + map->m_len;
->  	/*
->  	 * It is safe to convert extent to initialized via explicit
-> -	 * zeroout only if extent is fully insde i_size or new_size.
-> +	 * zeroout only if extent is fully inside i_size or new_size.
->  	 */
->  	depth = ext_depth(inode);
->  	ex = path[depth].p_ext;
-> @@ -4495,7 +4495,7 @@ static long ext4_zero_range(struct file *file, loff_t offset,
->  	}
->  
->  	/*
-> -	 * Round up offset. This is not fallocate, we neet to zero out
-> +	 * Round up offset. This is not fallocate, we need to zero out
->  	 * blocks, so convert interior block aligned part of the range to
->  	 * unwritten and possibly manually zero out unaligned parts of the
->  	 * range.
-> @@ -5579,7 +5579,7 @@ ext4_swap_extents(handle_t *handle, struct inode *inode1,
->  		}
->  		ex1 = path1[path1->p_depth].p_ext;
->  		ex2 = path2[path2->p_depth].p_ext;
-> -		/* Do we have somthing to swap ? */
-> +		/* Do we have something to swap ? */
->  		if (unlikely(!ex2 || !ex1))
->  			goto finish;
->  
-> -- 
-> 2.26.2
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
