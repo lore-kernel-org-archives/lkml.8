@@ -2,104 +2,121 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64476C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 812D020720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5EF20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WPlORj9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbgGHO6T (ORCPT
+        id S1729988AbgGHO7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:58:19 -0400
-Received: from mga01.intel.com ([192.55.52.88]:54394 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729206AbgGHO6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:58:17 -0400
-IronPort-SDR: ItNlxMO4N6NFzkLUzKIzJTKj+/rPBNB2N2fEThqdQ4ZfnFaBhLekkzMDGpnaA9WEFYO2K1NCUx
- 4jZkNgkDLoOA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="165921741"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="165921741"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 07:58:17 -0700
-IronPort-SDR: id16Q0uJtbOwrtqSPDTWmtvVUzlkhQZprKMISQjsDMxp0dUVrEX7FPeAtyajoU+9ZFd/GiqnvE
- KR9Em0UU8CYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="427862028"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 08 Jul 2020 07:58:13 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jtBWY-000gwo-3z; Wed, 08 Jul 2020 17:58:14 +0300
-Date:   Wed, 8 Jul 2020 17:58:14 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     sean.wang@mediatek.com
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        mika.westerberg@linux.intel.com, sr@denx.de, arnd@arndb.de,
-        matthias.bgg@gmail.com, tthayer@opensource.altera.com,
-        linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Steven Liu <steven.liu@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v5] tty: serial: don't do termios for BTIF
-Message-ID: <20200708145814.GN3703480@smile.fi.intel.com>
-References: <7c67171728cdcc4ccc10adfaea1a14bfbcf8375a.1594163304.git.sean.wang@mediatek.com>
+        Wed, 8 Jul 2020 10:59:02 -0400
+Received: from casper.infradead.org ([90.155.50.34]:36584 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728932AbgGHO7B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 10:59:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HXY6HyjdszjWPlFmwnu7PpLohHyegjNp5zS3C0BgjdM=; b=WPlORj9uxpDZmh4ZtrCe+13y0J
+        TTC5I/io9fZVm04GjLP53C1pskY9DoFzCXzafhan+OEHLFqMzALjBb3+iX3ygsiFypEe4QXWI9465
+        JFmq+bUhkNm6OIBZ4+dtJzW0eoL9yhBeAuICktm4q90n/WDglp6KgEjT57ACusXeBFppQSlinK4XS
+        PpxEZ1+VRg9HopJ0sw8oVuLBaWETsvEQFLqA5mF+KOEQtXY0fsbqMIBSeSBQ9hrjVrR//bC3btKQD
+        NhBLIt0wWyk0l6dUK/2j8LO+2ZVhOOnfvaxEVNe6UgRB+U7YrO34j3x/3BJxqmF354/HXA30/QPqU
+        Ea+Hhm4g==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtBWl-0000r7-8z; Wed, 08 Jul 2020 14:58:27 +0000
+Date:   Wed, 8 Jul 2020 15:58:26 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+Message-ID: <20200708145826.GS25523@casper.infradead.org>
+References: <20200706143208.GA25523@casper.infradead.org>
+ <20200707151105.GA23395@test-zns>
+ <20200707155237.GM25523@casper.infradead.org>
+ <20200707202342.GA28364@test-zns>
+ <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
+ <20200707221812.GN25523@casper.infradead.org>
+ <CGME20200707223803epcas5p41814360c764d6b5f67fdbf173a8ba64e@epcas5p4.samsung.com>
+ <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
+ <20200708125805.GA16495@test-zns>
+ <2962cd68-de34-89be-0464-8b102a3f1d0e@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7c67171728cdcc4ccc10adfaea1a14bfbcf8375a.1594163304.git.sean.wang@mediatek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <2962cd68-de34-89be-0464-8b102a3f1d0e@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 07:11:22AM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Wed, Jul 08, 2020 at 08:54:07AM -0600, Jens Axboe wrote:
+> On 7/8/20 6:58 AM, Kanchan Joshi wrote:
+> >>> +#define IOCB_NO_CMPL		(15 << 28)
+> >>>
+> >>>  struct kiocb {
+> >>> [...]
+> >>> -	void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
+> >>> +	loff_t __user *ki_uposp;
+> >>> -	int			ki_flags;
+> >>> +	unsigned int		ki_flags;
+> >>>
+> >>> +typedef void ki_cmpl(struct kiocb *, long ret, long ret2);
+> >>> +static ki_cmpl * const ki_cmpls[15];
+> >>>
+> >>> +void ki_complete(struct kiocb *iocb, long ret, long ret2)
+> >>> +{
+> >>> +	unsigned int id = iocb->ki_flags >> 28;
+> >>> +
+> >>> +	if (id < 15)
+> >>> +		ki_cmpls[id](iocb, ret, ret2);
+> >>> +}
+> >>>
+> >>> +int kiocb_cmpl_register(void (*cb)(struct kiocb *, long, long))
+> >>> +{
+> >>> +	for (i = 0; i < 15; i++) {
+> >>> +		if (ki_cmpls[id])
+> >>> +			continue;
+> >>> +		ki_cmpls[id] = cb;
+> >>> +		return id;
+> >>> +	}
+> >>> +	WARN();
+> >>> +	return -1;
+> >>> +}
+> >>
+> >> That could work, we don't really have a lot of different completion
+> >> types in the kernel.
+> > 
+> > Thanks, this looks sorted.
 > 
-> Bluetooth Interface (BTIF) is designed dedicatedly for MediaTek SOC with
-> BT in order to be instead of the UART interface between BT module and Host
-> CPU, and not exported to user space to access.
-> 
-> As the UART design, BTIF will be an APB slave and can transmit or receive
-> data by MCU access, but doesn't provide termios function like baudrate and
-> flow control setup.
-> 
-> Even LCR on offset 0xC that is just a FAKELCR
-> a. If FAKELCR[7] is equaled to 1, RBR(0x00), THR(0x00), IER(0x04)
->    will not be readable/writable.
-> 
-> b. If FAKELCR is equaled to 0xBF, RBR(0x00), THR(0x00), IER(0x04),
->    IIR(0x08), and LSR(0x14) will not be readable/writable.
-> 
-> So adding a new capability 'UART_CAP_NTIO' for the unusual unsupported
-> case.
-> 
-> The bluetooth driver would use BTIF device as a serdev. So the termios
-> still function would be called in kernelspace from ttyport_open in
-> drivers/tty/serdev/serdev-ttyprt.c.
+> Not really, someone still needs to do that work. I took a quick look, and
+> most of it looks straight forward. The only potential complication is
+> ocfs2, which does a swap of the completion for the kiocb. That would just
+> turn into an upper flag swap. And potential sync kiocb with NULL
+> ki_complete. The latter should be fine, I think we just need to reserve
+> completion nr 0 for being that.
 
+I was reserving completion 15 for that ;-)
+
++#define IOCB_NO_CMPL		(15 << 28)
 ...
->  	up->port.quirks |= skip_txen_test ? UPQ_NO_TXEN_TEST : 0;
-> +
-> +	if (up->port.type == PORT_MTK_BTIF)
-> +		up->port.quirks |= UPQ_IGNORE_TERMIOS;
++	if (id < 15)
++		ki_cmpls[id](iocb, ret, ret2);
 
-I don't like to see this in core.
-
-Can we have this inside 8250_port.c? Something like extending struct
-serial8250_config to carry quirks and assign them when you add a port or start
-it (wherever it's appropriated)?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Saves us one pointer in the array ...
