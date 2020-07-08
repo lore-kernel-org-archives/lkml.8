@@ -7,92 +7,83 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80EAF20774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD6DC20774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594214918;
-	bh=VhMSss2jA7ZhAMNmYaOiFgdnMaIpMf97N72d87vx7Gc=;
+	s=default; t=1594214921;
+	bh=+EXzLaIGuNzcggJX4dbRDub2DW6Hh2v4eTzeQDydLkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LcouR8ncLl+SK3qo01CL4RuOhoX3c9Vahq8dV9NUK/+EIX4vT1f2taWJ5uxwnrM6/
-	 FWjME+q1uTuwtffhG7RwmH720lszmFbxmDtxdvK2MNTQl/6qqJRzfxJBIKKAXJCrT0
-	 SH6Ue+W+CXiQmGdCEyHvk29GsqsALtTEfTqo05vQ=
+	b=QOGyQ/DCdHIc0OLPungM6VICacRazuV8Ki4cKVGwLJ5Hfp04xCI6ql4OA4yARO9Zr
+	 YIXJDbcoLjmWqUX2EbMd5gwNo8YUJ/Yawu+n4OpSdGKxsWYsr9W5w0FoV+g8Sw1DMN
+	 hioTl9V9HTy1EOVO71FdQqx9eyiop/e7BSyG4pOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbgGHN2h (ORCPT
+        id S1729508AbgGHN2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:28:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35626 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 09:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729529AbgGHN2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:28:35 -0400
+        id S1728364AbgGHN22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:28:28 -0400
 Received: from localhost.localdomain (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91EA220720;
-        Wed,  8 Jul 2020 13:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6807D20720;
+        Wed,  8 Jul 2020 13:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594214915;
-        bh=VhMSss2jA7ZhAMNmYaOiFgdnMaIpMf97N72d87vx7Gc=;
+        s=default; t=1594214908;
+        bh=+EXzLaIGuNzcggJX4dbRDub2DW6Hh2v4eTzeQDydLkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cCVvskzcXISwIX0hhlIjsLDR50x5u8DPdSbnWaotV7x7VQKs+030CtZD+x2jtQNqP
-         bnX+WXRKoXTncGQBuAzKC6DTYO3JoZsVmqq/PMqIy/iNwi4P4ngjV18XdYjQKw4TON
-         sfcF+kst0qp2jxO90ylqceEGtb25W+1fdFjTO9zM=
+        b=dI3QpP3Bm0o/hSuSs8yvBest+gUB+6Qu+wI6usDJeDMhGsxGiQ+nF8aHL+PeyPWYh
+         qeNjehxwUX60U/yvlrDN4nyPXySsVGNUBiz8z4RSfAl4NCfGI6B8DijRcgfn8Kck0d
+         xWd1VeorilBau7z4F2KPfLNdS3DxJel3OukP3HT0=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 6/6] phy: stm32: use NULL instead of zero
-Date:   Wed,  8 Jul 2020 18:58:09 +0530
-Message-Id: <20200708132809.265967-6-vkoul@kernel.org>
+        Loc Ho <lho@apm.com>
+Subject: [PATCH 3/6] phy: xgene: remove unsigned integer comparison with less than zero
+Date:   Wed,  8 Jul 2020 18:58:06 +0530
+Message-Id: <20200708132809.265967-3-vkoul@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200708132809.265967-1-vkoul@kernel.org>
 References: <20200708132809.265967-1-vkoul@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_clk_get() and devm_reset_control_get() expect a const char *id for
-the last arg, but a value of zero was provided. This results in below
-sparse warning:
+We get warning with W=1 build:
+drivers/phy/phy-xgene.c: In function ‘xgene_phy_xlate’:
+drivers/phy/phy-xgene.c:1618:20: warning: comparison of unsigned
+expression in ‘< 0’ is always false [-Wtype-limits]
+ 1618 |  if (args->args[0] < MODE_SATA || args->args[0] >= MODE_MAX) |
 
-drivers/phy/st/phy-stm32-usbphyc.c:330:42: warning: Using plain integer as NULL pointer
-drivers/phy/st/phy-stm32-usbphyc.c:343:52: warning: Using plain integer as NULL pointer
+args is uint32_t so can never be less than zero, so remove this check
 
-Instead of zero, use NULL
-
-Cc: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Loc Ho <lho@apm.com>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/phy/st/phy-stm32-usbphyc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/phy/phy-xgene.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/st/phy-stm32-usbphyc.c b/drivers/phy/st/phy-stm32-usbphyc.c
-index 56bdea4b0bd9..2b3639cba51a 100644
---- a/drivers/phy/st/phy-stm32-usbphyc.c
-+++ b/drivers/phy/st/phy-stm32-usbphyc.c
-@@ -327,7 +327,7 @@ static int stm32_usbphyc_probe(struct platform_device *pdev)
- 	if (IS_ERR(usbphyc->base))
- 		return PTR_ERR(usbphyc->base);
+diff --git a/drivers/phy/phy-xgene.c b/drivers/phy/phy-xgene.c
+index 7a33ec12f71b..b88922e7de1d 100644
+--- a/drivers/phy/phy-xgene.c
++++ b/drivers/phy/phy-xgene.c
+@@ -1615,7 +1615,7 @@ static struct phy *xgene_phy_xlate(struct device *dev,
  
--	usbphyc->clk = devm_clk_get(dev, 0);
-+	usbphyc->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(usbphyc->clk)) {
- 		ret = PTR_ERR(usbphyc->clk);
- 		dev_err(dev, "clk get failed: %d\n", ret);
-@@ -340,7 +340,7 @@ static int stm32_usbphyc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+ 	if (args->args_count <= 0)
+ 		return ERR_PTR(-EINVAL);
+-	if (args->args[0] < MODE_SATA || args->args[0] >= MODE_MAX)
++	if (args->args[0] >= MODE_MAX)
+ 		return ERR_PTR(-EINVAL);
  
--	usbphyc->rst = devm_reset_control_get(dev, 0);
-+	usbphyc->rst = devm_reset_control_get(dev, NULL);
- 	if (!IS_ERR(usbphyc->rst)) {
- 		reset_control_assert(usbphyc->rst);
- 		udelay(2);
+ 	ctx->mode = args->args[0];
 -- 
 2.26.2
 
