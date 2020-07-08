@@ -2,184 +2,156 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3479BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82C2420775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0322020773
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:06:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5ToQjsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgGHAFK (ORCPT
+        id S1728871AbgGHAG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 20:05:10 -0400
-Received: from www62.your-server.de ([213.133.104.62]:45386 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728280AbgGHAFK (ORCPT
+        Tue, 7 Jul 2020 20:06:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728184AbgGHAGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 20:05:10 -0400
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jsxaC-0000bi-IL; Wed, 08 Jul 2020 02:05:04 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jsxaC-0009N2-5Q; Wed, 08 Jul 2020 02:05:04 +0200
-Subject: Re: [PATCH v3 13/16] exit: Factor thread_group_exited out of
- pidfd_poll
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
- <20200702164140.4468-13-ebiederm@xmission.com>
- <20200703203021.paebx25miovmaxqt@ast-mbp.dhcp.thefacebook.com>
- <873668s2j8.fsf@x220.int.ebiederm.org>
- <20200704155052.kmrest5useyxcfnu@wittgenstein>
- <87mu4bjlqm.fsf@x220.int.ebiederm.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <a84ec1df-dc9b-dd5b-cc34-385fd3ca1da4@iogearbox.net>
-Date:   Wed, 8 Jul 2020 02:05:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 7 Jul 2020 20:06:55 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B16EC061755;
+        Tue,  7 Jul 2020 17:06:55 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id by13so30298453edb.11;
+        Tue, 07 Jul 2020 17:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=5u59B3j/I1X4s0AMR7GmGfqCIPTDy7Yx0A6CGhS03ZI=;
+        b=N5ToQjsLjnK6wZEzcaRPU9Y+knUc86dCs8SeQPKdRgGWdPboUoOi7UORyDTXadYsv3
+         7CBYkyUD3dX+4gQB1KGXwZtWQ2kfEaVqfTHwc60UpDuqAyor4ABFEINpckUFoOILizJe
+         oQBv6Iji5JFNf9QSLlW/vq7fHjjr/EwMN5JyZWwuTpMZJz5JKbc/lPROdiUJlJGHauGi
+         RD7u21Eye++Fiol+bUJQB66ufveXulVlmvGzcKAFamYgjiZfRM1bhaMKNmSVf9y3e1B7
+         OdvnD5pc5Egb/oSEu7hgwK5d3NXv/a1YbpoydVt7Uk5QFjk/7Oa2DygHQGntW5m8QnbY
+         g+oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=5u59B3j/I1X4s0AMR7GmGfqCIPTDy7Yx0A6CGhS03ZI=;
+        b=pSmbUYBDKLwdMHabuTv1SJ6s0f7N8CVq3n/myiJ3ZmeG8PTQTNGwLNI4nJNW+3tshI
+         ogAXZGe65sVfGZGC54dt1sUWqV2KiaNtUDwo/rI6YNrJuCNXZW8BIxGaXYc1e0PYWa61
+         wm8s2BGXKGxS/Avsx70gCPPzUwYvkrCqekwKpV5hTEq1VGbMswvkNk2sQaqr8QGF+wiM
+         TjRNM/Q/C5okfOW8g0ptRGIyEsNJbhVmY1ieZK6N7CqW8tQ5K3v5G/2NJ14ZyodMXve8
+         wKgmAxjB/CI4+fH6Lj/7cO+hyKut6vLPjRQKb55cSMfmnmJfJ+PdTaAFDHqGtqQhyFQi
+         hKFg==
+X-Gm-Message-State: AOAM530uOwwSg7T98veBvequFT28PSybxr3aIWlhZGtF5oGByAVVLW+o
+        9zqY7EZAb4tHg1wgEDcZXYxHVvPI
+X-Google-Smtp-Source: ABdhPJywQjpe6f713ksCWGGvOeROqfyqL4v3zrI5FFbi60qlBQjl58fYLu+MK5Y/LYkh0q8yk8Nraw==
+X-Received: by 2002:aa7:c24d:: with SMTP id y13mr66898293edo.123.1594166813826;
+        Tue, 07 Jul 2020 17:06:53 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:b7f9:7600:9501:ad60:97b5:4cc9])
+        by smtp.gmail.com with ESMTPSA id j19sm27123807edt.44.2020.07.07.17.06.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 17:06:52 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 02:06:51 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     linux-sparse@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Sparse improvements & regressions for Linux v5.7-rc1 -> v5.8-rc1
+Message-ID: <20200708000651.f5bykhd3mhgsbvk7@ltop.local>
 MIME-Version: 1.0
-In-Reply-To: <87mu4bjlqm.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25866/Tue Jul  7 15:47:52 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 7:09 PM, Eric W. Biederman wrote:
-> Christian Brauner <christian.brauner@ubuntu.com> writes:
->> On Fri, Jul 03, 2020 at 04:37:47PM -0500, Eric W. Biederman wrote:
->>> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
->>>
->>>> On Thu, Jul 02, 2020 at 11:41:37AM -0500, Eric W. Biederman wrote:
->>>>> Create an independent helper thread_group_exited report return true
->>>>> when all threads have passed exit_notify in do_exit.  AKA all of the
->>>>> threads are at least zombies and might be dead or completely gone.
->>>>>
->>>>> Create this helper by taking the logic out of pidfd_poll where
->>>>> it is already tested, and adding a missing READ_ONCE on
->>>>> the read of task->exit_state.
->>>>>
->>>>> I will be changing the user mode driver code to use this same logic
->>>>> to know when a user mode driver needs to be restarted.
->>>>>
->>>>> Place the new helper thread_group_exited in kernel/exit.c and
->>>>> EXPORT it so it can be used by modules.
->>>>>
->>>>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->>>>> ---
->>>>>   include/linux/sched/signal.h |  2 ++
->>>>>   kernel/exit.c                | 24 ++++++++++++++++++++++++
->>>>>   kernel/fork.c                |  6 +-----
->>>>>   3 files changed, 27 insertions(+), 5 deletions(-)
->>>>>
->>>>> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
->>>>> index 0ee5e696c5d8..1bad18a1d8ba 100644
->>>>> --- a/include/linux/sched/signal.h
->>>>> +++ b/include/linux/sched/signal.h
->>>>> @@ -674,6 +674,8 @@ static inline int thread_group_empty(struct task_struct *p)
->>>>>   #define delay_group_leader(p) \
->>>>>   		(thread_group_leader(p) && !thread_group_empty(p))
->>>>>   
->>>>> +extern bool thread_group_exited(struct pid *pid);
->>>>> +
->>>>>   extern struct sighand_struct *__lock_task_sighand(struct task_struct *task,
->>>>>   							unsigned long *flags);
->>>>>   
->>>>> diff --git a/kernel/exit.c b/kernel/exit.c
->>>>> index d3294b611df1..a7f112feb0f6 100644
->>>>> --- a/kernel/exit.c
->>>>> +++ b/kernel/exit.c
->>>>> @@ -1713,6 +1713,30 @@ COMPAT_SYSCALL_DEFINE5(waitid,
->>>>>   }
->>>>>   #endif
->>>>>   
->>>>> +/**
->>>>> + * thread_group_exited - check that a thread group has exited
->>>>> + * @pid: tgid of thread group to be checked.
->>>>> + *
->>>>> + * Test if thread group is has exited (all threads are zombies, dead
->>>>> + * or completely gone).
->>>>> + *
->>>>> + * Return: true if the thread group has exited. false otherwise.
->>>>> + */
->>>>> +bool thread_group_exited(struct pid *pid)
->>>>> +{
->>>>> +	struct task_struct *task;
->>>>> +	bool exited;
->>>>> +
->>>>> +	rcu_read_lock();
->>>>> +	task = pid_task(pid, PIDTYPE_PID);
->>>>> +	exited = !task ||
->>>>> +		(READ_ONCE(task->exit_state) && thread_group_empty(task));
->>>>> +	rcu_read_unlock();
->>>>> +
->>>>> +	return exited;
->>>>> +}
->>>>
->>>> I'm not sure why you think READ_ONCE was missing.
->>>> It's different in wait_consider_task() where READ_ONCE is needed because
->>>> of multiple checks. Here it's done once.
->>>
->>> In practice it probably has no effect on the generated code.  But
->>> READ_ONCE is about telling the compiler not to be clever.  Don't use
->>> tearing loads or stores etc.  When all of the other readers are using
->>> READ_ONCE I just get nervous if we have a case that doesn't.
->>
->> That's not true. The only place where READ_ONCE(->exit_state) is used is
->> in wait_consider_task() and nowhere else. We had that discussion a while
->> ago where I or someone proposed to simply place a READ_ONCE() around all
->> accesses to exit_state for the sake of kcsan and we agreed that it's
->> unnecessary and not to do this.
->> But it obviously doesn't hurt to have it.
-> 
-> There is a larger discussion to be had around the proper handling of
-> exit_state.
-> 
-> In this particular case because we are accessing exit_state with
-> only rcu_read_lock protection, because the outcome of the read
-> is about correctness, and because the compiler has nothing else
-> telling it not to re-read exit_state, I believe we actually need
-> the READ_ONCE.
-> 
-> At the same time it would take a pretty special compiler to want to
-> reaccess that field in thread_group_exited.
-> 
-> I have looked through and I don't find any of the other access of
-> exit_state where the result is about correctness (so that we care)
-> and we don't hold tasklist_lock.
-> 
-> But I have removed the necessary wording from the commit comment.
+I've finally written a silly script to easily compare my tests
+of Sparse on the kernel. So, it's now easy to share those results.
 
-Hey Eric, are you planning to push the final version into a topic branch
-so it can be pulled into bpf-next as discussed earlier?
+It's a comparison of Sparse's unique warnings between v5.7-rc1 &
+v5.8-rc1 on x86-64 (defconfig + allyesconfig). The results are
+quite similar on other architectures.
 
-Thanks,
-Daniel
+Note that the differences can be caused by changes in the kernel
+code or in Sparse code.
+
+Have fun.
+
+- 20114 19249 Total
+
++    95   161 Initializer entry defined twice
+-   152    98 Using plain integer as NULL pointer
+    394   394 advancing past deep designator
+      4     4 arithmetics on pointers to functions
++    15    16 bad assignment to restricted type
+      4     4 cast between address spaces (<asn:3> -> <asn:4>)
++     0    38 cast from non-scalar
+-   288   276 cast from restricted type
+-    43    41 cast removes address space '<asn:1>' of expression
+    142   142 cast removes address space '<asn:2>' of expression
+      1     1 cast removes address space '<asn:3>' of expression
++    10    15 cast removes address space '<asn:4>' of expression
++    13    51 cast to non-scalar
+-  4796  4512 cast to restricted type
++   595   609 cast truncates bits from constant value
++   335   349 context imbalance - different lock contexts for basic block
+-   463   453 context imbalance - unexpected unlock
+-   198   189 context imbalance - wrong count at exit
++   117   118 dereference of noderef expression
++    10    13 dubious: !x & y
++     0     1 dubious: !x | !y
+      6     6 dubious: !x | y
++    56    57 dubious: x & !y
+     21    21 dubious: x | !y
++    17    21 function with external linkage has definition
+      2     2 implicit cast from nocast type
++   497   500 incompatible types in comparison expression (different address spaces)
+      3     3 incompatible types in comparison expression (different base types)
+      1     1 incompatible types in comparison expression (different type sizes)
++     5     6 incompatible types in conditional expression (different base types)
++  1216  1225 incorrect type in argument (different address spaces)
+-   528   515 incorrect type in argument (different base types)
++     0     5 incorrect type in argument (different modifiers)
+-    11    10 incorrect type in argument (different type sizes)
++     0     1 incorrect type in argument (incompatible argument (different address spaces))
+      1     1 incorrect type in argument (incompatible argument (different base types))
++   369   388 incorrect type in assignment (different address spaces)
+-  5607  4945 incorrect type in assignment (different base types)
+      1     1 incorrect type in assignment (different modifiers)
++   139   141 incorrect type in initializer (different address spaces)
+-   141   132 incorrect type in initializer (different base types)
++     4     7 incorrect type in initializer (incompatible argument (different address spaces))
+-    27    26 incorrect type in return expression (different address spaces)
+-    30    26 incorrect type in return expression (different base types)
+-   516   451 invalid assignement
+     37    37 invalid bitfield specifier for type restricted type.
+     13    13 invalid initializer
+      1     1 marked inline, but without a definition
+      1     1 memcpy with byte count of ...
+      5     5 memset with byte count of ...
+-    10     0 missing braces around initializer
+      7     7 mixed bitwiseness
+     10    10 mixing different enum types:
+      1     1 multiple address spaces given
+-     2     1 no newline at end of file
+      1     1 non-scalar type in conditional:
+-     1     0 preprocessor token offsetof redefined
++   948   959 restricted type degrades to integer
++    42    43 return expression in void function
+      3     3 shift count is (-1)
+      5     5 shift too big for type
+     12    12 static assertion failed
+      5     5 subtraction of different types can't work (different address spaces)
++    23    24 subtraction of functions? Share your drugs
+      1     1 switch with no cases
++     0     5 symbol redeclared with different type (incompatible argument (different address spaces))
++  2109  2135 symbol was not declared. Should it be static?
+      1     1 too long token expansion
+      3     3 trying to concatenate long character string (8191 bytes max)
