@@ -2,118 +2,95 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65358C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8286C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DECF206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DE9207C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:00:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594227605;
+	bh=gVx9pVBglCab/+yLWlvOgqkrNnTRyxFbapbMdcE2/84=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=J1E2dTUWbtGf50F8sYU5VdEN5jI2MI2VPgoyTdNibNXgn0SQLPOgOLJwJOMNlP+si
+	 bFG+OTcy75vNW88x2Ctc7l08Ut0+3NyTHCB0j7xtKtZAb3ZZ2dtzY1z6vaRYllPJUg
+	 2ZQVn6fwRYQv0XG0WsKLD5ZpE8PUoxO/XvheDIjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbgGHQ7H (ORCPT
+        id S1730486AbgGHRAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:59:07 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:33820 "EHLO smtp.al2klimov.de"
+        Wed, 8 Jul 2020 13:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgGHQ7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:59:06 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 04350BC0CB;
-        Wed,  8 Jul 2020 16:59:02 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: CLOCKSOURCE, CLOCKEVENT DRIVERS
-Date:   Wed,  8 Jul 2020 18:58:56 +0200
-Message-Id: <20200708165856.15322-1-grandmaster@al2klimov.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+        id S1725989AbgGHRAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:00:03 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5351206F6;
+        Wed,  8 Jul 2020 17:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594227603;
+        bh=gVx9pVBglCab/+yLWlvOgqkrNnTRyxFbapbMdcE2/84=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=r1xftyc4XBLnqgFAm47wKCJjzgHiMo2YDG17d6p5WP85qZyR8cRYULcnEMcxg1+Rn
+         ylEUUpsdz/NluoZ0/RB1zuEW0oP7wct5Mev0BJ/e0Lh1p5nrheDfUJxwhwAoaL1lqW
+         /4PJD3XiLBN0keLx2oOmPMfEtbfn5369HPDKSQR8=
+Date:   Wed, 08 Jul 2020 17:59:58 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     tiwai@suse.com, ckeepax@opensource.cirrus.com,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com
+In-Reply-To: <20200707163641.17113-1-srinivas.kandagatla@linaro.org>
+References: <20200707163641.17113-1-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 00/11] ASoC: qdsp6: add gapless compressed audio support
+Message-Id: <159422758801.28431.9889241714368615225.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Tue, 7 Jul 2020 17:36:30 +0100, Srinivas Kandagatla wrote:
+> This patchset adds gapless compressed audio support on q6asm.
+> Gapless on q6asm is implemented using 2 streams in a single asm session.
+> 
+> First few patches are enhacements done to q6asm interface to allow
+> stream id per each command, gapless flags and silence meta data.
+> Along with this there are few trivial changes which I thought are necessary!
+> Last patch implements copy callback to allow finer control over buffer offsets,
+> specially in partial drain cases.
+> 
+> [...]
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Applied to
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Thanks!
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+[1/2] ASoC: q6asm: add command opcode to timeout error report
+      commit: b6198097b84abcbf9d098ddf5887fe62f9da2e3c
+[2/2] ASoC: qdsp6: use dev_err instead of pr_err
+      commit: 0579ece8f4de9956ea7087c63f55663ea79283bc
 
- If you apply the patch, please let me know.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
- Documentation/devicetree/bindings/timer/ti,keystone-timer.txt | 2 +-
- drivers/clocksource/timer-ti-32k.c                            | 2 +-
- drivers/clocksource/timer-ti-dm.c                             | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-diff --git a/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt b/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
-index 5fbe361252b4..d3905a5412b8 100644
---- a/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
-@@ -10,7 +10,7 @@ It is global timer is a free running up-counter and can generate interrupt
- when the counter reaches preset counter values.
- 
- Documentation:
--http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
-+https://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
- 
- Required properties:
- 
-diff --git a/drivers/clocksource/timer-ti-32k.c b/drivers/clocksource/timer-ti-32k.c
-index ae12bbf3d68c..59b0be482f32 100644
---- a/drivers/clocksource/timer-ti-32k.c
-+++ b/drivers/clocksource/timer-ti-32k.c
-@@ -21,7 +21,7 @@
-  * Roughly modelled after the OMAP1 MPU timer code.
-  * Added OMAP4 support - Santosh Shilimkar <santosh.shilimkar@ti.com>
-  *
-- * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com
-  */
- 
- #include <linux/clk.h>
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 60aff087947a..33eeabf9c3d1 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -4,7 +4,7 @@
-  *
-  * OMAP Dual-Mode Timers
-  *
-- * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
-  * Tarun Kanti DebBarma <tarun.kanti@ti.com>
-  * Thara Gopinath <thara@ti.com>
-  *
--- 
-2.27.0
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
