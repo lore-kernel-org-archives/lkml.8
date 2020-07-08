@@ -2,118 +2,263 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CACC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0C7020DD4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlyWPfUg"
+	by mail.kernel.org (Postfix) with ESMTP id A627C20DD4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgGHI2I (ORCPT
+        id S1728108AbgGHI2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:28:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727818AbgGHI1v (ORCPT
+        Wed, 8 Jul 2020 04:28:20 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:41316 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727818AbgGHI2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:27:51 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2EAC08C5DC;
-        Wed,  8 Jul 2020 01:27:50 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so53170738ljg.13;
-        Wed, 08 Jul 2020 01:27:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=U7a3U3FWt+2vvGq/4SeXOH+9VZAL84/sZqX5NPLbxHY=;
-        b=YlyWPfUgHqncBUEyzjMnqeQFBBJS/y2jCMlcsMj+NCY2iCQ2jJxoCDHGVYfHmdg4s9
-         CuVT+pQ79H9pc94xSZZCHjx98YTkpeWFjdm8KE96EAGw36y+aX7Ctx9OVJVm90bkxcJB
-         KAdc+QOlrWyqA21hj58kNm2J9x7AWm8SldLYXug2s6oOAsxmgv1MSfOQ4Bw0zPc1luB5
-         9LwYYuDWtsjs8GjGr4ETxqsp6314HtFwqgqZ6gCrANwcXlO2QH/sOZDJLFAdXqs89GCx
-         AfirMWrU99lMo+Qvk2FiFjwrmWVTf4GSsqxcOeXy6ScmtKVwmOB6kKJcOQ49YVOU/8WA
-         4ylw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=U7a3U3FWt+2vvGq/4SeXOH+9VZAL84/sZqX5NPLbxHY=;
-        b=WzScEBTCGFtNjMMTjybkvqpXGscOAFKkyaXxcaoOOAmXx0kmFeJyA7nCTGj8Bfuuj3
-         pA93ZsYF19pSSLcfvgOLcTS2vbIAarOqrLqMPKEmC96cd5FQPTM4OaojIWBgNNme3Bjo
-         gxwSZR4J66H371pmX+2RSAEOXynjpGTOxNpoAbM84s2cHDtXtFa/RHcfvKYcJK1udydD
-         q/TEhKrld3Ot1uXM28zfxy5B0MX72RxGCclv7oo/qU0qTzWpPDN5YXe6ZDcgI+4zKXpW
-         mRU2bWXMGZqd9vh9y9qjxVH1YvyAeLydZI/Xxvy68qHq/+Kp6j9imuiv5Te0N8jEjmxG
-         PudQ==
-X-Gm-Message-State: AOAM531CqBWmQ7CVPG8G6jj0yUNZ6vs3c6GtzjQzuz0r0yLX05ARHwkR
-        PZLQSEZ5eFBnba9hNZw0paI=
-X-Google-Smtp-Source: ABdhPJxPK2ha7FsL8Jach3PIhvFCcx7Ep3E9QChRmE1gbuo2S6y+JJUMSbF62Iq/aVEL2ymidTnlDg==
-X-Received: by 2002:a2e:8794:: with SMTP id n20mr14091674lji.359.1594196869189;
-        Wed, 08 Jul 2020 01:27:49 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.gmail.com with ESMTPSA id d2sm737555ljg.6.2020.07.08.01.27.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 01:27:48 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/5] gpio: max77620: Replace 8 with MAX77620_GPIO_NR
-Date:   Wed,  8 Jul 2020 11:26:31 +0300
-Message-Id: <20200708082634.30191-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200708082634.30191-1-digetx@gmail.com>
-References: <20200708082634.30191-1-digetx@gmail.com>
+        Wed, 8 Jul 2020 04:28:20 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07509368|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.546935-0.000464198-0.452601;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03309;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.I-BVxka_1594196890;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I-BVxka_1594196890)
+          by smtp.aliyun-inc.com(10.147.42.198);
+          Wed, 08 Jul 2020 16:28:14 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
+        tiny.windzz@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com, Frank Lee <frank@allwinnertech.com>
+Subject: [PATCH v3 16/16] arm64: allwinner: A100: add support for Allwinner Perf1 board
+Date:   Wed,  8 Jul 2020 16:28:21 +0800
+Message-Id: <20200708082821.13188-1-frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MAX77620_GPIO_NR enum value represents the total number of GPIOs,
-let's use it instead of a raw value in order to improve the code's
-readability a tad.
+A100 perf1 is an Allwinner A100-based SBC, with the following features:
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+- 1GiB DDR3 DRAM
+- AXP803 PMIC
+- 2 USB 2.0 ports
+- MicroSD slot and on-board eMMC module
+- on-board Nand flash
+- ···
+
+Adds initial support for it, including UART and PMU.
+
+Signed-off-by: Frank Lee <frank@allwinnertech.com>
 ---
- drivers/gpio/gpio-max77620.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../dts/allwinner/sun50i-a100-allwinner-perf1.dts  | 180 +++++++++++++++++++++
+ 2 files changed, 181 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
 
-diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index 473b4e900bbb..6a7ede6b8b74 100644
---- a/drivers/gpio/gpio-max77620.c
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -19,8 +19,8 @@ struct max77620_gpio {
- 	struct regmap		*rmap;
- 	struct device		*dev;
- 	struct mutex		buslock; /* irq_bus_lock */
--	unsigned int		irq_type[8];
--	bool			irq_enabled[8];
-+	unsigned int		irq_type[MAX77620_GPIO_NR];
-+	bool			irq_enabled[MAX77620_GPIO_NR];
- };
- 
- static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
-@@ -38,7 +38,7 @@ static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
- 
- 	pending = value;
- 
--	for_each_set_bit(offset, &pending, 8) {
-+	for_each_set_bit(offset, &pending, MAX77620_GPIO_NR) {
- 		unsigned int virq;
- 
- 		virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index e4d3cd0..ab780db 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a100-allwinner-perf1.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+new file mode 100644
+index 0000000..38621bb
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: (GPL-2.0+ or MIT)
++/*
++ * Copyright (c) 2020 Frank Lee <frank@allwinnertech.com>
++ */
++
++/dts-v1/;
++
++#include "sun50i-a100.dtsi"
++
++/{
++	model = "Allwinner A100 Perf1";
++	compatible = "allwinner,a100-perf1", "allwinner,sun50i-a100";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&pio {
++	vcc-pb-supply = <&reg_dcdc1>;
++	vcc-pc-supply = <&reg_eldo1>;
++	vcc-pd-supply = <&reg_dcdc1>;
++	vcc-pe-supply = <&reg_dldo2>;
++	vcc-pf-supply = <&reg_dcdc1>;
++	vcc-pg-supply = <&reg_dldo1>;
++	vcc-ph-supply = <&reg_dcdc1>;
++};
++
++&r_pio {
++	/*
++	 * FIXME: We can't add that supply for now since it would
++	 * create a circular dependency between pinctrl, the regulator
++	 * and the RSB Bus.
++	 *
++	 * vcc-pl-supply = <&reg_aldo3>;
++	 */
++};
++
++&r_i2c0 {
++	status = "okay";
++
++	axp803: pmic@34 {
++		compatible = "x-powers,axp803";
++		reg = <0x34>;
++		interrupt-parent = <&r_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		x-powers,drive-vbus-en; /* set N_VBUSEN as output pin */
++	};
++};
++
++#include "axp803.dtsi"
++
++&ac_power_supply {
++	status = "okay";
++};
++
++&reg_aldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-pll-avcc";
++};
++
++&reg_aldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-dram-1";
++};
++
++&reg_aldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-usb-pl";
++};
++
++&reg_dcdc1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pc-io-usb-pd-emmc-nand-card";
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	/*
++	 * FIXME: update min and max before support dvfs.
++	 */
++	regulator-min-microvolt = <500000>;
++	regulator-max-microvolt = <1300000>;
++	regulator-name = "vdd-cpux";
++};
++
++/* DCDC3 is polyphased with DCDC2 */
++
++&reg_dcdc4 {
++	regulator-always-on;
++	regulator-min-microvolt = <950000>;
++	regulator-max-microvolt = <950000>;
++	regulator-name = "vdd-sys-usb-dram";
++};
++
++&reg_dcdc5 {
++	regulator-always-on;
++	regulator-min-microvolt = <1500000>;
++	regulator-max-microvolt = <1500000>;
++	regulator-name = "vcc-dram-2";
++};
++
++&reg_dldo1 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pg-dcxo-wifi";
++};
++
++&reg_dldo2 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vcc-pe-csi";
++};
++
++&reg_dldo3 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "ldo-avdd-csi";
++};
++
++&reg_dldo4 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "avcc-csi";
++};
++
++&reg_eldo1 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-pc-lvds-csi-efuse-emmc-nand";
++};
++
++&reg_eldo2 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "dvdd-csi";
++};
++
++&reg_eldo3 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-mipi-lcd";
++};
++
++&reg_fldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <900000>;
++	regulator-name = "vdd-cpus-usb";
++};
++
++&reg_ldo_io0 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-ctp";
++	status = "okay";
++};
++
++&reg_drivevbus {
++	regulator-name = "usb0-vbus";
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pb_pins>;
++	status = "okay";
++};
 -- 
-2.26.0
+1.9.1
 
