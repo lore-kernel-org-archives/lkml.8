@@ -2,106 +2,103 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A36AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C61320786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J+G840SU"
+	by mail.kernel.org (Postfix) with ESMTP id 2E78520786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730551AbgGHQSH (ORCPT
+        id S1730542AbgGHQSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:18:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38842 "EHLO
+        Wed, 8 Jul 2020 12:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730093AbgGHQSG (ORCPT
+        with ESMTP id S1728148AbgGHQSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:18:06 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CFDDC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 09:18:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=i483IMQSRtR6J+n94GaZZET/X/lONTUJSH/4pcYK8jY=; b=J+G840SUfei8u8CJZHruj5Kw3p
-        3y3+AoKYPTFfOxz+GtgBh8qi5jW2iVlbQtmMzRgMr8RoWJGpSOD3lE/c6dMxbVmcyfqLr9DeNlura
-        II877bwwbuswXMUl+ISOTvxAZYOiL3Orzu68MXsAaeIazcS9JkP9PTjoHGOTIDypClGe+hKmJMDW6
-        A6CxpOLrhZNabtMyC9ytQN/33EdSvvx3maKfW4G2qYb98v9IOvS5F8XSlYG8hYnIhvYg4rR74i+PC
-        bz21rFdzdPwUxh+AxTCFWQx34PXItOHPW6s+4udZK6FsVezO/xdoP52liLVhHV+wYvnm+ONGHGpWP
-        DWRPLizw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtCll-0000lM-Bq; Wed, 08 Jul 2020 16:18:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2E4EE3006D0;
-        Wed,  8 Jul 2020 18:18:00 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1C3C4214ECDA9; Wed,  8 Jul 2020 18:18:00 +0200 (CEST)
-Date:   Wed, 8 Jul 2020 18:18:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 06/20] seqlock: Extend seqcount API with associated
- locks
-Message-ID: <20200708161800.GT4800@hirez.programming.kicks-ass.net>
-References: <20200630054452.3675847-7-a.darwish@linutronix.de>
- <20200706212148.GE5523@worktop.programming.kicks-ass.net>
- <20200707084024.GA4097637@debian-buster-darwi.lab.linutronix.de>
- <20200707130410.GO4800@hirez.programming.kicks-ass.net>
- <20200707143726.GO117543@hirez.programming.kicks-ass.net>
- <20200708103314.GB4151780@debian-buster-darwi.lab.linutronix.de>
- <20200708122938.GQ4800@hirez.programming.kicks-ass.net>
- <20200708150930.GA147323@debian-buster-darwi.lab.linutronix.de>
- <20200708153522.GR4800@hirez.programming.kicks-ass.net>
- <20200708155813.GA147953@debian-buster-darwi.lab.linutronix.de>
+        Wed, 8 Jul 2020 12:18:48 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D67C061A0B;
+        Wed,  8 Jul 2020 09:18:48 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id B948FBC116;
+        Wed,  8 Jul 2020 16:18:45 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     oberpar@linux.ibm.com, corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: GCOV BASED KERNEL PROFILING
+Date:   Wed,  8 Jul 2020 18:18:39 +0200
+Message-Id: <20200708161839.15170-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708155813.GA147953@debian-buster-darwi.lab.linutronix.de>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 05:58:13PM +0200, Ahmed S. Darwish wrote:
-> > I even considered:
-> >
-> > #define __SEQPROP(name, prop, expr) \
-> > static __always_inline __seqprop_##prop##_t \
-> > __seqprop##name##_##prop(seqcount##name##_t *s) \
-> > { \
-> > 	expr; \
-> > }
-> >
-> > Such that we could write:
-> >
-> > __SEQPROP(, ptr, return s)
-> > __SEQPROP(, preempt, return false)
-> > __SEQPROP(, assert, )
-> >
-> > __SEQPROP(_##locktype, ptr, return &s->seqcount) \
-> > __SEQPROP(_##locktype, preempt, return preempt) \
-> > __SEQPROP(_##locktype, assert, __SEQCOUNT_LOCKDEP(lockdep_assert_held(s->lockmember))) \
-> >
-> > But I figured _that_ might've been one step too far ;-)
-> 
-> Initially I implemented something like this during internal,
-> pre-upstream, versions of this patch series. We've decided afterwards
-> that the macro compression level is so high that the whole thing is not
-> so easily understandable.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-I've been reading too much tracing code lately... :-) This is only 2
-levels of expansion and fits on a single screen.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+
+ Documentation/dev-tools/gcov.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/dev-tools/gcov.rst b/Documentation/dev-tools/gcov.rst
+index 7bd013596217..9e989baae154 100644
+--- a/Documentation/dev-tools/gcov.rst
++++ b/Documentation/dev-tools/gcov.rst
+@@ -22,7 +22,7 @@ Possible uses:
+ * minimizing kernel configurations (do I need this option if the
+   associated code is never run?)
+ 
+-.. _gcov: http://gcc.gnu.org/onlinedocs/gcc/Gcov.html
++.. _gcov: https://gcc.gnu.org/onlinedocs/gcc/Gcov.html
+ .. _lcov: http://ltp.sourceforge.net/coverage/lcov.php
+ 
+ 
+@@ -171,7 +171,7 @@ Note on compilers
+ GCC and LLVM gcov tools are not necessarily compatible. Use gcov_ to work with
+ GCC-generated .gcno and .gcda files, and use llvm-cov_ for Clang.
+ 
+-.. _gcov: http://gcc.gnu.org/onlinedocs/gcc/Gcov.html
++.. _gcov: https://gcc.gnu.org/onlinedocs/gcc/Gcov.html
+ .. _llvm-cov: https://llvm.org/docs/CommandGuide/llvm-cov.html
+ 
+ Build differences between GCC and Clang gcov are handled by Kconfig. It
+-- 
+2.27.0
+
