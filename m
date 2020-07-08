@@ -2,166 +2,114 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D83C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AD8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A78A920720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8BF206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:52:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="taJns0Jz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bILbsUSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgGHSvT (ORCPT
+        id S1726648AbgGHSwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:51:19 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41878 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgGHSvS (ORCPT
+        Wed, 8 Jul 2020 14:52:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgGHSwi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:51:18 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 068Ip801090673;
-        Wed, 8 Jul 2020 13:51:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594234268;
-        bh=YsG/BJdDPnseIyIEYc1rtPIY9uAYMOtMWxEry2DdXs4=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=taJns0JzuccXHyzAK2SR9Ej7WBGaI1MX7nCOofGBZ7Ds9E/oksaVPkyqbaSB1iQtD
-         7GFt68NfPxF0R3YQXmxyy5pS58S651hIziKr6Uaim7ezh4cSgHgQ2APaY+AV5sXtMC
-         b3IjFq+mqtc3bdqDmuR/bfbpgvZlhpPLc4wpF428=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 068Ip8fR066885
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jul 2020 13:51:08 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 8 Jul
- 2020 13:51:08 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 8 Jul 2020 13:51:08 -0500
-Received: from [10.250.34.57] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 068Ip7MY049138;
-        Wed, 8 Jul 2020 13:51:07 -0500
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: hardware spinlock
- core
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        <ohad@wizery.com>, <bjorn.andersson@linaro.org>,
-        <baolin.wang7@gmail.com>, <linux-remoteproc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
-References: <20200708033634.62197-1-grandmaster@al2klimov.de>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <d5b35655-ed7e-7a7c-c8ad-6fb4376af4fd@ti.com>
-Date:   Wed, 8 Jul 2020 13:51:07 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 14:52:38 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12449C061A0B;
+        Wed,  8 Jul 2020 11:52:38 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t27so35026816ill.9;
+        Wed, 08 Jul 2020 11:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I8Ek3sbHV+Qpe9fOcOzWZlvnSZlEgpYlcwZ61n1jFP4=;
+        b=bILbsUSmkg8pSmFk4+CWhpqPMprhbG7sR2glHtRT9QDUqRqiE6KUCWnWL+lW/Wg7Hs
+         9+uRAEnwnVxl6QiBEUPX/AaGTdHpGjKJfwwmTHNJQigTFPkrkVAJrEXnl3P4y36WdTbw
+         5D7XgNlUkbVcjlVie5UYwGcvc+wvptuPAY1mZ2FhNjYLRBU6NWlyUcLOWavOZZclmi8o
+         8tna/B7Sl+jiQV0AVQh5c6UlFtfI2HPP171JUmp92wlXbpLHQeIWdTNPJE990xHts1WQ
+         Gyk0FQzJfV+xpRCMAWIq0aYOy45b/AOv5S7eI24/bapQiBwcPZmaDjs+bu1x0VRNZJwx
+         Mjww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I8Ek3sbHV+Qpe9fOcOzWZlvnSZlEgpYlcwZ61n1jFP4=;
+        b=qAhTjPtHNVuouMz6HLX6xYlBJD/9h0Z25xYFK7rQ0eTDtpPwFXiYieO7JBD6XL2rZ1
+         VjhFDQeNpu4H7ikbrMtAC/n41HYxsJogC7y2SED0NTRrjMSw2mbP0iHymYjT7ufoZnjb
+         qYYJwZUkjzyb8JhN4TSCfKsuNK0nBg1pSV7M16scsL1YOqaZt/RyzLNNZ3ezdx0V+YZJ
+         8d0K7M4SBhcbXWt6aExdhyGe5l9d3JMEzT4ts5ZaVAB7VwKrIx6Pr8iOluDOFoBNqY/O
+         n9ehV9UzBxXuB3dGuxjD7IschI+GcntLksBGTX+tMb6srzMRqviM7LJsqGsPbi4+9plX
+         6CZg==
+X-Gm-Message-State: AOAM532UoAEmMviMpzoVjHAi9WduQxx+2uftwhjVwuLFLXQApAXov6ED
+        VJQd4tnJZqJBOkwa0czGDfLFpWesuYf2x+egFMIr13hHMGGl4Q==
+X-Google-Smtp-Source: ABdhPJyJZHa3+V4fpz8geqJjVvpO/S7oXioSIGMEpHorK088WAqCy+3mjXN0Kpk3TMCdJ5FhXhqWnqtdYqmwlj3svCg=
+X-Received: by 2002:a92:5b4b:: with SMTP id p72mr12269260ilb.285.1594234357448;
+ Wed, 08 Jul 2020 11:52:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200708033634.62197-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAFXsbZrFRH2=+OgBARRkku2O0Okv=jg-uZaN+1Cv1tEwq-8k5Q@mail.gmail.com>
+ <CAOMZO5C42kbRM7T3kphdOFZPCPHz6kS+32X3CPncrAnhiP3HFw@mail.gmail.com>
+In-Reply-To: <CAOMZO5C42kbRM7T3kphdOFZPCPHz6kS+32X3CPncrAnhiP3HFw@mail.gmail.com>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Wed, 8 Jul 2020 11:52:26 -0700
+Message-ID: <CAFXsbZpy_mmhr2vHATqCajRi5-4AgwHOLd+wqCr_DMwjOuZwVQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-dev-rev-c.dts: Configure fibre port
+ to 1000BaseX
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/20 10:36 PM, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->    If not .svg:
->      For each line:
->        If doesn't contain `\bxmlns\b`:
->          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->            If both the HTTP and HTTPS versions
->            return 200 OK and serve the same content:
->              Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+On Wed, Jul 8, 2020 at 11:41 AM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Chris,
+>
+> In the Subject you could remove the .dts from the dts name:
+>
+> ARM: dts: vf610-zii-dev-rev-c: Configure fibre port to 1000BaseX
+>
+> On Sun, Jul 5, 2020 at 9:51 PM Chris Healy <cphealy@gmail.com> wrote:
+> >
+> > The SFF soldered onto the board expects the port to use 1000BaseX.  It
+> > makes no sense to have the port set to SGMII, since it doesn't even
+> > support that mode.
+> >
+> > Signed-off-by: Chris Healy <cphealy@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/vf610-zii-dev-rev-c.dts | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
+> > b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
+> > index 778e02c000d1..de79dcfd32e6 100644
+> > --- a/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
+> > +++ b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
+> > @@ -164,7 +164,7 @@
+> >                      port@9 {
+> >                          reg = <9>;
+> >                          label = "sff2";
+> > -                        phy-mode = "sgmii";
+> > +                        phy-mode = "1000base-x";
+>
+> Looks like tabs were converted to spaces.
 
-Acked-by: Suman Anna <s-anna@ti.com>
-
-> ---
->   Continuing my work started at 93431e0607e5.
->   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-> 
->   If there are any URLs to be removed completely or at least not HTTPSified:
->   Just clearly say so and I'll *undo my change*.
->   See also: https://lkml.org/lkml/2020/6/27/64
-> 
->   If there are any valid, but yet not changed URLs:
->   See: https://lkml.org/lkml/2020/6/26/837
-> 
->   If you apply the patch, please let me know.
->   Rationale:
->   I'd like not to submit patches much faster than you maintainers apply them.
-> 
->   drivers/hwspinlock/hwspinlock_core.c     | 2 +-
->   drivers/hwspinlock/hwspinlock_internal.h | 2 +-
->   drivers/hwspinlock/omap_hwspinlock.c     | 2 +-
->   include/linux/hwspinlock.h               | 2 +-
->   4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/hwspinlock/hwspinlock_core.c b/drivers/hwspinlock/hwspinlock_core.c
-> index fd5f5c5a5244..09568b9246e1 100644
-> --- a/drivers/hwspinlock/hwspinlock_core.c
-> +++ b/drivers/hwspinlock/hwspinlock_core.c
-> @@ -2,7 +2,7 @@
->   /*
->    * Hardware spinlock framework
->    *
-> - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com
-> + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com
->    *
->    * Contact: Ohad Ben-Cohen <ohad@wizery.com>
->    */
-> diff --git a/drivers/hwspinlock/hwspinlock_internal.h b/drivers/hwspinlock/hwspinlock_internal.h
-> index 29892767bb7a..318e257bb4fb 100644
-> --- a/drivers/hwspinlock/hwspinlock_internal.h
-> +++ b/drivers/hwspinlock/hwspinlock_internal.h
-> @@ -2,7 +2,7 @@
->   /*
->    * Hardware spinlocks internal header
->    *
-> - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com
-> + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com
->    *
->    * Contact: Ohad Ben-Cohen <ohad@wizery.com>
->    */
-> diff --git a/drivers/hwspinlock/omap_hwspinlock.c b/drivers/hwspinlock/omap_hwspinlock.c
-> index 3b05560456ea..d4491588a49b 100644
-> --- a/drivers/hwspinlock/omap_hwspinlock.c
-> +++ b/drivers/hwspinlock/omap_hwspinlock.c
-> @@ -2,7 +2,7 @@
->   /*
->    * OMAP hardware spinlock driver
->    *
-> - * Copyright (C) 2010-2015 Texas Instruments Incorporated - http://www.ti.com
-> + * Copyright (C) 2010-2015 Texas Instruments Incorporated - https://www.ti.com
->    *
->    * Contact: Simon Que <sque@ti.com>
->    *          Hari Kanigeri <h-kanigeri2@ti.com>
-> diff --git a/include/linux/hwspinlock.h b/include/linux/hwspinlock.h
-> index bfe7c1f1ac6d..690810acea7f 100644
-> --- a/include/linux/hwspinlock.h
-> +++ b/include/linux/hwspinlock.h
-> @@ -2,7 +2,7 @@
->   /*
->    * Hardware spinlock public header
->    *
-> - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com
-> + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com
->    *
->    * Contact: Ohad Ben-Cohen <ohad@wizery.com>
->    */
-> 
-
+I'll make both changes and submit a v2, thanks.
