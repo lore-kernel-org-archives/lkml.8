@@ -2,137 +2,158 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6425F206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC94206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HYbrvo/x"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZQ5VP3yH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgGHX0M (ORCPT
+        id S1726287AbgGHX0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgGHX0L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:26:11 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFD7C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:26:11 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id 72so41822ple.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:26:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nH2GS/OTrvCduU0b8tDpOcN6ehsAwEU0onRF+A5Ut5k=;
-        b=HYbrvo/xF79bO2B6IrkMMLUkmjKPzdJkvanrMInp8S42k6HBGtzvlMd9S1UMsOPkQq
-         kD96OG7jPioQJwVhmcN6AkeMW4/SHyENEHjDe4IuQjxeLq714wlZHE3s1cGSQxT8Jbv7
-         MrPitnx0OcckBdRzsOFubqaRZyUAfYAh/ym5I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nH2GS/OTrvCduU0b8tDpOcN6ehsAwEU0onRF+A5Ut5k=;
-        b=Xcw3ogIzlmaJhowvBUQcmUeottRmgArUZCYDrzps63ALB6Pa44yHX6d+bOcaAR/F3b
-         of1qiP9zhPGaE2zlFWDzGUs8EePwZlrUsCOxdbZaUZooKyL4O0NE9NZFRTgqoV58BKTf
-         HOrvXUguRJrE3xbm0JQQPJSnyDK4DbbcOvKvDuSMSD38aJMUw/yikmaoSZqgpCuLi8Ff
-         uAAwMMIoQwkAMoMTyHhnj5P+jBvrt5Bwk14mabMQkhrRaBPXpsdumMN8U/HgZMqP/0pZ
-         g5mS6gUEr6BZYtfu2Ula4sor17koGY8zovNzXDN5T/8nv6M/WVr3d5pjD6hO+j/RNh6R
-         Ow+Q==
-X-Gm-Message-State: AOAM5317/jpT5GfX3T4uV9hHjYtc0cclBuqIKbVLHvm7QIRrgTSAeF4O
-        +tnHE3LyrTqaeseudgksDvd4lQ==
-X-Google-Smtp-Source: ABdhPJzniWV9Twx/MX+UzsIO+dG+AvwC8/i/kZk/gvvqhaDExjNsUdeEEAP66hKEdkwugkIW4si31A==
-X-Received: by 2002:a17:90a:780f:: with SMTP id w15mr11778381pjk.235.1594250771013;
-        Wed, 08 Jul 2020 16:26:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i128sm759010pfe.74.2020.07.08.16.26.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 16:26:10 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 16:26:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Juxin Gao <gaojuxin@loongson.cn>
-Subject: Re: [PATCH] MIPS: Prevent READ_IMPLIES_EXEC propagation
-Message-ID: <202007081624.82FA0CC1EA@keescook>
-References: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Wed, 8 Jul 2020 19:26:36 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:47060 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgGHX0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 19:26:34 -0400
+Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0656270001>; Thu, 09 Jul 2020 07:26:31 +0800
+Received: from HKMAIL103.nvidia.com ([10.18.16.12])
+  by hkpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 08 Jul 2020 16:26:31 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate101.nvidia.com on Wed, 08 Jul 2020 16:26:31 -0700
+Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL103.nvidia.com
+ (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul
+ 2020 23:26:23 +0000
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.172)
+ by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Wed, 8 Jul 2020 23:26:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SPlASdoF8gSptMyieYn4WqmSDhgXKptPTXNDXQfujpkK2/KeBFo7V77RC3gTfMDcVvj2u8F9oLtTps8YedL4N61+bCqvKkdaOGfL5qZd7pn+FgQ543FxH0rmX5w9yJ2awAJvGEq02P+be8qxDMrnr0qqOpxCdsSaxEF4phkwOWg1oTmsQSEKAO5OOxT9yMcESmUXGNd4NdoshrURDro0bXDaT60C+RNibBUvhU+NNhNVfERuCW2CQ+2OkcoabQfpk5uYtbOd0bYNJqVBz+SzYqpboj9AscDfmGYgwkRO86jk7tyShD4+WEEayKjAXnr0/m7LawZlY6IcAw9ios0LnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b2vM2CAf9YENjnLoRZi/8Dm6yHfzhUVS+6T46ecRo8s=;
+ b=TE3T0ix9wWS1Sqoi6aICf/7atVjjHsMX3Nmg5/ro8OG0Brb7FV9KOPLZr8Pg3kDlTvgqANTUH/XKK3RKViZ7bPR5H5CWO9Y/Qz+p8rcmztg6vEYE7bfdm/R94HNyqHN+pip3m9ZC0Rf2BLFQxSPxSJuj6azMksHGdHzFBP7KKnqkcBqgvoaWoSAN+YsLv2T3PVTfBAJLQ+80enEyYrxOs1mNxCmtypqdL3yieTV47bGXENzjscmuNSZ0iZMGuh7Vb7XkEtBYhPtPPkMb87cM+pglfFvZZukj/ukvosnFm7X0msaGkT5n2JPc2rQsnrzKncH3dKGBbrN26s3sf3O1uA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB2486.namprd12.prod.outlook.com (2603:10b6:4:b2::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Wed, 8 Jul
+ 2020 23:26:21 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3153.030; Wed, 8 Jul 2020
+ 23:26:21 +0000
+Date:   Wed, 8 Jul 2020 20:26:19 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Aya Levin <ayal@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: Re: [PATCH rdma-rc 0/3] Fixes to mlx5_ib driver
+Message-ID: <20200708232619.GA1753748@nvidia.com>
+References: <20200707110612.882962-1-leon@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <20200707110612.882962-1-leon@kernel.org>
+X-ClientProxiedBy: YT1PR01CA0135.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2f::14) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by YT1PR01CA0135.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2f::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22 via Frontend Transport; Wed, 8 Jul 2020 23:26:20 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1jtJSF-007MQN-Ka; Wed, 08 Jul 2020 20:26:19 -0300
+X-Originating-IP: [206.223.160.26]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 835f69df-f7f4-4621-e5b5-08d823965289
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2486:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB2486FD55535F75D73083ADAFC2670@DM5PR12MB2486.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: RLwTCX7dIrzmtb3xV7yd++AIwczoH8BTbRiTN611NYgDKj+MBsSeyLYSUYYx2BdzD54vu/0TPpJjwz3LBuVQm0zjWSwjDfVX12+QizJjQqKHxI/ljoO8H3CeJjpEmHD3w5oqcZtA7Uocilw1Iyyy6QHNt1DNPWFJIjgWeAhbHr0J4nlinTAHIcTDD9tZT2tt1L2ciu6Lb+U2tqPs/cLeWl9p/g4bY25VAf9GWoho2s8ZcLVvi348McASGfS4N+7Ns1kXTIrP+tE7OiXxh3vDno5oB00cFx1JHZONkOishrDscOh7gbR6t0avbeMoAsWH/hmSPunSL/SMWEa3B0AeAQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(366004)(396003)(39860400002)(2616005)(8936002)(316002)(1076003)(33656002)(66556008)(66476007)(9786002)(9746002)(66946007)(4326008)(186003)(36756003)(2906002)(26005)(478600001)(54906003)(7416002)(86362001)(6916009)(83380400001)(5660300002)(426003)(4744005)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: J4ntQ7L6PU3DcUXP2mdY3n6osOAqbPK75CySOWJm1M4suy2btSxW4C0l/f/6NU7XZqAll/9J+UpknN+H0TaFkPmcYGqJARk4DoAUkm0ywc2YhDpXGCDDKl3Vbk1wZm9N5ed4wQ1z0jUK1u7jw3lo4Ah0z3CJ//3iPpPX2xOQ68xrge0x0AN/9GBPdVlCcFWNJwQwbBYzf0bz5+8xGVlTr9uKKtq6Q++bELWeDrnqUcnYCveGz5uq020ncXmF1LiDtFvh7KssH0xRpupZqo7HK8c6lK9K+XbRizX8LrPNyDifNCxJJcRW4yCofdtDc86YPoqGNGQiBKagvVQNgBqmCBHRI4MOSE8Q6KYLexYyJyTHKgj5TKe88buWe8OFplf4aQHaWChrfZCqPKgTqBMX5MiImxx07EypfAaJ44z1jCSF640cZm1okB+ZiOVTxOdubT2Ryauw3I9P5UzBNAI+qYr4b1P5UhUn8lxAT+Pip8aNVSl2B+uqWsVFLUFnj86P
+X-MS-Exchange-CrossTenant-Network-Message-Id: 835f69df-f7f4-4621-e5b5-08d823965289
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2020 23:26:21.2009
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qsuS2ibPHzBx74NozFiM2PIhPDCpNGhZ3Wj6HgWovl8AvMLVyTRkCmNNoYZH/MYs
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2486
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594250791; bh=b2vM2CAf9YENjnLoRZi/8Dm6yHfzhUVS+6T46ecRo8s=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
+         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=ZQ5VP3yH0aqUauE55he3dpph61D7uaEozpXrp70D/597FQb2kx4ym3Is3MKoY7eaY
+         DfTSmEB7mIQiAYri9fG3y3ygQ/ZVdjXPc6A4tkUw6xOfOp61gLM2E9V3Lad5vZupLU
+         dQdD85MXB4Is1oSGpuoawJnnWt6rpa+r5+KR2LtWzde6SpAZHvfrJrhIKlz+EIV4m4
+         Xt5BokxzFmwuVf1Xa+QfL6UWHhF14ZPX2w4v/f4MGAQ7g9AA4D0hjqM4mwWbLQ8egH
+         IkDy0Eg9MNwQcFm68Nzmo87H6uRlLXJlnPs8MUXLmleGeWJN+nut5nxkGvMSjNSj+9
+         El/AeGhNAWSmA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 05:39:01PM +0800, Tiezhu Yang wrote:
-> In the MIPS architecture, we should clear the security-relevant
-> flag READ_IMPLIES_EXEC in the function SET_PERSONALITY2() of the
-> file arch/mips/include/asm/elf.h.
+On Tue, Jul 07, 2020 at 02:06:09PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
 > 
-> Otherwise, with this flag set, PROT_READ implies PROT_EXEC for
-> mmap to make memory executable that is not safe, because this
-> condition allows an attacker to simply jump to and execute bytes
-> that are considered to be just data [1].
+> Hi,
 > 
-> In mm/mmap.c:
-> unsigned long do_mmap(struct file *file, unsigned long addr,
-> 			unsigned long len, unsigned long prot,
-> 			unsigned long flags, vm_flags_t vm_flags,
-> 			unsigned long pgoff, unsigned long *populate,
-> 			struct list_head *uf)
-> {
-> 	[...]
-> 	if ((prot & PROT_READ) && (current->personality & READ_IMPLIES_EXEC))
-> 		if (!(file && path_noexec(&file->f_path)))
-> 			prot |= PROT_EXEC;
-> 	[...]
-> }
+> This is patchset of independent fixes to mlx5_ib driver.
 > 
-> By the way, x86 and ARM64 have done the similar thing.
+> Thanks
 > 
-> After commit 250c22777fe1 ("x86_64: move kernel"), in the file
-> arch/x86/kernel/process_64.c:
-> void set_personality_64bit(void)
-> {
-> 	[...]
-> 	current->personality &= ~READ_IMPLIES_EXEC;
-> }
+> Aya Levin (1):
+>   IB/mlx5: Fix 50G per lane indication
 > 
-> After commit 48f99c8ec0b2 ("arm64: Preventing READ_IMPLIES_EXEC
-> propagation"), in the file arch/arm64/include/asm/elf.h:
-> #define SET_PERSONALITY(ex)						\
-> ({									\
-> 	clear_thread_flag(TIF_32BIT);					\
-> 	current->personality &= ~READ_IMPLIES_EXEC;			\
-> })
-> 
-> [1] https://insights.sei.cmu.edu/cert/2014/02/feeling-insecure-blame-your-parent.html
-> 
-> Reported-by: Juxin Gao <gaojuxin@loongson.cn>
-> Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
-> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Leon Romanovsky (1):
+>   RDMA/mlx5: Set PD pointers for the error flow unwind
 
-This seems correct to me.
+Applied to for-rc
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> Maor Gottlieb (1):
+>   RDMA/mlx5: Use xa_lock_irqsave when access to SRQ table
 
-BTW, does MIPS also need similar changes to this series:
-https://lore.kernel.org/lkml/20200327064820.12602-1-keescook@chromium.org/
+This one need resending
 
-Quoting from there "MIPS may need adjusting but the history of CPU
-features and toolchain behavior is very unclear to me."
-
--- 
-Kees Cook
+Thanks,
+Jason
