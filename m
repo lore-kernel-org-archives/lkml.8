@@ -2,151 +2,167 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6263C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C718BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8175B20672
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="RKAUZLS8"
+	by mail.kernel.org (Postfix) with ESMTP id AD50E20672
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgGHHxB (ORCPT
+        id S1727943AbgGHHxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:53:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgGHHw7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:52:59 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1621C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:52:58 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a1so49330850ejg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uzQgfQwlB8mQ8qOfmtknJOwa2W5D3WSjFsl4EQ7bldY=;
-        b=RKAUZLS8ppSGqqaHG7ZpIgrwQ4r8B+G/T5SL3RJnDgnzyaiBa8W86kf3od5xL40Utl
-         i6sfNp+Psui78KrXHyEyLcLwJ+StdXe8zue+WBNTrxBYzK1bKDKbZfx+17BRQ8BLtjUq
-         JU8kOyCeajyj/z+qqxVy47uUr8k0brlZ65dZ5xtbF76ueZQQkVYMLML9zplT9hlRvJce
-         DEf0lTcMjSp0fypSqF2K5dT7rHDKxo5JGwDTRfsEdMF+tTII4hs3WZUByfIgcQJadGIr
-         sTGOKA8G9whVLWqyP3Zu6HIObSR6j+7lKmOUSgvh8Ez4x3aOtICftIqhwrwqBQZQzTkc
-         mDAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uzQgfQwlB8mQ8qOfmtknJOwa2W5D3WSjFsl4EQ7bldY=;
-        b=fUxA6S6YuNHf5l0vpe+3+qv5d+2EUFCfOmLGu/dv9Dk4y9f68ntk+aDQKCE6lHYwqD
-         J8DZ2tKIbiX/wdYpRa3PeLkuo6yPMoOXO1hG6BYyKPBVlNcLNpHd9+3Y7xukd/8Bp37K
-         F/Q1JQevdcEBv/qoubYs61r9IV86c+JlzoQmuZhH5Rqa1MK1WmQomzSaKA4dLGzz3GKD
-         xwfDsmuWapu59mWstyUSXsO7YyZLKYK+SAB5xA+hY0gd3zPIQwK7MXnD8vIS7oabgM2M
-         5Sh3/g/Sc3DnG+QaL2jY4OOqBjzFNbYoZpAolwGZYIp7Ktxrq3iUq4GxQwPBqpEnitoy
-         +S1A==
-X-Gm-Message-State: AOAM533GF/gbcdaNskMG/CDcPZvPaSPG/1DoMGe1KpaDRkV53pXiB9Gn
-        vE3yIXRVaVqKQjTUEWtGjvcTsUaVLhHQ61rc1xAe/g==
-X-Google-Smtp-Source: ABdhPJw7442gcjNFjZSE2uTN+bNfa8n0XgtMlWOFnhVCtn09GNsf3QDa21dGRGPOv8CCO6HI2q650npcLAIGzKIcY5g=
-X-Received: by 2002:a17:906:b888:: with SMTP id hb8mr50141392ejb.124.1594194777397;
- Wed, 08 Jul 2020 00:52:57 -0700 (PDT)
+        Wed, 8 Jul 2020 03:53:07 -0400
+Received: from mga09.intel.com ([134.134.136.24]:63480 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbgGHHxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:53:07 -0400
+IronPort-SDR: Yo31FCfIKSIrDAuerFWFGcu3vab88eQIOxZfWH7SZL442j99cBnzRJlgJNcTLJY9CK+mACETc+
+ CdrHVnVkOeBQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="149267012"
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="149267012"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 00:53:06 -0700
+IronPort-SDR: 6kvmJWEXknsTkvD4gtKfEm6NH0jUp9MBddMWYFlMGj3MQwDpIemOGkb0jz+qe0HFw9qhsPRxhu
+ lopatIRaBE+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="358030872"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2020 00:53:05 -0700
+Received: from [10.249.226.44] (abudanko-mobl.ccr.corp.intel.com [10.249.226.44])
+        by linux.intel.com (Postfix) with ESMTP id 1F6595807C9;
+        Wed,  8 Jul 2020 00:53:02 -0700 (PDT)
+Subject: [PATCH v10 10/15] perf stat: extend -D,--delay option with -1 value
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <144b72a8-e718-4f28-d1cf-8ec5f402b2e2@linux.intel.com>
+Date:   Wed, 8 Jul 2020 10:53:02 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 8 Jul 2020 00:52:46 -0700
-Message-ID: <CAPcyv4h8J2qx92YmEfYDoSwKZYjqPaw8w2dcmeDuVbApCbS7aA@mail.gmail.com>
-Subject: Re: [PATCH v2] CodingStyle: Inclusive Terminology
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        Olof Johansson <olof@lixom.net>, Chris Mason <clm@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 12:40 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> Linux maintains a coding-style and its own idiomatic set of terminology.
-> Update the style guidelines to recommend replacements for the terms
-> master/slave and blacklist/whitelist.
->
-> Link: http://lore.kernel.org/r/159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> Acked-by: Dave Airlie <airlied@redhat.com>
-> Acked-by: Kees Cook <keescook@chromium.org>
-> Acked-by: SeongJae Park <sjpark@amazon.de>
-> Signed-off-by: Olof Johansson <olof@lixom.net>
-> Signed-off-by: Chris Mason <clm@fb.clm>
 
-Copy - paste error of Chris's address, should be .com of course.
+Extend -D,--delay option with -1 value to start monitoring with
+events disabled to be enabled later by enable command provided
+via control file descriptor.
 
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
-> Changes since v1 [1]
-> - Drop inclusive-terminology.rst, it is in the lore archives if the
->   arguments are needed for future debates, but otherwise no pressing
->   need to carry it in the tree (Linus, James)
->
-> - Update the recommended terms to include replacement for 'master' and
->   'whitelist' (Kees, Andy)
->
-> - Add 'target' as a replacement (Andy)
->
-> - Add 'device' as a replacement (Mark)
->
-> - Collect acks and signed-off-bys. Yes, the sign-offs are not reflective
->   of a submission chain, but I kept "Signed-off-by" if people offered
->   it.
->
-> - Non-change: I did not add explicit language as to what to do with
->   existing usages. My personal inclination is to prioritize this
->   coding-style cleanup higher than others, but the coding-style document
->   has typically not indicated policy on how cleanups are handled by
->   subsystems. It will be a case by case effort and consideration.
->
-> [1]: http://lore.kernel.org/r/159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com
->
->  Documentation/process/coding-style.rst |   13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-> index 2657a55c6f12..a5b61e9005ac 100644
-> --- a/Documentation/process/coding-style.rst
-> +++ b/Documentation/process/coding-style.rst
-> @@ -319,6 +319,19 @@ If you are afraid to mix up your local variable names, you have another
->  problem, which is called the function-growth-hormone-imbalance syndrome.
->  See chapter 6 (Functions).
->
-> +For symbol names, avoid introducing new usage of 'master/slave' (or
-> +'slave' independent of 'master') and 'blacklist/whitelist'. Recommended
-> +replacements for 'master/slave' are: 'main/{secondary,subordinate}',
-> +'primary/replica', '{initiator,requester}/{target,responder}',
-> +'host/{device,proxy}', or 'leader/{performer,follower}'. Recommended
-> +replacements for 'blacklist/whitelist' are: 'denylist/allowlist' or
-> +'blocklist/passlist'.
-> +
-> +Exceptions for introducing new usage is to maintain a userspace ABI/API,
-> +or when updating code for an existing (as of 2020) hardware or protocol
-> +specification that mandates those terms. For new specifications
-> +translate specification usage of the terminology to the kernel coding
-> +standard where possible.
->
->  5) Typedefs
->  -----------
->
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-stat.txt |  5 +++--
+ tools/perf/builtin-stat.c              | 18 ++++++++++++++----
+ tools/perf/util/evlist.h               |  3 +++
+ tools/perf/util/stat.h                 |  2 +-
+ 4 files changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index b029ee728a0b..9f32f6cd558d 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -238,8 +238,9 @@ mode, use --per-node in addition to -a. (system-wide).
+ 
+ -D msecs::
+ --delay msecs::
+-After starting the program, wait msecs before measuring. This is useful to
+-filter out the startup phase of the program, which is often very different.
++After starting the program, wait msecs before measuring (-1: start with events
++disabled). This is useful to filter out the startup phase of the program,
++which is often very different.
+ 
+ -T::
+ --transaction::
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index a5a0f4841003..9d5c503e698f 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -487,16 +487,26 @@ static bool handle_interval(unsigned int interval, int *times)
+ 
+ static void enable_counters(void)
+ {
+-	if (stat_config.initial_delay)
++	if (stat_config.initial_delay < 0) {
++		pr_info(EVLIST_DISABLED_MSG);
++		return;
++	}
++
++	if (stat_config.initial_delay > 0) {
++		pr_info(EVLIST_DISABLED_MSG);
+ 		usleep(stat_config.initial_delay * USEC_PER_MSEC);
++	}
+ 
+ 	/*
+ 	 * We need to enable counters only if:
+ 	 * - we don't have tracee (attaching to task or cpu)
+ 	 * - we have initial delay configured
+ 	 */
+-	if (!target__none(&target) || stat_config.initial_delay)
++	if (!target__none(&target) || stat_config.initial_delay) {
+ 		evlist__enable(evsel_list);
++		if (stat_config.initial_delay > 0)
++			pr_info(EVLIST_ENABLED_MSG);
++	}
+ }
+ 
+ static void disable_counters(void)
+@@ -1053,8 +1063,8 @@ static struct option stat_options[] = {
+ 		     "aggregate counts per thread", AGGR_THREAD),
+ 	OPT_SET_UINT(0, "per-node", &stat_config.aggr_mode,
+ 		     "aggregate counts per numa node", AGGR_NODE),
+-	OPT_UINTEGER('D', "delay", &stat_config.initial_delay,
+-		     "ms to wait before starting measurement after program start"),
++	OPT_INTEGER('D', "delay", &stat_config.initial_delay,
++		    "ms to wait before starting measurement after program start (-1: start with events disabled)"),
+ 	OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
+ 			"Only print computed metrics. No raw values", enable_metric_only),
+ 	OPT_BOOLEAN(0, "metric-no-group", &stat_config.metric_no_group,
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 1dac16f574fe..243ff8f2f130 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -377,4 +377,7 @@ int evlist__finalize_ctlfd(struct evlist *evlist);
+ bool evlist__ctlfd_initialized(struct evlist *evlist);
+ int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
+ 
++#define EVLIST_ENABLED_MSG "Events enabled\n"
++#define EVLIST_DISABLED_MSG "Events disabled\n"
++
+ #endif /* __PERF_EVLIST_H */
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 6911c7249199..41d59f192931 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -116,7 +116,7 @@ struct perf_stat_config {
+ 	FILE			*output;
+ 	unsigned int		 interval;
+ 	unsigned int		 timeout;
+-	unsigned int		 initial_delay;
++	int			 initial_delay;
+ 	unsigned int		 unit_width;
+ 	unsigned int		 metric_only_len;
+ 	int			 times;
+-- 
+2.24.1
+
+
