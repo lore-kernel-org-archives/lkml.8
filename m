@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F83BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2A82073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DF92073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:42:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+UBbUBL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="inEhFPEn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgGHAl0 (ORCPT
+        id S1729083AbgGHAmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 20:41:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34610 "EHLO
+        Tue, 7 Jul 2020 20:42:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728253AbgGHAlZ (ORCPT
+        with ESMTP id S1728061AbgGHAmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 20:41:25 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C435C061755;
-        Tue,  7 Jul 2020 17:41:25 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id 9so52121940ljv.5;
-        Tue, 07 Jul 2020 17:41:25 -0700 (PDT)
+        Tue, 7 Jul 2020 20:42:50 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467A4C061755;
+        Tue,  7 Jul 2020 17:42:50 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id h16so14308915ilj.11;
+        Tue, 07 Jul 2020 17:42:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4wnuVyqn/A+1xmBGPh5S2duo0jwqPLTeNICw59XWtkg=;
-        b=A+UBbUBLolCw9CI/FbAhnbfMEGKs93AFTnyD6mQMd7IJj2RCIxuMDejG/247BpZcCr
-         +lIksVysqfwcYB/7hQ1Y8OfSw9nX88KhiocpJpSZsUg+GzHTBtC6d2kxKMYIcC6aS9t1
-         0cIyEu0HQthUKNKkdxymEeunAo/hQWc+tcoXcib/ZlevSfu98BH6czzVGgN/qwe/DbZk
-         Q1a59ZCAyaPrTEsaLxHGy05Z3cSrLrek0JMD/so+XKXQgp4HhBXoZ5TPGsMZUWB3dnBh
-         L3DGUEd1KldP5SLZtFGNhKPdR9asqTDgJH8fW/w0wFDlVnKmG3FK57odsbo6Hu9fQv4L
-         9vfA==
+        bh=ue4EIK0VhUIPtRObeZ3zttXF6R0Ao0zF/3q1pqokQPM=;
+        b=inEhFPEnStHD/Ywc3gvLNoiHq+XKOlw6RgBQNg06T/GFGXVwaTL3DElg3MctaSyQfM
+         6lL/vnfDnogiuVoryb3vftEDddvFbO4/CH3vLBiDa0ehOkN/8edK00DDjyW5cH6zLC8E
+         1nKTyNwesdBhHJZb4ReHMkbyrIefPE1UC+6u/XyfJTYOiUPj1gYN0RvjphoGpZbqqptB
+         ZNtQafGsg5zOTnpoCifsgTeDv6+2GsdKuFAxx57qq9BXssb5DA2wjgZ9TbdCkHmcnw/n
+         n0QZAO9uQwbKHgPVh7eldKClSsQuFAz9x/hKuLGNirnjzavt6HruIx3UXW2iFuoly1hb
+         yuJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4wnuVyqn/A+1xmBGPh5S2duo0jwqPLTeNICw59XWtkg=;
-        b=DCtU3zXId+7HhCFy3FsQsezyiwHNhFAGwlKGMGCFqHT0nJhzptGltf2fOkhwzmitsA
-         +zppMdGfiWirUhiWEDsZFyOpYQAcB+sYJ5pgyudp1XWQ8SI8jv46PDqwETV/BXdfrVZL
-         7VTBn6lFNE0hQqNOmTG83WzlCutgHyDtBXg77yBKGzyDBTnFdmjQ9b6f/G97cuLdSSov
-         QFUvcBsSB9DJ0eCYwfmsggc1LTRVLtb5HlP9sahSF9N+36N0r/w2W8RSZMue/tIv3cgJ
-         Y6ZlDUAei2j1417URKltcLUlvBshi+NfmVWLG9FJovRR0XR35qWH8pEwlbzbHkCjaPf1
-         NBJQ==
-X-Gm-Message-State: AOAM531Pd4E1urrUPyFrZ9X079VUer/XEjkmdPy5ZGrikapt4D4s65sH
-        QTXRmPBqD/wogXhObE8HCqbYuXXeRRHNihvKE+k=
-X-Google-Smtp-Source: ABdhPJzdfphDYsZlnp34qJP3MAFltospm+PDY6UqHOByUfcmYtgk8TrPyp9ErjwYoGKFqEhyyi5c8+0AiW/zTkUSuTY=
-X-Received: by 2002:a2e:808d:: with SMTP id i13mr28941619ljg.452.1594168883388;
- Tue, 07 Jul 2020 17:41:23 -0700 (PDT)
+        bh=ue4EIK0VhUIPtRObeZ3zttXF6R0Ao0zF/3q1pqokQPM=;
+        b=XdHqsx563oCRwbV5pr60eSL/nXpAUssri3Xqb1zDI2LkxmGEdtCADHvZIDtpmZMBOb
+         s+gqiCKsx72olRad/23r0noyXvRTHmWYeXjFF/bu4B7cPWw7Dd75yXnzJBT+6u5Mw3MT
+         IpsMnRggIv66l4LTITLzlkh1ylOCq7GROYRcEiTO+fyc17aeFJjWkJ0GthHTTpM4gxkM
+         GceZfUXehAjR6DbX5FEhGHiKkJQEpNbfkGQ9rtezqTCtvp2HzjGb1KHBB2PuqB24ExE+
+         WBbHyqDjILhQN3uRIFd1MgqOC3KMAe/tEToRfG/cXYk3uvT5MmUFq0XCKgxtBbeH0VGt
+         Zsgg==
+X-Gm-Message-State: AOAM531PAEFVVOiX3FkOeGPDcC1Nfhx6tcH6TQj9axKnH9QOUXQEyuBa
+        pNiRYIS6T4M9SdKQ2cI7BL2N3+2r3Xht3aA0J7o=
+X-Google-Smtp-Source: ABdhPJw89Chg6p49ozpxXXxKixO+Ec9eT77p/qN2LR0pq5SKVnLXCaH6XvOadplfXVQXCE887WnMJ23c22bBOsavkck=
+X-Received: by 2002:a92:aa92:: with SMTP id p18mr38384061ill.199.1594168969758;
+ Tue, 07 Jul 2020 17:42:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200708003209.4737-1-cphealy@gmail.com>
-In-Reply-To: <20200708003209.4737-1-cphealy@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 7 Jul 2020 21:41:11 -0300
-Message-ID: <CAOMZO5BYDXbVUKad4Cn0fauGMEFu4ZPSOwunrFxMq7+bDYPtMw@mail.gmail.com>
+References: <20200708003209.4737-1-cphealy@gmail.com> <CAOMZO5BYDXbVUKad4Cn0fauGMEFu4ZPSOwunrFxMq7+bDYPtMw@mail.gmail.com>
+In-Reply-To: <CAOMZO5BYDXbVUKad4Cn0fauGMEFu4ZPSOwunrFxMq7+bDYPtMw@mail.gmail.com>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Tue, 7 Jul 2020 17:42:37 -0700
+Message-ID: <CAFXsbZqy8jtNbx-0oZQ=v+7ZuQTN6MUZELW5QVayk3xz=wHcCg@mail.gmail.com>
 Subject: Re: [PATCH v2] arm64: dts: zii-ultra: update MDIO speed and preamble device
-To:     Chris Healy <cphealy@gmail.com>
+To:     Fabio Estevam <festevam@gmail.com>
 Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
@@ -79,19 +79,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+On Tue, Jul 7, 2020 at 5:41 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Chris,
+>
+> On Tue, Jul 7, 2020 at 9:32 PM Chris Healy <cphealy@gmail.com> wrote:
+>
+> >                 #address-cells = <1>;
+> >                 #size-cells = <0>;
+> >                 status = "okay";
+> > +               suppress-preamble;
+> > +               clock-frequency = <12500000>;
+>
+> Sorry, I missed this in the previous review.
+>
+> The recommendation is to have status = okay as the last property.
+>
+> Please move suppress-preamble and clock-frequency = <12500000> prior
+> to status = "okay"
 
-On Tue, Jul 7, 2020 at 9:32 PM Chris Healy <cphealy@gmail.com> wrote:
-
->                 #address-cells = <1>;
->                 #size-cells = <0>;
->                 status = "okay";
-> +               suppress-preamble;
-> +               clock-frequency = <12500000>;
-
-Sorry, I missed this in the previous review.
-
-The recommendation is to have status = okay as the last property.
-
-Please move suppress-preamble and clock-frequency = <12500000> prior
-to status = "okay"
+Will do in the next version.
