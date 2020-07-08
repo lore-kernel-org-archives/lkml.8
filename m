@@ -7,67 +7,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D671EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F288DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD6C220775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F2720774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:57:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bqCkYlhY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kb/S5Cg1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgGHM5W (ORCPT
+        id S1729389AbgGHM50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:57:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35878 "EHLO
+        Wed, 8 Jul 2020 08:57:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729358AbgGHM5S (ORCPT
+        with ESMTP id S1729346AbgGHM5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:57:18 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C71C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:57:18 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b6so48870169wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:57:18 -0700 (PDT)
+        Wed, 8 Jul 2020 08:57:17 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AAEBC08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:57:17 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id j18so2962663wmi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:57:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TTuqyVT9cnuWmuZkR2avkoolSz/GKaORVGbqfOTz7Tw=;
-        b=bqCkYlhYnCpQAHR1jCpg4zDsmvF7/yYY+dW4Ry8hSQ0ol6hlgM9RxlvgkLto7NQu5s
-         SXp/EDHEhxl+WtlnQE+xeWiBsEgbG0avYbPfKcs3fKh90TWTpl3657DTRoFlcHS0lmrv
-         7ERcbYLCIBCB+dlVGHCMZm8/s+8PcLN6rNLnhsJGomxu6akKrsW1Gs3MzNUg8R2DM8Uw
-         P4YHkaMvjJqDKUr8l0a0yYdnA22JvmDESt/jJJtoE/+ULkUzyKAzorUCP8nUCaZtRmWV
-         8JGxbZEPcoL+95Lp48vw6qXXBAJdLR8xqZGilGjfZ5k6ZeZQ5cnVFZ5cITwpJahCk7JF
-         HJFg==
+        bh=8UJ8vNcm1muCjeIL9jJSh2dOgxc35YSiS6mUucMfOFc=;
+        b=kb/S5Cg1wIatV2LhM1iD4JFv6D2sAqfQf9Rm2ijGEaDelL3ShSznGpp9wYZyBumYuS
+         0s3Lbqx09CjQSw4Msur6M6WO19QXm2F9KBhdb/9lJ+XM0A9cVAup4CTBrFNNHb7sL1Vz
+         iLym7lJ2h/vD+wTMv6A5HgG0KWggb1tgJ//5xh9eYz+KFvHANrgtGnU1klxY0bxAku9f
+         Ejv2s0iOHsyBtQXf2QBPkHOh15xZqAJ/lZJy8cRtMtdOdGgr+4++PxGXoVT8Tqp3B+U5
+         mOaFV3GNCyCoJD8uupwB67n26wGnVA2Xhb9Uv3XEM0legVJd3HzKNWnUtigufV2y8R+K
+         u00A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TTuqyVT9cnuWmuZkR2avkoolSz/GKaORVGbqfOTz7Tw=;
-        b=XtwfcjmuBFVKqICUQs64gw7DFMdzqnJBLkgUIV51iEDdzdxVOZulGjy++xpy6YGQfv
-         RevVPmeVGEyD/hIiF0SAMSgxTI0F/vLOyWnUX9R53+HMnMh/QDq/24Oe97zJLALdFXnV
-         lX0y3yh62QN3kVk42YVjjjeRapOv8SSqAW8dlCjktDC06QpdWAuZJ/to2VHREMcRq+hT
-         H598zolJg22DMhZ1Cxo2lvl4t9+cbUpCnX5DmEHEyF5AsE1OkDWFOrrDeYo/8ie/kbDb
-         NKvXsZL9yylzbsih9E1i4pDgffSMOa2oYY19cY5EnnwhbZ2X5fITO707yYu8W+OROyw1
-         ia6w==
-X-Gm-Message-State: AOAM532Uo810ijh+3ZPnqwYzJG6qUbwe+p1Q4CkhnoqIOto7dPfiQZ8V
-        pHkCirCiagekZygruM6iNFWPGw==
-X-Google-Smtp-Source: ABdhPJxIHdPTQ+3Fj8EaoAnC4n0L/dO6qJOdSZK1Vn9FBMjAc28ucuEaecvFE3uBbNM6QZPL88lZuw==
-X-Received: by 2002:adf:f8cb:: with SMTP id f11mr61733966wrq.358.1594213037108;
-        Wed, 08 Jul 2020 05:57:17 -0700 (PDT)
+        bh=8UJ8vNcm1muCjeIL9jJSh2dOgxc35YSiS6mUucMfOFc=;
+        b=XioQXeNTlwvP4ce9HZoMHX4L08yBQ1ml613ZMZHcaujU0Gb4lIaGjwA260Xj7jfSYO
+         BpKTo4gnk8lOHD+jT9Y85BKPaMSPpvFxdfzh3giZymT9Qreq42VAe7+/811BH4DFxvbJ
+         8DWqkSlcrxFuj+Uf5Kjn2H7A/T/u3Azufg9iV2y+JnztW3lYPTdSCpRuI+AMnO13ghcK
+         7kIb9w06MNTb+agk7gHF433dQEFsJ+5yl7iKamlubsOlhZiMWLZFcBWczNJp2Qyhw/VZ
+         pgwTLx0CyPdo4CnNG4TCAcxTJh7/n6SB5mx7wSbWYaDqnWQ6tiWtqscOSjwoHnbiqeu9
+         5mSQ==
+X-Gm-Message-State: AOAM532JeS0nCQXCI0nhOx1Gv+ttgprciXCCzGhgvzRGUuoMyHCypqsG
+        fcP6WiFSXdfJDqQPqj/apy0POQ==
+X-Google-Smtp-Source: ABdhPJzUWKqk10DXKwD3WaPIVEJKElMkZ9viUxbnPKGlINpln9ql0M//0OKJ9PZRXALwgiiiXX22KA==
+X-Received: by 2002:a1c:6384:: with SMTP id x126mr9644207wmb.144.1594213035996;
+        Wed, 08 Jul 2020 05:57:15 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id v9sm6993885wri.3.2020.07.08.05.57.16
+        by smtp.gmail.com with ESMTPSA id v9sm6993885wri.3.2020.07.08.05.57.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:57:16 -0700 (PDT)
+        Wed, 08 Jul 2020 05:57:15 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 3/3] misc: cxl: flash: Remove unused variable 'drc_index'
-Date:   Wed,  8 Jul 2020 13:57:11 +0100
-Message-Id: <20200708125711.3443569-4-lee.jones@linaro.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 2/3] misc: eeprom: at24: Tell the compiler that ACPI functions may not be used
+Date:   Wed,  8 Jul 2020 13:57:10 +0100
+Message-Id: <20200708125711.3443569-3-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708125711.3443569-1-lee.jones@linaro.org>
 References: <20200708125711.3443569-1-lee.jones@linaro.org>
@@ -79,45 +77,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Keeping the pointer increment though.
+... as is the case when !CONFIG_ACPI.
 
 Fixes the following W=1 kernel build warning:
 
- drivers/misc/cxl/flash.c: In function ‘update_devicetree’:
- drivers/misc/cxl/flash.c:178:16: warning: variable ‘drc_index’ set but not used [-Wunused-but-set-variable]
- 178 | __be32 *data, drc_index, phandle;
- | ^~~~~~~~~
+ drivers/misc/eeprom/at24.c:228:36: warning: ‘at24_acpi_ids’ defined but not used [-Wunused-const-variable=]
 
-Cc: Frederic Barrat <fbarrat@linux.ibm.com>
-Cc: Andrew Donnellan <ajd@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/misc/cxl/flash.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/eeprom/at24.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/cxl/flash.c b/drivers/misc/cxl/flash.c
-index cb9cca35a2263..774d582ddd70b 100644
---- a/drivers/misc/cxl/flash.c
-+++ b/drivers/misc/cxl/flash.c
-@@ -175,7 +175,7 @@ static int update_devicetree(struct cxl *adapter, s32 scope)
- 	struct update_nodes_workarea *unwa;
- 	u32 action, node_count;
- 	int token, rc, i;
--	__be32 *data, drc_index, phandle;
-+	__be32 *data, phandle;
- 	char *buf;
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index 9ff18d4961ceb..2591c21b2b5d8 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -225,7 +225,7 @@ static const struct of_device_id at24_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, at24_of_match);
  
- 	token = rtas_token("ibm,update-nodes");
-@@ -213,7 +213,7 @@ static int update_devicetree(struct cxl *adapter, s32 scope)
- 					break;
- 				case OPCODE_ADD:
- 					/* nothing to do, just move pointer */
--					drc_index = *data++;
-+					*data++;
- 					break;
- 				}
- 			}
+-static const struct acpi_device_id at24_acpi_ids[] = {
++static const struct acpi_device_id __maybe_unused at24_acpi_ids[] = {
+ 	{ "INT3499",	(kernel_ulong_t)&at24_data_INT3499 },
+ 	{ "TPF0001",	(kernel_ulong_t)&at24_data_24c1024 },
+ 	{ /* END OF LIST */ }
 -- 
 2.25.1
 
