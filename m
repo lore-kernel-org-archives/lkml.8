@@ -2,102 +2,107 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE76C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3893FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADB9920786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594175379;
-	bh=xgGx6uwzn9NeaS+l/FPAXpAhoUdDQ2XZYX9DVgRf5YU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TMBV5IAHSc6OoOW3E57pwCs1Wz2xjzO1EB8zOu5c6Em74RxvT6Bw7AH4xyRGci3Ue
-	 gqjj0Zu2SDzK06Fx+SDd8YAG87N3VvwrFuIpfkjuS6lq6dgObrCx1xvwjAXDzEXocZ
-	 NUqqEoGlH3gT49HE4YDDmBzDeKLY/BugLrXYBwkg=
+	by mail.kernel.org (Postfix) with ESMTP id 0FAE12078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:33:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="D3FVXjRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgGHC3i (ORCPT
+        id S1729322AbgGHCdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 22:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729014AbgGHC3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 22:29:38 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A3CF20774;
-        Wed,  8 Jul 2020 02:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594175377;
-        bh=xgGx6uwzn9NeaS+l/FPAXpAhoUdDQ2XZYX9DVgRf5YU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ik3+CPSPmGpG2ABntxHOaGn++8Mk0ZxRqeqGC8DMhDNuvYFl6h2xPef1WYY0+Fi8R
-         +ONgL8jclZXHfUWwVBxaAdyk9VXXxmtKAzVd3ETzd6aNdbklKej6bZBq6z18pvxqLd
-         fopJbsNzbONot3a9YpLmVcpfLgBrZ3HqxNvn0qd4=
-Date:   Tue, 7 Jul 2020 22:29:35 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 4.19 10/36] nvme: fix possible deadlock when I/O is
- blocked
-Message-ID: <20200708022935.GW2722994@sasha-vm>
-References: <20200707145749.130272978@linuxfoundation.org>
- <20200707145749.639245963@linuxfoundation.org>
- <20200707181641.GA6290@amd>
+        Tue, 7 Jul 2020 22:33:32 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:9550 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728530AbgGHCdc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 22:33:32 -0400
+Received: from pps.filterd (m0170389.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0682W6N8011832;
+        Tue, 7 Jul 2020 22:33:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=453WNEVLFenePlfQdxY9hmxsb8VTxEZMoti+bi0oWcA=;
+ b=D3FVXjRVRIlT5kpdJcHZ62eTEIdMg7M6KZbZ9J5nh20YsALPvdhKbUJ44DZVLIcDiGDX
+ AVkg//kdiqysVIW4lZd8DT3wUH6/ihKlT+IdtnRYcx3QcoIYXGu+XSTEuhZTsHHL0Z72
+ pfUbQOP/dikj4OEM5DMNutlK42PyYkzosxvlM4HQkEAl+LB2uT6gzqeinXIhD7WDas9d
+ WiocjcXUq8CGCAtWHHUKVPsqU/RvtAMTiWg9kDhB7XcTrtf6m9FJh14eVXdt3LVQYjuU
+ zvXQ5ZXQObCPS/IK6gdV8pPVmdhz1PpfV/M212Yuri6gGeJM26Qit7yamBNUwgI2Ahvw aQ== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 322nskk4x9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 22:33:31 -0400
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0682UfrB071097;
+        Tue, 7 Jul 2020 22:33:31 -0400
+Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
+        by mx0a-00154901.pphosted.com with ESMTP id 3255dr811n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jul 2020 22:33:31 -0400
+X-LoopCount0: from 10.166.132.55
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="518766826"
+From:   <Crag.Wang@dell.com>
+To:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sre@kernel.org>
+CC:     <mathewk@chromium.org>, <Mario.Limonciello@dell.com>,
+        <crag0715@gmail.com>
+Subject: RE: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
+ charging mode
+Thread-Topic: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
+ charging mode
+Thread-Index: AQHWSTdLlppOCCC6Bki6k0A/v494M6jlsVIAgACTARD//8PXAIABEw/wgBXu6sA=
+Date:   Wed, 8 Jul 2020 02:33:26 +0000
+Message-ID: <2bb356e814f74fcc9ea6e86a50cc7c1e@KULX13MDC113.APAC.DELL.COM>
+References: <20200623082016.23188-1-crag_wang@dell.com>
+ <6a804505400e4109906fadcf945edf76@AUSX13MPC105.AMER.DELL.COM>
+ <ecda5d3852af4a1a8c08e0dc07983f35@KULX13MDC113.APAC.DELL.COM>
+ <05bbf37785bd44ce8cc8777f107b16ff@AUSX13MPC105.AMER.DELL.COM>
+ <23e76b5eda0849fdb4e1ef8b81807558@KULX13MDC113.APAC.DELL.COM>
+In-Reply-To: <23e76b5eda0849fdb4e1ef8b81807558@KULX13MDC113.APAC.DELL.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-23T13:48:06.9996956Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=f22c6ecd-fc33-4d94-beba-f01c0a6f3fa5;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.93.131.111]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200707181641.GA6290@amd>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-07_15:2020-07-07,2020-07-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 cotscore=-2147483648 spamscore=0 clxscore=1015
+ phishscore=0 mlxlogscore=627 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007080015
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 mlxlogscore=688 malwarescore=0 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007080015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 08:16:41PM +0200, Pavel Machek wrote:
->Hi!
->
->> From: Sagi Grimberg <sagi@grimberg.me>
->>
->> [ Upstream commit 3b4b19721ec652ad2c4fe51dfbe5124212b5f581 ]
->>
->> Revert fab7772bfbcf ("nvme-multipath: revalidate nvme_ns_head gendisk
->> in nvme_validate_ns")
->>
->> When adding a new namespace to the head disk (via nvme_mpath_set_live)
->> we will see partition scan which triggers I/O on the mpath device node.
->> This process will usually be triggered from the scan_work which holds
->> the scan_lock. If I/O blocks (if we got ana change currently have only
->> available paths but none are accessible) this can deadlock on the head
->> disk bd_mutex as both partition scan I/O takes it, and head disk revalidation
->> takes it to check for resize (also triggered from scan_work on a different
->> path). See trace [1].
->>
->> The mpath disk revalidation was originally added to detect online disk
->> size change, but this is no longer needed since commit cb224c3af4df
->> ("nvme: Convert to use set_capacity_revalidate_and_notify") which
->> already
->
->AFAICT cb224c3af4df is not applied to 4.19-stable series, so this is
->not safe according to the changelog.
->
->cb224c3af4df is simple enough, but AFAICT
->set_capacity_revalidate_and_notify() is missing in 4.19.132-rc1.
+Hi kernel maintainers,=20
+I'd like to request a code review for this patch accepted, thanks.
 
-Good point... It might be the case that e598a72faeb5 ("block/genhd:
-Notify udev about capacity change") is safe to take along with
-cb224c3af4df.
+Crag
 
-I'll look at it once these releases are out, but for now I'll drop this
-commit. Thanks!
-
--- 
-Thanks,
-Sasha
