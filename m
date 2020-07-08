@@ -2,136 +2,91 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E141C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE846C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2C42064C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:08:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghPAhjY8"
+	by mail.kernel.org (Postfix) with ESMTP id C0CD62064C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgGHJIn (ORCPT
+        id S1727888AbgGHJJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgGHJIm (ORCPT
+        Wed, 8 Jul 2020 05:09:20 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44554 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgGHJJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:08:42 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C685C08C5DC;
-        Wed,  8 Jul 2020 02:08:42 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 18so36383568otv.6;
-        Wed, 08 Jul 2020 02:08:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/pO1lbFCUd8JVwU/a/C5IVsUOfyRnCXcTbnllnxeuBc=;
-        b=ghPAhjY89wPTtIb5w/erbhv+0Fu4o6P535grpb4/02l9c5Ecua3V4upA6wSmM9SMx0
-         xtWAAaSRAjVWDWKsxP32g8hKqpQBeku2BlDUNd13Co4gN0YNetcGkuKRwBg8ctlxkJFo
-         CKAbwXQpXIVLXiYlbWcMgia41QD2185eniFbgyffkSDlej7W96qNLpUtpbdmx0fRmi6k
-         OmIyCZ7PiNSYxyOWFHVkgnYI3YuTzx0M4PwOYnYoRGwmkQyN5VfT2Jw0EfqdKCs8qrBC
-         IZrHUpN6YnhJ7cjEbifPgF3IjB8lZqbAbbiCbKKGbEYe67AlNYAYOPDkwSFDKvx91gWA
-         efRg==
+        Wed, 8 Jul 2020 05:09:19 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 5so34400513oty.11;
+        Wed, 08 Jul 2020 02:09:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/pO1lbFCUd8JVwU/a/C5IVsUOfyRnCXcTbnllnxeuBc=;
-        b=dHAxM8h+Lw3OaBOoovG9gDkVU7igPuDm0CbgWSncrx/dH9V7baU9arFO2Cgatn0ybQ
-         UdEWVSQZsYwwMNOC/e+6XixRLfqj/zvvyzH9WbOuEaAHl2tKAbtosrEozl5ckXUNHHdn
-         L1OyOW1UANpfmsJP0LqfEONsx9XJxf1L7cAkJXLGQrDx40XYLY8OwDdX145CU8XaXAOK
-         FkdclDCNCCv3E3/g01aoDlrAkWvH07l/FATFuWR4ykGYIgcUlGmeBu+6LnK7MLxmL/7P
-         iZB9rc/iLv4rsNfbDPZIDGeS6jM8IFZ/izZEJABnejoB5OAhZUAA8+LYMYi10YQxpV5S
-         zOcA==
-X-Gm-Message-State: AOAM533p1rGTH++S2YusA1PehNiPyZHJGDAfUsDXEBBgBmzJ5GDRk4rA
-        pw7nLEf2W4rmqZ8JeNttcHSsa4wYhknER4INztlrkg==
-X-Google-Smtp-Source: ABdhPJzG8uWjy+Qg3xQqO7+HHpcnCYMSI0FRT+Xb0hwMEVHj2JqTVkb2Sl5Z6vYWYiJAD/qPNTNH98MTyENK31IFEss=
-X-Received: by 2002:a9d:6f0d:: with SMTP id n13mr36728254otq.254.1594199321840;
- Wed, 08 Jul 2020 02:08:41 -0700 (PDT)
+        bh=2TOVO6Hb9HZqjDMN7R8CrnBFLPvMAJa6aPykM+a7dds=;
+        b=iONej4vdLbgt2ACKzkM/tyRixQxWQ9UnKvZgyfs3DRVqn9EIDwXqMKKS1byqCRUtDx
+         I3D+yFBTuiw1O1hNcxnAlpN+kF/Mwhc6sofSgw8qoiyPp71yg34pfqXyONNhx6/x8ZRG
+         J00Go//wffVIfmYRnrimWZa0piEdGcO0wPMaEsR04+f2Ztof0vQJ5KkdrJG05cCkK4mh
+         cOwCSEToSURiDkDPjC4plTj0EckS86NakDE4e4LqVeJfSMzzRv58YBl4Al7xiPFwa8NM
+         Cpoo2saZKLboeIduKnxoX50xmQ7zkGMyZDGwtY6UWARFRtCHrFBQvU1ZjXjcrsMpTT8P
+         te4w==
+X-Gm-Message-State: AOAM530xGzOi/Ucb364TV3iqHgSs2WeK+FpdKKOXQA7eu2+72cnQxuCT
+        Za7PxusdEDmeLN5zxgRoYaohjkDDlBhMQ/EMV8Y=
+X-Google-Smtp-Source: ABdhPJyhkpRCJtpPAs9hAa8vrBNGvUEx4nBIs4nP7nRXvEerlITrMEI9OahTeNAuPq/kfTLdDiw/8PJ9ezSlGzPVEFo=
+X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr16283684otl.145.1594199358865;
+ Wed, 08 Jul 2020 02:09:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200417163843.71624-1-pbonzini@redhat.com> <20200417163843.71624-2-pbonzini@redhat.com>
- <CANRm+CyWKbSU9FZkGoPx2nff-Se3Qcfn1TXXw8exy-6nuZrirg@mail.gmail.com> <57a405b3-6836-83f0-ed97-79f637f7b456@redhat.com>
-In-Reply-To: <57a405b3-6836-83f0-ed97-79f637f7b456@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 8 Jul 2020 17:08:31 +0800
-Message-ID: <CANRm+CzpFt5SwnQzJjRGp3T_Q=Ws3OWBx4FPmMK79qOx1v3NBQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] KVM: SVM: avoid infinite loop on NPF from bad address
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "# v3 . 10+" <stable@vger.kernel.org>
+References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 8 Jul 2020 11:09:07 +0200
+Message-ID: <CAMuHMdXLLVhi7wj4z82Si2HjiU5P=MLecTi2=0-yoyV_6TRHEA@mail.gmail.com>
+Subject: Re: [PATCH 02/14] dt-bindings: arm: renesas: Add HopeRun RZ/G2H boards
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020 at 16:38, Paolo Bonzini <pbonzini@redhat.com> wrote:
+On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 >
-> On 08/07/20 10:17, Wanpeng Li wrote:
-> > On Sat, 18 Apr 2020 at 00:39, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >> When a nested page fault is taken from an address that does not have
-> >> a memslot associated to it, kvm_mmu_do_page_fault returns RET_PF_EMULATE
-> >> (via mmu_set_spte) and kvm_mmu_page_fault then invokes svm_need_emulation_on_page_fault.
-> >>
-> >> The default answer there is to return false, but in this case this just
-> >> causes the page fault to be retried ad libitum.  Since this is not a
-> >> fast path, and the only other case where it is taken is an erratum,
-> >> just stick a kvm_vcpu_gfn_to_memslot check in there to detect the
-> >> common case where the erratum is not happening.
-> >>
-> >> This fixes an infinite loop in the new set_memory_region_test.
-> >>
-> >> Fixes: 05d5a4863525 ("KVM: SVM: Workaround errata#1096 (insn_len maybe zero on SMAP violation)")
-> >> Cc: stable@vger.kernel.org
-> >> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> >> ---
-> >>  arch/x86/kvm/svm/svm.c | 7 +++++++
-> >>  virt/kvm/kvm_main.c    | 1 +
-> >>  2 files changed, 8 insertions(+)
-> >>
-> >> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> >> index a91e397d6750..c86f7278509b 100644
-> >> --- a/arch/x86/kvm/svm/svm.c
-> >> +++ b/arch/x86/kvm/svm/svm.c
-> >> @@ -3837,6 +3837,13 @@ static bool svm_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
-> >>         bool smap = cr4 & X86_CR4_SMAP;
-> >>         bool is_user = svm_get_cpl(vcpu) == 3;
-> >>
-> >> +       /*
-> >> +        * If RIP is invalid, go ahead with emulation which will cause an
-> >> +        * internal error exit.
-> >> +        */
-> >> +       if (!kvm_vcpu_gfn_to_memslot(vcpu, kvm_rip_read(vcpu) >> PAGE_SHIFT))
-> >> +               return true;
-> >> +
-> >>         /*
-> >>          * Detect and workaround Errata 1096 Fam_17h_00_0Fh.
-> >>          *
-> >> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> >> index e2f60e313c87..e7436d054305 100644
-> >> --- a/virt/kvm/kvm_main.c
-> >> +++ b/virt/kvm/kvm_main.c
-> >> @@ -1602,6 +1602,7 @@ struct kvm_memory_slot *kvm_vcpu_gfn_to_memslot(struct kvm_vcpu *vcpu, gfn_t gfn
-> >>  {
-> >>         return __gfn_to_memslot(kvm_vcpu_memslots(vcpu), gfn);
-> >>  }
-> >> +EXPORT_SYMBOL_GPL(kvm_vcpu_gfn_to_memslot);
-> >
-> > This commit incurs the linux guest fails to boot once add --overcommit
-> > cpu-pm=on or not intercept hlt instruction, any thoughts?
+> This patch adds board HiHope RZ/G2H (the main board, powered by the
+> R8A774E1) and board HiHope RZ/G2 EX (the expansion board that sits on top
+> of the HiHope RZ/G2H). Both boards are made by Jiangsu HopeRun Software
+> Co., Ltd. (a.k.a. HopeRun).
 >
-> Can you write a selftest?
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Actually I don't know what's happening here(why not intercept hlt
-instruction has associated with this commit), otherwise, it has
-already been fixed. :)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-    Wanpeng
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
