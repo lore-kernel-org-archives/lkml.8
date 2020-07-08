@@ -2,317 +2,151 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D19AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1C12063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E73422063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:50:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YgdZOWqE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V0OXdErR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgGHJuD (ORCPT
+        id S1728358AbgGHJuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:50:03 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:38504 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgGHJuD (ORCPT
+        Wed, 8 Jul 2020 05:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgGHJuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:50:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594201802; x=1625737802;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MTnvbqcZlnu+azn/LRyoWX3UCd+R2A0BVyNb56D6uN8=;
-  b=YgdZOWqE2EMc2c0cLIYgf7bM0VipoRzRKKTvwclkaTKNvXcdUCY98qfo
-   Vjk3umkmFHUUN+rX9qx+FWf8YeKKSUh1DZn0ms+JRPrje2njlJ/e1WgUo
-   Ls/hLuZGALdClI4Q9wy31jfH7zZDBSlLu8nFyQsGFaDtFjsQJKOfO8syY
-   U2Ko7XR4Qz2nU6nE7RVL6LEdWYntpThU8VjVGxT2dH/FBC6914LZUXhba
-   HK8nNarISRDD92TNHW68VGfOlq1f3KGx1OdG+dxYLLLtkFMWk4cgb2rI5
-   jzZQt2HX9VygH7oP0oiB3hpBSYudAmnHsS5LRE7H7BJBcCQbk98QpWKi8
-   g==;
-IronPort-SDR: IbbmxUMeYbQAK6G9awOEMmxkfIoAVbYhMy5Sm8bBn3SY+SDC2UqWP2vu5iklzdGA1iBWi8se9M
- nU2rq+BgsX7tG3f1BqPjq2AMFzs/sGweYWiZPnKldm8E2P5P2z26+lgw2hgeE7mmqmtXMH/dWe
- uuoiIkT3xcCjs5sEybI7bFlNPqdFa+pH4rN5k/+yyK96cAsz041/5C8ZGD4y6IRzjO026chz6z
- nCEL/5MG0hEApgmjnw5gq37iyq07Uhh71K+yY8Uh31Juc33oMybrAC54zzzCn+0CDSwtI2kvQp
- PY0=
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="86638125"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jul 2020 02:50:02 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 8 Jul 2020 02:50:01 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 8 Jul 2020 02:49:51 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH] ASoC: atmel-classd: remove codec component
-Date:   Wed, 8 Jul 2020 12:49:21 +0300
-Message-ID: <20200708094921.2595529-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 8 Jul 2020 05:50:11 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33E14C08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 02:50:11 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id a14so20167024qvq.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 02:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iieBKdbIkdmEuMGEGprBPwP4csgir63UCa7hLiCZa6M=;
+        b=V0OXdErRBTLupYqEipOINuiPtJHpcBsQM7/vHKaEFnLr1pkYpzxqJ1o5kwevmUf51v
+         ymvzDBTQSIilevzrrRUM4+4ipAZ9ih4hVe6ZrAzFnVeVEgMQ/k2aThSZ2/nQya1S7EDH
+         Qd2TD6ya6A/5iK9oYR34gwpj0ux70WO/xXd5/m1+qP2Qi8PJapFMg38N6nIeKQA6F44a
+         GguvxOE49pmpAi27JrlclXO/t4Bsy9Bg8cXEh7oBOU+iCPn7jMB2DEooEv/rQcEXDzPs
+         oAO68G4VpK+E6o+siOv3ErW+s7llta1udcMF/FyfjlLVvSsUxmrp9eFPuQcV5fdzmHkU
+         olmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iieBKdbIkdmEuMGEGprBPwP4csgir63UCa7hLiCZa6M=;
+        b=Y/awkqsHFZxF3vgb7oOXSivKnoiKjSKl6rXyLofTjeWVCV6HXJq3K6JrV8Ma9JxTm8
+         94cn/KPBk2je+P0dJyqhSYSK8vdeHMMScY3U7jTMPLebyP94zlp3+NKZ0++cPBEGd3s5
+         YUyF1sNaqEFgoFFxwk5iBTPlDcnaVq3VR7ZECmI6yhW816Dfw+f/07Df4KMxiUAmflHK
+         RupGKDpIL9nAhZIe6+uGhkM26pTcixDMaIs/9uutgyz7rRZaGBSnyEzEiDVC9Cx3qPSJ
+         +7aiQ/bhcMxShA/J81xzAcUcKV8YSaM+EdWR3lywKHCk5p64T60d6yeuiYDAs9IqVa1x
+         q+HA==
+X-Gm-Message-State: AOAM530Rni9pS7OmFRxdSP3/SBt5WEzqRWzWFAH4o9FLvOI0r9K5qfdH
+        NT0WAHw8amgZI4st+m7gC1SbYw9L94TFZiWEerxavw==
+X-Google-Smtp-Source: ABdhPJynDfM3uILfAaTGVj9hpsAurHgU0H8GJVeZIADk8ItE2celzPpaFYs9GExbIpvouqqha+/tw2oz4EiSUlwgghg=
+X-Received: by 2002:a0c:ec04:: with SMTP id y4mr52177980qvo.148.1594201810456;
+ Wed, 08 Jul 2020 02:50:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20200701120402.6444-1-yannick.fertre@st.com> <3b6e02b8-0f54-4eb0-9728-b304a1aa85d5@st.com>
+In-Reply-To: <3b6e02b8-0f54-4eb0-9728-b304a1aa85d5@st.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Wed, 8 Jul 2020 11:49:59 +0200
+Message-ID: <CA+M3ks4Bb8ZHzYSZ0v86PvE3x=C30Gmi+mDVJ=PQ7uzPZ8x-+w@mail.gmail.com>
+Subject: Re: [PATCH] drm/stm: ltdc: remove call of pm-runtime functions
+To:     Philippe CORNU <philippe.cornu@st.com>
+Cc:     Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CPU and the codec both are represented now as components, so for
-CLASS-D we are registering two componenets with the same name. Since
-there is no actual codec, we will merge the codec component into the
-CPU one and use a dummy codec instead, for the DAI link.
-As a bonus, debugfs will no longer report an error when will try to
-create entries for both componenets with the same name.
+Le jeu. 2 juil. 2020 =C3=A0 14:18, Philippe CORNU <philippe.cornu@st.com> a=
+ =C3=A9crit :
+>
+>
+>
+> On 7/1/20 2:04 PM, Yannick Fertre wrote:
+> > It is not necessary to suspend or stop the ltdc clocks
+> > to modify the pixel clock.
+> >
+> > Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+> > ---
+> >   drivers/gpu/drm/stm/ltdc.c | 16 ----------------
+> >   1 file changed, 16 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+> > index 3f590d916e91..6e28f707092f 100644
+> > --- a/drivers/gpu/drm/stm/ltdc.c
+> > +++ b/drivers/gpu/drm/stm/ltdc.c
+> > @@ -506,15 +506,7 @@ static bool ltdc_crtc_mode_fixup(struct drm_crtc *=
+crtc,
+> >                                struct drm_display_mode *adjusted_mode)
+> >   {
+> >       struct ltdc_device *ldev =3D crtc_to_ltdc(crtc);
+> > -     struct drm_device *ddev =3D crtc->dev;
+> >       int rate =3D mode->clock * 1000;
+> > -     bool runtime_active;
+> > -     int ret;
+> > -
+> > -     runtime_active =3D pm_runtime_active(ddev->dev);
+> > -
+> > -     if (runtime_active)
+> > -             pm_runtime_put_sync(ddev->dev);
+> >
+> >       if (clk_set_rate(ldev->pixel_clk, rate) < 0) {
+> >               DRM_ERROR("Cannot set rate (%dHz) for pixel clk\n", rate)=
+;
+> > @@ -523,14 +515,6 @@ static bool ltdc_crtc_mode_fixup(struct drm_crtc *=
+crtc,
+> >
+> >       adjusted_mode->clock =3D clk_get_rate(ldev->pixel_clk) / 1000;
+> >
+> > -     if (runtime_active) {
+> > -             ret =3D pm_runtime_get_sync(ddev->dev);
+> > -             if (ret) {
+> > -                     DRM_ERROR("Failed to fixup mode, cannot get sync\=
+n");
+> > -                     return false;
+> > -             }
+> > -     }
+> > -
+> >       DRM_DEBUG_DRIVER("requested clock %dkHz, adjusted clock %dkHz\n",
+> >                        mode->clock, adjusted_mode->clock);
+> >
+> >
+> Hi Yannick,
+> Many thanks for your patch,
+> Acked-by: Philippe Cornu <philippe.cornu@st.com>
+> Philippe :-)
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- sound/soc/atmel/atmel-classd.c | 133 ++++++++++++---------------------
- 1 file changed, 48 insertions(+), 85 deletions(-)
+Applied on drm-misc-next.
 
-diff --git a/sound/soc/atmel/atmel-classd.c b/sound/soc/atmel/atmel-classd.c
-index e98601eccfa3..d1ce67d30cd7 100644
---- a/sound/soc/atmel/atmel-classd.c
-+++ b/sound/soc/atmel/atmel-classd.c
-@@ -5,7 +5,6 @@
-  *
-  * Author: Songjun Wu <songjun.wu@atmel.com>
-  */
--
- #include <linux/of.h>
- #include <linux/clk.h>
- #include <linux/module.h>
-@@ -120,39 +119,21 @@ static int atmel_classd_cpu_dai_startup(struct snd_pcm_substream *substream,
- {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
-+	int err;
- 
- 	regmap_write(dd->regmap, CLASSD_THR, 0x0);
- 
--	return clk_prepare_enable(dd->pclk);
--}
--
--static void atmel_classd_cpu_dai_shutdown(struct snd_pcm_substream *substream,
--					struct snd_soc_dai *cpu_dai)
--{
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
--	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
--
--	clk_disable_unprepare(dd->pclk);
-+	err = clk_prepare_enable(dd->pclk);
-+	if (err)
-+		return err;
-+	err = clk_prepare_enable(dd->gclk);
-+	if (err) {
-+		clk_disable_unprepare(dd->pclk);
-+		return err;
-+	}
-+	return 0;
- }
- 
--static const struct snd_soc_dai_ops atmel_classd_cpu_dai_ops = {
--	.startup	= atmel_classd_cpu_dai_startup,
--	.shutdown	= atmel_classd_cpu_dai_shutdown,
--};
--
--static struct snd_soc_dai_driver atmel_classd_cpu_dai = {
--	.playback = {
--		.channels_min	= 1,
--		.channels_max	= 2,
--		.rates		= ATMEL_CLASSD_RATES,
--		.formats	= SNDRV_PCM_FMTBIT_S16_LE,},
--	.ops = &atmel_classd_cpu_dai_ops,
--};
--
--static const struct snd_soc_component_driver atmel_classd_cpu_dai_component = {
--	.name = "atmel-classd",
--};
--
- /* platform */
- static int
- atmel_classd_platform_configure_dma(struct snd_pcm_substream *substream,
-@@ -306,31 +287,10 @@ static int atmel_classd_component_resume(struct snd_soc_component *component)
- 	return regcache_sync(dd->regmap);
- }
- 
--static struct snd_soc_component_driver soc_component_dev_classd = {
--	.probe			= atmel_classd_component_probe,
--	.resume			= atmel_classd_component_resume,
--	.controls		= atmel_classd_snd_controls,
--	.num_controls		= ARRAY_SIZE(atmel_classd_snd_controls),
--	.idle_bias_on		= 1,
--	.use_pmdown_time	= 1,
--	.endianness		= 1,
--	.non_legacy_dai_naming	= 1,
--};
--
--/* codec dai component */
--static int atmel_classd_codec_dai_startup(struct snd_pcm_substream *substream,
--				struct snd_soc_dai *codec_dai)
--{
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
--	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
--
--	return clk_prepare_enable(dd->gclk);
--}
--
--static int atmel_classd_codec_dai_digital_mute(struct snd_soc_dai *codec_dai,
--	int mute)
-+static int atmel_classd_cpu_dai_digital_mute(struct snd_soc_dai *cpu_dai,
-+					     int mute)
- {
--	struct snd_soc_component *component = codec_dai->component;
-+	struct snd_soc_component *component = cpu_dai->component;
- 	u32 mask, val;
- 
- 	mask = CLASSD_MR_LMUTE_MASK | CLASSD_MR_RMUTE_MASK;
-@@ -373,13 +333,13 @@ static struct {
- };
- 
- static int
--atmel_classd_codec_dai_hw_params(struct snd_pcm_substream *substream,
--			    struct snd_pcm_hw_params *params,
--			    struct snd_soc_dai *codec_dai)
-+atmel_classd_cpu_dai_hw_params(struct snd_pcm_substream *substream,
-+			       struct snd_pcm_hw_params *params,
-+			       struct snd_soc_dai *cpu_dai)
- {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
--	struct snd_soc_component *component = codec_dai->component;
-+	struct snd_soc_component *component = cpu_dai->component;
- 	int fs;
- 	int i, best, best_val, cur_val, ret;
- 	u32 mask, val;
-@@ -417,8 +377,8 @@ atmel_classd_codec_dai_hw_params(struct snd_pcm_substream *substream,
- }
- 
- static void
--atmel_classd_codec_dai_shutdown(struct snd_pcm_substream *substream,
--			    struct snd_soc_dai *codec_dai)
-+atmel_classd_cpu_dai_shutdown(struct snd_pcm_substream *substream,
-+			      struct snd_soc_dai *cpu_dai)
- {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
-@@ -426,10 +386,10 @@ atmel_classd_codec_dai_shutdown(struct snd_pcm_substream *substream,
- 	clk_disable_unprepare(dd->gclk);
- }
- 
--static int atmel_classd_codec_dai_prepare(struct snd_pcm_substream *substream,
--					struct snd_soc_dai *codec_dai)
-+static int atmel_classd_cpu_dai_prepare(struct snd_pcm_substream *substream,
-+					struct snd_soc_dai *cpu_dai)
- {
--	struct snd_soc_component *component = codec_dai->component;
-+	struct snd_soc_component *component = cpu_dai->component;
- 
- 	snd_soc_component_update_bits(component, CLASSD_MR,
- 				CLASSD_MR_LEN_MASK | CLASSD_MR_REN_MASK,
-@@ -439,10 +399,10 @@ static int atmel_classd_codec_dai_prepare(struct snd_pcm_substream *substream,
- 	return 0;
- }
- 
--static int atmel_classd_codec_dai_trigger(struct snd_pcm_substream *substream,
--					int cmd, struct snd_soc_dai *codec_dai)
-+static int atmel_classd_cpu_dai_trigger(struct snd_pcm_substream *substream,
-+					int cmd, struct snd_soc_dai *cpu_dai)
- {
--	struct snd_soc_component *component = codec_dai->component;
-+	struct snd_soc_component *component = cpu_dai->component;
- 	u32 mask, val;
- 
- 	mask = CLASSD_MR_LEN_MASK | CLASSD_MR_REN_MASK;
-@@ -468,19 +428,17 @@ static int atmel_classd_codec_dai_trigger(struct snd_pcm_substream *substream,
- 	return 0;
- }
- 
--static const struct snd_soc_dai_ops atmel_classd_codec_dai_ops = {
--	.digital_mute	= atmel_classd_codec_dai_digital_mute,
--	.startup	= atmel_classd_codec_dai_startup,
--	.shutdown	= atmel_classd_codec_dai_shutdown,
--	.hw_params	= atmel_classd_codec_dai_hw_params,
--	.prepare	= atmel_classd_codec_dai_prepare,
--	.trigger	= atmel_classd_codec_dai_trigger,
-+static const struct snd_soc_dai_ops atmel_classd_cpu_dai_ops = {
-+	.startup        = atmel_classd_cpu_dai_startup,
-+	.shutdown       = atmel_classd_cpu_dai_shutdown,
-+	.digital_mute	= atmel_classd_cpu_dai_digital_mute,
-+	.hw_params	= atmel_classd_cpu_dai_hw_params,
-+	.prepare	= atmel_classd_cpu_dai_prepare,
-+	.trigger	= atmel_classd_cpu_dai_trigger,
- };
- 
- #define ATMEL_CLASSD_CODEC_DAI_NAME  "atmel-classd-hifi"
--
--static struct snd_soc_dai_driver atmel_classd_codec_dai = {
--	.name = ATMEL_CLASSD_CODEC_DAI_NAME,
-+static struct snd_soc_dai_driver atmel_classd_cpu_dai = {
- 	.playback = {
- 		.stream_name	= "Playback",
- 		.channels_min	= 1,
-@@ -488,7 +446,18 @@ static struct snd_soc_dai_driver atmel_classd_codec_dai = {
- 		.rates		= ATMEL_CLASSD_RATES,
- 		.formats	= SNDRV_PCM_FMTBIT_S16_LE,
- 	},
--	.ops = &atmel_classd_codec_dai_ops,
-+	.ops = &atmel_classd_cpu_dai_ops,
-+};
-+
-+static const struct snd_soc_component_driver atmel_classd_cpu_dai_component = {
-+	.name			= "atmel-classd",
-+	.probe			= atmel_classd_component_probe,
-+	.resume			= atmel_classd_component_resume,
-+	.controls		= atmel_classd_snd_controls,
-+	.num_controls		= ARRAY_SIZE(atmel_classd_snd_controls),
-+	.idle_bias_on		= 1,
-+	.use_pmdown_time	= 1,
-+	.endianness		= 1,
- };
- 
- /* ASoC sound card */
-@@ -517,9 +486,10 @@ static int atmel_classd_asoc_card_init(struct device *dev,
- 
- 	dai_link->name			= "CLASSD";
- 	dai_link->stream_name		= "CLASSD PCM";
--	dai_link->codecs->dai_name	= ATMEL_CLASSD_CODEC_DAI_NAME;
-+	dai_link->codecs->dai_name	= "snd-soc-dummy-dai";
-+
- 	dai_link->cpus->dai_name	= dev_name(dev);
--	dai_link->codecs->name		= dev_name(dev);
-+	dai_link->codecs->name		= "snd-soc-dummy";
- 	dai_link->platforms->name	= dev_name(dev);
- 
- 	card->dai_link	= dai_link;
-@@ -620,13 +590,6 @@ static int atmel_classd_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ret = devm_snd_soc_register_component(dev, &soc_component_dev_classd,
--					&atmel_classd_codec_dai, 1);
--	if (ret) {
--		dev_err(dev, "could not register component: %d\n", ret);
--		return ret;
--	}
--
- 	/* register sound card */
- 	card = devm_kzalloc(dev, sizeof(*card), GFP_KERNEL);
- 	if (!card) {
--- 
-2.25.1
+Thanks,
+Benjamin
 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
