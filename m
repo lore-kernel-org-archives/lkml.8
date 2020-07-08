@@ -2,157 +2,154 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B573C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE9720720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E91520720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:46:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0EzvjxA0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kpN1+7l8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgGHJqJ (ORCPT
+        id S1728487AbgGHJqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:46:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60752 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726445AbgGHJqJ (ORCPT
+        Wed, 8 Jul 2020 05:46:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47792 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbgGHJqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:46:09 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0689Y4Aj181016;
-        Wed, 8 Jul 2020 05:45:58 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32584yej66-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 05:45:57 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0689b92K192578;
-        Wed, 8 Jul 2020 05:45:57 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32584yej58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 05:45:57 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0689eLGH026392;
-        Wed, 8 Jul 2020 09:45:55 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 322hd7t846-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 09:45:54 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0689jqQl11338098
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jul 2020 09:45:52 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3C205204E;
-        Wed,  8 Jul 2020 09:45:52 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.202.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 2F8345204F;
-        Wed,  8 Jul 2020 09:45:51 +0000 (GMT)
-Date:   Wed, 8 Jul 2020 12:45:49 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@kernel.org>, Jia He <justin.he@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid as
- EXPORT_SYMBOL_GPL
-Message-ID: <20200708094549.GA781326@linux.ibm.com>
-References: <20200707180043.GA386073@linux.ibm.com>
- <CAPcyv4iB-vP8U4pH_3jptfODbiNqJZXoTmA6+7EHoddk9jBgEQ@mail.gmail.com>
- <20200708052626.GB386073@linux.ibm.com>
- <9a009cf6-6c30-91ca-a1a5-9aa090c66631@redhat.com>
- <CAPcyv4jyk_tkDRewTVvRAv0g4LwemEyKYQyuJBXkF4VuYrBdrw@mail.gmail.com>
- <999ea296-4695-1219-6a4d-a027718f61e5@redhat.com>
- <20200708083951.GH386073@linux.ibm.com>
- <cdb0510e-4271-1c97-4305-5fd52da282dc@redhat.com>
- <20200708091520.GE128651@kernel.org>
- <df0e5f64-10bc-4c3c-a515-288a6f501065@redhat.com>
+        Wed, 8 Jul 2020 05:46:15 -0400
+Date:   Wed, 08 Jul 2020 09:46:11 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594201572;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=diJYgjtaYO5ivE+OT0+Yz2/Iul+eRtIpp4mpsKVZrP0=;
+        b=0EzvjxA0TpIf9NJ5cXcn86b7Y2TPeWuyLeA0Ds3uuNe8dwQ/UmakyCs6nANy7AUw9hQ6nc
+        Rux//gREIPcoma7zOnziAT/O19vkqgpnMZ5EY/FMjojGrZIi5d7XQbVQ+WOLZebOYHXSie
+        VWsiccuw3Y8qp3jbOmLNmoFlI3u459K6sfTFRkfhYNSw+ruyCCdSg7F1QgG7RuUCjtPpsf
+        qSiRfIE8cssVg5BD12ouiQWcZSU6TP5kq4Ym3yD6HQDTZo/5SJZknuhNZ7rNnVILcXU5AG
+        N6gowdy4aDnCz2yZEWjny/OyQuK9InD+RznJ0+/wCBl7Gc0e4yS64qgMohQVCg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594201572;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=diJYgjtaYO5ivE+OT0+Yz2/Iul+eRtIpp4mpsKVZrP0=;
+        b=kpN1+7l8MgriG9q+5yc3MU46xjR/5inqZxVuDbkhMB9s4S0fFAE+sApU2Iheuh6/6NFaVB
+        5Q+R6UpEqyLN5BCQ==
+From:   "tip-bot2 for Mathieu Desnoyers" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched: Fix unreliable rseq cpu_id for new tasks
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, #@tip-bot2.tec.linutronix.de,
+        v4.18+@tip-bot2.tec.linutronix.de, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200707201505.2632-1-mathieu.desnoyers@efficios.com>
+References: <20200707201505.2632-1-mathieu.desnoyers@efficios.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <df0e5f64-10bc-4c3c-a515-288a6f501065@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-08_07:2020-07-08,2020-07-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- mlxscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0 mlxlogscore=999
- bulkscore=0 impostorscore=0 suspectscore=1 phishscore=0 priorityscore=1501
- spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007080069
+Message-ID: <159420157146.4006.2039144692145212660.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 11:25:36AM +0200, David Hildenbrand wrote:
-> On 08.07.20 11:15, Mike Rapoport wrote:
-> >>>>>>
-> >>> But on more theoretical/fundmanetal level, I think we lack a generic
-> >>> abstraction similar to e.g. x86 'struct numa_meminfo' that serves as
-> >>> translaton of firmware supplied information into data that can be used
-> >>> by the generic mm without need to reimplement it for each and every
-> >>> arch.
-> >>
-> >> Right. As I expressed, I am not a friend of using memblock for that, and
-> >> the pgdat node span is tricky.
-> >>
-> >> Maybe abstracting that x86 concept is possible in some way (and we could
-> >> restrict the information to boot-time properties, so we don't have to
-> >> mess with memory hot(un)plug - just as done for numa_meminfo AFAIKS).
-> > 
-> > I agree with pgdat part and disagree about memblock. It already has
-> > non-init physmap, why won't we add memblock.memory to the mix? ;-)
-> 
-> Can we generalize and tweak physmap to contain node info? That's all we
-> need, no? (the special mem= parameter handling should not matter for our
-> use case, where "physmap" and "memory" would differ)
+The following commit has been merged into the sched/urgent branch of tip:
 
-TBH, I have only random vague thoughts at the moment. This might be an
-option. But then we need to enable physmap on !s390, right?
- 
-> > Now, seriously, memblock already has all the necessary information about
-> > the coldplug memory for several architectures. x86 being an exception
-> > because for some reason the reserved memory is not considered memory
-> > there. The infrastructure for quiering and iterating memory regions is
-> > already there. We just need to leave out the irrelevant parts, like
-> > memblock.reserved and allocation funcions.
-> 
-> I *really* don't want to mess with memblocks on memory hot(un)plug on
-> x86 and s390x (+other architectures in the future). I also thought about
-> stopping to create memblocks for hotplugged memory on arm64, by tweaking
-> pfn_valid() to query memblocks only for early sections.
->
-> If "physmem" is not an option, can we at least introduce something like
-> ARCH_UPDTAE_MEMBLOCK_ON_HOTPLUG to avoid doing that on x86 and s390x for
-> now (and later maybe for others)?
+Commit-ID:     ce3614daabea8a2d01c1dd17ae41d1ec5e5ae7db
+Gitweb:        https://git.kernel.org/tip/ce3614daabea8a2d01c1dd17ae41d1ec5e5ae7db
+Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+AuthorDate:    Mon, 06 Jul 2020 16:49:10 -04:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 08 Jul 2020 11:38:50 +02:00
 
-I have to do more memory hotplug howework to answer that ;-)
+sched: Fix unreliable rseq cpu_id for new tasks
 
-My general point is that we don't have to reinvent the wheel to have
-coldplug memory representation, it's already there. We just need a way
-to use it properly.
+While integrating rseq into glibc and replacing glibc's sched_getcpu
+implementation with rseq, glibc's tests discovered an issue with
+incorrect __rseq_abi.cpu_id field value right after the first time
+a newly created process issues sched_setaffinity.
 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-> 
+For the records, it triggers after building glibc and running tests, and
+then issuing:
 
--- 
-Sincerely yours,
-Mike.
+  for x in {1..2000} ; do posix/tst-affinity-static  & done
+
+and shows up as:
+
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 2, expected 0
+error: Unexpected CPU 138, expected 0
+error: Unexpected CPU 138, expected 0
+error: Unexpected CPU 138, expected 0
+error: Unexpected CPU 138, expected 0
+
+This is caused by the scheduler invoking __set_task_cpu() directly from
+sched_fork() and wake_up_new_task(), thus bypassing rseq_migrate() which
+is done by set_task_cpu().
+
+Add the missing rseq_migrate() to both functions. The only other direct
+use of __set_task_cpu() is done by init_idle(), which does not involve a
+user-space task.
+
+Based on my testing with the glibc test-case, just adding rseq_migrate()
+to wake_up_new_task() is sufficient to fix the observed issue. Also add
+it to sched_fork() to keep things consistent.
+
+The reason why this never triggered so far with the rseq/basic_test
+selftest is unclear.
+
+The current use of sched_getcpu(3) does not typically require it to be
+always accurate. However, use of the __rseq_abi.cpu_id field within rseq
+critical sections requires it to be accurate. If it is not accurate, it
+can cause corruption in the per-cpu data targeted by rseq critical
+sections in user-space.
+
+Reported-By: Florian Weimer <fweimer@redhat.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-By: Florian Weimer <fweimer@redhat.com>
+Cc: stable@vger.kernel.org # v4.18+
+Link: https://lkml.kernel.org/r/20200707201505.2632-1-mathieu.desnoyers@efficios.com
+---
+ kernel/sched/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 950ac45..e15543c 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2965,6 +2965,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 	 * Silence PROVE_RCU.
+ 	 */
+ 	raw_spin_lock_irqsave(&p->pi_lock, flags);
++	rseq_migrate(p);
+ 	/*
+ 	 * We're setting the CPU for the first time, we don't migrate,
+ 	 * so use __set_task_cpu().
+@@ -3029,6 +3030,7 @@ void wake_up_new_task(struct task_struct *p)
+ 	 * as we're not fully set-up yet.
+ 	 */
+ 	p->recent_used_cpu = task_cpu(p);
++	rseq_migrate(p);
+ 	__set_task_cpu(p, select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0));
+ #endif
+ 	rq = __task_rq_lock(p, &rf);
