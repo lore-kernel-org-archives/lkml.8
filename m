@@ -2,143 +2,103 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4286FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B4FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23B4720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDDBA20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGGZKRPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgGHLPV (ORCPT
+        id S1728843AbgGHLPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 8 Jul 2020 07:15:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3776 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725972AbgGHLPU (ORCPT
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgGHLPV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:15:20 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068B22S2029825;
-        Wed, 8 Jul 2020 07:15:18 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3255kdmdh6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 07:15:18 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 068B3svd039693;
-        Wed, 8 Jul 2020 07:15:17 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3255kdmdgf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 07:15:17 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 068BFGN6009783;
-        Wed, 8 Jul 2020 11:15:16 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04fra.de.ibm.com with ESMTP id 3251dw0af6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 11:15:15 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 068BFDUc63439114
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jul 2020 11:15:13 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD67DA4054;
-        Wed,  8 Jul 2020 11:15:13 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97DF5A405C;
-        Wed,  8 Jul 2020 11:15:12 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.79.222.188])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Jul 2020 11:15:12 +0000 (GMT)
-Subject: Re: [PATCH] ext4: Delete unnecessary checks before brelse()
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Ts'o" <tytso@mit.edu>
-Cc:     kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <0d713702-072f-a89c-20ec-ca70aa83a432@web.de>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Wed, 8 Jul 2020 16:45:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 07:15:21 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EE6C08C5DC;
+        Wed,  8 Jul 2020 04:15:21 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id w2so20711657pgg.10;
+        Wed, 08 Jul 2020 04:15:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x8CzCNCVY2DEFkmEo9x47ULwFWJK87T1/eVz2vgJvtc=;
+        b=pGGZKRPVLWhXkxQyhu202FK1t/DHwD6KvHlcedJwlR+AT3oBF2senhHisRpi+/sFxQ
+         VOVleXcjeU4/mvq5mIW4+tPMbZx1YLUmua1wrcXzcAyeo0jU85WN7E12tKwOHelJcttf
+         uvv+UkLOo2NVWTZzZ1ZgSLdE8bAimmrXTUXkkIBfgq84XpiQ96QuOAcSQMAJm8m8cto5
+         VrwJge2/7w8WZW6gsbOmVG+U6iSZNb8XaFVZ7GRtOrVYHgCZP8gpn5cxMCavGkBIyw52
+         Fx9VTUdOqYt6NJ6vaLgrLtU7YVVgN3LCmM+Xn1DPh8NiOmbXTazETk53+1D8PeDJ9aj7
+         MKgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x8CzCNCVY2DEFkmEo9x47ULwFWJK87T1/eVz2vgJvtc=;
+        b=lKEczzJFhINcpqYHjprGcfGXBOngjlXB+sDsJxoTptucvqmOE56p84ihKuA6nO1swQ
+         q0wsWOvMYd47wVepG2kMr17y9hrhl8MM7TGbg5v7Fpws2IhEdwZ6RRDvMo/dFrhwMJV7
+         Qrm3tq2k67cY8M7dXNox/HHaW+i4y+uflDVIPfsuxbWMiwXJbtPXCICTTdX5G01Q7KKk
+         0D1Pkg7BF4aWbDo0VopCQJKJ67ehTyXwieOKDQknsphQ2yUEyaFWGUQ1arnsPo4PR2d2
+         vHA636YW8VvFIi8iGbvN1AWGcOGmgb7OAdK9ZAykDPNwceeuvqmaUuEZSN8U57LyvSFK
+         KI8w==
+X-Gm-Message-State: AOAM531/T5sR8mOUDD+M1CUon5GtUtD+Sw4sxvc9EA8BTcyTEixjUPpv
+        Qi9pjfNu6d9kOGW0DxyUBAA=
+X-Google-Smtp-Source: ABdhPJwqHcvbEmt6GIaYgHDCndZvhyku4OdMSPqRUpWN7nzz3X1cjRdWKtIL1vykrYTQw0ikP14Dog==
+X-Received: by 2002:a63:d40d:: with SMTP id a13mr48854602pgh.225.1594206920643;
+        Wed, 08 Jul 2020 04:15:20 -0700 (PDT)
+Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id d22sm24858203pfd.105.2020.07.08.04.15.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 04:15:20 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 04:15:18 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Sergey Organov <sorganov@gmail.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
+ current kernel time
+Message-ID: <20200708111518.GF9080@hoboy>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+ <20200706142616.25192-4-sorganov@gmail.com>
+ <20200706152721.3j54m73bm673zlnj@skbuf>
+ <874kqksdrb.fsf@osv.gnss.ru>
+ <20200707063651.zpt6bblizo5r3kir@skbuf>
+ <87sge371hv.fsf@osv.gnss.ru>
+ <20200707164329.pm4p73nzbsda3sfv@skbuf>
+ <87sge345ho.fsf@osv.gnss.ru>
+ <20200707171233.et6zrwfqq7fddz2r@skbuf>
+ <87zh8b1a5i.fsf@osv.gnss.ru>
 MIME-Version: 1.0
-In-Reply-To: <0d713702-072f-a89c-20ec-ca70aa83a432@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200708111512.97DF5A405C@b06wcsmtp001.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-08_07:2020-07-08,2020-07-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxscore=0 suspectscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- impostorscore=0 clxscore=1011 cotscore=-2147483648 spamscore=0
- mlxlogscore=999 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007080075
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zh8b1a5i.fsf@osv.gnss.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 07, 2020 at 08:56:41PM +0300, Sergey Organov wrote:
+> It won't. Supposedly it'd force clock (that doesn't tick by default and
+> stays at 0) to start ticking.
+
+No existing clockid_t has this behavior.  Consider CLOCK_REALTIME or
+CLOCK_MONOTONIC.
+ 
+The PHC must act the same as the other POSIX clocks.
+
+Thanks,
+Richard
 
 
-On 6/13/20 11:37 PM, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sat, 13 Jun 2020 19:12:24 +0200
-> 
-> The brelse() function tests whether its argument is NULL
-> and then returns immediately.
-> Thus remove the tests which are not needed around the shown calls.
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-
-Sure, LGTM. Feel free to add
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-
-
-> ---
->   fs/ext4/extents.c | 6 ++----
->   fs/ext4/xattr.c   | 3 +--
->   2 files changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-> index 221f240eae60..315276d50aa8 100644
-> --- a/fs/ext4/extents.c
-> +++ b/fs/ext4/extents.c
-> @@ -693,10 +693,8 @@ void ext4_ext_drop_refs(struct ext4_ext_path *path)
->   		return;
->   	depth = path->p_depth;
->   	for (i = 0; i <= depth; i++, path++) {
-> -		if (path->p_bh) {
-> -			brelse(path->p_bh);
-> -			path->p_bh = NULL;
-> -		}
-> +		brelse(path->p_bh);
-> +		path->p_bh = NULL;
->   	}
->   }
-> 
-> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-> index 9b29a40738ac..eb997ce21be3 100644
-> --- a/fs/ext4/xattr.c
-> +++ b/fs/ext4/xattr.c
-> @@ -1354,8 +1354,7 @@ static int ext4_xattr_inode_write(handle_t *handle, struct inode *ea_inode,
-> 
->   	block = 0;
->   	while (wsize < bufsize) {
-> -		if (bh != NULL)
-> -			brelse(bh);
-> +		brelse(bh);
->   		csize = (bufsize - wsize) > blocksize ? blocksize :
->   								bufsize - wsize;
->   		bh = ext4_getblk(handle, ea_inode, block, 0);
-> --
-> 2.27.0
-> 
