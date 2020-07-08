@@ -2,172 +2,212 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB5C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDA722078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792C820774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:29:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ob7wYewf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgGHF2M (ORCPT
+        id S1729084AbgGHF3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:28:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46468 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725848AbgGHF2L (ORCPT
+        Wed, 8 Jul 2020 01:29:40 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:33115 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725848AbgGHF3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:28:11 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06852AT6066654;
-        Wed, 8 Jul 2020 01:28:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3257fsgsg8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 01:28:00 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06852J4H067392;
-        Wed, 8 Jul 2020 01:27:59 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3257fsgsfp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 01:27:59 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0685OcKV032636;
-        Wed, 8 Jul 2020 05:27:58 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma05fra.de.ibm.com with ESMTP id 3251w8g4tv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 05:27:57 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0685Rtj57340492
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jul 2020 05:27:55 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 95F4F11C04C;
-        Wed,  8 Jul 2020 05:27:55 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 677E511C04A;
-        Wed,  8 Jul 2020 05:27:53 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.202.29])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  8 Jul 2020 05:27:53 +0000 (GMT)
-Date:   Wed, 8 Jul 2020 08:27:46 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>, Jia He <justin.he@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid as
- EXPORT_SYMBOL_GPL
-Message-ID: <20200708052626.GB386073@linux.ibm.com>
-References: <20200707055917.143653-1-justin.he@arm.com>
- <20200707055917.143653-2-justin.he@arm.com>
- <20200707115454.GN5913@dhcp22.suse.cz>
- <20200707121302.GB9411@linux.ibm.com>
- <474f93e7-c709-1a13-5418-29f1777f614c@redhat.com>
- <20200707180043.GA386073@linux.ibm.com>
- <CAPcyv4iB-vP8U4pH_3jptfODbiNqJZXoTmA6+7EHoddk9jBgEQ@mail.gmail.com>
+        Wed, 8 Jul 2020 01:29:39 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594186178; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=H1KsZiKBnQeUBGPkmSKwKU0/CScTk+WjfjB+xahfqhQ=; b=Ob7wYewfwrN2/T/k3Pj9lZkmW4zAETVZgyPwFXkFIF/ChLtMqR/P3THAS2hl22p1uEAXhmdb
+ ASyyfEuFvW+w3013QNw6RFxO8gdNvOR6EhWyS2//ZlyvcJPudW607vEJ6F4OpX9yx0oGVEbL
+ /HEh74OVho0OGKqCOpuT9gdYR08=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f0559c155886724ff59e799 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 05:29:37
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 81348C433C8; Wed,  8 Jul 2020 05:29:37 +0000 (UTC)
+Received: from [192.168.29.129] (unknown [49.36.73.132])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94AA5C433C6;
+        Wed,  8 Jul 2020 05:29:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94AA5C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2] pinctrl: qcom: sc7180: Make gpio28 non wakeup capable
+ for google,lazor
+To:     Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LinusW <linus.walleij@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>
+References: <1593762506-32680-1-git-send-email-rnayak@codeaurora.org>
+ <CAD=FV=WyhJ6g0DZS=ysT-AyXJoiRX=UFE9fXY2NEHfuUHYUXCQ@mail.gmail.com>
+ <20200706203805.GS388985@builder.lan>
+ <c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org>
+ <CAD=FV=Xs9Z37hv=CPgLEALoSoX=Uyir0s=ker=YKecA+Lhy1Qg@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <56fb02df-372d-935a-cc39-c13289d65c0d@codeaurora.org>
+Date:   Wed, 8 Jul 2020 10:59:30 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iB-vP8U4pH_3jptfODbiNqJZXoTmA6+7EHoddk9jBgEQ@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-08_01:2020-07-08,2020-07-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- phishscore=0 clxscore=1015 spamscore=0 adultscore=0 mlxlogscore=999
- priorityscore=1501 bulkscore=0 impostorscore=0 lowpriorityscore=0
- suspectscore=0 mlxscore=0 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007080029
+In-Reply-To: <CAD=FV=Xs9Z37hv=CPgLEALoSoX=Uyir0s=ker=YKecA+Lhy1Qg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 03:05:48PM -0700, Dan Williams wrote:
-> On Tue, Jul 7, 2020 at 11:01 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> >
-> > On Tue, Jul 07, 2020 at 02:26:08PM +0200, David Hildenbrand wrote:
-> > > On 07.07.20 14:13, Mike Rapoport wrote:
-> > > > On Tue, Jul 07, 2020 at 01:54:54PM +0200, Michal Hocko wrote:
-> > > >> On Tue 07-07-20 13:59:15, Jia He wrote:
-> > > >>> This exports memory_add_physaddr_to_nid() for module driver to use.
-> > > >>>
-> > > >>> memory_add_physaddr_to_nid() is a fallback option to get the nid in case
-> > > >>> NUMA_NO_NID is detected.
-> > > >>>
-> > > >>> Suggested-by: David Hildenbrand <david@redhat.com>
-> > > >>> Signed-off-by: Jia He <justin.he@arm.com>
-> > > >>> ---
-> > > >>>  arch/arm64/mm/numa.c | 5 +++--
-> > > >>>  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > >>>
-> > > >>> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> > > >>> index aafcee3e3f7e..7eeb31740248 100644
-> > > >>> --- a/arch/arm64/mm/numa.c
-> > > >>> +++ b/arch/arm64/mm/numa.c
-> > > >>> @@ -464,10 +464,11 @@ void __init arm64_numa_init(void)
-> > > >>>
-> > > >>>  /*
-> > > >>>   * We hope that we will be hotplugging memory on nodes we already know about,
-> > > >>> - * such that acpi_get_node() succeeds and we never fall back to this...
-> > > >>> + * such that acpi_get_node() succeeds. But when SRAT is not present, the node
-> > > >>> + * id may be probed as NUMA_NO_NODE by acpi, Here provide a fallback option.
-> > > >>>   */
-> > > >>>  int memory_add_physaddr_to_nid(u64 addr)
-> > > >>>  {
-> > > >>> - pr_warn("Unknown node for memory at 0x%llx, assuming node 0\n", addr);
-> > > >>>   return 0;
-> > > >>>  }
-> > > >>> +EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
-> > > >>
-> > > >> Does it make sense to export a noop function? Wouldn't make more sense
-> > > >> to simply make it static inline somewhere in a header? I haven't checked
-> > > >> whether there is an easy way to do that sanely bu this just hit my eyes.
-> > > >
-> > > > We'll need to either add a CONFIG_ option or arch specific callback to
-> > > > make both non-empty (x86, powerpc, ia64) and empty (arm64, sh)
-> > > > implementations coexist ...
-> > >
-> > > Note: I have a similar dummy (return 0) patch for s390x lying around here.
-> >
-> > Then we'll call it a tie - 3:3 ;-)
-> 
-> So I'd be happy to jump on the train of people wanting to export the
-> ARM stub for this (and add a new ARM stub for phys_to_target_node()),
-> but Will did have a plausibly better idea that I have been meaning to
-> circle back to:
-> 
-> http://lore.kernel.org/r/20200325111039.GA32109@willie-the-truck
-> 
-> ...i.e. iterate over node data to do the lookup. This would seem to
-> work generically for multiple archs unless I am missing something?
+Hi,
 
-I think it would work on arm64, power and, most propbably on s390
-(David?), but not on x86. x86 does not have reserved memory in pgdat,
-it's never memblock_add()'ed (see e820__memblock_setup()).
+On 7/8/2020 4:33 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Mon, Jul 6, 2020 at 9:52 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>
+>> []..
+>>
+>>>>> @@ -1151,6 +1168,10 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
+>>>>>
+>>>>>    static int sc7180_pinctrl_probe(struct platform_device *pdev)
+>>>>>    {
+>>>>> +       if (of_machine_is_compatible("google,lazor")) {
+>>>>> +               sc7180_pinctrl.wakeirq_map = sc7180_lazor_pdc_map;
+>>>>> +               sc7180_pinctrl.nwakeirq_map = ARRAY_SIZE(sc7180_lazor_pdc_map);
+>>>>> +       }
+>>>> As much as I want patches landed and things working, the above just
+>>>> doesn't feel like a viable solution.  I guess it could work as a short
+>>>> term hack but it's going to become untenable pretty quickly.
+>>> I second that.
+>>>
+>>>> As we
+>>>> have more variants of this we're going to have to just keep piling
+>>>> more machines in here, right?  ...this is also already broken for us
+>>>> because not all boards will have the "google,lazor" compatible.  From
+>>>> the current Chrome OS here are the compatibles for various revs/SKUs
+>>>>
+>>>> compatible = "google,lazor-rev0", "qcom,sc7180";
+>>>> compatible = "google,lazor-rev0-sku0", "qcom,sc7180";
+>>>> compatible = "google,lazor", "qcom,sc7180";
+>>>> compatible = "google,lazor-sku0", "qcom,sc7180";
+>>>> compatible = "google,lazor-rev2", "qcom,sc7180";
+>>>>
+>>>> ...so of the 5 boards you'll only match one of them.
+>>>>
+>>>>
+>>>> Maybe I'm jumping into a situation again where I'm ignorant since I
+>>>> haven't followed all the prior conversation, but is it really that
+>>>> hard to just add dual edge support to the PDC irqchip driver?  ...or
+>> FWIK, this is really a PDC hardware issue (with the specific IP rev that exists
+>> on sc7180) so working it around in SW could get ugly.
+> Ugh.  I guess it's ugly because the workaround would need to be in the
+> PDC driver but to properly do the workaround you need to be able to
+> read the state of the pin from the PDC driver?  ...and I guess you
+> can't do that with the PDC register space so you'd either need to
+> violate a layer or 3 of abstraction and snarf into the GPIO register
+> space from the PDC driver or you'd have to provide some sort of API
+> access from the PDC back down to the GPIO driver?
+>
+> --
+>
+> Actually, though, I'm still not sure why this would need to be in the
+> PDC driver.  Sure, you can't just magically re-use the existing
+> dual-edge emulation in pinctrl-msm.c, but you can add some new
+> dual-edge emulation for when your parent handles your interrupts,
+> can't you?  As per usually, I'm talking out of my rear end, but I
+> sorta imagine:
+>
+> 1. At the head of msm_gpio_irq_set_type() if you detect that
+> "skip_wake_irqs" is set and you're on an SoC with this hardware errata
+> then you do a loop much like the one in
+> msm_gpio_update_dual_edge_pos() except that instead of changing the
+> polarity with msm_writel_intr_cfg() you change the polarity with
+> "irq_chip_set_type_parent()".
+>
+> 2. At the head of msm_gpio_irq_ack() you make the same function call
+> if "skip_wake_irqs" is set and you're on an SoC with this hardware
+> errata.
+>
+> It doesn't feel all that ugly to me, assuming I'm understanding it
+> correctly.  ...or maybe you can tell me why it'd be harder than that?
+>
+>
+>>>> maybe it's just easier to change the pinctrl driver to emulate dual
+>>>> edge itself and that can work around the problem in the PDC?  There
+>>>> seem to be a few samples you could copy from:
+>>>>
+>>>> $ git log --oneline --no-merges --grep=emulate drivers/pinctrl/
+>>>> 3221f40b7631 pinctrl: mediatek: emulate GPIO interrupt on both-edges
+>>>> 5a92750133ff pinctrl: rockchip: emulate both edge triggered interrupts
+>>>>
+>>> pinctrl-msm already supports emulating dual edge, but my understanding
+>>> was that the problem lies in that somehow this emulation would have to
+>>> be tied to or affect the PDC driver?
+>> yes, thats correct, pinctrl-msm already supports it, the problem lies
+>> in the fact that PDC does not. This patch, infact was trying to fix the
+>> issue by removing all PDC involvement for gpio28 and making pinctrl-msm
+>> in charge of it.
+> If we're going to try to do this, I think we're stuck with one of these:
+>
+> 1. A really really long list that we keep jamming more boards into.
+>
+> 2. Add an entry at the top-level device tree compatible to all
+> affected boards _just_ for this purpose.  Seems ugly since we don't
+> need it for any other reasons.
+>
+> 3. Add some sort of property to the pinctrl node on these boards.
+> Seems ugly since conceivably this _could_ be worked around in
+> software.
+>
+> I don't really like any of those options, so I'm really hoping we can
+> find out how to get a workaround in...
+Hi Doug,
 
-I've suggested to add E820_*_RESERVED to memblock.memory a while ago
-[1], but apparently there are systems that cannot tolerate OS mappings
-of the BIOS reserved areas.
+The client driver here never uses/needs both the edges at a given time.
+Another option (clean & correct IMO) is to update the driver to request 
+proper irq type its expecting.
 
-[1] https://lore.kernel.org/lkml/20200522142053.GW1059226@linux.ibm.com/
+Lets take SD card detect GPIO for example, which uses dual edge interrupt.
+one edge (rising type) can be used as a card insert detect interrupt and 
+another edge (falling type) may be used for card removal detect.
+
+The sequence of operations, IMO should be..
+1. Driver request a rising type irq to start with (the one that detects 
+card insertion)
+2. once card insertion irq comes in, the driver should change the type 
+to falling which is expected (to detect the card removal)
+3. once card removal irq comes in, it can change type to rising edge (to 
+detect another insertion)
+4. above steps (2,3) continues
+
+if above sequence is followed from drivers using dual edge IRQ, we don't 
+need any workaround.
+
+Thanks,
+Maulik
+>
+> -Doug
 
 -- 
-Sincerely yours,
-Mike.
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
