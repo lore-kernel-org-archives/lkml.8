@@ -2,84 +2,81 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D510EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36D0020772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3210206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594244944;
+	bh=jrrQ/BCtBiJFJ0A4cBfc8WXlQN52IDVeYFYN+UZ+OnI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BkkfLVEhazzmxc33BIFqOh9IlND1DnhAVCxHYcvqLrM97SgzVDfj9VMMisNlu37Le
+	 v5NLYdsyAWvXWEmyeHwfFyBKsXmoev1Mz3Qy3PX2Wwbo3WL5lOS4bWXWgDM7LLeV3h
+	 yCVUK1nIPRpwT1YWZZpLteuXM8RNyVJ1K/NWANL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgGHVqC convert rfc822-to-8bit (ORCPT
+        id S1726228AbgGHVtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 17:46:02 -0400
-Received: from mga17.intel.com ([192.55.52.151]:52224 "EHLO mga17.intel.com"
+        Wed, 8 Jul 2020 17:49:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgGHVqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 17:46:02 -0400
-IronPort-SDR: FUkXxY3mTm+mrZugqooGMVjxhgejEkOMhLeRCvrAQjOvtX8Q4btdo8cSY9KtrEvCFxIguEqK9V
- uUHKP2Rxik2g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="127975855"
-X-IronPort-AV: E=Sophos;i="5.75,329,1589266800"; 
-   d="scan'208";a="127975855"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 14:46:01 -0700
-IronPort-SDR: b3/Nl7o/5L5vZWeO8rnyzaiu8+4l5S+P1dJdDBbqdmILDrN2UJ/fzeAkbhvO6vcwQPgzy85Yq2
- iE6dCSt4qPqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,329,1589266800"; 
-   d="scan'208";a="358227657"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2020 14:46:01 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.56]) by
- ORSMSX109.amr.corp.intel.com ([169.254.11.7]) with mapi id 14.03.0439.000;
- Wed, 8 Jul 2020 14:46:01 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "rrichter@marvell.com" <rrichter@marvell.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] EDAC-I7300: Replace HTTP links with HTTPS ones
-Thread-Topic: [PATCH] EDAC-I7300: Replace HTTP links with HTTPS ones
-Thread-Index: AQHWVWie+YliV8zoVE+6QUbgzvKOq6j+Nl9Q
-Date:   Wed, 8 Jul 2020 21:46:00 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F68E520@ORSMSX115.amr.corp.intel.com>
-References: <20200708204425.22444-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200708204425.22444-1-grandmaster@al2klimov.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1725787AbgGHVtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 17:49:02 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4240E206C3;
+        Wed,  8 Jul 2020 21:49:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594244942;
+        bh=jrrQ/BCtBiJFJ0A4cBfc8WXlQN52IDVeYFYN+UZ+OnI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OAHJIW0Lm1fkcXmUwnKqgomGJjh6xxHYHYrdMeUf+r6AQylVIoX7rBjr8ecaJ/0qq
+         /MFX6HNaSUIohx5KtFtKzO+nCYN8UEKf+JBAim9G/OuuE2z1KgfkUsC5kDbz3YySUj
+         +YDtWymRGUaQ77ZZtaHUnAeCPPXYFuRMEqf5uBWc=
+Date:   Wed, 8 Jul 2020 14:49:00 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     "Ooi, Joyce" <joyce.ooi@intel.com>
+Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>
+Subject: Re: [PATCH v4 09/10] net: eth: altera: add msgdma prefetcher
+Message-ID: <20200708144900.058a8b25@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200708072401.169150-10-joyce.ooi@intel.com>
+References: <20200708072401.169150-1-joyce.ooi@intel.com>
+        <20200708072401.169150-10-joyce.ooi@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  * Intel 7300 Chipset Memory Controller Hub (MCH) - Datasheet
-- *	http://www.intel.com/Assets/PDF/datasheet/318082.pdf
-+ *	https://www.intel.com/Assets/PDF/datasheet/318082.pdf
+On Wed,  8 Jul 2020 15:24:00 +0800 Ooi, Joyce wrote:
+> +		/* get prefetcher rx poll frequency from device tree */
+> +		if (of_property_read_u32(pdev->dev.of_node, "rx-poll-freq",
+> +					 &priv->rx_poll_freq)) {
+> +			dev_info(&pdev->dev, "Defaulting RX Poll Frequency to 128\n");
+> +			priv->rx_poll_freq = 128;
+> +		}
+> +
+> +		/* get prefetcher rx poll frequency from device tree */
+> +		if (of_property_read_u32(pdev->dev.of_node, "tx-poll-freq",
+> +					 &priv->tx_poll_freq)) {
+> +			dev_info(&pdev->dev, "Defaulting TX Poll Frequency to 128\n");
+> +			priv->tx_poll_freq = 128;
+> +		}
 
-Sadly Intel isn't good at long term stable URLs for documentation
-and both of those links are dead. :-(
-
-FWIW the current URL for that is
-
-https://www.intel.com/content/dam/doc/datasheet/7300-chipset-memory-controller-hub-datasheet.pdf
-
-But who knows if it will still be good by the end of the week.
-
--Tony
+I'm no device tree expert but these look like config options rather than
+HW description. They also don't appear to be documented in the next
+patch.
