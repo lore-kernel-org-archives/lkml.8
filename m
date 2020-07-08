@@ -2,112 +2,123 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B5BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDA8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A621E20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E3C20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="ZI64ZvYC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPaJPdoz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbgGHQn2 (ORCPT
+        id S1730482AbgGHQpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42748 "EHLO
+        Wed, 8 Jul 2020 12:45:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730315AbgGHQn1 (ORCPT
+        with ESMTP id S1730278AbgGHQpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:43:27 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDEDAC08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 09:43:26 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id lx13so32597169ejb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 09:43:26 -0700 (PDT)
+        Wed, 8 Jul 2020 12:45:35 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A6BC061A0B;
+        Wed,  8 Jul 2020 09:45:35 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id md7so1436832pjb.1;
+        Wed, 08 Jul 2020 09:45:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=FQSHslaL0I5rKFTIhpxMpuxHDgff/m/4s4E6drvSh50=;
-        b=ZI64ZvYCqO1H9OvrPp+sZP7/XNOM1eSKEv165nyoWnJKSgYOqctlem6U92BTuRwSno
-         JKFPw1V3X9OTm1K5+0imAO2r1YwBMe9FG28MNUzf1FUKOVXd9pjlxg3T08k47hWbRc3m
-         1hBLD+5rWU2nj1yJhY3r4oTRao5i6jhtiT49spGa5MbIFpSuIpRQYOjfrsVHGd9xOqce
-         EvMVBeHzaZyl6JQm1dDYzs8aVpuhwC/DiOxXdLsOJ3gQsQwfiaS9xRC3ppomgcU6VDbL
-         WlQjE6a6mmTn82MsBhP3WJcSYWdOWRX+jqT/0W+8DzR+RrC8p0EAESmmPLw/RXl+9bAf
-         1GCg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/0QaE6E8CXzLAPNfsNVNICr8uQjOJBz75blux9yeZRY=;
+        b=ZPaJPdozMAQiL2Gq+tWHaGQ/IRAzrfgb72YMuC5chBqeUEHy/NNFCnayfq122lo6K4
+         lTNNaNgPZykcZ4Thl5hIfwvvuGI6hwji6HqDBIg86i9xQWhTqJ5PoOBCszgwClJ3a9gK
+         n6jVRhwMzu1fHl5uA1+jkWu5vV7cLzFxh0PM00rJwfjNu+6lqmGtEN1iViLcawmwYMWx
+         ttPt9TMxbyzUV2vBMJi+jRv6qeyHGXzbFp1LfXVmdNTcxXgRIkAUINAeUWrDI4t2th/y
+         BhqKtQoZOfMIGvUsYFeJX744JCIXSgX4ElOZ1SAlrYpqgw+9q9BPpp0PikQh3/3if5As
+         5avA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=FQSHslaL0I5rKFTIhpxMpuxHDgff/m/4s4E6drvSh50=;
-        b=D1CbGhUEnfTPdw+vGxrZCUUWo8RyfS3+gtKb6PJybGbE5jA0t5N/1OCVKxOQFQ8VBx
-         +J3MXgcgxrrRqTELDyy+9FsfxWc2lKy7Sihu62geuyjKDj1nhE/irYuytTfctIWriwG8
-         UD1tC2l/HU8QiKRa8yBgWgAGOHxyBknZGcim9gNFVcRv+fokIOD4ZjjBoo3xcduBhiEf
-         dewYCNiiul5vaMRBoHkkepZX5hmmImPaiebjnG2OTiXbdkfokW5uHwYC6hPF+H7LHqru
-         WeUL/p57mhTi6xUm+PJAwYRTt8pidw/QyckwD6hsy6BFLFYAXanX++5Vf6XkEYeGwGAA
-         63+A==
-X-Gm-Message-State: AOAM533LwmrDypUSofMTxNyCucdDX3ctq4ndQCQduZQc5imLxp9wYUa2
-        EXbxTSO4qTBHmHIoGWsE/X0ocQ==
-X-Google-Smtp-Source: ABdhPJwVOZw1Q3GjDKZxUluodDe6sBT5Cc5u0gd8LD+PmIgpIMcao77CAuaHErHT7XlP6ld5uZ5lEA==
-X-Received: by 2002:a17:906:3a17:: with SMTP id z23mr42641650eje.238.1594226605397;
-        Wed, 08 Jul 2020 09:43:25 -0700 (PDT)
-Received: from [192.168.2.16] (5.186.127.235.cgn.fibianet.dk. [5.186.127.235])
-        by smtp.gmail.com with ESMTPSA id w3sm55818edq.65.2020.07.08.09.43.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 09:43:24 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-Date:   Wed, 8 Jul 2020 18:43:24 +0200
-Message-Id: <4AB9628B-CD6C-4F30-8580-BF8DC2001EE3@javigon.com>
-References: <20200708163327.GU25523@casper.infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Kanchan Joshi <joshi.k@samsung.com>,
-        viro@zeniv.linux.org.uk, bcrl@kvack.org, hch@infradead.org,
-        damien.lemoal@wdc.com, asml.silence@gmail.com,
-        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-In-Reply-To: <20200708163327.GU25523@casper.infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-X-Mailer: iPhone Mail (17F80)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/0QaE6E8CXzLAPNfsNVNICr8uQjOJBz75blux9yeZRY=;
+        b=uoNm1umtbcLQ4EXP91QqmVuWda4TSYyuo4jrIwjIN0L2pE8I8VqShsT6s1C106M19/
+         bKduJoCinQh3SADSFZRUmPtQNbb3/UeVbUdkyQMqriBUF3Ftvh62WX5zYL84XI+9YvsW
+         ogz+ZwzI8fyCMgNRBz3XpAE3E2xlP1AdT9m0i9c2R2a9o+kSYExdda1s9HaxfVz0nhuc
+         qCYf4EglUQG//r+8j3Yba78x9oZrsNF7aJINLUL2NBVfCUawn96slthy4quVN5ZqZhul
+         +mant38PmXRFjw2Kig8POOUQNfvcpW0V5fqKo5OJBfByKIEp5tlz12r2gw72zf3GNsES
+         Lqcw==
+X-Gm-Message-State: AOAM533cYThngN9WelUz4bGDJJKwSd9uMzVW0KpKthKzvb5UoIbn/L9+
+        K6e3inh1Iu0vAT3vwED7k2GyygrdEo0VFH1yT2g=
+X-Google-Smtp-Source: ABdhPJw/9tCiF8Lg8K1frvEARIekU3Ycw+ZcCSwFx5Jcd6FFxgQUP1wz5lTVdVNaeVg63WLJLPKx9iXKjUcpc1CCYqs=
+X-Received: by 2002:a17:902:7288:: with SMTP id d8mr51792321pll.18.1594226734775;
+ Wed, 08 Jul 2020 09:45:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200708155834.19762-1-digetx@gmail.com> <20200708155834.19762-3-digetx@gmail.com>
+In-Reply-To: <20200708155834.19762-3-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 8 Jul 2020 19:45:18 +0300
+Message-ID: <CAHp75VeKKDevnYgu-te9DzND5nm1EfZQFCjEsGhaDg3yJn9-Kw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpio: max77620: Replace 8 with MAX77620_GPIO_NR
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-tegra@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 8, 2020 at 6:58 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> The MAX77620_GPIO_NR enum value represents the total number of GPIOs,
+> let's use it instead of a raw value in order to improve the code's
+> readability a tad.
 
-> On 8 Jul 2020, at 18.34, Matthew Wilcox <willy@infradead.org> wrote:
->=20
-> =EF=BB=BFOn Wed, Jul 08, 2020 at 06:08:12PM +0200, Javier Gonz=C3=A1lez wr=
-ote:
->>> I just wanted to get clarification there, because to me it sounded like
->>> you expected Kanchan to do it, and Kanchan assuming it "was sorted". I'd=
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
->>> consider that a prerequisite for the append series as far as io_uring is=
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/gpio/gpio-max77620.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+> index 970ad6397a56..08bd5b141437 100644
+> --- a/drivers/gpio/gpio-max77620.c
+> +++ b/drivers/gpio/gpio-max77620.c
+> @@ -19,8 +19,8 @@ struct max77620_gpio {
+>         struct regmap           *rmap;
+>         struct device           *dev;
+>         struct mutex            buslock; /* irq_bus_lock */
+> -       unsigned int            irq_type[8];
+> -       bool                    irq_enabled[8];
+> +       unsigned int            irq_type[MAX77620_GPIO_NR];
+> +       bool                    irq_enabled[MAX77620_GPIO_NR];
+>  };
+>
+>  static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
+> @@ -38,7 +38,7 @@ static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
+>
+>         pending = value;
+>
+> -       for_each_set_bit(offset, &pending, 8) {
+> +       for_each_set_bit(offset, &pending, MAX77620_GPIO_NR) {
+>                 unsigned int virq;
+>
+>                 virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
+> --
+> 2.26.0
+>
 
->>> concerned, hence _someone_ needs to actually do it ;-)
->=20
-> I don't know that it's a prerequisite in terms of the patches actually
-> depend on it.  I appreciate you want it first to ensure that we don't bloa=
-t
-> the kiocb.
->=20
->> I believe Kanchan meant that now the trade-off we were asking to clear ou=
-t is sorted.=20
->>=20
->> We will send a new version shortly for the current functionality - we can=
- see what we are missing on when the uring interface is clear.=20
->=20
-> I've started work on a patch series for this.  Mostly just waiting for
-> compilation now ... should be done in the next few hours.
 
-
-Awesome!
+-- 
+With Best Regards,
+Andy Shevchenko
