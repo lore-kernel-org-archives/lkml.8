@@ -2,155 +2,212 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E465FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E633C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C81D20774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cGKo3kW3"
+	by mail.kernel.org (Postfix) with ESMTP id 7AC5520720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgGHNZc (ORCPT
+        id S1729444AbgGHN1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:25:32 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:4373 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728148AbgGHNZb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:25:31 -0400
-X-UUID: 88346041bab743b293e7a3a8d908c68d-20200708
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=8MKbH1IX9Wezlb1mLgBVH7giMxWeaQpi+Vzc+0gSWkA=;
-        b=cGKo3kW3IYSKlmYT4j28d6xUrYgMdKii7tGBO0wDzaJyNLW7I9AdjZvi+zVeIVBsiobvgFACOtqZxvAg3dOtvz+Km7j9Y2yAbYj8A4RubWhL4LPuU1aVyuPQSUikF9Hie0goMQaVYoKvwAXIqek1SKGhQbAEvK2IRRZgwm3D/h0=;
-X-UUID: 88346041bab743b293e7a3a8d908c68d-20200708
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 280638738; Wed, 08 Jul 2020 21:25:27 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 8 Jul 2020 21:25:19 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 8 Jul 2020 21:25:22 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v4] kasan: fix KASAN unit tests for tag-based KASAN
-Date:   Wed, 8 Jul 2020 21:25:24 +0800
-Message-ID: <20200708132524.11688-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Wed, 8 Jul 2020 09:27:38 -0400
+Received: from mga01.intel.com ([192.55.52.88]:44799 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728148AbgGHN1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:27:37 -0400
+IronPort-SDR: GFOFpmxs39ys2LWS0Cxyt9SFupqrx1y1YjRbjKrN/mj8YNxgia+OC4mQamq5zAw7YGYxzhsqrO
+ mv2b71UMbphA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="165885625"
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="165885625"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 06:27:36 -0700
+IronPort-SDR: u8Fz46potcxJSI3SBmI7+w1H8xOv5qWfS8QDcZKGd5HubYAHAUzU8aC4Su31Bv/43RVnDmdEgz
+ lyBSIZPis3RA==
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="283797182"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.184]) ([10.255.31.184])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 06:27:34 -0700
+Subject: Re: [PATCH v3 4/8] KVM: X86: Split kvm_update_cpuid()
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200708065054.19713-1-xiaoyao.li@intel.com>
+ <20200708065054.19713-5-xiaoyao.li@intel.com>
+ <ad349b28-bc62-e478-c610-e829974a8342@redhat.com>
+ <92184f05-ca27-268c-ea72-f939fb1a0ab2@intel.com>
+ <4123eb60-d89a-9112-dd7e-1a7627a0fc70@redhat.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <0c0084cb-92c0-23fe-dc5a-441e4b04742c@intel.com>
+Date:   Wed, 8 Jul 2020 21:27:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 4FE038726111CFDF32B6454EE1B6840009C597B427D47AC810D59EFB2B7294702000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <4123eb60-d89a-9112-dd7e-1a7627a0fc70@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2UgdXNlIHRhZy1iYXNlZCBLQVNBTiwgdGhlbiBLQVNBTiB1bml0IHRlc3RzIGRvbid0IGRldGVj
-dCBvdXQtb2YtYm91bmRzDQptZW1vcnkgYWNjZXNzLiBUaGV5IG5lZWQgdG8gYmUgZml4ZWQuDQoN
-CldpdGggdGFnLWJhc2VkIEtBU0FOLCB0aGUgc3RhdGUgb2YgZWFjaCAxNiBhbGlnbmVkIGJ5dGVz
-IG9mIG1lbW9yeSBpcw0KZW5jb2RlZCBpbiBvbmUgc2hhZG93IGJ5dGUgYW5kIHRoZSBzaGFkb3cg
-dmFsdWUgaXMgdGFnIG9mIHBvaW50ZXIsIHNvDQp3ZSBuZWVkIHRvIHJlYWQgbmV4dCBzaGFkb3cg
-Ynl0ZSwgdGhlIHNoYWRvdyB2YWx1ZSBpcyBub3QgZXF1YWwgdG8gdGFnDQp2YWx1ZSBvZiBwb2lu
-dGVyLCBzbyB0aGF0IHRhZy1iYXNlZCBLQVNBTiB3aWxsIGRldGVjdCBvdXQtb2YtYm91bmRzDQpt
-ZW1vcnkgYWNjZXNzLg0KDQpTaWduZWQtb2ZmLWJ5OiBXYWx0ZXIgV3UgPHdhbHRlci16aC53dUBt
-ZWRpYXRlay5jb20+DQpTdWdnZXN0ZWQtYnk6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xl
-LmNvbT4NCkFja2VkLWJ5OiBEbWl0cnkgVnl1a292IDxkdnl1a292QGdvb2dsZS5jb20+DQpSZXZp
-ZXdlZC1ieTogQW5kcmV5IEtvbm92YWxvdiA8YW5kcmV5a252bEBnb29nbGUuY29tPg0KQ2M6IEFu
-ZHJleSBSeWFiaW5pbiA8YXJ5YWJpbmluQHZpcnR1b3p6by5jb20+DQpDYzogQWxleGFuZGVyIFBv
-dGFwZW5rbyA8Z2xpZGVyQGdvb2dsZS5jb20+DQpDYzogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhp
-YXMuYmdnQGdtYWlsLmNvbT4NCkNjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5kYXRp
-b24ub3JnPg0KLS0tDQoNCmNoYW5nZXMgc2luY2UgdjE6DQotIFJlZHVjZSBhbW91bnQgb2Ygbm9u
-LWNvbXBpbGVkIGNvZGUuDQotIEtVbml0LUtBU0FOIEludGVncmF0aW9uIHBhdGNoc2V0IGlzIG5v
-dCBtZXJnZWQgeWV0LiBNeSBwYXRjaCBzaG91bGQNCiAgaGF2ZSBjb25mbGljdCB3aXRoIGl0LCBp
-ZiBuZWVkZWQsIHdlIGNhbiBjb250aW51ZSB0byB3YWl0IGl0Lg0KDQpjaGFuZ2VzIHNpbmNlIHYy
-Og0KLSBBZGQgb25lIG1hcmNvIHRvIG1ha2UgdW5pdCB0ZXN0cyBtb3JlIHJlYWRhYmlsaXR5Lg0K
-DQpjaGFuZ2VzIHNpbmNlIHYzOg0KLSB1c2UgS0FTQU5fU0hBRE9XX1NDQUxFX1NJWkUgaW5zdGVh
-ZCBvZiAxMy4NCg0KLS0tDQogbGliL3Rlc3Rfa2FzYW4uYyB8IDQ5ICsrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAzMiBpbnNl
-cnRpb25zKCspLCAxNyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2xpYi90ZXN0X2thc2Fu
-LmMgYi9saWIvdGVzdF9rYXNhbi5jDQppbmRleCA2MWEzY2MxMTU1NmYuLjAwM2VhNWI0OWY0YyAx
-MDA2NDQNCi0tLSBhL2xpYi90ZXN0X2thc2FuLmMNCisrKyBiL2xpYi90ZXN0X2thc2FuLmMNCkBA
-IC0yMyw2ICsyMywxMCBAQA0KIA0KICNpbmNsdWRlIDxhc20vcGFnZS5oPg0KIA0KKyNpbmNsdWRl
-ICIuLi9tbS9rYXNhbi9rYXNhbi5oIg0KKw0KKyNkZWZpbmUgT09CX1RBR19PRkYgKElTX0VOQUJM
-RUQoQ09ORklHX0tBU0FOX0dFTkVSSUMpID8gMCA6IEtBU0FOX1NIQURPV19TQ0FMRV9TSVpFKQ0K
-Kw0KIC8qDQogICogTm90ZTogdGVzdCBmdW5jdGlvbnMgYXJlIG1hcmtlZCBub2lubGluZSBzbyB0
-aGF0IHRoZWlyIG5hbWVzIGFwcGVhciBpbg0KICAqIHJlcG9ydHMuDQpAQCAtNDAsNyArNDQsOCBA
-QCBzdGF0aWMgbm9pbmxpbmUgdm9pZCBfX2luaXQga21hbGxvY19vb2JfcmlnaHQodm9pZCkNCiAJ
-CXJldHVybjsNCiAJfQ0KIA0KLQlwdHJbc2l6ZV0gPSAneCc7DQorCXB0cltzaXplICsgT09CX1RB
-R19PRkZdID0gJ3gnOw0KKw0KIAlrZnJlZShwdHIpOw0KIH0NCiANCkBAIC05Miw3ICs5Nyw4IEBA
-IHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9jX3BhZ2VhbGxvY19vb2JfcmlnaHQo
-dm9pZCkNCiAJCXJldHVybjsNCiAJfQ0KIA0KLQlwdHJbc2l6ZV0gPSAwOw0KKwlwdHJbc2l6ZSAr
-IE9PQl9UQUdfT0ZGXSA9IDA7DQorDQogCWtmcmVlKHB0cik7DQogfQ0KIA0KQEAgLTE2Miw3ICsx
-NjgsOCBAQCBzdGF0aWMgbm9pbmxpbmUgdm9pZCBfX2luaXQga21hbGxvY19vb2Jfa3JlYWxsb2Nf
-bW9yZSh2b2lkKQ0KIAkJcmV0dXJuOw0KIAl9DQogDQotCXB0cjJbc2l6ZTJdID0gJ3gnOw0KKwlw
-dHIyW3NpemUyICsgT09CX1RBR19PRkZdID0gJ3gnOw0KKw0KIAlrZnJlZShwdHIyKTsNCiB9DQog
-DQpAQCAtMTgwLDcgKzE4Nyw5IEBAIHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9j
-X29vYl9rcmVhbGxvY19sZXNzKHZvaWQpDQogCQlrZnJlZShwdHIxKTsNCiAJCXJldHVybjsNCiAJ
-fQ0KLQlwdHIyW3NpemUyXSA9ICd4JzsNCisNCisJcHRyMltzaXplMiArIE9PQl9UQUdfT0ZGXSA9
-ICd4JzsNCisNCiAJa2ZyZWUocHRyMik7DQogfQ0KIA0KQEAgLTIxNiw3ICsyMjUsOCBAQCBzdGF0
-aWMgbm9pbmxpbmUgdm9pZCBfX2luaXQga21hbGxvY19vb2JfbWVtc2V0XzIodm9pZCkNCiAJCXJl
-dHVybjsNCiAJfQ0KIA0KLQltZW1zZXQocHRyKzcsIDAsIDIpOw0KKwltZW1zZXQocHRyICsgNyAr
-IE9PQl9UQUdfT0ZGLCAwLCAyKTsNCisNCiAJa2ZyZWUocHRyKTsNCiB9DQogDQpAQCAtMjMyLDcg
-KzI0Miw4IEBAIHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9jX29vYl9tZW1zZXRf
-NCh2b2lkKQ0KIAkJcmV0dXJuOw0KIAl9DQogDQotCW1lbXNldChwdHIrNSwgMCwgNCk7DQorCW1l
-bXNldChwdHIgKyA1ICsgT09CX1RBR19PRkYsIDAsIDQpOw0KKw0KIAlrZnJlZShwdHIpOw0KIH0N
-CiANCkBAIC0yNDksNyArMjYwLDggQEAgc3RhdGljIG5vaW5saW5lIHZvaWQgX19pbml0IGttYWxs
-b2Nfb29iX21lbXNldF84KHZvaWQpDQogCQlyZXR1cm47DQogCX0NCiANCi0JbWVtc2V0KHB0cisx
-LCAwLCA4KTsNCisJbWVtc2V0KHB0ciArIDEgKyBPT0JfVEFHX09GRiwgMCwgOCk7DQorDQogCWtm
-cmVlKHB0cik7DQogfQ0KIA0KQEAgLTI2NSw3ICsyNzcsOCBAQCBzdGF0aWMgbm9pbmxpbmUgdm9p
-ZCBfX2luaXQga21hbGxvY19vb2JfbWVtc2V0XzE2KHZvaWQpDQogCQlyZXR1cm47DQogCX0NCiAN
-Ci0JbWVtc2V0KHB0cisxLCAwLCAxNik7DQorCW1lbXNldChwdHIgKyAxICsgT09CX1RBR19PRkYs
-IDAsIDE2KTsNCisNCiAJa2ZyZWUocHRyKTsNCiB9DQogDQpAQCAtMjgxLDcgKzI5NCw4IEBAIHN0
-YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWFsbG9jX29vYl9pbl9tZW1zZXQodm9pZCkNCiAJ
-CXJldHVybjsNCiAJfQ0KIA0KLQltZW1zZXQocHRyLCAwLCBzaXplKzUpOw0KKwltZW1zZXQocHRy
-LCAwLCBzaXplICsgNSArIE9PQl9UQUdfT0ZGKTsNCisNCiAJa2ZyZWUocHRyKTsNCiB9DQogDQpA
-QCAtNDE1LDcgKzQyOSw4IEBAIHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrbWVtX2NhY2hl
-X29vYih2b2lkKQ0KIAkJcmV0dXJuOw0KIAl9DQogDQotCSpwID0gcFtzaXplXTsNCisJKnAgPSBw
-W3NpemUgKyBPT0JfVEFHX09GRl07DQorDQogCWttZW1fY2FjaGVfZnJlZShjYWNoZSwgcCk7DQog
-CWttZW1fY2FjaGVfZGVzdHJveShjYWNoZSk7DQogfQ0KQEAgLTUxMiwyNSArNTI3LDI1IEBAIHN0
-YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBjb3B5X3VzZXJfdGVzdCh2b2lkKQ0KIAl9DQogDQog
-CXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gY29weV9mcm9tX3VzZXIoKVxuIik7DQotCXVudXNl
-ZCA9IGNvcHlfZnJvbV91c2VyKGttZW0sIHVzZXJtZW0sIHNpemUgKyAxKTsNCisJdW51c2VkID0g
-Y29weV9mcm9tX3VzZXIoa21lbSwgdXNlcm1lbSwgc2l6ZSArIDEgKyBPT0JfVEFHX09GRik7DQog
-DQogCXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gY29weV90b191c2VyKClcbiIpOw0KLQl1bnVz
-ZWQgPSBjb3B5X3RvX3VzZXIodXNlcm1lbSwga21lbSwgc2l6ZSArIDEpOw0KKwl1bnVzZWQgPSBj
-b3B5X3RvX3VzZXIodXNlcm1lbSwga21lbSwgc2l6ZSArIDEgKyBPT0JfVEFHX09GRik7DQogDQog
-CXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gX19jb3B5X2Zyb21fdXNlcigpXG4iKTsNCi0JdW51
-c2VkID0gX19jb3B5X2Zyb21fdXNlcihrbWVtLCB1c2VybWVtLCBzaXplICsgMSk7DQorCXVudXNl
-ZCA9IF9fY29weV9mcm9tX3VzZXIoa21lbSwgdXNlcm1lbSwgc2l6ZSArIDEgKyBPT0JfVEFHX09G
-Rik7DQogDQogCXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gX19jb3B5X3RvX3VzZXIoKVxuIik7
-DQotCXVudXNlZCA9IF9fY29weV90b191c2VyKHVzZXJtZW0sIGttZW0sIHNpemUgKyAxKTsNCisJ
-dW51c2VkID0gX19jb3B5X3RvX3VzZXIodXNlcm1lbSwga21lbSwgc2l6ZSArIDEgKyBPT0JfVEFH
-X09GRik7DQogDQogCXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gX19jb3B5X2Zyb21fdXNlcl9p
-bmF0b21pYygpXG4iKTsNCi0JdW51c2VkID0gX19jb3B5X2Zyb21fdXNlcl9pbmF0b21pYyhrbWVt
-LCB1c2VybWVtLCBzaXplICsgMSk7DQorCXVudXNlZCA9IF9fY29weV9mcm9tX3VzZXJfaW5hdG9t
-aWMoa21lbSwgdXNlcm1lbSwgc2l6ZSArIDEgKyBPT0JfVEFHX09GRik7DQogDQogCXByX2luZm8o
-Im91dC1vZi1ib3VuZHMgaW4gX19jb3B5X3RvX3VzZXJfaW5hdG9taWMoKVxuIik7DQotCXVudXNl
-ZCA9IF9fY29weV90b191c2VyX2luYXRvbWljKHVzZXJtZW0sIGttZW0sIHNpemUgKyAxKTsNCisJ
-dW51c2VkID0gX19jb3B5X3RvX3VzZXJfaW5hdG9taWModXNlcm1lbSwga21lbSwgc2l6ZSArIDEg
-KyBPT0JfVEFHX09GRik7DQogDQogCXByX2luZm8oIm91dC1vZi1ib3VuZHMgaW4gc3RybmNweV9m
-cm9tX3VzZXIoKVxuIik7DQotCXVudXNlZCA9IHN0cm5jcHlfZnJvbV91c2VyKGttZW0sIHVzZXJt
-ZW0sIHNpemUgKyAxKTsNCisJdW51c2VkID0gc3RybmNweV9mcm9tX3VzZXIoa21lbSwgdXNlcm1l
-bSwgc2l6ZSArIDEgKyBPT0JfVEFHX09GRik7DQogDQogCXZtX211bm1hcCgodW5zaWduZWQgbG9u
-Zyl1c2VybWVtLCBQQUdFX1NJWkUpOw0KIAlrZnJlZShrbWVtKTsNCi0tIA0KMi4xOC4wDQo=
+On 7/8/2020 8:41 PM, Paolo Bonzini wrote:
+> On 08/07/20 14:33, Xiaoyao Li wrote:
+>> On 7/8/2020 8:06 PM, Paolo Bonzini wrote:
+>>> On 08/07/20 08:50, Xiaoyao Li wrote:
+>>>> Split the part of updating vcpu model out of kvm_update_cpuid(), and put
+>>>> it into a new kvm_update_vcpu_model(). So it's more clear that
+>>>> kvm_update_cpuid() is to update guest CPUID settings, while
+>>>> kvm_update_vcpu_model() is to update vcpu model (settings) based on the
+>>>> updated CPUID settings.
+>>>>
+>>>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>>>
+>>> I would prefer to keep the kvm_update_cpuid name for what you called
+>>> kvm_update_vcpu_model(), and rename the rest to
+>>> kvm_update_cpuid_runtime().
+>>
+>> But there is no CPUID being updated in kvm_update_cpuid(), after
+>> kvm_update_cpuid_runtime() is split out. This is confusing, IMO.
+> 
+> Then what about kvm_vcpu_after_set_cpuid()?  It's the "model" that is
+> not clear.
+
+I'm ok with kvm_vcpu_after_set_cpuid().
+
+BTW there is an unknown for me regarding enter_smm(). Currently, it 
+calls kvm_update_cpuid(). I'm not sure which part it really needs, 
+update CPUID or update vcpu state based on CPUID? maybe both?
+So in this Patch, after splitting kvm_update_cpuid(), I keep both 
+functions there to ensure no functional change in enter_smm().
+So using the name "kvm_vcpu_after_set_cpuid" seems weird in that function.
+
+> Thanks,
+> 
+> Paolo
+> 
+>>> Paolo
+>>>
+>>>> ---
+>>>>    arch/x86/kvm/cpuid.c | 38 ++++++++++++++++++++++++--------------
+>>>>    arch/x86/kvm/cpuid.h |  1 +
+>>>>    arch/x86/kvm/x86.c   |  1 +
+>>>>    3 files changed, 26 insertions(+), 14 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>>>> index a825878b7f84..001f5a94880e 100644
+>>>> --- a/arch/x86/kvm/cpuid.c
+>>>> +++ b/arch/x86/kvm/cpuid.c
+>>>> @@ -76,7 +76,6 @@ static int kvm_check_cpuid(struct kvm_vcpu *vcpu)
+>>>>    void kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>>>>    {
+>>>>        struct kvm_cpuid_entry2 *best;
+>>>> -    struct kvm_lapic *apic = vcpu->arch.apic;
+>>>>          best = kvm_find_cpuid_entry(vcpu, 1, 0);
+>>>>        if (best) {
+>>>> @@ -89,26 +88,14 @@ void kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>>>>                   vcpu->arch.apic_base & MSR_IA32_APICBASE_ENABLE);
+>>>>        }
+>>>>    -    if (best && apic) {
+>>>> -        if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
+>>>> -            apic->lapic_timer.timer_mode_mask = 3 << 17;
+>>>> -        else
+>>>> -            apic->lapic_timer.timer_mode_mask = 1 << 17;
+>>>> -    }
+>>>> -
+>>>>        best = kvm_find_cpuid_entry(vcpu, 7, 0);
+>>>>        if (best && boot_cpu_has(X86_FEATURE_PKU) && best->function ==
+>>>> 0x7)
+>>>>            cpuid_entry_change(best, X86_FEATURE_OSPKE,
+>>>>                       kvm_read_cr4_bits(vcpu, X86_CR4_PKE));
+>>>>          best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
+>>>> -    if (!best) {
+>>>> -        vcpu->arch.guest_supported_xcr0 = 0;
+>>>> -    } else {
+>>>> -        vcpu->arch.guest_supported_xcr0 =
+>>>> -            (best->eax | ((u64)best->edx << 32)) & supported_xcr0;
+>>>> +    if (best)
+>>>>            best->ebx = xstate_required_size(vcpu->arch.xcr0, false);
+>>>> -    }
+>>>>          best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+>>>>        if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
+>>>> @@ -127,6 +114,27 @@ void kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>>>>                           vcpu->arch.ia32_misc_enable_msr &
+>>>>                           MSR_IA32_MISC_ENABLE_MWAIT);
+>>>>        }
+>>>> +}
+>>>> +
+>>>> +void kvm_update_vcpu_model(struct kvm_vcpu *vcpu)
+>>>> +{
+>>>> +    struct kvm_lapic *apic = vcpu->arch.apic;
+>>>> +    struct kvm_cpuid_entry2 *best;
+>>>> +
+>>>> +    best = kvm_find_cpuid_entry(vcpu, 1, 0);
+>>>> +    if (best && apic) {
+>>>> +        if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
+>>>> +            apic->lapic_timer.timer_mode_mask = 3 << 17;
+>>>> +        else
+>>>> +            apic->lapic_timer.timer_mode_mask = 1 << 17;
+>>>> +    }
+>>>> +
+>>>> +    best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
+>>>> +    if (!best)
+>>>> +        vcpu->arch.guest_supported_xcr0 = 0;
+>>>> +    else
+>>>> +        vcpu->arch.guest_supported_xcr0 =
+>>>> +            (best->eax | ((u64)best->edx << 32)) & supported_xcr0;
+>>>>          /* Note, maxphyaddr must be updated before tdp_level. */
+>>>>        vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
+>>>> @@ -218,6 +226,7 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>>>>        kvm_apic_set_version(vcpu);
+>>>>        kvm_x86_ops.cpuid_update(vcpu);
+>>>>        kvm_update_cpuid(vcpu);
+>>>> +    kvm_update_vcpu_model(vcpu);
+>>>>          kvfree(cpuid_entries);
+>>>>    out:
+>>>> @@ -247,6 +256,7 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>>>>        kvm_apic_set_version(vcpu);
+>>>>        kvm_x86_ops.cpuid_update(vcpu);
+>>>>        kvm_update_cpuid(vcpu);
+>>>> +    kvm_update_vcpu_model(vcpu);
+>>>>    out:
+>>>>        return r;
+>>>>    }
+>>>> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+>>>> index f136de1debad..45e3643e2fba 100644
+>>>> --- a/arch/x86/kvm/cpuid.h
+>>>> +++ b/arch/x86/kvm/cpuid.h
+>>>> @@ -10,6 +10,7 @@ extern u32 kvm_cpu_caps[NCAPINTS] __read_mostly;
+>>>>    void kvm_set_cpu_caps(void);
+>>>>      void kvm_update_cpuid(struct kvm_vcpu *vcpu);
+>>>> +void kvm_update_vcpu_model(struct kvm_vcpu *vcpu);
+>>>>    struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
+>>>>                              u32 function, u32 index);
+>>>>    int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+>>>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>>>> index 09ee54f5e385..6f376392e6e6 100644
+>>>> --- a/arch/x86/kvm/x86.c
+>>>> +++ b/arch/x86/kvm/x86.c
+>>>> @@ -8184,6 +8184,7 @@ static void enter_smm(struct kvm_vcpu *vcpu)
+>>>>    #endif
+>>>>          kvm_update_cpuid(vcpu);
+>>>> +    kvm_update_vcpu_model(vcpu);
+>>>>        kvm_mmu_reset_context(vcpu);
+>>>>    }
+>>>>   
+>>>
+>>
+> 
 
