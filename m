@@ -2,131 +2,118 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0582C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63851C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B16FA20775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35269206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZzxSL3jE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="axyEP3Qx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgGHXQm (ORCPT
+        id S1726122AbgGHXVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47194 "EHLO
+        Wed, 8 Jul 2020 19:21:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgGHXQl (ORCPT
+        with ESMTP id S1725978AbgGHXVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:16:41 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87DC3C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:16:41 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x11so19923plo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:16:41 -0700 (PDT)
+        Wed, 8 Jul 2020 19:21:38 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CBD5C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:21:38 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id i14so136675pfu.13
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:21:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=Xz83zbMBS1ciMi4HP8F5AMInxsp8lIOMa2E1ookzEnM=;
-        b=ZzxSL3jE8TfZozJ+lUu5EWR8aD1tJwnYAK9Rn7Z7nImkfg7B/XXRCmyi8+tK0R92N1
-         /Stwcle6e+18anI9CK//KGt1cZmJd0DyMHlEP4hTTwuOuq7nExSNEYQsGsrBeGlQ7C/b
-         1hJ6p9N0VQwEZpNtgSUyrG6baMnNJ9biO4ikg=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aWbEsQ54hjjSOfJj7PQhDsC6GNOyST30pEElPtE2K0Q=;
+        b=axyEP3QxBfqQyEv9X2FCuSp03HkD7jBoS5PeshAW+/HPgWeJyf70rB3+wl+gNsvL4z
+         OFhXfmS9p2HHWFWbT6keuWPM581K76MKzFcl5aZm9ncPSpKj9nOmfqzNPgZqoe9kikWg
+         ZH1SeW27U4goZRxSItFv5LyG711am+m7a3hd0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=Xz83zbMBS1ciMi4HP8F5AMInxsp8lIOMa2E1ookzEnM=;
-        b=lFNn5j5dn++z6/3Ar6fWWW7qvIAR5Z/9bAbwOQt916SqCDBpLAdOas+z8BEYWKmmsI
-         SN9/bX3+brhItg0qXOyV4AMejb/l3bERg0HQDz8/thr/1xTUL92g4O6ONKVGmtzs3IZc
-         HAoQKoKY2qfw/i0pfVaKgwkO8j6DiBcal4XNb0gDRcU8+5147PcXtyo9MUVL81UbmiXV
-         aKI34eu1iZhc7Gbyt0CpLKra+pIldm0XQitImDd2VwBfMM/xXjI8wMQsYItRmCGcdjj1
-         EOnSH9q+UQGQ5jj2dud5BAw8lnm0Cq8V1ZDXUTCPWcOKynbHrSfq+6/k7cgRdAwI+JFg
-         D/Zg==
-X-Gm-Message-State: AOAM531IQ8gtwnPWUFxgTEDtInDP3/Hl38SbGlavBNzyz9K1WofmP2uz
-        xUeeGrOJ1sq18CWWvDcp2PGIzg==
-X-Google-Smtp-Source: ABdhPJyo85bWfKc7dmUbm6uwAqu7RbmKNA71lY/V6RFecIv5/ryA0rj3xviymXs4MMndMmbtr18M+Q==
-X-Received: by 2002:a17:902:6544:: with SMTP id d4mr9149663pln.138.1594250201062;
-        Wed, 08 Jul 2020 16:16:41 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z62sm734522pfb.47.2020.07.08.16.16.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aWbEsQ54hjjSOfJj7PQhDsC6GNOyST30pEElPtE2K0Q=;
+        b=JlM4ecpmJqbOGuc3OyZZI6/TPy7k0dWJPFYFUavYw5wJGhUma8fLyA8QAHnvcoUDIX
+         sT3kpn53yTosmEiD6PgPl8BpS2LZaPIis8NVpKZKjyHROImQ7TH3UMCRKdenz4PA8Svx
+         skjMmybD2TdCFSwm4Xfax89eUUT/+YACIHuWqOoIUFF4nXzpKY08KhuEtvwhwOrzE79I
+         mUpJQXtP3J0ojOF/XLDiyVZtLQg8Wc4MErXL9AjqIaMoxuwE+RT98sHmMCLOiN3jdqux
+         T1N/I7X4Yw/T+QlbG1+tSImac+zNQFg4M1xCCoiDzAMA3c52979+mLJU8T0TBT8yh4Dp
+         q8WQ==
+X-Gm-Message-State: AOAM530VDmFNf91URIiiyIMx2d95nHu+GxEtYfZdzLAx13Y7eaPBJJUR
+        XNAPjA5euu9N7+IQ+fTpC1mAaw==
+X-Google-Smtp-Source: ABdhPJwvMUAhxUfcwwUAmLp0XxTDFXEUcQ7x0gVaGJAbtyOUVE5rAUl6MbmzKSY9U6JBjKNN4941iQ==
+X-Received: by 2002:aa7:8283:: with SMTP id s3mr56731226pfm.90.1594250497690;
+        Wed, 08 Jul 2020 16:21:37 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:a28c:fdff:fef0:49dd])
+        by smtp.gmail.com with ESMTPSA id 64sm782880pgb.63.2020.07.08.16.21.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 16:16:40 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 16:16:39 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Dominik Czarnota <dominik.czarnota@trailofbits.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [GIT PULL] kallsyms_show_value() refactoring for v5.8-rc5
-Message-ID: <202007081608.AB6F0E96@keescook>
+        Wed, 08 Jul 2020 16:21:37 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 16:21:36 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/chrome: cros_ec_typec: USB4 support
+Message-ID: <20200708232136.GB68629@google.com>
+References: <20200703081703.87720-1-heikki.krogerus@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200703081703.87720-1-heikki.krogerus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi,
 
-Please pull this kallsyms_show_value() refactoring for v5.8-rc5. I'm not
-delighted by the timing of getting these changes to you, but it does fix
-a handful of kernel address exposures, and no one has screamed yet at the
-patches nor their existence in -next for a few days. Folks have reviewed
-(and even tested!) the series. :)
+On Fri, Jul 03, 2020 at 11:17:03AM +0300, Heikki Krogerus wrote:
+> +static int cros_typec_enable_usb4(struct cros_typec_data *typec,
+> +				  int port_num,
+> +				  struct ec_response_usb_pd_control_v2 *pd_ctrl)
+> +{
+> +	struct cros_typec_port *port = typec->ports[port_num];
+> +	struct enter_usb_data data;
+> +
+> +
+> +	/* REVISIT: Cable Current? */
 
-(I'm leaving the more experimental current_cred() WARN() stuff for
-later, obviously.)
+Since we don't pull this data out of the EC currently, I think we can just drop
+this for now (the "Mux" drivers aren't using this data at the moment
+either).
 
-Thanks!
+> +
+> +	/* REVISIT: Claiming unconditionally that all tunnels are supported. */
+> +	data.eudo |= EUDO_PCIE_SUPPORT;
+> +	data.eudo |= EUDO_DP_SUPPORT;
+> +
+> +	data.eudo |= EUDO_TBT_SUPPORT;
+> +	data.eudo |= EUDO_HOST_PRESENT;
 
--Kees
+I think it's fine to drop this block altogether. I don't think any of
+the current "Mux" drivers parse this information, and we aren't surfacing
+it from the Chrome EC.
 
-The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
+> +
+>  	} else if (mux_flags & USB_PD_MUX_DP_ENABLED) {
+>  		ret = cros_typec_enable_dp(typec, port_num, pd_ctrl);
+> -- 
+> 2.27.0
+> 
 
-  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
+I'll wait for a day for any comments for the maintainers, and if not,
+I'll upload v2 of this patch with the "REVISIT" comments omitted.
 
-are available in the Git repository at:
+Thanks,
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/kallsyms_show_value-v5.8-rc5
-
-for you to fetch changes up to 2c79583927bb8154ecaa45a67dde97661d895ecd:
-
-  selftests: kmod: Add module address visibility test (2020-07-08 16:01:36 -0700)
-
-----------------------------------------------------------------
-Refactor kallsyms_show_value() users for correct cred
-
-Several users of kallsyms_show_value() were performing checks not
-during "open". Refactor everything needed to gain proper checks against
-file->f_cred for modules, kprobes, and bpf.
-
-----------------------------------------------------------------
-Kees Cook (6):
-      kallsyms: Refactor kallsyms_show_value() to take cred
-      module: Refactor section attr into bin attribute
-      module: Do not expose section addresses to non-CAP_SYSLOG
-      kprobes: Do not expose probe addresses to non-CAP_SYSLOG
-      bpf: Check correct cred for CAP_SYSLOG in bpf_dump_raw_ok()
-      selftests: kmod: Add module address visibility test
-
- include/linux/filter.h               |  4 +--
- include/linux/kallsyms.h             |  5 ++--
- kernel/bpf/syscall.c                 | 37 +++++++++++++++-----------
- kernel/kallsyms.c                    | 17 +++++++-----
- kernel/kprobes.c                     |  4 +--
- kernel/module.c                      | 51 +++++++++++++++++++-----------------
- net/core/sysctl_net_core.c           |  2 +-
- tools/testing/selftests/kmod/kmod.sh | 36 +++++++++++++++++++++++++
- 8 files changed, 103 insertions(+), 53 deletions(-)
-
--- 
-Kees Cook
+-Prashant
