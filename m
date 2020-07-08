@@ -2,94 +2,125 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C939BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F26FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A24B1206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:53:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQsPCkDx"
+	by mail.kernel.org (Postfix) with ESMTP id 10F57206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594230820;
+	bh=ZXTVrAxt2BMAWE6jdwxSDmOlWWlY67skJb6anAFgFQs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ld1MsFWkuNkXnJY1uwbt9RYP/XaxeNqrXN0bGXQF7i1YISuXtI+R8ZTpXptJi72FJ
+	 khJ+I0VjNcIp/cMmv4bEy8PE9AAZXm/Wkts0+cmCNzBtmJCTn/ZwvQiz9um/MruCu+
+	 HuE6QOZFUOCQ2dQ5/kteAkogKDztKgzXmGQx6ysc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgGHRxW (ORCPT
+        id S1726806AbgGHRxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:53:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgGHRxU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:53:20 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8273FC061A0B;
-        Wed,  8 Jul 2020 10:53:20 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id p1so9216771pls.4;
-        Wed, 08 Jul 2020 10:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q7RtCjX8qOjm7x4acC+/+/CoPtebhwW7+KEvaA7qNaU=;
-        b=RQsPCkDxg9CDnHKl7fCuCkCuinCBQLSrBKcRpHPymiaIV9nccp4dNA+MtosyD2bk50
-         bDFSjo1PmONYLKw7ARfb8+Y4ZSlM+TumghpQhTPPHMYRur1LIzd52iEgFiUI263YdyDR
-         HfC/pYXs7+uIJYMw4L5a6WDw0qsKVzDIn3yg15qnV0Iv0OvM+3h46w8mxx2Kk6Hx5hMu
-         +Ddd4/qBPY9Yx0BfgTGvr191SfLiaqzoKzZmiCOsfKvSAreOMZNbYgpVS1Cw23xE1EQV
-         ip3vrM1llOwh/Ffsljnwfd4ij/kk3nxwR24gnJXidLRHYPOwcGD6HJ8fGsAKf8O6qeNk
-         u1Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q7RtCjX8qOjm7x4acC+/+/CoPtebhwW7+KEvaA7qNaU=;
-        b=ddPuBWno4qa8eHcXMEqpErByFgciwcDxfB4TgPs8PBI2TI47+9B6IBbS4IBXPyleG5
-         j2ubcg0zxH9yaXMOQLZw69J6bh7wmGzqUzYiJ0PCBjVmIqJPxdQ+RAwZGNvzdvR9rJz8
-         FoSNhfv597peHsKHyfR7VqdD5YnAaUBeJ9dB1GLzvM8xE5o3Ld3FHnaCVwTJLV5/JSBX
-         FDyEXki2IQovIAFxqwz048vzNSxho6kEQYi5vQva1sndZ+g36StdqKR9b+k68uzj5hbD
-         LymgG+H5sAMHhpWXVjSptmWPr/aLcs1yV5GUfTstGHgXgOGD6WUZT1/0QqUeS+uKnlWF
-         C6hg==
-X-Gm-Message-State: AOAM533MrxJnbWRRgaeuxHnrYUh70U+wqQ44Pqo0rjj13T14TYwU6H7R
-        DzxdkHXtxjs9LCj/XdFaXvw=
-X-Google-Smtp-Source: ABdhPJy81vMx0eFjphQNpavyeZFtXTcTBGgMQJv5rikkIacRxeWUn42hBtpc3a2FLhbXpUwVIbjP6w==
-X-Received: by 2002:a17:90a:318c:: with SMTP id j12mr10407016pjb.25.1594230800116;
-        Wed, 08 Jul 2020 10:53:20 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s194sm443952pgs.24.2020.07.08.10.53.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Jul 2020 10:53:19 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 10:53:18 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/65] 5.4.51-rc1 review
-Message-ID: <20200708175318.GE224053@roeck-us.net>
-References: <20200707145752.417212219@linuxfoundation.org>
+        Wed, 8 Jul 2020 13:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbgGHRxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:53:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62219206E9;
+        Wed,  8 Jul 2020 17:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594230817;
+        bh=ZXTVrAxt2BMAWE6jdwxSDmOlWWlY67skJb6anAFgFQs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SK/e44KLdRfJM29yIStfOo7N8ICd0pwunnsQJIXgfumzLPch2QwpB2QHz9mBmw2xn
+         6xaAol7QCiZYkv8cMVtkv3AsX4AHhZXZhy14C5eY2zM1ED/InYBzdqvDoUcJCJKwie
+         ffhJ3RezTrRyIf6y1p8ootCJOKI+f62QSz63DCGQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jtEGF-00AAKr-Te; Wed, 08 Jul 2020 18:53:36 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707145752.417212219@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 08 Jul 2020 18:53:35 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 6/8] arm64: dts: renesas: Initial r8a774e1 SoC device tree
+In-Reply-To: <1594230511-24790-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594230511-24790-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <daf83dafc069b12b6a10205e5f93793a@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: prabhakar.mahadev-lad.rj@bp.renesas.com, geert+renesas@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, ulf.hansson@linaro.org, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, prabhakar.csengg@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 05:16:39PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.51 release.
-> There are 65 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 2020-07-08 18:48, Lad Prabhakar wrote:
+> From: Marian-Cristian Rotariu 
+> <marian-cristian.rotariu.rb@bp.renesas.com>
 > 
-> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-> Anything received after that time might be too late.
+> Basic support for the RZ/G2H SoC.
 > 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 430 pass: 430 fail: 0
+> Signed-off-by: Marian-Cristian Rotariu
+> <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 652 ++++++++++++++++++++++
+>  1 file changed, 652 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> new file mode 100644
+> index 000000000000..6637e157ffcd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
 
-Guenter
+[...]
+> +		gic: interrupt-controller@f1010000 {
+> +			compatible = "arm,gic-400";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <0>;
+> +			interrupt-controller;
+> +			reg = <0x0 0xf1010000 0 0x1000>,
+> +			      <0x0 0xf1020000 0 0x20000>,
+> +			      <0x0 0xf1040000 0 0x20000>,
+> +			      <0x0 0xf1060000 0 0x20000>;
+> +			interrupts = <GIC_PPI 9
+> +					(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
+
+You seem to have a bit more than only 2 CPUs in this system.
+
+> +			clocks = <&cpg CPG_MOD 408>;
+> +			clock-names = "clk";
+> +			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
+> +			resets = <&cpg 408>;
+> +		};
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
