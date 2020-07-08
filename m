@@ -2,103 +2,101 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D49C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74DB6217D9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2108A217D9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgGHIdh (ORCPT
+        id S1727978AbgGHIeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:33:37 -0400
-Received: from mga02.intel.com ([134.134.136.20]:64457 "EHLO mga02.intel.com"
+        Wed, 8 Jul 2020 04:34:22 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:40138 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgGHIdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:33:36 -0400
-IronPort-SDR: HoY8vpWQECYOnt/SCqoVPXz22h3k+dpGOFYWviLFrNBUu21c7N+l0uf/JJwiVoEXSOkn7hYwxu
- HpyZwHkBR4YA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="135992104"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="135992104"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 01:33:36 -0700
-IronPort-SDR: ww1u6wUho2hrOo6VESFNIqGEjfdxdnumbHu5dNDSFnWsXuxUo/0pTRhBQptcoeRCucYwCiF5R6
- 5hcOiswz5ycA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="358040221"
-Received: from zhangj4-mobl1.ccr.corp.intel.com (HELO [10.249.171.75]) ([10.249.171.75])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2020 01:33:30 -0700
-Subject: Re: [PATCH v2 2/4] x86/cpufeatures: Enumerate TSX suspend load
- address tracking instructions
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, ricardo.neri-calderon@linux.intel.com,
-        kyung.min.park@intel.com, jpoimboe@redhat.com, ak@linux.intel.com,
-        dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com
-References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com>
- <1594088183-7187-3-git-send-email-cathy.zhang@intel.com>
- <20200707094019.GA2639362@kroah.com>
-From:   "Zhang, Cathy" <cathy.zhang@intel.com>
-Message-ID: <78a3edfe-0a6b-4b23-f41d-cebe7dce67cf@intel.com>
-Date:   Wed, 8 Jul 2020 16:33:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726385AbgGHIeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 04:34:21 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 604ABBC070;
+        Wed,  8 Jul 2020 08:34:18 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     linusw@kernel.org, kaloz@openwrt.org, khalasa@piap.pl,
+        linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: ARM/INTEL IXP4XX ARM ARCHITECTURE
+Date:   Wed,  8 Jul 2020 10:34:12 +0200
+Message-Id: <20200708083412.13404-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200707094019.GA2639362@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/2020 5:40 PM, Greg KH wrote:
-> On Tue, Jul 07, 2020 at 10:16:21AM +0800, Cathy Zhang wrote:
->> Intel TSX suspend load tracking instructions aim to give a way to
->> choose which memory accesses do not need to be tracked in the TSX
->> read set. Add TSX suspend load tracking CPUID feature flag TSXLDTRK
->> for enumeration.
->>
->> A processor supports Intel TSX suspend load address tracking if
->> CPUID.0x07.0x0:EDX[16] is present. Two instructions XSUSLDTRK, XRESLDTRK
->> are available when this feature is present.
->>
->> The CPU feature flag is shown as "tsxldtrk" in /proc/cpuinfo.
->>
->> Detailed information on the instructions and CPUID feature flag TSXLDTRK
->> can be found in the latest Intel Architecture Instruction Set Extensions
->> and Future Features Programming Reference and Intel 64 and IA-32
->> Architectures Software Developer's Manual.
->>
->> Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
->> Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
->> ---
->>   arch/x86/include/asm/cpufeatures.h | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
->> index adf45cf..34b66d7 100644
->> --- a/arch/x86/include/asm/cpufeatures.h
->> +++ b/arch/x86/include/asm/cpufeatures.h
->> @@ -366,6 +366,7 @@
->>   #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
->>   #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
->>   #define X86_FEATURE_SERIALIZE		(18*32+14) /* SERIALIZE instruction */
->> +#define X86_FEATURE_TSX_LDTRK           (18*32+16) /* TSX Suspend Load Address Tracking */
-> No tabs?
->
-> :(
-Sorry, it's my fault. I wrongly pick up an older kernel patch version, 
-the latest one has no such issue. It will be addressed in next version.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
+
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+
+ arch/arm/mach-ixp4xx/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-ixp4xx/Kconfig b/arch/arm/mach-ixp4xx/Kconfig
+index f7211b57b1e7..140759ac59bc 100644
+--- a/arch/arm/mach-ixp4xx/Kconfig
++++ b/arch/arm/mach-ixp4xx/Kconfig
+@@ -57,7 +57,7 @@ config MACH_GATEWAY7001
+ 	help
+ 	  Say 'Y' here if you want your kernel to support Gateway's
+ 	  7001 Access Point. For more information on this platform,
+-	  see http://openwrt.org
++	  see https://openwrt.org
+ 
+ config MACH_WG302V2
+ 	bool "Netgear WG302 v2 / WAG302 v2"
+@@ -65,7 +65,7 @@ config MACH_WG302V2
+ 	help
+ 	  Say 'Y' here if you want your kernel to support Netgear's
+ 	  WG302 v2 or WAG302 v2 Access Points. For more information
+-	  on this platform, see http://openwrt.org
++	  on this platform, see https://openwrt.org
+ 
+ config ARCH_IXDP425
+ 	bool "IXDP425"
+-- 
+2.27.0
+
