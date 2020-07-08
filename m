@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8194C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A34B6C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86E2C20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4C620739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgGHJuv (ORCPT
+        id S1728516AbgGHJux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:50:51 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:60517 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726302AbgGHJut (ORCPT
+        Wed, 8 Jul 2020 05:50:53 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:38564 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728417AbgGHJuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:50:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0U26VwzS_1594201844;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U26VwzS_1594201844)
+        Wed, 8 Jul 2020 05:50:50 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0U26Vwza_1594201845;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U26Vwza_1594201845)
           by smtp.aliyun-inc.com(127.0.0.1);
           Wed, 08 Jul 2020 17:50:45 +0800
 From:   Wei Yang <richard.weiyang@linux.alibaba.com>
@@ -33,9 +33,9 @@ To:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
         aneesh.kumar@linux.ibm.com, willy@infradead.org,
         thellstrom@vmware.com
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, digetx@gmail.com
-Subject: [Patch v4 3/4] mm/mremap: start addresses are properly aligned
-Date:   Wed,  8 Jul 2020 17:50:27 +0800
-Message-Id: <20200708095028.41706-4-richard.weiyang@linux.alibaba.com>
+Subject: [Patch v4 4/4] mm/mremap: use pmd_addr_end to simplify the calculate of extent
+Date:   Wed,  8 Jul 2020 17:50:28 +0800
+Message-Id: <20200708095028.41706-5-richard.weiyang@linux.alibaba.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200708095028.41706-1-richard.weiyang@linux.alibaba.com>
 References: <20200708095028.41706-1-richard.weiyang@linux.alibaba.com>
@@ -46,49 +46,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After previous cleanup, extent is the minimal step for both source and
-destination. This means when extent is HPAGE_PMD_SIZE or PMD_SIZE,
-old_addr and new_addr are properly aligned too.
+The purpose of this code is to calculate the smaller extent in old and
+new range. Let's leverage pmd_addr_end() to do the calculation.
 
-Since these two functions are only invoked in move_page_tables, it is
-safe to remove the check now.
+Hope this would make the code easier to read.
 
 Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- mm/huge_memory.c | 3 ---
- mm/mremap.c      | 3 ---
- 2 files changed, 6 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 1e580fdad4d0..462a7dbd6350 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1729,9 +1729,6 @@ bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
- 	struct mm_struct *mm = vma->vm_mm;
- 	bool force_flush = false;
- 
--	if ((old_addr & ~HPAGE_PMD_MASK) || (new_addr & ~HPAGE_PMD_MASK))
--		return false;
--
- 	/*
- 	 * The destination pmd shouldn't be established, free_pgtables()
- 	 * should have release it.
+---
+v4: remove redundant parentheses pointed by Kirill
+---
+ mm/mremap.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
 diff --git a/mm/mremap.c b/mm/mremap.c
-index a30b3e86cc99..f5f17d050617 100644
+index f5f17d050617..f6f56aa0b893 100644
 --- a/mm/mremap.c
 +++ b/mm/mremap.c
-@@ -199,9 +199,6 @@ static bool move_normal_pmd(struct vm_area_struct *vma, unsigned long old_addr,
- 	struct mm_struct *mm = vma->vm_mm;
- 	pmd_t pmd;
+@@ -237,11 +237,12 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+ 		unsigned long new_addr, unsigned long len,
+ 		bool need_rmap_locks)
+ {
+-	unsigned long extent, next, old_end;
++	unsigned long extent, old_next, new_next, old_end, new_end;
+ 	struct mmu_notifier_range range;
+ 	pmd_t *old_pmd, *new_pmd;
  
--	if ((old_addr & ~PMD_MASK) || (new_addr & ~PMD_MASK))
--		return false;
--
- 	/*
- 	 * The destination pmd shouldn't be established, free_pgtables()
- 	 * should have release it.
+ 	old_end = old_addr + len;
++	new_end = new_addr + len;
+ 	flush_cache_range(vma, old_addr, old_end);
+ 
+ 	mmu_notifier_range_init(&range, MMU_NOTIFY_UNMAP, 0, vma, vma->vm_mm,
+@@ -250,14 +251,11 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+ 
+ 	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
+ 		cond_resched();
+-		next = (old_addr + PMD_SIZE) & PMD_MASK;
+-		/* even if next overflowed, extent below will be ok */
+-		extent = next - old_addr;
+-		if (extent > old_end - old_addr)
+-			extent = old_end - old_addr;
+-		next = (new_addr + PMD_SIZE) & PMD_MASK;
+-		if (extent > next - new_addr)
+-			extent = next - new_addr;
++
++		old_next = pmd_addr_end(old_addr, old_end);
++		new_next = pmd_addr_end(new_addr, new_end);
++		extent = min(old_next - old_addr, new_next - new_addr);
++
+ 		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
+ 		if (!old_pmd)
+ 			continue;
 -- 
 2.20.1 (Apple Git-117)
 
