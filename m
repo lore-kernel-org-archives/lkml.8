@@ -2,95 +2,127 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C22C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A92AD206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818FE20708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594239911;
+	bh=D7k3xvbEWY4or+QblHb+6CiLuYXwy2HOGXpMEAVtPcQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZvaJrzW0KZmU6X+iXtftmY21xEI3GTlmM/vprnfp79uw8YoCsWnBSBYaF9oqBk3Bu
+	 HhU272422tEXX6ismMwPHnHiajPpQoECdhfrfPhnBjM5obgxUgg6Krk4EwZfQylCEl
+	 zEMLKQ7eU5qJOqVPl5d6NA/h6EfOT5DaEP0K1x8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgGHUY0 (ORCPT
+        id S1726228AbgGHUZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:24:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGHUY0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:24:26 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F742C061A0B;
-        Wed,  8 Jul 2020 13:24:26 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 56704BC0D4;
-        Wed,  8 Jul 2020 20:24:23 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     minyard@acm.org, corbet@lwn.net,
-        openipmi-developer@lists.sourceforge.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] IPMI SUBSYSTEM: Replace HTTP links with HTTPS ones
-Date:   Wed,  8 Jul 2020 22:24:17 +0200
-Message-Id: <20200708202417.22375-1-grandmaster@al2klimov.de>
+        Wed, 8 Jul 2020 16:25:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgGHUZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 16:25:09 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24DD3206DF;
+        Wed,  8 Jul 2020 20:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594239909;
+        bh=D7k3xvbEWY4or+QblHb+6CiLuYXwy2HOGXpMEAVtPcQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gmSbuJXrs6tj7XwmAZC5jPwyChbKk72Zpot4gH4a/O0GulkFwT505sKPfaTeV5Ds4
+         ZafoKJFk9+4hL3TYxcoC6T2O7T7kSTQT2u4WHOkiNJ0aXlBvWzajzFhnK9s9r8RwH3
+         oAXrxeG6aoCIbSAWd61N96W04rPc8MFJE+wI/sds=
+Date:   Wed, 8 Jul 2020 13:25:07 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     syzbot <syzbot+89731ccb6fec15ce1c22@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: kernel panic: smack: Failed to initialize cipso DOI.
+Message-ID: <20200708202507.GA35321@sol.localdomain>
+References: <000000000000db448f05a212beea@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000db448f05a212beea@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Hi Casey,
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+On Mon, Mar 30, 2020 at 06:51:18AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    1b649e0b Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14957099e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4ac76c43beddbd9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=89731ccb6fec15ce1c22
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1202c375e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1390bb03e00000
+> 
+> The bug was bisected to:
+> 
+> commit a9d2d53a788a9c5bc8a7d1b4ea7857b68e221357
+> Author: Ken Cox <jkc@redhat.com>
+> Date:   Tue Nov 15 19:00:37 2016 +0000
+> 
+>     ixgbe: test for trust in macvlan adjustments for VF
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13cb06f3e00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=102b06f3e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17cb06f3e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+89731ccb6fec15ce1c22@syzkaller.appspotmail.com
+> Fixes: a9d2d53a788a ("ixgbe: test for trust in macvlan adjustments for VF")
+> 
+> RSP: 002b:00007ffebd499a38 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 00007ffebd499a40 RCX: 00000000004404e9
+> RDX: 0000000000000014 RSI: 0000000020000040 RDI: 0000000000000003
+> RBP: 0000000000000004 R08: 0000000000000001 R09: 00007ffebd490031
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401dd0
+> R13: 0000000000401e60 R14: 0000000000000000 R15: 0000000000000000
+> Kernel panic - not syncing: smack:  Failed to initialize cipso DOI.
+> CPU: 1 PID: 7197 Comm: syz-executor480 Not tainted 5.6.0-rc7-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+>  panic+0x264/0x7a0 kernel/panic.c:221
+>  smk_cipso_doi+0x4d8/0x4e0 security/smack/smackfs.c:698
+>  smk_write_doi+0x123/0x190 security/smack/smackfs.c:1595
+>  __vfs_write+0xa7/0x710 fs/read_write.c:494
+>  vfs_write+0x271/0x570 fs/read_write.c:558
+>  ksys_write+0x115/0x220 fs/read_write.c:611
+>  do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x4404e9
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffebd499a38 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 00007ffebd499a40 RCX: 00000000004404e9
+> RDX: 0000000000000014 RSI: 0000000020000040 RDI: 0000000000000003
+> RBP: 0000000000000004 R08: 0000000000000001 R09: 00007ffebd490031
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401dd0
+> R13: 0000000000401e60 R14: 0000000000000000 R15: 0000000000000000
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+This means that writing to /smack/doi will panic the kernel if kmalloc fails.
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Why doesn't it handle errors?  Is this really an unrecoverable situation?
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
-
- Documentation/driver-api/ipmi.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/driver-api/ipmi.rst b/Documentation/driver-api/ipmi.rst
-index 5ef1047e2e66..292f587fccdd 100644
---- a/Documentation/driver-api/ipmi.rst
-+++ b/Documentation/driver-api/ipmi.rst
-@@ -18,7 +18,7 @@ management software that can use the IPMI system.
- 
- This document describes how to use the IPMI driver for Linux.  If you
- are not familiar with IPMI itself, see the web site at
--http://www.intel.com/design/servers/ipmi/index.htm.  IPMI is a big
-+https://www.intel.com/design/servers/ipmi/index.htm.  IPMI is a big
- subject and I can't cover it all here!
- 
- Configuration
--- 
-2.27.0
-
+- Eric
