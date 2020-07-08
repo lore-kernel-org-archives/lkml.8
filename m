@@ -2,67 +2,89 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F81C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5996206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9029B206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:32:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fyNL59Vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgGHTcJ (ORCPT
+        id S1726285AbgGHTc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:32:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725949AbgGHTcJ (ORCPT
+        Wed, 8 Jul 2020 15:32:27 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:60776 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726107AbgGHTc1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:32:09 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1831FC061A0B;
-        Wed,  8 Jul 2020 12:32:09 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 84B271275C905;
-        Wed,  8 Jul 2020 12:32:06 -0700 (PDT)
-Date:   Wed, 08 Jul 2020 12:32:03 -0700 (PDT)
-Message-Id: <20200708.123203.1079684608829711523.davem@davemloft.net>
-To:     alobakin@marvell.com
-Cc:     kuba@kernel.org, irusskikh@marvell.com, dbezrukov@marvell.com,
-        mstarovoitov@marvell.com, dbogdanov@marvell.com,
-        epomozov@marvell.com, sergey.samoilenko@marvell.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: atlantic: fix ip dst and ipv6 address filters
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200708141710.758-1-alobakin@marvell.com>
-References: <20200708141710.758-1-alobakin@marvell.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 08 Jul 2020 12:32:06 -0700 (PDT)
+        Wed, 8 Jul 2020 15:32:27 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id C32A530C0CC;
+        Wed,  8 Jul 2020 12:32:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com C32A530C0CC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1594236746;
+        bh=3OXvA8PCBEsIpA3nCB4c0nzrfCkD8JiWghv65L3ox8A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fyNL59VhScfPqWpAuZP2rsAnkHv8ybyYM7qLNm30sstdzWqX5ai5SqXqr/+mvKm72
+         ifiv83jpWJbvfMtKzV77FUw27tkC+ho6potoJzenQ08krb8IKUaJ58R1SP32BwXyBY
+         Hqi7XqGWSFxf5ToHgRQbap9CTmDhFojXNxF9WgCA=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 7906E14008B;
+        Wed,  8 Jul 2020 12:32:25 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v7 01/12] PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
+Date:   Wed,  8 Jul 2020 15:31:54 -0400
+Message-Id: <20200708193219.47134-2-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200708193219.47134-1-james.quinlan@broadcom.com>
+References: <20200708193219.47134-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
-Date: Wed, 8 Jul 2020 17:17:10 +0300
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-> From: Dmitry Bogdanov <dbogdanov@marvell.com>
-> 
-> This patch fixes ip dst and ipv6 address filters.
-> There were 2 mistakes in the code, which led to the issue:
-> * invalid register was used for ipv4 dst address;
-> * incorrect write order of dwords for ipv6 addresses.
-> 
-> Fixes: 23e7a718a49b ("net: aquantia: add rx-flow filter definitions")
-> Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
-> Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
-> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Have PCIE_BRCMSTB depend on ARCH_BRCMSTB.  Also set the default value to
+ARCH_BRCMSTB.
 
-Applied and queued up for -stable, thanks.
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pci/controller/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index adddf21fa381..c165328d5fbb 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -262,9 +262,10 @@ config VMD
+ 
+ config PCIE_BRCMSTB
+ 	tristate "Broadcom Brcmstb PCIe host controller"
+-	depends on ARCH_BCM2835 || COMPILE_TEST
++	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
+ 	depends on OF
+ 	depends on PCI_MSI_IRQ_DOMAIN
++	default ARCH_BRCMSTB
+ 	help
+ 	  Say Y here to enable PCIe host controller support for
+ 	  Broadcom STB based SoCs, like the Raspberry Pi 4.
+-- 
+2.17.1
+
