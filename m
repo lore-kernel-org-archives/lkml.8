@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C339C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D354C20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E88207DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594223020;
-	bh=dS8/G+hfAJds4aB+AZ58jEHtC4unT+hW+QxSxGfpACM=;
+	s=default; t=1594223025;
+	bh=vYlpYGsyJhK0/4g6W6O4my7I02N9kAXPtT++VcEw5NQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LxdOP4vyeaM0VnhPMIc64y8XkYpuiwqCNBRsSQ16Wogaxy1e/HzSenl+VXj9XjpbZ
-	 p0UxRbtLCSjd3LE1WhQTbEF9ztCkOjTlc8L+YUf3hScXMXeO69xAkuBTzzpOykGe19
-	 V70ZkxCP9W+PwR7cfit2HcNZb8UAlZKzctv9L9Rk=
+	b=tVbd3TDS/KIoZteuwcEpkB56bpRaVTrc9sZf4BYhDX6P91bwH/r5km3HtPNuSgFsu
+	 Ne9frIvyEpft77X4+MMShTyY7Df8xSdcBuJe81aVxXIkNdzXZ/fM6zJj45pZ43wbvv
+	 wOo9mj3ca6DJPLkPpHC91fgiPst2/Ky6UCRAbh4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730838AbgGHPnj (ORCPT
+        id S1730529AbgGHPlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48696 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:41:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730317AbgGHPlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:41:45 -0400
+        id S1730487AbgGHPlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:41:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21A7A207D0;
-        Wed,  8 Jul 2020 15:41:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF0912080D;
+        Wed,  8 Jul 2020 15:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222904;
-        bh=dS8/G+hfAJds4aB+AZ58jEHtC4unT+hW+QxSxGfpACM=;
+        s=default; t=1594222898;
+        bh=vYlpYGsyJhK0/4g6W6O4my7I02N9kAXPtT++VcEw5NQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KgB8+wGzPOilTekboLA/+rDPufT0G5C2/PhJ7YCPZDxem3D86NevHfczXH/Zgu3ow
-         dxIcIa1CIAHJaGUlpfjyigBbz/Sog77dJoLmMkKBQwVBNtOo9PVX3yprDU5YI7JD1v
-         AG/qIZ4b9k/evjw0Z6NgRIbxDH73aVnrarm70Hl4=
+        b=ekdSa7SYaCZ5/rQbn/dNXVJAhF0aOVu1Ld+dXqwrZlhxE8XZK4cnJSuhkMK87c8xa
+         qc5QkOlQpD07pHY6AeKDpN9aJJAaEcWeP4QIwXZukuWanlehVk+RpvjoBsgwVu43NU
+         gW+2Xt1FKjCDOXp1zNZy0ecqDSTH7arq51AhoFQk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 07/16] thermal/drivers: imx: Fix missing of_node_put() at probe time
-Date:   Wed,  8 Jul 2020 11:41:26 -0400
-Message-Id: <20200708154135.3199907-7-sashal@kernel.org>
+Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 02/16] drm/msm/dpu: allow initialization of encoder locks during encoder init
+Date:   Wed,  8 Jul 2020 11:41:21 -0400
+Message-Id: <20200708154135.3199907-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708154135.3199907-1-sashal@kernel.org>
 References: <20200708154135.3199907-1-sashal@kernel.org>
@@ -60,49 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Krishna Manikandan <mkrishn@codeaurora.org>
 
-[ Upstream commit b45fd13be340e4ed0a2a9673ba299eb2a71ba829 ]
+[ Upstream commit 2e7ec6b5297157efabb50e5f82adc628cf90296c ]
 
-After finishing using cpu node got from of_get_cpu_node(), of_node_put()
-needs to be called.
+In the current implementation, mutex initialization
+for encoder mutex locks are done during encoder
+setup. This can lead to scenarios where the lock
+is used before it is initialized. Move mutex_init
+to dpu_encoder_init to avoid this.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1585232945-23368-1-git-send-email-Anson.Huang@nxp.com
+Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/imx_thermal.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-index bb6754a5342c1..85511c1160b7f 100644
---- a/drivers/thermal/imx_thermal.c
-+++ b/drivers/thermal/imx_thermal.c
-@@ -656,7 +656,7 @@ MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
- static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
- {
- 	struct device_node *np;
--	int ret;
-+	int ret = 0;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index d82ea994063fa..62a70e9c3dacc 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -2185,7 +2185,6 @@ int dpu_encoder_setup(struct drm_device *dev, struct drm_encoder *enc,
  
- 	data->policy = cpufreq_cpu_get(0);
- 	if (!data->policy) {
-@@ -671,11 +671,12 @@ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
- 		if (IS_ERR(data->cdev)) {
- 			ret = PTR_ERR(data->cdev);
- 			cpufreq_cpu_put(data->policy);
--			return ret;
- 		}
- 	}
+ 	dpu_enc = to_dpu_encoder_virt(enc);
  
--	return 0;
-+	of_node_put(np);
-+
-+	return ret;
+-	mutex_init(&dpu_enc->enc_lock);
+ 	ret = dpu_encoder_setup_display(dpu_enc, dpu_kms, disp_info);
+ 	if (ret)
+ 		goto fail;
+@@ -2200,7 +2199,6 @@ int dpu_encoder_setup(struct drm_device *dev, struct drm_encoder *enc,
+ 				0);
+ 
+ 
+-	mutex_init(&dpu_enc->rc_lock);
+ 	INIT_DELAYED_WORK(&dpu_enc->delayed_off_work,
+ 			dpu_encoder_off_work);
+ 	dpu_enc->idle_timeout = IDLE_TIMEOUT;
+@@ -2245,6 +2243,8 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
+ 
+ 	spin_lock_init(&dpu_enc->enc_spinlock);
+ 	dpu_enc->enabled = false;
++	mutex_init(&dpu_enc->enc_lock);
++	mutex_init(&dpu_enc->rc_lock);
+ 
+ 	return &dpu_enc->base;
  }
- 
- static void imx_thermal_unregister_legacy_cooling(struct imx_thermal_data *data)
 -- 
 2.25.1
 
