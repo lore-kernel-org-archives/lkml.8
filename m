@@ -2,168 +2,123 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABBDE20786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B6F2078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Th0XJc6W"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PL5cI5qu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbgGHOoB (ORCPT
+        id S1729923AbgGHOpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729635AbgGHOoA (ORCPT
+        Wed, 8 Jul 2020 10:45:35 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37925 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729780AbgGHOpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:44:00 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83608C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 07:44:00 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id p20so50786769ejd.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 07:44:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xb0I2RYd0Xq5lHyYzv75SJprFPpXAlY3yqWxTTq8ERk=;
-        b=Th0XJc6W1FFDmfXlzq1ofFkJvJekBX7zuXGDikGiUjkBMOlogYquNwNS+vDbyRld8C
-         LhmCCn8+R4L8aqvauTPdax14LGVHZlnRbxbFJUFk5kGwgekZ9TMHuaCW0xJelAITcZlc
-         bTkGqQhrOc4opTVDlF0pxBjYG3sq0LPbVZdatyc9330fOkC85GWl8K2dSLV8Jpbs/9cp
-         TsbZP+UEqSPgDclqmwmlP6MwPu3Lle6OFkH2akseeprKhD6GAEX1lQ89u9UnPvr3Meob
-         D7JUXToS++1OjP0Y1tqs8PSm01a73keowt+TJ7L/kCHjHuia/yfaEqeyz1gDG4bd4zoY
-         TpAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xb0I2RYd0Xq5lHyYzv75SJprFPpXAlY3yqWxTTq8ERk=;
-        b=oMMEwWhwoSJFA3pJTN//wAOP9tSqBVEorNwYSaTHaIzAqISzVKOBf3xPfc0t3pWLnE
-         iIGrKkcwqzib0p75oJUrVxa8bgK61OOKBoHESmam2t1loOf7rFw4iPkrstWM6iA3MGsZ
-         ceHarAaggnVE8Di7XfvkhR694Jsq8mc1hIOlyyhFAgepuV5QhnfI8hckPi4DcX12b/9l
-         7XyNqGDFn6IDqu5t624bWqeRP9ECVYeTWe3BNZQLy94Yx01AhNgJH1KdPdPV+z843XqU
-         bxuQnrt2ECvgdRdGHE/jk1/u79F+FAarIPNQEYhNFIm6MdisJ8X/OiXM9C/cbWc3fFXQ
-         EjPw==
-X-Gm-Message-State: AOAM531YLOfjea6GtjKkEhUtfR2O9n4tvACFjcoiocgf63Dy7qbikYK1
-        /kzxfouoLZe9+lfhyy2mc3475pKbpIddyi4XIQYBSw==
-X-Google-Smtp-Source: ABdhPJw+kb55V3s0r2zHR9x2KWpKo58dCyUw71gkL9ZFxqoE83rgP6HV9RmtJmzsq9Lyp7rkyPUBX/xTtQTGt0qr+PM=
-X-Received: by 2002:a17:906:1a54:: with SMTP id j20mr51228103ejf.455.1594219439236;
- Wed, 08 Jul 2020 07:43:59 -0700 (PDT)
+        Wed, 8 Jul 2020 10:45:33 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708144532euoutp017a142eae82b3aab57fad55e5c9227922~fzjfl0GnE2280122801euoutp01i
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 14:45:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708144532euoutp017a142eae82b3aab57fad55e5c9227922~fzjfl0GnE2280122801euoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594219532;
+        bh=YBwMR+1cTI/+5nGmGVzzQP31lKTZwJfbm6Wde/Ufl4A=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=PL5cI5quI6staJfHOmmKGhIaJO34dXKTXMQe6A2lZHo8sFXDG8u7zJvRkt+VBSlCs
+         IwhBQ/9435Q8ni4H/kvNTqhtQBDTKX8NaV99fqbFV3YJrzm+MEHw7fEQ+Pr9on+2qr
+         NEgK9HVKP/L3aoTMx3hIarOCbmR9W1/pHd86ElIw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200708144532eucas1p221e9f49e596935cc2446d90228401a3f~fzjfPTn_W1367413674eucas1p2C;
+        Wed,  8 Jul 2020 14:45:32 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id DD.11.06456.C0CD50F5; Wed,  8
+        Jul 2020 15:45:32 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200708144531eucas1p282845354a7c2be8f70f4ef33a4d6bb1d~fzjej49pg1036510365eucas1p2i;
+        Wed,  8 Jul 2020 14:45:31 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200708144531eusmtrp2ef4e5df9d1dadc6a8f4a07e032e94097~fzjejK8C_2076020760eusmtrp2O;
+        Wed,  8 Jul 2020 14:45:31 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-5d-5f05dc0c78d0
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id A5.70.06314.B0CD50F5; Wed,  8
+        Jul 2020 15:45:31 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200708144530eusmtip2637227708c7bfcdd7c9c536e8be47371~fzjd7MV-g0039100391eusmtip2D;
+        Wed,  8 Jul 2020 14:45:30 +0000 (GMT)
+Subject: Re: [PATCH 01/11] media: exynos4-is: Remove static driver data for
+ S5PV210 FIMC variants
+To:     Jonathan Bakker <xc-racer2@live.ca>, kyungmin.park@samsung.com,
+        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <9dae0088-e7ab-8d20-617d-7922d86f0d43@samsung.com>
+Date:   Wed, 8 Jul 2020 16:45:29 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com>
- <202007080108.454C937@keescook>
-In-Reply-To: <202007080108.454C937@keescook>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 8 Jul 2020 07:43:48 -0700
-Message-ID: <CAPcyv4hmsjKqKWhYYSyCx6fp9P_5GPr+XSVN5xFHxE6Ft2Q7fw@mail.gmail.com>
-Subject: Re: [PATCH v2] CodingStyle: Inclusive Terminology
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dave Airlie <airlied@redhat.com>,
-        SeongJae Park <sjpark@amazon.de>,
-        Olof Johansson <olof@lixom.net>, Chris Mason <clm@fb.clm>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <BN6PR04MB06603A626BB6D54D11CB502CA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjmO+dsOw4nx2n5pmI5/ZOUt/xxIhOVfgwiEUoIRW3qQcVrO95D
+        lBQ1L2v6Q1MMTeZai3BMnWaReE+Ws4zsomYwC69kXiKzNOdR8t/zPhfe9/n4SFzcyXMkE1Mz
+        GHmqLFnCFxKG4S3TWetpXrT36CMhfde8hNPj4zoBPXZ7WUDrzZM8+m1PI5+u1HXy6HvjLzBa
+        rf+D0W+qZ4hAK6lee4cvbVcVSFs+/iKkig4tkq7rXUJ54UL/OCY5MYuRewXcECboVWO89Fks
+        Z7tOiRciFVaOrEig/ODloIZfjoSkmNIg0BWXI27YQFB7fwjjhnUEqxq14DAy87nmQHiIwPjA
+        uC+IqR8IJndiLNiOioXabbPAYrKnijD4pqnnWwQ+5QNVQwpkwSIqAAa+LxEWTFDuYJjQ7PPH
+        qChoW+jCOI8tjNbP7XusqEhoNw7iFoxTDvBprgnj8EnoWmnELcuAMghAv9iHuFMvwczzn3wO
+        28HiSMdBBWfYfdqEcYEiBJXPpgTcoEQwO9J8kL4A06bfe2lyb8VpaOvx4uggaH2twCw0UDbw
+        YcWWO8IGagx1OEeLoKxEzLndYVtbd/DYjlAxt0twWAom9TxfiVwbjtRsOFKt4Ui1hv83NCNC
+        ixyYTDYlnmF9UplsT1aWwmamxnvGpqXo0d5nMu6MrHWjzYmYfkSRSGItUup40WKeLIvNTelH
+        QOISe1HwmDFKLIqT5eYx8rRoeWYyw/YjJ5KQOIjOtSxEiql4WQaTxDDpjPxQxUgrx0LkHbGc
+        SLeXDodnjJkHMqkCWzD15VweCMu+svb3lH/32vUTvfNq5abeN9C0FNiuKlw4vlW++PhWx8b7
+        r/l+icVPQi+6+ay+CwlxFURIXaryztdX9970zTdOVkSWBZeuVm+WjLu0Jim01blXS7+EeXgo
+        2VfNztfIMzlBXm6tq074lIRgE2Q+Hriclf0DXTCoDEgDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNIsWRmVeSWpSXmKPExsVy+t/xe7rcd1jjDe5flrDof/ya2eL8+Q3s
+        Fmeb3rBbbHp8jdXi8q45bBY9G7ayWsw4v4/JYtmmP0wWFyfeZXHg9Ni0qpPNY/OSeo9FN3+w
+        ePRtWcXo8XmTXABrlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpO
+        Zllqkb5dgl7GpiVnWQvuM1X8nj6BuYFxCVMXIyeHhICJxN17k4BsLg4hgaWMEls//wJyOIAS
+        UhLzW5QgaoQl/lzrYoOoec8osXzSbTaQhLBAssS034/ZQRIiAs1MEv+Xb2OBqLrLKNH9+BZY
+        FZuAoUTv0T5GEJtXwE7i8PvXLCA2i4CKxLZLK8DiogJxEsu3zGeHqBGUODnzCVgNp0CsxObT
+        R5hBbGYBdYk/8y5B2eISt57MZ4Kw5SW2v53DPIFRcBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc
+        9NxiQ73ixNzi0rx0veT83E2MwIjbduzn5h2MlzYGH2IU4GBU4uF9sYk1Xog1say4MvcQowQH
+        s5IIr9PZ03FCvCmJlVWpRfnxRaU5qcWHGE2BnpvILCWanA9MBnkl8YamhuYWlobmxubGZhZK
+        4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhjVMu6LtLdk3ZvdECKTfDuKq5ihe82V1zd1T+x9
+        MVn8V+qx/3aNXB0KTRMncrMYzGmQejRTqWXJiidc4cKHSu+8V9zKpXrO/hsbj8qN300XHukY
+        Lch09eV5Z8CxOJPVoe755WX9b7atK1hbqJP6X6fjw50VYcvrbZ+x+N4I1+ZKEf3q+kjgYo4S
+        S3FGoqEWc1FxIgAxbc5IzgIAAA==
+X-CMS-MailID: 20200708144531eucas1p282845354a7c2be8f70f4ef33a4d6bb1d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200426022721eucas1p1d5cbdc4946279aeff7d6c11f93a56f74
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200426022721eucas1p1d5cbdc4946279aeff7d6c11f93a56f74
+References: <20200426022650.10355-1-xc-racer2@live.ca>
+        <CGME20200426022721eucas1p1d5cbdc4946279aeff7d6c11f93a56f74@eucas1p1.samsung.com>
+        <BN6PR04MB06603A626BB6D54D11CB502CA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 1:22 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Jul 08, 2020 at 12:23:59AM -0700, Dan Williams wrote:
-> > Linux maintains a coding-style and its own idiomatic set of terminology.
-> > Update the style guidelines to recommend replacements for the terms
-> > master/slave and blacklist/whitelist.
-> >
-> > Link: http://lore.kernel.org/r/159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> > Acked-by: Dave Airlie <airlied@redhat.com>
-> > Acked-by: Kees Cook <keescook@chromium.org>
-> > Acked-by: SeongJae Park <sjpark@amazon.de>
-> > Signed-off-by: Olof Johansson <olof@lixom.net>
-> > Signed-off-by: Chris Mason <clm@fb.com>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> > Changes since v1 [1]
-> > - Drop inclusive-terminology.rst, it is in the lore archives if the
-> >   arguments are needed for future debates, but otherwise no pressing
-> >   need to carry it in the tree (Linus, James)
-> >
-> > - Update the recommended terms to include replacement for 'master' and
-> >   'whitelist' (Kees, Andy)
-> >
-> > - Add 'target' as a replacement (Andy)
-> >
-> > - Add 'device' as a replacement (Mark)
-> >
-> > - Collect acks and signed-off-bys. Yes, the sign-offs are not reflective
-> >   of a submission chain, but I kept "Signed-off-by" if people offered
-> >   it.
->
-> In that case, I will "upgrade" my Ack. ;)
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
->
-> :)
+On 26.04.2020 04:26, Jonathan Bakker wrote:
+> The S5PV210 platform only supports device tree based booting
+> where the FIMC variant data is parsed directly from
+> the device tree, hence the now unused static data can be removed.
+> 
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 
-Noted.
-
->
-> > - Non-change: I did not add explicit language as to what to do with
-> >   existing usages. My personal inclination is to prioritize this
-> >   coding-style cleanup higher than others, but the coding-style document
-> >   has typically not indicated policy on how cleanups are handled by
-> >   subsystems. It will be a case by case effort and consideration.
->
-> While I'd like to have published guidance on fixing existing language
-> (which is already underway[1]), I agree: let's start here.
->
-> > [...]
-> > +For symbol names, avoid introducing new usage of 'master/slave' (or
->
-> For symbol names, comments, documentation, and other language, avoid
-> introducing ...
-
-How about "symbol names and documentation" because I'm struggling to
-think of an example of where this terminology would leak in outside
-those broad categories.
-
-> > +'slave' independent of 'master') and 'blacklist/whitelist'. Recommended
-> > +replacements for 'master/slave' are: 'main/{secondary,subordinate}',
-> > +'primary/replica', '{initiator,requester}/{target,responder}',
->
-> the main and primary should be merged, IMO:
->
->         '{primary,main}/{secondary,replica,subordinate}'
-
-Ok.
-
->
-> > +'host/{device,proxy}', or 'leader/{performer,follower}'. Recommended
->
-> leader/performer does not track for me. Split it out?
->
->         'leader/follower', 'director/performer'
-
-Sounds good.
-
-> I have also seen:
->
->         'controller/worker'
-
-Will add.
-
-Thanks Kees.
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
