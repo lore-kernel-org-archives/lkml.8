@@ -2,278 +2,201 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91508C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58FEE20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5946220708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsLAGSLM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UbUNMvUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbgGHHQJ (ORCPT
+        id S1730133AbgGHHQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729881AbgGHHQI (ORCPT
+        Wed, 8 Jul 2020 03:16:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56922 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729881AbgGHHQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:16:08 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4720C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:16:08 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id gc15so1810525pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:16:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Y/j7etSqm2CvvtGvUX/WpYIoiSvXeTmOIHFxWZnBTsE=;
-        b=CsLAGSLMEkS8nWCE4rutnqTqYmrr772RHKWtnIG7n4rxu9Kgmb8TFYZTFc9rLNYc62
-         Dswlr87tKNVy9tgVSZz1acJjl82kwNbQRKBEPw78xFnTWC5Bi0pYqJ5hj6IhLgRv/sTO
-         fxftVmAHCBM+YsVtUw89/B7n71Ynb19aHG1jwmkqLegnV9K/VogWyqbdTWDYpCDw0oJe
-         NjV33d3BeVd7JE0wOua77ABRsG5xdyf/9KWhAD2dmt28vB3np4P5ft4QALeyblVEfFq3
-         NyDF1J6hoJnkmrE3FR0UnxSOUcN2O8WZT712SbUIKWiKLGqRkFlKIO6N9PBvCggVVRwC
-         94MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y/j7etSqm2CvvtGvUX/WpYIoiSvXeTmOIHFxWZnBTsE=;
-        b=Zf2pLIYRrAaed/f0/wWkRlu1/Ne+ephf5TdkoZBvieBDeu4OwGemI40RsTWz+tBhIK
-         mk2siY+L85Z4ONj/NNHA0jL5j+Yl7B2idIGVmnRPc50e+7E53PRR9zWuv79/bBs5LEuM
-         iq319fKEs/GLgzUETi13Pnhp11DLwSLEn3dVJRf4W2zVQg6QGb+3Na05P7ZEkE/bUtB2
-         RZIApjdqCqG+2ZjYXXJWWQkYi6TIpugo4FlYUCRtWeFRecFSIeDapogKHb0RwgChMKiM
-         NCwwC+Y3rhWI08UZcMvnHp6uUNwjHPong4nO/IxmdRheIlUc47oPrqDqKpxA2wdbWwzN
-         3m4A==
-X-Gm-Message-State: AOAM531UUQabzS07I6FD0mRkgpZIPYLusooPpkV85Y31PkvOWreZT71d
-        515xiW78TPMTB+I5tofEtfA=
-X-Google-Smtp-Source: ABdhPJwIaRAbWPm7Qqidfy0HbX46p0sykZW0ruEPtvxhOIAw8VzmiWtxVFvhdD4GNEn3668EWKYDyw==
-X-Received: by 2002:a17:902:bccc:: with SMTP id o12mr51156464pls.29.1594192568168;
-        Wed, 08 Jul 2020 00:16:08 -0700 (PDT)
-Received: from js1304-desktop ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id h100sm4532663pjb.46.2020.07.08.00.16.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jul 2020 00:16:07 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 16:16:02 +0900
-From:   Joonsoo Kim <js1304@gmail.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v4 04/11] mm/hugetlb: make hugetlb migration callback CMA
- aware
-Message-ID: <20200708071602.GB16543@js1304-desktop>
-References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594107889-32228-5-git-send-email-iamjoonsoo.kim@lge.com>
- <c1cd6e11-08c3-5654-60e7-dec2eb80987a@suse.cz>
+        Wed, 8 Jul 2020 03:16:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594192572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=dx3HZ+yedwYcaidK+QZbCcB6z1aYUQHDgwu6LUEYe/4=;
+        b=UbUNMvUeC/lodaXM+IRgCoHShNxvHrSF53gIVKvQIoDrYDeVbubOTKdW8NJ1UKfE3zkeNd
+        VADa4L6BqTDTb31wrvHGcjzl6uA5wHPRKM9dkuODt9q/1cq6LWLmJVK29s4pebwSEvuCpp
+        EL9VK5UeeqOfy7XUriogwCcgnQEOLCk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-273-g9Z8KC3yNxm1InmXP6I2-g-1; Wed, 08 Jul 2020 03:16:08 -0400
+X-MC-Unique: g9Z8KC3yNxm1InmXP6I2-g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 078DD107ACCA;
+        Wed,  8 Jul 2020 07:16:06 +0000 (UTC)
+Received: from [10.36.113.117] (ovpn-113-117.ams2.redhat.com [10.36.113.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E375A10013D7;
+        Wed,  8 Jul 2020 07:16:02 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid as
+ EXPORT_SYMBOL_GPL
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>, Justin He <Justin.He@arm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Kaly Xin <Kaly.Xin@arm.com>
+References: <20200707055917.143653-1-justin.he@arm.com>
+ <20200707055917.143653-2-justin.he@arm.com>
+ <20200707115454.GN5913@dhcp22.suse.cz>
+ <AM6PR08MB406907F9F2B13DA6DC893AD9F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
+ <CAPcyv4ipu4qwKhk4pzJ8nZB2sp+=AndahS8eCgUvFvVP6dEkeA@mail.gmail.com>
+ <AM6PR08MB4069D0D1FD8FB31B6A56DDB5F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
+ <CAPcyv4ivyJsyzcbkBWcqBYZMx3VdJF7+VPCNs177DU2rYqtz_A@mail.gmail.com>
+ <20200708062217.GE386073@linux.ibm.com>
+ <c4ee0a94-c980-80ca-c43d-15729e1a3663@redhat.com>
+ <CAPcyv4inaZgmv=S36_DofA9prKhWg4KBNPkTvzSALO6Vtb9ddw@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <6aae78fa-b505-0f76-087b-d8b2146c62f1@redhat.com>
+Date:   Wed, 8 Jul 2020 09:16:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1cd6e11-08c3-5654-60e7-dec2eb80987a@suse.cz>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAPcyv4inaZgmv=S36_DofA9prKhWg4KBNPkTvzSALO6Vtb9ddw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 01:22:31PM +0200, Vlastimil Babka wrote:
-> On 7/7/20 9:44 AM, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > 
-> > new_non_cma_page() in gup.c which try to allocate migration target page
-> > requires to allocate the new page that is not on the CMA area.
-> > new_non_cma_page() implements it by removing __GFP_MOVABLE flag.  This way
-> > works well for THP page or normal page but not for hugetlb page.
-> > 
-> > hugetlb page allocation process consists of two steps.  First is dequeing
-> > from the pool.  Second is, if there is no available page on the queue,
-> > allocating from the page allocator.
-> > 
-> > new_non_cma_page() can control allocation from the page allocator by
-> > specifying correct gfp flag.  However, dequeing cannot be controlled until
-> > now, so, new_non_cma_page() skips dequeing completely.  It is a suboptimal
-> > since new_non_cma_page() cannot utilize hugetlb pages on the queue so this
-> > patch tries to fix this situation.
-> > 
-> > This patch makes the deque function on hugetlb CMA aware and skip CMA
-> > pages if newly added skip_cma argument is passed as true.
+On 08.07.20 09:04, Dan Williams wrote:
+> On Tue, Jul 7, 2020 at 11:59 PM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 08.07.20 08:22, Mike Rapoport wrote:
+>>> On Tue, Jul 07, 2020 at 09:27:43PM -0700, Dan Williams wrote:
+>>>> On Tue, Jul 7, 2020 at 9:08 PM Justin He <Justin.He@arm.com> wrote:
+>>>> [..]
+>>>>>> Especially for architectures that use memblock info for numa info
+>>>>>> (which seems to be everyone except x86) why not implement a generic
+>>>>>> memory_add_physaddr_to_nid() that does:
+>>>>>>
+>>>>>> int memory_add_physaddr_to_nid(u64 addr)
+>>>>>> {
+>>>>>>         unsigned long start_pfn, end_pfn, pfn = PHYS_PFN(addr);
+>>>>>>         int nid;
+>>>>>>
+>>>>>>         for_each_online_node(nid) {
+>>>>>>                 get_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
+>>>>>>                 if (pfn >= start_pfn && pfn <= end_pfn)
+>>>>>>                         return nid;
+>>>>>>         }
+>>>>>>         return NUMA_NO_NODE;
+>>>>>> }
+>>>>>
+>>>>> Thanks for your suggestion,
+>>>>> Could I wrap the codes and let memory_add_physaddr_to_nid simply invoke
+>>>>> phys_to_target_node()?
+>>>>
+>>>> I think it needs to be the reverse. phys_to_target_node() should call
+>>>> memory_add_physaddr_to_nid() by default, but fall back to searching
+>>>> reserved memory address ranges in memblock. See phys_to_target_node()
+>>>> in arch/x86/mm/numa.c. That one uses numa_meminfo instead of memblock,
+>>>> but the principle is the same i.e. that a target node may not be
+>>>> represented in memblock.memory, but memblock.reserved. I'm working on
+>>>> a patch to provide a function similar to get_pfn_range_for_nid() that
+>>>> operates on reserved memory.
+>>>
+>>> Do we really need yet another memblock iterator?
+>>> I think only x86 has memory that is not in memblock.memory but only in
+>>> memblock.reserved.
+>>
+>> Reading about abusing the memblock allcoator once again in memory
+>> hotplug paths makes me shiver.
 > 
-> Hmm, can't you instead change dequeue_huge_page_node_exact() to test the PF_
-> flag and avoid adding bool skip_cma everywhere?
+> Technical reasoning please?
 
-Okay! Please check following patch.
+ARCH_KEEP_MEMBLOCK is (AFAIK) only a hack for arm64 to implement
+pfn_valid(), because they zap out individual pages corresponding to
+memory holes of full sections.
+
+I am not a friend of adding more post-init code to rely on memblock
+data. It just makes it harder to eventually get rid of ARCH_KEEP_MEMBLOCK.
+
 > 
-> I think that's what Michal suggested [1] except he said "the code already does
-> by memalloc_nocma_{save,restore} API". It needs extending a bit though, AFAICS.
-> __gup_longterm_locked() indeed does the save/restore, but restore comes before
-> check_and_migrate_cma_pages() and thus new_non_cma_page() is called, so an
-> adjustment is needed there, but that's all?
-> 
-> Hm the adjustment should be also done because save/restore is done around
-> __get_user_pages_locked(), but check_and_migrate_cma_pages() also calls
-> __get_user_pages_locked(), and that call not being between nocma save and
-> restore is thus also a correctness issue?
+> arm64 numa information is established from memblock data. It seems
+> counterproductive to ignore that fact if we're already touching
+> memory_add_physaddr_to_nid() and have a use case for a driver to call
+> it.
 
-Simply, I call memalloc_nocma_{save,restore} in new_non_cma_page(). It
-would not cause any problem.
+... and we are trying to handle the "only a single dummy node" case
+(patch #2), or what am I missing? What is there to optimize currently?
 
------------------->8-------------------
-From bcfc57e3c6f2df1ad2940308b89d740cd3f0fba8 Mon Sep 17 00:00:00 2001
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Date: Wed, 8 Jul 2020 14:39:26 +0900
-Subject: [PATCH] mm/hugetlb: make hugetlb migration callback CMA aware
-
-new_non_cma_page() in gup.c which try to allocate migration target page
-requires to allocate the new page that is not on the CMA area.
-new_non_cma_page() implements it by removing __GFP_MOVABLE flag.  This way
-works well for THP page or normal page but not for hugetlb page.
-
-hugetlb page allocation process consists of two steps.  First is dequeing
-from the pool.  Second is, if there is no available page on the queue,
-allocating from the page allocator.
-
-new_non_cma_page() can control allocation from the page allocator by
-specifying correct gfp flag.  However, dequeing cannot be controlled until
-now, so, new_non_cma_page() skips dequeing completely.  It is a suboptimal
-since new_non_cma_page() cannot utilize hugetlb pages on the queue so this
-patch tries to fix this situation.
-
-This patch makes new_non_cma_page() uses memalloc_nocma_{save,restore}
-to exclude CMA memory rather than manually clearing __GFP_MOVABLE. And,
-this patch also makes the deque function on hugetlb CMA aware. In the
-deque function, CMA memory is skipped if PF_MEMALLOC_NOCMA flag is set
-by memalloc_nocma_{save,restore}.
-
-Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- include/linux/hugetlb.h |  2 --
- mm/gup.c                | 32 +++++++++++++++-----------------
- mm/hugetlb.c            | 11 +++++++++--
- 3 files changed, 24 insertions(+), 21 deletions(-)
-
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index bb93e95..34a10e5 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -509,8 +509,6 @@ struct page *alloc_huge_page_nodemask(struct hstate *h, int preferred_nid,
- 				nodemask_t *nmask, gfp_t gfp_mask);
- struct page *alloc_huge_page_vma(struct hstate *h, struct vm_area_struct *vma,
- 				unsigned long address);
--struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
--				     int nid, nodemask_t *nmask);
- int huge_add_to_page_cache(struct page *page, struct address_space *mapping,
- 			pgoff_t idx);
- 
-diff --git a/mm/gup.c b/mm/gup.c
-index 5daadae..79142a9 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1623,6 +1623,8 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
- 	 * allocation memory.
- 	 */
- 	gfp_t gfp_mask = GFP_USER | __GFP_NOWARN;
-+	unsigned int flags = memalloc_nocma_save();
-+	struct page *new_page = NULL;
- 
- 	if (PageHighMem(page))
- 		gfp_mask |= __GFP_HIGHMEM;
-@@ -1630,33 +1632,29 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
- #ifdef CONFIG_HUGETLB_PAGE
- 	if (PageHuge(page)) {
- 		struct hstate *h = page_hstate(page);
--		/*
--		 * We don't want to dequeue from the pool because pool pages will
--		 * mostly be from the CMA region.
--		 */
--		return alloc_migrate_huge_page(h, gfp_mask, nid, NULL);
-+
-+		new_page = alloc_huge_page_nodemask(h, nid, NULL, gfp_mask);
-+		goto out;
- 	}
- #endif
-+
- 	if (PageTransHuge(page)) {
--		struct page *thp;
- 		/*
- 		 * ignore allocation failure warnings
- 		 */
- 		gfp_t thp_gfpmask = GFP_TRANSHUGE | __GFP_NOWARN;
- 
--		/*
--		 * Remove the movable mask so that we don't allocate from
--		 * CMA area again.
--		 */
--		thp_gfpmask &= ~__GFP_MOVABLE;
--		thp = __alloc_pages_node(nid, thp_gfpmask, HPAGE_PMD_ORDER);
--		if (!thp)
--			return NULL;
--		prep_transhuge_page(thp);
--		return thp;
-+		new_page = __alloc_pages_node(nid, thp_gfpmask, HPAGE_PMD_ORDER);
-+		if (new_page)
-+			prep_transhuge_page(new_page);
-+		goto out;
- 	}
- 
--	return __alloc_pages_node(nid, gfp_mask, 0);
-+	new_page = __alloc_pages_node(nid, gfp_mask, 0);
-+
-+out:
-+	memalloc_nocma_restore(flags);
-+	return new_page;
- }
- 
- static long check_and_migrate_cma_pages(struct task_struct *tsk,
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 3245aa0..514e29c 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -29,6 +29,7 @@
- #include <linux/numa.h>
- #include <linux/llist.h>
- #include <linux/cma.h>
-+#include <linux/sched/mm.h>
- 
- #include <asm/page.h>
- #include <asm/tlb.h>
-@@ -1036,10 +1037,16 @@ static void enqueue_huge_page(struct hstate *h, struct page *page)
- static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
- {
- 	struct page *page;
-+	bool nocma = !!(READ_ONCE(current->flags) & PF_MEMALLOC_NOCMA);
-+
-+	list_for_each_entry(page, &h->hugepage_freelists[nid], lru) {
-+		if (nocma && is_migrate_cma_page(page))
-+			continue;
- 
--	list_for_each_entry(page, &h->hugepage_freelists[nid], lru)
- 		if (!PageHWPoison(page))
- 			break;
-+	}
-+
- 	/*
- 	 * if 'non-isolated free hugepage' not found on the list,
- 	 * the allocation fails.
-@@ -1928,7 +1935,7 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
- 	return page;
- }
- 
--struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
-+static struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
- 				     int nid, nodemask_t *nmask)
- {
- 	struct page *page;
 -- 
-2.7.4
+Thanks,
+
+David / dhildenb
 
