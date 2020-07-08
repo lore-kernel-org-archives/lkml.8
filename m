@@ -2,79 +2,118 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF07BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 891572065F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A880E2065F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgGHNf5 (ORCPT
+        id S1729731AbgGHNgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:35:57 -0400
-Received: from mga17.intel.com ([192.55.52.151]:55756 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgGHNf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:35:56 -0400
-IronPort-SDR: /x2eGVyQk+OS8cP8oHjhqMki7GQbmD0c8PY1aYldstTftGkcWvoDu3xZmitg0d2ZegEjK5nLaG
- fSbGOLKI0rdw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="127873211"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="127873211"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 06:35:55 -0700
-IronPort-SDR: aJscoD6Xxx8E/ww7mzPXQrwwPFlZ1PdDUbrFrgnVoXTfYBd8mctpotmhti+bHSB7PyudqP2iAw
- VOktHU/rDYTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="457505720"
-Received: from alachman-mobl.ger.corp.intel.com (HELO localhost) ([10.252.42.138])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jul 2020 06:35:51 -0700
-Date:   Wed, 8 Jul 2020 16:35:50 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert commit e918e570415c ("tpm_tis: Remove the HID
- IFX0102")
-Message-ID: <20200708133550.GB538949@linux.intel.com>
-References: <20200706205342.21333-1-jarkko.sakkinen@linux.intel.com>
- <20200707094140.GB2639362@kroah.com>
+        Wed, 8 Jul 2020 09:36:07 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59219 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728148AbgGHNgG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:36:06 -0400
+X-Originating-IP: 176.185.171.128
+Received: from localhost.localdomain (static-176-185-171-128.ftth.abo.bbox.fr [176.185.171.128])
+        (Authenticated sender: maxime.chretien@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 3FFE1FF803;
+        Wed,  8 Jul 2020 13:36:04 +0000 (UTC)
+From:   Maxime Chretien <maxime.chretien@bootlin.com>
+To:     masahiroy@kernel.org, michal.lkml@markovi.net, corbet@lwn.net
+Cc:     linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Maxime Chretien <maxime.chretien@bootlin.com>
+Subject: [PATCH] kconfig confdata: Add an option to keep all .config backups
+Date:   Wed,  8 Jul 2020 15:35:56 +0200
+Message-Id: <20200708133556.12934-1-maxime.chretien@bootlin.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707094140.GB2639362@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 11:41:40AM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Jul 06, 2020 at 11:53:42PM +0300, Jarkko Sakkinen wrote:
-> > Removing IFX0102 from tpm_tis was not a right move because both tpm_tis
-> > and tpm_infineon use the same device ID. Revert the commit and add a
-> > remark about a bug caused by commit 93e1b7d42e1e ("[PATCH] tpm: add HID
-> > module parameter").
-> > 
-> > Fixes: e918e570415c ("tpm_tis: Remove the HID IFX0102")
-> > Reported-by: Peter Huewe <peterhuewe@gmx.de>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> 
-> As the original was asked to be applied to the stable trees, this one
-> should have as well.
-> 
-> I'll go drop it from the stable queues right now, thanks.
-> 
-> greg k-h
+When KCONFIG_KEEPALLBACKUPS is set in the environment,
+instead of renaming the old .config to .config.old, kconfig puts it in
+a folder named .config.backupdir that stores all backups
+with the name .config.oldX where X is a number.
 
-Ah, apologies for my ignorance.
+The latest backup is the one with the highest number.
 
-/Jarkko
+This is useful to avoid doing a lot of manual backups to make sure to have
+a working build when you make a lot of changes that can break everything.
+
+Signed-off-by: Maxime Chretien <maxime.chretien@bootlin.com>
+---
+ Documentation/kbuild/kconfig.rst |  6 ++++++
+ Makefile                         |  2 +-
+ scripts/kconfig/confdata.c       | 15 ++++++++++++++-
+ 3 files changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/kbuild/kconfig.rst b/Documentation/kbuild/kconfig.rst
+index dce6801d66c9..0f1dac4f1fc2 100644
+--- a/Documentation/kbuild/kconfig.rst
++++ b/Documentation/kbuild/kconfig.rst
+@@ -46,6 +46,12 @@ KCONFIG_OVERWRITECONFIG
+ If you set KCONFIG_OVERWRITECONFIG in the environment, Kconfig will not
+ break symlinks when .config is a symlink to somewhere else.
+ 
++KCONFIG_KEEPALLBACKUPS
++-----------------------
++If you set KCONFIG_KEEPALLBACKUPS in the environment, Kconfig will save
++all .config.old as .config.oldX where X is a number (lower is older)
++inside a folder named .config.backupdir .
++
+ `CONFIG_`
+ ---------
+ If you set `CONFIG_` in the environment, Kconfig will prefix all symbols
+diff --git a/Makefile b/Makefile
+index ac2c61c37a73..c74a18c60107 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1437,7 +1437,7 @@ CLEAN_FILES += include/ksym vmlinux.symvers \
+ MRPROPER_FILES += include/config include/generated          \
+ 		  arch/$(SRCARCH)/include/generated .tmp_objdiff \
+ 		  debian snap tar-install \
+-		  .config .config.old .version \
++		  .config .config.old .config.backupdir .version \
+ 		  Module.symvers \
+ 		  signing_key.pem signing_key.priv signing_key.x509	\
+ 		  x509.genkey extra_certificates signing_key.x509.keyid	\
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index a39d93e3c6ae..a019752816a0 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -923,7 +923,20 @@ int conf_write(const char *name)
+ 			return 0;
+ 		}
+ 
+-		snprintf(oldname, sizeof(oldname), "%s.old", name);
++		env = getenv("KCONFIG_KEEPALLBACKUPS");
++		if (env) {
++			i = 0;
++			do {
++				snprintf(oldname, sizeof(oldname),
++					 "%s.backupdir/%s.old%d", name, name, i);
++				i++;
++			} while(is_present(oldname));
++
++			if (make_parent_dir(oldname))
++				return -1;
++		} else {
++			snprintf(oldname, sizeof(oldname), "%s.old", name);
++		}
+ 		rename(name, oldname);
+ 		if (rename(tmpname, name))
+ 			return 1;
+-- 
+2.27.0
+
