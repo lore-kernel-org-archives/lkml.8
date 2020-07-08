@@ -2,86 +2,135 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4180DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 308F2206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A489206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:08:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dfuebEZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgGHLIU (ORCPT
+        id S1728777AbgGHLIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:08:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbgGHLIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:08:19 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8311D20739;
-        Wed,  8 Jul 2020 11:08:17 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 12:08:15 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        syzbot <syzbot+dec34b033b3479b9ef13@syzkaller.appspotmail.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: memory leak in inotify_update_watch
-Message-ID: <20200708110814.GA6308@gaia>
-References: <000000000000a47ace05a9c7b825@google.com>
- <20200707152411.GD25069@quack2.suse.cz>
- <20200707181710.GD32331@gaia>
- <CACT4Y+ZLx3wT3uvsMr9EOQ35wF+tw3SN_kzgwn2B+K5dTtHrOg@mail.gmail.com>
+        Wed, 8 Jul 2020 07:08:34 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49823 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728385AbgGHLId (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 07:08:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594206512;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UsTH2g5Srh8ZxaMtl2dCP3xACw/aEbSOpSitaM2tt8A=;
+        b=dfuebEZ69Nl8u7couTN5mm/RTDEhc2SqsiKHx3p574k1YF1CtlZnSUeDqz7ZzjT5oSwfJ6
+        7mwHhtBoO3GKNt8OPLQa2qi3VmyNww79RaEXP/qwchJt8A1sSWDLCpnOW9+9YmXUoxrKmU
+        T/yYaSWBTtXtgdE066jkEQPAlTu16GY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-371-SFwAx6CiOo-yu-5zFDIr1A-1; Wed, 08 Jul 2020 07:08:30 -0400
+X-MC-Unique: SFwAx6CiOo-yu-5zFDIr1A-1
+Received: by mail-wr1-f69.google.com with SMTP id b8so37630879wro.19
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 04:08:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UsTH2g5Srh8ZxaMtl2dCP3xACw/aEbSOpSitaM2tt8A=;
+        b=p9qieC2D2b5UafoKflr85kdHnBm0i3FS/duMIRrDe9E+yUcbrplFuGwd3td/TQHYss
+         MxPaD7kEWaW/V1levOrQnriq8AgUCvrWG5AjtstQWrkYX6ZvVU0W0VadEeMqQHHPPp5+
+         DmzTZg+z68lTbaXUcrLzELa/Qv3FgtgW7ic3mFPy4hSe1iE5HeanydaETSJLLSmye4gj
+         tiqMZFz9xMrOcewODOSsKZy0yitTbArHRWl/iba4+EiaFaGXrVzj8Ysdb4NUsn1HKMAE
+         Mis7BaNmicH/b+jv8bP1JgKejek04gN6hWqDT8pc5gZ8TXgVtFqzGsy7yLEDqY2x20gS
+         44Qg==
+X-Gm-Message-State: AOAM531/Qw9kb/cY1Dh6cjeMURit0LUzFaDtvvU8rWmoTP0wYSjmMMkN
+        wYg98fSdeRrq7A/wh+49Pd4H33Jjrp5Fzy339tx0DiFaaNfHxlxeMf2T82rP7U4P1aQSrydgLOS
+        DFdNYUq02rZYLl/Iz0H06whSn
+X-Received: by 2002:a1c:9e84:: with SMTP id h126mr8405462wme.61.1594206509465;
+        Wed, 08 Jul 2020 04:08:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyfhETRvUhtCmEHWo63nXGRqkOPlkqmDpTb+2sESQBbbdmRxlhpOu5S/wmhPtZ2fWEh5Is7Nw==
+X-Received: by 2002:a1c:9e84:: with SMTP id h126mr8405427wme.61.1594206509215;
+        Wed, 08 Jul 2020 04:08:29 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.gmail.com with ESMTPSA id c136sm5923589wmd.10.2020.07.08.04.08.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 04:08:28 -0700 (PDT)
+Subject: Re: [PATCH] kvm: x86: limit the maximum number of vPMU fixed counters
+ to 3
+To:     Like Xu <like.xu@linux.intel.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
+References: <20200624015928.118614-1-like.xu@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <cd56533f-3dd5-70c3-c124-78c0d8950496@redhat.com>
+Date:   Wed, 8 Jul 2020 13:08:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZLx3wT3uvsMr9EOQ35wF+tw3SN_kzgwn2B+K5dTtHrOg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200624015928.118614-1-like.xu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 09:17:37AM +0200, Dmitry Vyukov wrote:
-> On Tue, Jul 7, 2020 at 8:17 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > Kmemleak never performs well under heavy load. Normally you'd need to
-> > let the system settle for a bit before checking whether the leaks are
-> > still reported. The issue is caused by the memory scanning not stopping
-> > the whole machine, so pointers may be hidden in registers on different
-> > CPUs (list insertion/deletion for example causes transient kmemleak
-> > confusion).
-> >
-> > I think the syzkaller guys tried a year or so ago to run it in parallel
-> > with kmemleak and gave up shortly. The proposal was to add a "stopscan"
-> > command to kmemleak which would do this under stop_machine(). However,
-> > no-one got to implementing it.
-> >
-> > So, in this case, does the leak still appear with the reproducer, once
-> > the system went idle?
+On 24/06/20 03:59, Like Xu wrote:
+> Some new Intel platforms (such as TGL) already have the
+> fourth fixed counter TOPDOWN.SLOTS, but it has not been
+> fully enabled on KVM and the host.
 > 
-> This report came from syzbot, so obviously we did not give up :)
+> Therefore, we limit edx.split.num_counters_fixed to 3,
+> so that it does not break the kvm-unit-tests PMU test
+> case and bad-handled userspace.
+> 
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 2 +-
+>  arch/x86/kvm/pmu.h   | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 8a294f9747aa..0a2c6d2b4650 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -604,7 +604,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  		eax.split.bit_width = cap.bit_width_gp;
+>  		eax.split.mask_length = cap.events_mask_len;
+>  
+> -		edx.split.num_counters_fixed = cap.num_counters_fixed;
+> +		edx.split.num_counters_fixed = min(cap.num_counters_fixed, MAX_FIXED_COUNTERS);
+>  		edx.split.bit_width_fixed = cap.bit_width_fixed;
+>  		edx.split.reserved = 0;
+>  
+> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+> index ab85eed8a6cc..067fef51760c 100644
+> --- a/arch/x86/kvm/pmu.h
+> +++ b/arch/x86/kvm/pmu.h
+> @@ -15,6 +15,8 @@
+>  #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
+>  #define VMWARE_BACKDOOR_PMC_APPARENT_TIME	0x10002
+>  
+> +#define MAX_FIXED_COUNTERS	3
+> +
+>  struct kvm_event_hw_type_mapping {
+>  	u8 eventsel;
+>  	u8 unit_mask;
+> 
 
-That's good to know ;).
+Queued, thanks.
 
-> We don't run scanning in parallel with fuzzing and do a very intricate
-> multi-step dance to overcome false positives:
-> https://github.com/google/syzkaller/blob/5962a2dc88f6511b77100acdf687c1088f253f6b/executor/common_linux.h#L3407-L3478
-> and only report leaks that are reproducible.
-> So far I have not seen any noticable amount of false positives, and
-> you can see 70 already fixed leaks here:
-> https://syzkaller.appspot.com/upstream/fixed?manager=ci-upstream-gce-leak
-> https://syzkaller.appspot.com/upstream?manager=ci-upstream-gce-leak
+Paolo
 
-Thanks for the information and the good work here. If you have time, you
-could implement the stop_machine() kmemleak scan as well ;).
-
--- 
-Catalin
