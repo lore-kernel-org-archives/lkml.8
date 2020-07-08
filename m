@@ -2,126 +2,83 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5999C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92100C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6B2B20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594212113;
-	bh=c/XsfQ8Q8NBrug/VaLpBs23ypZgUA72MElXvNmnXXyo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hj6qNIrhmw4g2KMrRuBCMWWdggYxcSUHeoDgBg7s+83jSgPd4a7phY2cBfJqFzw4P
-	 rQldCCrsMuL4IXVqwnLqxN79xtaS8B05c3GCrjqHtNSNkc2fmZMMYMtXRJJ3MaER5h
-	 Lq2cKpG0FgQjQoOBpKm+Vg4fA1PpbdjV8aSSkISs=
+	by mail.kernel.org (Postfix) with ESMTP id 6CA4920772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:42:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FvJ4nHy+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbgGHMlv (ORCPT
+        id S1729379AbgGHMl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:41:51 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37587 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729127AbgGHMlv (ORCPT
+        Wed, 8 Jul 2020 08:41:59 -0400
+Received: from casper.infradead.org ([90.155.50.34]:34022 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728994AbgGHMl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:41:51 -0400
-Received: by mail-pj1-f68.google.com with SMTP id o22so1140049pjw.2;
-        Wed, 08 Jul 2020 05:41:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9NsmHNMKtMo6heddAwR0Jo8rbD18ro99vFEXj/9cbns=;
-        b=gU5v9fPXEQpDNDazXWVqBd8QqxNIHTLza+/bB592uGJNiZxNKB1il8bRnarzCNHNul
-         T5P4mYSRJ7zeYncoL7HwoOWzTibv3ZVbGbgTu4WhkcfsozCCz0UKblIxnufnqVpb1h2Z
-         0f/jTm5wG2tSRmSiFpe4sBUJEMVq//UvNIlLZVlCl3jn4yKt1mj6H5Rcvx3QZkwBVxS3
-         +4UUj41wG/lKJ5myY1HumBfIaWJ2ZnhKOql9QnZEL2yw4192aSKuWdYoSEYGUt9Mu367
-         vWNV1a+uYtM2Du5BhDK4ikua4/0ZD4+/Pu1pVGxXbG6eMCNer4fUZVTpGLoIniJPCSaT
-         cxbQ==
-X-Gm-Message-State: AOAM531TXk4nuewkAj5vO460c828ivetn/VCkfFbzvSFGVG2kHDoeaRL
-        Om6zA+NmuITN0s8KlFQsjs0=
-X-Google-Smtp-Source: ABdhPJwELa0l63JqQ1sECDcd+rWg4PVJ50CjKNicqhYyEjnD+tSNYgEHmSQ3lqhAlX4VC2yD5V81Fg==
-X-Received: by 2002:a17:90b:190d:: with SMTP id mp13mr9911274pjb.211.1594212110549;
-        Wed, 08 Jul 2020 05:41:50 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 204sm14369397pfx.3.2020.07.08.05.41.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:41:49 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id BF77C401AE; Wed,  8 Jul 2020 12:41:48 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 12:41:48 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 10/16] exec: Remove do_execve_file
-Message-ID: <20200708124148.GP13911@42.do-not-panic.com>
-References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
- <20200702164140.4468-10-ebiederm@xmission.com>
- <20200708063525.GC4332@42.do-not-panic.com>
+        Wed, 8 Jul 2020 08:41:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=nCaWLKXo+tr/eEJ5CbH+6GpvCXBBLXFgjESqdoFH3tI=; b=FvJ4nHy+63Lc4RMGwVlRUdox0d
+        YlekPZD8LYJe6Ih1OUzKrwioMvc3EBCIRgNTcqa7IBUnQUxmixBadyYV3MJwlxKaEWGbjq9K5JIpJ
+        nHNMpxfjQR8plBv7w/Q67/CQHvXJymxziz8U7zPSFZJWTl63xZuUJ4T5GKBAJsZKu8+xIxeDLAeiM
+        nnTUTCmVCyN9S7dq6I0h21Zr7dNkYdOQrVH+ccE5g8ilRES6fBmYUanRATFx9vXncd5Jc2sayMrQ9
+        TmdVl2fuFZWOoc5onK3a+p9qpGIm2C6yxeKF3kx6q+3GM/Ls+geotoOKf6nPC84Iub1YwTEqZ8tcJ
+        Pf15sI7w==;
+Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jt9OU-0002XX-Mu; Wed, 08 Jul 2020 12:41:48 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Song Liu <song@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 6/6] mmc: remove the call to check_disk_change
+Date:   Wed,  8 Jul 2020 14:25:46 +0200
+Message-Id: <20200708122546.214579-7-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200708122546.214579-1-hch@lst.de>
+References: <20200708122546.214579-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708063525.GC4332@42.do-not-panic.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 06:35:25AM +0000, Luis Chamberlain wrote:
-> On Thu, Jul 02, 2020 at 11:41:34AM -0500, Eric W. Biederman wrote:
-> > Now that the last callser has been removed remove this code from exec.
-> > 
-> > For anyone thinking of resurrecing do_execve_file please note that
-> > the code was buggy in several fundamental ways.
-> > 
-> > - It did not ensure the file it was passed was read-only and that
-> >   deny_write_access had been called on it.  Which subtlely breaks
-> >   invaniants in exec.
-> > 
-> > - The caller of do_execve_file was expected to hold and put a
-> >   reference to the file, but an extra reference for use by exec was
-> >   not taken so that when exec put it's reference to the file an
-> >   underflow occured on the file reference count.
-> 
-> Maybe its my growing love with testing, but I'm going to have to partly
-> blame here that we added a new API without any respective testing.
-> Granted, I recall this this patch set could have used more wider review
-> and a bit more patience... but just mentioning this so we try to avoid
-> new api-without-testing with more reason in the future.
-> 
-> But more importantly, *how* could we have caught this? Or how can we
-> catch this sort of stuff better in the future?
+The mmc driver doesn't support event notifications, which means
+that check_disk_change is a no-op.
 
-Of all the issues you pointed out with do_execve_file(), since upon
-review the assumption *by design* was that LSMs/etc would pick up issues
-with the file *prior* to processing, I think that this file reference
-count issue comes to my attention as the more serious issue which I
-wish we could address *first* before this crusade.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/mmc/core/block.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-So I have to ask, has anyone *really tried* to give a crack at fixing
-this refcount issue in a smaller way first? Alexei?
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index 4791c82f8f7c78..fa313b63413547 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -312,10 +312,7 @@ static int mmc_blk_open(struct block_device *bdev, fmode_t mode)
+ 
+ 	mutex_lock(&block_mutex);
+ 	if (md) {
+-		if (md->usage == 2)
+-			check_disk_change(bdev);
+ 		ret = 0;
+-
+ 		if ((mode & FMODE_WRITE) && md->read_only) {
+ 			mmc_blk_put(md);
+ 			ret = -EROFS;
+-- 
+2.26.2
 
-I'm not opposed to the removal of do_execve_file(), however if there
-is a reproducible crash / issue with the existing user, this sledge
-hammer seems a bit overkill for older kernels.
-
-  Luis
