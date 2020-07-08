@@ -2,122 +2,91 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A56FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB92C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1E12067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E83206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594225592;
+	bh=JyxcUBZKMuQeOWNkFD3IhGsYoihTVx8BuPWJrqQpGmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nDje2eUsBw2zpw1GqW6+GeFUoKPsplGZVSAynjcEKnMWOfacg6fpn82+249Aueg8l
+	 VJN/rRYKH4Z0m9WQKAdF8J8wPTGZrc4UApMWyJg3n3JoISXvihA868T3pWvlwaQB/f
+	 vGTMlEedBPepi31OF+39GmuGkhuJoK5a9FhbtVAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbgGHQYD (ORCPT
+        id S1730450AbgGHQ0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:24:03 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59193 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730116AbgGHQYD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:24:03 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jtCrU-0003RS-Or; Wed, 08 Jul 2020 16:23:56 +0000
-Date:   Wed, 8 Jul 2020 18:23:56 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     corbet@lwn.net, ksummit-discuss@lists.linuxfoundation.org,
+        Wed, 8 Jul 2020 12:26:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730141AbgGHQ0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:26:30 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B715B206C3;
+        Wed,  8 Jul 2020 16:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594225590;
+        bh=JyxcUBZKMuQeOWNkFD3IhGsYoihTVx8BuPWJrqQpGmk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JNx8j2Uhr1iDOFoDHbyJOSCbFwsG666DofJVdQt8Leua6b7WInFHxvgHNlz6RoFan
+         s0QZzX77x2EenoMHw3fPqu3oVlJoxO2nXWpXNmLMQnN4luF3q7A97OwfTZ3hf3Cl8v
+         N+E9FvkiQN/R/wSFFAXnJSsaXltX9d+4NEHdyvjA=
+Date:   Wed, 8 Jul 2020 17:26:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        SeongJae Park <sjpark@amazon.de>, linux-kernel@vger.kernel.org,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>, Dave Airlie <airlied@redhat.com>
-Subject: Re: [Ksummit-discuss] [PATCH v2] CodingStyle: Inclusive Terminology
-Message-ID: <20200708162356.nrdv7n3dkasjiyfu@wittgenstein>
-References: <159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v1 5/5] regmap: irq: Convert to use fwnode directly
+Message-ID: <20200708162624.GW4655@sirena.org.uk>
+References: <20200708162135.31010-1-andriy.shevchenko@linux.intel.com>
+ <20200708162135.31010-6-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="udzYTtuEmHLUHegf"
 Content-Disposition: inline
-In-Reply-To: <159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <20200708162135.31010-6-andriy.shevchenko@linux.intel.com>
+X-Cookie: Oh Dad!  We're ALL Devo!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 12:23:59AM -0700, Dan Williams wrote:
-> Linux maintains a coding-style and its own idiomatic set of terminology.
-> Update the style guidelines to recommend replacements for the terms
-> master/slave and blacklist/whitelist.
-> 
-> Link: http://lore.kernel.org/r/159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> Acked-by: Dave Airlie <airlied@redhat.com>
-> Acked-by: Kees Cook <keescook@chromium.org>
-> Acked-by: SeongJae Park <sjpark@amazon.de>
-> Signed-off-by: Olof Johansson <olof@lixom.net>
-> Signed-off-by: Chris Mason <clm@fb.clm>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
 
-Probably got lost somewhere:
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+--udzYTtuEmHLUHegf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Changes since v1 [1]
-> - Drop inclusive-terminology.rst, it is in the lore archives if the
->   arguments are needed for future debates, but otherwise no pressing
->   need to carry it in the tree (Linus, James)
-> 
-> - Update the recommended terms to include replacement for 'master' and
->   'whitelist' (Kees, Andy)
-> 
-> - Add 'target' as a replacement (Andy)
-> 
-> - Add 'device' as a replacement (Mark)
-> 
-> - Collect acks and signed-off-bys. Yes, the sign-offs are not reflective
->   of a submission chain, but I kept "Signed-off-by" if people offered
->   it.
-> 
-> - Non-change: I did not add explicit language as to what to do with
->   existing usages. My personal inclination is to prioritize this
->   coding-style cleanup higher than others, but the coding-style document
->   has typically not indicated policy on how cleanups are handled by
->   subsystems. It will be a case by case effort and consideration.
-> 
-> [1]: http://lore.kernel.org/r/159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com
-> 
->  Documentation/process/coding-style.rst |   13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-> index 2657a55c6f12..a5b61e9005ac 100644
-> --- a/Documentation/process/coding-style.rst
-> +++ b/Documentation/process/coding-style.rst
-> @@ -319,6 +319,19 @@ If you are afraid to mix up your local variable names, you have another
->  problem, which is called the function-growth-hormone-imbalance syndrome.
->  See chapter 6 (Functions).
->  
-> +For symbol names, avoid introducing new usage of 'master/slave' (or
-> +'slave' independent of 'master') and 'blacklist/whitelist'. Recommended
-> +replacements for 'master/slave' are: 'main/{secondary,subordinate}',
-> +'primary/replica', '{initiator,requester}/{target,responder}',
-> +'host/{device,proxy}', or 'leader/{performer,follower}'. Recommended
-> +replacements for 'blacklist/whitelist' are: 'denylist/allowlist' or
-> +'blocklist/passlist'.
-> +
-> +Exceptions for introducing new usage is to maintain a userspace ABI/API,
-> +or when updating code for an existing (as of 2020) hardware or protocol
-> +specification that mandates those terms. For new specifications
-> +translate specification usage of the terminology to the kernel coding
-> +standard where possible.
->  
->  5) Typedefs
->  -----------
-> 
-> _______________________________________________
-> Ksummit-discuss mailing list
-> Ksummit-discuss@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
+On Wed, Jul 08, 2020 at 07:21:35PM +0300, Andy Shevchenko wrote:
+> Since IRQ domain provides an API to take fwnode as a parameter,
+> switch regmap IRQ to use that directly instead of be limited
+> to OF case only.
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--udzYTtuEmHLUHegf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8F87AACgkQJNaLcl1U
+h9A5MAf/Wxgn7w1ZCHPlUZoQc9EGM+aO67izkz5ZP1zWHDO4BRc3vogrLmMQ1cfF
+yUYcG8scWwlnlllUmMK0VLwi8yx9/xomocSBhTITdQ+LN52bktvEShDfh0WtLbNr
+ZsDM8j6Z9ya+TgQNOqdaBLnW0g3IueAf/S/LjGFeU/SseIBzNsblggJBqxrp76Ko
+UpvFMP60/7pngnv0eQi39pdSrJy03KbhzdyxP/GdCnf+YjlfJSFL25Y735oe7KKk
+Y3SdCbBR+KLGcAJ9P/mqPrNP6TGk+O0tLNTT3GtWXd79ZXes9DV4TsebTb93FSgm
+L8kz0k7ECK9i7UHdiOFKFpSg8Zi2HA==
+=eAwq
+-----END PGP SIGNATURE-----
+
+--udzYTtuEmHLUHegf--
