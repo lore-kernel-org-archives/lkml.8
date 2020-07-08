@@ -2,93 +2,85 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8908BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A432206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7E5206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mquyLh+T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgGHQUY (ORCPT
+        id S1730484AbgGHQVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:20:24 -0400
-Received: from mga06.intel.com ([134.134.136.31]:21896 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730278AbgGHQUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:20:22 -0400
-IronPort-SDR: OC2kW4fLquX+oPNMLHJf/9msQBZDYEEqnWInFz4Vtsh91B42yP65AU5hJAS/h+bVU7VN3XINJC
- Y9phUg9/4qqQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="209379719"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="209379719"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 09:20:22 -0700
-IronPort-SDR: gNf7C9Z2YX16Oxep5C8FDryKYcNh04YCXz9q1EE5RqNXBD0PzTqhyFoji8C62lK+bDl3ZWfBux
- m0qh6WBLiqrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="283846524"
-Received: from jschirra-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.201])
-  by orsmga006.jf.intel.com with ESMTP; 08 Jul 2020 09:20:18 -0700
-Date:   Wed, 8 Jul 2020 19:20:17 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Masahisa Kojima <masahisa.kojima@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ardb@kernel.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
-Subject: Re: [PATCH v3 0/2] synquacer: add TPM support
-Message-ID: <20200708162017.GB549022@linux.intel.com>
-References: <20200708131424.18729-1-masahisa.kojima@linaro.org>
+        Wed, 8 Jul 2020 12:21:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730133AbgGHQVA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:21:00 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 672FCC061A0B;
+        Wed,  8 Jul 2020 09:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=IFxG3I++S1fiEvjW5wx8/JfNFqGKg4LDaTs+WrEu4Ro=; b=mquyLh+TNq/82IQ6Jgx5yTBq2U
+        bE2LLEuCKNdN+kfM2lzxwvcQHnhup7SR98CwZfTexIjKhg2nlW2kzrajjqm4DW0Fv9Kpx51V1rqzM
+        9FjbU2nqd8VWYxcc7JBl1P/7p3MRiuwvpKe4xbj68c+9zvGBa9OKadTdSzZR9v77wU+FZmKxoG5pL
+        9LkA2Sn6V7aPdzeuLSaGRVEdJr+SjDumZITREAxphT+zabMtEP9PcAh6Aa51ZiXE/W+teODrsBIXb
+        P+H2JUzM/iEBjsGr120SF/hVbdDNYfLNY8FtCF0vISMdVxLYv4Do6UhqL3qlMBHT2zc2I1nOJzDOQ
+        Kn1FZVmw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtCoY-0001ag-W5; Wed, 08 Jul 2020 16:20:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6249E30047A;
+        Wed,  8 Jul 2020 18:20:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 47897235D47FC; Wed,  8 Jul 2020 18:20:53 +0200 (CEST)
+Date:   Wed, 8 Jul 2020 18:20:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        linux-efi <linux-efi@vger.kernel.org>
+Subject: Re: [GIT PULL] EFI fixes
+Message-ID: <20200708162053.GU4800@hirez.programming.kicks-ass.net>
+References: <20200628182601.GA84577@gmail.com>
+ <CAHk-=wgD+q+oDdtukYC74_cDX5i0Ynf0GLhuNe2Faaokejj6fQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708131424.18729-1-masahisa.kojima@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAHk-=wgD+q+oDdtukYC74_cDX5i0Ynf0GLhuNe2Faaokejj6fQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 10:14:22PM +0900, Masahisa Kojima wrote:
-> This adds support for driving the TPM on Socionext SynQuacer platform
-> using the driver for a memory mapped TIS frame.
+On Sun, Jun 28, 2020 at 11:57:18AM -0700, Linus Torvalds wrote:
+> On Sun, Jun 28, 2020 at 11:26 AM Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> > - Fix build regression on v4.8 and older
 > 
-> v3:
-> - prepare new module to handle TPM MMIO access on SynQuacer platform
+> Interesting.
 > 
-> v2:
-> - don't use read/write_bytes() to implement read/write16/32 since that uses
->   the wrong address
+> It's perhaps yet another reason to just skip gcc-4.8 too, since
+> apparently 4.9 works.
 > 
-> Cc: jarkko.sakkinen@linux.intel.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: ardb@kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-integrity@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: peterhuewe@gmx.de
-> Cc: jgg@ziepe.ca
-> 
-> Masahisa Kojima (2):
->   tpm: tis: add support for MMIO TPM on SynQuacer
->   dt-bindings: Add SynQucer TPM MMIO as a trivial device
-> 
->  .../devicetree/bindings/trivial-devices.yaml  |   2 +
->  drivers/char/tpm/Kconfig                      |  12 ++
->  drivers/char/tpm/Makefile                     |   1 +
->  drivers/char/tpm/tpm_tis_synquacer.c          | 196 ++++++++++++++++++
->  4 files changed, 211 insertions(+)
->  create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
-> 
-> -- 
-> 2.20.1
-> 
+> gcc-4.9 really has a lot of advantages. It's where (I think) gcc
+> basically supports all C11 things, including _Generic() but also
+> __auto_type.
 
-Overally the code looks great. You've run it through checkpatch.pl?
++1
 
-/Jarkko
+Anybody for nay, or should we just do this?
