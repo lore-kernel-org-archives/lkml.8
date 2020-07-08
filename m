@@ -4,72 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC85FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F60C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCEE207DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D96720772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LdN2LCty"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yzdKPR8L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbgGHMDK (ORCPT
+        id S1729245AbgGHMDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:03:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55526 "EHLO
+        Wed, 8 Jul 2020 08:03:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729213AbgGHMDH (ORCPT
+        with ESMTP id S1729229AbgGHMDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:03:07 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2BFAC08E6DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:03:06 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z15so37395308wrl.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:03:06 -0700 (PDT)
+        Wed, 8 Jul 2020 08:03:10 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA428C08E763
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:03:09 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id q15so2728534wmj.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:03:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=g3n7m55npDtDZS6ysg5UOur5QEJUSKE4xUdCSnXfF9I=;
-        b=LdN2LCtyGTzzQ+qlGdQvFqe+2zPotqSI9Imp8iDHZFNi/oyIhiVCezyF+yih5fiXay
-         A/klLsVhEKRZbPDNWDywrbfBE8CDLi8fS9P6dR0aWlzRH/cNKr7H+KHD1kUGKWCAddpL
-         EUNPqMf0EjIpSibosimkcdqLLGZKRN43OMT3YASWzcZ6aXGL5MG8yxS+fcn5TjBTgvf/
-         VLs7o/Nc9WIz8moWJMc9F2QkEp5/JrWr2Tt48FvzDgduRMy3rSQZoqr5rlYAbqVGKLb9
-         YcOEnf0YWXK1q8a3jhwdBcGl8/3ghj0+j90TDSbUxnuzoj1VZlfOsxeXfn1RuJKIL4in
-         8QRA==
+        bh=d7D7AfDQQG73fSw4f21gOz4vhVntWScnapCoKvjgVSM=;
+        b=yzdKPR8LmjXafIM30grkb0E+LW79z46rqDXm9mEWI86cQMpo85admAyJckDe32ioy3
+         Y+/tQzNQW+VY1amhzFzVpMR7XyOYzzrKFTG/xS8UjMQ8crFfdCVlaTGUxw9Fbx9khpTW
+         Cu6D4FUjxcj0ovqqy9n8v+274LaGFqN8iWjbMBXYsUgBAZ4otDdZ0gCGJFsFiItATOvW
+         bvoCE4xtS+DO82Pzz15fBgxnG+wqQE3nlWVnhvSGdHLafONqrnn4pxfqv1LZHT84O/lp
+         So9qQYGVA5Xf8pRvRF/gUz3BJxNWSi9GQFPbyzIhhC/X5X8AWUIuwGC7Vz+sWOcK0y4o
+         qy1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=g3n7m55npDtDZS6ysg5UOur5QEJUSKE4xUdCSnXfF9I=;
-        b=tey/VOy+7Gp3gACJ1ArsFQrQRSkxrpyCURJU2dqjS7P3+bffUNys7f53E9/Ygvqyie
-         plkY/WyobQ9OK4e9FQQ6BX+hbyATbOlifSPGSyvhJzf/WsTG80Q7BrdvUzWe/euov8r8
-         myaYrsJmo3SD3mctzWNsD6TMzW7Ofx7So2JuqcxuaclWQWy9ZYpZIOq5hCn84fNN241F
-         XUh6lSJ2Tk9agz9YWFJ4EdijU48Art6uJyqJB/zQ0tia+LLnz4YXyHeLMmPP/iHurnc6
-         g8ROUcvd59+tTbkjdQ1T13n+g+n8D9Ylk3ZdbjGIWe7XRVsqjeNslX+I0w1oai0ItErp
-         X2Kw==
-X-Gm-Message-State: AOAM5317SCoePTLsWsR8FWHYwYTomEHU3MxCpsiW/P8gPU6ubDaIWe71
-        sFKXQiHtvGed+dWeKqGuP6cEsw==
-X-Google-Smtp-Source: ABdhPJyJeKaM/57Fr+Eq5QRy28Y3Git8JNtamFxzD6xH0ADsZksp3OmxVWOkjxgbV0mq32FaBVDgKA==
-X-Received: by 2002:adf:e948:: with SMTP id m8mr59729897wrn.398.1594209785629;
-        Wed, 08 Jul 2020 05:03:05 -0700 (PDT)
+        bh=d7D7AfDQQG73fSw4f21gOz4vhVntWScnapCoKvjgVSM=;
+        b=BU0wsEnbUqp4ePeUAvPtByP95tVS95QsaFdmhHDk7BP3FN6AplbLEI+MiEpiqBl9aW
+         l19T+mu+OsOZcKOpyUt7rElotzgRJc1pxoIOigo4X5HhckvtKKuQTXxB+sIAHqxXVwDZ
+         M119K36QTo/1DXN+IXapt/Ve6rdU5cy7lDnNXk9qhjvs7PZllAOMysRYCu/NUhrKjXS+
+         E1UhAypr+F4ffNO9DsVnSV2oX3LgeNl2FGoJBXjtysJbcY0XpI6lZBsLpvwjYdFk5VyS
+         DkiHdQrFG0Jwk2gz7saj8M2MUWtx99iiAz+7BdxeH1dLuQE06O8l6A8MdRlhk0i13k96
+         MTcA==
+X-Gm-Message-State: AOAM530zyIdZ0RaKwJH9TLqGhtISc3bkCPqtoid6NwQVI3cuhAcwexu7
+        PiIOJX9qtu+k9KXYdjcoaOHprw==
+X-Google-Smtp-Source: ABdhPJzdvUY503n425HeR/FqzogV0LWtQyotNCGukbYwNiIlFSv32ZgKGIiJMG2t9LP/0bHWyzltXg==
+X-Received: by 2002:a1c:7d56:: with SMTP id y83mr9527216wmc.154.1594209788425;
+        Wed, 08 Jul 2020 05:03:08 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.03.04
+        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.03.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:03:04 -0700 (PDT)
+        Wed, 08 Jul 2020 05:03:07 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Kumar Santhanam <AnandKumar.Santhanam@pmcs.com>,
-        Sangeetha Gnanasekaran <Sangeetha.Gnanasekaran@pmcs.com>,
-        Nikith Ganigarakoppal <Nikith.Ganigarakoppal@pmcs.com>
-Subject: [PATCH 27/30] scsi: pm8001: pm8001_init: Demote obvious misuse of kerneldoc and update others
-Date:   Wed,  8 Jul 2020 13:02:18 +0100
-Message-Id: <20200708120221.3386672-28-lee.jones@linaro.org>
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Subject: [PATCH 29/30] scsi: aacraid: aachba: Fix a bunch of function doc formatting errors
+Date:   Wed,  8 Jul 2020 13:02:20 +0100
+Message-Id: <20200708120221.3386672-30-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708120221.3386672-1-lee.jones@linaro.org>
 References: <20200708120221.3386672-1-lee.jones@linaro.org>
@@ -80,144 +78,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-More bitrot issues with function documentation not keeping up with API changes.
+And a few missing/excessive parameter descriptions.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/pm8001/pm8001_init.c:64: warning: cannot understand function prototype: 'const struct pm8001_chip_info pm8001_chips[] = '
- drivers/scsi/pm8001/pm8001_init.c:86: warning: cannot understand function prototype: 'struct scsi_host_template pm8001_sht = '
- drivers/scsi/pm8001/pm8001_init.c:115: warning: cannot understand function prototype: 'struct sas_domain_function_template pm8001_transport_ops = '
- drivers/scsi/pm8001/pm8001_init.c:212: warning: Function parameter or member 'irq' not described in 'pm8001_interrupt_handler_msix'
- drivers/scsi/pm8001/pm8001_init.c:237: warning: Function parameter or member 'irq' not described in 'pm8001_interrupt_handler_intx'
- drivers/scsi/pm8001/pm8001_init.c:265: warning: Function parameter or member 'ent' not described in 'pm8001_alloc'
- drivers/scsi/pm8001/pm8001_init.c:624: warning: Function parameter or member 'pm8001_ha' not described in 'pm8001_init_sas_add'
- drivers/scsi/pm8001/pm8001_init.c:624: warning: Excess function parameter 'chip_info' description in 'pm8001_init_sas_add'
- drivers/scsi/pm8001/pm8001_init.c:900: warning: Function parameter or member 'pm8001_ha' not described in 'pm8001_setup_msix'
- drivers/scsi/pm8001/pm8001_init.c:900: warning: Excess function parameter 'chip_info' description in 'pm8001_setup_msix'
- drivers/scsi/pm8001/pm8001_init.c:900: warning: Excess function parameter 'irq_handler' description in 'pm8001_setup_msix'
- drivers/scsi/pm8001/pm8001_init.c:981: warning: Function parameter or member 'pm8001_ha' not described in 'pm8001_request_irq'
- drivers/scsi/pm8001/pm8001_init.c:981: warning: Excess function parameter 'chip_info' description in 'pm8001_request_irq'
+ drivers/scsi/aacraid/aachba.c:358: warning: Function parameter or member 'dev' not described in 'aac_get_config_status'
+ drivers/scsi/aacraid/aachba.c:358: warning: Function parameter or member 'commit_flag' not described in 'aac_get_config_status'
+ drivers/scsi/aacraid/aachba.c:358: warning: Excess function parameter 'common' description in 'aac_get_config_status'
+ drivers/scsi/aacraid/aachba.c:450: warning: Function parameter or member 'dev' not described in 'aac_get_containers'
+ drivers/scsi/aacraid/aachba.c:450: warning: Excess function parameter 'common' description in 'aac_get_containers'
+ drivers/scsi/aacraid/aachba.c:568: warning: Function parameter or member 'scsicmd' not described in 'aac_get_container_name'
+ drivers/scsi/aacraid/aachba.c:796: warning: Function parameter or member 'scsicmd' not described in 'aac_probe_container_callback1'
+ drivers/scsi/aacraid/aachba.c:796: warning: Excess function parameter 'dev' description in 'aac_probe_container_callback1'
+ drivers/scsi/aacraid/aachba.c:796: warning: Excess function parameter 'cid' description in 'aac_probe_container_callback1'
+ drivers/scsi/aacraid/aachba.c:1105: warning: Function parameter or member 'scsicmd' not described in 'aac_get_container_serial'
+ drivers/scsi/aacraid/aachba.c:1961: warning: Excess function parameter 'phys_luns' description in 'aac_set_safw_attr_all_targets'
+ drivers/scsi/aacraid/aachba.c:1961: warning: Excess function parameter 'rescan' description in 'aac_set_safw_attr_all_targets'
+ drivers/scsi/aacraid/aachba.c:3394: warning: Cannot understand  *
+ on line 3394 - I thought it was a doc line
+ drivers/scsi/aacraid/aachba.c:3687: warning: Cannot understand  *
+ on line 3687 - I thought it was a doc line
+ drivers/scsi/aacraid/aachba.c:3752: warning: Cannot understand  *
+ on line 3752 - I thought it was a doc line
+ drivers/scsi/aacraid/aachba.c:3795: warning: Cannot understand  *
+ on line 3795 - I thought it was a doc line
 
-Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
-Cc: Kumar Santhanam <AnandKumar.Santhanam@pmcs.com>
-Cc: Sangeetha Gnanasekaran <Sangeetha.Gnanasekaran@pmcs.com>
-Cc: Nikith Ganigarakoppal <Nikith.Ganigarakoppal@pmcs.com>
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/pm8001/pm8001_init.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/scsi/aacraid/aachba.c | 17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/scsi/pm8001/pm8001_init.c b/drivers/scsi/pm8001/pm8001_init.c
-index 9e99262a2b9dd..20fa96cbc9d3d 100644
---- a/drivers/scsi/pm8001/pm8001_init.c
-+++ b/drivers/scsi/pm8001/pm8001_init.c
-@@ -57,7 +57,7 @@ MODULE_PARM_DESC(link_rate, "Enable link rate.\n"
- 
- static struct scsi_transport_template *pm8001_stt;
- 
--/**
-+/*
-  * chip info structure to identify chip key functionality as
-  * encryption available/not, no of ports, hw specific function ref
-  */
-@@ -80,7 +80,7 @@ LIST_HEAD(hba_list);
- 
- struct workqueue_struct *pm8001_wq;
+diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
+index 2b868f8db8ffe..7ae1e545a255c 100644
+--- a/drivers/scsi/aacraid/aachba.c
++++ b/drivers/scsi/aacraid/aachba.c
+@@ -561,7 +561,7 @@ static void get_container_name_callback(void *context, struct fib * fibptr)
+ 	scsicmd->scsi_done(scsicmd);
+ }
  
 -/**
 +/*
-  * The main structure which LLDD must register for scsi core.
+  *	aac_get_container_name	-	get container name, none blocking.
   */
- static struct scsi_host_template pm8001_sht = {
-@@ -109,7 +109,7 @@ static struct scsi_host_template pm8001_sht = {
- 	.track_queue_depth	= 1,
- };
- 
--/**
-+/*
-  * Sas layer call this function to execute specific task.
-  */
- static struct sas_domain_function_template pm8001_transport_ops = {
-@@ -129,9 +129,9 @@ static struct sas_domain_function_template pm8001_transport_ops = {
- };
+ static int aac_get_container_name(struct scsi_cmnd * scsicmd)
+@@ -786,8 +786,7 @@ static int _aac_probe_container(struct scsi_cmnd * scsicmd, int (*callback)(stru
  
  /**
-- *pm8001_phy_init - initiate our adapter phys
-- *@pm8001_ha: our hba structure.
-- *@phy_id: phy id.
-+ * pm8001_phy_init - initiate our adapter phys
-+ * @pm8001_ha: our hba structure.
-+ * @phy_id: phy id.
+  *	aac_probe_container		-	query a logical volume
+- *	@dev: device to query
+- *	@cid: container identifier
++ * @scsicmd: the scsi command block
+  *
+  *	Queries the controller about the given volume. The volume information
+  *	is updated in the struct fsa_dev_info structure rather than returned.
+@@ -1098,7 +1097,7 @@ static void get_container_serial_callback(void *context, struct fib * fibptr)
+ 	scsicmd->scsi_done(scsicmd);
+ }
+ 
+-/**
++/*
+  *	aac_get_container_serial - get container serial, none blocking.
   */
- static void pm8001_phy_init(struct pm8001_hba_info *pm8001_ha, int phy_id)
- {
-@@ -155,9 +155,8 @@ static void pm8001_phy_init(struct pm8001_hba_info *pm8001_ha, int phy_id)
+ static int aac_get_container_serial(struct scsi_cmnd * scsicmd)
+@@ -1952,8 +1951,6 @@ static int aac_get_safw_attr_all_targets(struct aac_dev *dev)
+ /**
+  *	aac_set_safw_attr_all_targets-	update current hba map with data from FW
+  *	@dev:	aac_dev structure
+- *	@phys_luns: FW information from report phys luns
+- *	@rescan: Indicates scan type
+  *
+  *	Update our hba map with the information gathered from the FW
+  */
+@@ -3391,15 +3388,12 @@ int aac_dev_ioctl(struct aac_dev *dev, unsigned int cmd, void __user *arg)
  }
  
  /**
-- *pm8001_free - free hba
-- *@pm8001_ha:	our hba structure.
 - *
-+ * pm8001_free - free hba
-+ * @pm8001_ha:	our hba structure.
-  */
- static void pm8001_free(struct pm8001_hba_info *pm8001_ha)
- {
-@@ -205,6 +204,7 @@ static void pm8001_tasklet(unsigned long opaque)
-  * pm8001_interrupt_handler_msix - main MSIX interrupt handler.
-  * It obtains the vector number and calls the equivalent bottom
-  * half or services directly.
-+ * @irq: interrupt number
-  * @opaque: the passed outbound queue/vector. Host structure is
-  * retrieved from the same.
-  */
-@@ -230,6 +230,7 @@ static irqreturn_t pm8001_interrupt_handler_msix(int irq, void *opaque)
- 
- /**
-  * pm8001_interrupt_handler_intx - main INTx interrupt handler.
-+ * @irq: interrupt number
-  * @dev_id: sas_ha structure. The HBA is retrieved from sas_has structure.
-  */
- 
-@@ -257,8 +258,8 @@ static u32 pm8001_request_irq(struct pm8001_hba_info *pm8001_ha);
- 
- /**
-  * pm8001_alloc - initiate our hba structure and 6 DMAs area.
-- * @pm8001_ha:our hba structure.
-- *
-+ * @pm8001_ha: our hba structure.
-+ * @ent: PCI device ID structure to match on
-  */
- static int pm8001_alloc(struct pm8001_hba_info *pm8001_ha,
- 			const struct pci_device_id *ent)
-@@ -615,7 +616,7 @@ static void  pm8001_post_sas_ha_init(struct Scsi_Host *shost,
- 
- /**
-  * pm8001_init_sas_add - initialize sas address
-- * @chip_info: our ha struct.
-+ * @pm8001_ha: our ha struct.
+  * aac_srb_callback
+  * @context: the context set in the fib - here it is scsi cmd
+  * @fibptr: pointer to the fib
   *
-  * Currently we just set the fixed SAS address to our HBA,for manufacture,
-  * it should read from the EEPROM
-@@ -893,8 +894,7 @@ static int pm8001_configure_phy_settings(struct pm8001_hba_info *pm8001_ha)
- #ifdef PM8001_USE_MSIX
- /**
-  * pm8001_setup_msix - enable MSI-X interrupt
-- * @chip_info: our ha struct.
-- * @irq_handler: irq_handler
-+ * @pm8001_ha: our ha struct.
+  * Handles the completion of a scsi command to a non dasd device
+- *
   */
- static u32 pm8001_setup_msix(struct pm8001_hba_info *pm8001_ha)
+-
+ static void aac_srb_callback(void *context, struct fib * fibptr)
  {
-@@ -975,7 +975,7 @@ static u32 pm8001_setup_irq(struct pm8001_hba_info *pm8001_ha)
+ 	struct aac_srb_reply *srbreply;
+@@ -3684,13 +3678,11 @@ static void hba_resp_task_failure(struct aac_dev *dev,
+ }
  
  /**
-  * pm8001_request_irq - register interrupt
-- * @chip_info: our ha struct.
-+ * @pm8001_ha: our ha struct.
+- *
+  * aac_hba_callback
+  * @context: the context set in the fib - here it is scsi cmd
+  * @fibptr: pointer to the fib
+  *
+  * Handles the completion of a native HBA scsi command
+- *
   */
- static u32 pm8001_request_irq(struct pm8001_hba_info *pm8001_ha)
+ void aac_hba_callback(void *context, struct fib *fibptr)
  {
+@@ -3749,14 +3741,12 @@ void aac_hba_callback(void *context, struct fib *fibptr)
+ }
+ 
+ /**
+- *
+  * aac_send_srb_fib
+  * @scsicmd: the scsi command block
+  *
+  * This routine will form a FIB and fill in the aac_srb from the
+  * scsicmd passed in.
+  */
+-
+ static int aac_send_srb_fib(struct scsi_cmnd* scsicmd)
+ {
+ 	struct fib* cmd_fibcontext;
+@@ -3792,7 +3782,6 @@ static int aac_send_srb_fib(struct scsi_cmnd* scsicmd)
+ }
+ 
+ /**
+- *
+  * aac_send_hba_fib
+  * @scsicmd: the scsi command block
+  *
 -- 
 2.25.1
 
