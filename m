@@ -2,122 +2,182 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D3BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C16C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 005A92078A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:47:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QU2Zpel0"
+	by mail.kernel.org (Postfix) with ESMTP id BEE2020786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594205244;
+	bh=iri/PepGpXQz22ZI8HXioBgLrMkorexXAcPmHeVNvZY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=v+9bWLVGgatsQwMB34cWA8D0VPiEVtdcYGoJOT7uVyLog3GuyLpW1PGZ3f9jW5IaI
+	 3ftlY42WcDO3Zw6puQQ9FpnlDC6SZwiu98vCjxo1BeoU0qP5P7y4mwop1lkBjLyU3R
+	 gyFq0CrUF1Xo4sC95tkjcEorPVjHNbPiScnfrPm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725972AbgGHKrB (ORCPT
+        id S1728592AbgGHKrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:47:01 -0400
-Received: from ozlabs.org ([203.11.71.1]:58647 "EHLO ozlabs.org"
+        Wed, 8 Jul 2020 06:47:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgGHKrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:47:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726586AbgGHKrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:47:23 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1wwd55j4z9sRK;
-        Wed,  8 Jul 2020 20:46:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594205218;
-        bh=ZrW8RmkJHtrZxVS8lqjQ/q55l95r6iO1EK0yC9UCkUQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QU2Zpel0ZeE/X4pnLb6kXHkE0cVCIab746XfiGyxT2L8k2zQkX4oUwdxG12e2zMZR
-         fgKSOk/byGq729TBGJO08TT6NdonSaTymD0slThREnbPypHqLFeMtFzZ6QixJUBfYG
-         hBMoto0nQbqTNm8cdFU5IaxrP60xhqoKGE9kcn7KCMGORiPcplf7uWorWJwf5mXnkm
-         dcRE8i6oD5YJSpW8SnbIn6AZ837Ulj4zJ3PoV4umHLt7EV/USxTLYqG/vlBf0mpoHg
-         qPsOcSV6JmnrKOsgBJT98Twpoe+TPJcKSEiAZTA5rE4fMNpp3WGlX5gyAlgDpYed2d
-         5oJ9AA88Sc9sg==
-Date:   Wed, 8 Jul 2020 20:46:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Satya Tangirala <satyat@google.com>,
-        Waiman Long <longman@redhat.com>
-Subject: linux-next: manual merge of the akpm-current tree with the fscrypt
- tree
-Message-ID: <20200708204654.41f1a274@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 30BAF20772;
+        Wed,  8 Jul 2020 10:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594205242;
+        bh=iri/PepGpXQz22ZI8HXioBgLrMkorexXAcPmHeVNvZY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aYYCZK2GEHSnpkv7KzN+EX5MjRK9BtJ6qi/Bba1QuBKJ6iiL8CmELZ+CnTa21jWnn
+         6cDTa79gxnK95p2nB80/rO8rbZBJooPylDdt61NaWmwpa/iu64W0TTkDEpVJYaTWCI
+         DYiEGaOmV83nLapFAf+yDAthegKC1XJg9Mn1654I=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jt7bk-00A3D1-LS; Wed, 08 Jul 2020 11:47:20 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9aFPucP7BhW5i5D+_zdtUV7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 08 Jul 2020 11:47:20 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
+        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
+        Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
+ for PRUSS interrupts
+In-Reply-To: <CAMxfBF6Th+zKOmogA5phkh21tSUzutokCgU+pv0Eh-sDk=1Hbg@mail.gmail.com>
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org>
+ <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
+ <12db6d22c12369b6d64f410aa2434b03@kernel.org>
+ <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
+ <53d39d8fbd63c6638dbf0584c7016ee0@kernel.org>
+ <CAMxfBF6Th+zKOmogA5phkh21tSUzutokCgU+pv0Eh-sDk=1Hbg@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <f11097c321b62e7f8ba904dc2907d4e0@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com, afd@ti.com, rogerq@ti.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9aFPucP7BhW5i5D+_zdtUV7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020-07-08 08:04, Grzegorz Jaszczyk wrote:
+> On Sun, 5 Jul 2020 at 22:45, Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> On 2020-07-05 14:26, Grzegorz Jaszczyk wrote:
+>> > On Sat, 4 Jul 2020 at 11:39, Marc Zyngier <maz@kernel.org> wrote:
+>> >>
+>> >> On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
+>> 
+>> [...]
+>> 
+>> >> It still begs the question: if the HW can support both edge and level
+>> >> triggered interrupts, why isn't the driver supporting this diversity?
+>> >> I appreciate that your HW may only have level interrupts so far, but
+>> >> what guarantees that this will forever be true? It would imply a
+>> >> change
+>> >> in the DT binding, which isn't desirable.
+>> >
+>> > Ok, I've got your point. I will try to come up with something later
+>> > on. Probably extending interrupt-cells by one and passing interrupt
+>> > type will be enough for now. Extending this driver to actually support
+>> > it can be handled later if needed. Hope it works for you.
+>> 
+>> Writing a set_type callback to deal with this should be pretty easy.
+>> Don't delay doing the right thing.
+> 
+> Ok.
+> 
+>> 
+>> [...]
+>> 
+>> >> >> > +             hwirq = hipir & GENMASK(9, 0);
+>> >> >> > +             virq = irq_linear_revmap(intc->domain, hwirq);
+>> >> >>
+>> >> >> And this is where I worry. You seems to have a single irqdomain
+>> >> >> for all the muxes. Are you guaranteed that you will have no
+>> >> >> overlap between muxes? And please use irq_find_mapping(), as
+>> >> >> I have top-secret plans to kill irq_linear_revmap().
+>> >> >
+>> >> > Regarding irq_find_mapping - sure.
+>> >> >
+>> >> > Regarding irqdomains:
+>> >> > It is a single irqdomain since the hwirq (system event) can be mapped
+>> >> > to different irq_host (muxes). Patch #6
+>> >> > https://lkml.org/lkml/2020/7/2/616 implements and describes how input
+>> >> > events can be mapped to some output host interrupts through 2 levels
+>> >> > of many-to-one mapping i.e. events to channel mapping and channels to
+>> >> > host interrupts. Mentioned implementation ensures that specific system
+>> >> > event (hwirq) can be mapped through PRUSS specific channel into a
+>> >> > single host interrupt.
+>> >>
+>> >> Patch #6 is a nightmare of its own, and I haven't fully groked it yet.
+>> >> Also, this driver seems to totally ignore the 2-level routing. Where
+>> >> is it set up? map/unmap in this driver do exactly *nothing*, so
+>> >> something somewhere must set it up.
+>> >
+>> > The map/unmap is updated in patch #6 and it deals with those 2-level
+>> > routing setup. Map is responsible for programming the Channel Map
+>> > Registers (CMRx) and Host-Interrupt Map Registers (HMRx) basing on
+>> > provided configuration from the one parsed in the xlate function.
+>> > Unmap undo whatever was done on the map. More details can be found in
+>> > patch #6.
+>> >
+>> > Maybe it would be better to squash patch #6 with this one so it would
+>> > be less confusing. What is your advice?
+>> 
+>> So am I right in understanding that without patch #6, this driver does
+>> exactly nothing? If so, it has been a waste of review time.
+>> 
+>> Please split patch #6 so that this driver does something useful
+>> for Linux, without any of the PRU interrupt routing stuff. I want
+>> to see a Linux-only driver that works and doesn't rely on any other
+>> exotic feature.
+>> 
+> 
+> Patch #6 provides PRU specific 2-level routing setup. This step is
+> required and it is part of the entire patch-set. Theoretically routing
+> setup could be done by other platform driver (not irq one) or e.g. by
+> PRU firmware. In such case this driver would be functional without
+> patch #6 but I do not think it would be proper.
 
-Hi all,
+Then this whole driver is non-functional until the last patch that
+comes with the PRU-specific "value-add".
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+[...]
 
-  fs/crypto/keysetup_v1.c
+> I am open to any suggestion if there is a better way of handling
+> 2-level routing. I will also appreciate if you could elaborate about
+> issues that you see with patch #6.
 
-between commit:
+The two level routing has to be part of this (or another) irqchip
+driver (specially given that it appears to me like another set of
+crossbar). There should only be a *single* binding for all interrupts,
+including those targeting the PRU (you seem to have two).
 
-  73f43e98d01e ("fscrypt: add inline encryption support")
+And the non-CPU interrupt code has to be in its own patch, because
+it is pretty borderline anyway (I'm still not completely convinced
+this is Linux's job).
 
-from the fscrypt tree and commit:
-
-  f15de703d326 ("mm, treewide: rename kzfree() to kfree_sensitive()")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/crypto/keysetup_v1.c
-index a52686729a67,c8a930f8faf2..000000000000
---- a/fs/crypto/keysetup_v1.c
-+++ b/fs/crypto/keysetup_v1.c
-@@@ -154,8 -154,8 +154,8 @@@ struct fscrypt_direct_key=20
-  static void free_direct_key(struct fscrypt_direct_key *dk)
-  {
-  	if (dk) {
- -		crypto_free_skcipher(dk->dk_ctfm);
- +		fscrypt_destroy_prepared_key(&dk->dk_key);
-- 		kzfree(dk);
-+ 		kfree_sensitive(dk);
-  	}
-  }
- =20
-
---Sig_/9aFPucP7BhW5i5D+_zdtUV7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8FpB4ACgkQAVBC80lX
-0Gze0Qf+JzrxbOvydfTY/7zTdhvR8lZBtHfik/iJPyI8CzQHdSGyA9JrKghAPGd6
-ZAQndBhorBHJpKcwkx2lwdbTXRyiZLLU6Ns9Blq6zSiSrZ55Qaku9j6MQcAtwMTM
-vKHHnlhSkjZC/qx51jVo04w1Je4sl0RO5NMd8nnGxi4HOKLWrL6M5sKAfQr0W7kW
-pw/Ze5wrrgPJZDZIuZOA54u1o/B0FMJWs9sYjCWXUs4WPPI+SjeG6DFYAtpBu6jM
-iUCMsM5f/txCL6MoYniVFW7Kgbapgty7dV7uUDZ4QrXc7skkpQ9qdnpQZupmdWdt
-WvrQAuCi6zFgzDwIfpOPKLNfsNWASg==
-=OdH9
------END PGP SIGNATURE-----
-
---Sig_/9aFPucP7BhW5i5D+_zdtUV7--
+         N,
+-- 
+Jazz is not dead. It just smells funny...
