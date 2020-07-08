@@ -2,97 +2,98 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F26C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D98320659
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325872078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gr17qQFS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gVEkId32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgGHXyR (ORCPT
+        id S1726297AbgGHXyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:54:17 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47689 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgGHXyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:54:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 8 Jul 2020 19:54:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52750 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725982AbgGHXyk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 19:54:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594252479;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DtrdIs9PFK4eESgNJshnXKkRcQvqs7rbt6XjlBm0KbQ=;
+        b=gVEkId32pSu3TsCKcuMDerd9OCvfEATEpSGmSEv25aqpxmzrCH0oOwDVuR+QRSSDMKQaT2
+        ZD6t+JX2Bi90jgfiRuCbey+okavXUkgiQkAKyuukHSNsoG7EbcJJ6s/PehPi/rZtI4kpZR
+        LDRve4/NU7wrtMEnBnEq+S5Z9GcWf4U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-uUzGLLqxNBSRxBpviTCmyg-1; Wed, 08 Jul 2020 19:54:37 -0400
+X-MC-Unique: uUzGLLqxNBSRxBpviTCmyg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2GP23Z26z9s1x;
-        Thu,  9 Jul 2020 09:54:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594252454;
-        bh=onC3t2q4O01rGQptnXUjDwy19vC68yra6hJkPVHQo7U=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gr17qQFSo/BwrakkjrCQ90UyJoB6nzb98N6auG1I4KnbpVU+kQg6CB1dlbP9xhXiB
-         3GbAuGkB08MGaApA9CVEf5WeKsxtxqCr1EKk6T/70yDCsBBrwKX6aBygZa5K1o5j8S
-         whMas1D+K0sRBLLUAjynVdL68KRCSMSbibY6IG6eBMgyqGlGH1xzIWHu3uib/AeQ6J
-         JfaS6yStJEH++J6p1zv08Zqci4sa5zmJUnb92cBzO3wVafI9nCFmiviStm99mQImgq
-         Z4aeupTHqYcXHFOjVK4uxnyDAiPcJqC9V1aB3l65PqzDrcQhPJknZ94R8A+B3CYrVs
-         p9yFb+Of5tK6w==
-Date:   Thu, 9 Jul 2020 09:54:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the scmi tree
-Message-ID: <20200709095412.051d96ef@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA4D98027B1;
+        Wed,  8 Jul 2020 23:54:35 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-116-205.rdu2.redhat.com [10.10.116.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 986922C2BC;
+        Wed,  8 Jul 2020 23:54:34 +0000 (UTC)
+Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, Anton Blanchard <anton@ozlabs.org>,
+        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+ <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
+ <1594101082.hfq9x5yact.astroid@bobo.none>
+ <20200708084106.GE597537@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <a9834278-25bf-90e9-10f2-cd10e5407ff6@redhat.com>
+Date:   Wed, 8 Jul 2020 19:54:34 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/EaJJB4BeLyhN+rphM6to=j0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200708084106.GE597537@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EaJJB4BeLyhN+rphM6to=j0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 7/8/20 4:41 AM, Peter Zijlstra wrote:
+> On Tue, Jul 07, 2020 at 03:57:06PM +1000, Nicholas Piggin wrote:
+>> Yes, powerpc could certainly get more performance out of the slow
+>> paths, and then there are a few parameters to tune.
+> Can you clarify? The slow path is already in use on ARM64 which is weak,
+> so I doubt there's superfluous serialization present. And Will spend a
+> fair amount of time on making that thing guarantee forward progressm, so
+> there just isn't too much room to play.
+>
+>> We don't have a good alternate patching for function calls yet, but
+>> that would be something to do for native vs pv.
+> Going by your jump_label implementation, support for static_call should
+> be fairly straight forward too, no?
+>
+>    https://lkml.kernel.org/r/20200624153024.794671356@infradead.org
+>
+Speaking of static_call, I am also looking forward to it. Do you have an 
+idea when that will be merged?
 
-Hi all,
-
-After merging the scmi tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
-
-drivers/firmware/arm_scmi/clock.c: In function 'rate_cmp_func':
-drivers/firmware/arm_scmi/clock.c:128:12: warning: initialization discards =
-'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  128 |  u64 *r1 =3D _r1, *r2 =3D _r2;
-      |            ^~~
-drivers/firmware/arm_scmi/clock.c:128:23: warning: initialization discards =
-'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  128 |  u64 *r1 =3D _r1, *r2 =3D _r2;
-      |                       ^~~
-
-Introduced by commit
-
-  f0a2500a2a05 ("firmware: arm_scmi: Keep the discrete clock rates sorted")
-
---=20
 Cheers,
-Stephen Rothwell
+Longman
 
---Sig_/EaJJB4BeLyhN+rphM6to=j0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8GXKUACgkQAVBC80lX
-0GyKFwgAogM77kSorVYZQCGBOqTNjduLttwNXfzghndF8H9QHYZkRY+aNE/ILP6e
-Is9i4x5y4l/+QROiTaXucGqZ5SOZdHWdjVkdp9/mJQW44GWJPsw24Umn59GPv/LA
-y5d86M3gbzvV65OZqAKpirKzdHzpHRY0QC4+83+V52hiwdCqNwFh7zAivUQ144mN
-Dy2PH1sONisasD5ZLw247TcYWP0mPT+fp01UYOuf337455q9kCbLk92XBnm13CDd
-aOsc2pSL0kti0JQfXE7KuXxPUB3O4j5FMUwlrdU8/ft3K03fonYE1kThjvkGklUs
-wTR0Y3RyVLoOvyFhuwvxQUoAxroCPA==
-=DbEj
------END PGP SIGNATURE-----
-
---Sig_/EaJJB4BeLyhN+rphM6to=j0--
