@@ -6,53 +6,74 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68441C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B53C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6BD2065F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC082065F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbgGHRM7 (ORCPT
+        id S1730878AbgGHRNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:12:59 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53578 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbgGHRM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:12:58 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jtDM3-004CzI-3V; Wed, 08 Jul 2020 18:55:31 +0200
-Date:   Wed, 8 Jul 2020 18:55:31 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 2/2] net: phy: Uninline PHY ethtool statistics
- operations
-Message-ID: <20200708165531.GF928075@lunn.ch>
-References: <20200708164625.40180-1-f.fainelli@gmail.com>
- <20200708164625.40180-3-f.fainelli@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708164625.40180-3-f.fainelli@gmail.com>
+        Wed, 8 Jul 2020 13:13:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbgGHRNW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:13:22 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5241C061A0B;
+        Wed,  8 Jul 2020 10:13:22 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EED9612747A24;
+        Wed,  8 Jul 2020 10:13:21 -0700 (PDT)
+Date:   Wed, 08 Jul 2020 10:13:21 -0700 (PDT)
+Message-Id: <20200708.101321.1049330296069021543.davem@davemloft.net>
+To:     xie.he.0141@gmail.com
+Cc:     kuba@kernel.org, hkallweit1@gmail.com, snelson@pensando.io,
+        mhabets@solarflare.com, mst@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
+Subject: Re: [PATCH] drivers/net/wan/x25_asy: Fix to make it work
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200708043754.46554-1-xie.he.0141@gmail.com>
+References: <20200708043754.46554-1-xie.he.0141@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 08 Jul 2020 10:13:22 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 09:46:25AM -0700, Florian Fainelli wrote:
-> Now that we have moved the PHY ethtool statistics to be dynamically
-> registered, we no longer need to inline those for ethtool. This used to
-> be done to avoid cross symbol referencing and allow ethtool to be
-> decoupled from PHYLIB entirely.
+From: Xie He <xie.he.0141@gmail.com>
+Date: Tue,  7 Jul 2020 21:37:54 -0700
+
+> This driver is not working because of problems of its receiving code.
+> This patch fixes it to make it work.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> When the driver receives an LAPB frame, it should first pass the frame
+> to the LAPB module to process. After processing, the LAPB module passes
+> the data (the packet) back to the driver, the driver should then add a
+> one-byte pseudo header and pass the data to upper layers.
+> 
+> The changes to the "x25_asy_bump" function and the
+> "x25_asy_data_indication" function are to correctly implement this
+> procedure.
+> 
+> Also, the "x25_asy_unesc" function ignores any frame that is shorter
+> than 3 bytes. However the shortest frames are 2-byte long. So we need
+> to change it to allow 2-byte frames to pass.
+> 
+> Signed-off-by: Xie He <xie.he.0141@gmail.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Something's not right, because I find it hard to believe this has been
+so fundamentally broken for such a long period of time.
 
-    Andrew
+Maybe the drivers all handle things differently, and whilst your change
+might fix some drivers, it will break others.
+
+I'm not applying this until this situation is better understood.
