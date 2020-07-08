@@ -2,169 +2,110 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC3BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73563C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68EE32078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:09:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k6CxAh4P";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CwdYDTxh"
+	by mail.kernel.org (Postfix) with ESMTP id 4CA4E2078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594220999;
+	bh=jWbIygxcjBuw+Fa6iYlrC9vPat8plczsNwXJ60XXlbU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=bWEfiYTGfIPJMOFYUujFqZsVvfqeEMhvNKJBhhB4PVeZF/X23afxfwTAEqhRb+nCB
+	 9JlvBxwcZAyVnPYqeVCuV1xODAj/Jtw8moAZOmhk/ul2NM23/7y0Nvo1dnK6p/mIhv
+	 KsMJlUGLdjX3t4gvi1Y28Ca/SutjTKLYMhqGAzFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgGHPJe (ORCPT
+        id S1730021AbgGHPJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:09:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51172 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729676AbgGHPJd (ORCPT
+        Wed, 8 Jul 2020 11:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbgGHPJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:09:33 -0400
-Date:   Wed, 8 Jul 2020 17:09:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594220971;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Sk2EpFmlcG5nTIKnaSOK7WLibT20WG+40/XonWzggkw=;
-        b=k6CxAh4PVkh1KG2o0qvlbHm30a8aCBsmCcC+bj6C2XgCDcwHecs44g6NSI4I69OWyCsgY4
-        7nerFQjLCdQYk/c4RRo5qUXH72OB1P46AdpQBPI8hVC9AIZZoQ71HwAIRZm8J4cnHV357N
-        XSHbNeF5o/bWC6cSBrlyiV85TLRmfpd/y7eButAuzNZW+EeV0HldPxuilJTiI6TO7ULwGP
-        I17zOLJs0Hm1AmXVBUzdgNxiUK7JYnDiAXuIctdzSUOuoyCd7+B/wxrpDUHGZz0MqLIeiM
-        dI9d0fgjiGwF2x2GEnTbBTv+/ZZ5UQp0QQUJgc7eKV96Y3Ug6l7RkJGaqT3KAg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594220971;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Sk2EpFmlcG5nTIKnaSOK7WLibT20WG+40/XonWzggkw=;
-        b=CwdYDTxhNc1ymc0bQTO6KqGrRZJV4FvDWhc+vQg3oBTO64ChnyUYqZDYD6Qg5gAb/x8xCa
-        wLIvyIUQdhsVZUCw==
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 06/20] seqlock: Extend seqcount API with associated
- locks
-Message-ID: <20200708150930.GA147323@debian-buster-darwi.lab.linutronix.de>
-References: <20200630054452.3675847-1-a.darwish@linutronix.de>
- <20200630054452.3675847-7-a.darwish@linutronix.de>
- <20200706212148.GE5523@worktop.programming.kicks-ass.net>
- <20200707084024.GA4097637@debian-buster-darwi.lab.linutronix.de>
- <20200707130410.GO4800@hirez.programming.kicks-ass.net>
- <20200707143726.GO117543@hirez.programming.kicks-ass.net>
- <20200708103314.GB4151780@debian-buster-darwi.lab.linutronix.de>
- <20200708122938.GQ4800@hirez.programming.kicks-ass.net>
+        Wed, 8 Jul 2020 11:09:57 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA67C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 08:09:57 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id p26so3024963oos.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 08:09:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RWj01bK2pV6BNLG1xOO+3qo5uJchifSrRn1MyFV208k=;
+        b=JL7Ptq9v8mdFU10Yb7O/YO4CxQYZcvDVSnB+qXTzB4NbiDvIYQ0ewjqUt0qeaYw5nW
+         ltt/+5vEYCEg9hkpJudDux2YWtqB85ZRfe6NBuEf3fks9jniYOxoLPG/39GKaTWaNgoA
+         URbZJFP9ISJ6I2eGSUq/DSy13hrJZdBbOk68M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RWj01bK2pV6BNLG1xOO+3qo5uJchifSrRn1MyFV208k=;
+        b=RTVf3jpwA7BF/KBmYeQqDGlpuNYvLSa7sCLsiqa1Ln+s/Nuqi8xa2VpPazUl/XI1yE
+         btHU+66T94xrVJCkrCfDg9qMkpxNJ5m5r6dyYBK1Xux/YUujta5YXIO9+fNYRJf+Ez58
+         kmzyA9jxtGVuqwro6ifPbfve4kSNX0eRK05oA7RQkLtdio7vK8UylhQ+/YezR598ZHR3
+         P3YB4FSLZPh9ZMkXI25tkVn6pjxQBiwgNILXO9FwK2RqmrUiE4oOkIf7iSj8xK/zRGrg
+         ud01x6WVAnBtwLte41qu2weyUuw7uZNIYNCJ+vAAyyoiMeLRs1FWecJP/KU3KEj1CisY
+         ib6g==
+X-Gm-Message-State: AOAM531+GJP2Q9ftoImY6RZAMU+DyZmBXyRrXY0BBB8b2xaI10soNoHL
+        Ozl6fQC43lhVXSjuTwpiqSZ4LjNblgw=
+X-Google-Smtp-Source: ABdhPJzeDU0yQw5v+TRW2Xctx5qi7v/jAIXc8qXyGs0qRRPjjtgTkEOTV2OBsQa0qz3NFmOmj3jwrA==
+X-Received: by 2002:a4a:9552:: with SMTP id n18mr10303586ooi.1.1594220997010;
+        Wed, 08 Jul 2020 08:09:57 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id y1sm5770oto.1.2020.07.08.08.09.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 08:09:56 -0700 (PDT)
+Subject: Re: [PATCH 4.14 00/27] 4.14.188-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, skhan@linuxfoundation.org
+References: <20200707145748.944863698@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <f11dada6-53ad-0e0c-dfb8-53bad936a253@linuxfoundation.org>
+Date:   Wed, 8 Jul 2020 09:09:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708122938.GQ4800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200707145748.944863698@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 02:29:38PM +0200, Peter Zijlstra wrote:
-> On Wed, Jul 08, 2020 at 12:33:14PM +0200, Ahmed S. Darwish wrote:
->
-> > > +#define read_seqcount_begin(s)	do_read_seqcount_begin(__to_seqcount_t(s))
-> > > +
-> > > +static inline unsigned do_read_seqcount_begin(const seqcount_t *s)
-> > > +{
-> > ...
-> >
-> > Hmm, the __to_seqcount_t(s) force cast is not good. It will break the
-> > arguments type-safety of seqcount macros that do not have either:
-> >
-> >     __associated_lock_is_preemptible() or
-> >     __assert_associated_lock_held()
-> >
-> > in their path. This basically includes all the read path macros, and
-> > even some others (e.g. write_seqcount_invalidate()).
-> >
-> > With the suggested force cast above, I can literally *pass anything* to
-> > read_seqcount_begin() and friends, and the compiler won't say a thing.
-> >
-> > So, I'll restore __to_seqcount_t(s) that to its original implementation:
->
-> Right, I figured that the write side would be enough to catch glaring
-> abuse. But sure.
->
-> It's a bummer we didn't upgrade the minimum compiler version to 4.9,
-> that would've given us _Generic(), which allows one to write this
-> slightly less verbose I think.
->
+On 7/7/20 9:15 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.188 release.
+> There are 27 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.188-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Looking at 5429ef62bcf3 ("compiler/gcc: Raise minimum GCC version for
-kernel builds to 4.8"), it seems that the decision of picking gcc 4.8
-vs. 4.9 was kinda arbitrary.
+Compiled and booted on my test system. No dmesg regressions.
 
-Anyway, please continue below.
-
-> How about something disguisting like this then?
->
-...
-> #define __SEQ_RT	IS_BUILTIN(CONFIG_PREEMPT_RT)
->
-> SEQCOUNT_LOCKTYPE(raw_spinlock, raw_spinlock_t,	false,		lock)
-> SEQCOUNT_LOCKTYPE(spinlock,	spinlock_t,		__SEQ_RT,	lock)
-> SEQCOUNT_LOCKTYPE(rwlock,	rwlock_t,		__SEQ_RT,	lock)
-> SEQCOUNT_LOCKTYPE(mutex,	struct mutex,		true,		lock)
-> SEQCOUNT_LOCKTYPE(ww_mutex,	struct ww_mutex,	true,		lock->base)
->
-> #if (defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 40900) || defined(__CHECKER__)
->
-> #define __seqprop_pick(const_expr, s, locktype, prop, otherwise)	\
-> 	__builtin_choose_expr(const_expr,				\
-> 			      __seqprop_##locktype##_##prop((void *)(s)), \
-> 			      otherwise)
->
-> extern void __seqprop_invalid(void);
->
-> #define __seqprop(s, prop)								\
-> 	__seqprop_pick(__same_type(*(s), seqcount_t), (s), seqcount, prop,		\
-> 	  __seqprop_pick(__same_type(*(s), seqcount_raw_spinlock_t), (s), raw_spinlock, prop, \
-> 	    __seqprop_pick(__same_type(*(s), seqcount_spinlock_t), (s), spinlock, prop,	\
-> 	      __seqprop_pick(__same_type(*(s), seqcount_rwlock_t), (s), rwlock, prop,	\
-> 	        __seqprop_pick(__same_type(*(s), seqcount_mutex_t), (s), mutex, prop,	\
-> 	          __seqprop_pick(__same_type(*(s), seqcount_ww_mutex_t), (s), ww_mutex, prop, \
-> 		    __seqprop_invalid()))))))
->
-> #else
->
-> #define __seqprop_case(s, locktype, prop) \
-> 	seqcount_##locktype##_t: __seqprop_##locktype##_##prop((void *)s)
->
-> #define __seqprop(s, prop)					\
-> 	_Generic(*(s),						\
-> 		 seqcount_t: __seqprop_seqcount_##prop((void*)s),\
-> 		 __seqprop_case((s), raw_spinlock, prop),	\
-> 		 __seqprop_case((s), spinlock, prop),		\
-> 		 __seqprop_case((s), rwlock, prop),		\
-> 		 __seqprop_case((s), mutex, prop),		\
-> 		 __seqprop_case((s), ww_mutex, prop))
->
-> #endif
->
-> #define __to_seqcount_t(s)			__seqprop(s, ptr)
-> #define __associated_lock_is_preemptible(s)	__seqprop(s, preempt)
-> #define __assert_associated_lock_held(s)	__seqprop(s, assert)
-
-Hmm, I'll prototype the whole thing (along with PREEMPT_RT associated
-lock()/unlock() as you've mentioned in the other e-mail), and come back.
-
-Honestly, I have a first impression that this is heading into too much
-complexity and compaction, but let's finish the whole thing first.
-
-Thanks,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
+thanks,
+-- Shuah
