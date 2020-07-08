@@ -2,214 +2,173 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93577C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73E9E20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594234072;
-	bh=2uSG0t2YmRHLEmxRcypEIRroELoGimw9U9d+Xr4ZGus=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=XY8f3UXJB9QJxZ6g4ZIq2vwFOu+HTg+yahutuzj/TTd26ZW4dEF5AaiEzlPA624AD
-	 HaA7qdySvgUvyzfKObh5A6+/NcQ9ADYs+iCeKCHR0uVb0cplOj/6QyrxPNTeG3qFtP
-	 1o74pXKIRQ3cOhttcGX8g4G5twngCe2PzooIWmZE=
+	by mail.kernel.org (Postfix) with ESMTP id D4CD02065D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:48:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="GdWFJO3q";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="FrRzWPd+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgGHSru (ORCPT
+        id S1726836AbgGHSsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbgGHSrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:47:47 -0400
-Received: from [192.168.1.26] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28A5120786;
-        Wed,  8 Jul 2020 18:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594234066;
-        bh=2uSG0t2YmRHLEmxRcypEIRroELoGimw9U9d+Xr4ZGus=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=W3lbJDL+MwORmPfom6ckuoowJu1w46H7yQ5Ox8S4MJtmgL9japkFLheENhRWOc7YY
-         wGfqQxQADW54+mtKmXRo7dQk9N6D3ZE8OusIX5f2DLrbIgqBUsW1oEuyLkb7bbrISe
-         +4DcBOFhFScsx0k0gl/JXHZaNfXKlty25XHTurlA=
-Subject: Re: [PATCH] fpga: stratix10-soc: make FPGA task un-interruptible
-To:     Richard Gong <richard.gong@linux.intel.com>, mdf@kernel.org
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        richard.gong@intel.com
-References: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
- <3e45e4a4-f002-ecf8-110f-bf7d646a5dbe@kernel.org>
- <5be15818-9170-b2a5-e92b-bbe6b1fcba21@linux.intel.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <39936d44-a802-8105-7d60-97a1e44c163d@kernel.org>
-Date:   Wed, 8 Jul 2020 13:47:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 14:48:08 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:25038 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726325AbgGHSsH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 14:48:07 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068IYBkN017393;
+        Wed, 8 Jul 2020 11:46:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=DImYospgzoZHQr9Y+r0Vx0+UpNhAp0vw55eHaUZHCFg=;
+ b=GdWFJO3q8e3xbh4b5fZnaJGAe3oUEkwyh/nQlfMyxHCMIu98Yx63bFd7RGOX8j3oKG5F
+ pIZPJDh86WBig5x6vseqYfQIRAc2bGgBO9PgJ0AIMT74Lo/M+2VYbFFI8oJxPOJOTW9D
+ oRKmY578l33AVKMoR+z1j48ldvG4frHqLFs= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 325k288bng-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 08 Jul 2020 11:46:20 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 8 Jul 2020 11:46:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=muuPhDpa9uclXXfbaalo36cR3vj7+BTz/yPs3k3eRtO9r+LbsETGGfMv42k6sdUn/NkLZnQPojLIFH61ruOh6hNPwM7Qp9ajmhhJ/WjxueNkIVXfy+yIknPfxZu0ItiiaVzwUU4Oi9NSmNhX8oQWUNCnNL64HaQsRKeVNcZgnYXNO+9WRHEgyM9B6YI6ZbZEm/jqUIR2WrjGDHF9k28DJzawonmNT41IJoc7B1fODrI2EGfw5AXwidcXeuPQIIcKhkyDeuCl4hBUTRQTFDkng1th2RpCItY0XSJTmKg+fQqcVrh7L2TU9bDYsVRD7aqYGyWhgu/qbw4yN2sV7jizlg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DImYospgzoZHQr9Y+r0Vx0+UpNhAp0vw55eHaUZHCFg=;
+ b=V0khlsDmdPhNI9YKpxS2z6BjlzORkP2Oi2YT7y9RQSPWnqaAh2ONH8j1zSU9yOPCz+Ly36CLyHyPQHnxJS/r91wM5ry+IEOAhlwfLzV7/SVFvU2GS+P3VpDlR2zgO0HW8gQsRqQmjqiBlbjZrbGP3ozSo/e3BhpkanWyAzVRS2ZJ1mwr/vNAGdEF2lIqCVJcTXuuLOd9Bmt8E27Ogj6nEVJu0Vu1ZVNMigdcWTrZWZmEm3flK4PqDQ7Kp9+gb8KvpPWtmNus+4stpx2wZGetiOMXzGw+yUOmbvrA2PPxceE1Qb2aZ/B5SkpuunGwQHDAG0PqjbzayVq+G+gC1J0xSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DImYospgzoZHQr9Y+r0Vx0+UpNhAp0vw55eHaUZHCFg=;
+ b=FrRzWPd+R99Dmja0JBOMhX0PczM652DWKSF4X3aAq02wcQSjS2z1nDkFvPB/7rBnMxqL/H0zHUaL90tnCeoeevIN1jx+D5sAVTSZq7UY7WF3FMc0RZvttYXzDkE0ZmtlhKoH/n06h/z0zdUdN6rsHHWrK9/9MZ86CneaC2Wwjj4=
+Authentication-Results: oracle.com; dkim=none (message not signed)
+ header.d=none;oracle.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2391.namprd15.prod.outlook.com (2603:10b6:a02:8c::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24; Wed, 8 Jul
+ 2020 18:46:18 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3174.021; Wed, 8 Jul 2020
+ 18:46:18 +0000
+Date:   Wed, 8 Jul 2020 11:46:15 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Barry Song <song.bao.hua@hisilicon.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH v3] mm/hugetlb: avoid hardcoding while checking if cma is
+ enable
+Message-ID: <20200708184615.GA251665@carbon.dhcp.thefacebook.com>
+References: <20200707040204.30132-1-song.bao.hua@hisilicon.com>
+ <20200707125641.dbd2ccd63f525aa5870069d8@linux-foundation.org>
+ <9066e009-5ed2-1992-d70d-fd27b4bf5871@oracle.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9066e009-5ed2-1992-d70d-fd27b4bf5871@oracle.com>
+X-ClientProxiedBy: BY5PR16CA0032.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::45) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-In-Reply-To: <5be15818-9170-b2a5-e92b-bbe6b1fcba21@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:9af9) by BY5PR16CA0032.namprd16.prod.outlook.com (2603:10b6:a03:1a0::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Wed, 8 Jul 2020 18:46:17 +0000
+X-Originating-IP: [2620:10d:c090:400::5:9af9]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 77c01bf8-cc9a-475d-2d6a-08d8236f3315
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2391:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2391A9AF9E19D733FB1CE240BE670@BYAPR15MB2391.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 04583CED1A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CQq5v4ojO42IHsB9AKe7N+/OGb6rBoCnQ7ge/EDxAcvQaD0+AoWZXqcSdHnbJ64ma/0NDB1jVUzBAn4LbiqFQEFDumEZSDkdtg1BC4D61JdZmAi7bod6aDgHj0fqTUEDwNS0XxFuJEdbLSlySspQnGQXQ+muXlBBK53WtybyGdpdEgn8JakNFZAFaRf2x8QKqRH17TUb2aTOzPGzBOCTqVgX6gIUobvH+SvBtX5kSAKQdlZFJ8iEWKZmKrKDzooy7hJ38gFM5UCjiHd3anm/y3sQAnw6w0h3KVVm6Kl1YaDcr4cbsXy6QG1VnQdq9bNvhAUppwsymJzKGc8rU6zEFQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(346002)(376002)(396003)(39860400002)(83380400001)(6506007)(5660300002)(316002)(54906003)(478600001)(33656002)(6916009)(66946007)(7696005)(52116002)(66556008)(66476007)(8676002)(8936002)(86362001)(53546011)(55016002)(9686003)(1076003)(4326008)(186003)(16526019)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: D0sRMcKokzs8OdkCQ4BHjPmRp81vmEBvsSPqClxE8mP/BFqq7i2v7mybKhFXHMk7vvSqRwsdtoTQbSnI2EEGNEfbPhc3qOcoCtcQH7LANJDw21zoCJIWZlyeCxbUNPzfSkzuABmvPF79Qo5HkzPACDoNn0Bq20Ch/8CPqjU50FXkncDintG8UkDxpo1M7zrpliWb47Ui+LETkE6RyIQA5zAhJWLThSFPIVTu04opAq6/Dgf+5675/dSpQRZ9E3GEfW5NCHS2WkmCnaY0Wj86qsTpDEVENEM3gB85kKbeBTNtQJa6uhSCYOdQabhY6/HcPlUllU8XlvmDCd1ld3V03ETNzfK0ClOGBhI97t84VNUnF1yOLKJBL/o98s++x2q0rFDT+FeP2GhQYsjyxAfZ805NVWTSnagiq+Ry9NRftonmUzxp9IyTJ2KmTfXi2mqik3IbQLBuDTADI7+UVZssP5jKABfVk8Eh25e8OYwtBe9bcL/cxFOl0J0LlBB6brdNqqKFnGKn/M/RzCzqkbWa0w==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77c01bf8-cc9a-475d-2d6a-08d8236f3315
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2020 18:46:18.0381
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /8itNt3e9Q+wX2v+/jnTiC+mhQltaw0ISaeYZsF8mzUX36yMYg7TBkBZuYeNKpUK
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2391
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_16:2020-07-08,2020-07-08 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 priorityscore=1501 suspectscore=1 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007080114
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/8/20 1:30 PM, Richard Gong wrote:
-> Hi Dinh,
+On Wed, Jul 08, 2020 at 10:45:16AM -0700, Mike Kravetz wrote:
+> On 7/7/20 12:56 PM, Andrew Morton wrote:
+> > On Tue, 7 Jul 2020 16:02:04 +1200 Barry Song <song.bao.hua@hisilicon.com> wrote:
+> > 
+> >> hugetlb_cma[0] can be NULL due to various reasons, for example, node0 has
+> >> no memory. so NULL hugetlb_cma[0] doesn't necessarily mean cma is not
+> >> enabled. gigantic pages might have been reserved on other nodes.
+> > 
+> > I'm trying to figure out whether this should be backported into 5.7.1,
+> > but the changelog doesn't describe any known user-visible effects of
+> > the bug.  Are there any?
 > 
+> Barry must have missed this email.  He reported the issue so I was hoping
+> he would reply.
 > 
-> On 7/8/20 12:08 PM, Dinh Nguyen wrote:
->> Hi
->>
->> On 7/7/20 11:14 AM, richard.gong@linux.intel.com wrote:
->>> From: Richard Gong <richard.gong@intel.com>
->>>
->>> When CTRL+C occurs during the process of FPGA reconfiguration, the FPGA
->>> reconfiguration process stops and the user can't perform a new FPGA
->>> reconfiguration properly.
->>>
->>> Set FPGA complete task to be not interruptible so that the user can
->>> properly perform FPGA reconfiguration after CTRL+C event.
->>>
->>> Signed-off-by: Richard Gong <richard.gong@intel.com>
->>> ---
->>>   drivers/fpga/stratix10-soc.c | 23 +++--------------------
->>>   1 file changed, 3 insertions(+), 20 deletions(-)
->>>
->>> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
->>> index 44b7c56..657a70c 100644
->>> --- a/drivers/fpga/stratix10-soc.c
->>> +++ b/drivers/fpga/stratix10-soc.c
->>> @@ -196,17 +196,13 @@ static int s10_ops_write_init(struct
->>> fpga_manager *mgr,
->>>       if (ret < 0)
->>>           goto init_done;
->>>   -    ret = wait_for_completion_interruptible_timeout(
->>> +    ret = wait_for_completion_timeout(
->>>           &priv->status_return_completion, S10_RECONFIG_TIMEOUT);
->>>       if (!ret) {
->>>           dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
->>>           ret = -ETIMEDOUT;
->>>           goto init_done;
->>>       }
->>> -    if (ret < 0) {
->>> -        dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
->>> -        goto init_done;
->>> -    }
->>>         ret = 0;
->>>       if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
->>> @@ -318,7 +314,7 @@ static int s10_ops_write(struct fpga_manager
->>> *mgr, const char *buf,
->>>            */
->>>           wait_status = 1; /* not timed out */
->>>           if (!priv->status)
->>> -            wait_status = wait_for_completion_interruptible_timeout(
->>> +            wait_status = wait_for_completion_timeout(
->>>                   &priv->status_return_completion,
->>>                   S10_BUFFER_TIMEOUT);
->>>   @@ -340,13 +336,6 @@ static int s10_ops_write(struct fpga_manager
->>> *mgr, const char *buf,
->>>               ret = -ETIMEDOUT;
->>>               break;
->>>           }
->>> -        if (wait_status < 0) {
->>> -            ret = wait_status;
->>> -            dev_err(dev,
->>> -                "error (%d) waiting for svc layer buffers\n",
->>> -                ret);
->>> -            break;
->>> -        }
->>>       }
->>>         if (!s10_free_buffers(mgr))
->>> @@ -372,7 +361,7 @@ static int s10_ops_write_complete(struct
->>> fpga_manager *mgr,
->>>           if (ret < 0)
->>>               break;
->>>   -        ret = wait_for_completion_interruptible_timeout(
->>> +        ret = wait_for_completion_timeout(
->>>               &priv->status_return_completion, timeout);
->>>           if (!ret) {
->>>               dev_err(dev,
->>> @@ -380,12 +369,6 @@ static int s10_ops_write_complete(struct
->>> fpga_manager *mgr,
->>>               ret = -ETIMEDOUT;
->>>               break;
->>>           }
->>> -        if (ret < 0) {
->>> -            dev_err(dev,
->>> -                "error (%d) waiting for RECONFIG_COMPLETED\n",
->>> -                ret);
->>> -            break;
->>> -
->>>           /* Not error or timeout, so ret is # of jiffies until
->>> timeout */
->>>           timeout = ret;
->>>           ret = 0;
->>>
->>
->> Do you need the same change in drivers/fpga/socfpga.c? 
-> It is not required.
-
-Why not?
-
-> Also, you did not
->> include Moritz Fisher on this. He's the maintainer.
->>
-> I did include Moritz Fisher <mdf@kernel.org> in the submission, is
-> something change recently?
+> Based on the code changes, I believe the following could happen:
+> - Someone uses 'hugetlb_cma=' kernel command line parameter to reserve
+>   CMA for gigantic pages.
+> - The system topology is such that no memory is on node 0.  Therefore,
+>   no CMA can be reserved for gigantic pages on node 0.  CMA is reserved
+>   on other nodes.
+> - The user also specifies a number of gigantic pages to pre-allocate on
+>   the command line with hugepagesz=<gigantic_page_size> hugepages=<N>
+> - The routine which allocates gigantic pages from the bootmem allocator
+>   will not detect CMA has been reserved as there is no memory on node 0.
+>   Therefore, pages will be pre-allocated from bootmem allocator as well
+>   as reserved in CMA.
 > 
+> This double allocation (bootmem and CMA) is the worst case scenario.  Not
+> sure if this is what Barry saw, and I suspect this would rarely happen.
+> 
+> After writing this, I started to think that perhaps command line parsing
+> should be changed.  If hugetlb_cma= is specified, it makes no sense to
+> pre-allocate gigantic pages.  Therefore, the hugepages=<N> paramemter
+> should be ignored and flagged with a warning if  hugetlb_cma= is specified.
+> This could be checked at parsing time and there would be no need for such
+> a check in the allocation code (except for sanity cheching).
+> 
+> Thoughts?  I just cleaned up the parsing code and could make such a change
+> quite easily.
 
-My bad, I didn't see his name in the email.
+I agree. Basically, if hugetlb_cma_size > 0, we should not pre-allocate
+gigantic pages. It would be much simpler and more reliable than the existing
+code.
 
-Dinh
+Thank you!
