@@ -2,113 +2,90 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8752067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:31:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZOT6/9IR"
+	by mail.kernel.org (Postfix) with ESMTP id 54F4B2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbgGHHaC (ORCPT
+        id S1726313AbgGHHd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729672AbgGHHaB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:30:01 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5012EC08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:30:01 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z2so25470998wrp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=pLG17Nn5WyQtC4oBA5Y9UasPSCr2B8Qexry/ZQlo3J0=;
-        b=ZOT6/9IRhGIKRrutRMFUQw/yT2iO+XQRJWMcO1SXgq61tcKju0aQdZnDZXSRsPQ0yJ
-         dBbpZ/5mEphDo7zt8Xkcgx0XAPasfzkGRinamc6d6mwV1lmcuXb0zrAIx9Yhi7jtXtkx
-         wOiOluDUoLay2cuho43p3p6CLrc3pw0aAbMF5loiTHjzWots2ZcOFJKsgSnfHjLEgi83
-         QHKZSde6HgwuM+mhIGei+E8SobHzfgcQzQ08kidYmySJVJ4w0Qy5RDnnCMpAtyjpVrr6
-         J4lvgPRREbi5HCatI2nkDdDn8NdPtbFI+OrWNQsbqgI2Nj5LtRiCnc22N5KL97X//2Fu
-         rsTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=pLG17Nn5WyQtC4oBA5Y9UasPSCr2B8Qexry/ZQlo3J0=;
-        b=kqSloWfkmtXK2ZL9LyRo9vXrkSIRVjF9DbrKKpk/caUl5Qx2gE10xio7c3pky/iElo
-         lQcPRw9jDEsjG4g1E9TaGo+Nf/2POIQza4VNkRQFWBzQ52VKH/QawrnQlX5fH0sFrwPy
-         mWdLGoM6Bz46Frx2ny5/V6Sf1x5aoVm7eCr6rtgZnzpCCgpUDYehp3I0LBh8mjzaD40t
-         f3TyrNJx39zpVR+55jTCuvnRSOefyOQ02W7U/h63EE90Hle906qzbKNTZOKel56ycWZI
-         Uk7LTpEsOxdtyNi0gXQfuegkbF01e6gea3QQC2fl4Bau0q5C1kyXb5hsFaKN50N9BbbV
-         7GVg==
-X-Gm-Message-State: AOAM530UiIsjhr29kpwg0dYRzUbspoILVbijxID/MXKA1/RmhsrGLEdD
-        RjoHV3jE0QZjWl2lw3qUT14teg==
-X-Google-Smtp-Source: ABdhPJwTcA8SXwUVb2FYAt1pdgeglSrLHAJEjn6czrnSEyx5rgOoUmqgJol9MR04SsLlC5RGDY3JmA==
-X-Received: by 2002:a5d:65cd:: with SMTP id e13mr62480961wrw.213.1594193400034;
-        Wed, 08 Jul 2020 00:30:00 -0700 (PDT)
-Received: from dell ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id m16sm4763255wro.0.2020.07.08.00.29.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 00:29:59 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 08:29:57 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: axp20x: Use #ifdef for checking CONFIG_ACPI
-Message-ID: <20200708072957.GN3500@dell>
-References: <20200708070725.6318-1-krzk@kernel.org>
+        Wed, 8 Jul 2020 03:33:56 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:48186 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbgGHHd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:33:56 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 7B0EEBC078;
+        Wed,  8 Jul 2020 07:33:53 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     keescook@chromium.org, corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: YAMA SECURITY MODULE
+Date:   Wed,  8 Jul 2020 09:33:46 +0200
+Message-Id: <20200708073346.13177-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200708070725.6318-1-krzk@kernel.org>
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Jul 2020, Krzysztof Kozlowski wrote:
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-> Use #ifdef directive to check whether config symbol is defined and to
-> fix warning:
-> 
->     drivers/mfd/axp20x-i2c.c:82:5: warning: "CONFIG_ACPI" is not defined [-Wundef]
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/mfd/axp20x-i2c.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-This is already fixed (3 times now). :)
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-Thanks anyway.
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-> diff --git a/drivers/mfd/axp20x-i2c.c b/drivers/mfd/axp20x-i2c.c
-> index bd271fbe1ec1..3c930316d48b 100644
-> --- a/drivers/mfd/axp20x-i2c.c
-> +++ b/drivers/mfd/axp20x-i2c.c
-> @@ -79,7 +79,7 @@ static const struct i2c_device_id axp20x_i2c_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
->  
-> -#if CONFIG_ACPI
-> +#ifdef CONFIG_ACPI
->  static const struct acpi_device_id axp20x_i2c_acpi_match[] = {
->  	{
->  		.id = "INT33F4",
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
+ If you apply the patch, please let me know.
+
+
+ Documentation/admin-guide/LSM/Yama.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/LSM/Yama.rst b/Documentation/admin-guide/LSM/Yama.rst
+index d0a060de3973..64fd62507ae5 100644
+--- a/Documentation/admin-guide/LSM/Yama.rst
++++ b/Documentation/admin-guide/LSM/Yama.rst
+@@ -21,7 +21,7 @@ of their attack without resorting to user-assisted phishing.
+ 
+ This is not a theoretical problem. SSH session hijacking
+ (http://www.storm.net.nz/projects/7) and arbitrary code injection
+-(http://c-skills.blogspot.com/2007/05/injectso.html) attacks already
++(https://c-skills.blogspot.com/2007/05/injectso.html) attacks already
+ exist and remain possible if ptrace is allowed to operate as before.
+ Since ptrace is not commonly used by non-developers and non-admins, system
+ builders should be allowed the option to disable this debugging system.
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.27.0
+
