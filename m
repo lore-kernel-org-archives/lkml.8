@@ -2,76 +2,59 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F642C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DABC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7DC20775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7763F20739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594203774;
-	bh=wqmaKC3soWVBrlD0Udy60m7oemLeH3Uc93lnAOZzD64=;
+	s=default; t=1594204010;
+	bh=XqNMpi4tSi+iPnKQlTA7D2lkXRhf2npCuezhwJNDgRE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZfOdZmjIIRkoHRX8+u8n/Llg5KEFghi9WPGBwmnK1swOgSdm+m1eRVY3TK7e5R9Nj
-	 UPcKsRIyLOtVhy99s+q2z9Zg+B6m9nMVtOqvzbVEOnLni6EOIMnTfuDnsq7VCihson
-	 fEv4UCklBpioVnkyNDEHTLPDPR+6vQPk3V9/Kruk=
+	b=1hLCpSVXpUp5fjhOM6IUTJ/P/3vvyv97RuYNAHAMwcAZIHPq4UooAcZVMl9tUlo9C
+	 GFO4zfTF8Sm+8XmhIdNUNLeAfpR9RTrIkmP4Wrlnrf93gAw1oVg8PsEyQSMfEH4mhC
+	 z/58Po0z+UXH4uDUsDGEQDVemluuCsx5pDyX+xfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgGHKWx (ORCPT
+        id S1728337AbgGHK0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:22:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 06:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgGHKWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:22:52 -0400
+        id S1726110AbgGHK0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:26:48 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02ABA206F6;
-        Wed,  8 Jul 2020 10:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D439206F6;
+        Wed,  8 Jul 2020 10:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594203771;
-        bh=wqmaKC3soWVBrlD0Udy60m7oemLeH3Uc93lnAOZzD64=;
+        s=default; t=1594204007;
+        bh=XqNMpi4tSi+iPnKQlTA7D2lkXRhf2npCuezhwJNDgRE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aYUJimONTlH3wLq1pKSc1jyXGvkW2lRwGivQTRbMogNQuQnSdwDRn+kL2E4zSJ1lr
-         dt+DglW619hP+mHz7wZvNNOFaZS4z1CNFMdod/h3vMwzXOeBIuQdGyn5r1VucItt9+
-         93Kk/xam0fZbQoT25njkkG2V8PcvfpNiw3dhKgow=
-Date:   Wed, 8 Jul 2020 11:22:46 +0100
+        b=hFJ4DdaJUaOuz000SJgSOWGKy171Bi+YRedBCbAbjzl/A47iVqMBCo/i47cU285rX
+         lKshiKJOtn1NgJOXnfdmiOs+Ly/rHywx1SrtPO08jqzV5Fc/6rJoRtUV2OyqWwwtC6
+         1MeEVvlkk68tNkhPDaOHHvHu/D/tzq1M40MkzJtA=
+Date:   Wed, 8 Jul 2020 11:26:42 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 01/13] regmap-irq: use fwnode instead of device node
- in add_irq_chip()
-Message-ID: <20200708102246.GC4655@sirena.org.uk>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-2-michael@walle.cc>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Zhang Qiang <qiang.zhang@windriver.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH] spi: use kthread_create_worker() helper
+Message-ID: <20200708102642.GF4655@sirena.org.uk>
+References: <CGME20200708070913eucas1p221ca64347d0ca03709eeee86decfd1af@eucas1p2.samsung.com>
+ <20200708070900.30380-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
+        protocol="application/pgp-signature"; boundary="hoZxPH4CaxYzWscb"
 Content-Disposition: inline
-In-Reply-To: <20200706175353.16404-2-michael@walle.cc>
+In-Reply-To: <20200708070900.30380-1-m.szyprowski@samsung.com>
 X-Cookie: Oh Dad!  We're ALL Devo!
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,51 +63,43 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---iFRdW5/EC4oqxDHL
+--hoZxPH4CaxYzWscb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Jul 06, 2020 at 07:53:41PM +0200, Michael Walle wrote:
-> Convert the argument to the newer fwnode_handle instead a device tree
-> node. Fortunately, there are no users for now. So this is an easy
-> change.
+On Wed, Jul 08, 2020 at 09:09:00AM +0200, Marek Szyprowski wrote:
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+> ------------[ cut here ]------------
+> WARNING: CPU: 3 PID: 1 at kernel/kthread.c:817 kthread_queue_work+0xac/0xd4
+> Modules linked in:
+> CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc4-00017-g4977caef05aa #1193
+> Hardware name: Samsung Exynos (Flattened Device Tree)
+> [<c011184c>] (unwind_backtrace) from [<c010d250>] (show_stack+0x10/0x14)
+> [<c010d250>] (show_stack) from [<c0517f64>] (dump_stack+0xbc/0xe8)
+> [<c0517f64>] (dump_stack) from [<c01270a8>] (__warn+0xf0/0x108)
+> [<c01270a8>] (__warn) from [<c0127170>] (warn_slowpath_fmt+0xb0/0xb8)
+> [<c0127170>] (warn_slowpath_fmt) from [<c01512a4>] (kthread_queue_work+0xac/0xd4)
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+Please think hard before including complete backtraces in upstream
+reports, they are very large and contain almost no useful information
+relative to their size so often obscure the relevant content in your
+message. If part of the backtrace is usefully illustrative (it often is
+for search engines if nothing else) then it's usually better to pull out
+the relevant sections.
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-np-fwnode
-
-for you to fetch changes up to 5cc2013bfeee756a1ee6da9bfbe42e52b4695035:
-
-  regmap-irq: use fwnode instead of device node in add_irq_chip() (2020-07-08 11:15:12 +0100)
-
-----------------------------------------------------------------
-regmap: Change node pointer to fwnode in new IRQ API
-
-----------------------------------------------------------------
-Michael Walle (1):
-      regmap-irq: use fwnode instead of device node in add_irq_chip()
-
- drivers/base/regmap/regmap-irq.c | 53 ++++++++++++++++++++++------------------
- include/linux/regmap.h           | 21 +++++++++-------
- 2 files changed, 41 insertions(+), 33 deletions(-)
-
---iFRdW5/EC4oqxDHL
+--hoZxPH4CaxYzWscb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8FnnUACgkQJNaLcl1U
-h9B0awf+K6uyKfcY+Cw0Q9cXWpxT1fJLMyrXuyyDLg9o9Qo5YPVU8XkiwRGhJJto
-Asdm6vmCDIr0StMW2SEZxg4vVW6Xxw2UKMU2+ZBJxsGZEgpLxec+7NdiXOtqUQsL
-JmKcTbR+nObPx+w74a1G7QHftWWVDX4peRYST0rLvo8tzaS1NoACmku5AYVhc9Z6
-aUUQKrAghHkoinADk2p6YHBuo4C5EZg/qmB/iN2t5g3aNF9YhdDXNB4ZeE+UwQG+
-F+RC9shXxL6/pSqCpua22fNq6tEHEpaWnGwnsxX3eaJ00iDuD0KAHAmtNuo6X75M
-41RS28TqmDnMbDlLrCvgPxlHJ8Lpjw==
-=nOcx
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8Fn2EACgkQJNaLcl1U
+h9AJlQf+OaBKci5Cb0F9VbFu5fVoWaiqo1ZU7n3Xnb2jHkAI2OTf5fXvBWFJ7Khu
+gyzLd0GtPK0ZYzuk+FIuGXDGHKrUV34p1g7KTBEGBXvmb85QsDWzshTjlNTH8/WQ
+iliVOnZQpk5oAfxMWMtSpYbaw4NrmeASf9dQZPcvnrtrFaJPiS4VNgcZG/IyQY8o
+WlhQvLw7BVHpvKgoblZG34XfbWxA6eld0lDzMkj48WwQ2OTZHPmnw9t73Adt08FY
+lfHhoSgCi/iOVqIy4CCg3sory+FH2XMPevAfK0YqC0/3MUJCgpAcjtC9OklY6+yN
+9MT8NxmV0NbwzVsFEJ8Y6Vjz67B/TQ==
+=Tj2d
 -----END PGP SIGNATURE-----
 
---iFRdW5/EC4oqxDHL--
+--hoZxPH4CaxYzWscb--
