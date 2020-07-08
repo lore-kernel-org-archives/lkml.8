@@ -2,114 +2,198 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A39C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41DFB20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2481220738
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MBlkOOaM"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="g5NfoxZY";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="OUcXsmi5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgGHCAS (ORCPT
+        id S1729254AbgGHCCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 22:00:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729181AbgGHCAR (ORCPT
+        Tue, 7 Jul 2020 22:02:24 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:34984 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728973AbgGHCCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 22:00:17 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE19AC08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 19:00:17 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id 72so6936759ple.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 19:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=u/NB405Z1TGjtZAiReLViP52ut2JNiZUpUX2+/hS9zQ=;
-        b=MBlkOOaM9paH9hQQovavkqmNpn6kimzpHHW9Rwxu1Xw10PwIN6ecI8JMDcOm5bBlx8
-         qOUmSzTCMHcjWpgEzImM9swC8CZYizzpva6FG30NPA0Dv7w4ua+e0bMfQk0lHKswaiXi
-         3+kInOqVKYo5kxRGcrRBgpq+DRw/nsEPL2dzk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u/NB405Z1TGjtZAiReLViP52ut2JNiZUpUX2+/hS9zQ=;
-        b=jMXesoUaF6A+4vpzt4OehydEitwT1T/HOrCuq8B6Twawk72McqfkvKcDqaJu3HH3VK
-         C+D+V2ZwHyxwDO9SEk0i2+ceQvoFwHm9bzjtL7w1cCyYfT/zuyMq41CT5O0YNpiLOS2i
-         sSB4rsGLGWNhj8qWeFwqb+B1/j16CMAMKgAwLciYJGzltGwtBOu+z/q/c+cuarrNYGdo
-         RBgZ0dly6vxvfgJKPMib7ayVZPxIrxBCxXcQ2dGc3OJ+h9MDRPjgBMfF6VaJQNhygukS
-         5vJvD7TLk47zmyUIPkTSLOOOxY/mBOs5Ae/ZhKjF2aF6m82WrPVwvJzubys619VLQ2uq
-         iN0A==
-X-Gm-Message-State: AOAM530J7vITOuM0odvkrpynFVK+eRdarfcUqkxeMkGeN9p8tP047S2g
-        z4xiGn8Kn8hGy0JVCyCrsfQYhxJKV80=
-X-Google-Smtp-Source: ABdhPJyVs8uL4JfAJM6teEQLGRWubgP5mIejizDNiDtnt96R+c31W82MjetFIVRVBWrWSp/WQJPLIw==
-X-Received: by 2002:a17:90a:3002:: with SMTP id g2mr7353479pjb.68.1594173617292;
-        Tue, 07 Jul 2020 19:00:17 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 73sm23957949pfy.24.2020.07.07.19.00.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 19:00:16 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 19:00:15 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shuah Khan <shuah@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: linux-next: manual merge of the seccomp tree with the kselftest
- tree
-Message-ID: <202007071858.C097D869BB@keescook>
-References: <20200707145720.02636577@canb.auug.org.au>
- <202007070125.ECBAB9E7C3@keescook>
- <18b266d0-a116-7201-6cd8-6e11f809e753@linuxfoundation.org>
+        Tue, 7 Jul 2020 22:02:23 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0681x1x0030145;
+        Tue, 7 Jul 2020 19:01:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=TJtFxJDfUfd57qPUvcbQgKr0oK9nBTT4RTKa37Na8mg=;
+ b=g5NfoxZYvV1J2OGBSW2QYo/fUZPZC7in3QUK+qKLayYezZ4ARtF+EMNQ8g6eLGpKHp8J
+ PZyKGni3cZpvMBV7qFedJvdrXWSy3cMdHJH5B0qlZlP+kqubbChNjsX3VR4RMmCDvCbl
+ ZWWMU7FGpVZmvFHeq1x6T3Acx5mfyTNave0= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 3239rs4y84-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 07 Jul 2020 19:01:54 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 7 Jul 2020 19:01:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WB3SUyKw8kBnqQHArc64owI8fV266BnoOBAK3fHXVrsBs/hqTJ2cy0CY/l7ukSa0gDg8JyoROjtKoyZjbCK6FTgdaRdKvM74bSe4cwvf7HyPaIVBLC1PORDxKlBOgPcm+XRVV8OTrETNJtq3K15baNZZ8v2MPZwAElvCXU+GS1mWZ3Z6J1GMgcQEiJnxLQ8QpippbpaJJyRnf7KM+oaHVkeBqoBHrF4tmAX26QKpGT9Yfz79amw9xyiKVnuRq5VF1eBdEO7MKlG/UiX2O63CFpICuRljYCq66Vh50PypljIoeyIdcU5wObtzQy5ic90hiFoxSRm580ndFOrSpMHulg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TJtFxJDfUfd57qPUvcbQgKr0oK9nBTT4RTKa37Na8mg=;
+ b=VQgXgrJ1omTiIwOX9ptOGd2JF7LwI/Eairyj265pwcAvVyt3CxbXbiGtld/adjyJ5pXD7qPh9E5tYITqCXFSfz/HhFc/lcc6BZCz81EhMMPz95RQvy+rNzYmgHi7hAWuVi60foDj76pdfIMqVi6mgS34fJVrKY4DprXORDiSoNuw33Hg8Ogh4pf2kMSUTO6C75213E4G88hK8msZ38tIPkvaYZC7EpWjy5qOEfYW4+m+EZ/VPZ6+kgp+wYlrrvGq88gcnlzYKGskkZcWAPDmqjxMunUDnTYF4jlTPVDnGlwgiP4gDxS5UB0Z/S8Qy6XhpH0r1yjT29EU23mtISD9gg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TJtFxJDfUfd57qPUvcbQgKr0oK9nBTT4RTKa37Na8mg=;
+ b=OUcXsmi5QZsr+nD16L0W8wiIMxEWZXoHRb2DYrLDr1fgI1pE1MLLgYaQxCZkq60SppGSNE3piYnk2Vrb7prnpxyfA9r8hB0W0xrYtrrb1T/gDKsXD2jlut+j+TnGi8++Fv7S93loqb+7kpZwOSaqoAeiaepaalVGzMprbCXv9MU=
+Received: from CH2PR15MB3672.namprd15.prod.outlook.com (2603:10b6:610:5::14)
+ by CH2PR15MB3670.namprd15.prod.outlook.com (2603:10b6:610:a::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Wed, 8 Jul
+ 2020 02:01:50 +0000
+Received: from CH2PR15MB3672.namprd15.prod.outlook.com
+ ([fe80::2d7a:edf5:67f9:5446]) by CH2PR15MB3672.namprd15.prod.outlook.com
+ ([fe80::2d7a:edf5:67f9:5446%3]) with mapi id 15.20.3153.029; Wed, 8 Jul 2020
+ 02:01:50 +0000
+From:   Nick Terrell <terrelln@fb.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+CC:     Nick Terrell <nickrterrell@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>,
+        "Michael van der Westhuizen" <rmikey@fb.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "Patrick Williams" <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        "Norbert Lange" <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v6 4/8] init: add support for zstd compressed kernel
+Thread-Topic: [PATCH v6 4/8] init: add support for zstd compressed kernel
+Thread-Index: AQHWVBHah0xsJt/cakyKnqlA4hkEhaj8rv0AgABAWoA=
+Date:   Wed, 8 Jul 2020 02:01:50 +0000
+Message-ID: <BFD3E8B0-4BAA-4E3A-AF16-FB17E88BECFE@fb.com>
+References: <20200707034604.1539157-1-nickrterrell@gmail.com>
+ <20200707034604.1539157-5-nickrterrell@gmail.com>
+ <20200707221130.GB1591079@rani.riverdale.lan>
+In-Reply-To: <20200707221130.GB1591079@rani.riverdale.lan>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: alum.mit.edu; dkim=none (message not signed)
+ header.d=none;alum.mit.edu; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:8186]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 482ac2a4-4eb1-43f5-9d0e-08d822e2e131
+x-ms-traffictypediagnostic: CH2PR15MB3670:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR15MB3670D396C70318BE0FDF89C6AB670@CH2PR15MB3670.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 04583CED1A
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ocLsk+HhBoIC5SvWm90nQ2JXH5JMniZF2+QvbX7TvupBV2wIY0ddgGBCWX4KFzthTTnyqCMrMN0YMmQVue8om26SVACoeAMJ8uRMSuswq9x6eNG6GtYMYeKsC43Raw6n9o1Uc8XIZWgm3mkOSJl+0Op87iNFZnSDH9M87YZJQzZCfYsJnUA6p0eOOZR5vrdfX1IxDEOtzFy8Mx0EtAPF2BLAvh2ho3Zrjv3V4CGH14o0UL6nQP0id2cXHuVpoIMzlAk2aEJQP1QzFTdz6Hx58ifms6CUls2dS6ET6jNZWU+qG9DVmjShjwv5RxL/SwT9Lj2ftabxmgVmer3b0QQxFg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR15MB3672.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(366004)(396003)(39860400002)(376002)(136003)(316002)(83380400001)(8676002)(5660300002)(6506007)(71200400001)(8936002)(53546011)(54906003)(64756008)(66446008)(66476007)(478600001)(66556008)(36756003)(76116006)(2906002)(6486002)(91956017)(186003)(2616005)(6512007)(6916009)(4326008)(66946007)(7416002)(33656002)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: wfO7VKk0osYYDGYwJqwxt/NNyoZmGFFRYSMh9UQ6PxmkWFp8JBs+X+T6UM42c7JKigu78ZTePlykvUj6CqEBvlQmCCa6oAAMCbDZaXKKfmW5Oh02l0joDMMlMDIKLdbAnhqjvNoqBcCYiMz2wuPGRYr1/eaYTRb4GT9mHimOddNy9kkjIpSMjWrngvHMyaoXnhkqTxUKxuo0w7Fg26yL3qWi7yszgYvrmmTWy0vTU1UeQKNuWB26ymCXSN3o8bwe1Dlqh9jlAqthP1w2j277OC1wTVebipLlcO9c15MFfDbvEKlb1gO4AFdIoVKhVf1eWxOm0zB++Y3kEOmQfN1UUgKV8QNngfKq3UhtGqZks2HXK/MIt8VdcB96So0GQllmkV35bpKpqSCNXdadfLxJVvg3lq+TarQms4JLV74rIPAc1LedEXivADwv7Pt19vSNXhb/kmoDY1q53M6vO1VO43Sc3ONVzPA1LV9p0gh80Y6/S3tYkeE61BK1c3ec6qzUz5Yq+mXA+5EA4Vf6NBRXkQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A44DE559F25940449F9AB288F69D74BE@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18b266d0-a116-7201-6cd8-6e11f809e753@linuxfoundation.org>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR15MB3672.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 482ac2a4-4eb1-43f5-9d0e-08d822e2e131
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2020 02:01:50.7964
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XZMPykZ50QKBhHmprTgdh6UUctdRTET6iw0EXyQJDkIxPGMojvBBb2NYSX3B64VK
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR15MB3670
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-07_15:2020-07-07,2020-07-07 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ mlxscore=0 suspectscore=0 clxscore=1011 impostorscore=0 adultscore=0
+ malwarescore=0 cotscore=-2147483648 lowpriorityscore=0 phishscore=0
+ spamscore=0 bulkscore=0 priorityscore=1501 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007080011
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 01:27:59PM -0600, Shuah Khan wrote:
-> On 7/7/20 2:26 AM, Kees Cook wrote:
-> > On Tue, Jul 07, 2020 at 02:57:20PM +1000, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Today's linux-next merge of the seccomp tree got a conflict in:
-> > > 
-> > >    tools/testing/selftests/seccomp/seccomp_bpf.c
-> > > 
-> > > between commit:
-> > > 
-> > >    9847d24af95c ("selftests/harness: Refactor XFAIL into SKIP")
-> > > 
-> > > from the kselftest tree and commits:
-> > > 
-> > >    aae7d264d68b ("selftests/seccomp: Check for EPOLLHUP for user_notif")
-> > >    11b4beaa0d31 ("selftests/seccomp: Make kcmp() less required")
-> > >    ef332c970dfa ("selftests/seccomp: Rename user_trap_syscall() to user_notif_syscall()")
-> > > 
-> > > from the seccomp tree.
-> > 
-> > Har har -- a collision of my own creation. Yay lots of trees. ;) I'll
-> > make this go away; the cause is a harmless cleanup.
-> > 
-> 
-> Thanks Kees. Let me know if I have to do anything.
 
-Yeah, as it turns out, I could only minimize the conflict, and I think
-I'll just mention it when I send the seccomp pull request for the v5.9
-merge window.
 
-Thanks!
+> On Jul 7, 2020, at 6:11 PM, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>=20
+> On Mon, Jul 06, 2020 at 08:46:00PM -0700, Nick Terrell wrote:
+>> From: Nick Terrell <terrelln@fb.com>
+>>=20
+>> * Adds the zstd cmd to scripts/Makefile.lib
+>> * Adds the HAVE_KERNEL_ZSTD and KERNEL_ZSTD options
+>>=20
+>> Architecture specific support is still needed for decompression.
+>>=20
+>> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+>> index 916b2f7f7098..d960f8815f87 100644
+>> --- a/scripts/Makefile.lib
+>> +++ b/scripts/Makefile.lib
+>> @@ -413,6 +413,21 @@ quiet_cmd_xzkern =3D XZKERN  $@
+>> quiet_cmd_xzmisc =3D XZMISC  $@
+>>       cmd_xzmisc =3D cat $(real-prereqs) | $(XZ) --check=3Dcrc32 --lzma2=
+=3Ddict=3D1MiB > $@
+>>=20
+>> +# ZSTD
+>> +# ---------------------------------------------------------------------=
+------
+>> +# Appends the uncompressed size of the data using size_append. The .zst
+>> +# format has the size information available at the beginning of the fil=
+e too,
+>> +# but it's in a more complex format and it's good to avoid changing the=
+ part
+>> +# of the boot code that reads the uncompressed size.
+>> +# Note that the bytes added by size_append will make the zstd tool thin=
+k that
+>> +# the file is corrupt. This is expected.
+>> +
+>> +quiet_cmd_zstd =3D ZSTD    $@
+>> +cmd_zstd =3D (cat $(filter-out FORCE,$^) | \
+> 		   ^^ should just be $(real-prereqs)
+>> +	zstd -19 && \
+>> +        $(call size_append, $(filter-out FORCE,$^))) > $@ || \
+> 	   ^^ size_append does not take arguments. It's used as just
+> 	   $(size_append) and will always output shell code to print the
+> 	   total size of $(real-prereqs) -- see other compressor command
+> 	   definitions.
 
--- 
-Kees Cook
+Yeah, when I wrote this code, this was how the rest of the compressors were=
+ implemented.
+I noticed that they had all been updated when I was responding to Norbert L=
+ange earlier.
+I will submit a v7 shortly with the updated command.
+
+Thanks for the review,
+Nick
+
+
