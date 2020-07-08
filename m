@@ -2,180 +2,104 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F616C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C113206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3885920708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:53:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ri/wpHrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgGHTxZ (ORCPT
+        id S1726281AbgGHTx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:53:25 -0400
-Received: from mga17.intel.com ([192.55.52.151]:40188 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgGHTxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:53:24 -0400
-IronPort-SDR: C928S17URVCsQLapJk87Mr7jEdakDZe6xpeU9sUkqShrkv4Nwghj0zEDdJgYNM44lIrwio0vR7
- c+t6nY5HWqPQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="127964041"
-X-IronPort-AV: E=Sophos;i="5.75,329,1589266800"; 
-   d="scan'208";a="127964041"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 12:53:23 -0700
-IronPort-SDR: 8/9ojLLrmGs64bscpeZqOtSm5UVZKahjoTGa2EETs92BK2be3b3HmayslwObv2WdAS4u2AB1cq
- qeVtSJErnXDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,329,1589266800"; 
-   d="scan'208";a="280057231"
-Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jul 2020 12:53:23 -0700
-Subject: Re: [PATCH] fpga: stratix10-soc: make FPGA task un-interruptible
-To:     Dinh Nguyen <dinguyen@kernel.org>, mdf@kernel.org
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        richard.gong@intel.com
-References: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
- <3e45e4a4-f002-ecf8-110f-bf7d646a5dbe@kernel.org>
- <5be15818-9170-b2a5-e92b-bbe6b1fcba21@linux.intel.com>
- <39936d44-a802-8105-7d60-97a1e44c163d@kernel.org>
-From:   Richard Gong <richard.gong@linux.intel.com>
-Message-ID: <09ef73c9-f796-56d1-d9b3-183f7bb3b8b5@linux.intel.com>
-Date:   Wed, 8 Jul 2020 15:08:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 15:53:28 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51392 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgGHTx0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 15:53:26 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 068Jkc4b014971;
+        Wed, 8 Jul 2020 19:53:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=l5kP04TQx9CT6XBndJoPCQt97j3az16WSIoo49ut7H0=;
+ b=Ri/wpHrNAp/87a8ITffVtp7EjnPYPzVXnf++JO8YDZ4h3h6A24ObFmeMUy2urj8JP860
+ WmPB9TfZdQNosk77pShY+mRzraYfQnC2mzkkX/cREpHlmWIkKqf/Tr7xjV8MRyWoj+Z2
+ wLpjbBtMuWD3cCt9wGtAHF2heY6wrDRZseIUIHcPlX7vJe5PzBgYgN+7YEZ1S7SKoeOJ
+ gp4IkGEbBdRa/3g7f7TB79rpRqzIHVNKQ61BW10/nglfUQup6PUM3HyD+eBt46D9wUwc
+ GoX22Ro7BQsFkpWlRO34sK2EdnbFK57XPPIq+iDQXmZaq70ldIidQxYTlN3zix8c4Se3 pw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 325k368j0e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 08 Jul 2020 19:53:15 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 068JnHUe167225;
+        Wed, 8 Jul 2020 19:51:14 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 325k3efsre-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jul 2020 19:51:14 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 068JpClo018936;
+        Wed, 8 Jul 2020 19:51:12 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 08 Jul 2020 12:51:12 -0700
+Date:   Wed, 8 Jul 2020 15:51:40 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Nico Pache <npache@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        steffen.klassert@secunet.com, daniel.m.jordan@oracle.com
+Subject: Re: [PATCH v2] Remove __init from padata_do_multithreaded and
+ padata_mt_helper.
+Message-ID: <20200708195140.hioiltf7pwppz6j7@ca-dmjordan1.us.oracle.com>
+References: <20200702155548.14690-1-npache@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <39936d44-a802-8105-7d60-97a1e44c163d@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702155548.14690-1-npache@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9676 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 adultscore=0 suspectscore=0 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007080119
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9676 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0 mlxscore=0
+ adultscore=0 spamscore=0 mlxlogscore=999 malwarescore=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 clxscore=1011 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007080119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dinh,
+(I was away for a while)
 
-On 7/8/20 1:47 PM, Dinh Nguyen wrote:
-> 
-> 
-> On 7/8/20 1:30 PM, Richard Gong wrote:
->> Hi Dinh,
->>
->>
->> On 7/8/20 12:08 PM, Dinh Nguyen wrote:
->>> Hi
->>>
->>> On 7/7/20 11:14 AM, richard.gong@linux.intel.com wrote:
->>>> From: Richard Gong <richard.gong@intel.com>
->>>>
->>>> When CTRL+C occurs during the process of FPGA reconfiguration, the FPGA
->>>> reconfiguration process stops and the user can't perform a new FPGA
->>>> reconfiguration properly.
->>>>
->>>> Set FPGA complete task to be not interruptible so that the user can
->>>> properly perform FPGA reconfiguration after CTRL+C event.
->>>>
->>>> Signed-off-by: Richard Gong <richard.gong@intel.com>
->>>> ---
->>>>    drivers/fpga/stratix10-soc.c | 23 +++--------------------
->>>>    1 file changed, 3 insertions(+), 20 deletions(-)
->>>>
->>>> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
->>>> index 44b7c56..657a70c 100644
->>>> --- a/drivers/fpga/stratix10-soc.c
->>>> +++ b/drivers/fpga/stratix10-soc.c
->>>> @@ -196,17 +196,13 @@ static int s10_ops_write_init(struct
->>>> fpga_manager *mgr,
->>>>        if (ret < 0)
->>>>            goto init_done;
->>>>    -    ret = wait_for_completion_interruptible_timeout(
->>>> +    ret = wait_for_completion_timeout(
->>>>            &priv->status_return_completion, S10_RECONFIG_TIMEOUT);
->>>>        if (!ret) {
->>>>            dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
->>>>            ret = -ETIMEDOUT;
->>>>            goto init_done;
->>>>        }
->>>> -    if (ret < 0) {
->>>> -        dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
->>>> -        goto init_done;
->>>> -    }
->>>>          ret = 0;
->>>>        if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
->>>> @@ -318,7 +314,7 @@ static int s10_ops_write(struct fpga_manager
->>>> *mgr, const char *buf,
->>>>             */
->>>>            wait_status = 1; /* not timed out */
->>>>            if (!priv->status)
->>>> -            wait_status = wait_for_completion_interruptible_timeout(
->>>> +            wait_status = wait_for_completion_timeout(
->>>>                    &priv->status_return_completion,
->>>>                    S10_BUFFER_TIMEOUT);
->>>>    @@ -340,13 +336,6 @@ static int s10_ops_write(struct fpga_manager
->>>> *mgr, const char *buf,
->>>>                ret = -ETIMEDOUT;
->>>>                break;
->>>>            }
->>>> -        if (wait_status < 0) {
->>>> -            ret = wait_status;
->>>> -            dev_err(dev,
->>>> -                "error (%d) waiting for svc layer buffers\n",
->>>> -                ret);
->>>> -            break;
->>>> -        }
->>>>        }
->>>>          if (!s10_free_buffers(mgr))
->>>> @@ -372,7 +361,7 @@ static int s10_ops_write_complete(struct
->>>> fpga_manager *mgr,
->>>>            if (ret < 0)
->>>>                break;
->>>>    -        ret = wait_for_completion_interruptible_timeout(
->>>> +        ret = wait_for_completion_timeout(
->>>>                &priv->status_return_completion, timeout);
->>>>            if (!ret) {
->>>>                dev_err(dev,
->>>> @@ -380,12 +369,6 @@ static int s10_ops_write_complete(struct
->>>> fpga_manager *mgr,
->>>>                ret = -ETIMEDOUT;
->>>>                break;
->>>>            }
->>>> -        if (ret < 0) {
->>>> -            dev_err(dev,
->>>> -                "error (%d) waiting for RECONFIG_COMPLETED\n",
->>>> -                ret);
->>>> -            break;
->>>> -
->>>>            /* Not error or timeout, so ret is # of jiffies until
->>>> timeout */
->>>>            timeout = ret;
->>>>            ret = 0;
->>>>
->>>
->>> Do you need the same change in drivers/fpga/socfpga.c?
->> It is not required.
-> 
-> Why not?
+On Thu, Jul 02, 2020 at 11:55:48AM -0400, Nico Pache wrote:
+> Allow padata_do_multithreaded function to be called after bootstrap.
 
-The original codes doesn't handle the task completion to be signaled, so 
-here it serves the same function as wait_for_completion_timeout call.
+The functions are __init because they're currently only needed during boot, and
+using __init allows the text to be freed once it's over, saving some memory.
 
-Regards,
-Richard
+So this change, in isolation, doesn't make sense.  If there were an enhancement
+you were thinking of making, this patch could then be bundled with it so the
+change is made only when it's used.
 
-> 
->> Also, you did not
->>> include Moritz Fisher on this. He's the maintainer.
->>>
->> I did include Moritz Fisher <mdf@kernel.org> in the submission, is
->> something change recently?
->>
-> 
-> My bad, I didn't see his name in the email.
-> 
-> Dinh
-> 
+However, there's still work that needs to be merged before
+padata_do_multithreaded can be called after boot.  See the parts about priority
+adjustments (MAX_NICE/renicing) and concurrency limits in this branch
+
+  https://oss.oracle.com/git/gitweb.cgi?p=linux-dmjordan.git;a=shortlog;h=refs/heads/padata-mt-wip-v0.5
+
+and the ktask discussions from linux-mm/lkml where concerns about these issues
+were raised.  I plan to post these parts fairly soon and can include you if you
+want.
