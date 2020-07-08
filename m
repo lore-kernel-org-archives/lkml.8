@@ -2,332 +2,105 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F61C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDA132078A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:09:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wfG89uf9"
+	by mail.kernel.org (Postfix) with ESMTP id 469352078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgGHFJy (ORCPT
+        id S1729681AbgGHFKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:09:54 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:35726 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729625AbgGHFJy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:09:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594184993; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=3Ch8WSA1B/4jOFB5bA7AVNVE1HX8i9OvLQvCMnXDHgo=; b=wfG89uf9mlCUJW1UtZkyOFuR059x7lDYdRBvGgGDVZoeTZ5LqkbmYieiEIi4HrfVc3yGfgb2
- sJ1xUkdYq11yTD6r6szXMGO21AqNFoRHr0wn76MbQ5tsZXHUmP5FpfolMYYKXmrr7bpWtkbd
- oqyosXSIl8OwI97sTCGoNAURth8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f0555069b7f1f3df742d24e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 05:09:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DB87AC4344B; Wed,  8 Jul 2020 05:09:26 +0000 (UTC)
-Received: from rohkumar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0208CC433C6;
-        Wed,  8 Jul 2020 05:09:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0208CC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-From:   Rohit kumar <rohitkr@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ajit Pandey <ajitp@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v3 8/8] dt-bindings: sound: lpass-cpu: Move to yaml format
-Date:   Wed,  8 Jul 2020 10:38:16 +0530
-Message-Id: <1594184896-10629-9-git-send-email-rohitkr@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
-References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
+        Wed, 8 Jul 2020 01:10:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:42080 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728589AbgGHFKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 01:10:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4242C0A;
+        Tue,  7 Jul 2020 22:10:11 -0700 (PDT)
+Received: from [192.168.0.129] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DB5C3F71E;
+        Tue,  7 Jul 2020 22:10:09 -0700 (PDT)
+Subject: Re: [PATCH -next] Documentation/vm: fix tables in
+ arch_pgtable_helpers
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+References: <02ee60d0-e836-2237-4881-5c57ccac5551@infradead.org>
+ <b9dfad77-8dee-4628-a9f3-43417568a0e5@arm.com>
+ <13943665-f1c8-dc34-37cc-a1f56ae57a5b@infradead.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <b738eae9-79b7-60d6-0d8e-0c57d23d4e41@arm.com>
+Date:   Wed, 8 Jul 2020 10:39:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <13943665-f1c8-dc34-37cc-a1f56ae57a5b@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajit Pandey <ajitp@codeaurora.org>
 
-Update lpass-cpu binding with yaml formats.
 
-Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
----
- .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  80 -----------
- .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 154 +++++++++++++++++++++
- 2 files changed, 154 insertions(+), 80 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+On 07/08/2020 07:36 AM, Randy Dunlap wrote:
+> On 7/7/20 6:22 PM, Anshuman Khandual wrote:
+>>
+>>
+>> On 07/08/2020 06:37 AM, Randy Dunlap wrote:
+>>> From: Randy Dunlap <rdunlap@infradead.org>
+>>>
+>>> Make the tables be presented as tables in the generated output files
+>>> (the line drawing did not present well).
+>>>
+>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>>> Cc: Jonathan Corbet <corbet@lwn.net>
+>>> Cc: linux-doc@vger.kernel.org
+>>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+>>> Cc: Mike Rapoport <rppt@kernel.org>
+>>> Cc: linux-arch@vger.kernel.org
+>>> Cc: linux-mm@kvack.org
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> ---
+>>>  Documentation/vm/arch_pgtable_helpers.rst |  333 ++++++--------------
+>>>  1 file changed, 116 insertions(+), 217 deletions(-)
+>>
+>> Do you have a git URL some where to see these new output ? This
+>> documentation is also useful when reading from a terminal where
+>> these manual line drawing tables make sense.
+>>
+> 
+> No, I don't have a git URL.
+> You can go to
+> https://drive.google.com/file/d/1FO6lCRKldzESwLdylvY8tw10dOBvwz84/view?usp=sharing
+> 
+> I had to Download the file and then view it locally. I couldn't get Google Drive
+> to display it for me as html (only as text).
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-deleted file mode 100644
-index 04e34cc..00000000
---- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-+++ /dev/null
-@@ -1,80 +0,0 @@
--* Qualcomm Technologies LPASS CPU DAI
--
--This node models the Qualcomm Technologies Low-Power Audio SubSystem (LPASS).
--
--Required properties:
--
--- compatible		: "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
--			  "qcom,lpass-cpu-sc7180"
--- clocks		: Must contain an entry for each entry in clock-names.
--- clock-names		: A list which must include the following entries:
--				* "ahbix-clk"
--				* "mi2s-osr-clk"
--				* "mi2s-bit-clk"
--			: required clocks for "qcom,lpass-cpu-apq8016"
--				* "ahbix-clk"
--				* "mi2s-bit-clk0"
--				* "mi2s-bit-clk1"
--				* "mi2s-bit-clk2"
--				* "mi2s-bit-clk3"
--				* "pcnoc-mport-clk"
--				* "pcnoc-sway-clk"
--
--- interrupts		: Must contain an entry for each entry in
--			  interrupt-names.
--- interrupt-names	: A list which must include the following entries:
--				* "lpass-irq-lpaif"
--- pinctrl-N		: One property must exist for each entry in
--			  pinctrl-names.  See ../pinctrl/pinctrl-bindings.txt
--			  for details of the property values.
--- pinctrl-names		: Must contain a "default" entry.
--- reg			: Must contain an address for each entry in reg-names.
--- reg-names		: A list which must include the following entries:
--				* "lpass-lpaif"
--- #address-cells	: Must be 1
--- #size-cells		: Must be 0
--
--
--
--Optional properties:
--
--- qcom,adsp		: Phandle for the audio DSP node
--
--By default, the driver uses up to 4 MI2S SD lines, for a total of 8 channels.
--The SD lines to use can be configured by adding subnodes for each of the DAIs.
--
--Required properties for each DAI (represented by a subnode):
--- reg			: Must be one of the DAI IDs
--			  (usually part of dt-bindings header)
--- qcom,playback-sd-lines: List of serial data lines to use for playback
--			  Each SD line should be represented by a number from 0-3.
--- qcom,capture-sd-lines	: List of serial data lines to use for capture
--			  Each SD line should be represented by a number from 0-3.
--
--Note that adding a subnode changes the default to "no lines configured",
--so both playback and capture lines should be configured when a subnode is added.
--
--Example:
--
--lpass@28100000 {
--	compatible = "qcom,lpass-cpu";
--	clocks = <&lcc AHBIX_CLK>, <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
--	clock-names = "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk";
--	interrupts = <0 85 1>;
--	interrupt-names = "lpass-irq-lpaif";
--	pinctrl-names = "default", "idle";
--	pinctrl-0 = <&mi2s_default>;
--	pinctrl-1 = <&mi2s_idle>;
--	reg = <0x28100000 0x10000>;
--	reg-names = "lpass-lpaif";
--	qcom,adsp = <&adsp>;
--
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	/* Optional to set different MI2S SD lines */
--	dai@3 {
--		reg = <MI2S_QUATERNARY>;
--		qcom,playback-sd-lines = <0 1>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-new file mode 100644
-index 00000000..9c350bc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-@@ -0,0 +1,154 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/qcom,lpass-cpu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm LPASS CPU dai driver bindings
-+
-+maintainers:
-+  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-+  - Rohit kumar <rohitkr@codeaurora.org>
-+
-+description:
-+  Qualcomm SOC Low-Power Audio SubSystem (LPASS) that consist of MI2S interface
-+  for audio data transfer on external codecs. LPASS cpu driver is a module to
-+  configure Low-Power Audio Interface(LPAIF) core registers across different
-+  IP versions.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,lpass-cpu
-+      - qcom,apq8016-lpass-cpu
-+      - qcom,lpass-cpu-sc7180
-+
-+  reg:
-+    items:
-+      - description: LPAIF core registers
-+
-+  reg-names:
-+    items:
-+      - const: lpass-lpaif
-+
-+  clocks:
-+    items:
-+      - description: AHBIX core clock
-+      - description: oscillator clock for MI2S external interfaces
-+      - description: Bit clock for single MI2S dai
-+      - description: Bit clock for MI2S_PRIMARY dai interface
-+      - description: Bit clock for MI2S_SECONDARY dai interface
-+      - description: Bit clock for MI2S_TERTIARY dai interface
-+      - description: Bit clock for MI2S_QUATERNARY dai interface
-+      - description: NOC MPORT clock of LPASS core
-+      - description: NOC SWAY clock of LPASS core
-+
-+  clock-names:
-+    items:
-+      - const: ahbix-clk
-+      - const: mi2s-osr-clk
-+      - const: mi2s-bit-clk
-+      - const: mi2s-bit-clk0
-+      - const: mi2s-bit-clk1
-+      - const: mi2s-bit-clk2
-+      - const: mi2s-bit-clk3
-+      - const: pcnoc-mport-clk
-+      - const: pcnoc-sway-clk
-+
-+  interrupts:
-+    items:
-+      - description: LPAIF DMA buffer interrupt
-+
-+  interrupt-names:
-+    items:
-+      - const: lpass-irq-lpaif
-+
-+  qcom,adsp:
-+    maxItems: 1
-+    description: Phandle for the audio DSP node
-+
-+  iommus:
-+    maxItems: 1
-+    description: Phandle to apps_smmu node with sid mask
-+
-+  power-domains:
-+    maxItems: 1
-+    description: Phandle for power domain node
-+
-+  '#sound-dai-cells':
-+    const: 1
-+
-+  child-node:
-+    description: Required properties for each DAI
-+    type: object
-+    properties:
-+      reg:
-+        description: Must be one of the DAI ID
-+                     (Usually part of dtbindings header)
-+      qcom,playback-sd-lines:
-+        description: List of serial data lines to use for playback
-+                     Each SD line should be represented by a number from 0-3.
-+      qcom,capture-sd-lines :
-+        description: List of serial data lines to use for capture
-+                     Each SD line should be represented by a number from 0-3.
-+    required:
-+      -reg
-+    # Note that adding a subnode changes the default to "no lines configured",
-+    # so both playback and capture lines should be configured when a subnode
-+    # is added.
-+
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - interrupt-names
-+  - sound-dai-cells
-+
-+optional:
-+  - qcom,adsp
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: qcom,lpass-cpu-sc7180
-+
-+then:
-+  required:
-+    - iommus
-+    - power-domains
-+
-+examples:
-+  lpass@28100000 {
-+	compatible = "qcom,lpass-cpu";
-+	clocks = <&lcc AHBIX_CLK>,
-+		 <&lcc MI2S_OSR_CLK>,
-+		 <&lcc MI2S_BIT_CLK>;
-+
-+	clock-names = "ahbix-clk",
-+		      "mi2s-osr-clk",
-+		      "mi2s-bit-clk";
-+
-+	interrupts = <0 85 1>;
-+        interrupt-names = "lpass-irq-lpaif";
-+
-+	iommus = <&apps_smmu 0x1020 0>;
-+	power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-+
-+	reg = <0x28100000 0x10000>;
-+	reg-names = "lpass-lpaif";
-+	#sound-dai-cells = <1>;
-+	qcom,adsp = <&adsp>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	/* Optional to set different MI2S SD lines */
-+	mi2s-quaternary@3 {
-+		reg = <MI2S_QUATERNARY>;
-+		qcom,playback-sd-lines = <0 1>;
-+  };
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+I could see it locally as well on a browser and the table looks the same
+way like those current manual ones on a terminal, so looks good to me.
 
+> 
+> I understand about reading tables at a terminal.
+> This file could have been a txt file for that, but it's not. It's a RsT file.
+
+Thats right. All files in Documentation/vm/ are .rst type, hence would
+not like to have a .txt type in there.
+
+> 
+> If you want to leave it as is, please fix these warnings:
+
+Thats right. Can not have in both ways. Lets stick with .rst and change
+as required.
