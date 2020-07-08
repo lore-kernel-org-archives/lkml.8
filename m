@@ -2,149 +2,173 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C897C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70919C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49B6B206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5451820720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:47:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QOUjGeLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgGHToL (ORCPT
+        id S1726144AbgGHTrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:44:11 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:57956 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgGHToK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:44:10 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 0322FBC0EE;
-        Wed,  8 Jul 2020 19:44:06 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     broonie@kernel.org, robh+dt@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] SPI SUBSYSTEM: Replace HTTP links with HTTPS ones
-Date:   Wed,  8 Jul 2020 21:44:00 +0200
-Message-Id: <20200708194400.22213-1-grandmaster@al2klimov.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+        Wed, 8 Jul 2020 15:47:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgGHTrU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 15:47:20 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDF2C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 12:47:20 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id x1so5918517pla.10
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=pljlg3yHFHSvTFF5i62V0f3vLeabEmCDDf596zZbJM8=;
+        b=QOUjGeLtOAJD7kgc4YCP+sBsOWR5DJaZmc58t58h2EH8HPeOhHgvihOeBoBz41z+h7
+         lk1O16q6sWuFZvb1Kv6sHeJthkBqfgF2qsd/qhvyKS/S5WAaflpfrbqSIBn1+0fa9lyX
+         iS4S1CC2nll4cumNd3QhC7BkOedqQRBAgAicF545XYfTjAxsUBUvpBQbUeLyJAsr2f3q
+         r270qhAGqPIkeOxlgCn5Wz5tZjJdREM6VuKAjngTgE0lu0qPpnksRkKcwzVtoUrk6sJ5
+         5SUR+2PKD8qz79BJ2zuoJ7zlEHWPLVIlUzY8S8GdZPG77LadBr9xaUq0u6Ql9FOwH27X
+         TEnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=pljlg3yHFHSvTFF5i62V0f3vLeabEmCDDf596zZbJM8=;
+        b=Kh8vYINHstmaOQEhCnbXuz1zQtB3Gi5blEe88viAGy+gQscS1wz7GTrFUUIxjpKX4K
+         dUCzygexPfW0TQSRALT6gQ+K2tg+m6e79+faWtDD07etbb2IrTkw5VC0q9zGS0blGqUK
+         fgFTM5WQsfjrrVFhSJbinpa6opjNXawQJrpEfM1TNTEfTRSc98+KRIb4fbF/3e+aOs4+
+         NbkoKlDwhuaNhgwbXhfqcSNXn9P+iId5SpbUTGYbpV8sdspk1QGs2xPhGjj0B4FI6QPb
+         mk4dongNOkK7TgpW3C4OkHkL+5AcqVK6AmNyHVnocsRln6R/BM2JVhtaSKocYSKbaZek
+         zNew==
+X-Gm-Message-State: AOAM53102Mz00maInhmFFbErx349XkcVGfTrWFG2gXTHqeXSesRA4KLy
+        Tui1gpjKEnrggWFZaxQqV2scDzMIzhYpyiQWPnweXzZPrNARaUtPAUCupLlq1FHaFsjXxA3GtNz
+        OfNCnCtJnyVuN19/GVL9I0xga7merNx/uwH3lMMLIRtEG5BMVPOQZv/gdMFoPfqfh+4JjhMhf3E
+        XVAJEi
+X-Google-Smtp-Source: ABdhPJwu+cqA7SFopH7sDGho/uhjflNJjwTBWDtSPL4H1srwzxx+pUWfCqcSwPaH9Fom19mDm0ylxD8+2+ZFHvKK
+X-Received: by 2002:a17:902:a60d:: with SMTP id u13mr52502800plq.46.1594237639483;
+ Wed, 08 Jul 2020 12:47:19 -0700 (PDT)
+Date:   Wed,  8 Jul 2020 12:47:15 -0700
+Message-Id: <20200708194715.4073300-1-abhishekbh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+Subject: [PATCH v5] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+From:   Abhishek Bhardwaj <abhishekbh@google.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Abhishek Bhardwaj <abhishekbh@google.com>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+This change adds a new kernel configuration that sets the l1d cache
+flush setting at compile time rather than at run time.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+The reasons for this change are as follows -
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+ - Kernel command line arguments are getting unwieldy. These parameters
+ are not a scalable way to set the kernel config. They're intended as a
+ super limited way for the bootloader to pass info to the kernel and
+ also as a way for end users who are not compiling the kernel themselves
+ to tweak the kernel behavior.
+
+ - Also, if a user wants this setting from the start. It's a definite
+ smell that it deserves to be a compile time thing rather than adding
+ extra code plus whatever miniscule time at runtime to pass an
+ extra argument.
+
+ - Finally, it doesn't preclude the runtime / kernel command line way.
+ Users are free to use those as well.
+
+Signed-off-by: Abhishek Bhardwaj <abhishekbh@google.com>
+
 ---
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Changes in v5:
+- Fix indentation of the help text in the KConfig.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+Changes in v4:
+- Add motivation for the change in the commit message.
 
- If you apply the patch, please let me know.
+Changes in v3:
+- Change depends on to only x86_64.
+- Remove copy paste errors at the end of the KConfig.
 
+Changes in v2:
+- Fix typo in the help of the new KConfig.
 
- Documentation/devicetree/bindings/spi/spi-davinci.txt | 4 ++--
- Documentation/spi/spi-sc18is602.rst                   | 2 +-
- drivers/spi/spi-ep93xx.c                              | 2 +-
- drivers/spi/spi-oc-tiny.c                             | 2 +-
- drivers/spi/spi-ti-qspi.c                             | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |  8 ++++++++
+ arch/x86/kvm/Kconfig       | 13 +++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
-index 9f5b4c7c0c08..e2198a389484 100644
---- a/Documentation/devicetree/bindings/spi/spi-davinci.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
-@@ -1,8 +1,8 @@
- Davinci SPI controller device bindings
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 0b71970d2d3d2..1dcc875cf5547 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1406,7 +1406,15 @@ enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
+ #if IS_ENABLED(CONFIG_KVM_INTEL)
+ EXPORT_SYMBOL_GPL(l1tf_mitigation);
+ #endif
++#if (CONFIG_KVM_VMENTRY_L1D_FLUSH == 1)
++enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NEVER;
++#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 2)
++enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_COND;
++#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 3)
++enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_ALWAYS;
++#else
+ enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
++#endif
+ EXPORT_SYMBOL_GPL(l1tf_vmx_mitigation);
  
- Links on DM:
--Keystone 2 - http://www.ti.com/lit/ug/sprugp2a/sprugp2a.pdf
--dm644x - http://www.ti.com/lit/ug/sprue32a/sprue32a.pdf
-+Keystone 2 - https://www.ti.com/lit/ug/sprugp2a/sprugp2a.pdf
-+dm644x - https://www.ti.com/lit/ug/sprue32a/sprue32a.pdf
- OMAP-L138/da830 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
- 
- Required properties:
-diff --git a/Documentation/spi/spi-sc18is602.rst b/Documentation/spi/spi-sc18is602.rst
-index 2a31dc722321..4ab9ca346b44 100644
---- a/Documentation/spi/spi-sc18is602.rst
-+++ b/Documentation/spi/spi-sc18is602.rst
-@@ -6,7 +6,7 @@ Supported chips:
- 
-   * NXP SI18IS602/602B/603
- 
--    Datasheet: http://www.nxp.com/documents/data_sheet/SC18IS602_602B_603.pdf
-+    Datasheet: https://www.nxp.com/documents/data_sheet/SC18IS602_602B_603.pdf
- 
- Author:
-         Guenter Roeck <linux@roeck-us.net>
-diff --git a/drivers/spi/spi-ep93xx.c b/drivers/spi/spi-ep93xx.c
-index 8c854b187b1d..ae7c79a06208 100644
---- a/drivers/spi/spi-ep93xx.c
-+++ b/drivers/spi/spi-ep93xx.c
-@@ -10,7 +10,7 @@
-  *
-  * For more information about the SPI controller see documentation on Cirrus
-  * Logic web site:
-- *     http://www.cirrus.com/en/pubs/manual/EP93xx_Users_Guide_UM1.pdf
-+ *     https://www.cirrus.com/en/pubs/manual/EP93xx_Users_Guide_UM1.pdf
-  */
- 
- #include <linux/io.h>
-diff --git a/drivers/spi/spi-oc-tiny.c b/drivers/spi/spi-oc-tiny.c
-index 9df7c5979c29..f3843f0ff260 100644
---- a/drivers/spi/spi-oc-tiny.c
-+++ b/drivers/spi/spi-oc-tiny.c
-@@ -2,7 +2,7 @@
  /*
-  * OpenCores tiny SPI master driver
-  *
-- * http://opencores.org/project,tiny_spi
-+ * https://opencores.org/project,tiny_spi
-  *
-  * Copyright (C) 2011 Thomas Chou <thomas@wytron.com.tw>
-  *
-diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
-index 366a3e5cca6b..3c41649698a5 100644
---- a/drivers/spi/spi-ti-qspi.c
-+++ b/drivers/spi/spi-ti-qspi.c
-@@ -2,7 +2,7 @@
- /*
-  * TI QSPI driver
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Sourav Poddar <sourav.poddar@ti.com>
-  */
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index b277a2db62676..cb2639dfb6da1 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -107,4 +107,17 @@ config KVM_MMU_AUDIT
+ 	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
+ 	 auditing of KVM MMU events at runtime.
  
++config KVM_VMENTRY_L1D_FLUSH
++	int "L1D cache flush settings (1-3)"
++	range 1 3
++	default "2"
++	depends on KVM && X86_64
++	help
++	  This setting determines the L1D cache flush behavior before a VMENTER.
++	  This is similar to setting the option / parameter to
++	  kvm-intel.vmentry_l1d_flush.
++	  1 - Never flush.
++	  2 - Conditionally flush.
++	  3 - Always flush.
++
+ endif # VIRTUALIZATION
 -- 
-2.27.0
+2.27.0.383.g050319c2ae-goog
 
