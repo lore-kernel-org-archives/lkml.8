@@ -2,229 +2,175 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF31C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBFAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41BBE20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9472080D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:50:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xeq7EFlP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbgGHGuT (ORCPT
+        id S1729834AbgGHGut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 02:50:19 -0400
-Received: from verein.lst.de ([213.95.11.211]:33833 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgGHGuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 02:50:18 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 94BAE68AFE; Wed,  8 Jul 2020 08:50:14 +0200 (CEST)
-Date:   Wed, 8 Jul 2020 08:50:14 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Borkmann <daniel@iogearbox.net>, maximmi@mellanox.com,
-        konrad.wilk@oracle.com, jonathan.lemon@gmail.com,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, davem@davemloft.net,
-        magnus.karlsson@intel.com
-Subject: Re: [PATCH net] xsk: remove cheap_dma optimization
-Message-ID: <20200708065014.GA5694@lst.de>
-References: <20200626134358.90122-1-bjorn.topel@gmail.com> <c60dfb5a-2bf3-20bd-74b3-6b5e215f73f8@iogearbox.net> <20200627070406.GB11854@lst.de> <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com> <878626a2-6663-0d75-6339-7b3608aa4e42@arm.com>
+        Wed, 8 Jul 2020 02:50:49 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20270 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726171AbgGHGut (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 02:50:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594191045;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=hwOIoPZhNJC6ecRIpeMTkpwXX1sXWf9wq362A66w32w=;
+        b=Xeq7EFlP9T3HCodjEq7oHYIASenSonCIhi5MrfVWBZm0yLQx5WBbArBBFfkCxyMbNaomFM
+        PaPFBxDrYeCTd91z8CsmE/wvQUUoMwszdlFi40fOPj46ZZecNQqedRxphQpUV5CX1Jk9vX
+        zx5XGFXCh7DjkcAXhgiuGj78fwEoXyM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-173-A7Oen5JfOwKnvGjyU9c9ig-1; Wed, 08 Jul 2020 02:50:43 -0400
+X-MC-Unique: A7Oen5JfOwKnvGjyU9c9ig-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46CC6800D5C;
+        Wed,  8 Jul 2020 06:50:42 +0000 (UTC)
+Received: from [10.36.113.117] (ovpn-113-117.ams2.redhat.com [10.36.113.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A527D60C80;
+        Wed,  8 Jul 2020 06:50:40 +0000 (UTC)
+Subject: Re: [PATCH v1 0/9] s390: implement and optimize vmemmap_free()
+From:   David Hildenbrand <david@redhat.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20200703133917.39045-1-david@redhat.com>
+ <20200707120849.GB12303@osiris>
+ <f4a87c47-4987-e3f8-8c06-ff6dd60f6a39@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <51813747-a2d6-03a4-fe61-b8d62dbca05b@redhat.com>
+Date:   Wed, 8 Jul 2020 08:50:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <878626a2-6663-0d75-6339-7b3608aa4e42@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <f4a87c47-4987-e3f8-8c06-ff6dd60f6a39@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 04:41:16PM +0100, Robin Murphy wrote:
-> On 2020-06-28 18:16, Björn Töpel wrote:
->>
->> On 2020-06-27 09:04, Christoph Hellwig wrote:
->>> On Sat, Jun 27, 2020 at 01:00:19AM +0200, Daniel Borkmann wrote:
->>>> Given there is roughly a ~5 weeks window at max where this removal could
->>>> still be applied in the worst case, could we come up with a fix / 
->>>> proposal
->>>> first that moves this into the DMA mapping core? If there is something 
->>>> that
->>>> can be agreed upon by all parties, then we could avoid re-adding the 9%
->>>> slowdown. :/
+On 07.07.20 14:13, David Hildenbrand wrote:
+> On 07.07.20 14:08, Heiko Carstens wrote:
+>> On Fri, Jul 03, 2020 at 03:39:08PM +0200, David Hildenbrand wrote:
+>>> This series is based on the latest s390/features branch [1]. It implements
+>>> vmemmap_free(), consolidating it with vmem_add_range(), and optimizes it by
+>>> - Freeing empty page tables (now also done for idendity mapping).
+>>> - Handling cases where the vmemmap of a section does not fill huge pages
+>>>   completely.
 >>>
->>> I'd rather turn it upside down - this abuse of the internals blocks work
->>> that has basically just missed the previous window and I'm not going
->>> to wait weeks to sort out the API misuse.  But we can add optimizations
->>> back later if we find a sane way.
+>>> vmemmap_free() is currently never used, unless adiing standby memory fails
+>>> (unlikely). This is relevant for virtio-mem, which adds/removes memory
+>>> in memory block/section granularity (always removes memory in the same
+>>> granularity it added it).
 >>>
->>
->> I'm not super excited about the performance loss, but I do get
->> Christoph's frustration about gutting the DMA API making it harder for
->> DMA people to get work done. Lets try to solve this properly using
->> proper DMA APIs.
->>
->>
->>> That being said I really can't see how this would make so much of a
->>> difference.  What architecture and what dma_ops are you using for
->>> those measurements?  What is the workload?
+>>> I gave this a proper test with my virtio-mem prototype (which I will share
+>>> once the basic QEMU implementation is upstream), both with 56 byte memmap
+>>> per page and 64 byte memmap per page, with and without huge page support.
+>>> In both cases, removing memory (routed through arch_remove_memory()) will
+>>> result in
+>>> - all populated vmemmap pages to get removed/freed
+>>> - all applicable page tables for the vmemmap getting removed/freed
+>>> - all applicable page tables for the idendity mapping getting removed/freed
+>>> Unfortunately, I don't have access to bigger and z/VM (esp. dcss)
+>>> environments.
 >>>
+>>> This is the basis for real memory hotunplug support for s390x and should
+>>> complete my journey to s390x vmem/vmemmap code for now :)
+>>>
+>>> What needs double-checking is tlb flushing. AFAIKS, as there are no valid
+>>> accesses, doing a single range flush at the end is sufficient, both when
+>>> removing vmemmap pages and the idendity mapping.
+>>>
+>>> Along, some minor cleanups.
 >>
->> The 9% is for an AF_XDP (Fast raw Ethernet socket. Think AF_PACKET, but 
->> faster.) benchmark: receive the packet from the NIC, and drop it. The DMA 
->> syncs stand out in the perf top:
->>
->>    28.63%  [kernel]                   [k] i40e_clean_rx_irq_zc
->>    17.12%  [kernel]                   [k] xp_alloc
->>     8.80%  [kernel]                   [k] __xsk_rcv_zc
->>     7.69%  [kernel]                   [k] xdp_do_redirect
->>     5.35%  bpf_prog_992d9ddc835e5629  [k] bpf_prog_992d9ddc835e5629
->>     4.77%  [kernel]                   [k] xsk_rcv.part.0
->>     4.07%  [kernel]                   [k] __xsk_map_redirect
->>     3.80%  [kernel]                   [k] dma_direct_sync_single_for_cpu
->>     3.03%  [kernel]                   [k] dma_direct_sync_single_for_device
->>     2.76%  [kernel]                   [k] i40e_alloc_rx_buffers_zc
->>     1.83%  [kernel]                   [k] xsk_flush
->> ...
->>
->> For this benchmark the dma_ops are NULL (dma_is_direct() == true), and
->> the main issue is that SWIOTLB is now unconditionally enabled [1] for
->> x86, and for each sync we have to check that if is_swiotlb_buffer()
->> which involves a some costly indirection.
->>
->> That was pretty much what my hack avoided. Instead we did all the checks
->> upfront, since AF_XDP has long-term DMA mappings, and just set a flag
->> for that.
->>
->> Avoiding the whole "is this address swiotlb" in
->> dma_direct_sync_single_for_{cpu, device]() per-packet
->> would help a lot.
->
-> I'm pretty sure that's one of the things we hope to achieve with the 
-> generic bypass flag :)
->
->> Somewhat related to the DMA API; It would have performance benefits for
->> AF_XDP if the DMA range of the mapped memory was linear, i.e. by IOMMU
->> utilization. I've started hacking a thing a little bit, but it would be
->> nice if such API was part of the mapping core.
->>
->> Input: array of pages Output: array of dma addrs (and obviously dev,
->> flags and such)
->>
->> For non-IOMMU len(array of pages) == len(array of dma addrs)
->> For best-case IOMMU len(array of dma addrs) == 1 (large linear space)
->>
->> But that's for later. :-)
->
-> FWIW you will typically get that behaviour from IOMMU-based implementations 
-> of dma_map_sg() right now, although it's not strictly guaranteed. If you 
-> can weather some additional setup cost of calling 
-> sg_alloc_table_from_pages() plus walking the list after mapping to test 
-> whether you did get a contiguous result, you could start taking advantage 
-> of it as some of the dma-buf code in DRM and v4l2 does already (although 
-> those cases actually treat it as a strict dependency rather than an 
-> optimisation).
+>> Hmm.. I really would like to see if there would be only a single page
+>> table walker left in vmem.c, which handles both adding and removing
+>> things.
+>> Now we end up with two different page table walk implementations
+>> within the same file. However not sure if it is worth the effort to
+>> unify them though.
+> 
+> I tried to unify vmemmap_populate() and vmem_add_range() already and
+> didn't like the end result ... so, unifying these along with the removal
+> part won't be any better - most probably. Open for suggestions :)
+> 
+> (at least arm64 and x86-64 handle it similarly)
+> 
 
-Yikes.
+I'll play with something like
 
-> I'm inclined to agree that if we're going to see more of these cases, a new 
-> API call that did formally guarantee a DMA-contiguous mapping (either via 
-> IOMMU or bounce buffering) or failure might indeed be handy.
+static void modify_pagetable(unsigned long start, unsigned long end,
+			     bool direct, bool add)
 
-I was planning on adding a dma-level API to add more pages to an
-IOMMU batch, but was waiting for at least the intel IOMMU driver to be
-converted to the dma-iommu code (and preferably arm32 and s390 as well).
+and see how it turns out.
 
-Here is my old pseudo-code sketch for what I was aiming for from the
-block/nvme perspective.  I haven't even implemented it yet, so there might
-be some holes in the design:
+-- 
+Thanks,
 
+David / dhildenb
 
-/*
- * Returns 0 if batching is possible, postitive number of segments required
- * if batching is not possible, or negatie values on error.
- */
-int dma_map_batch_start(struct device *dev, size_t rounded_len,
-	enum dma_data_direction dir, unsigned long attrs, dma_addr_t *addr);
-int dma_map_batch_add(struct device *dev, dma_addr_t *addr, struct page *page,
-		unsigned long offset, size_t size);
-int dma_map_batch_end(struct device *dev, int ret, dma_addr_t start_addr);
-
-int blk_dma_map_rq(struct device *dev, struct request *rq, 
-		enum dma_data_direction dir, unsigned long attrs,
-		dma_addr_t *start_addr, size_t *len)
-{
-	struct req_iterator iter;
-	struct bio_vec bvec;
-	dma_addr_t next_addr;
-	int ret;
-
-	if (number_of_segments(req) == 1) {
-		// plain old dma_map_page();
-		return 0;
-	}
-
-	// XXX: block helper for rounded_len?
-	*len = length_of_request(req);
-	ret = dma_map_batch_start(dev, *len, dir, attrs, start_addr);
-	if (ret)
-		return ret;
-
-	next_addr = *start_addr;
-	rq_for_each_segment(bvec, rq, iter) {
-		ret = dma_map_batch_add(dev, &next_addr, bvec.bv_page,
-				bvec.bv_offset, bvev.bv_len);
-		if (ret)
-			break;
-	}
-
-	return dma_map_batch_end(dev, ret, *start_addr);
-}
-
-dma_addr_t blk_dma_map_bvec(struct device *dev, struct bio_vec *bvec,
-		enum dma_data_direction dir, unsigned long attrs)
-{
-	return dma_map_page_attrs(dev, bv_page, bvec.bv_offset, bvev.bv_len,
-			dir, attrs);
-}
-
-int queue_rq()
-{
-	dma_addr_t addr;
-	int ret;
-
-	ret = blk_dma_map_rq(dev, rq, dir, attrs. &addr, &len);
-	if (ret < 0)
-		return ret;
-
-	if (ret == 0) {
-		if (use_sgl()) {
-			nvme_pci_sgl_set_data(&cmd->dptr.sgl, addr, len);
-		} else {
-			set_prps();
-		}
-		return;
-	}
-
-	if (use_sgl()) {
-		alloc_one_sgl_per_segment();
-
-		rq_for_each_segment(bvec, rq, iter) {
-			addr = blk_dma_map_bvec(dev, &bdev, dir, 0);
-			set_one_sgl();
-		}
-	} else {
-		alloc_one_prp_per_page();
-
-		rq_for_each_segment(bvec, rq, iter) {
-			ret = blk_dma_map_bvec(dev, &bdev, dir, 0);
-			if (ret)
-				break;
-			set_prps();
-	}
-}
