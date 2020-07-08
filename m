@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B0F20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27240207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594222927;
-	bh=IGi0Xef7jbHhMsYfOprqPDNw4VFPWt/swz7U6H8LxOg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Zqf5ajUFMdxAnAnVsFiqUPZTapjQpe4xO987zxw0jMOb4LewiHYd83B6/fPhYtPjL
-	 IpzEASwa8z7lIe6Z+OSfrYbF75y2ZvU9XQs65GE6c4rXvjUxiosYae0UpdPmtgJ/EY
-	 0VYQGC5wPsOata3Rch0i2BhK9ykwPt7S9p1MsA3w=
+	s=default; t=1594222931;
+	bh=q64sLE5KM8tsbvF1NTx9fUgz7UsKdr5xL5orCqsm/jo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z59gPqhNwmHxKHXTHTvNrGd97kxw2AQIBYq51lQGEWOrG83utYgzLI+9UWk5vHAnx
+	 yrhRMxrpjAl0UHj8tY8AVzf18Lsj5MeLMc1C0yFQp5cPC+qenVtzOqn7xomd3n8eUM
+	 TWequKI/MZS3uVyp0A1x7Kj9rCVQF7M0pBFvqY0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbgGHPmG (ORCPT
+        id S1730663AbgGHPmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:42:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49174 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:42:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730610AbgGHPl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:41:59 -0400
+        id S1730625AbgGHPmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:42:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1802F208B6;
-        Wed,  8 Jul 2020 15:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAE2720842;
+        Wed,  8 Jul 2020 15:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222918;
-        bh=IGi0Xef7jbHhMsYfOprqPDNw4VFPWt/swz7U6H8LxOg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=azY+tD3Lw19sM10hAtYzHfv0jwN8m83cZjemnKnBkuvvujKX39w2Mxc9FLI/F03Sr
-         php+yLZ64zrX+/B3Dy4HM1KauAMqmYTI6kn02jjUgFYYj0cmp8e5g6oGwhQRaJLPAC
-         K0xGj2BV/dtK0xhjKNu8FsF3Ro0lO5e1W4RS8a/4=
+        s=default; t=1594222921;
+        bh=q64sLE5KM8tsbvF1NTx9fUgz7UsKdr5xL5orCqsm/jo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pYks+0Cel8xT/9Di8znvUnGp+EqOardOMphea9QWXWxLToi5XGIY1zXgSKJBZco82
+         yWdW3Cs/xce7Vpvkh/Yo183v845JaxQb5Eru/B0GKHDEJ43V26llZ8dgJz43nTULSx
+         BhKue2uAEv/2OqpxFbkMXA5/BRg6HhyPJ1omRzpM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bernard Zhao <bernard@vivo.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 1/8] drm/msm: fix potential memleak in error branch
-Date:   Wed,  8 Jul 2020 11:41:49 -0400
-Message-Id: <20200708154157.3200116-1-sashal@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 4.19 3/8] m68k: nommu: register start of the memory with memblock
+Date:   Wed,  8 Jul 2020 11:41:51 -0400
+Message-Id: <20200708154157.3200116-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200708154157.3200116-1-sashal@kernel.org>
+References: <20200708154157.3200116-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,39 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Zhao <bernard@vivo.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 177d3819633cd520e3f95df541a04644aab4c657 ]
+[ Upstream commit d63bd8c81d8ab64db506ffde569cc8ff197516e2 ]
 
-In function msm_submitqueue_create, the queue is a local
-variable, in return -EINVAL branch, queue didn`t add to ctx`s
-list yet, and also didn`t kfree, this maybe bring in potential
-memleak.
+The m68k nommu setup code didn't register the beginning of the physical
+memory with memblock because it was anyway occupied by the kernel. However,
+commit fa3354e4ea39 ("mm: free_area_init: use maximal zone PFNs rather than
+zone sizes") changed zones initialization to use memblock.memory to detect
+the zone extents and this caused inconsistency between zone PFNs and the
+actual PFNs:
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
-[trivial commit msg fixup]
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+BUG: Bad page state in process swapper  pfn:20165
+page:41fe0ca0 refcount:0 mapcount:1 mapping:00000000 index:0x0 flags: 0x0()
+raw: 00000000 00000100 00000122 00000000 00000000 00000000 00000000 00000000
+page dumped because: nonzero mapcount
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.8.0-rc1-00001-g3a38f8a60c65-dirty #1
+Stack from 404c9ebc:
+        404c9ebc 4029ab28 4029ab28 40088470 41fe0ca0 40299e21 40299df1 404ba2a4
+        00020165 00000000 41fd2c10 402c7ba0 41fd2c04 40088504 41fe0ca0 40299e21
+        00000000 40088a12 41fe0ca0 41fe0ca4 0000020a 00000000 00000001 402ca000
+        00000000 41fe0ca0 41fd2c10 41fd2c10 00000000 00000000 402b2388 00000001
+        400a0934 40091056 404c9f44 404c9f44 40088db4 402c7ba0 00000001 41fd2c04
+        41fe0ca0 41fd2000 41fe0ca0 40089e02 4026ecf4 40089e4e 41fe0ca0 ffffffff
+Call Trace:
+        [<40088470>] 0x40088470
+ [<40088504>] 0x40088504
+ [<40088a12>] 0x40088a12
+ [<402ca000>] 0x402ca000
+ [<400a0934>] 0x400a0934
+
+Adjust the memory registration with memblock to include the beginning of
+the physical memory and make sure that the area occupied by the kernel is
+marked as reserved.
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_submitqueue.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/m68k/kernel/setup_no.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
-index 5115f75b5b7f3..325da440264a3 100644
---- a/drivers/gpu/drm/msm/msm_submitqueue.c
-+++ b/drivers/gpu/drm/msm/msm_submitqueue.c
-@@ -78,8 +78,10 @@ int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
- 	queue->flags = flags;
+diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
+index cfd5475bfc315..4625acc1e7c4d 100644
+--- a/arch/m68k/kernel/setup_no.c
++++ b/arch/m68k/kernel/setup_no.c
+@@ -140,7 +140,8 @@ void __init setup_arch(char **cmdline_p)
+ 	pr_debug("MEMORY -> ROMFS=0x%p-0x%06lx MEM=0x%06lx-0x%06lx\n ",
+ 		 __bss_stop, memory_start, memory_start, memory_end);
  
- 	if (priv->gpu) {
--		if (prio >= priv->gpu->nr_rings)
-+		if (prio >= priv->gpu->nr_rings) {
-+			kfree(queue);
- 			return -EINVAL;
-+		}
+-	memblock_add(memory_start, memory_end - memory_start);
++	memblock_add(_rambase, memory_end - _rambase);
++	memblock_reserve(_rambase, memory_start - _rambase);
  
- 		queue->prio = prio;
- 	}
+ 	/* Keep a copy of command line */
+ 	*cmdline_p = &command_line[0];
 -- 
 2.25.1
 
