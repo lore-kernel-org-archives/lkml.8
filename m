@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFACCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7D412080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA341206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594222895;
-	bh=oQm2Jqtg4xH78lirey/DSRUlvvhxX/QamPy7sFyu/tE=;
+	s=default; t=1594222900;
+	bh=45jm8z0oH/KPMCdl/hxMxI2KDUiB/6BgrBctVihFt0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t677T/A1yeqpnILa/6KJ/1CXTdwRm9/1la2LBoQrUeyrQNm9ke7879TlqFZGEsE8z
-	 UwKz07b0LIyxgy7o02NT8I3+38oGPh1scFT7xHjX7YehyQWGNLpdccLIjcPebR+i5F
-	 HEZxjq14meCMjynK/lmjvH6hbz5nycSLyDj90Weg=
+	b=yoRZYsQkeaHQhsb6WUfXb/BPOHU4RLjMnHa75YZBX8dKdO0xeG9SE2sAeO36XnmpI
+	 MvJKUBuEP116BQ70OfCrEsrxqRkNwtNN2InA64bnl0NcCuQ3GcIdVa1QuYPwkFHUEw
+	 n8AzEYfziMlbGwh4YFu7Wgf5uFyKZ6UFiX47iCDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730471AbgGHPle (ORCPT
+        id S1730494AbgGHPlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48062 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:41:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730442AbgGHPla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:41:30 -0400
+        id S1730460AbgGHPld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:41:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6686A20836;
-        Wed,  8 Jul 2020 15:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC8A620870;
+        Wed,  8 Jul 2020 15:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222890;
-        bh=oQm2Jqtg4xH78lirey/DSRUlvvhxX/QamPy7sFyu/tE=;
+        s=default; t=1594222892;
+        bh=45jm8z0oH/KPMCdl/hxMxI2KDUiB/6BgrBctVihFt0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxVPRiXyUpqy8XWpybm9Uk4tUnusNEL/h/YUYM9F8mh+fG/2By0s4//YWPkmk83uh
-         WRER9olIDLn+ufi0tU63BJfppSSYMS+80L69CSsVMU9SOxoEIQajmUEPcWsWTdsX3I
-         0S9ivGEF8NuRtlnFIdrzqEbsXrk7KLj68d2ieEYI=
+        b=xuvixON59YIyX/y2eEEdXZpF5upnYeOOiEYdwz4ee2JMOOyhLgj/DNAE3E0Mv4flG
+         5sdFe1oXwntGj83UG659QCqAvUK3zQ5cci8eA3mAya8/bSmI0bXRZ1yJgYf6YzwGm7
+         cCJJ7NJWr5mAgj7zul7JC0zESwk2lGFskjq/5Q04=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 10/30] ACPI: DPTF: Add battery participant for TigerLake
-Date:   Wed,  8 Jul 2020 11:40:56 -0400
-Message-Id: <20200708154116.3199728-10-sashal@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 5.7 12/30] m68k: nommu: register start of the memory with memblock
+Date:   Wed,  8 Jul 2020 11:40:58 -0400
+Message-Id: <20200708154116.3199728-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708154116.3199728-1-sashal@kernel.org>
 References: <20200708154116.3199728-1-sashal@kernel.org>
@@ -59,33 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 1e05daca83bb42cde569f75f3bd7c8828b1ef30f ]
+[ Upstream commit d63bd8c81d8ab64db506ffde569cc8ff197516e2 ]
 
-Add DPTF battery participant ACPI ID for platforms based on the Intel
-TigerLake SoC.
+The m68k nommu setup code didn't register the beginning of the physical
+memory with memblock because it was anyway occupied by the kernel. However,
+commit fa3354e4ea39 ("mm: free_area_init: use maximal zone PFNs rather than
+zone sizes") changed zones initialization to use memblock.memory to detect
+the zone extents and this caused inconsistency between zone PFNs and the
+actual PFNs:
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-[ rjw: Changelog ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+BUG: Bad page state in process swapper  pfn:20165
+page:41fe0ca0 refcount:0 mapcount:1 mapping:00000000 index:0x0 flags: 0x0()
+raw: 00000000 00000100 00000122 00000000 00000000 00000000 00000000 00000000
+page dumped because: nonzero mapcount
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.8.0-rc1-00001-g3a38f8a60c65-dirty #1
+Stack from 404c9ebc:
+        404c9ebc 4029ab28 4029ab28 40088470 41fe0ca0 40299e21 40299df1 404ba2a4
+        00020165 00000000 41fd2c10 402c7ba0 41fd2c04 40088504 41fe0ca0 40299e21
+        00000000 40088a12 41fe0ca0 41fe0ca4 0000020a 00000000 00000001 402ca000
+        00000000 41fe0ca0 41fd2c10 41fd2c10 00000000 00000000 402b2388 00000001
+        400a0934 40091056 404c9f44 404c9f44 40088db4 402c7ba0 00000001 41fd2c04
+        41fe0ca0 41fd2000 41fe0ca0 40089e02 4026ecf4 40089e4e 41fe0ca0 ffffffff
+Call Trace:
+        [<40088470>] 0x40088470
+ [<40088504>] 0x40088504
+ [<40088a12>] 0x40088a12
+ [<402ca000>] 0x402ca000
+ [<400a0934>] 0x400a0934
+
+Adjust the memory registration with memblock to include the beginning of
+the physical memory and make sure that the area occupied by the kernel is
+marked as reserved.
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/dptf/dptf_power.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/m68k/kernel/setup_no.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
-index e4e8b75d39f09..8b42f529047e9 100644
---- a/drivers/acpi/dptf/dptf_power.c
-+++ b/drivers/acpi/dptf/dptf_power.c
-@@ -99,6 +99,7 @@ static int dptf_power_remove(struct platform_device *pdev)
- static const struct acpi_device_id int3407_device_ids[] = {
- 	{"INT3407", 0},
- 	{"INTC1047", 0},
-+	{"INTC1050", 0},
- 	{"", 0},
- };
- MODULE_DEVICE_TABLE(acpi, int3407_device_ids);
+diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
+index a63483de7a422..5dacba392c74e 100644
+--- a/arch/m68k/kernel/setup_no.c
++++ b/arch/m68k/kernel/setup_no.c
+@@ -139,7 +139,8 @@ void __init setup_arch(char **cmdline_p)
+ 	pr_debug("MEMORY -> ROMFS=0x%p-0x%06lx MEM=0x%06lx-0x%06lx\n ",
+ 		 __bss_stop, memory_start, memory_start, memory_end);
+ 
+-	memblock_add(memory_start, memory_end - memory_start);
++	memblock_add(_rambase, memory_end - _rambase);
++	memblock_reserve(_rambase, memory_start - _rambase);
+ 
+ 	/* Keep a copy of command line */
+ 	*cmdline_p = &command_line[0];
 -- 
 2.25.1
 
