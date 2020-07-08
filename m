@@ -2,124 +2,122 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E420C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E39C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0B3206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C32D206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oCYnI0GG"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Cki45PwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbgGHPqu (ORCPT
+        id S1730261AbgGHPr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:46:50 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:36617 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbgGHPqt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:46:49 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200708154647euoutp024e073ca307738b954a61e790d24498c7~f0Y_NDifV2284722847euoutp02d
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 15:46:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200708154647euoutp024e073ca307738b954a61e790d24498c7~f0Y_NDifV2284722847euoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594223207;
-        bh=8UYjgIC4s42kEpwbg4AQF/Erybejcy2vPCZCsfSKt1k=;
-        h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=oCYnI0GGMg1sI6jh7fZdFWO7Kfl0vLpXTG+os6zheEFxszJ6JrvNGBH5v2MnLqU/j
-         MdbbSyRgW7tzY/Qn48VWTOhR3EilTo8/040p3zJ/ycDLAY9HidVsOn0vYDSNgILRTq
-         kM5P6ma/YlSEyjAHPocv63cBH+MXo6bc2EEYXFF0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200708154647eucas1p118e3edc13777ca1c2cdff5f70ede7426~f0Y_CG1n83001130011eucas1p1p;
-        Wed,  8 Jul 2020 15:46:47 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 83.2B.06318.76AE50F5; Wed,  8
-        Jul 2020 16:46:47 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708154646eucas1p239d761cb198f46a64b86617907cec800~f0Y9oP2bP0511205112eucas1p2n;
-        Wed,  8 Jul 2020 15:46:46 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200708154646eusmtrp2565eb3d54c950bdd163b1f0e3e68f412~f0Y9njynU2618426184eusmtrp2s;
-        Wed,  8 Jul 2020 15:46:46 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-18-5f05ea677cde
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 45.37.06017.66AE50F5; Wed,  8
-        Jul 2020 16:46:46 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708154645eusmtip2c92455d951a7686a833a96e90c25dae5~f0Y8rlzbM0401804018eusmtip2N;
-        Wed,  8 Jul 2020 15:46:45 +0000 (GMT)
-Subject: Re: [PATCH 06/11] media: exynos4-is: Properly set JPEG options when
- not using CSIS
-To:     Jonathan Bakker <xc-racer2@live.ca>, kyungmin.park@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <f741b326-b1f1-858d-ca39-2ef1694541bd@samsung.com>
-Date:   Wed, 8 Jul 2020 17:46:45 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Wed, 8 Jul 2020 11:47:26 -0400
+Received: from mout.gmx.net ([212.227.17.20]:45163 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729022AbgGHPrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:47:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1594223208;
+        bh=LU0N738Cta16L6YXG8KR0rGDYWQO7GyOF1FHDDiJg24=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=Cki45PwWYQXuV+25zw+Sl0pjGy0r9ir66J5aJ3ClBXIXKJMSV7qabQS5dl8jY2Stf
+         2xL6jRcsZTrOzKig9oyv4+VfBwNDd317enh4Cj4OLeRV0jYfrwjFWiTivMg7uBPAMq
+         MwfB9oag27ZURwafMW1QZ9d0tt4ORT1/ucEdzcFM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([80.208.213.58]) by mail.gmx.com
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MyKDU-1kpIgO2BeG-00yiQp; Wed, 08 Jul 2020 17:46:48 +0200
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+        Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH] net: ethernet: mtk_eth_soc: fix mtu warning
+Date:   Wed,  8 Jul 2020 17:46:34 +0200
+Message-Id: <20200708154634.9565-1-frank-w@public-files.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <BN6PR04MB06606F63C7ACE765B57331A1A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRmVeSWpSXmKPExsWy7djP87rpr1jjDdYcELXof/ya2eL8+Q3s
-        Fmeb3rBbbHp8jdXi8q45bBY9G7ayWsw4v4/JYtmmP0wWFyfeZXHg9Ni0qpPNY/OSeo9FN3+w
-        ePRtWcXo8XmTXABrFJdNSmpOZllqkb5dAlfGmXlb2AuuM1Wcu1jSwDiPqYuRk0NCwETiTNtH
-        5i5GLg4hgRWMEj07X0A5Xxgl/t+bwwpSJSTwmVFi38pCmI6Xe+6yQRQtZ5T4/PU4C0TRR0aJ
-        U8uLQWxhgViJQx3PGUGKRASamSSerZjJBpJgEzCU6D3axwhi8wrYSXTdbgFrZhFQkfhy7DdY
-        XFQgTmL9y+1MEDWCEidnPgGr4QQaOmHqMbAaZgFxiVtP5jNB2PIS29/OATtbQmATu8Sft3vZ
-        IE51kfjRu4QFwhaWeHV8CzuELSPxfydIM0hDM9DTu2+zQzgTGCXuH1/ACFFlLXHn3C+gSRxA
-        KzQl1u/Shwg7SnQf/AcWlhDgk7jxVhDiCD6JSdumM0OEeSU62oQgqlUkfq+aDg1rKYnuJ/+h
-        zvGQeDT/HusERsVZSN6cheS1WUhem4VwwwJGllWM4qmlxbnpqcXGeanlesWJucWleel6yfm5
-        mxiBSen0v+NfdzDu+5N0iFGAg1GJh/fFJtZ4IdbEsuLK3EOMEhzMSiK8TmdPxwnxpiRWVqUW
-        5ccXleakFh9ilOZgURLnNV70MlZIID2xJDU7NbUgtQgmy8TBKdXA6JOc3X0is4xrm7KR6KQ6
-        3d2uHe4cKk8yzRbtXeZWMXu3eeTKGZbmbztiNyyu9H3XvEzV5YNY8ZbMma8C4i8elkuxrdvw
-        I+NWn2f9j1Uzd8nujlz5TuXc/2P72I8c7vz37vHzq5lcSkKtdro3Z+1Tb5vfasG40emi+ryl
-        qqp1M9w41yWwi/ZWKrEUZyQaajEXFScCAEiX7mlGAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xe7ppr1jjDXqaLSz6H79mtjh/fgO7
-        xdmmN+wWmx5fY7W4vGsOm0XPhq2sFjPO72OyWLbpD5PFxYl3WRw4PTat6mTz2Lyk3mPRzR8s
-        Hn1bVjF6fN4kF8AapWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqT
-        WZZapG+XoJdxZt4W9oLrTBXnLpY0MM5j6mLk5JAQMJF4uecuWxcjF4eQwFJGidmf5wA5HEAJ
-        KYn5LUoQNcISf651QdW8Z5Q4t+keWLOwQKzEoY7njCAJEYFmJon/y7exQFTdZZSYdmwvO0gV
-        m4ChRO/RPkYQm1fATqLrdgsLiM0ioCLx5dhvsLioQJzE8i3z2SFqBCVOznwCVsMJtGHC1GNg
-        NcwC6hJ/5l1ihrDFJW49mc8EYctLbH87h3kCo+AsJO2zkLTMQtIyC0nLAkaWVYwiqaXFuem5
-        xUZ6xYm5xaV56XrJ+bmbGIHxtu3Yzy07GLveBR9iFOBgVOLhfbGJNV6INbGsuDL3EKMEB7OS
-        CK/T2dNxQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwPTAV5JfGGpobmFpaG5sbmxmYWSuK8
-        HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYr1+SuOu4hv3ILN4ZO6ZVxs80fn3F5JK6+o2brl1h
-        jlk7pA3XbmO4aVN/JiLy/xNRl7RVLxqmpXw1Oeylq/co48XC+mmV9nKsPq92KT1VFZiUZXxa
-        llmNZaLW951+VsG/S41iS3eWKd2cfFssPeOAne5apySlj2eZ+Y+sqUnewZSw996zvt4VSizF
-        GYmGWsxFxYkAatWuPs0CAAA=
-X-CMS-MailID: 20200708154646eucas1p239d761cb198f46a64b86617907cec800
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200426022740eucas1p132625bc68acf42ee44a69e2a39e80ac9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200426022740eucas1p132625bc68acf42ee44a69e2a39e80ac9
-References: <20200426022650.10355-1-xc-racer2@live.ca>
-        <CGME20200426022740eucas1p132625bc68acf42ee44a69e2a39e80ac9@eucas1p1.samsung.com>
-        <BN6PR04MB06606F63C7ACE765B57331A1A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:f4eGLoM7b59LlVnF7QAav5q/YJIcx9clM2yM7+NqTv9tBkejQqs
+ au1gdA7QoPd0PPprJTzRKzybOTMmD14heF0qGnjwaABpo+XISVHKv5rw99O2S0ojFe9uDQL
+ Qxu2lOqi+kzvKyOBpfLYcfelq6iI7x0aHD2bo1rK4OYlfxeRe2f4NPCAwZXbWjcYfAUryJJ
+ xAsnWzoMdvXQ0LmII42Zg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QZLgElE1BP0=:Gqhv8ZkYtw7DnMAyPRXD/X
+ fJu6mohnMnpQAAYTv10zZw8JRMNqC10986RlCPTmKdzhQdheUmQlpzYByPQES1xWVq9/ZLpiJ
+ nE63xOKvJKwimVxIK8rufuTT3ERB5ELpRSWN4Bh6r8ZCGvMAK/FlY0NzZeUUsE+jAprL/qKN4
+ AI2dSf9H+nQEOTzhJ1AF+4URZzWlPL1HYaynWfijqXHenaimeCtP7cQdi/13F0CAkTN1XCPNX
+ WRuheRfGgFeiXmhyhXlVNd4/2gujkPQKn/26b2ucv6cJDhzl1uUs3sGq/c9kkI/LjL3aZQtED
+ gc+br4VzoFlVXavHhQVmnqgWXSL+EA2TrR9stXkiDOI/cyM3MwvVVPZ50TEq2/Q2OAbzZWTqC
+ NsPs6REaRJ17OKkESZFOPNgWu+Ic+pBDDc3nsZXWVZMqdJSM/JJI7id8Xx+DurJ8smNs8oulk
+ 9y+/MZ850QkTnee8j9A6FkCXnBDGJwygDDPQCNJqLAdCPPD/QaHHw/6/Ah3dUfILQ6+sPevQO
+ WwwCJHST3FdSMuCiJCiGLASeIEit2k3dAeL+KivcJPyM3Yame9Zi+CoiCY1rW0qLimxGCtw81
+ VIdfTIYIDCU8EItB3W2jvdmVzkFlgDxwuXGgI1+ige4LUD1zGtcGzaL+PDGNN6YflzYKrcw28
+ +fV5pzvXRJ7Z0h3Fv2FUQrbRn/EA837e+W4VXdAWYwh59XBHd03TTz4NSWu/omcRDa3Khb5+P
+ ESAtYO8iU/yQvq7FB9YBwlj5JdkMW6FyHf8M7cg4IHXlZJI3CnSIK/oOfppeafAsgsS4+2uAX
+ bXOzrchGMjm58CILJfqJ+KLsuggzdT8fmMSnFLnpyVvtWT6VHl+EZhCDY44WR+FLC6b5emPpg
+ tOychoZgk6LNTlFDnVXOshmOiinrWeXVHV63j/dcw4fH6XZDaQ3OzBR68OBPvKZSH1EO5muYM
+ y9x0idwevvzCpNm0FkEt7o1dY+lbwGBpXc70X/opvL51o/JxflVmZnP371AhguXCAV/UYFU3+
+ Y/BUCdCsL7gMBIfLOXlp4Lk4AVX3+5drM35UdAhB3lRDfkmmBCQtahquQh2y+PVdLKigx+XAK
+ Jje0lEOvgFGkQS0Jbi77PO2BTCoVBby4pXdDJs1kdVlRAVEK3/K9ODG8WdvrsLo6n6M5IquA3
+ 1mk+gzN6UbhUJT18/Szb7ULP+oFhp42bjbH2FBY5wU43ihVOlQGJfBEW7FJNBARX1ihjrghqk
+ 8siqjKpS75EovVn3BF1tgkeCRZialzpwFNk4W/A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.2020 04:26, Jonathan Bakker wrote:
-> Commit ee7160e57c98 ("[media] s5p-fimc: Add support for JPEG capture")
-> added support for JPEG capture, but missed setting a register when the
-> CSIS device wasn't in use.
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+From: Ren=C3=A9 van Dorst <opensource@vdorst.com>
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+in recent Kernel-Versions there are warnings about incorrect MTU-Size
+like these:
+
+mt7530 mdio-bus:00: nonfatal error -95 setting MTU on port x
+eth0: mtu greater than device maximum
+mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA o=
+verhead
+
+Signed-off-by: Ren=C3=A9 van Dorst <opensource@vdorst.com>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+
+Fixes: bfcb813203 ("net: dsa: configure the MTU for switch ports")
+Fixes: 72579e14a1 ("net: dsa: don't fail to probe if we couldn't set the M=
+TU")
+Fixes: 7a4c53bee3 ("net: report invalid mtu value via netlink extack")
+=2D--
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/eth=
+ernet/mediatek/mtk_eth_soc.c
+index 85735d32ecb0..00e3d70f7d07 100644
+=2D-- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -2891,6 +2891,10 @@ static int mtk_add_mac(struct mtk_eth *eth, struct =
+device_node *np)
+ 	eth->netdev[id]->irq =3D eth->irq[0];
+ 	eth->netdev[id]->dev.of_node =3D np;
+
++	eth->netdev[id]->mtu =3D 1536;
++	eth->netdev[id]->min_mtu =3D ETH_MIN_MTU;
++	eth->netdev[id]->max_mtu =3D 1536;
++
+ 	return 0;
+
+ free_netdev:
+=2D-
+2.25.1
 
