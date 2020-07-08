@@ -2,126 +2,221 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8259C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EABC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4D38206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3BE206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:06:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H5xU6XpO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AfO+vWxt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgGHMFk (ORCPT
+        id S1729070AbgGHMGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:05:40 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9027 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbgGHMFk (ORCPT
+        Wed, 8 Jul 2020 08:06:09 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54097 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728803AbgGHMGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:05:40 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f05b6290000>; Wed, 08 Jul 2020 05:03:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 08 Jul 2020 05:05:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 08 Jul 2020 05:05:40 -0700
-Received: from [10.26.73.185] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul
- 2020 12:05:34 +0000
-Subject: Re: [PATCH v10 2/5] iommu/arm-smmu: ioremap smmu mmio region before
- implementation init
-To:     Krishna Reddy <vdumpa@nvidia.com>, <joro@8bytes.org>,
-        <will@kernel.org>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
-        <treding@nvidia.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
-        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
-        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
-        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
-        <nicoleotsuka@gmail.com>
-References: <20200708050017.31563-1-vdumpa@nvidia.com>
- <20200708050017.31563-3-vdumpa@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <73aa8adb-2a62-f482-7a2f-cea3ad1c0d29@nvidia.com>
-Date:   Wed, 8 Jul 2020 13:05:32 +0100
+        Wed, 8 Jul 2020 08:06:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594209966;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PGDnI+tq2M1CuGv6kUVZuIa3j3HxiWlBIYy2dNXIfh0=;
+        b=AfO+vWxt7fdbIUbrVGTIAyioRuKgnjGKQkaAlN5Vt31t8cPx+tgkMHHoeGs5WKbdGtrXUS
+        8+iz8z2C3N3Sl4MRMiwvtDZ4bpGwv6Y2H5fol3HbVyxTsY/4nCUIboh0nq3H2zFYez0uJY
+        FgDiKw+/N1dYpW3vMB9aCUPoHg8fs/I=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-OZU-4COVMhuKppH-Rhl9rw-1; Wed, 08 Jul 2020 08:06:05 -0400
+X-MC-Unique: OZU-4COVMhuKppH-Rhl9rw-1
+Received: by mail-wr1-f69.google.com with SMTP id j3so32200614wrq.9
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:06:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PGDnI+tq2M1CuGv6kUVZuIa3j3HxiWlBIYy2dNXIfh0=;
+        b=J7YBke53VZIy6UDSw6mlntThNJNiUJ3d5J8Urwlk3SkQlWHpmftVGUzrRpg6pF+CHy
+         ty8slfa/4TxbRoe/4AAlPQ38STdYlNITxSanRA045IZFe4RXuL2tL7v7lL6R9GTfAe6W
+         0b9oJg+HyKCRUzqLR7AFo1HO0Wi9a4pGObVfCX5E44k4bPRvYVVwpm/Su2L2+VfT98rT
+         TJBwmtPfMiJXiRQE1tv2DDaZDC/zcdEg4CbK6zbZ1A7MNqJ31BX4tUrLTb9thwmGTEFv
+         OzRAoJdOZSKiLzNbKzpFCfXlwCH82PIdZoDpnn2/EASFGl1LLKYwnWHUZRTQ9rBExiWx
+         qlTw==
+X-Gm-Message-State: AOAM532Dz4HcxeehWkmjyAiOsf+ERUm0CxTe9UCbWHU5XhudzyP00PI/
+        9VIcyPfb8VCEzpWq/I++wspRmJk8ne8HjU3Royi44i/oLgV+Z436FOBCVYC9GYkxqdsksG2rJxn
+        kYtB4X0n8nL3ElstUlw2U3bJi
+X-Received: by 2002:a5d:5270:: with SMTP id l16mr57870376wrc.122.1594209963853;
+        Wed, 08 Jul 2020 05:06:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwuluZHlJi0gJ3KHsQYv1PPFRPGuu66foduw3C07LUOufgdALfT6pObfuRZwqAEkSI0AFNb0A==
+X-Received: by 2002:a5d:5270:: with SMTP id l16mr57870355wrc.122.1594209963601;
+        Wed, 08 Jul 2020 05:06:03 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.gmail.com with ESMTPSA id 12sm5574207wmg.6.2020.07.08.05.06.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 05:06:02 -0700 (PDT)
+Subject: Re: [PATCH v3 4/8] KVM: X86: Split kvm_update_cpuid()
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200708065054.19713-1-xiaoyao.li@intel.com>
+ <20200708065054.19713-5-xiaoyao.li@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <ad349b28-bc62-e478-c610-e829974a8342@redhat.com>
+Date:   Wed, 8 Jul 2020 14:06:02 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200708050017.31563-3-vdumpa@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200708065054.19713-5-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594209833; bh=gxQcl9bpk0BxcF/j6fxcVpCc4kYEvyi3JouVPj5UA8g=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=H5xU6XpOQP6NJAMN7gju07RMXH67AVI2gqLWDfsLEEZfr2cFgxo9KyrW3mmXxKdqA
-         deWyWZfoLZcaTKnbtZGNnLCnVwP2fXN6I2ITanKIxD1Cy0BmX4QTVENJVGeC8NPWeL
-         XwBbIL2PlMMbVz/JYbolgVUXTnWRPNQ3zGaFMycCDhBFh7ZIFBNODIhogPsQKbB2RN
-         jjMjQS5b/m534AJc5R4hjOhLA5E2OUmX+ZvIrOwQEtB5y7XI39PK2aUmsFyWP3dD5L
-         lXdBMnFpn8steP4v3rQwcmAixPnhb+IOAIhdftl4dF+H/yvuZUHtY8eApCEPAz3xPy
-         6KlCUsW6GOc6g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 08/07/2020 06:00, Krishna Reddy wrote:
-> ioremap smmu mmio region before calling into implementation init.
-> This is necessary to allow mapped address available during vendor
-> specific implementation init.
+On 08/07/20 08:50, Xiaoyao Li wrote:
+> Split the part of updating vcpu model out of kvm_update_cpuid(), and put
+> it into a new kvm_update_vcpu_model(). So it's more clear that
+> kvm_update_cpuid() is to update guest CPUID settings, while
+> kvm_update_vcpu_model() is to update vcpu model (settings) based on the
+> updated CPUID settings.
 > 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+
+I would prefer to keep the kvm_update_cpuid name for what you called
+kvm_update_vcpu_model(), and rename the rest to kvm_update_cpuid_runtime().
+
+Paolo
+
 > ---
->  drivers/iommu/arm-smmu.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  arch/x86/kvm/cpuid.c | 38 ++++++++++++++++++++++++--------------
+>  arch/x86/kvm/cpuid.h |  1 +
+>  arch/x86/kvm/x86.c   |  1 +
+>  3 files changed, 26 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index d2054178df35..e03e873d3bca 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -2120,10 +2120,6 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->  	if (err)
->  		return err;
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index a825878b7f84..001f5a94880e 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -76,7 +76,6 @@ static int kvm_check_cpuid(struct kvm_vcpu *vcpu)
+>  void kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>  {
+>  	struct kvm_cpuid_entry2 *best;
+> -	struct kvm_lapic *apic = vcpu->arch.apic;
 >  
-> -	smmu = arm_smmu_impl_init(smmu);
-> -	if (IS_ERR(smmu))
-> -		return PTR_ERR(smmu);
+>  	best = kvm_find_cpuid_entry(vcpu, 1, 0);
+>  	if (best) {
+> @@ -89,26 +88,14 @@ void kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>  			   vcpu->arch.apic_base & MSR_IA32_APICBASE_ENABLE);
+>  	}
+>  
+> -	if (best && apic) {
+> -		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
+> -			apic->lapic_timer.timer_mode_mask = 3 << 17;
+> -		else
+> -			apic->lapic_timer.timer_mode_mask = 1 << 17;
+> -	}
 > -
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	ioaddr = res->start;
->  	smmu->base = devm_ioremap_resource(dev, res);
-> @@ -2135,6 +2131,10 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->  	 */
->  	smmu->numpage = resource_size(res);
+>  	best = kvm_find_cpuid_entry(vcpu, 7, 0);
+>  	if (best && boot_cpu_has(X86_FEATURE_PKU) && best->function == 0x7)
+>  		cpuid_entry_change(best, X86_FEATURE_OSPKE,
+>  				   kvm_read_cr4_bits(vcpu, X86_CR4_PKE));
 >  
-> +	smmu = arm_smmu_impl_init(smmu);
-> +	if (IS_ERR(smmu))
-> +		return PTR_ERR(smmu);
+>  	best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
+> -	if (!best) {
+> -		vcpu->arch.guest_supported_xcr0 = 0;
+> -	} else {
+> -		vcpu->arch.guest_supported_xcr0 =
+> -			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
+> +	if (best)
+>  		best->ebx = xstate_required_size(vcpu->arch.xcr0, false);
+> -	}
+>  
+>  	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+>  	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
+> @@ -127,6 +114,27 @@ void kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>  					   vcpu->arch.ia32_misc_enable_msr &
+>  					   MSR_IA32_MISC_ENABLE_MWAIT);
+>  	}
+> +}
 > +
->  	num_irqs = 0;
->  	while ((res = platform_get_resource(pdev, IORESOURCE_IRQ, num_irqs))) {
->  		num_irqs++;
+> +void kvm_update_vcpu_model(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_lapic *apic = vcpu->arch.apic;
+> +	struct kvm_cpuid_entry2 *best;
+> +
+> +	best = kvm_find_cpuid_entry(vcpu, 1, 0);
+> +	if (best && apic) {
+> +		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
+> +			apic->lapic_timer.timer_mode_mask = 3 << 17;
+> +		else
+> +			apic->lapic_timer.timer_mode_mask = 1 << 17;
+> +	}
+> +
+> +	best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
+> +	if (!best)
+> +		vcpu->arch.guest_supported_xcr0 = 0;
+> +	else
+> +		vcpu->arch.guest_supported_xcr0 =
+> +			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
+>  
+>  	/* Note, maxphyaddr must be updated before tdp_level. */
+>  	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
+> @@ -218,6 +226,7 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>  	kvm_apic_set_version(vcpu);
+>  	kvm_x86_ops.cpuid_update(vcpu);
+>  	kvm_update_cpuid(vcpu);
+> +	kvm_update_vcpu_model(vcpu);
+>  
+>  	kvfree(cpuid_entries);
+>  out:
+> @@ -247,6 +256,7 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>  	kvm_apic_set_version(vcpu);
+>  	kvm_x86_ops.cpuid_update(vcpu);
+>  	kvm_update_cpuid(vcpu);
+> +	kvm_update_vcpu_model(vcpu);
+>  out:
+>  	return r;
+>  }
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index f136de1debad..45e3643e2fba 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -10,6 +10,7 @@ extern u32 kvm_cpu_caps[NCAPINTS] __read_mostly;
+>  void kvm_set_cpu_caps(void);
+>  
+>  void kvm_update_cpuid(struct kvm_vcpu *vcpu);
+> +void kvm_update_vcpu_model(struct kvm_vcpu *vcpu);
+>  struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
+>  					      u32 function, u32 index);
+>  int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 09ee54f5e385..6f376392e6e6 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -8184,6 +8184,7 @@ static void enter_smm(struct kvm_vcpu *vcpu)
+>  #endif
+>  
+>  	kvm_update_cpuid(vcpu);
+> +	kvm_update_vcpu_model(vcpu);
+>  	kvm_mmu_reset_context(vcpu);
+>  }
+>  
 > 
 
-
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-
-Thanks!
-Jon
-
--- 
-nvpublic
