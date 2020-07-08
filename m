@@ -2,235 +2,317 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82889206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1C12063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:50:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ihrFGM1z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YgdZOWqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgGHJsN (ORCPT
+        id S1728238AbgGHJuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:48:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbgGHJsM (ORCPT
+        Wed, 8 Jul 2020 05:50:03 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:38504 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgGHJuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:48:12 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B86AC08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 02:48:12 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h22so46247303lji.9
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 02:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EorH25W8Yxxi5FY5OnW1g+jshkGYsQppDgKBd1wwZ1k=;
-        b=ihrFGM1ziTDLRncYiMtbhzukF7rJcIYxDSGdN5kiRbNtq9IuS1n5MUXiqVYSraXFyk
-         nJ9BoyiVz4zei3RAyZRw2ByIUkOtvb7p3ZbZeUTWJOxiRvtiz9zKqWfRt+8YGMXvz/1F
-         Yz2GgYndWW05bNlxCb0g7BQ/XzcGX/KqeWzCrUBJTlv2WUCn5Ht3mN5CIGvxBHPY0O7F
-         8IrAVDssLs+mKZmL3YEumddRgCt1lB+LCOCQ8IU40ZilSNenPAutNYq5BSDEYNDa0wp4
-         1edKDNBLjpPvC9DCqgrrqUuqP3eT78CkeopMMcQfMjsf4hXs7HZQb7Y+83QWyIBCQzyp
-         RY4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EorH25W8Yxxi5FY5OnW1g+jshkGYsQppDgKBd1wwZ1k=;
-        b=VnCeiXKq5MJpHJ7DY772Yx6CML2xdAsmHoObTzOBmc+toY+UW33PTiIIyRklTR/DHw
-         YPoF7tAfjyFgMEpvCzdcOGxep7jx6t9dFcQ1sdFL5ftwuXbDp5srK/QaLl2lQDIJ55eV
-         VZBUWnKe0pN/oSiAns8tcRUz/obM25wmAR+LUgVZsjp7WBIFEA5PQM4rHelT4jDLH1o+
-         x6ui4XiLb8rqxP+il0lGDfEXJaZXOsMZMZifcb4ghT1ETqxNW8fcJ3e+D8iyeVhdJQA7
-         tPUGnzRQcI4O0sTHUMDuXWAqLk1MEcsGG8oj6c86N+adsNY6tQuT/DkHVoae5Tpe+F6X
-         pTug==
-X-Gm-Message-State: AOAM532jNFvipIUPe0kHBXUirHbAeOPaIoLr5mpeEP6PnXY2OIdxttPM
-        j0uE1YlYGJqNhvWZEEIUISgGazNVsFrJPyyCW/aQag==
-X-Google-Smtp-Source: ABdhPJz2gMjFnsDKbFqZPDDFArmkqye10pgeVljvY4vAJonEYlmNuZ3cZbOCCsYr//jzwPdEwL3oHR2klTs1FpqRQT8=
-X-Received: by 2002:a2e:7601:: with SMTP id r1mr34827659ljc.111.1594201690546;
- Wed, 08 Jul 2020 02:48:10 -0700 (PDT)
+        Wed, 8 Jul 2020 05:50:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594201802; x=1625737802;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MTnvbqcZlnu+azn/LRyoWX3UCd+R2A0BVyNb56D6uN8=;
+  b=YgdZOWqE2EMc2c0cLIYgf7bM0VipoRzRKKTvwclkaTKNvXcdUCY98qfo
+   Vjk3umkmFHUUN+rX9qx+FWf8YeKKSUh1DZn0ms+JRPrje2njlJ/e1WgUo
+   Ls/hLuZGALdClI4Q9wy31jfH7zZDBSlLu8nFyQsGFaDtFjsQJKOfO8syY
+   U2Ko7XR4Qz2nU6nE7RVL6LEdWYntpThU8VjVGxT2dH/FBC6914LZUXhba
+   HK8nNarISRDD92TNHW68VGfOlq1f3KGx1OdG+dxYLLLtkFMWk4cgb2rI5
+   jzZQt2HX9VygH7oP0oiB3hpBSYudAmnHsS5LRE7H7BJBcCQbk98QpWKi8
+   g==;
+IronPort-SDR: IbbmxUMeYbQAK6G9awOEMmxkfIoAVbYhMy5Sm8bBn3SY+SDC2UqWP2vu5iklzdGA1iBWi8se9M
+ nU2rq+BgsX7tG3f1BqPjq2AMFzs/sGweYWiZPnKldm8E2P5P2z26+lgw2hgeE7mmqmtXMH/dWe
+ uuoiIkT3xcCjs5sEybI7bFlNPqdFa+pH4rN5k/+yyK96cAsz041/5C8ZGD4y6IRzjO026chz6z
+ nCEL/5MG0hEApgmjnw5gq37iyq07Uhh71K+yY8Uh31Juc33oMybrAC54zzzCn+0CDSwtI2kvQp
+ PY0=
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="86638125"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jul 2020 02:50:02 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 8 Jul 2020 02:50:01 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 8 Jul 2020 02:49:51 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
+Subject: [PATCH] ASoC: atmel-classd: remove codec component
+Date:   Wed, 8 Jul 2020 12:49:21 +0300
+Message-ID: <20200708094921.2595529-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200702144258.19326-1-vincent.guittot@linaro.org> <4198cf3d-308e-feee-91c3-2edfd1748b4c@arm.com>
-In-Reply-To: <4198cf3d-308e-feee-91c3-2edfd1748b4c@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 8 Jul 2020 11:47:59 +0200
-Message-ID: <CAKfTPtBeRXCEWB3dTC8uOqbQ5xaZqQTAeG1EVGEk+pJcYz00sw@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: handle case of task_h_load() returning 0
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020 at 11:45, Dietmar Eggemann <dietmar.eggemann@arm.com> wr=
-ote:
->
-> On 02/07/2020 16:42, Vincent Guittot wrote:
-> > task_h_load() can return 0 in some situations like running stress-ng
-> > mmapfork, which forks thousands of threads, in a sched group on a 224 c=
-ores
-> > system. The load balance doesn't handle this correctly because
->
-> I guess the issue here is that 'cfs_rq->h_load' in
->
-> task_h_load() {
->     struct cfs_rq *cfs_rq =3D task_cfs_rq(p);
->     ...
->     return div64_ul(p->se.avg.load_avg * cfs_rq->h_load,
->                     cfs_rq_load_avg(cfs_rq) + 1);
-> }
->
-> is still ~0 (or at least pretty small) compared to se.avg.load_avg being
-> 1024 and cfs_rq_load_avg(cfs_rq) n*1024 in these lb occurrences.
->
-> > env->imbalance never decreases and it will stop pulling tasks only afte=
-r
-> > reaching loop_max, which can be equal to the number of running tasks of
-> > the cfs. Make sure that imbalance will be decreased by at least 1.
-> >
-> > misfit task is the other feature that doesn't handle correctly such
-> > situation although it's probably more difficult to face the problem
-> > because of the smaller number of CPUs and running tasks on heterogenous
-> > system.
-> >
-> > We can't simply ensure that task_h_load() returns at least one because =
-it
-> > would imply to handle underrun in other places.
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >  kernel/sched/fair.c | 18 +++++++++++++++++-
-> >  1 file changed, 17 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 6fab1d17c575..62747c24aa9e 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -4049,7 +4049,13 @@ static inline void update_misfit_status(struct t=
-ask_struct *p, struct rq *rq)
-> >               return;
-> >       }
-> >
-> > -     rq->misfit_task_load =3D task_h_load(p);
-> > +     /*
-> > +      * Make sure that misfit_task_load will not be null even if
-> > +      * task_h_load() returns 0. misfit_task_load is only used to sele=
-ct
-> > +      * rq with highest load so adding 1 will not modify the result
-> > +      * of the comparison.
-> > +      */
-> > +     rq->misfit_task_load =3D task_h_load(p) + 1;
-> >  }
-> >
-> >  #else /* CONFIG_SMP */
-> > @@ -7664,6 +7670,16 @@ static int detach_tasks(struct lb_env *env)
-> >                           env->sd->nr_balance_failed <=3D env->sd->cach=
-e_nice_tries)
-> >                               goto next;
-> >
-> > +                     /*
-> > +                      * Depending of the number of CPUs and tasks and =
-the
-> > +                      * cgroup hierarchy, task_h_load() can return a n=
-ull
-> > +                      * value. Make sure that env->imbalance decreases
-> > +                      * otherwise detach_tasks() will stop only after
-> > +                      * detaching up to loop_max tasks.
-> > +                      */
-> > +                     if (!load)
-> > +                             load =3D 1;
-> > +
-> >                       env->imbalance -=3D load;
-> >                       break;
->
-> I assume that this is related to the LKP mail
+The CPU and the codec both are represented now as components, so for
+CLASS-D we are registering two componenets with the same name. Since
+there is no actual codec, we will merge the codec component into the
+CPU one and use a dummy codec instead, for the DAI link.
+As a bonus, debugfs will no longer report an error when will try to
+create entries for both componenets with the same name.
 
-I have found this problem while studying the regression raised in the
-email below but it doesn't fix it. At least, it's not enough
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+---
+ sound/soc/atmel/atmel-classd.c | 133 ++++++++++++---------------------
+ 1 file changed, 48 insertions(+), 85 deletions(-)
 
->
-> https://lkml.kernel.org/r/20200421004749.GC26573@shao2-debian ?
->
-> I ran the test (5.8.0-rc4 w/o vs. w/ your patch) on 'Intel(R) Xeon(R)
-> CPU E5-2690 v2 @ 3.00GHz' (2*2*10, 40 CPUs).
-> I can't see the changes in the magnitude shown in the email above (they
-> used a 96 CPU system though).
-> I used only scheduler stressor mmapfork in taskgroup /A/B/C:
->
->  stress-ng --timeout 1 --times --verify --metrics-brief --sequential 40 -=
--class scheduler --exclude (all except mmapfork)
->
-> 5.8.0-rc4-custom-dieegg01-stress-ng-base
->
-> stress-ng: info:  [3720]  stressor      bogo ops real time  usr time  sys=
- time   bogo ops/s   bogo ops/s
-> stress-ng: info:  [3720]                           (secs)    (secs)    (s=
-ecs)   (real time) (usr+sys time)
-> stress-ng: info:  [3720]  mmapfork            40      1.98     12.53     =
-71.12        20.21         0.48
-> stress-ng: info:  [5201]  mmapfork            40      2.50     13.10     =
-98.61        16.01         0.36
-> stress-ng: info:  [6682]  mmapfork            40      2.58     14.80     =
-98.63        15.88         0.36
-> stress-ng: info:  [8195]  mmapfork            40      1.79     12.57     =
-61.61        22.31         0.54
-> stress-ng: info:  [9679]  mmapfork            40      2.20     12.17     =
-82.66        18.20         0.42
-> stress-ng: info:  [11164] mmapfork            40      2.61     15.09    1=
-02.86        16.86         0.37
-> stress-ng: info:  [12773] mmapfork            40      1.89     12.32     =
-65.09        21.15         0.52
-> stress-ng: info:  [3883]  mmapfork            40      2.14     12.90     =
-76.73        18.68         0.45
-> stress-ng: info:  [6845]  mmapfork            40      2.25     11.83     =
-84.06        17.80         0.42
-> stress-ng: info:  [8326]  mmapfork            40      1.76     12.93     =
-56.65        22.70         0.57
->
->                                                                          =
-       Mean: 18.98 (=CF=83: 2.369)
-> 5.8.0-rc4-custom-dieegg01-stress-ng
->
-> stress-ng: info:  [3895]  mmapfork            40      2.40     13.56     =
-92.83        16.67         0.38
-> stress-ng: info:  [5379]  mmapfork            40      2.08     13.65     =
-74.11        19.23         0.46
-> stress-ng: info:  [6860]  mmapfork            40      2.15     13.72     =
-80.24        18.62         0.43
-> stress-ng: info:  [8341]  mmapfork            40      2.37     13.74     =
-90.93        16.85         0.38
-> stress-ng: info:  [9822]  mmapfork            40      2.10     12.48     =
-83.85        19.09         0.42
-> stress-ng: info:  [13816] mmapfork            40      2.05     12.13     =
-77.64        19.49         0.45
-> stress-ng: info:  [15297] mmapfork            40      2.53     13.16    1=
-00.26        15.84         0.35
-> stress-ng: info:  [16780] mmapfork            40      2.00     12.10     =
-71.25        20.02         0.48
-> stress-ng: info:  [18262] mmapfork            40      1.73     12.24     =
-57.69        23.09         0.57
-> stress-ng: info:  [19743] mmapfork            40      1.78     12.51     =
-57.89        22.48         0.57
->
->                                                                          =
-       Mean: 19.14 (=CF=83: 2.239)
->
->
->
->
->
+diff --git a/sound/soc/atmel/atmel-classd.c b/sound/soc/atmel/atmel-classd.c
+index e98601eccfa3..d1ce67d30cd7 100644
+--- a/sound/soc/atmel/atmel-classd.c
++++ b/sound/soc/atmel/atmel-classd.c
+@@ -5,7 +5,6 @@
+  *
+  * Author: Songjun Wu <songjun.wu@atmel.com>
+  */
+-
+ #include <linux/of.h>
+ #include <linux/clk.h>
+ #include <linux/module.h>
+@@ -120,39 +119,21 @@ static int atmel_classd_cpu_dai_startup(struct snd_pcm_substream *substream,
+ {
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
++	int err;
+ 
+ 	regmap_write(dd->regmap, CLASSD_THR, 0x0);
+ 
+-	return clk_prepare_enable(dd->pclk);
+-}
+-
+-static void atmel_classd_cpu_dai_shutdown(struct snd_pcm_substream *substream,
+-					struct snd_soc_dai *cpu_dai)
+-{
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+-	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
+-
+-	clk_disable_unprepare(dd->pclk);
++	err = clk_prepare_enable(dd->pclk);
++	if (err)
++		return err;
++	err = clk_prepare_enable(dd->gclk);
++	if (err) {
++		clk_disable_unprepare(dd->pclk);
++		return err;
++	}
++	return 0;
+ }
+ 
+-static const struct snd_soc_dai_ops atmel_classd_cpu_dai_ops = {
+-	.startup	= atmel_classd_cpu_dai_startup,
+-	.shutdown	= atmel_classd_cpu_dai_shutdown,
+-};
+-
+-static struct snd_soc_dai_driver atmel_classd_cpu_dai = {
+-	.playback = {
+-		.channels_min	= 1,
+-		.channels_max	= 2,
+-		.rates		= ATMEL_CLASSD_RATES,
+-		.formats	= SNDRV_PCM_FMTBIT_S16_LE,},
+-	.ops = &atmel_classd_cpu_dai_ops,
+-};
+-
+-static const struct snd_soc_component_driver atmel_classd_cpu_dai_component = {
+-	.name = "atmel-classd",
+-};
+-
+ /* platform */
+ static int
+ atmel_classd_platform_configure_dma(struct snd_pcm_substream *substream,
+@@ -306,31 +287,10 @@ static int atmel_classd_component_resume(struct snd_soc_component *component)
+ 	return regcache_sync(dd->regmap);
+ }
+ 
+-static struct snd_soc_component_driver soc_component_dev_classd = {
+-	.probe			= atmel_classd_component_probe,
+-	.resume			= atmel_classd_component_resume,
+-	.controls		= atmel_classd_snd_controls,
+-	.num_controls		= ARRAY_SIZE(atmel_classd_snd_controls),
+-	.idle_bias_on		= 1,
+-	.use_pmdown_time	= 1,
+-	.endianness		= 1,
+-	.non_legacy_dai_naming	= 1,
+-};
+-
+-/* codec dai component */
+-static int atmel_classd_codec_dai_startup(struct snd_pcm_substream *substream,
+-				struct snd_soc_dai *codec_dai)
+-{
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+-	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
+-
+-	return clk_prepare_enable(dd->gclk);
+-}
+-
+-static int atmel_classd_codec_dai_digital_mute(struct snd_soc_dai *codec_dai,
+-	int mute)
++static int atmel_classd_cpu_dai_digital_mute(struct snd_soc_dai *cpu_dai,
++					     int mute)
+ {
+-	struct snd_soc_component *component = codec_dai->component;
++	struct snd_soc_component *component = cpu_dai->component;
+ 	u32 mask, val;
+ 
+ 	mask = CLASSD_MR_LMUTE_MASK | CLASSD_MR_RMUTE_MASK;
+@@ -373,13 +333,13 @@ static struct {
+ };
+ 
+ static int
+-atmel_classd_codec_dai_hw_params(struct snd_pcm_substream *substream,
+-			    struct snd_pcm_hw_params *params,
+-			    struct snd_soc_dai *codec_dai)
++atmel_classd_cpu_dai_hw_params(struct snd_pcm_substream *substream,
++			       struct snd_pcm_hw_params *params,
++			       struct snd_soc_dai *cpu_dai)
+ {
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
+-	struct snd_soc_component *component = codec_dai->component;
++	struct snd_soc_component *component = cpu_dai->component;
+ 	int fs;
+ 	int i, best, best_val, cur_val, ret;
+ 	u32 mask, val;
+@@ -417,8 +377,8 @@ atmel_classd_codec_dai_hw_params(struct snd_pcm_substream *substream,
+ }
+ 
+ static void
+-atmel_classd_codec_dai_shutdown(struct snd_pcm_substream *substream,
+-			    struct snd_soc_dai *codec_dai)
++atmel_classd_cpu_dai_shutdown(struct snd_pcm_substream *substream,
++			      struct snd_soc_dai *cpu_dai)
+ {
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
+@@ -426,10 +386,10 @@ atmel_classd_codec_dai_shutdown(struct snd_pcm_substream *substream,
+ 	clk_disable_unprepare(dd->gclk);
+ }
+ 
+-static int atmel_classd_codec_dai_prepare(struct snd_pcm_substream *substream,
+-					struct snd_soc_dai *codec_dai)
++static int atmel_classd_cpu_dai_prepare(struct snd_pcm_substream *substream,
++					struct snd_soc_dai *cpu_dai)
+ {
+-	struct snd_soc_component *component = codec_dai->component;
++	struct snd_soc_component *component = cpu_dai->component;
+ 
+ 	snd_soc_component_update_bits(component, CLASSD_MR,
+ 				CLASSD_MR_LEN_MASK | CLASSD_MR_REN_MASK,
+@@ -439,10 +399,10 @@ static int atmel_classd_codec_dai_prepare(struct snd_pcm_substream *substream,
+ 	return 0;
+ }
+ 
+-static int atmel_classd_codec_dai_trigger(struct snd_pcm_substream *substream,
+-					int cmd, struct snd_soc_dai *codec_dai)
++static int atmel_classd_cpu_dai_trigger(struct snd_pcm_substream *substream,
++					int cmd, struct snd_soc_dai *cpu_dai)
+ {
+-	struct snd_soc_component *component = codec_dai->component;
++	struct snd_soc_component *component = cpu_dai->component;
+ 	u32 mask, val;
+ 
+ 	mask = CLASSD_MR_LEN_MASK | CLASSD_MR_REN_MASK;
+@@ -468,19 +428,17 @@ static int atmel_classd_codec_dai_trigger(struct snd_pcm_substream *substream,
+ 	return 0;
+ }
+ 
+-static const struct snd_soc_dai_ops atmel_classd_codec_dai_ops = {
+-	.digital_mute	= atmel_classd_codec_dai_digital_mute,
+-	.startup	= atmel_classd_codec_dai_startup,
+-	.shutdown	= atmel_classd_codec_dai_shutdown,
+-	.hw_params	= atmel_classd_codec_dai_hw_params,
+-	.prepare	= atmel_classd_codec_dai_prepare,
+-	.trigger	= atmel_classd_codec_dai_trigger,
++static const struct snd_soc_dai_ops atmel_classd_cpu_dai_ops = {
++	.startup        = atmel_classd_cpu_dai_startup,
++	.shutdown       = atmel_classd_cpu_dai_shutdown,
++	.digital_mute	= atmel_classd_cpu_dai_digital_mute,
++	.hw_params	= atmel_classd_cpu_dai_hw_params,
++	.prepare	= atmel_classd_cpu_dai_prepare,
++	.trigger	= atmel_classd_cpu_dai_trigger,
+ };
+ 
+ #define ATMEL_CLASSD_CODEC_DAI_NAME  "atmel-classd-hifi"
+-
+-static struct snd_soc_dai_driver atmel_classd_codec_dai = {
+-	.name = ATMEL_CLASSD_CODEC_DAI_NAME,
++static struct snd_soc_dai_driver atmel_classd_cpu_dai = {
+ 	.playback = {
+ 		.stream_name	= "Playback",
+ 		.channels_min	= 1,
+@@ -488,7 +446,18 @@ static struct snd_soc_dai_driver atmel_classd_codec_dai = {
+ 		.rates		= ATMEL_CLASSD_RATES,
+ 		.formats	= SNDRV_PCM_FMTBIT_S16_LE,
+ 	},
+-	.ops = &atmel_classd_codec_dai_ops,
++	.ops = &atmel_classd_cpu_dai_ops,
++};
++
++static const struct snd_soc_component_driver atmel_classd_cpu_dai_component = {
++	.name			= "atmel-classd",
++	.probe			= atmel_classd_component_probe,
++	.resume			= atmel_classd_component_resume,
++	.controls		= atmel_classd_snd_controls,
++	.num_controls		= ARRAY_SIZE(atmel_classd_snd_controls),
++	.idle_bias_on		= 1,
++	.use_pmdown_time	= 1,
++	.endianness		= 1,
+ };
+ 
+ /* ASoC sound card */
+@@ -517,9 +486,10 @@ static int atmel_classd_asoc_card_init(struct device *dev,
+ 
+ 	dai_link->name			= "CLASSD";
+ 	dai_link->stream_name		= "CLASSD PCM";
+-	dai_link->codecs->dai_name	= ATMEL_CLASSD_CODEC_DAI_NAME;
++	dai_link->codecs->dai_name	= "snd-soc-dummy-dai";
++
+ 	dai_link->cpus->dai_name	= dev_name(dev);
+-	dai_link->codecs->name		= dev_name(dev);
++	dai_link->codecs->name		= "snd-soc-dummy";
+ 	dai_link->platforms->name	= dev_name(dev);
+ 
+ 	card->dai_link	= dai_link;
+@@ -620,13 +590,6 @@ static int atmel_classd_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ret = devm_snd_soc_register_component(dev, &soc_component_dev_classd,
+-					&atmel_classd_codec_dai, 1);
+-	if (ret) {
+-		dev_err(dev, "could not register component: %d\n", ret);
+-		return ret;
+-	}
+-
+ 	/* register sound card */
+ 	card = devm_kzalloc(dev, sizeof(*card), GFP_KERNEL);
+ 	if (!card) {
+-- 
+2.25.1
+
