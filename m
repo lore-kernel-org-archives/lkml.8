@@ -2,107 +2,137 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0540AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFE84206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6425F206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiV/nhyz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HYbrvo/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgGHXZX (ORCPT
+        id S1726220AbgGHX0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:25:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48522 "EHLO
+        Wed, 8 Jul 2020 19:26:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgGHXZW (ORCPT
+        with ESMTP id S1725903AbgGHX0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:25:22 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD69C061A0B;
-        Wed,  8 Jul 2020 16:25:22 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id m22so83938pgv.9;
-        Wed, 08 Jul 2020 16:25:22 -0700 (PDT)
+        Wed, 8 Jul 2020 19:26:11 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFD7C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:26:11 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id 72so41822ple.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:26:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KEmBmUTwNSBWXMQPRmc67sBv10v3F7YWKTzYVbw+TgA=;
-        b=SiV/nhyzb7anGw/Bm/QPEtl58g1GiRRq7kwSQbaLqnpoaX8iFL3SXXvZnDxaAudfHF
-         vX+neNUcu2/PdQaEzEd0IhCY2s4aBPr9vMIDNA0LenxXh1VXbgHlhEZm+TrrJ0Appk88
-         +gTS9K+c7KHSFWSu0eSKjTjSrWuPIp3D3UCTU/6dk4bFQW/cPJhQhPdbcb2VbEsdG92A
-         nrqp4rQ3odgYcThIO5VJJtuUCv2R92WQ50h/eOVEK3mq4M6a6QQe2/XrXtySrC0/HGMF
-         l3dxHw4F3mmK9E0Ew0SRluMsaFpxi93eLWwkusyX/wKQhFVozLoA+NsIa91DZZowEu9N
-         bXYQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nH2GS/OTrvCduU0b8tDpOcN6ehsAwEU0onRF+A5Ut5k=;
+        b=HYbrvo/xF79bO2B6IrkMMLUkmjKPzdJkvanrMInp8S42k6HBGtzvlMd9S1UMsOPkQq
+         kD96OG7jPioQJwVhmcN6AkeMW4/SHyENEHjDe4IuQjxeLq714wlZHE3s1cGSQxT8Jbv7
+         MrPitnx0OcckBdRzsOFubqaRZyUAfYAh/ym5I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KEmBmUTwNSBWXMQPRmc67sBv10v3F7YWKTzYVbw+TgA=;
-        b=o1GcpShgZ9sbJjVD8IthExL0+UKGkpwvqK6w7RbRtLI3meqP+rLvYXyEzW2QLclsLK
-         3OS8ng+EJ00H8nmZRfCuxEBqul/QWiE1lnL4BZS826Z/SxmLARaoyyCWntA8AGZ+tqZc
-         e1Tkp7WpoUEmtoTEEi3uTrrC6LsOBOuvoj2A5giAOfRCmhCHQNpp8gBybcy4WqrhRAy4
-         FRDYdm7NUk3iyCTYrpy1wfi9dkrcwlpBQujmXDnhpuhGshd81KKEBYjRKruYQfBexxO5
-         2v8kuMMOyF3vg1hDJDcSIlMeivFfoXgoofvVbo8InqEQXmZWmpvoA/U+5g9VhIZm03mG
-         6p1Q==
-X-Gm-Message-State: AOAM530Y9rpslBynwWJAVfbAezgGc548kTEGi5Hqk1/FJZrqnSku+iu/
-        w3WIXd0CvghZyffUTif24WH9FwupEuVsDw==
-X-Google-Smtp-Source: ABdhPJyBQJ7OXv/v/Ze/KPFjhaUgP0nBJ6UaCo3UtgwndeQt3s7FwziqvRWMeNcIO39g1QeMT5oTgw==
-X-Received: by 2002:a62:c584:: with SMTP id j126mr31916695pfg.213.1594250721699;
-        Wed, 08 Jul 2020 16:25:21 -0700 (PDT)
-Received: from localhost.localdomain.com ([2605:e000:160b:911f:a2ce:c8ff:fe03:6cb0])
-        by smtp.gmail.com with ESMTPSA id b4sm487793pjo.57.2020.07.08.16.25.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nH2GS/OTrvCduU0b8tDpOcN6ehsAwEU0onRF+A5Ut5k=;
+        b=Xcw3ogIzlmaJhowvBUQcmUeottRmgArUZCYDrzps63ALB6Pa44yHX6d+bOcaAR/F3b
+         of1qiP9zhPGaE2zlFWDzGUs8EePwZlrUsCOxdbZaUZooKyL4O0NE9NZFRTgqoV58BKTf
+         HOrvXUguRJrE3xbm0JQQPJSnyDK4DbbcOvKvDuSMSD38aJMUw/yikmaoSZqgpCuLi8Ff
+         uAAwMMIoQwkAMoMTyHhnj5P+jBvrt5Bwk14mabMQkhrRaBPXpsdumMN8U/HgZMqP/0pZ
+         g5mS6gUEr6BZYtfu2Ula4sor17koGY8zovNzXDN5T/8nv6M/WVr3d5pjD6hO+j/RNh6R
+         Ow+Q==
+X-Gm-Message-State: AOAM5317/jpT5GfX3T4uV9hHjYtc0cclBuqIKbVLHvm7QIRrgTSAeF4O
+        +tnHE3LyrTqaeseudgksDvd4lQ==
+X-Google-Smtp-Source: ABdhPJzniWV9Twx/MX+UzsIO+dG+AvwC8/i/kZk/gvvqhaDExjNsUdeEEAP66hKEdkwugkIW4si31A==
+X-Received: by 2002:a17:90a:780f:: with SMTP id w15mr11778381pjk.235.1594250771013;
+        Wed, 08 Jul 2020 16:26:11 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i128sm759010pfe.74.2020.07.08.16.26.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 16:25:21 -0700 (PDT)
-From:   Chris Healy <cphealy@gmail.com>
-To:     festevam@gmail.com, andrew@lunn.ch, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, stefan@agner.ch, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>
-Subject: [PATCH v2] ARM: dts: vf610-zii-dev-rev-c: Configure fiber port to 1000BaseX
-Date:   Wed,  8 Jul 2020 16:25:01 -0700
-Message-Id: <20200708232501.6200-1-cphealy@gmail.com>
-X-Mailer: git-send-email 2.21.3
+        Wed, 08 Jul 2020 16:26:10 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 16:26:09 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>
+Subject: Re: [PATCH] MIPS: Prevent READ_IMPLIES_EXEC propagation
+Message-ID: <202007081624.82FA0CC1EA@keescook>
+References: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594114741-26852-1-git-send-email-yangtiezhu@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SFF soldered onto the board expects the port to use 1000BaseX.  It
-makes no sense to have the port set to SGMII, since it doesn't even
-support that mode.
+On Tue, Jul 07, 2020 at 05:39:01PM +0800, Tiezhu Yang wrote:
+> In the MIPS architecture, we should clear the security-relevant
+> flag READ_IMPLIES_EXEC in the function SET_PERSONALITY2() of the
+> file arch/mips/include/asm/elf.h.
+> 
+> Otherwise, with this flag set, PROT_READ implies PROT_EXEC for
+> mmap to make memory executable that is not safe, because this
+> condition allows an attacker to simply jump to and execute bytes
+> that are considered to be just data [1].
+> 
+> In mm/mmap.c:
+> unsigned long do_mmap(struct file *file, unsigned long addr,
+> 			unsigned long len, unsigned long prot,
+> 			unsigned long flags, vm_flags_t vm_flags,
+> 			unsigned long pgoff, unsigned long *populate,
+> 			struct list_head *uf)
+> {
+> 	[...]
+> 	if ((prot & PROT_READ) && (current->personality & READ_IMPLIES_EXEC))
+> 		if (!(file && path_noexec(&file->f_path)))
+> 			prot |= PROT_EXEC;
+> 	[...]
+> }
+> 
+> By the way, x86 and ARM64 have done the similar thing.
+> 
+> After commit 250c22777fe1 ("x86_64: move kernel"), in the file
+> arch/x86/kernel/process_64.c:
+> void set_personality_64bit(void)
+> {
+> 	[...]
+> 	current->personality &= ~READ_IMPLIES_EXEC;
+> }
+> 
+> After commit 48f99c8ec0b2 ("arm64: Preventing READ_IMPLIES_EXEC
+> propagation"), in the file arch/arm64/include/asm/elf.h:
+> #define SET_PERSONALITY(ex)						\
+> ({									\
+> 	clear_thread_flag(TIF_32BIT);					\
+> 	current->personality &= ~READ_IMPLIES_EXEC;			\
+> })
+> 
+> [1] https://insights.sei.cmu.edu/cert/2014/02/feeling-insecure-blame-your-parent.html
+> 
+> Reported-by: Juxin Gao <gaojuxin@loongson.cn>
+> Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Signed-off-by: Chris Healy <cphealy@gmail.com>
----
-v2:
-- convert spaces back to tabs
-- remove .dts from subject line
+This seems correct to me.
 
- arch/arm/boot/dts/vf610-zii-dev-rev-c.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
-index 778e02c000d1..de79dcfd32e6 100644
---- a/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
-+++ b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
-@@ -164,7 +164,7 @@
- 					port@9 {
- 						reg = <9>;
- 						label = "sff2";
--						phy-mode = "sgmii";
-+						phy-mode = "1000base-x";
- 						managed = "in-band-status";
- 						sfp = <&sff2>;
- 					};
+BTW, does MIPS also need similar changes to this series:
+https://lore.kernel.org/lkml/20200327064820.12602-1-keescook@chromium.org/
+
+Quoting from there "MIPS may need adjusting but the history of CPU
+features and toolchain behavior is very unclear to me."
+
 -- 
-2.21.3
-
+Kees Cook
