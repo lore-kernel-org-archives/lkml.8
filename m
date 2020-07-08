@@ -2,101 +2,119 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A031CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1952065C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:24:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYYeGlJ2"
+	by mail.kernel.org (Postfix) with ESMTP id 7F3E12065D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594200318;
+	bh=9P7yqkllILNHB0enkXbV3ddephYjxosBT/dqFb1WhtA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vAk8mwD9hsH5Utb8o29d28kXrecelIhRMzLkdjyuej7vvrRljXCDYwh8cPsBAwA8x
+	 5AGfVHebsIky6QS/QOm7iXOOzZCawcV6IfESX63c6RspqqxDmSvy3EqOSpWLvRXIHn
+	 EBdcetrEo58OqmJGfuFCJ0+6HxEwNmvHrmk0nL4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgGHJYX (ORCPT
+        id S1728132AbgGHJZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:24:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGHJYW (ORCPT
+        Wed, 8 Jul 2020 05:25:17 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33311 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGHJZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:24:22 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34863C08C5DC;
-        Wed,  8 Jul 2020 02:24:22 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id y13so26444580lfe.9;
-        Wed, 08 Jul 2020 02:24:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lYLALftbbaQGDGQ4oQhMNUUQUOfek5lRcVRjkuKdTrA=;
-        b=sYYeGlJ2kC4wRWadEnOsdLVLgAVucuP6kKJIkLigv2jxcGBNt/IgDVdey4LdbU81ac
-         SysXqvh5kKC0gb2Zll29v6bxvr7vMXLluwggwr3qufh4qUGQCqaUWEM2JpUQs1uZrcmk
-         2VwZqpWSVqyzARCvEhYNwBm+IOHPY1FrYoDcLo5+NN4anJIME7bcrvxh8H+UA5Y+NjyP
-         lO4x2JfrsGgh3YIMwl6+sG/iTtNMNdCXrwP7LJwSsyYOw4onW9OyhV254b9ZUIUlPbp1
-         3X7XJKxca7k3CrX88J7UYV/r6g9AIAyAfkgzlUV6gDC3tQuoxvpzD895H9M5qxQtTl6X
-         i/Fw==
+        Wed, 8 Jul 2020 05:25:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f18so40028466wrs.0;
+        Wed, 08 Jul 2020 02:25:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lYLALftbbaQGDGQ4oQhMNUUQUOfek5lRcVRjkuKdTrA=;
-        b=eFP88LOVclSoG2XJiozRzsSP10wdshLvfCFG4J7OGJZa8ZvjMUQp5DcjYTyO6u5rFg
-         dgKC1J+bwkPLQJp0dZsS+qXECw6GVCinohESAFcBUIzXg41OuSwwqSFRS8eZxCpirgYh
-         VvMbCISRi+Va6R8krFFAWuJjk58lyru6DkrM/R0sXnwl/yWS1ObIeRwTI6+lOVRx6Tv1
-         Zl0x/tFGERTNXmdmfN5hNQ4LLHER4u+V7Eq7qmKqf8heom8Ueu9IG5S3PHxQcRLTG8GT
-         TsIPAEyjUoNuEP5fbOxdwwV2zeJFRkUfY3QoP0MS+95en8c7AfR+wIDCDkottb9b1X3j
-         DKfw==
-X-Gm-Message-State: AOAM531zHelyTj2B2uDvXh5XspWgTcb7QDBhTfHvzcYRDknSG38ynk8g
-        m79pLOGkaJlkoMlpGtiDy8+LTtAm
-X-Google-Smtp-Source: ABdhPJz4YTE9aTWCU8kxIn8SD7jDy4/H2vk0ZHjetWPH6HDT81VoGJgghIr8zluUMuMVKQ0FA+3Z+g==
-X-Received: by 2002:ac2:521a:: with SMTP id a26mr35148791lfl.192.1594200259811;
-        Wed, 08 Jul 2020 02:24:19 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id x17sm10195475lfe.44.2020.07.08.02.24.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 02:24:19 -0700 (PDT)
-Subject: Re: [PATCH v1 5/5] gpio: max77620: Move variable declaration
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200708082634.30191-1-digetx@gmail.com>
- <20200708082634.30191-6-digetx@gmail.com>
- <CAHp75VeMhb6BH9LnZxM+_-6nNzDErKN70T_QuuuW_dmLwcpoHg@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <204bc417-02cf-1b8f-da99-a598056ff7e4@gmail.com>
-Date:   Wed, 8 Jul 2020 12:24:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HHEXoSacTXtSlDKUw+15Jl9wo7TTVCqG6nV23+yAmOY=;
+        b=Kq21Rv+cNcUM9uVAoTM8ZD6HzjRyj8vTo636vyZCF7CFRZvmUS52zSeCMGKtytNzQi
+         9+Ahx1+VERT1Yqv6pBHLkkKcUsXrKKrt6HeIoVe/PeeKtn8+Hz/X3TXNr78XAZMHkFpy
+         TEH7BJwQRI0dTRSmhozndr3ybbNuA1dY7XzN6WRTSLwtSNge/v3k8XxBw3sQ3bnZc+FN
+         qU9BNxUIie9AmFzlVITpndZxHC8DGCdwrFg5ysSq/IyeVgUpMp0+Dh2dBqQH9yLJX5k/
+         ZPvEaz1oujEFJxU7O1FJkPWjnzmTibxoTPnsd9m/rR2K4/1TR02AdhRtZvaHDa7dHpDe
+         F56g==
+X-Gm-Message-State: AOAM531zx3ZB8Tk5uqssgDONu48BXPwuUSMosOdBuApCUA4qcsiU066S
+        36cnDCA4tD+EoQI5lfuEBCrNn3+X
+X-Google-Smtp-Source: ABdhPJzzs/pKIjoQFtFDc1tJJR5LO6koOXolKGudMz2NmyNrXczooElRgYoirakpBhV1oDJvMtDDAQ==
+X-Received: by 2002:adf:c185:: with SMTP id x5mr62928897wre.403.1594200314078;
+        Wed, 08 Jul 2020 02:25:14 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id k20sm5075886wmi.27.2020.07.08.02.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 02:25:13 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 09:25:12 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     t-mabelt@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, parri.andrea@gmail.com,
+        Andres Beltran <lkmlabelt@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] scsi: storvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Message-ID: <20200708092512.muse7szgxyihazvv@liuwe-devbox-debian-v2>
+References: <20200701001221.2540-1-lkmlabelt@gmail.com>
+ <20200701001221.2540-3-lkmlabelt@gmail.com>
+ <20200707234700.GA218@Ryzen-9-3900X.localdomain>
+ <20200708092105.7af7sf2olpaysh33@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VeMhb6BH9LnZxM+_-6nNzDErKN70T_QuuuW_dmLwcpoHg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708092105.7af7sf2olpaysh33@liuwe-devbox-debian-v2>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.07.2020 11:47, Andy Shevchenko пишет:
-> On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> Let's move the virq variable declaration to a top-level scope just to
->> make the code a bit more visually appealing.
+On Wed, Jul 08, 2020 at 09:21:05AM +0000, Wei Liu wrote:
+[...]
+> > If I revert this commit, everything works fine:
+> > 
+> > PS C:\Users\natec> wsl --shutdown
+> > PS C:\Users\natec> wsl -d ubuntu -- /bin/bash
+> > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ cat /proc/version
+> > Linux version 5.8.0-rc4-next-20200707-microsoft-standard+ (nathan@Ryzen-9-3900X) (gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #1 SMP Tue Jul 7 16:35:06 MST 2020
+> > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ git -C ~/src/linux-next lo -2
+> > 0ff017dff922 (HEAD -> master) Revert "scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening"
+> > 5b2a702f85b3 (tag: next-20200707, origin/master, origin/HEAD) Add linux-next specific files for 20200707
+> > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$
+> > 
+> > The kernel was built using the following commands:
+> > 
+> > $ mkdir -p out/x86_64
+> > 
+> > $ curl -LSso out/x86_64/.config https://github.com/microsoft/WSL2-Linux-Kernel/raw/linux-msft-wsl-4.19.y/Microsoft/config-wsl
+> > 
+> > $ scripts/config --file out/x86_64/.config -d RAID6_PQ_BENCHMARK -e NET_9P_VIRTIO
+> > 
+> > $ make -skj"$(nproc)" O=out/x86_64 olddefconfig bzImage
+> > 
+> > I don't really know how to get more information than this as WSL seems
+> > rather opaque but I am happy to provide any information.
 > 
-> To me it sounds like unneeded churn, but it's up to maintainers.
+> Linux kernel uses Hyper-V's crash reporting facility to spit out
+> information when it dies. It is said that you can see that information
+> in the "Event Viewer" program.
+> 
+> (I've never tried this though -- not using WSL2)
 > 
 
-I agree that this is an unnecessary change, but I couldn't resist :)
-Alright, I'll skip the patches 3-5 in the v2. Thank you very much for
-the review!
+If this doesn't work, another idea is to install a traditional VM on
+Hyper-V and replace the kernel with your own.
+
+With such setup, you should be able to add an emulated serial port to
+the VM and grab more information.
+
+Wei.
