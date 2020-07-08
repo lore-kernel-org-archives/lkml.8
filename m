@@ -2,133 +2,133 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C18C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B5EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA5720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5264D20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kDz+S3Ty"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ZjjGbP96";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NO5deZox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgGHMZ0 (ORCPT
+        id S1729139AbgGHMZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:25:26 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11105 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728681AbgGHMZ0 (ORCPT
+        Wed, 8 Jul 2020 08:25:48 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:59449 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728681AbgGHMZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:25:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f05bb280000>; Wed, 08 Jul 2020 05:25:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 08 Jul 2020 05:25:25 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 08 Jul 2020 05:25:25 -0700
-Received: from [10.26.73.185] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul
- 2020 12:25:18 +0000
-Subject: Re: [PATCH v10 4/5] dt-bindings: arm-smmu: add binding for Tegra194
- SMMU
-To:     Krishna Reddy <vdumpa@nvidia.com>, <joro@8bytes.org>,
-        <will@kernel.org>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
-        <treding@nvidia.com>
-CC:     <devicetree@vger.kernel.org>,
+        Wed, 8 Jul 2020 08:25:47 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 1B3E4BDC;
+        Wed,  8 Jul 2020 08:25:46 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 08 Jul 2020 08:25:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=W
+        GeLdZevEHRYXhgk2QETUtSKHCbJuo1sBlmhw+I+6SM=; b=ZjjGbP96DMyvdd6x4
+        HmJTMz6u3VBpaq/DrQc64LPyEYenL3og8ol5UevLG3Hjlwr7d+VEAghNB1EJGpo0
+        EnJl/zAiEdcOhJZ9xSq4+Yt6DMkamTVpbR09zulKv59rQloSJ1F4p9cU95XWAs96
+        BIsEiX0a79p/ZbFDL14NtGsXH90mXDO7NGScW6z/1zD46lsfQVd8IxE47n8Z00nH
+        Jgm2DR22vp8LMo91X8Wk9r7nPxRSwBSIv9n1sFsMlwSE1V1ox7TELtR+kfFBpCHg
+        srUQ1/rRY8vQAkXKNS5z9BZKTHMKz42TKZHwLC+ouqaV66uAFb1AuHiedZD2oQfP
+        oYvzg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=WGeLdZevEHRYXhgk2QETUtSKHCbJuo1sBlmhw+I+6
+        SM=; b=NO5deZoxpXKh4YytPuG5YffAbtm/zU7P3iKkyn9F7NJIUuFvPHCW2Oemy
+        O6BFSOtewPk41lTxckKysh6L0m3sbUMj7ps8SQnf4MHIuy7FoN8Y0qx8DW+cHJ/D
+        rVuPnBXQVA4Qk0DGy2u/OVCtoIV6fKiXnle93YPUlxnq2cDGddwrRyOnYBvhc4KT
+        oznAEa2hYXHOkNqaTqBk5YMKJvfBDhF51PsKHqoKGWDZjgqWNnNHWRgs769QNSBv
+        B1NKaLGnkuxjGWvje3z3ysT7Y6is9bBPpoWxIzIkgoG+aCYOyaocbnG0G32AOzCq
+        zUCFaCw1XCL4tZR7DMDfizTmgWz9Q==
+X-ME-Sender: <xms:SLsFXyLOvLkdkAy5uyKf7e6X6is93D0Ks9sPA8IfqSsAcyrJCy7uGg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdehvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepgfejtedtjefggfffvdetuedthedtheegheeuteekfeeghfdtteejkeeludeg
+    vddunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:SLsFX6Js5IFFY6GQtYg9RGjtBFkceXwpfiildcW4SRbTYduO4Elttg>
+    <xmx:SLsFXysllCDMSTHy74Q1CTzqDowUqvZea67-uqG7CNZTLQkoNPSvKA>
+    <xmx:SLsFX3bh_8oOt7Rn96Zv71VlWoc6qToaw7JrEodyGtkov_d5Cc2bWA>
+    <xmx:SbsFX15jqq9xsm4atcXFywdF0Lc1-_Q_JJKQIRt0X5y7xK3HtTUTZYwkGik>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 150273280059;
+        Wed,  8 Jul 2020 08:25:43 -0400 (EDT)
+Date:   Wed, 8 Jul 2020 14:25:42 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
         <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
-        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
-        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
-        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
-        <nicoleotsuka@gmail.com>
-References: <20200708050017.31563-1-vdumpa@nvidia.com>
- <20200708050017.31563-5-vdumpa@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <ec06de3c-fefa-eaa4-3498-abd1eb0d78d7@nvidia.com>
-Date:   Wed, 8 Jul 2020 13:25:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
+Message-ID: <20200708122542.73o3lbhgvbdw5c4z@gilmour.lan>
+References: <20200708105527.868987-1-megous@megous.com>
 MIME-Version: 1.0
-In-Reply-To: <20200708050017.31563-5-vdumpa@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594211113; bh=Xzfh1NzVG82EwW/mARDUWZypAGHmKQgo0WIQYqHsKDc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=kDz+S3TyRCG/4o8mz/Uk2mGnf3f30lnrD7KF8Wc1wtV3O/HdkAksX5kzf65vfE4yi
-         MnGesmon47DGmcHNIK/k2ypEnPSRbsyXzgwtuXtILxzo4je3d6P6qd44It9+GEL9z+
-         kE2H6+wZwwlC2R/Ois07laWv8TCk50ec4JPXn8bk7ZSe+Brhkq9rsoFl1UBxBSKO0G
-         7MYo3dBr5w03ywKutHN3eQ1Lu0nVlel7ZEt8w1lfx4AHZdD/NAzx6bsXIAjc/JidE7
-         69PlMytZhtkS5fxgBxm5KPfYwsRCXBZa0auLfK9UDDZSSpoWx+N6dR3Y2y2ZD2oExN
-         2c9I9k5UVGXzg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200708105527.868987-1-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 08/07/2020 06:00, Krishna Reddy wrote:
-> Add binding for NVIDIA's Tegra194 SoC SMMU.
-> 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+On Wed, Jul 08, 2020 at 12:55:27PM +0200, Ondrej Jirman wrote:
+> I noticed several mobile Linux distributions failing to enable the
+> thermal regulation correctly, because the kernel is silent
+> when thermal driver fails to probe. Add enough error reporting
+> to debug issues and warn users in case thermal sensor is failing
+> to probe.
+>=20
+> Failing to notify users means, that SoC can easily overheat under
+> load.
+>=20
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 > ---
->  .../devicetree/bindings/iommu/arm,smmu.yaml    | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index d7ceb4c34423..ac1f526c3424 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -38,6 +38,11 @@ properties:
->                - qcom,sc7180-smmu-500
->                - qcom,sdm845-smmu-500
->            - const: arm,mmu-500
-> +      - description: NVIDIA SoCs that program two ARM MMU-500s identically
-> +        items:
-> +          - enum:
-> +              - nvidia,tegra194-smmu
-> +          - const: nvidia,smmu-500
->        - items:
->            - const: arm,mmu-500
->            - const: arm,smmu-v2
-> @@ -138,6 +143,19 @@ required:
->  
->  additionalProperties: false
->  
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra194-smmu
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 2
-> +          maxItems: 2
+>  drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++-------
+>  1 file changed, 43 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_ther=
+mal.c
+> index 74d73be16496..9065e79ae743 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct ths_device *tm=
+dev)
+> =20
+>  	calcell =3D devm_nvmem_cell_get(dev, "calibration");
+>  	if (IS_ERR(calcell)) {
+> +		dev_err(dev, "Failed to get calibration nvmem cell (%ld)\n",
+> +			PTR_ERR(calcell));
 > +
->  examples:
->    - |+
->      /* SMMU with stream matching or stream indexing */
-> 
+>  		if (PTR_ERR(calcell) =3D=3D -EPROBE_DEFER)
+>  			return -EPROBE_DEFER;
+> +
 
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+The rest of the patch makes sense, but we should probably put the error
+message after the EPROBE_DEFER return so that we don't print any extra
+noise that isn't necessarily useful
 
-Thanks
-Jon
-
--- 
-nvpublic
+Maxime
