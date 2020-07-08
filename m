@@ -2,168 +2,169 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC3BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A791206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68EE32078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:09:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="DU3Ygtsc"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k6CxAh4P";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CwdYDTxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbgGHPGw (ORCPT
+        id S1729968AbgGHPJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbgGHPGv (ORCPT
+        Wed, 8 Jul 2020 11:09:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51172 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729676AbgGHPJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:06:51 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F90C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 08:06:51 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id i4so47292703iov.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 08:06:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QRr8IaIUSsGD3CeeBoEgXqxqpXOnhIwjY7NBGxGQZyo=;
-        b=DU3Ygtsctl26AMlkTp4CMraQH0A+FA5vOVnNO0UIcYo9nxfYiCGy/ymLFOrzpSIPvq
-         /CEOf6eB2iHMuxO2Uj9c0aYHbwNJ1koOfPwBQdxhbZrmEaBWTDcDovMfnMGuY7DQcBSl
-         /59aWWLJ+6nNzZru72U0sGqPquAoF2yyEAtIyDRj97tm1CKkmn7DmgaPYWmycBfkGRdp
-         5HtQzvJXXi6Iy+ALPgddlkzwEo8R8hBRrz1sJuxfBm8lVmmwg3bJZMt12DHYs3qwlyPS
-         rbB21x+49LQLxypL1cXpHtPNH1vD6NNvIYALazA0x6rwFXpzq1MciHcfiOlzuO9qSWGr
-         iI2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QRr8IaIUSsGD3CeeBoEgXqxqpXOnhIwjY7NBGxGQZyo=;
-        b=KJ6Z7rFYNrCqMC3QVxTZxjgbzCCE03VbqxyYTsKd7gmoWgwI5VIJhycTLQFLpXVQ5w
-         fcuucK0ppRDKUnlt700R8jL3eE00bG6kEDflD6hImCx0y+4yN9FPGVQ7ldyQmPQ01c6j
-         wCQJy9DH7RZqmNMCFXBNB0N3tScQj2DaNMiw3UjP5+acL2mNgb84PuNTS327/Annq5lW
-         w/rVnZkfCESgOMoirj6B34cVWT422ILyal2H6PbK96qqSebuOHHTlAi20/5L/WpwGliP
-         v5dKa24MRkL2xgprGtkzWyi4FUpB0HJYbxQSCHYZE6mQ5OVIiA/wv2L8LgWcyuEUn5Zi
-         eJWQ==
-X-Gm-Message-State: AOAM532VO3XzUKcxf9wCABpyUX4KVepG5MCHOiM5OtvcF5HZ+1LS4UWv
-        QYG8UlCmu5zNLsUYRsmmMT8izA==
-X-Google-Smtp-Source: ABdhPJxSNOJIwdG5M6/DgmtTZGq3z2ZwA8+OmZqthv4xlv2bxnbw+dF3KP0JkUjr+YWL22OnfN4/RQ==
-X-Received: by 2002:a05:6638:2591:: with SMTP id s17mr15513952jat.23.1594220810484;
-        Wed, 08 Jul 2020 08:06:50 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id h11sm15046512ilh.69.2020.07.08.08.06.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 08:06:49 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <20200707155237.GM25523@casper.infradead.org>
- <20200707202342.GA28364@test-zns>
- <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
- <20200707221812.GN25523@casper.infradead.org>
- <CGME20200707223803epcas5p41814360c764d6b5f67fdbf173a8ba64e@epcas5p4.samsung.com>
- <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
- <20200708125805.GA16495@test-zns>
- <2962cd68-de34-89be-0464-8b102a3f1d0e@kernel.dk>
- <20200708145826.GS25523@casper.infradead.org>
- <b1c58211-496a-ed85-a9bb-0d0cc56e250c@kernel.dk>
- <20200708150240.GT25523@casper.infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <33b9887b-eaba-c7be-5dfd-fc7e7d416f48@kernel.dk>
-Date:   Wed, 8 Jul 2020 09:06:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 11:09:33 -0400
+Date:   Wed, 8 Jul 2020 17:09:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594220971;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Sk2EpFmlcG5nTIKnaSOK7WLibT20WG+40/XonWzggkw=;
+        b=k6CxAh4PVkh1KG2o0qvlbHm30a8aCBsmCcC+bj6C2XgCDcwHecs44g6NSI4I69OWyCsgY4
+        7nerFQjLCdQYk/c4RRo5qUXH72OB1P46AdpQBPI8hVC9AIZZoQ71HwAIRZm8J4cnHV357N
+        XSHbNeF5o/bWC6cSBrlyiV85TLRmfpd/y7eButAuzNZW+EeV0HldPxuilJTiI6TO7ULwGP
+        I17zOLJs0Hm1AmXVBUzdgNxiUK7JYnDiAXuIctdzSUOuoyCd7+B/wxrpDUHGZz0MqLIeiM
+        dI9d0fgjiGwF2x2GEnTbBTv+/ZZ5UQp0QQUJgc7eKV96Y3Ug6l7RkJGaqT3KAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594220971;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Sk2EpFmlcG5nTIKnaSOK7WLibT20WG+40/XonWzggkw=;
+        b=CwdYDTxhNc1ymc0bQTO6KqGrRZJV4FvDWhc+vQg3oBTO64ChnyUYqZDYD6Qg5gAb/x8xCa
+        wLIvyIUQdhsVZUCw==
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/20] seqlock: Extend seqcount API with associated
+ locks
+Message-ID: <20200708150930.GA147323@debian-buster-darwi.lab.linutronix.de>
+References: <20200630054452.3675847-1-a.darwish@linutronix.de>
+ <20200630054452.3675847-7-a.darwish@linutronix.de>
+ <20200706212148.GE5523@worktop.programming.kicks-ass.net>
+ <20200707084024.GA4097637@debian-buster-darwi.lab.linutronix.de>
+ <20200707130410.GO4800@hirez.programming.kicks-ass.net>
+ <20200707143726.GO117543@hirez.programming.kicks-ass.net>
+ <20200708103314.GB4151780@debian-buster-darwi.lab.linutronix.de>
+ <20200708122938.GQ4800@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200708150240.GT25523@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708122938.GQ4800@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 9:02 AM, Matthew Wilcox wrote:
-> On Wed, Jul 08, 2020 at 08:59:50AM -0600, Jens Axboe wrote:
->> On 7/8/20 8:58 AM, Matthew Wilcox wrote:
->>> On Wed, Jul 08, 2020 at 08:54:07AM -0600, Jens Axboe wrote:
->>>> On 7/8/20 6:58 AM, Kanchan Joshi wrote:
->>>>>>> +#define IOCB_NO_CMPL		(15 << 28)
->>>>>>>
->>>>>>>  struct kiocb {
->>>>>>> [...]
->>>>>>> -	void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
->>>>>>> +	loff_t __user *ki_uposp;
->>>>>>> -	int			ki_flags;
->>>>>>> +	unsigned int		ki_flags;
->>>>>>>
->>>>>>> +typedef void ki_cmpl(struct kiocb *, long ret, long ret2);
->>>>>>> +static ki_cmpl * const ki_cmpls[15];
->>>>>>>
->>>>>>> +void ki_complete(struct kiocb *iocb, long ret, long ret2)
->>>>>>> +{
->>>>>>> +	unsigned int id = iocb->ki_flags >> 28;
->>>>>>> +
->>>>>>> +	if (id < 15)
->>>>>>> +		ki_cmpls[id](iocb, ret, ret2);
->>>>>>> +}
->>>>>>>
->>>>>>> +int kiocb_cmpl_register(void (*cb)(struct kiocb *, long, long))
->>>>>>> +{
->>>>>>> +	for (i = 0; i < 15; i++) {
->>>>>>> +		if (ki_cmpls[id])
->>>>>>> +			continue;
->>>>>>> +		ki_cmpls[id] = cb;
->>>>>>> +		return id;
->>>>>>> +	}
->>>>>>> +	WARN();
->>>>>>> +	return -1;
->>>>>>> +}
->>>>>>
->>>>>> That could work, we don't really have a lot of different completion
->>>>>> types in the kernel.
->>>>>
->>>>> Thanks, this looks sorted.
->>>>
->>>> Not really, someone still needs to do that work. I took a quick look, and
->>>> most of it looks straight forward. The only potential complication is
->>>> ocfs2, which does a swap of the completion for the kiocb. That would just
->>>> turn into an upper flag swap. And potential sync kiocb with NULL
->>>> ki_complete. The latter should be fine, I think we just need to reserve
->>>> completion nr 0 for being that.
->>>
->>> I was reserving completion 15 for that ;-)
->>>
->>> +#define IOCB_NO_CMPL		(15 << 28)
->>> ...
->>> +	if (id < 15)
->>> +		ki_cmpls[id](iocb, ret, ret2);
->>>
->>> Saves us one pointer in the array ...
->>
->> That works. Are you going to turn this into an actual series of patches,
->> adding the functionality and converting users?
-> 
-> I was under the impression Kanchan was going to do that, but I can run it
-> off quickly ...
+On Wed, Jul 08, 2020 at 02:29:38PM +0200, Peter Zijlstra wrote:
+> On Wed, Jul 08, 2020 at 12:33:14PM +0200, Ahmed S. Darwish wrote:
+>
+> > > +#define read_seqcount_begin(s)	do_read_seqcount_begin(__to_seqcount_t(s))
+> > > +
+> > > +static inline unsigned do_read_seqcount_begin(const seqcount_t *s)
+> > > +{
+> > ...
+> >
+> > Hmm, the __to_seqcount_t(s) force cast is not good. It will break the
+> > arguments type-safety of seqcount macros that do not have either:
+> >
+> >     __associated_lock_is_preemptible() or
+> >     __assert_associated_lock_held()
+> >
+> > in their path. This basically includes all the read path macros, and
+> > even some others (e.g. write_seqcount_invalidate()).
+> >
+> > With the suggested force cast above, I can literally *pass anything* to
+> > read_seqcount_begin() and friends, and the compiler won't say a thing.
+> >
+> > So, I'll restore __to_seqcount_t(s) that to its original implementation:
+>
+> Right, I figured that the write side would be enough to catch glaring
+> abuse. But sure.
+>
+> It's a bummer we didn't upgrade the minimum compiler version to 4.9,
+> that would've given us _Generic(), which allows one to write this
+> slightly less verbose I think.
+>
 
-I just wanted to get clarification there, because to me it sounded like
-you expected Kanchan to do it, and Kanchan assuming it "was sorted". I'd
-consider that a prerequisite for the append series as far as io_uring is
-concerned, hence _someone_ needs to actually do it ;-)
+Looking at 5429ef62bcf3 ("compiler/gcc: Raise minimum GCC version for
+kernel builds to 4.8"), it seems that the decision of picking gcc 4.8
+vs. 4.9 was kinda arbitrary.
 
--- 
-Jens Axboe
+Anyway, please continue below.
 
+> How about something disguisting like this then?
+>
+...
+> #define __SEQ_RT	IS_BUILTIN(CONFIG_PREEMPT_RT)
+>
+> SEQCOUNT_LOCKTYPE(raw_spinlock, raw_spinlock_t,	false,		lock)
+> SEQCOUNT_LOCKTYPE(spinlock,	spinlock_t,		__SEQ_RT,	lock)
+> SEQCOUNT_LOCKTYPE(rwlock,	rwlock_t,		__SEQ_RT,	lock)
+> SEQCOUNT_LOCKTYPE(mutex,	struct mutex,		true,		lock)
+> SEQCOUNT_LOCKTYPE(ww_mutex,	struct ww_mutex,	true,		lock->base)
+>
+> #if (defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 40900) || defined(__CHECKER__)
+>
+> #define __seqprop_pick(const_expr, s, locktype, prop, otherwise)	\
+> 	__builtin_choose_expr(const_expr,				\
+> 			      __seqprop_##locktype##_##prop((void *)(s)), \
+> 			      otherwise)
+>
+> extern void __seqprop_invalid(void);
+>
+> #define __seqprop(s, prop)								\
+> 	__seqprop_pick(__same_type(*(s), seqcount_t), (s), seqcount, prop,		\
+> 	  __seqprop_pick(__same_type(*(s), seqcount_raw_spinlock_t), (s), raw_spinlock, prop, \
+> 	    __seqprop_pick(__same_type(*(s), seqcount_spinlock_t), (s), spinlock, prop,	\
+> 	      __seqprop_pick(__same_type(*(s), seqcount_rwlock_t), (s), rwlock, prop,	\
+> 	        __seqprop_pick(__same_type(*(s), seqcount_mutex_t), (s), mutex, prop,	\
+> 	          __seqprop_pick(__same_type(*(s), seqcount_ww_mutex_t), (s), ww_mutex, prop, \
+> 		    __seqprop_invalid()))))))
+>
+> #else
+>
+> #define __seqprop_case(s, locktype, prop) \
+> 	seqcount_##locktype##_t: __seqprop_##locktype##_##prop((void *)s)
+>
+> #define __seqprop(s, prop)					\
+> 	_Generic(*(s),						\
+> 		 seqcount_t: __seqprop_seqcount_##prop((void*)s),\
+> 		 __seqprop_case((s), raw_spinlock, prop),	\
+> 		 __seqprop_case((s), spinlock, prop),		\
+> 		 __seqprop_case((s), rwlock, prop),		\
+> 		 __seqprop_case((s), mutex, prop),		\
+> 		 __seqprop_case((s), ww_mutex, prop))
+>
+> #endif
+>
+> #define __to_seqcount_t(s)			__seqprop(s, ptr)
+> #define __associated_lock_is_preemptible(s)	__seqprop(s, preempt)
+> #define __assert_associated_lock_held(s)	__seqprop(s, assert)
+
+Hmm, I'll prototype the whole thing (along with PREEMPT_RT associated
+lock()/unlock() as you've mentioned in the other e-mail), and come back.
+
+Honestly, I have a first impression that this is heading into too much
+complexity and compaction, but let's finish the whole thing first.
+
+Thanks,
+
+--
+Ahmed S. Darwish
+Linutronix GmbH
