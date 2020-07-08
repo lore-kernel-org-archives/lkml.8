@@ -2,60 +2,98 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E873C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5E2C20786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348A620786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:07:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qoLV49LC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgGHGFJ (ORCPT
+        id S1729366AbgGHGHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 02:05:09 -0400
-Received: from verein.lst.de ([213.95.11.211]:33707 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgGHGFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 02:05:09 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1830768AFE; Wed,  8 Jul 2020 08:05:06 +0200 (CEST)
-Date:   Wed, 8 Jul 2020 08:05:05 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Baolin Wang <baolin.wang@linux.alibaba.com>, axboe@fb.com,
-        hch@lst.de, sagi@grimberg.me, baolin.wang7@gmail.com,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] nvme-pci: Use standard block status macro
-Message-ID: <20200708060505.GA4919@lst.de>
-References: <cover.1593743937.git.baolin.wang@linux.alibaba.com> <a14bca482584d912d72209c6edab6b77b1a924f2.1593743937.git.baolin.wang@linux.alibaba.com> <20200707190123.GB1997220@dhcp-10-100-145-180.wdl.wdc.com>
+        Wed, 8 Jul 2020 02:07:08 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59306 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbgGHGHH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 02:07:07 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06866pLJ045649;
+        Wed, 8 Jul 2020 06:07:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=5ruWp+9PNArsGqnhm9xr7MKSa7IuE7jbRly7UNM0tks=;
+ b=qoLV49LCjiG4kLhn09ZK2WoDEpSIurc739haL71rdSnRJ+Rb4e2Ki2socVeK/cjt3Jiz
+ sZ1KeVIlXXFIGBAVwdPM2k+5pED3Ga3CEtqR/bD1DnEBnltYrjQ+eckcWWL7hZlxPalh
+ HudL28/TrWBUlimOUj9X01qIHGNpIVk+L4NgROmZLW6qnHiVkVkYQZGnNmAI2FowAdKi
+ 1tycCyWEPyleUEieK1S7bkfKzYwYPdPSuSh5LhKCw6FlhPZVCmeViT+IMvlXoUUBWkAc
+ wto1M0UGPxPjmQDe5rGXeSFNsDdVkKMXsIUsXe1/6lyj0qKOSl607tVO1RZCI1Nnxz8b 2w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 322kv6g9ff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 08 Jul 2020 06:07:01 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0685xBr0063833;
+        Wed, 8 Jul 2020 06:07:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 3233p4k2du-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jul 2020 06:07:01 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 068670xY030643;
+        Wed, 8 Jul 2020 06:07:00 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Jul 2020 23:07:00 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        linux-scsi@vger.kernel.org,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Colin King <colin.king@canonical.com>,
+        James Smart <james.smart@broadcom.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: lpfc: fix inconsistent indenting
+Date:   Wed,  8 Jul 2020 02:06:47 -0400
+Message-Id: <159418828150.5152.17012831289512414220.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200707150018.823350-1-colin.king@canonical.com>
+References: <20200707150018.823350-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707190123.GB1997220@dhcp-10-100-145-180.wdl.wdc.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9675 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=883
+ mlxscore=0 spamscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007080041
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9675 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=904 phishscore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 impostorscore=0 mlxscore=0 adultscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007080042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 12:01:23PM -0700, Keith Busch wrote:
-> On Fri, Jul 03, 2020 at 10:49:24AM +0800, Baolin Wang wrote:
-> >  static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
-> > @@ -844,7 +844,7 @@ static blk_status_t nvme_map_metadata(struct nvme_dev *dev, struct request *req,
-> >  	if (dma_mapping_error(dev->dev, iod->meta_dma))
-> >  		return BLK_STS_IOERR;
-> >  	cmnd->rw.metadata = cpu_to_le64(iod->meta_dma);
-> > -	return 0;
-> > +	return BLK_STS_OK;
-> >  }
-> 
-> This is fine, though it takes knowing that this value is 0 for the
-> subsequent 'if (!ret)' check to make sense. Maybe those should change to
-> 'if (ret != BLK_STS_OK)' so the check uses the same symbol as the
-> return, and will always work in the unlikely event that the defines
-> are reordered.
+On Tue, 7 Jul 2020 16:00:18 +0100, Colin King wrote:
 
-If you think this version is inconsistent I'd rather drop this patch.
-The assumption that 0 == BLK_STS_OK is inherent all over the code.
+> Fix smatch warning:
+> drivers/scsi/lpfc/lpfc_sli.c:15156 lpfc_cq_poll_hdler() warn: inconsistent
+> indenting
+
+Applied to 5.9/scsi-queue, thanks!
+
+[1/1] scsi: lpfc: Fix inconsistent indenting
+      https://git.kernel.org/mkp/scsi/c/26e0b9aa3578
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
