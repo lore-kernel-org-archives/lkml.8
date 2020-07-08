@@ -2,102 +2,89 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B05C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE84C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3D7A20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:01:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HtYdqSj0"
+	by mail.kernel.org (Postfix) with ESMTP id 437B020775
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgGHKBT (ORCPT
+        id S1728579AbgGHKB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:01:19 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55404 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728454AbgGHKBR (ORCPT
+        Wed, 8 Jul 2020 06:01:26 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35270 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728454AbgGHKBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:01:17 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0689qZ2U071053;
-        Wed, 8 Jul 2020 10:01:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=qGeeqBfb4B3JBrMGyCbTWzEAb8chOA1YYzwiQyLwlCg=;
- b=HtYdqSj0ofgVpUhnDTpmT0Kd9WoopR4hGOHz2IpnJQLMRChYBFd0z7TGLQw2yv9aopPQ
- ZpppJF6EbFqWhfOCxhpTdKbpXnhlt2t5/oStHImxj2QoBVgr1Kl2okV8E4WEcq0v4yQO
- MW6wtKIMcyf7QI0wAjJrdLmJ1cNytx+g4nGh7YAmX+zzfUia7QDwk2QCE8InnrXkX6iv
- U4Et+JMYoXmEwjXVmo6jxeCh2zaFsgtfFk23qAyjSwOIupc1ERhQCOOPqneABMcihhJw
- Q3mpKMH50M0JV1AylF1fMjarCjTuo8XyrzUuippeNODE6WlgT9cMx2ulyarHBaZQBdlY HA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 325bgf04v6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 08 Jul 2020 10:01:13 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0689xBMB018147;
-        Wed, 8 Jul 2020 09:59:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 3233p50tvu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Jul 2020 09:59:12 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0689xAx2021053;
-        Wed, 8 Jul 2020 09:59:10 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 Jul 2020 02:59:09 -0700
-Date:   Wed, 8 Jul 2020 12:59:04 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     linux-sparse@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Sparse improvements & regressions for Linux v5.7-rc1 -> v5.8-rc1
-Message-ID: <20200708095904.GI2549@kadam>
-References: <20200708000651.f5bykhd3mhgsbvk7@ltop.local>
+        Wed, 8 Jul 2020 06:01:25 -0400
+Received: by mail-ot1-f66.google.com with SMTP id d4so36544042otk.2;
+        Wed, 08 Jul 2020 03:01:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Od5/IKwUaZH7vBYoitS0Ni1R59CrgLmqnVtFqI2byA=;
+        b=NNxmo9VSfMAjYRCdIT3X+DUH8ffJsC4qPgO5ca9Q/NCbZuvB8xj5zmjlThctf+o6yQ
+         3LAzNz8CmjhYH2ECTwo/VdFvSvNxbVnItHcAfgysJMlwvb+OPxBqgtLrZT/t8UQaKLLp
+         A2WJrA/t7MOUVZuapaIucuA4yFY9S1sa3dmt8IIfNRnr01BFjtOiWOzkgaVL3ETL5r8f
+         YpqySJ/WRe/Gn/dzk6pIHaRE0whQ+UCQ48LTeVNGQz6VIgtkOKlRrgUCdKFD/w7w9FT4
+         6U4eMoNmfh3J2qlFF2OqVO/M0JVsU5lBMPf88LfD2CNWE2lY2uH9sGPlcAX10k9+nFpG
+         p1pg==
+X-Gm-Message-State: AOAM530qjzC2ogmcLeyiEr2bCMKg6RTgtY+l2UUWqfKFO9RECkaiEQFQ
+        ywiWRzU+g+TQTBh+vt3QuFmtw00IoC1G83i3lgg=
+X-Google-Smtp-Source: ABdhPJwh+QJapHYqqogpDGFIrsNKpl9NifpjTVIdei/1lvymLMXBmJmOrZBOn62svUeQVf2fysdDTy+tJGe2eFrUw38=
+X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr16418282otl.145.1594202483944;
+ Wed, 08 Jul 2020 03:01:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708000651.f5bykhd3mhgsbvk7@ltop.local>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9675 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- mlxscore=0 spamscore=0 bulkscore=0 malwarescore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007080072
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9675 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 cotscore=-2147483648 clxscore=1011
- mlxscore=0 spamscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007080071
+References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594138692-16816-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594138692-16816-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 8 Jul 2020 12:01:12 +0200
+Message-ID: <CAMuHMdXOa5VXZpZxJj3g3UXx6KHn047OLqvP_JJ+_VD1C5T1Kg@mail.gmail.com>
+Subject: Re: [PATCH 09/14] soc: renesas: rcar-rst: Add support for RZ/G2H
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 02:06:51AM +0200, Luc Van Oostenryck wrote:
-> I've finally written a silly script to easily compare my tests
-> of Sparse on the kernel. So, it's now easy to share those results.
-> 
-> It's a comparison of Sparse's unique warnings between v5.7-rc1 &
-> v5.8-rc1 on x86-64 (defconfig + allyesconfig). The results are
-> quite similar on other architectures.
-> 
-> Note that the differences can be caused by changes in the kernel
-> code or in Sparse code.
-> 
-> Have fun.
-> 
+On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Add support for RZ/G2H (R8A774E1) to the R-Car RST driver.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-This is quite fun!  Could you post the raw errors from the v5.8-rc1
-kernel as well?  Probably it's too big for LKML, so it would have to
-be posted to pastebin or something.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-regards,
-dan carpenter
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
