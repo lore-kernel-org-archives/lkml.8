@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8522082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3EDA2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:51:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hCzD2jb3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OX3G1zvD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aF99qXFL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ISo+kVYa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgGHJvu (ORCPT
+        id S1728640AbgGHJvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:51:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34940 "EHLO
+        Wed, 8 Jul 2020 05:51:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728572AbgGHJvs (ORCPT
+        with ESMTP id S1728591AbgGHJvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:51:48 -0400
+        Wed, 8 Jul 2020 05:51:49 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701BDC08C5DC;
-        Wed,  8 Jul 2020 02:51:48 -0700 (PDT)
-Date:   Wed, 08 Jul 2020 09:51:46 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C7CBC08C5DC;
+        Wed,  8 Jul 2020 02:51:49 -0700 (PDT)
+Date:   Wed, 08 Jul 2020 09:51:47 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1594201907;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -35,12 +35,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Or2WgI5iKNml6ubnnqZpi21TQJmEB5y/pH0zEpWOfIU=;
-        b=hCzD2jb314SBEOjlciwUs7DtFyn+4W1Se0kepDucnkRLsHrFErQ99ELLt5UCFDMS48AwzU
-        qrlAPcAxaAZc3D+hJLrKHLkmvFjLl+/bYnxP8X38pzeoJ9OHjQ+ywgoGRgijE7LPYJjJoY
-        Hl2suZTBSHNB0V83zN9tTukxvtJvMesoLR769L9hWGyNF/y8CAy4BPQBsZxSNq14CsCteJ
-        AgaHbk5aNn54+caJlFD7EmekUKo5ITKDLbxMu408jwJQ3hER1kPoIGGV/HKoJ47ZFKElWy
-        N+ave5VbaXsT1caTlMsPtqq4J+TDYQFZuruJMlQbw7flDYA46C4/YGNFapfjKA==
+        bh=6Zy3ybiBNjr/H0af95SIF94cU72PMtPmzrkLbDmx8gs=;
+        b=aF99qXFLMZOq+W9GUTnMcVCQy1SOCq4AjzrDGIkQh+npLo7W1OqO3uXVoWTuF5IUbCY8p7
+        N/umC0XK9Neh5/ZtmFFJigMWxX9fcBLrer2TEJHY+N7JpjoKb0Frp2y1tHzU1j103kElts
+        93pcrFCD+aT7OgiIjeHcAEbLuSNP9V11zsCiQoVcLMuKVHxi/v2FNemM6fxkbZuGn2kwtK
+        iepGH4w3gTHx7oJhWmctVFnD+pQ5PiBoP30y/yA0eBeNRKPnIie+hdywvsWpsRU5TXGtok
+        Xm+TwPMvPJ2vH6fPOdC599/692Z84y7wtgerdrQanmeSTCQ9s7O2HZxUlRl/ug==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1594201907;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -48,21 +48,20 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Or2WgI5iKNml6ubnnqZpi21TQJmEB5y/pH0zEpWOfIU=;
-        b=OX3G1zvD1Sl8V3NYpK1J4W6IgNw7B/QcBFwrHhHXtjK6/oH+8zoQsq+XsYuC/pa6QSr6xO
-        2eDig/HDObGZuFBg==
+        bh=6Zy3ybiBNjr/H0af95SIF94cU72PMtPmzrkLbDmx8gs=;
+        b=ISo+kVYaTxQoiZnUcpWjfJ9ViyP5CSHsbxqc35UCBk/y8noDZELX/ccNkfrYO8J9kJBiun
+        /9CtUlC5xVip1IAA==
 From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel/lbr: Create kmem_cache for the LBR
- context data
+Subject: [tip: perf/core] perf/core: Use kmem_cache to allocate the PMU specific data
 Cc:     Kan Liang <kan.liang@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1593780569-62993-18-git-send-email-kan.liang@linux.intel.com>
-References: <1593780569-62993-18-git-send-email-kan.liang@linux.intel.com>
+In-Reply-To: <1593780569-62993-17-git-send-email-kan.liang@linux.intel.com>
+References: <1593780569-62993-17-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159420190646.4006.2446824212113277371.tip-bot2@tip-bot2>
+Message-ID: <159420190705.4006.11190540790919295173.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -74,98 +73,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     33cad284497cf40f55ad6029c06011de3538ebed
-Gitweb:        https://git.kernel.org/tip/33cad284497cf40f55ad6029c06011de3538ebed
+Commit-ID:     217c2a633ebb36f1cc6d249f4ef2e4a809d46818
+Gitweb:        https://git.kernel.org/tip/217c2a633ebb36f1cc6d249f4ef2e4a809d46818
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Fri, 03 Jul 2020 05:49:23 -07:00
+AuthorDate:    Fri, 03 Jul 2020 05:49:22 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Wed, 08 Jul 2020 11:38:55 +02:00
 
-perf/x86/intel/lbr: Create kmem_cache for the LBR context data
+perf/core: Use kmem_cache to allocate the PMU specific data
 
-A new kmem_cache method is introduced to allocate the PMU specific data
-task_ctx_data, which requires the PMU specific code to create a
-kmem_cache.
+Currently, the PMU specific data task_ctx_data is allocated by the
+function kzalloc() in the perf generic code. When there is no specific
+alignment requirement for the task_ctx_data, the method works well for
+now. However, there will be a problem once a specific alignment
+requirement is introduced in future features, e.g., the Architecture LBR
+XSAVE feature requires 64-byte alignment. If the specific alignment
+requirement is not fulfilled, the XSAVE family of instructions will fail
+to save/restore the xstate to/from the task_ctx_data.
 
-Currently, the task_ctx_data is only used by the Intel LBR call stack
-feature, which is introduced since Haswell. The kmem_cache should be
-only created for Haswell and later platforms. There is no alignment
-requirement for the existing platforms.
+The function kzalloc() itself only guarantees a natural alignment. A
+new method to allocate the task_ctx_data has to be introduced, which
+has to meet the requirements as below:
+- must be a generic method can be used by different architectures,
+  because the allocation of the task_ctx_data is implemented in the
+  perf generic code;
+- must be an alignment-guarantee method (The alignment requirement is
+  not changed after the boot);
+- must be able to allocate/free a buffer (smaller than a page size)
+  dynamically;
+- should not cause extra CPU overhead or space overhead.
+
+Several options were considered as below:
+- One option is to allocate a larger buffer for task_ctx_data. E.g.,
+    ptr = kmalloc(size + alignment, GFP_KERNEL);
+    ptr &= ~(alignment - 1);
+  This option causes space overhead.
+- Another option is to allocate the task_ctx_data in the PMU specific
+  code. To do so, several function pointers have to be added. As a
+  result, both the generic structure and the PMU specific structure
+  will become bigger. Besides, extra function calls are added when
+  allocating/freeing the buffer. This option will increase both the
+  space overhead and CPU overhead.
+- The third option is to use a kmem_cache to allocate a buffer for the
+  task_ctx_data. The kmem_cache can be created with a specific alignment
+  requirement by the PMU at boot time. A new pointer for kmem_cache has
+  to be added in the generic struct pmu, which would be used to
+  dynamically allocate a buffer for the task_ctx_data at run time.
+  Although the new pointer is added to the struct pmu, the existing
+  variable task_ctx_size is not required anymore. The size of the
+  generic structure is kept the same.
+
+The third option which meets all the aforementioned requirements is used
+to replace kzalloc() for the PMU specific data allocation. A later patch
+will remove the kzalloc() method and the related variables.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/1593780569-62993-18-git-send-email-kan.liang@linux.intel.com
+Link: https://lkml.kernel.org/r/1593780569-62993-17-git-send-email-kan.liang@linux.intel.com
 ---
- arch/x86/events/intel/lbr.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ include/linux/perf_event.h | 5 +++++
+ kernel/events/core.c       | 8 +++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index e4e249a..e784c1d 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1531,9 +1531,17 @@ void __init intel_pmu_lbr_init_snb(void)
- 	 */
- }
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 46fe5cf..09915ae 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -425,6 +425,11 @@ struct pmu {
+ 	size_t				task_ctx_size;
  
-+static inline struct kmem_cache *
-+create_lbr_kmem_cache(size_t size, size_t align)
-+{
-+	return kmem_cache_create("x86_lbr", size, align, 0, NULL);
-+}
-+
- /* haswell */
- void intel_pmu_lbr_init_hsw(void)
- {
-+	size_t size = sizeof(struct x86_perf_task_context);
-+
- 	x86_pmu.lbr_nr	 = 16;
- 	x86_pmu.lbr_tos	 = MSR_LBR_TOS;
- 	x86_pmu.lbr_from = MSR_LBR_NHM_FROM;
-@@ -1542,6 +1550,8 @@ void intel_pmu_lbr_init_hsw(void)
- 	x86_pmu.lbr_sel_mask = LBR_SEL_MASK;
- 	x86_pmu.lbr_sel_map  = hsw_lbr_sel_map;
- 
-+	x86_get_pmu()->task_ctx_cache = create_lbr_kmem_cache(size, 0);
-+
- 	if (lbr_from_signext_quirk_needed())
- 		static_branch_enable(&lbr_from_quirk_key);
- }
-@@ -1549,6 +1559,8 @@ void intel_pmu_lbr_init_hsw(void)
- /* skylake */
- __init void intel_pmu_lbr_init_skl(void)
- {
-+	size_t size = sizeof(struct x86_perf_task_context);
-+
- 	x86_pmu.lbr_nr	 = 32;
- 	x86_pmu.lbr_tos	 = MSR_LBR_TOS;
- 	x86_pmu.lbr_from = MSR_LBR_NHM_FROM;
-@@ -1558,6 +1570,8 @@ __init void intel_pmu_lbr_init_skl(void)
- 	x86_pmu.lbr_sel_mask = LBR_SEL_MASK;
- 	x86_pmu.lbr_sel_map  = hsw_lbr_sel_map;
- 
-+	x86_get_pmu()->task_ctx_cache = create_lbr_kmem_cache(size, 0);
-+
  	/*
- 	 * SW branch filter usage:
- 	 * - support syscall, sysret capture.
-@@ -1631,6 +1645,7 @@ void __init intel_pmu_arch_lbr_init(void)
- 	union cpuid28_ebx ebx;
- 	union cpuid28_ecx ecx;
- 	unsigned int unused_edx;
-+	size_t size;
- 	u64 lbr_nr;
++	 * Kmem cache of PMU specific data
++	 */
++	struct kmem_cache		*task_ctx_cache;
++
++	/*
+ 	 * PMU specific parts of task perf event context (i.e. ctx->task_ctx_data)
+ 	 * can be synchronized using this function. See Intel LBR callstack support
+ 	 * implementation and Perf core context switch handling callbacks for usage
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7509040..30d9b31 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1240,12 +1240,18 @@ static void get_ctx(struct perf_event_context *ctx)
  
- 	/* Arch LBR Capabilities */
-@@ -1655,8 +1670,10 @@ void __init intel_pmu_arch_lbr_init(void)
- 	x86_pmu.lbr_br_type = ecx.split.lbr_br_type;
- 	x86_pmu.lbr_nr = lbr_nr;
+ static void *alloc_task_ctx_data(struct pmu *pmu)
+ {
++	if (pmu->task_ctx_cache)
++		return kmem_cache_zalloc(pmu->task_ctx_cache, GFP_KERNEL);
++
+ 	return kzalloc(pmu->task_ctx_size, GFP_KERNEL);
+ }
  
--	x86_get_pmu()->task_ctx_size = sizeof(struct x86_perf_task_context_arch_lbr) +
--				       lbr_nr * sizeof(struct lbr_entry);
-+	size = sizeof(struct x86_perf_task_context_arch_lbr) +
-+	       lbr_nr * sizeof(struct lbr_entry);
-+	x86_get_pmu()->task_ctx_size = size;
-+	x86_get_pmu()->task_ctx_cache = create_lbr_kmem_cache(size, 0);
+ static void free_task_ctx_data(struct pmu *pmu, void *task_ctx_data)
+ {
+-	kfree(task_ctx_data);
++	if (pmu->task_ctx_cache && task_ctx_data)
++		kmem_cache_free(pmu->task_ctx_cache, task_ctx_data);
++	else
++		kfree(task_ctx_data);
+ }
  
- 	x86_pmu.lbr_from = MSR_ARCH_LBR_FROM_0;
- 	x86_pmu.lbr_to = MSR_ARCH_LBR_TO_0;
+ static void free_ctx(struct rcu_head *head)
