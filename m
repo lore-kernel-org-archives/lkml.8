@@ -2,205 +2,102 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4441C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C46C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2CFB20739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903CE20739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:46:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OzmhrVMO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgGHHq3 (ORCPT
+        id S1727058AbgGHHqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:46:29 -0400
-Received: from mga07.intel.com ([134.134.136.100]:8907 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbgGHHq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:46:28 -0400
-IronPort-SDR: NWrJJP/gc/V6nq3AeMA4N2Jbaqv1Zpx+YYhTOkgjwSYreeehEKLtz0F+P73qFsdpppaJ5XMZ3o
- 3bmIrEhEfv2Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="212697996"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="212697996"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 00:46:28 -0700
-IronPort-SDR: 262ateI08tZ7kwQk86xiuiDgYWBsZsnu16kmrPUbD+wjZIegTzVS6WHHR7ERJYHU9xEEWksEFC
- edNSm7UWiqDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="305957785"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Jul 2020 00:46:28 -0700
-Received: from [10.249.226.44] (abudanko-mobl.ccr.corp.intel.com [10.249.226.44])
-        by linux.intel.com (Postfix) with ESMTP id AF71F5807FC;
-        Wed,  8 Jul 2020 00:46:25 -0700 (PDT)
-Subject: [PATCH v10 02/15] tools/libperf: add flags to fdarray fds objects
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <4c0e05df-8eb7-306e-033b-47e1a6b06924@linux.intel.com>
-Date:   Wed, 8 Jul 2020 10:46:24 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 8 Jul 2020 03:46:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgGHHqu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:46:50 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1936CC08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:46:50 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f18so1881235wml.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:46:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=13tTeGa2nW6X4a+Xzt0nK3tFREb2ehmWIY4bBAwrwkc=;
+        b=OzmhrVMOli7A5hNbR3fGy47aE+V6uJ2r1czZSGk/3KkO421wAC922Giw65d3B2JPWD
+         X/ku26qUfk/i2caIjdfEHpdTsmnPmpPZDPi+XZdivhOS2HkB0BkJCo/6QqYn4vHtnWFA
+         eoQiBiM0yflqSFLfyZ3YkmnQF1pEfYw6kmV6U05L6f9q010QhDxah8ITfFoOr6sr5CkP
+         tNxI9+5c8enZ2T4Rzo0r+LrprvweE6UlGy+PzLm5cjZhpJ6cy5FopH/yZzqTjBK39VDt
+         zCiX2BCn/9M5mMZjvBOGU2fki8enBseW7KJVFwyMCvZKxb+j9k39LnOwrAdvPf7wsz1R
+         9NbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=13tTeGa2nW6X4a+Xzt0nK3tFREb2ehmWIY4bBAwrwkc=;
+        b=AurB94454B4d3CzH2liygJRSO5HIc8wPhpBscETETEG49VF5ZSBbJTgzaO/Il7v634
+         ZMhg7MjuEZjTyHRvhBHae9X2MI7306LmYURpE3n7exb2ZKefsFDTMaPhxGCdnUhqQGlV
+         s764G/TGsvaRCY6Tr8a5kGivD8kN/Q93DXSpiZRe9oymIdellmNrjOGEUW4ouaffRjjC
+         8cyAAp8llGEg0IRwn/EdkfLzLfyy5f5jEgQZ+kxAAell6NxHlr4fnhJtGz8hByJe9Sbp
+         6Z6D2flf6raxQj/5z/3aqBj+AE9zYrs7IhmoJEGfudq0wHRR8N9+WirdXxwFyqStPPDh
+         d9mQ==
+X-Gm-Message-State: AOAM530c/tOw7pX6CN+WmYkVafSSOX7b/MF4r48Hr8zTWwuCm3PllW6X
+        14x5M6Mx6FDOFItVlDVEsUPY/g==
+X-Google-Smtp-Source: ABdhPJzbse+FrEgNn3I9Se6w6hg140YTQ1T0f5FheDYB3sZ29GWUzqdNaf8egMfSUzlAtD6+dXiaBA==
+X-Received: by 2002:a1c:44e:: with SMTP id 75mr8078098wme.139.1594194408880;
+        Wed, 08 Jul 2020 00:46:48 -0700 (PDT)
+Received: from dell ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id t4sm4873009wmf.4.2020.07.08.00.46.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 00:46:48 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 08:46:46 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+Cc:     "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH 09/10] scsi: libfc: fc_disc: Fix-up some incorrectly
+ referenced function parameters
+Message-ID: <20200708074646.GR3500@dell>
+References: <20200707140055.2956235-1-lee.jones@linaro.org>
+ <20200707140055.2956235-10-lee.jones@linaro.org>
+ <SN4PR0401MB359847D89233CFB550531B259B670@SN4PR0401MB3598.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SN4PR0401MB359847D89233CFB550531B259B670@SN4PR0401MB3598.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 08 Jul 2020, Johannes Thumshirn wrote:
 
-Store flags per struct pollfd *entries object in a bitmap of int size.
-Implement fdarray_flag__nonfilterable flag to skip object from counting
-by fdarray__filter().
+> On 07/07/2020 16:01, Lee Jones wrote:
+> > + * @disc:  The descovery context
+> 
+> s/descovery/discovery
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/lib/api/fd/array.c                 |  3 ++-
- tools/lib/api/fd/array.h                 | 16 ++++++++++++----
- tools/lib/perf/evlist.c                  |  6 +++---
- tools/lib/perf/include/internal/evlist.h |  2 +-
- tools/perf/tests/fdarray.c               |  2 +-
- tools/perf/util/evlist.c                 |  2 +-
- 6 files changed, 20 insertions(+), 11 deletions(-)
+Ah yes.  I can't even blame copy/paste for this!
 
-diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-index 89f9a2193c2d..37f291e6fc21 100644
---- a/tools/lib/api/fd/array.c
-+++ b/tools/lib/api/fd/array.c
-@@ -69,7 +69,7 @@ void fdarray__delete(struct fdarray *fda)
- 	free(fda);
- }
- 
--int fdarray__add(struct fdarray *fda, int fd, short revents)
-+int fdarray__add(struct fdarray *fda, int fd, short revents, enum fdarray_flags flags)
- {
- 	int pos = fda->nr;
- 
-@@ -79,6 +79,7 @@ int fdarray__add(struct fdarray *fda, int fd, short revents)
- 
- 	fda->entries[fda->nr].fd     = fd;
- 	fda->entries[fda->nr].events = revents;
-+	fda->priv[fda->nr].flags = flags;
- 	fda->nr++;
- 	return pos;
- }
-diff --git a/tools/lib/api/fd/array.h b/tools/lib/api/fd/array.h
-index b39557d1a88f..7f517a33af6f 100644
---- a/tools/lib/api/fd/array.h
-+++ b/tools/lib/api/fd/array.h
-@@ -21,19 +21,27 @@ struct fdarray {
- 	int	       nr_alloc;
- 	int	       nr_autogrow;
- 	struct pollfd *entries;
--	union {
--		int    idx;
--		void   *ptr;
-+	struct {
-+		union {
-+			int    idx;
-+			void   *ptr;
-+		};
-+		unsigned int flags;
- 	} *priv;
- };
- 
-+enum fdarray_flags {
-+	fdarray_flag__default	    = 0x00000000,
-+	fdarray_flag__nonfilterable = 0x00000001
-+};
-+
- void fdarray__init(struct fdarray *fda, int nr_autogrow);
- void fdarray__exit(struct fdarray *fda);
- 
- struct fdarray *fdarray__new(int nr_alloc, int nr_autogrow);
- void fdarray__delete(struct fdarray *fda);
- 
--int fdarray__add(struct fdarray *fda, int fd, short revents);
-+int fdarray__add(struct fdarray *fda, int fd, short revents, enum fdarray_flags flags);
- int fdarray__poll(struct fdarray *fda, int timeout);
- int fdarray__filter(struct fdarray *fda, short revents,
- 		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 6a875a0f01bb..2208444ecb44 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -305,9 +305,9 @@ int perf_evlist__alloc_pollfd(struct perf_evlist *evlist)
- }
- 
- int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
--			    void *ptr, short revent)
-+			    void *ptr, short revent, enum fdarray_flags flags)
- {
--	int pos = fdarray__add(&evlist->pollfd, fd, revent | POLLERR | POLLHUP);
-+	int pos = fdarray__add(&evlist->pollfd, fd, revent | POLLERR | POLLHUP, flags);
- 
- 	if (pos >= 0) {
- 		evlist->pollfd.priv[pos].ptr = ptr;
-@@ -488,7 +488,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
- 		revent = !overwrite ? POLLIN : 0;
- 
- 		if (!evsel->system_wide &&
--		    perf_evlist__add_pollfd(evlist, fd, map, revent) < 0) {
-+		    perf_evlist__add_pollfd(evlist, fd, map, revent, fdarray_flag__default) < 0) {
- 			perf_mmap__put(map);
- 			return -1;
- 		}
-diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
-index 74dc8c3f0b66..2d0fa02b036f 100644
---- a/tools/lib/perf/include/internal/evlist.h
-+++ b/tools/lib/perf/include/internal/evlist.h
-@@ -45,7 +45,7 @@ struct perf_evlist_mmap_ops {
- 
- int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
- int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
--			    void *ptr, short revent);
-+			    void *ptr, short revent, enum fdarray_flags flags);
- 
- int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 			  struct perf_evlist_mmap_ops *ops,
-diff --git a/tools/perf/tests/fdarray.c b/tools/perf/tests/fdarray.c
-index d0c8a05aab2f..d9eca8e86a6b 100644
---- a/tools/perf/tests/fdarray.c
-+++ b/tools/perf/tests/fdarray.c
-@@ -112,7 +112,7 @@ int test__fdarray__add(struct test *test __maybe_unused, int subtest __maybe_unu
- 	}
- 
- #define FDA_ADD(_idx, _fd, _revents, _nr)				   \
--	if (fdarray__add(fda, _fd, _revents) < 0) {			   \
-+	if (fdarray__add(fda, _fd, _revents, fdarray_flag__default) < 0) { \
- 		pr_debug("\n%d: fdarray__add(fda, %d, %d) failed!",	   \
- 			 __LINE__,_fd, _revents);			   \
- 		goto out_delete;					   \
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 1b884695b4d3..bcbe0cb8482e 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -497,7 +497,7 @@ int perf_evlist__enable_event_idx(struct evlist *evlist,
- 
- int evlist__add_pollfd(struct evlist *evlist, int fd)
- {
--	return perf_evlist__add_pollfd(&evlist->core, fd, NULL, POLLIN);
-+	return perf_evlist__add_pollfd(&evlist->core, fd, NULL, POLLIN, fdarray_flag__default);
- }
- 
- int evlist__filter_pollfd(struct evlist *evlist, short revents_and_mask)
+I think this patch has been applied.  I will send up a follow-up.
+
+Thank you!
+
 -- 
-2.24.1
-
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
