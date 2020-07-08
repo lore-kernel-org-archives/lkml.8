@@ -2,459 +2,124 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03368C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3337C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2F4020774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB92F20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 03:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPnsVq2+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VK2rzIej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgGHDWs (ORCPT
+        id S1729274AbgGHDXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 23:22:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59344 "EHLO
+        Tue, 7 Jul 2020 23:23:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728061AbgGHDWs (ORCPT
+        with ESMTP id S1728061AbgGHDXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 23:22:48 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4133C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 20:22:47 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id 187so21601029ybq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 20:22:47 -0700 (PDT)
+        Tue, 7 Jul 2020 23:23:33 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD1EDC061755;
+        Tue,  7 Jul 2020 20:23:32 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id t7so19852774qvl.8;
+        Tue, 07 Jul 2020 20:23:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ABQG2oadx0VCp89OceBbcXp6yzUWBQHoxJqUgABMtqo=;
-        b=hPnsVq2+1w2ASc44yTlzbbm2HIXKjHXMOkZ/d9w3MO9Xvl+XRBkzhDI3Zd3O9Lda3t
-         opWhWc00iOl+gGBKjREX7uwXRX9K8LGvY6Ai+QqHRkNK638yHQrV7vHx5pQvuvbpSONK
-         ahjTFSIJ8by6Hcj+/+y79N7HQMa4UZRyV7qaOeLkuLHMcHYQYx3rgB3NXf22PoBI+zrU
-         3JjN9rkrmumH0sgjpGGISdUp4WDSlcZgCcf/94mtqhYjCQpvAnZrp93omVC4/5MZYjVf
-         IjZoiNBtF9Y97fQDjhrbg+Ms/7kAYv8K5Qk9LPU+OJU8l7Q/zqzCpQ8IOt7hC+BYeITd
-         VCLw==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0tB4yD5kInlZmy1upi23IYYVXDZraVGUBEv20VlqeTE=;
+        b=VK2rzIejF6RAq9zDQnBEBxXLePiSGScgzCtI4kUlohWOu8Ea3Nd3R2/K9XzhqsFVCK
+         JDzEg4s4EwNUne3GplxSmEbcwHrVCTNqjA83EqK1ifBb5+JnOhtCxabCMzsibIfqNsvC
+         AYzRqR29Ne7LnPCaDmeFFwVSaV34rOohdRD9mlIASCppx5JbPFHFmzpv1Q6KGbJBlDVn
+         LycBAohVRkR64f8ij2TONkYdp69WvGR8Lb/3ag0RKcsuqBB2GUPoSJdwEEY81YKQvdDB
+         3nA2XY+qE1IOA1M6sNcKH2RHJrxjmwpuXoyox2nkyf3MlN4loLS4xXc9BeHkyf37lKzB
+         DiCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ABQG2oadx0VCp89OceBbcXp6yzUWBQHoxJqUgABMtqo=;
-        b=LOAdHB62yesE3rP4GfpS1BVp9pXal2cy50QyaT0nGHQ8nGUQcO7Vbs3LeBF59PjDT1
-         PiW5L/9GJs0zlvXmkFonT+kazII7R32hgDLtyyCne8+r9BBLR8p0M6rWuU0uNTS7pE0g
-         qE2l6MDrnspncELvfwmZLl7AyWJEhjM5FtDnuZECbDYqRenL3phkOAjM/e3oc910U/av
-         7XT4JoSIUsnoR+njsLEgGYKKuKwxQNzIAO9XYidwMTs2s/GsIojBVRRNciZQ37bdApNv
-         gercXxQURmLUym6R2Mwf887DMr7RN7DnDFTSA9OKVDBHvitJl8/WWz1tKjOxficxbxS3
-         3DcA==
-X-Gm-Message-State: AOAM532vQcwpP21ZzAIV0cDKwEGXmRlhwnDJFEF7H+XRcU023rseDYAm
-        2u1WHMPBmjWrCVvylRi11iUa50Z6rcFHRtIr1v4=
-X-Google-Smtp-Source: ABdhPJzGTCsJKb78k2k1arIKwlGc8x5TR/DquAelbv8xv7aZAf53QVEHOuGaOwVEqJ4Ev0bFrmrmOEpKPNfJO8DzwYw=
-X-Received: by 2002:a25:70c2:: with SMTP id l185mr31366508ybc.83.1594178567010;
- Tue, 07 Jul 2020 20:22:47 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=0tB4yD5kInlZmy1upi23IYYVXDZraVGUBEv20VlqeTE=;
+        b=qMUAnrfYCoClycgMNX1o7dBxB57sNWZiN+k+HMK8pCC1PKKXfWQmYFReDDrSCRMkYN
+         M98KfxxvCDCsxval3rQ2lPwgO7P8336ob7FHUTjsf+PeVHe3qlDpuRxw7dAvoiGcujT5
+         uXLRkLf3Qcd/eNg67muMobHV7GJACwPYf8K0GCjmJfmQkf1royh/IApCG7x1DKP5284S
+         8X1srQ713FkFORoDNZHcTJi3KVNPkSIvqbchHd91WXeTEglIiQkBpBkTP2pXXixJfh4J
+         wYY9tyfxiKu8eGteRizzZmm1ojKAxNAdjboI5Xb5qhfucZ4WvUWyZma7XxDh4iFEuvSu
+         yS7w==
+X-Gm-Message-State: AOAM531POu0wFOnvR/aKWxV8JKYKFtYXn4YxTctN46PytJ9teWfpLVhB
+        +959LM/Mquen4mPrtzP1qC8=
+X-Google-Smtp-Source: ABdhPJxAQp5az1SIV+4Vq38pQumLjoTSoxuOs9eJ5X285QH9uuaz1vC1Eq4d7KNq1zUyr7TTeNgSuA==
+X-Received: by 2002:a0c:e78e:: with SMTP id x14mr38208940qvn.65.1594178612000;
+        Tue, 07 Jul 2020 20:23:32 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id h197sm25525655qke.51.2020.07.07.20.23.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 20:23:31 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 7 Jul 2020 23:23:29 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Terrell <terrelln@fb.com>
+Subject: Re: [PATCH v6 2/8] lib: prepare xxhash for preboot environment
+Message-ID: <20200708032329.GB1847378@rani.riverdale.lan>
+References: <20200707034604.1539157-1-nickrterrell@gmail.com>
+ <20200707034604.1539157-3-nickrterrell@gmail.com>
+ <20200707215925.GA1591079@rani.riverdale.lan>
+ <202007071947.5E9723AF48@keescook>
 MIME-Version: 1.0
-References: <20200707173628.GA29695@embeddedor>
-In-Reply-To: <20200707173628.GA29695@embeddedor>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Wed, 8 Jul 2020 13:22:35 +1000
-Message-ID: <CACAvsv4ahps=4gWwGXwvHFZOTBg1ubW86t3++dN4fAJ6JsBhDw@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/nouveau: Use fallthrough pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        ML nouveau <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202007071947.5E9723AF48@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020 at 03:31, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
->
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> fall-through markings when it is the case.
-I really like this!  I was not a fan of explicitly marking those with comments.
+On Tue, Jul 07, 2020 at 07:49:25PM -0700, Kees Cook wrote:
+> On Tue, Jul 07, 2020 at 05:59:25PM -0400, Arvind Sankar wrote:
+> > On Mon, Jul 06, 2020 at 08:45:58PM -0700, Nick Terrell wrote:
+> > > From: Nick Terrell <terrelln@fb.com>
+> > > 
+> > > Don't export symbols if XXH_PREBOOT is defined.
+> > > 
+> > > This change is necessary to get xxhash to work in a preboot environment,
+> > > which is needed to support zstd-compressed kernels.
+> > 
+> > The usual way to do it is by adding -D__DISABLE_EXPORTS to the CFLAGS, which will
+> > cause EXPORT_SYMBOL to be stubbed out. Doesn't that work here?
+> 
+> This is quite rare, actually:
+> 
+> $ git grep DISABLE_EXPORTS
+> arch/s390/purgatory/Makefile:CFLAGS_sha256.o := -D__DISABLE_EXPORTS
+> arch/x86/boot/compressed/kaslr.c:#define __DISABLE_EXPORTS
+> arch/x86/purgatory/Makefile:CFLAGS_sha256.o := -D__DISABLE_EXPORTS
+> drivers/firmware/efi/libstub/Makefile: -D__DISABLE_EXPORTS
+> include/linux/export.h:#if !defined(CONFIG_MODULES) || defined(__DISABLE_EXPORTS)
+> 
+> But yes, it seems that would be the better approach.
+> 
+> -- 
+> Kees Cook
 
-Thank you, taken in my tree.
-Ben.
+Looks like Ard added it a couple of years back [0] but it got used only
+for the EFI stub and not the decompressors.
 
->
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/gpu/drm/nouveau/dispnv50/disp.c            |    2 -
->  drivers/gpu/drm/nouveau/nouveau_bo.c               |    2 -
->  drivers/gpu/drm/nouveau/nouveau_connector.c        |    4 +-
->  drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmi.c    |   34 ++++++++++-----------
->  drivers/gpu/drm/nouveau/nvkm/engine/dma/usernv04.c |    2 -
->  drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv04.c    |    4 +-
->  drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv40.c    |    2 -
->  drivers/gpu/drm/nouveau/nvkm/subdev/bios/dcb.c     |    2 -
->  drivers/gpu/drm/nouveau/nvkm/subdev/bios/dp.c      |    2 -
->  drivers/gpu/drm/nouveau/nvkm/subdev/bios/perf.c    |    2 -
->  drivers/gpu/drm/nouveau/nvkm/subdev/bios/pll.c     |    2 -
->  drivers/gpu/drm/nouveau/nvkm/subdev/bios/timing.c  |   10 +++---
->  drivers/gpu/drm/nouveau/nvkm/subdev/clk/base.c     |    2 -
->  drivers/gpu/drm/nouveau/nvkm/subdev/clk/mcp77.c    |    2 -
->  drivers/gpu/drm/nouveau/nvkm/subdev/devinit/nv04.c |   12 +++----
->  drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramnv40.c   |    4 +-
->  drivers/gpu/drm/nouveau/nvkm/subdev/mxm/nv50.c     |    2 -
->  17 files changed, 45 insertions(+), 45 deletions(-)
->
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> index d472942102f5..ee365f31056b 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> @@ -932,7 +932,7 @@ nv50_dp_bpc_to_depth(unsigned int bpc)
->         switch (bpc) {
->         case  6: return 0x2;
->         case  8: return 0x5;
-> -       case 10: /* fall-through */
-> +       case 10: fallthrough;
->         default: return 0x6;
->         }
->  }
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_bo.c b/drivers/gpu/drm/nouveau/nouveau_bo.c
-> index c40f127de3d0..00581e6d183f 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_bo.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
-> @@ -1458,7 +1458,7 @@ nouveau_ttm_io_mem_reserve(struct ttm_bo_device *bdev, struct ttm_mem_reg *reg)
->                 if (drm->client.mem->oclass < NVIF_CLASS_MEM_NV50 || !mem->kind)
->                         /* untiled */
->                         break;
-> -               /* fall through - tiled memory */
-> +               fallthrough;    /* tiled memory */
->         case TTM_PL_VRAM:
->                 reg->bus.offset = reg->start << PAGE_SHIFT;
->                 reg->bus.base = device->func->resource_addr(device, 1);
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-> index 1b383ae0248f..ae3b3002d737 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-> @@ -331,7 +331,7 @@ nouveau_conn_attach_properties(struct drm_connector *connector)
->         case DRM_MODE_CONNECTOR_VGA:
->                 if (disp->disp.object.oclass < NV50_DISP)
->                         break; /* Can only scale on DFPs. */
-> -               /* Fall-through. */
-> +               fallthrough;
->         default:
->                 drm_object_attach_property(&connector->base, dev->mode_config.
->                                            scaling_mode_property,
-> @@ -446,7 +446,7 @@ nouveau_connector_ddc_detect(struct drm_connector *connector)
->                 case DCB_OUTPUT_LVDS:
->                         switcheroo_ddc = !!(vga_switcheroo_handler_flags() &
->                                             VGA_SWITCHEROO_CAN_SWITCH_DDC);
-> -               /* fall-through */
-> +                       fallthrough;
->                 default:
->                         if (!nv_encoder->i2c)
->                                 break;
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmi.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmi.c
-> index 7147dc6d9018..1ccfc8314812 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmi.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmi.c
-> @@ -23,55 +23,55 @@ void pack_hdmi_infoframe(struct packed_hdmi_infoframe *packed_frame,
->                  */
->         case 17:
->                 subpack1_high = (raw_frame[16] << 16);
-> -               /* fall through */
-> +               fallthrough;
->         case 16:
->                 subpack1_high |= (raw_frame[15] << 8);
-> -               /* fall through */
-> +               fallthrough;
->         case 15:
->                 subpack1_high |= raw_frame[14];
-> -               /* fall through */
-> +               fallthrough;
->         case 14:
->                 subpack1_low = (raw_frame[13] << 24);
-> -               /* fall through */
-> +               fallthrough;
->         case 13:
->                 subpack1_low |= (raw_frame[12] << 16);
-> -               /* fall through */
-> +               fallthrough;
->         case 12:
->                 subpack1_low |= (raw_frame[11] << 8);
-> -               /* fall through */
-> +               fallthrough;
->         case 11:
->                 subpack1_low |= raw_frame[10];
-> -               /* fall through */
-> +               fallthrough;
->         case 10:
->                 subpack0_high = (raw_frame[9] << 16);
-> -               /* fall through */
-> +               fallthrough;
->         case 9:
->                 subpack0_high |= (raw_frame[8] << 8);
-> -               /* fall through */
-> +               fallthrough;
->         case 8:
->                 subpack0_high |= raw_frame[7];
-> -               /* fall through */
-> +               fallthrough;
->         case 7:
->                 subpack0_low = (raw_frame[6] << 24);
-> -               /* fall through */
-> +               fallthrough;
->         case 6:
->                 subpack0_low |= (raw_frame[5] << 16);
-> -               /* fall through */
-> +               fallthrough;
->         case 5:
->                 subpack0_low |= (raw_frame[4] << 8);
-> -               /* fall through */
-> +               fallthrough;
->         case 4:
->                 subpack0_low |= raw_frame[3];
-> -               /* fall through */
-> +               fallthrough;
->         case 3:
->                 header = (raw_frame[2] << 16);
-> -               /* fall through */
-> +               fallthrough;
->         case 2:
->                 header |= (raw_frame[1] << 8);
-> -               /* fall through */
-> +               fallthrough;
->         case 1:
->                 header |= raw_frame[0];
-> -               /* fall through */
-> +               fallthrough;
->         case 0:
->                 break;
->         }
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/dma/usernv04.c b/drivers/gpu/drm/nouveau/nvkm/engine/dma/usernv04.c
-> index 7f1adab21a5f..5159d5df20a2 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/engine/dma/usernv04.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/engine/dma/usernv04.c
-> @@ -122,7 +122,7 @@ nv04_dmaobj_new(struct nvkm_dma *dma, const struct nvkm_oclass *oclass,
->                 break;
->         case NV_MEM_ACCESS_WO:
->                 dmaobj->flags0 |= 0x00008000;
-> -               /* fall through */
-> +               fallthrough;
->         case NV_MEM_ACCESS_RW:
->                 dmaobj->flags2 |= 0x00000002;
->                 break;
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv04.c b/drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv04.c
-> index 93493b335d76..c1d1b1aa5bc6 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv04.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv04.c
-> @@ -117,10 +117,10 @@ nv04_fifo_swmthd(struct nvkm_device *device, u32 chid, u32 addr, u32 data)
->         switch (mthd) {
->         case 0x0000 ... 0x0000: /* subchannel's engine -> software */
->                 nvkm_wr32(device, 0x003280, (engine &= ~mask));
-> -               /* fall through */
-> +               fallthrough;
->         case 0x0180 ... 0x01fc: /* handle -> instance */
->                 data = nvkm_rd32(device, 0x003258) & 0x0000ffff;
-> -               /* fall through */
-> +               fallthrough;
->         case 0x0100 ... 0x017c:
->         case 0x0200 ... 0x1ffc: /* pass method down to sw */
->                 if (!(engine & mask) && sw)
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv40.c b/drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv40.c
-> index 47c16821c37f..2d61fd832ddb 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv40.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv40.c
-> @@ -81,7 +81,7 @@ nv40_fifo_init(struct nvkm_fifo *base)
->         case 0x49:
->         case 0x4b:
->                 nvkm_wr32(device, 0x002230, 0x00000001);
-> -               /* fall through */
-> +               fallthrough;
->         case 0x40:
->         case 0x41:
->         case 0x42:
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/dcb.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/dcb.c
-> index a8d5d67feeaf..8698f260b988 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/dcb.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/dcb.c
-> @@ -172,8 +172,8 @@ dcb_outp_parse(struct nvkm_bios *bios, u8 idx, u8 *ver, u8 *len,
->                                         outp->dpconf.link_nr = 1;
->                                         break;
->                                 }
-> +                               fallthrough;
->
-> -                               /* fall-through... */
->                         case DCB_OUTPUT_TMDS:
->                         case DCB_OUTPUT_LVDS:
->                                 outp->link = (conf & 0x00000030) >> 4;
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/dp.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/dp.c
-> index b099d1209be8..c694501ae206 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/dp.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/dp.c
-> @@ -100,7 +100,7 @@ nvbios_dpout_parse(struct nvkm_bios *bios, u8 idx,
->                 switch (*ver) {
->                 case 0x20:
->                         info->mask |= 0x00c0; /* match any link */
-> -                       /* fall-through */
-> +                       fallthrough;
->                 case 0x21:
->                 case 0x30:
->                         info->flags     = nvbios_rd08(bios, data + 0x05);
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/perf.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/perf.c
-> index 7112992e0e38..f039388f0676 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/perf.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/perf.c
-> @@ -135,7 +135,7 @@ nvbios_perfEp(struct nvkm_bios *bios, int idx,
->                 break;
->         case 0x30:
->                 info->script   = nvbios_rd16(bios, perf + 0x02);
-> -               /* fall through */
-> +               fallthrough;
->         case 0x35:
->                 info->fanspeed = nvbios_rd08(bios, perf + 0x06);
->                 info->voltage  = nvbios_rd08(bios, perf + 0x07);
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/pll.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/pll.c
-> index bda6cc9a7aaf..350f10a3de37 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/pll.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/pll.c
-> @@ -134,7 +134,7 @@ pll_map(struct nvkm_bios *bios)
->                     device->chipset == 0xaa ||
->                     device->chipset == 0xac)
->                         return g84_pll_mapping;
-> -               /* fall through */
-> +               fallthrough;
->         default:
->                 return NULL;
->         }
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/timing.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/timing.c
-> index 20ff5173cf8f..2da45e29f68b 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/timing.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/timing.c
-> @@ -115,21 +115,21 @@ nvbios_timingEp(struct nvkm_bios *bios, int idx,
->                 switch (min_t(u8, *hdr, 25)) {
->                 case 25:
->                         p->timing_10_24  = nvbios_rd08(bios, data + 0x18);
-> -                       /* fall through */
-> +                       fallthrough;
->                 case 24:
->                 case 23:
->                 case 22:
->                         p->timing_10_21  = nvbios_rd08(bios, data + 0x15);
-> -                       /* fall through */
-> +                       fallthrough;
->                 case 21:
->                         p->timing_10_20  = nvbios_rd08(bios, data + 0x14);
-> -                       /* fall through */
-> +                       fallthrough;
->                 case 20:
->                         p->timing_10_CWL = nvbios_rd08(bios, data + 0x13);
-> -                       /* fall through */
-> +                       fallthrough;
->                 case 19:
->                         p->timing_10_18  = nvbios_rd08(bios, data + 0x12);
-> -                       /* fall through */
-> +                       fallthrough;
->                 case 18:
->                 case 17:
->                         p->timing_10_16  = nvbios_rd08(bios, data + 0x10);
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/clk/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/clk/base.c
-> index 40e564524b7a..dc184e857f85 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/clk/base.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/clk/base.c
-> @@ -90,7 +90,7 @@ nvkm_cstate_valid(struct nvkm_clk *clk, struct nvkm_cstate *cstate,
->                         case NVKM_CLK_BOOST_NONE:
->                                 if (clk->base_khz && freq > clk->base_khz)
->                                         return false;
-> -                               /* fall through */
-> +                               fallthrough;
->                         case NVKM_CLK_BOOST_BIOS:
->                                 if (clk->boost_khz && freq > clk->boost_khz)
->                                         return false;
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/clk/mcp77.c b/drivers/gpu/drm/nouveau/nvkm/subdev/clk/mcp77.c
-> index 4f000237796f..efa50274df97 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/clk/mcp77.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/clk/mcp77.c
-> @@ -363,7 +363,7 @@ mcp77_clk_prog(struct nvkm_clk *base)
->         switch (clk->vsrc) {
->         case nv_clk_src_cclk:
->                 mast |= 0x00400000;
-> -               /* fall through */
-> +               fallthrough;
->         default:
->                 nvkm_wr32(device, 0x4600, clk->vdiv);
->         }
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/nv04.c b/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/nv04.c
-> index c3dae05348eb..317ce9fb8225 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/nv04.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/nv04.c
-> @@ -119,11 +119,11 @@ powerctrl_1_shift(int chip_version, int reg)
->
->         switch (reg) {
->         case 0x680520:
-> -               shift += 4; /* fall through */
-> +               shift += 4; fallthrough;
->         case 0x680508:
-> -               shift += 4; /* fall through */
-> +               shift += 4; fallthrough;
->         case 0x680504:
-> -               shift += 4; /* fall through */
-> +               shift += 4; fallthrough;
->         case 0x680500:
->                 shift += 4;
->         }
-> @@ -245,11 +245,11 @@ setPLL_double_highregs(struct nvkm_devinit *init, u32 reg1,
->
->                 switch (reg1) {
->                 case 0x680504:
-> -                       shift_c040 += 2; /* fall through */
-> +                       shift_c040 += 2; fallthrough;
->                 case 0x680500:
-> -                       shift_c040 += 2; /* fall through */
-> +                       shift_c040 += 2; fallthrough;
->                 case 0x680520:
-> -                       shift_c040 += 2; /* fall through */
-> +                       shift_c040 += 2; fallthrough;
->                 case 0x680508:
->                         shift_c040 += 2;
->                 }
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramnv40.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramnv40.c
-> index 5f4c287d7943..97b3a28ca5c0 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramnv40.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramnv40.c
-> @@ -131,13 +131,13 @@ nv40_ram_prog(struct nvkm_ram *base)
->                 nvkm_mask(device, 0x00402c, 0xc0771100, ram->ctrl);
->                 nvkm_wr32(device, 0x004048, ram->coef);
->                 nvkm_wr32(device, 0x004030, ram->coef);
-> -               /* fall through */
-> +               fallthrough;
->         case 0x43:
->         case 0x49:
->         case 0x4b:
->                 nvkm_mask(device, 0x004038, 0xc0771100, ram->ctrl);
->                 nvkm_wr32(device, 0x00403c, ram->coef);
-> -               /* fall through */
-> +               fallthrough;
->         default:
->                 nvkm_mask(device, 0x004020, 0xc0771100, ram->ctrl);
->                 nvkm_wr32(device, 0x004024, ram->coef);
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mxm/nv50.c b/drivers/gpu/drm/nouveau/nvkm/subdev/mxm/nv50.c
-> index 2a6150ab5611..70e2c414bb7b 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/mxm/nv50.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mxm/nv50.c
-> @@ -159,7 +159,7 @@ mxm_dcb_sanitise_entry(struct nvkm_bios *bios, void *data, int idx, u16 pdcb)
->                 break;
->         case 0x0e: /* eDP, falls through to DPint */
->                 ctx.outp[1] |= 0x00010000;
-> -               /* fall through */
-> +               fallthrough;
->         case 0x07: /* DP internal, wtf is this?? HP8670w */
->                 ctx.outp[1] |= 0x00000004; /* use_power_scripts? */
->                 type = DCB_CONNECTOR_eDP;
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+[0] http://lkml.kernel.org/r/20180704083651.24360-3-ard.biesheuvel@linaro.org
