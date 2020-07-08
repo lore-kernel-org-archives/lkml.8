@@ -2,98 +2,93 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7846FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 400C62067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:04:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LR39heqM"
+	by mail.kernel.org (Postfix) with ESMTP id 3CA382067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594206294;
+	bh=IHCyGxj1cvpIoNYOX+nc8vjaWSXk9jF7cUyVbUqeMg0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C+QznwY91Vld4DSEzac5gLvoh/xI0NQ3ohQmllbCs3QH2ds3hlWHpFeagNgtmSqtB
+	 ztsPMaqp9Nj7nFlN+H8n9bE66HYdt0iCIpRI6ir6eapH7h4KafVmcDbwQbhJGP+Q23
+	 kx2LLUF5Nfmcz9TWU6/ipZgqcD004xoOPOPl6RSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgGHLEs (ORCPT
+        id S1728742AbgGHLEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:04:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728589AbgGHLEr (ORCPT
+        Wed, 8 Jul 2020 07:04:53 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34709 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728385AbgGHLEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:04:47 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E364C08C5DC;
-        Wed,  8 Jul 2020 04:04:47 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so21501394pgb.6;
-        Wed, 08 Jul 2020 04:04:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x5Oz9T0/nlpWj7gcRwNRrBgun+HLR/g5S659t05tKAk=;
-        b=LR39heqMav7WHvZ4pKnrJQ31+4CyEVw+2hGuDisH+j9n1gkJwVc2/K6mxG1EQjfVil
-         LIGEYplcDD5qpXFPV8tgnl3KRw8fbxbycvmGyxMWqGiq9Q3ph4o5oRCLRWDrKdWli+by
-         K2ivVVunWUo+RHTwLF6uZtpR3HuqutuT1+xRXDuNSnW5Cy5Uwsy6qT8XR+16J4XQi1pb
-         JpvHS3+4fBTNk6cV0cehgvv2T8it1xEcJ1UEMhQXNnAwEadlHIUJX7Re5TNCGBmLQ14e
-         Szcu1XewElo2h5mjv/uqNISLi0pICRMI7+Cw5Zshlsz9/d92OMWqo6gCKvlaQ14N7krb
-         2DxA==
+        Wed, 8 Jul 2020 07:04:52 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e90so6082819ote.1;
+        Wed, 08 Jul 2020 04:04:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x5Oz9T0/nlpWj7gcRwNRrBgun+HLR/g5S659t05tKAk=;
-        b=bnGlypUo+N9hlMU6KzzAR1+oypsZWGRplZuP3gf4mUwxppKH6l/8ygr1tTyimIcLbP
-         GHdOAq/7zxniqq0xyFrHXxcJpDoCGGDD+gpz+wrD72lRQJtl7NQwlUmH1I2s6uVBNNsy
-         vbDoN4twklOX0V1zV2SxXnCgZyRB3q56+7A2yJNEkXU/zYauD8r2Fl29ElwV1CMdHvxh
-         iLDUoquaNf7bydPxJMDwvSgJf401s2CPzmJeHQRsRGMGdwkdwvx1fqI++C2kX/pzLNZm
-         aO2+fLose0tXCMEDODU/Dv+iHqsFnxut4sfZC5QFurWkOib1Z3fiTaQWFiIs57OPtwqf
-         D6Bg==
-X-Gm-Message-State: AOAM531Ca0WbvngjNp+Xio1H5cnQs52w0tm0uBNrRKzECMxi+Wop9gV9
-        PUgdxzwxS4fuiSyQk1bXvmA=
-X-Google-Smtp-Source: ABdhPJxb5ozr+JWoQl+Jz5jWG6SYLjXBLp6JNhv89WOi4DyJQNDOmtFEPYGpDsnU7XuR0T9m4Cl2xw==
-X-Received: by 2002:a62:64ce:: with SMTP id y197mr31491046pfb.19.1594206286983;
-        Wed, 08 Jul 2020 04:04:46 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id d18sm5092249pjz.11.2020.07.08.04.04.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 04:04:46 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 04:04:44 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Sergey Organov <sorganov@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
- current kernel time
-Message-ID: <20200708110444.GD9080@hoboy>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200706142616.25192-4-sorganov@gmail.com>
- <20200706152721.3j54m73bm673zlnj@skbuf>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IHCyGxj1cvpIoNYOX+nc8vjaWSXk9jF7cUyVbUqeMg0=;
+        b=J1Z3boooAV5Cn+Kp5oI8251HzkrPIExYbm/sVOlh+QQ928bqYOra/OSqZGr04bcI+w
+         J4mOTlNJbjg5NPW2ebhNtPgXUBV1nn2E1A2kt0tRiHcXblNv8sofqPYRi32igW30DYCy
+         T3ceyHrQR8P0jFEchMCAEYxR4SMC2W7QrOcicmvkboiCRXP51S/KySy0dzF0RcrQd2yM
+         SdqSgT3FErJobV5rfnu+Ai8Y+iJcNd0K6+1GCcSrBnXu0lULkuqLJuaImk4TXgJeZotu
+         uQm346UwL4D3Trujy5X5UvOKhJ8fJiJL6ItEtF3TQb6a7OMAwC74L6LY6LPIGBQSKuG2
+         nuaw==
+X-Gm-Message-State: AOAM532XKjbVxegZVwmQ62l1oRHGUxqTj60cQDWTDGejuQnoFPgDG0fz
+        Ird13t4uZfkKo8jC1jucH55/6ckdMSiomxwnFbk=
+X-Google-Smtp-Source: ABdhPJx0pYxRbD1A4YMqTXjB55nDwyDRMhKrjXyrUYVPPyCD8Vl+kVThCEsAAO/sNGwFVTx7mhc5bKdEBSapC4H9cgM=
+X-Received: by 2002:a9d:590a:: with SMTP id t10mr12704394oth.262.1594206290904;
+ Wed, 08 Jul 2020 04:04:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706152721.3j54m73bm673zlnj@skbuf>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <202007080131.3E6D0858@keescook> <CAPDyKFqT4DXr9pn3+mGmsdxTD6nNWfod_Z13fpzpHf0STOt_XQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFqT4DXr9pn3+mGmsdxTD6nNWfod_Z13fpzpHf0STOt_XQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 8 Jul 2020 13:04:38 +0200
+Message-ID: <CAJZ5v0iovBAj5-HyD0SA1UEfJ3+mfv=Ke04pEebbmbhH6q7Zsg@mail.gmail.com>
+Subject: Re: [PATCH] genpd: Fix up terminology with leader/follower
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 06:27:21PM +0300, Vladimir Oltean wrote:
-> There's no correct answer, I'm afraid. Whatever the default value of the
-> clock may be, it's bound to be confusing for some reason, _if_ the
-> reason why you're investigating it in the first place is a driver bug.
-> Also, I don't really see how your change to use Jan 1st 1970 makes it
-> any less confusing.
+On Wed, Jul 8, 2020 at 11:04 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Wed, 8 Jul 2020 at 10:35, Kees Cook <keescook@chromium.org> wrote:
+> >
+> > The genpd infrastructure uses the terms master/slave, but such uses have
+> > no external exposures (not even in Documentation/driver-api/pm/*) and are
+> > not mandated by nor associated with any external specifications. Change
+> > the language used through-out to leader/follower.
+>
+> In my opinion this doesn't really make it more clear, but rather the opposite.
+>
+> If we should improve, I suggest using "parent" and "child" instead. As
+> matter of fact, that's already the de-facto terminology that people
+> are using when talking about master/subdomains of genpd.
 
-+1
+IMO "parent" and "child" would be better indeed, because genpd only
+supports strict hierarchies.
 
-For a PHC, the user of the clock must check the PTP stack's
-synchronization flags via the management interface to know the status
-of the time signal.
-
-Thanks,
-Richard
+Thanks!
