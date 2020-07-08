@@ -2,101 +2,103 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F34C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C311C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E297F20739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60F920739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgGHKQt (ORCPT
+        id S1728466AbgGHKSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:16:49 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:63417 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728148AbgGHKQt (ORCPT
+        Wed, 8 Jul 2020 06:18:10 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:46653 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgGHKSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:16:49 -0400
-X-IronPort-AV: E=Sophos;i="5.75,327,1589234400"; 
-   d="scan'208";a="458905460"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 12:16:47 +0200
-Date:   Wed, 8 Jul 2020 12:16:46 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Joe Perches <joe@perches.com>
-cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usbip: Use fallthrough pseudo-keyword
-In-Reply-To: <8e08240671d65f1e92dbf5e1e066190149e0d074.camel@perches.com>
-Message-ID: <alpine.DEB.2.22.394.2007081209500.2558@hadrien>
-References: <20200707195214.GA3932@embeddedor>  <977e88c2-58cb-9507-c889-854e574a8f31@linuxfoundation.org> <8e08240671d65f1e92dbf5e1e066190149e0d074.camel@perches.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Wed, 8 Jul 2020 06:18:07 -0400
+Received: by mail-oo1-f67.google.com with SMTP id s190so5185012ooa.13;
+        Wed, 08 Jul 2020 03:18:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DW+k++6QmShOYTPp1GCiBSfmYcnWVZRPXo5Q7LF3tA0=;
+        b=jzEDVVqf+vpnTzAO8O7YEur1YefzHERctZFB8JV202/ZNQN21GincXfj+74EJH/UJx
+         IikpsTgOreG0FP8qWm/Rr2vls5g+xya3IHCtdzkyKJTXPV/O+0YdEZcAqUNW7flgjpzE
+         DKmJzJuFX2830mZStMkXyo9vcVXCuUZmMRhCQnBy40mKQ4lzIpdBnV4tBO3M/yYpVqGO
+         Qlj3vMYCngCg3rPh3uuRc4joR/KtsjPn0sWcs8potwHSiDYsVtTI5xJsvW2iX/+p36fc
+         pQt1f0C56AWlC+T+XE55FkTAKAT1+qNqGpCRHGZ+DG6CsFRNZ9+MMvxFHfjzwIHKdP7z
+         pRpQ==
+X-Gm-Message-State: AOAM530vR0kxczD2utPrjGcCQIGOVMOckWyF3vk17hOQLA6RNzOnG5nd
+        yUfENjuhT6duuE3QMAsL0+6hbigUaiTMUGVb2I7cF/vQSxo=
+X-Google-Smtp-Source: ABdhPJx+L6lRbWyeMJB6JvYEpS+n2WhASo6vd9a544uDAG1Ay2/5APPOJa/auzmeTbGCqjBXDSgeavriOmv1d4Ly1Ic=
+X-Received: by 2002:a4a:5209:: with SMTP id d9mr33382180oob.40.1594203486265;
+ Wed, 08 Jul 2020 03:18:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594138692-16816-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594138692-16816-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 8 Jul 2020 12:17:55 +0200
+Message-ID: <CAMuHMdWPLi4OVyfSgcc50BZHsTuWQ=dbKyJsEfzN5bEeDe9tAQ@mail.gmail.com>
+Subject: Re: [PATCH 11/14] clk: renesas: Add r8a774e1 CPG Core Clock Definitions
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Tue, 7 Jul 2020, Joe Perches wrote:
-
-> On Tue, 2020-07-07 at 14:06 -0600, Shuah Khan wrote:
-> > On 7/7/20 1:52 PM, Gustavo A. R. Silva wrote:
-> > > Replace the existing /* fall through */ comments and its variants with
-> > > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> > > fall-through markings when it is the case.
-> > >
-> > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> > >
-> >
-> > Is fallthrough syntax supported on our min gcc version?
+On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 >
-> No.  Introduced in gcc 7.
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 >
-> > Does checkpatch or coccicheck catch these cases?
+> Add all RZ/G2H Clock Pulse Generator Core Clock Outputs, as listed in
+> Table 11.2 ("List of Clocks [RZ/G2H]") of the RZ/G2H Hardware User's
+> Manual.
 >
-> Kinda.  checkpatch isn't very good at it.
-> I _believe_, though I'm not at all sure,
-> that coccinelle can find these.
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-I would not guarantee anything about the support of Coccinelle for switch.
-Coccinelle does now have the ability to match on comments.  So since there
-is a distinct comment that it is to be removed, it might be possible to do
-that part automatically.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in clk-renesas for v5.9, in a branch shared by driver
+and DT (renesas-r8a774e1-dt-binding-defs).
 
-Maybe it would have to look something like this:
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/r8a774e1-cpg-mssr.h
 
-@r1@
-comments c : script:python() { code to recognize the comment };
-statement S;
-@@
+> +#define R8A774E1_CLK_CANFD             46
 
-S@c
-+ fallthrough(); //or whatever is wanted
+I guess it's fine we keep CANFD last, for consistency with other RZ/G2
+SoCs (CANFD was not present in early revisions of the Hardware User's
+Manual).
 
-@@
-statement r1.S;
-@@
+Gr{oetje,eeting}s,
 
-- S
-- fallthrough();
-+ S
-+ fallthrough();
+                        Geert
 
-The second rule probably looks pretty strange, but the goal is to remove
-the comments between S and fallthrough();
 
-There is an example demos/comments.cocci that shows how to access the
-comment information using both ocaml and python.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-julia
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
