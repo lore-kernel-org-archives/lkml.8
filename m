@@ -2,67 +2,90 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE55C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A277C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F57720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4859C2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgGHJX2 (ORCPT
+        id S1728129AbgGHJXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:23:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45972 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgGHJX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:23:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 22963B118;
-        Wed,  8 Jul 2020 09:23:26 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 11:23:24 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Haren Myneni <haren@us.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jiri Kosina <jikos@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Tal Gilboa <talgi@mellanox.com>, kunit-dev@googlegroups.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] kbuild: trace functions in subdirectories of lib/
-Message-ID: <20200708092324.GA4751@alley>
-References: <20200707092117.963394-1-masahiroy@kernel.org>
- <20200707092117.963394-2-masahiroy@kernel.org>
- <20200708065223.GA11164@alley>
+        Wed, 8 Jul 2020 05:23:52 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38674 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGHJXv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 05:23:51 -0400
+Received: by mail-oi1-f195.google.com with SMTP id r8so37250810oij.5;
+        Wed, 08 Jul 2020 02:23:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uRrUPcHstxq9BkgjI6vnpH4KszKClgTBJE06AkYcztc=;
+        b=CUrklVRm8yukd62BbjAKNJ9YhAu8+I5bP7oNragQUGs6WLE00i40gfVI35i/3YMjom
+         1nOg43tjhiHXDb89YDF+trRBMbgld6uQVsKMATtTkWFrkicEnt+TI2rX8dBplRB/fJ08
+         q8CqySml7Lqvxz7v7sCq8CrIC0ds7CVry+0c/1prthjGX9A4i6o7fP3LSGRTZicJaGE4
+         NQkbM7AGKH9bij1dUJL/4zqzKJvGTUzgxIbTZUoGCqpv9wpn7psyCxGI7caxiXu5WBU8
+         k7vvemsddb8I0KF2HTBF9oo94CEUav7KJJYXQB2O1U/OfiKbcgJXl5oAQ8lhAGx6lBYN
+         MGOg==
+X-Gm-Message-State: AOAM531TSCGLdYEuc6W1TdxRnmgD9OsxoVFtG2AcSdB+5DDXrp8M6Vsg
+        n0XX6Y9a5KREIpXZa0o/p5U2OcE9i/2ph87kC74=
+X-Google-Smtp-Source: ABdhPJw/h8f5Kis8UalwBsKneubiY5z2iSAtJed4AhomXo2jGp/awDUmDdgBRshyWBZ7rOIvS+O3RiJ0BAwLO/z4q9A=
+X-Received: by 2002:aca:5c41:: with SMTP id q62mr6166090oib.148.1594200230635;
+ Wed, 08 Jul 2020 02:23:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708065223.GA11164@alley>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594138692-16816-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594138692-16816-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 8 Jul 2020 11:23:39 +0200
+Message-ID: <CAMuHMdUgoeWFj0iCL=UACN6L6_9O3r-RRNXDF8iJ_ahjFSgn=w@mail.gmail.com>
+Subject: Re: [PATCH 05/14] dt-bindings: power: renesas,rcar-sysc: Document
+ r8a774e1 SYSC binding
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-07-08 08:52:23, Petr Mladek wrote:
+On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 >
-> PS: BTW: The livepatch selftests fail in Linus's master now. But it
-> seems to be for another reason. I am going to dig into it.
+> Document bindings for the RZ/G2H (aka R8A774E1) SYSC block.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-JFYI, the livepatch selftests are actually working. I have messed
-the testing here. I am sorry for the noise.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-Best Regards,
-Petr
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
