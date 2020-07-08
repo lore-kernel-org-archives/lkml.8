@@ -2,108 +2,112 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A08FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B30CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF6820739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC4820739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f0fKPeVb"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="cYWTa2si"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbgGHLKt (ORCPT
+        id S1728840AbgGHLKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:10:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:38487 "EHLO ozlabs.org"
+        Wed, 8 Jul 2020 07:10:53 -0400
+Received: from vps.xff.cz ([195.181.215.36]:49176 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728611AbgGHLKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:10:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1xS56BKKz9sDX;
-        Wed,  8 Jul 2020 21:10:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594206647;
-        bh=XhXMD5CcbX40V+/dAoLEYM+yyXn7CkY3Pmqk+ZlW1Es=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=f0fKPeVbsKzPh4JBO0U2WrDBb4rKQggHrZ6CsSHjdkX9M6FF2qfi19y19KMkl2dDG
-         LDeYq8csjk1hijw6eLfFIxc3QcERfzndEOW24oPx3svLIqTcy1tHyO9lAn320Z9fCu
-         NMah/3CX1yqEZ+iaCevJqVcq2mpkJViUdciWzTWHkz6l+B9ihnHhgaZv0m7DfJ/Ej+
-         HUrqVhmxOBj/NgYF4W3Rlvdc3Ixu8GoKnHDaLAVk095QlDz6EDd2KRuWwA3MUbidop
-         lqCAgcQchG6PzNuwaMI9/PN95uDiSotMBRrDD/DZ3F6jXE4LodjBMOV57HPgixGa7X
-         1U+LBkS4wY+Tg==
-Date:   Wed, 8 Jul 2020 21:10:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the clk tree
-Message-ID: <20200708211044.3032905d@canb.auug.org.au>
-In-Reply-To: <20200630081115.mmqdsm3vlnj4yagu@gilmour.lan>
-References: <20200630095341.0f4ae8ed@canb.auug.org.au>
-        <20200630081115.mmqdsm3vlnj4yagu@gilmour.lan>
+        id S1728611AbgGHLKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 07:10:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1594206650; bh=HwMlt2AcB5R5z+ixudtSMz9QQLHUqR6NKrNCIv6ikVM=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=cYWTa2siMsoYgQ7Z91koQPla54fDsMFlBfu1PY4kZBU0he2uUKTPt+n7ZEZXWnfTt
+         +idq6HET2YSSsPaA8NXhJmN0Lni9sgfAaJv0De54NS+ARRA7AIV2eGGi51LaDYo4K2
+         U9RBIz7IKxjX6hw0VmT0tKKDKEGi4VaTymKJ3ZWo=
+Date:   Wed, 8 Jul 2020 13:10:50 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     linux-sunxi@googlegroups.com,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Zhang Rui <rui.zhang@intel.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
+Message-ID: <20200708111050.ivpkcutwwvm7kwcm@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux-sunxi@googlegroups.com,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Zhang Rui <rui.zhang@intel.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
+References: <20200708105527.868987-1-megous@megous.com>
+ <20200708110301.GB1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/WbWJTRmiXALElyekPJ_qGZt";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708110301.GB1551@shell.armlinux.org.uk>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/WbWJTRmiXALElyekPJ_qGZt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 08, 2020 at 12:03:01PM +0100, Russell King - ARM Linux admin wrote:
+> On Wed, Jul 08, 2020 at 12:55:27PM +0200, Ondrej Jirman wrote:
+> > I noticed several mobile Linux distributions failing to enable the
+> > thermal regulation correctly, because the kernel is silent
+> > when thermal driver fails to probe. Add enough error reporting
+> > to debug issues and warn users in case thermal sensor is failing
+> > to probe.
+> > 
+> > Failing to notify users means, that SoC can easily overheat under
+> > load.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++-------
+> >  1 file changed, 43 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> > index 74d73be16496..9065e79ae743 100644
+> > --- a/drivers/thermal/sun8i_thermal.c
+> > +++ b/drivers/thermal/sun8i_thermal.c
+> > @@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct ths_device *tmdev)
+> >  
+> >  	calcell = devm_nvmem_cell_get(dev, "calibration");
+> >  	if (IS_ERR(calcell)) {
+> > +		dev_err(dev, "Failed to get calibration nvmem cell (%ld)\n",
+> > +			PTR_ERR(calcell));
+> 
+> Consider using:
+> 
+> 		dev_err(dev, "Failed to get calibration nvmem cell (%pe)\n",
+> 			calcell);
+> 
+> which means the kernel can print the symbolic errno value.
 
-Hi all,
+Thank you, I'll change it in v2. :)
 
-On Tue, 30 Jun 2020 10:11:15 +0200 Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Tue, Jun 30, 2020 at 09:53:41AM +1000, Stephen Rothwell wrote:
-> > After merging the clk tree, today's linux-next build (x86_64 allmodconf=
-ig)
-> > produced this warning:
-> >=20
-> > WARNING: modpost: missing MODULE_LICENSE() in drivers/clk/bcm/clk-bcm27=
-11-dvp.o
-> >=20
-> > Introduced by commit
-> >=20
-> >   1bc95972715a ("clk: bcm: Add BCM2711 DVP driver") =20
->=20
-> I've posted a patch solving this already:
-> https://lore.kernel.org/linux-clk/20200626112513.90816-1-maxime@cerno.tec=
-h/
->=20
-> And it's supposed to be in clk-next since friday, but it looks like
-> stephen didn't push his branch?
+regards,
+	o.
 
-I am still getting this warning.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/WbWJTRmiXALElyekPJ_qGZt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8FqbQACgkQAVBC80lX
-0GwzzQf9FdIQwZ6iV2w8x8l3tX3Evj++77WF2fCFo0pUMEkZBcNTWs8CECYQe67e
-OSiKrpomiwbHS3d5peYkXURCM1aSzGKOTaVCQ/uTv4qZnzh+u4bUnPV9VOcyiZ95
-T80k+YefrWxMI8Atu5gyUChZyElvk3jmm4fqzzOww5SaZOfoUk1NJE4bYj+SB2NC
-1gt3ukmknAardTv49nxGQhzhw59GxActobY2miu4p36rVCFIJjj+6z6Gq+7TW5AR
-6nSsqOdqxUMOKFE6TMp3wuj4lMiMhHTL3NpPL/G273tDqU3Nun0lMtsRrP895Fei
-+ztkwMm9Hx+epZQ30uFFedrRSp7wRA==
-=i5wm
------END PGP SIGNATURE-----
-
---Sig_/WbWJTRmiXALElyekPJ_qGZt--
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
