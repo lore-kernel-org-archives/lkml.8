@@ -2,110 +2,126 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84406C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5322B20774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:34:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594211668;
-	bh=Ns14gnG/Yfu5X9lDg/bBHsmRgKXr1tZC51P6xAP5XpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fcCwFobdRVDQAOEnY+DopGq0jDoqZcWxYXkyiYdzKHbDCxwrisySCF/XkWUavobc9
-	 9jcY+7PyYM0u54i0Z9UdddPg8UqljAOumrZZTCUcB3C+X7Fw/E4RqrKJtYeUYnTqhe
-	 5VZD3wAYUxLQOkpRi6pQ4K8CP/jD+Fp7sUWgFfog=
+	by mail.kernel.org (Postfix) with ESMTP id 7899320775
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:34:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OBEWlLAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbgGHMe1 (ORCPT
+        id S1729232AbgGHMeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:34:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728980AbgGHMe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:34:26 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.179.83.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1310020774;
-        Wed,  8 Jul 2020 12:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594211666;
-        bh=Ns14gnG/Yfu5X9lDg/bBHsmRgKXr1tZC51P6xAP5XpI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o2p6YHq8Jq+gqoe/+k0j2k1acnoGBPRFOXxUoC6RumfXKCKjL6vVMUBMLlqPNlUUC
-         G/LegTx9N5b+ay0uZ//g+Wwa7DuE2y3AQzd9a4TBgI4EjcDjvCBxSzA034kVD3iW6o
-         KoC2ZDElyipk4oeR58tF0qyFuR9/LC7pI7wqxHlM=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CA103405FF; Wed,  8 Jul 2020 09:34:23 -0300 (-03)
-Date:   Wed, 8 Jul 2020 09:34:23 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V7 00/15] perf/x86: Add perf text poke events
-Message-ID: <20200708123423.GL1320@kernel.org>
-References: <20200512121922.8997-1-adrian.hunter@intel.com>
- <bee04840-143c-18bb-df82-5aa58d70730e@intel.com>
- <20200520014001.GF28228@kernel.org>
- <20200520155634.GQ317569@hirez.programming.kicks-ass.net>
- <20200527154716.GC16490@kernel.org>
- <20200527155436.GA706460@hirez.programming.kicks-ass.net>
- <79ca46d6-5d7c-7729-b51e-f9a447abe2a2@intel.com>
+        Wed, 8 Jul 2020 08:34:50 -0400
+Received: from casper.infradead.org ([90.155.50.34]:33786 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728640AbgGHMet (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 08:34:49 -0400
+X-Greylist: delayed 388 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 08:34:49 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=ZkV04PitK4z6d5CfWwL1ZjMYfYxppkuHiqkKWa0poRE=; b=OBEWlLAZdyoVGQ3F5UVsXk5uZw
+        nMNE39D2XcSvos21kke5WovZt265gieLA72C1jKxq5BIqd2Lf6QNblmhffb4xcJr5B3BSpJPvOCfG
+        z+At9jPRFrEOo7BAZ1UsaVAFQcP6Ln2qq3AXuoZLzjrhojdNKyheHXZTJEfcCS2pB53LQ6lNIwcam
+        SQWOu7CXvq/VhMXVydmZ+d07/e7V/p13CKVbJ5NHC9hxPQJ1UEuAO6OZcAx6qlPuwHHaYPfLfSYoj
+        u3t/+IEwSH375ANyPPVIDYjQAzvdC8z5Pez4lqVopg4f4MMTx3zYCtY6ntJ5mIqKrZAJmiSDOGbrY
+        e57MQyAA==;
+Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jt9Ha-000280-NX; Wed, 08 Jul 2020 12:34:42 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Song Liu <song@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 3/6] block: remove flush_disk
+Date:   Wed,  8 Jul 2020 14:25:43 +0200
+Message-Id: <20200708122546.214579-4-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200708122546.214579-1-hch@lst.de>
+References: <20200708122546.214579-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79ca46d6-5d7c-7729-b51e-f9a447abe2a2@intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Jul 08, 2020 at 02:55:36PM +0300, Adrian Hunter escreveu:
-> On 27/05/20 6:54 pm, Peter Zijlstra wrote:
-> > On Wed, May 27, 2020 at 12:47:16PM -0300, Arnaldo Carvalho de Melo wrote:
-> >> Em Wed, May 20, 2020 at 05:56:34PM +0200, Peter Zijlstra escreveu:
-> >>> On Tue, May 19, 2020 at 10:40:01PM -0300, Arnaldo Carvalho de Melo wrote:
-> >>>> PeterZ, from what we discussed for the next merge Window, perhaps we
-> >>>> should route the kernel bits via the tip tree while I will push the
-> >>>> tooling bits on my 5.8 merge request to Linus, Ok?
-> >>>
-> >>> Sure, I can take the kernel bits. Thanks!
-> >>
-> >> So, I'm going thru the userpace bits and stopped at the patch copying
-> >> include/uapi/linux/perf_events.h to
-> >> tools/include/uapi/linux/perf_events.h to get the text_poke
-> >> perf_event_attr bit, looked at tip/ and this hasn't landed there yet,
-> >> any issues with the kernel bits?
-> > 
-> > Nah, I was waiting on the 0day robot, but its broken *again* :-(
-> > 
-> > Let me go move things along manually.
-> > 
-> 
-> Hi
-> 
-> The kernel patches are in tip and the remaining tools patches still apply.
-> Remaining patches 11-15 are:
-> 
->       perf tools: Add support for PERF_RECORD_TEXT_POKE
->       perf tools: Add support for PERF_RECORD_KSYMBOL_TYPE_OOL
->       perf intel-pt: Add support for text poke events
->       perf script: Add option --show-text-poke-events
->       perf script: Show text poke address symbol
+flush_disk has only two callers, so open code it there.  That also helps
+clarifying the error message for the particular case, and allows to remove
+setting bd_invalidated in check_disk_size_change, which will be cleared
+again instantly.
 
-Sure, I'll merge those now that the kernel support is in tip, thanks for
-the reminder,
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/block_dev.c | 30 +++++++-----------------------
+ 1 file changed, 7 insertions(+), 23 deletions(-)
 
-- Arnaldo
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 2d2fcb50e78eac..a36d5b6907ea4e 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1347,26 +1347,6 @@ void bd_unlink_disk_holder(struct block_device *bdev, struct gendisk *disk)
+ EXPORT_SYMBOL_GPL(bd_unlink_disk_holder);
+ #endif
  
-> Is there anything else I can do for these?
-> 
-> Regards
-> Adrian
-
+-/**
+- * flush_disk - invalidates all buffer-cache entries on a disk
+- *
+- * @bdev:      struct block device to be flushed
+- * @kill_dirty: flag to guide handling of dirty inodes
+- *
+- * Invalidates all buffer-cache entries on a disk. It should be called
+- * when a disk has been changed -- either by a media change or online
+- * resize.
+- */
+-static void flush_disk(struct block_device *bdev, bool kill_dirty)
+-{
+-	if (__invalidate_device(bdev, kill_dirty)) {
+-		printk(KERN_WARNING "VFS: busy inodes on changed media or "
+-		       "resized disk %s\n",
+-		       bdev->bd_disk ? bdev->bd_disk->disk_name : "");
+-	}
+-	bdev->bd_invalidated = 1;
+-}
+-
+ /**
+  * check_disk_size_change - checks for disk size change and adjusts bdev size.
+  * @disk: struct gendisk to check
+@@ -1391,8 +1371,9 @@ static void check_disk_size_change(struct gendisk *disk,
+ 			       disk->disk_name, bdev_size, disk_size);
+ 		}
+ 		i_size_write(bdev->bd_inode, disk_size);
+-		if (bdev_size > disk_size)
+-			flush_disk(bdev, false);
++		if (bdev_size > disk_size && __invalidate_device(bdev, false))
++			pr_warn("VFS: busy inodes on resized disk %s\n",
++				disk->disk_name);
+ 	}
+ 	bdev->bd_invalidated = 0;
+ }
+@@ -1451,7 +1432,10 @@ int check_disk_change(struct block_device *bdev)
+ 	if (!(events & DISK_EVENT_MEDIA_CHANGE))
+ 		return 0;
+ 
+-	flush_disk(bdev, true);
++	if (__invalidate_device(bdev, true))
++		pr_warn("VFS: busy inodes on changed media %s\n",
++			disk->disk_name);
++	bdev->bd_invalidated = 1;
+ 	if (bdops->revalidate_disk)
+ 		bdops->revalidate_disk(bdev->bd_disk);
+ 	return 1;
 -- 
+2.26.2
 
-- Arnaldo
