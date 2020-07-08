@@ -2,264 +2,189 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D56C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2271920772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:15:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DF6PjmMY"
+	by mail.kernel.org (Postfix) with ESMTP id 51ED820708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbgGHXPI (ORCPT
+        id S1726505AbgGHXQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:15:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36368 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726213AbgGHXPH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:15:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594250105;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OytB3quZY1eP1hAcswU5NCJlCCNbci/6JgQPYAMn2as=;
-        b=DF6PjmMY+KtPf4akL3URqRRCAtIi8X2TBUDl/LUPEQCZBddfO/rJ4OZH4BC54QDnLDryO1
-        LdIBQ9Xot0OhcPudJqe1S1HxKfxzGcPNKOE8J+BXVX3xT39pR16+I67fjymr48R7hB89YO
-        FQCgoroR1cAxUorIUMEx/qa52mgezuE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-yw7hg5-cPP-hlQUYP92gCA-1; Wed, 08 Jul 2020 19:15:03 -0400
-X-MC-Unique: yw7hg5-cPP-hlQUYP92gCA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F9581005504;
-        Wed,  8 Jul 2020 23:15:02 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5BB9A19C4F;
-        Wed,  8 Jul 2020 23:14:54 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 19:14:51 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Eric Paris <eparis@parisplace.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, john.johansen@canonical.com
-Subject: Re: [PATCH ghak84 v3] audit: purge audit_log_string from the
- intra-kernel audit API
-Message-ID: <20200708231451.7t7cadrqhrp357is@madcap2.tricolour.ca>
-References: <20597345545df186f0a287c974c9dc88b5c940a0.1593808662.git.rgb@redhat.com>
- <CAHC9VhQT2O9GnVBhXvzpP+yNNoCqy-XTfMC7OHqz3xvFVaGvdw@mail.gmail.com>
+        Wed, 8 Jul 2020 19:16:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:44424 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbgGHXQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 19:16:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 147CB31B;
+        Wed,  8 Jul 2020 16:16:20 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0FB23F71E;
+        Wed,  8 Jul 2020 16:16:19 -0700 (PDT)
+Subject: Re: [PATCH] dma-pool: use single atomic pool for both DMA zones
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Rientjes <rientjes@google.com>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20200707122804.21262-1-nsaenzjulienne@suse.de>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <3ee7f5ec-46e3-6d36-820b-011e359e759d@arm.com>
+Date:   Wed, 8 Jul 2020 18:16:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhQT2O9GnVBhXvzpP+yNNoCqy-XTfMC7OHqz3xvFVaGvdw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200707122804.21262-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-08 18:41, Paul Moore wrote:
-> On Fri, Jul 3, 2020 at 5:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > audit_log_string() was inteded to be an internal audit function and
-> > since there are only two internal uses, remove them.  Purge all external
-> > uses of it by restructuring code to use an existing audit_log_format()
-> > or using audit_log_format().
-> >
-> > Please see the upstream issue
-> > https://github.com/linux-audit/audit-kernel/issues/84
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> > Passes audit-testsuite.
-> >
-> > Changelog:
-> > v3
-> > - fix two warning: non-void function does not return a value in all control paths
-> >         Reported-by: kernel test robot <lkp@intel.com>
-> >
-> > v2
-> > - restructure to piggyback on existing audit_log_format() calls, checking quoting needs for each.
-> >
-> > v1 Vlad Dronov
-> > - https://github.com/nefigtut/audit-kernel/commit/dbbcba46335a002f44b05874153a85b9cc18aebf
-> >
-> >  include/linux/audit.h     |  5 -----
-> >  kernel/audit.c            |  4 ++--
-> >  security/apparmor/audit.c | 10 ++++------
-> >  security/apparmor/file.c  | 25 +++++++------------------
-> >  security/apparmor/ipc.c   | 46 +++++++++++++++++++++++-----------------------
-> >  security/apparmor/net.c   | 14 ++++++++------
-> >  security/lsm_audit.c      |  4 ++--
-> >  7 files changed, 46 insertions(+), 62 deletions(-)
+Hi,
+
+On 7/7/20 7:28 AM, Nicolas Saenz Julienne wrote:
+> When allocating atomic DMA memory for a device, the dma-pool core
+> queries __dma_direct_optimal_gfp_mask() to check which atomic pool to
+> use. It turns out the GFP flag returned is only an optimistic guess.
+> The pool selected might sometimes live in a zone higher than the
+> device's view of memory.
 > 
-> ...
+> As there isn't a way to grantee a mapping between a device's DMA
+> constraints and correct GFP flags this unifies both DMA atomic pools.
+> The resulting pool is allocated in the lower DMA zone available, if any,
+> so as for devices to always get accessible memory while having the
+> flexibility of using dma_pool_kernel for the non constrained ones.
+
+With the follow-on patch "dma-pool: Do not allocate pool memory from 
+CMA" everything seems to be working fine now.
+
+tested-by: Jeremy Linton <jeremy.linton@arm.com>
+
+Thanks for fixing this!
+
+
 > 
-> > diff --git a/security/apparmor/audit.c b/security/apparmor/audit.c
-> > index 597732503815..335b5b8d300b 100644
-> > --- a/security/apparmor/audit.c
-> > +++ b/security/apparmor/audit.c
-> > @@ -57,18 +57,16 @@ static void audit_pre(struct audit_buffer *ab, void *ca)
-> >         struct common_audit_data *sa = ca;
-> >
-> >         if (aa_g_audit_header) {
-> > -               audit_log_format(ab, "apparmor=");
-> > -               audit_log_string(ab, aa_audit_type[aad(sa)->type]);
-> > +               audit_log_format(ab, "apparmor=%s",
-> > +                                aa_audit_type[aad(sa)->type]);
-> >         }
-> >
-> >         if (aad(sa)->op) {
-> > -               audit_log_format(ab, " operation=");
-> > -               audit_log_string(ab, aad(sa)->op);
-> > +               audit_log_format(ab, " operation=%s", aad(sa)->op);
-> >         }
+> Fixes: c84dc6e68a1d ("dma-pool: add additional coherent pools to map to gfp mask")
+> Reported-by: Jeremy Linton <jeremy.linton@arm.com>
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>   kernel/dma/pool.c | 47 +++++++++++++++++++----------------------------
+>   1 file changed, 19 insertions(+), 28 deletions(-)
 > 
-> In the case below you've added the quotes around the string, but they
-> appear to be missing in the two cases above.
-
-They aren't needed above since they are text with no spaces or special
-characters.  We don't usually include double quotes where they aren't
-needed.  The one below contains spaces so needs double quotes.
-
-> >         if (aad(sa)->info) {
-> > -               audit_log_format(ab, " info=");
-> > -               audit_log_string(ab, aad(sa)->info);
-> > +               audit_log_format(ab, " info=\"%s\"", aad(sa)->info);
-> >                 if (aad(sa)->error)
-> >                         audit_log_format(ab, " error=%d", aad(sa)->error);
-> >         }
-> > diff --git a/security/apparmor/file.c b/security/apparmor/file.c
-> > index 9a2d14b7c9f8..70f27124d051 100644
-> > --- a/security/apparmor/file.c
-> > +++ b/security/apparmor/file.c
-> > @@ -35,20 +35,6 @@ static u32 map_mask_to_chr_mask(u32 mask)
-> >  }
-> >
-> >  /**
-> > - * audit_file_mask - convert mask to permission string
-> > - * @buffer: buffer to write string to (NOT NULL)
-> > - * @mask: permission mask to convert
-> > - */
-> > -static void audit_file_mask(struct audit_buffer *ab, u32 mask)
-> > -{
-> > -       char str[10];
-> > -
-> > -       aa_perm_mask_to_str(str, sizeof(str), aa_file_perm_chrs,
-> > -                           map_mask_to_chr_mask(mask));
-> > -       audit_log_string(ab, str);
-> > -}
-> > -
-> > -/**
-> >   * file_audit_cb - call back for file specific audit fields
-> >   * @ab: audit_buffer  (NOT NULL)
-> >   * @va: audit struct to audit values of  (NOT NULL)
-> > @@ -57,14 +43,17 @@ static void file_audit_cb(struct audit_buffer *ab, void *va)
-> >  {
-> >         struct common_audit_data *sa = va;
-> >         kuid_t fsuid = current_fsuid();
-> > +       char str[10];
-> >
-> >         if (aad(sa)->request & AA_AUDIT_FILE_MASK) {
-> > -               audit_log_format(ab, " requested_mask=");
-> > -               audit_file_mask(ab, aad(sa)->request);
-> > +               aa_perm_mask_to_str(str, sizeof(str), aa_file_perm_chrs,
-> > +                                   map_mask_to_chr_mask(aad(sa)->request));
-> > +               audit_log_format(ab, " requested_mask=%s", str);
-> >         }
-> >         if (aad(sa)->denied & AA_AUDIT_FILE_MASK) {
-> > -               audit_log_format(ab, " denied_mask=");
-> > -               audit_file_mask(ab, aad(sa)->denied);
-> > +               aa_perm_mask_to_str(str, sizeof(str), aa_file_perm_chrs,
-> > +                                   map_mask_to_chr_mask(aad(sa)->denied));
-> > +               audit_log_format(ab, " denied_mask=%s", str);
-> >         }
+> diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+> index 8cfa01243ed2..883f7a583969 100644
+> --- a/kernel/dma/pool.c
+> +++ b/kernel/dma/pool.c
+> @@ -13,10 +13,11 @@
+>   #include <linux/slab.h>
+>   #include <linux/workqueue.h>
+>   
+> +#define GFP_ATOMIC_POOL_DMA	(IS_ENABLED(CONFIG_ZONE_DMA) ? GFP_DMA : \
+> +				 IS_ENABLED(CONFIG_ZONE_DMA32) ? GFP_DMA32 : 0)
+> +
+>   static struct gen_pool *atomic_pool_dma __ro_after_init;
+>   static unsigned long pool_size_dma;
+> -static struct gen_pool *atomic_pool_dma32 __ro_after_init;
+> -static unsigned long pool_size_dma32;
+>   static struct gen_pool *atomic_pool_kernel __ro_after_init;
+>   static unsigned long pool_size_kernel;
+>   
+> @@ -42,16 +43,13 @@ static void __init dma_atomic_pool_debugfs_init(void)
+>   		return;
+>   
+>   	debugfs_create_ulong("pool_size_dma", 0400, root, &pool_size_dma);
+> -	debugfs_create_ulong("pool_size_dma32", 0400, root, &pool_size_dma32);
+>   	debugfs_create_ulong("pool_size_kernel", 0400, root, &pool_size_kernel);
+>   }
+>   
+>   static void dma_atomic_pool_size_add(gfp_t gfp, size_t size)
+>   {
+> -	if (gfp & __GFP_DMA)
+> +	if (gfp & GFP_ATOMIC_POOL_DMA)
+>   		pool_size_dma += size;
+> -	else if (gfp & __GFP_DMA32)
+> -		pool_size_dma32 += size;
+>   	else
+>   		pool_size_kernel += size;
+>   }
+> @@ -132,12 +130,11 @@ static void atomic_pool_resize(struct gen_pool *pool, gfp_t gfp)
+>   
+>   static void atomic_pool_work_fn(struct work_struct *work)
+>   {
+> -	if (IS_ENABLED(CONFIG_ZONE_DMA))
+> -		atomic_pool_resize(atomic_pool_dma,
+> -				   GFP_KERNEL | GFP_DMA);
+> -	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+> -		atomic_pool_resize(atomic_pool_dma32,
+> -				   GFP_KERNEL | GFP_DMA32);
+> +	gfp_t dma_gfp = GFP_ATOMIC_POOL_DMA;
+> +
+> +	if (dma_gfp)
+> +		atomic_pool_resize(atomic_pool_dma, GFP_KERNEL | dma_gfp);
+> +
+>   	atomic_pool_resize(atomic_pool_kernel, GFP_KERNEL);
+>   }
+>   
+> @@ -168,6 +165,7 @@ static __init struct gen_pool *__dma_atomic_pool_init(size_t pool_size,
+>   
+>   static int __init dma_atomic_pool_init(void)
+>   {
+> +	gfp_t dma_gfp = GFP_ATOMIC_POOL_DMA;
+>   	int ret = 0;
+>   
+>   	/*
+> @@ -185,18 +183,13 @@ static int __init dma_atomic_pool_init(void)
+>   						    GFP_KERNEL);
+>   	if (!atomic_pool_kernel)
+>   		ret = -ENOMEM;
+> -	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
+> +
+> +	if (dma_gfp) {
+>   		atomic_pool_dma = __dma_atomic_pool_init(atomic_pool_size,
+> -						GFP_KERNEL | GFP_DMA);
+> +							 GFP_KERNEL | dma_gfp);
+>   		if (!atomic_pool_dma)
+>   			ret = -ENOMEM;
+>   	}
+> -	if (IS_ENABLED(CONFIG_ZONE_DMA32)) {
+> -		atomic_pool_dma32 = __dma_atomic_pool_init(atomic_pool_size,
+> -						GFP_KERNEL | GFP_DMA32);
+> -		if (!atomic_pool_dma32)
+> -			ret = -ENOMEM;
+> -	}
+>   
+>   	dma_atomic_pool_debugfs_init();
+>   	return ret;
+> @@ -206,14 +199,12 @@ postcore_initcall(dma_atomic_pool_init);
+>   static inline struct gen_pool *dev_to_pool(struct device *dev)
+>   {
+>   	u64 phys_mask;
+> -	gfp_t gfp;
+> -
+> -	gfp = dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
+> -					  &phys_mask);
+> -	if (IS_ENABLED(CONFIG_ZONE_DMA) && gfp == GFP_DMA)
+> -		return atomic_pool_dma;
+> -	if (IS_ENABLED(CONFIG_ZONE_DMA32) && gfp == GFP_DMA32)
+> -		return atomic_pool_dma32;
+> +
+> +	if (atomic_pool_dma &&
+> +	    dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
+> +					&phys_mask))
+> +			return atomic_pool_dma;
+> +
+>   	return atomic_pool_kernel;
+>   }
+>   
 > 
-> More missing quotes.
-
-This is a simple text field without punctuation or special characters.
-
-> >         if (aad(sa)->request & AA_AUDIT_FILE_MASK) {
-> >                 audit_log_format(ab, " fsuid=%d",
-> > diff --git a/security/apparmor/ipc.c b/security/apparmor/ipc.c
-> > index 4ecedffbdd33..fe431731883f 100644
-> > --- a/security/apparmor/ipc.c
-> > +++ b/security/apparmor/ipc.c
-> > @@ -20,25 +20,23 @@
-> >
-> >  /**
-> >   * audit_ptrace_mask - convert mask to permission string
-> > - * @buffer: buffer to write string to (NOT NULL)
-> >   * @mask: permission mask to convert
-> > + *
-> > + * Returns: pointer to static string
-> >   */
-> > -static void audit_ptrace_mask(struct audit_buffer *ab, u32 mask)
-> > +static const char *audit_ptrace_mask(u32 mask)
-> >  {
-> >         switch (mask) {
-> >         case MAY_READ:
-> > -               audit_log_string(ab, "read");
-> > -               break;
-> > +               return "read";
-> >         case MAY_WRITE:
-> > -               audit_log_string(ab, "trace");
-> > -               break;
-> > +               return "trace";
-> >         case AA_MAY_BE_READ:
-> > -               audit_log_string(ab, "readby");
-> > -               break;
-> > +               return "readby";
-> >         case AA_MAY_BE_TRACED:
-> > -               audit_log_string(ab, "tracedby");
-> > -               break;
-> > +               return "tracedby";
-> >         }
-> > +       return "";
-> >  }
-> >
-> >  /* call back to audit ptrace fields */
-> > @@ -47,12 +45,12 @@ static void audit_ptrace_cb(struct audit_buffer *ab, void *va)
-> >         struct common_audit_data *sa = va;
-> >
-> >         if (aad(sa)->request & AA_PTRACE_PERM_MASK) {
-> > -               audit_log_format(ab, " requested_mask=");
-> > -               audit_ptrace_mask(ab, aad(sa)->request);
-> > +               audit_log_format(ab, " requested_mask=%s",
-> > +                                audit_ptrace_mask(aad(sa)->request));
-> >
-> >                 if (aad(sa)->denied & AA_PTRACE_PERM_MASK) {
-> > -                       audit_log_format(ab, " denied_mask=");
-> > -                       audit_ptrace_mask(ab, aad(sa)->denied);
-> > +                       audit_log_format(ab, " denied_mask=%s",
-> > +                                        audit_ptrace_mask(aad(sa)->denied));
-> >                 }
-> 
-> Quotes.  There are none.
-> 
-> ... and it looks like there are more missing too, but I kinda stopped
-> seriously reading the patch here, please take a closer look at the
-> patch, make the necessary changes, and resubmit.
-
-This was all intentional as per the previous patch review discussion on github.
-
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
 
