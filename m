@@ -2,171 +2,157 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69745C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C64C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 414A32065F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7291C2065F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:19:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LORxdn5j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sgiOjnyG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgGHRQc (ORCPT
+        id S1726374AbgGHRTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:16:32 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:32009 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbgGHRQb (ORCPT
+        Wed, 8 Jul 2020 13:19:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgGHRTE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:16:31 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200708171629epoutp01d21a5e08ff5135b18b2e3aa1c8032197~f1nShYU3n3014730147epoutp01L
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 17:16:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200708171629epoutp01d21a5e08ff5135b18b2e3aa1c8032197~f1nShYU3n3014730147epoutp01L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594228589;
-        bh=cZw9uZ/B94t2YKJtaGtYKp2wPZ7theQ3oHVkcgqIa8A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LORxdn5j8CSVPSOVBEb9zJkzfy/P5yQc+KIQ2qUFrTd3SguIwD6ovDEY+/jY6IepJ
-         jljSEI+g3di9TdZjQ77C5yDDAwem6IP7fa91Z9jN4dKsP/WTVl8n6RzLKB2HN+CTXd
-         TP3FZgxYuSsRtHrmlQiSauhXIZCrjPlQDpG3W++I=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20200708171628epcas5p124f3b7ca4c149e7e6c037eb5c8c25458~f1nRz-8Pg2838928389epcas5p1o;
-        Wed,  8 Jul 2020 17:16:28 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2B.4B.09467.C6FF50F5; Thu,  9 Jul 2020 02:16:28 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200708171600epcas5p4a8494e7dcb887a7f1f39492007b3b78c~f1m3kn-U_0927809278epcas5p4U;
-        Wed,  8 Jul 2020 17:16:00 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200708171600epsmtrp2f9d5e955264893831a5c37846de7cc39~f1m3jsuZ70366303663epsmtrp2Q;
-        Wed,  8 Jul 2020 17:16:00 +0000 (GMT)
-X-AuditID: b6c32a49-a29ff700000024fb-96-5f05ff6ca0f1
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A8.15.08303.05FF50F5; Thu,  9 Jul 2020 02:16:00 +0900 (KST)
-Received: from test-zns (unknown [107.110.206.5]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200708171558epsmtip2b1b0a9859675abb5073230211ffdb391~f1m1PKiQU2709227092epsmtip2x;
-        Wed,  8 Jul 2020 17:15:57 +0000 (GMT)
-Date:   Wed, 8 Jul 2020 22:43:02 +0530
-From:   Kanchan Joshi <joshi.k@samsung.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>,
-        viro@zeniv.linux.org.uk, bcrl@kvack.org, hch@infradead.org,
-        damien.lemoal@wdc.com, asml.silence@gmail.com,
-        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-Message-ID: <20200708171302.GB26480@test-zns>
+        Wed, 8 Jul 2020 13:19:04 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350F0C061A0B;
+        Wed,  8 Jul 2020 10:19:04 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q7so41900656ljm.1;
+        Wed, 08 Jul 2020 10:19:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=5JvxYDMxfu2QIiI4ijZRK8l91niq2hk2cYfpZHrXrrY=;
+        b=sgiOjnyGEtnySkVWawBo0pWovsuKcHP9nmEwxy6aGc3wmaTlQ9j9h3CI+A2f7exiKf
+         pwWVfHfPMOV+7FISikwrtg98Qmfj5ry4PmLr0GZ7DwUgZaqdMjHepmRKPlO4WaU27SM0
+         XeRSEenW11wTPT9ayiVSdEXBIno6S9kl2tY4JrGkhGv1vV9jWu4vFuTvJPZx7S6+1spq
+         1T4PKhwQqiiT4ORVN+PMBUtSS/elzq+6Z9W0dXMCX8CrDEmAUBJE6XOPtsefGjHZEMRp
+         RGbOQM+q4YNbiIAhunn2/devSFm0+gOlPOGVzsbkEMmz8p9CHcY/Cfg6d9k4IYEt+Ghp
+         6TKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=5JvxYDMxfu2QIiI4ijZRK8l91niq2hk2cYfpZHrXrrY=;
+        b=SYj9/Nb8LYjg4d8gICCX2NFp/rBVi6iMIIs7E/ZJcpDKKLkthuUE94+dMTquA9z40b
+         /fjbLBpM72QTM1JbMdhG/XjAZYdk+v+c8c1D52wsGNPs44QkPKRpFEGYXAPw/JpPmkkw
+         BrXEQTu2hwj412cKOZySzdP6SIi302JUMt+kzJNgZ5l+G9CVZ5zusS3YgVOFuJgE/Qds
+         PumtZ5TvZ33nMGmG+B/36dqCUmPyQmXOfuKnatjL512u8maU8CMhaZSzZqKblvgrEgYg
+         6ioDPoWH9MoZC3mBgEwz8qejLVEQEEga4EYcnxFJq55SvZro2XzmthCmz/G8qEplvD8N
+         73ZQ==
+X-Gm-Message-State: AOAM531qIaX3wmKC8BCVlq+g6hYVJyS6W1s9PABRM4T7v7TuQmENZBMP
+        CmF/gHnwrrwYOHurW542L7c=
+X-Google-Smtp-Source: ABdhPJye8r7on70k5YrY8igIM2Hgo4v6aoGyNm09x6jPdMCI/7B30UA3v0jGzjru0Ny4nrz6PZ9BIA==
+X-Received: by 2002:a2e:6f08:: with SMTP id k8mr33420757ljc.384.1594228742491;
+        Wed, 08 Jul 2020 10:19:02 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id y13sm98686ljd.20.2020.07.08.10.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 10:19:01 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
+ current kernel time
+References: <20200706142616.25192-1-sorganov@gmail.com>
+        <20200706142616.25192-4-sorganov@gmail.com>
+        <20200706152721.3j54m73bm673zlnj@skbuf> <20200708110444.GD9080@hoboy>
+        <87mu4a9o8m.fsf@osv.gnss.ru> <20200708144803.GB13374@hoboy>
+Date:   Wed, 08 Jul 2020 20:18:49 +0300
+In-Reply-To: <20200708144803.GB13374@hoboy> (Richard Cochran's message of
+        "Wed, 8 Jul 2020 07:48:03 -0700")
+Message-ID: <87k0ze7wna.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <481e512a-0dd3-ae19-8f32-ed781af28038@kernel.dk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrIKsWRmVeSWpSXmKPExsWy7bCmum7Of9Z4g6OPVC3mrNrGaLH6bj+b
-        Rde/LSwWre3fmCxOT1jEZPGu9RyLxeM7n9ktOk9fYLKYMq2J0WLvLW2LPXtPslhc3jWHzWLF
-        9iMsFtt+z2e2eP3jJJvF+b/HWS1+/5jD5iDosXPWXXaPzSu0PJoX3GHxuHy21GPTp0nsHt1X
-        fzB69G1ZxejxeZOcR/uBbiaPTU/eMgVwRXHZpKTmZJalFunbJXBlfDmfX7CXv2Lxo2OMDYy3
-        eLoYOTgkBEwkdn8M6GLk4hAS2M0ocevHHHYI5xOjxOL385ghnM+MEn9XbGDqYuQE67h47Toj
-        RGIXo8Sjhy+YIJxnjBJvf9xnBpnLIqAi8WSbEYjJJqApcWFyKUiviICCRM/vlWwg5cwCL5kl
-        mjeDDOLkEBZwlPi88ySYzSugK/Fi6V92CFtQ4uTMJywgNqeArcTOpQfAbFEBZYkD245DHfSD
-        Q+LbAj4I20Xi16S57BC2sMSr41ugbCmJz+/2skHYxRK/7hwF+0xCoINR4nrDTBaIhL3ExT1/
-        mUCOZhbIkOh8UAsRlpWYemod2C5mAT6J3t9PoPbySuyYB2MrStyb9JQVwhaXeDhjCZTtIfF/
-        92xoKK5gktiz6jHzBEb5WUh+m4WwbhbYCiuJzg9NrBC2vETz1tnMECXSEsv/cUCYmhLrd+kv
-        YGRbxSiZWlCcm55abFpgmJdarlecmFtcmpeul5yfu4kRnCq1PHcw3n3wQe8QIxMH4yFGCQ5m
-        JRFeA0XWeCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8Sj/OxAkJpCeWpGanphakFsFkmTg4pRqY
-        Kg+Yvvhz44bfWrvqp/eUXsWZ6Zh5ae+e8rQysrDewW358y9Z361qkkU2L7T5VM606ih3tcWC
-        En7vre08JbGPLpS/Kaz3L4iYyXdlksLiGY0HPN4VfJsRvEk0+BBHJJ/VEiPXzJ1CF/UYkq44
-        r5smyFOUG3T4GPOW6+yT5dzWnvgsWpDy7vw288ln3kbcvZRwKz35wrFFtZdPJF3tmNR8685t
-        3t7uxx8XqRiL3tr+5vWOtAMKvG7SvYfDd6X/Kc4xy2W2dxCuXyR8Kfrd3UCnDI2Ono9Z22/e
-        2JMQ5fpQV1ZDznfT7AkPL3RdiQy58uN1bFeS5RxjhUTJdXO8io4unVAv/8u3d4v8vpMPLIsD
-        lViKMxINtZiLihMBjbWFdAQEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsWy7bCSvG7Af9Z4g8kPpSzmrNrGaLH6bj+b
-        Rde/LSwWre3fmCxOT1jEZPGu9RyLxeM7n9ktOk9fYLKYMq2J0WLvLW2LPXtPslhc3jWHzWLF
-        9iMsFtt+z2e2eP3jJJvF+b/HWS1+/5jD5iDosXPWXXaPzSu0PJoX3GHxuHy21GPTp0nsHt1X
-        fzB69G1ZxejxeZOcR/uBbiaPTU/eMgVwRXHZpKTmZJalFunbJXBl3L3TwlZwjqfiw53qBsYO
-        ri5GTg4JAROJi9euM3YxcnEICexglLhy7CgrREJcovnaD3YIW1hi5b/n7BBFTxglOv8uBurg
-        4GARUJF4ss0IxGQT0JS4MLkUpFxEQEGi5/dKNpByZoH3zBIvzmxhA0kICzhKfN55khHE5hXQ
-        lXix9C/UzBVMEg//zIdKCEqcnPmEBcRmFjCTmLf5ITPIAmYBaYnl/zggwvISzVtnM4PYnAK2
-        EjuXHgArFxVQljiw7TjTBEahWUgmzUIyaRbCpFlIJi1gZFnFKJlaUJybnltsWGCUl1quV5yY
-        W1yal66XnJ+7iREcwVpaOxj3rPqgd4iRiYPxEKMEB7OSCK+BImu8EG9KYmVValF+fFFpTmrx
-        IUZpDhYlcd6vsxbGCQmkJ5akZqemFqQWwWSZODilGpiMV5gJqrxfk7bOYKK6sYn4jU62d9dU
-        dcsbVi9bfNnfhL2Bx35h+uL3ZzgMp03MW3p9/vNXs/1d1ugt9PH+ZHqYbdneIDP+jzG6HD5c
-        fvYLjmptKTXZvVdgfVL5j72tP7Ya8rfdskzYKb0yk6PQVsZw7nct40mKq8OeyNz4a+LuwG0v
-        Ybb4vfNx5y81xxVMnbovh75YXerLt/xfnscHpuSrz68lS0cw634LXb2DeWY+Z+JZ/dveMo68
-        5hNMMipOF17gFa0OnnvO+u3VwM9lLXKT3NoOz/UrPHFalenfmbwAlZNfzpooxG874Ou3Sphh
-        qo5Te8WeB0vOfrbcNPtC9FH5qW5HpMP/GvywehA48YESS3FGoqEWc1FxIgCqDvw8TwMAAA==
-X-CMS-MailID: 20200708171600epcas5p4a8494e7dcb887a7f1f39492007b3b78c
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_e97d3_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200708163850epcas5p36f1f61ee4d77d31dc34c3bbe1d19f6fd
-References: <33b9887b-eaba-c7be-5dfd-fc7e7d416f48@kernel.dk>
-        <36C0AD99-0D75-40D4-B704-507A222AEB81@javigon.com>
-        <20200708163327.GU25523@casper.infradead.org>
-        <CGME20200708163850epcas5p36f1f61ee4d77d31dc34c3bbe1d19f6fd@epcas5p3.samsung.com>
-        <481e512a-0dd3-ae19-8f32-ed781af28038@kernel.dk>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_e97d3_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
+Richard Cochran <richardcochran@gmail.com> writes:
 
-On Wed, Jul 08, 2020 at 10:38:44AM -0600, Jens Axboe wrote:
->On 7/8/20 10:33 AM, Matthew Wilcox wrote:
->> On Wed, Jul 08, 2020 at 06:08:12PM +0200, Javier González wrote:
->>>> I just wanted to get clarification there, because to me it sounded like
->>>> you expected Kanchan to do it, and Kanchan assuming it "was sorted". I'd
->>>> consider that a prerequisite for the append series as far as io_uring is
->>>> concerned, hence _someone_ needs to actually do it ;-)
->>
->> I don't know that it's a prerequisite in terms of the patches actually
->> depend on it.  I appreciate you want it first to ensure that we don't bloat
->> the kiocb.
+> On Wed, Jul 08, 2020 at 03:37:29PM +0300, Sergey Organov wrote:
+>> Richard Cochran <richardcochran@gmail.com> writes:
+>> 
+>> > On Mon, Jul 06, 2020 at 06:27:21PM +0300, Vladimir Oltean wrote:
+>> >> There's no correct answer, I'm afraid. Whatever the default value of the
+>> >> clock may be, it's bound to be confusing for some reason, _if_ the
+>> >> reason why you're investigating it in the first place is a driver bug.
+>> >> Also, I don't really see how your change to use Jan 1st 1970 makes it
+>> >> any less confusing.
+>> >
+>> > +1
+>> >
+>> > For a PHC, the user of the clock must check the PTP stack's
+>> > synchronization flags via the management interface to know the status
+>> > of the time signal.
+>> 
+>> Actually, as I just realized, the right solution for my original problem
+>> would rather be adding PTP clock ID that time stamped Ethernet packet to
+>> the Ethernet hardware time stamp (see my previous reply as well).
 >
->Maybe not for the series, but for the io_uring addition it is.
+> I think you misunderstood my point.  I wasn't commenting on the
+> "stacked" MAC/PHY/DSA time stamp issue in the kernel.
+
+I think I did. It's rather that initialization value of PHP clock has
+consequences in MAC/PHY/DSA, and there is no way to check any flags
+/there/. And it's exactly the place where I needed the info, see
+background explanation below.
+
+I understand what your point is, but I try to explain that it's
+irrelevant for my particular use-case.
+
 >
->>> I believe Kanchan meant that now the trade-off we were asking to
->>> clear out is sorted.
->>>
->>> We will send a new version shortly for the current functionality - we
->>> can see what we are missing on when the uring interface is clear.
->>
->> I've started work on a patch series for this.  Mostly just waiting for
->> compilation now ... should be done in the next few hours.
+> I am talking about the question of whether to initialize the PHC time
+> to zero (decades off from TAI) or ktime (likely about 37 seconds off
+> from TAI).  It does not really matter, because the user must not guess
+> whether the time is valid based on the value.  Instead, the user
+> should query the relevant PTP data sets in a "live" online manner.
+
+I'm implementing PTP master clock, and there are no PTP data sets (yet)
+in my case, as it's me who will eventually create them.
+
 >
->Great!
+> For example, to tell whether a PHC is synchronized to anything at all,
+> you need to check PORT_DATA_SET.portState and probably also
+> CURRENT_DATA_SET.offsetFromMaster depending on your needs.
 
-Jens, Matthew - I'm sorry for creating the confusion. By "looks sorted"
-I meant the performance-implications and the room-for-pointer. For the
-latter I was thinking to go by your suggestion not to bloat the kiocb, and
-use io_kiocb instead.
-If we keep, there will be two paths to update that pointer, one using
-ki_complete(....,ret2) and another directly - which does not seem good.
+These are fields of PTP stack software that is not running in my case.
 
-On a different note: trimming kiocb by decoupling ki_complete work looks
-too good to be done by me :-)
+>
+> In addition, if you care about global time, you need to check:
+>
+> TIME_PROPERTIES_DATA_SET
+>   currentUtcOffset
+>   currentUtcOffsetValid
+>   ptpTimescale
+>   timeTraceable
+>   frequencyTraceable
 
-------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_e97d3_
-Content-Type: text/plain; charset="utf-8"
+I'm going to become PTP master clock, I already have very precise
+estimations of PTP time, I know UTC offset, all this independently from
+any PTP stack. Moreover, I've already synchronized PHY clock to this
+time scale with +-5ns accuracy, and then I suddenly get somewhat wrong
+hardware time stamps for Ethernet packets that I send/receive. You see?
 
+Setting initial value of PTP clock to 0 would allow me to figure what
+happens (time stamp coming from /different/ PTP clock) half a day
+earlier. Not a big deal, I agree, yet I wanted to help a little bit
+somebody who might happen to run into a similar trouble in the future.
 
-------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_e97d3_--
+Thanks,
+-- Sergey
