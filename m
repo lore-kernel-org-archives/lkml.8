@@ -2,97 +2,138 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E62C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D58C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F3B2220A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:53:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XVaw/fGy"
+	by mail.kernel.org (Postfix) with ESMTP id BA8662220A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgGHIxk (ORCPT
+        id S1728396AbgGHIyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgGHIxj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:53:39 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ECEAC08C5DC;
-        Wed,  8 Jul 2020 01:53:39 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id o1so11333311plk.1;
-        Wed, 08 Jul 2020 01:53:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VOj8KMo33FR22/jWCVdCcCGb06O1I/LxQuTqwI48/VM=;
-        b=XVaw/fGyrcXlucPs4sMyJWqR/2tGNDhmci6LOfI7G2KzbfyBiuLIKeM3gt/i/FHfTl
-         UcGL2VCudJBfvOAz0gWIcSHSf8k4L/na8w87HHwtvzKtaiul8V0eRHIFkzQTmRwQXJ1t
-         qagZ8IY5GU2EmHW3bCPmMlKSzPzLtMMxWRdGVHsR8hhYAlRuduo83IaB6cl1CRv3vrpV
-         WmzaO1zzTkd26THfyWZygotRdemT0E1Xk0Kpv4kpvIGCrUoiyVv8ap132a5iT/e7XPQI
-         PoN0RSoRRLf4uboTyl4zzhAX3Gi9sNsGm7NlcJjlMbzOSKgP7xdR7pnfuDvcI2xQvu3T
-         fGkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VOj8KMo33FR22/jWCVdCcCGb06O1I/LxQuTqwI48/VM=;
-        b=k3erQ4J8Hb9fMnC4DAui8e8VoTJUsR7oFJ1zJ691MDxE5mx5w0HF5MFtlRnEDmyFhu
-         gIfNuWZA2QsC8hHmiKMmBHH3zRz1S5T0kMbWuzBox5uyFI/OVInsYmJxqpqBTOH4tQDJ
-         U0iUEM/h0GGDOUwn2v/nwz790gwCjlIch0MXMEou1F+920fmHiL5lNj/DHDdYrzsRk9e
-         uqeluPyrBvrIKn90PgHaExXZ1o0f8eDAQbivSB9SWXm5PH2PmkHBqZLq/Us7pQtMZF90
-         KfzUQGQjqcoe7KsS9OAsFCdvSYh37Iq1/cy8s4WQghKQs/pIyFZLIdl9tjoR6aS0vfmX
-         Gkog==
-X-Gm-Message-State: AOAM532KJkndkBn6LUFIC2gFMDcYhDMT/SL27r+vDRfH6flvBD0+EUJk
-        TYj9h2a7zQ+ClO7d6Lq5rpHGqI7x9UM2iOvfiAE=
-X-Google-Smtp-Source: ABdhPJzAFjNmz79HHfOIHYsJ4VMDby2KumuiiAmBdz+zEaO/KA1y9Ri6f8yoIalH6rKTEGj14uU3CTNqOQmxPn7hMiw=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr8741109pjp.228.1594198419141;
- Wed, 08 Jul 2020 01:53:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200708082634.30191-1-digetx@gmail.com> <20200708082634.30191-2-digetx@gmail.com>
- <CAHp75VdFVGgKxR+n5TUMuFnWDy_uEmEeG=TvR9s7Xbe=jOdObg@mail.gmail.com>
-In-Reply-To: <CAHp75VdFVGgKxR+n5TUMuFnWDy_uEmEeG=TvR9s7Xbe=jOdObg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 8 Jul 2020 11:53:22 +0300
-Message-ID: <CAHp75VdTw87aOGqnjS-jukiHcMACG7-gDDhDWP6hikSLWpDebQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/5] gpio: max77620: Initialize interrupts state
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 8 Jul 2020 04:54:21 -0400
+Received: from mx.socionext.com ([202.248.49.38]:18909 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgGHIyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 04:54:21 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 08 Jul 2020 17:54:19 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 58B2460060;
+        Wed,  8 Jul 2020 17:54:19 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 8 Jul 2020 17:54:19 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id A55BC1A0507;
+        Wed,  8 Jul 2020 17:54:18 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 1/2] ARM: dts: uniphier: Rename ethphy node to ethernet-phy
+Date:   Wed,  8 Jul 2020 17:54:10 +0900
+Message-Id: <1594198451-29073-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 11:51 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+This renames the node name "ethphy" to "ethernet-phy" according to
+Documentation/devicetree/bindings/net/mdio.yaml.
 
-...
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ arch/arm/boot/dts/uniphier-ld6b-ref.dts    | 2 +-
+ arch/arm/boot/dts/uniphier-pro4-ace.dts    | 2 +-
+ arch/arm/boot/dts/uniphier-pro4-ref.dts    | 2 +-
+ arch/arm/boot/dts/uniphier-pro4-sanji.dts  | 2 +-
+ arch/arm/boot/dts/uniphier-pxs2-gentil.dts | 2 +-
+ arch/arm/boot/dts/uniphier-pxs2-vodka.dts  | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-> > +       max77620_gpio_initialize(mgpio);
->
-> I guess we have special callback for that, i.e.
-> https://elixir.bootlin.com/linux/v5.8-rc3/C/ident/init_hw.
-
-Sorry, here is correct link
-
-https://elixir.bootlin.com/linux/v5.8-rc3/source/include/linux/gpio/driver.h#L212
-
+diff --git a/arch/arm/boot/dts/uniphier-ld6b-ref.dts b/arch/arm/boot/dts/uniphier-ld6b-ref.dts
+index 079cadc..df3148f 100644
+--- a/arch/arm/boot/dts/uniphier-ld6b-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ld6b-ref.dts
+@@ -76,7 +76,7 @@
+ };
+ 
+ &mdio {
+-	ethphy: ethphy@0 {
++	ethphy: ethernet-phy@0 {
+ 		reg = <0>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/uniphier-pro4-ace.dts b/arch/arm/boot/dts/uniphier-pro4-ace.dts
+index 64246fa..27ff2b7 100644
+--- a/arch/arm/boot/dts/uniphier-pro4-ace.dts
++++ b/arch/arm/boot/dts/uniphier-pro4-ace.dts
+@@ -87,7 +87,7 @@
+ };
+ 
+ &mdio {
+-	ethphy: ethphy@1 {
++	ethphy: ethernet-phy@1 {
+ 		reg = <1>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/uniphier-pro4-ref.dts b/arch/arm/boot/dts/uniphier-pro4-ref.dts
+index 181442c..2c423e8 100644
+--- a/arch/arm/boot/dts/uniphier-pro4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-pro4-ref.dts
+@@ -84,7 +84,7 @@
+ };
+ 
+ &mdio {
+-	ethphy: ethphy@0 {
++	ethphy: ethernet-phy@0 {
+ 		reg = <0>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/uniphier-pro4-sanji.dts b/arch/arm/boot/dts/uniphier-pro4-sanji.dts
+index 5396556..7b6faf2 100644
+--- a/arch/arm/boot/dts/uniphier-pro4-sanji.dts
++++ b/arch/arm/boot/dts/uniphier-pro4-sanji.dts
+@@ -82,7 +82,7 @@
+ };
+ 
+ &mdio {
+-	ethphy: ethphy@1 {
++	ethphy: ethernet-phy@1 {
+ 		reg = <1>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/uniphier-pxs2-gentil.dts b/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
+index 8e9ac57..759384b 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
++++ b/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
+@@ -87,7 +87,7 @@
+ };
+ 
+ &mdio {
+-	ethphy: ethphy@1 {
++	ethphy: ethernet-phy@1 {
+ 		reg = <1>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/uniphier-pxs2-vodka.dts b/arch/arm/boot/dts/uniphier-pxs2-vodka.dts
+index 8eacc7b..7e08a45 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2-vodka.dts
++++ b/arch/arm/boot/dts/uniphier-pxs2-vodka.dts
+@@ -88,7 +88,7 @@
+ };
+ 
+ &mdio {
+-	ethphy: ethphy@1 {
++	ethphy: ethernet-phy@1 {
+ 		reg = <1>;
+ 	};
+ };
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
+
