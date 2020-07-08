@@ -2,110 +2,86 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D58C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D36AB20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308F2206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgGHLHg (ORCPT
+        id S1728733AbgGHLIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:07:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:60944 "EHLO foss.arm.com"
+        Wed, 8 Jul 2020 07:08:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbgGHLHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:07:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C9791045;
-        Wed,  8 Jul 2020 04:07:33 -0700 (PDT)
-Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4C1383F68F;
-        Wed,  8 Jul 2020 04:07:32 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Dien Pham <dien.pham.ry@renesas.com>
-Subject: [PATCH 2/2] clk: scmi: Fix min and max rate when registering clocks with discrete rates
-Date:   Wed,  8 Jul 2020 12:07:25 +0100
-Message-Id: <20200708110725.18017-2-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200708110725.18017-1-sudeep.holla@arm.com>
-References: <20200708110725.18017-1-sudeep.holla@arm.com>
+        id S1728385AbgGHLIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 07:08:19 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8311D20739;
+        Wed,  8 Jul 2020 11:08:17 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 12:08:15 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        syzbot <syzbot+dec34b033b3479b9ef13@syzkaller.appspotmail.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: memory leak in inotify_update_watch
+Message-ID: <20200708110814.GA6308@gaia>
+References: <000000000000a47ace05a9c7b825@google.com>
+ <20200707152411.GD25069@quack2.suse.cz>
+ <20200707181710.GD32331@gaia>
+ <CACT4Y+ZLx3wT3uvsMr9EOQ35wF+tw3SN_kzgwn2B+K5dTtHrOg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ZLx3wT3uvsMr9EOQ35wF+tw3SN_kzgwn2B+K5dTtHrOg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we are not initializing the scmi clock with discrete rates
-correctly. We fetch the min_rate and max_rate value only for clocks with
-ranges and ignore the ones with discrete rates. This will lead to wrong
-initialization of rate range when clock supports discrete rate.
+On Wed, Jul 08, 2020 at 09:17:37AM +0200, Dmitry Vyukov wrote:
+> On Tue, Jul 7, 2020 at 8:17 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > Kmemleak never performs well under heavy load. Normally you'd need to
+> > let the system settle for a bit before checking whether the leaks are
+> > still reported. The issue is caused by the memory scanning not stopping
+> > the whole machine, so pointers may be hidden in registers on different
+> > CPUs (list insertion/deletion for example causes transient kmemleak
+> > confusion).
+> >
+> > I think the syzkaller guys tried a year or so ago to run it in parallel
+> > with kmemleak and gave up shortly. The proposal was to add a "stopscan"
+> > command to kmemleak which would do this under stop_machine(). However,
+> > no-one got to implementing it.
+> >
+> > So, in this case, does the leak still appear with the reproducer, once
+> > the system went idle?
+> 
+> This report came from syzbot, so obviously we did not give up :)
 
-Fix this by using the first and the last rate in the sorted list of the
-discrete clock rates while registering the clock.
+That's good to know ;).
 
-Fixes: 6d6a1d82eaef7 ("clk: add support for clocks provided by SCMI")
-Reported-by: Dien Pham <dien.pham.ry@renesas.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/clk/clk-scmi.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+> We don't run scanning in parallel with fuzzing and do a very intricate
+> multi-step dance to overcome false positives:
+> https://github.com/google/syzkaller/blob/5962a2dc88f6511b77100acdf687c1088f253f6b/executor/common_linux.h#L3407-L3478
+> and only report leaks that are reproducible.
+> So far I have not seen any noticable amount of false positives, and
+> you can see 70 already fixed leaks here:
+> https://syzkaller.appspot.com/upstream/fixed?manager=ci-upstream-gce-leak
+> https://syzkaller.appspot.com/upstream?manager=ci-upstream-gce-leak
 
-Hi Stephen,
+Thanks for the information and the good work here. If you have time, you
+could implement the stop_machine() kmemleak scan as well ;).
 
-If you fine, I can take this via ARM SoC along with the change in firmware
-driver. But it is fine if you want to merge this independently as it should
-be fine. Let me know either way.
-
-Regards,
-Sudeep
-
-diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
-index c491f5de0f3f..ea65b7bf1408 100644
---- a/drivers/clk/clk-scmi.c
-+++ b/drivers/clk/clk-scmi.c
-@@ -103,6 +103,8 @@ static const struct clk_ops scmi_clk_ops = {
- static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
- {
- 	int ret;
-+	unsigned long min_rate, max_rate;
-+
- 	struct clk_init_data init = {
- 		.flags = CLK_GET_RATE_NOCACHE,
- 		.num_parents = 0,
-@@ -112,9 +114,23 @@ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
-
- 	sclk->hw.init = &init;
- 	ret = devm_clk_hw_register(dev, &sclk->hw);
--	if (!ret)
--		clk_hw_set_rate_range(&sclk->hw, sclk->info->range.min_rate,
--				      sclk->info->range.max_rate);
-+	if (ret)
-+		return ret;
-+
-+	if (sclk->info->rate_discrete) {
-+		int num_rates = sclk->info->list.num_rates;
-+
-+		if (num_rates <= 0)
-+			return -EINVAL;
-+
-+		min_rate = sclk->info->list.rates[0]
-+		max_rate = sclk->info->list.rates[num_rates - 1];
-+	} else {
-+		min_rate = sclk->info->range.min_rate;
-+		max_rate = sclk->info->range.max_rate;
-+	}
-+
-+	clk_hw_set_rate_range(&sclk->hw, min_rate, max_rate);
- 	return ret;
- }
-
---
-2.17.1
-
+-- 
+Catalin
