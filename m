@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B002207DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB7F206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:44:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="hnTlNuB5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="syAhqB32"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="cNb0scoy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fGlsB1WP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgGHRoO (ORCPT
+        id S1728096AbgGHRoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:44:14 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:43723 "EHLO
+        Wed, 8 Jul 2020 13:44:21 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:60545 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727949AbgGHRoF (ORCPT
+        by vger.kernel.org with ESMTP id S1728055AbgGHRoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:44:05 -0400
+        Wed, 8 Jul 2020 13:44:16 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id BA49D10A4;
-        Wed,  8 Jul 2020 13:44:03 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 7CEE1102D;
+        Wed,  8 Jul 2020 13:44:15 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:44:04 -0400
+  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:44:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=3Jc1accPTXcxo
-        H547y/FvdzgQxJY2TLozI7qw6RJ/gI=; b=hnTlNuB5h29/Y0Ds9dotJTvyFiIcv
-        JxvhfwuizbCurimlw02x/1N4gssTgchSn8Yn1vgCbOctM2a5L01V0C/AR/AYAv6R
-        ACrE1NX7KHsIqB3T7KbcIhohe/+c/PACJDwDGe8cyigwhQLTL77AkFWJ3Zx9H7Cm
-        NgGaYr+w2qGRxN6R9dpeU0JEiEUir0RgjzWanhvUakSzqnEYx+h7Kp4g0LIvMz0D
-        XxVzpC6yW5l0d8aDwnA8vd9JpevneIBQfFeyt+XkeTOEBP7wvhUfzu1Ex6880SKA
-        v0uq9tI+QLpfHWs9lWesnnW7htLztMmA5CKWbsrZGNco7zkychnj4x70g==
+        :mime-version:content-transfer-encoding; s=fm3; bh=1mEX+3++0BewV
+        JPrut0JzEcRQwhjaEVpe1Cyf0r7/ro=; b=cNb0scoyYyNACCyd9DH6nq4YpK1td
+        AaLkYyXpdgNbV1f5WteZy/buxOsf7Zfxnqa+5q8msRKhbvUrr1YFA6fGPavJ918O
+        k2J6r5b80VmJNax9fRmjKW6S0Js3U96INLwL9BgnGmOEGmHf3x+RrWimfrkv6QTg
+        wn1fnUfcJpiQi4YGR0MBsBppHh3iFMy6vj3BZWqLBLorVuK1KJDUh+/qSdZfZ9Jp
+        rqKEBpw8GHKKCq64F1LdsqnuyK4rBkG2jN672QVc4FidrZTdGS3nrxruETYJuU1I
+        WR6olJ3F9E58/gdLXgnEJ6cqeEuMSp3N3092fdoEYTkhEcIcSmkvFP4nQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=3Jc1accPTXcxoH547y/FvdzgQxJY2TLozI7qw6RJ/gI=; b=syAhqB32
-        iyUCy9q/mYme6IEyiZVik3bvnkk4O9OLMauY7YWBvO42j5pBC/5X2nW3DHYWYGpq
-        ZJmpyh2GNlCsmbx8V+bq0hsL3P1trOZ+vMkuRe7NrEGG3hI+oiWJ1EXb8BMgRmHE
-        zMw31HWm9tB+HLXmSFLXUKbZzPa1na+6p/32Ab8+McaPwzOaix7iQrU/lKzyfKs1
-        qt+Pf5pNkBJhq8c5bpy40OCUdZUx1cKJuAyBw4ik9RLB4WohB+xJgrwq39AWxzl1
-        N8YK3K6BCYbxMZLA/cEprseKtk5KXbDqDJ7kHcZMgbIzfHy6cEEilLPc+0I4mwJ3
-        th11bi2TtG+xIA==
-X-ME-Sender: <xms:4wUGX7bXKTfGFbKaxUbWZ6ZkTNojoceB8Brn3lphDFjhNVNRGZB3Mg>
+        fm3; bh=1mEX+3++0BewVJPrut0JzEcRQwhjaEVpe1Cyf0r7/ro=; b=fGlsB1WP
+        B0TKVh0GpmRgREEj7HFfH00RpKvJt97hmeqxTlC4M5u/mkMGe1OSKTPWWiDoor5v
+        tLyDoF7OfAn3s+OmuhetjxRqvDnD5uvEwgoviAEQImV59p/oOsKzKeh71kX4FsTe
+        4xjI87dvy5YouBTAae20tIONy/2d11vGIa4cZHgZIChfYVbhenntw+u5u2Y5p5ta
+        H9a/EjDEhF2iKyM8BK78zFyti44pBPE0N4vabUA1DBwcTQfOsxdJnCMRnfooyluY
+        DiUjHxmXFPlqKvsWGzuJ5Cwhe3Bg+kHDSW8mqtlPqg3Zs2DdsfrPJdoSVrNSeD1u
+        iB+hgRaLyhWYmA==
+X-ME-Sender: <xms:7gUGX-yq5tC_6HORJVgu3QHMd8J0AjJ1ZJlxM8typDLLmlw6Nmq2kQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepheekne
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepieeine
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:4wUGX6Z4XAxjNNHF4BwIgyk6uUE2E0XunDGOshtNTr_4j9jTYSGM-A>
-    <xmx:4wUGX9_aLHy2icqVvV6Jt466DBp7uUBpuspzZ7sJZCVS0do9Hsk2Pw>
-    <xmx:4wUGXxr3NJjDAsh-D0IWL0NcYNVZi9GqIzj8bM3tEE3-PT-oq47QUw>
-    <xmx:4wUGX2J4Dbp89OhD8iNVzF_WEWzett7qlq9C0Hch9K2gdLFruAin_EQX1ps>
+X-ME-Proxy: <xmx:7gUGX6TqTLEoMRhuzu2hdWNAMoyH9nXLi5TUkMmL1ehvPzsxYBiv7Q>
+    <xmx:7gUGXwWYHxfkq2OkQWIzgxYGQ1CIPdFV006h52c16rqe7Vr8QkNV6g>
+    <xmx:7gUGX0ikh_rT4IoHsU00EHqETkEN5u2o0QrUrLBiHWK7ktjW1mpn7A>
+    <xmx:7wUGX-BlFmN4NW8Href5Hca4NiMftQOKIRh1E70-i2rtA-HxoPvif8gfB50>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F06E13280065;
-        Wed,  8 Jul 2020 13:44:02 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id AE6B0328005D;
+        Wed,  8 Jul 2020 13:44:14 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 64/78] drm/vc4: hdmi: Use reg-names to retrieve the HDMI audio registers
-Date:   Wed,  8 Jul 2020 19:42:12 +0200
-Message-Id: <1f49af6616f1eaf28a4e9d8c409e60ebcf45041e.1594230107.git-series.maxime@cerno.tech>
+Subject: [PATCH v4 72/78] drm/vc4: hdmi: Do the VID_CTL configuration at once
+Date:   Wed,  8 Jul 2020 19:42:20 +0200
+Message-Id: <06921938439fdf7da952fb8d148932fc9403f82a.1594230107.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
 References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
@@ -89,45 +89,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+The VID_CTL setup is done in several places in the driver even though it's
+not really required. Let's simplify it a bit to do the configuration in one
+go.
 
-The register range used for audio setup in the previous generations of
-SoC were always the second range in the device tree. However, now that
-the BCM2711 has way more register ranges, it makes sense to retrieve it
-by names for it, while preserving the id-based lookup as a fallback.
-
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c |  9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index d99188c90ff9..8b94b920be43 100644
+index bbe521ab000b..f56a718a3643 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -954,6 +954,7 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi *vc4_hdmi)
- 	struct snd_soc_card *card = &vc4_hdmi->audio.card;
- 	struct device *dev = &vc4_hdmi->pdev->dev;
- 	const __be32 *addr;
-+	int index;
+@@ -428,10 +428,6 @@ static void vc4_hdmi_set_timings(struct vc4_hdmi *vc4_hdmi,
+ 
+ 	HDMI_WRITE(HDMI_VERTB0, vertb_even);
+ 	HDMI_WRITE(HDMI_VERTB1, vertb);
+-
+-	HDMI_WRITE(HDMI_VID_CTL,
+-		   (vsync_pos ? 0 : VC4_HD_VID_CTL_VSYNC_LOW) |
+-		   (hsync_pos ? 0 : VC4_HD_VID_CTL_HSYNC_LOW));
+ }
+ 
+ static void vc4_hdmi_recenter_fifo(struct vc4_hdmi *vc4_hdmi)
+@@ -520,8 +516,6 @@ static void vc4_hdmi_encoder_pre_crtc_configure(struct drm_encoder *encoder)
+ 	if (vc4_hdmi->variant->phy_init)
+ 		vc4_hdmi->variant->phy_init(vc4_hdmi, mode);
+ 
+-	HDMI_WRITE(HDMI_VID_CTL, 0);
+-
+ 	HDMI_WRITE(HDMI_SCHEDULER_CONTROL,
+ 		   HDMI_READ(HDMI_SCHEDULER_CONTROL) |
+ 		   VC4_HDMI_SCHEDULER_CONTROL_MANUAL_FORMAT |
+@@ -555,15 +549,19 @@ static void vc4_hdmi_encoder_pre_crtc_enable(struct drm_encoder *encoder)
+ 
+ static void vc4_hdmi_encoder_post_crtc_enable(struct drm_encoder *encoder)
+ {
++	struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
+ 	struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
+ 	struct vc4_hdmi_encoder *vc4_encoder = to_vc4_hdmi_encoder(encoder);
++	bool hsync_pos = mode->flags & DRM_MODE_FLAG_PHSYNC;
++	bool vsync_pos = mode->flags & DRM_MODE_FLAG_PVSYNC;
  	int ret;
  
- 	if (!of_find_property(dev->of_node, "dmas", NULL)) {
-@@ -974,7 +975,13 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi *vc4_hdmi)
- 	 * for DMA transfers.
- 	 * This VC/MMU should probably be exposed to avoid this kind of hacks.
- 	 */
--	addr = of_get_address(dev->of_node, 1, NULL, NULL);
-+	index = of_property_match_string(dev->of_node, "reg-names", "hd");
-+	/* Before BCM2711, we don't have a named register range */
-+	if (index < 0)
-+		index = 1;
-+
-+	addr = of_get_address(dev->of_node, index, NULL, NULL);
-+
- 	vc4_hdmi->audio.dma_data.addr = be32_to_cpup(addr) + mai_data->offset;
- 	vc4_hdmi->audio.dma_data.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	vc4_hdmi->audio.dma_data.maxburst = 2;
+ 	HDMI_WRITE(HDMI_VID_CTL,
+-		   HDMI_READ(HDMI_VID_CTL) |
+ 		   VC4_HD_VID_CTL_ENABLE |
+ 		   VC4_HD_VID_CTL_UNDERFLOW_ENABLE |
+-		   VC4_HD_VID_CTL_FRAME_COUNTER_RESET);
++		   VC4_HD_VID_CTL_FRAME_COUNTER_RESET |
++		   (vsync_pos ? 0 : VC4_HD_VID_CTL_VSYNC_LOW) |
++		   (hsync_pos ? 0 : VC4_HD_VID_CTL_HSYNC_LOW));
+ 
+ 	if (vc4_encoder->hdmi_monitor) {
+ 		HDMI_WRITE(HDMI_SCHEDULER_CONTROL,
 -- 
 git-series 0.9.1
