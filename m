@@ -2,144 +2,118 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC08C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA348C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4909A206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3B3206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:59:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tL5rdDII"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P9+4sBCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgGHR44 (ORCPT
+        id S1726116AbgGHR7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54164 "EHLO
+        Wed, 8 Jul 2020 13:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgGHR44 (ORCPT
+        with ESMTP id S1725879AbgGHR7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:56:56 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37409C08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 10:56:56 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id u185so18254708pfu.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 10:56:56 -0700 (PDT)
+        Wed, 8 Jul 2020 13:59:34 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B0CC061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 10:59:34 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id b77so1186442vsd.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 10:59:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KFZpY681inDypA2LYvEVNVJEszHTfc/UjNXbYEWopm4=;
-        b=tL5rdDIIvL7NgwMR9ubYdHDjODQac7uQ2v8GBeHDf2Tn9kJcIAsydShvdY+g6dcg9h
-         d4z1KbV5x1NdZZSf8QcDtE/99f/9J/4JCfIpTve2g2MO9/sMc26j0Kb7UXQ4EEuVqgQw
-         Od4S2hpQgi1/Q+UbShoxbdPVJsSYYTXmAi1pnAv11Lyftvq6ejJv8YSCa0U9a0ACFQmg
-         hSIqWu7TuuHBQneUxcaYCRZIiTiMz2mEbGygdeMFQbuEY6/KKGG3U4Chw91Ef1W9umk+
-         qZgbOU2KWawJbNFtYNUodoErqMOL+BUCNxZ4xBOkXbItFzwgHfGeg9udZZo4FHGqGSY8
-         zraw==
+        bh=hiompu44sJmWIX0VHQ2p43N5hGspvrVdRKwV2/c7PTg=;
+        b=P9+4sBCXeroD/gl9lFaX0m06xjtx10agKSYwDQ+/NbcOaSqY89NkXRbgqBPgQRcOVj
+         2sE/15k5UksYrS6NLHG1qzC0R1PFVEXJFB/IoQuFPz8kRo7ozYT8rfPO1xJegBPdj20k
+         dgvGQbI7VTNxqtWycqUuFvVewZCIYxRbrTVJY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KFZpY681inDypA2LYvEVNVJEszHTfc/UjNXbYEWopm4=;
-        b=gcG0Np1tAppgNp3ymlaTDVW+28DBThi8ga7YaSUN7Ahz0tIf6LcJUy2fF++UDTv2dv
-         TNjkomnv1bQrrp/ZFWQ3T4d1fMdoegjy+c95iwn+OQuSQNbHMUMIzVYNxZ9qMfQOKXVU
-         u76bjmzn6FfPPHME9YahmHz7x1cNMuwLOUZcOILKIMYQ02pD0Wn9ObLyEu+uWDlMpsbW
-         3XPfSUPp4e+1yo3rZrFGjrTnZiYjVbPuXrN6/K4E9fJgGK2+uQdyJVTt/vFIehbjH6HB
-         X6S0L8n2NlIExhFMHWT4egMpXerExgcd570OBJtadbtuE8cT8zNp5JQo28BGrJ0WPF8N
-         KRdQ==
-X-Gm-Message-State: AOAM5319hs7ty8tDe+n6DoUY6jeuEBvXWAcsVA/2ghOxzWuDldHohGxn
-        WLFLfGQdm/FZcYxe23w1eC1hP0v9dXzToovmmcojbQ==
-X-Google-Smtp-Source: ABdhPJz3qZ0R9CdScEvi6luqWSPLgualQyiV/WOJObuwgv4BQwFpHN2jFXYiBWikVExNO/FQ07vGF30QykV0INt/TrA=
-X-Received: by 2002:a62:86cc:: with SMTP id x195mr47595529pfd.39.1594231015327;
- Wed, 08 Jul 2020 10:56:55 -0700 (PDT)
+        bh=hiompu44sJmWIX0VHQ2p43N5hGspvrVdRKwV2/c7PTg=;
+        b=HWbH7T6YAxZbFw1/04ndpqq7v6L+S5OZns5d6OmKtuARfCvy55r9xCFEORuF8ZANbA
+         gUSfIseAoX4U9VhoULTtXCyywjPZrbRoiy1ZJXgI6qI+Z9L7XYiIH1ygjCHaROm2L/3x
+         rxJsZgefn/V9C9EbOHTKlghcNCZuI8duWjJyIrg48Zc4upiTw+v6Dctxe29Jvm5cfbeU
+         mntxm1K2v/Zhy1Osd1i+7/bKBRG7qMlAxG98NNg2yQNmt0qRg1mXeDss4rxH2eO4kcVC
+         b3qxUyfj6Oe7pI8qhumeT1ZcHkGdUb/hvfkeOdJmcge6lkU1gLl8FYc+33RXpoOgddDI
+         XNcA==
+X-Gm-Message-State: AOAM53042f2Mt9wFqAX/fhZxKD6iPc2dTJ3ATdvcHqV29U5AN5siS71o
+        1RtMHXbq3OYBqcPgR2N/6W7WoguZ+UE=
+X-Google-Smtp-Source: ABdhPJzp+M42wmbKggKbCvfnnfk7MPt2Eb86ZUMOPIoGnSmzxIeTuHFywSrlDFhAcxAbHKLKgFFKeQ==
+X-Received: by 2002:a67:ea84:: with SMTP id f4mr44586847vso.113.1594231173372;
+        Wed, 08 Jul 2020 10:59:33 -0700 (PDT)
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
+        by smtp.gmail.com with ESMTPSA id 8sm67131uat.0.2020.07.08.10.59.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 10:59:32 -0700 (PDT)
+Received: by mail-vk1-f171.google.com with SMTP id e10so3652032vkm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 10:59:32 -0700 (PDT)
+X-Received: by 2002:a1f:3f05:: with SMTP id m5mr18475983vka.92.1594231171733;
+ Wed, 08 Jul 2020 10:59:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200707211642.1106946-1-ndesaulniers@google.com>
- <bca8cff8-3ffe-e5ab-07a5-2ab29d5e394a@linaro.org> <CAKwvOdmtv2EdNQz+c_DZm_47EEibkaXfDW8dGPwNPA3OrcoC9g@mail.gmail.com>
- <20997cd9-91e5-ca83-218d-4fd5af128893@linaro.org>
-In-Reply-To: <20997cd9-91e5-ca83-218d-4fd5af128893@linaro.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 8 Jul 2020 10:56:43 -0700
-Message-ID: <CAKwvOd=PrNG9WqBc4P43-XK7pOD4rQg4FA8Gd27OdUYb2qMDdw@mail.gmail.com>
-Subject: Re: [PATCH] bitfield.h: don't compile-time validate _val in FIELD_FIT
-To:     Alex Elder <elder@linaro.org>, Jakub Kicinski <kuba@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     "# 3.4.x" <stable@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
+References: <20200630081938.8131-1-sibis@codeaurora.org>
+In-Reply-To: <20200630081938.8131-1-sibis@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 8 Jul 2020 10:59:20 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V2JyYaNBjkFgiKEuWpvNSyt+GP_kAbAtOkNizt136EFA@mail.gmail.com>
+Message-ID: <CAD=FV=V2JyYaNBjkFgiKEuWpvNSyt+GP_kAbAtOkNizt136EFA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Drop the unused non-MSA SID
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
+        Will Deacon <will@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, "# 4.0+" <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 10:34 AM Alex Elder <elder@linaro.org> wrote:
+Hi,
+
+On Tue, Jun 30, 2020 at 1:20 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> I understand why something needs to be done to handle that case.
-> There's fancy macro gymnastics in "bitfield.h" to add convenient
-> build-time checks for usage problems; I just thought there might
-> be something we could do to preserve the checking--even in this
-> case.  But figuring that out takes more time than I was willing
-> to spend on it yesterday...
-
-I also find the use of 0U in FIELD_GET sticks out from the use of 0ULL
-or (0ull) in these macros (hard to notice, but I changed it in my diff
-to 0ULL).  Are there implicit promotion+conversion bugs here?  I don't
-know, but I'd rather not think about it by just using types of the
-same width and signedness.
-
-> >> A second comment about this is that it might be nice to break
-> >> __BF_FIELD_CHECK() into the parts that verify the mask (which
-> >> could be used by FIELD_FIT() here) and the parts that verify
-> >> other things.
-> >
-> > Like so? Jakub, WDYT? Or do you prefer v1+Alex's suggestion about
-> > using `(typeof(_mask))0` in place of 0ULL?
+> Having a non-MSA (Modem Self-Authentication) SID bypassed breaks modem
+> sandboxing i.e if a transaction were to originate from it, the hardware
+> memory protections units (XPUs) would fail to flag them (any transaction
+> originating from modem are historically termed as an MSA transaction).
+> Drop the unused non-MSA modem SID on SC7180 SoCs and cheza so that SMMU
+> continues to block them.
 >
-> Yes, very much like that!  But you could do that as a follow-on
-> instead, so as not to delay or confuse things.
+> Fixes: bec71ba243e95 ("arm64: dts: qcom: sc7180: Update Q6V5 MSS node")
+> Fixes: 68aee4af5f620 ("arm64: dts: qcom: sdm845-cheza: Add iommus property")
+> Cc: stable@vger.kernel.org
+> Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts    | 2 +-
+>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 
-No rush; let's get it right.
+I'm not sure if my review is worth all that much since it's not my
+area of expertise, but as far as I can tell this is good / ready to go
+in.  I've confirmed that a similar on my sc7180 board doesn't seem to
+break anything for me so restricting things like this seems sane.
 
-So I can think of splitting this into maybe 3 patches, based on feedback:
-1. there's a bug in compile time validating _val in FIELD_FIT, since
-we want to be able to call it at runtime with "bad" values.
-2. the FIELD_* macros use constants (0ull, 0ULL, 0U) that don't match
-typeof(_mask).
-3. It might be nice to break up __BF_FIELD_CHECK.
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
-I don't think anyone's raised an objection to 1.
-
-Assuming Jakub is ok with 3, fixing 3 will actually also address 2.
-So then we don't need 3 patches; only 2.  But if we don't do 3 first,
-then I have to resend a v2 of 1 anyways to address 2 (which was Alex's
-original feedback).
-
-My above diff was all three in one go, but I don't think it would be
-unreasonable to break it up into 3 then 1.
-
-If we prefer not to do 3, then I can send a v2 of 1 that addresses the
-inconsistent use of types, as one or two patches.
-
-Jakub, what is your preference?
-
-(Also, noting that I'm sending to David, assuming he'll pick up the
-patches once we have everyone's buy in? Or is there someone else more
-appropriate to accept changes to this header? I guess Jakub and David
-are the listed maintainers for
-drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c)
--- 
-Thanks,
-~Nick Desaulniers
+-Doug
