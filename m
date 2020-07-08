@@ -2,123 +2,101 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A837C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61B6F2078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F132078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PL5cI5qu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJizyAfV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbgGHOpf (ORCPT
+        id S1729968AbgGHOpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:45:35 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:37925 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729780AbgGHOpd (ORCPT
+        Wed, 8 Jul 2020 10:45:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729941AbgGHOpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:45:33 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708144532euoutp017a142eae82b3aab57fad55e5c9227922~fzjfl0GnE2280122801euoutp01i
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 14:45:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708144532euoutp017a142eae82b3aab57fad55e5c9227922~fzjfl0GnE2280122801euoutp01i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594219532;
-        bh=YBwMR+1cTI/+5nGmGVzzQP31lKTZwJfbm6Wde/Ufl4A=;
-        h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=PL5cI5quI6staJfHOmmKGhIaJO34dXKTXMQe6A2lZHo8sFXDG8u7zJvRkt+VBSlCs
-         IwhBQ/9435Q8ni4H/kvNTqhtQBDTKX8NaV99fqbFV3YJrzm+MEHw7fEQ+Pr9on+2qr
-         NEgK9HVKP/L3aoTMx3hIarOCbmR9W1/pHd86ElIw=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200708144532eucas1p221e9f49e596935cc2446d90228401a3f~fzjfPTn_W1367413674eucas1p2C;
-        Wed,  8 Jul 2020 14:45:32 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id DD.11.06456.C0CD50F5; Wed,  8
-        Jul 2020 15:45:32 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708144531eucas1p282845354a7c2be8f70f4ef33a4d6bb1d~fzjej49pg1036510365eucas1p2i;
-        Wed,  8 Jul 2020 14:45:31 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200708144531eusmtrp2ef4e5df9d1dadc6a8f4a07e032e94097~fzjejK8C_2076020760eusmtrp2O;
-        Wed,  8 Jul 2020 14:45:31 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-5d-5f05dc0c78d0
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id A5.70.06314.B0CD50F5; Wed,  8
-        Jul 2020 15:45:31 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708144530eusmtip2637227708c7bfcdd7c9c536e8be47371~fzjd7MV-g0039100391eusmtip2D;
-        Wed,  8 Jul 2020 14:45:30 +0000 (GMT)
-Subject: Re: [PATCH 01/11] media: exynos4-is: Remove static driver data for
- S5PV210 FIMC variants
-To:     Jonathan Bakker <xc-racer2@live.ca>, kyungmin.park@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <9dae0088-e7ab-8d20-617d-7922d86f0d43@samsung.com>
-Date:   Wed, 8 Jul 2020 16:45:29 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <BN6PR04MB06603A626BB6D54D11CB502CA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjmO+dsOw4nx2n5pmI5/ZOUt/xxIhOVfgwiEUoIRW3qQcVrO95D
-        lBQ1L2v6Q1MMTeZai3BMnWaReE+Ws4zsomYwC69kXiKzNOdR8t/zPhfe9/n4SFzcyXMkE1Mz
-        GHmqLFnCFxKG4S3TWetpXrT36CMhfde8hNPj4zoBPXZ7WUDrzZM8+m1PI5+u1HXy6HvjLzBa
-        rf+D0W+qZ4hAK6lee4cvbVcVSFs+/iKkig4tkq7rXUJ54UL/OCY5MYuRewXcECboVWO89Fks
-        Z7tOiRciFVaOrEig/ODloIZfjoSkmNIg0BWXI27YQFB7fwjjhnUEqxq14DAy87nmQHiIwPjA
-        uC+IqR8IJndiLNiOioXabbPAYrKnijD4pqnnWwQ+5QNVQwpkwSIqAAa+LxEWTFDuYJjQ7PPH
-        qChoW+jCOI8tjNbP7XusqEhoNw7iFoxTDvBprgnj8EnoWmnELcuAMghAv9iHuFMvwczzn3wO
-        28HiSMdBBWfYfdqEcYEiBJXPpgTcoEQwO9J8kL4A06bfe2lyb8VpaOvx4uggaH2twCw0UDbw
-        YcWWO8IGagx1OEeLoKxEzLndYVtbd/DYjlAxt0twWAom9TxfiVwbjtRsOFKt4Ui1hv83NCNC
-        ixyYTDYlnmF9UplsT1aWwmamxnvGpqXo0d5nMu6MrHWjzYmYfkSRSGItUup40WKeLIvNTelH
-        QOISe1HwmDFKLIqT5eYx8rRoeWYyw/YjJ5KQOIjOtSxEiql4WQaTxDDpjPxQxUgrx0LkHbGc
-        SLeXDodnjJkHMqkCWzD15VweCMu+svb3lH/32vUTvfNq5abeN9C0FNiuKlw4vlW++PhWx8b7
-        r/l+icVPQi+6+ay+CwlxFURIXaryztdX9970zTdOVkSWBZeuVm+WjLu0Jim01blXS7+EeXgo
-        2VfNztfIMzlBXm6tq074lIRgE2Q+Hriclf0DXTCoDEgDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNIsWRmVeSWpSXmKPExsVy+t/xe7rcd1jjDe5flrDof/ya2eL8+Q3s
-        Fmeb3rBbbHp8jdXi8q45bBY9G7ayWsw4v4/JYtmmP0wWFyfeZXHg9Ni0qpPNY/OSeo9FN3+w
-        ePRtWcXo8XmTXABrlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpO
-        Zllqkb5dgl7GpiVnWQvuM1X8nj6BuYFxCVMXIyeHhICJxN17k4BsLg4hgaWMEls//wJyOIAS
-        UhLzW5QgaoQl/lzrYoOoec8osXzSbTaQhLBAssS034/ZQRIiAs1MEv+Xb2OBqLrLKNH9+BZY
-        FZuAoUTv0T5GEJtXwE7i8PvXLCA2i4CKxLZLK8DiogJxEsu3zGeHqBGUODnzCVgNp0CsxObT
-        R5hBbGYBdYk/8y5B2eISt57MZ4Kw5SW2v53DPIFRcBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc
-        9NxiQ73ixNzi0rx0veT83E2MwIjbduzn5h2MlzYGH2IU4GBU4uF9sYk1Xog1say4MvcQowQH
-        s5IIr9PZ03FCvCmJlVWpRfnxRaU5qcWHGE2BnpvILCWanA9MBnkl8YamhuYWlobmxubGZhZK
-        4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhjVMu6LtLdk3ZvdECKTfDuKq5ihe82V1zd1T+x9
-        MVn8V+qx/3aNXB0KTRMncrMYzGmQejRTqWXJiidc4cKHSu+8V9zKpXrO/hsbj8qN300XHukY
-        Lch09eV5Z8CxOJPVoe755WX9b7atK1hbqJP6X6fjw50VYcvrbZ+x+N4I1+ZKEf3q+kjgYo4S
-        S3FGoqEWc1FxIgAxbc5IzgIAAA==
-X-CMS-MailID: 20200708144531eucas1p282845354a7c2be8f70f4ef33a4d6bb1d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200426022721eucas1p1d5cbdc4946279aeff7d6c11f93a56f74
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200426022721eucas1p1d5cbdc4946279aeff7d6c11f93a56f74
-References: <20200426022650.10355-1-xc-racer2@live.ca>
-        <CGME20200426022721eucas1p1d5cbdc4946279aeff7d6c11f93a56f74@eucas1p1.samsung.com>
-        <BN6PR04MB06603A626BB6D54D11CB502CA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Wed, 8 Jul 2020 10:45:38 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6739C061A0B;
+        Wed,  8 Jul 2020 07:45:37 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id p20so50792680ejd.13;
+        Wed, 08 Jul 2020 07:45:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RdfWn03vRZooKuWSX0Y9p+HO6KzHdtLgw16so87+iZE=;
+        b=CJizyAfVuX2RfMehSevr1t4fopl7nciJWOw82DAWph6fURt2MSJlRryCIgFKrxgofB
+         TP+8Ig45ia2G+Qs6xzxtGkaPr3oJjiJ+DoTytD306TbFHX59zXtHGJwsXH6gkMm0HEfu
+         0y63873T1NCTzNjshTA3JXKgdijPdEIRUSMmGLBglOjioC50pXKOD9FHqZCVTOvGJNVo
+         Odva0/dO225Iwhit4dqTqi3rGe1SMRZvY7ylOBSygSEwY0WHqwJWpXjbE0HNdWjo6/s+
+         LjVJnMxYV6vuBlAewZeD+FXJvGGoJeEWdIxDydasNZpdyprVEEWxWSMoOC56B+iNJRdI
+         Cd6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RdfWn03vRZooKuWSX0Y9p+HO6KzHdtLgw16so87+iZE=;
+        b=fu0WKn+ue3DdJhxC0cBaaddCb3dAv3g8DTrHi5oq5+oRIDnKDJ5cTd6nnCe2leFBGF
+         USS9uYef1/ql0vyfbA26P1fh3bwwEb0xYyRNHtKgwSVprYjON48d8hxie5Bi4Oohez//
+         vw7j095Wf0hFxD/6xUMrNVc/YvFNVemiq2oFuidMaA/feZZdmAJiINmy8G2SvrZXI9vt
+         2LJfERaagfn6FthULgzz5PZqGyE6zY9/eh9upd/9X/Wg6veH07dVhSa39j6TRWY5h1zF
+         EsZDamhqKCDVcpqIOUunCJcSQtBN60V61BemP3Lizyz6iTD6PT66AY+wGE+5Fn2GwFgr
+         OrOw==
+X-Gm-Message-State: AOAM530p76uj3F+AF62bmneO+IuV2CiGQbqeTydHJSoLCyslWkeKsJId
+        CWv6zpHMovhl2nnlRCJpUh6aFC77CSQ=
+X-Google-Smtp-Source: ABdhPJzR2jRjEGYSUyaOrdtfGtwk7CFmfjsZiD2qcbvBmzFKFC6WC0lRLu5+lMT/azD/9cFsvxS7zw==
+X-Received: by 2002:a17:907:9c6:: with SMTP id bx6mr52133016ejc.43.1594219536533;
+        Wed, 08 Jul 2020 07:45:36 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id z22sm28545654edx.72.2020.07.08.07.45.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jul 2020 07:45:35 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     zhangqing@rock-chips.com, mturquette@baylibre.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: rockchip: mark pclk_uart2 as critical on rk3328
+Date:   Wed,  8 Jul 2020 16:45:28 +0200
+Message-Id: <20200708144528.20465-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.2020 04:26, Jonathan Bakker wrote:
-> The S5PV210 platform only supports device tree based booting
-> where the FIMC variant data is parsed directly from
-> the device tree, hence the now unused static data can be removed.
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+The rk3328 uart2 port is used as boot console and to debug.
+During the boot pclk_uart2 is disabled by a clk_disable_unused
+initcall. Fix the uart2 function by marking pclk_uart2
+as critical on rk3328. Also add sclk_uart2 as that is needed
+for the same DT node.
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ drivers/clk/rockchip/clk-rk3328.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
+index c186a1985..cb7749cb7 100644
+--- a/drivers/clk/rockchip/clk-rk3328.c
++++ b/drivers/clk/rockchip/clk-rk3328.c
+@@ -875,6 +875,8 @@ static const char *const rk3328_critical_clocks[] __initconst = {
+ 	"aclk_gmac_niu",
+ 	"pclk_gmac_niu",
+ 	"pclk_phy_niu",
++	"pclk_uart2",
++	"sclk_uart2",
+ };
+ 
+ static void __init rk3328_clk_init(struct device_node *np)
+-- 
+2.11.0
+
