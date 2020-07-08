@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A98DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D34C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1373A20739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A6A207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:55:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLDzlIB2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLZSHSpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgGHSzT (ORCPT
+        id S1726970AbgGHSzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:55:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34908 "EHLO
+        Wed, 8 Jul 2020 14:55:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbgGHSzQ (ORCPT
+        with ESMTP id S1726941AbgGHSzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:55:16 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72925C061A0B;
-        Wed,  8 Jul 2020 11:55:16 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so22116213pgc.5;
-        Wed, 08 Jul 2020 11:55:16 -0700 (PDT)
+        Wed, 8 Jul 2020 14:55:23 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D5DCC061A0B;
+        Wed,  8 Jul 2020 11:55:23 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so6726213pfm.4;
+        Wed, 08 Jul 2020 11:55:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8/DI/50DEIVF9w1bgg6BLrThdU6CkFz7wJynwzPDC4k=;
-        b=GLDzlIB2Oax6hF+ATkoT5AzF8ixWcQ9xkNuO+8srP1woTAgFi1fBGuS6NrqPKr/mAl
-         IDBJt4SqLWZt7+lcRMZQm3Ht5FMl6cVucSYMGHMl0Qdk839Aae97EWRgeS1BNOFCdJBR
-         MbrABf1Bf/naL8O5H+GHKn5WO1tPLRmpacrLz6nFSOHyGPVqaPADkL3ku7kGubHQ5mSQ
-         IvICFxlCQoNl06UKI0m5+OKef8Csy2YVlOP0Rmw7qsFzAFuL6WDVegNtJECxXkeR2UHQ
-         jvlFDM6VTINAOquH5HA8S2661EtoGsmrDGtfGp43yQvEDBa4q/WIJW2dQeuAMGT7Esqq
-         C/Mw==
+        bh=n6QCGzWBzwdRunC88ZR2ssAXgvTx6O91V0TzBT8uQq0=;
+        b=HLZSHSpL7anA3opEA2iCsRRTIgFRA+bbZF60HTrHBZMUFO0orOHpswLJuZGQ6RJYEk
+         9hRkRYnnp3yjlZhI3ZiyGyYXzAeUBW1/ne89V18X7SEYevVIekigBWM9jNDLZaDa7eeA
+         KLso1REH6Jahpkl25epuqd43KPvmt6Rpr/dL+sk+8lYUk4G73hi3O59W0QfLf6Yf1W+J
+         +1ehDAIwOy7dNRrCdCodYbMqH39FsgHeWFvFkxa4qHz0a8XIOac4yUuOmqUsSsdWA4wQ
+         9F513U5V6j7oKo0pKe/SVHjO8MHd4n+nlVXxYDAtG/SqzCoFVc3uxc+I0tz82Rs2N2s1
+         IHPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8/DI/50DEIVF9w1bgg6BLrThdU6CkFz7wJynwzPDC4k=;
-        b=QnI+VIvrLRBlyRbfZOCS+u98scOXOl+IaQSaJyFI3Ns1p8bBJFfLlBQ/+5lFWR4fTG
-         uNu8/dtmWEI0xxpEVo3ua9OJ4jgL1UoTtVKWYaYQ0xXSanPAs91641JDNDNGe9qFy5DO
-         oA8X6mtA52a3ALumuP1yajEXewiRIFsaA2gxJxZ1kf5VpZ04Bu1uJK0f9+Rx25acAi1/
-         YJ08CFVa1KlaRjp5PgtDcJpN03s60NRs1gPb9LkA67cDJOu+BuZr4iXZ4a/0mK0mVDS1
-         lJx6NjCyq/1IhDWtW4Qrie3i2NDOBgmzrvJpBwd6gE2kWJXN5cEJwMSHBPZuHByMcmon
-         AHqQ==
-X-Gm-Message-State: AOAM532uuSAyLZJKYd3lyV6Og5KdDV6amwW9KwW1QLonKkTozEvUX3wR
-        nr5YvPIzgGNh123SYjMvyM0=
-X-Google-Smtp-Source: ABdhPJyZ1ssrk+U3Zhc40rLB7kxQEZrB8nvzFfbkDaE2dafh9nedsH8yJe8wXyeqJNMjSqK9n31fqQ==
-X-Received: by 2002:a63:d30a:: with SMTP id b10mr49913270pgg.430.1594234515952;
-        Wed, 08 Jul 2020 11:55:15 -0700 (PDT)
+        bh=n6QCGzWBzwdRunC88ZR2ssAXgvTx6O91V0TzBT8uQq0=;
+        b=UYdgPggSesBc6DkTF0ixmecK0YZJRs89c3tPBD+X2QVS4NPxtayjOPB/KsrOFPjcCc
+         T629XJhOyUyIrdQcGXzcDT3rCfn0+pYV6HBaUfqG9jVkDIY8bZHAfFaU10xSDpFFCdMt
+         xXpfcQOxNeXToY+ZtbmsJeZTVjw9/0RH/T/+T5POiG4jhvjG1ixZQgRw62bNTnw25prh
+         tAiir2eyMCzh1MOwojmsP/qDfwqWoGeg2DJ9tKOv3zI+0/JTRW4yfEcfD6FW9iWR0k63
+         wDEesPCfhyNaHu27eBcJMT/qBCutS5FQ/kJrWOO7PQo0Yv3I0xUhWOw7ir+bRTw50yYU
+         wCHQ==
+X-Gm-Message-State: AOAM533H92E8bTx/P9x1FPnjBnBPrISf0NxrM1dePAQvkQR/egjeiQ8C
+        6DXhIWS28Cm435DxbHndez0=
+X-Google-Smtp-Source: ABdhPJxSk57oqgiCu2hJUKRSyRh/1GroV7eOSeQipfNpj2GhtwYlW7QPWwcJ3OoBH7uKcuiBDhn8eQ==
+X-Received: by 2002:a65:408b:: with SMTP id t11mr49871925pgp.407.1594234522539;
+        Wed, 08 Jul 2020 11:55:22 -0700 (PDT)
 Received: from nickserv.localdomain (c-98-33-101-203.hsd1.ca.comcast.net. [98.33.101.203])
-        by smtp.gmail.com with ESMTPSA id c132sm485606pfb.112.2020.07.08.11.55.14
+        by smtp.gmail.com with ESMTPSA id c132sm485606pfb.112.2020.07.08.11.55.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 11:55:15 -0700 (PDT)
+        Wed, 08 Jul 2020 11:55:22 -0700 (PDT)
 From:   Nick Terrell <nickrterrell@gmail.com>
 To:     Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -76,9 +76,9 @@ Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
         Norbert Lange <nolange79@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Alex Xu <alex_y_xu@yahoo.ca>, Nick Terrell <terrelln@fb.com>
-Subject: [PATCH v7 3/7] init: add support for zstd compressed kernel
-Date:   Wed,  8 Jul 2020 11:50:20 -0700
-Message-Id: <20200708185024.2767937-4-nickrterrell@gmail.com>
+Subject: [PATCH v7 5/7] x86: bump ZO_z_extra_bytes margin for zstd
+Date:   Wed,  8 Jul 2020 11:50:22 -0700
+Message-Id: <20200708185024.2767937-6-nickrterrell@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200708185024.2767937-1-nickrterrell@gmail.com>
 References: <20200708185024.2767937-1-nickrterrell@gmail.com>
@@ -91,113 +91,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nick Terrell <terrelln@fb.com>
 
-* Adds the zstd and zstd22 cmds to scripts/Makefile.lib
-* Adds the HAVE_KERNEL_ZSTD and KERNEL_ZSTD options
+Bump the ZO_z_extra_bytes margin for zstd.
 
-Architecture specific support is still needed for decompression.
+Zstd needs 3 bytes per 128 KB, and has a 22 byte fixed overhead.
+Zstd needs to maintain 128 KB of space at all times, since that is
+the maximum block size. See the comments regarding in-place
+decompression added in lib/decompress_unzstd.c for details.
+
+The existing code is written so that all the compression algorithms use
+the same ZO_z_extra_bytes. It is taken to be the maximum of the growth
+rate plus the maximum fixed overhead. The comments just above this diff
+state that:
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 Signed-off-by: Nick Terrell <terrelln@fb.com>
 ---
- Makefile             |  3 ++-
- init/Kconfig         | 15 ++++++++++++++-
- scripts/Makefile.lib | 22 ++++++++++++++++++++++
- 3 files changed, 38 insertions(+), 2 deletions(-)
+ arch/x86/boot/header.S | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index fe0164a654c7..d14f9b7038ba 100644
---- a/Makefile
-+++ b/Makefile
-@@ -464,6 +464,7 @@ KLZOP		= lzop
- LZMA		= lzma
- LZ4		= lz4c
- XZ		= xz
-+ZSTD		= zstd
- 
- CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
- 		  -Wbitwise -Wno-return-void -Wno-unknown-attribute $(CF)
-@@ -512,7 +513,7 @@ CLANG_FLAGS :=
- export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE LD CC
- export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
- export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
--export KGZIP KBZIP2 KLZOP LZMA LZ4 XZ
-+export KGZIP KBZIP2 KLZOP LZMA LZ4 XZ ZSTD
- export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
- 
- export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS KBUILD_LDFLAGS
-diff --git a/init/Kconfig b/init/Kconfig
-index 0498af567f70..8d99f0c5e240 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -191,13 +191,16 @@ config HAVE_KERNEL_LZO
- config HAVE_KERNEL_LZ4
- 	bool
- 
-+config HAVE_KERNEL_ZSTD
-+	bool
-+
- config HAVE_KERNEL_UNCOMPRESSED
- 	bool
- 
- choice
- 	prompt "Kernel compression mode"
- 	default KERNEL_GZIP
--	depends on HAVE_KERNEL_GZIP || HAVE_KERNEL_BZIP2 || HAVE_KERNEL_LZMA || HAVE_KERNEL_XZ || HAVE_KERNEL_LZO || HAVE_KERNEL_LZ4 || HAVE_KERNEL_UNCOMPRESSED
-+	depends on HAVE_KERNEL_GZIP || HAVE_KERNEL_BZIP2 || HAVE_KERNEL_LZMA || HAVE_KERNEL_XZ || HAVE_KERNEL_LZO || HAVE_KERNEL_LZ4 || HAVE_KERNEL_ZSTD || HAVE_KERNEL_UNCOMPRESSED
- 	help
- 	  The linux kernel is a kind of self-extracting executable.
- 	  Several compression algorithms are available, which differ
-@@ -276,6 +279,16 @@ config KERNEL_LZ4
- 	  is about 8% bigger than LZO. But the decompression speed is
- 	  faster than LZO.
- 
-+config KERNEL_ZSTD
-+	bool "ZSTD"
-+	depends on HAVE_KERNEL_ZSTD
-+	help
-+	  ZSTD is a compression algorithm targeting intermediate compression
-+	  with fast decompression speed. It will compress better than GZIP and
-+	  decompress around the same speed as LZO, but slower than LZ4. You
-+	  will need at least 192 KB RAM or more for booting. The zstd command
-+	  line tools is required for compression.
-+
- config KERNEL_UNCOMPRESSED
- 	bool "None"
- 	depends on HAVE_KERNEL_UNCOMPRESSED
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 916b2f7f7098..54f7b7eb580b 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -413,6 +413,28 @@ quiet_cmd_xzkern = XZKERN  $@
- quiet_cmd_xzmisc = XZMISC  $@
-       cmd_xzmisc = cat $(real-prereqs) | $(XZ) --check=crc32 --lzma2=dict=1MiB > $@
- 
-+# ZSTD
-+# ---------------------------------------------------------------------------
-+# Appends the uncompressed size of the data using size_append. The .zst
-+# format has the size information available at the beginning of the file too,
-+# but it's in a more complex format and it's good to avoid changing the part
-+# of the boot code that reads the uncompressed size.
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index 735ad7f21ab0..6dbd7e9f74c9 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -539,8 +539,14 @@ pref_address:		.quad LOAD_PHYSICAL_ADDR	# preferred load addr
+ # the size-dependent part now grows so fast.
+ #
+ # extra_bytes = (uncompressed_size >> 8) + 65536
 +#
-+# Note that the bytes added by size_append will make the zstd tool think that
-+# the file is corrupt. This is expected.
++# ZSTD compressed data grows by at most 3 bytes per 128K, and only has a 22
++# byte fixed overhead but has a maximum block size of 128K, so it needs a
++# larger margin.
 +#
-+# zstd uses a maximum window size of 8 MB. zstd22 uses a maximum window size of
-+# 128 MB. zstd22 is used for kernel compression because it is decompressed in a
-+# single pass, so zstd doesn't need to allocate a window buffer. When streaming
-+# decompression is used, like initramfs decompression, zstd22 should likely not
-+# be used because it would require zstd to allocate a 128 MB buffer.
-+
-+quiet_cmd_zstd = ZSTD    $@
-+      cmd_zstd = { cat $(real-prereqs) | $(ZSTD) -19; $(size_append); } > $@
-+
-+quiet_cmd_zstd22 = ZSTD22  $@
-+      cmd_zstd22 = { cat $(real-prereqs) | $(ZSTD) -22 --ultra; $(size_append); } > $@
-+
- # ASM offsets
- # ---------------------------------------------------------------------------
++# extra_bytes = (uncompressed_size >> 8) + 131072
  
+-#define ZO_z_extra_bytes	((ZO_z_output_len >> 8) + 65536)
++#define ZO_z_extra_bytes	((ZO_z_output_len >> 8) + 131072)
+ #if ZO_z_output_len > ZO_z_input_len
+ # define ZO_z_extract_offset	(ZO_z_output_len + ZO_z_extra_bytes - \
+ 				 ZO_z_input_len)
 -- 
 2.27.0
 
