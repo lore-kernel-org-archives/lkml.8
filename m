@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B425C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7487FC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA48206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4881E206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594222972;
-	bh=x3TI26fq0rdV96diUqs7jM7Bnoi9nSesyt0CbLUsbv0=;
+	s=default; t=1594222980;
+	bh=9R5qCD+xKMNoXqsCLklYv2WYXTd1y0xTvOQ8L4C5nlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWiStjzGAs+qkc/UtUZfKtfvXp1k+udmt65i39yQa6PSziNES1e1jCkgmimLeoYI6
-	 mzxtHemDx6XXS5xj0zqPFtES1XyXdYUeiVkxoVU3lewNbyGLlMkGIB8HjtvFP1UYHv
-	 +PI4I4TbC1qf8w6QxMRRNYJQnnuEcIMBnBX1pxkk=
+	b=XmKr5sCbB166qaRQrfou+y9Kh6k/4OW+F5qILKSdfyT9xzj7kyZ0DRegSqlO8y5hW
+	 sS4EootQfSbk4UX6LTtUtT8Cy41wf11r/sUJNTckkW4uTCpt1nGkCPaneBDEJeUbmI
+	 GoomdLcJ12bxinuM4f0Zj0BOLkZcKVI/ca2cVxXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbgGHPmu (ORCPT
+        id S1730783AbgGHPm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:42:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49450 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:42:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730610AbgGHPmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:42:06 -0400
+        id S1730642AbgGHPmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:42:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB9C7206DF;
-        Wed,  8 Jul 2020 15:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 710D420720;
+        Wed,  8 Jul 2020 15:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222926;
-        bh=x3TI26fq0rdV96diUqs7jM7Bnoi9nSesyt0CbLUsbv0=;
+        s=default; t=1594222925;
+        bh=9R5qCD+xKMNoXqsCLklYv2WYXTd1y0xTvOQ8L4C5nlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nGwqecUzCpIpjvEjuRoCZLchSNYikagyA4ydSCsz7td1Hd2IAP8c55O4dGIye4Y9P
-         bbrbR4+jZlr5bU5E9+EwVohxX9OOBtMVjIPvqb0SENhMvqvAX7JnMjxaPEZF0XPOwB
-         rdDz/4TtgT7H8uKj84z0kLhuQDMVAk/swSddQyTk=
+        b=j2Z//uEW9BwmFb99SsBZa1udsFniEAZc37NNM5QfrtBoDF4ouyrNBX4Irf3YqGYcM
+         0OQ3f4SSdFYYJ22Nm4wfvkSGA2IcKeMHZNEa90fe7iAs9RMpz6rfuCROaBOs/z10kD
+         NSC8Lzlz1eAhPd9cpVsmJHM/GTVGMdIp2HoOCWxY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.19 7/8] gfs2: read-only mounts should grab the sd_freeze_gl glock
-Date:   Wed,  8 Jul 2020 11:41:55 -0400
-Message-Id: <20200708154157.3200116-7-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-integrity@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 6/8] tpm_tis: extra chip->ops check on error path in tpm_tis_core_init
+Date:   Wed,  8 Jul 2020 11:41:54 -0400
+Message-Id: <20200708154157.3200116-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708154157.3200116-1-sashal@kernel.org>
 References: <20200708154157.3200116-1-sashal@kernel.org>
@@ -58,49 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit b780cc615ba4795a7ef0e93b19424828a5ad456a ]
+[ Upstream commit ccf6fb858e17a8f8a914a1c6444d277cfedfeae6 ]
 
-Before this patch, only read-write mounts would grab the freeze
-glock in read-only mode, as part of gfs2_make_fs_rw. So the freeze
-glock was never initialized. That meant requests to freeze, which
-request the glock in EX, were granted without any state transition.
-That meant you could mount a gfs2 file system, which is currently
-frozen on a different cluster node, in read-only mode.
+Found by smatch:
+drivers/char/tpm/tpm_tis_core.c:1088 tpm_tis_core_init() warn:
+ variable dereferenced before check 'chip->ops' (see line 979)
 
-This patch makes read-only mounts lock the freeze glock in SH mode,
-which will block for file systems that are frozen on another node.
+'chip->ops' is assigned in the beginning of function
+in tpmm_chip_alloc->tpm_chip_alloc
+and is used before first possible goto to error path.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/ops_fstype.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/char/tpm/tpm_tis_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index ed77b10bdfb53..9448c8461e576 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -1160,7 +1160,17 @@ static int fill_super(struct super_block *sb, struct gfs2_args *args, int silent
- 		goto fail_per_node;
- 	}
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index 5d8f8f018984d..280d60cba1f8c 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -1007,7 +1007,7 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
  
--	if (!sb_rdonly(sb)) {
-+	if (sb_rdonly(sb)) {
-+		struct gfs2_holder freeze_gh;
-+
-+		error = gfs2_glock_nq_init(sdp->sd_freeze_gl, LM_ST_SHARED,
-+					   GL_EXACT, &freeze_gh);
-+		if (error) {
-+			fs_err(sdp, "can't make FS RO: %d\n", error);
-+			goto fail_per_node;
-+		}
-+		gfs2_glock_dq_uninit(&freeze_gh);
-+	} else {
- 		error = gfs2_make_fs_rw(sdp);
- 		if (error) {
- 			fs_err(sdp, "can't make FS RW: %d\n", error);
+ 	return 0;
+ out_err:
+-	if ((chip->ops != NULL) && (chip->ops->clk_enable != NULL))
++	if (chip->ops->clk_enable != NULL)
+ 		chip->ops->clk_enable(chip, false);
+ 
+ 	tpm_tis_remove(chip);
 -- 
 2.25.1
 
