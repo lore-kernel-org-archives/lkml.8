@@ -2,101 +2,132 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A83C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D112C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF5B20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52DD020720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5CJo1Zx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tMLLk6gk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0BCZ5+Hq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgGHJwl (ORCPT
+        id S1728777AbgGHJwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbgGHJwj (ORCPT
+        Wed, 8 Jul 2020 05:52:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47986 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728633AbgGHJvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:52:39 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C07C08C5DC;
-        Wed,  8 Jul 2020 02:52:39 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w2so20615460pgg.10;
-        Wed, 08 Jul 2020 02:52:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4uXoXl8/1y/j7nPsVmJseHhrJF5XiQs05znGEJZOBZ8=;
-        b=A5CJo1ZxDAYBmoD9C3rvsPznO+6JycDycdMwgxsHX+j1QuieL3wg35GNkjtERxLz6j
-         DI6kLhCoZ+3VAa80POJ4LibgHlO7oXvX/hqeoDc6JDjjNT48UGFE9PgEd+M85cgYEYSZ
-         PpAyTEXTg9cB9JP7uxz05yuJmhctQ1MlGFWSOMIMc0AaR44ziLHPCEtjKHxQe1jDICQ4
-         RlBa1Y17gcCPLzWLGKjZP0JUN3/t3154Xl7NyoesS8JhTm5EyL+HryK4FghKcaVa9cGd
-         CSg8iJQ9U9TteotyI0aH2YYdda4CycMJVlRHInBjgZROA2PZv6z+ijRdlNiKlnYSuyjD
-         Jl0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4uXoXl8/1y/j7nPsVmJseHhrJF5XiQs05znGEJZOBZ8=;
-        b=Yv+xR6ZydIctcYeFLiWDdie8KCNJMCaArL+o7Dx0J8TCK4ueL6sCjkQBhte01Cxm0u
-         9Xyp5dwnEfYAVvCAPhEKJg3ITS0FZe31eN9YpiKWRKx5XYzl5zxqm4f7zztYgwdPhllF
-         5pQXdhCDIZEP7+MZxjOcdy96Rq3v9He+J6tuTlUcaOMbCLq6uFYMN6n8OZw/g0bpSSAb
-         0sZMALfyeYnpE/njOtyQjuWNZ+C6CRs18zMRaT/Sh12/iP1JTPwU5kvOMc2cZF7vBGqu
-         bFbT/hLKbqvDyYvfnK6O14Y6QkHZw50V5qvilr+J11OK841EAlxULdi6YJZHjC9fw/qw
-         9dbw==
-X-Gm-Message-State: AOAM532HBDYpzym67vSDq3Nv0YvE6i/VKEON5d8PH4peMUdEdrZvVwBh
-        ZTb7z8WLlyG33WPvlTLe+h7i3CKNpPAUXQ==
-X-Google-Smtp-Source: ABdhPJwwY9vjbL2kr0eR3IHlFZebmDGsxlNG+/tT0bM+RSmn4SVVUAjgIfg/Etx5J7ki0dCTkwG0/g==
-X-Received: by 2002:a63:7054:: with SMTP id a20mr47155904pgn.17.1594201958740;
-        Wed, 08 Jul 2020 02:52:38 -0700 (PDT)
-Received: from localhost.localdomain ([27.122.242.75])
-        by smtp.gmail.com with ESMTPSA id d16sm24761257pfo.156.2020.07.08.02.52.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jul 2020 02:52:38 -0700 (PDT)
-From:   Hyeongseok Kim <hyeongseok@gmail.com>
-To:     namjae.jeon@samsung.com, sj1557.seo@samsung.com
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hyeongseok Kim <hyeongseok@gmail.com>
-Subject: [PATCH] exfat: fix wrong size update of stream entry by typo
-Date:   Wed,  8 Jul 2020 18:52:33 +0900
-Message-Id: <20200708095233.56131-1-hyeongseok@gmail.com>
-X-Mailer: git-send-email 2.27.0.83.g0313f36
+        Wed, 8 Jul 2020 05:51:52 -0400
+Date:   Wed, 08 Jul 2020 09:51:50 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594201910;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A36WFf54t/lOmWjcos+3kIorCDngAcHvXNxtMZHDhfM=;
+        b=tMLLk6gkPCUfWxP6yGQSfeauTkRR1RQVEaGu/+BlBAHRdtGyD1buS+chy7bbQXAh7uujNP
+        ClhvQmlOBBt+IFWjoG+CMFA1QrlRMaC51y+ikEYeQrzaxoYMrXwxJ19/b1J7vC+6W8n8Lx
+        GeTSwzEX7BBqb3FwJg05tRS3cKvXOiBIBXTtrmJmGDsnQeVfMbKqi9zl8L2XeeY133E/u3
+        mduUnT7Vq1apmI5bEqlgqb7L7FEc5MecgBb/+HHmFbyvEFbgQkLN046LAvw1eyRJF099ZU
+        EbgTBT0UjVlRWnd/tyWWtmKrpOBt/ef9QGY70TK1FyYftX5kR4oph0dmkEy5XQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594201910;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A36WFf54t/lOmWjcos+3kIorCDngAcHvXNxtMZHDhfM=;
+        b=0BCZ5+Hqr3MuIr4ygw4P2ewNA5M9GiEJN/yJE6lXIyVjtilBpXqCxSoiT9ILdz1nNonwoP
+        DUZE2eAozkWrODCQ==
+From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf/x86/intel/lbr: Mark the {rd,wr}lbr_{to,from}
+ wrappers __always_inline
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1593780569-62993-12-git-send-email-kan.liang@linux.intel.com>
+References: <1593780569-62993-12-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <159420191008.4006.4909876213341116387.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The stream.size field is updated to the value of create timestamp
-of the file entry. Fix this to use correct stream entry pointer.
+The following commit has been merged into the perf/core branch of tip:
 
-Fixes: 29bbb14bfc80 ("exfat: fix incorrect update of stream entry in __exfat_truncate()")
-Signed-off-by: Hyeongseok Kim <hyeongseok@gmail.com>
+Commit-ID:     020d91e5f32da4f4b929b3a6e680135fd526107c
+Gitweb:        https://git.kernel.org/tip/020d91e5f32da4f4b929b3a6e680135fd526107c
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Fri, 03 Jul 2020 05:49:17 -07:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 08 Jul 2020 11:38:53 +02:00
+
+perf/x86/intel/lbr: Mark the {rd,wr}lbr_{to,from} wrappers __always_inline
+
+The {rd,wr}lbr_{to,from} wrappers are invoked in hot paths, e.g. context
+switch and NMI handler. They should be always inline to achieve better
+performance. However, the CONFIG_OPTIMIZE_INLINING allows the compiler
+to uninline functions marked 'inline'.
+
+Mark the {rd,wr}lbr_{to,from} wrappers as __always_inline to force
+inline the wrappers.
+
+Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/1593780569-62993-12-git-send-email-kan.liang@linux.intel.com
 ---
- fs/exfat/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/lbr.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/exfat/file.c b/fs/exfat/file.c
-index 6707f3eb09b5..6bdabfd4b134 100644
---- a/fs/exfat/file.c
-+++ b/fs/exfat/file.c
-@@ -177,7 +177,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
- 			ep2->dentry.stream.size = 0;
- 		} else {
- 			ep2->dentry.stream.valid_size = cpu_to_le64(new_size);
--			ep2->dentry.stream.size = ep->dentry.stream.valid_size;
-+			ep2->dentry.stream.size = ep2->dentry.stream.valid_size;
- 		}
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index b8baaf1..21f4f07 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -332,18 +332,18 @@ static u64 lbr_from_signext_quirk_rd(u64 val)
+ 	return val;
+ }
  
- 		if (new_size == 0) {
--- 
-2.27.0.83.g0313f36
-
+-static inline void wrlbr_from(unsigned int idx, u64 val)
++static __always_inline void wrlbr_from(unsigned int idx, u64 val)
+ {
+ 	val = lbr_from_signext_quirk_wr(val);
+ 	wrmsrl(x86_pmu.lbr_from + idx, val);
+ }
+ 
+-static inline void wrlbr_to(unsigned int idx, u64 val)
++static __always_inline void wrlbr_to(unsigned int idx, u64 val)
+ {
+ 	wrmsrl(x86_pmu.lbr_to + idx, val);
+ }
+ 
+-static inline u64 rdlbr_from(unsigned int idx)
++static __always_inline u64 rdlbr_from(unsigned int idx)
+ {
+ 	u64 val;
+ 
+@@ -352,7 +352,7 @@ static inline u64 rdlbr_from(unsigned int idx)
+ 	return lbr_from_signext_quirk_rd(val);
+ }
+ 
+-static inline u64 rdlbr_to(unsigned int idx)
++static __always_inline u64 rdlbr_to(unsigned int idx)
+ {
+ 	u64 val;
+ 
