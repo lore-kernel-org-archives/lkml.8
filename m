@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D12C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8692020720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248BB2078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:35:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ip3T8f6t"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JQP3kVbB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgGHTek (ORCPT
+        id S1726806AbgGHTfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:34:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35678 "EHLO
+        Wed, 8 Jul 2020 15:35:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21266 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726187AbgGHTeh (ORCPT
+        with ESMTP id S1726845AbgGHTec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:34:37 -0400
+        Wed, 8 Jul 2020 15:34:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594236875;
+        s=mimecast20190719; t=1594236871;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nwkOICvOQaXOWcko8kpLlTGev7mN/mGmU8J6lWaTsxY=;
-        b=ip3T8f6tccdkxoFoWGtI/tpKytfsNaprv1faEEgTjJoNVQzzCM17UxlC4D/YTyyYB80iWB
-        qvdgF1oX0wm3fYzSJwcpYaqS0pXtp4bOS64UdOX1t1Vtinf/TlbPzlAPlvLNdc9YVqbAuh
-        BPY6EBFLFXp8XahvMcvW4pil+NM7B7I=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-p3N6SddKNZWmhcEHDRkPVg-1; Wed, 08 Jul 2020 15:34:33 -0400
-X-MC-Unique: p3N6SddKNZWmhcEHDRkPVg-1
-Received: by mail-qv1-f71.google.com with SMTP id m8so12418358qvv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:34:33 -0700 (PDT)
+        bh=1Frsr00VTIsYjdqDeTzSRco7BaTYBstaIvbV6rdyHlg=;
+        b=JQP3kVbBCsMNHp5r6QtA13veXWfGfDique/5XXzTNxa1Yz90gnmDbQ6EvMz40WyM9PTkB/
+        dal/ufeW3x0R3Mw1yY3mfQHBDxUQe38pfikRDXknfsRhptU/Bv2Q6z5Wfwn7qoBMTzXaEn
+        NClDR3qLGFLrd0oHWo9UKWtKldxpDSg=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-508-pzovjpSsOBqq_O5aaSHhxQ-1; Wed, 08 Jul 2020 15:34:29 -0400
+X-MC-Unique: pzovjpSsOBqq_O5aaSHhxQ-1
+Received: by mail-qk1-f198.google.com with SMTP id 13so16893867qks.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:34:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nwkOICvOQaXOWcko8kpLlTGev7mN/mGmU8J6lWaTsxY=;
-        b=n7aPQiZpu3lFgUDuEkAIv+wS5TVyI+Jl4CCFEz8ynBd9LyTcB8uP2fdSgAOeGl9d0q
-         HcC75GoMjzZleCp+eUsyFh/y1ApoFM5Rn8RHyJImkODPUBtcf8G6b5LfzV9gcYuCaF2J
-         IVhm7xAHiTeqABuoLpnPOyyJ5vMEMiF20UBU7CY5M5MrNp50kqenqqZLYO3Du1tY7cN3
-         RISSRD/M87e4iJXq6+4NF/jza49YE4/lzHUHzbtNduNiGCnwQHK/6Afh75Pu2fNZoKom
-         n78p+8Ey8i/yxMnS/lT8ZEm6BKanGCAeCxLusSuBM1tObKy2juQLLIXzLJepce88o2ch
-         y4nA==
-X-Gm-Message-State: AOAM533RXj0JlEZ/VCJtCibb9+S/qAOr2rxO7f9sK1Jd5zIgGUWyYQoe
-        PEHlKkjdkZXoM8nXTpDEi/Hv9LLN2YVDjR8UCM7uxf9m7DTSxxv0A/dbXQZuEV1g8wQhog5bdqx
-        SuPyiV40p2bV+wk++d+Ez0jfj
-X-Received: by 2002:ac8:47ce:: with SMTP id d14mr61485539qtr.285.1594236873030;
-        Wed, 08 Jul 2020 12:34:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzr9Hn7DgKOB0eSRHWqePldCPb4gTgHpgitkXaRkiQjSqZ7uVPKSjC183UXZv6LE8NZNKN3dg==
-X-Received: by 2002:ac8:47ce:: with SMTP id d14mr61485520qtr.285.1594236872793;
-        Wed, 08 Jul 2020 12:34:32 -0700 (PDT)
+        bh=1Frsr00VTIsYjdqDeTzSRco7BaTYBstaIvbV6rdyHlg=;
+        b=tib4gOIeEnkmuuTjoQBq3IfQYCximWA7uDWP66KW2+76WWVNQC+kuRj9LsKsQ0Je+N
+         CbcigAeRhqBjv7V8qK2Q29gOaK3XCVFv+TqKmLPTYAyOdmLVasK6g5NQnlpqCJUMHa5+
+         7KICEJHhQGZ+ldRj59E/9xYJPtZOJkBDE/YM7eW2yPdqjxujo4Y9C/XumXq7ZvRyeD4c
+         8Rsh9W56PnF1EtYPWw6T66CyRCcs9OQ5nQ3+rNn4hV6v/xYVepx49F07l4WK+I+fwoFc
+         1LkzVp/nJc2vDKHGXRaGyLxMOato04Ckzen7EPwWxUVlMsTbMq3+nSgfSK3lMAMrkV49
+         O/LQ==
+X-Gm-Message-State: AOAM531NTg5QEoRKYH5bhJlDUQoQQFMMJ9Gq1mTMS45ZqxyOJw+ZZJ0A
+        kC+xG3VQ17F6bDsfQr3j4ni4hY7Y35nNQzxqWWuPKfJRLN6xZWePTNYR9Y8xfEJYRZfMKqAezbU
+        myMVH7RsDHu/g455ziMKZbHzW
+X-Received: by 2002:a05:6214:12c:: with SMTP id w12mr12785332qvs.78.1594236869167;
+        Wed, 08 Jul 2020 12:34:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxhhogDlEob2FtS8KDhjvuCX9hbkX64dztP+mMW9Xu5ZFyStLlHU0ETMPRqGMDCdqiDAPAv0Q==
+X-Received: by 2002:a05:6214:12c:: with SMTP id w12mr12785311qvs.78.1594236868931;
+        Wed, 08 Jul 2020 12:34:28 -0700 (PDT)
 Received: from xz-x1.redhat.com ([2607:9880:19c8:6f::1f4f])
-        by smtp.gmail.com with ESMTPSA id f18sm664884qtc.28.2020.07.08.12.34.31
+        by smtp.gmail.com with ESMTPSA id f18sm664884qtc.28.2020.07.08.12.34.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 12:34:32 -0700 (PDT)
+        Wed, 08 Jul 2020 12:34:28 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     peterx@redhat.com,
@@ -69,9 +69,9 @@ Cc:     peterx@redhat.com,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
         Andrew Jones <drjones@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH v11 13/13] KVM: selftests: Add "-c" parameter to dirty log test
-Date:   Wed,  8 Jul 2020 15:34:08 -0400
-Message-Id: <20200708193408.242909-14-peterx@redhat.com>
+Subject: [PATCH v11 10/13] KVM: selftests: Introduce after_vcpu_run hook for dirty log test
+Date:   Wed,  8 Jul 2020 15:34:05 -0400
+Message-Id: <20200708193408.242909-11-peterx@redhat.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200708193408.242909-1-peterx@redhat.com>
 References: <20200708193408.242909-1-peterx@redhat.com>
@@ -82,71 +82,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's only used to override the existing dirty ring size/count.  If
-with a bigger ring count, we test async of dirty ring.  If with a
-smaller ring count, we test ring full code path.  Async is default.
-
-It has no use for non-dirty-ring tests.
+Provide a hook for the checks after vcpu_run() completes.  Preparation
+for the dirty ring test because we'll need to take care of another
+exit reason.
 
 Reviewed-by: Andrew Jones <drjones@redhat.com>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- tools/testing/selftests/kvm/dirty_log_test.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ tools/testing/selftests/kvm/dirty_log_test.c | 36 +++++++++++++-------
+ 1 file changed, 24 insertions(+), 12 deletions(-)
 
 diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-index 4b404dfdc2f9..80c42c87265e 100644
+index 139ccb550618..a2160946bcf5 100644
 --- a/tools/testing/selftests/kvm/dirty_log_test.c
 +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -168,6 +168,7 @@ static enum log_mode_t host_log_mode_option = LOG_MODE_ALL;
- /* Logging mode for current run */
- static enum log_mode_t host_log_mode;
- static pthread_t vcpu_thread;
-+static uint32_t test_dirty_ring_count = TEST_DIRTY_RING_COUNT;
- 
- /* Only way to pass this to the signal handler */
- static struct kvm_vm *current_vm;
-@@ -250,7 +251,7 @@ static void dirty_ring_create_vm_done(struct kvm_vm *vm)
- 	 * Switch to dirty ring mode after VM creation but before any
- 	 * of the vcpu creation.
- 	 */
--	vm_enable_dirty_ring(vm, TEST_DIRTY_RING_COUNT *
-+	vm_enable_dirty_ring(vm, test_dirty_ring_count *
- 			     sizeof(struct kvm_dirty_gfn));
+@@ -178,6 +178,15 @@ static void clear_log_collect_dirty_pages(struct kvm_vm *vm, int slot,
+ 	kvm_vm_clear_dirty_log(vm, slot, bitmap, 0, num_pages);
  }
  
-@@ -272,7 +273,7 @@ static uint32_t dirty_ring_collect_one(struct kvm_dirty_gfn *dirty_gfns,
- 	uint32_t count = 0;
++static void default_after_vcpu_run(struct kvm_vm *vm)
++{
++	struct kvm_run *run = vcpu_state(vm, VCPU_ID);
++
++	TEST_ASSERT(get_ucall(vm, VCPU_ID, NULL) == UCALL_SYNC,
++		    "Invalid guest sync status: exit_reason=%s\n",
++		    exit_reason_str(run->exit_reason));
++}
++
+ struct log_mode {
+ 	const char *name;
+ 	/* Return true if this mode is supported, otherwise false */
+@@ -187,16 +196,20 @@ struct log_mode {
+ 	/* Hook to collect the dirty pages into the bitmap provided */
+ 	void (*collect_dirty_pages) (struct kvm_vm *vm, int slot,
+ 				     void *bitmap, uint32_t num_pages);
++	/* Hook to call when after each vcpu run */
++	void (*after_vcpu_run)(struct kvm_vm *vm);
+ } log_modes[LOG_MODE_NUM] = {
+ 	{
+ 		.name = "dirty-log",
+ 		.collect_dirty_pages = dirty_log_collect_dirty_pages,
++		.after_vcpu_run = default_after_vcpu_run,
+ 	},
+ 	{
+ 		.name = "clear-log",
+ 		.supported = clear_log_supported,
+ 		.create_vm_done = clear_log_create_vm_done,
+ 		.collect_dirty_pages = clear_log_collect_dirty_pages,
++		.after_vcpu_run = default_after_vcpu_run,
+ 	},
+ };
  
- 	while (true) {
--		cur = &dirty_gfns[*fetch_index % TEST_DIRTY_RING_COUNT];
-+		cur = &dirty_gfns[*fetch_index % test_dirty_ring_count];
- 		if (!dirty_gfn_is_dirtied(cur))
- 			break;
- 		TEST_ASSERT(cur->slot == slot, "Slot number didn't match: "
-@@ -778,6 +779,9 @@ static void help(char *name)
- 	printf("usage: %s [-h] [-i iterations] [-I interval] "
- 	       "[-p offset] [-m mode]\n", name);
- 	puts("");
-+	printf(" -c: specify dirty ring size, in number of entries\n");
-+	printf("     (only useful for dirty-ring test; default: %"PRIu32")\n",
-+	       TEST_DIRTY_RING_COUNT);
- 	printf(" -i: specify iteration counts (default: %"PRIu64")\n",
- 	       TEST_HOST_LOOP_N);
- 	printf(" -I: specify interval in ms (default: %"PRIu64" ms)\n",
-@@ -833,8 +837,11 @@ int main(int argc, char *argv[])
- 	guest_mode_init(VM_MODE_P40V48_4K, true, true);
- #endif
+@@ -247,6 +260,14 @@ static void log_mode_collect_dirty_pages(struct kvm_vm *vm, int slot,
+ 	mode->collect_dirty_pages(vm, slot, bitmap, num_pages);
+ }
  
--	while ((opt = getopt(argc, argv, "hi:I:p:m:M:")) != -1) {
-+	while ((opt = getopt(argc, argv, "c:hi:I:p:m:M:")) != -1) {
- 		switch (opt) {
-+		case 'c':
-+			test_dirty_ring_count = strtol(optarg, NULL, 10);
-+			break;
- 		case 'i':
- 			iterations = strtol(optarg, NULL, 10);
- 			break;
++static void log_mode_after_vcpu_run(struct kvm_vm *vm)
++{
++	struct log_mode *mode = &log_modes[host_log_mode];
++
++	if (mode->after_vcpu_run)
++		mode->after_vcpu_run(vm);
++}
++
+ static void generate_random_array(uint64_t *guest_array, uint64_t size)
+ {
+ 	uint64_t i;
+@@ -261,25 +282,16 @@ static void *vcpu_worker(void *data)
+ 	struct kvm_vm *vm = data;
+ 	uint64_t *guest_array;
+ 	uint64_t pages_count = 0;
+-	struct kvm_run *run;
+-
+-	run = vcpu_state(vm, VCPU_ID);
+ 
+ 	guest_array = addr_gva2hva(vm, (vm_vaddr_t)random_array);
+-	generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
+ 
+ 	while (!READ_ONCE(host_quit)) {
++		generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
++		pages_count += TEST_PAGES_PER_LOOP;
+ 		/* Let the guest dirty the random pages */
+ 		ret = _vcpu_run(vm, VCPU_ID);
+ 		TEST_ASSERT(ret == 0, "vcpu_run failed: %d\n", ret);
+-		if (get_ucall(vm, VCPU_ID, NULL) == UCALL_SYNC) {
+-			pages_count += TEST_PAGES_PER_LOOP;
+-			generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
+-		} else {
+-			TEST_FAIL("Invalid guest sync status: "
+-				  "exit_reason=%s\n",
+-				  exit_reason_str(run->exit_reason));
+-		}
++		log_mode_after_vcpu_run(vm);
+ 	}
+ 
+ 	pr_info("Dirtied %"PRIu64" pages\n", pages_count);
 -- 
 2.26.2
 
