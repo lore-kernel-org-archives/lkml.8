@@ -2,116 +2,95 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEBBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC0E20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:38:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="r2aYBKtm"
+	by mail.kernel.org (Postfix) with ESMTP id 27F7220786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbgGHQis (ORCPT
+        id S1730561AbgGHQi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:38:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42008 "EHLO
+        Wed, 8 Jul 2020 12:38:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730517AbgGHQir (ORCPT
+        with ESMTP id S1730486AbgGHQi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:38:47 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA75BC08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 09:38:47 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id h16so16288180ilj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 09:38:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=x40mQIo6pbykjXv9//B5R7xrCzXQXUjihLVbtkiUa9g=;
-        b=r2aYBKtmKnJoGglstR/KwDkSizzhk1HKxBGky1uxaxsiNjnLatURQ8I0s9zaue+PKT
-         2jYp+Sefs/cWRMEwXBSrJWapxBilnK5oYERYtxceNvh2a3ig16BwFCMvxx+u0sxBP8Hg
-         ctWQZjc1WJ/4SB1takLxKbYje1p34srfpN/f47B0sy5lKTP/g5AQ/quiQmfLQNyuX9Z2
-         pP/IVD1fb+jLwCEZdn7pT7UWaUmOlZ8gDCfSIeFYNeKTpSeoFEYQ005ezP4mk9Iyz2XG
-         CHpOvKnwb++tqbtlESaqibEveYvCl0IyOySYCNm7MjLh3c4ddhQACdI6PUi4eKc/O7C0
-         Lhlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x40mQIo6pbykjXv9//B5R7xrCzXQXUjihLVbtkiUa9g=;
-        b=KS5tgThY4BA4xtf5K62QPKJo4inTKUS4HzYRAZa5qy74rEfGTEXmPV3Ur0iWQ2l0hq
-         3WdHlIWt2h1wHjsHH2zEuCjbf0vLDLJSuOi0U6VWFzr4rJ8bw/eCx+KKwR2c6EzWg0Nx
-         RSFRsSsqlyJVDrsHezeZmZevzxYoiCJ1B54mm1YPhnT7WdxSBF1c89XuzqwAiSS5qJ+r
-         9WdOtp3XN+9FpubQ2Dqys+RlA++Wku5flISkqJF2qaJKH7H3H1/5DmgQ3JxxTHx8LyAD
-         TdwOVL+j3pNeShzzbHYF5+E0YtbhDS5d/mRcJLq8LVJk8R7Xo1nZnA7sBY3zdJC1s0Gj
-         rLbg==
-X-Gm-Message-State: AOAM531HJQPtA20Lw1J9GFBlUtW2qm6U0FYMLmo7i7CkHu6XaaNyxzyH
-        x7NLcxkLSlusv6lIqH9kcv43ow==
-X-Google-Smtp-Source: ABdhPJyTcqfpY26yzbDhop4EBT8zrxwbgeCVTBoxPI2mA4p/uq8qrmaGUFMkhhcemSEieA5vJWewZA==
-X-Received: by 2002:a92:c806:: with SMTP id v6mr41972216iln.10.1594226326381;
-        Wed, 08 Jul 2020 09:38:46 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id k3sm328182iot.42.2020.07.08.09.38.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 09:38:45 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Matthew Wilcox <willy@infradead.org>,
-        =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier@javigon.com>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, hch@infradead.org, damien.lemoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <33b9887b-eaba-c7be-5dfd-fc7e7d416f48@kernel.dk>
- <36C0AD99-0D75-40D4-B704-507A222AEB81@javigon.com>
- <20200708163327.GU25523@casper.infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <481e512a-0dd3-ae19-8f32-ed781af28038@kernel.dk>
-Date:   Wed, 8 Jul 2020 10:38:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 12:38:57 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B87DC061A0B;
+        Wed,  8 Jul 2020 09:38:57 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id DBE05BC06E;
+        Wed,  8 Jul 2020 16:38:53 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     lee.jones@linaro.org, daniel.thompson@linaro.org,
+        jingoohan1@gmail.com, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: BACKLIGHT CLASS/SUBSYSTEM
+Date:   Wed,  8 Jul 2020 18:38:47 +0200
+Message-Id: <20200708163847.15250-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200708163327.GU25523@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 10:33 AM, Matthew Wilcox wrote:
-> On Wed, Jul 08, 2020 at 06:08:12PM +0200, Javier González wrote:
->>> I just wanted to get clarification there, because to me it sounded like
->>> you expected Kanchan to do it, and Kanchan assuming it "was sorted". I'd
->>> consider that a prerequisite for the append series as far as io_uring is
->>> concerned, hence _someone_ needs to actually do it ;-)
-> 
-> I don't know that it's a prerequisite in terms of the patches actually
-> depend on it.  I appreciate you want it first to ensure that we don't bloat
-> the kiocb.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Maybe not for the series, but for the io_uring addition it is.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
->> I believe Kanchan meant that now the trade-off we were asking to
->> clear out is sorted. 
->>
->> We will send a new version shortly for the current functionality - we
->> can see what we are missing on when the uring interface is clear. 
-> 
-> I've started work on a patch series for this.  Mostly just waiting for
-> compilation now ... should be done in the next few hours.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-Great!
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+
+ drivers/video/backlight/led_bl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+index 3f66549997c8..2c48957e9b60 100644
+--- a/drivers/video/backlight/led_bl.c
++++ b/drivers/video/backlight/led_bl.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
++ * Copyright (C) 2015-2019 Texas Instruments Incorporated -  https://www.ti.com/
+  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+  *
+  * Based on pwm_bl.c
 -- 
-Jens Axboe
+2.27.0
 
