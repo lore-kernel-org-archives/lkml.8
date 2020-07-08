@@ -2,104 +2,97 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B94DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E95C92067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C2C2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:18:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="34KLThHp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SySxJPDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbgGHNSE (ORCPT
+        id S1729467AbgGHNSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:18:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63492 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729166AbgGHNSD (ORCPT
+        Wed, 8 Jul 2020 09:18:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729139AbgGHNSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:18:03 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068D429X020772;
-        Wed, 8 Jul 2020 09:17:53 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 325ecs90ee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 09:17:53 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 068DHQXZ021357;
-        Wed, 8 Jul 2020 13:17:51 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 3251w8gbx4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 13:17:51 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 068DHnIP56492272
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jul 2020 13:17:49 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36B504203F;
-        Wed,  8 Jul 2020 13:17:49 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6F5D42045;
-        Wed,  8 Jul 2020 13:17:48 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Jul 2020 13:17:48 +0000 (GMT)
-Received: from [9.206.220.137] (unknown [9.206.220.137])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 3F92FA0131;
-        Wed,  8 Jul 2020 23:17:47 +1000 (AEST)
-Subject: Re: [PATCH 3/3] misc: cxl: flash: Remove unused variable 'drc_index'
-To:     Lee Jones <lee.jones@linaro.org>, arnd@arndb.de,
-        gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20200708125711.3443569-1-lee.jones@linaro.org>
- <20200708125711.3443569-4-lee.jones@linaro.org>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Message-ID: <d4a75ccc-7965-70e3-b154-669cbe4c3db1@linux.ibm.com>
-Date:   Wed, 8 Jul 2020 23:17:42 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 8 Jul 2020 09:18:23 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD99C08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 06:18:23 -0700 (PDT)
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594214301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZUazG+j+kI1930BTbc0/bqv2TsWNNEbE1MGkVz6uV9s=;
+        b=34KLThHpioqqC54Kgwrqzjn+OlkcE7fTctzXYyiEmCD5k1r/80a6oTqMNHmEVxtyuX0lfv
+        6VChSEW+1KTZr8loA28XGwIIk9aSaKGi391iGQH1soEHK62xHmwbD2ndFSao5QiHgbBaWD
+        mRy9trtqx1jMnROXB2DPHCEvchp1EbDcwFXL7VLxavaese5Sp81SpP2wd9jsgfKLtn6Dsj
+        8kd07xmlaRvay4zHwfPmPgbRgteZyySxtTtprHMQsHLTcyFdroFCyIjY/xgYkRxRzWiQlc
+        FNQf2FWRhnY7maM8QUL7EKr7Xe5Xg9NTSlFYwwIqr7/U5D+wtpIL1vTNZeWjcQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594214301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZUazG+j+kI1930BTbc0/bqv2TsWNNEbE1MGkVz6uV9s=;
+        b=SySxJPDKr98X19wC70QSlsUPzdFnfZ1w5ZNtBMr/772LxZUCQndO9IOCNA8sfKJb8ZpSo9
+        GF6KtY3H2TMV77CQ==
+To:     kernel test robot <lkp@intel.com>, Petr Mladek <pmladek@suse.com>
+Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] printk: use the lockless ringbuffer
+In-Reply-To: <202007080356.fSb8SLZk%lkp@intel.com>
+References: <20200707145932.8752-5-john.ogness@linutronix.de> <202007080356.fSb8SLZk%lkp@intel.com>
+Date:   Wed, 08 Jul 2020 15:24:20 +0206
+Message-ID: <87r1tmcfhf.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200708125711.3443569-4-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-08_11:2020-07-08,2020-07-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 impostorscore=0 adultscore=0 mlxlogscore=825 phishscore=0
- malwarescore=0 mlxscore=0 clxscore=1011 suspectscore=0 priorityscore=1501
- spamscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007080091
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/20 10:57 pm, Lee Jones wrote:
-> Keeping the pointer increment though.
-> 
-> Fixes the following W=1 kernel build warning:
-> 
->   drivers/misc/cxl/flash.c: In function ‘update_devicetree’:
->   drivers/misc/cxl/flash.c:178:16: warning: variable ‘drc_index’ set but not used [-Wunused-but-set-variable]
->   178 | __be32 *data, drc_index, phandle;
->   | ^~~~~~~~~
-> 
-> Cc: Frederic Barrat <fbarrat@linux.ibm.com>
-> Cc: Andrew Donnellan <ajd@linux.ibm.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fix prepared for for v5.
 
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+On 2020-07-08, kernel test robot <lkp@intel.com> wrote:
+>>> kernel/printk/printk.c:1146:10: warning: format specifies type 'unsigned long' but the argument has type 'size_t' (aka 'unsigned int') [-Wformat]
+>                           new_descs_size);
+>                           ^~~~~~~~~~~~~~
+>    include/linux/printk.h:338:33: note: expanded from macro 'pr_err'
+>            printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+>                                   ~~~     ^~~~~~~~~~~
+>    1 warning generated.
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+Reported-by: kernel test robot <lkp@intel.com>
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index de8d54be4115..0b1337f4188c 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -1142,7 +1142,7 @@ void __init setup_log_buf(int early)
+ 	new_descs_size = new_descs_count * sizeof(struct prb_desc);
+ 	new_descs = memblock_alloc(new_descs_size, LOG_ALIGN);
+ 	if (unlikely(!new_descs)) {
+-		pr_err("log_buf_len: %lu desc bytes not available\n",
++		pr_err("log_buf_len: %zu desc bytes not available\n",
+ 		       new_descs_size);
+ 		memblock_free(__pa(new_dict_buf), new_log_buf_len);
+ 		memblock_free(__pa(new_log_buf), new_log_buf_len);
