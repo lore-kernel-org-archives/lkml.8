@@ -2,156 +2,169 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18446C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14319C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E624A20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594182692;
-	bh=LcOckJuOj+5sUFe6g+u39DgFAcUu18OewaeM1iROexo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T1UXkms4QF7olbLQ+Zv3fjJVaWLXQBe7L/AZAZqFNmY+O2q/sMMlmok0fJn7BqnRV
-	 Xu5WL33r48n0cf9WBffoP/4v7qbCB4hlpjhhTOjEBgXB99GwGGaXipyJ70WmYeMwlS
-	 ujy916T8qGBbZE9NBljzd8K9h/3VIrPVlM5F7rao=
+	by mail.kernel.org (Postfix) with ESMTP id DA24020774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbxCs0Xh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbgGHEbb (ORCPT
+        id S1728952AbgGHEiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 00:31:31 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41078 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgGHEbb (ORCPT
+        Wed, 8 Jul 2020 00:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgGHEiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 00:31:31 -0400
-Received: by mail-pg1-f196.google.com with SMTP id g67so20156512pgc.8;
-        Tue, 07 Jul 2020 21:31:30 -0700 (PDT)
+        Wed, 8 Jul 2020 00:38:05 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC5F7C061755;
+        Tue,  7 Jul 2020 21:38:04 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id m9so9148305pfh.0;
+        Tue, 07 Jul 2020 21:38:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pGbaCoMke0eHVeVRLkTlHstsJU5HzwWe4OVKEnmf1ZQ=;
+        b=sbxCs0Xh2GFQxQ+jOOqUDA4ATECZXZ2LYdmSyQjvs7devdjXaMII5lDZiIUTSCJY0X
+         U7UCVgT7t1OcdgWbf9oY1ilqODpu70WpY1ItakeeQmoerMUy/LMhjq5iJWq5rSbtdejy
+         xbvIMeKzFf6x7fmtlSHMpjB7hXA3OvGR1LN1mHVnowtPTVUmRyrn9ozfCjk+sbS4E+Dt
+         st1okfrv4p7vrDbRRB7EgbaQRl86CQoSa0BlRByLqKjrz4kYwlSSvXj0OBuZcJOMocpW
+         mAVyxhpQ1C/JAouRcBrBWG4pOqMhKdWUZO2moH/xqvObFvLjpRo+QkTlUZiH60M+V64Q
+         LhJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w74eNERLG2pgyjUdSRcYW9SUoyc7gG8Z+LPaMqm+zH4=;
-        b=bGr877LUdCQ0kuSTd6Jzf41uJHQKYxSNHoRUTRR4j8FtJtlOyW0FoOwCvJ0t/mozML
-         9fOZVHGHIAIbjMyLZ5VM5fRv3stTWKk7HF0lUxN31Qo/mFTe5Ut9rSku6IXj4n2wJM6K
-         jRqY4pu+DIOuIYgJGMOqyQROrz4ULc6SXGN0zIvDNqz/VX4OSlAk9OI13oUJdMhZUjTr
-         qZgqSTZw5FOEBGtJoz/pGXZj0m6zw5LLFpapPHSoVx6UcuJ7qzaaFud0REjTTWVhI14S
-         rCO2SGeobH8T5XoDsIg9G7ylBOjEFE1WfZP3pDWJ4TPg+VZ9fVXHT0Vf3ax++zbqU7ve
-         sHdA==
-X-Gm-Message-State: AOAM530ICR02122zUYQomrMS4iQ1qTHs/XZYJDQeu7GC25eX8vFqkuWi
-        ghI+l8FtpVk6T3WVUxjSv2U=
-X-Google-Smtp-Source: ABdhPJxHZU8n57bHyUA87/h7IOAVFo14RjremkjbHa0piNVeEl4DjqKtxGu5JTtc4Tf00fVU/dHDDQ==
-X-Received: by 2002:a05:6a00:2c1:: with SMTP id b1mr40074651pft.159.1594182690346;
-        Tue, 07 Jul 2020 21:31:30 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id w9sm3745302pja.39.2020.07.07.21.31.29
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pGbaCoMke0eHVeVRLkTlHstsJU5HzwWe4OVKEnmf1ZQ=;
+        b=UOeqvUaYOChqQxfyTtAbewQT/Wka2Z4c4HniEkChI1ca8hfQhlzv0fcQkSODZLXeNM
+         bL1pK+fcaY4JFJtsjS1iauZrfj6yL+EM40araeyRtlrg1PkEHyFSCarY9Mgpo8eImvAP
+         L/N8IoOI9Z/3MqRnTpgsIu9qwarJzxaL8P4H+dhWjNchtzpTNRUoZyUkuKBi/PXwdPKj
+         XMulAlf0lxNpu4E4Zci8UWlNxW+LVAvtPGA9TNb1h7+gi3gksKGr7RPGcJF4XQYniI+k
+         0eZk1vnAwcE/Y5eUBvu/keLvMX6ryAdLMr1nJX9bnzL50d2sBrbTaxVhDYDsXF0Ok4JW
+         YYrQ==
+X-Gm-Message-State: AOAM533OUdw2RYvpeIXRTKA/RKUJDOIQQ3aBfK9J9BAv9P7AhnnXVwLC
+        0+EUCmMpIygqw4ck/KplQD0=
+X-Google-Smtp-Source: ABdhPJyueUvBUwFB5CkcsW7TctjCVGF9ROFxbj4AKt5/+V3u8yHu6Y7DuT1FOCV6MrMPQqKXKnknFg==
+X-Received: by 2002:aa7:9736:: with SMTP id k22mr50226247pfg.62.1594183083354;
+        Tue, 07 Jul 2020 21:38:03 -0700 (PDT)
+Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:4dfb:86a6:10aa:1756])
+        by smtp.gmail.com with ESMTPSA id f6sm26191724pfe.174.2020.07.07.21.38.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 21:31:29 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id A30C1400DB; Wed,  8 Jul 2020 04:31:28 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 04:31:28 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Kees Cook <keescook@chromium.org>, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Frank Rowand <frowand.list@gmail.com>, catalin.marinas@arm.com,
-        will@kernel.org, monstr@monstr.eu,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        paulus@samba.org, chris@zankel.net, jcmvbkbc@gmail.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-xtensa@linux-xtensa.org
-Subject: Re: [PATCH v5 01/12] vmlinux.lds.h: add linker section for KUnit
- test suites
-Message-ID: <20200708043128.GY4332@42.do-not-panic.com>
-References: <20200626210917.358969-1-brendanhiggins@google.com>
- <20200626210917.358969-2-brendanhiggins@google.com>
- <202006261416.F4EAAE47E3@keescook>
- <CAFd5g47vu5vmrXnS0sLu+hdC2HmYz7GY82sE8rhcHfNkuC1NRw@mail.gmail.com>
+        Tue, 07 Jul 2020 21:38:02 -0700 (PDT)
+From:   Xie He <xie.he.0141@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Martin Habets <mhabets@solarflare.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Xie He <xie.he.0141@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
+Subject: [PATCH] drivers/net/wan/x25_asy: Fix to make it work
+Date:   Tue,  7 Jul 2020 21:37:54 -0700
+Message-Id: <20200708043754.46554-1-xie.he.0141@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFd5g47vu5vmrXnS0sLu+hdC2HmYz7GY82sE8rhcHfNkuC1NRw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 02:22:11PM -0700, Brendan Higgins wrote:
-> On Fri, Jun 26, 2020 at 2:20 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Fri, Jun 26, 2020 at 02:09:06PM -0700, Brendan Higgins wrote:
-> > > Add a linker section where KUnit can put references to its test suites.
-> > > This patch is the first step in transitioning to dispatching all KUnit
-> > > tests from a centralized executor rather than having each as its own
-> > > separate late_initcall.
-> > >
-> > > Co-developed-by: Iurii Zaikin <yzaikin@google.com>
-> > > Signed-off-by: Iurii Zaikin <yzaikin@google.com>
-> > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > > ---
-> > >  include/asm-generic/vmlinux.lds.h | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> > > index db600ef218d7d..4f9b036fc9616 100644
-> > > --- a/include/asm-generic/vmlinux.lds.h
-> > > +++ b/include/asm-generic/vmlinux.lds.h
-> > > @@ -881,6 +881,13 @@
-> > >               KEEP(*(.con_initcall.init))                             \
-> > >               __con_initcall_end = .;
-> > >
-> > > +/* Alignment must be consistent with (kunit_suite *) in include/kunit/test.h */
-> >
-> > Nit on naming:
-> >
-> > > +#define KUNIT_TEST_SUITES                                            \
-> >
-> > I would call this KUNIT_TABLE to maintain the same names as other things
-> > of this nature.
-> >
-> > > +             . = ALIGN(8);                                           \
-> > > +             __kunit_suites_start = .;                               \
-> > > +             KEEP(*(.kunit_test_suites))                             \
-> > > +             __kunit_suites_end = .;
-> > > +
-> > >  #ifdef CONFIG_BLK_DEV_INITRD
-> > >  #define INIT_RAM_FS                                                  \
-> > >       . = ALIGN(4);                                                   \
-> > > @@ -1056,6 +1063,7 @@
-> > >               INIT_CALLS                                              \
-> > >               CON_INITCALL                                            \
-> > >               INIT_RAM_FS                                             \
-> > > +             KUNIT_TEST_SUITES                                       \
-> > >       }
-> >
-> > Nack: this must be in INIT_DATA, not in INIT_DATA_SECTION. Not all
-> > architectures use the INIT_DATA_SECTION macro (e.g. arm64), but everything
-> > uses INIT_DATA.
-> 
-> Oh, maybe that would eliminate the need for the other linkerscript
-> patches? That would be nice.
+This driver is not working because of problems of its receiving code.
+This patch fixes it to make it work.
 
-Curious, did changing it as Kees suggest fix it for m68k?
+When the driver receives an LAPB frame, it should first pass the frame
+to the LAPB module to process. After processing, the LAPB module passes
+the data (the packet) back to the driver, the driver should then add a
+one-byte pseudo header and pass the data to upper layers.
 
-  Luis
+The changes to the "x25_asy_bump" function and the
+"x25_asy_data_indication" function are to correctly implement this
+procedure.
+
+Also, the "x25_asy_unesc" function ignores any frame that is shorter
+than 3 bytes. However the shortest frames are 2-byte long. So we need
+to change it to allow 2-byte frames to pass.
+
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+---
+ drivers/net/wan/x25_asy.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/wan/x25_asy.c b/drivers/net/wan/x25_asy.c
+index 69773d228ec1..3fd8938e591b 100644
+--- a/drivers/net/wan/x25_asy.c
++++ b/drivers/net/wan/x25_asy.c
+@@ -183,7 +183,7 @@ static inline void x25_asy_unlock(struct x25_asy *sl)
+ 	netif_wake_queue(sl->dev);
+ }
+ 
+-/* Send one completely decapsulated IP datagram to the IP layer. */
++/* Send an LAPB frame to the LAPB module to process. */
+ 
+ static void x25_asy_bump(struct x25_asy *sl)
+ {
+@@ -195,13 +195,12 @@ static void x25_asy_bump(struct x25_asy *sl)
+ 	count = sl->rcount;
+ 	dev->stats.rx_bytes += count;
+ 
+-	skb = dev_alloc_skb(count+1);
++	skb = dev_alloc_skb(count);
+ 	if (skb == NULL) {
+ 		netdev_warn(sl->dev, "memory squeeze, dropping packet\n");
+ 		dev->stats.rx_dropped++;
+ 		return;
+ 	}
+-	skb_push(skb, 1);	/* LAPB internal control */
+ 	skb_put_data(skb, sl->rbuff, count);
+ 	skb->protocol = x25_type_trans(skb, sl->dev);
+ 	err = lapb_data_received(skb->dev, skb);
+@@ -209,7 +208,6 @@ static void x25_asy_bump(struct x25_asy *sl)
+ 		kfree_skb(skb);
+ 		printk(KERN_DEBUG "x25_asy: data received err - %d\n", err);
+ 	} else {
+-		netif_rx(skb);
+ 		dev->stats.rx_packets++;
+ 	}
+ }
+@@ -356,12 +354,16 @@ static netdev_tx_t x25_asy_xmit(struct sk_buff *skb,
+  */
+ 
+ /*
+- *	Called when I frame data arrives. We did the work above - throw it
+- *	at the net layer.
++ *	Called when I frame data arrives. We add a pseudo header for upper
++ *	layers and pass it to upper layers.
+  */
+ 
+ static int x25_asy_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
++	skb_push(skb, 1);
++	skb->data[0] = X25_IFACE_DATA;
++	skb->protocol = x25_type_trans(skb, dev);
++
+ 	return netif_rx(skb);
+ }
+ 
+@@ -657,7 +659,7 @@ static void x25_asy_unesc(struct x25_asy *sl, unsigned char s)
+ 	switch (s) {
+ 	case X25_END:
+ 		if (!test_and_clear_bit(SLF_ERROR, &sl->flags) &&
+-		    sl->rcount > 2)
++		    sl->rcount >= 2)
+ 			x25_asy_bump(sl);
+ 		clear_bit(SLF_ESCAPE, &sl->flags);
+ 		sl->rcount = 0;
+-- 
+2.25.1
+
