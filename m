@@ -2,82 +2,157 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E46C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D74C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D83542063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014222063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgGHUi1 (ORCPT
+        id S1726276AbgGHUjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:38:27 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:54779 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGHUi1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:38:27 -0400
-Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MXpM2-1kPCu53p3E-00YBdb for <linux-kernel@vger.kernel.org>; Wed, 08 Jul
- 2020 22:38:26 +0200
-Received: by mail-qt1-f170.google.com with SMTP id g13so35637209qtv.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 13:38:25 -0700 (PDT)
-X-Gm-Message-State: AOAM532w0UeP0WwBpw/zrbmSv7F14jdVTJTTiUunqsEMm2gFejB7kl/i
-        DvlUrvrOyEnhQ04zJQLF0tWJ6uASNymNlEtyW6I=
-X-Google-Smtp-Source: ABdhPJz68h0QI29GgcNujCOHJJRLRxCryNllMMt7XOrct3Fz9NvPE7S9FBlPpZcCU/WKTQVPVEde++p5gb0kEQ7QGxY=
-X-Received: by 2002:ac8:7587:: with SMTP id s7mr62150452qtq.304.1594240704805;
- Wed, 08 Jul 2020 13:38:24 -0700 (PDT)
+        Wed, 8 Jul 2020 16:39:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:36594 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgGHUjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 16:39:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D36D1FB;
+        Wed,  8 Jul 2020 13:39:19 -0700 (PDT)
+Received: from bogus (unknown [10.37.8.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F29D93F66E;
+        Wed,  8 Jul 2020 13:39:15 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 21:39:13 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Paul Murphy <paul.j.murphy@intel.com>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 6/7] arm64: dts: keembay: Add device tree for Keem Bay SoC
+Message-ID: <20200708203913.GC31671@bogus>
+References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+ <20200616155613.121242-7-daniele.alessandrelli@linux.intel.com>
 MIME-Version: 1.0
-References: <20200708122248.52771-1-cristian.marussi@arm.com> <20200708122248.52771-3-cristian.marussi@arm.com>
-In-Reply-To: <20200708122248.52771-3-cristian.marussi@arm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 8 Jul 2020 22:38:08 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3mH4h9=MZiLmqk=YY8_pzQnUUvsvcL1TZQ6uJEdGUf=w@mail.gmail.com>
-Message-ID: <CAK8P3a3mH4h9=MZiLmqk=YY8_pzQnUUvsvcL1TZQ6uJEdGUf=w@mail.gmail.com>
-Subject: Re: [PATCH 3/4] firmware: arm_scmi: Fix scmi_event_header fields typing
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:xKvUOf6eoq16hD9HbdtXx1MDQmDNpfPUg3XZB6jOB6YCnvdToTt
- QtUFHLSdMAfwP+er5U+PyHE03lA7JTdaTwvyAdyOLc/27eEwZHcf8EbV3uXM/61OBMXJ2h5
- htoslGBKrKfiQvHC/wT/3VQoN3GFGcAyTG0iIictrxp1UdalWpPkO8JhtF6e/L0swZcaCge
- 4FvOhJaFCctEwyE0OEafQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:igD6fevkCF8=:4zr/6OYLQ0wUYpU54A1GTn
- 8TnLo7h8MrJwfV0Rffv7t0A2Hl3hC3s8l58EyzKgNRxJyO+Cz0HhbEWg/V0yyxkReo6p+nhK+
- WawDLBHF0jKiXEvkuD+6IjpwbXBFssJ9kfM0PoPCNRiZACEZdLE+HknLXOCwnbOm6WdZ7qX8z
- Y3ZuH1rkcq9xVX6hmViCbMvfWc6nFpL/PNOay4MTOC5O0iFWGx/xs64ugukWoBExJoq9d9Et4
- jzeFP62/HQbUaZvBCYk4lBCuPvXrcUf2qLiDaB6gXPhxdOBKSBWzNTKJp7exCNhUTv5lE3E3K
- zLmQ9x3bzrLQ1+ljkgvRRZ9mPmd3H6lKy5FsEFWIefz+7imz+Ydnxwu6vAGv95/J0QR66XmuV
- pkVNfeNlZYYWERdPMHJAA9OQ77ALvU8/wvZ3Rza9Ta/U3myuDxIOPZORerWVAeBGHqfm/X4/C
- gR4goAktl7mJKzCR7gHVLguCOyi3rJSM7UwXMvmYWavsqVeFDZUveMOsugrl8Gj2JHpJwwJrv
- MisEcJQqmaGxwXwE4wwe5AWK0ByqSm2he7zDD5jwiasfsNrs20QIOQO1ZJzVB6JP+rk1SkSDj
- Ku4gBU7y8lwAck+7RuTDlEjIla5SqTSrHSYPV6t1v9NdLefY7VyxQp7XXBppn4ONi+1VOIFev
- lE7uyrZiR1QPxchcxCvnykP05wHGYa1mVuQSKll0iELjQfNZ2Yq5VQ2LoPP+wEqznKuYO31wG
- jML1sGfZ4FUVh8PB2dv/hxc6tDJ0euwCkelRmyxasiLqjLRGQ/E081DJm71slv1HFITCQcCta
- Idoa+EjqRsKfF58XZXaZj6yBO195ZBWrDlpwl5z+K72VbjatqUDawt8rufKk3fosVavcqKR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616155613.121242-7-daniele.alessandrelli@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 2:24 PM Cristian Marussi
-<cristian.marussi@arm.com> wrote:
->
-> Drop size_t in favour of fixed size u32 for consistency and shuffle
-> around fields definitions to minimize implicit padding.
->
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+On Tue, Jun 16, 2020 at 04:56:12PM +0100, Daniele Alessandrelli wrote:
+> From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+> 
+> Add initial device tree for Intel Movidius SoC code-named Keem Bay.
+> 
+> This initial DT includes nodes for Cortex-A53 cores, UARTs, timers, GIC,
+> PSCI, PMU, and Keem Bay SCMI mailbox.
+> 
+> Reviewed-by: Dinh Nguyen <dinguyen@kernel.org>
+> Signed-off-by: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+> ---
+>  MAINTAINERS                                |   1 +
+>  arch/arm64/boot/dts/intel/keembay-soc.dtsi | 172 +++++++++++++++++++++
+>  2 files changed, 173 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/intel/keembay-soc.dtsi
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3b919aa8b1bd..610907bf391b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1959,6 +1959,7 @@ M:	Paul J. Murphy <paul.j.murphy@intel.com>
+>  M:	Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/arm/keembay.yaml
+> +F:	arch/arm64/boot/dts/intel/keembay-soc.dtsi
+>  F:	include/dt-bindings/clock/keembay-clocks.h
+>  F:	include/dt-bindings/power/keembay-power.h
+>  
+> diff --git a/arch/arm64/boot/dts/intel/keembay-soc.dtsi b/arch/arm64/boot/dts/intel/keembay-soc.dtsi
+> new file mode 100644
+> index 000000000000..bd0a48f24e09
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/intel/keembay-soc.dtsi
+> @@ -0,0 +1,172 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2020, Intel Corporation.
+> + *
+> + * Device tree describing Keem Bay SoC.
+> + */
+> +
+> +#include <dt-bindings/clock/keembay-clocks.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/power/keembay-power.h>
+> +
+> +/ {
+> +	compatible = "intel,keembay";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			compatible = "arm,cortex-a53";
+> +			device_type = "cpu";
+> +			reg = <0x0>;
+> +			enable-method = "psci";
+> +			clocks = <&scmi_dvfs 0>;
+> +		};
+> +
+> +		cpu@1 {
+> +			compatible = "arm,cortex-a53";
+> +			device_type = "cpu";
+> +			reg = <0x1>;
+> +			enable-method = "psci";
+> +			clocks = <&scmi_dvfs 0>;
+> +		};
+> +
+> +		cpu@2 {
+> +			compatible = "arm,cortex-a53";
+> +			device_type = "cpu";
+> +			reg = <0x2>;
+> +			enable-method = "psci";
+> +			clocks = <&scmi_dvfs 0>;
+> +		};
+> +
+> +		cpu@3 {
+> +			compatible = "arm,cortex-a53";
+> +			device_type = "cpu";
+> +			reg = <0x3>;
+> +			enable-method = "psci";
+> +			clocks = <&scmi_dvfs 0>;
+> +		};
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	firmware: firmware {
+> +
+> +		scmi: scmi {
+> +			compatible = "arm,scmi";
 
-As you still have implicit padding at the end, I'd either make
-that explicit now, or leave the __packed attribute.
+The above must be changed to "arm,scmi-smc".
+Add "arm,smc-id = <sip_id_for_this>" and drop mboxes.
 
-The payld_sz is not actually force to be misaligned with the
-reordered layout, which is what's most important.
-
-     Arnd
+-- 
+Regards,
+Sudeep
