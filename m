@@ -2,127 +2,129 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBB5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA38920786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE08C20786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="URJLugTZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXw+UlKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbgGHOrd (ORCPT
+        id S1730019AbgGHOsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:47:33 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:38537 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729699AbgGHOrd (ORCPT
+        Wed, 8 Jul 2020 10:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729652AbgGHOsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:47:33 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708144731euoutp01b89e4a5fa901b1921c0dac60c92aa96a~fzlOQV1nZ2594825948euoutp01s
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 14:47:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708144731euoutp01b89e4a5fa901b1921c0dac60c92aa96a~fzlOQV1nZ2594825948euoutp01s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594219651;
-        bh=ViiMOJCBbxi2+iuATmMr1L9GKNGz+b2VRkUFLdZuwVE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=URJLugTZrUmDvs8hHiqT1itDeZekNe6q4NjF/J8kEBbmC0Fg3I7UBei1bEZDCIWRs
-         3SR3JbVhNRpRWvRSYAaL55PO+hI5zwvLjHqGPLrlf2165Q6ab5k46CJqhmUTyJIOU8
-         oZt+f+xMWCDDTE5SWGmp8Jwcaj5O2wuQAITeJ06c=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200708144731eucas1p15efde121434a4e112648738aed977ac3~fzlN4B7hT2544125441eucas1p1J;
-        Wed,  8 Jul 2020 14:47:31 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 82.61.06456.28CD50F5; Wed,  8
-        Jul 2020 15:47:30 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200708144730eucas1p1234baf92046e1e94c313ad6741f7b484~fzlNhbqWl0490004900eucas1p1a;
-        Wed,  8 Jul 2020 14:47:30 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200708144730eusmtrp1efab9edd034aea689db00aba672e4d03~fzlNgr4y71277812778eusmtrp1l;
-        Wed,  8 Jul 2020 14:47:30 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-bc-5f05dc82398e
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 1D.B0.06314.28CD50F5; Wed,  8
-        Jul 2020 15:47:30 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200708144729eusmtip28f34d8d0eb54e08c36fc474fdd5c15ce~fzlMuFrDL3217032170eusmtip2i;
-        Wed,  8 Jul 2020 14:47:29 +0000 (GMT)
-Subject: Re: [PATCH 02/11] media: exynos4-is: Request syscon only if ISP
- writeback is present
-To:     Jonathan Bakker <xc-racer2@live.ca>, kyungmin.park@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <8cf458a6-68b8-4fca-eb14-6db03bbdb3d9@samsung.com>
-Date:   Wed, 8 Jul 2020 16:47:29 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Wed, 8 Jul 2020 10:48:07 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28FF3C061A0B;
+        Wed,  8 Jul 2020 07:48:07 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t11so15203443pfq.11;
+        Wed, 08 Jul 2020 07:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WhGgrGKcd7sGWY9MzL2leiUQIrs2+2qjPvCl1NLx+eY=;
+        b=gXw+UlKIVhowiPQKdVS4aInpk5zM1TnuTdyvF8oGC2sgOsMw5CHGCisRVIeVXdUyrQ
+         ONKjgFEjgNnx3/pGHceBvJIh3xs+JniaqJznQHQ1iRu6uoif0q5EvgYYgnxMjRnPqbSj
+         3Uy/KxLnHnYQdL6y2R5IVeG96O0zbo3DFtDOYaPglw3KI/MsbvnGzjX+KjbV3CfPeCzk
+         prp6L0Dim38Uvvaw6mQUDFw87arHWIPReRBpMwGKWTBC6bvfpaZtjyu8lDn1fsszZWqm
+         15r3eg/yiBA2rNo0+ymLtqZeeOvhR/czLYYbD3uAX790nDHtczpb20kll8Oijh5I7vf5
+         I79w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WhGgrGKcd7sGWY9MzL2leiUQIrs2+2qjPvCl1NLx+eY=;
+        b=ajdkSatanbfy+H2Zk7HxYmp/vPBX9R5MYjmrR7S49f0KRabPFfmn5ea/ev51bk/8Ep
+         6o70phFHEqywnZSvqmt2qCH3IPhOgtiHJhdfW7ic4dk/u0xZNPelQNGVg6cvMQ6CAksG
+         xuWJZYzr135wLeG6rW5+4r2Ar7IGEhDZn90q1snR88A26AFtq6h+vM1qW2J35kFn4SfO
+         adcPQPhqiVvSalO23EwHpL2sf4IfZNRVwSBCspR3mR+5li460uzy1JTkoZb7NkjhANpe
+         hLNlD4SqAf9QVyqa3j3680cIxoJY2xMj8z8C+ThYvhVxJ+uJdStZDsw0JFb79AGf/3zt
+         JsfA==
+X-Gm-Message-State: AOAM530aEdx0j14xnvL39mZAOi0onaLsQL4W0zrus1W/AwoCFHlqoLgv
+        s1SfXNO66sq+LXz20Zs2s70=
+X-Google-Smtp-Source: ABdhPJyFaDf6vZi+hjhnezcD8cztHjByr8YfgEIcBPmqO77EJZtJjLg8R5usAx0gVhNf8VGxVYV2AA==
+X-Received: by 2002:a65:60ce:: with SMTP id r14mr50169456pgv.85.1594219686688;
+        Wed, 08 Jul 2020 07:48:06 -0700 (PDT)
+Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id e191sm152808pfh.42.2020.07.08.07.48.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 07:48:05 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 07:48:03 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Sergey Organov <sorganov@gmail.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
+ current kernel time
+Message-ID: <20200708144803.GB13374@hoboy>
+References: <20200706142616.25192-1-sorganov@gmail.com>
+ <20200706142616.25192-4-sorganov@gmail.com>
+ <20200706152721.3j54m73bm673zlnj@skbuf>
+ <20200708110444.GD9080@hoboy>
+ <87mu4a9o8m.fsf@osv.gnss.ru>
 MIME-Version: 1.0
-In-Reply-To: <BN6PR04MB066006C199A43996C0502B62A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAKsWRmVeSWpSXmKPExsWy7djPc7pNd1jjDV5/M7fof/ya2eL8+Q3s
-        Fmeb3rBbbHp8jdXi8q45bBY9G7ayWsw4v4/JYtmmP0wWq3b9YbS4OPEuiwOXx85Zd9k9Nq3q
-        ZPPYvKTeY9HNHywefVtWMXp83iQXwBbFZZOSmpNZllqkb5fAldF0bwN7wSPmirdH1jI2ME5n
-        7mLk5JAQMJE40bGQqYuRi0NIYAWjRMPrfmYI5wujRNO+81DOZ0aJC6eXssK0XG++wAqRWM4o
-        8Wv3aqiqj4wSp3rvsYNUCQvES7y/+oEFJCEi0Mwk8WzFTDaQBLOAusSvUydYQGw2AUOJ3qN9
-        jCA2r4CdxMt/N8DiLAIqEnveXASzRQXiJNa/3M4EUSMocXLmE7A4p0CsxMW9r5ggZopL3Hoy
-        H8qWl9j+dg7YRRIC59glfjw+wARxt4vEs5bZUG8LS7w6voUdwpaROD25hwWioZlRomf3bXYI
-        ZwKjxP3jCxghqqwl7pz7BfQCB9AKTYn1u/Qhwo4Saw9tZAQJSwjwSdx4KwhxBJ/EpG2gIAYJ
-        80p0tAlBVKtI/F41HeocKYnuJ/9ZJjAqzULy2iwk78xC8s4shL0LGFlWMYqnlhbnpqcWG+al
-        lusVJ+YWl+al6yXn525iBKar0/+Of9rB+PVS0iFGAQ5GJR7eCRtY44VYE8uKK3MPMUpwMCuJ
-        8DqdPR0nxJuSWFmVWpQfX1Sak1p8iFGag0VJnNd40ctYIYH0xJLU7NTUgtQimCwTB6dUA6OD
-        vSu3GVf+QcOyTX7TyxeovGsPXG+zubR24Rcxr5mzNx43rzmptpJzuj7jtFP+t0u+nyl+sTCY
-        XSpM5sJRxqf870qqD785cltpTY+Q4fdNq2KXzNfv0y7q+R8el3PExznT4jqb1JwVdzo0eLdN
-        bP6zUHnaLZOuzzzR76UWbtiRs6jI9sWcxKVKLMUZiYZazEXFiQDoH3M0UwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xe7pNd1jjDY5PVbHof/ya2eL8+Q3s
-        Fmeb3rBbbHp8jdXi8q45bBY9G7ayWsw4v4/JYtmmP0wWq3b9YbS4OPEuiwOXx85Zd9k9Nq3q
-        ZPPYvKTeY9HNHywefVtWMXp83iQXwBalZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwe
-        a2VkqqRvZ5OSmpNZllqkb5egl9F0bwN7wSPmirdH1jI2ME5n7mLk5JAQMJG43nyBtYuRi0NI
-        YCmjxJPt69m6GDmAElIS81uUIGqEJf5c62IDsYUE3jNKPD6qAmILC8RLvL/6gQWkV0SgmUni
-        //JtLCAJZgF1iV+nTrBADL3LKNH7bCNYgk3AUKL3aB8jiM0rYCfx8t8NsDiLgIrEnjcXwWxR
-        gTiJ5Vvms0PUCEqcnPkELM4pECtxce8rJpgFf+ZdYoawxSVuPZkPFZeX2P52DvMERqFZSNpn
-        IWmZhaRlFpKWBYwsqxhFUkuLc9Nziw31ihNzi0vz0vWS83M3MQJjc9uxn5t3MF7aGHyIUYCD
-        UYmH98Um1ngh1sSy4srcQ4wSHMxKIrxOZ0/HCfGmJFZWpRblxxeV5qQWH2I0BXpuIrOUaHI+
-        MG3klcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+LglGpgDJ3f9Y/lvOKp
-        qtUTp1ms9VrMs4XxxW/tH1JpQhKr+VqZJ7hfClm2wop5udzR7pWC9aG73l/du7o+PmPShrPz
-        r280uuNp8OZuYfNLzuccfgzpx+wbfly19Pk928U+fF5qQrEVW8Xq9Lj/1cd3L2mwPPVlud6R
-        uUIKyZ1OvlsnGL8u/muZwK18RImlOCPRUIu5qDgRADhzcufjAgAA
-X-CMS-MailID: 20200708144730eucas1p1234baf92046e1e94c313ad6741f7b484
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200426022729eucas1p1f2db1e439ed5b74b00c97ec4823f72ea
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200426022729eucas1p1f2db1e439ed5b74b00c97ec4823f72ea
-References: <20200426022650.10355-1-xc-racer2@live.ca>
-        <CGME20200426022729eucas1p1f2db1e439ed5b74b00c97ec4823f72ea@eucas1p1.samsung.com>
-        <BN6PR04MB066006C199A43996C0502B62A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mu4a9o8m.fsf@osv.gnss.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.2020 04:26, Jonathan Bakker wrote:
-> From: Tomasz Figa <tomasz.figa@gmail.com>
+On Wed, Jul 08, 2020 at 03:37:29PM +0300, Sergey Organov wrote:
+> Richard Cochran <richardcochran@gmail.com> writes:
 > 
-> On FIMC variants which don't have writeback channel, there is no need to
-> access system registers. This patch makes the driver request sysreg
-> regmap conditionally depending on whether writeback is supported.
+> > On Mon, Jul 06, 2020 at 06:27:21PM +0300, Vladimir Oltean wrote:
+> >> There's no correct answer, I'm afraid. Whatever the default value of the
+> >> clock may be, it's bound to be confusing for some reason, _if_ the
+> >> reason why you're investigating it in the first place is a driver bug.
+> >> Also, I don't really see how your change to use Jan 1st 1970 makes it
+> >> any less confusing.
+> >
+> > +1
+> >
+> > For a PHC, the user of the clock must check the PTP stack's
+> > synchronization flags via the management interface to know the status
+> > of the time signal.
 > 
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> Actually, as I just realized, the right solution for my original problem
+> would rather be adding PTP clock ID that time stamped Ethernet packet to
+> the Ethernet hardware time stamp (see my previous reply as well).
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+I think you misunderstood my point.  I wasn't commenting on the
+"stacked" MAC/PHY/DSA time stamp issue in the kernel.
+
+I am talking about the question of whether to initialize the PHC time
+to zero (decades off from TAI) or ktime (likely about 37 seconds off
+from TAI).  It does not really matter, because the user must not guess
+whether the time is valid based on the value.  Instead, the user
+should query the relevant PTP data sets in a "live" online manner.
+
+For example, to tell whether a PHC is synchronized to anything at all,
+you need to check PORT_DATA_SET.portState and probably also
+CURRENT_DATA_SET.offsetFromMaster depending on your needs.
+
+In addition, if you care about global time, you need to check:
+
+TIME_PROPERTIES_DATA_SET
+  currentUtcOffset
+  currentUtcOffsetValid
+  ptpTimescale
+  timeTraceable
+  frequencyTraceable
+
+Thanks,
+Richard
