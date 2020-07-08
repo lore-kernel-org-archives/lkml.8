@@ -4,70 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A135C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D515C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3170A2065C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA942065C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:03:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V7YTg/Nu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wYVP4yTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729200AbgGHMDk (ORCPT
+        id S1729142AbgGHMCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55502 "EHLO
+        Wed, 8 Jul 2020 08:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728995AbgGHMDC (ORCPT
+        with ESMTP id S1729123AbgGHMCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:03:02 -0400
+        Wed, 8 Jul 2020 08:02:50 -0400
 Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B519BC08E6DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:03:01 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f2so20693040wrp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:03:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1FDAC08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:02:49 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f2so20692313wrp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:02:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EfL+TnTwzrxBs3OWsbVJ1u2HNp81yr5D58y8jJwfHCg=;
-        b=V7YTg/NuT1ipSiphL7EvNRuTDaXv8eq0KaXXKKSKjl/mC+jCiU36KNbNpr6xipISRd
-         qWZWOid3XF/HdL7CtyOkvOVNsRM4xkEX+fjQAovODTP/W0CIuJkkHlFIFykYxRI9Qvo2
-         qE8RJ0nwah9EwAlJFf+GPBkJRk63xtzmgOt4P6iT0iahUYwp1gIlsl3MCWmaGO79N5bN
-         y1DSQnGFHBZLQ2sIPBPi+E2ieP2vvs1eA/maPioucGFRuBDhYQtQrlppYxc8xu68qIFj
-         L6IHtoeUfefWuAax+TghGhwH9LCZf0l5eps2R/cZBZljKcjvX9KvozXCeIy4iILmYgId
-         Awwg==
+        bh=sZwSMA5UIb7oM9+D5j+l12KsCqeP4op1hhjOFtyL2ps=;
+        b=wYVP4yTrdIb3gPXKLBwSIe8aCHTr6bqSOLL6eZHfT2SvX4q7eX66ukJezKlb3lJqzz
+         CMDoawaoFMDHzHmDGUCKQ6z7g/1iBWboIw+C6XhatxXuamWkI+POzEoQS8TVmKkIoHjn
+         lDqKVIY9a1/orsCpupEsEuTM39RugV8ru6SmhANSET57A7VpxrvkQJ+SE2M2lcl2jD0b
+         n2EXTHaIJfjG7vIhxcWdJTpZqeBDEtlI96662m8C4+2T7wWh/+pZOhrRQB1snq6rGvuy
+         ldFuM1a634U11GCgiL8GLL8ONxQ1GezKf3CdyRcJet9PeWu1yxrI1x04pzhr6hv//mrS
+         SmrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EfL+TnTwzrxBs3OWsbVJ1u2HNp81yr5D58y8jJwfHCg=;
-        b=PmzikLjkrwILgCl5B7i4fNJel0C5CODdDNsFjd/M+kKjKjj0MWoidPSfodVDVwyaIo
-         1NlVe9AOxwCyX86CUXWnyoEmx1J3FynbBmFSJc+QFVdbOPX/MxmY/ra7F30Tl9r7CnNb
-         mW3hfNtVGzTdR8yLF8FgDuA/ad9KAVnwNXqAqDJgOzcMPwdSxnasnBtiitr8mVtAx4nF
-         Z8M3q8ESp5Wic/GlXcf2CjzR9/4B6ovAIB5BgcG+m7ZnHEK5y9tfkSaZpWupbotNQcN/
-         1S1ulX+qciIbfjohTdu+OkTyrG+yJl4XPR79g5O3VdwKtyQbs+5pveoWAO9cAEibDlYq
-         4msg==
-X-Gm-Message-State: AOAM531NcV9+4tTO7NkgSoEqoElx8nki7OzZ7r6qoe/LH1H2bsYW1gGq
-        8VBYIOXLKyDIuQ/TyfXVd+OH7Q==
-X-Google-Smtp-Source: ABdhPJwDfd21b5LkVyddx+3HtwmIG7Pf/brq+tML6qftxXPRLFkk5Zh6X+F0E5Q2tUlt/E8YIAo/KQ==
-X-Received: by 2002:a5d:5549:: with SMTP id g9mr61834625wrw.419.1594209780204;
-        Wed, 08 Jul 2020 05:03:00 -0700 (PDT)
+        bh=sZwSMA5UIb7oM9+D5j+l12KsCqeP4op1hhjOFtyL2ps=;
+        b=aHmPLGdpxKMuJKog+6EtOQAvfNAyFUfR+RNT11THAV6aM26e5K3eKGBARF8Av1CBku
+         JN5iU7dBPB+sWhq0OgrJb0HdtCdqCPknN1kPDA3Liot3OpGdmj23io5gIkPCOgIxIHJf
+         yyiU3G1AZoMypbGQrxYrgt+dVly2O0WGHXTcFnao8nvCDN2QQBVvkWZa9byjWt32VDI0
+         RSMH+ubC5y3n05vSCVX3pkJIhhFXo0XmrlO5dpFfrkeR6VnTeXBsgpjkGCGJG48BI3HZ
+         J7iPV1bdlrRYdHQmNj5rs/4Bi/YS8+CEuNEywtNXBQcd+X8wOEFnMtVFQZPE7kdgARhT
+         IFoA==
+X-Gm-Message-State: AOAM533v3BTOm0NNGSpmP0AgYSlVqboabpqOupu5Vf+/8/iMqp8UgQXc
+        HeTfhhSrmccVZy+mu+styObRPg==
+X-Google-Smtp-Source: ABdhPJzUhN5+/7ZGY9cHq+7oMDlNaKPxbiI8XirtTADjCEmOj88jT3VDHFhh0FBXmjOTu9U+a4GNVg==
+X-Received: by 2002:a5d:6412:: with SMTP id z18mr56966206wru.310.1594209767822;
+        Wed, 08 Jul 2020 05:02:47 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.02.58
+        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.02.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:02:59 -0700 (PDT)
+        Wed, 08 Jul 2020 05:02:47 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
-Subject: [PATCH 24/30] scsi: aacraid: linit: Provide suggested curly braces around empty body of if()
-Date:   Wed,  8 Jul 2020 13:02:15 +0100
-Message-Id: <20200708120221.3386672-25-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>, support@areca.com.tw
+Subject: [PATCH 16/30] scsi: arcmsr: arcmsr_hba: Make room for the trailing NULL, even if it is over-written
+Date:   Wed,  8 Jul 2020 13:02:07 +0100
+Message-Id: <20200708120221.3386672-17-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708120221.3386672-1-lee.jones@linaro.org>
 References: <20200708120221.3386672-1-lee.jones@linaro.org>
@@ -79,36 +77,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ensure we do not copy the final one (which is not overwitten).
+
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/aacraid/linit.c: In function ‘aac_biosparm’:
- drivers/scsi/aacraid/linit.c:368:41: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
- 368 | param->heads, param->sectors, num));
+ In file included from include/linux/bitmap.h:9,
+ from include/linux/nodemask.h:95,
+ from include/linux/mmzone.h:17,
+ from include/linux/gfp.h:6,
+ from include/linux/umh.h:4,
+ from include/linux/kmod.h:9,
+ from include/linux/module.h:16,
+ from drivers/scsi/arcmsr/arcmsr_hba.c:47:
+ In function ‘strncpy’,
+ inlined from ‘arcmsr_handle_virtual_command’ at drivers/scsi/arcmsr/arcmsr_hba.c:3055:3:
+ include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ output truncated before terminating nul copying 4 bytes from a string of the same length [-Wstringop-truncation]
+ 297 | #define __underlying_strncpy __builtin_strncpy
  | ^
+ include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
+ 307 | return __underlying_strncpy(p, q, size);
+ | ^~~~~~~~~~~~~~~~~~~~
+ In function ‘strncpy’,
+ inlined from ‘arcmsr_handle_virtual_command’ at drivers/scsi/arcmsr/arcmsr_hba.c:3053:3:
+ include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ output truncated before terminating nul copying 16 bytes from a string of the same length [-Wstringop-truncation]
+ 297 | #define __underlying_strncpy __builtin_strncpy
+ | ^
+ include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
+ 307 | return __underlying_strncpy(p, q, size);
+ | ^~~~~~~~~~~~~~~~~~~~
+ In function ‘strncpy’,
+ inlined from ‘arcmsr_handle_virtual_command’ at drivers/scsi/arcmsr/arcmsr_hba.c:3051:3:
+ include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ output truncated before terminating nul copying 8 bytes from a string of the same length [-Wstringop-truncation]
+ 297 | #define __underlying_strncpy __builtin_strncpy
+ | ^
+ include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
+ 307 | return __underlying_strncpy(p, q, size);
+ | ^~~~~~~~~~~~~~~~~~~~
 
-Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Cc: support@areca.com.tw
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/aacraid/linit.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/arcmsr/arcmsr_hba.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
-index a308e86a97f19..734dd6e67246d 100644
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -363,9 +363,10 @@ static int aac_biosparm(struct scsi_device *sdev, struct block_device *bdev,
+diff --git a/drivers/scsi/arcmsr/arcmsr_hba.c b/drivers/scsi/arcmsr/arcmsr_hba.c
+index 1c252934409c7..5feed135eb26c 100644
+--- a/drivers/scsi/arcmsr/arcmsr_hba.c
++++ b/drivers/scsi/arcmsr/arcmsr_hba.c
+@@ -3031,7 +3031,7 @@ static void arcmsr_handle_virtual_command(struct AdapterControlBlock *acb,
+ {
+ 	switch (cmd->cmnd[0]) {
+ 	case INQUIRY: {
+-		unsigned char inqdata[36];
++		unsigned char inqdata[37];
+ 		char *buffer;
+ 		struct scatterlist *sg;
  
- 		param->cylinders = cap_to_cyls(capacity, param->heads * param->sectors);
- 		if (num < 4 && end_sec == param->sectors) {
--			if (param->cylinders != saved_cylinders)
-+			if (param->cylinders != saved_cylinders) {
- 				dprintk((KERN_DEBUG "Adopting geometry: heads=%d, sectors=%d from partition table %d.\n",
- 					param->heads, param->sectors, num));
-+			}
- 		} else if (end_head > 0 || end_sec > 0) {
- 			dprintk((KERN_DEBUG "Strange geometry: heads=%d, sectors=%d in partition table %d.\n",
- 				end_head + 1, end_sec, num));
+@@ -3048,16 +3048,16 @@ static void arcmsr_handle_virtual_command(struct AdapterControlBlock *acb,
+ 		/* ISO, ECMA, & ANSI versions */
+ 		inqdata[4] = 31;
+ 		/* length of additional data */
+-		strncpy(&inqdata[8], "Areca   ", 8);
++		strncpy(&inqdata[8], "Areca   ", 9);
+ 		/* Vendor Identification */
+-		strncpy(&inqdata[16], "RAID controller ", 16);
++		strncpy(&inqdata[16], "RAID controller ", 17);
+ 		/* Product Identification */
+-		strncpy(&inqdata[32], "R001", 4); /* Product Revision */
++		strncpy(&inqdata[32], "R001", 5); /* Product Revision */
+ 
+ 		sg = scsi_sglist(cmd);
+ 		buffer = kmap_atomic(sg_page(sg)) + sg->offset;
+ 
+-		memcpy(buffer, inqdata, sizeof(inqdata));
++		memcpy(buffer, inqdata, sizeof(inqdata) - 1);
+ 		sg = scsi_sglist(cmd);
+ 		kunmap_atomic(buffer - sg->offset);
+ 
 -- 
 2.25.1
 
