@@ -2,109 +2,133 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E197C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6119FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4685920786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CE42078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:15:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sp5vy7rm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbgGHQNW (ORCPT
+        id S1730512AbgGHQPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:13:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43820 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728148AbgGHQNV (ORCPT
+        Wed, 8 Jul 2020 12:15:10 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:33603 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728148AbgGHQPJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:13:21 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068G1smT029292;
-        Wed, 8 Jul 2020 12:13:19 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 325h8kggm4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 12:13:19 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 068G2P7X032157;
-        Wed, 8 Jul 2020 12:13:18 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 325h8kggka-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 12:13:18 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 068GAtpv010405;
-        Wed, 8 Jul 2020 16:13:17 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 322hd7vrdn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 16:13:17 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 068GDEqx196934
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jul 2020 16:13:15 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC23DAE05A;
-        Wed,  8 Jul 2020 16:13:14 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1589AE058;
-        Wed,  8 Jul 2020 16:13:13 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.202.84])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Jul 2020 16:13:13 +0000 (GMT)
-Message-ID: <1594224793.23056.251.camel@linux.ibm.com>
-Subject: Re: [PATCH AUTOSEL 5.7 03/30] ima: extend boot_aggregate with
- kernel measurements
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Maurizio Drocco <maurizio.drocco@ibm.com>,
-        Bruno Meneguele <bmeneg@redhat.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Date:   Wed, 08 Jul 2020 12:13:13 -0400
-In-Reply-To: <20200708154116.3199728-3-sashal@kernel.org>
-References: <20200708154116.3199728-1-sashal@kernel.org>
-         <20200708154116.3199728-3-sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-08_13:2020-07-08,2020-07-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1031
- cotscore=-2147483648 bulkscore=0 adultscore=0 lowpriorityscore=0
- impostorscore=0 phishscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- malwarescore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007080106
+        Wed, 8 Jul 2020 12:15:09 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708161507euoutp0169811a0d917fca1ea26ea35f96c2f3e6~f0xtl1vqD2919629196euoutp01Y
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:15:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708161507euoutp0169811a0d917fca1ea26ea35f96c2f3e6~f0xtl1vqD2919629196euoutp01Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594224907;
+        bh=vJfvmVF8vcAgmxnCgS3wKbE10DIPei7sXr/YrJ17xYQ=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=sp5vy7rmCCJgX0gCZB6VfD7gA/lWbc7ck5IDxS6Yuko8uvfkL7ohgEVwt1uPOgU/n
+         OAP/KxES3e5qAMTUxFu6iYIYZ4Pclq9xPPr4r/t7ZSVKfgjANK2Wa8NHdSoBEFz0Lb
+         I05JJCOMWnCJjFllz4g605uheFjcWFC5VMefH5S8=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200708161507eucas1p286d8adcbcff18ae68b0ae189cbc5e5df~f0xtNr1VY3193831938eucas1p2O;
+        Wed,  8 Jul 2020 16:15:07 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 50.AD.06318.B01F50F5; Wed,  8
+        Jul 2020 17:15:07 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200708161506eucas1p2273cb7bd714705ff2d0a99d7394b6baf~f0xsvvxU10142801428eucas1p2Z;
+        Wed,  8 Jul 2020 16:15:06 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200708161506eusmtrp1356dceb2c2b3c89ab2cc2819b88bf8f8~f0xsvDZti0476504765eusmtrp1s;
+        Wed,  8 Jul 2020 16:15:06 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-86-5f05f10b2b78
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 8B.2A.06314.A01F50F5; Wed,  8
+        Jul 2020 17:15:06 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200708161506eusmtip17cfa99d68b1fe2018a5a5a5bbb86de61~f0xsLkASF1337513375eusmtip1e;
+        Wed,  8 Jul 2020 16:15:06 +0000 (GMT)
+Subject: Re: [PATCH 11/11] media: exynos4-is: Correct parallel port probing
+To:     Jonathan Bakker <xc-racer2@live.ca>, kyungmin.park@samsung.com,
+        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <05381b4a-3581-e57d-3ecc-43eaafd9d527@samsung.com>
+Date:   Wed, 8 Jul 2020 18:15:05 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <BN6PR04MB0660A14860692EAB2A658AEFA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+d3H7t1s4zqtnUwyl3+Y5CtLLhaS1R+DiB4ghaFz6U1NnWNX
+        LSvwRWJq5gNZzlATKVuYunyUopFRUqJiopgm/eEQpy0zK8zUcl4r//uc8/0ezvfAoXF5M+lC
+        x2mTOb1Wk6AUSYjW1z/7vR3mSbVfU4Eje3tyFmcHBhopti/rE8WaJ0dIdqj9rogtaGwh2TsD
+        XRh737yMsYPFE8RhscpsuilSPalNV9W8XyRUhc0mpFow7zxFhkkORXMJcamc3jc4UhK7sOqu
+        sxJX2rPnyAw0jechMQ3MfljJyUV5SELLmToE9RU9uFB8Q1BnyBYJxQKCRzWj/0Y+Z81QgvAA
+        wfCXJcIuyJl5BNXjWjs7McehruQxZjc5M9kYTNWVi+yCiPGHW68KkZ2lTDDY6hsxOxOMBzwc
+        HKXsvJWJgAZrGyZ4HOFNuWV9gZgJh6bn0+uMMwoYs1RhArtBm+3uem5gWikozCjDhKjHIH9p
+        ZCO2E8z0NFMCu0JvaQEhDGQjKOgYp4SiCMHHnmokuA7Ch/6ltdj02oo90NDuK7RDoNTylbK3
+        gZHBqM1RCCGDklYDLrSlkJsjF9we8Mtk2IjjAvmW34TAKvgx8ZIqQu7GTWcaN51m3HSa8X+G
+        akSYkIJL4RNjOD5Ay1324TWJfIo2xicqKdGM1n6pd7Xn+1PUtXyhGzE0Um6RTptJtZzUpPJp
+        id0IaFzpLD3S1xshl0Zr0q5y+iS1PiWB47vRDppQKqQBNdZwOROjSebiOU7H6f+qGC12yUCX
+        9J1USQ1+zt3mfSOUlc3Fh4Xw+1zjFbNMtEw3lDkW3PG2uuXF3u08fibFAzewXYFDnelu245K
+        V67tjhuOLAv0Ok0PVuqcO6iTVSc8w2Os9WL1xGzG9QOZ9/wWi4lhIx3UFfouTbar4pmnQ0uH
+        RUK619JnLxrORwRVNsxETSkJPlbj74Xrec0f8Y8LfEcDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xu7pcH1njDfrfGlj0P37NbHH+/AZ2
+        i7NNb9gtNj2+xmpxedccNoueDVtZLWac38dksWzTHyaLixPvsjhwemxa1cnmsXlJvceimz9Y
+        PPq2rGL0+LxJLoA1Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUn
+        syy1SN8uQS/j8z/FgpcsFbua37M2ML5g7mLk5JAQMJF41/SKvYuRi0NIYCmjxJ5z7SxdjBxA
+        CSmJ+S1KEDXCEn+udbFB1LxnlLjyrYkNJCEs4C2xYtI6JpCEiEAzk8T/5dtYIKruMkqcPbwK
+        rIpNwFCi92gfI4jNK2An8XbtBiYQm0VARWLlxRvsILaoQJzE8i3z2SFqBCVOznzCAmJzCsRK
+        bNz/AsxmFlCX+DPvEjOELS5x68l8JghbXmL72znMExgFZyFpn4WkZRaSlllIWhYwsqxiFEkt
+        Lc5Nzy021CtOzC0uzUvXS87P3cQIjLdtx35u3sF4aWPwIUYBDkYlHt4Xm1jjhVgTy4orcw8x
+        SnAwK4nwOp09HSfEm5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cBUkFcSb2hqaG5haWhubG5s
+        ZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgTHzsWAtT92l7S+amPt0doYEapeZFmSJ+Kur
+        ZYXuS3Rv1T7yLEl0T+epu0EnuPf1HLNsCWR591Op4cOk1S+t1/05JFZXGabos8Pr140p3dFR
+        4hZq92O3/PerOxJ8SFy5emPDjpQtx7aoOtc5LX60ep37Iy67U7vendAw4LjJuHTfB27x9O8T
+        spVYijMSDbWYi4oTAelXiffNAgAA
+X-CMS-MailID: 20200708161506eucas1p2273cb7bd714705ff2d0a99d7394b6baf
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200426022757eucas1p2d10b653b3d974a1226560ccceed0d120
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200426022757eucas1p2d10b653b3d974a1226560ccceed0d120
+References: <20200426022650.10355-1-xc-racer2@live.ca>
+        <CGME20200426022757eucas1p2d10b653b3d974a1226560ccceed0d120@eucas1p2.samsung.com>
+        <BN6PR04MB0660A14860692EAB2A658AEFA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
+Hi,
 
-On Wed, 2020-07-08 at 11:40 -0400, Sasha Levin wrote:
-> From: Maurizio Drocco <maurizio.drocco@ibm.com>
+On 26.04.2020 04:26, Jonathan Bakker wrote:
+> According to the binding doc[1], port A should be reg = 0
+> and port B reg = 1.  Unfortunately, the driver was treating 0
+> as invalid and 1 as camera port A.  Match the binding doc and
+> make 0=A and 1=B.
 > 
-> [ Upstream commit 20c59ce010f84300f6c655d32db2610d3433f85c ]
-> 
-> Registers 8-9 are used to store measurements of the kernel and its
-> command line (e.g., grub2 bootloader with tpm module enabled). IMA
-> should include them in the boot aggregate. Registers 8-9 should be
-> only included in non-SHA1 digests to avoid ambiguity.
+> [1] Documentation/devicetree/bindings/media/samsung-fimc.txt
 
-Prior to Linux 5.8, the SHA1 template data hashes were padded before
-being extended into the TPM.  Support for calculating and extending
-the per TPM bank template data digests is only being upstreamed in
-Linux 5.8.
+Thank you for correcting this. I would prefer to correct the binding
+documentation instead, so it says reg=1 for A and reg=2 for B. 
+Then it would also match what we have in dts for Goni and 
+enum fimc_input in include/media/drv-intf/exynos-fimc.h.
 
-How will attestation servers know whether to include PCRs 8 & 9 in the
-the boot_aggregate calculation?  Now, there is a direct relationship
-between the template data SHA1 padded digest not including PCRs 8 & 9,
-and the new per TPM bank template data digest including them.
 
-Mimi
+-- 
+Regards,
+Sylwester
