@@ -2,333 +2,242 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C06C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B70C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52C72206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594232590;
-	bh=C3Gg8Xh5/GKU63Aih3Db7PKPQN75HGOuicquAhDPVeg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VrQ4NGlIpaWa/73VeDbMrYO1uZNezb0SbLw1xvbNfWCBCyxo6PxrQfrrMXx6w6Wgk
-	 tmer/bgaswav4I8eJXvrUwCjNK6REIlZ15pNRFheolYAl56+up80eXAww9iQtguGkw
-	 +v6eZZrMAQlnwTUKzgAWxHxL13V3fYzSGesoJoNk=
+	by mail.kernel.org (Postfix) with ESMTP id CE8B2207C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgGHSXI (ORCPT
+        id S1726291AbgGHSY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:23:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43124 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 14:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgGHSXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:23:08 -0400
-Received: from embeddedor (unknown [201.162.240.161])
+        id S1725937AbgGHSY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 14:24:57 -0400
+Received: from gaia (unknown [95.146.230.158])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AE05206F6;
-        Wed,  8 Jul 2020 18:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594232587;
-        bh=C3Gg8Xh5/GKU63Aih3Db7PKPQN75HGOuicquAhDPVeg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vBsIOnjOUMAOWgWN76b+ljOM9BEq/FtEMKiFm7PszidjdT1wQ3x2iwa5Wf0lEZmlo
-         tXwujwYcR79rC3z19OcWo7gIivfenvNe0MyAeo2QbtxMU1tvnC4JztD/Ka3jnTKNmJ
-         PDC3yeotegDsXp5gv2eHqJn8kayzoZh+zRb4ZtEw=
-Date:   Wed, 8 Jul 2020 13:28:35 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] IB/hfi1: Use fallthrough pseudo-keyword
-Message-ID: <20200708182835.GF11533@embeddedor>
-References: <20200707173942.GA29814@embeddedor>
- <20200708054703.GR207186@unreal>
+        by mail.kernel.org (Postfix) with ESMTPSA id 06BF2206F6;
+        Wed,  8 Jul 2020 18:24:53 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 19:24:51 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     will@kernel.org, suzuki.poulose@arm.com, maz@kernel.org,
+        steven.price@arm.com, guohanjun@huawei.com, olof@lixom.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [RFC PATCH v5 2/2] arm64: tlb: Use the TLBI RANGE feature in
+ arm64
+Message-ID: <20200708182451.GF6308@gaia>
+References: <20200708124031.1414-1-yezhenyu2@huawei.com>
+ <20200708124031.1414-3-yezhenyu2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708054703.GR207186@unreal>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200708124031.1414-3-yezhenyu2@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leon,
+On Wed, Jul 08, 2020 at 08:40:31PM +0800, Zhenyu Ye wrote:
+> Add __TLBI_VADDR_RANGE macro and rewrite __flush_tlb_range().
+> 
+> In this patch, we only use the TLBI RANGE feature if the stride == PAGE_SIZE,
+> because when stride > PAGE_SIZE, usually only a small number of pages need
+> to be flushed and classic tlbi intructions are more effective.
 
-On Wed, Jul 08, 2020 at 08:47:03AM +0300, Leon Romanovsky wrote:
-> On Tue, Jul 07, 2020 at 12:39:42PM -0500, Gustavo A. R. Silva wrote:
-> > Replace the existing /* fall through */ comments and its variants with
-> > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> > fall-through markings when it is the case.
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> >
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/infiniband/hw/hfi1/chip.c     |    8 ++++----
-> >  drivers/infiniband/hw/hfi1/firmware.c |   16 ----------------
-> >  drivers/infiniband/hw/hfi1/mad.c      |    9 ++++-----
-> >  drivers/infiniband/hw/hfi1/pio.c      |    2 +-
-> >  drivers/infiniband/hw/hfi1/pio_copy.c |   12 ++++++------
-> >  drivers/infiniband/hw/hfi1/platform.c |   10 +++++-----
-> >  drivers/infiniband/hw/hfi1/qp.c       |    2 +-
-> >  drivers/infiniband/hw/hfi1/qsfp.c     |    4 ++--
-> >  drivers/infiniband/hw/hfi1/rc.c       |   25 ++++++++++++-------------
-> >  drivers/infiniband/hw/hfi1/sdma.c     |    9 ++++-----
-> >  drivers/infiniband/hw/hfi1/tid_rdma.c |    4 ++--
-> >  drivers/infiniband/hw/hfi1/uc.c       |    8 ++++----
-> >  12 files changed, 45 insertions(+), 64 deletions(-)
-> >
-> > diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-> > index 15f9c635f292..132f1df6f23b 100644
-> > --- a/drivers/infiniband/hw/hfi1/chip.c
-> > +++ b/drivers/infiniband/hw/hfi1/chip.c
-> > @@ -7320,7 +7320,7 @@ static u16 link_width_to_bits(struct hfi1_devdata *dd, u16 width)
-> >  	default:
-> >  		dd_dev_info(dd, "%s: invalid width %d, using 4\n",
-> >  			    __func__, width);
-> > -		/* fall through */
-> > +		fallthrough;
-> >  	case 4: return OPA_LINK_WIDTH_4X;
-> 
-> "case ..:" after "default:" ???
-> IMHO, it should be written in more standard way.
-> 
+Why are they more effective? I guess a range op would work on this as
+well, say unmapping a large THP range. If we ignore this stride ==
+PAGE_SIZE, it could make the code easier to read.
 
-I agree. However, that piece of code, and the other below, does not
-concern to this patch.
+> We can also use 'end - start < threshold number' to decide which way
+> to go, however, different hardware may have different thresholds, so
+> I'm not sure if this is feasible.
+> 
+> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+> ---
+>  arch/arm64/include/asm/tlbflush.h | 104 ++++++++++++++++++++++++++----
+>  1 file changed, 90 insertions(+), 14 deletions(-)
 
-I will address the rest of the comments and send v2.
+Could you please rebase these patches on top of the arm64 for-next/tlbi
+branch:
 
-Thanks!
---
-Gustavo
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/tlbi
 
-> >  	}
-> >  }
-> > @@ -7380,7 +7380,7 @@ static void get_link_widths(struct hfi1_devdata *dd, u16 *tx_width,
-> >  			dd_dev_err(dd,
-> >  				   "%s: unexpected max rate %d, using 25Gb\n",
-> >  				   __func__, (int)max_rate);
-> > -			/* fall through */
-> > +			fallthrough;
-> >  		case 1:
-> >  			dd->pport[0].link_speed_active = OPA_LINK_SPEED_25G;
-> >  			break;
-> > @@ -12882,7 +12882,7 @@ static u32 chip_to_opa_lstate(struct hfi1_devdata *dd, u32 chip_lstate)
-> >  		dd_dev_err(dd,
-> >  			   "Unknown logical state 0x%x, reporting IB_PORT_DOWN\n",
-> >  			   chip_lstate);
-> > -		/* fall through */
-> > +		fallthrough;
-> >  	case LSTATE_DOWN:
-> >  		return IB_PORT_DOWN;
-> >  	case LSTATE_INIT:
-> > @@ -12901,7 +12901,7 @@ u32 chip_to_opa_pstate(struct hfi1_devdata *dd, u32 chip_pstate)
-> >  	default:
-> >  		dd_dev_err(dd, "Unexpected chip physical state of 0x%x\n",
-> >  			   chip_pstate);
-> > -		/* fall through */
-> > +		fallthrough;
-> >  	case PLS_DISABLED:
-> >  		return IB_PORTPHYSSTATE_DISABLED;
-> >  	case PLS_OFFLINE:
-> 
-> same comment.
-> 
-> 
-> > diff --git a/drivers/infiniband/hw/hfi1/firmware.c b/drivers/infiniband/hw/hfi1/firmware.c
-> > index 2b57ba70ddd6..0e83d4b61e46 100644
-> > --- a/drivers/infiniband/hw/hfi1/firmware.c
-> > +++ b/drivers/infiniband/hw/hfi1/firmware.c
-> > @@ -1868,11 +1868,8 @@ int parse_platform_config(struct hfi1_devdata *dd)
-> >  									2;
-> >  				break;
-> >  			case PLATFORM_CONFIG_RX_PRESET_TABLE:
-> > -				/* fall through */
-> >  			case PLATFORM_CONFIG_TX_PRESET_TABLE:
-> > -				/* fall through */
-> >  			case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
-> > -				/* fall through */
-> >  			case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
-> >  				pcfgcache->config_tables[table_type].num_table =
-> >  							table_length_dwords;
-> > @@ -1890,15 +1887,10 @@ int parse_platform_config(struct hfi1_devdata *dd)
-> >  			/* metadata table */
-> >  			switch (table_type) {
-> >  			case PLATFORM_CONFIG_SYSTEM_TABLE:
-> > -				/* fall through */
-> >  			case PLATFORM_CONFIG_PORT_TABLE:
-> > -				/* fall through */
-> >  			case PLATFORM_CONFIG_RX_PRESET_TABLE:
-> > -				/* fall through */
-> >  			case PLATFORM_CONFIG_TX_PRESET_TABLE:
-> > -				/* fall through */
-> >  			case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
-> > -				/* fall through */
-> >  			case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
-> >  				break;
-> >  			default:
-> > @@ -2027,15 +2019,10 @@ static int get_platform_fw_field_metadata(struct hfi1_devdata *dd, int table,
-> >
-> >  	switch (table) {
-> >  	case PLATFORM_CONFIG_SYSTEM_TABLE:
-> > -		/* fall through */
-> >  	case PLATFORM_CONFIG_PORT_TABLE:
-> > -		/* fall through */
-> >  	case PLATFORM_CONFIG_RX_PRESET_TABLE:
-> > -		/* fall through */
-> >  	case PLATFORM_CONFIG_TX_PRESET_TABLE:
-> > -		/* fall through */
-> >  	case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
-> > -		/* fall through */
-> >  	case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
-> >  		if (field && field < platform_config_table_limits[table])
-> >  			src_ptr =
-> > @@ -2138,11 +2125,8 @@ int get_platform_config_field(struct hfi1_devdata *dd,
-> >  			pcfgcache->config_tables[table_type].table;
-> >  		break;
-> >  	case PLATFORM_CONFIG_RX_PRESET_TABLE:
-> > -		/* fall through */
-> >  	case PLATFORM_CONFIG_TX_PRESET_TABLE:
-> > -		/* fall through */
-> >  	case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
-> > -		/* fall through */
-> >  	case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
-> >  		src_ptr = pcfgcache->config_tables[table_type].table;
-> >
-> > diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
-> > index 7073f237a949..3222e3acb79c 100644
-> > --- a/drivers/infiniband/hw/hfi1/mad.c
-> > +++ b/drivers/infiniband/hw/hfi1/mad.c
-> > @@ -721,7 +721,7 @@ static int check_mkey(struct hfi1_ibport *ibp, struct ib_mad_hdr *mad,
-> >  			/* Bad mkey not a violation below level 2 */
-> >  			if (ibp->rvp.mkeyprot < 2)
-> >  				break;
-> > -			/* fall through */
-> > +			fallthrough;
-> >  		case IB_MGMT_METHOD_SET:
-> >  		case IB_MGMT_METHOD_TRAP_REPRESS:
-> >  			if (ibp->rvp.mkey_violations != 0xFFFF)
-> > @@ -1272,7 +1272,7 @@ static int set_port_states(struct hfi1_pportdata *ppd, struct opa_smp *smp,
-> >  	case IB_PORT_NOP:
-> >  		if (phys_state == IB_PORTPHYSSTATE_NOP)
-> >  			break;
-> > -		/* FALLTHROUGH */
-> > +		fallthrough;
-> >  	case IB_PORT_DOWN:
-> >  		if (phys_state == IB_PORTPHYSSTATE_NOP) {
-> >  			link_state = HLS_DN_DOWNDEF;
-> > @@ -2300,7 +2300,6 @@ static int __subn_set_opa_vl_arb(struct opa_smp *smp, u32 am, u8 *data,
-> >  	 * can be changed from the default values
-> >  	 */
-> >  	case OPA_VLARB_PREEMPT_ELEMENTS:
-> > -		/* FALLTHROUGH */
-> >  	case OPA_VLARB_PREEMPT_MATRIX:
-> >  		smp->status |= IB_SMP_UNSUP_METH_ATTR;
-> >  		break;
-> > @@ -4170,7 +4169,7 @@ static int subn_get_opa_sma(__be16 attr_id, struct opa_smp *smp, u32 am,
-> >  			return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_CONSUMED;
-> >  		if (ibp->rvp.port_cap_flags & IB_PORT_SM)
-> >  			return IB_MAD_RESULT_SUCCESS;
-> > -		/* FALLTHROUGH */
-> > +		fallthrough;
-> >  	default:
-> >  		smp->status |= IB_SMP_UNSUP_METH_ATTR;
-> >  		ret = reply((struct ib_mad_hdr *)smp);
-> > @@ -4240,7 +4239,7 @@ static int subn_set_opa_sma(__be16 attr_id, struct opa_smp *smp, u32 am,
-> >  			return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_CONSUMED;
-> >  		if (ibp->rvp.port_cap_flags & IB_PORT_SM)
-> >  			return IB_MAD_RESULT_SUCCESS;
-> > -		/* FALLTHROUGH */
-> > +		fallthrough;
-> >  	default:
-> >  		smp->status |= IB_SMP_UNSUP_METH_ATTR;
-> >  		ret = reply((struct ib_mad_hdr *)smp);
-> > diff --git a/drivers/infiniband/hw/hfi1/pio.c b/drivers/infiniband/hw/hfi1/pio.c
-> > index 79126b2b14ab..ff864f6f0266 100644
-> > --- a/drivers/infiniband/hw/hfi1/pio.c
-> > +++ b/drivers/infiniband/hw/hfi1/pio.c
-> > @@ -86,7 +86,7 @@ void pio_send_control(struct hfi1_devdata *dd, int op)
-> >  	switch (op) {
-> >  	case PSC_GLOBAL_ENABLE:
-> >  		reg |= SEND_CTRL_SEND_ENABLE_SMASK;
-> > -	/* Fall through */
-> > +		fallthrough;
-> >  	case PSC_DATA_VL_ENABLE:
-> >  		mask = 0;
-> >  		for (i = 0; i < ARRAY_SIZE(dd->vld); i++)
-> > diff --git a/drivers/infiniband/hw/hfi1/pio_copy.c b/drivers/infiniband/hw/hfi1/pio_copy.c
-> > index 03024cec78dd..b12e4665c9ab 100644
-> > --- a/drivers/infiniband/hw/hfi1/pio_copy.c
-> > +++ b/drivers/infiniband/hw/hfi1/pio_copy.c
-> > @@ -191,22 +191,22 @@ static inline void jcopy(u8 *dest, const u8 *src, u32 n)
-> >  	switch (n) {
-> >  	case 7:
-> >  		*dest++ = *src++;
-> > -		/* fall through */
-> > +		fallthrough;
-> >  	case 6:
-> >  		*dest++ = *src++;
-> > -		/* fall through */
-> > +		fallthrough;
-> >  	case 5:
-> >  		*dest++ = *src++;
-> > -		/* fall through */
-> > +		fallthrough;
-> >  	case 4:
-> >  		*dest++ = *src++;
-> > -		/* fall through */
-> > +		fallthrough;
-> >  	case 3:
-> >  		*dest++ = *src++;
-> > -		/* fall through */
-> > +		fallthrough;
-> >  	case 2:
-> >  		*dest++ = *src++;
-> > -		/* fall through */
-> > +		fallthrough;
-> >  	case 1:
-> >  		*dest++ = *src++;
-> >  		/* fall through */
-> 
-> This is missed and it seems that one memcpy will do the same.
-> 
-> > diff --git a/drivers/infiniband/hw/hfi1/platform.c b/drivers/infiniband/hw/hfi1/platform.c
-> > index 36593f2efe26..4642d6ceb890 100644
-> > --- a/drivers/infiniband/hw/hfi1/platform.c
-> > +++ b/drivers/infiniband/hw/hfi1/platform.c
-> > @@ -668,8 +668,8 @@ static u8 aoc_low_power_setting(struct hfi1_pportdata *ppd)
-> >
-> >  	/* active optical cables only */
-> >  	switch ((cache[QSFP_MOD_TECH_OFFS] & 0xF0) >> 4) {
-> > -	case 0x0 ... 0x9: /* fallthrough */
-> > -	case 0xC: /* fallthrough */
-> > +	case 0x0 ... 0x9: fallthrough;
-> > +	case 0xC: fallthrough;
-> 
-> fallthrough is not needed.
-> 
-> >  	case 0xE:
-> >  		/* active AOC */
-> >  		power_class = get_qsfp_power_class(cache[QSFP_MOD_PWR_OFFS]);
-> > @@ -899,8 +899,8 @@ static int tune_qsfp(struct hfi1_pportdata *ppd,
-> >
-> >  		*ptr_tuning_method = OPA_PASSIVE_TUNING;
-> >  		break;
-> > -	case 0x0 ... 0x9: /* fallthrough */
-> > -	case 0xC: /* fallthrough */
-> > +	case 0x0 ... 0x9: fallthrough;
-> > +	case 0xC: fallthrough;
-> 
-> same
-> 
-> Thanks
+> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+> index bc3949064725..30975ddb8f06 100644
+> --- a/arch/arm64/include/asm/tlbflush.h
+> +++ b/arch/arm64/include/asm/tlbflush.h
+> @@ -50,6 +50,16 @@
+>  		__tlbi(op, (arg) | USER_ASID_FLAG);				\
+>  } while (0)
+>  
+> +#define __tlbi_last_level(op1, op2, arg, last_level) do {		\
+> +	if (last_level)	{						\
+> +		__tlbi(op1, arg);					\
+> +		__tlbi_user(op1, arg);					\
+> +	} else {							\
+> +		__tlbi(op2, arg);					\
+> +		__tlbi_user(op2, arg);					\
+> +	}								\
+> +} while (0)
+> +
+>  /* This macro creates a properly formatted VA operand for the TLBI */
+>  #define __TLBI_VADDR(addr, asid)				\
+>  	({							\
+> @@ -59,6 +69,60 @@
+>  		__ta;						\
+>  	})
+>  
+> +/*
+> + * Get translation granule of the system, which is decided by
+> + * PAGE_SIZE.  Used by TTL.
+> + *  - 4KB	: 1
+> + *  - 16KB	: 2
+> + *  - 64KB	: 3
+> + */
+> +static inline unsigned long get_trans_granule(void)
+> +{
+> +	switch (PAGE_SIZE) {
+> +	case SZ_4K:
+> +		return 1;
+> +	case SZ_16K:
+> +		return 2;
+> +	case SZ_64K:
+> +		return 3;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+
+Maybe you can factor out this switch statement in the for-next/tlbi
+branch to be shared with TTL.
+
+> +/*
+> + * This macro creates a properly formatted VA operand for the TLBI RANGE.
+> + * The value bit assignments are:
+> + *
+> + * +----------+------+-------+-------+-------+----------------------+
+> + * |   ASID   |  TG  | SCALE |  NUM  |  TTL  |        BADDR         |
+> + * +-----------------+-------+-------+-------+----------------------+
+> + * |63      48|47  46|45   44|43   39|38   37|36                   0|
+> + *
+> + * The address range is determined by below formula:
+> + * [BADDR, BADDR + (NUM + 1) * 2^(5*SCALE + 1) * PAGESIZE)
+> + *
+> + */
+> +#define __TLBI_VADDR_RANGE(addr, asid, scale, num, ttl)		\
+
+I don't see a non-zero ttl passed to this macro but I suspect this would
+change if based on top of the TTL patches.
+
+> +	({							\
+> +		unsigned long __ta = (addr) >> PAGE_SHIFT;	\
+> +		__ta &= GENMASK_ULL(36, 0);			\
+> +		__ta |= (unsigned long)(ttl) << 37;		\
+> +		__ta |= (unsigned long)(num) << 39;		\
+> +		__ta |= (unsigned long)(scale) << 44;		\
+> +		__ta |= get_trans_granule() << 46;		\
+> +		__ta |= (unsigned long)(asid) << 48;		\
+> +		__ta;						\
+> +	})
+> +
+> +/* These macros are used by the TLBI RANGE feature. */
+> +#define __TLBI_RANGE_PAGES(num, scale)	(((num) + 1) << (5 * (scale) + 1))
+> +#define MAX_TLBI_RANGE_PAGES		__TLBI_RANGE_PAGES(31, 3)
+> +
+> +#define TLBI_RANGE_MASK			GENMASK_ULL(4, 0)
+> +#define __TLBI_RANGE_NUM(range, scale)	\
+> +	(((range) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK)
+> +
+>  /*
+>   *	TLB Invalidation
+>   *	================
+> @@ -181,32 +245,44 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>  				     unsigned long start, unsigned long end,
+>  				     unsigned long stride, bool last_level)
+>  {
+> +	int num = 0;
+> +	int scale = 0;
+>  	unsigned long asid = ASID(vma->vm_mm);
+>  	unsigned long addr;
+> +	unsigned long range_pages;
+>  
+>  	start = round_down(start, stride);
+>  	end = round_up(end, stride);
+> +	range_pages = (end - start) >> PAGE_SHIFT;
+>  
+> -	if ((end - start) >= (MAX_TLBI_OPS * stride)) {
+> +	if ((!cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
+> +	    (end - start) >= (MAX_TLBI_OPS * stride)) ||
+> +	    range_pages >= MAX_TLBI_RANGE_PAGES) {
+>  		flush_tlb_mm(vma->vm_mm);
+>  		return;
+>  	}
+
+Is there any value in this range_pages check here? What's the value of
+MAX_TLBI_RANGE_PAGES? If we have TLBI range ops, we make a decision here
+but without including the stride. Further down we use the stride to skip
+the TLBI range ops.
+
+>  
+> -	/* Convert the stride into units of 4k */
+> -	stride >>= 12;
+> -
+> -	start = __TLBI_VADDR(start, asid);
+> -	end = __TLBI_VADDR(end, asid);
+> -
+>  	dsb(ishst);
+> -	for (addr = start; addr < end; addr += stride) {
+> -		if (last_level) {
+> -			__tlbi(vale1is, addr);
+> -			__tlbi_user(vale1is, addr);
+> -		} else {
+> -			__tlbi(vae1is, addr);
+> -			__tlbi_user(vae1is, addr);
+> +	while (range_pages > 0) {
+
+BTW, I think we can even drop the "range_" from range_pages, it's just
+the number of pages.
+
+> +		if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
+> +		    stride == PAGE_SIZE && range_pages % 2 == 0) {
+> +			num = __TLBI_RANGE_NUM(range_pages, scale) - 1;
+> +			if (num >= 0) {
+> +				addr = __TLBI_VADDR_RANGE(start, asid, scale,
+> +							  num, 0);
+> +				__tlbi_last_level(rvale1is, rvae1is, addr,
+> +						  last_level);
+> +				start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT;
+> +				range_pages -= __TLBI_RANGE_PAGES(num, scale);
+> +			}
+> +			scale++;
+> +			continue;
+>  		}
+> +
+> +		addr = __TLBI_VADDR(start, asid);
+> +		__tlbi_last_level(vale1is, vae1is, addr, last_level);
+> +		start += stride;
+> +		range_pages -= stride >> PAGE_SHIFT;
+>  	}
+>  	dsb(ish);
+>  }
+
+I think the algorithm is correct, though I need to work it out on a
+piece of paper.
+
+The code could benefit from some comments (above the loop) on how the
+range is built and the right scale found.
+
+-- 
+Catalin
