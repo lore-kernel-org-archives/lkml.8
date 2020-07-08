@@ -2,157 +2,135 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30AFC2065C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C342065C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:02:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kTKeuYMJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KpCSdog7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgGHMC1 (ORCPT
+        id S1728982AbgGHMC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55316 "EHLO
+        Wed, 8 Jul 2020 08:02:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728637AbgGHMC0 (ORCPT
+        with ESMTP id S1728637AbgGHMC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:02:26 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434FEC08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:02:26 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j18so2716281wmi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:02:26 -0700 (PDT)
+        Wed, 8 Jul 2020 08:02:27 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0ACC08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:02:27 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g10so3825887wmc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:02:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DEuQ0isQDZs4z6XMYzEe+OOf6ezHgXSzxswYMqwj6a4=;
-        b=kTKeuYMJiUQcuxilaT9rXVewbfHw8SfFhgcTG5QDP5p55FBn3j+/Pt2Tj5AQaT3mNc
-         jOHmQaoGDGfsJQ7GhFxVBNMbIRp48CHrWPdDJjSOrsmfHMY3rp3a+sYtj6oPuoliZzMw
-         WNdJypkf/t9nRJ9RERASarhQ3shh6G4z4rYN8VOdDhzpbXAQ3XW3fwHDjwE+9wprv0mN
-         eMWQxXxUveuWUoNRWcSvVwZF7qWOU7WC4yq4xifQoyuQ64upmvixE8vkN6ml+AKb1b8p
-         /ut5TfdlDFd1bQy4JqQK+pkath1zDxsYycX1/Re8MuRMhyan3ul2cXdcWYmeWryt3LQs
-         qO7g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OYcU6QrkQ8vEFK16KZ0JwglvYSsa1RsL+nSDllm7Llo=;
+        b=KpCSdog7huLlJl0j5Tz551x3UOHlNMY59WJnYF7IOjTNQ7wGfCYJwMCkY7q/tQQvFB
+         tPxTBmOK4P2phupcTbCAGmgW4bl05vYVFXnkPACYCRmO5PurZJ5BotQL4IfIkwBK0vRx
+         9AEOsxpeG4po7sQEpY9l227WkEHE3rKVKVmlrH1c3xkFMfY8xEXRsJY0W9lQ1rINQecT
+         e8EmCwPRoEPigbSphNAFdzgSsGLRbOtOumrBqaXFbPKvjqEKmzp/E8inOLjAld3mGX0p
+         rqYQH6JHXH01TBdNtxnNOBkHOP5k2WyPD6yo7rRy/U875/5DH47Rut8yY7Nx1xj2qTW5
+         QrQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DEuQ0isQDZs4z6XMYzEe+OOf6ezHgXSzxswYMqwj6a4=;
-        b=cb42jOZD2PF4JdfqAIVgAoQDeEentuy5rMTBWx7NvX0/3/AMqPxqKlLfndv2WBB904
-         e7LEIS686uMEaJQDXeNDw18R8e6U+R+94ioj4uh0GoidRtgaRmLmIt5pzozzGSiCHdHW
-         yA8SLBAjydTvRRKbdUceIi4cx9vOhEEUG3glO+9iPGbvnpr7pp4pUqyJm+bfig9e6wjh
-         +rKXEzns7vcWR/nnonLoyfd2ohreJpvkAaytfU+whJixGGL73NvhSbdtuxrTvVr1i1N7
-         xEP4q7Vchiws/wfUvPXTZGZrVu/vPqtDfs1CtMrdfiAlYm8/41nrqxVU34FPnA1gkF7G
-         fx3A==
-X-Gm-Message-State: AOAM532+mP5QLtWrqCP975m+uzq1L0dF4KsSmpDaErSLOs6vRTEy55vs
-        MJ/x4ZoJqUV5F/MRownafyGF8zQy0Zw=
-X-Google-Smtp-Source: ABdhPJx73gz4OHGK9q9TrCi5i7d6kqBovv7MtsV5YduvjgG7QbypnkpYq6Vk4YcwDOzaOFFX/3WtxQ==
-X-Received: by 2002:a7b:cf16:: with SMTP id l22mr9786555wmg.68.1594209744661;
-        Wed, 08 Jul 2020 05:02:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OYcU6QrkQ8vEFK16KZ0JwglvYSsa1RsL+nSDllm7Llo=;
+        b=lkUv1nLuYKEkV4t8cKwY7e8+L4ciYyOyao6OWR+FTpAgYKzr/xfB0/XHx0SY81a461
+         +GdFqbZVNCs1NOmlpEOyYXxNovOLn0jSj6CNr+YsGM3ydo2TlPQ8EAAg8QZxYavvoQKH
+         LQpRX/x+VJSc9kJTWSa/bV3aPayAXODUCM5Xm9z9kD/uOIyb/vdZD8eu1GAhGl6c1t77
+         hYpr5L/YRO2MJS/YcQozDfEUfitws0l/BpsJBZIZXmlNSfB5QXeTeFuVFkY2rEvrcTe5
+         CeIzDQG+L9okpxvbHtTFnlx/kZt9z8T/0LExwJi/v9/EsUK9pMF8Rp0Rqj35fRUlwfTC
+         enHQ==
+X-Gm-Message-State: AOAM531pxi1bJnDgEld6MF4cy0AchOkwcVlwojXoBYafCR7M2Tmc1kZk
+        5vwuRzfnr+mqgsgszuK1gmu2XQ==
+X-Google-Smtp-Source: ABdhPJycC9Sqys7Gmp7jg5AAPUD6iK1Pq5Uk5vSy/gv3EyAVuisDIiJYjEPx39WpB5AD7BroV+e4sA==
+X-Received: by 2002:a1c:2485:: with SMTP id k127mr8789530wmk.138.1594209746128;
+        Wed, 08 Jul 2020 05:02:26 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.02.23
+        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.02.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:02:23 -0700 (PDT)
+        Wed, 08 Jul 2020 05:02:25 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 00/30] Fix a bunch more SCSI related W=1 warnings
-Date:   Wed,  8 Jul 2020 13:01:51 +0100
-Message-Id: <20200708120221.3386672-1-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH 01/30] scsi: libfc: fc_exch: Supply some missing kerneldoc struct/function attributes/params
+Date:   Wed,  8 Jul 2020 13:01:52 +0100
+Message-Id: <20200708120221.3386672-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200708120221.3386672-1-lee.jones@linaro.org>
+References: <20200708120221.3386672-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+Fixes the following W=1 kernel build warning(s):
 
-Slowly working through the SCSI related ones.  There are many.
+ drivers/scsi/libfc/fc_exch.c:66: warning: Function parameter or member 'left' not described in 'fc_exch_pool'
+ drivers/scsi/libfc/fc_exch.c:66: warning: Function parameter or member 'right' not described in 'fc_exch_pool'
+ drivers/scsi/libfc/fc_exch.c:100: warning: Function parameter or member 'lport' not described in 'fc_exch_mgr'
+ drivers/scsi/libfc/fc_exch.c:727: warning: Function parameter or member 'ep' not described in 'fc_invoke_resp'
+ drivers/scsi/libfc/fc_exch.c:727: warning: Function parameter or member 'sp' not described in 'fc_invoke_resp'
+ drivers/scsi/libfc/fc_exch.c:727: warning: Function parameter or member 'fp' not described in 'fc_invoke_resp'
 
-Lee Jones (30):
-  scsi: libfc: fc_exch: Supply some missing kerneldoc struct/function
-    attributes/params
-  include: scsi: scsi_transport_fc: Match HBA Attribute Length with
-    HBAAPI V2.0 definitions
-  scsi: libfc: fc_disc: trivial: Fix spelling mistake of 'discovery'
-  scsi: fcoe: fcoe: Fix various kernel-doc infringements
-  scsi: fcoe: fcoe_ctlr: Fix a myriad of documentation issues
-  scsi: fcoe: fcoe_transport: Correct some kernel-doc issues
-  scsi: bnx2fc: bnx2fc_fcoe: Repair a range of kerneldoc issues
-  scsi: qedf: qedf_main: Demote obvious misuse of kerneldoc to standard
-    comment blocks
-  scsi: qedf: qedf_main: Remove set but not checked variable 'tmp'
-  scsi: libfc: fc_lport: Repair function parameter documentation
-  scsi: libfc: fc_rport: Fix a couple of misdocumented function
-    parameters
-  scsi: libfc: fc_fcp: Provide missing and repair existing function
-    documentation
-  scsi: libfc: fc_rport: Fix bitrotted function parameter and copy/paste
-    error
-  scsi: bnx2fc: bnx2fc_hwi: Fix a couple  of bitrotted function
-    documentation headers
-  scsi: arcmsr: arcmsr_hba: Remove some set but unused variables
-  scsi: arcmsr: arcmsr_hba: Make room for the trailing NULL, even if it
-    is over-written
-  scsi: qedf: qedf_io: Remove a whole host of unused variables
-  scsi: bnx2fc: bnx2fc_tgt: Demote obvious misuse of kerneldoc to
-    standard comment blocks
-  scsi: aic7xxx: aic7xxx_osm: Remove unused variable 'tinfo'
-  scsi: aic7xxx: aic7xxx_osm: Remove unused variable 'ahc'
-  scsi: aic7xxx: aic7xxx_osm: Remove unused variable 'targ'
-  scsi: aic7xxx: aic7xxx_osm: Fix 'amount_xferred' set but not used
-    issue
-  scsi: qedf: qedf_debugfs: Demote obvious misuse of kerneldoc to
-    standard comment blocks
-  scsi: aacraid: linit: Provide suggested curly braces around empty body
-    of if()
-  scsi: aacraid: linit: Fix a couple of small kerneldoc issues
-  scsi: aic94xx: aic94xx_init: Demote seemingly unintentional kerneldoc
-    header
-  scsi: pm8001: pm8001_init: Demote obvious misuse of kerneldoc and
-    update others
-  scsi: aic94xx: aic94xx_hwi: Repair kerneldoc formatting error and
-    remove extra param
-  scsi: aacraid: aachba: Fix a bunch of function doc formatting errors
-  scsi: qla4xxx: ql4_init: Provide a missing function param description
-    and fix formatting
+Cc: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/scsi/libfc/fc_exch.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
- drivers/scsi/aacraid/aachba.c       | 17 +++-------------
- drivers/scsi/aacraid/linit.c        |  6 +++---
- drivers/scsi/aic7xxx/aic7xxx_osm.c  | 13 ++----------
- drivers/scsi/aic94xx/aic94xx_hwi.c  |  3 +--
- drivers/scsi/aic94xx/aic94xx_init.c |  2 +-
- drivers/scsi/arcmsr/arcmsr_hba.c    | 31 ++++++++++++-----------------
- drivers/scsi/bnx2fc/bnx2fc_fcoe.c   | 18 ++++++++---------
- drivers/scsi/bnx2fc/bnx2fc_hwi.c    |  6 +++---
- drivers/scsi/bnx2fc/bnx2fc_tgt.c    |  7 +++----
- drivers/scsi/fcoe/fcoe.c            | 10 ++++------
- drivers/scsi/fcoe/fcoe_ctlr.c       | 26 ++++++++++++------------
- drivers/scsi/fcoe/fcoe_transport.c  |  4 +++-
- drivers/scsi/libfc/fc_disc.c        |  2 +-
- drivers/scsi/libfc/fc_exch.c        |  7 ++++++-
- drivers/scsi/libfc/fc_fcp.c         | 11 ++++++----
- drivers/scsi/libfc/fc_lport.c       |  7 +++++--
- drivers/scsi/libfc/fc_rport.c       |  4 ++--
- drivers/scsi/pm8001/pm8001_init.c   | 30 ++++++++++++++--------------
- drivers/scsi/qedf/qedf_debugfs.c    | 18 ++++++++---------
- drivers/scsi/qedf/qedf_io.c         | 30 ++++------------------------
- drivers/scsi/qedf/qedf_main.c       | 10 ++++------
- drivers/scsi/qla4xxx/ql4_init.c     |  7 ++++---
- include/scsi/fc/fc_ms.h             |  4 ++--
- 23 files changed, 115 insertions(+), 158 deletions(-)
-
+diff --git a/drivers/scsi/libfc/fc_exch.c b/drivers/scsi/libfc/fc_exch.c
+index 52e8666598531..16eb3b60ed582 100644
+--- a/drivers/scsi/libfc/fc_exch.c
++++ b/drivers/scsi/libfc/fc_exch.c
+@@ -49,6 +49,8 @@ static struct workqueue_struct *fc_exch_workqueue;
+  * @total_exches: Total allocated exchanges
+  * @lock:	  Exch pool lock
+  * @ex_list:	  List of exchanges
++ * @left:	  Cache of free slot in exch array
++ * @right:	  Cache of free slot in exch array
+  *
+  * This structure manages per cpu exchanges in array of exchange pointers.
+  * This array is allocated followed by struct fc_exch_pool memory for
+@@ -60,7 +62,6 @@ struct fc_exch_pool {
+ 	u16		 next_index;
+ 	u16		 total_exches;
+ 
+-	/* two cache of free slot in exch array */
+ 	u16		 left;
+ 	u16		 right;
+ } ____cacheline_aligned_in_smp;
+@@ -74,6 +75,7 @@ struct fc_exch_pool {
+  * @ep_pool:	    Reserved exchange pointers
+  * @pool_max_index: Max exch array index in exch pool
+  * @pool:	    Per cpu exch pool
++ * @lport:	    Local exchange port
+  * @stats:	    Statistics structure
+  *
+  * This structure is the center for creating exchanges and sequences.
+@@ -702,6 +704,9 @@ int fc_seq_exch_abort(const struct fc_seq *req_sp, unsigned int timer_msec)
+ 
+ /**
+  * fc_invoke_resp() - invoke ep->resp()
++ * @ep:	   The exchange to be operated on
++ * @fp:	   The frame pointer to pass through to ->resp()
++ * @sp:	   The sequence pointer to pass through to ->resp()
+  *
+  * Notes:
+  * It is assumed that after initialization finished (this means the
 -- 
 2.25.1
 
