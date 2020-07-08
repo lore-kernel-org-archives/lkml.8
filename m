@@ -2,122 +2,112 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10662C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B50C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3C89206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10BCC206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:49:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZHppF9kI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fc24JXCH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgGHCqO (ORCPT
+        id S1729339AbgGHCt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 22:46:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53660 "EHLO
+        Tue, 7 Jul 2020 22:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgGHCqM (ORCPT
+        with ESMTP id S1728479AbgGHCt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 22:46:12 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6907BC061755;
-        Tue,  7 Jul 2020 19:46:12 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id w6so48797671ejq.6;
-        Tue, 07 Jul 2020 19:46:12 -0700 (PDT)
+        Tue, 7 Jul 2020 22:49:28 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2189CC08C5DC
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 19:49:28 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 1so1599012pfn.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 19:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XuQXgKfjhRPfHlI6CUS9W8MpPRXyJFXM/VMcVD9TWSg=;
-        b=ZHppF9kI4mXLPuSLMpLIZJIATEcKJyXFvjR+sgZlNQVkPpRF7/UQTAW3e3oCFUefSZ
-         ZmtO5jwWdkEuY4gEkjAHdOR4nOrFhs2xLcPFyZCLFl4FibCkmmUv8TDU8of1bN2lFET5
-         UQT2mnqTzsQT5mVhSfwfs9uABpRRfYSopCH49SVJSDJXmKfshxVWJTGJZXvGz2Pd8sLB
-         rhbK/BSxfB86gfl/7qnIBnoUPUoIne9egWs1BbscFuF5I+cw9YspYJC1hS5gmPS+Okta
-         xkw2i3TcD18rjgrEPvg5UkGbReMo+p6CcJ6p+/R0AzTYz2ZINiEmkfhBe3gvP2p2B7UY
-         HGDg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oDMKuoobK+wqThSWZV2fTvhky7fucypql6WSexq7SY4=;
+        b=Fc24JXCHjbpqPEpvXryUfcnNyA2mmorz14N9RlzXJsBnaQdTLSB+0vNa2gElwKFTBq
+         tROEvAxBpwQpNioPsPuphSsbqPGoxKoyKPyUpdbez8qBRHjTBthA8AQIgNXX6dxW8AOP
+         CRHvVbQFe8l2sTYGW/NR2veeV54tHy6AMZ1cc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XuQXgKfjhRPfHlI6CUS9W8MpPRXyJFXM/VMcVD9TWSg=;
-        b=WPaDhUZ24TrpNuuQwQkWR49zBfBOhd4ChoFZOti9woh/g+3f6owQSjDiFYKME2tQfg
-         bBl8pjRrzl+NsBHw5hmAMaeladKqO+7tj3M8QpAPvBKt99p23PgSiaRAMCxl7jXs9a9V
-         oXUp8rd+ii8b0XYfO/wLVaQ1p8HcDInuOCm2wJBmSH2fan/C88AAMNxZWPCXQdOJI6OQ
-         bNY/LwvWFsWSiBGMpMBfHlfFEuMKrU/Kf3yZgS71n774EiUnrJ+TO+l23JUoMcAL9xFy
-         44MOzTmY+aF6j2uFackowPxpnW0Hhdr7M2AI0saB04DAnANYzVNITcKyLtiSCRr4rFBO
-         vRxQ==
-X-Gm-Message-State: AOAM531xfvo2jx2pcC7T/rc4E51lUlQPhfGq6hf/ejapg/GNMzv+6sfo
-        KJVIF0Hh75N0l1yJHzHRQSV4V8NVBvq49pKt1Oc=
-X-Google-Smtp-Source: ABdhPJxYdhLRcy744oW+MNtiCcL1RmFwk3vsdiHmDMArMFLyhT1qlrWXymL9oHuKbRVyql22v0GBVdidoxnHGMqGO+0=
-X-Received: by 2002:a17:906:31c8:: with SMTP id f8mr38085963ejf.269.1594176371013;
- Tue, 07 Jul 2020 19:46:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oDMKuoobK+wqThSWZV2fTvhky7fucypql6WSexq7SY4=;
+        b=VM+PYXnGV7kcrQZ9AGpi2Lr7ghmHWrtYZQ6nAjeXWRxYb8GYFBTkcfOH6rSjSEpnqc
+         dHw/Zi7EO/c+OX7FPMWRQgNBOlkILxRhasJkL1aKwwiNYUMmY//CkW+YVGWGUnxl0OTN
+         bbmkioe+JuRYDU/OAV1pR9SRe59wi5VuqY41/3X01MxKjHbqTfsIEXH7YueA/y4ThwWK
+         24YZ7yEMH3vXBn2hP7ca4U9/mMnRWEcxQd4VtOhOCq0Y/zHke+G+5iTP6h7EiRL9qFzx
+         hsOgEMXIQ3CBRZ7exnS667qvCkNoAdBIwYqwa9z54nA2T7rKUO6MPSbV2N4suygC4jan
+         gvqA==
+X-Gm-Message-State: AOAM530jfNqlQeG0K10iIO/aTlDMQPYCfRO2IoWsUQzrT4hKW8/4AvAY
+        X0tue2lXrdIIruYN71IwOD1g+A==
+X-Google-Smtp-Source: ABdhPJy17KyAApy//tmd0auIXDpzf4SJ5j36NacgxMqfw+6L7OOFclQs7+UZzPNkKGPt/n7+60qswA==
+X-Received: by 2002:a63:5110:: with SMTP id f16mr46362138pgb.377.1594176567609;
+        Tue, 07 Jul 2020 19:49:27 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c187sm23031520pfc.146.2020.07.07.19.49.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 19:49:26 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 19:49:25 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Nick Terrell <nickrterrell@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Terrell <terrelln@fb.com>
+Subject: Re: [PATCH v6 2/8] lib: prepare xxhash for preboot environment
+Message-ID: <202007071947.5E9723AF48@keescook>
+References: <20200707034604.1539157-1-nickrterrell@gmail.com>
+ <20200707034604.1539157-3-nickrterrell@gmail.com>
+ <20200707215925.GA1591079@rani.riverdale.lan>
 MIME-Version: 1.0
-References: <20200707180800.549b561b@canb.auug.org.au> <2f85f3c4-a58b-f225-a533-86e209a4651c@infradead.org>
- <7ae1c7e3-ce8d-836b-1ae7-d4d00bd8f95c@broadcom.com>
-In-Reply-To: <7ae1c7e3-ce8d-836b-1ae7-d4d00bd8f95c@broadcom.com>
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-Date:   Wed, 8 Jul 2020 08:16:00 +0530
-Message-ID: <CAOh2x=nGvuzicr77y-X5u8FWP7_G_UGosvdmtns01VCgtM_s=g@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jul 7 (scsi/lpfc/lpfc_init.c)
-To:     James Smart <james.smart@broadcom.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        dick kennedy <dick.kennedy@broadcom.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707215925.GA1591079@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On Tue, Jul 07, 2020 at 05:59:25PM -0400, Arvind Sankar wrote:
+> On Mon, Jul 06, 2020 at 08:45:58PM -0700, Nick Terrell wrote:
+> > From: Nick Terrell <terrelln@fb.com>
+> > 
+> > Don't export symbols if XXH_PREBOOT is defined.
+> > 
+> > This change is necessary to get xxhash to work in a preboot environment,
+> > which is needed to support zstd-compressed kernels.
+> 
+> The usual way to do it is by adding -D__DISABLE_EXPORTS to the CFLAGS, which will
+> cause EXPORT_SYMBOL to be stubbed out. Doesn't that work here?
 
-On Tue, Jul 7, 2020 at 11:43 PM James Smart <james.smart@broadcom.com> wrote:
->
-> On 7/7/2020 10:09 AM, Randy Dunlap wrote:
-> > On 7/7/20 1:08 AM, Stephen Rothwell wrote:
-> >> Hi all,
-> >>
-> >> Changes since 20200706:
-> >>
-> > on i386:
-> >
-> > when CONFIG_ACPI is not set/enabled:
-> >
-> >
-> > ../drivers/scsi/lpfc/lpfc_init.c:1265:15: error: implicit declaration of function 'get_cpu_idle_time'; did you mean 'get_cpu_device'? [-Werror=implicit-function-declaration]
-> >
-> >
-> > The cpufreq people want justification for using
+This is quite rare, actually:
 
-I am one of cpufreq people :)
+$ git grep DISABLE_EXPORTS
+arch/s390/purgatory/Makefile:CFLAGS_sha256.o := -D__DISABLE_EXPORTS
+arch/x86/boot/compressed/kaslr.c:#define __DISABLE_EXPORTS
+arch/x86/purgatory/Makefile:CFLAGS_sha256.o := -D__DISABLE_EXPORTS
+drivers/firmware/efi/libstub/Makefile: -D__DISABLE_EXPORTS
+include/linux/export.h:#if !defined(CONFIG_MODULES) || defined(__DISABLE_EXPORTS)
 
-> > get_cpu_idle_time().  Please see
-> > https://lore.kernel.org/linux-scsi/20200707030943.xkocccy6qy2c3hrx@vireshk-i7/
-> >
->
-> The driver is using cpu utilization in order to choose between softirq
-> or work queues in handling an interrupt. Less-utilized, softirq is used.
-> higher utilized, work queue is used.  The utilization is checked
-> periodically via a heartbeat.
+But yes, it seems that would be the better approach.
 
-I understand that you need to use this functionality, what I was
-rather asking was
-why do you need to use a routine that is for cpufreq related stuff only.
-
-I also see that drivers/macintosh/rack-meter.c has its own
-implementation for this.
-
-What I would suggest is that, if required, we should add/move a
-generic implementation
-of this to another file (which is available to all) and then let
-everyone use it.
-
---
-viresh
+-- 
+Kees Cook
