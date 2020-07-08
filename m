@@ -2,119 +2,111 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1870C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97744C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1571206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED70206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:00:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQas3odO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="B1VYJdPq";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="GkIbqh4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbgGHP7A (ORCPT
+        id S1730531AbgGHQAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:59:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730455AbgGHP6y (ORCPT
+        Wed, 8 Jul 2020 12:00:00 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:34698 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730179AbgGHP77 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:58:54 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6300BC061A0B;
-        Wed,  8 Jul 2020 08:58:54 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so54898016ljg.13;
-        Wed, 08 Jul 2020 08:58:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=y3Kszy//dV/3ZrTCIiMY2zk03BLva2o1jpjsj31kgZc=;
-        b=cQas3odOPQtQaLvgYDobztGG6g2gEYZ2Hg4fbddCnQZtOplm3zyXipgeF0h9B/kqKv
-         L0cEB4uzqhWDx2eBXL91wx2LzXPDYh9nUo2yuja8uPPovI46c1+XS3W4NBDB3xV33sQ7
-         IaSuvEay+d3bPI0UJoajKxhql7BbsBHyMJLfsRqPHyvqaMlmKSlbweBuFHekIj4NZVzS
-         KfNGPZWZUlZKmmtwW/6+7K8qiPTgLsqmiWUIl1ymsnb7xywQMWzgee7nDnCQdpKbDXd1
-         VDIvJ/McsukJztVxWQn2oPoISWZDSc8hcTGVVcXSW6UCooIEr9j4wQuZGAM1yalQRWhQ
-         sbOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=y3Kszy//dV/3ZrTCIiMY2zk03BLva2o1jpjsj31kgZc=;
-        b=jidlL0hDHsBKj9Iwz/ldnZDhdUPdssajpr53gbOQrgtjQuqttkumC+vU1CuK4gd59o
-         8AjNrlj1Sh71n0Z6vKMWE2UR1RacMG4kDMFerT+3IwWu/a7AFblUoW43jAPm3BIOb5uS
-         eVlvd8btuYNxp9T+2VJYuEwHYmA+xSSmEdomJGHZRNa7Y31hpfTksCX1bIYgCadB+Rop
-         J+Ldqn67XDixaPINfx6lhAbrZom3Km3pCkVOVHrm4I3WpWfV+9exgd33RtM4Qtx/8Ov8
-         hCJOA/5SV6lGyJXfcio8fmuCx78Fft4BfpVTELj9XFVXUFBU+MFchmjpj4QAKBdnGTLZ
-         wMVA==
-X-Gm-Message-State: AOAM532A7gRlkuVASJN3ROmxiV7lPPWexOYyWtIBb/j617pBWJSSIZkx
-        XKbYfeAOuabh8dfTYVFSEWE=
-X-Google-Smtp-Source: ABdhPJyrpjpvYaDXRvcwQAr6Bs0kWI783MfxN1YD+81hFyE9gbvH6upZWVh5QOqda7MHyTpTdEMdXw==
-X-Received: by 2002:a05:651c:2006:: with SMTP id s6mr22289969ljo.74.1594223932578;
-        Wed, 08 Jul 2020 08:58:52 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.gmail.com with ESMTPSA id 16sm37977ljw.127.2020.07.08.08.58.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 08:58:52 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] gpio: max77620: Replace 8 with MAX77620_GPIO_NR
-Date:   Wed,  8 Jul 2020 18:58:34 +0300
-Message-Id: <20200708155834.19762-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200708155834.19762-1-digetx@gmail.com>
-References: <20200708155834.19762-1-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Jul 2020 11:59:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 0E5E28EE1D9;
+        Wed,  8 Jul 2020 08:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1594223998;
+        bh=wqk55O2VC/Slr4lVR3r5mJCWnsiLDjFN52OqFL8PToM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=B1VYJdPqFQS+fqqY5rdrSizfLkmTMBloNay1fdTmef1GfIr5qSpMaM/9Z2Kwp1Jfl
+         YMOA9nrMyFPKUXP7Q0mZc3G/ORxbR+PhOI9juZpCpHcC7YuQJiLNT5ZFWya4Pb94Xt
+         KheBxppUY/WoSIt0r7n5/YBsx8YjMsH1alNeNEqc=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 4TxuoJRcRocU; Wed,  8 Jul 2020 08:59:57 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 29F768EE12E;
+        Wed,  8 Jul 2020 08:59:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1594223997;
+        bh=wqk55O2VC/Slr4lVR3r5mJCWnsiLDjFN52OqFL8PToM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=GkIbqh4j2vhdw1VTdraa3DFeRdfvYkxyIsXKasakocl9hy7o6/dksAOmGvDJwcf6q
+         jR6m83Rn8RfzfXbggCzkMrDm88NlYrkPpWE6mzI20MbDO/mwgITLQNskicNzSUcXNf
+         bfsbM5rJ3iskElHX/5K8LlyWYiqKij0UER5blm4Y=
+Message-ID: <1594223995.4349.28.camel@HansenPartnership.com>
+Subject: Re: [Tech-board-discuss] [PATCH v2] CodingStyle: Inclusive
+ Terminology
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Joe Perches <joe@perches.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     ksummit-discuss@lists.linuxfoundation.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        SeongJae Park <sjpark@amazon.de>, linux-kernel@vger.kernel.org,
+        tech-board-discuss@lists.linuxfoundation.org,
+        Chris Mason <clm@fb.clm>, Dave Airlie <airlied@redhat.com>,
+        torvalds@linux-foundation.org
+Date:   Wed, 08 Jul 2020 08:59:55 -0700
+In-Reply-To: <b15e2652aba06dbe244f5ed447e6e96f12302198.camel@perches.com>
+References: <159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <b15e2652aba06dbe244f5ed447e6e96f12302198.camel@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MAX77620_GPIO_NR enum value represents the total number of GPIOs,
-let's use it instead of a raw value in order to improve the code's
-readability a tad.
+On Wed, 2020-07-08 at 04:04 -0700, Joe Perches wrote:
+> On Wed, 2020-07-08 at 00:23 -0700, Dan Williams wrote:
+> > Linux maintains a coding-style and its own idiomatic set of
+> > terminology.
+> > Update the style guidelines to recommend replacements for the terms
+> > master/slave and blacklist/whitelist.
+> > 
+> > Link: http://lore.kernel.org/r/159389297140.2210796.135901422546687
+> > 87525.stgit@dwillia2-desk3.amr.corp.intel.com
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> > Acked-by: Dave Airlie <airlied@redhat.com>
+> > Acked-by: Kees Cook <keescook@chromium.org>
+> > Acked-by: SeongJae Park <sjpark@amazon.de>
+> > Signed-off-by: Olof Johansson <olof@lixom.net>
+> > Signed-off-by: Chris Mason <clm@fb.clm>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> > Changes since v1 [1]
+> > - Drop inclusive-terminology.rst, it is in the lore archives if the
+> >   arguments are needed for future debates, but otherwise no
+> > pressing
+> >   need to carry it in the tree (Linus, James)
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/gpio/gpio-max77620.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Acked-by: James Bottomley <James.Bottomley@HansenPartnership.com>
 
-diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index 970ad6397a56..08bd5b141437 100644
---- a/drivers/gpio/gpio-max77620.c
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -19,8 +19,8 @@ struct max77620_gpio {
- 	struct regmap		*rmap;
- 	struct device		*dev;
- 	struct mutex		buslock; /* irq_bus_lock */
--	unsigned int		irq_type[8];
--	bool			irq_enabled[8];
-+	unsigned int		irq_type[MAX77620_GPIO_NR];
-+	bool			irq_enabled[MAX77620_GPIO_NR];
- };
- 
- static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
-@@ -38,7 +38,7 @@ static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
- 
- 	pending = value;
- 
--	for_each_set_bit(offset, &pending, 8) {
-+	for_each_set_bit(offset, &pending, MAX77620_GPIO_NR) {
- 		unsigned int virq;
- 
- 		virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
--- 
-2.26.0
+> Where did Linus publicly state this was unnecessary?
+
+https://lists.linuxfoundation.org/pipermail/tech-board-discuss/2020-July/000412.html
+
+James
+
 
