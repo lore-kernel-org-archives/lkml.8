@@ -2,142 +2,225 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1912C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4921DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A9820786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594215175;
-	bh=qNSFZBgBPSN6z9JLu6mOVFeNQ4nZWtGCv5IVzJHjSFI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mA7hF33+k3Rn+aJ/X6UMmL1Vw3BIEGKVFzjaLUrcjE1MqZuML51DSxqhcag7wRf1M
-	 s3Xc2weBptZuCktMIplswkE18b8Wz3/jrzhIbP7vqJf24gKSLrcMWg4cKUCv2Opf9i
-	 ANhnBvlpKhA24o3+y8lnAgJLLqb83pUAw438vmb0=
+	by mail.kernel.org (Postfix) with ESMTP id 213BE20786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:33:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Rp56wWkG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbgGHNcy (ORCPT
+        id S1729650AbgGHNdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:32:54 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33707 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729323AbgGHNcx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:32:53 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m9so9717909pfh.0;
-        Wed, 08 Jul 2020 06:32:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=G3W3NkSnYhvVkNWYcmyRPWMbSJt95CSFGEsN8GxSyEw=;
-        b=mVanR3Whkf4arRJg+Thx4buqfyznr1htPmIEtMovYg8JU2x4Y0fUITkChQIPudh8fs
-         IaFhf8DzAIITNTmXFtWk70Da3vB6SYOCXMOUwZ3XrGf04jz8aqKmtHQxZ9vXgXV/HV3A
-         Y8FIcCnZLjSJM2XZQHLYxOaElpwgJHyDPqbSbthyXWUjBlnKVdTwY0KdIuyh0eh7YsjJ
-         uXrHbeIS6GlGmGjEOH6m8O6RXXLIFsb0+EcyT+OWuftQv+J369LEHLIyzuHX1SY3Xanw
-         3h5k17dvLZilYwqfMN5Qvxqh6dzRc9I59PRmRNkuzAlkRUutb9ZeQBXoshmUkxAXtDer
-         ew2g==
-X-Gm-Message-State: AOAM533d3i/ukNuyU4lsK1I//23MxoKIm+kvoMK9TRA1+JoEvoleeajw
-        yb+OTEw3xRrL1HqERj9ZlNE=
-X-Google-Smtp-Source: ABdhPJwZ7feFM1ZYPTAtPzjUOIBUzFcSp+eVIFKh44MG9j3GZhMy3GAUeMk4BS0+DEkeaPGPchsaFA==
-X-Received: by 2002:a62:7505:: with SMTP id q5mr50170680pfc.262.1594215171970;
-        Wed, 08 Jul 2020 06:32:51 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id n25sm12846pff.51.2020.07.08.06.32.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 06:32:51 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 801FF401AE; Wed,  8 Jul 2020 13:32:50 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 13:32:50 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 10/16] exec: Remove do_execve_file
-Message-ID: <20200708133250.GH4332@42.do-not-panic.com>
-References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
- <20200702164140.4468-10-ebiederm@xmission.com>
- <20200708063525.GC4332@42.do-not-panic.com>
- <20200708124148.GP13911@42.do-not-panic.com>
- <87y2nugnnq.fsf@x220.int.ebiederm.org>
+        Wed, 8 Jul 2020 09:33:08 -0400
+Received: from vps.xff.cz ([195.181.215.36]:51824 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729147AbgGHNdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:33:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1594215185; bh=idGKF3JzxhsuONqMIcvOgw3WlXUUbr9YQZ9VScLBUYg=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=Rp56wWkG9R4RLksIW7bT1P61QkUVxcyv2wX+/7vHCpxeoUMSrE1Bi6DgyZSXgqc8+
+         y/DikjqGDtr6N9UFBztaPkoS+vvTdOUXWMHEQ4t/na3QL9r1uv9Fim0TQ0sifgFNcO
+         iqkuaF/HsWznZrrsKSlbyTFB8bEPCgx8GX356vho=
+Date:   Wed, 8 Jul 2020 15:33:05 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
+Message-ID: <20200708133305.hpvxybbsy3xdxtmp@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Frank Lee <tiny.windzz@gmail.com>, linux-sunxi@googlegroups.com,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200708105527.868987-1-megous@megous.com>
+ <CAEExFWvR4QnAQsXBnxk3V776P+YVJzs4PU-HWJ7dfo4B6cdtkg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87y2nugnnq.fsf@x220.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEExFWvR4QnAQsXBnxk3V776P+YVJzs4PU-HWJ7dfo4B6cdtkg@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 08:08:09AM -0500, Eric W. Biederman wrote:
-> Luis Chamberlain <mcgrof@kernel.org> writes:
-> 
-> > On Wed, Jul 08, 2020 at 06:35:25AM +0000, Luis Chamberlain wrote:
-> >> On Thu, Jul 02, 2020 at 11:41:34AM -0500, Eric W. Biederman wrote:
-> >> > Now that the last callser has been removed remove this code from exec.
-> >> > 
-> >> > For anyone thinking of resurrecing do_execve_file please note that
-> >> > the code was buggy in several fundamental ways.
-> >> > 
-> >> > - It did not ensure the file it was passed was read-only and that
-> >> >   deny_write_access had been called on it.  Which subtlely breaks
-> >> >   invaniants in exec.
-> >> > 
-> >> > - The caller of do_execve_file was expected to hold and put a
-> >> >   reference to the file, but an extra reference for use by exec was
-> >> >   not taken so that when exec put it's reference to the file an
-> >> >   underflow occured on the file reference count.
-> >> 
-> >> Maybe its my growing love with testing, but I'm going to have to partly
-> >> blame here that we added a new API without any respective testing.
-> >> Granted, I recall this this patch set could have used more wider review
-> >> and a bit more patience... but just mentioning this so we try to avoid
-> >> new api-without-testing with more reason in the future.
-> >> 
-> >> But more importantly, *how* could we have caught this? Or how can we
-> >> catch this sort of stuff better in the future?
+On Wed, Jul 08, 2020 at 07:55:40PM +0800, Frank Lee wrote:
+> HI Ondrej,
+> On Wed, Jul 8, 2020 at 6:55 PM Ondrej Jirman <megous@megous.com> wrote:
 > >
-> > Of all the issues you pointed out with do_execve_file(), since upon
-> > review the assumption *by design* was that LSMs/etc would pick up issues
-> > with the file *prior* to processing, I think that this file reference
-> > count issue comes to my attention as the more serious issue which I
-> > wish we could address *first* before this crusade.
+> > I noticed several mobile Linux distributions failing to enable the
+> > thermal regulation correctly, because the kernel is silent
+> > when thermal driver fails to probe. Add enough error reporting
+> > to debug issues and warn users in case thermal sensor is failing
+> > to probe.
 > >
-> > So I have to ask, has anyone *really tried* to give a crack at fixing
-> > this refcount issue in a smaller way first? Alexei?
+> > Failing to notify users means, that SoC can easily overheat under
+> > load.
 > >
-> > I'm not opposed to the removal of do_execve_file(), however if there
-> > is a reproducible crash / issue with the existing user, this sledge
-> > hammer seems a bit overkill for older kernels.
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  drivers/thermal/sun8i_thermal.c | 55 ++++++++++++++++++++++++++-------
+> >  1 file changed, 43 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> > index 74d73be16496..9065e79ae743 100644
+> > --- a/drivers/thermal/sun8i_thermal.c
+> > +++ b/drivers/thermal/sun8i_thermal.c
+> > @@ -287,8 +287,12 @@ static int sun8i_ths_calibrate(struct ths_device *tmdev)
+> >
+> >         calcell = devm_nvmem_cell_get(dev, "calibration");
+> >         if (IS_ERR(calcell)) {
+> > +               dev_err(dev, "Failed to get calibration nvmem cell (%ld)\n",
+> > +                       PTR_ERR(calcell));
+> > +
+> >                 if (PTR_ERR(calcell) == -EPROBE_DEFER)
+> >                         return -EPROBE_DEFER;
+> > +
+> >                 /*
+> >                  * Even if the external calibration data stored in sid is
+> >                  * not accessible, the THS hardware can still work, although
+> > @@ -308,6 +312,8 @@ static int sun8i_ths_calibrate(struct ths_device *tmdev)
+> >         caldata = nvmem_cell_read(calcell, &callen);
+> >         if (IS_ERR(caldata)) {
+> >                 ret = PTR_ERR(caldata);
+> > +               dev_err(dev, "Failed to read calibration data (%d)\n",
+> > +                       ret);
+> >                 goto out;
+> >         }
+> >
+> > @@ -330,23 +336,35 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+> >                 return PTR_ERR(base);
+> >
+> >         tmdev->regmap = devm_regmap_init_mmio(dev, base, &config);
+> > -       if (IS_ERR(tmdev->regmap))
+> > +       if (IS_ERR(tmdev->regmap)) {
+> > +               dev_err(dev, "Failed to init regmap (%ld)\n",
+> > +                       PTR_ERR(tmdev->regmap));
+> >                 return PTR_ERR(tmdev->regmap);
+> > +       }
+> >
+> >         if (tmdev->chip->has_bus_clk_reset) {
+> >                 tmdev->reset = devm_reset_control_get(dev, NULL);
+> > -               if (IS_ERR(tmdev->reset))
+> > +               if (IS_ERR(tmdev->reset)) {
+> > +                       dev_err(dev, "Failed to get reset (%ld)\n",
+> > +                               PTR_ERR(tmdev->reset));
+> >                         return PTR_ERR(tmdev->reset);
+> > +               }
+> >
+> >                 tmdev->bus_clk = devm_clk_get(&pdev->dev, "bus");
+> > -               if (IS_ERR(tmdev->bus_clk))
+> > +               if (IS_ERR(tmdev->bus_clk)) {
+> > +                       dev_err(dev, "Failed to get bus clock (%ld)\n",
+> > +                               PTR_ERR(tmdev->bus_clk));
+> >                         return PTR_ERR(tmdev->bus_clk);
+> > +               }
+> >         }
+> >
+> >         if (tmdev->chip->has_mod_clk) {
+> >                 tmdev->mod_clk = devm_clk_get(&pdev->dev, "mod");
+> > -               if (IS_ERR(tmdev->mod_clk))
+> > +               if (IS_ERR(tmdev->mod_clk)) {
+> > +                       dev_err(dev, "Failed to get mod clock (%ld)\n",
+> > +                               PTR_ERR(tmdev->mod_clk));
+> >                         return PTR_ERR(tmdev->mod_clk);
+> > +               }
+> >         }
+> >
+> >         ret = reset_control_deassert(tmdev->reset);
+> > @@ -471,8 +489,12 @@ static int sun8i_ths_register(struct ths_device *tmdev)
+> >                                                              i,
+> >                                                              &tmdev->sensor[i],
+> >                                                              &ths_ops);
+> > -               if (IS_ERR(tmdev->sensor[i].tzd))
+> > +               if (IS_ERR(tmdev->sensor[i].tzd)) {
+> > +                       dev_err(tmdev->dev,
+> > +                               "Failed to register sensor %d (%ld)\n",
+> > +                               i, PTR_ERR(tmdev->sensor[i].tzd));
+> >                         return PTR_ERR(tmdev->sensor[i].tzd);
+> > +               }
+> >
+> >                 if (devm_thermal_add_hwmon_sysfs(tmdev->sensor[i].tzd))
+> >                         dev_warn(tmdev->dev,
+> > @@ -501,19 +523,21 @@ static int sun8i_ths_probe(struct platform_device *pdev)
+> >
+> >         ret = sun8i_ths_resource_init(tmdev);
+> >         if (ret)
+> > -               return ret;
+> > +               goto err_out;
+> >
+> >         irq = platform_get_irq(pdev, 0);
+> > -       if (irq < 0)
+> > -               return irq;
+> > +       if (irq < 0) {
+> > +               ret = irq;
+> > +               goto err_out;
+> > +       }
+> >
+> >         ret = tmdev->chip->init(tmdev);
+> >         if (ret)
+> > -               return ret;
+> > +               goto err_out;
+> >
+> >         ret = sun8i_ths_register(tmdev);
+> >         if (ret)
+> > -               return ret;
+> > +               goto err_out;
+> >
+> >         /*
+> >          * Avoid entering the interrupt handler, the thermal device is not
+> > @@ -523,10 +547,17 @@ static int sun8i_ths_probe(struct platform_device *pdev)
+> >         ret = devm_request_threaded_irq(dev, irq, NULL,
+> >                                         sun8i_irq_thread,
+> >                                         IRQF_ONESHOT, "ths", tmdev);
+> > -       if (ret)
+> > -               return ret;
+> > +       if (ret) {
+> > +               dev_err(dev, "Failed to request irq (%d)\n", ret);
+> > +               goto err_out;
+> > +       }
+> >
+> > +       dev_info(dev, "Thermal sensor ready!\n");
+> >         return 0;
+> > +
+> > +err_out:
+> > +       dev_err(dev, "Failed to probe thermal sensor (%d)\n", ret);
 > 
-> It does not matter for older kernels because there is exactly one user.
-> That one user is just a place holder keeping the code alive until a real
-> user comes along.
+> When the driver fails, there will be this print. Isn't it superfluous
+> for you to add these？
 > 
-> For older kernels the solution is to just mark the bpfilter code broken
-> in Kconfig and refuse to compile it.  That is the trivial backportable
-> fix if anyone wants one.
+> sun8i-thermal: probe of 5070400.thermal-sensor failed with error
 
-This seals the deal for me, thanks! Carry on, but hey, please add
-yourself to MAINTAINERS too :)
- 
-  Luis
+Thinking more about it. You're right. This is probably only shown for
+non-EPROBE_DEFER errors. So this printk is superfluous, since EPROBE_DEFER
+from nvmem/sid is already shown elsewhere in this patch.
+
+thanks,
+	o.
+
+> 
+> Yangtao
