@@ -2,132 +2,117 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA87C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34273C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B333520720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B41720720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:08:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="HhcRfR4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbgGHOH7 (ORCPT
+        id S1729648AbgGHOIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:07:59 -0400
-Received: from mga02.intel.com ([134.134.136.20]:29263 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgGHOH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:07:59 -0400
-IronPort-SDR: vmTDpWZTKkevxrFqlxBi71OawkZWrQcoY5aa5uOdxWccq+6D4Aln8z6653tDb3O7L6R5tNplUh
- wGfeIyUoSg7Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="136027091"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="136027091"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 07:07:58 -0700
-IronPort-SDR: /qeY/VuRKlFc+ez7PhFZz0m79tIeqkwYka6UISwhCTNiQf7Gl2A6cfELVsSKoz0gWSZGV6g9YT
- eOPFAZnugEmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="283807420"
-Received: from jschirra-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.201])
-  by orsmga006.jf.intel.com with ESMTP; 08 Jul 2020 07:07:55 -0700
-Date:   Wed, 8 Jul 2020 17:07:53 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v9 2/2] tpm: Add support for event log pointer found in
- TPM2 ACPI table
-Message-ID: <20200708140753.GC538949@linux.intel.com>
-References: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com>
- <20200706181953.3592084-3-stefanb@linux.vnet.ibm.com>
- <20200706230914.GC20770@linux.intel.com>
- <78ec872f-89b3-6464-6ede-bd0a46fe5c4c@linux.ibm.com>
- <20200707022416.GC112019@linux.intel.com>
- <f3e0fb50-8617-da40-1456-158531a070cb@linux.ibm.com>
- <20200707040325.GB143804@linux.intel.com>
- <85c27199-df55-eecc-855c-dedcea64f89e@linux.ibm.com>
+        Wed, 8 Jul 2020 10:08:55 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45482 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728148AbgGHOIz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 10:08:55 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068E41hE002186;
+        Wed, 8 Jul 2020 16:08:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Bh+DwW0TqfiKlxh43rCoh2hS/GAP9fFXbNlOjmqZ/RU=;
+ b=HhcRfR4FELadkvTJvSqfWbxNG74oFekTOmzhN6PIx1rdWXNe7wBIdqiIsePZegPXchNW
+ We0kikYQaHvqOwintrIQYzJxptLfJR3/yQiGS8UlQwVCkxc2v21JVOfNtG1KouO74OWx
+ 8Rsgc2DG11X90kCYHhQLNtfiOHPYGnUxNc6wiAxOSyoVLbeGbrmJHkH480yTM4KnfM34
+ 6/dT4ZwnE6EQ+gD7IsUX9H/YY/5GMd283GG/4MUz7vkKkk+DKb+98gMBZxW3aE74Dr0F
+ Z/aMrym21jOBYOnpiVIcIiIrzVvkbTzdVJ0M8eiZAwek/UXKvQPBEKLowzMyizqNuEIF Ig== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 322gnfqqg6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 16:08:42 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BD417100038;
+        Wed,  8 Jul 2020 16:08:40 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A1A592C2317;
+        Wed,  8 Jul 2020 16:08:40 +0200 (CEST)
+Received: from localhost (10.75.127.44) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul 2020 16:08:39
+ +0200
+From:   Yannick Fertre <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] drm/bridge/synopsys: dsi: allow LP commands in video mode
+Date:   Wed, 8 Jul 2020 16:08:36 +0200
+Message-ID: <20200708140836.32418-1-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <85c27199-df55-eecc-855c-dedcea64f89e@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_11:2020-07-08,2020-07-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 12:09:11AM -0400, Stefan Berger wrote:
-> On 7/7/20 12:03 AM, Jarkko Sakkinen wrote:
-> > On Mon, Jul 06, 2020 at 11:08:12PM -0400, Stefan Berger wrote:
-> > > On 7/6/20 10:24 PM, Jarkko Sakkinen wrote:
-> > > > On Mon, Jul 06, 2020 at 07:55:26PM -0400, Stefan Berger wrote:
-> > > > > On 7/6/20 7:09 PM, Jarkko Sakkinen wrote:
-> > > > > > On Mon, Jul 06, 2020 at 02:19:53PM -0400, Stefan Berger wrote:
-> > > > > > > From: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > > > 
-> > > > > > > In case a TPM2 is attached, search for a TPM2 ACPI table when trying
-> > > > > > > to get the event log from ACPI. If one is found, use it to get the
-> > > > > > > start and length of the log area. This allows non-UEFI systems, such
-> > > > > > > as SeaBIOS, to pass an event log when using a TPM2.
-> > > > > > > 
-> > > > > > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > > Do you think that QEMU with TPM 1.2 emulator turned on would be a viable
-> > > > > > way to test this?
-> > > > > Yes.
-> > > > Is the emulator bundled with QEMU or does it have to be installed
-> > > > separately?
-> > > It has to be installed separately. On Fedora 31 it would just be a `sudo dnf
-> > > -y install swtpm-tools` and you should be good to go with libvirt /
-> > > virt-manager.
-> > Is there some packaging for Debian/Ubuntu available?
-> 
-> 
-> So far may not be available yet. I had *experimented* with a PPA once:
-> https://launchpad.net/~stefanberger/+archive/ubuntu/swtpm-focal
+From: Antonio Borneo <antonio.borneo@st.com>
 
-There is a snap available:
+Current code only sends LP commands in command mode.
 
-name:      swtpm-mvo
-summary:   Libtpms-based TPM emulator
-publisher: Michael Vogt (mvo)
-store-url: https://snapcraft.io/swtpm-mvo
-license:   unset
-description: |
-  Libtpms-based TPM emulator with socket, character device, and Linux
-  CUSE interface.
-commands:
-  - swtpm-mvo.swtpm
-services:
-  swtpm-mvo.swtpm-sock: simple, enabled, active
-snap-id:      HNl1TwHRBk3OtXQ8OriRB93FDZ6vman7
-tracking:     latest/edge
-refresh-date: today at 02:05 EEST
-channels:
-  latest/stable:    –                         
-  latest/candidate: –                         
-  latest/beta:      0.1.0 2019-07-26 (11) 3MB -
-  latest/edge:      0.1.0 2020-07-08 (75) 3MB -
-installed:          0.1.0            (74) 3MB -
+Allows sending LP commands also in video mode by setting the
+proper flag in DSI_VID_MODE_CFG.
 
-This is the version information:
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
+---
+ drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-❯ swtpm-mvo.swtpm --version
-TPM emulator version 0.4.0, Copyright (c) 2014 IBM Corp.
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+index 1a24ea648ef8..e9a0f42ff99f 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+@@ -89,6 +89,7 @@
+ #define VID_MODE_TYPE_NON_BURST_SYNC_EVENTS	0x1
+ #define VID_MODE_TYPE_BURST			0x2
+ #define VID_MODE_TYPE_MASK			0x3
++#define ENABLE_LOW_POWER_CMD		BIT(15)
+ #define VID_MODE_VPG_ENABLE		BIT(16)
+ #define VID_MODE_VPG_HORIZONTAL		BIT(24)
+ 
+@@ -376,6 +377,13 @@ static void dw_mipi_message_config(struct dw_mipi_dsi *dsi,
+ 
+ 	dsi_write(dsi, DSI_LPCLK_CTRL, lpm ? 0 : PHY_TXREQUESTCLKHS);
+ 	dsi_write(dsi, DSI_CMD_MODE_CFG, val);
++
++	val = dsi_read(dsi, DSI_VID_MODE_CFG);
++	if (lpm)
++		val |= ENABLE_LOW_POWER_CMD;
++	else
++		val &= ~ENABLE_LOW_POWER_CMD;
++	dsi_write(dsi, DSI_VID_MODE_CFG, val);
+ }
+ 
+ static int dw_mipi_dsi_gen_pkt_hdr_write(struct dw_mipi_dsi *dsi, u32 hdr_val)
+-- 
+2.17.1
 
-However, if I try to run the first example from [*], I get:
-
-❯ swtpm-mvo.swtpm socket --tpmstate dir=/tmp/mytpm1 \
-  --ctrl type=unixio,path=/tmp/mytpm1/swtpm-sock \
-  --log level=20
-swtpm: Could not open UnixIO socket: No such file or directory
-
-[*] https://www.qemu.org/docs/master/specs/tpm.html
-
-/Jarkko
