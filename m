@@ -6,136 +6,109 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C88BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D80C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5E7620672
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 873B120672
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgGHHwd (ORCPT
+        id S1727919AbgGHHw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:52:33 -0400
-Received: from mga14.intel.com ([192.55.52.115]:7504 "EHLO mga14.intel.com"
+        Wed, 8 Jul 2020 03:52:57 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:8233 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbgGHHwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:52:33 -0400
-IronPort-SDR: B5sB9e6B2ZryaOtmiamDm8xA0UKZA6Y4UvMYLPb6feOviZezkmToOI0i6mI5qfHM//A/xTaY9r
- YlD9JYr3QOyw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="146824742"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="146824742"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 00:52:31 -0700
-IronPort-SDR: PJTHRv1C00VQiPOHbM3BNfja4AH8KikS1rFp0wuJNmBOAZZz7wXAWOAOXrequPGqb/5V2AFhGj
- AqZoKieiQq3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="358030767"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2020 00:52:31 -0700
-Received: from [10.249.226.44] (abudanko-mobl.ccr.corp.intel.com [10.249.226.44])
-        by linux.intel.com (Postfix) with ESMTP id 47F8A5807FC;
-        Wed,  8 Jul 2020 00:52:29 -0700 (PDT)
-Subject: [PATCH v10 09/15] perf stat: factor out event handling loop into
- dispatch_events()
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <ef57a962-8e9f-4627-8b24-0198b8bd2117@linux.intel.com>
-Date:   Wed, 8 Jul 2020 10:52:28 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        id S1726291AbgGHHw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:52:57 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4B1s3n3hS3z9ttw5;
+        Wed,  8 Jul 2020 09:52:53 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id pMFOMNr9q3WY; Wed,  8 Jul 2020 09:52:53 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4B1s3n2bWGz9ttw4;
+        Wed,  8 Jul 2020 09:52:53 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B2CE38B7F3;
+        Wed,  8 Jul 2020 09:52:54 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id FkR4CCf8Gi86; Wed,  8 Jul 2020 09:52:54 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AD3DF8B76B;
+        Wed,  8 Jul 2020 09:52:53 +0200 (CEST)
+Subject: Re: [PATCH v3 1/9] powerpc/watchpoint: Fix 512 byte boundary limit
+To:     Jordan Niethe <jniethe5@gmail.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
+        apopple@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200708045046.135702-1-ravi.bangoria@linux.ibm.com>
+ <20200708045046.135702-2-ravi.bangoria@linux.ibm.com>
+ <CACzsE9qka0j7vKm186Z70fhNy9L4dNR3B97-jQ2oZZAwYduaRw@mail.gmail.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <2e418e64-e40a-f33d-8a1f-8f09a4605db9@csgroup.eu>
+Date:   Wed, 8 Jul 2020 09:52:45 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CACzsE9qka0j7vKm186Z70fhNy9L4dNR3B97-jQ2oZZAwYduaRw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Consolidate event dispatching loops for fork, attach and system
-wide monitoring use cases into common dispatch_events() function.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-stat.c | 36 ++++++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+Le 08/07/2020 à 09:44, Jordan Niethe a écrit :
+> On Wed, Jul 8, 2020 at 2:53 PM Ravi Bangoria
+> <ravi.bangoria@linux.ibm.com> wrote:
+>>
+>> Milton Miller reported that we are aligning start and end address to
+>> wrong size SZ_512M. It should be SZ_512. Fix that.
+>>
+>> While doing this change I also found a case where ALIGN() comparison
+>> fails. Within a given aligned range, ALIGN() of two addresses does not
+>> match when start address is pointing to the first byte and end address
+>> is pointing to any other byte except the first one. But that's not true
+>> for ALIGN_DOWN(). ALIGN_DOWN() of any two addresses within that range
+>> will always point to the first byte. So use ALIGN_DOWN() instead of
+>> ALIGN().
+>>
+>> Fixes: e68ef121c1f4 ("powerpc/watchpoint: Use builtin ALIGN*() macros")
+>> Reported-by: Milton Miller <miltonm@us.ibm.com>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>> ---
+>>   arch/powerpc/kernel/hw_breakpoint.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+>> index 0000daf0e1da..031e6defc08e 100644
+>> --- a/arch/powerpc/kernel/hw_breakpoint.c
+>> +++ b/arch/powerpc/kernel/hw_breakpoint.c
+>> @@ -419,7 +419,7 @@ static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
+>>          if (dawr_enabled()) {
+>>                  max_len = DAWR_MAX_LEN;
+>>                  /* DAWR region can't cross 512 bytes boundary */
+>> -               if (ALIGN(start_addr, SZ_512M) != ALIGN(end_addr - 1, SZ_512M))
+>> +               if (ALIGN_DOWN(start_addr, SZ_512) != ALIGN_DOWN(end_addr - 1, SZ_512))
+> I wonder if you should use end_addr - 1, but rather end_addr. For example:
+> 512 -> 1023, because of the -1, 1024 will now be included in this
+> range meaning 513 bytes?
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 91f31518948e..a5a0f4841003 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -550,6 +550,27 @@ static bool is_target_alive(struct target *_target,
- 	return false;
- }
- 
-+static int dispatch_events(bool forks, int timeout, int interval, int *times, struct timespec *ts)
-+{
-+	int child_exited = 0, status = 0;
-+
-+	while (!done) {
-+		if (forks)
-+			child_exited = waitpid(child_pid, &status, WNOHANG);
-+		else
-+			child_exited = !is_target_alive(&target, evsel_list->core.threads) ? 1 : 0;
-+
-+		if (child_exited)
-+			break;
-+
-+		nanosleep(ts, NULL);
-+		if (timeout || handle_interval(interval, times))
-+			break;
-+	}
-+
-+	return status;
-+}
-+
- enum counter_recovery {
- 	COUNTER_SKIP,
- 	COUNTER_RETRY,
-@@ -789,13 +810,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		perf_evlist__start_workload(evsel_list);
- 		enable_counters();
- 
--		if (interval || timeout) {
--			while (!waitpid(child_pid, &status, WNOHANG)) {
--				nanosleep(&ts, NULL);
--				if (timeout || handle_interval(interval, &times))
--					break;
--			}
--		}
-+		if (interval || timeout)
-+			status = dispatch_events(forks, timeout, interval, &times, &ts);
- 		if (child_pid != -1) {
- 			if (timeout)
- 				kill(child_pid, SIGTERM);
-@@ -812,11 +828,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 			psignal(WTERMSIG(status), argv[0]);
- 	} else {
- 		enable_counters();
--		while (!done && is_target_alive(&target, evsel_list->core.threads)) {
--			nanosleep(&ts, NULL);
--			if (timeout || handle_interval(interval, &times))
--				break;
--		}
-+		status = dispatch_events(forks, timeout, interval, &times, &ts);
- 	}
- 
- 	disable_counters();
--- 
-2.24.1
+end_addr is not part of the range.
 
+If you want the range [512;1023], it means addr 512 len 512, that is 
+end_addr = addr + len = 1024
 
+Christophe
