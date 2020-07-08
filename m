@@ -2,176 +2,104 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F353206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD3A206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:17:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="gM7AHVPe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbgGHMRE (ORCPT
+        id S1728971AbgGHMRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:17:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38138 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728790AbgGHMRE (ORCPT
+        Wed, 8 Jul 2020 08:17:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728765AbgGHMRo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:17:04 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068C0eio107900;
-        Wed, 8 Jul 2020 08:16:42 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 325dp70r9k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 08:16:41 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 068CAH8u002721;
-        Wed, 8 Jul 2020 12:16:40 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 322hd7vhgy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jul 2020 12:16:40 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 068CGbaI36896792
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jul 2020 12:16:37 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41927AE055;
-        Wed,  8 Jul 2020 12:16:37 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA336AE045;
-        Wed,  8 Jul 2020 12:16:36 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.179.233])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Jul 2020 12:16:36 +0000 (GMT)
-Subject: Re: [PATCH 2/2] KVM: PPC: Book3S HV: rework secure mem slot dropping
-To:     bharata@linux.ibm.com
-Cc:     linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        paulus@samba.org, bauerman@linux.ibm.com, sukadev@linux.ibm.com,
-        sathnaga@linux.vnet.ibm.com, Ram Pai <linuxram@us.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>
-References: <20200703155914.40262-1-ldufour@linux.ibm.com>
- <20200703155914.40262-3-ldufour@linux.ibm.com>
- <20200708112531.GA7902@in.ibm.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <0588d16a-8548-0f55-1132-400807a390a1@linux.ibm.com>
-Date:   Wed, 8 Jul 2020 14:16:36 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Wed, 8 Jul 2020 08:17:44 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9883BC08E6DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:17:43 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id n26so36331893ejx.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8s3hVkeJXRrqVzLJrXsBVtMK+GJ5/tfUWRczvsro23Y=;
+        b=gM7AHVPez1nWNFGhMbSa3qWES9UryMt8FPQr0h0DAlWp3EYs1hqVW6ZrG0JhIOgbQr
+         tzkkkbGNP+i6rLWUMq4VCN8aYrYendWmHZJrqDpLGyXxe9qh1CsCebVwFnast3ekz/9I
+         SY0tt5l4unvXsXdDUdASuvSoRsGNaxx1ypz/6abUEgwIeMVgeJ9eONiL7oLS7mHsAp7B
+         WX3dXJmkPmzn1lEn6g0+WU+4AsFtvaCJNr/CBjSlTx4g+03udR/XQdIJEDZRrb2/G23F
+         9SxZUN7ItJ7Gdcscn0bBpPl4dO+uFOM6HO3Aovk6PGL2BoeupAwCOPCdxy6lscd/xYFE
+         dB0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8s3hVkeJXRrqVzLJrXsBVtMK+GJ5/tfUWRczvsro23Y=;
+        b=pB9JQi6l6kuDeHPvWzVDDNIe36dwgmSUzDAh7A3+9nbZqnIMRIZGFgebUZ3/tHdCwh
+         LVoDHlqL/Dl1Xmsg4QzVH6vH9y7Ou0BjB0xo5VHXmEGdauKmZyuWGrPF7DusVfEOulpR
+         lk4ixV8UN3FCsDYc8ShASTGwsGRVykUEwwzX+fcip5K9VF0VbytX3Tu7z8IrORdwG0ow
+         yGye9lAO3q63QH/GFr2fSdPNvPkn9ABeHAWKc9ww9YgZbTUMGOSmH21ciQUemLJAZcuG
+         Clm0ZDXpQ1ILZzn68kx5Qe+P5q8hNGNjbiiVdT5NQ8oTnOORXJsKQsXhab8AzQoBrKsM
+         me/w==
+X-Gm-Message-State: AOAM533OLnluz9BJ+RhbdOM9Bez05HUSocokmE3GKCWhpAJDN9dfhlpX
+        QSNMojUibpEBPwxfwuYiPX8Ex6QQIHseIAuTOl03UQ==
+X-Google-Smtp-Source: ABdhPJwUaRb6MyfaY0ixa5ufAPvXOz8OxJhGWoNFarBGfcV2wZK47yHcG48etxaaxuxyHXDwrKtCaPoAdFDUyKoDaVA=
+X-Received: by 2002:a17:906:e294:: with SMTP id gg20mr49897023ejb.521.1594210662221;
+ Wed, 08 Jul 2020 05:17:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200708112531.GA7902@in.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-08_08:2020-07-08,2020-07-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- cotscore=-2147483648 phishscore=0 impostorscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=3 bulkscore=0
- spamscore=0 mlxlogscore=779 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007080084
+References: <20200708120221.3386672-1-lee.jones@linaro.org> <20200708120221.3386672-28-lee.jones@linaro.org>
+In-Reply-To: <20200708120221.3386672-28-lee.jones@linaro.org>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Wed, 8 Jul 2020 14:17:31 +0200
+Message-ID: <CAMGffE=v5sx=RsS9i7kNbgn9BbL6LQz2PO1fG2WkCj9P3cDHXQ@mail.gmail.com>
+Subject: Re: [PATCH 27/30] scsi: pm8001: pm8001_init: Demote obvious misuse of
+ kerneldoc and update others
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org,
+        Linux SCSI Mailinglist <linux-scsi@vger.kernel.org>,
+        Kumar Santhanam <AnandKumar.Santhanam@pmcs.com>,
+        Sangeetha Gnanasekaran <Sangeetha.Gnanasekaran@pmcs.com>,
+        Nikith Ganigarakoppal <Nikith.Ganigarakoppal@pmcs.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 08/07/2020 à 13:25, Bharata B Rao a écrit :
-> On Fri, Jul 03, 2020 at 05:59:14PM +0200, Laurent Dufour wrote:
->> When a secure memslot is dropped, all the pages backed in the secure device
->> (aka really backed by secure memory by the Ultravisor) should be paged out
->> to a normal page. Previously, this was achieved by triggering the page
->> fault mechanism which is calling kvmppc_svm_page_out() on each pages.
->>
->> This can't work when hot unplugging a memory slot because the memory slot
->> is flagged as invalid and gfn_to_pfn() is then not trying to access the
->> page, so the page fault mechanism is not triggered.
->>
->> Since the final goal is to make a call to kvmppc_svm_page_out() it seems
->> simpler to directly calling it instead of triggering such a mechanism. This
->> way kvmppc_uvmem_drop_pages() can be called even when hot unplugging a
->> memslot.
-> 
-> Yes, this appears much simpler.
-
-Thanks Bharata for reviewing this.
-
-> 
->>
->> Since kvmppc_uvmem_drop_pages() is already holding kvm->arch.uvmem_lock,
->> the call to __kvmppc_svm_page_out() is made.
->> As __kvmppc_svm_page_out needs the vma pointer to migrate the pages, the
->> VMA is fetched in a lazy way, to not trigger find_vma() all the time. In
->> addition, the mmap_sem is help in read mode during that time, not in write
->> mode since the virual memory layout is not impacted, and
->> kvm->arch.uvmem_lock prevents concurrent operation on the secure device.
->>
->> Cc: Ram Pai <linuxram@us.ibm.com>
->> Cc: Bharata B Rao <bharata@linux.ibm.com>
->> Cc: Paul Mackerras <paulus@ozlabs.org>
->> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
->> ---
->>   arch/powerpc/kvm/book3s_hv_uvmem.c | 54 ++++++++++++++++++++----------
->>   1 file changed, 37 insertions(+), 17 deletions(-)
->>
->> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
->> index 852cc9ae6a0b..479ddf16d18c 100644
->> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
->> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
->> @@ -533,35 +533,55 @@ static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
->>    * fault on them, do fault time migration to replace the device PTEs in
->>    * QEMU page table with normal PTEs from newly allocated pages.
->>    */
->> -void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *free,
->> +void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *slot,
->>   			     struct kvm *kvm, bool skip_page_out)
->>   {
->>   	int i;
->>   	struct kvmppc_uvmem_page_pvt *pvt;
->> -	unsigned long pfn, uvmem_pfn;
->> -	unsigned long gfn = free->base_gfn;
->> +	struct page *uvmem_page;
->> +	struct vm_area_struct *vma = NULL;
->> +	unsigned long uvmem_pfn, gfn;
->> +	unsigned long addr, end;
->> +
->> +	down_read(&kvm->mm->mmap_sem);
-> 
-> You should be using mmap_read_lock(kvm->mm) with recent kernels.
-
-Absolutely, shame on me, I reviewed Michel's series about that!
-
-Paul, Michael, could you fix that when pulling this patch or should I sent a 
-whole new series?
-
-> 
->> +
->> +	addr = slot->userspace_addr;
->> +	end = addr + (slot->npages * PAGE_SIZE);
->>   
->> -	for (i = free->npages; i; --i, ++gfn) {
->> -		struct page *uvmem_page;
->> +	gfn = slot->base_gfn;
->> +	for (i = slot->npages; i; --i, ++gfn, addr += PAGE_SIZE) {
->> +
->> +		/* Fetch the VMA if addr is not in the latest fetched one */
->> +		if (!vma || (addr < vma->vm_start || addr >= vma->vm_end)) {
->> +			vma = find_vma_intersection(kvm->mm, addr, end);
->> +			if (!vma ||
->> +			    vma->vm_start > addr || vma->vm_end < end) {
->> +				pr_err("Can't find VMA for gfn:0x%lx\n", gfn);
->> +				break;
->> +			}
->> +		}
-> 
-> The first find_vma_intersection() was called for the range spanning the
-> entire memslot, but you have code to check if vma remains valid for the
-> new addr in each iteration. Guess you wanted to get vma for one page at
-> a time and use it for subsequent pages until it covers the range?
-
-That's the goal, fetch the VMA once and no more until we reach its end boundary.
+On Wed, Jul 8, 2020 at 2:03 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> More bitrot issues with function documentation not keeping up with API changes.
+>
+> Fixes the following W=1 kernel build warning(s):
+>
+>  drivers/scsi/pm8001/pm8001_init.c:64: warning: cannot understand function prototype: 'const struct pm8001_chip_info pm8001_chips[] = '
+>  drivers/scsi/pm8001/pm8001_init.c:86: warning: cannot understand function prototype: 'struct scsi_host_template pm8001_sht = '
+>  drivers/scsi/pm8001/pm8001_init.c:115: warning: cannot understand function prototype: 'struct sas_domain_function_template pm8001_transport_ops = '
+>  drivers/scsi/pm8001/pm8001_init.c:212: warning: Function parameter or member 'irq' not described in 'pm8001_interrupt_handler_msix'
+>  drivers/scsi/pm8001/pm8001_init.c:237: warning: Function parameter or member 'irq' not described in 'pm8001_interrupt_handler_intx'
+>  drivers/scsi/pm8001/pm8001_init.c:265: warning: Function parameter or member 'ent' not described in 'pm8001_alloc'
+>  drivers/scsi/pm8001/pm8001_init.c:624: warning: Function parameter or member 'pm8001_ha' not described in 'pm8001_init_sas_add'
+>  drivers/scsi/pm8001/pm8001_init.c:624: warning: Excess function parameter 'chip_info' description in 'pm8001_init_sas_add'
+>  drivers/scsi/pm8001/pm8001_init.c:900: warning: Function parameter or member 'pm8001_ha' not described in 'pm8001_setup_msix'
+>  drivers/scsi/pm8001/pm8001_init.c:900: warning: Excess function parameter 'chip_info' description in 'pm8001_setup_msix'
+>  drivers/scsi/pm8001/pm8001_init.c:900: warning: Excess function parameter 'irq_handler' description in 'pm8001_setup_msix'
+>  drivers/scsi/pm8001/pm8001_init.c:981: warning: Function parameter or member 'pm8001_ha' not described in 'pm8001_request_irq'
+>  drivers/scsi/pm8001/pm8001_init.c:981: warning: Excess function parameter 'chip_info' description in 'pm8001_request_irq'
+>
+> Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+> Cc: Kumar Santhanam <AnandKumar.Santhanam@pmcs.com>
+> Cc: Sangeetha Gnanasekaran <Sangeetha.Gnanasekaran@pmcs.com>
+> Cc: Nikith Ganigarakoppal <Nikith.Ganigarakoppal@pmcs.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Thanks Lee,
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
