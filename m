@@ -2,88 +2,244 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09123C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD6DC20774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594214921;
-	bh=+EXzLaIGuNzcggJX4dbRDub2DW6Hh2v4eTzeQDydLkg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QOGyQ/DCdHIc0OLPungM6VICacRazuV8Ki4cKVGwLJ5Hfp04xCI6ql4OA4yARO9Zr
-	 YIXJDbcoLjmWqUX2EbMd5gwNo8YUJ/Yawu+n4OpSdGKxsWYsr9W5w0FoV+g8Sw1DMN
-	 hioTl9V9HTy1EOVO71FdQqx9eyiop/e7BSyG4pOM=
+	by mail.kernel.org (Postfix) with ESMTP id CF90520720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="Ck5Eclqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbgGHN2b (ORCPT
+        id S1729572AbgGHN3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728364AbgGHN22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:28:28 -0400
-Received: from localhost.localdomain (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6807D20720;
-        Wed,  8 Jul 2020 13:28:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594214908;
-        bh=+EXzLaIGuNzcggJX4dbRDub2DW6Hh2v4eTzeQDydLkg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dI3QpP3Bm0o/hSuSs8yvBest+gUB+6Qu+wI6usDJeDMhGsxGiQ+nF8aHL+PeyPWYh
-         qeNjehxwUX60U/yvlrDN4nyPXySsVGNUBiz8z4RSfAl4NCfGI6B8DijRcgfn8Kck0d
-         xWd1VeorilBau7z4F2KPfLNdS3DxJel3OukP3HT0=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Loc Ho <lho@apm.com>
-Subject: [PATCH 3/6] phy: xgene: remove unsigned integer comparison with less than zero
-Date:   Wed,  8 Jul 2020 18:58:06 +0530
-Message-Id: <20200708132809.265967-3-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200708132809.265967-1-vkoul@kernel.org>
-References: <20200708132809.265967-1-vkoul@kernel.org>
+        Wed, 8 Jul 2020 09:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729311AbgGHN3E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:29:04 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167E9C08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 06:29:04 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id z5so21673333pgb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 06:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wN3EWgk/x5NoifjZbV2/MdXn6UXBSWUU/L+JDx5urmA=;
+        b=Ck5EclqdTPhVTMFgg6o2aa4zQ3r7sKrPXh6IA93ELVlTG2AZl7EFcBYb+N/gLwYjHX
+         Bm0/kaPLgwbKxHy5njCl9vz03Naus7hVgS6d89ulhKVVyrIbjuu4UmeQlr43Vdi59hv/
+         fbO2EB06AGjRn4djiqh0weKEcBqT8NJXz8iElkjVljjKwahe/RbJp2XalZh8664e6oh5
+         +IgBhD1OlDYIg5cA47MdzJIoZtCWNFgzddNttpZ5j7LqyB0e4f11g3jyvruslhrh1xzP
+         M2RvCiYOAkYJ4Wlb0hJ6AaKqE0Ou9tm844RGkwG3AHBkvriw4SCU4sCTHLdgAFBgG6Iq
+         dmug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wN3EWgk/x5NoifjZbV2/MdXn6UXBSWUU/L+JDx5urmA=;
+        b=XQDqOuc1pcS/Vl8LYM0/tg5pKc34zIK9yAVsE76JRhfYJReq4E3CbuwMdi7YckuNgV
+         Evn33TdXFVmY77HHdNbras7rkfeo3+OCoHHOr2ZzmLJF0/yzZ2c9ac52pc6NAUissfYF
+         h56ySgLaMKSTPJadWZ+BK4HOdMEyawxOucZNFeqPoXXohOENtZNTqU+rUAAsgIhaifx/
+         hfev6pMEcJnL23uiwEDSQb8fPd4sp598R83EvbY/l/c+VuPivuSSwzBjybMawShhX/Bq
+         dWjIh69jy4UYn9CBbQJrFbLl7dARm1wubsFK8Q8yvrNDrGdWFl/Z2EvGa9sOvTXG7e0e
+         kJFQ==
+X-Gm-Message-State: AOAM533kUDN86RqOoU0IqlI8recKXsq8B9TrU38bT2Dg24l4WlGKM3EN
+        KBHqei9ICnu0S8BEV2uwfV+tjOEff9TiGL1V1G7WYQ==
+X-Google-Smtp-Source: ABdhPJy6eI1/TSJpreDxCQpqeyG6XeOm5xpbcgLAF1WPOQZyO2y0sMxOp79n/z1Tey4/S/Cd6hAidyyvLZgG66GhGlo=
+X-Received: by 2002:a63:8c18:: with SMTP id m24mr51276927pgd.289.1594214943466;
+ Wed, 08 Jul 2020 06:29:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200604185745.23568-1-jernej.skrabec@siol.net> <20200604185745.23568-2-jernej.skrabec@siol.net>
+In-Reply-To: <20200604185745.23568-2-jernej.skrabec@siol.net>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Wed, 8 Jul 2020 10:28:52 -0300
+Message-ID: <CAAEAJfAx4=RGJBVPccVFNYxNUqom7tkQD=J9oMfqajGxn6k+Zg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] media: uapi: h264: update reference lists
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devel@driverdev.osuosl.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get warning with W=1 build:
-drivers/phy/phy-xgene.c: In function ‘xgene_phy_xlate’:
-drivers/phy/phy-xgene.c:1618:20: warning: comparison of unsigned
-expression in ‘< 0’ is always false [-Wtype-limits]
- 1618 |  if (args->args[0] < MODE_SATA || args->args[0] >= MODE_MAX) |
+Hello Jernej,
 
-args is uint32_t so can never be less than zero, so remove this check
+I'd like to post a new H264 uAPI cleanup series soon,
+would you mind resending this, or otherwise do you
+mind if I include this patch in the series?
 
-Cc: Loc Ho <lho@apm.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/phy/phy-xgene.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+See below for a tiny comment.
 
-diff --git a/drivers/phy/phy-xgene.c b/drivers/phy/phy-xgene.c
-index 7a33ec12f71b..b88922e7de1d 100644
---- a/drivers/phy/phy-xgene.c
-+++ b/drivers/phy/phy-xgene.c
-@@ -1615,7 +1615,7 @@ static struct phy *xgene_phy_xlate(struct device *dev,
- 
- 	if (args->args_count <= 0)
- 		return ERR_PTR(-EINVAL);
--	if (args->args[0] < MODE_SATA || args->args[0] >= MODE_MAX)
-+	if (args->args[0] >= MODE_MAX)
- 		return ERR_PTR(-EINVAL);
- 
- 	ctx->mode = args->args[0];
--- 
-2.26.2
+On Thu, 4 Jun 2020 at 15:55, Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+>
+> When dealing with with interlaced frames, reference lists must tell if
+> each particular reference is meant for top or bottom field. This info
+> is currently not provided at all in the H264 related controls.
+>
+> Make reference lists hold a structure which will also hold flags along
+> index into DPB array. Flags will tell if reference is meant for top or
+> bottom field.
+>
+> Currently the only user of these lists is Cedrus which is just compile
+> fixed here. Actual usage of newly introduced flags will come in
+> following commit.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  .../media/v4l/ext-ctrls-codec.rst             | 40 ++++++++++++++++++-
+>  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 +--
+>  include/media/h264-ctrls.h                    | 12 +++++-
+>  3 files changed, 51 insertions(+), 7 deletions(-)
+>
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index d0d506a444b1..6c36d298db20 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -1843,10 +1843,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+>      * - __u32
+>        - ``slice_group_change_cycle``
+>        -
+> -    * - __u8
+> +    * - struct :c:type:`v4l2_h264_reference`
+>        - ``ref_pic_list0[32]``
+>        - Reference picture list after applying the per-slice modifications
+> -    * - __u8
+> +    * - struct :c:type:`v4l2_h264_reference`
+>        - ``ref_pic_list1[32]``
+>        - Reference picture list after applying the per-slice modifications
+>      * - __u32
+> @@ -1926,6 +1926,42 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+>        - ``chroma_offset[32][2]``
+>        -
+>
+> +``Picture Reference``
+> +
+> +.. c:type:: v4l2_h264_reference
+> +
+> +.. cssclass:: longtable
+> +
+> +.. flat-table:: struct v4l2_h264_reference
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - __u16
+> +      - ``flags``
+> +      - See :ref:`Picture Reference Flags <h264_reference_flags>`
+> +    * - __u8
+> +      - ``index``
+> +      -
+> +
+> +.. _h264_reference_flags:
+> +
+> +``Picture Reference Flags``
+> +
+> +.. cssclass:: longtable
+> +
+> +.. flat-table::
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - ``V4L2_H264_REFERENCE_FLAG_TOP_FIELD``
+> +      - 0x00000001
+> +      -
+> +    * - ``V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD``
+> +      - 0x00000002
+> +      -
+> +
+>  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS (struct)``
+>      Specifies the decode parameters (as extracted from the bitstream)
+>      for the associated H264 slice data. This includes the necessary
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> index 54ee2aa423e2..cce527bbdf86 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> @@ -166,8 +166,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
+>
+>  static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+>                                    struct cedrus_run *run,
+> -                                  const u8 *ref_list, u8 num_ref,
+> -                                  enum cedrus_h264_sram_off sram)
+> +                                  const struct v4l2_h264_reference *ref_list,
+> +                                  u8 num_ref, enum cedrus_h264_sram_off sram)
+>  {
+>         const struct v4l2_ctrl_h264_decode_params *decode = run->h264.decode_params;
+>         struct vb2_queue *cap_q;
+> @@ -188,7 +188,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+>                 int buf_idx;
+>                 u8 dpb_idx;
+>
+> -               dpb_idx = ref_list[i];
+> +               dpb_idx = ref_list[i].index;
+>                 dpb = &decode->dpb[dpb_idx];
+>
+>                 if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> index 080fd1293c42..9b1cbc9bc38e 100644
+> --- a/include/media/h264-ctrls.h
+> +++ b/include/media/h264-ctrls.h
+> @@ -140,6 +140,14 @@ struct v4l2_h264_pred_weight_table {
+>  #define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED    0x04
+>  #define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH             0x08
+>
+> +#define V4L2_H264_REFERENCE_FLAG_TOP_FIELD             0x01
+> +#define V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD          0x02
+> +
+> +struct v4l2_h264_reference {
+> +       __u8 flags;
+> +       __u8 index;
+> +};
+> +
+>  struct v4l2_ctrl_h264_slice_params {
+>         /* Size in bytes, including header */
+>         __u32 size;
+> @@ -182,8 +190,8 @@ struct v4l2_ctrl_h264_slice_params {
+>          * Entries on each list are indices into
+>          * v4l2_ctrl_h264_decode_params.dpb[].
+>          */
+> -       __u8 ref_pic_list0[32];
+> -       __u8 ref_pic_list1[32];
+> +       struct v4l2_h264_reference ref_pic_list0[32];
+> +       struct v4l2_h264_reference ref_pic_list1[32];
+>
 
+Could we use a macro for "32" here? Something like:
+
+#define V4L2_H264_REF_PIC_LIST_LEN (V4L2_H264_NUM_DPB_ENTRIES * 2).
+
+Does it make sense to add a comment as well?
+
+I was thinking something along these lines:
+
+"""
+Pictures in the DPB can be a frame, a complementary field pair or a
+single field.
+Therefore, reference pictures lists need twice as much entries, so it
+can reference
+either field of a field pair.
+"""
+
+While it doesn't replace proper H264 specification reading,
+it would add some clarity.
+
+Thanks,
+Ezequiel
