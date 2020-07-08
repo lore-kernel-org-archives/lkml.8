@@ -7,59 +7,62 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C4CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEF2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B18420720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF4120720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:53:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fhfH5PNJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GdfD9K69"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KR6HYwqr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fKRaoMNy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgGHJvr (ORCPT
+        id S1728802AbgGHJxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:51:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47886 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgGHJvq (ORCPT
+        Wed, 8 Jul 2020 05:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728559AbgGHJvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:51:46 -0400
-Date:   Wed, 08 Jul 2020 09:51:42 -0000
+        Wed, 8 Jul 2020 05:51:47 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65265C08C5DC;
+        Wed,  8 Jul 2020 02:51:47 -0700 (PDT)
+Date:   Wed, 08 Jul 2020 09:51:45 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594201903;
+        s=2020; t=1594201905;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ZHgMxlkSbEJSf97I5bf8z7K7NgvXEo7/zO2vDV9W4i8=;
-        b=fhfH5PNJBzuJ80LikHX7laYP6LD3TaCrbVZBw8jP3c5gOg0N1Xu2wZLQm5CjuQ3fShXpiy
-        eaQ6fB9+PL8+++gDcf0Z/um1kUgIpPbF0wAcDpp/ZGo1mZPl8ZY9NxlU+dj18264PHDdDT
-        lFDnYkqMO5lEuzVHie023WwHw3bK7EPvLBNzJKD8WYR8rXExt0zP3aoN6xGpBfO4i+MWW6
-        uWxxOozQdIIg8cbImHkpBzAH1xZwaypaDUOFzSkHuBpyf9uan4JuNqFL8lfoijKUgrbLju
-        mFhFuTehL3aLeSIcrHtoK14IzE2vnrixW9H1ac4fNHKwDK7dU/a43nW/WGxacQ==
+        bh=S8clFBUT48Zg4Jbc2veI/f5Sqo7XOO1HQtb3xkQSOIs=;
+        b=KR6HYwqrPgY7cejgJQjzfl1ZzasTHmxM8tYJF2Pozz/CvMP+1WQoK0v9wXjgvlD/tr2h1C
+        1kHMxaO5V4jTh74kDG0uP4lsC73wtNwQLgpH8Q7NKQrACYxGVXyngQUIlR/8fezkXZhMKa
+        jWnqJy1Jqo0d3ZCSPdyAn3gX73HuhEQ/kFcrPzKF2yAjjVBKQsyQFdWW9ILqhuibBMMu5H
+        SXDkDuhX6etuzWF03UDqom4S8eQXGIB9eMBASZWYpnlU6slj811H8pNjsxv9tFOnwJ6bNl
+        rhvYv/AJthOQfQExAKl378C+b2pIMSxykzLuZFtFR+TtpQvHNK5/KZAJL1HD1Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594201903;
+        s=2020e; t=1594201905;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ZHgMxlkSbEJSf97I5bf8z7K7NgvXEo7/zO2vDV9W4i8=;
-        b=GdfD9K69M+8vhiPsoCaylfZy4GPu9+w245CorBVx6721wGLunQSOKpFtQ6PllcRPEqbuzy
-        eZOrYl7sqFuwVICw==
+        bh=S8clFBUT48Zg4Jbc2veI/f5Sqo7XOO1HQtb3xkQSOIs=;
+        b=fKRaoMNy2AC9K5o846cbq8gsE1V8VIZ2fID4bkOXOaMBQRO8cnnEPaC1RqCiImKnT6ZfFu
+        IFZBvIs40YjtZvBA==
 From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel/lbr: Support XSAVES for arch LBR read
+Subject: [tip: perf/core] x86/fpu: Use proper mask to replace full instruction mask
 Cc:     Kan Liang <kan.liang@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Dave Hansen <dave.hansen@intel.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1593780569-62993-24-git-send-email-kan.liang@linux.intel.com>
-References: <1593780569-62993-24-git-send-email-kan.liang@linux.intel.com>
+In-Reply-To: <1593780569-62993-20-git-send-email-kan.liang@linux.intel.com>
+References: <1593780569-62993-20-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159420190283.4006.10798804933769478660.tip-bot2@tip-bot2>
+Message-ID: <159420190524.4006.281131920134798684.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -71,169 +74,201 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     c085fb8774671e83f6199a8e838fbc0e57094029
-Gitweb:        https://git.kernel.org/tip/c085fb8774671e83f6199a8e838fbc0e57094029
+Commit-ID:     a063bf249b9f8d8004f282031781322c1b527d13
+Gitweb:        https://git.kernel.org/tip/a063bf249b9f8d8004f282031781322c1b527d13
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Fri, 03 Jul 2020 05:49:29 -07:00
+AuthorDate:    Fri, 03 Jul 2020 05:49:25 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 08 Jul 2020 11:38:57 +02:00
+CommitterDate: Wed, 08 Jul 2020 11:38:56 +02:00
 
-perf/x86/intel/lbr: Support XSAVES for arch LBR read
+x86/fpu: Use proper mask to replace full instruction mask
 
-Reading LBR registers in a perf NMI handler for a non-PEBS event
-causes a high overhead because the number of LBR registers is huge.
-To reduce the overhead, the XSAVES instruction should be used to replace
-the LBR registers' reading method.
+When saving xstate to a kernel/user XSAVE area with the XSAVE family of
+instructions, the current code applies the 'full' instruction mask (-1),
+which tries to XSAVE all possible features. This method relies on
+hardware to trim 'all possible' down to what is enabled in the
+hardware. The code works well for now. However, there will be a
+problem, if some features are enabled in hardware, but are not suitable
+to be saved into all kernel XSAVE buffers, like task->fpu, due to
+performance consideration.
 
-The XSAVES buffer used for LBR read has to be per-CPU because the NMI
-handler invoked the lbr_read(). The existing task_ctx_data buffer
-cannot be used which is per-task and only be allocated for the LBR call
-stack mode. A new lbr_xsave pointer is introduced in the cpu_hw_events
-as an XSAVES buffer for LBR read.
+One such example is the Last Branch Records (LBR) state. The LBR state
+only contains valuable information when LBR is explicitly enabled by
+the perf subsystem, and the size of an LBR state is large (808 bytes
+for now). To avoid both CPU overhead and space overhead at each context
+switch, the LBR state should not be saved into task->fpu like other
+state components. It should be saved/restored on demand when LBR is
+enabled in the perf subsystem. Current copy_xregs_to_* will trigger a
+buffer overflow for such cases.
 
-The XSAVES buffer should be allocated only when LBR is used by a
-non-PEBS event on the CPU because the total size of the lbr_xsave is
-not small (~1.4KB).
+Three sites use the '-1' instruction mask which must be updated.
 
-The XSAVES buffer is allocated when a non-PEBS event is added, but it
-is lazily released in x86_release_hardware() when perf releases the
-entire PMU hardware resource, because perf may frequently schedule the
-event, e.g. high context switch. The lazy release method reduces the
-overhead of frequently allocate/free the buffer.
+Two are saving/restoring the xstate to/from a kernel-allocated XSAVE
+buffer and can use 'xfeatures_mask_all', which will save/restore all of
+the features present in a normal task FPU buffer.
 
-If the lbr_xsave fails to be allocated, roll back to normal Arch LBR
-lbr_read().
+The last one saves the register state directly to a user buffer. It
+could
+also use 'xfeatures_mask_all'. Just as it was with the '-1' argument,
+any supervisor states in the mask will be filtered out by the hardware
+and not saved to the buffer.  But, to be more explicit about what is
+expected to be saved, use xfeatures_mask_user() for the instruction
+mask.
+
+KVM includes the header file fpu/internal.h. To avoid 'undefined
+xfeatures_mask_all' compiling issue, move copy_fpregs_to_fpstate() to
+fpu/core.c and export it, because:
+- The xfeatures_mask_all is indirectly used via copy_fpregs_to_fpstate()
+  by KVM. The function which is directly used by other modules should be
+  exported.
+- The copy_fpregs_to_fpstate() is a function, while xfeatures_mask_all
+  is a variable for the "internal" FPU state. It's safer to export a
+  function than a variable, which may be implicitly changed by others.
+- The copy_fpregs_to_fpstate() is a big function with many checks. The
+  removal of the inline keyword should not impact the performance.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-Link: https://lkml.kernel.org/r/1593780569-62993-24-git-send-email-kan.liang@linux.intel.com
+Link: https://lkml.kernel.org/r/1593780569-62993-20-git-send-email-kan.liang@linux.intel.com
 ---
- arch/x86/events/core.c       |  1 +-
- arch/x86/events/intel/lbr.c  | 40 ++++++++++++++++++++++++++++++++++-
- arch/x86/events/perf_event.h |  7 ++++++-
- 3 files changed, 47 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/fpu/internal.h | 47 ++++------------------------
+ arch/x86/kernel/fpu/core.c          | 39 +++++++++++++++++++++++-
+ 2 files changed, 46 insertions(+), 40 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 6b1228a..1cbf57d 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -358,6 +358,7 @@ void x86_release_hardware(void)
- 	if (atomic_dec_and_mutex_lock(&pmc_refcount, &pmc_reserve_mutex)) {
- 		release_pmc_hardware();
- 		release_ds_buffers();
-+		release_lbr_buffers();
- 		mutex_unlock(&pmc_reserve_mutex);
- 	}
- }
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index cb1a049..63f58bd 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -658,6 +658,7 @@ static inline bool branch_user_callstack(unsigned br_sel)
- 
- void intel_pmu_lbr_add(struct perf_event *event)
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index 42159f4..d3724dc 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -274,7 +274,7 @@ static inline void copy_fxregs_to_kernel(struct fpu *fpu)
+  */
+ static inline void copy_xregs_to_kernel_booting(struct xregs_state *xstate)
  {
-+	struct kmem_cache *kmem_cache = event->pmu->task_ctx_cache;
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
- 	if (!x86_pmu.lbr_nr)
-@@ -695,6 +696,29 @@ void intel_pmu_lbr_add(struct perf_event *event)
- 	perf_sched_cb_inc(event->ctx->pmu);
- 	if (!cpuc->lbr_users++ && !event->total_time_running)
- 		intel_pmu_lbr_reset();
-+
-+	if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
-+	    kmem_cache && !cpuc->lbr_xsave &&
-+	    (cpuc->lbr_users != cpuc->lbr_pebs_users))
-+		cpuc->lbr_xsave = kmem_cache_alloc(kmem_cache, GFP_KERNEL);
-+}
-+
-+void release_lbr_buffers(void)
-+{
-+	struct kmem_cache *kmem_cache = x86_get_pmu()->task_ctx_cache;
-+	struct cpu_hw_events *cpuc;
-+	int cpu;
-+
-+	if (!static_cpu_has(X86_FEATURE_ARCH_LBR))
-+		return;
-+
-+	for_each_possible_cpu(cpu) {
-+		cpuc = per_cpu_ptr(&cpu_hw_events, cpu);
-+		if (kmem_cache && cpuc->lbr_xsave) {
-+			kmem_cache_free(kmem_cache, cpuc->lbr_xsave);
-+			cpuc->lbr_xsave = NULL;
-+		}
-+	}
- }
- 
- void intel_pmu_lbr_del(struct perf_event *event)
-@@ -945,6 +969,19 @@ static void intel_pmu_arch_lbr_read(struct cpu_hw_events *cpuc)
- 	intel_pmu_store_lbr(cpuc, NULL);
- }
- 
-+static void intel_pmu_arch_lbr_read_xsave(struct cpu_hw_events *cpuc)
-+{
-+	struct x86_perf_task_context_arch_lbr_xsave *xsave = cpuc->lbr_xsave;
-+
-+	if (!xsave) {
-+		intel_pmu_store_lbr(cpuc, NULL);
-+		return;
-+	}
-+	copy_dynamic_supervisor_to_kernel(&xsave->xsave, XFEATURE_MASK_LBR);
-+
-+	intel_pmu_store_lbr(cpuc, xsave->lbr.entries);
-+}
-+
- void intel_pmu_lbr_read(void)
+-	u64 mask = -1;
++	u64 mask = xfeatures_mask_all;
+ 	u32 lmask = mask;
+ 	u32 hmask = mask >> 32;
+ 	int err;
+@@ -320,7 +320,7 @@ static inline void copy_kernel_to_xregs_booting(struct xregs_state *xstate)
+  */
+ static inline void copy_xregs_to_kernel(struct xregs_state *xstate)
  {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-@@ -1767,14 +1804,15 @@ void __init intel_pmu_arch_lbr_init(void)
- 		x86_pmu.lbr_ctl_map = NULL;
- 
- 	x86_pmu.lbr_reset = intel_pmu_arch_lbr_reset;
--	x86_pmu.lbr_read = intel_pmu_arch_lbr_read;
- 	if (arch_lbr_xsave) {
- 		x86_pmu.lbr_save = intel_pmu_arch_lbr_xsaves;
- 		x86_pmu.lbr_restore = intel_pmu_arch_lbr_xrstors;
-+		x86_pmu.lbr_read = intel_pmu_arch_lbr_read_xsave;
- 		pr_cont("XSAVE ");
- 	} else {
- 		x86_pmu.lbr_save = intel_pmu_arch_lbr_save;
- 		x86_pmu.lbr_restore = intel_pmu_arch_lbr_restore;
-+		x86_pmu.lbr_read = intel_pmu_arch_lbr_read;
- 	}
- 
- 	pr_cont("Architectural LBR, ");
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index d5e351c..7b68ab5 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -253,6 +253,7 @@ struct cpu_hw_events {
- 	void				*last_task_ctx;
- 	int				last_log_id;
- 	int				lbr_select;
-+	void				*lbr_xsave;
+-	u64 mask = -1;
++	u64 mask = xfeatures_mask_all;
+ 	u32 lmask = mask;
+ 	u32 hmask = mask >> 32;
+ 	int err;
+@@ -356,6 +356,9 @@ static inline void copy_kernel_to_xregs(struct xregs_state *xstate, u64 mask)
+  */
+ static inline int copy_xregs_to_user(struct xregs_state __user *buf)
+ {
++	u64 mask = xfeatures_mask_user();
++	u32 lmask = mask;
++	u32 hmask = mask >> 32;
+ 	int err;
  
  	/*
- 	 * Intel host/guest exclude bits
-@@ -1066,6 +1067,8 @@ void release_ds_buffers(void);
+@@ -367,7 +370,7 @@ static inline int copy_xregs_to_user(struct xregs_state __user *buf)
+ 		return -EFAULT;
  
- void reserve_ds_buffers(void);
+ 	stac();
+-	XSTATE_OP(XSAVE, buf, -1, -1, err);
++	XSTATE_OP(XSAVE, buf, lmask, hmask, err);
+ 	clac();
  
-+void release_lbr_buffers(void);
-+
- extern struct event_constraint bts_constraint;
- extern struct event_constraint vlbr_constraint;
- 
-@@ -1207,6 +1210,10 @@ static inline void release_ds_buffers(void)
- {
+ 	return err;
+@@ -408,43 +411,7 @@ static inline int copy_kernel_to_xregs_err(struct xregs_state *xstate, u64 mask)
+ 	return err;
  }
  
-+static inline void release_lbr_buffers(void)
-+{
-+}
-+
- static inline int intel_pmu_init(void)
+-/*
+- * These must be called with preempt disabled. Returns
+- * 'true' if the FPU state is still intact and we can
+- * keep registers active.
+- *
+- * The legacy FNSAVE instruction cleared all FPU state
+- * unconditionally, so registers are essentially destroyed.
+- * Modern FPU state can be kept in registers, if there are
+- * no pending FP exceptions.
+- */
+-static inline int copy_fpregs_to_fpstate(struct fpu *fpu)
+-{
+-	if (likely(use_xsave())) {
+-		copy_xregs_to_kernel(&fpu->state.xsave);
+-
+-		/*
+-		 * AVX512 state is tracked here because its use is
+-		 * known to slow the max clock speed of the core.
+-		 */
+-		if (fpu->state.xsave.header.xfeatures & XFEATURE_MASK_AVX512)
+-			fpu->avx512_timestamp = jiffies;
+-		return 1;
+-	}
+-
+-	if (likely(use_fxsr())) {
+-		copy_fxregs_to_kernel(fpu);
+-		return 1;
+-	}
+-
+-	/*
+-	 * Legacy FPU register saving, FNSAVE always clears FPU registers,
+-	 * so we have to mark them inactive:
+-	 */
+-	asm volatile("fnsave %[fp]; fwait" : [fp] "=m" (fpu->state.fsave));
+-
+-	return 0;
+-}
++extern int copy_fpregs_to_fpstate(struct fpu *fpu);
+ 
+ static inline void __copy_kernel_to_fpregs(union fpregs_state *fpstate, u64 mask)
  {
- 	return 0;
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 06c8189..1bb7532 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -82,6 +82,45 @@ bool irq_fpu_usable(void)
+ }
+ EXPORT_SYMBOL(irq_fpu_usable);
+ 
++/*
++ * These must be called with preempt disabled. Returns
++ * 'true' if the FPU state is still intact and we can
++ * keep registers active.
++ *
++ * The legacy FNSAVE instruction cleared all FPU state
++ * unconditionally, so registers are essentially destroyed.
++ * Modern FPU state can be kept in registers, if there are
++ * no pending FP exceptions.
++ */
++int copy_fpregs_to_fpstate(struct fpu *fpu)
++{
++	if (likely(use_xsave())) {
++		copy_xregs_to_kernel(&fpu->state.xsave);
++
++		/*
++		 * AVX512 state is tracked here because its use is
++		 * known to slow the max clock speed of the core.
++		 */
++		if (fpu->state.xsave.header.xfeatures & XFEATURE_MASK_AVX512)
++			fpu->avx512_timestamp = jiffies;
++		return 1;
++	}
++
++	if (likely(use_fxsr())) {
++		copy_fxregs_to_kernel(fpu);
++		return 1;
++	}
++
++	/*
++	 * Legacy FPU register saving, FNSAVE always clears FPU registers,
++	 * so we have to mark them inactive:
++	 */
++	asm volatile("fnsave %[fp]; fwait" : [fp] "=m" (fpu->state.fsave));
++
++	return 0;
++}
++EXPORT_SYMBOL(copy_fpregs_to_fpstate);
++
+ void kernel_fpu_begin(void)
+ {
+ 	preempt_disable();
