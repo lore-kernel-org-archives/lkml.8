@@ -2,265 +2,119 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1304C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B2AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D52BD2065F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DFE2065F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:36:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="PTpAiqd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbgGHNgS (ORCPT
+        id S1729760AbgGHNgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:36:18 -0400
-Received: from mailout2.hostsharing.net ([83.223.78.233]:35203 "EHLO
-        mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729732AbgGHNgR (ORCPT
+        Wed, 8 Jul 2020 09:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729136AbgGHNgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:36:17 -0400
-X-Greylist: delayed 373 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 09:36:16 EDT
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by mailout2.hostsharing.net (Postfix) with ESMTPS id 3522A10189B24;
-        Wed,  8 Jul 2020 15:36:15 +0200 (CEST)
-Received: from localhost (pd95be530.dip0.t-ipconnect.de [217.91.229.48])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id E7E796106EC8;
-        Wed,  8 Jul 2020 15:36:14 +0200 (CEST)
-X-Mailbox-Line: From bf185285172a7b127424ac22fa42811eb2081cd4 Mon Sep 17 00:00:00 2001
-Message-Id: <bf185285172a7b127424ac22fa42811eb2081cd4.1594214103.git.lukas@wunner.de>
-In-Reply-To: <cover.1594214103.git.lukas@wunner.de>
-References: <cover.1594214103.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Wed, 8 Jul 2020 15:27:02 +0200
-Subject: [PATCH 2/3] driver core: Use rwsem for kill_device() serialization
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
+        Wed, 8 Jul 2020 09:36:43 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5CD2C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 06:36:42 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id o18so46140895eje.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 06:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=03JonGFN41nMFJlGEFKXl9Bpzl1Ujvr23TaWRry9onc=;
+        b=PTpAiqd5RBCVgLGXWMXrunrli3T+E2DRzw707sA1qaIazkk1zVS3jiycB3+KP5jLb6
+         m5YAmUwQ53ftCOo62gFY/HYloYVnKUhS7Iq5KBCW7w/UDdy9bMPKAXqQwU2jz85e2vGC
+         ALkviGT9PZvm4uM+oxth8Xd38yi3gsX+t8fkglimpP1cl2PmLCsHae2moo7n0uXKfUkC
+         x9jXy10+LnxamCFwmlbp5Z4LbzKA6B2rPgPjXdo+raNSneJhTjdyYqESlCLAcPmbcOL3
+         pF6A9AIhJ+bvbpu/AiGswEK3ZxopazEVxQuVGD9j3jsGzaXppove6apHUkvn5LQRItim
+         kxOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=03JonGFN41nMFJlGEFKXl9Bpzl1Ujvr23TaWRry9onc=;
+        b=CqbpF9W3aA4ygY/p2fF/iq1j3cC30iGCyTGeA/r/sq3jRmZ9Bb0I8NMPXNOlRb4CEx
+         NqhnAcErkgEvw3pVx4uzM4enJ8qbhQPt3h0D8fJm/envKrePkzukzQlgSgSJLV7kYaX3
+         fDz3p933yAcl2/HW1DL7lMbQIxpJo6A5x4uooZ9Jow93sfPHIsGTr0M1WQBAbCUbB8gO
+         7ZaD4BmxFiSQ+AkFUCLE89NKnf9bkRx7wLSlUix/YXOgR3NpaM43djitSz1dorcnYoum
+         pa9mli3fRYbQjhUYxqxcnF+U0ZCFIBRxosv+OZnN/BxsxrZhZAMFB8jNtKA7fXNUc3dP
+         O/9Q==
+X-Gm-Message-State: AOAM533GgLHElFl23o0k5hJrZL+FtNJJSxZuK3LBoylqA4P/7g3W314b
+        myvhfLOcS6TlkZg3GUBMsX+fmw==
+X-Google-Smtp-Source: ABdhPJwVfFoW6iQQ+fqbd7xp/1R/wW/saRz131MOzHu2XUHAvs/Onqzqo2VydVyKgnOzuUcxyR0yLw==
+X-Received: by 2002:a17:906:7b54:: with SMTP id n20mr50913962ejo.144.1594215401541;
+        Wed, 08 Jul 2020 06:36:41 -0700 (PDT)
+Received: from [192.168.178.33] (i5C746C99.versanet.de. [92.116.108.153])
+        by smtp.gmail.com with ESMTPSA id d26sm26632583edz.93.2020.07.08.06.36.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 06:36:41 -0700 (PDT)
+Subject: Re: [PATCH 1/6] md: switch to ->check_events for media change
+ notifications
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Song Liu <song@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200708122546.214579-1-hch@lst.de>
+ <20200708122546.214579-2-hch@lst.de>
+ <09cd4827-52ae-0e7c-c3d3-e9a6cd27ff2b@cloud.ionos.com>
+ <20200708132338.GO25523@casper.infradead.org>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <69412063-07eb-ddd1-2fee-2d3e1258cecf@cloud.ionos.com>
+Date:   Wed, 8 Jul 2020 15:36:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200708132338.GO25523@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kill_device() is currently serialized with driver probing by way of the
-device_lock().  We're about to serialize it with device_add() as well
-to prevent addition of children below a device which is going away.
-However the parent's device_lock() cannot be taken by device_add()
-lest deadlocks occur:  Addition of the parent may result in addition
-of children (as is the case with SPI controllers) and device_add()
-already takes the device_lock through the call to bus_probe_device() ->
-device_initial_probe() -> __device_attach().
+On 7/8/20 3:23 PM, Matthew Wilcox wrote:
+> On Wed, Jul 08, 2020 at 03:17:31PM +0200, Guoqing Jiang wrote:
+>> On 7/8/20 2:25 PM, Christoph Hellwig wrote:
+>>> -static int md_media_changed(struct gendisk *disk)
+>>> -{
+>>> -	struct mddev *mddev = disk->private_data;
+>>> -
+>>> -	return mddev->changed;
+>>> -}
+>> Maybe we can remove "changed" from struct mddev since no one reads it
+>> after the change.
+> You missed this hunk:
+>
+> +static unsigned int md_check_events(struct gendisk *disk, unsigned int clearing)
+>   {
+>          struct mddev *mddev = disk->private_data;
+> +	unsigned int ret = 0;
+>
+> +	if (mddev->changed)
+> +               ret = DISK_EVENT_MEDIA_CHANGE;
+>          mddev->changed = 0;
+> -	return 0;
+> +	return ret;
+>   }
+>
 
-Avoid such deadlocks by introducing an rw_semaphore whose specific
-purpose is to serialize kill_device() with other parts of the kernel.
+Yes, sorry for the noise.
 
-Use an rw_semaphore instead of a mutex because the latter would preclude
-concurrent driver probing of multiple children below the same parent.
-The semaphore is acquired for writing when declaring a device dead and
-otherwise only acquired for reading.  It is private to the driver core,
-obviating the need to acquire a lock when calling kill_device(), as is
-currently done in nvdimm's nd_device_unregister() and device_del().
-
-An alternative approach would be to convert the device_lock() itself to
-an rw_semaphore (instead of a mutex).
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- drivers/base/base.h  |  2 ++
- drivers/base/core.c  | 33 +++++++++++++++++++--------------
- drivers/base/dd.c    |  8 ++++++++
- drivers/nvdimm/bus.c |  8 +-------
- 4 files changed, 30 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index 95c22c0f90360..7e71a1d262ef6 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -79,6 +79,7 @@ struct driver_private {
-  * @async_driver - pointer to device driver awaiting probe via async_probe
-  * @device - pointer back to the struct device that this structure is
-  * associated with.
-+ * @dead_sem - semaphore taken when declaring the device @dead.
-  * @dead - This device is currently either in the process of or has been
-  *	removed from the system. Any asynchronous events scheduled for this
-  *	device should exit without taking any action.
-@@ -94,6 +95,7 @@ struct device_private {
- 	struct list_head deferred_probe;
- 	struct device_driver *async_driver;
- 	struct device *device;
-+	struct rw_semaphore dead_sem;
- 	u8 dead:1;
- };
- #define to_device_private_parent(obj)	\
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 67d39a90b45c7..057da42b1a660 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2526,6 +2526,7 @@ static int device_private_init(struct device *dev)
- 	klist_init(&dev->p->klist_children, klist_children_get,
- 		   klist_children_put);
- 	INIT_LIST_HEAD(&dev->p->deferred_probe);
-+	init_rwsem(&dev->p->dead_sem);
- 	return 0;
- }
- 
-@@ -2780,21 +2781,27 @@ void put_device(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(put_device);
- 
-+/**
-+ * kill_device - declare device dead
-+ * @dev: device in question
-+ *
-+ * Declare @dev dead to prevent it from binding to a driver.
-+ * Return true if it was killed or false if it was already dead.
-+ */
- bool kill_device(struct device *dev)
- {
--	/*
--	 * Require the device lock and set the "dead" flag to guarantee that
--	 * the update behavior is consistent with the other bitfields near
--	 * it and that we cannot have an asynchronous probe routine trying
--	 * to run while we are tearing out the bus/class/sysfs from
--	 * underneath the device.
--	 */
--	lockdep_assert_held(&dev->mutex);
-+	bool killed;
- 
--	if (dev->p->dead)
--		return false;
--	dev->p->dead = true;
--	return true;
-+	down_write(&dev->p->dead_sem);
-+	if (dev->p->dead) {
-+		killed = false;
-+	} else {
-+		dev->p->dead = true;
-+		killed = true;
-+	}
-+	up_write(&dev->p->dead_sem);
-+
-+	return killed;
- }
- EXPORT_SYMBOL_GPL(kill_device);
- 
-@@ -2817,9 +2824,7 @@ void device_del(struct device *dev)
- 	struct kobject *glue_dir = NULL;
- 	struct class_interface *class_intf;
- 
--	device_lock(dev);
- 	kill_device(dev);
--	device_unlock(dev);
- 
- 	if (dev->fwnode && dev->fwnode->dev == dev)
- 		dev->fwnode->dev = NULL;
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 31c668651e824..9353d811cce83 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -817,6 +817,7 @@ static void __device_attach_async_helper(void *_dev, async_cookie_t cookie)
- 	};
- 
- 	device_lock(dev);
-+	down_read(&dev->p->dead_sem);
- 
- 	/*
- 	 * Check if device has already been removed or claimed. This may
-@@ -838,6 +839,7 @@ static void __device_attach_async_helper(void *_dev, async_cookie_t cookie)
- 	if (dev->parent)
- 		pm_runtime_put(dev->parent);
- out_unlock:
-+	up_read(&dev->p->dead_sem);
- 	device_unlock(dev);
- 
- 	put_device(dev);
-@@ -848,6 +850,7 @@ static int __device_attach(struct device *dev, bool allow_async)
- 	int ret = 0;
- 
- 	device_lock(dev);
-+	down_read(&dev->p->dead_sem);
- 	if (dev->p->dead) {
- 		goto out_unlock;
- 	} else if (dev->driver) {
-@@ -893,6 +896,7 @@ static int __device_attach(struct device *dev, bool allow_async)
- 			pm_runtime_put(dev->parent);
- 	}
- out_unlock:
-+	up_read(&dev->p->dead_sem);
- 	device_unlock(dev);
- 	return ret;
- }
-@@ -967,6 +971,7 @@ int device_driver_attach(struct device_driver *drv, struct device *dev)
- 	int ret = 0;
- 
- 	__device_driver_lock(dev, dev->parent);
-+	down_read(&dev->p->dead_sem);
- 
- 	/*
- 	 * If device has been removed or someone has already successfully
-@@ -975,6 +980,7 @@ int device_driver_attach(struct device_driver *drv, struct device *dev)
- 	if (!dev->p->dead && !dev->driver)
- 		ret = driver_probe_device(drv, dev);
- 
-+	up_read(&dev->p->dead_sem);
- 	__device_driver_unlock(dev, dev->parent);
- 
- 	return ret;
-@@ -987,6 +993,7 @@ static void __driver_attach_async_helper(void *_dev, async_cookie_t cookie)
- 	int ret = 0;
- 
- 	__device_driver_lock(dev, dev->parent);
-+	down_read(&dev->p->dead_sem);
- 
- 	drv = dev->p->async_driver;
- 
-@@ -997,6 +1004,7 @@ static void __driver_attach_async_helper(void *_dev, async_cookie_t cookie)
- 	if (!dev->p->dead && !dev->driver)
- 		ret = driver_probe_device(drv, dev);
- 
-+	up_read(&dev->p->dead_sem);
- 	__device_driver_unlock(dev, dev->parent);
- 
- 	dev_dbg(dev, "driver %s async attach completed: %d\n", drv->name, ret);
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index 09087c38fabdc..35e069c69386a 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -559,8 +559,6 @@ EXPORT_SYMBOL(nd_device_register);
- 
- void nd_device_unregister(struct device *dev, enum nd_async_mode mode)
- {
--	bool killed;
--
- 	switch (mode) {
- 	case ND_ASYNC:
- 		/*
-@@ -584,11 +582,7 @@ void nd_device_unregister(struct device *dev, enum nd_async_mode mode)
- 		 * or otherwise let the async path handle it if the
- 		 * unregistration was already queued.
- 		 */
--		nd_device_lock(dev);
--		killed = kill_device(dev);
--		nd_device_unlock(dev);
--
--		if (!killed)
-+		if (!kill_device(dev))
- 			return;
- 
- 		nd_synchronize();
--- 
-2.27.0
+Thanks,
+Guoqing
 
