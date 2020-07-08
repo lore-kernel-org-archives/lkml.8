@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C89BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD26206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D392206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:43:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="RW8+v/a2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DWXVhxMB"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="fY0YjHXU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CoLsHTmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGHRnR (ORCPT
+        id S1726941AbgGHRnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:43:17 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:44653 "EHLO
+        Wed, 8 Jul 2020 13:43:21 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:42445 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726859AbgGHRnO (ORCPT
+        by vger.kernel.org with ESMTP id S1726287AbgGHRnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:43:14 -0400
+        Wed, 8 Jul 2020 13:43:17 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 703632F2;
-        Wed,  8 Jul 2020 13:43:13 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 55BB02F3;
+        Wed,  8 Jul 2020 13:43:16 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:43:14 -0400
+  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:43:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=vbjE83hg7Ongd
-        MeQodU+dgrmswlM1THN0QhMEewZkvM=; b=RW8+v/a2EI3ks2LHkZUer3JGoGiCk
-        ABeiOoFrl8Mai2jcM8rSjjx5sCwhg3Uw3ZThtNOw8RfMfrDLFyUY0nqP+mwsGL42
-        UDyezKjInwegZutxkIDqLs8OLYvlbUSICVq97cVYteD8EaQiN5ehk5Oe9fzbXl3D
-        RcipBU38ea3uVifKZBIYLY9Y1wp/fcTPljGPEy3oU/QUYPiLf9dxib4dU8x/M7Xs
-        sJElmJ52OY8YdlXVWyKlg72qPwShPFZf38rqYDrBoUQHfBH9p6qkMmTVU8Td/Vwu
-        UMjAvGR3Oyzk1HMNdwkc6V6x+5VXDsEds4z14bmlkCwm+HeVlypyeQd1w==
+        :mime-version:content-transfer-encoding; s=fm3; bh=ld0J1fBGkPaub
+        dbqtuPwQXtIDQMOFVgRg/8rzgVDg+A=; b=fY0YjHXU3Q6UEy6FY8hscoLThbqI/
+        QtOLbu7yg2GkY9JOigntbxDtk9zAkM0Gat3szkQx/9lTCQUla/Mc6jLftHnY2zCx
+        axFaS96Aq/PmBT9TtbVmZLv50iV6I6HfadndN8WiFpIn2HtW3MUPFUB0xCCQlKgv
+        fgdUIqp+I8UqrtYydiVJFRSNDhtXp+Gb0lkoRC5UVMvzGDh1zh9UPLHJYnCfWY7y
+        o1LBABTle3QpspqQWmez/X5xA5u2MjQQHtPz30goUqUmYmrOCsM+BrMSkNxNcZX8
+        6ul6kO9Tcz/D6yhTE8RdDowthtpzZluWOlWxmjVK8hGMnI4KF3u6Bk2MQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=vbjE83hg7OngdMeQodU+dgrmswlM1THN0QhMEewZkvM=; b=DWXVhxMB
-        CsuCQo8OYJl67ZpvprUbp3z9D1Ic0v3d1vI2qryL4Y2ullV+ZgFsw4GY1koUhT7v
-        6GWYzWQSmxpF5Qev0waD24CapNL9nqedhxqkQy9Jz7LKDeojTwwwScsW6uAwzDFr
-        BOnep/3yWhLZh2mulPWCn8U1DeBboj7+WN/u0p7PEQWxeND3Utl/TWdjIkMUBDzM
-        +zA4ya3+qyiyak0DUnLAw+6ElIbwO1bQ5+f30bG1kuBOifo2ABI2QlpOA3h1Rg+x
-        hbIP3tADSFwp87+uZJGGM3NikoYIweg58paXA6ZB+Nnv0tGsBaPmJ46rn2XvlpGQ
-        Y4rDME0+eYXmmw==
-X-ME-Sender: <xms:sAUGX8LTQlVtDABGy0CB8T-muopUPA0f_f6xHrzpqyscGGldfeCuFQ>
+        fm3; bh=ld0J1fBGkPaubdbqtuPwQXtIDQMOFVgRg/8rzgVDg+A=; b=CoLsHTmM
+        8NkzaSs+YrrszLP7CznAn1KzjV16u1XyRDoDJSIGv2OdFFG3I7W/C3l5OVtu1k72
+        dBYSbWMt443jayL7DycHHlhjbFv5o8PPngIKbdRdh2HO3uWSOuP6jUrliKYKD46E
+        bkCtJgavxDThG5AycHqauUzlegUaFBE2CMsbvh7hYe0NgwyCeZJAs6VCC6s9qJ/q
+        VvSJUyzQJV75ptZFo7lYMW2GQcO6AMJU1NuO98dfrXEXPZ6j2NK6rJTfwqu9ZIhF
+        aBFhGeduOEpgrEiWzvnNpIRmTzmc/pHSNXDgZOent9W6D4Dhkt21g7F7Yv0MmFqo
+        1BjtXUidgHtHmg==
+X-ME-Sender: <xms:swUGX5VzqN7wXtNJNqxvRCsp7mcNRROmnTyGzdOjcsp6F7VAwLVA0w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdekne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:sAUGX8KRghJRrKrhxzvMohKknj7XiJYvyp5v1A0Zw-sNiFEK3yPCog>
-    <xmx:sAUGX8uzxMIfRoMKgMEsFAdDtVjLR8cFnCAPDLmyz-iltORKWVgVQA>
-    <xmx:sAUGX5ZbULW5e-3VhYnDHJtx0isAlD0ndOYeEj4LpViUPuVRfbHlag>
-    <xmx:sQUGX34QnHZtxO6HR_ZrfFTd0JV3ImUGnaa0ZBBraXMuXLtdof7mX2LkZ8w>
+X-ME-Proxy: <xmx:swUGX5kw4zDBTINFg3BeM903imkSpuc0oq0Izp-Em1PJ6XsW-VlQAw>
+    <xmx:swUGX1Z_0WAalfOIHbmZj0APuEA6szFVdxXxWiP7Lr7nX2uAv5fLAg>
+    <xmx:swUGX8Xnxa1LVqfSIYB3sDRmndlIvpfLYrwtDxj2FGoWeKuKtEjZag>
+    <xmx:swUGXxUTzocUDUqpRHao9m8IqwNrcI0VSl20XwRIQUvxeEO2ZF0pCJ3o9qc>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B285730600B2;
-        Wed,  8 Jul 2020 13:43:12 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8E9CC30600A6;
+        Wed,  8 Jul 2020 13:43:15 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 29/78] drm/vc4: crtc: Add a delay after disabling the PixelValve output
-Date:   Wed,  8 Jul 2020 19:41:37 +0200
-Message-Id: <a1f22aadc60a2f32022831a6348c8bbd6e1954c3.1594230107.git-series.maxime@cerno.tech>
+Subject: [PATCH v4 31/78] drm/vc4: crtc: Clear the PixelValve FIFO during configuration
+Date:   Wed,  8 Jul 2020 19:41:39 +0200
+Message-Id: <596dac201108233446694a1014726c51843172c5.1594230107.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
 References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
@@ -89,28 +89,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to avoid pixels getting stuck in the (unflushable) FIFO between
-the HVS and the PV, we need to add some delay after disabling the PV output
-and before disabling the HDMI controller. 20ms seems to be good enough so
-let's use that.
+Even though it's not really clear why we need to flush the PV FIFO during
+the configuration even though we started by flushing it, experience shows
+that without it we get a stale pixel stuck in the FIFO between the HVS and
+the PV.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index d0b326e1df0a..7b178d67187f 100644
+index 13fe0e370fb3..25a77cd46b28 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -403,6 +403,8 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
- 	ret = wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN), 1);
- 	WARN_ONCE(ret, "Timeout waiting for !PV_VCONTROL_VIDEN\n");
+@@ -358,7 +358,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ 	if (is_dsi)
+ 		CRTC_WRITE(PV_HACT_ACT, mode->hdisplay * pixel_rep);
  
-+	mdelay(20);
-+
- 	if (vc4_encoder->post_crtc_disable)
- 		vc4_encoder->post_crtc_disable(encoder);
- 
+-	CRTC_WRITE(PV_CONTROL,
++	CRTC_WRITE(PV_CONTROL, PV_CONTROL_FIFO_CLR |
+ 		   vc4_crtc_get_fifo_full_level_bits(vc4_crtc, format) |
+ 		   VC4_SET_FIELD(format, PV_CONTROL_FORMAT) |
+ 		   VC4_SET_FIELD(pixel_rep - 1, PV_CONTROL_PIXEL_REP) |
 -- 
 git-series 0.9.1
