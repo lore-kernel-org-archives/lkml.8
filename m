@@ -2,90 +2,227 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FFCC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53152206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:49:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wf7knxLW"
+	by mail.kernel.org (Postfix) with ESMTP id 05F71206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgGHRtS (ORCPT
+        id S1726628AbgGHRuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52926 "EHLO
+        Wed, 8 Jul 2020 13:50:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728721AbgGHRtJ (ORCPT
+        with ESMTP id S1726100AbgGHRuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:49:09 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26640C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 10:49:09 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id d17so40522790ljl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 10:49:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bhowNbJuV356oFdiSTzabdZB1J+dSIh5y7YWbXkVY2Q=;
-        b=Wf7knxLWk7qOaIH8aOWRD28F+E1eDaRcllXSUdNMF4E0ItMOATRQAgxeALRSgrKmkV
-         Eba9/ww36+r+1KS5krZIUFljxrtm1gIf/j41574CgdgiCAlVMv1EPxnF8cLuz3h9Kdwd
-         Ixpozzln58qGQjgtRoaOy3smHCkLJ247j66KN6qwo7h2lASuXyvuvWjV2PDQzbiKqe55
-         fzYwNGf8ke6c5XMun507OWWsnI8xv/TFx3z0b7R9XXlmxXNbMYjQvtFZivwyTg8J+Xln
-         XnChoWPsX9GXm4PEWVmPDihpwhTM9x5+ke2RFBm75fKGj1eYZUpz0EpOrFP9SWgmRByv
-         4HDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bhowNbJuV356oFdiSTzabdZB1J+dSIh5y7YWbXkVY2Q=;
-        b=Mz5YCAs5g1jMS1U9vVrOuXhWbxkT+flhXROOOqMssnPOwC1KFy0aef9u8UUpNuBCaR
-         1EpU7nBkQkLkgxp7cD7957jd/059jxtY8f4qYhSdJ24VFtir/9+Ne/S9FcX66BaWCd8b
-         kcFPFJoWN5McUNy1lwIfpsIbgSyEudS42VVZKRBWTje5/RfJ3RDkvKDr2iJQChrQt2yi
-         a3/uEeYeo+eqfsbS26sIHnNjnXgRgvLQOV6d71l8Wdt/xDQtEbhiA1T4QDlGX/K6xMUt
-         H9lNQDY0gQcWifUuMPL9JrIndqOYaytTskob5qH3BuiUDfYq9LQqRnT81YOKTkZ0+uOw
-         Ekkw==
-X-Gm-Message-State: AOAM530EpTN4gC9Fjm03Q4BfvT1BgxmSReh09LSwpELNg4Vcv0Y3mGLm
-        RmhDdCapbZMGxv8M3+1OHpFwM1QpQmW7sQJUxnc=
-X-Google-Smtp-Source: ABdhPJyK31rnONgRQ4xLjluvVcQNMLo+jfRoVczIGoEX71ohC46z3bYeEV76nRiYiTJiIemoWeswDy2kGmMBMezSRQ8=
-X-Received: by 2002:a2e:808d:: with SMTP id i13mr31426488ljg.452.1594230547595;
- Wed, 08 Jul 2020 10:49:07 -0700 (PDT)
+        Wed, 8 Jul 2020 13:50:16 -0400
+Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [IPv6:2001:1600:3:17::bc0f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67C76C061A0B;
+        Wed,  8 Jul 2020 10:50:16 -0700 (PDT)
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4B26Jy6zZ9zlhZKc;
+        Wed,  8 Jul 2020 19:50:10 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4B26Js1rjFzlh8TH;
+        Wed,  8 Jul 2020 19:50:05 +0200 (CEST)
+Subject: Re: [PATCH v19 08/12] landlock: Add syscall implementation
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Richard Weinberger <richard@nod.at>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+References: <20200707180955.53024-1-mic@digikod.net>
+ <20200707180955.53024-9-mic@digikod.net>
+ <CAK8P3a0FkoxFtcQJ2jSqyLbDCOp3R8-1JoY8CWAgbSZ9hH9wdQ@mail.gmail.com>
+ <7f407b67-d470-25fd-1287-f4f55f18e74a@digikod.net>
+ <CAK8P3a1ehWZErD2a0iBqn37s-LTAtW0AbV_gt32iX3cQkXbpOQ@mail.gmail.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <ec79f6ad-1c11-d69f-724b-622baa28f19f@digikod.net>
+Date:   Wed, 8 Jul 2020 19:50:03 +0200
+User-Agent: 
 MIME-Version: 1.0
-References: <1594025081-2353-1-git-send-email-hongxing.zhu@nxp.com>
-In-Reply-To: <1594025081-2353-1-git-send-email-hongxing.zhu@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 8 Jul 2020 14:48:56 -0300
-Message-ID: <CAOMZO5CGDzzADq6yC1FMStc1ZcuLS5mVahf_EOe1RNfdki9+Jw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl: only enable pcie in the pcie dts file
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAK8P3a1ehWZErD2a0iBqn37s-LTAtW0AbV_gt32iX3cQkXbpOQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
 
-On Mon, Jul 6, 2020 at 5:49 AM Richard Zhu <hongxing.zhu@nxp.com> wrote:
->
-> Since iMX6Q/DL PCIe has the PM limitation (ERR005723 "PCIe PCIe does
-> not support L2 Power Down").
-> System suspend/resume would be broken by PCIe, if PCIe is enabled.
-> Only enable PCIe in the xxx-pcie.dts files to avoid the brokens when
-> other xxx.dtb files are used on sabresd and sabreauto boards.
+On 08/07/2020 15:49, Arnd Bergmann wrote:
+> On Wed, Jul 8, 2020 at 3:04 PM Mickaël Salaün <mic@digikod.net> wrote:
+>> On 08/07/2020 10:57, Arnd Bergmann wrote:
+>>> On Tue, Jul 7, 2020 at 8:10 PM Mickaël Salaün <mic@digikod.net> wrote:
+>>>
+>>> It looks like all you need here today is a single argument bit, plus
+>>> possibly some room for extensibility. I would suggest removing all
+>>> the extra bits and using a syscall like
+>>>
+>>> SYSCALL_DEFINE1(landlock_create_ruleset, u32, flags);
+>>>
+>>> I don't really see how this needs any variable-length arguments,
+>>> it really doesn't do much.
+>>
+>> We need the attr_ptr/attr_size pattern because the number of ruleset
+>> properties will increase (e.g. network access mask).
+> 
+> But how many bits do you think you will *actually* need in total that
+> this needs to be a two-dimensional set of flags? At the moment you
+> only have a single bit that you interpret.
 
-We have several imx6 dts files that currently enable pcie.
+I think there is a misunderstanding. For this syscall I wasn't talking
+about the "options" field but about the "handled_access_fs" field which
+has 14 bits dedicated to control access to the file system:
+https://landlock.io/linux-doc/landlock-v19/security/landlock/user.html#filesystem-flags
+The idea is to add other handled_access_* fields for other kernel object
+types (e.g. network, process, etc.).
 
-Can't we have a proper software workaround for this issue instead?
+The "options" field is fine as a raw __u32 syscall argument.
 
-Thanks
+> 
+>>> To be on the safe side, you might split up the flags into either the
+>>> upper/lower 16 bits or two u32 arguments, to allow both compatible
+>>> (ignored by older kernels if flag is set) and incompatible (return error
+>>> when an unknown flag is set) bits.
+>>
+>> This may be a good idea in general, but in the case of Landlock, because
+>> this kind of (discretionary) sandboxing should be a best-effort security
+>> feature, we should avoid incompatible behavior. In practice, every
+>> unknown bit returns an error because userland can probe for available
+>> bits thanks to the get_features command. This kind of (in)compatibility
+>> can then be handled by userland.
+> 
+> If there are not going to be incompatible extensions, then just ignore
+> all unknown bits and never return an error but get rid of the user
+> space probing that just complicates the interface.
+
+There was multiple discussions about ABI compatibility, especially
+inspired by open(2) vs. openat2(2), and ignoring flags seems to be a bad
+idea. In the "sandboxer" example, we first probe the supported features
+and then mask unknown bits (i.e. access rights) at run time in userland.
+This strategy is quite straightforward, backward compatible and
+future-proof.
+
+What does the linux-api folks think about this?
+
+> 
+> In general, it's hard to rely on user space to first ask the kernel
+> what it can do, the way this normally works is that user space
+> asks the kernel for something and it either does it or not, but gives
+> an indication of whether it worked.
+
+Right, but this is a special case (i.e. best-effort security, not a
+required feature to run an application properly). As previously
+discussed, this kind of security feature should be used as much as
+possible by userland, but it may run on a system without Landlock. To
+encourage a wide use of this kind of security sandboxing by userland
+developers we should avoid the case when all the sandboxing is disabled
+because not all sandboxing features are supported by the running kernel.
+
+> 
+>> I suggest this syscall signature:
+>> SYSCALL_DEFINE3(landlock_create_ruleset, __u32, options, const struct
+>> landlock_attr_ruleset __user *, ruleset_ptr, size_t, ruleset_size);
+> 
+> The other problem here is that indirect variable-size structured arguments
+> are a pain to instrument with things like strace or seccomp, so you
+> should first try to use a fixed argument list, and fall back to a fixed
+> structure if that fails.
+
+I agree that it is not perfect with the current tools but this kind of
+extensible structs are becoming common and well defined (e.g. openat2).
+Moreover there is some work going on for seccomp to support "extensible
+argument" syscalls: https://lwn.net/Articles/822256/
+
+> 
+>>>> +static int syscall_add_rule_path_beneath(const void __user *const attr_ptr,
+>>>> +               const size_t attr_size)
+>>>> +{
+>>>> +       struct landlock_attr_path_beneath attr_path_beneath;
+>>>> +       struct path path;
+>>>> +       struct landlock_ruleset *ruleset;
+>>>> +       int err;
+>>>
+>>> Similarly, it looks like this wants to be
+>>>
+>>> SYSCALL_DEFINE3(landlock_add_rule_path_beneath, int, ruleset, int,
+>>> path, __u32, flags)
+>>>
+>>> I don't see any need to extend this in a way that wouldn't already
+>>> be served better by adding another system call. You might argue
+>>> that 'flags' and 'allowed_access' could be separate, with the latter
+>>> being an indirect in/out argument here, like
+>>>
+>>> SYSCALL_DEFINE4(landlock_add_rule_path_beneath, int, ruleset, int, path,
+>>>                            __u64 *, allowed_acces, __u32, flags)
+>>
+>> To avoid adding a new syscall for each new rule type (e.g. path_beneath,
+>> path_range, net_ipv4_range, etc.), I think it would be better to keep
+>> the attr_ptr/attr_size pattern and to explicitely set a dedicated option
+>> flag to specify the attr type.
+>>
+>> This would look like this:
+>> SYSCALL_DEFINE4(landlock_add_rule, __u32, options, int, ruleset, const
+>> void __user *, rule_ptr, size_t, rule_size);
+>>
+>> The rule_ptr could then point to multiple types like struct
+>> landlock_attr_path_beneath (without the current ruleset_fd field).
+> 
+> This again introduces variable-sized structured data. How many different
+> kinds of rule types do you think there will be (most likely, and maybe an
+> upper bound)?
+
+I don't know how many rule types will come, but right now I think it may
+be less than 10.
+
+> 
+> Could (some of) these be generalized to use the same data structure?
+
+I don't think so, file path and network addresses are an example of very
+different types.
+
+> 
+>>>> +static int syscall_enforce_ruleset(const void __user *const attr_ptr,
+>>>> +               const size_t attr_size)
+>>>
+>>> Here it seems like you just need to pass the file descriptor, or maybe
+>>>
+>>> SYSCALL_DEFINE2(landlock_enforce, int, ruleset, __u32 flags);
+>>>
+>>> if you need flags for extensibility.
+>>
+>> Right, but for consistency I prefer to change the arguments like this:
+>> SYSCALL_DEFINE2(landlock_enforce, __u32 options, int, ruleset);
+> 
+> Most system calls pass the object they work on as the first argument,
+> in this case this would be the ruleset file descriptor.
+
+OK, makes sense, I'll try to follow this as much as possible then.
