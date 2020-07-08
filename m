@@ -2,101 +2,86 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70678C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35DC52078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:26:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zHi3NQ6B"
+	by mail.kernel.org (Postfix) with ESMTP id 4D1D5206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594222087;
+	bh=q6H2MgomFwB1RePMLnNiDwgJsDS/PcygRl+huPQQ0x8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TI5zHVhQnSkoIhcMq7CjpyAlwcAZNYy1BnW7nFJtAyHCGsXMEID+WgFxv2KhN19NG
+	 ymu9C6tmrMBbN074Qv9WoPpEHYjBTC0DB1AQpRZvKz9PhSN4kgoXFDjawLOt4AUyrY
+	 uHO0naruxWAbUMHtjnKaZexW31xKIh2luTsmuwqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbgGHP0Q (ORCPT
+        id S1730072AbgGHP2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:26:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbgGHP0Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:26:16 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9FBAC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 08:26:15 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f18so3663261wml.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 08:26:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Rs6MPvocUji5XwIYCOn+gelVQBocwRHLVhtpEwxkopg=;
-        b=zHi3NQ6B1pEluj+8pRje9dKHgoKbTqzf12bvtSJLqPgPd1PZ5P/N/fsCC/EByu/GTd
-         ++8Oc6NBX8a3f5/bPCKW7JM4YnUQKD8/hAJR2PJ1Uc9vHLTPnL9e/cFg89VZjBPxvMzA
-         y4BkWh5zSPAoF+FoDDhsEVdd8b6S+E1jCbnRDpAHk4hdpNP3GXOj53AHr5r8yK89s+GP
-         pye/KGXh35xCAojrNnVW13bWLMqwi7ezhX/xSyPxR0U/y3l+I2x14vaCYP+bBk8+3woy
-         zXWpdvdAKra2z194nEkS5/3ll8CQYGCRGxHuQIglF0ZGeS3njAoh8uv9HwlKTkLxnZZH
-         a63Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Rs6MPvocUji5XwIYCOn+gelVQBocwRHLVhtpEwxkopg=;
-        b=PoZ17HDcTO6pdZT02Oo+ja2R6/ekLGkcis+igcCLD9P1c59OYavIt9TyzwoFmRlyHA
-         1pTfSH+Mz4qilfIIeOwOQQG9W2QydTuOzMgxnolpeAQv1Hu7limJDDni8W+9f2r7/OQQ
-         tLGKy1vL6b28Q/0gde1NgtQ1sT0o02S2ve2cC0Sl85+xNfCFUeHFN4O/J53rP809IJ1T
-         rR5c6odTYFLv/aAU3Winsa4Vf978l/7m1gQQkMOQU+SHPdZbCdtsln/KzD8UBUoJpEIy
-         bh8Q9fWAtdQefVUxVpByGZNkrMZbhFkZvFJo3Xn7ujaQQIYgGIGiBw8i678snggSRteo
-         +Xzg==
-X-Gm-Message-State: AOAM532pe33bmbdUXxEn/GFfOtPJ5r1WjBlUWlM1CNFcp4TVR50cxkRf
-        w822NJYXdRj0Lzorb5VJIqmWJg==
-X-Google-Smtp-Source: ABdhPJzwmo/GYeZxAsTWJXB+WycKYqDbjAStLBPyn3jw2SSdLqcjmDlSfW2zCFpuBDE+OXnWOYizbw==
-X-Received: by 2002:a1c:5a41:: with SMTP id o62mr9955647wmb.16.1594221974686;
-        Wed, 08 Jul 2020 08:26:14 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id y77sm154483wmd.36.2020.07.08.08.26.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jul 2020 08:26:13 -0700 (PDT)
-Subject: Re: [PATCH 03/11] ASoC: q6asm: make commands specific to streams
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
-        tiwai@suse.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org
-References: <20200707163641.17113-1-srinivas.kandagatla@linaro.org>
- <20200707163641.17113-4-srinivas.kandagatla@linaro.org>
- <9ff595b4-1093-36c8-f27f-f097e24657a0@linux.intel.com>
- <4eedae20-903f-77c6-c6e9-fbf3db209bcf@linaro.org>
- <20200708131307.GO4655@sirena.org.uk>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <863fb181-9814-ee1e-c174-ca58ff6468f1@linaro.org>
-Date:   Wed, 8 Jul 2020 16:26:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 8 Jul 2020 11:28:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729910AbgGHP2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:28:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8574C20786;
+        Wed,  8 Jul 2020 15:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594222085;
+        bh=q6H2MgomFwB1RePMLnNiDwgJsDS/PcygRl+huPQQ0x8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dC6UhLb1AbGooN9jirdPGALczpea5Ixd0NZpTeVsXEp+e/nWOUycm2jtjJPgDH89d
+         wI75Z1xAFStAHh7V2F4eBfSBsCwPJU2uBONQTtU4NwO2dT8kHpHCvIwcWBgeCXiCS3
+         N6rTEZSxdu3uBdHH3YWFCdZzNnou4lzL0fT4UFDM=
+Date:   Wed, 8 Jul 2020 17:28:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.7 000/112] 5.7.8-rc1 review
+Message-ID: <20200708152800.GA714318@kroah.com>
+References: <20200707145800.925304888@linuxfoundation.org>
+ <552f9118-eac9-56cc-c321-dd9b97eff09e@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200708131307.GO4655@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <552f9118-eac9-56cc-c321-dd9b97eff09e@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 08/07/2020 14:13, Mark Brown wrote:
->> Plan is that the users of these apis will send flags directly instead of
->> boiler plating this!
->> This change should go as part of next patch("[PATCH 04/11] ASoC: q6asm: use
->> flags directly from asm-dai") which would make it much clear!
-> It should be in here.
+On Wed, Jul 08, 2020 at 07:05:12AM -0600, Shuah Khan wrote:
+> On 7/7/20 9:16 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.7.8 release.
+> > There are 112 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.8-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> Please be also consistent in your use of ASM, especially given that asm
-> is a widely used name in the kernel.
+> Compiled and booted on my test system. No dmesg regressions.
 
-I agree, I will fix such usage in next patchset!
+Thanks for testing all of these and letting me know.
 
---srini
+greg k-h
