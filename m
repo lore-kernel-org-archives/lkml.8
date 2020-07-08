@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56322C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 262A020720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1FF20786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594222967;
-	bh=e6MJ1jDkNLcWDBG1X6jjVt05hEmPTtGNPap9XM5tuuc=;
+	s=default; t=1594222969;
+	bh=D/Eush0zwrRAESt/++OQbx7+J6f0APoivtHQWJ8KTC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m8J+LtBRt6dd6ASFD70gh0C2zIdGv33pQMjBlpQzdFW5aY6RFZE54hYQJjnLNrpM6
-	 G1eFcVRSbSL+uzwHfCKezTFL9nFNrJnIeOzYlSvIcoBuf2TV8v+4dtXqa/G6XsXt1v
-	 HzK2DuKc7WXWtVWeqawoT41sVfN3gn1OOFl8Udug=
+	b=MBJMQ00RQTxBqAb61i75q2UCPi5sQVK7meew45sOwt4tUljKDmuD8ZP/A/I1QA6qq
+	 A5sg1+hFpKLUP6en+vHS8MfrwWZoNBj+abMZ1RdlOE5sc/5DpdeHDK3o698O40GD5m
+	 TDhP8rWE8rkAmWI8YnL+JV3dSauffwwG0/m7qBkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730656AbgGHPmI (ORCPT
+        id S1730271AbgGHPms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49200 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730620AbgGHPmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:42:00 -0400
+        id S1730653AbgGHPmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:42:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 668E4206DF;
-        Wed,  8 Jul 2020 15:41:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8851207DF;
+        Wed,  8 Jul 2020 15:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222920;
-        bh=e6MJ1jDkNLcWDBG1X6jjVt05hEmPTtGNPap9XM5tuuc=;
+        s=default; t=1594222927;
+        bh=D/Eush0zwrRAESt/++OQbx7+J6f0APoivtHQWJ8KTC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FO3sQ50kPt51+hCGPWyPEH4dADSAa6Akjl+tyGhYL6X79uRbrsCP1hujklXTCZ/Vk
-         sTGL6Sd8D3OLovWfEgOBPjQGvHqbybw+kKAq9z4fiJyp/AeK+kg4ne/QE6xve2w5PD
-         pZBioUijgl2iV7TRx9BdmrzbSo6GEUb4AMM5P22Y=
+        b=PzJXjs+WwCDCffW9oNG6rjkwaBTNOQ5/Xf7BOwyukzXIHG3b+py0RoOnxWXXBzyEY
+         8seppYyas8nHwrTmERgnf+GeVb3BUbNKboJbT1KYl3PKqiI3crzI4DwhXMxyDQvnzP
+         vWgKmEq3/tuAnT8FYCaZKB0hAvoz8P/Cl2/Gvd8c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 2/8] drm/exynos: fix ref count leak in mic_pre_enable
-Date:   Wed,  8 Jul 2020 11:41:50 -0400
-Message-Id: <20200708154157.3200116-2-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 8/8] i2c: eg20t: Load module automatically if ID matches
+Date:   Wed,  8 Jul 2020 11:41:56 -0400
+Message-Id: <20200708154157.3200116-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708154157.3200116-1-sashal@kernel.org>
 References: <20200708154157.3200116-1-sashal@kernel.org>
@@ -62,36 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit d4f5a095daf0d25f0b385e1ef26338608433a4c5 ]
+[ Upstream commit 5f90786b31fb7d1e199a8999d46c4e3aea672e11 ]
 
-in mic_pre_enable, pm_runtime_get_sync is called which
-increments the counter even in case of failure, leading to incorrect
-ref count. In case of failure, decrement the ref count before returning.
+The driver can't be loaded automatically because it misses
+module alias to be provided. Add corresponding MODULE_DEVICE_TABLE()
+call to the driver.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_drm_mic.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-eg20t.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_mic.c b/drivers/gpu/drm/exynos/exynos_drm_mic.c
-index 2fd299a58297e..cd5530bbfe2e6 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_mic.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_mic.c
-@@ -267,8 +267,10 @@ static void mic_pre_enable(struct drm_bridge *bridge)
- 		goto unlock;
+diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
+index 231675b10376a..44025507b8f7b 100644
+--- a/drivers/i2c/busses/i2c-eg20t.c
++++ b/drivers/i2c/busses/i2c-eg20t.c
+@@ -188,6 +188,7 @@ static const struct pci_device_id pch_pcidev_id[] = {
+ 	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_I2C), 1, },
+ 	{0,}
+ };
++MODULE_DEVICE_TABLE(pci, pch_pcidev_id);
  
- 	ret = pm_runtime_get_sync(mic->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(mic->dev);
- 		goto unlock;
-+	}
- 
- 	mic_set_path(mic, 1);
+ static irqreturn_t pch_i2c_handler(int irq, void *pData);
  
 -- 
 2.25.1
