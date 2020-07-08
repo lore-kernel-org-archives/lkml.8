@@ -2,143 +2,156 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B68C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0301D206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138562078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:52:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FFF5Uhym"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CWnwWjIA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgGHXuT (ORCPT
+        id S1726139AbgGHXwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:50:19 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31559 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726044AbgGHXuS (ORCPT
+        Wed, 8 Jul 2020 19:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725982AbgGHXwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:50:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594252216;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7a+U5YBzYfEsFsCMWL9LQvEdqafvJrKo9TGytXjXtNY=;
-        b=FFF5Uhym+Z9d/PSvRCKHK6oo27iZtuXtObyFUhfZJUEYh1Q4j/MEef1pYwkju9lFhuuzyy
-        8l6jBOMu6vrzdT/zhnCQo7B06Pn460dwYTGs0exw59On28UqSILFVNJGRakjP9G/VISEPG
-        EI4GgYPeU1uIxxZHSGwEgDBOVNcfVz4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-490-y7uP8t23P4WocJdbNKNi9g-1; Wed, 08 Jul 2020 19:50:12 -0400
-X-MC-Unique: y7uP8t23P4WocJdbNKNi9g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6DD511085;
-        Wed,  8 Jul 2020 23:50:10 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-116-205.rdu2.redhat.com [10.10.116.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B6FD60E3E;
-        Wed,  8 Jul 2020 23:50:06 +0000 (UTC)
-Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
-To:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     Anton Blanchard <anton@ozlabs.org>,
-        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        virtualization@lists.linux-foundation.org,
-        Will Deacon <will@kernel.org>
-References: <20200706043540.1563616-1-npiggin@gmail.com>
- <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
- <1594101082.hfq9x5yact.astroid@bobo.none>
- <de3ead58-7f81-8ebd-754d-244f6be24af4@redhat.com>
- <1594184204.ncuq7vstsz.astroid@bobo.none>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <62fa6343-e084-75c3-01c9-349a4617e67c@redhat.com>
-Date:   Wed, 8 Jul 2020 19:50:05 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 8 Jul 2020 19:52:22 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E769DC08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:52:21 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k4so42102pld.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:52:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fsDIuQ+QGlLJItLLTBWc5HjwT0IhAh/4/r7bcFEnnPc=;
+        b=CWnwWjIAujJnrPuFiYjABbEC6jeH5sQeFt2uMF0YasTyHtuSXsGI+orYI9aYeH02E5
+         YK2bZgzfqAwLDSmHnKDl1Mbjj6MMyZ7t2ySryI8bRIwOoJwRrMSxbb1IAuYiIV5YEnSK
+         2ufhSjvXJnWyl9Cb6B8K7QBMuNk+8X7ikdjaE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fsDIuQ+QGlLJItLLTBWc5HjwT0IhAh/4/r7bcFEnnPc=;
+        b=OTZJ7Lv9qrh0ZsLabs/YHrD5ucJEneC1tkjYSazlwzGp23adZgmwvz96Yl165/Fpk6
+         GYW6T58q0Aoy7zr+SoDr3d1oFEvYMgMG/Hman1vwC469EVlqV2dMJUkWQca7iNFanrPG
+         Q3OgnyhsGD9c8+tvwuh6FRhxAZqUV7fqJnQGqPbFLStlvjSgcZTLvPKUiCsG+UxRhxsr
+         Ir0uodtEVEo3I5qIHT8StdhDDZAQLRSkREsWY25IP9L54Nic1M8DFg2Wj4nMXdlfxgir
+         mIYltTkexiCa6R1YfdjZTtPQCUZiebuPiDu0Rq0hWQ9PzLHy33GG2ZWkdNR5X4FIC7h8
+         nYOg==
+X-Gm-Message-State: AOAM533+d2jy3aR4MRdi+2rkpeM+patw9APFBb8W4WlrntCvwS7iAdw9
+        XT3IxY6PeR0EH+y2LYcEauTvXw==
+X-Google-Smtp-Source: ABdhPJzaUUiMh9xWXaIxrk0LMWQv1TGq8ruUqPrjGUj99WaVNBGcnuFxoRDDOcUYCmg5D8lPT5NVCg==
+X-Received: by 2002:a17:90a:fd12:: with SMTP id cv18mr12554968pjb.66.1594252341309;
+        Wed, 08 Jul 2020 16:52:21 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o2sm765839pfh.160.2020.07.08.16.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 16:52:20 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 16:52:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 5/7] fs: Expand __receive_fd() to accept existing fd
+Message-ID: <202007081651.F2EBF59F2B@keescook>
+References: <20200706201720.3482959-1-keescook@chromium.org>
+ <20200706201720.3482959-6-keescook@chromium.org>
+ <20200707123854.wi4s2kzwkhkgieyv@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <1594184204.ncuq7vstsz.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707123854.wi4s2kzwkhkgieyv@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 1:10 AM, Nicholas Piggin wrote:
-> Excerpts from Waiman Long's message of July 8, 2020 1:33 pm:
->> On 7/7/20 1:57 AM, Nicholas Piggin wrote:
->>> Yes, powerpc could certainly get more performance out of the slow
->>> paths, and then there are a few parameters to tune.
->>>
->>> We don't have a good alternate patching for function calls yet, but
->>> that would be something to do for native vs pv.
->>>
->>> And then there seem to be one or two tunable parameters we could
->>> experiment with.
->>>
->>> The paravirt locks may need a bit more tuning. Some simple testing
->>> under KVM shows we might be a bit slower in some cases. Whether this
->>> is fairness or something else I'm not sure. The current simple pv
->>> spinlock code can do a directed yield to the lock holder CPU, whereas
->>> the pv qspl here just does a general yield. I think we might actually
->>> be able to change that to also support directed yield. Though I'm
->>> not sure if this is actually the cause of the slowdown yet.
->> Regarding the paravirt lock, I have taken a further look into the
->> current PPC spinlock code. There is an equivalent of pv_wait() but no
->> pv_kick(). Maybe PPC doesn't really need that.
-> So powerpc has two types of wait, either undirected "all processors" or
-> directed to a specific processor which has been preempted by the
-> hypervisor.
->
-> The simple spinlock code does a directed wait, because it knows the CPU
-> which is holding the lock. In this case, there is a sequence that is
-> used to ensure we don't wait if the condition has become true, and the
-> target CPU does not need to kick the waiter it will happen automatically
-> (see splpar_spin_yield). This is preferable because we only wait as
-> needed and don't require the kick operation.
-Thanks for the explanation.
->
-> The pv spinlock code I did uses the undirected wait, because we don't
-> know the CPU number which we are waiting on. This is undesirable because
-> it's higher overhead and the wait is not so accurate.
->
-> I think perhaps we could change things so we wait on the correct CPU
-> when queued, which might be good enough (we could also put the lock
-> owner CPU in the spinlock word, if we add another format).
+On Tue, Jul 07, 2020 at 02:38:54PM +0200, Christian Brauner wrote:
+> On Mon, Jul 06, 2020 at 01:17:18PM -0700, Kees Cook wrote:
+> > Expand __receive_fd() with support for replace_fd() for the coming seccomp
+> > "addfd" ioctl(). Add new wrapper receive_fd_replace() for the new behavior
+> > and update existing wrappers to retain old behavior.
+> > 
+> > Thanks to Colin Ian King <colin.king@canonical.com> for pointing out an
+> > uninitialized variable exposure in an earlier version of this patch.
+> > 
+> > Reviewed-by: Sargun Dhillon <sargun@sargun.me>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> 
+> Thanks!
+> (One tiny-nit below.)
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> 
+> >  fs/file.c            | 24 ++++++++++++++++++------
+> >  include/linux/file.h | 10 +++++++---
+> >  2 files changed, 25 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/fs/file.c b/fs/file.c
+> > index 0efdcf413210..11313ff36802 100644
+> > --- a/fs/file.c
+> > +++ b/fs/file.c
+> > @@ -937,6 +937,7 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+> >  /**
+> >   * __receive_fd() - Install received file into file descriptor table
+> >   *
+> > + * @fd: fd to install into (if negative, a new fd will be allocated)
+> >   * @file: struct file that was received from another process
+> >   * @ufd: __user pointer to write new fd number to
+> >   * @o_flags: the O_* flags to apply to the new fd entry
+> > @@ -950,7 +951,7 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+> >   *
+> >   * Returns newly install fd or -ve on error.
+> >   */
+> > -int __receive_fd(struct file *file, int __user *ufd, unsigned int o_flags)
+> > +int __receive_fd(int fd, struct file *file, int __user *ufd, unsigned int o_flags)
+> >  {
+> >  	struct socket *sock;
+> >  	int new_fd;
+> > @@ -960,18 +961,30 @@ int __receive_fd(struct file *file, int __user *ufd, unsigned int o_flags)
+> >  	if (error)
+> >  		return error;
+> >  
+> > -	new_fd = get_unused_fd_flags(o_flags);
+> > -	if (new_fd < 0)
+> > -		return new_fd;
+> > +	if (fd < 0) {
+> > +		new_fd = get_unused_fd_flags(o_flags);
+> > +		if (new_fd < 0)
+> > +			return new_fd;
+> > +	} else
+> > +		new_fd = fd;
+> 
+> This is nitpicky but coding style technically wants us to use braces
+> around both branches if one of them requires them. ;)
 
-The LS byte of the lock word is used to indicate locking status. If we 
-have less than 255 cpus, we can put the (cpu_nr + 1) into the lock byte. 
-The special 0xff value can be used to indicate a cpu number >= 255 for 
-indirect yield. The required change to the qspinlock code will be 
-minimal, I think.
+Ah yeah, good point. Fixed. Thanks!
 
-
->> Attached are two
->> additional qspinlock patches that adds a CONFIG_PARAVIRT_QSPINLOCKS_LITE
->> option to not require pv_kick(). There is also a fixup patch to be
->> applied after your patchset.
->>
->> I don't have access to a PPC LPAR with shared processor at the moment,
->> so I can't test the performance of the paravirt code. Would you mind
->> adding my patches and do some performance test on your end to see if it
->> gives better result?
-> Great, I'll do some tests. Any suggestions for what to try?
-
-I will just like to see if it will produce some better performance 
-result compared with your current version.
-
-Cheers,
-Longman
-
+-- 
+Kees Cook
