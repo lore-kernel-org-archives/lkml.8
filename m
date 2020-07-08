@@ -2,112 +2,100 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 624C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20D5920772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4585820772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgGHNGE (ORCPT
+        id S1729243AbgGHNGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:06:04 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:46964 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbgGHNGD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:06:03 -0400
-IronPort-SDR: EuY/f6T9Q0yMSk4FmAsthL52/Ao5DWeiOtEBVRO8oXiJ3djSVDd8M69klEMQJAAiIHyREX/aQ0
- yhSQKbcpxQl1vTAyv2eqRWHA+Vs4prYJCm7J9kIx/8uZv29VSXHBgSQhrpufeQN6TJHr+oEtvy
- Z97b4IluZoUBPdHAtPOBeLsZ3PBdTdzGTaWmMTZaU/XMP0QTlGwZm752ZERnGumsWgVX5A6Aij
- u7pbSJZ6LD7gP2stDSE3AhDmm7vg6j7h1ZjkeJdcJ6PTAFRLuBHTWzxesDxzBYfs8IERmuo0Gc
- 03s=
-X-IronPort-AV: E=Sophos;i="5.75,327,1589270400"; 
-   d="scan'208";a="52847563"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 08 Jul 2020 05:06:02 -0800
-IronPort-SDR: vQ91E3efLjDL/Pcel0FCEkydF1TkB0qRh//ggnUj8fAmF/M5ENyBuS9urX43DIufRqg4SA/Evd
- GShtVaEPgWllaWEEdolheF9SzCCtVAneT8a8zWkR9XsqcVhGf07v+pYaEfBx312LupS6QBk3ke
- FPAwYGB/PQfMv6mnBNGeZWnSIf0xjfQ/ghCixWBM0i3gadSpK10tOdmW58Dg4EfdsS2zoUEY8V
- eXM5T3/Ce+ccWfNFBD8a6TrdvsBygalH3eCG0DyO7JXyqn5xSDBBTIpNi0IK49RsVIZ2aysUk9
- r0U=
-Subject: Re: [PATCH v11 00/56] atmel_mxt_ts misc
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     <nick@shmanahar.org>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>,
-        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200508055656.96389-1-jiada_wang@mentor.com>
- <20200527064307.GK89269@dtor-ws>
- <2f7964da-0dca-2d13-3559-28b4582a3278@mentor.com>
-Message-ID: <80fc7a3e-efd5-fab8-8ba8-8aa011944ab1@mentor.com>
-Date:   Wed, 8 Jul 2020 22:05:56 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 8 Jul 2020 09:06:31 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52885 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728677AbgGHNGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:06:31 -0400
+IronPort-SDR: IcDcEqQvdnqjpkT3TfhxldoXxc1KeFpSZUM6fy/3SYAymJf5r4AD3qPKlM+AwrwHAlXHVcruIz
+ wNCxQ2lVqNjw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="127868589"
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="127868589"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 06:06:31 -0700
+IronPort-SDR: P5qtq4WPAKu4Jcv7EbkTrZYVMsTvHhoAMjb7Hcm8yODViPeHgSoGywF3dW4kqb/58IvCXubQ3O
+ wc9ryDf15Pow==
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="323873323"
+Received: from sare-mobl.amr.corp.intel.com (HELO [10.251.7.246]) ([10.251.7.246])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 06:06:30 -0700
+Subject: Re: [PATCH] regmap: add missing dependency on SoundWire
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     tiwai@suse.de, alsa-devel@alsa-project.org, broonie@kernel.org,
+        "open list:REGISTER MAP ABSTRACTION" <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20200707202628.113142-1-pierre-louis.bossart@linux.intel.com>
+ <20200708071428.GA353107@kroah.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <dda765be-b252-98ff-f339-f226a42f4093@linux.intel.com>
+Date:   Wed, 8 Jul 2020 08:06:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <2f7964da-0dca-2d13-3559-28b4582a3278@mentor.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200708071428.GA353107@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SVR-ORW-MBX-06.mgc.mentorg.com (147.34.90.206) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dmitry
 
-I am working on refining this series,
-regarding your comment about drop changes related to
-upload firmware and config during boot.
 
-I found currently only config is uploaded during every boot.
-but firmware is only uploaded when userspace asks to do so via
-sysfs interface.
-
-Could you help to confirm if this is the case?
-
-Thanks,
-Jiada
-
-On 2020/06/25 22:50, Wang, Jiada wrote:
-> Hello Dmitry
-> 
-> sorry for the delay,
-> 
-> On 2020/05/27 15:43, Dmitry Torokhov wrote:
->> Hi Jiada,
+On 7/8/20 2:14 AM, Greg Kroah-Hartman wrote:
+> On Tue, Jul 07, 2020 at 03:26:28PM -0500, Pierre-Louis Bossart wrote:
+>> CONFIG_REGMAP is not selected when no other serial bus is supported.
+>> It's largely academic since CONFIG_I2C is usually selected e.g. by
+>> DRM, but still this can break randconfig so let's be explicit.
 >>
->> On Thu, May 07, 2020 at 10:56:00PM -0700, Jiada Wang wrote:
->>> This patch-set forward ports Nick Dyer's work in ndyer/linux github
->>> repository as long as some other features and fixes
+>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> ---
+>>   drivers/base/regmap/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> Sorry for ignoring the series for quite a while. I guess my biggest
->> issue with the series is that quite a bit of patches are trying to
->> handle the fallout from a very unfortunate design decision in the
->> driver: the fact that it attempts to automatically upload firmware and
->> config on every boot/probe. This design was done at my urging because I
->> did not have access to the technical documentation and did not realize
->> that the controller has non-volatile memory for both firmware and
->> configuration. We should only attempt to automatically load firmware
->> where device does not have non-volatile memory and is unable function
->> otherwise, in all other cases we better leave it to userspace to decide
->> whether to execute firmware update and when. The kernel should only
->> provide facilities so that userspace can initiate firmware update. This
->> design has worked well for Chrome OS for many years (it used Atmel
->> controllers in several products), and I would like to bring it to the
->> mainline.
+>> diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
+>> index 0fd6f97ee523..1d1d26b0d279 100644
+>> --- a/drivers/base/regmap/Kconfig
+>> +++ b/drivers/base/regmap/Kconfig
+>> @@ -4,7 +4,7 @@
+>>   # subsystems should select the appropriate symbols.
+>>   
+>>   config REGMAP
+>> -	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SCCB || REGMAP_I3C)
+>> +	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SOUNDWIRE || REGMAP_SCCB || REGMAP_I3C)
 > 
-> I agree with you, I will review the patch-set,
-> and only pick these not related to firmware/cfg upload
-> 
-> Thanks,
-> jiada
->>
->> Thanks.
->>
+> Any reason you didn't add it to the end of the list instead of adding it
+> to the middle?
+
+yes, I followed the config order in the same file:
+
+grep config Kconfig
+config REGMAP
+config REGCACHE_COMPRESSED
+config REGMAP_AC97
+config REGMAP_I2C
+config REGMAP_SLIMBUS
+config REGMAP_SPI
+config REGMAP_SPMI
+config REGMAP_W1
+config REGMAP_MMIO
+config REGMAP_IRQ
+config REGMAP_SOUNDWIRE
+config REGMAP_SCCB
+config REGMAP_I3C
