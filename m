@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D873C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A553620720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72495206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594222883;
-	bh=+LpYrR59OhPiCgCI0Bz36JSXB63Ug5Bm7RsE1ZYQFX8=;
+	s=default; t=1594222886;
+	bh=B4KbhpoltGExd208/4xHgN1aUeY0aanpA2UIDqaA8Jk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2gCAJktFAVCaHAjuZWb6eO3bQPKFlgTArEY01C5NXssHYqJZjO0UUcy2+U3VrcPgW
-	 pfT0R3YRdwHmWyRWOhdIzrp/NUrAIGRITl4MzCfG4S3cZ7kRpmUAHjVa8xcYK4PcMA
-	 q9/fEzU7dlFHhzYkBQEP2D+46KFTzNwxd9qwD+Mg=
+	b=TRn73THZe8B17HEwkqW6LVVHckmdTW2Toe08wCV53i6ay3rv6f3GcRVx/r2h3Grsi
+	 Xyw1H+4GiQVFn9DCpjG1L3t8mAD0CdfCB3oLt/+OVFZWUzJlxOFsCAXcgqqkcVSm32
+	 RsfgqbVic2e+NxacmgCWvfBMddlikPgdAZLwl/HI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgGHPlX (ORCPT
+        id S1730402AbgGHPlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:41:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:41:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729858AbgGHPlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:41:20 -0400
+        id S1730386AbgGHPlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:41:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 445D320786;
-        Wed,  8 Jul 2020 15:41:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 006CC20786;
+        Wed,  8 Jul 2020 15:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222880;
-        bh=+LpYrR59OhPiCgCI0Bz36JSXB63Ug5Bm7RsE1ZYQFX8=;
+        s=default; t=1594222882;
+        bh=B4KbhpoltGExd208/4xHgN1aUeY0aanpA2UIDqaA8Jk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wwWTusAX+B59vR848JVEGG/G3GVKCXLKlLQXX8ksaEXR1undr+mwNOl1XwzJ9FSNv
-         VE4mR6EtV41UtdVgXDeXyZAmS6Cy63U1zhJCmYPY9Wo/QN4khMVmLD63JRpKAHm+lH
-         66cp17kyHZDdFnI0l8VpX1OesE+6V0THaMlethbI=
+        b=aIVCD5gYfxPdcaJsnAEHtOOb2xq53ugXXr2BODQBSt+AXrX6jS7ShY9kZBcARtfvw
+         651RMymOudCIP+Vq5uQuqdrN8jzAOrXSbvM0X8UMXkGpZ9Uzf4lANE777KslWl2nP6
+         AaJHDnETAjLVJrmhBrPtT+CI9u+mu9xZk9/hZARQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 02/30] drm/msm/dpu: allow initialization of encoder locks during encoder init
-Date:   Wed,  8 Jul 2020 11:40:48 -0400
-Message-Id: <20200708154116.3199728-2-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        kbuild test robot <lkp@intel.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 04/30] drm/exynos: Properly propagate return value in drm_iommu_attach_device()
+Date:   Wed,  8 Jul 2020 11:40:50 -0400
+Message-Id: <20200708154116.3199728-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708154116.3199728-1-sashal@kernel.org>
 References: <20200708154116.3199728-1-sashal@kernel.org>
@@ -60,52 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishna Manikandan <mkrishn@codeaurora.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 2e7ec6b5297157efabb50e5f82adc628cf90296c ]
+[ Upstream commit b9c633882de4601015625f9136f248e9abca8a7a ]
 
-In the current implementation, mutex initialization
-for encoder mutex locks are done during encoder
-setup. This can lead to scenarios where the lock
-is used before it is initialized. Move mutex_init
-to dpu_encoder_init to avoid this.
+Propagate the proper error codes from the called functions instead of
+unconditionally returning 0.
 
-Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Merge conflict so merged it manually.
+Signed-off-by: Inki Dae <inki.dae@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 4 ++--
+ drivers/gpu/drm/exynos/exynos_drm_dma.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index a1b79ee2bd9d5..aa5409f06e3f9 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -2126,7 +2126,6 @@ int dpu_encoder_setup(struct drm_device *dev, struct drm_encoder *enc,
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dma.c b/drivers/gpu/drm/exynos/exynos_drm_dma.c
+index 619f81435c1b2..58b89ec11b0eb 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dma.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dma.c
+@@ -61,7 +61,7 @@ static int drm_iommu_attach_device(struct drm_device *drm_dev,
+ 				struct device *subdrv_dev, void **dma_priv)
+ {
+ 	struct exynos_drm_private *priv = drm_dev->dev_private;
+-	int ret;
++	int ret = 0;
  
- 	dpu_enc = to_dpu_encoder_virt(enc);
- 
--	mutex_init(&dpu_enc->enc_lock);
- 	ret = dpu_encoder_setup_display(dpu_enc, dpu_kms, disp_info);
+ 	if (get_dma_ops(priv->dma_dev) != get_dma_ops(subdrv_dev)) {
+ 		DRM_DEV_ERROR(subdrv_dev, "Device %s lacks support for IOMMU\n",
+@@ -92,7 +92,7 @@ static int drm_iommu_attach_device(struct drm_device *drm_dev,
  	if (ret)
- 		goto fail;
-@@ -2141,7 +2140,6 @@ int dpu_encoder_setup(struct drm_device *dev, struct drm_encoder *enc,
- 				0);
+ 		clear_dma_max_seg_size(subdrv_dev);
  
- 
--	mutex_init(&dpu_enc->rc_lock);
- 	INIT_DELAYED_WORK(&dpu_enc->delayed_off_work,
- 			dpu_encoder_off_work);
- 	dpu_enc->idle_timeout = IDLE_TIMEOUT;
-@@ -2186,6 +2184,8 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
- 
- 	spin_lock_init(&dpu_enc->enc_spinlock);
- 	dpu_enc->enabled = false;
-+	mutex_init(&dpu_enc->enc_lock);
-+	mutex_init(&dpu_enc->rc_lock);
- 
- 	return &dpu_enc->base;
+-	return 0;
++	return ret;
  }
+ 
+ /*
 -- 
 2.25.1
 
