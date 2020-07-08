@@ -2,129 +2,136 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34743C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A34E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E49C20853
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:51:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WUXj1hng"
+	by mail.kernel.org (Postfix) with ESMTP id 8CF4D20853
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbgGHEvw (ORCPT
+        id S1729624AbgGHEvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 00:51:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729539AbgGHEvu (ORCPT
+        Wed, 8 Jul 2020 00:51:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30804 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725903AbgGHEvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 00:51:50 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76BDC08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 21:51:49 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g10so3093178wmc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 21:51:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=YM0IzGADgX2tl1Mp5AFtyEMSY+GtGZFBS0TzG37PEVo=;
-        b=WUXj1hnghzt3S3Xl8PkHIhKgc4y1+imaFlRTqYId1bXkQETCFWvksi9OaC5IchDWnN
-         /G3tZ3QPpXYdo0LQXnUBTJmqJT9KSLHL1W0ppqEv0GzEoRLMsgv7oAFu9hXuZV3qNwUU
-         EmbTjiaI3Wsm/bQlCldA6nvGa0OVis92xbh6I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=YM0IzGADgX2tl1Mp5AFtyEMSY+GtGZFBS0TzG37PEVo=;
-        b=aB9owTrbYkCr6aFXlIpWWotZkvdmMKBGKSMy1pjYexe3J4g+wsZO3el5I2UkwO64S3
-         wtb4cdQUD641rsPUkLbj1yaY+vLx6cgoRaf8VNHJxzrwzoVYnCZ1ZjD2168O4+yezp2D
-         +YAD7LhR9LkQi6Onk2xcAqwfQyFNqZnlCWlMfHSwDGtOh9eWmrcjJeFKJxreIP28lwYV
-         9M9vG+IPxnS79jreGVes7RNugHMHZURe7EyAojQKvvafBPmOvaOMHeiK5YhRSBMz7fA2
-         9qTk+bx2MWqge914CuxsmVJrLeLiTLLBolQ3NuB8Ebq9RW9IfZGRb1/MKYGo40O9Co8N
-         WRIA==
-X-Gm-Message-State: AOAM530x8TMrQsul22upNAcB5SBYSvOkgIEfc6Gx8U4mbClAq72ylFq7
-        Y2CaRzQbdsyDrynbOfVaKytbAQ==
-X-Google-Smtp-Source: ABdhPJxCmxanR1p+Zv9NtrwZXxJyNGR3oD42FStMXE5QtLw0GpBvXi6oEnvGhedpl11EqTWK1HD1Eg==
-X-Received: by 2002:a1c:ba0b:: with SMTP id k11mr7135332wmf.140.1594183908367;
-        Tue, 07 Jul 2020 21:51:48 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id y7sm3843597wrt.11.2020.07.07.21.51.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 21:51:47 -0700 (PDT)
-Subject: Re: [PATCH v10 0/9] firmware: add request_partial_firmware_into_buf
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-References: <20200706232309.12010-1-scott.branden@broadcom.com>
- <c8bbabe6-0b25-a816-f95d-8af63010eaf2@gmail.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <6c6126cc-6572-b341-7808-5e573d0cfad8@broadcom.com>
-Date:   Tue, 7 Jul 2020 21:51:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 00:51:52 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0684VqBi026692;
+        Wed, 8 Jul 2020 00:51:27 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3256kqh3ev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 00:51:26 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0684Xbxv030659;
+        Wed, 8 Jul 2020 00:51:26 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3256kqh3eb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 00:51:26 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0684oq2Z002020;
+        Wed, 8 Jul 2020 04:51:24 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma05fra.de.ibm.com with ESMTP id 3251w8g455-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 04:51:24 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0684pLLu63570400
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Jul 2020 04:51:21 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73283AE04D;
+        Wed,  8 Jul 2020 04:51:21 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D7637AE055;
+        Wed,  8 Jul 2020 04:51:17 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.51.84])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Jul 2020 04:51:17 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     ravi.bangoria@linux.ibm.com, apopple@linux.ibm.com,
+        paulus@samba.org, npiggin@gmail.com, christophe.leroy@c-s.fr,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 6/9] powerpc/watchpoint: Rename current H_SET_MODE DAWR macro
+Date:   Wed,  8 Jul 2020 10:20:43 +0530
+Message-Id: <20200708045046.135702-7-ravi.bangoria@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200708045046.135702-1-ravi.bangoria@linux.ibm.com>
+References: <20200708045046.135702-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <c8bbabe6-0b25-a816-f95d-8af63010eaf2@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_01:2020-07-08,2020-07-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 bulkscore=0
+ spamscore=0 adultscore=0 impostorscore=0 malwarescore=0 mlxscore=0
+ cotscore=-2147483648 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007080024
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+Current H_SET_MODE hcall macro name for setting/resetting DAWR0 is
+H_SET_MODE_RESOURCE_SET_DAWR. Add suffix 0 to macro name as well.
 
-On 2020-07-07 9:38 p.m., Florian Fainelli wrote:
->
-> On 7/6/2020 4:23 PM, Scott Branden wrote:
->> This patch series adds partial read support via a new call
->> request_partial_firmware_into_buf.
->> Such support is needed when the whole file is not needed and/or
->> only a smaller portion of the file will fit into allocated memory
->> at any one time.
->> In order to accept the enhanced API it has been requested that kernel
->> selftests and upstreamed driver utilize the API enhancement and so
->> are included in this patch series.
->>
->> Also in this patch series is the addition of a new Broadcom VK driver
->> utilizing the new request_firmware_into_buf enhanced API.
->>
->> Further comment followed to add IMA support of the partial reads
->> originating from request_firmware_into_buf calls.  And another request
->> to move existing kernel_read_file* functions to its own include file.
-> Do you have any way to separate the VK drivers submission from the
-> request_partial_firmware_into_buf() work that you are doing? It looks
-> like it is going to require quite a few iterations of this patch set for
-> the firmware/fs/IMA part to be ironed out, so if you could get your
-> driver separated out, it might help you achieve partial success here.
-Originally I did not submit the driver.
-But Greg K-H rejected the pread support unless there was an actual user 
-in the kernel.
-Hence the need to submit this all in the patch series.
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+---
+ arch/powerpc/include/asm/hvcall.h         | 2 +-
+ arch/powerpc/include/asm/plpar_wrappers.h | 2 +-
+ arch/powerpc/kvm/book3s_hv.c              | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/hvcall.h b/arch/powerpc/include/asm/hvcall.h
+index e90c073e437e..a7f6f1aeda6b 100644
+--- a/arch/powerpc/include/asm/hvcall.h
++++ b/arch/powerpc/include/asm/hvcall.h
+@@ -354,7 +354,7 @@
+ 
+ /* Values for 2nd argument to H_SET_MODE */
+ #define H_SET_MODE_RESOURCE_SET_CIABR		1
+-#define H_SET_MODE_RESOURCE_SET_DAWR		2
++#define H_SET_MODE_RESOURCE_SET_DAWR0		2
+ #define H_SET_MODE_RESOURCE_ADDR_TRANS_MODE	3
+ #define H_SET_MODE_RESOURCE_LE			4
+ 
+diff --git a/arch/powerpc/include/asm/plpar_wrappers.h b/arch/powerpc/include/asm/plpar_wrappers.h
+index 4497c8afb573..93eb133d572c 100644
+--- a/arch/powerpc/include/asm/plpar_wrappers.h
++++ b/arch/powerpc/include/asm/plpar_wrappers.h
+@@ -312,7 +312,7 @@ static inline long plpar_set_ciabr(unsigned long ciabr)
+ 
+ static inline long plpar_set_watchpoint0(unsigned long dawr0, unsigned long dawrx0)
+ {
+-	return plpar_set_mode(0, H_SET_MODE_RESOURCE_SET_DAWR, dawr0, dawrx0);
++	return plpar_set_mode(0, H_SET_MODE_RESOURCE_SET_DAWR0, dawr0, dawrx0);
+ }
+ 
+ static inline long plpar_signal_sys_reset(long cpu)
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index 6bf66649ab92..7ad692c2d7c7 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -764,7 +764,7 @@ static int kvmppc_h_set_mode(struct kvm_vcpu *vcpu, unsigned long mflags,
+ 			return H_P3;
+ 		vcpu->arch.ciabr  = value1;
+ 		return H_SUCCESS;
+-	case H_SET_MODE_RESOURCE_SET_DAWR:
++	case H_SET_MODE_RESOURCE_SET_DAWR0:
+ 		if (!kvmppc_power8_compatible(vcpu))
+ 			return H_P2;
+ 		if (!ppc_breakpoint_available())
+-- 
+2.26.2
 
