@@ -2,187 +2,87 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C670C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3519B20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51C220772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="HEnbOYKo"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BTMibEBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgGHMrI (ORCPT
+        id S1729214AbgGHMrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:47:08 -0400
-Received: from mail-bn8nam12on2069.outbound.protection.outlook.com ([40.107.237.69]:6058
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728941AbgGHMrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:47:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EKLMUlmACno8RUItxpYLh1jOiR9r/CKdc3OM4N0m3T+rJU3uCYWSztTx8wPRMlmMCan076FHR0u07ELDDA/z180p93PYJ2hGy7a0+Rm/N8yFObL0R9r71ZmsJoJ+nL/Up/6x1sGsPJK+2ndXLycCXu04mSev9JYVJxc3G+hPkD11MCwoyKx6hSLg9jwlmTBBjXGl6ZYZ60HjppNXIFkbqo82lNYn/nwbMdefZIXiJmE9bo+1QXQkl7yCM+LdllUa1ywTLFVBX28tnYuEu03X4BToZgltJ60rxu8k6p0zGeGWrGJO7nsQn1QnmEIraZl0b9q4lyzarJAxoJmpJ2avmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yNLYKUlvJ4ZMa9bOBdwSHfPbwd5Q/AnwQJ4LGeV4EDY=;
- b=M0WO+IeXgDB/44A8MK7d1Urgegs2kBy8eMp5Ry5imYneuaemEiVLBmkIvsjxy23EkOCbtZcZS3tIvdPm1n8EygNPqJ+BNBETuQB1ONFFSQQh97VqhSd9Skt/ATb+/q79jM4Cc2DKB0xKRkcNcn94CxYrWqpgJVRwvUhcuJb0sj1PDvDjf3ZjbA3PKYxI3e8sLHxlnk9c7tC17sZds/YCeBXXEdyhBU6UhXtNFXeUzRruVNb4dslsRgeJoMFZgJF9F7mXtUw9O7zSvSM7389kpB0uWEWkfCQD3eNP68qrBqzDF3ZxmqzCbB5XbN6uPHoNwNxF72H8BG1YBMuEPaLcJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Wed, 8 Jul 2020 08:47:20 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:42513 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728941AbgGHMrT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 08:47:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yNLYKUlvJ4ZMa9bOBdwSHfPbwd5Q/AnwQJ4LGeV4EDY=;
- b=HEnbOYKoRrqCl3LVmlvCi7xJBWGPDNZ/ueLwCPkLJbKdMqhLp5CkwdHJVFNJT9lZ/H8BcZMa6jBOXQWVUTXi52LJnqmhOu98w4JB6DDWsAiG2bFYDo7Avn0XIpYCTfhIiHiBElUBcp9syzkaiZP1bSLWbbKRTivnBQ6JFcD//X4=
-Received: from MN2PR01CA0034.prod.exchangelabs.com (2603:10b6:208:10c::47) by
- BYAPR02MB5367.namprd02.prod.outlook.com (2603:10b6:a03:62::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3153.28; Wed, 8 Jul 2020 12:47:02 +0000
-Received: from BL2NAM02FT043.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:10c:cafe::f0) by MN2PR01CA0034.outlook.office365.com
- (2603:10b6:208:10c::47) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24 via Frontend
- Transport; Wed, 8 Jul 2020 12:47:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT043.mail.protection.outlook.com (10.152.77.95) with Microsoft SMTP
- Server id 15.20.3174.21 via Frontend Transport; Wed, 8 Jul 2020 12:47:02
- +0000
-Received: from [149.199.38.66] (port=53302 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jt9S5-0000kz-0F; Wed, 08 Jul 2020 05:45:29 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jt9Ta-0007Pk-3K; Wed, 08 Jul 2020 05:47:02 -0700
-Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 068CkxSB007612;
-        Wed, 8 Jul 2020 05:46:59 -0700
-Received: from [172.30.17.109]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1jt9TW-0007OH-Ji; Wed, 08 Jul 2020 05:46:58 -0700
-Subject: Re: [PATCH] arm64: dts: xilinx: Align IOMMU nodename with dtschema
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Nava kishore Manne <nava.manne@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Kalyani Akula <kalyani.akula@xilinx.com>,
-        Manish Narani <manish.narani@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200629081744.13916-1-krzk@kernel.org>
-From:   Michal Simek <michal.simek@xilinx.com>
-Autocrypt: addr=michals@xilinx.com; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <3c28bb72-35ae-6c76-6935-624e90316f71@xilinx.com>
-Date:   Wed, 8 Jul 2020 14:46:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594212432; x=1625748432;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=btrDV7aPAqvlElbvwAkFQmMKkQBqBqJee/b+p+KItns=;
+  b=BTMibEBM7clfhfQcE58lc2X15T8a/0DnAHxuwxqvfdImA9EubWQF3DkV
+   8+baYGBwfakQUMoJvZgxMD5pApWEd5ATnr7QWIXgH5dZIaGYqchWfz09u
+   0T5Q7sidcfA0D/QLalOjvvKI3S/38jJZ4FCmr9P9z8tNaW0z469k5VY8p
+   s=;
+IronPort-SDR: WJyvA9mxqWowPK4+4DsGJk+1HdBnbhVPJuiWD4G58/KQ3uZWq44DaSP03TEWT9MJZ1FAOshrG9
+ c/fx7KUis/nw==
+X-IronPort-AV: E=Sophos;i="5.75,327,1589241600"; 
+   d="scan'208";a="40844025"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 08 Jul 2020 12:47:11 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 0DDCDA26D6;
+        Wed,  8 Jul 2020 12:47:09 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 8 Jul 2020 12:47:08 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.65) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 8 Jul 2020 12:46:58 +0000
+Subject: Re: [PATCH v4 09/18] nitro_enclaves: Add logic for enclave vcpu
+ creation
+To:     Alexander Graf <graf@amazon.de>, <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        "Stefano Garzarella" <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-10-andraprs@amazon.com>
+ <52e916fc-8fe3-f9bc-009e-ca84ab7dd650@amazon.de>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <c56a653f-31ab-6c7f-6b30-6651e4c23d77@amazon.com>
+Date:   Wed, 8 Jul 2020 15:46:44 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200629081744.13916-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <52e916fc-8fe3-f9bc-009e-ca84ab7dd650@amazon.de>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(39860400002)(136003)(46966005)(426003)(70586007)(82740400003)(186003)(70206006)(478600001)(336012)(82310400002)(31686004)(2906002)(2616005)(44832011)(31696002)(47076004)(81166007)(8936002)(4744005)(8676002)(26005)(36756003)(316002)(6666004)(356005)(83380400001)(9786002)(110136005)(5660300002)(921003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b3eb2e72-bef4-4cd2-44f8-08d8233d0319
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5367:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB5367B2CB75BFAACE8511A1DBC6670@BYAPR02MB5367.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:901;
-X-Forefront-PRVS: 04583CED1A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dsS53n26PAL0q6/CvezifkBmDARQjKb0fFhNj7oI31N0woksjyd9hM2zU13CGK7I5jI47SXcMrrQkCvw/uaIZcD73IDWnN+LgtHnX7CNMnA8/voo6vWEAfvc3FLGPPEVfOHyxyA8c04Q18BEhZXFpZxBqZmTSJBm6/dtdiF98vPLyNJdAZoB4/po2Mk4gGYMxXdzJ07QV4aUXCbG+YZbSoqwtlBGiGF+XvrmWXuivOwjqF2fR6Y2HrJaoIeYNXLa99PFwq6QciKzwfkAupTGtF9xgxggB3xCHcc3eUUjxQ4HW4BbkWj4kX7ZAOwmcrWb0YJK0wbVDx/HETJP+Iq8JhdgwteVpPmVYTWlSPB/sgU/PRsBf4bpjDAHxGf+Ry60MBJFO0L+xCtlgY9Ume/cenYsPuqGV123A4b/5IQtJ7xizESlsU8D2DSaVWEBRv0A
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2020 12:47:02.4810
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3eb2e72-bef4-4cd2-44f8-08d8233d0319
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT043.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5367
+X-Originating-IP: [10.43.160.65]
+X-ClientProxiedBy: EX13D28UWC004.ant.amazon.com (10.43.162.24) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -190,31 +90,866 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 29. 06. 20 10:17, Krzysztof Kozlowski wrote:
-> Fix dtschema validator warnings like:
->     smmu@fd800000: $nodename:0: 'smmu@fd800000' does not match '^iommu@[0-9a-f]*'
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> index 9174ddc76bdc..2b82206eba02 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -601,7 +601,7 @@
->  			power-domains = <&zynqmp_firmware PD_SD_1>;
->  		};
->  
-> -		smmu: smmu@fd800000 {
-> +		smmu: iommu@fd800000 {
->  			compatible = "arm,mmu-500";
->  			reg = <0x0 0xfd800000 0x0 0x20000>;
->  			status = "disabled";
-> 
+On 06/07/2020 13:12, Alexander Graf wrote:
+>
+>
+> On 22.06.20 22:03, Andra Paraschiv wrote:
+>> An enclave, before being started, has its resources set. One of its
+>> resources is CPU.
+>>
+>> The NE CPU pool is set for choosing CPUs for enclaves from it. Offline
+>> the CPUs from the NE CPU pool during the pool setup and online them back
+>> during the NE CPU pool teardown.
+>>
+>> The enclave CPUs need to be full cores and from the same NUMA node. CPU
+>> 0 and its siblings have to remain available to the primary / parent VM.
+>>
+>> Add ioctl command logic for enclave vCPU creation. Return as result a
+>> file descriptor that is associated with the enclave vCPU.
+>>
+>> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+>> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+>> ---
+>> Changelog
+>>
+>> v3 -> v4
+>>
+>> * Setup the NE CPU pool at runtime via a sysfs file for the kernel
+>> =A0=A0 parameter.
+>> * Check enclave CPUs to be from the same NUMA node.
+>> * Use dev_err instead of custom NE log pattern.
+>> * Update the NE ioctl call to match the decoupling from the KVM API.
+>>
+>> v2 -> v3
+>>
+>> * Remove the WARN_ON calls.
+>> * Update static calls sanity checks.
+>> * Update kzfree() calls to kfree().
+>> * Remove file ops that do nothing for now - open, ioctl and release.
+>>
+>> v1 -> v2
+>>
+>> * Add log pattern for NE.
+>> * Update goto labels to match their purpose.
+>> * Remove the BUG_ON calls.
+>> * Check if enclave state is init when setting enclave vcpu.
+>> ---
+>> =A0 drivers/virt/nitro_enclaves/ne_misc_dev.c | 491 ++++++++++++++++++++=
+++
+>> =A0 1 file changed, 491 insertions(+)
+>>
+>> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c =
 
-Applied.
+>> b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+>> index f70496813033..d6777008f685 100644
+>> --- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
+>> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+>> @@ -39,7 +39,11 @@
+>> =A0=A0 * TODO: Update logic to create new sysfs entries instead of using
+>> =A0=A0 * a kernel parameter e.g. if multiple sysfs files needed.
+>> =A0=A0 */
+>> +static int ne_set_kernel_param(const char *val, const struct =
 
-Thanks,
-Michal
+>> kernel_param *kp);
+>> +
+>> =A0 static const struct kernel_param_ops ne_cpu_pool_ops =3D {
+>> +=A0=A0=A0 .get =3D param_get_string,
+>> +=A0=A0=A0 .set =3D ne_set_kernel_param,
+>> =A0 };
+>> =A0 =A0 static char ne_cpus[PAGE_SIZE];
+>> @@ -60,6 +64,485 @@ struct ne_cpu_pool {
+>> =A0 =A0 static struct ne_cpu_pool ne_cpu_pool;
+>> =A0 +static const struct file_operations ne_enclave_vcpu_fops =3D {
+>> +=A0=A0=A0 .owner=A0=A0=A0=A0=A0=A0=A0 =3D THIS_MODULE,
+>> +=A0=A0=A0 .llseek=A0=A0=A0=A0=A0=A0=A0 =3D noop_llseek,
+>> +};
+>
+> Do we really need an fd for an object without operations? I think the =
+
+> general flow to add CPUs from the pool to the VM is very sensible. But =
+
+> I don't think we really need an fd as return value from that operation.
+
+Not particularly now, I kept it here for any potential further use cases =
+
+where will need one and to make sure we take into account a stable =
+
+interface and possibility for extensions.
+
+As we've discussed that we can have as option for further extensions to =
+
+add another ioctl which returns an fd, will update the current ioctl to =
+
+keep the logic of adding a vCPU w/o generating an fd.
+
+>
+>> +
+>> +/**
+>> + * ne_check_enclaves_created - Verify if at least one enclave has =
+
+>> been created.
+>> + *
+>> + * @pdev: PCI device used for enclave lifetime management.
+>> + *
+>> + * @returns: true if at least one enclave is created, false otherwise.
+>> + */
+>> +static bool ne_check_enclaves_created(struct pci_dev *pdev)
+>> +{
+>> +=A0=A0=A0 struct ne_pci_dev *ne_pci_dev =3D pci_get_drvdata(pdev);
+>> +
+>> +=A0=A0=A0 if (!ne_pci_dev)
+>> +=A0=A0=A0=A0=A0=A0=A0 return false;
+>
+> Please pass in the ne_pci_dev into this function directly.
+
+Updated the function signature.
+
+>
+>
+>> +
+>> +=A0=A0=A0 mutex_lock(&ne_pci_dev->enclaves_list_mutex);
+>> +
+>> +=A0=A0=A0 if (list_empty(&ne_pci_dev->enclaves_list)) {
+>> +=A0=A0=A0=A0=A0=A0=A0 mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return false;
+>
+> If you make this a return variable, you save on the unlock duplication.
+
+Updated the logic to use a ret var.
+
+>
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
+>> +
+>> +=A0=A0=A0 return true;
+>> +}
+>> +
+>> +/**
+>> + * ne_setup_cpu_pool - Set the NE CPU pool after handling sanity =
+
+>> checks such as
+>> + * not sharing CPU cores with the primary / parent VM or not using =
+
+>> CPU 0, which
+>> + * should remain available for the primary / parent VM. Offline the =
+
+>> CPUs from
+>> + * the pool after the checks passed.
+>> + *
+>> + * @pdev: PCI device used for enclave lifetime management.
+>> + * @ne_cpu_list: the CPU list used for setting NE CPU pool.
+>> + *
+>> + * @returns: 0 on success, negative return value on failure.
+>> + */
+>> +static int ne_setup_cpu_pool(struct pci_dev *pdev, const char =
+
+>> *ne_cpu_list)
+>> +{
+>> +=A0=A0=A0 unsigned int cpu =3D 0;
+>> +=A0=A0=A0 unsigned int cpu_sibling =3D 0;
+>> +=A0=A0=A0 int numa_node =3D -1;
+>> +=A0=A0=A0 int rc =3D -EINVAL;
+>> +
+>> +=A0=A0=A0 if (!capable(CAP_SYS_ADMIN)) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "No admin capability for CPU =
+pool =
+
+>> setup\n");
+>
+> No need to print anything here. It only gives non-admin users a chance =
+
+> to spill the kernel log. If non-admin users can write at all? Can they?
+>
+> Also, isn't this at the wrong abstraction level? I would expect such a =
+
+> check to happen on the file write function, not here.
+
+Removed the log. Non-admin users don't have the permission to write, =
+
+that's the default file permission set. I wanted to guard the offline / =
+
+online of the CPUs anyway with this check.
+
+True, I already moved the check when writing (setting) the cpu list in =
+
+the file when I started to work on v5.
+
+>
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return -EPERM;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 if (!ne_cpu_list)
+>> +=A0=A0=A0=A0=A0=A0=A0 return 0;
+>> +
+>> +=A0=A0=A0 if (ne_check_enclaves_created(pdev)) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "The CPU pool is used, enclav=
+es =
+
+>> created\n");
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 mutex_lock(&ne_cpu_pool.mutex);
+>> +
+>> +=A0=A0=A0 rc =3D cpulist_parse(ne_cpu_list, ne_cpu_pool.avail);
+>> +=A0=A0=A0 if (rc < 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "Error in cpulist parse [rc=3D%d]\n",=
+ rc);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 goto unlock_mutex;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 /*
+>> +=A0=A0=A0=A0 * Check if CPU 0 and its siblings are included in the prov=
+ided =
+
+>> CPU pool
+>> +=A0=A0=A0=A0 * They should remain available for the primary / parent VM.
+>> +=A0=A0=A0=A0 */
+>> +=A0=A0=A0 if (cpumask_test_cpu(0, ne_cpu_pool.avail)) {
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "CPU 0 has to remain available for th=
+e primary VM\n");
+>
+> Shouldn't this also change the read value of the sysfs file?
+
+Yes, I already updated the logic in v5 to set an empty string for sysfs =
+
+file value when there are failures in setting the CPU pool.
+
+>
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 rc =3D -EINVAL;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 goto unlock_mutex;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 for_each_cpu(cpu_sibling, topology_sibling_cpumask(0)) {
+>> +=A0=A0=A0=A0=A0=A0=A0 if (cpumask_test_cpu(cpu_sibling, ne_cpu_pool.ava=
+il)) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "CPU sibling %d of CPU 0 =
+is in the CPU pool\n",
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cpu_sibling);
+>
+> Same here. I would expect the sysfs file to reflect either the =
+
+> previous state or <empty> because failures mean no CPUs are donated =
+
+> anymore.
+>
+> Can we somehow implement the get function of the param as something =
+
+> that gets generated dynamically?
+
+I already updated the logic to set the string value of the CPU pool to =
+
+an empty string and clear our internal data structure, the cpumask. This =
+
+way, an empty sysfs file means no CPUs are set and all the CPUs are =
+
+onlined back.
+
+The CPU pool sysfs file value setup in v5 includes an early exit check - =
+
+if enclaves are available, the CPU pool cannot be changed anymore.
+
+Sure, we could have a custom get function, but I just haven't seen for =
+
+now a need to have one replacing the current (default) implementation =
+
+provided by the kernel.
+
+>
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 rc =3D -EINVAL;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto unlock_mutex;
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 /*
+>> +=A0=A0=A0=A0 * Check if CPU siblings are included in the provided CPU p=
+ool. The
+>> +=A0=A0=A0=A0 * expectation is that CPU cores are made available in the =
+CPU =
+
+>> pool for
+>> +=A0=A0=A0=A0 * enclaves.
+>> +=A0=A0=A0=A0 */
+>> +=A0=A0=A0 for_each_cpu(cpu, ne_cpu_pool.avail) {
+>> +=A0=A0=A0=A0=A0=A0=A0 for_each_cpu(cpu_sibling, topology_sibling_cpumas=
+k(cpu)) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!cpumask_test_cpu(cpu_sibling, ne=
+_cpu_pool.avail)) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "CPU %d is no=
+t in the CPU pool\n",
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cpu_sibling);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 rc =3D -EINVAL;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto unlock_mutex;
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 /*
+>> +=A0=A0=A0=A0 * Check if the CPUs from the NE CPU pool are from the same=
+ NUMA =
+
+>> node.
+>> +=A0=A0=A0=A0 */
+>> +=A0=A0=A0 for_each_cpu(cpu, ne_cpu_pool.avail) {
+>> +=A0=A0=A0=A0=A0=A0=A0 if (numa_node < 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 numa_node =3D cpu_to_node(cpu);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (numa_node < 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "Invalid NUMA=
+ node %d\n", numa_node);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 rc =3D -EINVAL;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto unlock_mutex;
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
+>> +=A0=A0=A0=A0=A0=A0=A0 } else {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (numa_node !=3D cpu_to_node(cpu)) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "CPUs are fro=
+m different NUMA nodes\n");
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 rc =3D -EINVAL;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto unlock_mutex;
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +=A0=A0=A0 }
+>> +
+>
+> There should be a comment here that describes the why:
+>
+> /*
+> =A0* CPUs that are donated to enclaves should not be considered online
+> =A0* by Linux anymore, as the hypervisor will degrade them to floating.
+> =A0*
+> =A0* We offline them here, to not degrade performance and expose correct
+> =A0* topology to Linux and user space.
+> =A0*/
+
+Good point. Added here and also included in the commit message the =
+
+motivation for offlining / onlining the CPUs from the pool.
+
+>
+>> +=A0=A0=A0 for_each_cpu(cpu, ne_cpu_pool.avail) {
+>> +=A0=A0=A0=A0=A0=A0=A0 rc =3D remove_cpu(cpu);
+>> +=A0=A0=A0=A0=A0=A0=A0 if (rc !=3D 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "CPU %d is not offlined [=
+rc=3D%d]\n", cpu, rc);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto online_cpus;
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 mutex_unlock(&ne_cpu_pool.mutex);
+>> +
+>> +=A0=A0=A0 return 0;
+>> +
+>> +online_cpus:
+>> +=A0=A0=A0 for_each_cpu(cpu, ne_cpu_pool.avail)
+>> +=A0=A0=A0=A0=A0=A0=A0 add_cpu(cpu);
+>> +unlock_mutex:
+>> +=A0=A0=A0 mutex_unlock(&ne_cpu_pool.mutex);
+>> +
+>> +=A0=A0=A0 return rc;
+>> +}
+>> +
+>> +/**
+>> + * ne_teardown_cpu_pool - Online the CPUs from the NE CPU pool and =
+
+>> cleanup the
+>> + * CPU pool.
+>> + *
+>> + * @pdev: PCI device used for enclave lifetime management.
+>> + */
+>> +static void ne_teardown_cpu_pool(struct pci_dev *pdev)
+>> +{
+>> +=A0=A0=A0 unsigned int cpu =3D 0;
+>> +=A0=A0=A0 int rc =3D -EINVAL;
+>> +
+>> +=A0=A0=A0 if (!capable(CAP_SYS_ADMIN)) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "No admin capability for CPU =
+pool =
+
+>> setup\n");
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 if (!ne_cpu_pool.avail)
+>> +=A0=A0=A0=A0=A0=A0=A0 return;
+>> +
+>> +=A0=A0=A0 if (ne_check_enclaves_created(pdev)) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "The CPU pool is used, enclav=
+es =
+
+>> created\n");
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 mutex_lock(&ne_cpu_pool.mutex);
+>> +
+>> +=A0=A0=A0 for_each_cpu(cpu, ne_cpu_pool.avail) {
+>> +=A0=A0=A0=A0=A0=A0=A0 rc =3D add_cpu(cpu);
+>> +=A0=A0=A0=A0=A0=A0=A0 if (rc !=3D 0)
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "CPU %d is not onlined [r=
+c=3D%d]\n", cpu, rc);
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 cpumask_clear(ne_cpu_pool.avail);
+>> +
+>> +=A0=A0=A0 mutex_unlock(&ne_cpu_pool.mutex);
+>> +}
+>> +
+>> +static int ne_set_kernel_param(const char *val, const struct =
+
+>> kernel_param *kp)
+>> +{
+>> +=A0=A0=A0 const char *ne_cpu_list =3D val;
+>> +=A0=A0=A0 struct pci_dev *pdev =3D pci_get_device(PCI_VENDOR_ID_AMAZON,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0 PCI_DEVICE_ID_NE, NULL);
+>
+> Isn't there a better way?
+
+Yeah, I'm looking for options to update the logic to not use the =
+
+pci_get_device() call where it appears in the patch series. Also pointed =
+
+out in the discussion I've had before with Greg on a patch from the =
+
+current version.
+
+>
+>> +=A0=A0=A0 int rc =3D -EINVAL;
+>> +
+>> +=A0=A0=A0 if (!pdev)
+>> +=A0=A0=A0=A0=A0=A0=A0 return -ENODEV;
+>> +
+>> +=A0=A0=A0 ne_teardown_cpu_pool(pdev);
+>> +
+>> +=A0=A0=A0 rc =3D ne_setup_cpu_pool(pdev, ne_cpu_list);
+>> +=A0=A0=A0 if (rc < 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err(&pdev->dev, "Error in setup CPU pool [rc=
+=3D%d]\n", rc);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return rc;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 return param_set_copystring(val, kp);
+>> +}
+>> +
+>> +/**
+>> + * ne_get_cpu_from_cpu_pool - Get a CPU from the CPU pool. If the =
+
+>> vCPU id is 0,
+>> + * the CPU is autogenerated and chosen from the NE CPU pool.
+>> + *
+>> + * This function gets called with the ne_enclave mutex held.
+>> + *
+>> + * @ne_enclave: private data associated with the current enclave.
+>> + * @vcpu_id: id of the CPU to be associated with the given slot, =
+
+>> apic id on x86.
+>> + *
+>> + * @returns: 0 on success, negative return value on failure.
+>> + */
+>> +static int ne_get_cpu_from_cpu_pool(struct ne_enclave *ne_enclave, =
+
+>> u32 *vcpu_id)
+>
+> That's a very awkward API. Can you instead just pass by-value and =
+
+> return the resulting CPU ID?
+
+I separated the whole logic in 2 functions, one for getting a CPU from =
+
+the pool and one for checking a given CPU is in the pool.
+
+>
+>> +{
+>> +=A0=A0=A0 unsigned int cpu =3D 0;
+>> +=A0=A0=A0 unsigned int cpu_sibling =3D 0;
+>> +
+>> +=A0=A0=A0 if (*vcpu_id !=3D 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0 if (cpumask_test_cpu(*vcpu_id, ne_enclave->cpu_si=
+blings)) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cpumask_clear_cpu(*vcpu_id, ne_enclav=
+e->cpu_siblings);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return 0;
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 mutex_lock(&ne_cpu_pool.mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 if (!cpumask_test_cpu(*vcpu_id, ne_cpu_pool.avail=
+)) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
+device,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
+CPU %d is not in NE CPU pool\n",
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *=
+vcpu_id);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mutex_unlock(&ne_cpu_pool.mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
+>
+> I think you're better off making the return value explicit for the =
+
+> error, so that user space can print the error message rather than us.
+
+Yup, will update the patch series to use NE specific errors in cases =
+
+where necessary like this one.
+
+>
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 cpumask_clear_cpu(*vcpu_id, ne_cpu_pool.avail);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 /*
+>> +=A0=A0=A0=A0=A0=A0=A0=A0 * Make sure the CPU siblings are not marked as=
+ available
+>> +=A0=A0=A0=A0=A0=A0=A0=A0 * anymore.
+>> +=A0=A0=A0=A0=A0=A0=A0=A0 */
+>> +=A0=A0=A0=A0=A0=A0=A0 for_each_cpu(cpu_sibling, topology_sibling_cpumas=
+k(*vcpu_id)) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (cpu_sibling !=3D *vcpu_id) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cpumask_clear_cpu(cpu_sib=
+ling,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0 ne_cpu_pool.avail);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cpumask_set_cpu(cpu_sibli=
+ng,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 n=
+e_enclave->cpu_siblings);
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 mutex_unlock(&ne_cpu_pool.mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return 0;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 /* There are CPU siblings available to choose from. */
+>> +=A0=A0=A0 cpu =3D cpumask_any(ne_enclave->cpu_siblings);
+>> +=A0=A0=A0 if (cpu < nr_cpu_ids) {
+>> +=A0=A0=A0=A0=A0=A0=A0 cpumask_clear_cpu(cpu, ne_enclave->cpu_siblings);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 *vcpu_id =3D cpu;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return 0;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 mutex_lock(&ne_cpu_pool.mutex);
+>> +
+>> +=A0=A0=A0 /* Choose any CPU from the available CPU pool. */
+>> +=A0=A0=A0 cpu =3D cpumask_any(ne_cpu_pool.avail);
+>> +=A0=A0=A0 if (cpu >=3D nr_cpu_ids) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_device,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "No CPUs avai=
+lable in CPU pool\n");
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 mutex_unlock(&ne_cpu_pool.mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
+>
+> I think you're better off making the return value explicit for the =
+
+> error, so that user space can print the error message rather than us.
+>
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 cpumask_clear_cpu(cpu, ne_cpu_pool.avail);
+>> +
+>> +=A0=A0=A0 /* Make sure the CPU siblings are not marked as available =
+
+>> anymore. */
+>> +=A0=A0=A0 for_each_cpu(cpu_sibling, topology_sibling_cpumask(cpu)) {
+>> +=A0=A0=A0=A0=A0=A0=A0 if (cpu_sibling !=3D cpu) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cpumask_clear_cpu(cpu_sibling, ne_cpu=
+_pool.avail);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cpumask_set_cpu(cpu_sibling, ne_encla=
+ve->cpu_siblings);
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 mutex_unlock(&ne_cpu_pool.mutex);
+>
+> I find the function slightly confusingly structured. Why can't we do =
+
+> something like
+>
+>
+> =A0 if (!vcpu_id) {
+> =A0=A0=A0 vcpu_id =3D find_next_free_vcpu_id();
+> =A0=A0=A0 if (vcpu_id < 0)
+> =A0=A0=A0=A0=A0=A0=A0 return -ENOSPC;
+> =A0 }
+>
+> =A0 [logic to handle an explicit vcpu id]
+>
+> I think that would be much more readable.
+
+The logic is now separated in 2 functions, one for checking the CPU is =
+
+in the pool and one for getting a CPU from the pool.
+
+>
+>> +
+>> +=A0=A0=A0 *vcpu_id =3D cpu;
+>> +
+>> +=A0=A0=A0 return 0;
+>> +}
+>> +
+>> +/**
+>> + * ne_create_vcpu_ioctl - Add vCPU to the slot associated with the =
+
+>> current
+>> + * enclave. Create vCPU file descriptor to be further used for CPU =
+
+>> handling.
+>> + *
+>> + * This function gets called with the ne_enclave mutex held.
+>> + *
+>> + * @ne_enclave: private data associated with the current enclave.
+>> + * @vcpu_id: id of the CPU to be associated with the given slot, =
+
+>> apic id on x86.
+>> + *
+>> + * @returns: vCPU fd on success, negative return value on failure.
+>> + */
+>> +static int ne_create_vcpu_ioctl(struct ne_enclave *ne_enclave, u32 =
+
+>> vcpu_id)
+>> +{
+>> +=A0=A0=A0 struct ne_pci_dev_cmd_reply cmd_reply =3D {};
+>> +=A0=A0=A0 int fd =3D 0;
+>> +=A0=A0=A0 struct file *file =3D NULL;
+>> +=A0=A0=A0 struct ne_vcpu_id *ne_vcpu_id =3D NULL;
+>> +=A0=A0=A0 int rc =3D -EINVAL;
+>> +=A0=A0=A0 struct slot_add_vcpu_req slot_add_vcpu_req =3D {};
+>> +
+>> +=A0=A0=A0 if (ne_enclave->mm !=3D current->mm)
+>> +=A0=A0=A0=A0=A0=A0=A0 return -EIO;
+>> +
+>> +=A0=A0=A0 ne_vcpu_id =3D kzalloc(sizeof(*ne_vcpu_id), GFP_KERNEL);
+>> +=A0=A0=A0 if (!ne_vcpu_id)
+>> +=A0=A0=A0=A0=A0=A0=A0 return -ENOMEM;
+>> +
+>> +=A0=A0=A0 fd =3D get_unused_fd_flags(O_CLOEXEC);
+>> +=A0=A0=A0 if (fd < 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0 rc =3D fd;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_device,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "Error in get=
+ting unused fd [rc=3D%d]\n", rc);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 goto free_ne_vcpu_id;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 /* TODO: Include (vcpu) id in the ne-vm-vcpu naming. */
+>> +=A0=A0=A0 file =3D anon_inode_getfile("ne-vm-vcpu", &ne_enclave_vcpu_fo=
+ps,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ne_enclave, O_RDWR);
+>> +=A0=A0=A0 if (IS_ERR(file)) {
+>> +=A0=A0=A0=A0=A0=A0=A0 rc =3D PTR_ERR(file);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_device,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "Error in ano=
+n inode get file [rc=3D%d]\n",
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 rc);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 goto put_fd;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 slot_add_vcpu_req.slot_uid =3D ne_enclave->slot_uid;
+>> +=A0=A0=A0 slot_add_vcpu_req.vcpu_id =3D vcpu_id;
+>> +
+>> +=A0=A0=A0 rc =3D ne_do_request(ne_enclave->pdev, SLOT_ADD_VCPU, =
+
+>> &slot_add_vcpu_req,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sizeof(slot_add_vcpu_req), &=
+cmd_reply,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sizeof(cmd_reply));
+>> +=A0=A0=A0 if (rc < 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_device,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "Error in slo=
+t add vcpu [rc=3D%d]\n", rc);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 goto put_file;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 ne_vcpu_id->vcpu_id =3D vcpu_id;
+>> +
+>> +=A0=A0=A0 list_add(&ne_vcpu_id->vcpu_id_list_entry, =
+
+>> &ne_enclave->vcpu_ids_list);
+>> +
+>> +=A0=A0=A0 ne_enclave->nr_vcpus++;
+>> +
+>> +=A0=A0=A0 fd_install(fd, file);
+>> +
+>> +=A0=A0=A0 return fd;
+>> +
+>> +put_file:
+>> +=A0=A0=A0 fput(file);
+>> +put_fd:
+>> +=A0=A0=A0 put_unused_fd(fd);
+>> +free_ne_vcpu_id:
+>> +=A0=A0=A0 kfree(ne_vcpu_id);
+>> +
+>> +=A0=A0=A0 return rc;
+>> +}
+>> +
+>> +static long ne_enclave_ioctl(struct file *file, unsigned int cmd,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 unsigned long arg)
+>> +{
+>> +=A0=A0=A0 struct ne_enclave *ne_enclave =3D file->private_data;
+>> +
+>> +=A0=A0=A0 if (!ne_enclave || !ne_enclave->pdev)
+>> +=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
+>> +
+>> +=A0=A0=A0 switch (cmd) {
+>> +=A0=A0=A0 case NE_CREATE_VCPU: {
+>
+> Can this be an ADD_VCPU rather than CREATE? We don't really need a =
+
+> vcpu fd after all ...
+
+I updated the ioctl call.
+
+Thanks for review.
+
+Andra
+
+>
+>> +=A0=A0=A0=A0=A0=A0=A0 int rc =3D -EINVAL;
+>> +=A0=A0=A0=A0=A0=A0=A0 u32 vcpu_id =3D 0;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 if (copy_from_user(&vcpu_id, (void *)arg, sizeof(=
+vcpu_id))) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
+device,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
+Error in copy from user\n");
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -EFAULT;
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 mutex_lock(&ne_enclave->enclave_info_mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 if (ne_enclave->state !=3D NE_STATE_INIT) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
+device,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
+Enclave isn't in init state\n");
+>> +
+>> + mutex_unlock(&ne_enclave->enclave_info_mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 /* Use the CPU pool for choosing a CPU for the en=
+clave. */
+>> +=A0=A0=A0=A0=A0=A0=A0 rc =3D ne_get_cpu_from_cpu_pool(ne_enclave, &vcpu=
+_id);
+>> +=A0=A0=A0=A0=A0=A0=A0 if (rc < 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
+device,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
+Error in get CPU from pool\n");
+>> +
+>> + mutex_unlock(&ne_enclave->enclave_info_mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 rc =3D ne_create_vcpu_ioctl(ne_enclave, vcpu_id);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 /* Put back the CPU in enclave cpu pool, if add v=
+cpu error. */
+>> +=A0=A0=A0=A0=A0=A0=A0 if (rc < 0)
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cpumask_set_cpu(vcpu_id, ne_enclave->=
+cpu_siblings);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 mutex_unlock(&ne_enclave->enclave_info_mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 if (copy_to_user((void *)arg, &vcpu_id, sizeof(vc=
+pu_id))) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
+device,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
+Error in copy to user\n");
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -EFAULT;
+>> +=A0=A0=A0=A0=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 return rc;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 default:
+>> +=A0=A0=A0=A0=A0=A0=A0 return -ENOTTY;
+>> +=A0=A0=A0 }
+>> +
+>> +=A0=A0=A0 return 0;
+>> +}
+>> +
+>> =A0 static __poll_t ne_enclave_poll(struct file *file, poll_table *wait)
+>> =A0 {
+>> =A0=A0=A0=A0=A0 __poll_t mask =3D 0;
+>> @@ -79,6 +562,7 @@ static const struct file_operations =
+
+>> ne_enclave_fops =3D {
+>> =A0=A0=A0=A0=A0 .owner=A0=A0=A0=A0=A0=A0=A0 =3D THIS_MODULE,
+>> =A0=A0=A0=A0=A0 .llseek=A0=A0=A0=A0=A0=A0=A0 =3D noop_llseek,
+>> =A0=A0=A0=A0=A0 .poll=A0=A0=A0=A0=A0=A0=A0 =3D ne_enclave_poll,
+>> +=A0=A0=A0 .unlocked_ioctl=A0=A0=A0 =3D ne_enclave_ioctl,
+>> =A0 };
+>> =A0 =A0 /**
+>> @@ -286,8 +770,15 @@ static int __init ne_init(void)
+>> =A0 =A0 static void __exit ne_exit(void)
+>> =A0 {
+>> +=A0=A0=A0 struct pci_dev *pdev =3D pci_get_device(PCI_VENDOR_ID_AMAZON,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0 PCI_DEVICE_ID_NE, NULL);
+>> +=A0=A0=A0 if (!pdev)
+>> +=A0=A0=A0=A0=A0=A0=A0 return;
+>> +
+>> =A0=A0=A0=A0=A0 pci_unregister_driver(&ne_pci_driver);
+>> =A0 +=A0=A0=A0 ne_teardown_cpu_pool(pdev);
+>> +
+>> =A0=A0=A0=A0=A0 free_cpumask_var(ne_cpu_pool.avail);
+>> =A0 }
+>>
+
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
+ Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
+omania. Registration number J22/2621/2005.
+
