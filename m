@@ -2,116 +2,90 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E883AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B190C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4F32204EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594207981;
-	bh=s9HfRCZApvmz7y/e3Q61nqw/KHpFSB/uN1Zs5YJupf0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OhVhX2R6dU2Y+Q//HEL2uI3XWh52nZqubDjf4Sp9s83NiB1vRvTKX9DgRudw36uDr
-	 P27QuSgX6GXd4+DKNRWLqWVRH41pY6WB6fg73gQ/K7GBZ+yUYw5lY5GvPDAuCyaNsy
-	 Ds56G1QB1xaxB28qW8MI4fGpceN4HUjLsDK4JmSI=
+	by mail.kernel.org (Postfix) with ESMTP id 25968204EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgGHLdA (ORCPT
+        id S1728830AbgGHLf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:33:00 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:35773 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728897AbgGHLc7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:32:59 -0400
-Received: by mail-ej1-f65.google.com with SMTP id rk21so50050987ejb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 04:32:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+9BlsY0XFg5CpKVe1acIU9xV2I7eOlxFrwWt4OM7Tc0=;
-        b=NsZBP1J4gJKl82kqc9uimQF6MYcAQd0Nw4rSTX9DVXZUigT8Chi61cBVFBBtMv6YiD
-         J8+xsVDRmrb2Vvr5Mnl01BfUA0ibEuAgPkhmhj1hwW5Mo6SEiq6rxUaIVP0XxH5YBoeR
-         4bXnyb+aIHDdQ2j+wRPYfom87YST0BqhefChxB9KcEdCMDZfOy2diRM95AUlCpHp0Tul
-         GRuHeebdhZuem9JbLf0+3dT2L15z4V/RnvY0DIN5vueSylF7IPrk/5ba9EVUu+VdEYla
-         SIh1wiSR8bMC8BANShunx0RHEf4RC678Xl3qxNPHQ8TcSi4GyMBpFD2dyHzKms+shJj9
-         8M3w==
-X-Gm-Message-State: AOAM531xy4bVw1KK4T+i+9ej6zs3wYQaUVoWrvKDvUBFBwsAzQiPaiXI
-        142UWfHn5SW/BQoqx7mRWJc=
-X-Google-Smtp-Source: ABdhPJw9dltknYTt89hYa1SpdeGec/bhleJVh9/LF970K3cyJNycxptZT0tReKmdbLaSjDGVNL0y1A==
-X-Received: by 2002:a17:906:2a5b:: with SMTP id k27mr49749551eje.82.1594207977416;
-        Wed, 08 Jul 2020 04:32:57 -0700 (PDT)
-Received: from localhost (ip-37-188-179-51.eurotel.cz. [37.188.179.51])
-        by smtp.gmail.com with ESMTPSA id cz2sm26895698edb.82.2020.07.08.04.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 04:32:56 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 13:32:54 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Joonsoo Kim <js1304@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 04/11] mm/hugetlb: make hugetlb migration callback CMA
- aware
-Message-ID: <20200708113254.GI7271@dhcp22.suse.cz>
-References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594107889-32228-5-git-send-email-iamjoonsoo.kim@lge.com>
- <c1cd6e11-08c3-5654-60e7-dec2eb80987a@suse.cz>
- <20200708071602.GB16543@js1304-desktop>
- <20200708074103.GD7271@dhcp22.suse.cz>
- <8549326e-7485-dd6d-1fa1-a899228b9b2f@suse.cz>
- <87h7uil1f7.fsf@linux.ibm.com>
+        Wed, 8 Jul 2020 07:35:57 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:45670 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728598AbgGHLf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 07:35:56 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id D1879BC0D1;
+        Wed,  8 Jul 2020 11:35:52 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     tony.luck@intel.com, qiuxu.zhuo@intel.com, bp@alien8.de,
+        mchehab@kernel.org, james.morse@arm.com, rrichter@marvell.com,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: EDAC-SBRIDGE
+Date:   Wed,  8 Jul 2020 13:35:46 +0200
+Message-Id: <20200708113546.14135-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h7uil1f7.fsf@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 08-07-20 16:27:16, Aneesh Kumar K.V wrote:
-> Vlastimil Babka <vbabka@suse.cz> writes:
-> 
-> > On 7/8/20 9:41 AM, Michal Hocko wrote:
-> >> On Wed 08-07-20 16:16:02, Joonsoo Kim wrote:
-> >>> On Tue, Jul 07, 2020 at 01:22:31PM +0200, Vlastimil Babka wrote:
-> >>> 
-> >>> Simply, I call memalloc_nocma_{save,restore} in new_non_cma_page(). It
-> >>> would not cause any problem.
-> >> 
-> >> I believe a proper fix is the following. The scope is really defined for
-> >> FOLL_LONGTERM pins and pushing it inside check_and_migrate_cma_pages
-> >> will solve the problem as well but it imho makes more sense to do it in
-> >> the caller the same way we do for any others. 
-> >> 
-> >> Fixes: 9a4e9f3b2d73 ("mm: update get_user_pages_longterm to migrate pages allocated from CMA region")
-> >
-> > Agreed.
-> >
-> >> 
-> >> I am not sure this is worth backporting to stable yet.
-> >
-> > CC Aneesh.
-> >
-> > Context: since check_and_migrate_cma_pages() calls __get_user_pages_locked(), it
-> > should also be called under memalloc_nocma_save().
-> 
-> But by then we faulted in all relevant pages and migrated them out of
-> CMA rea right?
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-check_and_migrate_cma_pages will allocate target pages that you want to
-migrate off the CMA region unless I am misreading the code. And those
-allocation need to be placed outside of the CMA.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+
+ drivers/edac/sb_edac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
+index d414698ca324..a6704e73fcce 100644
+--- a/drivers/edac/sb_edac.c
++++ b/drivers/edac/sb_edac.c
+@@ -3552,6 +3552,6 @@ MODULE_PARM_DESC(edac_op_state, "EDAC Error Reporting state: 0=Poll,1=NMI");
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Mauro Carvalho Chehab");
+-MODULE_AUTHOR("Red Hat Inc. (http://www.redhat.com)");
++MODULE_AUTHOR("Red Hat Inc. (https://www.redhat.com)");
+ MODULE_DESCRIPTION("MC Driver for Intel Sandy Bridge and Ivy Bridge memory controllers - "
+ 		   SBRIDGE_REVISION);
 -- 
-Michal Hocko
-SUSE Labs
+2.27.0
+
