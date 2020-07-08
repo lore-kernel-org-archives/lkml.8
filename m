@@ -2,207 +2,272 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B26BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB1E20786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:56:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbwrULrp"
+	by mail.kernel.org (Postfix) with ESMTP id 1AB732084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbgGHP4Z (ORCPT
+        id S1730353AbgGHP5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730048AbgGHP4Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:56:24 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F5FC061A0B;
-        Wed,  8 Jul 2020 08:56:23 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id k27so5786962pgm.2;
-        Wed, 08 Jul 2020 08:56:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aTnB75vtOiMnbJqaXMvvz8L2JnWzPT1EaDAz7nDE03Y=;
-        b=QbwrULrpg+PmMdPzqkDQfzuOdRcVMM0J3kkOHTf9KV5F6X81uJgGRL1DRuOfE7YYLy
-         KQRrNu+8BMYuJHI4Bla08kX/ordNvUCa82r+1oZ5ZJa+CQJNM9zXNm938oU9YsflLMRF
-         LLLkAT4D0VZsEQsVZNUdX2HmSwLDYTam8wFZ3QLpcbNUPjwiQWhyf//Swwi0t9M/2fFt
-         Km6XNqVKQSHoKEbkRzJAGGnhtsARCGHhqvw43+bRXBQ92VjNHw6Jgs5IqeiBoa8kIGAC
-         RjCP1uVdmTwXWRlIDwHpXhU7AcPRsPs+kaHm8qn3rW8izjbv7cuf9garpWuipYUTBhOF
-         bgLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aTnB75vtOiMnbJqaXMvvz8L2JnWzPT1EaDAz7nDE03Y=;
-        b=RPX381jX0KdJzxtJWrv6p4zqaR0OV/GIxj4Gk4D+bLm14mOJ5TvsebhH2MrvpkWb6V
-         krBP+mWgus4W7vQ9VMMqWWBaCXqTE/iLOIaLqA7D/Yx+S0VXOxBuPo+S7oqVYqwLJDZh
-         hIT9zu3YLYKuSJOSaTPa5/YzyTI/kkwe9CB2W0MVrrBsqyLh/fPOr+XWBfZ0IVqmsSIF
-         c24esEx98UExxwPGaq0DlLcZuVyppGPr/mgXA7DDbBt/1YoJG4NPDoDKB6PBoOaMQ62H
-         /S0UrT+IdpIvY811q0M59sMffViF5lFqU3OfN3aTTYihxMU0NpAok+gFV1xGFsPTwRfX
-         qWhw==
-X-Gm-Message-State: AOAM533JuTgXLIGuaOL1TSoplZOTyJo4DVcUJNqbSEdpmGOzHdzgey+B
-        HKQSGVWKGWJzhtJiJGJiWYk=
-X-Google-Smtp-Source: ABdhPJz06Vl6GCUNpLi+sFeMwoYs4LZGc0RPijejxvNKqSbOK+voGeoXsqXro3kDQQshV6k8IlIN1w==
-X-Received: by 2002:a62:52d2:: with SMTP id g201mr1028079pfb.57.1594223782761;
-        Wed, 08 Jul 2020 08:56:22 -0700 (PDT)
-Received: from localhost ([89.208.244.139])
-        by smtp.gmail.com with ESMTPSA id e6sm227698pfh.176.2020.07.08.08.56.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Jul 2020 08:56:22 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     jingoohan1@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, kgene@kernel.org, krzk@kernel.org,
-        thomas.petazzoni@bootlin.com, f.fainelli@gmail.com,
-        linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v2] PCI: controller: convert to devm_platform_ioremap_resource()
-Date:   Wed,  8 Jul 2020 23:56:14 +0800
-Message-Id: <20200708155614.308-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200526160110.31898-1-zhengdejin5@gmail.com>
-References: 
+        Wed, 8 Jul 2020 11:57:20 -0400
+Received: from mailoutvs2.siol.net ([185.57.226.193]:39664 "EHLO mail.siol.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729022AbgGHP5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:57:20 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id D1C385245C3;
+        Wed,  8 Jul 2020 17:57:15 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id eJi2L-kAwrmu; Wed,  8 Jul 2020 17:57:15 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 41CAA52483D;
+        Wed,  8 Jul 2020 17:57:15 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 197785245C3;
+        Wed,  8 Jul 2020 17:57:11 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devel@driverdev.osuosl.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/3] media: uapi: h264: update reference lists
+Date:   Wed, 08 Jul 2020 17:57:11 +0200
+Message-ID: <3602665.eG79kSnugm@jernej-laptop>
+In-Reply-To: <CAAEAJfAx4=RGJBVPccVFNYxNUqom7tkQD=J9oMfqajGxn6k+Zg@mail.gmail.com>
+References: <20200604185745.23568-1-jernej.skrabec@siol.net> <20200604185745.23568-2-jernej.skrabec@siol.net> <CAAEAJfAx4=RGJBVPccVFNYxNUqom7tkQD=J9oMfqajGxn6k+Zg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use devm_platform_ioremap_resource() to simplify code, it
-contains platform_get_resource() and devm_ioremap_resource().
+Hi!
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v1 -> v2:
-	- rebase to pci/misc branch
-	- add Rob Reviewed tag and Thanks for Bob's help.
+Dne sreda, 08. julij 2020 ob 15:28:52 CEST je Ezequiel Garcia napisal(a):
+> Hello Jernej,
+> 
+> I'd like to post a new H264 uAPI cleanup series soon,
+> would you mind resending this, or otherwise do you
+> mind if I include this patch in the series?
 
- drivers/pci/controller/dwc/pci-exynos.c | 4 +---
- drivers/pci/controller/pci-aardvark.c   | 5 ++---
- drivers/pci/controller/pci-ftpci100.c   | 4 +---
- drivers/pci/controller/pci-versatile.c  | 6 ++----
- drivers/pci/controller/pcie-brcmstb.c   | 4 +---
- 5 files changed, 7 insertions(+), 16 deletions(-)
+I don't mind at all. Currently my focus was elsewhere...
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index c5043d951e80..5791039d6a54 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -84,14 +84,12 @@ static int exynos5440_pcie_get_mem_resources(struct platform_device *pdev,
- {
- 	struct dw_pcie *pci = ep->pci;
- 	struct device *dev = pci->dev;
--	struct resource *res;
- 
- 	ep->mem_res = devm_kzalloc(dev, sizeof(*ep->mem_res), GFP_KERNEL);
- 	if (!ep->mem_res)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	ep->mem_res->elbi_base = devm_ioremap_resource(dev, res);
-+	ep->mem_res->elbi_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ep->mem_res->elbi_base))
- 		return PTR_ERR(ep->mem_res->elbi_base);
- 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 90ff291c24f0..0d98f9b04daa 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -1105,7 +1105,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct advk_pcie *pcie;
--	struct resource *res, *bus;
-+	struct resource *bus;
- 	struct pci_host_bridge *bridge;
- 	int ret, irq;
- 
-@@ -1116,8 +1116,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 	pcie = pci_host_bridge_priv(bridge);
- 	pcie->pdev = pdev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pcie->base = devm_ioremap_resource(dev, res);
-+	pcie->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pcie->base))
- 		return PTR_ERR(pcie->base);
- 
-diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
-index 1b67564de7af..221dfc9dc81b 100644
---- a/drivers/pci/controller/pci-ftpci100.c
-+++ b/drivers/pci/controller/pci-ftpci100.c
-@@ -422,7 +422,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	const struct faraday_pci_variant *variant =
- 		of_device_get_match_data(dev);
--	struct resource *regs;
- 	struct resource_entry *win;
- 	struct faraday_pci *p;
- 	struct resource *io;
-@@ -465,8 +464,7 @@ static int faraday_pci_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	p->base = devm_ioremap_resource(dev, regs);
-+	p->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(p->base))
- 		return PTR_ERR(p->base);
- 
-diff --git a/drivers/pci/controller/pci-versatile.c b/drivers/pci/controller/pci-versatile.c
-index e90f0cc65c73..a8d361f6c5d9 100644
---- a/drivers/pci/controller/pci-versatile.c
-+++ b/drivers/pci/controller/pci-versatile.c
-@@ -76,13 +76,11 @@ static int versatile_pci_probe(struct platform_device *pdev)
- 	if (!bridge)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	versatile_pci_base = devm_ioremap_resource(dev, res);
-+	versatile_pci_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(versatile_pci_base))
- 		return PTR_ERR(versatile_pci_base);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	versatile_cfg_base[0] = devm_ioremap_resource(dev, res);
-+	versatile_cfg_base[0] = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(versatile_cfg_base[0]))
- 		return PTR_ERR(versatile_cfg_base[0]);
- 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 15c747c1390a..91a4b7f3ee45 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -933,7 +933,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	struct pci_host_bridge *bridge;
- 	struct device_node *fw_np;
- 	struct brcm_pcie *pcie;
--	struct resource *res;
- 	int ret;
- 
- 	/*
-@@ -958,8 +957,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	pcie->dev = &pdev->dev;
- 	pcie->np = np;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pcie->base = devm_ioremap_resource(&pdev->dev, res);
-+	pcie->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pcie->base))
- 		return PTR_ERR(pcie->base);
- 
--- 
-2.25.0
+> 
+> See below for a tiny comment.
+> 
+> On Thu, 4 Jun 2020 at 15:55, Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+> > When dealing with with interlaced frames, reference lists must tell if
+> > each particular reference is meant for top or bottom field. This info
+> > is currently not provided at all in the H264 related controls.
+> > 
+> > Make reference lists hold a structure which will also hold flags along
+> > index into DPB array. Flags will tell if reference is meant for top or
+> > bottom field.
+> > 
+> > Currently the only user of these lists is Cedrus which is just compile
+> > fixed here. Actual usage of newly introduced flags will come in
+> > following commit.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  .../media/v4l/ext-ctrls-codec.rst             | 40 ++++++++++++++++++-
+> >  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 +--
+> >  include/media/h264-ctrls.h                    | 12 +++++-
+> >  3 files changed, 51 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst index
+> > d0d506a444b1..6c36d298db20 100644
+> > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > @@ -1843,10 +1843,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type
+> > -> 
+> >      * - __u32
+> >      
+> >        - ``slice_group_change_cycle``
+> >        -
+> > 
+> > -    * - __u8
+> > +    * - struct :c:type:`v4l2_h264_reference`
+> > 
+> >        - ``ref_pic_list0[32]``
+> >        - Reference picture list after applying the per-slice modifications
+> > 
+> > -    * - __u8
+> > +    * - struct :c:type:`v4l2_h264_reference`
+> > 
+> >        - ``ref_pic_list1[32]``
+> >        - Reference picture list after applying the per-slice modifications
+> >      
+> >      * - __u32
+> > 
+> > @@ -1926,6 +1926,42 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type
+> > -
+> > 
+> >        - ``chroma_offset[32][2]``
+> >        -
+> > 
+> > +``Picture Reference``
+> > +
+> > +.. c:type:: v4l2_h264_reference
+> > +
+> > +.. cssclass:: longtable
+> > +
+> > +.. flat-table:: struct v4l2_h264_reference
+> > +    :header-rows:  0
+> > +    :stub-columns: 0
+> > +    :widths:       1 1 2
+> > +
+> > +    * - __u16
+> > +      - ``flags``
+> > +      - See :ref:`Picture Reference Flags <h264_reference_flags>`
+> > +    * - __u8
+> > +      - ``index``
+> > +      -
+> > +
+> > +.. _h264_reference_flags:
+> > +
+> > +``Picture Reference Flags``
+> > +
+> > +.. cssclass:: longtable
+> > +
+> > +.. flat-table::
+> > +    :header-rows:  0
+> > +    :stub-columns: 0
+> > +    :widths:       1 1 2
+> > +
+> > +    * - ``V4L2_H264_REFERENCE_FLAG_TOP_FIELD``
+> > +      - 0x00000001
+> > +      -
+> > +    * - ``V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD``
+> > +      - 0x00000002
+> > +      -
+> > +
+> > 
+> >  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS (struct)``
+> >  
+> >      Specifies the decode parameters (as extracted from the bitstream)
+> >      for the associated H264 slice data. This includes the necessary
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
+> > 54ee2aa423e2..cce527bbdf86 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > @@ -166,8 +166,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx
+> > *ctx,> 
+> >  static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+> >  
+> >                                    struct cedrus_run *run,
+> > 
+> > -                                  const u8 *ref_list, u8 num_ref,
+> > -                                  enum cedrus_h264_sram_off sram)
+> > +                                  const struct v4l2_h264_reference
+> > *ref_list, +                                  u8 num_ref, enum
+> > cedrus_h264_sram_off sram)> 
+> >  {
+> >  
+> >         const struct v4l2_ctrl_h264_decode_params *decode =
+> >         run->h264.decode_params; struct vb2_queue *cap_q;
+> > 
+> > @@ -188,7 +188,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx
+> > *ctx,> 
+> >                 int buf_idx;
+> >                 u8 dpb_idx;
+> > 
+> > -               dpb_idx = ref_list[i];
+> > +               dpb_idx = ref_list[i].index;
+> > 
+> >                 dpb = &decode->dpb[dpb_idx];
+> >                 
+> >                 if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> > 
+> > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> > index 080fd1293c42..9b1cbc9bc38e 100644
+> > --- a/include/media/h264-ctrls.h
+> > +++ b/include/media/h264-ctrls.h
+> > @@ -140,6 +140,14 @@ struct v4l2_h264_pred_weight_table {
+> > 
+> >  #define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED    0x04
+> >  #define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH             0x08
+> > 
+> > +#define V4L2_H264_REFERENCE_FLAG_TOP_FIELD             0x01
+> > +#define V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD          0x02
+> > +
+> > +struct v4l2_h264_reference {
+> > +       __u8 flags;
+> > +       __u8 index;
+> > +};
+> > +
+> > 
+> >  struct v4l2_ctrl_h264_slice_params {
+> >  
+> >         /* Size in bytes, including header */
+> >         __u32 size;
+> > 
+> > @@ -182,8 +190,8 @@ struct v4l2_ctrl_h264_slice_params {
+> > 
+> >          * Entries on each list are indices into
+> >          * v4l2_ctrl_h264_decode_params.dpb[].
+> >          */
+> > 
+> > -       __u8 ref_pic_list0[32];
+> > -       __u8 ref_pic_list1[32];
+> > +       struct v4l2_h264_reference ref_pic_list0[32];
+> > +       struct v4l2_h264_reference ref_pic_list1[32];
+> 
+> Could we use a macro for "32" here? Something like:
+> 
+> #define V4L2_H264_REF_PIC_LIST_LEN (V4L2_H264_NUM_DPB_ENTRIES * 2).
+> 
+> Does it make sense to add a comment as well?
+> 
+> I was thinking something along these lines:
+> 
+> """
+> Pictures in the DPB can be a frame, a complementary field pair or a
+> single field.
+
+To be honest, I don't know if user has a free choice to select same or 
+different destination (capture) buffer for another field. I never tested it and 
+I'm not sure how to test it with ffmpeg. HW deinterlacing cores on Allwinner 
+SoCs support only interleaved fields as a input, that's why I never though 
+about separate fields.
+
+Best regards,
+Jernej
+
+> Therefore, reference pictures lists need twice as much entries, so it
+> can reference
+> either field of a field pair.
+> """
+> 
+> While it doesn't replace proper H264 specification reading,
+> it would add some clarity.
+> 
+> Thanks,
+> Ezequiel
+
+
+
 
