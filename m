@@ -2,88 +2,114 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B84C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A40272067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A2A2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sG6bN2pE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AwPsH2xH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbgGHH1s (ORCPT
+        id S1730257AbgGHH2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:27:48 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:64452 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729471AbgGHH1s (ORCPT
+        Wed, 8 Jul 2020 03:28:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729889AbgGHH2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:27:48 -0400
-X-UUID: 940e5fced38c4a39a6114dc6aecae28e-20200708
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=eL3lgx8YILsDyHzj4UM7ymN5RgGxS7otNYsWxv/+afc=;
-        b=sG6bN2pE8uNxnFmh9fBWTZAWITKicz+dLC5YND7/csf+FJVZWAxM41GizjkI2WkaYYrYMivN6YSr8o2UcFRzmzCq0rcrxHyKnxBAgMrqzCrV5Ko8hmm7zJvzsRuR9uOhgPWEnr6eBTYvIYNZBIFQngbNVAIfBKTD7UPdWA7gArw=;
-X-UUID: 940e5fced38c4a39a6114dc6aecae28e-20200708
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1304503638; Wed, 08 Jul 2020 15:27:42 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 8 Jul 2020 15:27:35 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 8 Jul 2020 15:27:36 +0800
-Message-ID: <1594193257.21095.0.camel@mtksdaap41>
-Subject: Re: [PATCH v3 1/9] soc: mediatek: cmdq: add address shift in jump
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        HS Liao <hs.liao@mediatek.com>
-Date:   Wed, 8 Jul 2020 15:27:37 +0800
-In-Reply-To: <1594136714-11650-2-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1594136714-11650-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1594136714-11650-2-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 8 Jul 2020 03:28:53 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA0FC08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:28:53 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z15so36451738wrl.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Zl79XYG9RpYOPnp+QVXRdAzYxd6Okp4Q5wCmn7g7MKA=;
+        b=AwPsH2xHht4G+BLnA0M6iX+MrsxZJ1Kijghrowztd1bb8KSXFNAHeUaFNcoLZbmRa6
+         OFqv49mKAbqonum0vhxSaEUheyYwrJgnGhncgDPaQMC0JM1hpFAjW8UmFSCAFBZORlkp
+         H3Dk7LV39V6mByiGm+G24cxG6lzpKcNDooMym/okLE9Nw3J8vw5l8f2oS6ZMgegp2SYH
+         ImxEH7zJHfPwy/2lpWpkHFN3LWv7mLTqjVmQ+OVV44RTh1JHnuxFi+NWC+DZs+lWMXJJ
+         ZzhyRzEEjEqfzNyfxMxzvJWUtn9z3IlR8Um2lEFNqHW/f0GV2U2nNjjxQrYWwKkyeyIq
+         rfBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Zl79XYG9RpYOPnp+QVXRdAzYxd6Okp4Q5wCmn7g7MKA=;
+        b=FuOOuh21wxq7XNzziJ8P3wkLlMZradQ7aKU7umZFl8nWMK0IrElaYA9SRqs+qVEw7w
+         aBz4lUWMlKtjRhVBd2YSkX3bU50IbF0A31SLE5v2hAx0ekVaNsTzph09hB0ikiIJ7+3l
+         4Ifbboa7ht0KDLU0/G1QJKLKCXvd+FzY1RBjgkQfSmauT9I8QCHzBSsAVnLz7vsmj3YU
+         U7C9IeOg8uEwf9ENpwIpOJIrRpB86Rhp0HZLrujyTGsOH3muhGI7I/pnQBC7aJhCh7WE
+         qBwT6Gg3P0nQKO1g7UBJepnA0D6Mgoh3/G9q2tWTTp8uPzCT3Pyo4lR2h/bJFmEgfeUY
+         k1Wg==
+X-Gm-Message-State: AOAM533LoRYCVqAM5H/nn6dKsjpfo/fZsxf9X0c9dOrjgl+IG5KQ9Jo8
+        Kt+d1k2xLzd9VhbDnqOaNdXnYRpotow=
+X-Google-Smtp-Source: ABdhPJxXJm9MquwLLudzjpDO/k3N8W36ftniU9l86lvBSq7ameDk2knhL/eF+gIV17Cqkrz0C37PaA==
+X-Received: by 2002:a5d:4002:: with SMTP id n2mr60579055wrp.255.1594193331795;
+        Wed, 08 Jul 2020 00:28:51 -0700 (PDT)
+Received: from dell ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id n17sm4107493wrs.2.2020.07.08.00.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 00:28:51 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 08:28:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     jejb@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 00/10] Fix a bunch SCSI related W=1 warnings
+Message-ID: <20200708072849.GM3500@dell>
+References: <20200707140055.2956235-1-lee.jones@linaro.org>
+ <159418828150.5152.12521251265216774568.b4-ty@oracle.com>
+ <20200708065100.GK3500@dell>
+ <yq1mu4azea8.fsf@ca-mkp.ca.oracle.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: CB4E59DADC0BE1E85780C93DA1D761BB1D861C4286F724D519190AE4CC4AFEF22000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <yq1mu4azea8.fsf@ca-mkp.ca.oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IEJpYmJ5IEhzaWVoIDxiaWJieS5oc2llaEBtZWRpYXRlay5jb20+DQoNCg0K
-T24gVHVlLCAyMDIwLTA3LTA3IGF0IDIzOjQ1ICswODAwLCBEZW5uaXMgWUMgSHNpZWggd3JvdGU6
-DQo+IEFkZCBhZGRyZXNzIHNoaWZ0IHdoZW4gY29tcG9zZSBqdW1wIGluc3RydWN0aW9uDQo+IHRv
-IGNvbXBhdGlibGUgd2l0aCAzNWJpdCBmb3JtYXQuDQo+IA0KPiBDaGFuZ2Ugc2luY2UgdjE6DQo+
-IC0gUmVuYW1lIGNtZHFfbWJveF9zaGlmdCgpIHRvIGNtZHFfZ2V0X3NoaWZ0X3BhKCkuDQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRl
-ay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMg
-fCAgICAzICsrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlv
-bigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhl
-bHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gaW5kZXgg
-ZGM2NDRjZmI2NDE5Li45ZmFmNzhmYmVkM2EgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29jL21l
-ZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210
-ay1jbWRxLWhlbHBlci5jDQo+IEBAIC0zMjksNyArMzI5LDggQEAgaW50IGNtZHFfcGt0X2ZpbmFs
-aXplKHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KPiAgDQo+ICAJLyogSlVNUCB0byBlbmQgKi8NCj4g
-IAlpbnN0Lm9wID0gQ01EUV9DT0RFX0pVTVA7DQo+IC0JaW5zdC52YWx1ZSA9IENNRFFfSlVNUF9Q
-QVNTOw0KPiArCWluc3QudmFsdWUgPSBDTURRX0pVTVBfUEFTUyA+Pg0KPiArCQljbWRxX2dldF9z
-aGlmdF9wYSgoKHN0cnVjdCBjbWRxX2NsaWVudCAqKXBrdC0+Y2wpLT5jaGFuKTsNCj4gIAllcnIg
-PSBjbWRxX3BrdF9hcHBlbmRfY29tbWFuZChwa3QsIGluc3QpOw0KPiAgDQo+ICAJcmV0dXJuIGVy
-cjsNCg0K
+On Wed, 08 Jul 2020, Martin K. Petersen wrote:
 
+> 
+> Lee,
+> 
+> > Out of interest, do you know of any other efforts to fix W=1 warnings
+> > in SCSI?
+> 
+> I am not.
+> 
+> I try to encourage that all new patches get compiled with C=1/W=1. If I
+> could, I would strictly enforce this. However, there is just too much
+> vintage code around at this point. And even some of the most actively
+> developed "contemporary" drivers suffer from a large amount of sparse
+> warnings.
+
+Exactly.  This is what spurred me on in the first place.  I really
+wanted to build my own subsytems with W=1, but due to the very many
+spurious build warnings I was forced to avoid them.  Once I fixed my
+own, I thought "why not fix others", and here we are.
+
+Backlight, MFD, PWM, USB, Misc, Regulator, GPIO, ASoC and MMC are all
+clean.  Now it's SCSI's turn.
+
+> warnings. Would love to see things cleaned up.
+
+Great.  Watch this space.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
