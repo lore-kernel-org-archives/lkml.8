@@ -2,101 +2,343 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8771EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03060C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDE520720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594185300;
-	bh=+mzjqhYU5rQO3nwvQakxHkkMohSQjAaPau32KB6XtgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FIYvRN611W4/3Qatjsk4yKIgnBGSpYVtDofENAJRokN1IcLdFt+YjValjS3YjOunO
-	 vJs0Z2yCkvW5VQbTnzuA34eFcdnCklettKOqm4ZxelsqbrZGGEkaNmA11hUykowU7k
-	 etmSIXYbsU7Fw84pu8sYUMZbpUou5czIpUwBl51I=
+	by mail.kernel.org (Postfix) with ESMTP id D1FFB20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nNAuFdPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgGHFO7 (ORCPT
+        id S1729080AbgGHFPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:14:59 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:34773 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgGHFO6 (ORCPT
+        Wed, 8 Jul 2020 01:15:22 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:32006 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725446AbgGHFPV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:14:58 -0400
-Received: by mail-pj1-f68.google.com with SMTP id cv18so1685275pjb.1;
-        Tue, 07 Jul 2020 22:14:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OqVVW0oBTFGuooK5mpqIGnPNuH2j0inEUm18D/YWITE=;
-        b=C+5XmQ4DjwLm6uKyKMliNV9QR10t19L42Y4ymLbtfroZ91vOCM3zSAy/1VSRAdXBsd
-         4MGX8Rtz1BSXDDJ4Tjtq3QugK/DNNkwkgXinlwx1OjyXhS8Gf6THuuIhASNrYTXnc8o3
-         4akC8DQdnwm8Ba0bha5jHB7EUgEHwmvKobw0PWVSyeLHlJOTJENZvGauM9NeSNkZW/pp
-         SmNbQgYRC9LlyO7bLVmVefZivO/El9/oiEk2X8bBOUhiyO10veTsjlig2hVG19GKURUa
-         lULsj7bCkoLs3LbqPFv3WkdupWoQGcbMBSPQ7HztHU35gXjpJvSWjaiCg8aerchCChQe
-         S93Q==
-X-Gm-Message-State: AOAM530lBa+PGKnezy6ELfbJ318WNeuMJirruvc09rfiuOsjr7RqJYqS
-        xJOWLxkeQRSjw1tF30EYXYc=
-X-Google-Smtp-Source: ABdhPJyQx8ZMpcO8bKNNbg4mSfCGoBKklHKtFUJJ+PqPd/73lutAhh1K9WLnEPfuPOJBEPM1jMtFNA==
-X-Received: by 2002:a17:902:778d:: with SMTP id o13mr46710940pll.247.1594185297748;
-        Tue, 07 Jul 2020 22:14:57 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id b18sm4120429pju.10.2020.07.07.22.14.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 22:14:56 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id BEAB7400DB; Wed,  8 Jul 2020 05:14:55 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 05:14:55 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file
- operations
-Message-ID: <20200708051455.GA4332@42.do-not-panic.com>
-References: <20200624162901.1814136-1-hch@lst.de>
- <20200624162901.1814136-4-hch@lst.de>
- <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
- <20200624175548.GA25939@lst.de>
- <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
- <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com>
- <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
+        Wed, 8 Jul 2020 01:15:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594185320; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=DqngTMN8bZvP5c/5P7DMgEaEbgXzsIHVVYA1hFd9HjI=; b=nNAuFdPXKWMqxfYeuQnN6OyuleS4Xlzss/DghynCzhOtwI7b/Tb11h8EU0ReTN1ODo2XdVfb
+ z6LONk+YzwZIWlnvif+mz1jM0roDuwgnIK4TbyH6F9VwpwIWaep1UIN/IO7kd/h22doaHUIm
+ Lf7XNfSGUgCcwcRKUJ3YXocB5qs=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f055658c431f7323b62c50e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 05:15:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 957FDC43395; Wed,  8 Jul 2020 05:15:04 +0000 (UTC)
+Received: from rohkumar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 946A2C433C8;
+        Wed,  8 Jul 2020 05:14:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 946A2C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+From:   Rohit kumar <rohitkr@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ajit Pandey <ajitp@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>
+Subject: [RESEND][PATCH v3 7/8] ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
+Date:   Wed,  8 Jul 2020 10:44:46 +0530
+Message-Id: <1594185286-11323-1-git-send-email-rohitkr@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 09:33:03AM -0700, Linus Torvalds wrote:
-> The real problem with
-> "set_fs()" has been that we've occasionally had bugs where we ended up
-> running odd paths that we really didn't _intend_ to run with kernel
-> pointers. The classic example is the SCSI "write as ioctl" example,
-> where a write to a SCSI generic device would do various odd things and
-> follow pointers and what-not. Then you get into real trouble when
-> "splice()" ends up truiong to write a kernel buffer, and because of
-> "set_fs()" suddenly the sg code started accessing kernel memory
-> willy-nilly.
+From: Ajit Pandey <ajitp@codeaurora.org>
 
-So the semantics of this interface can create chaos fast if not used
-carefully and conservatively.
+Add platform driver for configuring sc7180 lpass core I2S and
+DMA configuration to support playback & capture to external codecs
+connected over primary & secondary MI2S interfaces.
 
-Christoph, it would be great if you're future series can include some
-version of a verbiage for the motivation for the culling of set_fs().
-Maybe it was just me, but the original motivation wasn't clear at first
-and took some thread digging to get it.
+Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+---
+Resending to update Signed-off mail id.
 
-  Luis
+ sound/soc/qcom/Kconfig        |   5 +
+ sound/soc/qcom/Makefile       |   2 +
+ sound/soc/qcom/lpass-sc7180.c | 216 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 223 insertions(+)
+ create mode 100644 sound/soc/qcom/lpass-sc7180.c
+
+diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+index 0ea4cde..87bec7f 100644
+--- a/sound/soc/qcom/Kconfig
++++ b/sound/soc/qcom/Kconfig
+@@ -24,6 +24,11 @@ config SND_SOC_LPASS_APQ8016
+ 	select SND_SOC_LPASS_CPU
+ 	select SND_SOC_LPASS_PLATFORM
+ 
++config SND_SOC_LPASS_SC7180
++	tristate
++	select SND_SOC_LPASS_CPU
++	select SND_SOC_LPASS_PLATFORM
++
+ config SND_SOC_STORM
+ 	tristate "ASoC I2S support for Storm boards"
+ 	depends on SND_SOC_QCOM
+diff --git a/sound/soc/qcom/Makefile b/sound/soc/qcom/Makefile
+index 41b2c7a..7972c94 100644
+--- a/sound/soc/qcom/Makefile
++++ b/sound/soc/qcom/Makefile
+@@ -4,11 +4,13 @@ snd-soc-lpass-cpu-objs := lpass-cpu.o
+ snd-soc-lpass-platform-objs := lpass-platform.o
+ snd-soc-lpass-ipq806x-objs := lpass-ipq806x.o
+ snd-soc-lpass-apq8016-objs := lpass-apq8016.o
++snd-soc-lpass-sc7180-objs := lpass-sc7180.o
+ 
+ obj-$(CONFIG_SND_SOC_LPASS_CPU) += snd-soc-lpass-cpu.o
+ obj-$(CONFIG_SND_SOC_LPASS_PLATFORM) += snd-soc-lpass-platform.o
+ obj-$(CONFIG_SND_SOC_LPASS_IPQ806X) += snd-soc-lpass-ipq806x.o
+ obj-$(CONFIG_SND_SOC_LPASS_APQ8016) += snd-soc-lpass-apq8016.o
++obj-$(CONFIG_SND_SOC_LPASS_SC7180) += snd-soc-lpass-sc7180.o
+ 
+ # Machine
+ snd-soc-storm-objs := storm.o
+diff --git a/sound/soc/qcom/lpass-sc7180.c b/sound/soc/qcom/lpass-sc7180.c
+new file mode 100644
+index 00000000..dd85a97
+--- /dev/null
++++ b/sound/soc/qcom/lpass-sc7180.c
+@@ -0,0 +1,216 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ *
++ * lpass-sc7180.c -- ALSA SoC platform-machine driver for QTi LPASS
++ */
++
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <dt-bindings/sound/sc7180-lpass.h>
++#include <sound/pcm.h>
++#include <sound/soc.h>
++
++#include "lpass-lpaif-reg.h"
++#include "lpass.h"
++
++static struct snd_soc_dai_driver sc7180_lpass_cpu_dai_driver[] = {
++	[MI2S_PRIMARY] = {
++		.id = MI2S_PRIMARY,
++		.name = "Primary MI2S",
++		.playback = {
++			.stream_name = "Primary Playback",
++			.formats	= SNDRV_PCM_FMTBIT_S16,
++			.rates = SNDRV_PCM_RATE_48000,
++			.rate_min	= 48000,
++			.rate_max	= 48000,
++			.channels_min	= 2,
++			.channels_max	= 2,
++		},
++		.capture = {
++			.stream_name = "Primary Capture",
++			.formats = SNDRV_PCM_FMTBIT_S16,
++			.rates = SNDRV_PCM_RATE_48000,
++			.rate_min	= 48000,
++			.rate_max	= 48000,
++			.channels_min	= 2,
++			.channels_max	= 2,
++		},
++		.probe	= &asoc_qcom_lpass_cpu_dai_probe,
++		.ops    = &asoc_qcom_lpass_cpu_dai_ops,
++	},
++
++	[MI2S_SECONDARY] = {
++		.id = MI2S_SECONDARY,
++		.name = "Secondary MI2S",
++		.playback = {
++			.stream_name = "Secondary Playback",
++			.formats	= SNDRV_PCM_FMTBIT_S16,
++			.rates = SNDRV_PCM_RATE_48000,
++			.rate_min	= 48000,
++			.rate_max	= 48000,
++			.channels_min	= 2,
++			.channels_max	= 2,
++		},
++		.probe	= &asoc_qcom_lpass_cpu_dai_probe,
++		.ops    = &asoc_qcom_lpass_cpu_dai_ops,
++	},
++};
++
++static int sc7180_lpass_alloc_dma_channel(struct lpass_data *drvdata,
++					   int direction)
++{
++	struct lpass_variant *v = drvdata->variant;
++	int chan = 0;
++
++	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
++		chan = find_first_zero_bit(&drvdata->dma_ch_bit_map,
++					v->rdma_channels);
++
++		if (chan >= v->rdma_channels)
++			return -EBUSY;
++	} else {
++		chan = find_next_zero_bit(&drvdata->dma_ch_bit_map,
++					v->wrdma_channel_start +
++					v->wrdma_channels,
++					v->wrdma_channel_start);
++
++		if (chan >=  v->wrdma_channel_start + v->wrdma_channels)
++			return -EBUSY;
++	}
++
++	set_bit(chan, &drvdata->dma_ch_bit_map);
++
++	return chan;
++}
++
++static int sc7180_lpass_free_dma_channel(struct lpass_data *drvdata, int chan)
++{
++	clear_bit(chan, &drvdata->dma_ch_bit_map);
++
++	return 0;
++}
++
++static int sc7180_lpass_init(struct platform_device *pdev)
++{
++	struct lpass_data *drvdata = platform_get_drvdata(pdev);
++	struct lpass_variant *variant = drvdata->variant;
++	struct device *dev = &pdev->dev;
++	int ret, i;
++
++	drvdata->clks = devm_kcalloc(dev, variant->num_clks,
++				     sizeof(*drvdata->clks), GFP_KERNEL);
++	drvdata->num_clks = variant->num_clks;
++
++	for (i = 0; i < drvdata->num_clks; i++)
++		drvdata->clks[i].id = variant->clk_name[i];
++
++	ret = devm_clk_bulk_get(dev, drvdata->num_clks, drvdata->clks);
++	if (ret) {
++		dev_err(dev, "Failed to get clocks %d\n", ret);
++		return ret;
++	}
++
++	ret = clk_bulk_prepare_enable(drvdata->num_clks, drvdata->clks);
++	if (ret) {
++		dev_err(dev, "sc7180 clk_enable failed\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int sc7180_lpass_exit(struct platform_device *pdev)
++{
++	struct lpass_data *drvdata = platform_get_drvdata(pdev);
++
++	clk_bulk_disable_unprepare(drvdata->num_clks, drvdata->clks);
++
++	return 0;
++}
++
++static struct lpass_variant sc7180_data = {
++	.i2sctrl_reg_base	= 0x1000,
++	.i2sctrl_reg_stride	= 0x1000,
++	.i2s_ports		= 3,
++	.irq_reg_base		= 0x9000,
++	.irq_reg_stride		= 0x1000,
++	.irq_ports		= 3,
++	.rdma_reg_base		= 0xC000,
++	.rdma_reg_stride	= 0x1000,
++	.rdma_channels		= 5,
++	.dmactl_audif_start	= 1,
++	.wrdma_reg_base		= 0x18000,
++	.wrdma_reg_stride	= 0x1000,
++	.wrdma_channel_start	= 5,
++	.wrdma_channels		= 4,
++
++	.loopback		= REG_FIELD_ID(0x1000, 17, 17, 3, 0x1000),
++	.spken			= REG_FIELD_ID(0x1000, 16, 16, 3, 0x1000),
++	.spkmode		= REG_FIELD_ID(0x1000, 11, 15, 3, 0x1000),
++	.spkmono		= REG_FIELD_ID(0x1000, 10, 10, 3, 0x1000),
++	.micen			= REG_FIELD_ID(0x1000, 9, 9, 3, 0x1000),
++	.micmode		= REG_FIELD_ID(0x1000, 4, 8, 3, 0x1000),
++	.micmono		= REG_FIELD_ID(0x1000, 3, 3, 3, 0x1000),
++	.wssrc			= REG_FIELD_ID(0x1000, 2, 2, 3, 0x1000),
++	.bitwidth		= REG_FIELD_ID(0x1000, 0, 0, 3, 0x1000),
++
++	.rdma_dyncclk		= REG_FIELD_ID(0xC000, 21, 21, 5, 0x1000),
++	.rdma_bursten		= REG_FIELD_ID(0xC000, 20, 20, 5, 0x1000),
++	.rdma_wpscnt		= REG_FIELD_ID(0xC000, 16, 19, 5, 0x1000),
++	.rdma_intf		= REG_FIELD_ID(0xC000, 12, 15, 5, 0x1000),
++	.rdma_fifowm		= REG_FIELD_ID(0xC000, 1, 5, 5, 0x1000),
++	.rdma_enable		= REG_FIELD_ID(0xC000, 0, 0, 5, 0x1000),
++
++	.wrdma_dyncclk		= REG_FIELD_ID(0x18000, 22, 22, 4, 0x1000),
++	.wrdma_bursten		= REG_FIELD_ID(0x18000, 21, 21, 4, 0x1000),
++	.wrdma_wpscnt		= REG_FIELD_ID(0x18000, 17, 20, 4, 0x1000),
++	.wrdma_intf		= REG_FIELD_ID(0x18000, 12, 16, 4, 0x1000),
++	.wrdma_fifowm		= REG_FIELD_ID(0x18000, 1, 5, 4, 0x1000),
++	.wrdma_enable		= REG_FIELD_ID(0x18000, 0, 0, 4, 0x1000),
++
++	.clk_name		= (const char*[]) {
++				   "noc",
++				   "audio-core",
++				   "sysnoc_mport",
++				},
++	.num_clks		= 3,
++	.dai_driver		= sc7180_lpass_cpu_dai_driver,
++	.num_dai		= ARRAY_SIZE(sc7180_lpass_cpu_dai_driver),
++	.dai_osr_clk_names      = (const char *[]) {
++				   "mclk0",
++				   "null",
++				},
++	.dai_bit_clk_names      = (const char *[]) {
++				   "pri_ibit",
++				   "sec_ibit",
++				},
++	.init			= sc7180_lpass_init,
++	.exit			= sc7180_lpass_exit,
++	.alloc_dma_channel	= sc7180_lpass_alloc_dma_channel,
++	.free_dma_channel	= sc7180_lpass_free_dma_channel,
++};
++
++static const struct of_device_id sc7180_lpass_cpu_device_id[] = {
++	{.compatible = "qcom,lpass-cpu-sc7180", .data = &sc7180_data},
++	{}
++};
++
++static struct platform_driver sc7180_lpass_cpu_platform_driver = {
++	.driver = {
++		.name = "sc7180-lpass-cpu",
++		.of_match_table = of_match_ptr(sc7180_lpass_cpu_device_id),
++	},
++	.probe = asoc_qcom_lpass_cpu_platform_probe,
++	.remove = asoc_qcom_lpass_cpu_platform_probe,
++};
++
++module_platform_driver(sc7180_lpass_cpu_platform_driver);
++
++MODULE_DESCRIPTION("SC7180 LPASS CPU DRIVER");
++MODULE_LICENSE("GPL v2");
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
