@@ -2,122 +2,88 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA572C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E87492064B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:00:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KLwi9sL3"
+	by mail.kernel.org (Postfix) with ESMTP id D0519206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgGHOAl (ORCPT
+        id S1729829AbgGHOBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:00:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34936 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729656AbgGHOAk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:00:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594216838;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=qPr0eL60h+DsRpfuaobt35zdISOXizza2r3opqrQCz0=;
-        b=KLwi9sL37dbgYv0VA6tG9WfUosYBtuqJRDgYD/HoP4MidTC/LKSJGMuUhIKLQSUyQ09hm/
-        tnnEMxqy88AnLg/pMm9vKAeeAAevzlx745fS4WQfKlt5CVsUiA2JouSQ3JW0hbAWEPxUgM
-        ldWkgSIz6yK+5Kz2ynIvz3yBjYghSbA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-214-EiqG4VkKOCG6ODFfeWtUJg-1; Wed, 08 Jul 2020 10:00:37 -0400
-X-MC-Unique: EiqG4VkKOCG6ODFfeWtUJg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DA8E8015F7;
-        Wed,  8 Jul 2020 14:00:34 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3AE6078493;
-        Wed,  8 Jul 2020 14:00:25 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86: take as_id into account when checking PGD
-Date:   Wed,  8 Jul 2020 16:00:23 +0200
-Message-Id: <20200708140023.1476020-1-vkuznets@redhat.com>
+        Wed, 8 Jul 2020 10:01:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:42246 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729537AbgGHOBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 10:01:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB7941FB;
+        Wed,  8 Jul 2020 07:01:29 -0700 (PDT)
+Received: from [10.37.12.67] (unknown [10.37.12.67])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CB353F237;
+        Wed,  8 Jul 2020 07:01:25 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/2] PM / devfreq: Add delayed timer for polling
+To:     Chanwoo Choi <cw00.choi@samsung.com>, k.konieczny@samsung.com,
+        krzk@kernel.org, kgene@kernel.org
+Cc:     s.nawrocki@samsung.com, willy.mh.wolff.ml@gmail.com,
+        b.zolnierkie@samsung.com, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <CGME20200703061508epcas1p171aa3c0ab832b77e5837d8bd1e563742@epcas1p1.samsung.com>
+ <20200703062622.11773-1-cw00.choi@samsung.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <cea8d850-131f-6121-6d96-8b8dc2a33432@arm.com>
+Date:   Wed, 8 Jul 2020 15:01:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200703062622.11773-1-cw00.choi@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OVMF booted guest running on shadow pages crashes on TRIPLE FAULT after
-enabling paging from SMM. The crash is triggered from mmu_check_root() and
-is caused by kvm_is_visible_gfn() searching through memslots with as_id = 0
-while vCPU may be in a different context (address space).
+Hi all,
 
-Introduce kvm_vcpu_is_visible_gfn() and use it from mmu_check_root().
+On 7/3/20 7:26 AM, Chanwoo Choi wrote:
+> Add the delayed timer to devfreq framework in order to support
+> the periodical polling mode without stop caused by CPU idle state.
+> Some Non-CPU device must need to monitor the device status like
+> utilization regardless of CPU state.
+> 
+> - patch1 explains the detailed reason why the delayed timer is required.
+> - patch2 initializes that exynos5422-dmc device use delayed timer as default
+> instead of deferrable timer.
+> 
+> Chanwoo Choi (2):
+>    PM / devfreq: Add support delayed timer for polling mode
+>    memory: samsung: exynos5422-dmc: Use delayed timer as default
+> 
+>   Documentation/ABI/testing/sysfs-class-devfreq | 12 +++
+>   drivers/devfreq/devfreq.c                     | 83 ++++++++++++++++++-
+>   drivers/memory/samsung/exynos5422-dmc.c       |  1 +
+>   include/linux/devfreq.h                       |  9 ++
+>   4 files changed, 104 insertions(+), 1 deletion(-)
+> 
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/mmu/mmu.c   | 2 +-
- include/linux/kvm_host.h | 1 +
- virt/kvm/kvm_main.c      | 8 ++++++++
- 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 4fd4b5de8996..309024210a35 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3668,7 +3668,7 @@ static int mmu_check_root(struct kvm_vcpu *vcpu, gfn_t root_gfn)
- {
- 	int ret = 0;
- 
--	if (!kvm_is_visible_gfn(vcpu->kvm, root_gfn)) {
-+	if (!kvm_vcpu_is_visible_gfn(vcpu, root_gfn)) {
- 		kvm_make_request(KVM_REQ_TRIPLE_FAULT, vcpu);
- 		ret = 1;
- 	}
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index d564855243d8..f74d2a5afc26 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -774,6 +774,7 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
- int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
- struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
- bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
-+bool kvm_vcpu_is_visible_gfn(struct kvm_vcpu *vcpu, gfn_t gfn);
- unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
- void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
- 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index a852af5c3214..b131c7da1d12 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1626,6 +1626,14 @@ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
- }
- EXPORT_SYMBOL_GPL(kvm_is_visible_gfn);
- 
-+bool kvm_vcpu_is_visible_gfn(struct kvm_vcpu *vcpu, gfn_t gfn)
-+{
-+	struct kvm_memory_slot *memslot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
-+
-+	return kvm_is_visible_memslot(memslot);
-+}
-+EXPORT_SYMBOL_GPL(kvm_vcpu_is_visible_gfn);
-+
- unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	struct vm_area_struct *vma;
--- 
-2.25.4
+My apologizes for being late for the party. I wasn't able to run tests
+and I had to fix my setup after I messed up some scripts.
 
+The patch set looks good to me, so you can add my (to both patches):
+
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+
+I have run these Willy's benchmark tests and I will send some
+follow up patches in a few minutes.
+
+Regards,
+Lukasz
