@@ -2,95 +2,108 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 419E920775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594212554;
-	bh=Uqa5Ixx9A8DkN2H2K4w6mWtGsN4oJbAFIYsvEF105uM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1rGABpptcUjpBTrNB/I/frhPmDZ+k+fK107PobLVm/12BFgxn6Op8Zzev+E0TJ4RD
-	 /F845WkJjkZsMmL11ZYHbW2CZi1KmD/YXl34VcuulMcnz7OM5pBp66aavEK2MELIvU
-	 ay07x9cVsI3+GU6ax64cOHFmDpvh61MGao0t8fTw=
+	by mail.kernel.org (Postfix) with ESMTP id E908C206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgGHMtN (ORCPT
+        id S1729166AbgGHMuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:49:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729122AbgGHMtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:49:12 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B4A620775;
-        Wed,  8 Jul 2020 12:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594212552;
-        bh=Uqa5Ixx9A8DkN2H2K4w6mWtGsN4oJbAFIYsvEF105uM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oKbE2oFg2VMewf3p7Ik1zsK0oPUYm+PwxqnkQ3WyNwSaGQ+vK8bZ9pf7YiB1ykQXH
-         XU3WCRTnd/8w1PxUBPh0r2Sq+WwCReWyrIGJMMqt77XDx21WOrQ4qLYv3To6Ef4nbj
-         c5RMeN5svZBNGIr/TZziTEiSoPwEkXfcdR2Eldbs=
-Date:   Wed, 8 Jul 2020 13:49:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        akashast@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        mkshah@codeaurora.org, swboyd@chromium.org,
-        georgi.djakov@linaro.org, ctheegal@codeaurora.org,
-        mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH 3/3] spi: spi-geni-qcom: Get rid of most overhead in
- prepare_message()
-Message-ID: <20200708124903.GN4655@sirena.org.uk>
-References: <20200702004509.2333554-1-dianders@chromium.org>
- <20200701174506.3.I2b3d7aeb1ea622335482cce60c58d2f8381e61dd@changeid>
+        Wed, 8 Jul 2020 08:50:17 -0400
+Received: from stargate.chelsio.com ([12.32.117.8]:53652 "EHLO
+        stargate.chelsio.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728803AbgGHMuR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 08:50:17 -0400
+Received: from localhost (scalar.blr.asicdesigners.com [10.193.185.94])
+        by stargate.chelsio.com (8.13.8/8.13.8) with ESMTP id 068Cnn5v011537;
+        Wed, 8 Jul 2020 05:49:54 -0700
+Date:   Wed, 8 Jul 2020 18:06:57 +0530
+From:   Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, nirranjan@chelsio.com
+Subject: Re: [PATCH 4.19 17/36] cxgb4: use correct type for all-mask IP
+ address comparison
+Message-ID: <20200708123656.GA13635@chelsio.com>
+References: <20200707145749.130272978@linuxfoundation.org>
+ <20200707145749.959174058@linuxfoundation.org>
+ <20200707213326.GB11158@amd>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Xb8pJpF45Qg/t7GZ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701174506.3.I2b3d7aeb1ea622335482cce60c58d2f8381e61dd@changeid>
-X-Cookie: Oh Dad!  We're ALL Devo!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200707213326.GB11158@amd>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tuesday, July 07/07/20, 2020 at 23:33:26 +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+> > 
+> > [ Upstream commit f286dd8eaad5a2758750f407ab079298e0bcc8a5 ]
+> > 
+> > Use correct type to check for all-mask exact match IP addresses.
+> > 
+> > Fixes following sparse warnings due to big endian value checks
+> > against 0xffffffff in is_addr_all_mask():
+> > cxgb4_filter.c:977:25: warning: restricted __be32 degrades to integer
+> > cxgb4_filter.c:983:37: warning: restricted __be32 degrades to integer
+> > cxgb4_filter.c:984:37: warning: restricted __be32 degrades to integer
+> > cxgb4_filter.c:985:37: warning: restricted __be32 degrades to integer
+> > cxgb4_filter.c:986:37: warning: restricted __be32 degrades to integer
+> 
+> > diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+> > index 7dddb9e748b81..86745f33a252d 100644
+> > --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+> > +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+> > @@ -810,16 +810,16 @@ static bool is_addr_all_mask(u8 *ipmask, int family)
+> >  		struct in_addr *addr;
+> >  
+> >  		addr = (struct in_addr *)ipmask;
+> > -		if (addr->s_addr == 0xffffffff)
+> > +		if (ntohl(addr->s_addr) == 0xffffffff)
+> 
+> Endianity does not really matter for ~0, but can compiler figure it
+> out?
+> 
+> would it be better to do these tests as 
+> 
+>       if (foo == htonl(0xffffffff))
+> 
+> to make it clear to the compiler?
+> 
 
---Xb8pJpF45Qg/t7GZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sure, I'll update all checks to follow above approach. Will send a
+patch.
 
-On Wed, Jul 01, 2020 at 05:45:09PM -0700, Douglas Anderson wrote:
-> There's a bunch of overhead in spi-geni-qcom's prepare_message.  Get
-> rid of it.  Before this change spi_geni_prepare_message() took around
-> 14.5 us.  After this change, spi_geni_prepare_message() takes about
-> 1.75 us (as measured by ftrace).
+> 
+> >  	} else if (family == AF_INET6) {
+> >  		struct in6_addr *addr6;
+> >  
+> >  		addr6 = (struct in6_addr *)ipmask;
+> > -		if (addr6->s6_addr32[0] == 0xffffffff &&
+> > -		    addr6->s6_addr32[1] == 0xffffffff &&
+> > -		    addr6->s6_addr32[2] == 0xffffffff &&
+> > -		    addr6->s6_addr32[3] == 0xffffffff)
+> > +		if (ntohl(addr6->s6_addr32[0]) == 0xffffffff &&
+> > +		    ntohl(addr6->s6_addr32[1]) == 0xffffffff &&
+> > +		    ntohl(addr6->s6_addr32[2]) == 0xffffffff &&
+> > +		    ntohl(addr6->s6_addr32[3]) == 0xffffffff)
+> >  			return true;
+> >  	}
+> >  	return false;
+> 
 
-Acked-by: Mark Brown <broonie@kernel.org>
-
---Xb8pJpF45Qg/t7GZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8FwL4ACgkQJNaLcl1U
-h9D4Rgf/Uva2syJm8KRxZ3zqSrynarhaL0MlZwq4rb26hTPp7LnZs8TIOfboQ2aP
-ReLvfYszSbgQhhIFxtZAnJAVpwEz2twAVROsnO0/K26NmqaV5/p0Z1KyPCPfgQfW
-N7LN4MOtDh97n84llxMtJJG8P8Tqoje0YRAuQdwSIC9LkcRCvNe02yRdJ9cnPMzX
-OTOYc4avIDtmWA+t+K7nyDJ1RoQmAqDyejMsUEy32LO1UmlW64hZ8njrNyZRisUu
-+8XdZqLO/aiQOTxuvxXbTH7ZltyFd+kkwlksVqDVVto2THb5RDJ20/+MdU8arQYF
-sN8xdQTvufuZYgkETqAeW5REBVttHQ==
-=/s94
------END PGP SIGNATURE-----
-
---Xb8pJpF45Qg/t7GZ--
+Thanks,
+Rahul
