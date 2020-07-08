@@ -2,108 +2,115 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F11C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5568C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E069820739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE8820760
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgGHHrp (ORCPT
+        id S1727098AbgGHHry convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:47:45 -0400
-Received: from mga02.intel.com ([134.134.136.20]:60128 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbgGHHrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:47:45 -0400
-IronPort-SDR: jT5qVe74UmxQNsyxaLA7eCCM3lRx7krSug8sOOmMNjsYSKzJl1UwRicUpUc0A4386zjWtT9oZ/
- Rm7hd4mc64iA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="135987842"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="135987842"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 00:47:44 -0700
-IronPort-SDR: 1D/JtnuSfCCoKYN+pqoTcXLFPhiswVea4KFhk0k+3QuBPjKv1PbkOLVv+k1DfHB+ZjvBG3d5UK
- fjJf3XaQ4dmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="297642967"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 08 Jul 2020 00:47:44 -0700
-Received: from [10.249.226.44] (abudanko-mobl.ccr.corp.intel.com [10.249.226.44])
-        by linux.intel.com (Postfix) with ESMTP id 74DC05807FC;
-        Wed,  8 Jul 2020 00:47:42 -0700 (PDT)
-Subject: [PATCH v10 04/15] perf evlist: introduce control file descriptors
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <92aa73c7-4148-a45d-6964-983fe1654d1e@linux.intel.com>
-Date:   Wed, 8 Jul 2020 10:47:41 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 8 Jul 2020 03:47:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:42745 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgGHHrx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:47:53 -0400
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MCKO2-1k2OCC2vkg-009Tzk; Wed, 08 Jul 2020 09:47:50 +0200
+Received: by mail-qt1-f172.google.com with SMTP id e12so33761106qtr.9;
+        Wed, 08 Jul 2020 00:47:49 -0700 (PDT)
+X-Gm-Message-State: AOAM532QhPf3S6YmnJkCrqd7T4mtSEWxZpWEFGxDS/7NJFyNC+4nNHmT
+        NlTdO8TrSG9eqELI16Ui1AN1+/ml99mcq0WaQJo=
+X-Google-Smtp-Source: ABdhPJwJ7bU/Pv3kW4ZV6dqofAWrDLTCi8XHvPobkRXOzurHnagr3TngzbBTEHTIVieA5Q2mcy/tSnvloWa3hIIuPE8=
+X-Received: by 2002:ac8:7587:: with SMTP id s7mr58818246qtq.304.1594194469018;
+ Wed, 08 Jul 2020 00:47:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200707180955.53024-1-mic@digikod.net> <20200707180955.53024-10-mic@digikod.net>
+ <CAK8P3a0docCqHkEn9C7=e0GC_ieN1dsYgKQ9PbUmSZYxh9MRnw@mail.gmail.com> <8d2dab03-289e-2872-db66-ce80ce5c189f@digikod.net>
+In-Reply-To: <8d2dab03-289e-2872-db66-ce80ce5c189f@digikod.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 8 Jul 2020 09:47:33 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3Mf_+-MY5kdeY7sqwUgCUi=PksWz1pGDy+o0ZfgF93Zw@mail.gmail.com>
+Message-ID: <CAK8P3a3Mf_+-MY5kdeY7sqwUgCUi=PksWz1pGDy+o0ZfgF93Zw@mail.gmail.com>
+Subject: Re: [PATCH v19 09/12] arch: Wire up landlock() syscall
+To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
+        Richard Weinberger <richard@nod.at>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:Icrsh0mC3bAQKFyB4VE2qo4aKKy+ZA1A9ib/ejxxFIqzH1RAOKn
+ penst3TphTVidMyURXogrAolNNxvYg3ueob3GXJ57i+dcPzud3M6FOaVE/1z5cVpjZqMHTU
+ HMLO5w64LNa6l1OCdf5lbDNfMiPCYRQaHbuB46l5be2Kkg7WxGcLfbDDi5Y00gMTEoGvGo7
+ 1ZtPSL9WM44wPVMp6xovg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mPluZrwySps=:GUXjDTVVVga3OTdEi2pLLE
+ /dCG1/4aSyDQxIoiIcpsHhi9hIrJDPlEKRT8Z7nJeB3mhYqleJixw9qSffZ29S9kx2H7q7KPh
+ MtiizC8lmjEZLUCZF4gJLmhogyeNt5HRxc5eYHydk6XYG6IPUKsTXSCVZKZzNkCjb+Q0Gwyeh
+ OWBPZ5mT3lv9WKZpQmfd3daDuYl4CVUhD8bswWDMeFUkaehf86+vQi2daoLEl7SetO9fFGNwV
+ F8sO3eq7a0P+0IVhSesXNCZCI1gUespgxKIzcwmPZCyaPvSpNWT/ePRmrfmdHvXzgeCqBsKVB
+ wvLs0Z1czNW2d/YX4qZouATcfHGUc4bcGxEboQoDSdbXC75dDhVw4pfqKJCyjYWZ3k+4Us36u
+ wCfpAXVdEsIgafm0vUWwJ2XLwfvsCk9VwHn8ElBnjYb7QJGAUEua0pM8ti3xAao2PXAEJI0FI
+ Rh+jtOg7CdK1Rmxa2BTf8vOR7ZUO0frI0lpqmH/LNdToiwg5qOd8X+DCAUmD4mwNbVDuhBVGP
+ STdGGIAR7L/ZJ5U8nR/kMj/3xxDWtSBlX8XbGSolKCDz8h7lv84+ahSjks4vBpo1VRxVWZ5pm
+ aBATcxNKBl6FIga/hDFJO9u2D/i8MSjbTnSsRHrW8Eiy3Wyl1aONYLnK8w1WnK6AXNp+cxP50
+ t8yvr4d2NC0g7vWxbGQABJLyq1FW4bekvAdBTciq1c1Q4Au7GK88fF+SYTH2EqnZumrQyQhCh
+ 0puZ2PnYNJ3qyi5M3JxrOK/whkL96HYmwG8xatanXAnFkXM5iMtTpDO2fEjmoD9gDxUNwgSwD
+ VAfhLgJwI7BWJ+YO/r4mCsp1WkuaC9f124ursXBh5zP+ANEdME6fnbHL6rwcu4/VhwVvUXGWV
+ /3heJDV5oZmCIcgGp6d/eJEUKY4wnOG1k9HjV2sXpTDUHT8BZAkyTG9vWz/mDTJjtIjUGEarh
+ TN0dpp7vWHvulUrm7u2nd07TwdnRIysmRNjZQLFX9yBnTz0jI3x9e
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 8, 2020 at 9:31 AM Mickaël Salaün <mic@digikod.net> wrote:
+> On 08/07/2020 09:22, Arnd Bergmann wrote:
+> > On Tue, Jul 7, 2020 at 8:10 PM Mickaël Salaün <mic@digikod.net> wrote:
+> >
+> >> index f4a01305d9a6..a63a411a74d5 100644
+> >> --- a/include/uapi/asm-generic/unistd.h
+> >> +++ b/include/uapi/asm-generic/unistd.h
+>
+> OK, I'll rebase the next series on linux-next.
 
-Define and initialize control file descriptors.
+Just change the number to the next free one, without actually rebasing.
+It's always a bit messy to have multiple syscalls added, but I think that
+causes the least confusion.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/util/evlist.c | 3 +++
- tools/perf/util/evlist.h | 5 +++++
- 2 files changed, 8 insertions(+)
+> Do you know if there is other syscalls on their way to linux-next?
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index bcbe0cb8482e..36eb50aba1f5 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -63,6 +63,9 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- 	perf_evlist__set_maps(&evlist->core, cpus, threads);
- 	evlist->workload.pid = -1;
- 	evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
-+	evlist->ctl_fd.fd = -1;
-+	evlist->ctl_fd.ack = -1;
-+	evlist->ctl_fd.pos = -1;
- }
- 
- struct evlist *evlist__new(void)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 38901c0d1599..2caf19fb87a8 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -74,6 +74,11 @@ struct evlist {
- 		pthread_t		th;
- 		volatile int		done;
- 	} thread;
-+	struct {
-+		int	fd;
-+		int	ack;
-+		int	pos;
-+	} ctl_fd;
- };
- 
- struct evsel_str_handler {
--- 
-2.24.1
+None that I'm aware of.
 
+> Are the other parts of arch/syscall OK for you?
 
+The arch/* and include/uapi/asm-generic changes look ok to me.
+I'll reply to the syscall implementation separately/
+
+     Arnd
