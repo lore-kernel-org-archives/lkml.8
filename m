@@ -2,198 +2,223 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7218AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4694020672
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8251206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="M3lslppQ";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="IuwNzazA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhfdobkY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbgGHQDy (ORCPT
+        id S1730322AbgGHQED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:03:54 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:19261 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730067AbgGHQDx (ORCPT
+        Wed, 8 Jul 2020 12:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730067AbgGHQED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:03:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594224233; x=1625760233;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=AnErN4u1RKf/uAJ2hPXwE332+8yg//KZ+Posz3vV5Ew=;
-  b=M3lslppQHz2gM80YET6ztKp1MZBjUi6KJdN6APx4MtEs0AGkTKywJKHi
-   hcoxmTgssIu18hhVxgo7ZegtRg8nnJ0ozqv9bNtBE9s/y/Bs8kinfKUYa
-   TsgAFrUNWh7FyzGjI9OCOFpGVZ+mBk8M8CHBoPqHIRAr0rClEn7JWUn6/
-   TfEo0YtPP9PPg4jZye12cUSPuuDNj4tFnaNB5u6gfQiiQOIBL2MtGbz1r
-   U8nLnhrqNOm8BnqPdj8NRc3m91KpSH39FlqkHRwFU3zvG2wIFl2O58g2O
-   mWjMIEw/cY2aBOz8hwqRm24oQS+1DGBnQu/NwcAQ/N8P/LrBr/1XyasS9
-   Q==;
-IronPort-SDR: olXbXUk8CbIM2J11neeomo8fEqaQ6y5SedBrWoH3grAA6CYNqSmyHhQYndwZSzGLGFm5W9x7zh
- uk8ZdtICFbdalhObI+rSvfkeArQmRt3IXDlETwsUO10R38BthE2y/YffTJ+S+FkSFkIlCszhbT
- lCpd9ODw+mTGYw6JlDqLx/nvZS0Ae/2/DEn0kcSTF+MpnOIErHV3bPe472QmJU9D0Vb/I5D9P2
- mkHUWB3wSNYUZcGY4t0RGKyHEaE7ef0Vlv0lP+yqXCBJ4RtdjPI9LhjwrnyHvJXDeTXOHF5Ixz
- 3YU=
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="79169684"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jul 2020 09:03:52 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 8 Jul 2020 09:03:52 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Wed, 8 Jul 2020 09:03:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bR/fnwTPgmSKb+b13eGHpieaZMQoYhYJKpRSBSU2d92w0JDkteYVKY7MCE4K7AjftAJCTm5HNZ1c1268l5BAIFlgY9DtrPqZynHEAv1cpVhuS1N7Gf6UKrHwxTe3NjDDo0elAYQCAPx6SCoyW+Uir+isvSQczg8Ck79M9H7Sus9b/osnj9QkrHXgD8MlI23It2LZVnqbDjfmK7/Zqht3MMhjNX+4nDe09u2SKwKABs5UZobKGVr9aPgvY3wHUULgY0Dks4a+5MNcQeGJg97vIH3oUTp97LctF+6D4Q1aTJowVWzx2dQfaHRPIq3fTUJUCQTPBgZXgPFJNilqqZV6Qw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AnErN4u1RKf/uAJ2hPXwE332+8yg//KZ+Posz3vV5Ew=;
- b=PEhlF4L/PSQ0Kb/1t9B7aJGdFdbKqCUPSA3RATGo0Mp5Waxr/YcU13GhyfeRUAmjcy+Bn1Uy4rwTIwxFoUOm/38HW8kXVhpx/LuBvCarC65tU05fG2hmkDU8IqCEmuYe+PQi3JbeHT9fJOxlzCnQ8nLkVJDnKmcQiWbHAeZiGJkC4vdSv+n5h0Ck5QhGS53+mH/5LSmrH44HeBE5FNLJpwjaMBZpcp26r5E7XjYVM9eLS78cHN0FG9DSdvyLopQkS/7/CoxyUMZud8P2S3gL4LxJRmL5ycwK8eFfd6net0hbsK5zwriR0InP5DbuuXGLr8+ajmANBNpcPtAqBKk9EA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Wed, 8 Jul 2020 12:04:03 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE42C061A0B;
+        Wed,  8 Jul 2020 09:04:02 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id d4so21879431pgk.4;
+        Wed, 08 Jul 2020 09:04:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AnErN4u1RKf/uAJ2hPXwE332+8yg//KZ+Posz3vV5Ew=;
- b=IuwNzazA/lKysCRZhhjNjbJJAMUim63+f41L5ByrWo2FGhgmUBa6ZhWzw6P6seX+JxYXiFKbI5m5FSC1A0qi2asyjoy+Z8XF5bmg6sWdpbWkHSUKHskseZ7Jg3ph/W9x5K1sXaqPkNQ2APAupgVTXovwObmxtl7sTUJ/jNoeONQ=
-Received: from BYAPR11MB2856.namprd11.prod.outlook.com (2603:10b6:a02:bd::11)
- by BY5PR11MB3958.namprd11.prod.outlook.com (2603:10b6:a03:18e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Wed, 8 Jul
- 2020 16:03:47 +0000
-Received: from BYAPR11MB2856.namprd11.prod.outlook.com
- ([fe80::f1d5:60ca:d163:c1b3]) by BYAPR11MB2856.namprd11.prod.outlook.com
- ([fe80::f1d5:60ca:d163:c1b3%3]) with mapi id 15.20.3153.030; Wed, 8 Jul 2020
- 16:03:47 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <p.yadav@ti.com>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <vigneshr@ti.com>, <broonie@kernel.org>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <matthias.bgg@gmail.com>,
-        <michal.simek@xilinx.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     <nsekhar@ti.com>, <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v10 08/17] mtd: spi-nor: core: use dummy cycle and address
- width info from SFDP
-Thread-Topic: [PATCH v10 08/17] mtd: spi-nor: core: use dummy cycle and
- address width info from SFDP
-Thread-Index: AQHWVUFcjtrXlk7Bh0yQOzcibPIurg==
-Date:   Wed, 8 Jul 2020 16:03:47 +0000
-Message-ID: <d4b5178e-debb-1397-caae-f20086f5c3fc@microchip.com>
-References: <20200623183030.26591-1-p.yadav@ti.com>
- <20200623183030.26591-9-p.yadav@ti.com>
-In-Reply-To: <20200623183030.26591-9-p.yadav@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-authentication-results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 488e016b-bd31-4fe4-ad22-08d823587f83
-x-ms-traffictypediagnostic: BY5PR11MB3958:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB39582C230037EB49E77EC04CF0670@BY5PR11MB3958.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: niKiimRN7BdP7CxVJmd2YDcfqW3VEwxH8epZujYhRC1J0EvwkknB0mh9TQshPG5zC1BjMgc5+uzg9hPyJHBqGCbpAziS3k6nivOKnLID6looKjbkB7BRqUdSoUjgZXeotAgBud5dswRTL+WiYR4NMKZcamp2e/hD8ZHvj4TJZV9pL5Dgrd+r6BH6F/3HBWhKRDL8I5M/mkgF/8uEmCwzKaqcv958BIIGFivMQRLftanr26gTfRQ2cFcAqX4Fs8AGcYMqx6v7liutdLO+XfI8FAYWwLs4k6+x6RO/q9wfENwptzJ4Qb092F10NbAnEuxIrHb2HlFixiswc2YdaHs1ZyGavPAS4iL0IVa7uHEaoBJxzVTXU3YhZNlpaQLhSL1wa2AT7RJaDpHle8JGvUTWGQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2856.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(39860400002)(396003)(376002)(346002)(110136005)(316002)(6486002)(8676002)(2616005)(71200400001)(8936002)(478600001)(91956017)(66556008)(66476007)(5660300002)(64756008)(66446008)(66946007)(76116006)(31696002)(2906002)(186003)(4326008)(26005)(7416002)(6512007)(31686004)(83380400001)(86362001)(54906003)(36756003)(53546011)(6506007)(921003)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: fDa+Ctj2hKV1gmG1otu9xIUaLhr2ivl/o3VTVcsddrpercky8eXHlvkzmfpYSG7AGnS+zuYbo5SqSXBZ8clEt0/8jXuemYbLBHm59KULw7jN9WSiWd70+KruZlzzgxcUekRXcPDlSzmihC5kcQjB84fYlJ7X002DghTW8bbZnh7BVSs/OS8oyiicS+7xdD4c2T3DXR3eCgF1HjF/7DgcSMypO92JwS+JZir+frvwkxcjej+rQUSQRlIOFTXapXIaZW+FTTnKMg739lz8hjv1HEaouRH0Z+UPC7HqXhu0D4lUrdT+M86KRZlZt3vYgq7Gu9rP9XlkUoAwSUuY2LmQF6aotuvFBS56RNONkQ9/c1QjN4lT+KsYdo6GlhNWD1/0oUtHDnXxZ7SBQWcP8c6FN5EEdoM4Cz4TIp7V70PjU2OGB49sRTt5+HxAXnHV/pwTdbnwYZzxs3WoeIGCtSo1SuzTE7P8DJEMDc7EyIkeynU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <52858E4A70C6AF4F9B260B65206915F7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i4e593cpPp1JbK9mhrl0XOUScgdAL0u9hY9gCGAke4c=;
+        b=VhfdobkYEy+3v5oUfDeNrYdjOFBIdoil78/kedVVOkv4y7daPXhnrT2deNHm1JeGZD
+         6naq9YiGSPidHEMAj8MCzz13l3GfFI9uGsy4viYNB8NTcJUFymon9xlaAH+2EozXqM2q
+         YzMzY2Ud56eJ51bBtEk98xE16g5a9ad3/kt8YbHYvZAFtbPO2fHIF6Q811Ikd2s3v6B2
+         khPa5L7gTE7M/f9+X0zw/efTkelwcZvNX6y3WkiWWTZp9CGg2Hygb/lVEEk5uX4AADu/
+         oFGAKebCaX43DRD+PMJiDfHCDlxjeEi8esB5bnQTV3AK6Uimxg2jsHwegjdX3lAY/qhG
+         GVlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i4e593cpPp1JbK9mhrl0XOUScgdAL0u9hY9gCGAke4c=;
+        b=AlKe8qt4BVhYwspdvCKZXMiZkRkXO0wwCaTnkNWZXb0BmoPJ8BLHJdz5mQSeiEGXdY
+         RTZoJcn+3dTK9ywYk7Wb131WztPlsfplhqY9GVT8gIcoG4U7va0C20KZ040lKMiq46Pd
+         IjgIeSSC3o//vowsyCY+AafmlB1G8Rv/pRX0P3R9qWryHBXRp8ja+V2vKVWUNKL0Vcqe
+         tsdINewx1vCcaCvikQTg42inXerT1jtSltG2kcipS0yD09fwTc3MqghyYEQkgmZv3vjP
+         31tkWW7qwApm6nO9Q5a4MovvodkIZkSi+ProDYhDwVIeHyXAUHWbQnvxiRXVE3Nt/Y0V
+         5i4Q==
+X-Gm-Message-State: AOAM531tLbFgdn7lJ5F6JwF/a5omQ/cFx5YxdFOSm4Obx79Vo3niKP5K
+        eHe/LnO5f24s/QTY1j+vaKg=
+X-Google-Smtp-Source: ABdhPJwVSzJ0zp2pG2hU4YHZRfO5rMlGpBwp58/lM/qJVQQDmkFsMTArBdNzW4V/l95GZ+dSn4QxQQ==
+X-Received: by 2002:a62:fcca:: with SMTP id e193mr45366563pfh.307.1594224242432;
+        Wed, 08 Jul 2020 09:04:02 -0700 (PDT)
+Received: from localhost ([89.208.244.139])
+        by smtp.gmail.com with ESMTPSA id y20sm261065pfo.170.2020.07.08.09.04.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jul 2020 09:04:01 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 00:03:55 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     jingoohan1@gmail.com, robh@kernel.org, bhelgaas@google.com,
+        kgene@kernel.org, thomas.petazzoni@bootlin.com,
+        nsaenzjulienne@suse.de, f.fainelli@gmail.com,
+        jquinlan@broadcom.com, krzk@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: controller: convert to
+ devm_platform_ioremap_resource()
+Message-ID: <20200708160355.GA382@nuc8i5>
+References: <20200526160110.31898-1-zhengdejin5@gmail.com>
+ <20200707133707.GA17163@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2856.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 488e016b-bd31-4fe4-ad22-08d823587f83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2020 16:03:47.5255
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6frkT+Y0NL6XnX+0s5WCFLWOB/ettI8UOqv0bDfxt9HtJ9PaVge/j5dQFbRL3IbgdL1fJOz9C99NAyiESrLlAOzDHdzI+KRDFl/fazqjJUg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3958
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707133707.GA17163@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNi8yMy8yMCA5OjMwIFBNLCBQcmF0eXVzaCBZYWRhdiB3cm90ZToNCj4gRVhURVJOQUwgRU1B
-SUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3Uga25v
-dyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBUaGUgeFNQSSBQcm9maWxlIDEuMCB0YWJsZSBz
-cGVjaWZpZXMgaG93IG1hbnkgZHVtbXkgY3ljbGVzIGFuZCBhZGRyZXNzDQo+IGJ5dGVzIGFyZSBu
-ZWVkZWQgZm9yIHRoZSBSZWFkIFN0YXR1cyBSZWdpc3RlciBjb21tYW5kIGluIG9jdGFsIERUUiBt
-b2RlLg0KPiBVc2UgdGhhdCBpbmZvcm1hdGlvbiB0byBzZW5kIHRoZSBjb3JyZWN0IFJlYWQgU1Ig
-Y29tbWFuZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFByYXR5dXNoIFlhZGF2IDxwLnlhZGF2QHRp
-LmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL2NvcmUuYyB8IDI1ICsrKysrKysr
-KysrKysrKysrKysrKysrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspLCAy
-IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL3NwaS1ub3IvY29y
-ZS5jIGIvZHJpdmVycy9tdGQvc3BpLW5vci9jb3JlLmMNCj4gaW5kZXggN2QyNGU2M2ZjY2E4Li5m
-Mjc0OGYxZDk5NTcgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbXRkL3NwaS1ub3IvY29yZS5jDQo+
-ICsrKyBiL2RyaXZlcnMvbXRkL3NwaS1ub3IvY29yZS5jDQo+IEBAIC0zNTcsNiArMzU3LDggQEAg
-aW50IHNwaV9ub3Jfd3JpdGVfZGlzYWJsZShzdHJ1Y3Qgc3BpX25vciAqbm9yKQ0KPiAgc3RhdGlj
-IGludCBzcGlfbm9yX3JlYWRfc3Ioc3RydWN0IHNwaV9ub3IgKm5vciwgdTggKnNyKQ0KPiAgew0K
-PiAgICAgICAgIGludCByZXQ7DQo+ICsgICAgICAgdTggYWRkcl9ieXRlcyA9IG5vci0+cGFyYW1z
-LT5yZHNyX2FkZHJfbmJ5dGVzOw0KPiArICAgICAgIHU4IGR1bW15ID0gbm9yLT5wYXJhbXMtPnJk
-c3JfZHVtbXk7DQoNCm5vIG5lZWQgdG8gaW50cm9kdWNlIGxvY2FsIHZhcmlhYmxlcyBmb3IgYSBz
-aW5nbGUgZGVyZWZlcmVuY2UNCg0KPiANCj4gICAgICAgICBpZiAobm9yLT5zcGltZW0pIHsNCj4g
-ICAgICAgICAgICAgICAgIHN0cnVjdCBzcGlfbWVtX29wIG9wID0NCj4gQEAgLTM2NSwxMCArMzY3
-LDIxIEBAIHN0YXRpYyBpbnQgc3BpX25vcl9yZWFkX3NyKHN0cnVjdCBzcGlfbm9yICpub3IsIHU4
-ICpzcikNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTUElfTUVNX09QX05P
-X0RVTU1ZLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNQSV9NRU1fT1Bf
-REFUQV9JTigxLCBzciwgMSkpOw0KPiANCj4gKyAgICAgICAgICAgICAgIGlmIChzcGlfbm9yX3By
-b3RvY29sX2lzX2R0cihub3ItPnJlZ19wcm90bykpIHsNCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgb3AuYWRkci5uYnl0ZXMgPSBhZGRyX2J5dGVzOw0KPiArICAgICAgICAgICAgICAgICAgICAg
-ICBvcC5hZGRyLnZhbCA9IDA7DQoNCmlzbid0IGFkZHIgYWxyZWFkeSBpbml0aWFsaXplZCB0byAw
-Pw0KDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIG9wLmR1bW15Lm5ieXRlcyA9IGR1bW15Ow0K
-PiArICAgICAgICAgICAgICAgfQ0KPiArDQo+ICsgICAgICAgICAgICAgICBzcGlfbm9yX3NwaW1l
-bV9zZXR1cF9vcChub3IsICZvcCwgbm9yLT5yZWdfcHJvdG8pOw0KPiArDQo+ICAgICAgICAgICAg
-ICAgICByZXQgPSBzcGlfbWVtX2V4ZWNfb3Aobm9yLT5zcGltZW0sICZvcCk7DQo+ICAgICAgICAg
-fSBlbHNlIHsNCj4gLSAgICAgICAgICAgICAgIHJldCA9IG5vci0+Y29udHJvbGxlcl9vcHMtPnJl
-YWRfcmVnKG5vciwgU1BJTk9SX09QX1JEU1IsDQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBzciwgMSk7DQo+ICsgICAgICAgICAgICAgICBpZiAo
-c3BpX25vcl9wcm90b2NvbF9pc19kdHIobm9yLT5yZWdfcHJvdG8pKQ0KPiArICAgICAgICAgICAg
-ICAgICAgICAgICByZXQgPSAtRU5PVFNVUFA7DQo+ICsgICAgICAgICAgICAgICBlbHNlDQo+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIHJldCA9IG5vci0+Y29udHJvbGxlcl9vcHMtPnJlYWRfcmVn
-KG5vciwgU1BJTk9SX09QX1JEU1IsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNyLCAxKTsNCj4gICAgICAgICB9DQoNCmRvZXNu
-J3QgdGhpcyBiZWxvbmcgdG8gYSBwcmV2aW91cyBwYXRjaD8NCg0KPiANCj4gICAgICAgICBpZiAo
-cmV0KQ0KPiBAQCAtMzg4LDYgKzQwMSw4IEBAIHN0YXRpYyBpbnQgc3BpX25vcl9yZWFkX3NyKHN0
-cnVjdCBzcGlfbm9yICpub3IsIHU4ICpzcikNCj4gIHN0YXRpYyBpbnQgc3BpX25vcl9yZWFkX2Zz
-cihzdHJ1Y3Qgc3BpX25vciAqbm9yLCB1OCAqZnNyKQ0KPiAgew0KPiAgICAgICAgIGludCByZXQ7
-DQo+ICsgICAgICAgdTggYWRkcl9ieXRlcyA9IG5vci0+cGFyYW1zLT5yZHNyX2FkZHJfbmJ5dGVz
-Ow0KPiArICAgICAgIHU4IGR1bW15ID0gbm9yLT5wYXJhbXMtPnJkc3JfZHVtbXk7DQo+IA0KPiAg
-ICAgICAgIGlmIChub3ItPnNwaW1lbSkgew0KPiAgICAgICAgICAgICAgICAgc3RydWN0IHNwaV9t
-ZW1fb3Agb3AgPQ0KPiBAQCAtMzk2LDYgKzQxMSwxMiBAQCBzdGF0aWMgaW50IHNwaV9ub3JfcmVh
-ZF9mc3Ioc3RydWN0IHNwaV9ub3IgKm5vciwgdTggKmZzcikNCj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBTUElfTUVNX09QX05PX0RVTU1ZLA0KPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIFNQSV9NRU1fT1BfREFUQV9JTigxLCBmc3IsIDEpKTsNCj4gDQo+
-ICsgICAgICAgICAgICAgICBpZiAoc3BpX25vcl9wcm90b2NvbF9pc19kdHIobm9yLT5yZWdfcHJv
-dG8pKSB7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIG9wLmFkZHIubmJ5dGVzID0gYWRkcl9i
-eXRlczsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgb3AuYWRkci52YWwgPSAwOw0KPiArICAg
-ICAgICAgICAgICAgICAgICAgICBvcC5kdW1teS5uYnl0ZXMgPSBkdW1teTsNCj4gKyAgICAgICAg
-ICAgICAgIH0NCj4gKw0KPiAgICAgICAgICAgICAgICAgc3BpX25vcl9zcGltZW1fc2V0dXBfb3Ao
-bm9yLCAmb3AsIG5vci0+cmVnX3Byb3RvKTsNCj4gDQo+ICAgICAgICAgICAgICAgICByZXQgPSBz
-cGlfbWVtX2V4ZWNfb3Aobm9yLT5zcGltZW0sICZvcCk7DQo+IC0tDQo+IDIuMjcuMA0KPiANCg0K
+On Tue, Jul 07, 2020 at 02:37:07PM +0100, Lorenzo Pieralisi wrote:
+> On Wed, May 27, 2020 at 12:01:10AM +0800, Dejin Zheng wrote:
+> > use devm_platform_ioremap_resource() to simplify code, it
+> > contains platform_get_resource() and devm_ioremap_resource().
+> > 
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > ---
+> >  drivers/pci/controller/dwc/pci-exynos.c | 4 +---
+> >  drivers/pci/controller/pci-aardvark.c   | 5 ++---
+> >  drivers/pci/controller/pci-ftpci100.c   | 4 +---
+> >  drivers/pci/controller/pci-versatile.c  | 6 ++----
+> >  drivers/pci/controller/pcie-brcmstb.c   | 4 +---
+> >  5 files changed, 7 insertions(+), 16 deletions(-)
+> 
+> Can you rebase it please against:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/misc
+> 
+> I will apply it then (please carry over the review tags).
+>
+Hi Lorenzo:
+
+I have sent the patch v2 for rebase it, Thank you very much!
+The link is here: https://patchwork.ozlabs.org/project/linux-pci/patch/20200708155614.308-1-zhengdejin5@gmail.com/
+
+BR,
+Dejin
+> Lorenzo
+> 
+> > diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+> > index c5043d951e80..5791039d6a54 100644
+> > --- a/drivers/pci/controller/dwc/pci-exynos.c
+> > +++ b/drivers/pci/controller/dwc/pci-exynos.c
+> > @@ -84,14 +84,12 @@ static int exynos5440_pcie_get_mem_resources(struct platform_device *pdev,
+> >  {
+> >  	struct dw_pcie *pci = ep->pci;
+> >  	struct device *dev = pci->dev;
+> > -	struct resource *res;
+> >  
+> >  	ep->mem_res = devm_kzalloc(dev, sizeof(*ep->mem_res), GFP_KERNEL);
+> >  	if (!ep->mem_res)
+> >  		return -ENOMEM;
+> >  
+> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -	ep->mem_res->elbi_base = devm_ioremap_resource(dev, res);
+> > +	ep->mem_res->elbi_base = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(ep->mem_res->elbi_base))
+> >  		return PTR_ERR(ep->mem_res->elbi_base);
+> >  
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index 90ff291c24f0..0d98f9b04daa 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -1105,7 +1105,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> >  	struct advk_pcie *pcie;
+> > -	struct resource *res, *bus;
+> > +	struct resource *bus;
+> >  	struct pci_host_bridge *bridge;
+> >  	int ret, irq;
+> >  
+> > @@ -1116,8 +1116,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+> >  	pcie = pci_host_bridge_priv(bridge);
+> >  	pcie->pdev = pdev;
+> >  
+> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -	pcie->base = devm_ioremap_resource(dev, res);
+> > +	pcie->base = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(pcie->base))
+> >  		return PTR_ERR(pcie->base);
+> >  
+> > diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+> > index 1b67564de7af..221dfc9dc81b 100644
+> > --- a/drivers/pci/controller/pci-ftpci100.c
+> > +++ b/drivers/pci/controller/pci-ftpci100.c
+> > @@ -422,7 +422,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
+> >  	struct device *dev = &pdev->dev;
+> >  	const struct faraday_pci_variant *variant =
+> >  		of_device_get_match_data(dev);
+> > -	struct resource *regs;
+> >  	struct resource_entry *win;
+> >  	struct faraday_pci *p;
+> >  	struct resource *io;
+> > @@ -465,8 +464,7 @@ static int faraday_pci_probe(struct platform_device *pdev)
+> >  		return ret;
+> >  	}
+> >  
+> > -	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -	p->base = devm_ioremap_resource(dev, regs);
+> > +	p->base = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(p->base))
+> >  		return PTR_ERR(p->base);
+> >  
+> > diff --git a/drivers/pci/controller/pci-versatile.c b/drivers/pci/controller/pci-versatile.c
+> > index b911359b6d81..b34bbfe611e7 100644
+> > --- a/drivers/pci/controller/pci-versatile.c
+> > +++ b/drivers/pci/controller/pci-versatile.c
+> > @@ -77,13 +77,11 @@ static int versatile_pci_probe(struct platform_device *pdev)
+> >  	if (!bridge)
+> >  		return -ENOMEM;
+> >  
+> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -	versatile_pci_base = devm_ioremap_resource(dev, res);
+> > +	versatile_pci_base = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(versatile_pci_base))
+> >  		return PTR_ERR(versatile_pci_base);
+> >  
+> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > -	versatile_cfg_base[0] = devm_ioremap_resource(dev, res);
+> > +	versatile_cfg_base[0] = devm_platform_ioremap_resource(pdev, 1);
+> >  	if (IS_ERR(versatile_cfg_base[0]))
+> >  		return PTR_ERR(versatile_cfg_base[0]);
+> >  
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index 7730ea845ff2..04bbf9b40193 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -934,7 +934,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> >  	struct device_node *fw_np;
+> >  	struct brcm_pcie *pcie;
+> >  	struct pci_bus *child;
+> > -	struct resource *res;
+> >  	int ret;
+> >  
+> >  	/*
+> > @@ -959,8 +958,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> >  	pcie->dev = &pdev->dev;
+> >  	pcie->np = np;
+> >  
+> > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -	pcie->base = devm_ioremap_resource(&pdev->dev, res);
+> > +	pcie->base = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(pcie->base))
+> >  		return PTR_ERR(pcie->base);
+> >  
+> > -- 
+> > 2.25.0
+> > 
