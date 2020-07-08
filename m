@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B85C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 884AE207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6D320786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594222934;
-	bh=wxgYB4Ga8dIT1hCDuystHs20ZPtwGYzVHZ80NqcdTa4=;
+	s=default; t=1594222938;
+	bh=221b/j4YBJGJwtLatHEUMclSCzxLCqcNEjhJB+xYaSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TINZJ2aasVnPncixAlmTBr6myjWAYpmShHZqpNy1iYUIcITgan40HqRLej7JjjEFU
-	 MavK1FF91AVmzUKEVEszClbPP3StGodpjYTdRAmPy2WiZqkZ5TM4oC3ZYVR6qVCSxJ
-	 MZa5mLoqDffcc6wBMptK6LyI3wOggOL/C4zhw2xE=
+	b=zxbI4bfNw8vlYfKdJJeUerxGzO2RNV9vk7D7IUnGS67MXvmbC1jjGhIvsxCVLyoX8
+	 BhB1h2ayCZBo1gHCD0nahwvDrbXbVnav9ERDEt8ECS+5BtqCNdRQIa6E+Hy6j/RZah
+	 OBwdun7pIBgjq3otmt134HEn2FM514EGkLKs/Pe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730674AbgGHPmM (ORCPT
+        id S1730690AbgGHPmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:42:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49314 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730635AbgGHPmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:42:02 -0400
+        id S1730677AbgGHPmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:42:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFCDE20720;
-        Wed,  8 Jul 2020 15:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 656482085B;
+        Wed,  8 Jul 2020 15:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222922;
-        bh=wxgYB4Ga8dIT1hCDuystHs20ZPtwGYzVHZ80NqcdTa4=;
+        s=default; t=1594222933;
+        bh=221b/j4YBJGJwtLatHEUMclSCzxLCqcNEjhJB+xYaSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gyQUTHGHvK61UozvqdxOl00QcHs3tts3PHCepXtQkNBf7jEQh8wr1BAYhzLh9sXbl
-         oV890aUmCcWPeEVtQ8vJ54/x959cxKTpJyojbdXcyKAzgvlatdmgla6PvXtl3+/8la
-         0rOv1h268FRhzsrWshevxEZJy0KbYEmDFahWAXH8=
+        b=MJ3gGng8Z6BOh5LbCn+m7DwvkFqj0tJwrOCvPvlXhcKlfkpkUFQ9AKDxbc9JXs/eC
+         KaYzhGloY9PjtZKVROZkaimRNixM8j+7KnDDus8EH6aYJbfO/EpGPPZpIr+pipadqb
+         rRtW/3fyafu8hIIEbL7H+ZDfFUSMXrrWp/IAJaZ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Angelo Dureghello <angelo.dureghello@timesys.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH AUTOSEL 4.19 4/8] m68k: mm: fix node memblock init
-Date:   Wed,  8 Jul 2020 11:41:52 -0400
-Message-Id: <20200708154157.3200116-4-sashal@kernel.org>
+        linux-integrity@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 3/5] tpm_tis: extra chip->ops check on error path in tpm_tis_core_init
+Date:   Wed,  8 Jul 2020 11:42:06 -0400
+Message-Id: <20200708154208.3200232-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200708154157.3200116-1-sashal@kernel.org>
-References: <20200708154157.3200116-1-sashal@kernel.org>
+In-Reply-To: <20200708154208.3200232-1-sashal@kernel.org>
+References: <20200708154208.3200232-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,37 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Dureghello <angelo.dureghello@timesys.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit c43e55796dd4d13f4855971a4d7970ce2cd94db4 ]
+[ Upstream commit ccf6fb858e17a8f8a914a1c6444d277cfedfeae6 ]
 
-After pulling 5.7.0 (linux-next merge), mcf5441x mmu boot was
-hanging silently.
+Found by smatch:
+drivers/char/tpm/tpm_tis_core.c:1088 tpm_tis_core_init() warn:
+ variable dereferenced before check 'chip->ops' (see line 979)
 
-memblock_add() seems not appropriate, since using MAX_NUMNODES
-as node id, while memblock_add_node() sets up memory for node id 0.
+'chip->ops' is assigned in the beginning of function
+in tpmm_chip_alloc->tpm_chip_alloc
+and is used before first possible goto to error path.
 
-Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/mm/mcfmmu.c | 2 +-
+ drivers/char/tpm/tpm_tis_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/m68k/mm/mcfmmu.c b/arch/m68k/mm/mcfmmu.c
-index f5453d944ff5e..c5e26222979ad 100644
---- a/arch/m68k/mm/mcfmmu.c
-+++ b/arch/m68k/mm/mcfmmu.c
-@@ -160,7 +160,7 @@ void __init cf_bootmem_alloc(void)
- 	m68k_memory[0].addr = _rambase;
- 	m68k_memory[0].size = _ramend - _rambase;
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index 9b1116501f209..c028ffd953326 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -897,7 +897,7 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
  
--	memblock_add(m68k_memory[0].addr, m68k_memory[0].size);
-+	memblock_add_node(m68k_memory[0].addr, m68k_memory[0].size, 0);
+ 	return 0;
+ out_err:
+-	if ((chip->ops != NULL) && (chip->ops->clk_enable != NULL))
++	if (chip->ops->clk_enable != NULL)
+ 		chip->ops->clk_enable(chip, false);
  
- 	/* compute total pages in system */
- 	num_pages = PFN_DOWN(_ramend - _rambase);
+ 	tpm_tis_remove(chip);
 -- 
 2.25.1
 
