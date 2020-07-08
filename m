@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFACCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B920C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA341206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D39208A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594222900;
-	bh=45jm8z0oH/KPMCdl/hxMxI2KDUiB/6BgrBctVihFt0Y=;
+	s=default; t=1594222906;
+	bh=+odP2bCQF1lMbbJVqN/WL3MCFwb04Mq+cW50QSuGPg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yoRZYsQkeaHQhsb6WUfXb/BPOHU4RLjMnHa75YZBX8dKdO0xeG9SE2sAeO36XnmpI
-	 MvJKUBuEP116BQ70OfCrEsrxqRkNwtNN2InA64bnl0NcCuQ3GcIdVa1QuYPwkFHUEw
-	 n8AzEYfziMlbGwh4YFu7Wgf5uFyKZ6UFiX47iCDk=
+	b=ZvD/N7YZCP5zDX2DsusHNe2ZaARVMAh3YwOPtRc6VWB2vwbcuGJo9zC8rF8VoNG1K
+	 rYwiYhfuCD9BANFZzRAHDFGi27SPorhuLoQsGkGfuWDVpJVW97Y9l8YnKJERlPMXVp
+	 dedkF8Ih/QjSmUjOF9dzxxP7Y3KruPM+a9FlXYqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730494AbgGHPlj (ORCPT
+        id S1730541AbgGHPlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:41:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48176 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:41:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730460AbgGHPld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:41:33 -0400
+        id S1730499AbgGHPlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:41:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC8A620870;
-        Wed,  8 Jul 2020 15:41:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27EDB2082E;
+        Wed,  8 Jul 2020 15:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222892;
-        bh=45jm8z0oH/KPMCdl/hxMxI2KDUiB/6BgrBctVihFt0Y=;
+        s=default; t=1594222900;
+        bh=+odP2bCQF1lMbbJVqN/WL3MCFwb04Mq+cW50QSuGPg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xuvixON59YIyX/y2eEEdXZpF5upnYeOOiEYdwz4ee2JMOOyhLgj/DNAE3E0Mv4flG
-         5sdFe1oXwntGj83UG659QCqAvUK3zQ5cci8eA3mAya8/bSmI0bXRZ1yJgYf6YzwGm7
-         cCJJ7NJWr5mAgj7zul7JC0zESwk2lGFskjq/5Q04=
+        b=D8C7H8ZAODxB7RodAKWgqIXcnivWYx9hVg/GVXTWDWe1pBCd679IxRhhMwEoxP5nr
+         Ioehk81cBuBNc2drmMdYitd29OWY6TjIrDKOpegleY8oNxzi1MyX4gg8o/36RiBXvZ
+         URKWHQI6KGNYE7BTwz7dXgupM5daQr2bsslEAp90=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
+Cc:     Maurizio Drocco <maurizio.drocco@ibm.com>,
+        Bruno Meneguele <bmeneg@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH AUTOSEL 5.7 12/30] m68k: nommu: register start of the memory with memblock
-Date:   Wed,  8 Jul 2020 11:40:58 -0400
-Message-Id: <20200708154116.3199728-12-sashal@kernel.org>
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 03/16] ima: extend boot_aggregate with kernel measurements
+Date:   Wed,  8 Jul 2020 11:41:22 -0400
+Message-Id: <20200708154135.3199907-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200708154116.3199728-1-sashal@kernel.org>
-References: <20200708154116.3199728-1-sashal@kernel.org>
+In-Reply-To: <20200708154135.3199907-1-sashal@kernel.org>
+References: <20200708154135.3199907-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,61 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Maurizio Drocco <maurizio.drocco@ibm.com>
 
-[ Upstream commit d63bd8c81d8ab64db506ffde569cc8ff197516e2 ]
+[ Upstream commit 20c59ce010f84300f6c655d32db2610d3433f85c ]
 
-The m68k nommu setup code didn't register the beginning of the physical
-memory with memblock because it was anyway occupied by the kernel. However,
-commit fa3354e4ea39 ("mm: free_area_init: use maximal zone PFNs rather than
-zone sizes") changed zones initialization to use memblock.memory to detect
-the zone extents and this caused inconsistency between zone PFNs and the
-actual PFNs:
+Registers 8-9 are used to store measurements of the kernel and its
+command line (e.g., grub2 bootloader with tpm module enabled). IMA
+should include them in the boot aggregate. Registers 8-9 should be
+only included in non-SHA1 digests to avoid ambiguity.
 
-BUG: Bad page state in process swapper  pfn:20165
-page:41fe0ca0 refcount:0 mapcount:1 mapping:00000000 index:0x0 flags: 0x0()
-raw: 00000000 00000100 00000122 00000000 00000000 00000000 00000000 00000000
-page dumped because: nonzero mapcount
-CPU: 0 PID: 1 Comm: swapper Not tainted 5.8.0-rc1-00001-g3a38f8a60c65-dirty #1
-Stack from 404c9ebc:
-        404c9ebc 4029ab28 4029ab28 40088470 41fe0ca0 40299e21 40299df1 404ba2a4
-        00020165 00000000 41fd2c10 402c7ba0 41fd2c04 40088504 41fe0ca0 40299e21
-        00000000 40088a12 41fe0ca0 41fe0ca4 0000020a 00000000 00000001 402ca000
-        00000000 41fe0ca0 41fd2c10 41fd2c10 00000000 00000000 402b2388 00000001
-        400a0934 40091056 404c9f44 404c9f44 40088db4 402c7ba0 00000001 41fd2c04
-        41fe0ca0 41fd2000 41fe0ca0 40089e02 4026ecf4 40089e4e 41fe0ca0 ffffffff
-Call Trace:
-        [<40088470>] 0x40088470
- [<40088504>] 0x40088504
- [<40088a12>] 0x40088a12
- [<402ca000>] 0x402ca000
- [<400a0934>] 0x400a0934
-
-Adjust the memory registration with memblock to include the beginning of
-the physical memory and make sure that the area occupied by the kernel is
-marked as reserved.
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+Reviewed-by: Bruno Meneguele <bmeneg@redhat.com>
+Tested-by: Bruno Meneguele <bmeneg@redhat.com>  (TPM 1.2, TPM 2.0)
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/kernel/setup_no.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ security/integrity/ima/ima.h        |  2 +-
+ security/integrity/ima/ima_crypto.c | 15 ++++++++++++++-
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
-index a63483de7a422..5dacba392c74e 100644
---- a/arch/m68k/kernel/setup_no.c
-+++ b/arch/m68k/kernel/setup_no.c
-@@ -139,7 +139,8 @@ void __init setup_arch(char **cmdline_p)
- 	pr_debug("MEMORY -> ROMFS=0x%p-0x%06lx MEM=0x%06lx-0x%06lx\n ",
- 		 __bss_stop, memory_start, memory_start, memory_end);
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index be469fce19e12..d5127b9f24ae1 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -30,7 +30,7 @@
  
--	memblock_add(memory_start, memory_end - memory_start);
-+	memblock_add(_rambase, memory_end - _rambase);
-+	memblock_reserve(_rambase, memory_start - _rambase);
+ enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
+ 		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
+-enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
++enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8, TPM_PCR10 = 10 };
  
- 	/* Keep a copy of command line */
- 	*cmdline_p = &command_line[0];
+ /* digest size for IMA, fits SHA1 or MD5 */
+ #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index d5ad7b2539c75..c9b04005c8be9 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -682,13 +682,26 @@ static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+ 	if (rc != 0)
+ 		return rc;
+ 
+-	/* cumulative sha1 over tpm registers 0-7 */
++	/* cumulative digest over TPM registers 0-7 */
+ 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+ 		ima_pcrread(i, &d);
+ 		/* now accumulate with current aggregate */
+ 		rc = crypto_shash_update(shash, d.digest,
+ 					 crypto_shash_digestsize(tfm));
+ 	}
++	/*
++	 * Extend cumulative digest over TPM registers 8-9, which contain
++	 * measurement for the kernel command line (reg. 8) and image (reg. 9)
++	 * in a typical PCR allocation. Registers 8-9 are only included in
++	 * non-SHA1 boot_aggregate digests to avoid ambiguity.
++	 */
++	if (alg_id != TPM_ALG_SHA1) {
++		for (i = TPM_PCR8; i < TPM_PCR10; i++) {
++			ima_pcrread(i, &d);
++			rc = crypto_shash_update(shash, d.digest,
++						crypto_shash_digestsize(tfm));
++		}
++	}
+ 	if (!rc)
+ 		crypto_shash_final(shash, digest);
+ 	return rc;
 -- 
 2.25.1
 
