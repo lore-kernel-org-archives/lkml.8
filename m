@@ -2,147 +2,94 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C306CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E82C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A383220720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF6320774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:32:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QECDpTuJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbgGHNcF (ORCPT
+        id S1729524AbgGHNcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:32:05 -0400
-Received: from mga11.intel.com ([192.55.52.93]:44215 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728210AbgGHNcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:32:04 -0400
-IronPort-SDR: VdQtDux9/BcQOzmEpbALdQgJ7bFREd2NopcT0GqVUFQMIUSbYKHdWBhk3dlmYWkHVaVWGgYnym
- yMCHAZZK44Vg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="145893465"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="145893465"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 06:32:04 -0700
-IronPort-SDR: JpZagW8MXgMBvYL2D8nB9CPV8hqSBf7SjbpT5EbikngkLv4RhwnVp/V/1aWGE07okKPQTvc2KL
- 8xAPSOsMJkdw==
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="306046990"
-Received: from sare-mobl.amr.corp.intel.com (HELO [10.251.7.246]) ([10.251.7.246])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 06:32:03 -0700
-Subject: Re: [PATCH 10/11] ASoC: qdsp6-dai: add gapless support
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
-        tiwai@suse.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org
-References: <20200707163641.17113-1-srinivas.kandagatla@linaro.org>
- <20200707163641.17113-11-srinivas.kandagatla@linaro.org>
- <62af11d3-db26-a31b-00c8-9d78b11862cc@linux.intel.com>
- <04a7f696-e23d-5563-7cc3-aedfaf2c7636@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <cf9b2d33-9b63-f3d2-2e51-a88c528dad53@linux.intel.com>
-Date:   Wed, 8 Jul 2020 08:32:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 09:32:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729323AbgGHNcL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:32:11 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A8FC061A0B;
+        Wed,  8 Jul 2020 06:32:10 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id e8so19997254ljb.0;
+        Wed, 08 Jul 2020 06:32:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FyWAeR1uTs/9fAF9wUmZ0OImawjeuUkpapCXR9PrAmA=;
+        b=QECDpTuJTwRzCzuhG2763IHEXgvtUskyyhE85TzGDu8hEBvLOFq/H5kFjfjK+xMnXJ
+         SC5szPi/O3K31QxF0W1dT8dGKt7pGPU6XrcaQ2KnKtm+eza62+fqot+fl6tVLwu87CN/
+         GsnPii3wl8QN8XHoBkxSfDgAO7E1FQENtrX6KRxty0Msh4HDbDHIitGVvuwN8KtwqzYO
+         a12Ad6Gacs6E6W2fGAsxOZSTZYTR8lITfbMtm2TJXhseUA6MXXZuVkLYuCn4JfK2uOtw
+         5x1WPQPKywsALH2J3aELblkKO1g3hpMliGZsqRhNPOySN04+QAwVy41LJPjx0PQgLL3b
+         I/Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FyWAeR1uTs/9fAF9wUmZ0OImawjeuUkpapCXR9PrAmA=;
+        b=EO29uml7YecIVGds0E4B3CuJByBTADREjEBswfmXaMfneApkC98Vqyoq4f9ex5QpJj
+         XJD0P2/o/2+CzVaecQeXZr62dQNL88spDpB+lFV7TyarIYVlBnykvdNrp+3ymom/WRsM
+         HfP+jIlEa/YvBs6o6EOQ/DrJeDEqYw1q6pbaX2AlyiCzYnrcmdyA4IPUgNY7CjcwnCdS
+         OFbyTImidX6WnZjMBolatSnwwXbfetxIGRnNc5BMKguiscqGW89Ij2EAGKBUhgaliSK8
+         OcRJIgDdWOlhT6xUhJoPhX8H+09lLgGkN6MGC6zHidGqAMQ2e5gSoY+qbW6hrszdF9Ee
+         Yv3w==
+X-Gm-Message-State: AOAM531P6FbYJKLSee297UZjZTqxl09JaBClL97FCPB9pLRK2HyOChqW
+        ETRm9ix+yw1m9obLajtgn2DeJpvWABwXfez6VVA=
+X-Google-Smtp-Source: ABdhPJzFxYy8aKcybTu5lfAkoS0cN1dpUz/UH/XTyV+W+0pwpmYOnE7soZElzFfKoJQjn4vgvw4TUtuhQrGYfUC6/kk=
+X-Received: by 2002:a2e:880e:: with SMTP id x14mr23010681ljh.218.1594215129024;
+ Wed, 08 Jul 2020 06:32:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <04a7f696-e23d-5563-7cc3-aedfaf2c7636@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
+ <1573586526-15007-3-git-send-email-oliver.graute@gmail.com>
+ <CAOMZO5DX_-zSHJjDigK2c=dVLEMxvfd_dFCu=0fbyjht1gsr=A@mail.gmail.com> <20200708103836.GA20983@portage>
+In-Reply-To: <20200708103836.GA20983@portage>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 8 Jul 2020 10:31:57 -0300
+Message-ID: <CAOMZO5AddAHXs=dmvJtK4qi=khnNJDo0GZcWTXeWT4RVogz98g@mail.gmail.com>
+Subject: Re: [PATCHv7 2/3] ARM: dts: Add support for i.MX6 UltraLite DART
+ Variscite Customboard
+To:     Oliver Graute <oliver.graute@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Oliver,
 
->>> Add support to gapless playback by implementing metadata,
->>> next_track, drain and partial drain support.
->>>
->>> Gapless on Q6ASM is implemented by opening 2 streams in a single asm 
->>> stream
->>
->> What does 'in a single asm stream' means?
-> 
-> 
-> So in QDSP6 ASM (Audio Stream Manager) terminology we have something 
-> called "asm session" for each ASoC FE DAI, Each asm session can be 
-> connected with multiple streams (upto 8 I think). However there will be 
-> only one active stream at anytime. Also there only single data buffer 
-> associated with each asm session.
-> 
-> For Gapless usecase, we can keep two streams open for one asm-session, 
-> allowing us to fill in data on second stream while first stream is playing.
+On Wed, Jul 8, 2020 at 10:12 AM Oliver Graute <oliver.graute@gmail.com> wrote:
 
-Ah, that's interesting, thanks for the details. So you have one DMA 
-transfer and the data from the previous and next track are provided in 
-consecutive bytes in a ring buffer, but at the DSP level you have a 
-switch that will feed data for the previous and next tracks into 
-different decoders, yes?
+> ok thx for you comments, coming back to this. I now added this to
+> panel-simple.c. Is this the way to go?
 
-If that is the case, indeed the extension you suggested earlier to 
-change the profile is valid. You could even change the format I guess.
-
-To avoid confusion I believe the capabilities would need to be extended 
-so that applications know that gapless playback is supported across 
-unrelated profiles/formats. The point is that you don't want a 
-traditional implementation to use a capability that isn't supported in 
-hardware or will lead to audio issues.
-
->>> and toggling them on next track.
->>
->> It really seems to me that you have two streams at the lowest level, 
->> along with the knowledge of how many samples to remove/insert and 
->> hence could do a much better job - including gapless support between 
->> unrelated profiles and cross-fading - without the partial drain and 
->> next_track mechanism that was defined assuming a single stream/profile.
-> At the end of the day its a single session with one data buffer but with 
-> multiple streams.
-> 
-> Achieving cross fade should be easy with this design.
-
-looks like it indeed.
-
-> We need those hooks for partial drain and next track to allow us to 
-> switch between streams and pass silence information to respective stream 
-> ids.
-
-right, but the key point is 'switch between streams'. That means a more 
-complex/capable implementation that should be advertised as such to 
-applications. This is not the default behavior assumed initially: to 
-allow for minimal implementations in memory-constrained devices, we 
-assumed gapless was supported with a single decoder.
-
-Maybe the right way to do this is extend the snd_compr_caps structure:
-
-/**
-  * struct snd_compr_caps - caps descriptor
-  * @codecs: pointer to array of codecs
-  * @direction: direction supported. Of type snd_compr_direction
-  * @min_fragment_size: minimum fragment supported by DSP
-  * @max_fragment_size: maximum fragment supported by DSP
-  * @min_fragments: min fragments supported by DSP
-  * @max_fragments: max fragments supported by DSP
-  * @num_codecs: number of codecs supported
-  * @reserved: reserved field
-  */
-struct snd_compr_caps {
-	__u32 num_codecs;
-	__u32 direction;
-	__u32 min_fragment_size;
-	__u32 max_fragment_size;
-	__u32 min_fragments;
-	__u32 max_fragments;
-	__u32 codecs[MAX_NUM_CODECS];
-	__u32 reserved[11];
-} __attribute__((packed, aligned(4)));
-
-
-and use a reserved field to provide info on capabilities, and filter the 
-set_codec_params() addition based this capability - i.e. return -ENOTSUP 
-in 'traditional' implementations based on a single 'stream'/decoder 
-instance.
+Yes, please submit it as a formal patch to the drm folks.
