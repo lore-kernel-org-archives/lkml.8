@@ -2,155 +2,159 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05307C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B965C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9C912064C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7500920708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 02:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgGHCuX (ORCPT
+        id S1728832AbgGHC5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 22:50:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbgGHCuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 22:50:23 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18234C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 19:50:23 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 15294BC0C1;
-        Wed,  8 Jul 2020 02:50:18 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     sudeep.dutt@intel.com, ashutosh.dixit@intel.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: Intel mic drivers
-Date:   Wed,  8 Jul 2020 04:50:13 +0200
-Message-Id: <20200708025013.57804-1-grandmaster@al2klimov.de>
+        Tue, 7 Jul 2020 22:57:46 -0400
+Received: from mga01.intel.com ([192.55.52.88]:49034 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728298AbgGHC5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 22:57:45 -0400
+IronPort-SDR: OKbL1/TCwglT8Q9ZG4G+pz0je+FL7LktRmZhpap1dBCNrT0DeSDZXLIOF0pc0qQQ0lsj0gS09E
+ N4yHcOi2NS/w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="165802807"
+X-IronPort-AV: E=Sophos;i="5.75,326,1589266800"; 
+   d="scan'208";a="165802807"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2020 19:57:44 -0700
+IronPort-SDR: NWBGavxXZ0Y2OEfeOpa5yL3dbxWEkLftrQJ1t6KHDS/S4/wLSkPMlMJ/7R0rlPEJGtpdkhJq4B
+ C2UnIQJWPqPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,326,1589266800"; 
+   d="scan'208";a="457339798"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by orsmga005.jf.intel.com with ESMTP; 07 Jul 2020 19:57:41 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] iommu: iommu_aux_at(de)tach_device() extension
+To:     Alex Williamson <alex.williamson@redhat.com>
+References: <20200707013957.23672-1-baolu.lu@linux.intel.com>
+ <20200707013957.23672-2-baolu.lu@linux.intel.com>
+ <20200707150408.474d81f1@x1.home>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <dc98a109-7121-36b7-0854-f899b09692a4@linux.intel.com>
+Date:   Wed, 8 Jul 2020 10:53:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+In-Reply-To: <20200707150408.474d81f1@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Hi Alex,
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-          If both the HTTP and HTTPS versions
-          return 200 OK and serve the same content:
-            Replace HTTP with HTTPS.
+Thanks a lot for your comments. Please check my reply inline.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+On 7/8/20 5:04 AM, Alex Williamson wrote:
+> On Tue,  7 Jul 2020 09:39:56 +0800
+> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+> 
+>> The hardware assistant vfio mediated device is a use case of iommu
+>> aux-domain. The interactions between vfio/mdev and iommu during mdev
+>> creation and passthr are:
+>>
+>> - Create a group for mdev with iommu_group_alloc();
+>> - Add the device to the group with
+>>          group = iommu_group_alloc();
+>>          if (IS_ERR(group))
+>>                  return PTR_ERR(group);
+>>
+>>          ret = iommu_group_add_device(group, &mdev->dev);
+>>          if (!ret)
+>>                  dev_info(&mdev->dev, "MDEV: group_id = %d\n",
+>>                           iommu_group_id(group));
+>> - Allocate an aux-domain
+>>          iommu_domain_alloc()
+>> - Attach the aux-domain to the physical device from which the mdev is
+>>    created.
+>>          iommu_aux_attach_device()
+>>
+>> In the whole process, an iommu group was allocated for the mdev and an
+>> iommu domain was attached to the group, but the group->domain leaves
+>> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
+>>
+>> The iommu_get_domain_for_dev() is a necessary interface for device
+>> drivers that want to support aux-domain. For example,
+>>
+>>          struct iommu_domain *domain;
+>>          struct device *dev = mdev_dev(mdev);
+>>          unsigned long pasid;
+>>
+>>          domain = iommu_get_domain_for_dev(dev);
+>>          if (!domain)
+>>                  return -ENODEV;
+>>
+>>          pasid = iommu_aux_get_pasid(domain, dev->parent);
+> How did we know this was an aux domain? ie. How did we know we could
+> use it with iommu_aux_get_pasid()?
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Yes. It's a bit confusing if iommu_get_domain_for_dev() is reused here
+for aux-domain.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+> 
+> Why did we assume the parent device is the iommu device for the aux
+> domain?  Should that level of detail be already known by the aux domain?
+> 
+> Nits - The iomu device of an mdev device is found via
+> mdev_get_iommu_device(dev), it should not be assumed to be the parent.
+> The parent of an mdev device is found via mdev_parent_dev(mdev).
 
- If you apply the patch, please let me know.
- Rationale:
- I'd like not to submit patches much faster than you maintainers apply them.
+My bad. The driver should use mdev_get_iommu_device() instead.
 
- drivers/misc/mic/Kconfig | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> The leaps in logic here make me wonder if we should instead be exposing
+> more of an aux domain API rather than blurring the differences between
+> these domains.  Thanks,
 
-diff --git a/drivers/misc/mic/Kconfig b/drivers/misc/mic/Kconfig
-index 8f201d019f5a..a20202df8ce2 100644
---- a/drivers/misc/mic/Kconfig
-+++ b/drivers/misc/mic/Kconfig
-@@ -14,7 +14,7 @@ config INTEL_MIC_BUS
- 
- 	  More information about the Intel MIC family as well as the Linux
- 	  OS and tools for MIC to use with this driver are available from
--	  <http://software.intel.com/en-us/mic-developer>.
-+	  <https://software.intel.com/en-us/mic-developer>.
- 
- config SCIF_BUS
- 	tristate "SCIF Bus Driver"
-@@ -29,7 +29,7 @@ config SCIF_BUS
- 
- 	  More information about the Intel MIC family as well as the Linux
- 	  OS and tools for MIC to use with this driver are available from
--	  <http://software.intel.com/en-us/mic-developer>.
-+	  <https://software.intel.com/en-us/mic-developer>.
- 
- config VOP_BUS
- 	tristate "VOP Bus Driver"
-@@ -43,7 +43,7 @@ config VOP_BUS
- 
- 	  More information about the Intel MIC family as well as the Linux
- 	  OS and tools for MIC to use with this driver are available from
--	  <http://software.intel.com/en-us/mic-developer>.
-+	  <https://software.intel.com/en-us/mic-developer>.
- 
- config INTEL_MIC_HOST
- 	tristate "Intel MIC Host Driver"
-@@ -61,7 +61,7 @@ config INTEL_MIC_HOST
- 
- 	  More information about the Intel MIC family as well as the Linux
- 	  OS and tools for MIC to use with this driver are available from
--	  <http://software.intel.com/en-us/mic-developer>.
-+	  <https://software.intel.com/en-us/mic-developer>.
- 
- config INTEL_MIC_CARD
- 	tristate "Intel MIC Card Driver"
-@@ -78,7 +78,7 @@ config INTEL_MIC_CARD
- 	  say M (recommended) or Y, else say N. If unsure say N.
- 
- 	  For more information see
--	  <http://software.intel.com/en-us/mic-developer>.
-+	  <https://software.intel.com/en-us/mic-developer>.
- 
- config SCIF
- 	tristate "SCIF Driver"
-@@ -96,7 +96,7 @@ config SCIF
- 
- 	  More information about the Intel MIC family as well as the Linux
- 	  OS and tools for MIC to use with this driver are available from
--	  <http://software.intel.com/en-us/mic-developer>.
-+	  <https://software.intel.com/en-us/mic-developer>.
- 
- config MIC_COSM
- 	tristate "Intel MIC Coprocessor State Management (COSM) Drivers"
-@@ -112,7 +112,7 @@ config MIC_COSM
- 
- 	  More information about the Intel MIC family as well as the Linux
- 	  OS and tools for MIC to use with this driver are available from
--	  <http://software.intel.com/en-us/mic-developer>.
-+	  <https://software.intel.com/en-us/mic-developer>.
- 
- config VOP
- 	tristate "VOP Driver"
-@@ -131,6 +131,6 @@ config VOP
- 
- 	  More information about the Intel MIC family as well as the Linux
- 	  OS and tools for MIC to use with this driver are available from
--	  <http://software.intel.com/en-us/mic-developer>.
-+	  <https://software.intel.com/en-us/mic-developer>.
- 
- endmenu
--- 
-2.27.0
+How about add below API?
 
+/**
+  * iommu_aux_get_domain_for_dev - get aux domain for a device
+  * @dev: the accessory device
+  *
+  * The caller should pass a valid @dev to iommu_aux_attach_device() before
+  * calling this api. Return an attached aux-domain, or NULL otherwise.
+  */
+struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
+{
+         struct iommu_domain *domain = NULL;
+         struct iommu_group *group;
+
+         group = iommu_group_get(dev);
+         if (!group)
+                 return NULL;
+
+         if (group->aux_domain_attached)
+                 domain = group->domain;
+
+         iommu_group_put(group);
+
+         return domain;
+}
+EXPORT_SYMBOL_GPL(iommu_aux_get_domain_for_dev);
+
+Best regards,
+baolu
