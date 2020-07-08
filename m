@@ -2,143 +2,166 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A224C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B18C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58192206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F16B2078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:44:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXdyyE+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgGHVnR (ORCPT
+        id S1726260AbgGHVoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 17:43:17 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:56903 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGHVnQ (ORCPT
+        Wed, 8 Jul 2020 17:44:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgGHVoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 17:43:16 -0400
-Received: by mail-il1-f200.google.com with SMTP id k13so33670593ilh.23
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 14:43:16 -0700 (PDT)
+        Wed, 8 Jul 2020 17:44:38 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45FEC061A0B;
+        Wed,  8 Jul 2020 14:44:37 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q4so16938lji.2;
+        Wed, 08 Jul 2020 14:44:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DKE3Qx4NqqHAmkA79Cwyh3cscqveKce5cBLWkBL9ZD8=;
+        b=IXdyyE+PeuUsV96D/O0KARgoOKGVoT74bfHSsdCFeW+/91RGn9Gzixxdetrl9r2EJJ
+         JDetKl632XdqCPqRI8GE8gXpS4KzWW/DCBmTNJB9juYM1BCGKzs+I3aIss2D4j+WX2/L
+         iFwuOQulk4DCEueDpNTce2nBYBLKjxJf7ydrMMj6JTwDtckUPPZbORbYPNjq/bsrYz8V
+         Bwb9ckLWcaKgZhbmRS6RGSmV5pRXHIwzYEsOsxqXvWnjbyy7ew0ZPJZoW4T8jTmEJiK/
+         TzbUdVOJa7C8DbjIBZZ9XbWfm4/aVVIRTqXsCIfG8AnTV/3O3MGqui5V+3s4/tBA4NMv
+         zvMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=eoAn1HlYkwtbVVLjbIq4KVlzt4T6kCE2zsNOQ24E920=;
-        b=ooJVv4udaK09Hi/dyyrEEVJ2yZUiJ856MSJR8iamzz+3xYyNgY+1u5CmEz3xte9GHN
-         wP/V74KMywN6Ouxjc4L2d/suemsq/VB+2x2hwJuiNTvoY/z47Zll4/y3MGOrDDr7O0Cl
-         dpWL1pNCbgjr/5HzrMEVvWgS2bOsYti/wdmJE+mUXkMucamvMtzdGfjly6bcJsZoQrDE
-         RkLGdG0ks3ISPW0JJYCIFBE4EH9u4k/R3lhUyQTsXj+TIwd0Yivg5PXUbPGC+Efbd+Cn
-         xHEdM9AJfc/Dgg/OPP+SVHLYwTmluR4xbQ9FylO4ab4/XnIaYqiE5l+gfCV5qm23EYEc
-         Daqw==
-X-Gm-Message-State: AOAM531fuOax68cw97KCuuLnBhj7Al9P1Lk/Nx0OCfsP5CyxGw6cXLe0
-        U0wCxxJDokluM/BAb+DatbCLzAVXC0pYvIoIkKY1DroAqzT2
-X-Google-Smtp-Source: ABdhPJxtVs90avTmLhHuFTbp9SwkoETCGdzxpP2pm4glRJJsiB5Q8iHRT7JN6fzz2qPUpuTsElQF6l6PkypUKN+lP0QL06V+vWaG
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DKE3Qx4NqqHAmkA79Cwyh3cscqveKce5cBLWkBL9ZD8=;
+        b=mlrewnWNEXQPdURTDNzp5dUytxx4EbZFp0oQJMrsm3JGHt5KtZON1yVg6IiQEhxud+
+         TGzdesR45uJs8iVplQ2b3euBD0F5ncUbaHX/0/DmECKWj5AvFBFSndi7vtdKnRXP1fFS
+         r5uqOjlA4J/RVtxnK73xOTq6VK3II98qSqsBYqu4ikeK0rfTo00VSaHgElNL2fz3/Q+j
+         2W5pMrkeDq+nONRgo3cTGPqjYNRODDR7oR4fVoJ5XGRpe+DMrKuLcInqoWXbs05KEC51
+         nzQTrnuR1cbnM8lanGim5Y9RR744vEnhMBw1B23vaGj6ioCFK8CgU2e67CMYaZ4tz1qr
+         cB3A==
+X-Gm-Message-State: AOAM532dbiNBXQmIzaRwqu3cDFGBucY1QWYT8Ul5qKBua7IxxIj4MqMh
+        lV5nkuiBJekGtR8nrSwq+r46XoEN
+X-Google-Smtp-Source: ABdhPJwZrbJ+l8PiY3hx9jTjb3F2/yOhxw6lamN9/8C6+B0kV2IEsPE/rw6SArJPQZAoUNtsoXq7rg==
+X-Received: by 2002:a2e:9316:: with SMTP id e22mr32722271ljh.393.1594244675696;
+        Wed, 08 Jul 2020 14:44:35 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.googlemail.com with ESMTPSA id k11sm241618ljg.37.2020.07.08.14.44.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 14:44:35 -0700 (PDT)
+Subject: Re: [PATCH v3 3/6] gpio: max77620: Don't set of_node
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200708202355.28507-1-digetx@gmail.com>
+ <20200708202355.28507-4-digetx@gmail.com>
+ <CAHp75VejftNuSqdYvd1YE1SdRON6=mQ_iD2dEr4K9D8YGgeRBQ@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <675c4691-d372-4fe1-d515-c86fdba2f588@gmail.com>
+Date:   Thu, 9 Jul 2020 00:44:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:4101:: with SMTP id o1mr32609484ila.53.1594244595688;
- Wed, 08 Jul 2020 14:43:15 -0700 (PDT)
-Date:   Wed, 08 Jul 2020 14:43:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cfab3705a9f4fef7@google.com>
-Subject: general protection fault in dma_buf_release
-From:   syzbot <syzbot+4342719956b367864c91@syzkaller.appspotmail.com>
-To:     christian.koenig@amd.com, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, sumit.semwal@linaro.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHp75VejftNuSqdYvd1YE1SdRON6=mQ_iD2dEr4K9D8YGgeRBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+08.07.2020 23:57, Andy Shevchenko пишет:
+> 
+> 
+> On Wednesday, July 8, 2020, Dmitry Osipenko <digetx@gmail.com
+> <mailto:digetx@gmail.com>> wrote:
+> 
+>     The gpiochip_add_data() takes care of setting the of_node to the
+>     parent's
+>     device of_node, hence there is no need to do it manually in the driver's
+>     code. This patch corrects the parent's device pointer and removes the
+>     unnecessary setting of the of_node.
+> 
+> 
+> I gave a second look and I think my suggestion is wrong. Here is an
+> interesting propagation of the parent device node to its grand son,
+> leaving son’s one untouched. Original code has intentions to do that way.
 
-syzbot found the following crash on:
+The [1] says that gpio_chip.parent should point at the "device providing
+the GPIOs". That's the pdev->dev.parent in the case of this driver.
+MAX77620 is an MFD PMIC device that has virtual sub-devices like GPIO
+controller, PINCTRL and RTC. The MFD is the parent device that provides
+the GPIOs [2].
 
-HEAD commit:    9e50b94b Add linux-next specific files for 20200703
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=121cf755100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f99cc0faa1476ed6
-dashboard link: https://syzkaller.appspot.com/bug?extid=4342719956b367864c91
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1467c5e3100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153f2283100000
+[1]
+https://elixir.bootlin.com/linux/v5.8-rc3/source/include/linux/gpio/driver.h#L276
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4342719956b367864c91@syzkaller.appspotmail.com
+[2]
+https://elixir.bootlin.com/linux/v5.8-rc3/source/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi#L48
 
-RBP: 00000000000103d6 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402170
-R13: 0000000000402200 R14: 0000000000000000 R15: 0000000000000000
-general protection fault, probably for non-canonical address 0xdffffc0000000017: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x00000000000000b8-0x00000000000000bf]
-CPU: 1 PID: 6798 Comm: syz-executor223 Not tainted 5.8.0-rc3-next-20200703-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:dma_buf_release+0x51/0x3f0 drivers/dma-buf/dma-buf.c:63
-Code: 03 80 3c 02 00 0f 85 30 03 00 00 48 8b ad e8 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d bd b8 00 00 00 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e e3 02 00 00 8b 9d b8 00 00 00
-RSP: 0018:ffffc90001b87aa0 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffffffff847e30a0 RCX: ffffffff81c58a83
-RDX: 0000000000000017 RSI: ffffffff847e30b0 RDI: 00000000000000b8
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffff88808a53c80b
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff88808b7dc550
-R13: ffff88808b7dc4d8 R14: ffff88808b7dc520 R15: 0000000000000000
-FS:  0000000001f09880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000006cc090 CR3: 00000000a87d2000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __dentry_kill+0x42b/0x640 fs/dcache.c:584
- dentry_kill fs/dcache.c:705 [inline]
- dput+0x725/0xbc0 fs/dcache.c:878
- path_put+0x2d/0x60 fs/namei.c:496
- alloc_file_pseudo+0x20d/0x250 fs/file_table.c:236
- dma_buf_getfile drivers/dma-buf/dma-buf.c:439 [inline]
- dma_buf_export+0x5d8/0xae0 drivers/dma-buf/dma-buf.c:555
- udmabuf_create+0xb9d/0xe30 drivers/dma-buf/udmabuf.c:228
- udmabuf_ioctl_create_list drivers/dma-buf/udmabuf.c:284 [inline]
- udmabuf_ioctl+0x265/0x2c0 drivers/dma-buf/udmabuf.c:299
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:367
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x441229
-Code: Bad RIP value.
-RSP: 002b:00007ffe24394848 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441229
-RDX: 0000000020000000 RSI: 0000000040087543 RDI: 0000000000000004
-RBP: 00000000000103d6 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402170
-R13: 0000000000402200 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 1a68562902844a66 ]---
-RIP: 0010:dma_buf_release+0x51/0x3f0 drivers/dma-buf/dma-buf.c:63
-Code: 03 80 3c 02 00 0f 85 30 03 00 00 48 8b ad e8 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d bd b8 00 00 00 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e e3 02 00 00 8b 9d b8 00 00 00
-RSP: 0018:ffffc90001b87aa0 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffffffff847e30a0 RCX: ffffffff81c58a83
-RDX: 0000000000000017 RSI: ffffffff847e30b0 RDI: 00000000000000b8
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffff88808a53c80b
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff88808b7dc550
-R13: ffff88808b7dc4d8 R14: ffff88808b7dc520 R15: 0000000000000000
-FS:  0000000001f09880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000006cc090 CR3: 00000000a87d2000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+I think the old code was wrong and this patch is correct, please correct
+me if I'm missing something.
 
+>     Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com
+>     <mailto:andy.shevchenko@gmail.com>>
+>     Signed-off-by: Dmitry Osipenko <digetx@gmail.com
+>     <mailto:digetx@gmail.com>>
+>     ---
+>      drivers/gpio/gpio-max77620.c | 5 +----
+>      1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+>     diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+>     index 7f7e8d4bf0d3..39d431da2dbc 100644
+>     --- a/drivers/gpio/gpio-max77620.c
+>     +++ b/drivers/gpio/gpio-max77620.c
+>     @@ -279,7 +279,7 @@ static int max77620_gpio_probe(struct
+>     platform_device *pdev)
+>             mgpio->dev = &pdev->dev;
+> 
+>             mgpio->gpio_chip.label = pdev->name;
+>     -       mgpio->gpio_chip.parent = &pdev->dev;
+>     +       mgpio->gpio_chip.parent = pdev->dev.parent;
+>             mgpio->gpio_chip.direction_input = max77620_gpio_dir_input;
+>             mgpio->gpio_chip.get = max77620_gpio_get;
+>             mgpio->gpio_chip.direction_output = max77620_gpio_dir_output;
+>     @@ -288,9 +288,6 @@ static int max77620_gpio_probe(struct
+>     platform_device *pdev)
+>             mgpio->gpio_chip.ngpio = MAX77620_GPIO_NR;
+>             mgpio->gpio_chip.can_sleep = 1;
+>             mgpio->gpio_chip.base = -1;
+>     -#ifdef CONFIG_OF_GPIO
+>     -       mgpio->gpio_chip.of_node = pdev->dev.parent->of_node;
+>     -#endif
+> 
+>             platform_set_drvdata(pdev, mgpio);
+>      
+>     -- 
+>     2.26.0
+> 
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
