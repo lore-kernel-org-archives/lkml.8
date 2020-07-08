@@ -2,310 +2,287 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8615320786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:08:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594228126;
-	bh=es+dte+fs80l4OQRqdcNPD42C4Sm0o2PqbKv2KtDdCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m6SteRegtEZQG9GNiBLEfsqDAzHpKsNlg64yGq0O5QqEPcuwCRIuUKw5YTH9+g1L0
-	 aT9zdRU75z0wEBzjRK9W2qL5/29vk7vQtgez7lwAM7sbwCQ3qQOQEupCUg6a5wI4zq
-	 hcIbIQmuansJGqFfatFjaOHihQWmfsppJowhKYCM=
+	by mail.kernel.org (Postfix) with ESMTP id A6C85206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:10:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n3f7ckSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730856AbgGHRIp (ORCPT
+        id S1730861AbgGHRK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730143AbgGHRIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:08:44 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00288206DF;
-        Wed,  8 Jul 2020 17:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594228123;
-        bh=es+dte+fs80l4OQRqdcNPD42C4Sm0o2PqbKv2KtDdCg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d3GWKIq5/HyRZWlJ4VxgeyII5e/D798Iesm9xRnpb7HwYZLUOoj1Jf09FYIVRwV0F
-         2u7HOfWngMC0Y6/XH9O+6ybHHrdmSul5vk1FQ7c7wjDoLzyAHq96FLJqGoiKkKPpOZ
-         tX2m2x9xiFskPJcsh1kdssgtQ5avHCWY2lAYqM3Q=
-Date:   Wed, 8 Jul 2020 10:08:42 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com, Eric Biggers <ebiggers@google.com>
-Subject: Re: [PATCH v12 3/4] f2fs: Use generic casefolding support
-Message-ID: <20200708170842.GA4062395@google.com>
-References: <20200708091237.3922153-1-drosen@google.com>
- <20200708091237.3922153-4-drosen@google.com>
+        Wed, 8 Jul 2020 13:10:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730457AbgGHRK1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:10:27 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A168C08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 10:10:27 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d194so18594856pga.13
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 10:10:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0rEN23cbd1SKA3NGgD72iDuMJC8fxPRHEEwlwQ22hpY=;
+        b=n3f7ckSQTYxY4oOO8C4Z4sELvQoSxfPuNNn5dS5itgz86q7oeo6QAE5dnY3J8ean9i
+         6dvZUT2D5UoOUQYFMRIphN2tg3/E0o0u05fgXWbfYNdG3CZngyfAq7WUJOYeAFMlC0Zd
+         N77A/v1AFDsWhOHGZQ9z/9FmP3EU77jnkVYGxPDCa4WffEdnSowEm+8OqO4TLltztoio
+         b6DPBKGnr/2gByDXf3TsF4fRI+44HDCNThtu2KIhKTXKLKqVFz0RbdfSz6DjYy9nWF43
+         hWKIf1qRkcfvq+So1oikHSAY2Reos3ReB+a+Yu7L00yMWsIWoJOCDTFU0T5jy1NAIZrn
+         CWOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0rEN23cbd1SKA3NGgD72iDuMJC8fxPRHEEwlwQ22hpY=;
+        b=BqR72MrCm72wAZPok5sWDeSCt8Y4KXsiRQLzXU9fWiHj0QF649+FRvEHOrIrJ+fYg1
+         YbaNXQk5c5zDGGL2tORlUrVuVnCH/tXDThJyBQlHg7x8wcg/nVIqcQJm7HQJ13OWc0uj
+         G2WWU0/DahevW8URORDYruCXTyJMLMbmJyOjtUBpbPmlwa3A0arSZ+jlPTFNXjTqPYn6
+         MKbFnUnECgcv5EGqOe9w2g5mCfGaqK/gh+w5CMlQacd5Zj64qoGdGjL8B5ZZ/uNncAzN
+         3zuTxi43YZoa3LgAY17q6OcbTM+chyeh+TMA6eIyxdgVcuYnV2dW3hjpmBKeK+XBeWG9
+         Ra3w==
+X-Gm-Message-State: AOAM532Bp1tC1cxrf/LoluOW47fUrfdwCO0vMNEBejJaLP30+9cYrg6x
+        UuYqlU1Yq0A0V/dDsfqPDsWiUiw7f0w6I9PovtECcg==
+X-Google-Smtp-Source: ABdhPJzv8hmcPMQH68pT1oCrLz0ZeqUbfp5c1EkwtUlJxi7EMIom41s9drUIMd+EWqnR/3xanznSqmzVFWme8WK7OaA=
+X-Received: by 2002:aa7:9303:: with SMTP id 3mr45101796pfj.108.1594228226197;
+ Wed, 08 Jul 2020 10:10:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708091237.3922153-4-drosen@google.com>
+References: <20200707211642.1106946-1-ndesaulniers@google.com> <bca8cff8-3ffe-e5ab-07a5-2ab29d5e394a@linaro.org>
+In-Reply-To: <bca8cff8-3ffe-e5ab-07a5-2ab29d5e394a@linaro.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 8 Jul 2020 10:10:14 -0700
+Message-ID: <CAKwvOdmtv2EdNQz+c_DZm_47EEibkaXfDW8dGPwNPA3OrcoC9g@mail.gmail.com>
+Subject: Re: [PATCH] bitfield.h: don't compile-time validate _val in FIELD_FIT
+To:     Alex Elder <elder@linaro.org>, Jakub Kicinski <kuba@kernel.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/08, Daniel Rosenberg wrote:
-> This switches f2fs over to the generic support provided in
-> the previous patch.
-> 
-> Since casefolded dentries behave the same in ext4 and f2fs, we decrease
-> the maintenance burden by unifying them, and any optimizations will
-> immediately apply to both.
-> 
-> Signed-off-by: Daniel Rosenberg <drosen@google.com>
-> Reviewed-by: Eric Biggers <ebiggers@google.com>
+On Tue, Jul 7, 2020 at 3:43 PM Alex Elder <elder@linaro.org> wrote:
+>
+> On 7/7/20 4:16 PM, Nick Desaulniers wrote:
+> > From: Jakub Kicinski <kuba@kernel.org>
+> >
+> > When ur_load_imm_any() is inlined into jeq_imm(), it's possible for the
+> > compiler to deduce a case where _val can only have the value of -1 at
+> > compile time. Specifically,
+> >
+> > /* struct bpf_insn: _s32 imm */
+> > u64 imm = insn->imm; /* sign extend */
+> > if (imm >> 32) { /* non-zero only if insn->imm is negative */
+> >   /* inlined from ur_load_imm_any */
+> >   u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
+> >   if (__builtin_constant_p(__imm) && __imm > 255)
+> >     compiletime_assert_XXX()
+> >
+> > This can result in tripping a BUILD_BUG_ON() in __BF_FIELD_CHECK() that
+> > checks that a given value is representable in one byte (interpreted as
+> > unsigned).
 
-Acked-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Hi Alex,
+Thanks for taking a look. They're good and fair questions.
 
-> ---
->  fs/f2fs/dir.c           | 84 +++++------------------------------------
->  fs/f2fs/f2fs.h          |  4 --
->  fs/f2fs/super.c         | 10 ++---
->  fs/f2fs/sysfs.c         | 10 +++--
->  include/linux/f2fs_fs.h |  3 --
->  5 files changed, 20 insertions(+), 91 deletions(-)
-> 
-> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-> index d35976785e8c..ff61f3a9c11d 100644
-> --- a/fs/f2fs/dir.c
-> +++ b/fs/f2fs/dir.c
-> @@ -75,21 +75,22 @@ int f2fs_init_casefolded_name(const struct inode *dir,
->  			      struct f2fs_filename *fname)
->  {
->  #ifdef CONFIG_UNICODE
-> -	struct f2fs_sb_info *sbi = F2FS_SB(dir->i_sb);
-> +	struct super_block *sb = dir->i_sb;
-> +	struct f2fs_sb_info *sbi = F2FS_SB(sb);
->  
->  	if (IS_CASEFOLDED(dir)) {
->  		fname->cf_name.name = f2fs_kmalloc(sbi, F2FS_NAME_LEN,
->  						   GFP_NOFS);
->  		if (!fname->cf_name.name)
->  			return -ENOMEM;
-> -		fname->cf_name.len = utf8_casefold(sbi->s_encoding,
-> +		fname->cf_name.len = utf8_casefold(sb->s_encoding,
->  						   fname->usr_fname,
->  						   fname->cf_name.name,
->  						   F2FS_NAME_LEN);
->  		if ((int)fname->cf_name.len <= 0) {
->  			kfree(fname->cf_name.name);
->  			fname->cf_name.name = NULL;
-> -			if (f2fs_has_strict_mode(sbi))
-> +			if (sb_has_strict_encoding(sb))
->  				return -EINVAL;
->  			/* fall back to treating name as opaque byte sequence */
->  		}
-> @@ -215,8 +216,8 @@ static struct f2fs_dir_entry *find_in_block(struct inode *dir,
->  static bool f2fs_match_ci_name(const struct inode *dir, const struct qstr *name,
->  			       const u8 *de_name, u32 de_name_len)
->  {
-> -	const struct f2fs_sb_info *sbi = F2FS_SB(dir->i_sb);
-> -	const struct unicode_map *um = sbi->s_encoding;
-> +	const struct super_block *sb = dir->i_sb;
-> +	const struct unicode_map *um = sb->s_encoding;
->  	struct qstr entry = QSTR_INIT(de_name, de_name_len);
->  	int res;
->  
-> @@ -226,7 +227,7 @@ static bool f2fs_match_ci_name(const struct inode *dir, const struct qstr *name,
->  		 * In strict mode, ignore invalid names.  In non-strict mode,
->  		 * fall back to treating them as opaque byte sequences.
->  		 */
-> -		if (f2fs_has_strict_mode(sbi) || name->len != entry.len)
-> +		if (sb_has_strict_encoding(sb) || name->len != entry.len)
->  			return false;
->  		return !memcmp(name->name, entry.name, name->len);
->  	}
-> @@ -1107,75 +1108,8 @@ const struct file_operations f2fs_dir_operations = {
->  };
->  
->  #ifdef CONFIG_UNICODE
-> -static int f2fs_d_compare(const struct dentry *dentry, unsigned int len,
-> -			  const char *str, const struct qstr *name)
-> -{
-> -	const struct dentry *parent = READ_ONCE(dentry->d_parent);
-> -	const struct inode *dir = READ_ONCE(parent->d_inode);
-> -	const struct f2fs_sb_info *sbi = F2FS_SB(dentry->d_sb);
-> -	struct qstr entry = QSTR_INIT(str, len);
-> -	char strbuf[DNAME_INLINE_LEN];
-> -	int res;
-> -
-> -	if (!dir || !IS_CASEFOLDED(dir))
-> -		goto fallback;
-> -
-> -	/*
-> -	 * If the dentry name is stored in-line, then it may be concurrently
-> -	 * modified by a rename.  If this happens, the VFS will eventually retry
-> -	 * the lookup, so it doesn't matter what ->d_compare() returns.
-> -	 * However, it's unsafe to call utf8_strncasecmp() with an unstable
-> -	 * string.  Therefore, we have to copy the name into a temporary buffer.
-> -	 */
-> -	if (len <= DNAME_INLINE_LEN - 1) {
-> -		memcpy(strbuf, str, len);
-> -		strbuf[len] = 0;
-> -		entry.name = strbuf;
-> -		/* prevent compiler from optimizing out the temporary buffer */
-> -		barrier();
-> -	}
-> -
-> -	res = utf8_strncasecmp(sbi->s_encoding, name, &entry);
-> -	if (res >= 0)
-> -		return res;
-> -
-> -	if (f2fs_has_strict_mode(sbi))
-> -		return -EINVAL;
-> -fallback:
-> -	if (len != name->len)
-> -		return 1;
-> -	return !!memcmp(str, name->name, len);
-> -}
-> -
-> -static int f2fs_d_hash(const struct dentry *dentry, struct qstr *str)
-> -{
-> -	struct f2fs_sb_info *sbi = F2FS_SB(dentry->d_sb);
-> -	const struct unicode_map *um = sbi->s_encoding;
-> -	const struct inode *inode = READ_ONCE(dentry->d_inode);
-> -	unsigned char *norm;
-> -	int len, ret = 0;
-> -
-> -	if (!inode || !IS_CASEFOLDED(inode))
-> -		return 0;
-> -
-> -	norm = f2fs_kmalloc(sbi, PATH_MAX, GFP_ATOMIC);
-> -	if (!norm)
-> -		return -ENOMEM;
-> -
-> -	len = utf8_casefold(um, str, norm, PATH_MAX);
-> -	if (len < 0) {
-> -		if (f2fs_has_strict_mode(sbi))
-> -			ret = -EINVAL;
-> -		goto out;
-> -	}
-> -	str->hash = full_name_hash(dentry, norm, len);
-> -out:
-> -	kvfree(norm);
-> -	return ret;
-> -}
-> -
->  const struct dentry_operations f2fs_dentry_ops = {
-> -	.d_hash = f2fs_d_hash,
-> -	.d_compare = f2fs_d_compare,
-> +	.d_hash = generic_ci_d_hash,
-> +	.d_compare = generic_ci_d_compare,
->  };
->  #endif
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index b35a50f4953c..d11ffe26bfde 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -1402,10 +1402,6 @@ struct f2fs_sb_info {
->  	int valid_super_block;			/* valid super block no */
->  	unsigned long s_flag;				/* flags for sbi */
->  	struct mutex writepages;		/* mutex for writepages() */
-> -#ifdef CONFIG_UNICODE
-> -	struct unicode_map *s_encoding;
-> -	__u16 s_encoding_flags;
-> -#endif
->  
->  #ifdef CONFIG_BLK_DEV_ZONED
->  	unsigned int blocks_per_blkz;		/* F2FS blocks per zone */
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 20e56b0fa46a..cca7a83ffa08 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -1257,7 +1257,7 @@ static void f2fs_put_super(struct super_block *sb)
->  	for (i = 0; i < NR_PAGE_TYPE; i++)
->  		kvfree(sbi->write_io[i]);
->  #ifdef CONFIG_UNICODE
-> -	utf8_unload(sbi->s_encoding);
-> +	utf8_unload(sb->s_encoding);
->  #endif
->  	kvfree(sbi);
->  }
-> @@ -3278,7 +3278,7 @@ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
->  static int f2fs_setup_casefold(struct f2fs_sb_info *sbi)
->  {
->  #ifdef CONFIG_UNICODE
-> -	if (f2fs_sb_has_casefold(sbi) && !sbi->s_encoding) {
-> +	if (f2fs_sb_has_casefold(sbi) && !sbi->sb->s_encoding) {
->  		const struct f2fs_sb_encodings *encoding_info;
->  		struct unicode_map *encoding;
->  		__u16 encoding_flags;
-> @@ -3309,8 +3309,8 @@ static int f2fs_setup_casefold(struct f2fs_sb_info *sbi)
->  			 "%s-%s with flags 0x%hx", encoding_info->name,
->  			 encoding_info->version?:"\b", encoding_flags);
->  
-> -		sbi->s_encoding = encoding;
-> -		sbi->s_encoding_flags = encoding_flags;
-> +		sbi->sb->s_encoding = encoding;
-> +		sbi->sb->s_encoding_flags = encoding_flags;
->  		sbi->sb->s_d_op = &f2fs_dentry_ops;
->  	}
->  #else
-> @@ -3806,7 +3806,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->  		kvfree(sbi->write_io[i]);
->  
->  #ifdef CONFIG_UNICODE
-> -	utf8_unload(sbi->s_encoding);
-> +	utf8_unload(sb->s_encoding);
->  #endif
->  free_options:
->  #ifdef CONFIG_QUOTA
-> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-> index e877c59b9fdb..8bee99ab3978 100644
-> --- a/fs/f2fs/sysfs.c
-> +++ b/fs/f2fs/sysfs.c
-> @@ -176,12 +176,14 @@ static ssize_t encoding_show(struct f2fs_attr *a,
->  		struct f2fs_sb_info *sbi, char *buf)
->  {
->  #ifdef CONFIG_UNICODE
-> +	struct super_block *sb = sbi->sb;
-> +
->  	if (f2fs_sb_has_casefold(sbi))
->  		return snprintf(buf, PAGE_SIZE, "%s (%d.%d.%d)\n",
-> -			sbi->s_encoding->charset,
-> -			(sbi->s_encoding->version >> 16) & 0xff,
-> -			(sbi->s_encoding->version >> 8) & 0xff,
-> -			sbi->s_encoding->version & 0xff);
-> +			sb->s_encoding->charset,
-> +			(sb->s_encoding->version >> 16) & 0xff,
-> +			(sb->s_encoding->version >> 8) & 0xff,
-> +			sb->s_encoding->version & 0xff);
->  #endif
->  	return sprintf(buf, "(none)");
->  }
-> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-> index 3c383ddd92dd..a5dbb57a687f 100644
-> --- a/include/linux/f2fs_fs.h
-> +++ b/include/linux/f2fs_fs.h
-> @@ -38,9 +38,6 @@
->  #define F2FS_MAX_QUOTAS		3
->  
->  #define F2FS_ENC_UTF8_12_1	1
-> -#define F2FS_ENC_STRICT_MODE_FL	(1 << 0)
-> -#define f2fs_has_strict_mode(sbi) \
-> -	(sbi->s_encoding_flags & F2FS_ENC_STRICT_MODE_FL)
->  
->  #define F2FS_IO_SIZE(sbi)	(1 << F2FS_OPTION(sbi).write_io_size_bits) /* Blocks */
->  #define F2FS_IO_SIZE_KB(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 2)) /* KB */
-> -- 
-> 2.27.0.383.g050319c2ae-goog
+>
+> Why does FIELD_FIT() pass an unsigned long long value as the second
+> argument to __BF_FIELD_CHECK()?
+
+Was Jakub's suggestion; I don't feel strongly against it either way, though...
+
+> Could it pass (typeof(_mask))0 instead?
+
+...might be nice to avoid implicit promotions and conversions if _mask
+is not the same sizeof _val.
+
+> It wouldn't fix this particular case, because UR_REG_IMM_MAX is also
+> defined with that type.  But (without working through this in more
+> detail) it seems like there might be a solution that preserves the
+> compile-time checking.
+
+I'd argue the point of the patch is to not check at compile time for
+FIELD_FIT, since we have a case in
+drivers/net/ethernet/netronome/nfp/bpf/jit.c (jeq_imm()) that will
+always pass -1 (unintentionally due to compiler optimization).
+
+> A second comment about this is that it might be nice to break
+> __BF_FIELD_CHECK() into the parts that verify the mask (which
+> could be used by FIELD_FIT() here) and the parts that verify
+> other things.
+
+Like so? Jakub, WDYT? Or do you prefer v1+Alex's suggestion about
+using `(typeof(_mask))0` in place of 0ULL?
+
+diff --git a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c
+b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c
+index 311a5be25acb..938fc733fccb 100644
+--- a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c
++++ b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c
+@@ -492,11 +492,12 @@ nfp_eth_set_bit_config(struct nfp_nsp *nsp,
+unsigned int raw_idx,
+        return 0;
+ }
+
+-#define NFP_ETH_SET_BIT_CONFIG(nsp, raw_idx, mask, val, ctrl_bit)      \
+-       ({                                                              \
+-               __BF_FIELD_CHECK(mask, 0ULL, val, "NFP_ETH_SET_BIT_CONFIG: "); \
+-               nfp_eth_set_bit_config(nsp, raw_idx, mask, __bf_shf(mask), \
+-                                      val, ctrl_bit);                  \
++#define NFP_ETH_SET_BIT_CONFIG(nsp, raw_idx, mask, val, ctrl_bit)
+         \
++       ({
+         \
++               __BF_FIELD_CHECK_MASK(mask, "NFP_ETH_SET_BIT_CONFIG:
+");        \
++               __BF_FIELD_CHECK_VAL(mask, val,
+"NFP_ETH_SET_BIT_CONFIG: ");    \
++               nfp_eth_set_bit_config(nsp, raw_idx, mask,
+__bf_shf(mask),      \
++                                      val, ctrl_bit);
+         \
+        })
+
+ /**
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 48ea093ff04c..79651867beb3 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -41,18 +41,26 @@
+
+ #define __bf_shf(x) (__builtin_ffsll(x) - 1)
+
+-#define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)                      \
++#define __BF_FIELD_CHECK_MASK(_mask, _pfx)                             \
+        ({                                                              \
+                BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
+                                 _pfx "mask is not constant");          \
+                BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
++               __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
++                                             (1ULL << __bf_shf(_mask))); \
++       })
++
++#define __BF_FIELD_CHECK_VAL(_mask, _val, _pfx)
+         \
++       ({                                                              \
+                BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
+                                 ~((_mask) >> __bf_shf(_mask)) & (_val) : 0, \
+                                 _pfx "value too large for the field"); \
+-               BUILD_BUG_ON_MSG((_mask) > (typeof(_reg))~0ull,         \
++       })
++
++#define __BF_FIELD_CHECK_REG(_mask, _reg, _pfx)
+         \
++       ({                                                              \
++               BUILD_BUG_ON_MSG((_mask) > (typeof(_reg))~0ULL,         \
+                                 _pfx "type of reg too small for mask"); \
+-               __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
+-                                             (1ULL << __bf_shf(_mask))); \
+        })
+
+ /**
+@@ -64,7 +72,7 @@
+  */
+ #define FIELD_MAX(_mask)                                               \
+        ({                                                              \
+-               __BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_MAX: ");     \
++               __BF_FIELD_CHECK_MASK(_mask, "FIELD_MAX: ");            \
+                (typeof(_mask))((_mask) >> __bf_shf(_mask));            \
+        })
+
+@@ -77,7 +85,7 @@
+  */
+ #define FIELD_FIT(_mask, _val)                                         \
+        ({                                                              \
+-               __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");     \
++               __BF_FIELD_CHECK_MASK(_mask, "FIELD_FIT: ");            \
+                !((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
+        })
+ @@ -91,7 +99,8 @@
+  */
+ #define FIELD_PREP(_mask, _val)
+         \
+        ({                                                              \
+-               __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");    \
++               __BF_FIELD_CHECK_MASK(_mask, "FIELD_PREP: ");           \
++               __BF_FIELD_CHECK_VAL(_mask, _val, "FIELD_PREP: ");      \
+                ((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask);   \
+        })
+
+@@ -105,7 +114,8 @@
+  */
+ #define FIELD_GET(_mask, _reg)                                         \
+        ({                                                              \
+-               __BF_FIELD_CHECK(_mask, _reg, 0U, "FIELD_GET: ");       \
++               __BF_FIELD_CHECK_MASK(_mask, "FIELD_GET: ");            \
++               __BF_FIELD_CHECK_REG(_mask, _reg,  "FIELD_GET: ");      \
+                (typeof(_mask))(((_reg) & (_mask)) >> __bf_shf(_mask)); \
+        })
+
+
+
+>
+> That's all--just questions, I have no problem with the patch...
+>
+>                                         -Alex
+>
+>
+>
+>
+> > FIELD_FIT() should return true or false at runtime for whether a value
+> > can fit for not. Don't break the build over a value that's too large for
+> > the mask. We'd prefer to keep the inlining and compiler optimizations
+> > though we know this case will always return false.
+> >
+> > Cc: stable@vger.kernel.org
+> > Link: https://lore.kernel.org/kernel-hardening/CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com/
+> > Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+> > Debugged-by: Sami Tolvanen <samitolvanen@google.com>
+> > Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > ---
+> >  include/linux/bitfield.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+> > index 48ea093ff04c..4e035aca6f7e 100644
+> > --- a/include/linux/bitfield.h
+> > +++ b/include/linux/bitfield.h
+> > @@ -77,7 +77,7 @@
+> >   */
+> >  #define FIELD_FIT(_mask, _val)                                               \
+> >       ({                                                              \
+> > -             __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_FIT: ");     \
+> > +             __BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_FIT: ");     \
+> >               !((((typeof(_mask))_val) << __bf_shf(_mask)) & ~(_mask)); \
+> >       })
+> >
+> >
+>
+
+
+--
+Thanks,
+~Nick Desaulniers
