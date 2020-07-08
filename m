@@ -2,61 +2,85 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBAFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03DE5206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BF2206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbgGHOWQ (ORCPT
+        id S1729763AbgGHOWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:22:16 -0400
-Received: from verein.lst.de ([213.95.11.211]:35608 "EHLO verein.lst.de"
+        Wed, 8 Jul 2020 10:22:38 -0400
+Received: from mga11.intel.com ([192.55.52.93]:49688 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729468AbgGHOWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:22:16 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4C7A868AFE; Wed,  8 Jul 2020 16:22:13 +0200 (CEST)
-Date:   Wed, 8 Jul 2020 16:22:12 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <song@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-raid@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 6/6] mmc: remove the call to check_disk_change
-Message-ID: <20200708142212.GA22601@lst.de>
-References: <20200708122546.214579-1-hch@lst.de> <20200708122546.214579-7-hch@lst.de> <CAPDyKFr5+LRRGMYhWM2At=O9LQSPmFAp0YuQiwmRiV1a6Tx6=g@mail.gmail.com>
+        id S1729468AbgGHOWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 10:22:38 -0400
+IronPort-SDR: dCvA5WlVPBnTHtyexhzpKz9ZppxMClHr3vvCBWiVPVtkpRwDUwaCXiNo9WE/1nyasRqZTU4iCb
+ EKhWoig0jCyw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="145903017"
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="145903017"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 07:22:37 -0700
+IronPort-SDR: ypnSgETFnURfOh2lY/Di1FrVtyy0tX6IzKv3i1woeeu6NNiCW0dbri/bMNjUS49QgLV/4alj1Y
+ Sab66rb+t1oA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="322949843"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.255.31.237]) ([10.255.31.237])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Jul 2020 07:22:34 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH] kvm: x86: limit the maximum number of vPMU fixed counters
+ to 3
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Like Xu <like.xu@linux.intel.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
+References: <20200624015928.118614-1-like.xu@linux.intel.com>
+ <8de3f450-7efd-96ab-fdf8-169b3327e5ac@intel.com>
+ <9b50db05-759e-c95c-35b2-99fba50e6997@redhat.com>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <3e849687-67f9-ac53-10ff-2b76d4881de4@intel.com>
+Date:   Wed, 8 Jul 2020 22:22:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFr5+LRRGMYhWM2At=O9LQSPmFAp0YuQiwmRiV1a6Tx6=g@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <9b50db05-759e-c95c-35b2-99fba50e6997@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 04:17:26PM +0200, Ulf Hansson wrote:
-> On Wed, 8 Jul 2020 at 14:41, Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > The mmc driver doesn't support event notifications, which means
-> > that check_disk_change is a no-op.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> 
-> I can queue this via my mmc tree, but perhaps you have plans for some
-> additional cleanups on top? In such a case, it may be better that this
-> goes through Jens' tree?
+On 2020/7/8 19:09, Paolo Bonzini wrote:
+> On 08/07/20 09:51, Xu, Like wrote:
+>> Kindly ping.
+>>
+>> I think we may need this patch, as we limit the maximum vPMU version to 2:
+>>      eax.split.version_id = min(cap.version, 2);
+> I don't think this is a problem.  Are you planning to add support for
+> the fourth counter?
+Yes, we plan to provide this support on the KVM after fully enabling the fourth
+counter (and an accompanying special counter) on the host perf side.
 
-I have some vague plans.  They might or might not hit this merge window,
-so if you are fine with Jens picking up the whole thing that would
-avoid any potential problems.
+This may require one or two kernel cycles, so I have to prevent it from
+being exposed to non-linux guest with this fix. Thanks for your support.
+
+Thanks,
+Like Xu
+>
+> Paolo
+>
+
