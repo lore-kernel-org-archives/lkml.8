@@ -2,93 +2,82 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E46C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A46206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:37:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drdq9olW"
+	by mail.kernel.org (Postfix) with ESMTP id D83542063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgGHUhz (ORCPT
+        id S1726319AbgGHUi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:37:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGHUhy (ORCPT
+        Wed, 8 Jul 2020 16:38:27 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:54779 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgGHUi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:37:54 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E4DC061A0B;
-        Wed,  8 Jul 2020 13:37:54 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x72so11044405pfc.6;
-        Wed, 08 Jul 2020 13:37:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ljcNt9Q9gyoQ+/Fb061cdO0nQmkXaUZAJJkPkHoUNac=;
-        b=drdq9olWal5ez1y2TdJFej07GcBIeRMEANqTT0u7bHwUbCDF5jJ4SSdsxGbL/CnKId
-         efhZJpESy1Jm6sWFCNDVk7HR821YBSOksd/azKBSTO9NEMfLh0XXeZ4a6CqgMEkTJ66r
-         920mDi2yinUxrwXG+GQ36ZHgcXHMVUm7cGu5diO3R/ybDFZIdh1obuVR+50M5nTJzPmE
-         32vVvE3dK5IWytBsS2h9Ed1ESz3fASU0Z0bsOboJFmJuedsKS7T2R+Tw9sxOI0b43gjt
-         h9h/fPIS5yrKydQZU8Xzfu4NePVJduC89xparXm98r6FAWjgxBaV16E3IeI3rNgpYYWm
-         YxcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ljcNt9Q9gyoQ+/Fb061cdO0nQmkXaUZAJJkPkHoUNac=;
-        b=SIv5hecR9J9p2Tkq6nssPDmdsvCO1Ro6FcE59gNZ4fG9EtRew2MF1EiIOC9pRHrUk2
-         jF8a/oYZBbLNhXvq2+hleAq5Fv/Lud3KgE3R8RMindSIOoJJV1RpevBG3l2WnF4urLyj
-         M08VrMcERUr7IjTSQ0PiR7IVrYIIpEpbBM2GWti/oWsIAqVWrcse/AGhi68tL9nrCCu6
-         L/2f7rQttCxZgcGO1xAUCyfPpXhnWlI7ZrIzcrPRDYf89hLGloNPTX9d2m6A4MjkKCgx
-         wSbfiL1J/hwBvUwpOZJlbD9TAGeytzwC0o21Y5dStE3jBMIlqP8rKVy/34bPvm9p7AOm
-         skaA==
-X-Gm-Message-State: AOAM530Zcop6RzFIwtJYhD4qM8Dg1iHO2fWcpqTkl3/kPmc9ETh/pdu5
-        UR8rJn6aphIgQUqBA6mhCEI=
-X-Google-Smtp-Source: ABdhPJyPrtwfQkvn91VaFePjHd+mmgPxNNRCW36/D+GYnL7TWzlB+XRW8gav2TLMpTbep6hsFpiA6A==
-X-Received: by 2002:a62:140e:: with SMTP id 14mr11831620pfu.196.1594240674079;
-        Wed, 08 Jul 2020 13:37:54 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id u74sm573275pgc.58.2020.07.08.13.37.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Jul 2020 13:37:53 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 13:37:40 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Krishna Reddy <vdumpa@nvidia.com>
-Cc:     joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
-        robh+dt@kernel.org, treding@nvidia.com, jonathanh@nvidia.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, yhsu@nvidia.com, snikam@nvidia.com,
-        praithatha@nvidia.com, talho@nvidia.com, bbiswas@nvidia.com,
-        mperttunen@nvidia.com, nicolinc@nvidia.com, bhuntsman@nvidia.com
-Subject: Re: [PATCH v10 2/5] iommu/arm-smmu: ioremap smmu mmio region before
- implementation init
-Message-ID: <20200708203740.GD28080@Asurada-Nvidia>
-References: <20200708050017.31563-1-vdumpa@nvidia.com>
- <20200708050017.31563-3-vdumpa@nvidia.com>
+        Wed, 8 Jul 2020 16:38:27 -0400
+Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MXpM2-1kPCu53p3E-00YBdb for <linux-kernel@vger.kernel.org>; Wed, 08 Jul
+ 2020 22:38:26 +0200
+Received: by mail-qt1-f170.google.com with SMTP id g13so35637209qtv.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 13:38:25 -0700 (PDT)
+X-Gm-Message-State: AOAM532w0UeP0WwBpw/zrbmSv7F14jdVTJTTiUunqsEMm2gFejB7kl/i
+        DvlUrvrOyEnhQ04zJQLF0tWJ6uASNymNlEtyW6I=
+X-Google-Smtp-Source: ABdhPJz68h0QI29GgcNujCOHJJRLRxCryNllMMt7XOrct3Fz9NvPE7S9FBlPpZcCU/WKTQVPVEde++p5gb0kEQ7QGxY=
+X-Received: by 2002:ac8:7587:: with SMTP id s7mr62150452qtq.304.1594240704805;
+ Wed, 08 Jul 2020 13:38:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708050017.31563-3-vdumpa@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200708122248.52771-1-cristian.marussi@arm.com> <20200708122248.52771-3-cristian.marussi@arm.com>
+In-Reply-To: <20200708122248.52771-3-cristian.marussi@arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 8 Jul 2020 22:38:08 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3mH4h9=MZiLmqk=YY8_pzQnUUvsvcL1TZQ6uJEdGUf=w@mail.gmail.com>
+Message-ID: <CAK8P3a3mH4h9=MZiLmqk=YY8_pzQnUUvsvcL1TZQ6uJEdGUf=w@mail.gmail.com>
+Subject: Re: [PATCH 3/4] firmware: arm_scmi: Fix scmi_event_header fields typing
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:xKvUOf6eoq16hD9HbdtXx1MDQmDNpfPUg3XZB6jOB6YCnvdToTt
+ QtUFHLSdMAfwP+er5U+PyHE03lA7JTdaTwvyAdyOLc/27eEwZHcf8EbV3uXM/61OBMXJ2h5
+ htoslGBKrKfiQvHC/wT/3VQoN3GFGcAyTG0iIictrxp1UdalWpPkO8JhtF6e/L0swZcaCge
+ 4FvOhJaFCctEwyE0OEafQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:igD6fevkCF8=:4zr/6OYLQ0wUYpU54A1GTn
+ 8TnLo7h8MrJwfV0Rffv7t0A2Hl3hC3s8l58EyzKgNRxJyO+Cz0HhbEWg/V0yyxkReo6p+nhK+
+ WawDLBHF0jKiXEvkuD+6IjpwbXBFssJ9kfM0PoPCNRiZACEZdLE+HknLXOCwnbOm6WdZ7qX8z
+ Y3ZuH1rkcq9xVX6hmViCbMvfWc6nFpL/PNOay4MTOC5O0iFWGx/xs64ugukWoBExJoq9d9Et4
+ jzeFP62/HQbUaZvBCYk4lBCuPvXrcUf2qLiDaB6gXPhxdOBKSBWzNTKJp7exCNhUTv5lE3E3K
+ zLmQ9x3bzrLQ1+ljkgvRRZ9mPmd3H6lKy5FsEFWIefz+7imz+Ydnxwu6vAGv95/J0QR66XmuV
+ pkVNfeNlZYYWERdPMHJAA9OQ77ALvU8/wvZ3Rza9Ta/U3myuDxIOPZORerWVAeBGHqfm/X4/C
+ gR4goAktl7mJKzCR7gHVLguCOyi3rJSM7UwXMvmYWavsqVeFDZUveMOsugrl8Gj2JHpJwwJrv
+ MisEcJQqmaGxwXwE4wwe5AWK0ByqSm2he7zDD5jwiasfsNrs20QIOQO1ZJzVB6JP+rk1SkSDj
+ Ku4gBU7y8lwAck+7RuTDlEjIla5SqTSrHSYPV6t1v9NdLefY7VyxQp7XXBppn4ONi+1VOIFev
+ lE7uyrZiR1QPxchcxCvnykP05wHGYa1mVuQSKll0iELjQfNZ2Yq5VQ2LoPP+wEqznKuYO31wG
+ jML1sGfZ4FUVh8PB2dv/hxc6tDJ0euwCkelRmyxasiLqjLRGQ/E081DJm71slv1HFITCQcCta
+ Idoa+EjqRsKfF58XZXaZj6yBO195ZBWrDlpwl5z+K72VbjatqUDawt8rufKk3fosVavcqKR
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:00:14PM -0700, Krishna Reddy wrote:
-> ioremap smmu mmio region before calling into implementation init.
-> This is necessary to allow mapped address available during vendor
-> specific implementation init.
-> 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+On Wed, Jul 8, 2020 at 2:24 PM Cristian Marussi
+<cristian.marussi@arm.com> wrote:
+>
+> Drop size_t in favour of fixed size u32 for consistency and shuffle
+> around fields definitions to minimize implicit padding.
+>
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 
-Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+As you still have implicit padding at the end, I'd either make
+that explicit now, or leave the __packed attribute.
+
+The payld_sz is not actually force to be misaligned with the
+reordered layout, which is what's most important.
+
+     Arnd
