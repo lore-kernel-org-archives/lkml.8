@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B32C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1850EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0519120760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E664A20760
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="NyNNnw7G";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F7eCYlOM"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Ln0OKaBB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uAiKqEMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgGHRoD (ORCPT
+        id S1727975AbgGHRoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:44:03 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:35725 "EHLO
+        Wed, 8 Jul 2020 13:44:06 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:34989 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727820AbgGHRn7 (ORCPT
+        by vger.kernel.org with ESMTP id S1727916AbgGHRoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:43:59 -0400
+        Wed, 8 Jul 2020 13:44:00 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id E905910A5;
-        Wed,  8 Jul 2020 13:43:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:43:58 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 53D87109F;
+        Wed,  8 Jul 2020 13:43:59 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:44:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=GnbtfFU8aTFeD
-        wUZr0nWCBIFykNjel/BZCz1dGHIXyY=; b=NyNNnw7GfXkRhXgMCbG4R2QwP9Qza
-        6TgY9mQ2bl9Q8hhQdxisWZ+hAqC4qko3eXbBdxFLXe0bSehUDOSXUjGufrffNgSB
-        /nl4moxeUMONFpXMj4PmMJrcUYiIbtRdxgtT+ZUbgyxNH27Qb1FM1K9jF9JSqp66
-        esA43fc+7Sa4v5LhBAyDiC0vTPmZkqmK2rb19r6YQ4AK1PmGwUVimJ5CllBC+Kmg
-        pQhcXVj6JH5FTHWZrlSvH+/NHw1yvkEEbiELOXxwECt0Dr7g1X1uOqEyGaVJW5Ju
-        ep3GTMOp/pYVBhROUO0B/NcziJoV3joJPLJtzihzgx3mDWzQrbNBmps8g==
+        :mime-version:content-transfer-encoding; s=fm3; bh=1LFoNqmlgRkCm
+        9FumZP8Ph+ISo5fft0Ywc9akrAcD3c=; b=Ln0OKaBBgyPGG/gofM1Q3zxphS6PR
+        li0SDkil7RPCHYuiV0m6hf4NxEw4B62QPrjnO3F8VJFNIX3AGvxrRuFaKxx+M2Q6
+        hUMC7KgdzGbDxyMqrSN87gBfZen92cQmQSPpJett4MI0U89R2YJVbjoK2CuFuP4Q
+        UMkawH/wPu4QzIt4vGlDtuH+8lODCftLrt+exea+87sIQAhcUBwV0+3L7mkCXenX
+        fXAWu+ttFIdr/7lwdHft7UguqG19M2UPTS+YI82E80TIslWwH3zZ9w+6mr2nIzCL
+        djCehWICYr9rBZDIqL8cTR5jtTsN0q7fThXAI5eAb/iWLtMKU2Px+kT8Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=GnbtfFU8aTFeDwUZr0nWCBIFykNjel/BZCz1dGHIXyY=; b=F7eCYlOM
-        W+tTBYsmA0zBGnCSnaDo2jTubrRsgumLYLYDb46r92T/dPN5rFzMg6L2K474cBFP
-        PSxO4aUUf8uhC12jQfdlG5cCtu1EHK1iPRkpnc8e8SHuZLzTU1pudlCjuvFn7VXn
-        OLstomZ7L7N+BjTcZaC6K7a47ZIoFwa7dXNLCiXvhQOah97YI4NQufM9P2jX1iXF
-        kh9WjAv+dIUNc+pV6IoNAqXJA+2EnWrJGe0Y9AXzOKVT34jZKVQ3a/UDzBSdsfcF
-        sONyE5k1U4+FNYv0ksbJJiUNzrQO2hsK4u7zLo3ed85aDf5K0mufKBhAVlYQtlO1
-        oUXOuN+cxd6NsA==
-X-ME-Sender: <xms:3QUGX0Wvl08UJiDtYN9Tv-IfghWCnputTAYdiamlknKf_PuydW62hw>
+        fm3; bh=1LFoNqmlgRkCm9FumZP8Ph+ISo5fft0Ywc9akrAcD3c=; b=uAiKqEMp
+        TfXXdjKes/L6ImvulxcM0mClqWwM1gC9A2Wkp5gcMNka9+Wa5UtjNBpJsKcotfEZ
+        CDuKzs84xyn1/Ay3OEghnsu/tA+N6OfmSy/5YjceMqlt7TzkII22POZW8cTdAyfP
+        1K8DUUcO3fJUnFihgFPyTB1T5gVvfKxQ8ONdtH7yoai4JED7PcyURhTutnILNxa3
+        NZFLbBpyKr58mlCoWrkgFAm6TwD/EKDatAkCkrT38tWyTUzREjOp3K1h16OWwC6N
+        gFi7FnCcTmvvZ7F+co1gApoJYy7N57NYugXddlcLl21QV/PmYRbT4Fcpmsc7aBCT
+        j8BRTOPSQPKr1Q==
+X-ME-Sender: <xms:3gUGX1XYfZEPQWEYX9w_0o1TTCh38UyAvyZNl0fUZTfrUzjiCHhUOQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepheegne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:3QUGX4m6n9zaeKRy-BWMcwko2kW7jktvK7dfYZvVk4bmacp-Rn1lzA>
-    <xmx:3QUGX4baRS3dx8pJGoYf3E4TVssIon0ZxVdW1SP5IPdndUUKGMeioQ>
-    <xmx:3QUGXzXbffUv17gidyFQuwIl7OFtu-3SU7r-wZqwd4LCOIiwHkMNXQ>
-    <xmx:3QUGXwX5gByCAHS5IEHerWqfkf9-4qSKYodm3SjZg5VD1N7zcwhSjZhQIyg>
+X-ME-Proxy: <xmx:3gUGX1mWQ298bbiTPD17Pqf_cboxxBFsJOrePX37d3Y_AUlVMuWsrQ>
+    <xmx:3gUGXxZSR9gnzCvFr7bStqQhdhDk66DbJ2vAyHCFcvAm00K0Cl-EQQ>
+    <xmx:3gUGX4UjSS85qPvad-rKRGcSVFSVH2aSkbQTvRjyTIbr6HWSqUbixw>
+    <xmx:3gUGX9VoEzr44hV3Cs_nKzctvKqjFFsGWHrwj3VAnGZ-u63MkWpOlihnj3I>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 31DAD328005E;
-        Wed,  8 Jul 2020 13:43:57 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id A0CBF306005F;
+        Wed,  8 Jul 2020 13:43:58 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 60/78] drm/vc4: hdmi: Remove unused CEC_CLOCK_DIV define
-Date:   Wed,  8 Jul 2020 19:42:08 +0200
-Message-Id: <cdbba354ffc234d6c03978671f99e129748ff48f.1594230107.git-series.maxime@cerno.tech>
+Subject: [PATCH v4 61/78] drm/vc4: hdmi: Rename drm_encoder pointer in mode_valid
+Date:   Wed,  8 Jul 2020 19:42:09 +0200
+Message-Id: <98c93e0a594e42e39ba77946a0c8107996495eae.1594230107.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
 References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
@@ -89,25 +89,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CEC_CLOCK_DIV define is not used anywhere in the driver, let's remove
-it.
+The mode_valid hook on the encoder uses a pointer to a drm_encoder called
+crtc, which is pretty confusing. Let's rename it to encoder to make it
+clear what it is.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 86e21de6c578..a01562a49bf0 100644
+index a01562a49bf0..17797b14cde4 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -55,7 +55,6 @@
+@@ -556,7 +556,7 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+ }
  
- #define HSM_CLOCK_FREQ 163682864
- #define CEC_CLOCK_FREQ 40000
--#define CEC_CLOCK_DIV  (HSM_CLOCK_FREQ / CEC_CLOCK_FREQ)
- 
- static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
+ static enum drm_mode_status
+-vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
++vc4_hdmi_encoder_mode_valid(struct drm_encoder *encoder,
+ 			    const struct drm_display_mode *mode)
  {
+ 	/*
 -- 
 git-series 0.9.1
