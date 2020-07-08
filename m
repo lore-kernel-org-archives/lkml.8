@@ -2,94 +2,77 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8750FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67620206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:22:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qKICfYS8"
+	by mail.kernel.org (Postfix) with ESMTP id 51A0820760
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbgGHHWd (ORCPT
+        id S1730341AbgGHHWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:22:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730086AbgGHHWc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:22:32 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D771C08C5E2
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:22:32 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h19so52980261ljg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FmCJ3eglFvN3eT4dZ92ESwtil9DSI68INw+lfLda+f0=;
-        b=qKICfYS87wXGDK2raBiEPSdqxxy/mrxVg8JsloXiJmUkD4BjyHRWRE4wcTUfMBQmJs
-         hpmvYepXlAJbEtD/LWIgAhWW0U8MrNXFU58I0H5xfvZ6as0cPKmDvxfeaSmSOgdTpJGW
-         3xbFMQDGPsZxoKvxkZvrKL7O1bhMa8JKOD+6Q0UYZU/qpREdNDldt82AtA7EQcgTwquo
-         hz9dWTGi9zb4aJga/xTyztV6y02ajJ7qyliC8BxFGVtJABzgjQ3dgxKfD3jsDlOhyEPZ
-         v6WkFjQ3BdVy8nsneqRcusS6PHaZ7ln5hjHT+u/p1zL6HzJhfmcZU7/a9Jq6UfwfYIoN
-         a3yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FmCJ3eglFvN3eT4dZ92ESwtil9DSI68INw+lfLda+f0=;
-        b=eldoRNWgzVnnuBmP6Rxt1He2w44HkuZjXcLaeePHgRWjn1b46M1ooHeNDAm82+XSon
-         W9Z4zcF3Q1xQ0KzPzLteVGym5F2S1v8gMrIg9GP3YTpeBWpLRO6mz0auespkngeeyRcw
-         k0+UGVOqqzGpjZCajcyuwDvIjzzbnUA4xpbegtQhbc7GTLwwD9Fv2y7msY336J70QL2n
-         9yqt/EozwVIugYd5701BLeie/RLUcrt3aiqVKKnaF8fEKDxG/mRw7kuas9jlMBxjy8p9
-         vTmTJFNvV46ndkVf0BCav71PMpypH+wrQwDhgHdoHtteGZNFGGY0i9S328ZgRTVvPSFq
-         g1Lg==
-X-Gm-Message-State: AOAM533UlBXQMo8dn005OWdXdvGm8up3cb2oce8mAVc0+SIsiwzramt6
-        EuCqGTnRvwKEeTts+dn0gebDnke54ln09/EYc2JYPvSgHUU=
-X-Google-Smtp-Source: ABdhPJxVSZk9OJ8mzvBdSpccIOkiBmKRMTgwEzL7Qe5kGuMosrbh6GYSkWDU//vCaRe7LEQh541MQ2A2jqXKACTTlqA=
-X-Received: by 2002:a2e:810a:: with SMTP id d10mr26819272ljg.144.1594192950588;
- Wed, 08 Jul 2020 00:22:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200630133345.2232932-1-lee.jones@linaro.org> <20200630133345.2232932-10-lee.jones@linaro.org>
-In-Reply-To: <20200630133345.2232932-10-lee.jones@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 8 Jul 2020 09:22:19 +0200
-Message-ID: <CACRpkdZY0dP6oRdbWYUkPNicyZsVOKA-smEtkLt1h_-p7NSM7w@mail.gmail.com>
-Subject: Re: [PATCH 09/10] gpio: gpio-mlxbf2: Tell the compiler that ACPI
- functions may not be use
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Asmaa Mnebhi <Asmaa@mellanox.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 8 Jul 2020 03:22:50 -0400
+Received: from smtp21.cstnet.cn ([159.226.251.21]:53318 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730047AbgGHHWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:22:49 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-01 (Coremail) with SMTP id qwCowAAnCOk2dAVfs4CkBA--.31422S2;
+        Wed, 08 Jul 2020 15:22:31 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        vulab@iscas.ac.cn, linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] arch: powerpc: Remove unnecessary cast in kfree()
+Date:   Wed,  8 Jul 2020 07:22:28 +0000
+Message-Id: <20200708072228.30776-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: qwCowAAnCOk2dAVfs4CkBA--.31422S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JrWxWw4rXr1rWr1xuw17Wrg_yoW3GrbEk3
+        yvkFnFkrW0qrsavanxXF1xGFn2y393Xrs5KrnFga9rt345Xw15C3W3ZrW8Gay8Jry0yrZx
+        G3Z8tr98Zas3KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbzAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
+        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+        xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+        cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+        AvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
+        7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUY6wZUUUUU
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwcLA102Yl76WQAAs8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 3:33 PM Lee Jones <lee.jones@linaro.org> wrote:
+Remove unnecassary casts in the argument to kfree.
 
-> ... as is the case when !CONFIG_ACPI.
->
-> Fixes the following W=3D1 kernel build warning:
->
->  drivers/gpio/gpio-mlxbf2.c:312:36: warning: =E2=80=98mlxbf2_gpio_acpi_ma=
-tch=E2=80=99 defined but not used [-Wunused-const-variable=3D]
->  312 | static const struct acpi_device_id mlxbf2_gpio_acpi_match[] =3D {
->  | ^~~~~~~~~~~~~~~~~~~~~~
->
-> Cc: Asmaa Mnebhi <Asmaa@mellanox.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ arch/powerpc/platforms/pseries/dlpar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch applied!
+diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+index 16e86ba8aa20..1f3d26806295 100644
+--- a/arch/powerpc/platforms/pseries/dlpar.c
++++ b/arch/powerpc/platforms/pseries/dlpar.c
+@@ -379,7 +379,7 @@ static void pseries_hp_work_fn(struct work_struct *work)
+ 	handle_dlpar_errorlog(hp_work->errlog);
+ 
+ 	kfree(hp_work->errlog);
+-	kfree((void *)work);
++	kfree(work);
+ }
+ 
+ void queue_hotplug_event(struct pseries_hp_errorlog *hp_errlog)
+-- 
+2.17.1
 
-Yours,
-Linus Walleij
