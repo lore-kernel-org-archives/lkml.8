@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6BF120771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E37420720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dpTamrUD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gEPfn1Ac"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tI22gLbF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sovHU6CW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgGHJwD (ORCPT
+        id S1728573AbgGHJwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:52:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48022 "EHLO
+        Wed, 8 Jul 2020 05:52:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48176 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728651AbgGHJvy (ORCPT
+        with ESMTP id S1728678AbgGHJv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:51:54 -0400
-Date:   Wed, 08 Jul 2020 09:51:52 -0000
+        Wed, 8 Jul 2020 05:51:58 -0400
+Date:   Wed, 08 Jul 2020 09:51:55 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594201912;
+        s=2020; t=1594201916;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PGK8qSpIgDcGxBwGC2W7bf2t6+vph84YrY8LKmIcO9M=;
-        b=dpTamrUDBtb3ea8hqIiky7gj/rqpc7TTBoKOkosraMz+HkCXpZdaAU4SKoZU5jH/Uj9OQV
-        LcebeXjx7g6qaPQy1ezDpwvf6S2ZU++8/UHoijOWlXlDZM7iOBr5VAC6GJnXIM/QiiN+eH
-        FxBLlrK7kj2gRMgbdkpNfhqHSa0NcAiogaNdsRJy8xz8oNIAxc+MAkjMRnCyH+HQaf3rw3
-        nnx5tW+5uBuL+4YPiRkotc7VRMYN69o2ZMQlBmJObkBcY7lbVnynLcECAbNs5zEGA+v5ms
-        5i45MUsdpcBVgP8pmGpAJW5hVdFAeKL64XYLea+/yQidIwAAgJ17j1G4nG9P3w==
+        bh=ZYBwRaqcxgn+XMoGe3mL1BKkwzTwL8McDCTncXMpY4Y=;
+        b=tI22gLbF2Jb8QflLTiD78wkFexT+0SwmX6jQ9PzKK7q+GS8lS6FOYbh0BaazAXZkFjQkmZ
+        EW9vVZd4u+6sbTeT12a7DuCRLrmBChxnhTM2IgofxB5WIZdlGDNJAwWc99vmKRgqupzvP5
+        o+82zoxem68ck5uFisou5dfnZ9nw+0PwIBSZDepV0+Omtwq3sHYLIUbN8qIQT5Pjwy7Ofc
+        h01zh3Y1fmGkxQ61oKbvopwxIjCqJ0qmsWOVfR1DlymSJA7AAiE6rmQfmTSMAqd6ERjm3t
+        uAJb5wKfty9svsRVeVWq8E+s4f4gJE5jlmIIFfb055znmq1Vd0P5k0Zs340fjA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594201912;
+        s=2020e; t=1594201916;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PGK8qSpIgDcGxBwGC2W7bf2t6+vph84YrY8LKmIcO9M=;
-        b=gEPfn1Ac7oqli9wU/GxBdjK1V1tWFWXwz0Ys1xEueHDuSTnE3agwOLWSTRyqz1CXk+x7KM
-        PlhgbDk276v+rMAQ==
+        bh=ZYBwRaqcxgn+XMoGe3mL1BKkwzTwL8McDCTncXMpY4Y=;
+        b=sovHU6CWDTn3adq0atjjPoIgNyQrQtf6cZcrzhfpH8HqKlVh1LNW6YEElg5cyHXKkdK29e
+        ctaZ1VVCI79PRHCw==
 From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] x86/msr-index: Add bunch of MSRs for Arch LBR
+Subject: [tip: perf/core] x86/cpufeatures: Add Architectural LBRs feature bit
 Cc:     Kan Liang <kan.liang@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1593780569-62993-8-git-send-email-kan.liang@linux.intel.com>
-References: <1593780569-62993-8-git-send-email-kan.liang@linux.intel.com>
+        Dave Hansen <dave.hansen@intel.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1593780569-62993-2-git-send-email-kan.liang@linux.intel.com>
+References: <1593780569-62993-2-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159420191229.4006.89063706463703327.tip-bot2@tip-bot2>
+Message-ID: <159420191583.4006.10876391642907607745.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,49 +71,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     d6a162a41bfd2ff9ea4cbb338d3df6a3f9b7e89f
-Gitweb:        https://git.kernel.org/tip/d6a162a41bfd2ff9ea4cbb338d3df6a3f9b7e89f
+Commit-ID:     bd657aa3dd8514e62486ce7f90b5e484c18d684d
+Gitweb:        https://git.kernel.org/tip/bd657aa3dd8514e62486ce7f90b5e484c18d684d
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Fri, 03 Jul 2020 05:49:13 -07:00
+AuthorDate:    Fri, 03 Jul 2020 05:49:07 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 08 Jul 2020 11:38:52 +02:00
+CommitterDate: Wed, 08 Jul 2020 11:38:51 +02:00
 
-x86/msr-index: Add bunch of MSRs for Arch LBR
+x86/cpufeatures: Add Architectural LBRs feature bit
 
-Add Arch LBR related MSRs and the new LBR INFO bits in MSR-index.
+CPUID.(EAX=07H, ECX=0):EDX[19] indicates whether an Intel CPU supports
+Architectural LBRs.
+
+The "X86_FEATURE_..., word 18" is already mirrored from CPUID
+"0x00000007:0 (EDX)". Add X86_FEATURE_ARCH_LBR under the "word 18"
+section.
+
+The feature will appear as "arch_lbr" in /proc/cpuinfo.
+
+The Architectural Last Branch Records (LBR) feature enables recording
+of software path history by logging taken branches and other control
+flows. The feature will be supported in the perf_events subsystem.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/1593780569-62993-8-git-send-email-kan.liang@linux.intel.com
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+Link: https://lkml.kernel.org/r/1593780569-62993-2-git-send-email-kan.liang@linux.intel.com
 ---
- arch/x86/include/asm/msr-index.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index e8370e6..bdc07fc 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -158,7 +158,23 @@
- #define LBR_INFO_MISPRED		BIT_ULL(63)
- #define LBR_INFO_IN_TX			BIT_ULL(62)
- #define LBR_INFO_ABORT			BIT_ULL(61)
-+#define LBR_INFO_CYC_CNT_VALID		BIT_ULL(60)
- #define LBR_INFO_CYCLES			0xffff
-+#define LBR_INFO_BR_TYPE_OFFSET		56
-+#define LBR_INFO_BR_TYPE		(0xfull << LBR_INFO_BR_TYPE_OFFSET)
-+
-+#define MSR_ARCH_LBR_CTL		0x000014ce
-+#define ARCH_LBR_CTL_LBREN		BIT(0)
-+#define ARCH_LBR_CTL_CPL_OFFSET		1
-+#define ARCH_LBR_CTL_CPL		(0x3ull << ARCH_LBR_CTL_CPL_OFFSET)
-+#define ARCH_LBR_CTL_STACK_OFFSET	3
-+#define ARCH_LBR_CTL_STACK		(0x1ull << ARCH_LBR_CTL_STACK_OFFSET)
-+#define ARCH_LBR_CTL_FILTER_OFFSET	16
-+#define ARCH_LBR_CTL_FILTER		(0x7full << ARCH_LBR_CTL_FILTER_OFFSET)
-+#define MSR_ARCH_LBR_DEPTH		0x000014cf
-+#define MSR_ARCH_LBR_FROM_0		0x00001500
-+#define MSR_ARCH_LBR_TO_0		0x00001600
-+#define MSR_ARCH_LBR_INFO_0		0x00001200
- 
- #define MSR_IA32_PEBS_ENABLE		0x000003f1
- #define MSR_PEBS_DATA_CFG		0x000003f2
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 02dabc9..72ba4c5 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -366,6 +366,7 @@
+ #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+ #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+ #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
++#define X86_FEATURE_ARCH_LBR		(18*32+19) /* Intel ARCH LBR */
+ #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+ #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+ #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
