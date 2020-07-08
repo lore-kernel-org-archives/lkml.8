@@ -2,192 +2,182 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCC3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C652206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B36220720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 05:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rgthVhHU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmOhTu0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgGHF43 (ORCPT
+        id S1729721AbgGHF4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:56:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54746 "EHLO
+        Wed, 8 Jul 2020 01:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729450AbgGHF42 (ORCPT
+        with ESMTP id S1729670AbgGHF43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:56:28 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63308C08C5DC
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 22:56:27 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id j11so3983339ljo.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 22:56:27 -0700 (PDT)
+        Wed, 8 Jul 2020 01:56:29 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 017ADC061755;
+        Tue,  7 Jul 2020 22:56:29 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id g13so33623158qtv.8;
+        Tue, 07 Jul 2020 22:56:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xTA9wtH1lLSUNwm6vjcqZv4w0az/iyPfRuwwmpvGZdc=;
-        b=rgthVhHUThyUAYY+Hlj2YWNZzEshJAMA0Pf8FRmCzaUZ2JDpG8vl4t+3VsEGXnst+B
-         oj4CFY/ifEgTVWvm6Eix+nzUcik+s/nkmgvkHej0J2sFIXev1HyMWb8Rotz22KBD2puG
-         uiIeQePdbpHTnE6HM4HutDNEV1tMwXOwcYXazExHe9mZqOgxh+EUYoqofd/X15x7Rig8
-         tHeTGg5OP+s3jaXk5yNIzDrkZPYyLAhX/YqnkS6jTLRjbpdK2fSKkewMVo2P9F0Rf4Fp
-         Hjx5Pjl+yaVmR9z4mXJ4Qbf7dpNxhC0EPyytPUvFz/gkT1HXOmUH8aGeLRG42PzCEB2Z
-         f5YA==
+         :cc;
+        bh=Ede8UCLHh6UsB8NU2wRY++2AzYreMnz6NE+PpTkdL98=;
+        b=hmOhTu0bZ1qSrrBabkvGxLEkZ6Tmxj4uI8hMEYNDcbakRAgvMsuDZnazGEZynvTCiJ
+         bfi/OBeeX2McKvP0C4RiyguymOlK+lW3uQUOK+si6eZgNCNaicQRly1rO1fjktjBRrKQ
+         9p4xz6HPzxMweLxx8DltGiyb0ThA0y4bYzk7fk849e8c07DKAVCx+NHYodc5mUo4EOQo
+         wNfuwA4mW0ASVjcme8pfyC5TJI+QKg0JVwHk0WzyWule9ThvFHA+F+aacLeL3MdCY9Oc
+         UDuTyDxXTvAYtrMN0DDUggvpIZhmp6umf4aY9JajNrz0gcch1Ubnf/1+ussfKEPvzn25
+         ya/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xTA9wtH1lLSUNwm6vjcqZv4w0az/iyPfRuwwmpvGZdc=;
-        b=Tp5Eh7F36ebwbeVs2Kg5Yx83EcLFHTp0idk1mkrjBIEU8/jQU9GNnatbrtUR5ZD+bf
-         ZfxZvb3+OfZPJpw3elm1l2jbfPQ0o5vUZ1CH/DOKROfjLaJVcwIekeDaEvZJetI69cL2
-         5DrmMRk2F3VlqPwrft54F4Z0IK7CLTrbbKsYnP5eogYFFFUCdJ4/J4tGpoBTJWmLi0yd
-         INViiCgVbDs8l+rqq6n/JHkLAnTUQ2l89WS+L0SbHPAed2rqjWPe3P47OCSQLgjD7yCa
-         jV639KOC5JwtR7GyVgkvQhvT8cZB2JiQPBs33os17lMuo749C11HRvSAB+g19fjB/KWW
-         PY1Q==
-X-Gm-Message-State: AOAM530EXDVIJVzgVXpbrPk/zsnS4Y6SczCkhuxHsjZI8xDPAi9BxmTU
-        i8+CUZzVknyaBSJWKQoD7KRs5IsB1NpvCsMxBxjluJeq5gsSiw==
-X-Google-Smtp-Source: ABdhPJzy6IS//cmE7cy7+em7+9Qp+w4r1y1BkSX2PCLWFbEUzLJgbAVjzLSoTTWkbZ4JE6aam+fkfRJry5RPoA+x4RI=
-X-Received: by 2002:a2e:9b42:: with SMTP id o2mr31703150ljj.102.1594187785588;
- Tue, 07 Jul 2020 22:56:25 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Ede8UCLHh6UsB8NU2wRY++2AzYreMnz6NE+PpTkdL98=;
+        b=Bdi7yg0tcGAexA2QlHDYMCk77DWNrTnwQrawBCfxBDAJYWA6fsEB9+1AWW3YLeV74e
+         k0DbjMgH8cumyRWPIbNOzJqUpkMOospeA4Je9SBL3lQArfFtnOgMAaDJKS6P6CG7LqG/
+         vi69J/H0HUx0eeUNldYokc/b2xyzXWmktTeobyaElLHtLOruRSHnf50AnWskGx/tvBYE
+         4KIp5cM4dESrRHI58/IPwWuRcaN6kErr82rQIHSC7Pjr1oI/CERwWWLk0QA2Suqx89Xj
+         KCKa0OMxBDSjTsehUUNC0bCx7ajDStyKsxClLzIlzPYp9M6+l70sO/zHLA/E4MpK630W
+         l3Ug==
+X-Gm-Message-State: AOAM530uN1j6XF0JIsOhnEct8CLUKZsDPlZEvA4h6wg+YWuTxAdjDl1u
+        uigieGtpyVKdOtdUC7LDvWyyEQVbFY57g1ZU3Ww=
+X-Google-Smtp-Source: ABdhPJzyBiKleEu5SueSzbeJcoPFdUlCA5bsg0IlxIguusVGJrcnFS9fyhDINLrfrwxoiI5whB4X1OCdXROVWfJBtUc=
+X-Received: by 2002:ac8:19c4:: with SMTP id s4mr54112512qtk.117.1594187788189;
+ Tue, 07 Jul 2020 22:56:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200707145749.130272978@linuxfoundation.org>
-In-Reply-To: <20200707145749.130272978@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 8 Jul 2020 11:26:14 +0530
-Message-ID: <CA+G9fYvkRi6=Eky_unsZW=3EtmThZiW5f=7KaEmtMe6dunggMA@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/36] 4.19.132-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+References: <1593787468-29931-1-git-send-email-alan.maguire@oracle.com> <1593787468-29931-2-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <1593787468-29931-2-git-send-email-alan.maguire@oracle.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 7 Jul 2020 22:56:17 -0700
+Message-ID: <CAEf4BzaGWZGYQf6C0GT3mwhjh8PSVLwgoFiHtpx6zaTny3B_gw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf: use dedicated bpf_trace_printk event
+ instead of trace_printk()
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jul 2020 at 20:48, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Fri, Jul 3, 2020 at 7:47 AM Alan Maguire <alan.maguire@oracle.com> wrote:
 >
-> This is the start of the stable review cycle for the 4.19.132 release.
-> There are 36 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> The bpf helper bpf_trace_printk() uses trace_printk() under the hood.
+> This leads to an alarming warning message originating from trace
+> buffer allocation which occurs the first time a program using
+> bpf_trace_printk() is loaded.
 >
-> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-> Anything received after that time might be too late.
+> We can instead create a trace event for bpf_trace_printk() and enable
+> it in-kernel when/if we encounter a program using the
+> bpf_trace_printk() helper.  With this approach, trace_printk()
+> is not used directly and no warning message appears.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.132-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
+> This work was started by Steven (see Link) and finished by Alan; added
+> Steven's Signed-off-by with his permission.
 >
-> thanks,
+> Link: https://lore.kernel.org/r/20200628194334.6238b933@oasis.local.home
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> ---
+>  kernel/trace/Makefile    |  2 ++
+>  kernel/trace/bpf_trace.c | 41 +++++++++++++++++++++++++++++++++++++----
+>  kernel/trace/bpf_trace.h | 34 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 73 insertions(+), 4 deletions(-)
+>  create mode 100644 kernel/trace/bpf_trace.h
 >
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+[...]
 
-Summary
-------------------------------------------------------------------------
+> +static DEFINE_SPINLOCK(trace_printk_lock);
+> +
+> +#define BPF_TRACE_PRINTK_SIZE   1024
+> +
+> +static inline int bpf_do_trace_printk(const char *fmt, ...)
+> +{
+> +       static char buf[BPF_TRACE_PRINTK_SIZE];
+> +       unsigned long flags;
+> +       va_list ap;
+> +       int ret;
+> +
+> +       spin_lock_irqsave(&trace_printk_lock, flags);
+> +       va_start(ap, fmt);
+> +       ret = vsnprintf(buf, BPF_TRACE_PRINTK_SIZE, fmt, ap);
+> +       va_end(ap);
+> +       if (ret > 0)
+> +               trace_bpf_trace_printk(buf);
 
-kernel: 4.19.132-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 168e2945aaf526364ca3aa3e674490d363c32a33
-git describe: v4.19.130-164-g168e2945aaf5
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.130-164-g168e2945aaf5
+Is there any reason to artificially limit the case of printing empty
+string? It's kind of an awkward use case, for sure, but having
+guarantee that every bpf_trace_printk() invocation triggers tracepoint
+is a nice property, no?
 
-No regressions (compared to build v4.19.130)
+> +       spin_unlock_irqrestore(&trace_printk_lock, flags);
+> +
+> +       return ret;
+> +}
+> +
+>  /*
+>   * Only limited trace_printk() conversion specifiers allowed:
+>   * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pB %pks %pus %s
+> @@ -483,8 +510,7 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
+>   */
+>  #define __BPF_TP_EMIT()        __BPF_ARG3_TP()
+>  #define __BPF_TP(...)                                                  \
+> -       __trace_printk(0 /* Fake ip */,                                 \
+> -                      fmt, ##__VA_ARGS__)
+> +       bpf_do_trace_printk(fmt, ##__VA_ARGS__)
+>
+>  #define __BPF_ARG1_TP(...)                                             \
+>         ((mod[0] == 2 || (mod[0] == 1 && __BITS_PER_LONG == 64))        \
+> @@ -518,13 +544,20 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
+>         .arg2_type      = ARG_CONST_SIZE,
+>  };
+>
+> +int bpf_trace_printk_enabled;
 
-No fixes (compared to build v4.19.130)
+static?
 
-Ran 33084 total tests in the following environments and test suites.
+> +
+>  const struct bpf_func_proto *bpf_get_trace_printk_proto(void)
+>  {
+>         /*
+>          * this program might be calling bpf_trace_printk,
+> -        * so allocate per-cpu printk buffers
+> +        * so enable the associated bpf_trace/bpf_trace_printk event.
+>          */
+> -       trace_printk_init_buffers();
+> +       if (!bpf_trace_printk_enabled) {
+> +               if (trace_set_clr_event("bpf_trace", "bpf_trace_printk", 1))
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
+just to double check, it's ok to simultaneously enable same event in
+parallel, right?
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-controllers-tests
-* ltp-dio-tests
-* ltp-fs-tests
-* ltp-io-tests
-* network-basic-tests
-* perf
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
+> +                       pr_warn_ratelimited("could not enable bpf_trace_printk events");
+> +               else
+> +                       bpf_trace_printk_enabled = 1;
+> +       }
+>
+>         return &bpf_trace_printk_proto;
+>  }
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+[...]
