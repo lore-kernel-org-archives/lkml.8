@@ -2,147 +2,115 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67628C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF5EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4230A206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594190130;
-	bh=mDv+nbLZWbK2dSX4e2wszQuUCLCAyBQoudm6ECV+kz4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VT4f6i0d5QGHRQU71tEe+j120QGsBRCXaGtmk/UQNtET7R8U+JCrD4WfZW6mN77h0
-	 JhHzLKeZdsDrdK0Cn1Q2z0dCdzlF736ZL1ebDVExdGT7VjMpsYQvDe43Cpeupvx/af
-	 3nwAZqhRCRhVHqClgmEjIkKNibO0r+031YS8Dtfw=
+	by mail.kernel.org (Postfix) with ESMTP id DE5FB206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 06:36:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="N2FhsoIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbgGHGf3 (ORCPT
+        id S1729673AbgGHGgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 02:35:29 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41408 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728603AbgGHGf2 (ORCPT
+        Wed, 8 Jul 2020 02:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728603AbgGHGgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 02:35:28 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f2so17761763plr.8;
-        Tue, 07 Jul 2020 23:35:28 -0700 (PDT)
+        Wed, 8 Jul 2020 02:36:42 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A4DC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 23:36:41 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t11so14667504pfq.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 23:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IV3+uveO4NWQ+DzEhA8aJUinLEWctsxMHdF7wTb5EsU=;
+        b=N2FhsoICJdMy7FvrW7irqCM5djNZYTzp5ZN2PuMmjGHtG/u/GIOXG8wdfg4sZ6I4Li
+         0irBmCfAbuNGuLR6fd1S/M3kzh0QdCGN2/cYrxYsyeGUEan9+vZU6fk5EQiLBbhsZ/zE
+         sddUxfGVpSxfTSHII2qjmiZR++iXoR/67soME=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wcGsk/H34ADHkkcrhevzy9A6V7aeuvW0VaA+xIQKcJI=;
-        b=ebFUpcFPAHeH/k++QKEcZ8gP7s929BeGB/rko+35QUexuF8CrBKs1YW5xkPb1hhokH
-         HAWpCoFoA7E15lV7yrUqkJiqWGK3fMTRdFe/JLcie6SQVORLq5URnkHeF943/pgXg12V
-         ftzxE+LeqB1Qlmwomul6Smkqt3jlZ5LVGZwdsddDzDBaSp9HkiRXiOmFQ49647l0nGNy
-         yenp8gYOl82EkiBuw2W/3AveMUc3qr8N8cnGJ1Ajan3KfZO0Lkj7HdzSbBykWb4eZW7W
-         zxPr5JrDRb0xUMvdVH37YCvhavaw/yxgfWPQ4VUXbr+hI6uevPEpGmAgaON2Fsx8Lmcl
-         p4tw==
-X-Gm-Message-State: AOAM5305zuY+FfCltfMl7+ucwIrvs/hg70+pKz/0PBqucBUwl7PfSO+m
-        HHNf4mgwhrnFkeyMmzjiSCRkGtVxsVA=
-X-Google-Smtp-Source: ABdhPJwRXovytVEyyAT/lpHCAHItwhk1xn4NAYtBTkSi6xafA4n3ZPFiHU6WnOqp9vfv8jYYmkuKgw==
-X-Received: by 2002:a17:90a:e017:: with SMTP id u23mr8047308pjy.179.1594190127774;
-        Tue, 07 Jul 2020 23:35:27 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id u23sm2791327pgn.26.2020.07.07.23.35.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IV3+uveO4NWQ+DzEhA8aJUinLEWctsxMHdF7wTb5EsU=;
+        b=sLmVswPL8rm2Hv8BEizMP8jy/BU/xj5YeJ+/2in6y/JTmn5nkUz9uUTZ5kt/FgSNly
+         +zdeUcJjrO5i/N7fDyajk0b2oKWmge3kAw/avKV8ChJrPRQp2by/D/VlPiTDGmugwgXr
+         G7Qtn7NEl7iEFigf0pbZmVlYjBPlwF/kIiN56dToSc3eIqn4WXTADCkmsBvVvx2uNTjU
+         3vxRUPViXsmquL+c+MxjIP9kuWo6HnL75CwTdWMnICDWEAhC5/Q7E8PHFIbR/PmBvCg1
+         mKSJ7MWCDDbO7LoZ3owt7GnFH7eey18DWck5SxxdjqTiPZH+nO8sz2AzGNp8cLJNBunz
+         NIig==
+X-Gm-Message-State: AOAM532hyVQuKdcVDaA8Uu+IIIT39Eqps7Btpd1R0p0djuvty0VMeGeC
+        bxA7sSxqY3UGyVnYmhGctUiNUw==
+X-Google-Smtp-Source: ABdhPJyByhHKXVQ0vuN0I4Ok0LYHgprFA72fKsMPOHyOpv9xYFodg73sWexQTqunUCY12sbHAhyfmQ==
+X-Received: by 2002:a63:1a16:: with SMTP id a22mr25024136pga.142.1594190200909;
+        Tue, 07 Jul 2020 23:36:40 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:ade2:f5f3:8cc0:52f9])
+        by smtp.gmail.com with ESMTPSA id c12sm24587898pfn.162.2020.07.07.23.36.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 23:35:26 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 62403400DB; Wed,  8 Jul 2020 06:35:25 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 06:35:25 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 10/16] exec: Remove do_execve_file
-Message-ID: <20200708063525.GC4332@42.do-not-panic.com>
-References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
- <20200702164140.4468-10-ebiederm@xmission.com>
+        Tue, 07 Jul 2020 23:36:40 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
+Cc:     Tom Cubie <tom@radxa.com>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v4 0/4] ARM: dts: rockchip: Radxa Rock Pi N8 initial support
+Date:   Wed,  8 Jul 2020 12:06:23 +0530
+Message-Id: <20200708063627.8365-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702164140.4468-10-ebiederm@xmission.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 11:41:34AM -0500, Eric W. Biederman wrote:
-> Now that the last callser has been removed remove this code from exec.
-> 
-> For anyone thinking of resurrecing do_execve_file please note that
-> the code was buggy in several fundamental ways.
-> 
-> - It did not ensure the file it was passed was read-only and that
->   deny_write_access had been called on it.  Which subtlely breaks
->   invaniants in exec.
-> 
-> - The caller of do_execve_file was expected to hold and put a
->   reference to the file, but an extra reference for use by exec was
->   not taken so that when exec put it's reference to the file an
->   underflow occured on the file reference count.
+Rock Pi N8 is a Rockchip RK3288 based SBC, which has
+- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
+- Compatible carrier board from Radxa.
 
-Maybe its my growing love with testing, but I'm going to have to partly
-blame here that we added a new API without any respective testing.
-Granted, I recall this this patch set could have used more wider review
-and a bit more patience... but just mentioning this so we try to avoid
-new api-without-testing with more reason in the future.
+VMARC RK3288 SOM need to mount on top of dalang carrier
+board for making Rock PI N8 SBC.
 
-But more importantly, *how* could we have caught this? Or how can we
-catch this sort of stuff better in the future?
+This series moved i2c2 into rk3399pro dtsi and rest are 
+similar to v3.
 
-> - The point of the interface was so that a pathname did not need to
->   exist.  Which breaks pathname based LSMs.
+Changes for v4:
+- move i2c2 from carrier board to rk3399pro dtsi
+Changes for v3:
+- move hym8563_int pin to rk3399pro dtsi
+Changes for v2:
+- add more trivial cleanups
+- update commit message
 
-Perhaps so but this fails to do justice of the LSM consideration done
-for the patch which added this during patch review [0], and I
-particularly recall I called out LSM folks to bring their ray guns out at
-this patch. It didn't get much attention.
+Jagan Teki (4):
+  arm64: dts: rockchip: Trivial cleanups for RockPI N10
+  dt-bindings: arm: rockchip: Add Rock Pi N8 binding
+  ARM: dts: rockchip: Add VMARC RK3288 SOM initial support
+  ARM: dts: rockchip: Add Radxa Rock Pi N8 initial support
 
-Let me recap a few points I think your commit log should somehow
-consider. You do as you please.
+ .../devicetree/bindings/arm/rockchip.yaml     |   6 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/rk3288-rock-pi-n8.dts       |  17 ++
+ arch/arm/boot/dts/rk3288-vmarc-som.dtsi       | 270 ++++++++++++++++++
+ .../dts/rockchip-radxa-dalang-carrier.dtsi    |  67 +++--
+ .../dts/rockchip/rk3399pro-rock-pi-n10.dts    |   2 +-
+ .../dts/rockchip/rk3399pro-vmarc-som.dtsi     |  98 ++++---
+ 7 files changed, 379 insertions(+), 82 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3288-rock-pi-n8.dts
+ create mode 100644 arch/arm/boot/dts/rk3288-vmarc-som.dtsi
 
-Users of shmem_kernel_file_setup() spawned out of the desire to                                                                                                      
-*avoid* LSMs since it didn't make sense in their case as their inodes                                                                                                      
-are never exposed to userspace. Such is the case for ipc/shm.c and                                                                                                         
-security/keys/big_key.c. Refer to commit c7277090927a5 ("security: shmem:                                                                                                  
-implement kernel private shmem inodes") and then commit e1832f2923ec9                                                                                                      
-("ipc: use private shmem or hugetlbfs inodes for shm segments").
+-- 
+2.25.1
 
-And the umh module approach was doing:
-
- a) mapping data already extracted by the kernel somehow from
-    a file somehow, presumably from /lib/modules/ path somewhere, but
-    again this is not visible to umc.c, as it just gets called with:
-                                                                                                                                                                          
-     fork_usermode_blob(void *data, size_t len, struct umh_info *info)
-                                                                                                                                                                          
- b) Creating the respective tmpfs file with shmem_kernel_file_setup()
- c) Populating the file created and stuffing it with our data passed
- d) Calling do_execve_file() on it.
-
-So, although I was hoping LSM folks would chime in for things I may have
-missed during my patch review, my recollection from the patch thread was
-that this becuase of a) it in theory could skip out on dealing with LSMs.
-
-[0] https://lkml.kernel.org/r/20180509022526.hertzfpvy7apz6ny@ast-mbp               
-
-  Luis
