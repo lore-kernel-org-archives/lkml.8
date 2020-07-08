@@ -2,431 +2,193 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D045C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC786C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA78B20658
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:08:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="l1wbF1mW";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="EYkG2YsQ"
+	by mail.kernel.org (Postfix) with ESMTP id C167E20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594228115;
+	bh=ZweyIDuSEj4TGRfgHl730FqUUHxZIKjgrRk9wtW2wCI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=BJA2Y3/5oVDxxqLQ/E7L7dQfVEdnEpWFFqDOkQf/TLOUT/JU4NB0nbC413PAd/C4q
+	 ar+lNvw/0VKkqU1lrtEKuFwNwpOKgfJdmm81JzHHVh/TA0QAG/mU3Vd2jtm5i8tiL9
+	 p8lkCRmfbxr8iANgkM3ejnUdJTV4Oxhx1NdaH5ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730825AbgGHRIZ (ORCPT
+        id S1730836AbgGHRIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:08:25 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:38354 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730143AbgGHRIX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:08:23 -0400
-Received: from mailhost.synopsys.com (sv1-mailhost1.synopsys.com [10.205.2.131])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Wed, 8 Jul 2020 13:08:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730143AbgGHRId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:08:33 -0400
+Received: from [192.168.1.26] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7B03140AF7;
-        Wed,  8 Jul 2020 17:08:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1594228103; bh=2jEvUb/uTFJGecJdugPOPZBDNEPd/fiCzGzHFMxWB1U=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=l1wbF1mW3JxiLkko0svM2+QyiPtf/iWrcoiLcIWj3XrwZK8f19rQz3MNaoHwqQ2Na
-         ysCcqff81MphicqTrm67Iv0IkPAXWsJWBexhTjjtGd7nUFaZ1OgiEifb3aPS+F/qOe
-         aE84pV5hXzM3Z/JO6WOtYo6b4RAWJp7G2YJMYqsuyVh6M3g8W1Xes7rQA0oYLKdL2B
-         Kn5KQwHhnsZGNW/zU69InGDnkUAnqbQfAXAFWMWBS8yzhvhVO3ftoYFQELKp1B2Gdb
-         3+7B2jeyIKnyW8k20UCWbDqsOdFsxJPsC8vrWHvagd/+NaXFUYeEjyycBALmlxD3QL
-         ohPXuLrcjR4sg==
-Received: from o365relay-in.synopsys.com (sv2-o365relay1.synopsys.com [10.202.1.137])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 6B2E5A005C;
-        Wed,  8 Jul 2020 17:08:19 +0000 (UTC)
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2058.outbound.protection.outlook.com [104.47.36.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
-        by o365relay-in.synopsys.com (Postfix) with ESMTPS id BDD7240140;
-        Wed,  8 Jul 2020 17:08:16 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=angelor@synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="EYkG2YsQ";
-        dkim-atps=neutral
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iHuurGmbRntmiX/zUPOMYqpf9BgzX10QwfJ7IMCSzuHv28Zofpox2h/5vAtldp4C55wEzqG7dUTnWB7E+TVkhbUHjAgGF43fbamfyyANxCihKX3vJj3J9VFBdOngbsVBsu3Z+hgiiDuQ+Jvx0AZmg/VKOtKsFI6Cds9Jb9G27gLuwZaW7VFOrSRBytkPQpqIl7TYwnXQnbqZFDE93tOKj8bGeyPFcDJba22DoT/Yu+mfwjEaX8SOdeVc2ST8b0pQiggIdILxkrAprdC0vVBTsaPBibszwZjBwZvtFYW3t5a5ASyxaJ31OAmd/eSrJGCOIidOnp8AhdhE+3EDuYtMfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bJ/Pi8xqWX8QEndtEFm6veBXsMoKztFNzftj3gLGHSM=;
- b=jKSCnK+8Qsns04SOd5LznCpKnjT97IwyEltYPsrun522OLchX2uIgp5a/B1nNrrMenFCY+8DXQ2j+fEg85e5cQruZqpEEMmpgc83ww9xh2+CTaduUtM3ddWO5Nn/SQknFq8tIoQpv/ArOSWddNg80NGaMsfgg8ib7kXURsdsjgRJPSUrORqOIKp42HOpxlcc6YbJ3gWkw+ObB45XGKZbFR1eGtCp/3bzSSqcZLR0Xo7uoEjuvGidAIuqxDc7Z2P/Be805SwatogHTlwDzglzORJPgZ5c4CAme/km/aaSnCxeYfIPKpkOegpJluvplpjydbWPizZW/hfrGSLT67c9fQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bJ/Pi8xqWX8QEndtEFm6veBXsMoKztFNzftj3gLGHSM=;
- b=EYkG2YsQuXNluyDC+wrThmDDfFfMD53pGWLadIk0QHJrX2I1AZ0v56KxkUkW4NPsQ5bELEiZij0vWzhv8X9F0HTZLhzN+vfKkt+cJ3mJjyGyKsAW99eawrvb8/thA/yeFaUb4P8S97FcFqkK5pcEiTOLFsDRURiY8dAiZiNHrXI=
-Received: from CH2PR12MB3782.namprd12.prod.outlook.com (2603:10b6:610:23::28)
- by CH2PR12MB3704.namprd12.prod.outlook.com (2603:10b6:610:21::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Wed, 8 Jul
- 2020 17:08:15 +0000
-Received: from CH2PR12MB3782.namprd12.prod.outlook.com
- ([fe80::cd2:acb3:1b6a:236d]) by CH2PR12MB3782.namprd12.prod.outlook.com
- ([fe80::cd2:acb3:1b6a:236d%7]) with mapi id 15.20.3153.029; Wed, 8 Jul 2020
- 17:08:14 +0000
-X-SNPS-Relay: synopsys.com
-From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
-To:     Yannick FERTRE <yannick.fertre@st.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pop.adrian61@gmail.com" <pop.adrian61@gmail.com>
-CC:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: RE: [PATCH v2] drm/bridge: dw-mipi-dsi.c: Add VPG runtime config
- through debugfs
-Thread-Topic: [PATCH v2] drm/bridge: dw-mipi-dsi.c: Add VPG runtime config
- through debugfs
-Thread-Index: AQHWDBo6Hn96DzA7REmPZBpLU636BqjoYdsAgBYY4fA=
-Date:   Wed, 8 Jul 2020 17:08:14 +0000
-Message-ID: <CH2PR12MB37823C45C7CC1A142ACC4BBECB670@CH2PR12MB3782.namprd12.prod.outlook.com>
-References: <a809feb7d7153a92e323416f744f1565e995da01.1586180592.git.angelo.ribeiro@synopsys.com>
- <d46d3aaf-d3cd-e5e1-81b9-c019537bd09a@st.com>
-In-Reply-To: <d46d3aaf-d3cd-e5e1-81b9-c019537bd09a@st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-Mentions: yannick.fertre@st.com,philippe.cornu@st.com,daniel@ffwll.ch,pop.adrian61@gmail.com
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYW5nZWxvclxh?=
- =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
- =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTk5ZDExZGU0LWMxM2QtMTFlYS05ZDdjLWZjNzc3?=
- =?us-ascii?Q?NGVlZGMyZVxhbWUtdGVzdFw5OWQxMWRlNS1jMTNkLTExZWEtOWQ3Yy1mYzc3?=
- =?us-ascii?Q?NzRlZWRjMmVib2R5LnR4dCIgc3o9IjYzNDkiIHQ9IjEzMjM4NzAxNjkxNjEy?=
- =?us-ascii?Q?NTY2OCIgaD0iTllWU1FNN0ZyQUwxNkxZZVgvZVd1aDFqa1RBPSIgaWQ9IiIg?=
- =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
- =?us-ascii?Q?a3h5aGNTbFhXQVUxamo4SzRlTWZYVFdPUHdyaDR4OWNPQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQVFBQkFBQUFIYVd5TkFBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
- =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
- =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
- =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
- =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
- =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
- =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
- =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
- =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
- =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
- =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
- =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
- =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
- =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
- =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
- =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
- =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
- =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
- =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
- =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
- =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
- =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
- =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
- =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
- =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: st.com; dkim=none (message not signed)
- header.d=none;st.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [95.136.124.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 199feca2-fe27-41dc-6fc0-08d8236180a1
-x-ms-traffictypediagnostic: CH2PR12MB3704:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR12MB3704ECD9FC7FBC2A6D7FB83FCB670@CH2PR12MB3704.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QaVMVdofiO20MBHt0IgQl5z994ktpXdoSrAlvg3YZ+oAI2aB5BFihAjvD/alPqJSReTe6KPy/WkL/CqZaTQ8bPMYvD8KDWjq0Hxyx90C+hjbUC93Gbm3Q1cxjR41iCgTUNWYn5t5mFz1+sMAhkJGxeOpJsBKsOb4EziiD+nBZCDTNp+aOqlvMTlzmVMSTSsk0tHszBUtm0vbPs9UwQ9ImQX575g77QRH+AxdgbSvseIH4NHMiz1uwxY2bHyyNr2RIz78C9jWXzC0dsnRd9KlvV4MniVO/xosVsEBvmZlKwJGfqlV7DpEv3L/wJiPr7rbsEY0JA3nJHzM84Ko+hfdVrgRSz2Ih3TsdjCV+ByMcERXDwx5nIOATa0ZYESCXp8oYTkTQSW1vFnXwLeI/o/cfqlYUzwyMPRACSabd535B39JDC76IcWgSCVP/+LG4bDq
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3782.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(136003)(396003)(346002)(39860400002)(86362001)(66556008)(478600001)(8676002)(110136005)(5660300002)(186003)(26005)(9686003)(966005)(52536014)(7416002)(4326008)(33656002)(107886003)(2906002)(53546011)(6506007)(55016002)(83380400001)(71200400001)(316002)(54906003)(7696005)(66476007)(64756008)(66446008)(76116006)(8936002)(66946007)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: CM/UkheSuG89QXdY4GMNJFGr9D3Cw3cmPG1tB4bVN7ms+SOuqQ+Hpcn0X2fFqzQMRYW15h79grcXsZijF0Nvnwp0aXjQQyULOPT2kaJv3x09C0BFWO5OzLkS+X8GBzKB8Gwlxsx7m3ZBKfiSnFIdj/6tKbQRYdyo60i4iewZ7N25WBx2MrOOdcuIBC82lZu9o6m/Gwc4/a3hc5bg0gsd9UzuaXa0cfL3qfHdn5yr6GxpP50pCz6hDE122FvhJqlU01Wx1+18BoJ/mGvEdtZlMd0H/CFXQJLn8DbTa1O7D7X5dYq+eQypdf/A672a56jDlL2uU8+GunBUh1zAKkA1MIBVJ4F4VNn3HC1+uBEYjypKRSwgxPK94horiocNaIUlVitAUT7h9rKaeuEbqzicnIT9u+OJLAmjGO00sNNIsKUnVCBHrflg71FfRUcnCaJwcXxwQOAJqhJC0nuJg+Je0sVUxKxMuWiFkF838KjzWQk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A0E120658;
+        Wed,  8 Jul 2020 17:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594228113;
+        bh=ZweyIDuSEj4TGRfgHl730FqUUHxZIKjgrRk9wtW2wCI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=oRK1fdgOb7p9TLEw5aMB7qcYOZUnjAN/6uHVDEw3jq4p3bbxD+7EoDA+IPFsPjmlk
+         cc6kWZcS8bLmyqWDmJdK101uPEMV1FwIrJzW0U8M20FYTIR9qpvioaoVrtadCEqjFL
+         UJ47wAp8dbGFpWUFxexGTsD2iztXTexuGIfNZh60=
+Subject: Re: [PATCH] fpga: stratix10-soc: make FPGA task un-interruptible
+To:     richard.gong@linux.intel.com, mdf@kernel.org
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        richard.gong@intel.com
+References: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <3e45e4a4-f002-ecf8-110f-bf7d646a5dbe@kernel.org>
+Date:   Wed, 8 Jul 2020 12:08:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3782.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 199feca2-fe27-41dc-6fc0-08d8236180a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2020 17:08:14.8219
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NJm9jGwWQ4qlPZVnTWEtk8Qz0fVviKWyqYP/zfL5v8NOWV9cdSCQKXo820neDhFeiT6G9TolmPR4FL0p2ppFNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3704
+In-Reply-To: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi
 
-Is this patch good to go?=20
-@daniel@ffwll.ch, @Philippe CORNU
+On 7/7/20 11:14 AM, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
+> 
+> When CTRL+C occurs during the process of FPGA reconfiguration, the FPGA
+> reconfiguration process stops and the user can't perform a new FPGA
+> reconfiguration properly.
+> 
+> Set FPGA complete task to be not interruptible so that the user can
+> properly perform FPGA reconfiguration after CTRL+C event.
+> 
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> ---
+>  drivers/fpga/stratix10-soc.c | 23 +++--------------------
+>  1 file changed, 3 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
+> index 44b7c56..657a70c 100644
+> --- a/drivers/fpga/stratix10-soc.c
+> +++ b/drivers/fpga/stratix10-soc.c
+> @@ -196,17 +196,13 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
+>  	if (ret < 0)
+>  		goto init_done;
+>  
+> -	ret = wait_for_completion_interruptible_timeout(
+> +	ret = wait_for_completion_timeout(
+>  		&priv->status_return_completion, S10_RECONFIG_TIMEOUT);
+>  	if (!ret) {
+>  		dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
+>  		ret = -ETIMEDOUT;
+>  		goto init_done;
+>  	}
+> -	if (ret < 0) {
+> -		dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
+> -		goto init_done;
+> -	}
+>  
+>  	ret = 0;
+>  	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
+> @@ -318,7 +314,7 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
+>  		 */
+>  		wait_status = 1; /* not timed out */
+>  		if (!priv->status)
+> -			wait_status = wait_for_completion_interruptible_timeout(
+> +			wait_status = wait_for_completion_timeout(
+>  				&priv->status_return_completion,
+>  				S10_BUFFER_TIMEOUT);
+>  
+> @@ -340,13 +336,6 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
+>  			ret = -ETIMEDOUT;
+>  			break;
+>  		}
+> -		if (wait_status < 0) {
+> -			ret = wait_status;
+> -			dev_err(dev,
+> -				"error (%d) waiting for svc layer buffers\n",
+> -				ret);
+> -			break;
+> -		}
+>  	}
+>  
+>  	if (!s10_free_buffers(mgr))
+> @@ -372,7 +361,7 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+>  		if (ret < 0)
+>  			break;
+>  
+> -		ret = wait_for_completion_interruptible_timeout(
+> +		ret = wait_for_completion_timeout(
+>  			&priv->status_return_completion, timeout);
+>  		if (!ret) {
+>  			dev_err(dev,
+> @@ -380,12 +369,6 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+>  			ret = -ETIMEDOUT;
+>  			break;
+>  		}
+> -		if (ret < 0) {
+> -			dev_err(dev,
+> -				"error (%d) waiting for RECONFIG_COMPLETED\n",
+> -				ret);
+> -			break;
+> -		}
+>  		/* Not error or timeout, so ret is # of jiffies until timeout */
+>  		timeout = ret;
+>  		ret = 0;
+> 
 
-Was already tested by @Yannick FERTRE=20
-and @Adrian Pop
-on https://lkml.org/lkml/2020/4/6/691 .
+Do you need the same change in drivers/fpga/socfpga.c? Also, you did not
+include Moritz Fisher on this. He's the maintainer.
 
-Thanks,
-Angelo
-
-From: Yannick=20
-FERTRE <yannick.fertre@st.com>
-Date: Wed, Jun 24, 2020 at 16:35:04
-
-> Hello Angelo,
-> thanks for the patch.
-> Tested-by: Yannick Fertre <yannick.fertre@st.com>
-> Tested OK on STM32MP1-DISCO, DSI v1.31
->=20
-> Best regards
->=20
->=20
-> On 4/6/20 3:49 PM, Angelo Ribeiro wrote:
-> > Add support for the video pattern generator (VPG) BER pattern mode and
-> > configuration in runtime.
-> >=20
-> > This enables using the debugfs interface to manipulate the VPG after
-> > the pipeline is set.
-> > Also, enables the usage of the VPG BER pattern.
-> >=20
-> > Changes in v2:
-> >    - Added VID_MODE_VPG_MODE
-> >    - Solved incompatible return type on __get and __set
-> >=20
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Reported-by: Adrian Pop <pop.adrian61@gmail.com>
-> > Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > Cc: Joao Pinto <jpinto@synopsys.com>
-> > Cc: Jose Abreu <jose.abreu@synopsys.com>
-> > Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
-> > ---
-> >   drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 98 ++++++++++++++++++=
-++++++---
-> >   1 file changed, 90 insertions(+), 8 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gp=
-u/drm/bridge/synopsys/dw-mipi-dsi.c
-> > index b18351b..9de3645 100644
-> > --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-> > @@ -91,6 +91,7 @@
-> >   #define VID_MODE_TYPE_BURST			0x2
-> >   #define VID_MODE_TYPE_MASK			0x3
-> >   #define VID_MODE_VPG_ENABLE		BIT(16)
-> > +#define VID_MODE_VPG_MODE		BIT(20)
-> >   #define VID_MODE_VPG_HORIZONTAL		BIT(24)
-> >  =20
-> >   #define DSI_VID_PKT_SIZE		0x3c
-> > @@ -221,6 +222,21 @@
-> >   #define PHY_STATUS_TIMEOUT_US		10000
-> >   #define CMD_PKT_STATUS_TIMEOUT_US	20000
-> >  =20
-> > +#ifdef CONFIG_DEBUG_FS
-> > +#define VPG_DEFS(name, dsi) \
-> > +	((void __force *)&((*dsi).vpg_defs.name))
-> > +
-> > +#define REGISTER(name, mask, dsi) \
-> > +	{ #name, VPG_DEFS(name, dsi), mask, dsi }
-> > +
-> > +struct debugfs_entries {
-> > +	const char				*name;
-> > +	bool					*reg;
-> > +	u32					mask;
-> > +	struct dw_mipi_dsi			*dsi;
-> > +};
-> > +#endif /* CONFIG_DEBUG_FS */
-> > +
-> >   struct dw_mipi_dsi {
-> >   	struct drm_bridge bridge;
-> >   	struct mipi_dsi_host dsi_host;
-> > @@ -238,9 +254,12 @@ struct dw_mipi_dsi {
-> >  =20
-> >   #ifdef CONFIG_DEBUG_FS
-> >   	struct dentry *debugfs;
-> > -
-> > -	bool vpg;
-> > -	bool vpg_horizontal;
-> > +	struct debugfs_entries *debugfs_vpg;
-> > +	struct {
-> > +		bool vpg;
-> > +		bool vpg_horizontal;
-> > +		bool vpg_ber_pattern;
-> > +	} vpg_defs;
-> >   #endif /* CONFIG_DEBUG_FS */
-> >  =20
-> >   	struct dw_mipi_dsi *master; /* dual-dsi master ptr */
-> > @@ -530,9 +549,11 @@ static void dw_mipi_dsi_video_mode_config(struct d=
-w_mipi_dsi *dsi)
-> >   		val |=3D VID_MODE_TYPE_NON_BURST_SYNC_EVENTS;
-> >  =20
-> >   #ifdef CONFIG_DEBUG_FS
-> > -	if (dsi->vpg) {
-> > +	if (dsi->vpg_defs.vpg) {
-> >   		val |=3D VID_MODE_VPG_ENABLE;
-> > -		val |=3D dsi->vpg_horizontal ? VID_MODE_VPG_HORIZONTAL : 0;
-> > +		val |=3D dsi->vpg_defs.vpg_horizontal ?
-> > +		       VID_MODE_VPG_HORIZONTAL : 0;
-> > +		val |=3D dsi->vpg_defs.vpg_ber_pattern ? VID_MODE_VPG_MODE : 0;
-> >   	}
-> >   #endif /* CONFIG_DEBUG_FS */
-> >  =20
-> > @@ -961,6 +982,68 @@ static const struct drm_bridge_funcs dw_mipi_dsi_b=
-ridge_funcs =3D {
-> >  =20
-> >   #ifdef CONFIG_DEBUG_FS
-> >  =20
-> > +int dw_mipi_dsi_debugfs_write(void *data, u64 val)
-> > +{
-> > +	struct debugfs_entries *vpg =3D data;
-> > +	struct dw_mipi_dsi *dsi;
-> > +	u32 mode_cfg;
-> > +
-> > +	if (!vpg)
-> > +		return -ENODEV;
-> > +
-> > +	dsi =3D vpg->dsi;
-> > +
-> > +	*vpg->reg =3D (bool)val;
-> > +
-> > +	mode_cfg =3D dsi_read(dsi, DSI_VID_MODE_CFG);
-> > +
-> > +	if (*vpg->reg)
-> > +		mode_cfg |=3D vpg->mask;
-> > +	else
-> > +		mode_cfg &=3D ~vpg->mask;
-> > +
-> > +	dsi_write(dsi, DSI_VID_MODE_CFG, mode_cfg);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +int dw_mipi_dsi_debugfs_show(void *data, u64 *val)
-> > +{
-> > +	struct debugfs_entries *vpg =3D data;
-> > +
-> > +	if (!vpg)
-> > +		return -ENODEV;
-> > +
-> > +	*val =3D *vpg->reg;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_mipi_dsi_debugfs_show,
-> > +			 dw_mipi_dsi_debugfs_write, "%llu\n");
-> > +
-> > +static void debugfs_create_files(void *data)
-> > +{
-> > +	struct dw_mipi_dsi *dsi =3D data;
-> > +	struct debugfs_entries debugfs[] =3D {
-> > +		REGISTER(vpg, VID_MODE_VPG_ENABLE, dsi),
-> > +		REGISTER(vpg_horizontal, VID_MODE_VPG_HORIZONTAL, dsi),
-> > +		REGISTER(vpg_ber_pattern, VID_MODE_VPG_MODE, dsi),
-> > +	};
-> > +	int i;
-> > +
-> > +	dsi->debugfs_vpg =3D kmalloc(sizeof(debugfs), GFP_KERNEL);
-> > +	if (!dsi->debugfs_vpg)
-> > +		return;
-> > +
-> > +	memcpy(dsi->debugfs_vpg, debugfs, sizeof(debugfs));
-> > +
-> > +	for (i =3D 0; i < ARRAY_SIZE(debugfs); i++)
-> > +		debugfs_create_file(dsi->debugfs_vpg[i].name, 0644,
-> > +				    dsi->debugfs, &dsi->debugfs_vpg[i],
-> > +				    &fops_x32);
-> > +}
-> > +
-> >   static void dw_mipi_dsi_debugfs_init(struct dw_mipi_dsi *dsi)
-> >   {
-> >   	dsi->debugfs =3D debugfs_create_dir(dev_name(dsi->dev), NULL);
-> > @@ -969,14 +1052,13 @@ static void dw_mipi_dsi_debugfs_init(struct dw_m=
-ipi_dsi *dsi)
-> >   		return;
-> >   	}
-> >  =20
-> > -	debugfs_create_bool("vpg", 0660, dsi->debugfs, &dsi->vpg);
-> > -	debugfs_create_bool("vpg_horizontal", 0660, dsi->debugfs,
-> > -			    &dsi->vpg_horizontal);
-> > +	debugfs_create_files(dsi);
-> >   }
-> >  =20
-> >   static void dw_mipi_dsi_debugfs_remove(struct dw_mipi_dsi *dsi)
-> >   {
-> >   	debugfs_remove_recursive(dsi->debugfs);
-> > +	kfree(dsi->debugfs_vpg);
-> >   }
-> >  =20
-> >   #else
-> >=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://urldefense.com/v3/__https://lists.freedesktop.org/mailman/listinf=
-o/dri-devel__;!!A4F2R9G_pg!PaD758-TpCHJcJG4biB5oM3WJXd1mTbLitD8K1qzSVQ4Z06n=
-c__06MR_sz-ITMIl$=20
-
-
+Dinh
