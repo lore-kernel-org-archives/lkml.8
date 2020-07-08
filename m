@@ -2,133 +2,110 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE3BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB40C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 801AD20774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2A520774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgGHEtI (ORCPT
+        id S1728845AbgGHEtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 00:49:08 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:54028 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgGHEtI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 00:49:08 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jt211-0001kS-7J; Tue, 07 Jul 2020 22:49:03 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jt210-0006xn-Av; Tue, 07 Jul 2020 22:49:03 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-        <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
-        <87eepwzqhd.fsf@x220.int.ebiederm.org>
-        <1f4d8b7e-bcff-f950-7dac-76e3c4a65661@i-love.sakura.ne.jp>
-        <87pn9euks9.fsf@x220.int.ebiederm.org>
-        <757f37f8-5641-91d2-be80-a96ebc74cacb@i-love.sakura.ne.jp>
-        <87h7upucqi.fsf@x220.int.ebiederm.org>
-        <d0266a24-dfab-83d0-e178-aa67c9f5ebc0@i-love.sakura.ne.jp>
-        <87lfk0nslu.fsf@x220.int.ebiederm.org>
-        <ec6a6e18-d7aa-3072-c8dc-b925398b8409@i-love.sakura.ne.jp>
-Date:   Tue, 07 Jul 2020 23:46:18 -0500
-In-Reply-To: <ec6a6e18-d7aa-3072-c8dc-b925398b8409@i-love.sakura.ne.jp>
-        (Tetsuo Handa's message of "Sat, 4 Jul 2020 15:57:38 +0900")
-Message-ID: <87o8oqipgl.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 8 Jul 2020 00:49:36 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:7856 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgGHEtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 00:49:36 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4B1n0C4zc4z9v12f;
+        Wed,  8 Jul 2020 06:49:31 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id WuA_H24l4QZ1; Wed,  8 Jul 2020 06:49:31 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4B1n0C42Y8z9v12h;
+        Wed,  8 Jul 2020 06:49:31 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 788828B77C;
+        Wed,  8 Jul 2020 06:49:32 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id PdPoikqdbpGg; Wed,  8 Jul 2020 06:49:32 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 471658B76B;
+        Wed,  8 Jul 2020 06:49:30 +0200 (CEST)
+Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with
+ __put_user()/__get_user()
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        segher@kernel.crashing.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
+ <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
+ <878sg6862r.fsf@mpe.ellerman.id.au> <875zb98i5a.fsf@mpe.ellerman.id.au>
+ <8b751738-a9d1-8f55-8f9b-9264c8ac7ed8@csgroup.eu>
+ <faa6759a-8188-104b-a9f9-a5ff3b060cfa@csgroup.eu>
+Message-ID: <c827fd9b-984d-ca86-67e9-512ca10d118f@csgroup.eu>
+Date:   Wed, 8 Jul 2020 06:49:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jt210-0006xn-Av;;;mid=<87o8oqipgl.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+sfYvpeMP1lDLTQFoc9fa68JTKvPiHbwU=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <faa6759a-8188-104b-a9f9-a5ff3b060cfa@csgroup.eu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Just to make certain I understand what is going on I instrumented a
-kernel with some print statements.
 
-a) The workqueues and timers start before populate_rootfs.
+Le 07/07/2020 à 21:02, Christophe Leroy a écrit :
+> 
+> 
+> Le 07/07/2020 à 14:44, Christophe Leroy a écrit :
+>>
+>>
+>> Le 30/06/2020 à 03:19, Michael Ellerman a écrit :
+>>> Michael Ellerman <mpe@ellerman.id.au> writes:
+>>>> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+>>>>> Hi Michael,
+>>>>>
+>>>>> I see this patch is marked as "defered" in patchwork, but I can't see
+>>>>> any related discussion. Is it normal ?
+>>>>
+>>>> Because it uses the "m<>" constraint which didn't work on GCC 4.6.
+>>>>
+>>>> https://github.com/linuxppc/issues/issues/297
+>>>>
+>>>> So we should be able to pick it up for v5.9 hopefully.
+>>>
+>>> It seems to break the build with the kernel.org 4.9.4 compiler and
+>>> corenet64_smp_defconfig:
+>>
+>> Most likely a GCC bug ?
+>>
+>> It seems the problem vanishes with patch 
+>> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/173de3b659fa3a5f126a0eb170522cccd909950f.1594125164.git.christophe.leroy@csgroup.eu/ 
+>>
+> 
+> Same kind of issue in signal_64.c now.
+> 
+> The following patch fixes it: 
+> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/810bd8840ef990a200f58c9dea9abe767ca02a3a.1594146723.git.christophe.leroy@csgroup.eu/ 
+> 
+> 
 
-b) populate_rootfs does indeed happen long before the bpfilter
-   module is intialized.
+This time I confirm, with the two above mentioned patches, it builds OK 
+with 4.9, see 
+http://kisskb.ellerman.id.au/kisskb/head/810bd8840ef990a200f58c9dea9abe767ca02a3a/
 
-c) What prevents populate_rootfs and the umd_load_blob from
-   having problems when they call flush_delayed_put is the
-   fact that fput_many does:
-   "schedule_delayed_work(&delayed_fput_work,1)".
-
-   That 1 requests a delay of at least 1 jiffy.  A jiffy is between
-   1ms and 10ms depending on how Linux is configured.
-
-   In my test configuration running a kernel in kvm printing to a serial
-   console I measured 0.8ms between the fput in blob_to_mnt and
-   flush_delayed_fput which immediately follows it.
-
-   So unless the fput becomes incredibly slow there is nothing to worry
-   about in blob_to_mnt.
-
-d) As the same mechanism is used by populate_rootfs.  A but in the
-   mechanism applies to both.
-
-e) No one appears to have reported a problem executing files out of
-   initramfs these last several years since the flush_delayed_fput was
-   introduced.
- 
-f) The code works for me.  There is real reason to believe the code will
-   work for everyone else, as the exact same logic is used by initramfs.
-   So it should be perfectly fine for the patchset and the
-   usermode_driver code to go ahead as written.
-
-h) If there is something to be fixed it is flush_delayed_fput as that is
-   much more important than anything in the usermode driver code.
-
-Eric
-
-p.s.) When I talked of restarts of the usermode driver code ealier I was
-   referring to the code that restarts the usermode driver if it is
-   killed, the next time the kernel tries to talk to it.
-
-   That could mask an -ETXTBUSY except if it happens on the first exec
-   the net/bfilter/bpfilter_kern.c:load_umh() will return an error.
-
+Christophe
