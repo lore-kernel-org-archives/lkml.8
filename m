@@ -2,86 +2,91 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC93C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05224C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4BF420663
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D8720663
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:37:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgGHQgM (ORCPT
+        id S1730327AbgGHQhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:36:12 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:57546 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730445AbgGHQgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:36:12 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jtD3D-0003zF-QC; Wed, 08 Jul 2020 16:36:03 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jtD3D-0002Vp-NX; Wed, 08 Jul 2020 18:36:03 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        carlos <carlos@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Neel Natu <neelnatu@google.com>
-Subject: Re: [RFC PATCH for 5.8 3/4] rseq: Introduce RSEQ_FLAG_RELIABLE_CPU_ID
-References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
-        <20200706204913.20347-4-mathieu.desnoyers@efficios.com>
-        <87fta3zstr.fsf@mid.deneb.enyo.de>
-        <2088331919.943.1594118895344.JavaMail.zimbra@efficios.com>
-        <874kqjzhkb.fsf@mid.deneb.enyo.de>
-        <378862525.1039.1594123580789.JavaMail.zimbra@efficios.com>
-        <d6b28b3e-9866-ce6f-659e-2c0dba4cd527@redhat.com>
-        <87zh8bw158.fsf@mid.deneb.enyo.de>
-        <1448906726.3717.1594222431276.JavaMail.zimbra@efficios.com>
-        <20200708162247.txdleelcalxkrfjy@wittgenstein>
-Date:   Wed, 08 Jul 2020 18:36:03 +0200
-In-Reply-To: <20200708162247.txdleelcalxkrfjy@wittgenstein> (Christian
-        Brauner's message of "Wed, 8 Jul 2020 18:22:47 +0200")
-Message-ID: <87zh8aufpo.fsf@mid.deneb.enyo.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 8 Jul 2020 12:37:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31878 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730123AbgGHQhn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:37:43 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 068GUgnf109128;
+        Wed, 8 Jul 2020 12:37:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 325ew2xd6k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 12:37:41 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 068GVdVH112357;
+        Wed, 8 Jul 2020 12:37:40 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 325ew2xd5w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 12:37:40 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 068GLmAM015632;
+        Wed, 8 Jul 2020 16:37:38 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06fra.de.ibm.com with ESMTP id 322h1gabby-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 16:37:38 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 068Gba7h43057284
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Jul 2020 16:37:36 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67F8F11C05E;
+        Wed,  8 Jul 2020 16:37:36 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7F2D11C04C;
+        Wed,  8 Jul 2020 16:37:35 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.202.84])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Jul 2020 16:37:35 +0000 (GMT)
+Message-ID: <1594226255.23056.261.camel@linux.ibm.com>
+Subject: Re: [PATCH ima-evm-utils 3/3] ima-evm-utils: ima_sign supports sm3
+ algorithm
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>, vt@altlinux.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 08 Jul 2020 12:37:35 -0400
+In-Reply-To: <20200707033548.21640-3-tianjia.zhang@linux.alibaba.com>
+References: <20200707033548.21640-1-tianjia.zhang@linux.alibaba.com>
+         <20200707033548.21640-3-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_13:2020-07-08,2020-07-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ priorityscore=1501 cotscore=-2147483648 malwarescore=0 clxscore=1015
+ adultscore=0 spamscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007080107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Christian Brauner:
+On Tue, 2020-07-07 at 11:35 +0800, Tianjia Zhang wrote:
+> imaevm sign and verify support sm3 hash algorithm.
+> 
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-> I've been following this a little bit. The kernel version itself doesn't
-> really mean anything and the kernel version is imho not at all
-> interesting to userspace applications. Especially for cross-distro
-> programs. We can't go around and ask Red Hat, SUSE, Ubuntu, Archlinux,
-> openSUSE and god knows who what other distro what their fixed kernel
-> version is.
+The patch description is a bit off.  The crypto support already
+exists.  Please update the patch description appropriately.
 
-And Red Hat Enterprise Linux only has a dozen or two kernel branches
-under active maintenance, each with their own succession of version
-numbers.  It's just not feasible.  Even figuring out the branch based
-on the kernel version can be tricky!
-
-> (Also, as a side-note. I see that you're passing struct rseq *rseq with
-> a length argument but you are not versioning by size. Is that
-> intentional? That basically somewhat locks you to the current struct
-> rseq layout and means users might run into problems when you extend
-> struct rseq in the future as they can't pass the new struct down to
-> older kernels. The way we deal with this is now - rseq might preceed
-> this - is copy_struct_from_user()
-
-The kernel retains the pointer after the system call returns.
-Basically, ownership of the memory area is transferred to the kernel.
-It's like set_robust_list in this regard.
+Mimi
