@@ -2,113 +2,132 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCD9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2575DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 428D22063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0292F2078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:58:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q7a53iOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbgGHQ62 (ORCPT
+        id S1730661AbgGHQ6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:58:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:50803 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgGHQ62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:58:28 -0400
-IronPort-SDR: 2E9sGbbmlDZbh0AuCHFKBOF2YqHzGuhL7Gp9NggbspfwobICaWsN149psnq8hYg+OQtcSRLt7I
- yapTvW2KveiQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="149360287"
-X-IronPort-AV: E=Sophos;i="5.75,328,1589266800"; 
-   d="scan'208";a="149360287"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 09:58:23 -0700
-IronPort-SDR: roGAQ+C7dQ+FJJZSqTi34AQnhgyYC0DtG4s6q1coKI7tPOCpFfdRkjC2CATJp7RkOUcJVllJ5L
- f+1n0hQF6NXA==
-X-IronPort-AV: E=Sophos;i="5.75,328,1589266800"; 
-   d="scan'208";a="358162394"
-Received: from sare-mobl.amr.corp.intel.com (HELO [10.251.7.246]) ([10.251.7.246])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 09:58:23 -0700
-Subject: Re: [PATCH 10/11] ASoC: qdsp6-dai: add gapless support
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org, tiwai@suse.com,
-        vkoul@kernel.org
-References: <20200707163641.17113-1-srinivas.kandagatla@linaro.org>
- <20200707163641.17113-11-srinivas.kandagatla@linaro.org>
- <62af11d3-db26-a31b-00c8-9d78b11862cc@linux.intel.com>
- <04a7f696-e23d-5563-7cc3-aedfaf2c7636@linaro.org>
- <cf9b2d33-9b63-f3d2-2e51-a88c528dad53@linux.intel.com>
- <e6d10009-d01e-d506-1aa3-a915ef42a693@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <b0aa1cff-33c9-a44d-b17b-d2e4e42d60f1@linux.intel.com>
-Date:   Wed, 8 Jul 2020 11:58:21 -0500
+        Wed, 8 Jul 2020 12:58:33 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11547 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgGHQ6c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:58:32 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f05fb2b0001>; Wed, 08 Jul 2020 09:58:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 08 Jul 2020 09:58:31 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 08 Jul 2020 09:58:31 -0700
+Received: from [10.26.73.185] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul
+ 2020 16:58:29 +0000
+Subject: Re: [PATCH 5.4 00/65] 5.4.51-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
+        <akpm@linux-foundation.org>, <linux@roeck-us.net>,
+        <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200707145752.417212219@linuxfoundation.org>
+ <6fbcdd30-68d3-e8c5-d762-7b8a8c48d112@nvidia.com>
+ <20200708151500.GA710412@kroah.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <14d23282-c871-3f9d-372c-06da693666e1@nvidia.com>
+Date:   Wed, 8 Jul 2020 17:58:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <e6d10009-d01e-d506-1aa3-a915ef42a693@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200708151500.GA710412@kroah.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594227499; bh=IpJAqj0DH00PflI4I9sW5sqaACjectpvaylAIhAVG7s=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Q7a53iOPmLs8d9iWm3U6etK1KpSylQuik5UXcVEb2kjWnROGQ2BgNLYHVq8Fz+Yi5
+         Tk7DF0YZyanIm2OdmZ/z4eIrYT/g30WWNQaZXpMsfzGbjwcrvCCEZJddbNMpy3H388
+         DFhnPIu0idJnIzsjC96EghxTyoKki7YCDdGQ25j7pb8xoKNtVU12mJLw7qI0OXek7k
+         leSqzHmUHFxBRalMx/S3tLQjrceSq/NSTJR0WwyJ7ygB8fe6wYA+0uJ5YxlZ97vLcb
+         af+LFRqQAuVcHTWetT7DdmbedQnjX4HTIGhxpimtkUK8Bpsr41CkifXx5bFhSo0/Vs
+         naQ1GJJXmbwaw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
->> right, but the key point is 'switch between streams'. That means a 
->> more complex/capable implementation that should be advertised as such 
->> to applications. This is not the default behavior assumed initially: 
->> to allow for minimal implementations in memory-constrained devices, we 
->> assumed gapless was supported with a single decoder.
+On 08/07/2020 16:15, Greg Kroah-Hartman wrote:
+> On Wed, Jul 08, 2020 at 09:41:33AM +0100, Jon Hunter wrote:
 >>
->> Maybe the right way to do this is extend the snd_compr_caps structure:
+>> On 07/07/2020 16:16, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 5.4.51 release.
+>>> There are 65 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+>>> Anything received after that time might be too late.
+>>>
+>>> The whole patch series can be found in one patch at:
+>>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.51-rc1.gz
+>>> or in the git tree and branch at:
+>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+>>> and the diffstat can be found below.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
 >>
->> /**
->>   * struct snd_compr_caps - caps descriptor
->>   * @codecs: pointer to array of codecs
->>   * @direction: direction supported. Of type snd_compr_direction
->>   * @min_fragment_size: minimum fragment supported by DSP
->>   * @max_fragment_size: maximum fragment supported by DSP
->>   * @min_fragments: min fragments supported by DSP
->>   * @max_fragments: max fragments supported by DSP
->>   * @num_codecs: number of codecs supported
->>   * @reserved: reserved field
->>   */
->> struct snd_compr_caps {
->>      __u32 num_codecs;
->>      __u32 direction;
->>      __u32 min_fragment_size;
->>      __u32 max_fragment_size;
->>      __u32 min_fragments;
->>      __u32 max_fragments;
->>      __u32 codecs[MAX_NUM_CODECS];
->>      __u32 reserved[11];
->> } __attribute__((packed, aligned(4)));
+>> All tests are passing for Tegra ...
 >>
+>> Test results for stable-v5.4:
+>>     11 builds:	11 pass, 0 fail
+>>     26 boots:	26 pass, 0 fail
+>>     56 tests:	56 pass, 0 fail
 >>
->> and use a reserved field to provide info on capabilities, and filter 
->> the set_codec_params() addition based this capability - i.e. return 
->> -ENOTSUP in 'traditional' implementations based on a single 
->> 'stream'/decoder instance.
+>> Linux version:	5.4.51-rc1-g47d410b54275
+>> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>>                 tegra194-p2972-0000, tegra20-ventana,
+>>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>>                 tegra30-cardhu-a04
+> 
+> Thanks for testing all of these and letting me know.
 
-I think this is also what Mark was referring to earlier.
+No problem. For some reason the v5.7 review email never made it to my
+inbox AFAICT. Who knows if it will show up tomorrow, but anyway it all
+looks good to Tegra ...
 
-> Sounds good!
-> I will give it a go and see how it ends up!
+Test results for stable-v5.7:
+    11 builds:	11 pass, 0 fail
+    26 boots:	26 pass, 0 fail
+    56 tests:	56 pass, 0 fail
 
-Glad to see this discussion progressing.
+Linux version:	5.7.8-rc1-gb371afd12a48
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
-We may also want to document the 3 possible ways of supporting gapless 
-playback while we are at it:
-a) with the existing single decoder assumption
-b) with your suggested solution with a switch at the DSP level
-c) with 2 streams at the userspace level and a switch/x-fade at the DSP 
-level - which may simplify userspace quite a bit and was the initial 
-design in a non-Linux OS.
+Cheers
+Jon
+
+-- 
+nvpublic
