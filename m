@@ -2,42 +2,43 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FDFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C146C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8441320775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A12920786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594204574;
-	bh=2v5F+PRYQT8vahprdgVWxD5wlP/mcKRGtnE6ta0XxG0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Wg77pFa5EWibNGFdaVYJDabcMOSuSNc6ZJvFfQFAIkyM4ZvsC9KtwjroRUbENw5qJ
-	 8WNBbB5ngs1AOrQFq3g43YhBw2ODORz0PXh2hDmuSOVlXBghx8o3fMFzZCYcLNYXFt
-	 hCk+Iv9Hn+O/P9ceSVUEWuZAK37Kb+x8q6ifl9OQ=
+	s=default; t=1594204581;
+	bh=j4EX+FYYMmUL3lz0Sf39rotA7d7j4vro6NAbsWtYLko=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xz/jQBTdIWURHJWK0x5GVsyAZPfUe9MBjJHq1xY2sp4ceBhhBFm7ZoPHzQndLp+io
+	 LhG//AmXgt1XwUWXQWgkPKnawbBecEnjWLqJGHr+f7Hrfh6WGsSOxIx2dlDeU0ezZ3
+	 XWPOl2r9lyaUcoj4jCN8Uxvgx67awYPN4q1uD8aU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgGHKgN (ORCPT
+        id S1728590AbgGHKgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:36:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35128 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 06:36:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728410AbgGHKgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:36:13 -0400
+        id S1728410AbgGHKgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:36:19 -0400
 Received: from localhost.localdomain (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8D0020739;
-        Wed,  8 Jul 2020 10:36:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20B1820772;
+        Wed,  8 Jul 2020 10:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594204572;
-        bh=2v5F+PRYQT8vahprdgVWxD5wlP/mcKRGtnE6ta0XxG0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Nzm4hjiYrvSsylJENbbODhuYxwzBqKLLjuIHk/q8Tz047Pla7cP5oDORM+QczIX2l
-         tTvZUiJSGLvPtStViJPy6/fqIHBGYesw4Dr3baWajDbRsoWCrMX9vMnWo3XKSTRa6C
-         n2i4f+H2MGt6razieEBSV20SHUcHq8VRc8LKJEIk=
+        s=default; t=1594204579;
+        bh=j4EX+FYYMmUL3lz0Sf39rotA7d7j4vro6NAbsWtYLko=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FV2Sus3+GfHAz3YX6mDetTIQ59c65IsSFM0x/7I4TnxHuz6Coc4eTY9+3jBGWUUhJ
+         9Rc7QmzEdpkgQEcawXOih+5hnCt384un3DGMZ9MoQaJp/V91NJkgTRN3hKU08Fozs3
+         oijZ90OGG28jfD7DdMtNP7sG72hxFKbwrCFYYmE4=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
         Rob Clark <robdclark@gmail.com>
@@ -52,11 +53,14 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Emil Velikov <emil.l.velikov@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v5 0/4] Add LT9611 DSI to HDMI bridge
-Date:   Wed,  8 Jul 2020 16:05:55 +0530
-Message-Id: <20200708103559.132300-1-vkoul@kernel.org>
+        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH v5 1/4] dt-bindings: vendor-prefixes: Add Lontium vendor prefix
+Date:   Wed,  8 Jul 2020 16:05:56 +0530
+Message-Id: <20200708103559.132300-2-vkoul@kernel.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200708103559.132300-1-vkoul@kernel.org>
+References: <20200708103559.132300-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,50 +68,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add prefix for Lontium Semiconductor Corporation
 
-This series adds driver and bindings for Lontium LT9611 bridge chip which
-takes MIPI DSI as input and HDMI as output.
+Acked-by: Rob Herring <robh@kernel.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This chip can be found in 96boards RB3 platform [1] commonly called DB845c.
-
-[1]: https://www.96boards.org/product/rb3-platform/
-
-Changes in v5:
- - make symbol static, reported by kbuild-bot
-
-Changes in v4:
- - Add msm/dsi patch to create connector and support DRM_BRIDGE_ATTACH_NO_CONNECTOR
- - Fix comments provided by Sam
-
-Changes in v3:
- - fix kbuild reported error
- - rebase on v5.8-rc1
-
-Changes in v2:
- - Add acks by Rob
- - Fix comments reported by Emil and rename the file to lontium-lt9611.c
- - Fix comments reported by Laurent on binding and driver
- - Add HDMI audio support
-
-Vinod Koul (4):
-  dt-bindings: vendor-prefixes: Add Lontium vendor prefix
-  dt-bindings: display: bridge: Add documentation for LT9611
-  drm/bridge: Introduce LT9611 DSI to HDMI bridge
-  drm/msm/dsi: attach external bridge with
-    DRM_BRIDGE_ATTACH_NO_CONNECTOR
-
- .../display/bridge/lontium,lt9611.yaml        |  176 +++
- .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
- drivers/gpu/drm/bridge/Kconfig                |   13 +
- drivers/gpu/drm/bridge/Makefile               |    1 +
- drivers/gpu/drm/bridge/lontium-lt9611.c       | 1142 +++++++++++++++++
- drivers/gpu/drm/msm/dsi/dsi.c                 |    7 +-
- drivers/gpu/drm/msm/dsi/dsi_manager.c         |   27 +-
- 7 files changed, 1348 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
- create mode 100644 drivers/gpu/drm/bridge/lontium-lt9611.c
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9aeab66be85f..31cdb21a3d22 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -595,6 +595,8 @@ patternProperties:
+     description: Logic Technologies Limited
+   "^longcheer,.*":
+     description: Longcheer Technology (Shanghai) Co., Ltd.
++  "^lontium,.*":
++    description: Lontium Semiconductor Corporation
+   "^loongson,.*":
+     description: Loongson Technology Corporation Limited
+   "^lsi,.*":
 -- 
 2.26.2
 
