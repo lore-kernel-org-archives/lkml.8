@@ -2,142 +2,79 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A87C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6185CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7362073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:03:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VTUdIfdQ"
+	by mail.kernel.org (Postfix) with ESMTP id 34A7A20771
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594166706;
+	bh=bFz0XD3XXeJwo06qMWGrcu+03e11AsmfH/V5+bjZrlU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=DJx9XDUpIIiT+luRXzQq0O72KU9yaX26PAHyf7IlYKMG9n8eJ+08qpRHL6bmrKYr0
+	 Fkrl6EaFzx+/6wcMtvVCUP3NurK3RnTbigtELK/Y7ENSdxTn/5w5lvIyXrEjRMNrXm
+	 FcvPgNStOR9XETgEywNTZ6nJVM1NWyjwjEwF4C+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgGHADz (ORCPT
+        id S1729540AbgGHAFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 20:03:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728956AbgGHADy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 20:03:54 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C803C08C5E3
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 17:03:54 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id m22so10402012pgv.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 17:03:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XdUaPDr56t2dB8W61mELkwj0Skn6S5S4z+Vsl/tJuD4=;
-        b=VTUdIfdQiK5zHvzFtK8tbyfXjd+nD6axR+vPnmGSSkNh1E+1ZiM7M9DC1CsxyMf2wt
-         b2v8jrBY52b2jGsd26dV33M2EUP/T2e2Dgnx6h0zwboF2A1izvEz03TmfgImJCv+hVe9
-         ZK3sk7xEQSZ9B1SsC6/oLqAPlJT5zW/upU9BA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XdUaPDr56t2dB8W61mELkwj0Skn6S5S4z+Vsl/tJuD4=;
-        b=kdxyPYOzicFhWZ9aA2pheRQby8muA69xtOawVfH2ybnU0q5GIBfo38gYqxswucZP7m
-         NyjX6e6zcngbyBbHC5kVj8WyzDaa71U/r7lJJ7zqc0LXP/wm2gtZsxfzzFySwt+p3Twy
-         EgjYatIJUaBHPLQ5H1J8283/3hAC4IG+npfcKMDUfvCgu8LhVKjn4MsvnqAmz5s41lf5
-         OQYqBWbkEZ8fCyt/lkjG/DgV058qC9+5P58Zj3ywWk8iBVaS4///YIkGgBMDOiJ4QMTF
-         HunUTMXFpP/VlpoMippytdQMbXvV1QLZwIEb61G3M+RT4WV7ukPou+a7shLWDdpaIrC+
-         rM+Q==
-X-Gm-Message-State: AOAM532iqmPcUUPHCPPJPQ8LfQzpoHfP8er5s2kai9NPs4vqQ1a9ILnc
-        UGwJHgXkimOFaS5Lo5MPzehDtA==
-X-Google-Smtp-Source: ABdhPJzlB+wnA820KsXyKDpkiqDz27omyRVHEG+75x1JqbwOpWvyP8oemaSGQaQclki+9QkvXKv2uA==
-X-Received: by 2002:a62:f202:: with SMTP id m2mr39784579pfh.157.1594166631916;
-        Tue, 07 Jul 2020 17:03:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 27sm3417389pjg.19.2020.07.07.17.03.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 17:03:51 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 17:03:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Desmond Yan <desmond.yan@broadcom.com>,
-        James Hu <james.hu@broadcom.com>
-Subject: Re: [PATCH v10 7/9] misc: bcm-vk: add Broadcom VK driver
-Message-ID: <202007071700.C567BA7B@keescook>
-References: <20200706232309.12010-1-scott.branden@broadcom.com>
- <20200706232309.12010-8-scott.branden@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200706232309.12010-8-scott.branden@broadcom.com>
+        Tue, 7 Jul 2020 20:05:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728280AbgGHAFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 20:05:04 -0400
+Subject: Re: [GIT PULL] Second batch of perf tooling fixes for v5.8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594166704;
+        bh=bFz0XD3XXeJwo06qMWGrcu+03e11AsmfH/V5+bjZrlU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=l5/UGdGT1IIKZNS1gEdOuHQrOFEr8V5+P9bwfAtQ0CYB5geP+47MV4VjuTqXHr3zh
+         yWnPqht4CwmN6inTPZtZd1XZUe0RKsvikhBsqrCIA2gqoCav02eftaGmVddKsjFYXe
+         gM9Vhncfg3x0mBAmYEKvdaDILCir8Kt7FlW+B/Mc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200707202450.23345-1-acme@kernel.org>
+References: <20200707202450.23345-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200707202450.23345-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+ tags/perf-tools-fixes-2020-07-07
+X-PR-Tracked-Commit-Id: bee9ca1c8a237ca178f281062bf162637071ab04
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: dcde237b9b0eb1d19306e6f48c0a4e058907619f
+Message-Id: <159416670428.16656.5257808883488752855.pr-tracker-bot@kernel.org>
+Date:   Wed, 08 Jul 2020 00:05:04 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Wei Li <liwei391@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 04:23:07PM -0700, Scott Branden wrote:
-> Add Broadcom VK driver offload engine.
-> This driver interfaces to the VK PCIe offload engine to perform
-> should offload functions as video transcoding on multiple streams
-> in parallel.  VK device is booted from files loaded using
-> request_firmware_into_buf mechanism.  After booted card status is updated
-> and messages can then be sent to the card.
-> Such messages contain scatter gather list of addresses
-> to pull data from the host to perform operations on.
-> 
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> Signed-off-by: Desmond Yan <desmond.yan@broadcom.com>
+The pull request you sent on Tue,  7 Jul 2020 17:24:50 -0300:
 
-nit: your S-o-b chain doesn't make sense (I would expect you at the end
-since you're sending it and showing as the Author). Is it Co-developed-by?
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-2020-07-07
 
-> [...]
-> +
-> +		max_buf = SZ_4M;
-> +		bufp = dma_alloc_coherent(dev,
-> +					  max_buf,
-> +					  &boot_dma_addr, GFP_KERNEL);
-> +		if (!bufp) {
-> +			dev_err(dev, "Error allocating 0x%zx\n", max_buf);
-> +			ret = -ENOMEM;
-> +			goto err_buf_out;
-> +		}
-> +
-> +		bcm_vk_buf_notify(vk, bufp, boot_dma_addr, max_buf);
-> +	} else {
-> +		dev_err(dev, "Error invalid image type 0x%x\n", load_type);
-> +		ret = -EINVAL;
-> +		goto err_buf_out;
-> +	}
-> +
-> +	ret = request_partial_firmware_into_buf(&fw, filename, dev,
-> +						bufp, max_buf, 0);
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/dcde237b9b0eb1d19306e6f48c0a4e058907619f
 
-Unless I don't understand what's happening here, this needs to be
-reordered if you're going to keep Mimi happy and disallow the device
-being able to see the firmware before it has been verified. (i.e. please
-load the firmware before mapping DMA across the buffer.)
+Thank you!
 
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
