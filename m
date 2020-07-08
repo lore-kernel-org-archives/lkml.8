@@ -2,99 +2,110 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD24EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB22C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 811762078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594219542;
-	bh=cP+F+wz6n3hVoP8aNvSk5AWUDQcuCoNcjaP+vD3mi0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2L6NkUAQJb/ewaXJ9/69eh3D6Qd4lNq9GTyP+VJpgBZQ/t/fJo8wS59FCIP3wBN3R
-	 OgiYaG8+rIogFK3Js8EuK5wpGk79k2g3KHD9u0+SLh9xiWtI6js5ggUO3Q1RONKnpU
-	 S6pabH0V/s0mHoN9a6NKzBbz8ZizjNS1LTV8vs2s=
+	by mail.kernel.org (Postfix) with ESMTP id 5213D2078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:46:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mrot4Vsb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AgOptL+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbgGHOpi (ORCPT
+        id S1729987AbgGHOqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:45:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729595AbgGHOpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:45:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9595820786;
-        Wed,  8 Jul 2020 14:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594219534;
-        bh=cP+F+wz6n3hVoP8aNvSk5AWUDQcuCoNcjaP+vD3mi0c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p8p1ggFGPnEJteeBB95WXlg92wIy14eUukTWMJ98rTrbqwYdZcJBZGUYN+pWuCINt
-         XKR5p/f/qA4r7A8X87MfvonfgMpiHzjS6QYwHMdhNYNt4sQzTkKwBnR2ZBo6G1r8c6
-         /yDXSsapFaQp6Elc81pa5Frm12+eTa/cFMtCgq50=
-Date:   Wed, 8 Jul 2020 15:45:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rohit kumar <rohitkr@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
-        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ajit Pandey <ajitp@codeaurora.org>
-Subject: Re: [PATCH v3 4/8] include: dt-bindings: sound: Add sc7180-lpass
- bindings header
-Message-ID: <20200708144528.GT4655@sirena.org.uk>
-References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
- <1594184896-10629-5-git-send-email-rohitkr@codeaurora.org>
+        Wed, 8 Jul 2020 10:46:03 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:58345 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729854AbgGHOqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 10:46:03 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id AB1BBDF2;
+        Wed,  8 Jul 2020 10:46:01 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 08 Jul 2020 10:46:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=4NREBuy0f4ceXTelZ1c05+0MR5
+        Jh1oCebiw4dhTmkwo=; b=mrot4VsbtbIj7r651H0GQW8ozK6aAsVAvln1MX6N54
+        QVtozd2CTIW9mYGPPKm/Je5lqsm8YKbYhBMuNWglTfKizGwOpXN8iIeKESTVKY1s
+        7bp27HpLpRn1K9W/DoKsySCz++H+q20VAeHm3FiQj222DG4R+SXDtOYIXgc5sKfH
+        ODTrtiIzRt6GrFKUEjvWCQ5Il8t+jTuSpYHS/A5ZddupCLMKvwI1rknYYGAQH+J5
+        qOltWUoI8CH6pAq2vClxvTzQ7lYagIscmL5Rnzni/TD3d9Gim6hLEVh/K2stfA/I
+        zxTcasGRdLG8Sdj/iaUwQq9ijk+x6Q15dVW1/0oGJjfw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=4NREBuy0f4ceXTelZ
+        1c05+0MR5Jh1oCebiw4dhTmkwo=; b=AgOptL+0VLoGiDi+SsFyCLLKauc6uq1B0
+        an6opM9PmkFNYtzai5noRLpI+37B3e9mCZT7tYDS5kXElctl9n2+Kf/7nXRFJELf
+        dfikWSf/8ks3ga8pOJwPNMs3DTGicwOZD72ykDH5NwFl2N0H1sJN7opJ5gwQ6lvQ
+        AKgT1+cljjhPvofL0OpiCELOLkiGnql8a157imIcalAefiN+iCJcLnYp48A3AnFW
+        grU2zldwFhUNownecpcNWM3zHhxB+YV89e/yI2aJdLjmzMoPP67UhWryRoePLICV
+        xxT80fD9hYfHMGcINGU+hlhaKYnuiKHZYIRmaKjeERN0GgnOhfPLw==
+X-ME-Sender: <xms:JtwFX97V55PVlIlyO6dbHGZOH_e5AL5nzt3bSUMz4Us28heyXridOg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdekvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucft
+    ihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtthgvrh
+    hnpeejffehuddvvddvlefhgeelleffgfeijedvhefgieejtdeiueetjeetfeeukeejgeen
+    ucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:JtwFX66feTj8YlZBr2kQuxlIM311HHmjem0qBUY4pxly-IPAkUOC-Q>
+    <xmx:JtwFX0epB2H0zg_666qv-MO06-YwUlMwlkyT77m-2byocavX5SYURg>
+    <xmx:JtwFX2JJsBYOF-7qKdqFgDp93qCW0fHcEWtTwmRLrKajhqsEbPAIsg>
+    <xmx:KdwFX2pxYtegwssixOJgEGszWwlAeIGYVmXFBnuXM8r9y6-FX9PENzPYfDg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 30F7D328005D;
+        Wed,  8 Jul 2020 10:45:58 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH] drm/vc4: hdmi: Add a name to the codec DAI component
+Date:   Wed,  8 Jul 2020 16:45:55 +0200
+Message-Id: <20200708144555.718404-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="e7jIye1Ygp5H0AIi"
-Content-Disposition: inline
-In-Reply-To: <1594184896-10629-5-git-send-email-rohitkr@codeaurora.org>
-X-Cookie: Oh Dad!  We're ALL Devo!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since the components for a given device in ASoC are identified by their
+name, it makes sense to add one even though it's not strictly necessary.
 
---e7jIye1Ygp5H0AIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Wed, Jul 08, 2020 at 10:38:12AM +0530, Rohit kumar wrote:
-> From: Ajit Pandey <ajitp@codeaurora.org>
->=20
-> Add header defining dai-id and mclk id for SC7180 lpass soc.
->=20
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-> ---
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+index 15a11cd4de25..a057db0d9baa 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@ -983,6 +983,7 @@ static const struct snd_soc_dapm_route vc4_hdmi_audio_routes[] = {
+ };
+ 
+ static const struct snd_soc_component_driver vc4_hdmi_audio_component_drv = {
++	.name			= "vc4-hdmi-codec-dai-component",
+ 	.controls		= vc4_hdmi_audio_controls,
+ 	.num_controls		= ARRAY_SIZE(vc4_hdmi_audio_controls),
+ 	.dapm_widgets		= vc4_hdmi_audio_widgets,
+-- 
+2.26.2
 
-This one is missing a signoff as well, and I can't seem to see any
-reference to this header in the bindings document patches?
-
---e7jIye1Ygp5H0AIi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8F3AgACgkQJNaLcl1U
-h9CXIwf/dPOevjBguwkthEqzY8waDrI4Vr76oqQ/VwaDcPs5ms8WZBlIduTiQwHe
-LvggZGwuNjq49n6Yx7+vu+/uOJaTTRf99NF8bJ4FuS4aJK0VaCdUwLwwYE6xuSPq
-tGc5B3e4rzdzrs+FJMmRZZ+a55RNU8MXP3j5LuecI7xlxRMifHIx8Nmn52GSI4RD
-7YtEODCmd4xSh4KAEIydg9yzn8o/zMPqwv/jL8MNOEUol5x20FU4tnD2iRJ6E5Fx
-n+yak8arDbKsLRjZH4xtGxhTrl4pKyeGOVrN12XcbiZupG2dDzmJi6LOR9P3HXQ9
-ElQHfFZxIRiHgX9scCPEWtn0DlKV6Q==
-=qOBi
------END PGP SIGNATURE-----
-
---e7jIye1Ygp5H0AIi--
