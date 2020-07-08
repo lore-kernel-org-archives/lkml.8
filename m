@@ -2,201 +2,96 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_SBL,URIBL_SBL_A autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B13BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E268C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07D6D2080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:35:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O+ZGOc9R"
+	by mail.kernel.org (Postfix) with ESMTP id EBB4820772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbgGHMfJ (ORCPT
+        id S1729171AbgGHMgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:35:09 -0400
-Received: from casper.infradead.org ([90.155.50.34]:33804 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728965AbgGHMfI (ORCPT
+        Wed, 8 Jul 2020 08:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728770AbgGHMgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:35:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=JOdrvVBNvN427RftYiUMCKmaeWd1nQ0Dut+NXex+TSk=; b=O+ZGOc9RoTX2V/qcTsSPAokNRh
-        d2pWbJc2ihWp7bGGU05Nr+Xvu3yG+tye8lm/g56o9IMBubnqURZyfdE1L3Ea1FNJjIEPLVdLYW9Iu
-        tg6EZ8uN8RhremEP2JAqLUtt/CIg2EvVpFwGGtSeFvrRwl/H9zKhYo240mC+5jfIf5zDqCwYqvRcw
-        M568Lm71gNygDTnqrTXHndVlI9TR5tfs3pgifNl0Ozoc/IjItelwK9iTlHPwNkyO8Tskux2MsTng2
-        d2dPoJQjzI/+P1DMdj140U6havH7n52zmK1onESgZre2EkP6t69hytcEzoL9Z/fdRKyQjjcAGB5Wq
-        zxialUiA==;
-Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jt9FP-00021j-HP; Wed, 08 Jul 2020 12:32:26 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Song Liu <song@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 2/6] cdrom: remove the unused cdrom_media_changed function
-Date:   Wed,  8 Jul 2020 14:25:42 +0200
-Message-Id: <20200708122546.214579-3-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200708122546.214579-1-hch@lst.de>
-References: <20200708122546.214579-1-hch@lst.de>
+        Wed, 8 Jul 2020 08:36:23 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28181C08C5DC;
+        Wed,  8 Jul 2020 05:36:23 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 0C50CBC070;
+        Wed,  8 Jul 2020 12:36:19 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com, corbet@lwn.net,
+        linux-usb@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: USB HID/HIDBP DRIVERS (USB KEYBOARDS, MICE, REMOTE CONTROLS, ...)
+Date:   Wed,  8 Jul 2020 14:36:13 +0200
+Message-Id: <20200708123613.14368-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As well as the ->media_changed method.  All these are left over from
-before the drivers were switched over to the check_events scheme.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- Documentation/cdrom/cdrom-standard.rst | 18 +----------------
- drivers/cdrom/cdrom.c                  | 28 +++++---------------------
- include/linux/cdrom.h                  |  2 --
- 3 files changed, 6 insertions(+), 42 deletions(-)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/Documentation/cdrom/cdrom-standard.rst b/Documentation/cdrom/cdrom-standard.rst
-index dde4f7f7fdbf1c..2de90581059033 100644
---- a/Documentation/cdrom/cdrom-standard.rst
-+++ b/Documentation/cdrom/cdrom-standard.rst
-@@ -157,7 +157,6 @@ with the kernel as a block device by registering the following general
- 		cdrom_release,		/∗ release ∗/
- 		NULL,			/∗ fsync ∗/
- 		NULL,			/∗ fasync ∗/
--		cdrom_media_changed,	/∗ media change ∗/
- 		NULL			/∗ revalidate ∗/
- 	};
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+
+ Documentation/hid/hiddev.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/hid/hiddev.rst b/Documentation/hid/hiddev.rst
+index 209e6ba4e019..9b28a97c03e6 100644
+--- a/Documentation/hid/hiddev.rst
++++ b/Documentation/hid/hiddev.rst
+@@ -65,7 +65,7 @@ The HIDDEV API
+ ==============
  
-@@ -366,19 +365,6 @@ which may or may not be in the drive). If the drive is not a changer,
- 	CDS_DRIVE_NOT_READY	/* something is wrong, tray is moving? */
- 	CDS_DISC_OK		/* a disc is loaded and everything is fine */
+ This description should be read in conjunction with the HID
+-specification, freely available from http://www.usb.org, and
++specification, freely available from https://www.usb.org, and
+ conveniently linked of http://www.linux-usb.org.
  
--::
--
--	int media_changed(struct cdrom_device_info *cdi, int disc_nr)
--
--This function is very similar to the original function in $struct
--file_operations*. It returns 1 if the medium of the device *cdi->dev*
--has changed since the last call, and 0 otherwise. The parameter
--*disc_nr* identifies a specific slot in a juke-box, it should be
--ignored for single-disc drives. Note that by `re-routing` this
--function through *cdrom_media_changed()*, we can implement separate
--queues for the VFS and a new *ioctl()* function that can report device
--changes to software (e. g., an auto-mounting daemon).
--
- ::
- 
- 	int tray_move(struct cdrom_device_info *cdi, int position)
-@@ -917,9 +903,7 @@ commands can be identified by the underscores in their names.
- 	maximum number of discs in the juke-box found in the *cdrom_dops*.
- `CDROM_MEDIA_CHANGED`
- 	Returns 1 if a disc has been changed since the last call.
--	Note that calls to *cdrom_media_changed* by the VFS are treated
--	by an independent queue, so both mechanisms will detect a
--	media change once. For juke-boxes, an extra argument *arg*
-+	For juke-boxes, an extra argument *arg*
- 	specifies the slot for which the information is given. The special
- 	value *CDSL_CURRENT* requests that information about the currently
- 	selected slot be returned.
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index d82b3b7658bddc..0c271b9e3c5b79 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -605,7 +605,7 @@ int register_cdrom(struct gendisk *disk, struct cdrom_device_info *cdi)
- 	disk->cdi = cdi;
- 
- 	ENSURE(cdo, drive_status, CDC_DRIVE_STATUS);
--	if (cdo->check_events == NULL && cdo->media_changed == NULL)
-+	if (cdo->check_events == NULL)
- 		WARN_ON_ONCE(cdo->capability & (CDC_MEDIA_CHANGED | CDC_SELECT_DISC));
- 	ENSURE(cdo, tray_move, CDC_CLOSE_TRAY | CDC_OPEN_TRAY);
- 	ENSURE(cdo, lock_door, CDC_LOCK);
-@@ -1419,8 +1419,6 @@ static int cdrom_select_disc(struct cdrom_device_info *cdi, int slot)
- 
- 	if (cdi->ops->check_events)
- 		cdi->ops->check_events(cdi, 0, slot);
--	else
--		cdi->ops->media_changed(cdi, slot);
- 
- 	if (slot == CDSL_NONE) {
- 		/* set media changed bits, on both queues */
-@@ -1517,13 +1515,10 @@ int media_changed(struct cdrom_device_info *cdi, int queue)
- 		return ret;
- 
- 	/* changed since last call? */
--	if (cdi->ops->check_events) {
--		BUG_ON(!queue);	/* shouldn't be called from VFS path */
--		cdrom_update_events(cdi, DISK_EVENT_MEDIA_CHANGE);
--		changed = cdi->ioctl_events & DISK_EVENT_MEDIA_CHANGE;
--		cdi->ioctl_events = 0;
--	} else
--		changed = cdi->ops->media_changed(cdi, CDSL_CURRENT);
-+	BUG_ON(!queue);	/* shouldn't be called from VFS path */
-+	cdrom_update_events(cdi, DISK_EVENT_MEDIA_CHANGE);
-+	changed = cdi->ioctl_events & DISK_EVENT_MEDIA_CHANGE;
-+	cdi->ioctl_events = 0;
- 
- 	if (changed) {
- 		cdi->mc_flags = 0x3;    /* set bit on both queues */
-@@ -1535,18 +1530,6 @@ int media_changed(struct cdrom_device_info *cdi, int queue)
- 	return ret;
- }
- 
--int cdrom_media_changed(struct cdrom_device_info *cdi)
--{
--	/* This talks to the VFS, which doesn't like errors - just 1 or 0.  
--	 * Returning "0" is always safe (media hasn't been changed). Do that 
--	 * if the low-level cdrom driver dosn't support media changed. */ 
--	if (cdi == NULL || cdi->ops->media_changed == NULL)
--		return 0;
--	if (!CDROM_CAN(CDC_MEDIA_CHANGED))
--		return 0;
--	return media_changed(cdi, 0);
--}
--
- /* Requests to the low-level drivers will /always/ be done in the
-    following format convention:
- 
-@@ -3464,7 +3447,6 @@ EXPORT_SYMBOL(unregister_cdrom);
- EXPORT_SYMBOL(cdrom_open);
- EXPORT_SYMBOL(cdrom_release);
- EXPORT_SYMBOL(cdrom_ioctl);
--EXPORT_SYMBOL(cdrom_media_changed);
- EXPORT_SYMBOL(cdrom_number_of_slots);
- EXPORT_SYMBOL(cdrom_mode_select);
- EXPORT_SYMBOL(cdrom_mode_sense);
-diff --git a/include/linux/cdrom.h b/include/linux/cdrom.h
-index 8543fa59da7207..f48d0a31deaece 100644
---- a/include/linux/cdrom.h
-+++ b/include/linux/cdrom.h
-@@ -73,7 +73,6 @@ struct cdrom_device_ops {
- 	int (*drive_status) (struct cdrom_device_info *, int);
- 	unsigned int (*check_events) (struct cdrom_device_info *cdi,
- 				      unsigned int clearing, int slot);
--	int (*media_changed) (struct cdrom_device_info *, int);
- 	int (*tray_move) (struct cdrom_device_info *, int);
- 	int (*lock_door) (struct cdrom_device_info *, int);
- 	int (*select_speed) (struct cdrom_device_info *, int);
-@@ -107,7 +106,6 @@ extern int cdrom_ioctl(struct cdrom_device_info *cdi, struct block_device *bdev,
- 		       fmode_t mode, unsigned int cmd, unsigned long arg);
- extern unsigned int cdrom_check_events(struct cdrom_device_info *cdi,
- 				       unsigned int clearing);
--extern int cdrom_media_changed(struct cdrom_device_info *);
- 
- extern int register_cdrom(struct gendisk *disk, struct cdrom_device_info *cdi);
- extern void unregister_cdrom(struct cdrom_device_info *cdi);
+ The hiddev API uses a read() interface, and a set of ioctl() calls.
 -- 
-2.26.2
+2.27.0
 
