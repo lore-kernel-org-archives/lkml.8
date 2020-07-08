@@ -2,120 +2,122 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7890AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65692C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 572B6207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44065207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594224765;
+	bh=wvHjxZxUZUUkYWq6mEbxkcnvzWEL0F6xg2+xf/F0qnA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JBx/PVLCVSbSaYlei1c+ksuvmjcFMAD9LJQt4IL4CE7+XnRHv5qMbcsc/D8XEG1f6
+	 AeUbuzaJSsxrGqNDf7p+AytH1UpthSRqCEr+RFntl0jOFqWgR91mfCnbyo/quQ/xZe
+	 c5jt69inwu8fbpcCYcLXTeVZOk6dUC4Qufe+saSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbgGHQMl (ORCPT
+        id S1730634AbgGHQMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:12:41 -0400
-Received: from mga09.intel.com ([134.134.136.24]:45949 "EHLO mga09.intel.com"
+        Wed, 8 Jul 2020 12:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgGHQMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:12:40 -0400
-IronPort-SDR: BkoI7E0U9FsmcSwErJvWktvBNDgy5DYO2S6tcTrY/DK0kSMnCQ1UfK+YcK+X8KSHnqCyEVFNcz
- flpKduB5XfpQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="149347436"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="149347436"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 09:12:40 -0700
-IronPort-SDR: 7OQdnSn0i/jg5bNMTBL0fUlP0GeQFtfVhMZ8eEQEjXCww4Am2hQ+tWWri4pcE9d5QQSkP0CxlW
- 3XYyxQP7KMwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="279998707"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jul 2020 09:12:38 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id AD0D621D; Wed,  8 Jul 2020 19:12:37 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        id S1728148AbgGHQMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:12:42 -0400
+Received: from linux-8ccs.fritz.box (p57a23121.dip0.t-ipconnect.de [87.162.49.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3F4620720;
+        Wed,  8 Jul 2020 16:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594224761;
+        bh=wvHjxZxUZUUkYWq6mEbxkcnvzWEL0F6xg2+xf/F0qnA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OdlewKOXT4w7chOuimi+NRrqQKuLn+dX5NTKYo4SIzQyDzA12aSFG6KscIhvd9VHU
+         cebUXOVOlotPVrB9iqWRvv5KxuVMB+L50oQ1FRo3NwitSn01OTkTU6LrbmN74gjyPi
+         LJfjrwd4dzS6QqKI3qGEuCERfNXDGHfirUjbEXZA=
+Date:   Wed, 8 Jul 2020 18:12:33 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Dominik Czarnota <dominik.czarnota@trailofbits.com>,
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] regmap: Switch to use fwnode instead of OF one
-Date:   Wed,  8 Jul 2020 19:12:32 +0300
-Message-Id: <20200708161232.17914-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.27.0
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matteo Croce <mcroce@redhat.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] module: Do not expose section addresses to
+ non-CAP_SYSLOG
+Message-ID: <20200708161233.GB5609@linux-8ccs.fritz.box>
+References: <20200702232638.2946421-1-keescook@chromium.org>
+ <20200702232638.2946421-4-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200702232638.2946421-4-keescook@chromium.org>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make regmap firmware node type agnostic by switching it to use fwnode.
++++ Kees Cook [02/07/20 16:26 -0700]:
+>The printing of section addresses in /sys/module/*/sections/* was not
+>using the correct credentials to evaluate visibility.
+>
+>Before:
+>
+> # cat /sys/module/*/sections/.*text
+> 0xffffffffc0458000
+> ...
+> # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
+> 0xffffffffc0458000
+> ...
+>
+>After:
+>
+> # cat /sys/module/*/sections/*.text
+> 0xffffffffc0458000
+> ...
+> # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
+> 0x0000000000000000
+> ...
+>
+>Additionally replaces the existing (safe) /proc/modules check with
+>file->f_cred for consistency.
+>
+>Cc: stable@vger.kernel.org
+>Reported-by: Dominik Czarnota <dominik.czarnota@trailofbits.com>
+>Fixes: be71eda5383f ("module: Fix display of wrong module .text address")
+>Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/base/regmap/regmap.c | 31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index aa4c8f5dc6e5..e93700af7e6e 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -11,7 +11,7 @@
- #include <linux/export.h>
- #include <linux/mutex.h>
- #include <linux/err.h>
--#include <linux/of.h>
-+#include <linux/property.h>
- #include <linux/rbtree.h>
- #include <linux/sched.h>
- #include <linux/delay.h>
-@@ -631,7 +631,7 @@ enum regmap_endian regmap_get_val_endian(struct device *dev,
- 					 const struct regmap_bus *bus,
- 					 const struct regmap_config *config)
- {
--	struct device_node *np;
-+	struct fwnode_handle *fwnode = dev ? dev_fwnode(dev) : NULL;
- 	enum regmap_endian endian;
- 
- 	/* Retrieve the endianness specification from the regmap config */
-@@ -641,22 +641,17 @@ enum regmap_endian regmap_get_val_endian(struct device *dev,
- 	if (endian != REGMAP_ENDIAN_DEFAULT)
- 		return endian;
- 
--	/* If the dev and dev->of_node exist try to get endianness from DT */
--	if (dev && dev->of_node) {
--		np = dev->of_node;
--
--		/* Parse the device's DT node for an endianness specification */
--		if (of_property_read_bool(np, "big-endian"))
--			endian = REGMAP_ENDIAN_BIG;
--		else if (of_property_read_bool(np, "little-endian"))
--			endian = REGMAP_ENDIAN_LITTLE;
--		else if (of_property_read_bool(np, "native-endian"))
--			endian = REGMAP_ENDIAN_NATIVE;
--
--		/* If the endianness was specified in DT, use that */
--		if (endian != REGMAP_ENDIAN_DEFAULT)
--			return endian;
--	}
-+	/* If the firmware node exist try to get endianness from it */
-+	if (fwnode_property_read_bool(fwnode, "big-endian"))
-+		endian = REGMAP_ENDIAN_BIG;
-+	else if (fwnode_property_read_bool(fwnode, "little-endian"))
-+		endian = REGMAP_ENDIAN_LITTLE;
-+	else if (fwnode_property_read_bool(fwnode, "native-endian"))
-+		endian = REGMAP_ENDIAN_NATIVE;
-+
-+	/* If the endianness was specified in fwnode, use that */
-+	if (endian != REGMAP_ENDIAN_DEFAULT)
-+		return endian;
- 
- 	/* Retrieve the endianness specification from the bus config */
- 	if (bus && bus->val_format_endian_default)
--- 
-2.27.0
+Tested-by: Jessica Yu <jeyu@kernel.org>
+Acked-by: Jessica Yu <jeyu@kernel.org>
 
