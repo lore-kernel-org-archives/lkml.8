@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2246EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A46120772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED995206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594239578;
-	bh=S84KvemR4M6dpgIi8v4v9eUz3FpWojXbsMcXjZdI0HE=;
+	s=default; t=1594239684;
+	bh=UeCNSUIXhUf07hExa3mxpd08ul/F7bP7XImjtU6s0mQ=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=b016g53zojorqxKXs/km5jtacaTKGL0p3fRkrm2ZYXQyMQz6KktPn1N/6U1LCZcpz
-	 PyxT7j8dq09abhLMAJ5TFOe24ntuwHCDYJuM9jm7Qo1u1+UjD3wzcX2jzFfHHuI0RC
-	 0mgZLEQTi+GvCdZJWW0QeQVQlFQb/bNaQzFjoY1E=
+	b=Gdpz9RtdSpgjLt4BI1jpwDrkZAF9SFqlnLm9DwgiQAUar6TqGu7Ck9RXYyvOIjetl
+	 IRdEcoXUzLnGGS5rrMKJ9g9nu/zlYevFRya3DXgWJ0Vy8vPR75bDsFtUiw2r2VSfo/
+	 p9+FZwjT3CwxISad/fSrdaJLJkC+uoA+qbLRRDXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgGHUTh (ORCPT
+        id S1726174AbgGHUVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:19:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36152 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 16:21:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbgGHUTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:19:37 -0400
+        id S1725915AbgGHUVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 16:21:22 -0400
 Received: from embeddedor (unknown [201.162.240.161])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D902620672;
-        Wed,  8 Jul 2020 20:19:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E9AC206DF;
+        Wed,  8 Jul 2020 20:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594239576;
-        bh=S84KvemR4M6dpgIi8v4v9eUz3FpWojXbsMcXjZdI0HE=;
+        s=default; t=1594239681;
+        bh=UeCNSUIXhUf07hExa3mxpd08ul/F7bP7XImjtU6s0mQ=;
         h=Date:From:To:Cc:Subject:From;
-        b=weUr/blubCR5NpqUVcA2gNZD7HfiGJu4ukvmAQrs8BO7LOjwgQRhyYwztWJWORaxs
-         SOZspislB67pt+1oKgI+XZ9Agd2Gus49p6dxI+EzcZXPITwrwU3GNAQuuTz5K5HSTR
-         6OVMfB+MhqXDHa11OPQRt3zeYxH3ocGNZmkIRbqE=
-Date:   Wed, 8 Jul 2020 15:25:05 -0500
+        b=qpT21zjyUpZRBes6dwkVF7VRpNo7GVmRVSB6Z8LaZTi2JEQxIMzHw64KWRNqB7U7u
+         ltBidmEtNbtwkVXLYf0V/xmUZ+JXRstbLw5hxbqCkpOSgjsqu9XrdlhlkZdCgps4Pu
+         BGa5rraSVTfspfi+I7fjZMP4d9Tkx33lbeEij7ls=
+Date:   Wed, 8 Jul 2020 15:26:50 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH] Bluetooth: RFCOMM: Use fallthrough pseudo-keyword
-Message-ID: <20200708202505.GA1733@embeddedor>
+Subject: [PATCH] Bluetooth: Use fallthrough pseudo-keyword
+Message-ID: <20200708202650.GA3866@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -60,42 +57,105 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1].
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
 [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/bluetooth/rfcomm/core.c | 2 +-
- net/bluetooth/rfcomm/sock.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/bluetooth/bcm203x.c     | 2 +-
+ drivers/bluetooth/bluecard_cs.c | 2 --
+ drivers/bluetooth/hci_ll.c      | 2 +-
+ drivers/bluetooth/hci_qca.c     | 8 +-------
+ 4 files changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
-index 2e20af317cea..f2bacb464ccf 100644
---- a/net/bluetooth/rfcomm/core.c
-+++ b/net/bluetooth/rfcomm/core.c
-@@ -479,7 +479,7 @@ static int __rfcomm_dlc_close(struct rfcomm_dlc *d, int err)
- 		/* if closing a dlc in a session that hasn't been started,
- 		 * just close and unlink the dlc
+diff --git a/drivers/bluetooth/bcm203x.c b/drivers/bluetooth/bcm203x.c
+index 3b176257b993..e667933c3d70 100644
+--- a/drivers/bluetooth/bcm203x.c
++++ b/drivers/bluetooth/bcm203x.c
+@@ -106,7 +106,7 @@ static void bcm203x_complete(struct urb *urb)
+ 		}
+ 
+ 		data->state = BCM203X_LOAD_FIRMWARE;
+-		/* fall through */
++		fallthrough;
+ 	case BCM203X_LOAD_FIRMWARE:
+ 		if (data->fw_sent == data->fw_size) {
+ 			usb_fill_int_urb(urb, udev, usb_rcvintpipe(udev, BCM203X_IN_EP),
+diff --git a/drivers/bluetooth/bluecard_cs.c b/drivers/bluetooth/bluecard_cs.c
+index cc6e56223656..36eabf61717f 100644
+--- a/drivers/bluetooth/bluecard_cs.c
++++ b/drivers/bluetooth/bluecard_cs.c
+@@ -295,7 +295,6 @@ static void bluecard_write_wakeup(struct bluecard_info *info)
+ 				baud_reg = REG_CONTROL_BAUD_RATE_115200;
+ 				break;
+ 			case PKT_BAUD_RATE_57600:
+-				/* Fall through... */
+ 			default:
+ 				baud_reg = REG_CONTROL_BAUD_RATE_57600;
+ 				break;
+@@ -585,7 +584,6 @@ static int bluecard_hci_set_baud_rate(struct hci_dev *hdev, int baud)
+ 		hci_skb_pkt_type(skb) = PKT_BAUD_RATE_115200;
+ 		break;
+ 	case 57600:
+-		/* Fall through... */
+ 	default:
+ 		cmd[4] = 0x03;
+ 		hci_skb_pkt_type(skb) = PKT_BAUD_RATE_57600;
+diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
+index d9a4c6c691e0..8bfe024d1fcd 100644
+--- a/drivers/bluetooth/hci_ll.c
++++ b/drivers/bluetooth/hci_ll.c
+@@ -219,7 +219,7 @@ static void ll_device_want_to_wakeup(struct hci_uart *hu)
+ 		 * perfectly safe to always send one.
  		 */
+ 		BT_DBG("dual wake-up-indication");
 -		/* fall through */
 +		fallthrough;
+ 	case HCILL_ASLEEP:
+ 		/* acknowledge device wake up */
+ 		if (send_hcill_cmd(HCILL_WAKE_UP_ACK, hu) < 0) {
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 99d14c777105..7e395469ca4f 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -472,8 +472,6 @@ static void hci_ibs_tx_idle_timeout(struct timer_list *t)
  
+ 	case HCI_IBS_TX_ASLEEP:
+ 	case HCI_IBS_TX_WAKING:
+-		/* Fall through */
+-
  	default:
- 		rfcomm_dlc_clear_timer(d);
-diff --git a/net/bluetooth/rfcomm/sock.c b/net/bluetooth/rfcomm/sock.c
-index df14eebe80da..0afc4bc5ab41 100644
---- a/net/bluetooth/rfcomm/sock.c
-+++ b/net/bluetooth/rfcomm/sock.c
-@@ -218,7 +218,7 @@ static void __rfcomm_sock_close(struct sock *sk)
- 	case BT_CONFIG:
- 	case BT_CONNECTED:
- 		rfcomm_dlc_close(d, 0);
--		/* fall through */
+ 		BT_ERR("Spurious timeout tx state %d", qca->tx_ibs_state);
+ 		break;
+@@ -516,8 +514,6 @@ static void hci_ibs_wake_retrans_timeout(struct timer_list *t)
+ 
+ 	case HCI_IBS_TX_ASLEEP:
+ 	case HCI_IBS_TX_AWAKE:
+-		/* Fall through */
+-
+ 	default:
+ 		BT_ERR("Spurious timeout tx state %d", qca->tx_ibs_state);
+ 		break;
+@@ -835,8 +831,6 @@ static void device_woke_up(struct hci_uart *hu)
+ 		break;
+ 
+ 	case HCI_IBS_TX_ASLEEP:
+-		/* Fall through */
+-
+ 	default:
+ 		BT_ERR("Received HCI_IBS_WAKE_ACK in tx state %d",
+ 		       qca->tx_ibs_state);
+@@ -2072,7 +2066,7 @@ static int __maybe_unused qca_suspend(struct device *dev)
+ 	switch (qca->tx_ibs_state) {
+ 	case HCI_IBS_TX_WAKING:
+ 		del_timer(&qca->wake_retrans_timer);
+-		/* Fall through */
 +		fallthrough;
+ 	case HCI_IBS_TX_AWAKE:
+ 		del_timer(&qca->tx_idle_timer);
  
- 	default:
- 		sock_set_flag(sk, SOCK_ZAPPED);
 -- 
 2.27.0
 
