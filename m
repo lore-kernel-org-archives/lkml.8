@@ -2,118 +2,194 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D491FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7304920775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2A8320772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:04:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=oppoglobal.onmicrosoft.com header.i=@oppoglobal.onmicrosoft.com header.b="Ub5w/lnS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MtqJ+7ld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgGHKDc (ORCPT
+        id S1728590AbgGHKEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:03:32 -0400
-Received: from mail-eopbgr1310043.outbound.protection.outlook.com ([40.107.131.43]:36509
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726196AbgGHKDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:03:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VYwXTlZ2eJtH0FqTNo3NSCT/vHvPA9XZsjUUfBQk5OI853Awck6ilOWA7UXBteN3x/FTXlx1pKtPObp01PfAZTORmb59QRRmJ3MBj6BS44/092sQqjHMJTF4izspgLaXRjojsunl9sULcT8RP7ztdbddZvjBJ1eZv1FQVvJ3zaYboTCi6U3tBcXTecBAYjoe6LNjeLm7J1q15X0TzhPC17t4hiYkMGMqNTJvWKCwwxOYkbMa9vbYGoYxpWh3y6RqBmmqX/aDjMdpW6x0Wvzyhn2XrxyvGULywx6UBvJyPkMPZ9jIFxpjNyVIrwp4xgZOXb4cZJ39nrKXLFZqUTlx6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QK4DFEGMRz2UGxaLw9hL5pkxsR6bM3pSF8IetCs1Hcc=;
- b=UG1eBMnKBZ+ZA8rAPaPIMzCrgZ2OXQzTlmdrpxojL9c7Vlg+0v1Lbrptb1788boIvONIqxXaOgLN5IRG93jRuZR+xKjMicf95hbgFLxpxfxZouag6X1V1mkxzCBT7gaWWbE65lh627ATkYbZPdBimouzlzj1WvNisulgdE+sq5xounxSHRz352VSodIVkzzkpFws4EbX9EM31UNNNPfG0iyGEgrxzWI0KNP+MAqDXXpTKs8fa5S+zA+lNQBbnmybD2x2PQk2sr48qkuP+Uxj0kmj705Kihty60mRW9YUKnsX7VXRUzoP/AW7DQzZLi9P0xuKGOi7oMBSCk2IibZtkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
- dkim=pass header.d=oppo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oppoglobal.onmicrosoft.com; s=selector1-oppoglobal-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QK4DFEGMRz2UGxaLw9hL5pkxsR6bM3pSF8IetCs1Hcc=;
- b=Ub5w/lnSzq0/CTvt2m42HqqslhC2xCygu6ZeFbt0UarbBVyfkDq9PZ0QwZkShP2WEvS6c5vd64fVqOANGmR2HRBNym4K/8ezVCAKyhIEC1V/potgursWJpOu5tT2zLiCfvq/H0mhPhd1azN2Rh2Dp0a3N2DR2tHY0a2mIhiYQ3Q=
-Received: from HKAPR02MB4291.apcprd02.prod.outlook.com (2603:1096:203:d3::12)
- by HK0PR02MB3042.apcprd02.prod.outlook.com (2603:1096:203:37::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Wed, 8 Jul
- 2020 10:03:28 +0000
-Received: from HKAPR02MB4291.apcprd02.prod.outlook.com
- ([fe80::d4d8:820c:6e00:69d2]) by HKAPR02MB4291.apcprd02.prod.outlook.com
- ([fe80::d4d8:820c:6e00:69d2%8]) with mapi id 15.20.3174.021; Wed, 8 Jul 2020
- 10:03:28 +0000
-From:   =?utf-8?B?5b2t5rWpKFJpY2hhcmQp?= <richard.peng@oppo.com>
-To:     Will Deacon <will@kernel.org>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ardb@kernel.org" <ardb@kernel.org>
-Subject: Re: [PATCH] arm64/module-plts: Consider the special case where
- plt_max_entries is 0
-Thread-Topic: [PATCH] arm64/module-plts: Consider the special case where
- plt_max_entries is 0
-Thread-Index: AdZVDnc5+YpMVDDhTCCDDkk4WgR86A==
-Date:   Wed, 8 Jul 2020 10:03:28 +0000
-Message-ID: <HKAPR02MB4291B970192A023778445B1BE0670@HKAPR02MB4291.apcprd02.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oppo.com;
-x-originating-ip: [58.255.79.102]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f3271dda-4de1-4ac8-ed8f-08d823262996
-x-ms-traffictypediagnostic: HK0PR02MB3042:
-x-microsoft-antispam-prvs: <HK0PR02MB304257527B7ADD4277B74BD2E0670@HK0PR02MB3042.apcprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CUMQc3I4jAbO/EiVmOqbbPwpTqf2Q0SH51If7Vy/gNiOMhKPQ5OENwEvpi1wqOGOWZI1JG0fAyYDZjeZ/qcPDlb94CMTChYCWOn7rWMMrrxRgQYCURwaRmChl5CCn4nz0sks7yybEqlufowvsg08eZIYScCOOEtwFD95VROvAUcimib6krvupsivemLepm0TYkTh4+5GfU5DX0f4arbLXxsZbsNZ2FROfoCjj2tcmKEDP9GagsUmeVX783HFHcyMVlFoqwOPFoQU9mMVZRETSAqfcfWXWSCekTBlf+0fJZa+fjNNWDTNqQVz2bsEnPhGtACuXTQje1dQuqC2+AAkrBQaY0L7eFrEiHE7Alzz7A+XxXAcFc8anazQ5vhMo/ZK
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HKAPR02MB4291.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(346002)(376002)(136003)(396003)(366004)(26005)(55016002)(7696005)(66946007)(86362001)(186003)(76116006)(8676002)(85182001)(6506007)(2906002)(8936002)(52536014)(478600001)(83380400001)(316002)(5660300002)(71200400001)(66446008)(4326008)(64756008)(66556008)(66476007)(6916009)(9686003)(54906003)(33656002)(11606004);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: oyZn+OuiWj1wcfUmiG9ZI/B7LqKentyT6y4IPrJ86yWA+T8mr/w9R1MQLzvqeO4eBWAlPaenf8Nvrq3LmzM/TnFUpTs+35uiMoftUTUpuMDZAih2S8ctSFp7Gjj3em8F/SqCgDTa25RZf66BzGpG4a2A1CiAN8ibl+1alaGBk+Szv1EJSUGfQVBcSsQgP+RMIZQWvK9DltToOyc9teEX2gqWkLcWd9lJWIFzG/jlvD8SksYuuVUHdfAFsODi+7IBLYTiPJgV/u1NTcWGWt3Xy6prRJrP1UwSIk0a7s3m8uxyiddbvsnGwRcPI5AjhAYoy7g9R4k7xFeVDyVym7LRihxPOsJiHKHW+OhILS1De57kO0rP1imV/WF9LbcfMb3u0H9nleZa3fg2qUyZVfuvjTxvRFSGLQw3ivjmYlPDa+DXqKuN80gqm/Qn35XBtV8V29YeTs334kKz/cQ9rgAGy3cB+EvzM75bE2nwBTXZ37s=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 8 Jul 2020 06:04:35 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51454 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728169AbgGHKEe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:04:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594202672;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=fkHeC0QBJUdk7vZhqe39CYqplGbutdV8Iag/eDZdyIQ=;
+        b=MtqJ+7ldWFRwv6PY+bg1xLyL3O0u129Ec+d61nYfOsOgzuPz2UYSd5mqec7Q73kt7EQuRa
+        bOqD9y1cpt75tI46zlYK6DObr5DDE2QTn/WUxselKxOrD0wUEfclsXntBrAjvcI5Fm1Wyk
+        97BlLImr+NZIrPDh0/HC4tle5yo9bDY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-36-X6kz7XnkNSG7LKZB3xj5Ig-1; Wed, 08 Jul 2020 06:04:28 -0400
+X-MC-Unique: X6kz7XnkNSG7LKZB3xj5Ig-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 544B31080;
+        Wed,  8 Jul 2020 10:04:26 +0000 (UTC)
+Received: from [10.36.113.117] (ovpn-113-117.ams2.redhat.com [10.36.113.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D96AD60CD1;
+        Wed,  8 Jul 2020 10:04:22 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid as
+ EXPORT_SYMBOL_GPL
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>, Jia He <justin.he@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Kaly Xin <Kaly.Xin@arm.com>
+References: <20200707180043.GA386073@linux.ibm.com>
+ <CAPcyv4iB-vP8U4pH_3jptfODbiNqJZXoTmA6+7EHoddk9jBgEQ@mail.gmail.com>
+ <20200708052626.GB386073@linux.ibm.com>
+ <9a009cf6-6c30-91ca-a1a5-9aa090c66631@redhat.com>
+ <CAPcyv4jyk_tkDRewTVvRAv0g4LwemEyKYQyuJBXkF4VuYrBdrw@mail.gmail.com>
+ <999ea296-4695-1219-6a4d-a027718f61e5@redhat.com>
+ <20200708083951.GH386073@linux.ibm.com>
+ <cdb0510e-4271-1c97-4305-5fd52da282dc@redhat.com>
+ <20200708091520.GE128651@kernel.org>
+ <df0e5f64-10bc-4c3c-a515-288a6f501065@redhat.com>
+ <20200708094549.GA781326@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <98166184-3aaf-479e-bfb3-fc737f4ac98d@redhat.com>
+Date:   Wed, 8 Jul 2020 12:04:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HKAPR02MB4291.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3271dda-4de1-4ac8-ed8f-08d823262996
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2020 10:03:28.4121
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xQgb9kWOfkWirfSwwxKXWz8ORFwk8xLykt+B+sMc3MmqeO7zVr9GVE6YNxlpFj1mXdbQ6hi0HS+p4r/bncgwpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR02MB3042
+In-Reply-To: <20200708094549.GA781326@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBUdWUsIEp1bCAwNywgMjAyMCBhdCAwNzo0NjowOEFNIC0wNDAwLCBQZW5nIEhhbyB3cm90
-ZToNCj4+IElmIHBsdF9tYXhfZW50cmllcyBpcyAwLCBhIHdhcm5pbmcgaXMgdHJpZ2dlcmVkLg0K
-Pj4gV0FSTklORzogQ1BVOiAyMDAgUElEOiAzMDAwIGF0IGFyY2gvYXJtNjQva2VybmVsL21vZHVs
-ZS1wbHRzLmM6OTcgbW9kdWxlX2VtaXRfcGx0X2VudHJ5KzB4YTQvMHgxNTANCj4NCj4gV2hpY2gg
-a2VybmVsIGFyZSB5b3Ugc2VlaW5nIHRoaXMgd2l0aD8gVGhlcmUgaXMgYSBQTFQtcmVsYXRlZCBj
-aGFuZ2UgaW4NCj4gZm9yLW5leHQvY29yZSwgYW5kIEknZCBsaWtlIHRvIHJ1bGUgaWYgb3V0IGlm
-IHBvc3NpYmxlLg0KPg0KNS42LjAtcmMzKw0KPj4gU2lnbmVkLW9mZi1ieTogUGVuZyBIYW8gPHJp
-Y2hhcmQucGVuZ0BvcHBvLmNvbT4NCj4+IC0tLQ0KPj4gIGFyY2gvYXJtNjQva2VybmVsL21vZHVs
-ZS1wbHRzLmMgfCAzICsrLQ0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEg
-ZGVsZXRpb24oLSkNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQva2VybmVsL21vZHVs
-ZS1wbHRzLmMgYi9hcmNoL2FybTY0L2tlcm5lbC9tb2R1bGUtcGx0cy5jDQo+PiBpbmRleCA2NWIw
-OGE3NGFlYzYuLjE4NjhjOWFjMTNmMiAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtNjQva2VybmVs
-L21vZHVsZS1wbHRzLmMNCj4+ICsrKyBiL2FyY2gvYXJtNjQva2VybmVsL21vZHVsZS1wbHRzLmMN
-Cj4+IEBAIC03OSw3ICs3OSw4IEBAIHU2NCBtb2R1bGVfZW1pdF9wbHRfZW50cnkoc3RydWN0IG1v
-ZHVsZSAqbW9kLCBFbGY2NF9TaGRyICpzZWNoZHJzLA0KPj4gIAlpbnQgaSA9IHBsdHNlYy0+cGx0
-X251bV9lbnRyaWVzOw0KPj4gIAlpbnQgaiA9IGkgLSAxOw0KPj4gIAl1NjQgdmFsID0gc3ltLT5z
-dF92YWx1ZSArIHJlbGEtPnJfYWRkZW5kOw0KPj4gLQ0KPj4gKwlpZiAocGx0c2VjLT5wbHRfbWF4
-X2VudHJpZXMgPT0gMCkNCj4+ICsJCXJldHVybiAwOw0KPg0KPkhtbSwgYnV0IGlmIHRoZXJlIGFy
-ZW4ndCBhbnkgUExUcyB0aGVuIGhvdyBkbyB3ZSBlbmQgdXAgaGVyZT8NCj4NCldlIGFsc28gcmV0
-dXJuZWQgMCB3aGVuIHdhcm5pbmcgd2FzIHRyaWdnZXJlZC4NCj5XaWxsDQo=
+On 08.07.20 11:45, Mike Rapoport wrote:
+> On Wed, Jul 08, 2020 at 11:25:36AM +0200, David Hildenbrand wrote:
+>> On 08.07.20 11:15, Mike Rapoport wrote:
+>>>>>>>>
+>>>>> But on more theoretical/fundmanetal level, I think we lack a generic
+>>>>> abstraction similar to e.g. x86 'struct numa_meminfo' that serves as
+>>>>> translaton of firmware supplied information into data that can be used
+>>>>> by the generic mm without need to reimplement it for each and every
+>>>>> arch.
+>>>>
+>>>> Right. As I expressed, I am not a friend of using memblock for that, and
+>>>> the pgdat node span is tricky.
+>>>>
+>>>> Maybe abstracting that x86 concept is possible in some way (and we could
+>>>> restrict the information to boot-time properties, so we don't have to
+>>>> mess with memory hot(un)plug - just as done for numa_meminfo AFAIKS).
+>>>
+>>> I agree with pgdat part and disagree about memblock. It already has
+>>> non-init physmap, why won't we add memblock.memory to the mix? ;-)
+>>
+>> Can we generalize and tweak physmap to contain node info? That's all we
+>> need, no? (the special mem= parameter handling should not matter for our
+>> use case, where "physmap" and "memory" would differ)
+> 
+> TBH, I have only random vague thoughts at the moment. This might be an
+> option. But then we need to enable physmap on !s390, right?
+
+Yes, looks like it.
+
+>  
+>>> Now, seriously, memblock already has all the necessary information about
+>>> the coldplug memory for several architectures. x86 being an exception
+>>> because for some reason the reserved memory is not considered memory
+>>> there. The infrastructure for quiering and iterating memory regions is
+>>> already there. We just need to leave out the irrelevant parts, like
+>>> memblock.reserved and allocation funcions.
+>>
+>> I *really* don't want to mess with memblocks on memory hot(un)plug on
+>> x86 and s390x (+other architectures in the future). I also thought about
+>> stopping to create memblocks for hotplugged memory on arm64, by tweaking
+>> pfn_valid() to query memblocks only for early sections.
+>>
+>> If "physmem" is not an option, can we at least introduce something like
+>> ARCH_UPDTAE_MEMBLOCK_ON_HOTPLUG to avoid doing that on x86 and s390x for
+>> now (and later maybe for others)?
+> 
+> I have to do more memory hotplug howework to answer that ;-)
+> 
+> My general point is that we don't have to reinvent the wheel to have
+> coldplug memory representation, it's already there. We just need a way
+> to use it properly.
+
+Yes, I tend to agree. Details to be clarified :)
+
+-- 
+Thanks,
+
+David / dhildenb
+
