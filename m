@@ -2,114 +2,109 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32BEE21D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B88F21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qwXnmjEV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Aat7/UYD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgGHIj4 (ORCPT
+        id S1728245AbgGHIkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:39:56 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:29013 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726795AbgGHIjz (ORCPT
+        Wed, 8 Jul 2020 04:40:01 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12978 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbgGHIkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:39:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594197595; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=4dQVarAM3wGiNoLl2bz5daF0OQcsMFRvodrSI3IQvBk=; b=qwXnmjEV7QnVr62+HaOOb1Nnqh6IiNO1ulk8iqR4SHcLmeckts7k6uNbpJC7DSwM1QMciBxe
- Goin1mLOSAvGpxSVam+Rsfjgfh7BOkNIN9QO6P/1QqcJv8Zh09M9007JOeibc9bb41W4Btqa
- RoGlMzda8QocNkQMpRjFYNCXkbk=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5f058655a33b1a3dd481efc7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 08:39:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 39ABDC43387; Wed,  8 Jul 2020 08:39:49 +0000 (UTC)
-Received: from [192.168.1.11] (unknown [61.3.23.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 20184C433CA;
-        Wed,  8 Jul 2020 08:39:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 20184C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 0/2] spi: spi-qcom-qspi: Avoid some per-transfer overhead
-To:     Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mka@chromium.org, Akash Asthana <akashast@codeaurora.org>,
-        swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
-        georgi.djakov@linaro.org, ctheegal@codeaurora.org,
-        mkshah@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-References: <20200707201641.2030532-1-dianders@chromium.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <5b62bf01-cb06-abda-aada-8a11b4a3935c@codeaurora.org>
-Date:   Wed, 8 Jul 2020 14:09:42 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 8 Jul 2020 04:40:00 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0586530000>; Wed, 08 Jul 2020 01:39:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 08 Jul 2020 01:39:59 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 08 Jul 2020 01:39:59 -0700
+Received: from [10.26.73.185] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul
+ 2020 08:39:57 +0000
+Subject: Re: [PATCH 4.4 00/19] 4.4.230-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200707145747.493710555@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4d2606a1-1a35-31db-3440-11793103e2ec@nvidia.com>
+Date:   Wed, 8 Jul 2020 09:39:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200707201641.2030532-1-dianders@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200707145747.493710555@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594197587; bh=yS02Vsb9bWJf3Visd5mCOgiND894kkzAjZsbD0PYZMU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Aat7/UYDFKB5OPXvsGQluUGvBVFPNBPon67NMH0EYMJewXM+DxkWVi6RFbmuhxQY7
+         IDYYQMMscWT6pTTlXTnBQRsA9E0c7pXnCfcUNew3Ub+ZC5/A3A1eW2GMnwQnfjS+dg
+         0Xm3EtIhj76A6ZZiNVKx0DTno3PTF20Pw5jrGeDDwisfP70Kzs5nG1/EhnN9iPeAwe
+         8TTvxheuDk91O7iPUoSj7FldBEzB5Ew1kWijcNruTQPkxQd80tLkk1BvYBCN2E0yg9
+         TYIIldGa7BHEoQ/t1MmdawyJfPZFPTWkxjwgiNpos38T6Y8IdxXR7lnlmxPgOCed1s
+         vcLA/Bz+e01Sw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 7/8/2020 1:46 AM, Douglas Anderson wrote:
+On 07/07/2020 16:10, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.230 release.
+> There are 19 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Not to be confused with the similar series I posed for the _other_
-> Qualcomm SPI controller (spi-geni-qcom) [1], this one avoids the
-> overhead on the Quad SPI controller.
+> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+> Anything received after that time might be too late.
 > 
-> It's based atop the current Qualcomm tree including Rajendra's ("spi:
-> spi-qcom-qspi: Use OPP API to set clk/perf state").  As discussed in
-> individual patches, these could ideally land through the Qualcomm tree
-> with Mark's Ack.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.230-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
 > 
-> Measuring:
-> * Before OPP / Interconnect patches reading all flash takes: ~3.4 seconds
-> * After OPP / Interconnect patches reading all flash takes: ~4.7 seconds
-> * After this patch reading all flash takes: ~3.3 seconds
+> thanks,
+> 
+> greg k-h
 
-Thanks Doug, I saw similar benefit on my setup with these patches. They do help
-reduce the (unnecessary) additional overhead so it makes sense to merge these
-along with the OPP/Interconnect patches in-order to avoid the regression.
 
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-Tested-by: Rajendra Nayak <rnayak@codeaurora.org>
+All tests are passing for Tegra ...
 
-> 
-> [1] https://lore.kernel.org/r/20200702004509.2333554-1-dianders@chromium.org
-> [2] https://lore.kernel.org/r/1593769293-6354-2-git-send-email-rnayak@codeaurora.org
-> 
-> 
-> Douglas Anderson (2):
->    spi: spi-qcom-qspi: Avoid clock setting if not needed
->    spi: spi-qcom-qspi: Set an autosuspend delay of 250 ms
-> 
->   drivers/spi/spi-qcom-qspi.c | 45 ++++++++++++++++++++++++++++---------
->   1 file changed, 35 insertions(+), 10 deletions(-)
-> 
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    25 tests:	25 pass, 0 fail
+
+Linux version:	4.4.230-rc1-gc19eba6b3434
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+nvpublic
