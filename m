@@ -2,161 +2,142 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A87C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 335DB2073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594166572;
-	bh=z46cyTZt/bH+p+d4vmodanNsBEiI02n4fRqOMrOVKmo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RuAy+/EWBK/OitSkRj36ByGDvJAiwP1wNmG4QFY/dRTPlxvRwx2bm2Rg6NPb02a86
-	 OETk8B7Z2xjDWLI18CxQ3IguG7enXWIlTJZFRHcaCPwkYqlKcPeQOXndAQRxaLR6mX
-	 pTHNgXk4hi7p775QGqtKNV5t9NB57u9KeJzZI2KM=
+	by mail.kernel.org (Postfix) with ESMTP id 4C7362073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 00:03:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VTUdIfdQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgGHACv (ORCPT
+        id S1729530AbgGHADz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 20:02:51 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35650 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728208AbgGHACu (ORCPT
+        Tue, 7 Jul 2020 20:03:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbgGHADy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 20:02:50 -0400
-Received: by mail-wm1-f65.google.com with SMTP id l2so1144246wmf.0;
-        Tue, 07 Jul 2020 17:02:48 -0700 (PDT)
+        Tue, 7 Jul 2020 20:03:54 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C803C08C5E3
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 17:03:54 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id m22so10402012pgv.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 17:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XdUaPDr56t2dB8W61mELkwj0Skn6S5S4z+Vsl/tJuD4=;
+        b=VTUdIfdQiK5zHvzFtK8tbyfXjd+nD6axR+vPnmGSSkNh1E+1ZiM7M9DC1CsxyMf2wt
+         b2v8jrBY52b2jGsd26dV33M2EUP/T2e2Dgnx6h0zwboF2A1izvEz03TmfgImJCv+hVe9
+         ZK3sk7xEQSZ9B1SsC6/oLqAPlJT5zW/upU9BA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vpxopt2Khk0HAnbQE7M23zoSpPESbE8YjxfhosY0Dr4=;
-        b=VPLzzsgPbayHzSYAeTrxO1mKE+tgCVCIQx7J9l3DG5VeaqxSbBsmChRIrsXnGIH0dK
-         i4kLJZxUIy984nFWHQ8NfOJXTPT/kiob4l5N6ElYPSxx6JQplelltDteXx3XSfZdKMU7
-         Rhxbl6ZlE9iLAJaOzSFcJey3VRlY97TjvBAyGQvX6KUONyFAJHIenMRPPkXRiDJ9iOkc
-         FY/VrnJfoJeceiTimVtJB5G/EW6O1sn1WA73rH2zdn1FeaLr7txpYPUcaT5o7PLhEWd4
-         vLKgKVxDnjq+uhjRaghqN33niIwG5QPfSnpf0BlX+M4XYC9o8HiMPVLSGkEJ9pGM8cZS
-         /X0w==
-X-Gm-Message-State: AOAM533E+KaHXyUOpnxftJYAsIWW6eJjUKh3Tz1Fyv+uHJRv8U3GwA2y
-        jt2rowjYVU4AmdGp55mda4hSYvJkIb0x2XGM0h0=
-X-Google-Smtp-Source: ABdhPJzL+mtungvxvI3PHj4vPvRIolyOrH6lVMezOj/m2hU0YHBPrKPGBLrFBbh6jBgcs/j8dw83ahDud1JeS1kp3R0=
-X-Received: by 2002:a05:600c:410f:: with SMTP id j15mr6323689wmi.128.1594166568212;
- Tue, 07 Jul 2020 17:02:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200702185344.913492689@goodmis.org> <20200702185704.248123446@goodmis.org>
- <CAM9d7chfvJwodpVrHGc5E2J80peRojmYV_fD8x3cpn9HFRUw2g@mail.gmail.com> <20200707112407.746cca77@oasis.local.home>
-In-Reply-To: <20200707112407.746cca77@oasis.local.home>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 8 Jul 2020 09:02:37 +0900
-Message-ID: <CAM9d7cgMgqFDvKhs6xwdBSMsaG=3ZG0RtxwgQDCTLGkML1MY4Q@mail.gmail.com>
-Subject: Re: [PATCH v2 05/15] tools lib traceevent: Introduced new traceevent
- API, for adding new plugins directories.
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XdUaPDr56t2dB8W61mELkwj0Skn6S5S4z+Vsl/tJuD4=;
+        b=kdxyPYOzicFhWZ9aA2pheRQby8muA69xtOawVfH2ybnU0q5GIBfo38gYqxswucZP7m
+         NyjX6e6zcngbyBbHC5kVj8WyzDaa71U/r7lJJ7zqc0LXP/wm2gtZsxfzzFySwt+p3Twy
+         EgjYatIJUaBHPLQ5H1J8283/3hAC4IG+npfcKMDUfvCgu8LhVKjn4MsvnqAmz5s41lf5
+         OQYqBWbkEZ8fCyt/lkjG/DgV058qC9+5P58Zj3ywWk8iBVaS4///YIkGgBMDOiJ4QMTF
+         HunUTMXFpP/VlpoMippytdQMbXvV1QLZwIEb61G3M+RT4WV7ukPou+a7shLWDdpaIrC+
+         rM+Q==
+X-Gm-Message-State: AOAM532iqmPcUUPHCPPJPQ8LfQzpoHfP8er5s2kai9NPs4vqQ1a9ILnc
+        UGwJHgXkimOFaS5Lo5MPzehDtA==
+X-Google-Smtp-Source: ABdhPJzlB+wnA820KsXyKDpkiqDz27omyRVHEG+75x1JqbwOpWvyP8oemaSGQaQclki+9QkvXKv2uA==
+X-Received: by 2002:a62:f202:: with SMTP id m2mr39784579pfh.157.1594166631916;
+        Tue, 07 Jul 2020 17:03:51 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 27sm3417389pjg.19.2020.07.07.17.03.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 17:03:51 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 17:03:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Desmond Yan <desmond.yan@broadcom.com>,
+        James Hu <james.hu@broadcom.com>
+Subject: Re: [PATCH v10 7/9] misc: bcm-vk: add Broadcom VK driver
+Message-ID: <202007071700.C567BA7B@keescook>
+References: <20200706232309.12010-1-scott.branden@broadcom.com>
+ <20200706232309.12010-8-scott.branden@broadcom.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200706232309.12010-8-scott.branden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 12:24 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Wed, 8 Jul 2020 00:06:38 +0900
-> Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > +/**
-> > > + * tep_add_plugin_path - Add a new plugin directory.
-> > > + * @tep: Trace event handler.
-> > > + * @path: Path to a directory. All files with extension .so in that
-> >
-> > Is the extension (".so") fixed?  I think a new API has the suffix argument
-> > which may change it... ?
->
-> So this should add a "suffix" argument? NULL for ".so"?
+On Mon, Jul 06, 2020 at 04:23:07PM -0700, Scott Branden wrote:
+> Add Broadcom VK driver offload engine.
+> This driver interfaces to the VK PCIe offload engine to perform
+> should offload functions as video transcoding on multiple streams
+> in parallel.  VK device is booted from files loaded using
+> request_firmware_into_buf mechanism.  After booted card status is updated
+> and messages can then be sent to the card.
+> Such messages contain scatter gather list of addresses
+> to pull data from the host to perform operations on.
+> 
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> Signed-off-by: Desmond Yan <desmond.yan@broadcom.com>
 
-I think it's just fine to change the comment.  The file extension handling
-belongs to the plugin load API and we are adding the directory path
-here IMHO.
+nit: your S-o-b chain doesn't make sense (I would expect you at the end
+since you're sending it and showing as the Author). Is it Co-developed-by?
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
 
->
-> >
-> >
-> > > + *       directory will be loaded as plugins.
-> > > + *@prio: Load priority of the plugins in that directory.
-> > > + *
-> > > + * Returns -1 in case of an error, 0 otherwise.
-> > > + */
-> > > +int tep_add_plugin_path(struct tep_handle *tep, char *path,
-> > > +                       enum tep_plugin_load_priority prio)
-> > > +{
-> > > +       struct tep_plugins_dir *dir;
-> > > +
-> > > +       if (!tep || !path)
-> > > +               return -1;
-> > > +
-> > > +       dir = calloc(1, sizeof(*dir));
-> > > +       if (!dir)
-> > > +               return -1;
-> > > +
-> > > +       dir->path = strdup(path);
-> >
-> > It needs to check the return value..
->
-> Yes it does indeed.
->
-> BTW, since these patches are already in trace-cmd.git, would be OK if
-> we just write patches on top of this series to address your concerns.
-> This way, we would be also adding them to trace-cmd.git as well.
+> [...]
+> +
+> +		max_buf = SZ_4M;
+> +		bufp = dma_alloc_coherent(dev,
+> +					  max_buf,
+> +					  &boot_dma_addr, GFP_KERNEL);
+> +		if (!bufp) {
+> +			dev_err(dev, "Error allocating 0x%zx\n", max_buf);
+> +			ret = -ENOMEM;
+> +			goto err_buf_out;
+> +		}
+> +
+> +		bcm_vk_buf_notify(vk, bufp, boot_dma_addr, max_buf);
+> +	} else {
+> +		dev_err(dev, "Error invalid image type 0x%x\n", load_type);
+> +		ret = -EINVAL;
+> +		goto err_buf_out;
+> +	}
+> +
+> +	ret = request_partial_firmware_into_buf(&fw, filename, dev,
+> +						bufp, max_buf, 0);
 
-I'm ok with it.  I'll review more patches soon..
+Unless I don't understand what's happening here, this needs to be
+reordered if you're going to keep Mimi happy and disallow the device
+being able to see the firmware before it has been verified. (i.e. please
+load the firmware before mapping DMA across the buffer.)
 
-Thanks
-Namhyung
-
->
-> I eventually want a separate libraries repo on kernel.org that this
-> lives in and remove it from the tools/lib directory of the kernel.
->
-> -- Steve
->
->
-> >
-> > > +       dir->prio = prio;
-> > > +       dir->next = tep->plugins_dir;
-> > > +       tep->plugins_dir = dir;
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +void tep_free_plugin_paths(struct tep_handle *tep)
-> > > +{
-> > > +       struct tep_plugins_dir *dir;
-> > > +
-> > > +       if (!tep)
-> > > +               return;
-> > > +
-> > > +       dir = tep->plugins_dir;
-> > > +       while (dir) {
-> > > +               tep->plugins_dir = tep->plugins_dir->next;
-> > > +               free(dir->path);
-> > > +               free(dir);
-> > > +               dir = tep->plugins_dir;
-> > > +       }
-> > > +}
-> > > +
-> > >  void
-> > >  tep_unload_plugins(struct tep_plugin_list *plugin_list, struct tep_handle *tep)
-> > >  {
-> > > --
-> > > 2.26.2
-> > >
-> > >
->
+-- 
+Kees Cook
