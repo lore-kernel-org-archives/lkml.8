@@ -6,68 +6,67 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C55FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDCE2078D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17997207DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594227627;
-	bh=N7zc2EeHk3r0bhTq3OgKegYaJEeQCtjXoaIweWas5ac=;
+	s=default; t=1594227638;
+	bh=WnhCZojewPXcv0n/TF3e1xmOynWedsPS6pPm82CttRE=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=EviboS3TxfcZADZX+5MZRMXyb9eyWh3r8al+wo0pYDt/DuzceGyY9Ojfa4dYwupLE
-	 4rowbFQ/hOvqjVeluJwRluG2viSKGtHudt5mkhDsI///aqWD5gEf/X3s1tbJ5XvICZ
-	 VBeAXBBZsZ04iogxgevzs0HctO1cSQTnCWZTMCU0=
+	b=UnY+X9R9DQbU47s9/FstFME1hyN32kDTK2gkHFKgIZTJSfll0k381iQ2Qpn6pJHvO
+	 VRAN7/pVyN/4KBwmi37RgWXr8sPYh0s/rh+eFS3az4Nb9JVT97U4CMOh+FKKbvak9q
+	 u12IFEQVidRKIstBfouy5Zn50reyjYRwRAK+svX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgGHRA0 (ORCPT
+        id S1730721AbgGHRAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:00:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36704 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 13:00:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgGHRAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:00:25 -0400
+        id S1725989AbgGHRAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:00:36 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4DCD206F6;
-        Wed,  8 Jul 2020 17:00:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F65E206F6;
+        Wed,  8 Jul 2020 17:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594227625;
-        bh=N7zc2EeHk3r0bhTq3OgKegYaJEeQCtjXoaIweWas5ac=;
+        s=default; t=1594227635;
+        bh=WnhCZojewPXcv0n/TF3e1xmOynWedsPS6pPm82CttRE=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=ANGvFU+FrmeS3EjWD++6/jhDsQ+yknawZY+4glld97t0R+O+WyHaKy4n8AMWKxVn6
-         PsfgPUe7IniSEtFTp+McMdwHEM3HaLDrK82LbU1iMcYkfTb0fyn5cJUS/ZA6DdhuwC
-         kOrq8rmIMVpBUZes4c6yKhIItueWSDe+9RlKhAHQ=
-Date:   Wed, 08 Jul 2020 18:00:20 +0100
+        b=QEA/Dt9v66OvDEiw6aCk1h7ffkzZKT14hMmC3MEoWl0mslZPF9v8sdeX3fTPNhOJK
+         0P7YmGnSzR6nrdNCgGAiHrGKQWh+VRqPB+6eVwFk+DcEQghVXm3hk6RJc9bqqwidD4
+         KlE6kJdXCt1mFrffP8vGx6UNe0Msgz0PG+P33jsQ=
+Date:   Wed, 08 Jul 2020 18:00:30 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     alsa-devel@alsa-project.org,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Cc:     Takashi Iwai <tiwai@suse.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        rdunlap@infradead.org, Alexander.Deucher@amd.com,
-        Liam Girdwood <lgirdwood@gmail.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <1594147044-25582-1-git-send-email-Vijendar.Mukunda@amd.com>
-References: <1594147044-25582-1-git-send-email-Vijendar.Mukunda@amd.com>
-Subject: Re: [PATCH] ASoC: amd: fixed kernel warnings
-Message-Id: <159422758800.28431.7689040196790188529.b4-ty@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, tiwai@suse.de,
+        "open list:REGISTER MAP ABSTRACTION" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In-Reply-To: <20200707202628.113142-1-pierre-louis.bossart@linux.intel.com>
+References: <20200707202628.113142-1-pierre-louis.bossart@linux.intel.com>
+Subject: Re: [PATCH] regmap: add missing dependency on SoundWire
+Message-Id: <159422762554.28767.13186222307552952374.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020 00:07:11 +0530, Vijendar Mukunda wrote:
-> This patch will fix unused variables kernel warnings when
-> CONFIG_ACPI is disabled.
+On Tue, 7 Jul 2020 15:26:28 -0500, Pierre-Louis Bossart wrote:
+> CONFIG_REGMAP is not selected when no other serial bus is supported.
+> It's largely academic since CONFIG_I2C is usually selected e.g. by
+> DRM, but still this can break randconfig so let's be explicit.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
 
 Thanks!
 
-[1/1] ASoC: amd: fixed kernel warnings
-      commit: ee3d133972f1e5d260891c4dd58adb005014414a
+[1/1] regmap: add missing dependency on SoundWire
+      commit: 443a34ba68e8a627c15f9987b11cfa01f3e1ba0a
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
