@@ -2,125 +2,159 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB00C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB3C020772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5861F2078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KA2YZHkG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4l4YxNU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgGHLZN (ORCPT
+        id S1728863AbgGHLZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:25:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47279 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728730AbgGHLZM (ORCPT
+        Wed, 8 Jul 2020 07:25:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728688AbgGHLZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:25:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594207511;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ouHANG20USBE2PCP33rRejZoUHD5MZlrUjWu6D42Tb4=;
-        b=KA2YZHkGdCGN2YVpn6uMNpQb21kQvvRgz9owFiAu6GI2lSHYe8Z9e6EevlEqy2LNOiX+kI
-        AGESEwt6yFq0E/2sMLhG41bFbBqJg0eDLYshM3u4ykkxXgEZ59eiIBlMGUrDZEoLZz1KLW
-        y1LqipVmjyEbNr0YMW8kndh/oWDt3Oc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-GM8-KE1MPfGT2ffzZa3Dhw-1; Wed, 08 Jul 2020 07:25:09 -0400
-X-MC-Unique: GM8-KE1MPfGT2ffzZa3Dhw-1
-Received: by mail-wr1-f70.google.com with SMTP id e11so51772278wrs.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 04:25:09 -0700 (PDT)
+        Wed, 8 Jul 2020 07:25:28 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02CEFC08C5DC;
+        Wed,  8 Jul 2020 04:25:28 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id t27so33770619ill.9;
+        Wed, 08 Jul 2020 04:25:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7ROJmAmlrv2K7BTumTUPVQDyi0qWehgUULex/JMDOtg=;
+        b=T4l4YxNUQK6zjbqIgyyPtPtZPhbJWv5nwD043lVas5RIHsEkMkqLf18GCAo456tjCY
+         pgIUPDiCZ29hNKcbB+hZHNz2IWLNnE9pPWGP6eL3UStzgv658p7s6m1QkOKSwxX5lA0c
+         ce8gKWBj4/qIG6CjeFJvv7qRoZJ0Q/8oeGY6F82dHYI+kHL7tmmN4T0zkT8dbgSHYOxe
+         peD7J79Dr01tgJb9WzCeZjMgJN3gTuv8N05wUGJO8GdFSFqxKG7k//APWJyxnF9dZv3Q
+         SB+uQySi+sQqWqqhKASLHLbR9+q07gokqztvN4K/9qtDMNOtlUUsuhK3Mm58fN0ScW3V
+         by9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ouHANG20USBE2PCP33rRejZoUHD5MZlrUjWu6D42Tb4=;
-        b=OCbx3udocBukofMWHuy6uGM7B9fZ+GzcjStwObxF1xexDjQ411QyplPCAFqtdspgnW
-         NdAAcypL6S7d4AT8mdl7pMrHl2cLi7JPBprhjWXNAW6RummISD3kjAwUVvY9F6SQJpXT
-         Gz8ebUrnhzx1XxAGO9mRcWwQrGfRIbjDhuYZks9xVxeVdzlZquEeSU0Y0mTnQ8lJZ3/P
-         BjfCcCDAAiN4OLwvqZerLr9lZ7SLCOV2Ju22an0mjTm8Gr1QIGibxsG7LsCMaVZi+phn
-         7ErUkWvl9N8NnO6mgYAbss7DBhDlwgYMdzPWC2U96u2oNxjmic9RE8xAdcIDIl4++Z++
-         hVMg==
-X-Gm-Message-State: AOAM532zoybpkpIRo3165IGcCNLLas6NQu5iTJeOr3Qa7phEmKwKvxyG
-        Wl8gvDkOteZfpslzWWTwO35tahTPD0GBWZqvuwaPQXRDuVfv1FPqK1fIAcuE1mZ6Uwe6QUYx8vc
-        TdStztoaP/VGZLjtJseXLnPOL
-X-Received: by 2002:adf:91e1:: with SMTP id 88mr51187467wri.89.1594207508242;
-        Wed, 08 Jul 2020 04:25:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyXgz9j1sndzaJgOQXlSN4IivMaE3Sx1qi84w6Se+wj028onpholiatocyX5gSUkoL/o3ht2w==
-X-Received: by 2002:adf:91e1:: with SMTP id 88mr51187436wri.89.1594207507992;
-        Wed, 08 Jul 2020 04:25:07 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id m9sm5433915wml.45.2020.07.08.04.25.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 04:25:07 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] KVM: nSVM: split kvm_init_shadow_npt_mmu() from
- kvm_init_shadow_mmu()
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        linux-kernel@vger.kernel.org
-References: <20200708093611.1453618-1-vkuznets@redhat.com>
- <20200708093611.1453618-2-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <42d6eefa-2875-ff4d-c972-71fe405aec98@redhat.com>
-Date:   Wed, 8 Jul 2020 13:25:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7ROJmAmlrv2K7BTumTUPVQDyi0qWehgUULex/JMDOtg=;
+        b=PFPgFWGGlKvNcgeKmAUgyQrqg+17GOMaCIsiYCPXj1kCPbMehSs6WFJdxV5T7/mRF7
+         ku0hUPm3hh9Ynlb8CNHURmIRXvh590evuKWzqYGrivMLMTomfirG4C85nXW9NFU8NFnu
+         +ZU7v4oMIXhghEulvEgxs1Zq8hN/AUoYGwYJth+ZU//pJS59b1TGPnZoChXAFdPM7Lk3
+         HjBm1764anpXkGvWDB2aAG+wkdVxRpUeaduwoY12lEj4Eh7QjwPgI4TnCyvsFVp6kkPH
+         Uvy9KaqWfxehzfTc/h7SJ8VBSY25HixZTevbHt/RN5Vda+f5jSDUtTJ0K03zhcpNOboY
+         OSAg==
+X-Gm-Message-State: AOAM532CaPNDV8uu8qTw1QwAZH9GGQcBZU9FTp2BAKIw1OY2EU3o1fLe
+        D58Klchuvnp36Q4FeG6YOyuqpp1hulGQ+y5AnkqsccUMTHo=
+X-Google-Smtp-Source: ABdhPJyxDeLrfCflP+Xy4iTpQCHzKv+AsR6M56vWlh6bN5a1kfAxmpQpB1A3ivVpGAbrlZ4kYCjZG9sLcHwA0nTcuFQ=
+X-Received: by 2002:a05:6e02:970:: with SMTP id q16mr30878956ilt.112.1594207526418;
+ Wed, 08 Jul 2020 04:25:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200708093611.1453618-2-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200708065328.13031-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200708065328.13031-1-grandmaster@al2klimov.de>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Wed, 8 Jul 2020 13:25:35 +0200
+Message-ID: <CAOi1vP_vS-nNMXuo4n8njx=pRVUQd-C8LAeSTpVTufqiHsCS-g@mail.gmail.com>
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: CEPH COMMON CODE (LIBCEPH)
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/20 11:36, Vitaly Kuznetsov wrote:
-> @@ -4973,7 +4969,28 @@ void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer)
->  	context->mmu_role.as_u64 = new_role.as_u64;
->  	reset_shadow_zero_bits_mask(vcpu, context);
->  }
-> -EXPORT_SYMBOL_GPL(kvm_init_shadow_mmu);
-> +
-> +static void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer)
-> +{
-> +	struct kvm_mmu *context = vcpu->arch.mmu;
-> +	union kvm_mmu_role new_role =
-> +		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
-> +
-> +	if (new_role.as_u64 != context->mmu_role.as_u64)
-> +		shadow_mmu_init_context(vcpu, cr0, cr4, efer, new_role);
-> +}
-> +
-> +void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer,
-> +			     gpa_t nested_cr3)
-> +{
-> +	struct kvm_mmu *context = vcpu->arch.mmu;
-> +	union kvm_mmu_role new_role =
-> +		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
-> +
-> +	if (new_role.as_u64 != context->mmu_role.as_u64)
-> +		shadow_mmu_init_context(vcpu, cr0, cr4, efer, new_role);
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_init_shadow_npt_mmu);
->  
->  static union kvm_mmu_role
+On Wed, Jul 8, 2020 at 8:53 AM Alexander A. Klimov
+<grandmaster@al2klimov.de> wrote:
+>
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+>
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+>
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+>
+>  If you apply the patch, please let me know.
+>
+>
+>  net/ceph/ceph_hash.c    | 2 +-
+>  net/ceph/crush/hash.c   | 2 +-
+>  net/ceph/crush/mapper.c | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/net/ceph/ceph_hash.c b/net/ceph/ceph_hash.c
+> index 9a5850f264ed..81e1e006c540 100644
+> --- a/net/ceph/ceph_hash.c
+> +++ b/net/ceph/ceph_hash.c
+> @@ -4,7 +4,7 @@
+>
+>  /*
+>   * Robert Jenkin's hash function.
+> - * http://burtleburtle.net/bob/hash/evahash.html
+> + * https://burtleburtle.net/bob/hash/evahash.html
+>   * This is in the public domain.
+>   */
+>  #define mix(a, b, c)                                           \
+> diff --git a/net/ceph/crush/hash.c b/net/ceph/crush/hash.c
+> index e5cc603cdb17..fe79f6d2d0db 100644
+> --- a/net/ceph/crush/hash.c
+> +++ b/net/ceph/crush/hash.c
+> @@ -7,7 +7,7 @@
+>
+>  /*
+>   * Robert Jenkins' function for mixing 32-bit values
+> - * http://burtleburtle.net/bob/hash/evahash.html
+> + * https://burtleburtle.net/bob/hash/evahash.html
+>   * a, b = random bits, c = input and output
+>   */
+>  #define crush_hashmix(a, b, c) do {                    \
+> diff --git a/net/ceph/crush/mapper.c b/net/ceph/crush/mapper.c
+> index 3f323ed9df52..07e5614eb3f1 100644
+> --- a/net/ceph/crush/mapper.c
+> +++ b/net/ceph/crush/mapper.c
+> @@ -298,7 +298,7 @@ static __u64 crush_ln(unsigned int xin)
+>   *
+>   * for reference, see:
+>   *
+> - * http://en.wikipedia.org/wiki/Exponential_distribution#Distribution_of_the_minimum_of_exponential_random_variables
+> + * https://en.wikipedia.org/wiki/Exponential_distribution#Distribution_of_the_minimum_of_exponential_random_variables
+>   *
+>   */
+>
 
-As a follow up, the assignments to context should stop using
-vcpu->arch.mmu in favor of root_mmu/guest_mmu.
+Applied with a couple more link fixes folded in.
 
-Paolo
+Thanks,
 
+                Ilya
