@@ -2,129 +2,127 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF534C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE08C20786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8E520786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:49:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXw+UlKI"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="odQ4u8nw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgGHOsH (ORCPT
+        id S1729652AbgGHOts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729652AbgGHOsH (ORCPT
+        Wed, 8 Jul 2020 10:49:48 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:39226 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729206AbgGHOtr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:48:07 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28FF3C061A0B;
-        Wed,  8 Jul 2020 07:48:07 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id t11so15203443pfq.11;
-        Wed, 08 Jul 2020 07:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WhGgrGKcd7sGWY9MzL2leiUQIrs2+2qjPvCl1NLx+eY=;
-        b=gXw+UlKIVhowiPQKdVS4aInpk5zM1TnuTdyvF8oGC2sgOsMw5CHGCisRVIeVXdUyrQ
-         ONKjgFEjgNnx3/pGHceBvJIh3xs+JniaqJznQHQ1iRu6uoif0q5EvgYYgnxMjRnPqbSj
-         3Uy/KxLnHnYQdL6y2R5IVeG96O0zbo3DFtDOYaPglw3KI/MsbvnGzjX+KjbV3CfPeCzk
-         prp6L0Dim38Uvvaw6mQUDFw87arHWIPReRBpMwGKWTBC6bvfpaZtjyu8lDn1fsszZWqm
-         15r3eg/yiBA2rNo0+ymLtqZeeOvhR/czLYYbD3uAX790nDHtczpb20kll8Oijh5I7vf5
-         I79w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WhGgrGKcd7sGWY9MzL2leiUQIrs2+2qjPvCl1NLx+eY=;
-        b=ajdkSatanbfy+H2Zk7HxYmp/vPBX9R5MYjmrR7S49f0KRabPFfmn5ea/ev51bk/8Ep
-         6o70phFHEqywnZSvqmt2qCH3IPhOgtiHJhdfW7ic4dk/u0xZNPelQNGVg6cvMQ6CAksG
-         xuWJZYzr135wLeG6rW5+4r2Ar7IGEhDZn90q1snR88A26AFtq6h+vM1qW2J35kFn4SfO
-         adcPQPhqiVvSalO23EwHpL2sf4IfZNRVwSBCspR3mR+5li460uzy1JTkoZb7NkjhANpe
-         hLNlD4SqAf9QVyqa3j3680cIxoJY2xMj8z8C+ThYvhVxJ+uJdStZDsw0JFb79AGf/3zt
-         JsfA==
-X-Gm-Message-State: AOAM530aEdx0j14xnvL39mZAOi0onaLsQL4W0zrus1W/AwoCFHlqoLgv
-        s1SfXNO66sq+LXz20Zs2s70=
-X-Google-Smtp-Source: ABdhPJyFaDf6vZi+hjhnezcD8cztHjByr8YfgEIcBPmqO77EJZtJjLg8R5usAx0gVhNf8VGxVYV2AA==
-X-Received: by 2002:a65:60ce:: with SMTP id r14mr50169456pgv.85.1594219686688;
-        Wed, 08 Jul 2020 07:48:06 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id e191sm152808pfh.42.2020.07.08.07.48.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 07:48:05 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 07:48:03 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Sergey Organov <sorganov@gmail.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
- current kernel time
-Message-ID: <20200708144803.GB13374@hoboy>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200706142616.25192-4-sorganov@gmail.com>
- <20200706152721.3j54m73bm673zlnj@skbuf>
- <20200708110444.GD9080@hoboy>
- <87mu4a9o8m.fsf@osv.gnss.ru>
+        Wed, 8 Jul 2020 10:49:47 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708144946euoutp01ce219f38917824b631b8e61579340091~fznL_jTUK2871428714euoutp01P
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 14:49:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708144946euoutp01ce219f38917824b631b8e61579340091~fznL_jTUK2871428714euoutp01P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594219786;
+        bh=FvnKpLpfAzSLRUm2zDE6RqfbQeB+7yAT2FnD5DmeapI=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=odQ4u8nwo9Jd82INCHGBA3ReWUSALaJ1h1Omrp926IBAnvTSJDu0M9mVVYnE4FDa9
+         6gVsO/a5V7poAspknYNACao/1V02s687eNilcIAUmuJ+n2A3QA8+pKVx0H9P7jhG6P
+         tRc9a0Fzqiy7qIgsyIGHwoqDWvA93gKDP/lTh3cc=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200708144946eucas1p2cdb48155d4c4b27d6aeeb9a5f80e43a0~fznLyXjxp0172401724eucas1p2P;
+        Wed,  8 Jul 2020 14:49:46 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 3A.79.05997.A0DD50F5; Wed,  8
+        Jul 2020 15:49:46 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200708144945eucas1p262cbd0aacfb58e0ce579aaa6cd5d3119~fznLhnd9b0283102831eucas1p26;
+        Wed,  8 Jul 2020 14:49:45 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200708144945eusmtrp223856cbb5fd52bdcab3e3d7f6b6203c8~fznLg8IxX2353923539eusmtrp2F;
+        Wed,  8 Jul 2020 14:49:45 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-a0-5f05dd0a7b6c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id DF.01.06314.90DD50F5; Wed,  8
+        Jul 2020 15:49:45 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200708144945eusmtip2712a08ec91f400a7a3cae14cf21b82b8~fznK4YwMv0154601546eusmtip2k;
+        Wed,  8 Jul 2020 14:49:45 +0000 (GMT)
+Subject: Re: [PATCH 03/11] media: exynos4-is: Fix nullptr when no CSIS
+ device present
+To:     Jonathan Bakker <xc-racer2@live.ca>, kyungmin.park@samsung.com,
+        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <c4fd36f4-a241-1279-c62b-823a67c05d88@samsung.com>
+Date:   Wed, 8 Jul 2020 16:49:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mu4a9o8m.fsf@osv.gnss.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <BN6PR04MB0660EE7304C2BB2E603A8824A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju287ZjqPJcSq+qBkNkRKvFXRCEYuIQX/CKEFSO+pBLTdl06n1
+        Q0t0Ts3UInUZ3s2moEybNVFqkKO8lmVpitFWqGmWE7xkmfMo+e95n8v3vg98BFekx12JRFkq
+        I5fRSWKeANP3rQ35Cqbw6ADVNJ+6Y/7OpYaH2/nU4K15PqUzj+HUqKGKRxW1P8GpiuFeDtWk
+        2+BQb0qnsFA7iU6r5kk6GrIkdeOrmKS4U4skVp3HeTxCEBzHJCUqGbl/yBVBQlX9HyylEcvo
+        zmnCslEPtwDZEUAeh5/vTPwCJCBEZDOCvNWbGDssI1DX5iF2sCK4a7Wi3cjj2pYd1yMEFXrV
+        Tv4XgrF7D3Gby5EMhw96NccmOJE5HPjWXMmzCTwyEG6/LN5+SkiGgGXkB9+GMdIT1mZbMRt2
+        JqOgbbaLw3oc4FWlZZu3IyPhs350m+eSLjBhqd7BB6FroYprWwakng/r71tx9tYzUL46wGOx
+        I8yZOvksdofNZ9UcNpCDoKj7E58dShBMm2p2mgbB5ND6VprYWnEE2gz+LH0KltQTyEYDaQ8f
+        FxzYI+yhTF/OZWkh5OeJWLcn/NaWc1jsCoWWTYzFEsg3fMFL0CHNnpqaPdU0e6pp/t9QgzAt
+        cmHSFNJ4RnFUxqT7KWipIk0W7xebLNWhrd/U/9e0/BQZNmKMiCSQeL9wRodHi3BaqciUGhEQ
+        XLGT8PRgf5RIGEdnXmfkydHytCRGYURuBCZ2ER6rm40UkfF0KnONYVIY+a7KIexcs5FXvc8F
+        rw5VuE9LIe2u8Uh/MeAbsS8IV84UDK0EBp+9KImzxsa0mxfDyjod+zLuH3BTqlIu5TaqUbZp
+        5cHzpeTensHxlS7n7MWBsFVx7tzkSP+5jli/3IlW5eVikXm69OtoXzm5fOKtNiuw2niD9o46
+        fPWksCFg8/VQzPp8cmikGFMk0IHeXLmC/gfunvO7SQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xe7qcd1njDbqPGFv0P37NbHH+/AZ2
+        i7NNb9gtNj2+xmpxedccNoueDVtZLWac38dksWzTHyaLixPvsjhwemxa1cnmsXlJvceimz9Y
+        PPq2rGL0+LxJLoA1Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUn
+        syy1SN8uQS9jzuK/LAVLWSp2Ny9jaWDcy9zFyMkhIWAisXLhahYQW0hgKaPEoh7lLkYOoLiU
+        xPwWJYgSYYk/17rYuhi5gEreM0qc+P+CESQhLBAusebuZ1aQhIhAM5PE/+XbWCCq7jJKvFo+
+        H2wqm4ChRO/RPrAOXgE7iScX3rGD2CwCKhI/X64BqxEViJNYvmU+O0SNoMTJmU/A4pwCsRIP
+        tl1mArGZBdQl/sy7xAxhi0vcejIfKi4vsf3tHOYJjIKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW
+        56bnFhvqFSfmFpfmpesl5+duYgTG27ZjPzfvYLy0MfgQowAHoxIP74tNrPFCrIllxZW5hxgl
+        OJiVRHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCvTcRGYp0eR8YCrIK4k3NDU0t7A0NDc2Nzaz
+        UBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAaDT7mxPH/DvXP56Z3mD1IFNKJX43k6AZl/u+
+        L+IFektNI88UVFvmr9F0+zr3mfX7jIcVui0HWQo1LIVWGXUcr014H7h8I9/d771mJQkW5sUf
+        7wQ+c/5yXnWG7NmzbDmbFsh6ay9fY9gYq+/woraZ6/vuKZseXpLYx/BhcuM988NXc7k3sF1e
+        rMRSnJFoqMVcVJwIAIWvT8vNAgAA
+X-CMS-MailID: 20200708144945eucas1p262cbd0aacfb58e0ce579aaa6cd5d3119
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200426022730eucas1p12b77bd3e1bb3ee123dcec1eb8b00bc6a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200426022730eucas1p12b77bd3e1bb3ee123dcec1eb8b00bc6a
+References: <20200426022650.10355-1-xc-racer2@live.ca>
+        <CGME20200426022730eucas1p12b77bd3e1bb3ee123dcec1eb8b00bc6a@eucas1p1.samsung.com>
+        <BN6PR04MB0660EE7304C2BB2E603A8824A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 03:37:29PM +0300, Sergey Organov wrote:
-> Richard Cochran <richardcochran@gmail.com> writes:
+On 26.04.2020 04:26, Jonathan Bakker wrote:
+> Not all devices use the CSIS device, some may use the FIMC directly in
+> which case the CSIS device isn't registered.  This leads to a nullptr
+> exception when starting the stream as the CSIS device is always
+> referenced.  Instead, if getting the CSIS device fails, try getting the
+> FIMC directly to check if we are using the subdev API
 > 
-> > On Mon, Jul 06, 2020 at 06:27:21PM +0300, Vladimir Oltean wrote:
-> >> There's no correct answer, I'm afraid. Whatever the default value of the
-> >> clock may be, it's bound to be confusing for some reason, _if_ the
-> >> reason why you're investigating it in the first place is a driver bug.
-> >> Also, I don't really see how your change to use Jan 1st 1970 makes it
-> >> any less confusing.
-> >
-> > +1
-> >
-> > For a PHC, the user of the clock must check the PTP stack's
-> > synchronization flags via the management interface to know the status
-> > of the time signal.
-> 
-> Actually, as I just realized, the right solution for my original problem
-> would rather be adding PTP clock ID that time stamped Ethernet packet to
-> the Ethernet hardware time stamp (see my previous reply as well).
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 
-I think you misunderstood my point.  I wasn't commenting on the
-"stacked" MAC/PHY/DSA time stamp issue in the kernel.
+Thanks, the change looks good to me.
 
-I am talking about the question of whether to initialize the PHC time
-to zero (decades off from TAI) or ktime (likely about 37 seconds off
-from TAI).  It does not really matter, because the user must not guess
-whether the time is valid based on the value.  Instead, the user
-should query the relevant PTP data sets in a "live" online manner.
-
-For example, to tell whether a PHC is synchronized to anything at all,
-you need to check PORT_DATA_SET.portState and probably also
-CURRENT_DATA_SET.offsetFromMaster depending on your needs.
-
-In addition, if you care about global time, you need to check:
-
-TIME_PROPERTIES_DATA_SET
-  currentUtcOffset
-  currentUtcOffsetValid
-  ptpTimescale
-  timeTraceable
-  frequencyTraceable
-
-Thanks,
-Richard
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
