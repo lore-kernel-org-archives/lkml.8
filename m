@@ -2,97 +2,103 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5B320771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:18:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hbhaqiwe"
+	by mail.kernel.org (Postfix) with ESMTP id 1427920708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbgGHHSn (ORCPT
+        id S1730214AbgGHHSw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730196AbgGHHSm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:18:42 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA943C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:18:41 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z24so28042339ljn.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zIm1nTTtroh3jSlQCc4nRT6z0BXJtM8UPxEVaJ3cdLQ=;
-        b=HbhaqiwehhVEfm4RXj6ezjnjj3skiTF36bLdw0wq3Js0HZ+q47/PQ19bQ9it3Le/ZO
-         kIisM0AyOOAEQMiohpkCTxaAPUL6Dz7zw0xGdJI2gYf+Dy/iLT6rh7HerQ5uaLNAgVfI
-         e69jZzP4+X27rz0je+uDqsReALXKWsHYDVlsVj4cL8RkVMj1rYFxQ0auzpTj5hj22uD8
-         bP4v673Ap9IfGu4wfv8KKuPbOG7KxTOtCt5/2EtRVTupKNy9Cve6LnGGtS/A6a9hCqkx
-         KbhZ55JRq3es6MI/n87mmUjLM53ZKQSENEioEIUNtk2K8ZaskCuKtvMfqFxLAprDv5k8
-         aM0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zIm1nTTtroh3jSlQCc4nRT6z0BXJtM8UPxEVaJ3cdLQ=;
-        b=UmG+nmiOAeLEvelYzV7pVOYqIFuJ17uITy7j5Zda4RwVXyC9sAzyBg/Yh7XdjSh74r
-         /raNycvdog/WEIQhWm429AVZzpZT9rJhjmKmQQ71DwGV7N+gFA+S0sD/4tY/2/sHiznA
-         RDwKL8I3Y49jYv1sQrroK9/LQMAc9wsnesCXHjm1lWRgPDyeefkYo/8SuoAwIRmXSR8a
-         uK65GmfnLLjLk/d/fS8UUBpAJR6f3cGrkPLNLGL/2XrZKLlOSHjXzRkgVAO0XE4+ElET
-         Ty1dcC4hBoNzbiImjcZ8wPEjyffXx4OW8ofLffPJSM6tttH+s13Cmt76tUUdxTGdG/gz
-         iUhw==
-X-Gm-Message-State: AOAM531rgAEwAem+csFskl2EB0tuxr+JR72HNUuH5M7oWaBAdm1hDxqo
-        F3d53RLlDl+AdjSoJGpM8TFwuwY503oG5mqPfjTM1g==
-X-Google-Smtp-Source: ABdhPJxeR9wevkAjhUg6iANqN39oApGw6BnyXI8B+rYDzmMCbtxZ9tcyP9q2LYQH3/SAsU5Fp4RtftyI9ozwwBiT/ws=
-X-Received: by 2002:a2e:810a:: with SMTP id d10mr26812174ljg.144.1594192720209;
- Wed, 08 Jul 2020 00:18:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200630133345.2232932-1-lee.jones@linaro.org> <20200630133345.2232932-7-lee.jones@linaro.org>
-In-Reply-To: <20200630133345.2232932-7-lee.jones@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 8 Jul 2020 09:18:29 +0200
-Message-ID: <CACRpkdbszVdmRY4V=Z=vVPAdbx4q=26F-OcnZu2w3-BNk+0ohQ@mail.gmail.com>
-Subject: Re: [PATCH 06/10] gpio: gpio-syscon: Fix formatting issues which
- confuse kerneldoc
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Wed, 8 Jul 2020 03:18:52 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2565 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729972AbgGHHSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:18:51 -0400
+Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id CE7EC7E3DC7FCAFBC0BD;
+        Wed,  8 Jul 2020 15:18:47 +0800 (CST)
+Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.177]) by
+ dggemi404-hub.china.huawei.com ([10.3.17.142]) with mapi id 14.03.0487.000;
+ Wed, 8 Jul 2020 15:18:41 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     "liwei (CM)" <liwei213@huawei.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>
+CC:     fengbaopeng <fengbaopeng2@hisilicon.com>,
+        "nsaenzjulienne@suse.de" <nsaenzjulienne@suse.de>,
+        "steve.capper@arm.com" <steve.capper@arm.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Alexander Shiyan <shc_work@mail.ru>
-Content-Type: text/plain; charset="UTF-8"
+        sujunfei <sujunfei2@hisilicon.com>
+Subject: RE: [PATCH] arm64: mm: free unused memmap for sparse memory model
+ that define VMEMMAP
+Thread-Topic: [PATCH] arm64: mm: free unused memmap for sparse memory model
+ that define VMEMMAP
+Thread-Index: AQHWVMrtlX9AbygsxkCkGlEoK5gXXaj9QcNg
+Date:   Wed, 8 Jul 2020 07:18:39 +0000
+Message-ID: <B926444035E5E2439431908E3842AFD255E7A1@DGGEMI525-MBS.china.huawei.com>
+References: <20200708015555.14946-1-liwei213@huawei.com>
+In-Reply-To: <20200708015555.14946-1-liwei213@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.200.214]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 3:33 PM Lee Jones <lee.jones@linaro.org> wrote:
 
-> Kerneldoc expects struct properties to be documented using the syntax
-> '@.*: ', but no '@' has been provided in 'struct syscon_gpio_data's
-> header.  Add them to stop confusing kerneldoc.
->
-> Fixes the following W=1 warnings:
->
->  drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'compatible' not described in 'syscon_gpio_data'
->  drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'flags' not described in 'syscon_gpio_data'
->  drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'bit_count' not described in 'syscon_gpio_data'
->  drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'dat_bit_offset' not described in 'syscon_gpio_data'
->  drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'dir_bit_offset' not described in 'syscon_gpio_data'
->  drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'set' not described in 'syscon_gpio_data'
->
-> Cc: Alexander Shiyan <shc_work@mail.ru>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Patch applied!
+> -----Original Message-----
+> From: liwei (CM)
+> Sent: Wednesday, July 8, 2020 1:56 PM
+> To: catalin.marinas@arm.com; will@kernel.org
+> Cc: liwei (CM) <liwei213@huawei.com>; fengbaopeng
+> <fengbaopeng2@hisilicon.com>; nsaenzjulienne@suse.de;
+> steve.capper@arm.com; rppt@linux.ibm.com; Song Bao Hua (Barry Song)
+> <song.bao.hua@hisilicon.com>; linux-arm-kernel@lists.infradead.org;
+> linux-kernel@vger.kernel.org; sujunfei <sujunfei2@hisilicon.com>
+> Subject: [PATCH] arm64: mm: free unused memmap for sparse memory model
+> that define VMEMMAP
+> 
+> For the memory hole, sparse memory model that define
+> SPARSEMEM_VMEMMAP do not free the reserved memory for the page map,
+> this patch do it.
 
-Yours,
-Linus Walleij
+Hello Wei,
+Just curious if this patch breaks MEMORY_HOTPLUG?
+
+> 
+> Signed-off-by: Wei Li <liwei213@huawei.com>
+> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+> Signed-off-by: Xia Qing <saberlily.xia@hisilicon.com>
+> ---
+>  arch/arm64/mm/init.c | 81
+> +++++++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 71 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c index
+> 1e93cfc7c47a..d1b56b47d5ba 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -441,7 +441,48 @@ void __init bootmem_init(void)
+>  	memblock_dump_all();
+>  }
+> 
+
+Thanks
+Barry
+
