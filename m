@@ -2,92 +2,256 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55783C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84917C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC2820760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:49:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="im5l+vpB"
+	by mail.kernel.org (Postfix) with ESMTP id 64E6C20672
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgGHHtv (ORCPT
+        id S1727787AbgGHHuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGHHtu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:49:50 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FAC3C08C5DC;
-        Wed,  8 Jul 2020 00:49:50 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q7so39771244ljm.1;
-        Wed, 08 Jul 2020 00:49:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FUTB6Gj5NIh2r6okp5YAqa694OkQrnNvKWiwMgZTNfY=;
-        b=im5l+vpBXfSW+5v/TNVzMl36mq15su47KPUzHMFSTBTMSApucZOiueGMRS7z/iEmzy
-         WPdWdBsI/N8fEjYnyT/gjixkdrxPo/6sMR0qyt0GMvkPSUDOzq8ehzinKFyipyYV1IOz
-         DQChFnxdM5IY8rhgklEjnGnkMIeB5YNjeNMhllJ+l3Jp30DYGUkOE8aZLRBbOwUK9eB0
-         1x6V51vtvYk0EwwpwhHQMOVD2P2d0tA9mCCWSMyIXBMkvLSb4Kz9V/uLFz/6yZDyhwk0
-         NRDzDrFtfmZYctLbG17z74M189pyg2lwAQF3NBcC85oYJUEEnvMhxmGeh1cz54vJY0wb
-         WKGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FUTB6Gj5NIh2r6okp5YAqa694OkQrnNvKWiwMgZTNfY=;
-        b=I6R8K4Xx9XNreBLNw7A3SKW4Qc17lBgAvm/FBT8GysKPsnTqjzCD8xcOQQz32efLMG
-         h5wEvs+TcImVVlxRvE8lpN2Z/AC0CCD0dI+EOaKAwlqMwv6AOBhvR/Ogp/SjK3NxUHUK
-         ILS7zyhAMfBSRDCUz53TwYeP5Ynrg1MXmZLApU4VYlGICmRWZ1b6QaQouu9Yk9XLR3kP
-         /PvZMAewC0PEAxwUUFt3O1gW3Uu6/zj/Ji2/FieSbg9cvwQS+vqGclYHKrlz49eNQ6Z4
-         VEfVAYV/q+HMzt0pDyFCmmrkRey/jb8CXmp86eTaUPX1ncUs9kGHVanbvEziiMRuzffL
-         FUqw==
-X-Gm-Message-State: AOAM533vG0y6oRSPCzc9bRLH9ooWOovCc6JD8RbXyGGFTEk4sIhJtEDI
-        QnCjDQV8Y/T28+sXcT+sNVNYjpp2
-X-Google-Smtp-Source: ABdhPJx6G982NPkYWEBvtVzULmONwk412bm0ahtXQBXpo7eh8PZW0660IfxNiznHIoCWlVzi6KmTuQ==
-X-Received: by 2002:a2e:9dc6:: with SMTP id x6mr25059652ljj.94.1594194588695;
-        Wed, 08 Jul 2020 00:49:48 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id o1sm10129343lfi.92.2020.07.08.00.49.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 00:49:48 -0700 (PDT)
-Subject: Re: [PATCH v2] clk: tegra: pll: Improve PLLM enable-state detection
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200708074628.18173-1-digetx@gmail.com>
-Message-ID: <e9579336-cb9f-c266-cc6f-5ea877539db2@gmail.com>
-Date:   Wed, 8 Jul 2020 10:49:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 8 Jul 2020 03:50:19 -0400
+Received: from mga01.intel.com ([192.55.52.88]:12571 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbgGHHuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:50:18 -0400
+IronPort-SDR: yP5WVLlKfBm/B1T6nPsFoJQ1HneAEZVy6WXRB6Ugr2eUeneUHUX1rS7Pn8oeq0+hAEIbUOe/Ar
+ dnw2GhRjQf3A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="165827987"
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="165827987"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 00:50:17 -0700
+IronPort-SDR: fILylLhPHNZXecQNq4Sjs1l4V30MrcM0vKGt0T+zP6I1jr86OCbhXhFO/LQYybo2vhLgC+mrLm
+ ZEIo23ITW8TQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="267058597"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 08 Jul 2020 00:50:17 -0700
+Received: from [10.249.226.44] (abudanko-mobl.ccr.corp.intel.com [10.249.226.44])
+        by linux.intel.com (Postfix) with ESMTP id 648C05807C9;
+        Wed,  8 Jul 2020 00:50:15 -0700 (PDT)
+Subject: [PATCH v10 05/15] perf evlist: implement control command handling
+ functions
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <93e1c3b1-ee77-a94d-8806-049e0245fab7@linux.intel.com>
+Date:   Wed, 8 Jul 2020 10:50:14 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200708074628.18173-1-digetx@gmail.com>
+In-Reply-To: <4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.07.2020 10:46, Dmitry Osipenko пишет:
-> -	return val & PLL_BASE_ENABLE ? 1 : 0;
-> +	return val & PLL_BASE_ENABLE;
 
-This was unintended change that caught my eve only after sending out the
-email, woops :) Please let me make a v3 shortly.
+Implement functions of initialization, finalization and processing
+of control command messages coming from control file descriptors.
+Allocate control file descriptor as descriptor at struct pollfd
+object of evsel_list for atomic poll() operation.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/util/evlist.c | 139 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/evlist.h |  18 +++++
+ 2 files changed, 157 insertions(+)
+
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 36eb50aba1f5..84cf318fa538 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1714,3 +1714,142 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
+ 	}
+ 	return leader;
+ }
++
++int evlist__initialize_ctlfd(struct evlist *evlist, int fd, int ack)
++{
++	if (fd == -1) {
++		pr_debug("Control descriptor is not initialized\n");
++		return 0;
++	}
++
++	evlist->ctl_fd.pos = perf_evlist__add_pollfd(&evlist->core, fd, NULL, POLLIN,
++						     fdarray_flag__nonfilterable);
++	if (evlist->ctl_fd.pos < 0) {
++		evlist->ctl_fd.pos = -1;
++		pr_err("Failed to add ctl fd entry: %m\n");
++		return -1;
++	}
++
++	evlist->ctl_fd.fd = fd;
++	evlist->ctl_fd.ack = ack;
++
++	return 0;
++}
++
++bool evlist__ctlfd_initialized(struct evlist *evlist)
++{
++	return evlist->ctl_fd.pos >= 0;
++}
++
++int evlist__finalize_ctlfd(struct evlist *evlist)
++{
++	struct pollfd *entries = evlist->core.pollfd.entries;
++
++	if (!evlist__ctlfd_initialized(evlist))
++		return 0;
++
++	entries[evlist->ctl_fd.pos].fd = -1;
++	entries[evlist->ctl_fd.pos].events = 0;
++	entries[evlist->ctl_fd.pos].revents = 0;
++
++	evlist->ctl_fd.pos = -1;
++	evlist->ctl_fd.ack = -1;
++	evlist->ctl_fd.fd = -1;
++
++	return 0;
++}
++
++static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
++			      char *cmd_data, size_t data_size)
++{
++	int err;
++	char c;
++	size_t bytes_read = 0;
++
++	memset(cmd_data, 0, data_size--);
++
++	do {
++		err = read(evlist->ctl_fd.fd, &c, 1);
++		if (err > 0) {
++			if (c == '\n' || c == '\0')
++				break;
++			cmd_data[bytes_read++] = c;
++			if (bytes_read == data_size)
++				break;
++		} else {
++			if (err == -1)
++				pr_err("Failed to read from ctlfd %d: %m\n", evlist->ctl_fd.fd);
++			break;
++		}
++	} while (1);
++
++	pr_debug("Message from ctl_fd: \"%s%s\"\n", cmd_data,
++		 bytes_read == data_size ? "" : c == '\n' ? "\\n" : "\\0");
++
++	if (err > 0) {
++		if (!strncmp(cmd_data, EVLIST_CTL_CMD_ENABLE_TAG,
++			     (sizeof(EVLIST_CTL_CMD_ENABLE_TAG)-1))) {
++			*cmd = EVLIST_CTL_CMD_ENABLE;
++		} else if (!strncmp(cmd_data, EVLIST_CTL_CMD_DISABLE_TAG,
++				    (sizeof(EVLIST_CTL_CMD_DISABLE_TAG)-1))) {
++			*cmd = EVLIST_CTL_CMD_DISABLE;
++		}
++	}
++
++	return err;
++}
++
++static int evlist__ctlfd_ack(struct evlist *evlist)
++{
++	int err;
++
++	if (evlist->ctl_fd.ack == -1)
++		return 0;
++
++	err = write(evlist->ctl_fd.ack, EVLIST_CTL_CMD_ACK_TAG,
++		    sizeof(EVLIST_CTL_CMD_ACK_TAG));
++	if (err == -1)
++		pr_err("failed to write to ctl_ack_fd %d: %m\n", evlist->ctl_fd.ack);
++
++	return err;
++}
++
++int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd)
++{
++	int err = 0;
++	char cmd_data[EVLIST_CTL_CMD_MAX_LEN];
++	int ctlfd_pos = evlist->ctl_fd.pos;
++	struct pollfd *entries = evlist->core.pollfd.entries;
++
++	if (!evlist__ctlfd_initialized(evlist) || !entries[ctlfd_pos].revents)
++		return 0;
++
++	if (entries[ctlfd_pos].revents & POLLIN) {
++		err = evlist__ctlfd_recv(evlist, cmd, cmd_data,
++					 EVLIST_CTL_CMD_MAX_LEN);
++		if (err > 0) {
++			switch (*cmd) {
++			case EVLIST_CTL_CMD_ENABLE:
++				evlist__enable(evlist);
++				break;
++			case EVLIST_CTL_CMD_DISABLE:
++				evlist__disable(evlist);
++				break;
++			case EVLIST_CTL_CMD_ACK:
++			case EVLIST_CTL_CMD_UNSUPPORTED:
++			default:
++				pr_debug("ctlfd: unsupported %d\n", *cmd);
++				break;
++			}
++			if (!(*cmd == EVLIST_CTL_CMD_ACK || *cmd == EVLIST_CTL_CMD_UNSUPPORTED))
++				evlist__ctlfd_ack(evlist);
++		}
++	}
++
++	if (entries[ctlfd_pos].revents & (POLLHUP | POLLERR))
++		evlist__finalize_ctlfd(evlist);
++	else
++		entries[ctlfd_pos].revents = 0;
++
++	return err;
++}
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 2caf19fb87a8..1dac16f574fe 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -359,4 +359,22 @@ void perf_evlist__force_leader(struct evlist *evlist);
+ struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
+ 						 struct evsel *evsel,
+ 						bool close);
++#define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
++#define EVLIST_CTL_CMD_DISABLE_TAG "disable"
++#define EVLIST_CTL_CMD_ACK_TAG     "ack\n"
++
++#define EVLIST_CTL_CMD_MAX_LEN 64
++
++enum evlist_ctl_cmd {
++	EVLIST_CTL_CMD_UNSUPPORTED = 0,
++	EVLIST_CTL_CMD_ENABLE,
++	EVLIST_CTL_CMD_DISABLE,
++	EVLIST_CTL_CMD_ACK
++};
++
++int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
++int evlist__finalize_ctlfd(struct evlist *evlist);
++bool evlist__ctlfd_initialized(struct evlist *evlist);
++int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
++
+ #endif /* __PERF_EVLIST_H */
+-- 
+2.24.1
+
+
