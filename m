@@ -2,86 +2,119 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA75C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B1EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86DDA206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8009C206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vz1Ro+du"
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="RlNUnYwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbgGHNpI (ORCPT
+        id S1729467AbgGHNq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:45:08 -0400
-Received: from casper.infradead.org ([90.155.50.34]:35430 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729288AbgGHNpH (ORCPT
+        Wed, 8 Jul 2020 09:46:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729288AbgGHNqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:45:07 -0400
-X-Greylist: delayed 1266 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 09:45:06 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ALoTRUWpyoJ5TLvh/u0ihRx9QLx7mqPr8euUVwU9fWg=; b=vz1Ro+dufJWwWA7UmwzBycaTV9
-        /0RiH/WHQ+aVbPep3jyOFfC+FP1u5tkkrzFk3s7JyMNkln5i3pV7RpQjenFkFTWyUGqMRVwvT//JA
-        7Ln8LUzELu+B67MOLF21c7RKpsTDp0q2wmslj7Ntk3r4uH00aI6JobFDMismYfceQWmV8votbz/S4
-        ZQt9RxMwIp7yniwMoRc8Yt83jF6EcSNpJy6aQnT765vpDWP5Pteo+uRvy+NPp2rx6eaewh0NRee7v
-        XZWFjNktt65gVlkKlUHpxi37RmmbPgb+4++oEwChZy60usK+sCyjg2DVm/YCEOAtnEF7FdFI3hTee
-        WeMGORlw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtA31-0004Tm-CW; Wed, 08 Jul 2020 13:23:41 +0000
-Date:   Wed, 8 Jul 2020 14:23:38 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <song@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/6] md: switch to ->check_events for media change
- notifications
-Message-ID: <20200708132338.GO25523@casper.infradead.org>
-References: <20200708122546.214579-1-hch@lst.de>
- <20200708122546.214579-2-hch@lst.de>
- <09cd4827-52ae-0e7c-c3d3-e9a6cd27ff2b@cloud.ionos.com>
+        Wed, 8 Jul 2020 09:46:25 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7F8C08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 06:46:25 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y18so26910017lfh.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 06:46:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yokX6/GqNfCJVra9vogfMzW7oEaeEABdbokc5LYRIwI=;
+        b=RlNUnYwYCZObU1qK4ULsAxSxIXkTG7mMUyf77VNDSVZC4Xi6DQ4dCOW2m4BXHu+HCL
+         nwfiJhi9CyF7hG35p4U+XBd8E71/Fl/59SCIYtqWsNfPTf5d1rHJSZxd/SYHEHZ8XxPY
+         2rDi6EuVbK0iMGwhD2fvX8QpM5iO9TsO6sUDMGQq0FXnC0MhfaW8NgV+kEABTllp3BKf
+         4n4ZUFiG1Zfj2vk7+ooDH9kOeaugMGbqOzT1unF1S9ydZ/6CWuWeUcbE8l59bZxQiCuR
+         FuMJD9nTgSZ7bN2O5sU1ctPUWsjcmKeDp43MghNoo8oKtgoFYt6OE1wcGaNFhau9/FcW
+         RJUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yokX6/GqNfCJVra9vogfMzW7oEaeEABdbokc5LYRIwI=;
+        b=oxyBoXctaq79c4yQjC3iS+RQndtfWejJjGtBnA6pDaoLHgnjupC+hyegcLLWkYDiTi
+         mtSmrYUnIipuA0s6o8tBXckzaDnR3DoCb+G4drpBGjvvcs2MekCibvMFiZrpLSiFarDT
+         3fWfo+0FFfj6LaJwCyU9GIrZHCa0sojXrUQnPHOaVRV9EZQ+yW3ngfZSML8/tdh5RAm2
+         RBjDj4dhy56jrtaLQL2nTTIgTSoeEtlQ0fyhjodc+aGXdURg5biLWFjfn/N1YJmcAHVe
+         hJT6mB3EDqTbHUkb7O7JFLOx5Dl8+VBqIqezAjthTOZMR+MbFT3fXY4Z0I6wE0xysPMv
+         BnOA==
+X-Gm-Message-State: AOAM531og+9fnURR4wwcb7R2WpHuOGYowJpxJDOOHnpH0S3h0DRZXMvY
+        pFXz3TXhgoRCmP+7wFB6oc4XYg==
+X-Google-Smtp-Source: ABdhPJyWX/2LEyXuL3gCobpVJKTemEzBK880Mx2uxw2/QqlMJrw22x14dTEHFtlA6zdr2cVdoqvECQ==
+X-Received: by 2002:ac2:47e7:: with SMTP id b7mr36026094lfp.68.1594215983911;
+        Wed, 08 Jul 2020 06:46:23 -0700 (PDT)
+Received: from fedora.toya.net.pl (staticline-31-182-130-176.toya.net.pl. [31.182.130.176])
+        by smtp.gmail.com with ESMTPSA id i22sm924902ljb.19.2020.07.08.06.46.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 06:46:23 -0700 (PDT)
+From:   Bartosz Szczepanek <bsz@semihalf.com>
+To:     Matthew Garrett <mjg59@google.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Pandruvada Srinivas <srinivas.pandruvada@linux.intel.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Radoslaw Biernacki <rad@semihalf.com>,
+        Alex Levin <levinale@google.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>
+Subject: [PATCH] thermal/int340x_thermal: Prevent page fault on .set_mode() op
+Date:   Wed,  8 Jul 2020 15:46:13 +0200
+Message-Id: <20200708134613.131555-1-bsz@semihalf.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09cd4827-52ae-0e7c-c3d3-e9a6cd27ff2b@cloud.ionos.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 03:17:31PM +0200, Guoqing Jiang wrote:
-> On 7/8/20 2:25 PM, Christoph Hellwig wrote:
-> > -static int md_media_changed(struct gendisk *disk)
-> > -{
-> > -	struct mddev *mddev = disk->private_data;
-> > -
-> > -	return mddev->changed;
-> > -}
-> 
-> Maybe we can remove "changed" from struct mddev since no one reads it
-> after the change.
+Starting from commit "thermal/int340x_thermal: Don't require IDSP to
+exist", priv->current_uuid_index is initialized to -1. This value may
+be passed to int3400_thermal_run_osc() from int3400_thermal_set_mode,
+contributing to page fault when accessing int3400_thermal_uuids array
+at index -1.
 
-You missed this hunk:
+This commit adds a check on uuid value to int3400_thermal_run_osc.
 
-+static unsigned int md_check_events(struct gendisk *disk, unsigned int clearing)
- {
-        struct mddev *mddev = disk->private_data;
-+	unsigned int ret = 0;
+Signed-off-by: Bartosz Szczepanek <bsz@semihalf.com>
+---
+ drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-+	if (mddev->changed)
-+               ret = DISK_EVENT_MEDIA_CHANGE;
-        mddev->changed = 0;
--	return 0;
-+	return ret;
- }
+diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+index 0b3a62655843..12448ccd27f1 100644
+--- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
++++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+@@ -216,11 +216,16 @@ static int int3400_thermal_run_osc(acpi_handle handle,
+ 	acpi_status status;
+ 	int result = 0;
+ 	struct acpi_osc_context context = {
+-		.uuid_str = int3400_thermal_uuids[uuid],
++		.uuid_str = NULL,
+ 		.rev = 1,
+ 		.cap.length = 8,
+ 	};
+ 
++	if (uuid < 0 || uuid >= INT3400_THERMAL_MAXIMUM_UUID)
++		return -EINVAL;
++
++	context.uuid_str = int3400_thermal_uuids[uuid];
++
+ 	buf[OSC_QUERY_DWORD] = 0;
+ 	buf[OSC_SUPPORT_DWORD] = enable;
+ 
+-- 
+2.17.1
 
