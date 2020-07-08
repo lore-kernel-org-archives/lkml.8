@@ -2,230 +2,126 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25899C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5999C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8DD820720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:41:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WaeUpVJO"
+	by mail.kernel.org (Postfix) with ESMTP id C6B2B20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594212113;
+	bh=c/XsfQ8Q8NBrug/VaLpBs23ypZgUA72MElXvNmnXXyo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Hj6qNIrhmw4g2KMrRuBCMWWdggYxcSUHeoDgBg7s+83jSgPd4a7phY2cBfJqFzw4P
+	 rQldCCrsMuL4IXVqwnLqxN79xtaS8B05c3GCrjqHtNSNkc2fmZMMYMtXRJJ3MaER5h
+	 Lq2cKpG0FgQjQoOBpKm+Vg4fA1PpbdjV8aSSkISs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbgGHMlk (ORCPT
+        id S1729312AbgGHMlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:41:40 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52261 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728770AbgGHMlk (ORCPT
+        Wed, 8 Jul 2020 08:41:51 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:37587 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbgGHMlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:41:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594212098;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PWJrF8GNrTsOPJXQF6A4Nm884YZBFXppAIvdzvPyPnk=;
-        b=WaeUpVJO0XJg224DKxAsyj1mcTR2R7v9vcYRNL4Iy0IV/FpI6erK0dNFeqRglYnpD3Oa1b
-        7i4vcPO8S7HavB3cjtJzhB4wXwi7Q+ba0T8fGizbEsXguJ6wtSszRoYfbtDnoRjVEp62CZ
-        VpomXYecg+k+9y/Ourm/BWQsn5y9Rbo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-Iyw5hy60NhavDLx91TPpDg-1; Wed, 08 Jul 2020 08:41:36 -0400
-X-MC-Unique: Iyw5hy60NhavDLx91TPpDg-1
-Received: by mail-wm1-f71.google.com with SMTP id c81so1574294wmd.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:41:36 -0700 (PDT)
+        Wed, 8 Jul 2020 08:41:51 -0400
+Received: by mail-pj1-f68.google.com with SMTP id o22so1140049pjw.2;
+        Wed, 08 Jul 2020 05:41:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PWJrF8GNrTsOPJXQF6A4Nm884YZBFXppAIvdzvPyPnk=;
-        b=Womisuca8fytIrkzSByurZETpwMKAKu1ZwctVFMHSO+1acJswsJ9QRrhQU1ePMfFpb
-         u97H9UeepEensxwHjEPxqfYCpO58q5sLgxWKede9xRGBM5nz20QDBt8ao0UMNbsG+L6U
-         uwVOXS78EG/RqQCtBia/2h2rhYabcgq+0E4t8veXMjVeeCjoDJn5iVBcVEfkDtiqZnhF
-         tpDP85zkAiwisW4D9LIu0GtuS4VVD6TIkr1vcy308V9fcLkVgbMK1XKNG4FGXFkMEYaU
-         J/N3dIBPvr6KCuBodX+Hvu2lO182rHK+g6p1KBMm3Sant4DafFqrZB7SfzHBMBlLe/H/
-         yBgQ==
-X-Gm-Message-State: AOAM532aGLTiZNHuHup/Lm9CkrIadc4zPuJKweacGfTLighS9VU1SumE
-        0JYiFhOUK9ARnLw3WnqJMlxK/flWZTMdnkWjBhAf2v5xO8JNRWy6uFPKg8ma/5MQgvS/x1bHTfu
-        FiLD2bEMnTXPAwB2rUPruFRoV
-X-Received: by 2002:a1c:b007:: with SMTP id z7mr8852861wme.37.1594212095599;
-        Wed, 08 Jul 2020 05:41:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy9S0KjmUjXRwLCzzIVJdozgXmlU23+U8U7gcW0F2/tm0N0HaqBXAGWFoxFryTLZhmG5ysKYg==
-X-Received: by 2002:a1c:b007:: with SMTP id z7mr8852837wme.37.1594212095362;
-        Wed, 08 Jul 2020 05:41:35 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id d10sm5909342wrx.66.2020.07.08.05.41.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 05:41:34 -0700 (PDT)
-Subject: Re: [PATCH v3 4/8] KVM: X86: Split kvm_update_cpuid()
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200708065054.19713-1-xiaoyao.li@intel.com>
- <20200708065054.19713-5-xiaoyao.li@intel.com>
- <ad349b28-bc62-e478-c610-e829974a8342@redhat.com>
- <92184f05-ca27-268c-ea72-f939fb1a0ab2@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <4123eb60-d89a-9112-dd7e-1a7627a0fc70@redhat.com>
-Date:   Wed, 8 Jul 2020 14:41:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9NsmHNMKtMo6heddAwR0Jo8rbD18ro99vFEXj/9cbns=;
+        b=gU5v9fPXEQpDNDazXWVqBd8QqxNIHTLza+/bB592uGJNiZxNKB1il8bRnarzCNHNul
+         T5P4mYSRJ7zeYncoL7HwoOWzTibv3ZVbGbgTu4WhkcfsozCCz0UKblIxnufnqVpb1h2Z
+         0f/jTm5wG2tSRmSiFpe4sBUJEMVq//UvNIlLZVlCl3jn4yKt1mj6H5Rcvx3QZkwBVxS3
+         +4UUj41wG/lKJ5myY1HumBfIaWJ2ZnhKOql9QnZEL2yw4192aSKuWdYoSEYGUt9Mu367
+         vWNV1a+uYtM2Du5BhDK4ikua4/0ZD4+/Pu1pVGxXbG6eMCNer4fUZVTpGLoIniJPCSaT
+         cxbQ==
+X-Gm-Message-State: AOAM531TXk4nuewkAj5vO460c828ivetn/VCkfFbzvSFGVG2kHDoeaRL
+        Om6zA+NmuITN0s8KlFQsjs0=
+X-Google-Smtp-Source: ABdhPJwELa0l63JqQ1sECDcd+rWg4PVJ50CjKNicqhYyEjnD+tSNYgEHmSQ3lqhAlX4VC2yD5V81Fg==
+X-Received: by 2002:a17:90b:190d:: with SMTP id mp13mr9911274pjb.211.1594212110549;
+        Wed, 08 Jul 2020 05:41:50 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 204sm14369397pfx.3.2020.07.08.05.41.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 05:41:49 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id BF77C401AE; Wed,  8 Jul 2020 12:41:48 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 12:41:48 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 10/16] exec: Remove do_execve_file
+Message-ID: <20200708124148.GP13911@42.do-not-panic.com>
+References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
+ <20200702164140.4468-10-ebiederm@xmission.com>
+ <20200708063525.GC4332@42.do-not-panic.com>
 MIME-Version: 1.0
-In-Reply-To: <92184f05-ca27-268c-ea72-f939fb1a0ab2@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708063525.GC4332@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/20 14:33, Xiaoyao Li wrote:
-> On 7/8/2020 8:06 PM, Paolo Bonzini wrote:
->> On 08/07/20 08:50, Xiaoyao Li wrote:
->>> Split the part of updating vcpu model out of kvm_update_cpuid(), and put
->>> it into a new kvm_update_vcpu_model(). So it's more clear that
->>> kvm_update_cpuid() is to update guest CPUID settings, while
->>> kvm_update_vcpu_model() is to update vcpu model (settings) based on the
->>> updated CPUID settings.
->>>
->>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->>
->> I would prefer to keep the kvm_update_cpuid name for what you called
->> kvm_update_vcpu_model(), and rename the rest to
->> kvm_update_cpuid_runtime().
+On Wed, Jul 08, 2020 at 06:35:25AM +0000, Luis Chamberlain wrote:
+> On Thu, Jul 02, 2020 at 11:41:34AM -0500, Eric W. Biederman wrote:
+> > Now that the last callser has been removed remove this code from exec.
+> > 
+> > For anyone thinking of resurrecing do_execve_file please note that
+> > the code was buggy in several fundamental ways.
+> > 
+> > - It did not ensure the file it was passed was read-only and that
+> >   deny_write_access had been called on it.  Which subtlely breaks
+> >   invaniants in exec.
+> > 
+> > - The caller of do_execve_file was expected to hold and put a
+> >   reference to the file, but an extra reference for use by exec was
+> >   not taken so that when exec put it's reference to the file an
+> >   underflow occured on the file reference count.
 > 
-> But there is no CPUID being updated in kvm_update_cpuid(), after
-> kvm_update_cpuid_runtime() is split out. This is confusing, IMO.
-
-Then what about kvm_vcpu_after_set_cpuid()?  It's the "model" that is
-not clear.
-
-Thanks,
-
-Paolo
-
->> Paolo
->>
->>> ---
->>>   arch/x86/kvm/cpuid.c | 38 ++++++++++++++++++++++++--------------
->>>   arch/x86/kvm/cpuid.h |  1 +
->>>   arch/x86/kvm/x86.c   |  1 +
->>>   3 files changed, 26 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->>> index a825878b7f84..001f5a94880e 100644
->>> --- a/arch/x86/kvm/cpuid.c
->>> +++ b/arch/x86/kvm/cpuid.c
->>> @@ -76,7 +76,6 @@ static int kvm_check_cpuid(struct kvm_vcpu *vcpu)
->>>   void kvm_update_cpuid(struct kvm_vcpu *vcpu)
->>>   {
->>>       struct kvm_cpuid_entry2 *best;
->>> -    struct kvm_lapic *apic = vcpu->arch.apic;
->>>         best = kvm_find_cpuid_entry(vcpu, 1, 0);
->>>       if (best) {
->>> @@ -89,26 +88,14 @@ void kvm_update_cpuid(struct kvm_vcpu *vcpu)
->>>                  vcpu->arch.apic_base & MSR_IA32_APICBASE_ENABLE);
->>>       }
->>>   -    if (best && apic) {
->>> -        if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
->>> -            apic->lapic_timer.timer_mode_mask = 3 << 17;
->>> -        else
->>> -            apic->lapic_timer.timer_mode_mask = 1 << 17;
->>> -    }
->>> -
->>>       best = kvm_find_cpuid_entry(vcpu, 7, 0);
->>>       if (best && boot_cpu_has(X86_FEATURE_PKU) && best->function ==
->>> 0x7)
->>>           cpuid_entry_change(best, X86_FEATURE_OSPKE,
->>>                      kvm_read_cr4_bits(vcpu, X86_CR4_PKE));
->>>         best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
->>> -    if (!best) {
->>> -        vcpu->arch.guest_supported_xcr0 = 0;
->>> -    } else {
->>> -        vcpu->arch.guest_supported_xcr0 =
->>> -            (best->eax | ((u64)best->edx << 32)) & supported_xcr0;
->>> +    if (best)
->>>           best->ebx = xstate_required_size(vcpu->arch.xcr0, false);
->>> -    }
->>>         best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
->>>       if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
->>> @@ -127,6 +114,27 @@ void kvm_update_cpuid(struct kvm_vcpu *vcpu)
->>>                          vcpu->arch.ia32_misc_enable_msr &
->>>                          MSR_IA32_MISC_ENABLE_MWAIT);
->>>       }
->>> +}
->>> +
->>> +void kvm_update_vcpu_model(struct kvm_vcpu *vcpu)
->>> +{
->>> +    struct kvm_lapic *apic = vcpu->arch.apic;
->>> +    struct kvm_cpuid_entry2 *best;
->>> +
->>> +    best = kvm_find_cpuid_entry(vcpu, 1, 0);
->>> +    if (best && apic) {
->>> +        if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
->>> +            apic->lapic_timer.timer_mode_mask = 3 << 17;
->>> +        else
->>> +            apic->lapic_timer.timer_mode_mask = 1 << 17;
->>> +    }
->>> +
->>> +    best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
->>> +    if (!best)
->>> +        vcpu->arch.guest_supported_xcr0 = 0;
->>> +    else
->>> +        vcpu->arch.guest_supported_xcr0 =
->>> +            (best->eax | ((u64)best->edx << 32)) & supported_xcr0;
->>>         /* Note, maxphyaddr must be updated before tdp_level. */
->>>       vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
->>> @@ -218,6 +226,7 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
->>>       kvm_apic_set_version(vcpu);
->>>       kvm_x86_ops.cpuid_update(vcpu);
->>>       kvm_update_cpuid(vcpu);
->>> +    kvm_update_vcpu_model(vcpu);
->>>         kvfree(cpuid_entries);
->>>   out:
->>> @@ -247,6 +256,7 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
->>>       kvm_apic_set_version(vcpu);
->>>       kvm_x86_ops.cpuid_update(vcpu);
->>>       kvm_update_cpuid(vcpu);
->>> +    kvm_update_vcpu_model(vcpu);
->>>   out:
->>>       return r;
->>>   }
->>> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
->>> index f136de1debad..45e3643e2fba 100644
->>> --- a/arch/x86/kvm/cpuid.h
->>> +++ b/arch/x86/kvm/cpuid.h
->>> @@ -10,6 +10,7 @@ extern u32 kvm_cpu_caps[NCAPINTS] __read_mostly;
->>>   void kvm_set_cpu_caps(void);
->>>     void kvm_update_cpuid(struct kvm_vcpu *vcpu);
->>> +void kvm_update_vcpu_model(struct kvm_vcpu *vcpu);
->>>   struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
->>>                             u32 function, u32 index);
->>>   int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
->>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->>> index 09ee54f5e385..6f376392e6e6 100644
->>> --- a/arch/x86/kvm/x86.c
->>> +++ b/arch/x86/kvm/x86.c
->>> @@ -8184,6 +8184,7 @@ static void enter_smm(struct kvm_vcpu *vcpu)
->>>   #endif
->>>         kvm_update_cpuid(vcpu);
->>> +    kvm_update_vcpu_model(vcpu);
->>>       kvm_mmu_reset_context(vcpu);
->>>   }
->>>  
->>
+> Maybe its my growing love with testing, but I'm going to have to partly
+> blame here that we added a new API without any respective testing.
+> Granted, I recall this this patch set could have used more wider review
+> and a bit more patience... but just mentioning this so we try to avoid
+> new api-without-testing with more reason in the future.
 > 
+> But more importantly, *how* could we have caught this? Or how can we
+> catch this sort of stuff better in the future?
 
+Of all the issues you pointed out with do_execve_file(), since upon
+review the assumption *by design* was that LSMs/etc would pick up issues
+with the file *prior* to processing, I think that this file reference
+count issue comes to my attention as the more serious issue which I
+wish we could address *first* before this crusade.
+
+So I have to ask, has anyone *really tried* to give a crack at fixing
+this refcount issue in a smaller way first? Alexei?
+
+I'm not opposed to the removal of do_execve_file(), however if there
+is a reproducible crash / issue with the existing user, this sledge
+hammer seems a bit overkill for older kernels.
+
+  Luis
