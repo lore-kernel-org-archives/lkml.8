@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B876AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF72CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87AA92080D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DBC207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594222910;
-	bh=B4KbhpoltGExd208/4xHgN1aUeY0aanpA2UIDqaA8Jk=;
+	s=default; t=1594222913;
+	bh=GEJJCDdVm8pUbVjvqKgHBBMZkXtSqzUnyt6nkVra9C4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EFFqI+Cm3Ut8IR1LFanQPOZv6Zj4JMV7dfG6d4Xk6xTanqIAFBp3oy00fiVdLzn+9
-	 8d4laQusMaUh1y7+WyHlMVZ7MpoB3TBoWWMxVim6FdxB6kJPmHpfdL+87xqMswrD54
-	 WQSyd9DDtI4NscHQI4AtSBXX1V/EUJE8bdm9Dscg=
+	b=2NgWw5GLq+5qyNjzD8i61xfx5oLbW/JmQUY0pXBDRmYfM1RYP9smmfv1rzIarAv1G
+	 6450lgrs/tBlHoreXsWr6xdwCc5hMoAsSmxTGEzAhwwJUiCLNMjuj6s6lCjCwMcfxw
+	 YM7I3X1k3k1gwNDg04maYkv3NCYcZDqnKKX45w2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgGHPlt (ORCPT
+        id S1730591AbgGHPlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48556 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:41:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730515AbgGHPll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:41:41 -0400
+        id S1730535AbgGHPlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:41:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66D4820874;
-        Wed,  8 Jul 2020 15:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D07220720;
+        Wed,  8 Jul 2020 15:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222901;
-        bh=B4KbhpoltGExd208/4xHgN1aUeY0aanpA2UIDqaA8Jk=;
+        s=default; t=1594222903;
+        bh=GEJJCDdVm8pUbVjvqKgHBBMZkXtSqzUnyt6nkVra9C4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e7hrprns7iZuKnnrVu63EVUGDYiaRWoBbqNZfSCvZSIv1vzbiszw1eOpfcABjipwP
-         OiRvTN9b2hb7PkpgN5WDPhELGCFu/CKn7becxuBi5kbLvVuBpSA+ikrc9+U0s/ac6B
-         FjL5SRovhG+d12EEaapv1+C7f9fwTjZlCEN/FW+U=
+        b=aBUrmeS77HvmBbJ5tE58bgWTympiR5yhdY5uAgV600Sn6deb7x8BxFiS0eY7golBP
+         F6jcC3UivJ8btGG3t7kxEGorLI3O+cQvnMfRFtaYeM3yvNRHOdyji6/DWFCQ9jlHES
+         DMwyC9BGX0f+oimH969clCr9zstSqeaSb7UBJP98=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        kbuild test robot <lkp@intel.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 04/16] drm/exynos: Properly propagate return value in drm_iommu_attach_device()
-Date:   Wed,  8 Jul 2020 11:41:23 -0400
-Message-Id: <20200708154135.3199907-4-sashal@kernel.org>
+Cc:     Petteri Aimonen <jpa@git.mail.kapsi.fi>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 06/16] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
+Date:   Wed,  8 Jul 2020 11:41:25 -0400
+Message-Id: <20200708154135.3199907-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708154135.3199907-1-sashal@kernel.org>
 References: <20200708154135.3199907-1-sashal@kernel.org>
@@ -63,44 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Petteri Aimonen <jpa@git.mail.kapsi.fi>
 
-[ Upstream commit b9c633882de4601015625f9136f248e9abca8a7a ]
+[ Upstream commit 7ad816762f9bf89e940e618ea40c43138b479e10 ]
 
-Propagate the proper error codes from the called functions instead of
-unconditionally returning 0.
+Previously, kernel floating point code would run with the MXCSR control
+register value last set by userland code by the thread that was active
+on the CPU core just before kernel call. This could affect calculation
+results if rounding mode was changed, or a crash if a FPU/SIMD exception
+was unmasked.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Merge conflict so merged it manually.
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Restore MXCSR to the kernel's default value.
+
+ [ bp: Carve out from a bigger patch by Petteri, add feature check, add
+   FNINIT call too (amluto). ]
+
+Signed-off-by: Petteri Aimonen <jpa@git.mail.kapsi.fi>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207979
+Link: https://lkml.kernel.org/r/20200624114646.28953-2-bp@alien8.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_drm_dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/fpu/internal.h | 5 +++++
+ arch/x86/kernel/fpu/core.c          | 6 ++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_dma.c b/drivers/gpu/drm/exynos/exynos_drm_dma.c
-index 619f81435c1b2..58b89ec11b0eb 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_dma.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_dma.c
-@@ -61,7 +61,7 @@ static int drm_iommu_attach_device(struct drm_device *drm_dev,
- 				struct device *subdrv_dev, void **dma_priv)
- {
- 	struct exynos_drm_private *priv = drm_dev->dev_private;
--	int ret;
-+	int ret = 0;
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index 44c48e34d7994..00eac7f1529b0 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -619,6 +619,11 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
+  * MXCSR and XCR definitions:
+  */
  
- 	if (get_dma_ops(priv->dma_dev) != get_dma_ops(subdrv_dev)) {
- 		DRM_DEV_ERROR(subdrv_dev, "Device %s lacks support for IOMMU\n",
-@@ -92,7 +92,7 @@ static int drm_iommu_attach_device(struct drm_device *drm_dev,
- 	if (ret)
- 		clear_dma_max_seg_size(subdrv_dev);
++static inline void ldmxcsr(u32 mxcsr)
++{
++	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
++}
++
+ extern unsigned int mxcsr_feature_mask;
  
--	return 0;
-+	return ret;
+ #define XCR_XFEATURE_ENABLED_MASK	0x00000000
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 12c70840980e4..cd8839027f66d 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -101,6 +101,12 @@ void kernel_fpu_begin(void)
+ 		copy_fpregs_to_fpstate(&current->thread.fpu);
+ 	}
+ 	__cpu_invalidate_fpregs_state();
++
++	if (boot_cpu_has(X86_FEATURE_XMM))
++		ldmxcsr(MXCSR_DEFAULT);
++
++	if (boot_cpu_has(X86_FEATURE_FPU))
++		asm volatile ("fninit");
  }
+ EXPORT_SYMBOL_GPL(kernel_fpu_begin);
  
- /*
 -- 
 2.25.1
 
