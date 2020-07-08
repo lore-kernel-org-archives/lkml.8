@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ED3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE0420775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BABF20775
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:52:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dzgr6QCK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="44JN/bKC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CDTkBkN0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3pqvOBoY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgGHJwE (ORCPT
+        id S1728714AbgGHJwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:52:04 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48054 "EHLO
+        Wed, 8 Jul 2020 05:52:06 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48010 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728645AbgGHJvy (ORCPT
+        with ESMTP id S1728660AbgGHJv4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:51:54 -0400
-Date:   Wed, 08 Jul 2020 09:51:51 -0000
+        Wed, 8 Jul 2020 05:51:56 -0400
+Date:   Wed, 08 Jul 2020 09:51:52 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594201911;
+        s=2020; t=1594201913;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6SNQKgtYeN3ILXa5tMtzSYLdxzXoALKzjaJMGXnrzvk=;
-        b=Dzgr6QCKfboMWagin7pXkhNJy42ZPWpW+T2fAKKVLsqUqDrGSJ40rVWOMJvP465nF4PjWx
-        gdk3NZuwdSyq8aY6+W4Q2V8nr2aC2mmeL+J/jFzGqldVCws0Vosz92U0wNtwU+t8TZk+FI
-        N0OJfMRVs9X1jui369pqnQWJ0wL2BRPbDjkwlmeR0hffwQehhSMKV4uAmZ85GYG/E7Cuss
-        KOoxJk7I/2z5NsmBgSMyK0eQ95NfP8gWKE12xjGevueVPsuqoW1WSwPwOy9mzXuGCo+6bV
-        S3zUCKAtBBBGqFrbGnqpPS7Z+e5Ilwyxip/33my0Su0DEYKe7PvMTO1Kvm4YWA==
+        bh=kMKbfOGFEtvyd8U45jdjk/aZBBQAwGanGVZ9xTxWXfU=;
+        b=CDTkBkN0UuWBj94afgr0QsAEjtGGmsNQ1z4qrI8cM7yiFbIGlr5Mc7kUQvaCBtG4NPH86c
+        rGvbFSTl6zNJagD511bKK5wbHI4NE0Aro5pgb6XUJzXtH/bytrF4E+Y2n1IBvLb2RdYN25
+        R4RXNdd8OrOqu3qQfxstf6hDpiFes9r/fTR+4xh4sX+/hepXzdHbZgG8n01DSxxIt0l76O
+        Op9QJn9RZag5D5ifD9WvXE2TrFhYvv092u3i7feUuSMhMWYOzw7XtzjOpeH40aQNc4xbhF
+        2CbU80B6PUXY5iyuaU7sq+p1DzzPwLlYCZSlSrDEDOxIqJivdehQ38UJJsFLvg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594201911;
+        s=2020e; t=1594201913;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6SNQKgtYeN3ILXa5tMtzSYLdxzXoALKzjaJMGXnrzvk=;
-        b=44JN/bKCXQG9KcrLC4rvGbBeMe0B4JOaHB+5kI1AmuC4pB9w/HB56gOD73iwxyOoCLRo4N
-        8yO2b6mb6zkTDJAw==
+        bh=kMKbfOGFEtvyd8U45jdjk/aZBBQAwGanGVZ9xTxWXfU=;
+        b=3pqvOBoYQ/vVzQVE/hUgFd9uWcWbjRGVE3YY+CsN6mJmzVk4DZ4gUXuHMTGkZKzHlagNN0
+        gk2P/Xpmuro944CA==
 From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel/lbr: Support LBR_CTL
+Subject: [tip: perf/core] perf/x86/intel/lbr: Use dynamic data structure for task_ctx
 Cc:     Kan Liang <kan.liang@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1593780569-62993-10-git-send-email-kan.liang@linux.intel.com>
-References: <1593780569-62993-10-git-send-email-kan.liang@linux.intel.com>
+In-Reply-To: <1593780569-62993-7-git-send-email-kan.liang@linux.intel.com>
+References: <1593780569-62993-7-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159420191116.4006.12606247942831487185.tip-bot2@tip-bot2>
+Message-ID: <159420191288.4006.3420651578991456355.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,140 +70,204 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     49d8184f2036ff5b8d1eea3d61bac8b23420eca7
-Gitweb:        https://git.kernel.org/tip/49d8184f2036ff5b8d1eea3d61bac8b23420eca7
+Commit-ID:     f42be8651a7a9d5cb165e5d176fc0b09621b4f4d
+Gitweb:        https://git.kernel.org/tip/f42be8651a7a9d5cb165e5d176fc0b09621b4f4d
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Fri, 03 Jul 2020 05:49:15 -07:00
+AuthorDate:    Fri, 03 Jul 2020 05:49:12 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 08 Jul 2020 11:38:53 +02:00
+CommitterDate: Wed, 08 Jul 2020 11:38:52 +02:00
 
-perf/x86/intel/lbr: Support LBR_CTL
+perf/x86/intel/lbr: Use dynamic data structure for task_ctx
 
-An IA32_LBR_CTL is introduced for Architecture LBR to enable and config
-LBR registers to replace the previous LBR_SELECT.
+The type of task_ctx is hardcoded as struct x86_perf_task_context,
+which doesn't apply for Architecture LBR. For example, Architecture LBR
+doesn't have the TOS MSR. The number of LBR entries is variable. A new
+struct will be introduced for Architecture LBR. Perf has to determine
+the type of task_ctx at run time.
 
-All the related members in struct cpu_hw_events and struct x86_pmu
-have to be renamed.
+The type of task_ctx pointer is changed to 'void *', which will be
+determined at run time.
 
-Some new macros are added to reflect the layout of LBR_CTL.
-
-The mapping from PERF_SAMPLE_BRANCH_* to the corresponding bits in
-LBR_CTL MSR is saved in lbr_ctl_map now, which is not a const value.
-The value relies on the CPUID enumeration.
-
-For the previous model-specific LBR, most of the bits in LBR_SELECT
-operate in the suppressed mode. For the bits in LBR_CTL, the polarity is
-inverted.
-
-For the previous model-specific LBR format 5 (LBR_FORMAT_INFO), if the
-NO_CYCLES and NO_FLAGS type are set, the flag LBR_NO_INFO will be set to
-avoid the unnecessary LBR_INFO MSR read. Although Architecture LBR also
-has a dedicated LBR_INFO MSR, perf doesn't need to check and set the
-flag LBR_NO_INFO. For Architecture LBR, XSAVES instruction will be used
-as the default way to read the LBR MSRs all together. The overhead which
-the flag tries to avoid doesn't exist anymore. Dropping the flag can
-save the extra check for the flag in the lbr_read() later, and make the
-code cleaner.
+The generic LBR optimization can be shared between Architecture LBR and
+model-specific LBR. Both need to access the structure for the generic
+LBR optimization. A helper task_context_opt() is introduced to retrieve
+the pointer of the structure at run time.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/1593780569-62993-10-git-send-email-kan.liang@linux.intel.com
+Link: https://lkml.kernel.org/r/1593780569-62993-7-git-send-email-kan.liang@linux.intel.com
 ---
- arch/x86/events/intel/lbr.c  | 43 +++++++++++++++++++++++++++++++++++-
- arch/x86/events/perf_event.h | 15 +++++++++---
- 2 files changed, 55 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/lbr.c  | 59 +++++++++++++++--------------------
+ arch/x86/events/perf_event.h |  7 +++-
+ 2 files changed, 32 insertions(+), 34 deletions(-)
 
 diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index e62baa9..7742562 100644
+index bba9939..e62baa9 100644
 --- a/arch/x86/events/intel/lbr.c
 +++ b/arch/x86/events/intel/lbr.c
-@@ -132,6 +132,44 @@ enum {
- 	 X86_BR_IRQ		|\
- 	 X86_BR_INT)
+@@ -355,18 +355,17 @@ void intel_pmu_lbr_restore(void *ctx)
+ 		wrmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
+ }
  
-+/*
-+ * Intel LBR_CTL bits
-+ *
-+ * Hardware branch filter for Arch LBR
-+ */
-+#define ARCH_LBR_KERNEL_BIT		1  /* capture at ring0 */
-+#define ARCH_LBR_USER_BIT		2  /* capture at ring > 0 */
-+#define ARCH_LBR_CALL_STACK_BIT		3  /* enable call stack */
-+#define ARCH_LBR_JCC_BIT		16 /* capture conditional branches */
-+#define ARCH_LBR_REL_JMP_BIT		17 /* capture relative jumps */
-+#define ARCH_LBR_IND_JMP_BIT		18 /* capture indirect jumps */
-+#define ARCH_LBR_REL_CALL_BIT		19 /* capture relative calls */
-+#define ARCH_LBR_IND_CALL_BIT		20 /* capture indirect calls */
-+#define ARCH_LBR_RETURN_BIT		21 /* capture near returns */
-+#define ARCH_LBR_OTHER_BRANCH_BIT	22 /* capture other branches */
-+
-+#define ARCH_LBR_KERNEL			(1ULL << ARCH_LBR_KERNEL_BIT)
-+#define ARCH_LBR_USER			(1ULL << ARCH_LBR_USER_BIT)
-+#define ARCH_LBR_CALL_STACK		(1ULL << ARCH_LBR_CALL_STACK_BIT)
-+#define ARCH_LBR_JCC			(1ULL << ARCH_LBR_JCC_BIT)
-+#define ARCH_LBR_REL_JMP		(1ULL << ARCH_LBR_REL_JMP_BIT)
-+#define ARCH_LBR_IND_JMP		(1ULL << ARCH_LBR_IND_JMP_BIT)
-+#define ARCH_LBR_REL_CALL		(1ULL << ARCH_LBR_REL_CALL_BIT)
-+#define ARCH_LBR_IND_CALL		(1ULL << ARCH_LBR_IND_CALL_BIT)
-+#define ARCH_LBR_RETURN			(1ULL << ARCH_LBR_RETURN_BIT)
-+#define ARCH_LBR_OTHER_BRANCH		(1ULL << ARCH_LBR_OTHER_BRANCH_BIT)
-+
-+#define ARCH_LBR_ANY			 \
-+	(ARCH_LBR_JCC			|\
-+	 ARCH_LBR_REL_JMP		|\
-+	 ARCH_LBR_IND_JMP		|\
-+	 ARCH_LBR_REL_CALL		|\
-+	 ARCH_LBR_IND_CALL		|\
-+	 ARCH_LBR_RETURN		|\
-+	 ARCH_LBR_OTHER_BRANCH)
-+
-+#define ARCH_LBR_CTL_MASK			0x7f000e
-+
- static void intel_pmu_lbr_filter(struct cpu_hw_events *cpuc);
+-static __always_inline bool
+-lbr_is_reset_in_cstate(struct x86_perf_task_context *task_ctx)
++static __always_inline bool lbr_is_reset_in_cstate(void *ctx)
+ {
+-	return !rdlbr_from(task_ctx->tos);
++	return !rdlbr_from(((struct x86_perf_task_context *)ctx)->tos);
+ }
  
- /*
-@@ -820,6 +858,11 @@ static int intel_pmu_setup_hw_lbr_filter(struct perf_event *event)
- 	reg = &event->hw.branch_reg;
- 	reg->idx = EXTRA_REG_LBR;
+-static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
++static void __intel_pmu_lbr_restore(void *ctx)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
  
-+	if (static_cpu_has(X86_FEATURE_ARCH_LBR)) {
-+		reg->config = mask;
-+		return 0;
-+	}
-+
+-	if (task_ctx->opt.lbr_callstack_users == 0 ||
+-	    task_ctx->opt.lbr_stack_state == LBR_NONE) {
++	if (task_context_opt(ctx)->lbr_callstack_users == 0 ||
++	    task_context_opt(ctx)->lbr_stack_state == LBR_NONE) {
+ 		intel_pmu_lbr_reset();
+ 		return;
+ 	}
+@@ -376,16 +375,16 @@ static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
+ 	 * - No one else touched them, and
+ 	 * - Was not cleared in Cstate
+ 	 */
+-	if ((task_ctx == cpuc->last_task_ctx) &&
+-	    (task_ctx->opt.log_id == cpuc->last_log_id) &&
+-	    !lbr_is_reset_in_cstate(task_ctx)) {
+-		task_ctx->opt.lbr_stack_state = LBR_NONE;
++	if ((ctx == cpuc->last_task_ctx) &&
++	    (task_context_opt(ctx)->log_id == cpuc->last_log_id) &&
++	    !lbr_is_reset_in_cstate(ctx)) {
++		task_context_opt(ctx)->lbr_stack_state = LBR_NONE;
+ 		return;
+ 	}
+ 
+-	x86_pmu.lbr_restore(task_ctx);
++	x86_pmu.lbr_restore(ctx);
+ 
+-	task_ctx->opt.lbr_stack_state = LBR_NONE;
++	task_context_opt(ctx)->lbr_stack_state = LBR_NONE;
+ }
+ 
+ void intel_pmu_lbr_save(void *ctx)
+@@ -415,27 +414,27 @@ void intel_pmu_lbr_save(void *ctx)
+ 		rdmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
+ }
+ 
+-static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
++static void __intel_pmu_lbr_save(void *ctx)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+-	if (task_ctx->opt.lbr_callstack_users == 0) {
+-		task_ctx->opt.lbr_stack_state = LBR_NONE;
++	if (task_context_opt(ctx)->lbr_callstack_users == 0) {
++		task_context_opt(ctx)->lbr_stack_state = LBR_NONE;
+ 		return;
+ 	}
+ 
+-	x86_pmu.lbr_save(task_ctx);
++	x86_pmu.lbr_save(ctx);
+ 
+-	task_ctx->opt.lbr_stack_state = LBR_VALID;
++	task_context_opt(ctx)->lbr_stack_state = LBR_VALID;
+ 
+-	cpuc->last_task_ctx = task_ctx;
+-	cpuc->last_log_id = ++task_ctx->opt.log_id;
++	cpuc->last_task_ctx = ctx;
++	cpuc->last_log_id = ++task_context_opt(ctx)->log_id;
+ }
+ 
+ void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
+ 				 struct perf_event_context *next)
+ {
+-	struct x86_perf_task_context *prev_ctx_data, *next_ctx_data;
++	void *prev_ctx_data, *next_ctx_data;
+ 
+ 	swap(prev->task_ctx_data, next->task_ctx_data);
+ 
+@@ -451,14 +450,14 @@ void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
+ 	if (!prev_ctx_data || !next_ctx_data)
+ 		return;
+ 
+-	swap(prev_ctx_data->opt.lbr_callstack_users,
+-	     next_ctx_data->opt.lbr_callstack_users);
++	swap(task_context_opt(prev_ctx_data)->lbr_callstack_users,
++	     task_context_opt(next_ctx_data)->lbr_callstack_users);
+ }
+ 
+ void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+-	struct x86_perf_task_context *task_ctx;
++	void *task_ctx;
+ 
+ 	if (!cpuc->lbr_users)
+ 		return;
+@@ -495,7 +494,6 @@ static inline bool branch_user_callstack(unsigned br_sel)
+ void intel_pmu_lbr_add(struct perf_event *event)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+-	struct x86_perf_task_context *task_ctx;
+ 
+ 	if (!x86_pmu.lbr_nr)
+ 		return;
+@@ -505,10 +503,8 @@ void intel_pmu_lbr_add(struct perf_event *event)
+ 
+ 	cpuc->br_sel = event->hw.branch_reg.reg;
+ 
+-	if (branch_user_callstack(cpuc->br_sel) && event->ctx->task_ctx_data) {
+-		task_ctx = event->ctx->task_ctx_data;
+-		task_ctx->opt.lbr_callstack_users++;
+-	}
++	if (branch_user_callstack(cpuc->br_sel) && event->ctx->task_ctx_data)
++		task_context_opt(event->ctx->task_ctx_data)->lbr_callstack_users++;
+ 
  	/*
- 	 * The first 9 bits (LBR_SEL_MASK) in LBR_SELECT operate
- 	 * in suppress mode. So LBR_SELECT should be set to
+ 	 * Request pmu::sched_task() callback, which will fire inside the
+@@ -539,16 +535,13 @@ void intel_pmu_lbr_add(struct perf_event *event)
+ void intel_pmu_lbr_del(struct perf_event *event)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+-	struct x86_perf_task_context *task_ctx;
+ 
+ 	if (!x86_pmu.lbr_nr)
+ 		return;
+ 
+ 	if (branch_user_callstack(cpuc->br_sel) &&
+-	    event->ctx->task_ctx_data) {
+-		task_ctx = event->ctx->task_ctx_data;
+-		task_ctx->opt.lbr_callstack_users--;
+-	}
++	    event->ctx->task_ctx_data)
++		task_context_opt(event->ctx->task_ctx_data)->lbr_callstack_users--;
+ 
+ 	if (event->hw.flags & PERF_X86_EVENT_LBR_SELECT)
+ 		cpuc->lbr_select = 0;
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index cc81177..ba89e56 100644
+index 96d73cd..7dbf148 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -245,7 +245,10 @@ struct cpu_hw_events {
- 	int				lbr_pebs_users;
- 	struct perf_branch_stack	lbr_stack;
+@@ -247,7 +247,7 @@ struct cpu_hw_events {
  	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
--	struct er_account		*lbr_sel;
-+	union {
-+		struct er_account		*lbr_sel;
-+		struct er_account		*lbr_ctl;
-+	};
+ 	struct er_account		*lbr_sel;
  	u64				br_sel;
- 	void				*last_task_ctx;
+-	struct x86_perf_task_context	*last_task_ctx;
++	void				*last_task_ctx;
  	int				last_log_id;
-@@ -688,8 +691,14 @@ struct x86_pmu {
- 	 */
- 	unsigned int	lbr_tos, lbr_from, lbr_to,
- 			lbr_nr;			   /* LBR base regs and size */
--	u64		lbr_sel_mask;		   /* LBR_SELECT valid bits */
--	const int	*lbr_sel_map;		   /* lbr_select mappings */
-+	union {
-+		u64	lbr_sel_mask;		   /* LBR_SELECT valid bits */
-+		u64	lbr_ctl_mask;		   /* LBR_CTL valid bits */
-+	};
-+	union {
-+		const int	*lbr_sel_map;	   /* lbr_select mappings */
-+		int		*lbr_ctl_map;	   /* LBR_CTL mappings */
-+	};
- 	bool		lbr_double_abort;	   /* duplicated lbr aborts */
- 	bool		lbr_pt_coexist;		   /* (LBR|BTS) may coexist with PT */
+ 	int				lbr_select;
  
+@@ -800,6 +800,11 @@ static struct perf_pmu_events_ht_attr event_attr_##v = {		\
+ struct pmu *x86_get_pmu(void);
+ extern struct x86_pmu x86_pmu __read_mostly;
+ 
++static __always_inline struct x86_perf_task_context_opt *task_context_opt(void *ctx)
++{
++	return &((struct x86_perf_task_context *)ctx)->opt;
++}
++
+ static inline bool x86_pmu_has_lbr_callstack(void)
+ {
+ 	return  x86_pmu.lbr_sel_map &&
