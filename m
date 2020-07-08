@@ -2,223 +2,122 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23615C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED3E5206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5AA206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="URapwdiT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EU3f5NbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgGHXdh (ORCPT
+        id S1726302AbgGHXeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:33:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34792 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725848AbgGHXdg (ORCPT
+        Wed, 8 Jul 2020 19:34:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgGHXem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:33:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594251214;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QaE/bgVY27cEeWKGYQCTywLFI4G1w38fi5rvZfEqvys=;
-        b=URapwdiTe5JJdxise2zwS+I4k8TU10ZThZ3XKgXU49b1IjUpOTxdX8IttwL8w64a2rDVXP
-        +fNDlkk6mm7w40F72tIudC5cCyRGAxuuGEH0BpNTCBNxfHnHfDM14hCli9ranBoks1f9MZ
-        v1XX5AUsBm8tdiMOPk2N8wjkpEgxoHQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-378-WTNheZBBOoOdwrSqrFCx-A-1; Wed, 08 Jul 2020 19:33:30 -0400
-X-MC-Unique: WTNheZBBOoOdwrSqrFCx-A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E858C7467;
-        Wed,  8 Jul 2020 23:33:28 +0000 (UTC)
-Received: from Whitewolf.redhat.com (unknown [10.10.115.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 47672C0062;
-        Wed,  8 Jul 2020 23:33:26 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     Lee Shawn C <shawn.c.lee@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Ville Syrjala <ville.syrjala@linux.intel.com>,
-        Cooper Chiou <cooper.chiou@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/2] drm/i915/mst: filter out the display mode exceed sink's capability
-Date:   Wed,  8 Jul 2020 19:33:11 -0400
-Message-Id: <20200708233311.200024-3-lyude@redhat.com>
-In-Reply-To: <20200708233311.200024-1-lyude@redhat.com>
-References: <20200708233311.200024-1-lyude@redhat.com>
+        Wed, 8 Jul 2020 19:34:42 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B363C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:34:42 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e4so254111ljn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:34:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QNDZpJjz5/37zGpab5eadfzDdCt43fYlei6otLmkW94=;
+        b=EU3f5NbDKEsP2KVSGkoUxrAZa/JIRM7Z+WcDOsT5JeC0mCWRsd1l8yradKcL3CalxN
+         xgilBNuVcDu96LiPUpu7Kt9bIY3/UsOtmGETjSdStVyzQ6Tf7prfUvnZCvpH2cENjUFd
+         tyV2xUeUzbLn3rrc0fCEDgA+OAnD98J7bbrhh8unuCZiPk45zNAdW07donusdMLqBlOQ
+         zwu9WyZYNuNK+vjjDF2MxInbYD51wXQpVXf2XMJ0xfefOwgrSFRvnpsyI2h1QXv+kmoy
+         204tAwb6QN0CmEpQx11FQJL9WbaCsQQ+YxSx9KzPERI/UPzkzZKnsS4Wm+2mqXVZ8+5E
+         dzPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QNDZpJjz5/37zGpab5eadfzDdCt43fYlei6otLmkW94=;
+        b=Ed3iYijA9iw70dboBqlhCCqMx+gjFdHVACczDPqXDNq2u0wsFdjqBTJi8zTsTmIeZa
+         Ab4K/yKZWLvT3E4UF+bYauF964lMIEssvFkt5S5Y9hWcUPzcUuHmix7i2hASYL/il7np
+         4ENu8o+ySvwyPcw61kPqO8pblirp2DolO3NLOVBW0HUCP5TOLbm4OqRL/q8Kh3B2r5ga
+         5NWOftL8zHFJBznRqFjD8dacQ6i93OMyEd/asf0pMEEv3/mJtocu//Zm6EDV5IPP8Yyc
+         PxFt0O3PinOPMWzRt1LtrH8mURUv70UNglVoreu7tyaJFXmrwMEDxRiAiFoCMefFbWOo
+         06Gw==
+X-Gm-Message-State: AOAM530SjZqCTqVrhx/Rb8AiF0D7KVe/9zSnUnnaGHi2umvJ7P6I5MPp
+        I6x5bf73IkQIKXg6IV/62U0WLZ26XokeZBSlf50uww==
+X-Google-Smtp-Source: ABdhPJyRfsD1N5VAM42yOVLaqGvMozV4Q8gJh+j60/h5/3G53DcDqMeMXmPl1V4fduOSeZwa/G0+MHF9d1ZgvU4dy/o=
+X-Received: by 2002:a2e:8085:: with SMTP id i5mr29909053ljg.97.1594251279742;
+ Wed, 08 Jul 2020 16:34:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200708131424.18729-1-masahisa.kojima@linaro.org> <20200708162017.GB549022@linux.intel.com>
+In-Reply-To: <20200708162017.GB549022@linux.intel.com>
+From:   Masahisa Kojima <masahisa.kojima@linaro.org>
+Date:   Thu, 9 Jul 2020 08:34:27 +0900
+Message-ID: <CADQ0-X9im8yVVVJbJL5Ssaa49UTOw+M=tYrfhNoODUaY723O8A@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] synquacer: add TPM support
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ardb@kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lee Shawn C <shawn.c.lee@intel.com>
+Hi Jakko,
 
-So far, max dot clock rate for MST mode rely on physcial
-bandwidth limitation. It would caused compatibility issue
-if source display resolution exceed MST hub output ability.
+> Overally the code looks great. You've run it through checkpatch.pl?
 
-For example, source DUT had DP 1.2 output capability.
-And MST docking just support HDMI 1.4 spec. When a HDMI 2.0
-monitor connected. Source would retrieve EDID from external
-and get max resolution 4k@60fps. DP 1.2 can support 4K@60fps
-because it did not surpass DP physical bandwidth limitation.
-Do modeset to 4k@60fps, source output display data but MST
-docking can't output HDMI properly due to this resolution
-already over HDMI 1.4 spec.
+Yes, I have run checkpatch.pl and removed errors.
 
-Refer to commit <fcf463807596> ("drm/dp_mst: Use full_pbn
-instead of available_pbn for bandwidth checks").
-Source driver should refer to full_pbn to evaluate sink
-output capability. And filter out the resolution surpass
-sink output limitation.
+Regards,
+Masahisa
 
-Changes since v1:
-* Using mgr->base.lock to protect full_pbn.
-Changes since v2:
-* Add ctx lock.
-Changes since v3:
-* s/intel_dp_mst_mode_clock_exceed_pbn_bandwidth/
-  intel_dp_mst_mode_clock_exceeds_pbn_bw/
-* Use the new drm_connector_helper_funcs.mode_valid_ctx to properly pipe
-  down the drm_modeset_acquire_ctx that the probe helpers are using, so
-  we can safely grab &mgr->base.lock without deadlocking
-Changes since v4:
-* Move drm_dp_calc_pbn_mode(mode->clock, bpp, false) > port->full_pbn
-  check
-* Fix the bpp we use in drm_dp_calc_pbn_mode()
-* Drop leftover (!mgr) check
-* Don't check for if full_pbn is unset. To be clear - it _can_ be unset,
-  but if it is then it's certainly a bug in DRM or a non-compliant sink
-  as full_pbn should always be populated by the time we call
-  ->mode_valid_ctx.
-  We should workaround non-compliant sinks with full_pbn=0, but that
-  should happen in the DP MST helpers so we can estimate the full_pbn
-  value as best we can.
-
-Cc: Manasi Navare <manasi.d.navare@intel.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Ville Syrjala <ville.syrjala@linux.intel.com>
-Cc: Cooper Chiou <cooper.chiou@intel.com>
-Co-developed-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Lee Shawn C <shawn.c.lee@intel.com>
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/i915/display/intel_dp_mst.c | 55 ++++++++++++++-------
- 1 file changed, 38 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-index bdc19b04b2c10..a2d91a4997001 100644
---- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-@@ -639,39 +639,60 @@ static int intel_dp_mst_get_modes(struct drm_connector *connector)
- 	return intel_dp_mst_get_ddc_modes(connector);
- }
- 
--static enum drm_mode_status
--intel_dp_mst_mode_valid(struct drm_connector *connector,
--			struct drm_display_mode *mode)
-+static int
-+intel_dp_mst_mode_valid_ctx(struct drm_connector *connector,
-+			    struct drm_display_mode *mode,
-+			    struct drm_modeset_acquire_ctx *ctx,
-+			    enum drm_mode_status *status)
- {
- 	struct drm_i915_private *dev_priv = to_i915(connector->dev);
- 	struct intel_connector *intel_connector = to_intel_connector(connector);
- 	struct intel_dp *intel_dp = intel_connector->mst_port;
-+	struct drm_dp_mst_topology_mgr *mgr = &intel_dp->mst_mgr;
-+	struct drm_dp_mst_port *port = intel_connector->port;
-+	const int min_bpp = 18;
- 	int max_dotclk = to_i915(connector->dev)->max_dotclk_freq;
- 	int max_rate, mode_rate, max_lanes, max_link_clock;
-+	int ret;
- 
--	if (drm_connector_is_unregistered(connector))
--		return MODE_ERROR;
-+	if (drm_connector_is_unregistered(connector)) {
-+		*status = MODE_ERROR;
-+		return 0;
-+	}
- 
--	if (mode->flags & DRM_MODE_FLAG_DBLSCAN)
--		return MODE_NO_DBLESCAN;
-+	if (mode->flags & DRM_MODE_FLAG_DBLSCAN) {
-+		*status = MODE_NO_DBLESCAN;
-+		return 0;
-+	}
- 
- 	max_link_clock = intel_dp_max_link_rate(intel_dp);
- 	max_lanes = intel_dp_max_lane_count(intel_dp);
- 
- 	max_rate = intel_dp_max_data_rate(max_link_clock, max_lanes);
--	mode_rate = intel_dp_link_required(mode->clock, 18);
-+	mode_rate = intel_dp_link_required(mode->clock, min_bpp);
- 
--	/* TODO - validate mode against available PBN for link */
--	if (mode->clock < 10000)
--		return MODE_CLOCK_LOW;
-+	ret = drm_modeset_lock(&mgr->base.lock, ctx);
-+	if (ret)
-+		return ret;
- 
--	if (mode->flags & DRM_MODE_FLAG_DBLCLK)
--		return MODE_H_ILLEGAL;
-+	if (mode_rate > max_rate || mode->clock > max_dotclk ||
-+	    drm_dp_calc_pbn_mode(mode->clock, min_bpp, false) > port->full_pbn) {
-+		*status = MODE_CLOCK_HIGH;
-+		return 0;
-+	}
-+
-+	if (mode->clock < 10000) {
-+		*status = MODE_CLOCK_LOW;
-+		return 0;
-+	}
- 
--	if (mode_rate > max_rate || mode->clock > max_dotclk)
--		return MODE_CLOCK_HIGH;
-+	if (mode->flags & DRM_MODE_FLAG_DBLCLK) {
-+		*status = MODE_H_ILLEGAL;
-+		return 0;
-+	}
- 
--	return intel_mode_valid_max_plane_size(dev_priv, mode);
-+	*status = intel_mode_valid_max_plane_size(dev_priv, mode);
-+	return 0;
- }
- 
- static struct drm_encoder *intel_mst_atomic_best_encoder(struct drm_connector *connector,
-@@ -700,7 +721,7 @@ intel_dp_mst_detect(struct drm_connector *connector,
- 
- static const struct drm_connector_helper_funcs intel_dp_mst_connector_helper_funcs = {
- 	.get_modes = intel_dp_mst_get_modes,
--	.mode_valid = intel_dp_mst_mode_valid,
-+	.mode_valid_ctx = intel_dp_mst_mode_valid_ctx,
- 	.atomic_best_encoder = intel_mst_atomic_best_encoder,
- 	.atomic_check = intel_dp_mst_atomic_check,
- 	.detect_ctx = intel_dp_mst_detect,
--- 
-2.26.2
-
+On Thu, 9 Jul 2020 at 01:20, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Wed, Jul 08, 2020 at 10:14:22PM +0900, Masahisa Kojima wrote:
+> > This adds support for driving the TPM on Socionext SynQuacer platform
+> > using the driver for a memory mapped TIS frame.
+> >
+> > v3:
+> > - prepare new module to handle TPM MMIO access on SynQuacer platform
+> >
+> > v2:
+> > - don't use read/write_bytes() to implement read/write16/32 since that uses
+> >   the wrong address
+> >
+> > Cc: jarkko.sakkinen@linux.intel.com
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: ardb@kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-integrity@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: peterhuewe@gmx.de
+> > Cc: jgg@ziepe.ca
+> >
+> > Masahisa Kojima (2):
+> >   tpm: tis: add support for MMIO TPM on SynQuacer
+> >   dt-bindings: Add SynQucer TPM MMIO as a trivial device
+> >
+> >  .../devicetree/bindings/trivial-devices.yaml  |   2 +
+> >  drivers/char/tpm/Kconfig                      |  12 ++
+> >  drivers/char/tpm/Makefile                     |   1 +
+> >  drivers/char/tpm/tpm_tis_synquacer.c          | 196 ++++++++++++++++++
+> >  4 files changed, 211 insertions(+)
+> >  create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
+> >
+> > --
+> > 2.20.1
+> >
+>
+> Overally the code looks great. You've run it through checkpatch.pl?
+>
+> /Jarkko
