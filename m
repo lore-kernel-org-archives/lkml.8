@@ -2,41 +2,75 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B81C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1266DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C812C20DD4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F3B2078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFg0MyMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgGHI1T (ORCPT
+        id S1727775AbgGHI1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:27:19 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:40435 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726006AbgGHI1S (ORCPT
+        Wed, 8 Jul 2020 04:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgGHI1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:27:18 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3919662|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.05864-0.00417621-0.937184;FP=16269809178823979455|2|1|16|0|-1|-1|-1;HT=e02c03268;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I-BX2cf_1594196829;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I-BX2cf_1594196829)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Wed, 08 Jul 2020 16:27:14 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
-        icenowy@aosc.io, clabbe@baylibre.com, megous@megous.com,
-        frank@allwinnertech.com, georgii.staroselskii@emlid.com,
-        tiny.windzz@gmail.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com
-Subject: [PATCH v3 15/16] dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
-Date:   Wed,  8 Jul 2020 16:27:19 +0800
-Message-Id: <20200708082719.5644-1-frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 8 Jul 2020 04:27:49 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D56C08C5DC;
+        Wed,  8 Jul 2020 01:27:48 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f5so37284069ljj.10;
+        Wed, 08 Jul 2020 01:27:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6Miaa8SoPzdiSzDoIlcAzPHbKCfF0bU4YdLj1kWGR1M=;
+        b=YFg0MyMnPINaoVSvIpWRiBilrX594BmO/FCm9av5ANoQe4KLrWHJ14z6Qm/ZWmvub9
+         o2ffSS59gvRiJHNilGvFEXBEGlUpk6N/9CkFwxPU6XQw9Uloa0tfFvwbPJEw9cgs3mKI
+         QDRFOmO3rxTadCw5EBV1x2J9eK5zy+aRkj30a8T9mqFT81pc0TCwtBhT79d7WmebnM2s
+         1xp/euasOSn5lkOaZ4t20xHQvRp9+dPf3EiPzPLaUVjBHB1hQCcb5t42f6zBMX22H3YW
+         DXkjKMTboqXSVJ+I0XnkrAV0Ynxl80N2uoSoJNUU98Ss1H2JUV9K+NTlxyHp9ey487Hn
+         8gIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6Miaa8SoPzdiSzDoIlcAzPHbKCfF0bU4YdLj1kWGR1M=;
+        b=oiWBF9BBFI8QwEjzHPmNSlVrPzC8fmzs73OkmXVYdiaRVLEUq5VSjffsT7wcmWaex0
+         uroSQcknivooAkOjhq4sR5bmn6khXyjB3DzQ7GGi6yo9c9TwekdRlnDJK7MUI1wudEKp
+         13+oD4YoZ74KYRz4/SuNh8xqfHAQFvCZq4PrVvdFDN0EEyJfnZY4jlnb+kRNzCtiuNhp
+         AdXTRHUIOG6LsJsQJO1NgNtTsjKoJRZdyO0uo3pIiiY00VKO2ne6DBhVX+zWm1E8g3W2
+         7TGPbuq+nP14R5NjvXIh/t4Qb+LLEV1/XMRtt5eItqM2HakUhSGzqO6bV+rUfjbSE6L5
+         /8Yg==
+X-Gm-Message-State: AOAM533jvrGufPNwr3xSBQ8NYqe5sMKH8QaG/Wo6GR7dbTc1gqk4pmI/
+        0udy72wlv9OVuhcHcRk/9wY=
+X-Google-Smtp-Source: ABdhPJyBil27+pSnKjuHOLLHdLn0yACNNRc/K0bc43EGma0+Bnx0Ikvb9anELJU9nxt2MIQhpcP7lg==
+X-Received: by 2002:a05:651c:50d:: with SMTP id o13mr34705414ljp.181.1594196867111;
+        Wed, 08 Jul 2020 01:27:47 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.gmail.com with ESMTPSA id d2sm737555ljg.6.2020.07.08.01.27.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 01:27:46 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/5] Improvements for MAX77620 GPIO driver
+Date:   Wed,  8 Jul 2020 11:26:29 +0300
+Message-Id: <20200708082634.30191-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,29 +78,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document board compatible names for Allwinner A100 Perf1 Board.
+Hello!
 
-Signed-off-by: Frank Lee <frank@allwinnertech.com>
----
- Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+This series addresses a problem that I discovered on Nexus 7 device where
+GPIO interrupts may be left enabled after bootloader and the driver isn't
+prepared to this. Secondly, I made few very minor cleanup improvements to
+the code.
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index abf2d97..8cdc677 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -16,6 +16,11 @@ properties:
-   compatible:
-     oneOf:
- 
-+      - description: Allwinner A100 Perf1 Board
-+        items:
-+          - const: allwinner,a100-perf1
-+          - const: allwinner,sun50i-a100
-+
-       - description: Allwinner A23 Evaluation Board
-         items:
-           - const: allwinner,sun8i-a23-evb
+Dmitry Osipenko (5):
+  gpio: max77620: Initialize interrupts state
+  gpio: max77620: Replace 8 with MAX77620_GPIO_NR
+  gpio: max77620: Replace interrupt-enable array with bitmap
+  gpio: max77620: Don't handle disabled interrupts
+  gpio: max77620: Move variable declaration
+
+ drivers/gpio/gpio-max77620.c | 44 ++++++++++++++++++++++++++++--------
+ 1 file changed, 34 insertions(+), 10 deletions(-)
+
 -- 
-1.9.1
+2.26.0
 
