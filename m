@@ -2,102 +2,108 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CD7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A08FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F921206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF6820739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aPMTnqW4"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f0fKPeVb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgGHLKK (ORCPT
+        id S1728747AbgGHLKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:10:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34429 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728764AbgGHLKJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:10:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594206608;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=14f1mTpd7HVDpOyXYxD6GElv4scdvE+XkzizMQMoy8M=;
-        b=aPMTnqW4vi7hq5klY6J2VUbGsVQnrotJZlcnMe8cPHSSCQdUyKf3qPpba8e7uJ3m07i31x
-        WEXkUFh125t61i6fffK+YSFOyx+bGHtMv+Zh9YR2Z0HlgBCIitfthnb+/4hMewT87ksT7a
-        VphcxakFTpnfY7JYX0zPbtO2S1NDblU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-391-RwB05G-MOPK6OfZ0w1nCpw-1; Wed, 08 Jul 2020 07:10:05 -0400
-X-MC-Unique: RwB05G-MOPK6OfZ0w1nCpw-1
-Received: by mail-wr1-f69.google.com with SMTP id 89so28140735wrr.15
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 04:10:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=14f1mTpd7HVDpOyXYxD6GElv4scdvE+XkzizMQMoy8M=;
-        b=ZXWFwiICjspZqC6FSgINQEhV/CE6sOGnUoKquYONm1ydNMLXEIi4SX/DYxHBkTWMfy
-         s2vnOzGQV2kk9p1a/4fEfWMOk6PdZb4VUwZ9xp21hDPYf5POUSWyUX6ZAIbvX8dNeyGv
-         Qkn5Peu8+Gqbh9tFFPhwxB5RHGmmpig0opwISLvLNziJfKiB2wiU5FQzYCDyVdiifm16
-         tOsMLpbWsMy3BB/VkotZMrD/e1MA3cRneuJO2jJkqtqm5UOXDbO4nbI/SMPM6onk6g6O
-         dPbZZ3eg1OtOaN86YATdzCcoK7h14z37QU5gvjnMQAO/Y4uJqG9Epn/nHToUAoK82duT
-         1Wig==
-X-Gm-Message-State: AOAM531neZdpg11uD21Z9QxrAFwBvzo+sfToIaZw9fnEkozH7NttyWDk
-        qvIuMy3nSkMrHfTOdC/49C6o0Y4LvJuXamz0IZ33bqQOODZA9hgabbEjAP0JbhQ90RuhA0guH+h
-        zzAkAL2YHwr8Cv0crqQILaLSh
-X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr54529520wrx.50.1594206604360;
-        Wed, 08 Jul 2020 04:10:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyS9IXWXY8AsLX9C3rrryHKZ4q/47XveQNN7O/2+yEMRnuw24+Agts1i9nEHB/Ycwubh37ATw==
-X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr54529504wrx.50.1594206604189;
-        Wed, 08 Jul 2020 04:10:04 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id j6sm5766924wma.25.2020.07.08.04.10.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 04:10:03 -0700 (PDT)
-Subject: Re: [PATCH 1/2] KVM: SVM: avoid infinite loop on NPF from bad address
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "# v3 . 10+" <stable@vger.kernel.org>
-References: <20200417163843.71624-1-pbonzini@redhat.com>
- <20200417163843.71624-2-pbonzini@redhat.com>
- <CANRm+CyWKbSU9FZkGoPx2nff-Se3Qcfn1TXXw8exy-6nuZrirg@mail.gmail.com>
- <57a405b3-6836-83f0-ed97-79f637f7b456@redhat.com>
- <CANRm+CzpFt5SwnQzJjRGp3T_Q=Ws3OWBx4FPmMK79qOx1v3NBQ@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <7507de6a-799e-4f71-012d-ddaa39178284@redhat.com>
-Date:   Wed, 8 Jul 2020 13:10:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 8 Jul 2020 07:10:49 -0400
+Received: from ozlabs.org ([203.11.71.1]:38487 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728611AbgGHLKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 07:10:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1xS56BKKz9sDX;
+        Wed,  8 Jul 2020 21:10:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594206647;
+        bh=XhXMD5CcbX40V+/dAoLEYM+yyXn7CkY3Pmqk+ZlW1Es=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=f0fKPeVbsKzPh4JBO0U2WrDBb4rKQggHrZ6CsSHjdkX9M6FF2qfi19y19KMkl2dDG
+         LDeYq8csjk1hijw6eLfFIxc3QcERfzndEOW24oPx3svLIqTcy1tHyO9lAn320Z9fCu
+         NMah/3CX1yqEZ+iaCevJqVcq2mpkJViUdciWzTWHkz6l+B9ihnHhgaZv0m7DfJ/Ej+
+         HUrqVhmxOBj/NgYF4W3Rlvdc3Ixu8GoKnHDaLAVk095QlDz6EDd2KRuWwA3MUbidop
+         lqCAgcQchG6PzNuwaMI9/PN95uDiSotMBRrDD/DZ3F6jXE4LodjBMOV57HPgixGa7X
+         1U+LBkS4wY+Tg==
+Date:   Wed, 8 Jul 2020 21:10:44 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the clk tree
+Message-ID: <20200708211044.3032905d@canb.auug.org.au>
+In-Reply-To: <20200630081115.mmqdsm3vlnj4yagu@gilmour.lan>
+References: <20200630095341.0f4ae8ed@canb.auug.org.au>
+        <20200630081115.mmqdsm3vlnj4yagu@gilmour.lan>
 MIME-Version: 1.0
-In-Reply-To: <CANRm+CzpFt5SwnQzJjRGp3T_Q=Ws3OWBx4FPmMK79qOx1v3NBQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/WbWJTRmiXALElyekPJ_qGZt";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/20 11:08, Wanpeng Li wrote:
->>>> +EXPORT_SYMBOL_GPL(kvm_vcpu_gfn_to_memslot);
->>> This commit incurs the linux guest fails to boot once add --overcommit
->>> cpu-pm=on or not intercept hlt instruction, any thoughts?
->> Can you write a selftest?
-> Actually I don't know what's happening here(why not intercept hlt
-> instruction has associated with this commit), otherwise, it has
-> already been fixed. :)
+--Sig_/WbWJTRmiXALElyekPJ_qGZt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I don't understand, what has been fixed and where?
+Hi all,
 
-Paolo
+On Tue, 30 Jun 2020 10:11:15 +0200 Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> On Tue, Jun 30, 2020 at 09:53:41AM +1000, Stephen Rothwell wrote:
+> > After merging the clk tree, today's linux-next build (x86_64 allmodconf=
+ig)
+> > produced this warning:
+> >=20
+> > WARNING: modpost: missing MODULE_LICENSE() in drivers/clk/bcm/clk-bcm27=
+11-dvp.o
+> >=20
+> > Introduced by commit
+> >=20
+> >   1bc95972715a ("clk: bcm: Add BCM2711 DVP driver") =20
+>=20
+> I've posted a patch solving this already:
+> https://lore.kernel.org/linux-clk/20200626112513.90816-1-maxime@cerno.tec=
+h/
+>=20
+> And it's supposed to be in clk-next since friday, but it looks like
+> stephen didn't push his branch?
 
+I am still getting this warning.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/WbWJTRmiXALElyekPJ_qGZt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8FqbQACgkQAVBC80lX
+0GwzzQf9FdIQwZ6iV2w8x8l3tX3Evj++77WF2fCFo0pUMEkZBcNTWs8CECYQe67e
+OSiKrpomiwbHS3d5peYkXURCM1aSzGKOTaVCQ/uTv4qZnzh+u4bUnPV9VOcyiZ95
+T80k+YefrWxMI8Atu5gyUChZyElvk3jmm4fqzzOww5SaZOfoUk1NJE4bYj+SB2NC
+1gt3ukmknAardTv49nxGQhzhw59GxActobY2miu4p36rVCFIJjj+6z6Gq+7TW5AR
+6nSsqOdqxUMOKFE6TMp3wuj4lMiMhHTL3NpPL/G273tDqU3Nun0lMtsRrP895Fei
++ztkwMm9Hx+epZQ30uFFedrRSp7wRA==
+=i5wm
+-----END PGP SIGNATURE-----
+
+--Sig_/WbWJTRmiXALElyekPJ_qGZt--
