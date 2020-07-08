@@ -2,156 +2,149 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E36C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC87C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2021206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GAkv2Kjn"
+	by mail.kernel.org (Postfix) with ESMTP id 8FD0420775
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbgGHWyu (ORCPT
+        id S1726268AbgGHW4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 18:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgGHWyt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 18:54:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C79D9C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 15:54:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ch3so208981pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 15:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WGbtKIEdak0poDhgfsr8gAWQKkDV/IYhUhdp4uNN4yw=;
-        b=GAkv2Kjn1Zts3qt68FflHU+1+2Um6tBR5MCMb8MYAcSNkqPYq49D7B4VR61eWXSOh4
-         FhoavuaRf4SqWblrVieRMwuHDJ8Y2uYi3nQfd9iyZ9G+lGWD2HNVlHWDSLRsqe3HbDKb
-         fuQlTfITW/1ZOw55rOG5jyZx6kQHAGB0BAK6g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WGbtKIEdak0poDhgfsr8gAWQKkDV/IYhUhdp4uNN4yw=;
-        b=IVxCHRHDq7QOje6uNufJAAQbBrA0VQDA7IWQIDa2bZAiFaPeHarKZ3f4y757YWKDlF
-         gSwsnL/Qj9BgeuPhYi758SmHRvLxywZ2eh8/5wgK9rdBuikx8dTZRQari4+t2K6PzVvn
-         kBggIqCVRZC/5YlAtEB/PzIP5rJuvoSmPPIguoj6i8mAavU8Vcziy+FBjI2T6Q2ZIhu9
-         JnuSmYUQnIWxiZO7zAw+jBxVYhaMZF64YjSrjrT6wXCHRd46KZdUNnn028FpbCMPZedd
-         R2SNNOsF9V22R/37Du7OPaZJQHqAJVjBJ6vXmiRW/4nypIEiPUx5JDe5raEmfZWvbyoA
-         mXvw==
-X-Gm-Message-State: AOAM5305uQRgeJ9YaQ6s4GN8rm/Hzj6IyxCkIdg70WiSf9JtWN4RzInW
-        8+q2tWk6EHFdZ+xHE13TFHYjt6IlbeU=
-X-Google-Smtp-Source: ABdhPJzk2Efj4MLTOriOU/NTXKepBMMQF8rKdzggSb+KTSO4Fmm2CNyNkdu4gp4N4Ir5pqJsx4O7QA==
-X-Received: by 2002:a17:90a:2e85:: with SMTP id r5mr12029622pjd.232.1594248889174;
-        Wed, 08 Jul 2020 15:54:49 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r9sm478867pje.12.2020.07.08.15.54.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 15:54:48 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 15:54:47 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: YAMA SECURITY MODULE
-Message-ID: <202007081531.085533FC5@keescook>
-References: <20200708073346.13177-1-grandmaster@al2klimov.de>
- <202007080103.2DAD857D4C@keescook>
- <2c05c0c3-e72a-7cc6-3391-2e0d3bdf6b2c@al2klimov.de>
+        Wed, 8 Jul 2020 18:56:49 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18722 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbgGHW4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 18:56:48 -0400
+IronPort-SDR: NkHbaKtR/W1R9HHqcytVc0RouyJwf+h7eH8/kJvsaV+tckRFOsBaFrDcaPaLaLZ4oDtaliCCIl
+ kNPDICwFjOOw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="127498496"
+X-IronPort-AV: E=Sophos;i="5.75,329,1589266800"; 
+   d="scan'208";a="127498496"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 15:56:47 -0700
+IronPort-SDR: /auNzKhh+AO4yI81ZDRh49U1dmLrMxI7i1dpQov7WHos3zFuA9nebDYYxIkBC97DzZgEFOlh19
+ ypKq3d6y3tvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,329,1589266800"; 
+   d="scan'208";a="297870575"
+Received: from herbergs-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.53.31])
+  by orsmga002.jf.intel.com with ESMTP; 08 Jul 2020 15:56:35 -0700
+Date:   Thu, 9 Jul 2020 01:56:33 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
+        cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v34 10/24] mm: Add vm_ops->mprotect()
+Message-ID: <20200708225633.GA590299@linux.intel.com>
+References: <20200707030204.126021-1-jarkko.sakkinen@linux.intel.com>
+ <20200707030204.126021-11-jarkko.sakkinen@linux.intel.com>
+ <20200707031424.GD25523@casper.infradead.org>
+ <20200707032254.GB5208@linux.intel.com>
+ <20200707032408.GE25523@casper.infradead.org>
+ <20200707040151.GA143804@linux.intel.com>
+ <20200707041046.GI25523@casper.infradead.org>
+ <20200708143320.GD538949@linux.intel.com>
+ <20200708143708.GR25523@casper.infradead.org>
+ <20200708161027.GA549022@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2c05c0c3-e72a-7cc6-3391-2e0d3bdf6b2c@al2klimov.de>
+In-Reply-To: <20200708161027.GA549022@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 08:22:03PM +0200, Alexander A. Klimov wrote:
-> 
-> 
-> Am 08.07.20 um 10:05 schrieb Kees Cook:
-> > On Wed, Jul 08, 2020 at 09:33:46AM +0200, Alexander A. Klimov wrote:
-> > > Rationale:
-> > > Reduces attack surface on kernel devs opening the links for MITM
-> > > as HTTPS traffic is much harder to manipulate.
+On Wed, Jul 08, 2020 at 07:10:27PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Jul 08, 2020 at 03:37:08PM +0100, Matthew Wilcox wrote:
+> > On Wed, Jul 08, 2020 at 05:33:20PM +0300, Jarkko Sakkinen wrote:
+> > > I get the point but I don't think that your proposal could work given
+> > > that mprotect-callback takes neither 'prev' nor 'newflags' as its
+> > > parameters. The current callback has no means to call mprotect_fixup()
+> > > properly.
 > > > 
-> > > Deterministic algorithm:
-> > > For each file:
-> > >    If not .svg:
-> > >      For each line:
-> > >        If doesn't contain `\bxmlns\b`:
-> > >          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> > > 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-> > >              If both the HTTP and HTTPS versions
-> > >              return 200 OK and serve the same content:
-> > >                Replace HTTP with HTTPS.
+> > > It would have to be extended
 > > > 
-> > > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> > > ---
-> > >   Continuing my work started at 93431e0607e5.
-> > >   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-> > >   (Actually letting a shell for loop submit all this stuff for me.)
+> > > 	int (*mprotect)(struct vm_area_struct *vma,
+> > > 			struct vm_area_struct **pprev, unsigned long start,
+> > > 			unsigned long end, unsigned long prot,
+> > > 			unsigned long newflags);
 > > > 
-> > >   If there are any URLs to be removed completely or at least not HTTPSified:
-> > >   Just clearly say so and I'll *undo my change*.
-> As written here...
-
-I interpreted that as "any URLs [changed by this patch]". I wanted no
-URLs you changed to be removed nor not HTTPSified.
-
-> > >   See also: https://lkml.org/lkml/2020/6/27/64
-
-(You seem to be saying "any URLs [in the file]".)
-
-> > >   If there are any valid, but yet not changed URLs:
-> > >   See: https://lkml.org/lkml/2020/6/26/837
-
-The URL I commented on was not valid and not changed by your patch.
-
-> > > 
-> > >   If you apply the patch, please let me know.
-> > > 
-> > > 
-> > >   Documentation/admin-guide/LSM/Yama.rst | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/admin-guide/LSM/Yama.rst b/Documentation/admin-guide/LSM/Yama.rst
-> > > index d0a060de3973..64fd62507ae5 100644
-> > > --- a/Documentation/admin-guide/LSM/Yama.rst
-> > > +++ b/Documentation/admin-guide/LSM/Yama.rst
-> > > @@ -21,7 +21,7 @@ of their attack without resorting to user-assisted phishing.
-> > >   This is not a theoretical problem. SSH session hijacking
-> > >   (http://www.storm.net.nz/projects/7) and arbitrary code injection
+> > > Is this what you want?
 > > 
-> > This link is dead. It is likely best replaced by:
-> ... I'd undo this change.
+> > https://lore.kernel.org/linux-mm/20200625173050.GF7703@casper.infradead.org/
+> 
+> Ugh, it's there as it should be. I'm sorry - I just misread the code.
+> 
+> I think that should work, and we do not have to do extra conversion
+> inside the callback.
+> 
+> There is still one thing that I'm wondering. 'page->vm_max_prot_bits'
+> contains some an union of subset of {VM_READ, VM_WRITE, VM_EXEC}, and
+> 'newflags' can contain other bits set too.
+> 
+> The old implementation of sgx_vma_mprotect() is like this:
+> 
+> static int sgx_vma_mprotect(struct vm_area_struct *vma, unsigned long start,
+> 			    unsigned long end, unsigned long prot)
+> {
+> 	return sgx_encl_may_map(vma->vm_private_data, start, end,
+> 				calc_vm_prot_bits(prot, 0));
+> }
+> 
+> The new one should be probably the implemented along the lines of
+> 
+> static int sgx_vma_mprotect(struct vm_area_struct *vma,
+> 			    struct vm_area_struct **pprev, unsigned long start,
+> 			    unsigned long end, unsigned long newflags)
+> {
+> 	unsigned long masked_newflags = newflags &
+> 					(VM_READ | VM_WRITE | VM_EXEC);
+> 	int ret;
+> 
+> 	ret = sgx_encl_may_map(vma->vm_private_data, start, end,
+> 				   masked_newflags);
+> 	if (ret)
+> 		return ret;
+> 
+> 	return mprotect_fixup(vma, pprev, start, end, newflags);
+> }
+> 
+> Alternatively the filtering can be inside sgx_encl_may_map(). Perhaps
+> that is a better place for it. This was just easier function to
+> represent the idea.
 
-You sent me a patch to update URLs, gave me (seemingly) explicit
-instructions about which things would cause you to undo individual
-changes, none of which seemed to trigger, so I offered an improvement,
-that would add another HTTPS URL -- which is entirely within your stated
-desires to have "[one] commit ... per one thing [you've]i done" for
-a patch where the Subject is literally "Replace HTTP links with HTTPS
-ones", for which I suggested an improvement.
+Turned out that mmap() handler was already masking with RWX. So I
+removed masking from there and do it as the first step in
+sgx_encl_may_map(), which is called by the both handlers:
 
-> But as it's the only one here, just forget this patch.
+int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
+		     unsigned long end, unsigned long vm_flags)
+{
+	unsigned long vm_prot_bits = vm_flags & (VM_READ | VM_WRITE | VM_EXEC);
+	unsigned long idx, idx_start, idx_end;
+	struct sgx_encl_page *page;
 
-You seem hostile to accepting feedback on how this patch could be
-improved. It's one thing to use automation to help generate patches,
-and I understand your apparent desires to keep it automated, but that
-is not always how patch development turns out.
+Also renamed the last function parameter from vm_flags to vm_port_bits.
+Kind of makes the flow more understandable (i.e. vm_prot_bits is purely
+internal representation, not something caller needs to be concerned of).
 
-Your instructions appear to take a long way to just say "here's a patch,
-take it or leave it" which seems pretty anti-collaborative to me.
-
--- 
-Kees Cook
+/Jarkko
