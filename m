@@ -2,87 +2,62 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB11C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE00AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A364E20774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594172683;
-	bh=pc9r2MlQ4YV78AG0esE4ppDqeMfOm93xI5UmXgp5gqY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QaXcCsgmcGNQ+osX3yZ7xmsO/VK+fa0oosRBk1EBKsMuoZn/vlFMWNkzDe5grtHZW
-	 PsfCWaFT7wZHRqJHvdxRXdOjUyKDa6ZZ8N+ok4wxCGQkDjDQWH0kJcq3YeldAoOT+y
-	 zi3OCD+e1D64vZF1cb9Rvddpd6Cq9bVdXTvwkO04=
+	by mail.kernel.org (Postfix) with ESMTP id A408020774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgGHBom (ORCPT
+        id S1728763AbgGHBsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 21:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728067AbgGHBom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 21:44:42 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50755206DF;
-        Wed,  8 Jul 2020 01:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594172681;
-        bh=pc9r2MlQ4YV78AG0esE4ppDqeMfOm93xI5UmXgp5gqY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QA5sGO5qUiLKD4ECswpWLjjMFqRtnVqe1TpN2o5l+JL6AMbY49ekIgI2f+lN+1OzN
-         CpYzIZysoQcDNnfJWfLju4xO+Q6RkMAy4njljS9zJ24uFFljUEDXTXsHuSFPA9bRdu
-         ocaEleHjB6OsO9CNhqwYyabxBcbLRQwGKW2j0Aco=
-Date:   Tue, 7 Jul 2020 18:44:39 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH v10 4/4] ext4: Use generic casefolding support
-Message-ID: <20200708014439.GH839@sol.localdomain>
-References: <20200707113123.3429337-1-drosen@google.com>
- <20200707113123.3429337-5-drosen@google.com>
+        Tue, 7 Jul 2020 21:48:33 -0400
+Received: from smtprelay0210.hostedemail.com ([216.40.44.210]:40702 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728067AbgGHBsd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 21:48:33 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 2656A837F24C;
+        Wed,  8 Jul 2020 01:48:32 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: hand52_200294f26eb9
+X-Filterd-Recvd-Size: 1327
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  8 Jul 2020 01:48:31 +0000 (UTC)
+Message-ID: <96f58df8a489093fb239cea8d36768b921269056.camel@perches.com>
+Subject: Re: [PATCH] xfs: Use fallthrough pseudo-keyword
+From:   Joe Perches <joe@perches.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 07 Jul 2020 18:48:29 -0700
+In-Reply-To: <20200707205036.GL7606@magnolia>
+References: <20200707200504.GA4796@embeddedor>
+         <20200707205036.GL7606@magnolia>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707113123.3429337-5-drosen@google.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 04:31:23AM -0700, Daniel Rosenberg wrote:
-> This switches ext4 over to the generic support provided in
-> the previous patch.
-> 
-> Since casefolded dentries behave the same in ext4 and f2fs, we decrease
-> the maintenance burden by unifying them, and any optimizations will
-> immediately apply to both.
-> 
-> Signed-off-by: Daniel Rosenberg <drosen@google.com>
-> ---
->  fs/ext4/dir.c   | 64 ++-----------------------------------------------
->  fs/ext4/ext4.h  | 12 ----------
->  fs/ext4/hash.c  |  2 +-
->  fs/ext4/namei.c | 20 +++++++---------
->  fs/ext4/super.c | 12 +++++-----
->  5 files changed, 17 insertions(+), 93 deletions(-)
-> 
+On Tue, 2020-07-07 at 13:50 -0700, Darrick J. Wong wrote:
+> On Tue, Jul 07, 2020 at 03:05:04PM -0500, Gustavo A. R. Silva wrote:
+> > Replace the existing /* fall through */ comments and its variants with
+> > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> > fall-through markings when it is the case.
+[]
+> I don't get it, what's the point?  Are gcc/clang
+> refusing to support -Wimplicit-fallthrough=[1-4] past a certain date?
 
-Looks good, you can add:
+clang doesn't support comments
 
-    Reviewed-by: Eric Biggers <ebiggers@google.com>
 
-- Eric
