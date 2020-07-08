@@ -2,79 +2,66 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAEBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4F1206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA983206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgGHMSJ (ORCPT
+        id S1728966AbgGHMTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgGHMSJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:18:09 -0400
-X-Greylist: delayed 337 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 08 Jul 2020 05:18:09 PDT
-Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f236:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5554BC08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:18:09 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by mailout3.hostsharing.net (Postfix) with ESMTPS id 492F5101E69A5;
-        Wed,  8 Jul 2020 14:12:30 +0200 (CEST)
-Received: from localhost (unknown [87.130.102.138])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id D4C096106EBC;
-        Wed,  8 Jul 2020 14:12:29 +0200 (CEST)
-X-Mailbox-Line: From b1af31b0e351bcbc056fe1ec44500737a7998d43 Mon Sep 17 00:00:00 2001
-Message-Id: <b1af31b0e351bcbc056fe1ec44500737a7998d43.1594210157.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Wed, 8 Jul 2020 14:12:22 +0200
-Subject: [PATCH] driver core: Drop mention of obsolete bus rwsem from
- kernel-doc
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
+        Wed, 8 Jul 2020 08:19:44 -0400
+Received: from verein.lst.de ([213.95.11.211]:35029 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728723AbgGHMTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 08:19:44 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B235068AFE; Wed,  8 Jul 2020 14:19:40 +0200 (CEST)
+Date:   Wed, 8 Jul 2020 14:19:40 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "maximmi@mellanox.com" <maximmi@mellanox.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>
+Subject: Re: [PATCH net] xsk: remove cheap_dma optimization
+Message-ID: <20200708121940.GA19619@lst.de>
+References: <20200626134358.90122-1-bjorn.topel@gmail.com> <c60dfb5a-2bf3-20bd-74b3-6b5e215f73f8@iogearbox.net> <20200627070406.GB11854@lst.de> <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com> <878626a2-6663-0d75-6339-7b3608aa4e42@arm.com> <20200708065014.GA5694@lst.de> <B926444035E5E2439431908E3842AFD255E99A@DGGEMI525-MBS.china.huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B926444035E5E2439431908E3842AFD255E99A@DGGEMI525-MBS.china.huawei.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15 years ago, commit 6eded061b126 ("Fix up bus code and remove use of
-rwsem") removed the bus rwsem, but left over a reference to it in a
-kernel-doc comment.  Drop it.
+On Wed, Jul 08, 2020 at 07:57:23AM +0000, Song Bao Hua (Barry Song) wrote:
+> > int dma_map_batch_start(struct device *dev, size_t rounded_len,
+> > 	enum dma_data_direction dir, unsigned long attrs, dma_addr_t *addr);
+> > int dma_map_batch_add(struct device *dev, dma_addr_t *addr, struct page
+> > *page,
+> > 		unsigned long offset, size_t size);
+> > int dma_map_batch_end(struct device *dev, int ret, dma_addr_t start_addr);
+> > 
+> 
+> Hello Christoph,
+> 
+> What is the different between dma_map_batch_add() and adding the buffer to sg of dma_map_sg()?
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/base/dd.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 9353d811cce83..cc42c91c5bf56 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -430,10 +430,9 @@ static void driver_sysfs_remove(struct device *dev)
-  * Allow manual attachment of a driver to a device.
-  * Caller must have already set @dev->driver.
-  *
-- * Note that this does not modify the bus reference count
-- * nor take the bus's rwsem. Please verify those are accounted
-- * for before calling this. (It is ok to call with no other effort
-- * from a driver's probe() method.)
-+ * Note that this does not modify the bus reference count.
-+ * Please verify that is accounted for before calling this.
-+ * (It is ok to call with no other effort from a driver's probe() method.)
-  *
-  * This function must be called with the device lock held.
-  */
--- 
-2.27.0
-
+There is not struct scatterlist involved in this API, avoiding the
+overhead to allocate it (which is kinda the point).
