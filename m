@@ -2,168 +2,120 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2263BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D8AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D6C20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:54:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ucOznK9I"
+	by mail.kernel.org (Postfix) with ESMTP id B19B720720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgGHOyL (ORCPT
+        id S1729868AbgGHOzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:54:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729625AbgGHOyK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:54:10 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA7CC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 07:54:10 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id f23so47340162iof.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 07:54:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cREv3rZvN4Yo/5YgjBmWEsOZvAdLXz7UPWWz2pKlQ9E=;
-        b=ucOznK9IILbhxf+nT10Izgudiaar596unf8NWa0m/o0Jiph3G2hRVDYzB+xxkbCE2M
-         G590FSnAm7skRHO+QkI52tf7ossC1S7j6RBi132SOgfj6eEjsP8GDBCHnNB6o6r5/zOT
-         GbeoE4VsBS22IZmU3o3ERZcFWR1bBvvqYHeoEh0JcHQ0y3PRp67ylDO3ieWC9VXq5PMD
-         HsgG0WgZ9Vk9FMB8LEVGXsM3Cj4Tzz/6lFqgZrlTgR/joLp/dHr5rf7NRjdE2F28iTr0
-         jLrM2gkAuDySNGXgfDswcAcO/8x5/jZz0Aq4JqGnGF4yU9sHRHdH+APOdpunsCNlUCnq
-         ehbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cREv3rZvN4Yo/5YgjBmWEsOZvAdLXz7UPWWz2pKlQ9E=;
-        b=hom6l1KWK5rhx5Yt1Q94rxGNoamXTFvoy+aXl29nuF6cjep1yl1q4ySgXFPXVdkBBH
-         k5I5ALekO7gQXu1haFBkyVPhXF+oSU2Fdc8Ir/fGy5+nBA5L1EByDiwNga1vDLjwGZnI
-         mzQMjIMy2W4o0aeelKLZSIQ6A8KDoGFmwMqPok5M8lpnlB0onHgGSD3hUJ+hcwmCMMVe
-         G336PXQ/coQUC7GRIpqP2XV8E9P5HBYTGCvLfsnUUgci0r1dPBfsc2n5eUV8mpWrhKh4
-         5BpxB64kiAZzf9dN3PnI/ulBxMZa9XMdBxSiSNUMEq1jMXcqnuHePZfelJ/lCCNG+QZ3
-         ee4w==
-X-Gm-Message-State: AOAM532Qs2HVe6+khJ++RCc5CZ8PvOhg3zepVpAyuH1g9yj/bSyezx83
-        QOM+itIkRTs81/ZhDRVzW1j8MgHGeutEXQ==
-X-Google-Smtp-Source: ABdhPJwvxt6/cEh1jwInQ9172/X1P+ZmWFDn2UVC6foDaqaig1JsByh1HsQke/oaidprcVkvcdQ1LQ==
-X-Received: by 2002:a5d:9dc4:: with SMTP id 4mr37851090ioo.172.1594220049556;
-        Wed, 08 Jul 2020 07:54:09 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id k3sm14966359ils.8.2020.07.08.07.54.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 07:54:08 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Kanchan Joshi <joshi.k@samsung.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <20200706141002.GZ25523@casper.infradead.org>
- <4a9bf73e-f3ee-4f06-7fad-b8f8861b0bc1@kernel.dk>
- <20200706143208.GA25523@casper.infradead.org>
- <20200707151105.GA23395@test-zns>
- <20200707155237.GM25523@casper.infradead.org>
- <20200707202342.GA28364@test-zns>
- <7a44d9c6-bf7d-0666-fc29-32c3cba9d1d8@kernel.dk>
- <20200707221812.GN25523@casper.infradead.org>
- <CGME20200707223803epcas5p41814360c764d6b5f67fdbf173a8ba64e@epcas5p4.samsung.com>
- <145cc0ad-af86-2d6a-78b3-9ade007aae52@kernel.dk>
- <20200708125805.GA16495@test-zns>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2962cd68-de34-89be-0464-8b102a3f1d0e@kernel.dk>
-Date:   Wed, 8 Jul 2020 08:54:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200708125805.GA16495@test-zns>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 8 Jul 2020 10:55:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36778 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729829AbgGHOzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 10:55:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D6AC4AE54;
+        Wed,  8 Jul 2020 14:55:05 +0000 (UTC)
+Date:   Wed, 08 Jul 2020 16:55:05 +0200
+Message-ID: <s5hy2nu9hva.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.8-rc5
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 6:58 AM, Kanchan Joshi wrote:
-> On Tue, Jul 07, 2020 at 04:37:55PM -0600, Jens Axboe wrote:
->> On 7/7/20 4:18 PM, Matthew Wilcox wrote:
->>> On Tue, Jul 07, 2020 at 02:40:06PM -0600, Jens Axboe wrote:
->>>>>> so we have another 24 bytes before io_kiocb takes up another cacheline.
->>>>>> If that's a serious problem, I have an idea about how to shrink struct
->>>>>> kiocb by 8 bytes so struct io_rw would have space to store another
->>>>>> pointer.
->>>>> Yes, io_kiocb has room. Cache-locality wise whether that is fine or
->>>>> it must be placed within io_rw - I'll come to know once I get to
->>>>> implement this. Please share the idea you have, it can come handy.
->>>>
->>>> Except it doesn't, I'm not interested in adding per-request type fields
->>>> to the generic part of it. Before we know it, we'll blow past the next
->>>> cacheline.
->>>>
->>>> If we can find space in the kiocb, that'd be much better. Note that once
->>>> the async buffered bits go in for 5.9, then there's no longer a 4-byte
->>>> hole in struct kiocb.
->>>
->>> Well, poot, I was planning on using that.  OK, how about this:
->>
->> Figured you might have had your sights set on that one, which is why I
->> wanted to bring it up upfront :-)
->>
->>> +#define IOCB_NO_CMPL		(15 << 28)
->>>
->>>  struct kiocb {
->>> [...]
->>> -	void (*ki_complete)(struct kiocb *iocb, long ret, long ret2);
->>> +	loff_t __user *ki_uposp;
->>> -	int			ki_flags;
->>> +	unsigned int		ki_flags;
->>>
->>> +typedef void ki_cmpl(struct kiocb *, long ret, long ret2);
->>> +static ki_cmpl * const ki_cmpls[15];
->>>
->>> +void ki_complete(struct kiocb *iocb, long ret, long ret2)
->>> +{
->>> +	unsigned int id = iocb->ki_flags >> 28;
->>> +
->>> +	if (id < 15)
->>> +		ki_cmpls[id](iocb, ret, ret2);
->>> +}
->>>
->>> +int kiocb_cmpl_register(void (*cb)(struct kiocb *, long, long))
->>> +{
->>> +	for (i = 0; i < 15; i++) {
->>> +		if (ki_cmpls[id])
->>> +			continue;
->>> +		ki_cmpls[id] = cb;
->>> +		return id;
->>> +	}
->>> +	WARN();
->>> +	return -1;
->>> +}
->>
->> That could work, we don't really have a lot of different completion
->> types in the kernel.
-> 
-> Thanks, this looks sorted.
+Linus,
 
-Not really, someone still needs to do that work. I took a quick look, and
-most of it looks straight forward. The only potential complication is
-ocfs2, which does a swap of the completion for the kiocb. That would just
-turn into an upper flag swap. And potential sync kiocb with NULL
-ki_complete. The latter should be fine, I think we just need to reserve
-completion nr 0 for being that.
+please pull sound fixes for v5.8-rc5 from:
 
--- 
-Jens Axboe
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.8-rc5
+
+The topmost commit is f79a732a8325dfbd570d87f1435019d7e5501c6d
+
+----------------------------------------------------------------
+
+sound fixes for 5.8-rc5
+
+A collection of small, mostly device-specific fixes.
+The significant one is the regression fix for USB-audio implicit
+feedback devices due to the incorrect frame size calculation, which
+landed in 5.8 and stable trees.  In addition, a few usual HD-audio
+and USB-audio quirks, Intel HDMI fixes, ASoC fsl and rt5682 fixes,
+as well as the fix in compress-offload partial drain operation.
+
+----------------------------------------------------------------
+
+Alexander Tsoy (2):
+      ALSA: usb-audio: Fix packet size calculation
+      ALSA: usb-audio: Replace s/frame/packet/ where appropriate
+
+Benjamin Poirier (1):
+      ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th quirk subdevice id
+
+Hector Martin (1):
+      ALSA: usb-audio: add quirk for MacroSilicon MS2109
+
+Hui Wang (1):
+      ALSA: hda - let hs_mic be picked ahead of hp_mic
+
+Jaroslav Kysela (1):
+      AsoC: amd: add missing snd- module prefix to the acp3x-rn driver kernel module
+
+Jian-Hong Pan (3):
+      ALSA: hda/realtek - Enable audio jacks of Acer vCopperbox with ALC269VC
+      ALSA: hda/realtek: Enable headset mic of Acer C20-820 with ALC269VC
+      ALSA: hda/realtek: Enable headset mic of Acer Veriton N4660G with ALC269VC
+
+Kai Vehmanen (2):
+      ALSA: hda/hdmi: fix failures at PCM open on Intel ICL and later
+      ALSA: hda/hdmi: improve debug traces for stream lookups
+
+Pavel Hofman (1):
+      ALSA: usb-audio: Add implicit feedback quirk for RTX6001
+
+Shengjiu Wang (2):
+      ASoC: fsl_mqs: Don't check clock is NULL before calling clk API
+      ASoC: fsl_mqs: Fix unchecked return value for clk_prepare_enable
+
+Shuming Fan (1):
+      ASoC: rt5682: fix the pop noise while OMTP type headset plugin
+
+Vinod Koul (1):
+      ALSA: compress: fix partial_drain completion state
+
+xidongwang (1):
+      ALSA: opl3: fix infoleak in opl3
+
+---
+ include/sound/compress_driver.h | 10 +++++++-
+ sound/core/compress_offload.c   |  4 ++++
+ sound/drivers/opl3/opl3_synth.c |  2 ++
+ sound/pci/hda/hda_auto_parser.c |  6 +++++
+ sound/pci/hda/patch_hdmi.c      | 41 ++++++++++++++++++++------------
+ sound/pci/hda/patch_realtek.c   | 38 ++++++++++++++++++++++++++++--
+ sound/soc/amd/renoir/Makefile   |  7 +++---
+ sound/soc/codecs/rt5682.c       |  9 ++++++-
+ sound/soc/fsl/fsl_mqs.c         | 23 +++++++++++-------
+ sound/usb/card.h                |  6 ++---
+ sound/usb/endpoint.c            | 18 +++++++-------
+ sound/usb/pcm.c                 |  1 +
+ sound/usb/quirks-table.h        | 52 +++++++++++++++++++++++++++++++++++++++++
+ 13 files changed, 174 insertions(+), 43 deletions(-)
 
