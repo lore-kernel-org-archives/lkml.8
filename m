@@ -2,131 +2,108 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DF4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32572206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:01:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0L8z7z3"
+	by mail.kernel.org (Postfix) with ESMTP id 79640206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594227764;
+	bh=tcQEpvfKXYviEYwZH0mvCarafvIgmX4RQCzp4S4dXEk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qlBgeKMR1xMbaxxHODJxfRaxEy0bcXJLGy351WVAUAVsBdW+xVQFwg1rQHRbQ7kQS
+	 SIVQptDVWZY1zikIDxRAo9spyD2p+EoW7DQ/LC8HKOrmAG+OVRdk2NwVfbfiELgTGe
+	 /fzZwdSHDqtIQOfaLSbtopITQ19z1cCOqiRdEmek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbgGHRBH (ORCPT
+        id S1730148AbgGHRCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgGHRBG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:01:06 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87EBFC08C5C1;
-        Wed,  8 Jul 2020 10:01:05 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l17so4029009wmj.0;
-        Wed, 08 Jul 2020 10:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kmG9b4C0CGWiQmngusza359yBl9owEptyLOdBdxcZPw=;
-        b=R0L8z7z3gg2e8s10ZSWNSgyEjZAAMPCzk7F8P9EWXVkYhXtCupySosRDeHdcZcKvT8
-         liPiJPb6ctjJQespNd09zAdoFfagtBn4l5yyJtHvyyoxYNwpFsSWiSrVIwL8FVsHdtsw
-         jEBc61J6o2bmaHQ+cJlAmw9OkfSyOMa4E141uykah44gvGS3YOGUIPv+1aeQXIfDxzhG
-         56M0Epi3WqI4Ycb4uByVbzLmvN6uj0xC5wn0gec4/JW8plTve+IE2v1w+cqnr5jwXhpK
-         LO+F1v1fcr3k/NpKZyFCmNfjg6to2tfYJpoGyJm41Xj2s3Q5vmkRtLKeaNK4QQLGxC53
-         Y/Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kmG9b4C0CGWiQmngusza359yBl9owEptyLOdBdxcZPw=;
-        b=fFTHIKF82QjKPAmJ3FV71m2SeOdEYwt6ybw+dpAxvczANDNbASm4fJKi/HoSS+C8Tm
-         HYe8V/5MHaUWGve7lEruNHL3kCgR+icgolaBG0nu1RRIE/Y+RI3o3P0cSW/iFIR/Kl92
-         /U59xsC5nVGlzbkAQ5HMepxz4eydStZkFaNjxFdBVkZWdFUDqCaEkkXPbvzqFc4lQrk7
-         Ehx0AOPnOVkMvTJdfKznU8g07tqirn4BomGbUTJiQEvILAkANUJy/QanZPNJGdZ8aiWE
-         Rcf5aVyapUJyLV3feAeGB4uo2/EX9FXEeGV9Uy09k93CBcHRUv8wFw09m24xa5cBO4X3
-         /Qhw==
-X-Gm-Message-State: AOAM530XnmV5KZ/gVzU1COmpdU8viuNOgrKcAbMq3bELPtejT09Yet+n
-        2R6kYMU9iiTPiooSRluBkVo=
-X-Google-Smtp-Source: ABdhPJwRCorVzWEJ98mxCh/6oheaQq5W6O1pJfnoyvQ+20/LU2fCMzKSwSK3HCxoGP90YIcw/bwzfg==
-X-Received: by 2002:a1c:49d7:: with SMTP id w206mr10756670wma.181.1594227664190;
-        Wed, 08 Jul 2020 10:01:04 -0700 (PDT)
-Received: from ziggy.stardust (static-99-78-7-89.ipcom.comunitel.net. [89.7.78.99])
-        by smtp.gmail.com with ESMTPSA id j6sm895312wro.25.2020.07.08.10.01.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 10:01:03 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: mt8173: Re-measure capacity-dmips-mhz
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-mediatek@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        ikjn@chromium.org
-References: <20200706083705.2343150-1-hsinyi@chromium.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <71bc5fa2-0869-5d91-6bb8-e8d59176e19c@gmail.com>
-Date:   Wed, 8 Jul 2020 19:01:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 8 Jul 2020 13:02:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgGHRCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:02:43 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE1762078D;
+        Wed,  8 Jul 2020 17:02:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594227762;
+        bh=tcQEpvfKXYviEYwZH0mvCarafvIgmX4RQCzp4S4dXEk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hSkMogadsUklt9G7aiuiDAwf4BMfSqpeNShgUb7qd1Ko0H7KZQjkzfRrerYxS6SLM
+         sw7izinKrm8hAwSoT97v0+URzoki85TLyeAsXgaZx1jcpGU5rI8gm6JaC1NxJSJn/S
+         j5Pw7ZGMbXl7LsyjQgCyV8e/0Vjzrngt0duu2yZQ=
+Date:   Wed, 8 Jul 2020 18:02:37 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        ctheegal@codeaurora.org, Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Subject: Re: [PATCH 1/3] spi: spi-geni-qcom: Avoid clock setting if not needed
+Message-ID: <20200708170237.GY4655@sirena.org.uk>
+References: <20200702004509.2333554-1-dianders@chromium.org>
+ <20200701174506.1.Icfdcee14649fc0a6c38e87477b28523d4e60bab3@changeid>
+ <20200707120812.GA22129@sirena.org.uk>
+ <CAD=FV=U5RHh_QuZ1tv9V5JtcsrhRONSa_CerYwUFsHhDOhEqdA@mail.gmail.com>
+ <20200708100110.GB4655@sirena.org.uk>
+ <CAD=FV=UFFN+FQhvs1Cdh7jWBRMzDvfHNiC43M_ZqiVqnWf+Y+g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200706083705.2343150-1-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="reSNjdE3Iylkp4B8"
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=UFFN+FQhvs1Cdh7jWBRMzDvfHNiC43M_ZqiVqnWf+Y+g@mail.gmail.com>
+X-Cookie: Oh Dad!  We're ALL Devo!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--reSNjdE3Iylkp4B8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 06/07/2020 10:37, Hsin-Yi Wang wrote:
-> Re measure capacity-dmips-mhz on elm and hana:
-> 
-> cpu 1:  9502 DMIPS @ 1703 Mhz
-> cpu 3: 16250 DMIPS @ 2106 Mhz
-> 
-> ==> 740 : 1024
+On Wed, Jul 08, 2020 at 08:22:05AM -0700, Doug Anderson wrote:
 
-I have some trouble to match the commit message to the actual patch. Commit 
-message talks about cpu 1 but patch changes cpu0. Where are the values of the 
-other CPUs?
+> Since the rest haven't landed, it would be nice to just land them in
+> the Qualcomm tree.
 
-Regards,
-Matthias
+I guess.
 
-> 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->   arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 70b1ffcab7f0..5e046f9d48ce 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -167,7 +167,7 @@ cpu0: cpu@0 {
->   				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->   			clock-names = "cpu", "intermediate";
->   			operating-points-v2 = <&cluster0_opp>;
-> -			capacity-dmips-mhz = <526>;
-> +			capacity-dmips-mhz = <740>;
->   		};
->   
->   		cpu1: cpu@1 {
-> @@ -182,7 +182,7 @@ cpu1: cpu@1 {
->   				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->   			clock-names = "cpu", "intermediate";
->   			operating-points-v2 = <&cluster0_opp>;
-> -			capacity-dmips-mhz = <526>;
-> +			capacity-dmips-mhz = <740>;
->   		};
->   
->   		cpu2: cpu@100 {
-> 
+> I think there's still more work to make the Geni SPI driver more
+> optimized, but I don't think it'll be as urgent as those patches and I
+> feel like any more major work could wait a cycle.
+
+It feels like there's more than what's already landed in flight at the
+minute, though some of that might just be the multiple rounds of reviews
+there were for the bandwidth stuff.
+
+--reSNjdE3Iylkp4B8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8F/CwACgkQJNaLcl1U
+h9BemQf+JIvcscVf3YMT0+iP6NxdT0RynD3DndnbkYXWTEnEZxPOYD85pGqBY5dW
+JRWAakqd8G6RJ0sVOrPH4hzxxLuove4MHEebr6kXxUnY3nvio6DyPz40pOu8ekw8
+eLhIUgs8Em5ZxCpc72Tz2XJhOwtt8WlxNhG1qmlaDaQ48LMH6kC3h+Nl6460B2bb
+JF7D8w+lvhrDO/PHsZt2BAsMF9QH6demYc7EyhQBE/dCmm1mCXzPrLonXC4+3aRi
+1V1ci374Tx4KhgVjYuzrhLFNsW7tr2PwoZiMcch1UlJUJ7f8sgEmu8QA444Nh4fv
+toKcswg0ytpd1q1r6x2pF1FVpnuXow==
+=Mmu2
+-----END PGP SIGNATURE-----
+
+--reSNjdE3Iylkp4B8--
