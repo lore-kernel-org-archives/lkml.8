@@ -6,88 +6,174 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BE7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 201A520672
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594235137;
-	bh=aaYK61D2dba1tdgulaTSDb0XcVB63hreHbj7DH35NsI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gBE4R/5JGnYVbQJVLrLGeWQZOORYB2qvwF4c3u6LYJOssSXr0AvhM6Rl00Cu+SisU
-	 ufODk6Accov8vcjejnQp7GL8brrq44ffVFuYKoqaJIvsBDVajamkt9c0u5hbWXfLHx
-	 GQb2R9alPMmaO1PtqpLQWEVWzEcdyYJ8Fm/fjxrU=
+	by mail.kernel.org (Postfix) with ESMTP id F293B20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:07:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GTv8hl9K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgGHTFg (ORCPT
+        id S1726352AbgGHTH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:05:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgGHTFf (ORCPT
+        Wed, 8 Jul 2020 15:07:58 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22602 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726044AbgGHTH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:05:35 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99AA9C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 12:05:35 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e8so21229727ljb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:05:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pkDFbbuq3q2W1lHJjvEjj/xgyCF9z52iptQfPftmTAM=;
-        b=HtfmUDGx2rNdsQOsn0yMpe+lX6pcF1XlTKPk2+SSS34TYeLBmOCv+2DzaSgwpR/DuO
-         9WFvZDZnHLeA9A8dhSTORzcJ8AUHWFqPNczkXRVlHUp872ci9/51LVRhKDSFziM5QM34
-         wZ/UjaxcGUXNmbkIqyvtwcbfni2VvnT6fsHGI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pkDFbbuq3q2W1lHJjvEjj/xgyCF9z52iptQfPftmTAM=;
-        b=aMiaXS/WFIQ/I+0wMefXnKR69zoCDyonPyPmhhHMcqs6F7CSAAuSJc58KP/SF7iSIK
-         lLhdzcddocU0DTrKF6HRTC1cTvXHX9wzjjNMdYH9HMURy5zG6WEi05G1tnCKht7JHcFx
-         HrSrALtJbvobTUc5E6GaFyHE6juAHe29ohP/H2m1PB2U0XNCZ3wqNB/IibhMiBHkUbkX
-         ON/ITv2Z4XVmOymlqWtBIGIIKwh1NN4f9FD+HF2Po5J3FwNBjgYVbdoX79cUHGKJe2zi
-         JUv/M8d7puE+bYBF1AaeyMfMXjYLhW2qjJvJwuMAY1GK8xqhHe3CkAT3BkgTaGkVB7dt
-         Qx1A==
-X-Gm-Message-State: AOAM532n29uktlqPMGyKYP3j0Eqd0Rkv4QqBTX4U3rIsHGNL9T3OMjVu
-        1HUeaqaB0XOs4J3DaJ2PkULSEmDkCyU=
-X-Google-Smtp-Source: ABdhPJzdjUDLzqajnZCyimHWgj88BeGeS3ltBDGxFxy1b9FqgnD+YLe0Vms6SXaFOTyMcPBJQlMDkQ==
-X-Received: by 2002:a05:651c:1b5:: with SMTP id c21mr9256202ljn.82.1594235133707;
-        Wed, 08 Jul 2020 12:05:33 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id n9sm200740lfd.60.2020.07.08.12.05.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 12:05:33 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id y18so27496991lfh.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:05:32 -0700 (PDT)
-X-Received: by 2002:a05:6512:3f1:: with SMTP id n17mr37754883lfq.125.1594235132296;
- Wed, 08 Jul 2020 12:05:32 -0700 (PDT)
+        Wed, 8 Jul 2020 15:07:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594235276;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=i2jzZdLUrEZwSvsltld7qJazxhy6bdHEH3AcJYhJaq4=;
+        b=GTv8hl9Kt93QT+k+zv/wPVFkOW/sYNkVJnvhMRpebWbg8yFoMvV5N0Xqx30ToN/C6QDGaC
+        6OuuCm7kKKWJ2bxreysecElL+4/ItV6sS2UN1zK0RX9FvCtqwzAsv9xZ7DvaW5XxMikSXX
+        P6jl0vHQssmFTLQ/8BCyl5OQskAM48I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-85-XdLsMZw-McaWOVhxfaNBeA-1; Wed, 08 Jul 2020 15:07:52 -0400
+X-MC-Unique: XdLsMZw-McaWOVhxfaNBeA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9ED62800C64;
+        Wed,  8 Jul 2020 19:07:50 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AF58773FEA;
+        Wed,  8 Jul 2020 19:07:49 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 13:07:49 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] iommu: iommu_aux_at(de)tach_device() extension
+Message-ID: <20200708130749.1b1e1421@x1.home>
+In-Reply-To: <dc98a109-7121-36b7-0854-f899b09692a4@linux.intel.com>
+References: <20200707013957.23672-1-baolu.lu@linux.intel.com>
+        <20200707013957.23672-2-baolu.lu@linux.intel.com>
+        <20200707150408.474d81f1@x1.home>
+        <dc98a109-7121-36b7-0854-f899b09692a4@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <a98e9c26-5405-3894-6197-3f5e388a5698@infradead.org>
- <CAHk-=whkuOeHvA_ws=usQt=rYq_M2vh448mDxY7kYhUmp_Lomw@mail.gmail.com> <1ac6b3ba-ad54-a227-94d3-06cdf4fa4c91@infradead.org>
-In-Reply-To: <1ac6b3ba-ad54-a227-94d3-06cdf4fa4c91@infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 8 Jul 2020 12:05:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg1W=g_oUUfN6aqbWhsicuFLikHZ4B8UkT1RfEa351J_A@mail.gmail.com>
-Message-ID: <CAHk-=wg1W=g_oUUfN6aqbWhsicuFLikHZ4B8UkT1RfEa351J_A@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: update for gcc 4.9 requirement
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 12:04 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Should I resend it?
+On Wed, 8 Jul 2020 10:53:12 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-Nah. I'm just wondering if I should apply it directly or let it go through Jon.
+> Hi Alex,
+> 
+> Thanks a lot for your comments. Please check my reply inline.
+> 
+> On 7/8/20 5:04 AM, Alex Williamson wrote:
+> > On Tue,  7 Jul 2020 09:39:56 +0800
+> > Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+> >   
+> >> The hardware assistant vfio mediated device is a use case of iommu
+> >> aux-domain. The interactions between vfio/mdev and iommu during mdev
+> >> creation and passthr are:
+> >>
+> >> - Create a group for mdev with iommu_group_alloc();
+> >> - Add the device to the group with
+> >>          group = iommu_group_alloc();
+> >>          if (IS_ERR(group))
+> >>                  return PTR_ERR(group);
+> >>
+> >>          ret = iommu_group_add_device(group, &mdev->dev);
+> >>          if (!ret)
+> >>                  dev_info(&mdev->dev, "MDEV: group_id = %d\n",
+> >>                           iommu_group_id(group));
+> >> - Allocate an aux-domain
+> >>          iommu_domain_alloc()
+> >> - Attach the aux-domain to the physical device from which the mdev is
+> >>    created.
+> >>          iommu_aux_attach_device()
+> >>
+> >> In the whole process, an iommu group was allocated for the mdev and an
+> >> iommu domain was attached to the group, but the group->domain leaves
+> >> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
+> >>
+> >> The iommu_get_domain_for_dev() is a necessary interface for device
+> >> drivers that want to support aux-domain. For example,
+> >>
+> >>          struct iommu_domain *domain;
+> >>          struct device *dev = mdev_dev(mdev);
+> >>          unsigned long pasid;
+> >>
+> >>          domain = iommu_get_domain_for_dev(dev);
+> >>          if (!domain)
+> >>                  return -ENODEV;
+> >>
+> >>          pasid = iommu_aux_get_pasid(domain, dev->parent);  
+> > How did we know this was an aux domain? ie. How did we know we could
+> > use it with iommu_aux_get_pasid()?  
+> 
+> Yes. It's a bit confusing if iommu_get_domain_for_dev() is reused here
+> for aux-domain.
+> 
+> > 
+> > Why did we assume the parent device is the iommu device for the aux
+> > domain?  Should that level of detail be already known by the aux domain?
+> > 
+> > Nits - The iomu device of an mdev device is found via
+> > mdev_get_iommu_device(dev), it should not be assumed to be the parent.
+> > The parent of an mdev device is found via mdev_parent_dev(mdev).  
+> 
+> My bad. The driver should use mdev_get_iommu_device() instead.
+> 
+> > 
+> > The leaps in logic here make me wonder if we should instead be exposing
+> > more of an aux domain API rather than blurring the differences between
+> > these domains.  Thanks,  
+> 
+> How about add below API?
+> 
+> /**
+>   * iommu_aux_get_domain_for_dev - get aux domain for a device
+>   * @dev: the accessory device
+>   *
+>   * The caller should pass a valid @dev to iommu_aux_attach_device() before
+>   * calling this api. Return an attached aux-domain, or NULL otherwise.
 
-                   Linus
+That's not necessarily the caller's responsibility, that might happen
+elsewhere, this function simply returns an aux domain for the device if
+it's attached to one.
+
+>   */
+> struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
+> {
+>          struct iommu_domain *domain = NULL;
+>          struct iommu_group *group;
+> 
+>          group = iommu_group_get(dev);
+>          if (!group)
+>                  return NULL;
+> 
+>          if (group->aux_domain_attached)
+>                  domain = group->domain;
+> 
+>          iommu_group_put(group);
+> 
+>          return domain;
+> }
+> EXPORT_SYMBOL_GPL(iommu_aux_get_domain_for_dev);
+
+For your example use case, this seems more clear to me.  Thanks,
+
+Alex
+
