@@ -2,122 +2,118 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D81C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF76FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5BD20578
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:12:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LTXCD78c"
+	by mail.kernel.org (Postfix) with ESMTP id 7AE7F20774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594213996;
+	bh=5rANE8QL9bujIGIKTFmNAOGIjpnD1tbUYUW9Yy2zXf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XoFFuqKhjTV8d33PLUiHPnHctN5cReGo/6FsxDxdVog70IkBopCkHJoeDmxNAql1X
+	 GKmbCZaLQNO3pAdG1OZwBi6NuyhQ2QJuUifGDCRHn97V5v22Mdo2CBJfdjMwrvCkEJ
+	 eQg35lX/r5D+oQd556EMHWMuUZg8AApu24PoCiz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgGHNMy (ORCPT
+        id S1729408AbgGHNNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:12:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32727 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729195AbgGHNMx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:12:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594213972;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=dpcN6uhzyYQ/ewztTgf0OWdeJAZ75wA/b6rJJQ+xVDs=;
-        b=LTXCD78c8WKfs+M4LqeYYWuXHRgNrp0qfwHxhr3jVpk0DT1mltbpbKj8RW3s314dufbVSX
-        Va/IcR31/AtFTEBfNUGcg/ypb9L1h1kgurxUVcjhWOFMGOE3XDWkbo2sN5DJy9DVMy2A4f
-        WoFFQcGPqciwYs8X1Ar9tX0jaHGeSyw=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-leoqs0txMHCyIAjFmcu1Ag-1; Wed, 08 Jul 2020 09:12:50 -0400
-X-MC-Unique: leoqs0txMHCyIAjFmcu1Ag-1
-Received: by mail-qk1-f199.google.com with SMTP id i145so12031785qke.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 06:12:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dpcN6uhzyYQ/ewztTgf0OWdeJAZ75wA/b6rJJQ+xVDs=;
-        b=kTsYw5MZHIVtzRhKoXvjO70hZFbJFr1mb3nttRlzFueXEdG3tYgI/ENNe1WZf5Uecz
-         6Vzx4TMxmSDkGCRyQHqnED3BUmSuJXisJtMP5LUMO2cPfHucCrkRKgHjc9o8x4YbPJaV
-         YgDKOYyfAMHEsgIStpjaLfDCcWEJeVIVfzgE96SPalfZ/twLI86nEg70bPGWzIPL80nA
-         XyHC4xPDa6ZHxMcBUKktqodlTzFCgcn0io6k3dQqJHseesTOhxNh1vMu9rFr7211gsYn
-         RotvoXSF0lTTe8C2q45B7/u6TmxButgzRpYoskMsS0e4Vqlc+LH3s4XNk/xtZOzEKJ/Z
-         ZWHQ==
-X-Gm-Message-State: AOAM533ctKaiowdkITZmkYMMBGvaJ4GpbKI28PL7Lu3J7uY/tbOXkfUh
-        JSLZ2UeKNWD/LW5XcOxiYLzmvle+O1C1IuTNVNjSaR0nd83qTJ4vbN8w9f68n7DVDz15lH+XuxB
-        EARzXmHcVTCFYtL5rCpxNgp8O
-X-Received: by 2002:a05:620a:7d6:: with SMTP id 22mr56815624qkb.311.1594213970199;
-        Wed, 08 Jul 2020 06:12:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxitu/hHcDwF3flowJxfpEmgEDZRQIJzjglSzVYv/A5vvAMuGPmy88ZU3gyB0peMa9Z/OfSHA==
-X-Received: by 2002:a05:620a:7d6:: with SMTP id 22mr56815595qkb.311.1594213969919;
-        Wed, 08 Jul 2020 06:12:49 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id k6sm21494856qki.123.2020.07.08.06.12.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 06:12:49 -0700 (PDT)
-From:   trix@redhat.com
-To:     jacmet@sunsite.dk, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] USB: c67x00: fix use after free in c67x00_giveback_urb
-Date:   Wed,  8 Jul 2020 06:12:43 -0700
-Message-Id: <20200708131243.24336-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Wed, 8 Jul 2020 09:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728759AbgGHNNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:13:13 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1C5A20578;
+        Wed,  8 Jul 2020 13:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594213993;
+        bh=5rANE8QL9bujIGIKTFmNAOGIjpnD1tbUYUW9Yy2zXf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w4+SEDGLAoFA3Xs7h9v8fQ6kjHFgBMCaiT3W0AjRftyEAUzxY8jqwpkxq5zhH9xZt
+         wtYwhEmYsxu46SnGP6wBSLJYjIGLURiBDW2NRIhmUssF2btzHI8xyypEtSGbpr+ssm
+         cCvfO9iv4r43IHJhMNurq3k02mT6Si6QyK7oN968=
+Date:   Wed, 8 Jul 2020 14:13:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
+        tiwai@suse.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org
+Subject: Re: [PATCH 03/11] ASoC: q6asm: make commands specific to streams
+Message-ID: <20200708131307.GO4655@sirena.org.uk>
+References: <20200707163641.17113-1-srinivas.kandagatla@linaro.org>
+ <20200707163641.17113-4-srinivas.kandagatla@linaro.org>
+ <9ff595b4-1093-36c8-f27f-f097e24657a0@linux.intel.com>
+ <4eedae20-903f-77c6-c6e9-fbf3db209bcf@linaro.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GoZzJvFfKjxI3RhA"
+Content-Disposition: inline
+In-Reply-To: <4eedae20-903f-77c6-c6e9-fbf3db209bcf@linaro.org>
+X-Cookie: Oh Dad!  We're ALL Devo!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
 
-clang static analysis flags this error
+--GoZzJvFfKjxI3RhA
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-c67x00-sched.c:489:55: warning: Use of memory after it is freed [unix.Malloc]
-        usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, urbp->status);
-                                                             ^~~~~~~~~~~~
-Problem happens in this block of code
+On Wed, Jul 08, 2020 at 10:44:19AM +0100, Srinivas Kandagatla wrote:
+> On 07/07/2020 17:52, Pierre-Louis Bossart wrote:
 
-	c67x00_release_urb(c67x00, urb);
-	usb_hcd_unlink_urb_from_ep(c67x00_hcd_to_hcd(c67x00), urb);
-	spin_unlock(&c67x00->lock);
-	usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, urbp->status);
+> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 if (substream->stream =3D=3D SNDRV_PCM_ST=
+REAM_PLAYBACK)
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 q6asm_write_async(prtd->audio_clie=
+nt,
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 prtd->pcm_cou=
+nt, 0, 0, NO_TIMESTAMP);
+> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 q6asm_write_async(prtd->audio_clie=
+nt, prtd->stream_id,
+> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 prtd->pcm_cou=
+nt, 0, 0, 0);
 
-In the call to c67x00_release_urb has this freeing of urbp
+> > sound/soc/qcom/qdsp6/q6asm.h:#define NO_TIMESTAMP=A0=A0=A0 0xFF00
 
-	urbp = urb->hcpriv;
-	urb->hcpriv = NULL;
-	list_del(&urbp->hep_node);
-	kfree(urbp);
+> > is the change on the previous line intentional?
 
-And so urbp is freed before usb_hcd_giveback_urb uses it as its 3rd
-parameter.
+> May be not!
 
-Since all is required is the status, pass the status directly as is
-done in c64x00_urb_dequeue
+> Plan is that the users of these apis will send flags directly instead of
+> boiler plating this!
 
-Fixes: e9b29ffc519b ("USB: add Cypress c67x00 OTG controller HCD driver")
+> This change should go as part of next patch("[PATCH 04/11] ASoC: q6asm: u=
+se
+> flags directly from asm-dai") which would make it much clear!
 
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- drivers/usb/c67x00/c67x00-sched.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It should be in here.
 
-diff --git a/drivers/usb/c67x00/c67x00-sched.c b/drivers/usb/c67x00/c67x00-sched.c
-index ef1e4ecaee99..f7f6229082ca 100644
---- a/drivers/usb/c67x00/c67x00-sched.c
-+++ b/drivers/usb/c67x00/c67x00-sched.c
-@@ -486,7 +486,7 @@ c67x00_giveback_urb(struct c67x00_hcd *c67x00, struct urb *urb, int status)
- 	c67x00_release_urb(c67x00, urb);
- 	usb_hcd_unlink_urb_from_ep(c67x00_hcd_to_hcd(c67x00), urb);
- 	spin_unlock(&c67x00->lock);
--	usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, urbp->status);
-+	usb_hcd_giveback_urb(c67x00_hcd_to_hcd(c67x00), urb, status);
- 	spin_lock(&c67x00->lock);
- }
- 
--- 
-2.18.1
+Please be also consistent in your use of ASM, especially given that asm
+is a widely used name in the kernel.
 
+--GoZzJvFfKjxI3RhA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8FxmMACgkQJNaLcl1U
+h9CkaAf9EYS1y3Rx8LG8HM3oH1Htsox8HmKMN+MFhUgtH+3ent6wb2eaYtZ+FcET
+qwwYx6Vrs4F5lBh6UyKGFhUyznHP01JY2qGjtUfgEP+NRJc1IcSnSuAiD1Bu77Wl
+0HSBK7HpF/feGrZZcUxov527kh7O1TCBEAu3/PNCLZ45SXwbNP/6rDMc2PQM1JlQ
+/rjNJpWokFP+CnUaY4Yy653Jlh6s+7UTJyi0bKzXpejJyYhDICBq5XS8PmGA/EE2
+8wU3ez4ZBwlr9ujK67WuSRuOFeGpnU+HtRdo1KTNs4msmNQZdjSlcjEYgWo5T883
+EhcHgBqaHAPIPKdv77XiRIygaJm1GA==
+=8rYY
+-----END PGP SIGNATURE-----
+
+--GoZzJvFfKjxI3RhA--
