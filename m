@@ -2,94 +2,86 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F59BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF054C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56DFB20774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAB620786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 14:38:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TeN+LC55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbgGHOiI (ORCPT
+        id S1729910AbgGHOiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 10:38:08 -0400
-Received: from mga14.intel.com ([192.55.52.115]:46429 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729468AbgGHOiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 10:38:07 -0400
-IronPort-SDR: cuzTBBI8lx7ijv8/XLOF3IkCXqxC/qaqwm60VrGzFZELVDheibtR2FselNOSFBVTSLjBdOXKDP
- 91XXTE11MWkg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="146878729"
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="146878729"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 07:38:06 -0700
-IronPort-SDR: q/6Fm8SieqlGqdux/lIR8JIg46GkcYtv5bKNgrkwJ9vimlib/sktAWycnltSE/ylTOCNQKFcRc
- S3T+mPPtOvnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
-   d="scan'208";a="322956464"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.255.31.237]) ([10.255.31.237])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Jul 2020 07:38:03 -0700
-Reply-To: like.xu@intel.com
-Subject: Re: [PATCH v12 06/11] KVM: vmx/pmu: Expose LBR to guest via
- MSR_IA32_PERF_CAPABILITIES
-To:     Andi Kleen <ak@linux.intel.com>, Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, wei.w.wang@intel.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20200613080958.132489-1-like.xu@linux.intel.com>
- <20200613080958.132489-7-like.xu@linux.intel.com>
- <20200708133646.GM3448022@tassilo.jf.intel.com>
-From:   "Xu, Like" <like.xu@intel.com>
-Organization: Intel OTC
-Message-ID: <f7f87595-9cec-8512-5385-e5d746b4e886@intel.com>
-Date:   Wed, 8 Jul 2020 22:38:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 8 Jul 2020 10:38:22 -0400
+Received: from casper.infradead.org ([90.155.50.34]:36230 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729468AbgGHOiU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 10:38:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=c8LJS0PEirAv0LRNOM8mCHHxnhEu7nen7eJsU9tuuok=; b=TeN+LC551cDKhOWJDvk6jmN66n
+        udCzXPPwxi33y2zhNgD687f3u2vtT7DSsXs3quGv8g0PzKnTChr6Z4GNtREaMTbPKuIDMCSrz3UnA
+        QqhZyRPT13YpjqE0y2vDiGN2onKxt3FeEV6IMyIF74kQepBCHTeYKAClm7Fuev9lkGPYru2AClg4E
+        pru0NnowEsbhbPObd022ZEh+8BBmHXRK3eCUy6shpUYxSVdV4POjEq6zgubO5YgE1w3KNnwrK+av3
+        mP7/kJTpzrNDudmzYub4TPYWDDdAtCHijW77sZ6mGaFclgdA0UWQeXawoVgCot12qbBug0+VVvvrO
+        MAYi4Ngg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtBC9-0008JO-LB; Wed, 08 Jul 2020 14:37:21 +0000
+Date:   Wed, 8 Jul 2020 15:37:08 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
+        cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v34 10/24] mm: Add vm_ops->mprotect()
+Message-ID: <20200708143708.GR25523@casper.infradead.org>
+References: <20200707030204.126021-1-jarkko.sakkinen@linux.intel.com>
+ <20200707030204.126021-11-jarkko.sakkinen@linux.intel.com>
+ <20200707031424.GD25523@casper.infradead.org>
+ <20200707032254.GB5208@linux.intel.com>
+ <20200707032408.GE25523@casper.infradead.org>
+ <20200707040151.GA143804@linux.intel.com>
+ <20200707041046.GI25523@casper.infradead.org>
+ <20200708143320.GD538949@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200708133646.GM3448022@tassilo.jf.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708143320.GD538949@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/8 21:36, Andi Kleen wrote:
->> +	/*
->> +	 * As a first step, a guest could only enable LBR feature if its cpu
->> +	 * model is the same as the host because the LBR registers would
->> +	 * be pass-through to the guest and they're model specific.
->> +	 */
->> +	if (boot_cpu_data.x86_model != guest_cpuid_model(vcpu))
->> +		return false;
-> Could we relax this in a followon patch? (after this series is merged)
-Sure, there would be a follow-on patch to relax this check after it's merged.
->
-> It's enough of the perf cap LBR version matches, don't need full model
-> number match.
-I assume you are referring to the LBR_FMT value in the perf_capabilities.
-> This would require a way to configure the LBR version
-> from qemu.
-Sure, I may propose this configuration in the QEMU community.
->
-> This would allow more flexibility, for example migration from
-> Icelake to Skylake and vice versa.
-Yes, we need this flexibility to cover as many platforms as possible.
+On Wed, Jul 08, 2020 at 05:33:20PM +0300, Jarkko Sakkinen wrote:
+> I get the point but I don't think that your proposal could work given
+> that mprotect-callback takes neither 'prev' nor 'newflags' as its
+> parameters. The current callback has no means to call mprotect_fixup()
+> properly.
+> 
+> It would have to be extended
+> 
+> 	int (*mprotect)(struct vm_area_struct *vma,
+> 			struct vm_area_struct **pprev, unsigned long start,
+> 			unsigned long end, unsigned long prot,
+> 			unsigned long newflags);
+> 
+> Is this what you want?
 
-Thanks,
-Like Xu
->
-> -Andi
-
+https://lore.kernel.org/linux-mm/20200625173050.GF7703@casper.infradead.org/
