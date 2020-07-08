@@ -2,191 +2,116 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2157020656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C62420656
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:38:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="EyXNAWiU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LRDw4SqZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgGHHgk (ORCPT
+        id S1726345AbgGHHiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:36:40 -0400
-Received: from mail-am6eur05on2059.outbound.protection.outlook.com ([40.107.22.59]:42049
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726306AbgGHHgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:36:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K+qpoLtFeRc8IWJ9kwp0cYCv3SDfu11u+tZGh7r4qLZTfgQu8+SvnerpG1KxWVIpUhxCA8O+07UmFU+Uc1YpfFNA2t9oqBuKlvT1ApAsyNRXXJMhzrE7I6rrprdLqlfxEvFz9OL8cPSZ+7sFlzGpF3/2bXdUZhn2AlzxCqlolCW0Lg+qFVKz4C1X1Bllhj3o8IZ30udUbjMZxyAwttStxbrLNxaq31KFcpLq4EhLE3Kc7bx6dz+9cBf1hD0DwDxeCqR2UDuBdkM4UMTSi2yiThEwnlAZW6RQe0OxzyxVbPCRfNc3MM9BEX0m43IlLGtREYl+twuQBdFGRmoCKrz2IA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qx+fvUeueNs7OsvsFQZr7T8aAABL4CCpTJI7Pg02XHA=;
- b=KiKgB/AWh/20WVfn/CTNyDV0XU2f/RD1h639/QB5n+wy/61A2hOj5Xq750/olln19JILWHjcnp17hBZZuK7L+wY44IQNAqvfYJhvgbkXMMktQI+9Rwe69vCS1peRDYE6SNt3UDNKV9bDPvyfOuIYq+0yYMTEjJrwQOcQ7XBcIoQjKj3r+F1YciXkfKWpXeEbl5tTKinzEUJqcTOgIut9arazUJ3pbvibhXTG+GNANV12zuHC7/VLS59kmVyRwyx9gyjaZIesephqe4EUhLO7iTJ8cy5JUa4eHEeb2LebOsHX9jatpQU3ZrhQxl9H2OFKKINZ9yMluDnr4oaLejFSVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qx+fvUeueNs7OsvsFQZr7T8aAABL4CCpTJI7Pg02XHA=;
- b=EyXNAWiUubtnd9azdK/AIjhpyrCjc1U5fdPD/NDerC9frQJp6SNRy9smJbA6BATfYZX6HkrmoKKJTTXY75TUooL4KDjG2HGrUnyr4ZyiQhCCcbNoXyzsGt1C5JOxIC9J/8QAu2WEinMkwq95WLW/50HT0Vca9M/IUluslbQmuCM=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19) by VE1PR04MB6734.eurprd04.prod.outlook.com
- (2603:10a6:803:121::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Wed, 8 Jul
- 2020 07:36:31 +0000
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60]) by VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60%3]) with mapi id 15.20.3153.030; Wed, 8 Jul 2020
- 07:36:31 +0000
-From:   Daniel Baluta <daniel.baluta@oss.nxp.com>
-To:     shawnguo@kernel.org, kernel@pengutronix.de
-Cc:     s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        linux@rempel-privat.de, linux-arm-kernel@lists.infradead.org,
+        Wed, 8 Jul 2020 03:38:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgGHHiQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:38:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B594C08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:30:33 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so1839330wml.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=cG2EeSiNmVnVaZPbJg0dA9qERe7hr1Vw8tX5Dp6lxwc=;
+        b=LRDw4SqZ/Xjjp8Jg8dzYrO8CN8Pp8Gz2nDHG/juEa75dwOFt3gyUpGglGZ8ydO8iEd
+         ibmHyVON+8qa3WpOFcdpFIlstgH7dQ+sVVu3BXZ2NvKnUbN9P/Olv0fyfxaLCtS8Ak5c
+         wa8gF0CRvE6MscGW2dqohuRo0BqmjZq/oKlMMxu3/pbbAvBQpy/wyrKPk7x+HRNiCCn1
+         Qy7EZhAcSMxPTbhloJ0vvUfLtFe2jhr+ouuxQQ2VkM+x52/wx/q/8R5gsBYP1y2VpjIA
+         y3wkYHiMSr4QL8u7b6Jgc8PByUi7CWxvW90l8MrzHPw8Sdm7pG9L6WR7xiy1uhWkpGHt
+         F1Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cG2EeSiNmVnVaZPbJg0dA9qERe7hr1Vw8tX5Dp6lxwc=;
+        b=tdC70DhF6ObaSUXAhS6p7i+PrbyMtk8cBv8ivdRhwFh6J0RBgPDP4EkPOp1HGHwXww
+         xZkOCh+wo6RvWJkzUtOExfvBVYeQ3gvP+OYUNVteVAb0I/GyxrCM8LtqgpFZLuzmmCkL
+         csKbicbavTH8ZSWdJN6iWC9RNVkEHqrC22W7YkRpttP9/Ro67KO9TK6jqj58vetKxO6P
+         rDom3DCJrFzBtXxmz3toHNhRswo7ipP2re9Cd7Lbekad1Ial8SLYUcK38EeZnsgv+Noc
+         upIEU9NQGa2pv2oWNW1dCVBcqVvlP9e6XkPE73VXBURQ+9iyToL3pKDPHIyKuxYs8PXG
+         aRew==
+X-Gm-Message-State: AOAM532/6SiHiSSwuDuxvKFqcgpSC/0i9F/JvwhpXcZ0yDrSK95sknxj
+        maKkw5jW0fYVnOnlQCn7dBCOe1G+F7s=
+X-Google-Smtp-Source: ABdhPJzjvkf/p3Lm9nHa/KlWWqk7KcbAXk1MxDzQAPXoHG5QHDZUnEUtHF1mwLlpHWzxqL+71ouV5w==
+X-Received: by 2002:a7b:cd18:: with SMTP id f24mr8304983wmj.40.1594193432117;
+        Wed, 08 Jul 2020 00:30:32 -0700 (PDT)
+Received: from dell ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id 1sm4381699wmf.0.2020.07.08.00.30.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 00:30:31 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 08:30:29 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Carlo Caione <carlo@caione.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] firmware: imx-dsp: Export functions to request/free channels
-Date:   Wed,  8 Jul 2020 10:35:56 +0300
-Message-Id: <20200708073556.19188-4-daniel.baluta@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200708073556.19188-1-daniel.baluta@oss.nxp.com>
-References: <20200708073556.19188-1-daniel.baluta@oss.nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR10CA0067.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:15::20) To VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19)
+Subject: Re: [PATCH] mfd/axp20x-i2c: Fix "CONFIG_ACPI" is not defined warning
+Message-ID: <20200708073029.GO3500@dell>
+References: <20200707110058.976371-1-axel.lin@ingics.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-103.ro-buh02.nxp.com (83.217.231.2) by AM0PR10CA0067.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20 via Frontend Transport; Wed, 8 Jul 2020 07:36:30 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 83be978c-7aad-4f9a-ff30-08d82311a1c0
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6734:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB67345392D9932881906E9A32B8670@VE1PR04MB6734.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0CHu0demtKQnLWfIRI8TKRFC1yIp2v3cjs3whQTmJY3YidIUmK6gEnx8Y6F2v1mcR6asgXFjaiEdnHQS40JqBgZiBPq6JgI9u0P59TSNb5iFuk8JrJeaYTJPqgdq52qcXMXjnx8+OJigi2c67eTdWAJUnJ6D4g9WoY+PDXjoQBHonmHbBfXEoS5oMrofJDJeeaEBByQ2AGWTCGLx+1+wSHoodrsIyd7zsUhz3WwX6ZWjAUGe34eAIHpysQ/xuQoxLbSKvHXtPdnm8aZFRvrnmW5aPd1Tx4P9A+X5RMmpXZ8Z1lMjPhzO9cUmZSiJhSlqEtNV377zk7g+OGAQt3ka5w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(366004)(39860400002)(136003)(376002)(83380400001)(26005)(8936002)(4326008)(186003)(6512007)(16526019)(86362001)(8676002)(66476007)(66556008)(6506007)(6486002)(52116002)(478600001)(316002)(66946007)(1076003)(6666004)(44832011)(956004)(2616005)(5660300002)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 18jxE88tqGKa6ukKk65SMz37trM+A/pr+lQiX7sVmRXGewXHG8WSDgKZ/8Rdq9otcj0PCrAF3eppq90MC4MsiFWuo8jozcGPTL0cq9jXYSXpKnf7BTD9LnTqqHO0EFri/GzPPVEYYdJsOX53jyljj3InsDSZFsi7c0LWDit6lfi1hCOPmuI/og+Qn+7+OA/l6DfnP3Wk6oYm4I/G68d7araNnUIKj4pPgWggwAtLkxVvQ1QCwmWpTZlzpCv5+W4ac9N66IurZIALUdTDWD+mDqeeOMqTnfhBCKT+SQi7TvTTx9LDE2T0ZYSkSvCesB4hO6C/W9dZOXxodb1+JM7q3PO6wFpdL5FnKdtBELNmB2XSx9k0ELTMPcsHfw7kUJlAzI+bnSnbe/Obe2ssvz3TY//yLeJKuFh3IaUq8bsaHaT2yDR36qOgaWcYekBU5Ln1xVkrz/tNY29Cyal7VO2enVEkuhGMprK4I4K11vMuexQ=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83be978c-7aad-4f9a-ff30-08d82311a1c0
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0401MB2287.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2020 07:36:31.1709
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T8MFjRQctFMtIEig/WPBv3HN1OIJbAaRzB9wX3yjnDvqrraWjTLLubqLHFTL606FLygPCQGljN6DOabST7K4mg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6734
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200707110058.976371-1-axel.lin@ingics.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+On Tue, 07 Jul 2020, Axel Lin wrote:
 
-In order to save power, we only need to request a channel
-when the communication with the DSP active.
+> Fix below build warning:
+> 
+> drivers/mfd/axp20x-i2c.c:82:5: warning: "CONFIG_ACPI" is not defined, evaluates to 0 [-Wundef]
+>    82 | #if CONFIG_ACPI
+>       |     ^~~~~~~~~~~
+> 
+> Fixes: 20f359cb236b ("mfd: axp20x-i2c: Do not define 'struct acpi_device_id' when !CONFIG_ACPI")
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> ---
+>  drivers/mfd/axp20x-i2c.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-For this we export the following functions:
-	- imx_dsp_request_channel, gets a channel with a given index
-	- imx_dsp_free_channel, frees a channel with a given index
+This should already be fixed.
 
-Notice that we still request channels at probe to support devices
-that do not have PM callbacks implemented.
+Thanks anyway Axel.
 
-More explanations about why requesting a channel has an effect
-on power savings:
- - requesting an mailbox channel will call mailbox's startup
-   function.
- - startup function calls pm_runtime_get_sync which increments device
-   usage count and will keep the device active. Specifically, mailbox
-   clock will be always ON when a mailbox channel is requested.
+> diff --git a/drivers/mfd/axp20x-i2c.c b/drivers/mfd/axp20x-i2c.c
+> index bd271fbe1ec1..3c930316d48b 100644
+> --- a/drivers/mfd/axp20x-i2c.c
+> +++ b/drivers/mfd/axp20x-i2c.c
+> @@ -79,7 +79,7 @@ static const struct i2c_device_id axp20x_i2c_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
+>  
+> -#if CONFIG_ACPI
+> +#ifdef CONFIG_ACPI
+>  static const struct acpi_device_id axp20x_i2c_acpi_match[] = {
+>  	{
+>  		.id = "INT33F4",
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- drivers/firmware/imx/imx-dsp.c   | 25 +++++++++++++++++++++++++
- include/linux/firmware/imx/dsp.h | 10 ++++++++++
- 2 files changed, 35 insertions(+)
-
-diff --git a/drivers/firmware/imx/imx-dsp.c b/drivers/firmware/imx/imx-dsp.c
-index b6e95d6d34c0..a6c06d7476c3 100644
---- a/drivers/firmware/imx/imx-dsp.c
-+++ b/drivers/firmware/imx/imx-dsp.c
-@@ -60,6 +60,31 @@ static void imx_dsp_handle_rx(struct mbox_client *c, void *msg)
- 	}
- }
- 
-+struct mbox_chan *imx_dsp_request_channel(struct imx_dsp_ipc *dsp_ipc, int idx)
-+{
-+	struct imx_dsp_chan *dsp_chan;
-+
-+	if (idx >= DSP_MU_CHAN_NUM)
-+		return ERR_PTR(-EINVAL);
-+
-+	dsp_chan = &dsp_ipc->chans[idx];
-+	dsp_chan->ch = mbox_request_channel_byname(&dsp_chan->cl, dsp_chan->name);
-+	return dsp_chan->ch;
-+}
-+EXPORT_SYMBOL(imx_dsp_request_channel);
-+
-+void imx_dsp_free_channel(struct imx_dsp_ipc *dsp_ipc, int idx)
-+{
-+	struct imx_dsp_chan *dsp_chan;
-+
-+	if (idx >= DSP_MU_CHAN_NUM)
-+		return;
-+
-+	dsp_chan = &dsp_ipc->chans[idx];
-+	mbox_free_channel(dsp_chan->ch);
-+}
-+EXPORT_SYMBOL(imx_dsp_free_channel);
-+
- static int imx_dsp_setup_channels(struct imx_dsp_ipc *dsp_ipc)
- {
- 	struct device *dev = dsp_ipc->dev;
-diff --git a/include/linux/firmware/imx/dsp.h b/include/linux/firmware/imx/dsp.h
-index 7562099c9e46..4f7895a3b73c 100644
---- a/include/linux/firmware/imx/dsp.h
-+++ b/include/linux/firmware/imx/dsp.h
-@@ -55,6 +55,9 @@ static inline void *imx_dsp_get_data(struct imx_dsp_ipc *ipc)
- 
- int imx_dsp_ring_doorbell(struct imx_dsp_ipc *dsp, unsigned int chan_idx);
- 
-+struct mbox_chan *imx_dsp_request_channel(struct imx_dsp_ipc *ipc, int idx);
-+void imx_dsp_free_channel(struct imx_dsp_ipc *ipc, int idx);
-+
- #else
- 
- static inline int imx_dsp_ring_doorbell(struct imx_dsp_ipc *ipc,
-@@ -63,5 +66,12 @@ static inline int imx_dsp_ring_doorbell(struct imx_dsp_ipc *ipc,
- 	return -ENOTSUPP;
- }
- 
-+struct mbox_chan *imx_dsp_request_channel(struct imx_dsp_ipc *ipc, int idx)
-+{
-+	return ERR_PTR(-EOPNOTSUPP);
-+}
-+
-+void imx_dsp_free_channel(struct imx_dsp_ipc *ipc, int idx) { }
-+
- #endif
- #endif /* _IMX_DSP_IPC_H */
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
