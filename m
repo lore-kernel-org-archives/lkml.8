@@ -2,110 +2,277 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB23CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB6320708
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCCB20708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 21:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBEUkXUe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lghGwHTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgGHVuA (ORCPT
+        id S1726072AbgGHVxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 17:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33810 "EHLO
+        Wed, 8 Jul 2020 17:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgGHVuA (ORCPT
+        with ESMTP id S1725787AbgGHVxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 17:50:00 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB394C061A0B;
-        Wed,  8 Jul 2020 14:49:59 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id k17so14962673lfg.3;
-        Wed, 08 Jul 2020 14:49:59 -0700 (PDT)
+        Wed, 8 Jul 2020 17:53:47 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EBCAC061A0B;
+        Wed,  8 Jul 2020 14:53:47 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i4so154866iov.11;
+        Wed, 08 Jul 2020 14:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Kr0uY34MA2mU+mS/f5yLCH/4lLR9Q4Z3ZgnSHFjUcx4=;
-        b=LBEUkXUeI+61J5vvXQ+EenX7NsSU1l5OPZOPHBgpWqew6/jnVAUTUhNNtTErgxoaWS
-         6wqQLbhM+/wlgwVd9ne+F90HccjQ2xSKYatYsC/+Bd4EnNrFdE7n3MLfRYmVqXrn6WLy
-         S85IyYQwW6ThUMbUvvmhpxpX/azJ7KYuhjdhHzYTy1ZWvZqVI5zIQeKSvGbGvECPwoZn
-         cV/97Hj2sZiuX5tXXlCPZB8rxR4ZaZZbAnrWdIk31knlEeFRd2xSkuTSQCE/fSevVY3u
-         BCJJFG7K9bfOX0kl1zRVr8NdVHl6olBbis2B/AAFTetpq39pOsFe1VlCbMGOSGZJWwWx
-         9lpg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+CW7beEWR0Pb7ROLSpU0nhqAUHLthMao4T7CzyDGi7g=;
+        b=lghGwHTsCwGCyoPa+9rmEJ3S5GtY7q5i1xeiRM2RR3MBWe64lRkMFY/PrdVKSnX8NZ
+         Yzlxl2zY0V/sXdfP8rTjuZn/gW8+31BAB1WQrESefLUjQBkugtdRCwZbmtsgQT6d4x4A
+         VbT0EZ+gXCJfssGHq9ekpjg/uBF263tzzy81r4bZWc1vZgyjrL4g69y/vkpkIW5UJekB
+         2tMnPIE/Pxvbc00qBMOADrtQJB+5LSmYs1pJnQZ1CU0K2uGyDO1O8mIS+dnyRm36ZYyA
+         8Y5NpaBoxG8EHXF08Wezudx9kRvonp1TvhnqRJxlnhAAiyp+VhQwTofhMEVYQhhNqMmN
+         2jSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kr0uY34MA2mU+mS/f5yLCH/4lLR9Q4Z3ZgnSHFjUcx4=;
-        b=jgpEyqx+Hh/pUbLXQ5gssmYturF/IZm7+6leynP2zCNlqLt07hjKlidWfTbe3UCzJO
-         YSZ+8vtY5tgBBVCmIO0ZLEQcA93fDyMyzj1cYHaVyAnSQDdSthsWmNjYRMfhJwYZyI6H
-         c6LA8z0jOv2tZxJ1pAkhvl4u+DVCLVBgzu4XtU1vmZF4nOwgxivarBJlWRkRfKQynjLn
-         vW/beDfl6UWz/4VMa8QAM+ZgPLyqRC9Ve3MQ2uo9R0NRv/ya+e/3+ICFdNXvFSBoRuzf
-         oPlWTGefOT1YchZSNzG6IcEJvwaezeZg+aAeMXOulzncMJzJw7DWbBce99w/4r38NgNS
-         lmng==
-X-Gm-Message-State: AOAM533/ysIn1buK0aaY0D41OR55H+7607c7QwDiMKT8abk5+JV7Vf4/
-        4gnTrQpiCz21VtFRB0M4o4D6BRLU
-X-Google-Smtp-Source: ABdhPJwFsl/ec0lVG8I+JQ7DImhTtBUD3KiZvK1iWZVMvoOkMtHKvfLdeJuCRMpspXgoTac8KKUrJQ==
-X-Received: by 2002:a19:8c09:: with SMTP id o9mr38410780lfd.160.1594244998024;
-        Wed, 08 Jul 2020 14:49:58 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id o201sm310201lff.8.2020.07.08.14.49.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 14:49:57 -0700 (PDT)
-Subject: Re: [PATCH v1 0/5] Improvements for MAX77620 GPIO driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200708202355.28507-1-digetx@gmail.com>
- <CAHp75VcNao84UajMYDJRH2gX7t8n=uo_Th8VVgcxJj3YkiA+pA@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5cfa2209-2d54-c347-cd95-08554213d392@gmail.com>
-Date:   Thu, 9 Jul 2020 00:49:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+CW7beEWR0Pb7ROLSpU0nhqAUHLthMao4T7CzyDGi7g=;
+        b=pwm7Q7ulOyJziDeA9xz15ILrdT2Dduf9BrR+F0aDgsdHZGakjVdko7rhVNqfmVrIBv
+         KO9fMDFOXO4l8llMr48/eYap+kBx6JWSy5RTy9hQQLJYzhmhkCTA8DAunYfuRlnSHZYU
+         nF2q1VK3j5Xr5izT7RObfn28kwl7OAEn25mFrW1X1f3ECDvXetZkkSdCCjyPlA+HwrCX
+         IzG1cQbnwHyNyQkFcQtRCI5NjxLKCSthj50fCNwlJH9dXggGhj5iYIH/mQc3cpCJsC6Y
+         KcJj/y2NwmZggDZxMP5dVGBmMyIZXMirpopHLcZJqcmI/IiLFHn7f7IpdiF6bPkrwPq7
+         I7sw==
+X-Gm-Message-State: AOAM533NmBM8O3uN6k8S3dS/8SA53iEvfoAPvmfuioMXS2r++MFXDUKG
+        zhwb+ajQD++jsDVH8GJPwq5xYvr1ghqnfXW3dR0=
+X-Google-Smtp-Source: ABdhPJzWDUaz5piMlQV0HXant7ReM+7ufFvRfoIb1d3rlp4myFcLfkmvRPbl31kMpL2rip/q7vj0I3hqA4BnKFICEGU=
+X-Received: by 2002:a05:6638:1483:: with SMTP id j3mr69836998jak.65.1594245226337;
+ Wed, 08 Jul 2020 14:53:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcNao84UajMYDJRH2gX7t8n=uo_Th8VVgcxJj3YkiA+pA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200617120510.25071-1-aford173@gmail.com> <CAMuHMdWjpyi6QiGTHkwXcepMzP8hN7MkXSJ=Xnxn40VkRU9OXg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWjpyi6QiGTHkwXcepMzP8hN7MkXSJ=Xnxn40VkRU9OXg@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 8 Jul 2020 16:53:35 -0500
+Message-ID: <CAHCN7xJWbP16SA-Ok-5syNnqOZAt8OFJo2_rtg5VrNVsN2-eiQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.07.2020 00:00, Andy Shevchenko пишет:
-> 
-> 
-> On Wednesday, July 8, 2020, Dmitry Osipenko <digetx@gmail.com
-> <mailto:digetx@gmail.com>> wrote:
-> 
->     Hello!
-> 
->     This series addresses a problem that I discovered on Nexus 7 device
->     where
->     GPIO interrupts may be left enabled after bootloader and the driver
->     isn't
->     prepared to this. It also makes a small improvements to the code,
->     fixes the
->     non-released interrupt bug and converts driver to use irqchip template.
-> 
-> 
-> Thanks! I commented on one patch, the rest looks good and you may add my
-> Rb tag.
+On Mon, Jun 22, 2020 at 8:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Adam,
+>
+> Thanks for your patch!
 
-Thank you! :)
+Thanks for the review.  :-)
 
+>
+> On Wed, Jun 17, 2020 at 2:05 PM Adam Ford <aford173@gmail.com> wrote:
+> > Beacon EmebddedWorks, formerly Logic PD is introducing a new
+>
+> EmbeddedWorks
+
+(facepalm)  I feel stupid.
+
+>
+> > SOM and development kit based on the RZ/G2M SoC from Renesas.
+> >
+> > The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
+> > cellular radio.
+> >
+> > The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
+> > along with a vareity of push buttons and LED's.
+>
+> variety
+>
+> Are schematics for this kit available? That would make it easier to review
+> the DTS.
+
+As of right now, we don't have them available publicly.  If you're
+willing to sign an NDA, I might be able get you access to them.
+
+>
+> Please add the DTB to arch/arm64/boot/dts/renesas/Makefile, else it
+> won't be built :-)
+
+oops.
+
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
+> > @@ -0,0 +1,733 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright 2020, Compass Electronics Group, LLC
+> > + */
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/input/input.h>
+> > +#include <dt-bindings/clk/versaclock.h>
+>
+> This depends on "[PATCH V3 2/3] dt: Add additional option bindings for
+> IDT VersaClock", which hasn't been accepted yet, AFAIK.
+>
+> > +
+> > +/ {
+> > +       aliases {
+> > +               serial0 = &scif2;
+> > +               serial1 = &hscif0;
+> > +               serial2 = &hscif1;
+> > +               serial3 = &scif0;
+> > +               serial4 = &hscif2;
+> > +               serial5 = &scif5;
+> > +               spi0 = &msiof0;
+> > +               spi1 = &msiof1;
+> > +               spi2 = &msiof2;
+> > +               spi3 = &msiof3;
+>
+> Please drop the spiX aliases, as they are not needed.
+
+OK.
+>
+> > +               ethernet0 = &avb;
+> > +       };
+>
+> > +       leds {
+> > +               compatible = "gpio-leds";
+> > +               pinctrl-0 = <&led_pins>;
+> > +               pinctrl-names = "default";
+> > +
+> > +               led0 {
+> > +                       gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+> > +                       label = "LED0";
+> > +                       linux,default-trigger = "heartbeat";
+> > +               };
+> > +               led1 {
+> > +                       gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
+> > +                       label = "LED1";
+> > +                       linux,default-trigger = "heartbeat";
+> > +               };
+> > +               led2 {
+> > +                       gpios = <&gpio7 1 GPIO_ACTIVE_HIGH>;
+> > +                       label = "LED2";
+> > +                       linux,default-trigger = "heartbeat";
+> > +               };
+> > +               led3 {
+> > +                       gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
+> > +                       label = "LED3";
+> > +                       linux,default-trigger = "heartbeat";
+>
+> Lots of heartbeats ;-)
+
+Yeah, I cut than down to one.  We don't have a dedicated plan for what
+they need to do yet.  :-)
+
+>
+> > +               };
+> > +       };
+>
+> > +&ehci0 {
+> > +       dr_mode = "otg";
+> > +       status = "okay";
+> > +       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>, <&versaclock5 3>, <&versaclock6_bb 4>;
+>
+> What's the purpose of the 3rd and 4th clock?
+
+We added a versaclock to drive something else, but that other thing
+didn't request the clocks, so they didn't ever turn on.  This was bad
+hack to get something to turn them on.  We've revised the hardware and
+device tree to eliminate this.
+
+>
+> > +};
+> > +
+> > +&ehci1 {
+> > +       status = "okay";
+> > +       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>, <&versaclock5 4>;
+>
+> What's the purpose of the 3rd clock?
+
+Same as above, and it'll be gone in V2 as well.
+>
+> > +};
+>
+> > +       msiof1_pins: msiof1 {
+> > +               groups = "msiof1_clk_g", "msiof1_rxd_g", "msiof1_txd_g";
+> > +               function = "msiof1";
+> > +       };
+>
+> What is msiof1 connected to?
+
+There is a GPIO header on the main board with a SPI connector, but
+nothing actually on the SPI bus.  We can remove this.
+
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
+>
+> > +       eeprom@50 {
+> > +               compatible = "microchip, at24c64", "atmel,24c64";
+>
+> Bogus space after the first comma.
+
+Noted.
+
+>
+> > +               pagesize = <32>;
+> > +               read-only;      /* Manufacturing EEPROM programmed at factory */
+> > +               reg = <0x50>;
+> > +       };
+>
+> > new file mode 100644
+> > index 000000000000..e7ed5d480618
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774a1-beacon-rzg2m-kit.dts
+> > @@ -0,0 +1,15 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright 2020, Compass Electronics Group, LLC
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "r8a774a1.dtsi"
+> > +#include "beacon-renesom-som.dtsi"
+> > +#include "beacon-renesom-baseboard.dtsi"
+> > +
+> > +/ {
+> > +       model = "Beacon Embedded Works RZ/G2M Development Kit";
+> > +       compatible =    "beacon,beacon-rzg2m", "renesas,r8a774a1";
+> > +};
+>
+> Please include a patch to add "beacon,beacon-rzg2m" to
+> Documentation/devicetree/bindings/arm/renesas.yaml.
+
+OK.
+
+adam
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
