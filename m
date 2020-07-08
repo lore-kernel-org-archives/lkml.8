@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F03FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A92D20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3CC20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 18:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="bum1GQm0"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="JrkBxlZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgGHSES (ORCPT
+        id S1726374AbgGHSEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 14:04:18 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:4514 "EHLO rere.qmqm.pl"
+        Wed, 8 Jul 2020 14:04:23 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:35635 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbgGHSEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 14:04:13 -0400
+        id S1725937AbgGHSEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 14:04:11 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4B26d75cftzMP;
-        Wed,  8 Jul 2020 20:04:11 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4B26d556fGzHb;
+        Wed,  8 Jul 2020 20:04:09 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1594231451; bh=xM/vWleWXURnCmkoT1m4VqMEiH0DaR/Qp4g8IWC4YVs=;
+        t=1594231449; bh=QmkFZ9eFWaDioQbY5TlOYF/cOWllJop5t2LIsaqe1rM=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=bum1GQm0msIj7p2nETmbGZKQvjcCCBWedhvYhFIwdap2XWn9HbP4noedwDNa9Bqf9
-         yJPsrYv7s7dGMaZcWKLKGDV6FdkSPNxd4uca77CeZwf9geRele95F5ejAyU47ERikf
-         es/U/qXq156uvIANDAhaILaey+XAN/h/8ruo/L76LJoaBUr2hWqhyBJNxjbGzyUogM
-         qbwXpz+YTAzfLBviQq1ZHqtKtqe8hmd+Vzal2ZgE7rym8D0S1L8ijOfqKLCoLFwIyP
-         bOyC4dAkIyhlJrRlie0BDBBauiNyiyj0WoIZyKvJeq3logf0xzrkc1mMdhekB0DINQ
-         mpdTeCwmyyG/g==
+        b=JrkBxlZ5jKWUHDm0hXV++Dlk2XK/I2oBoMGhHmhzOgs3LeFkbiDUGKtMARXjl4mCa
+         QJf6hPBpozoCeTK1oeycyVo2/UfeqYH+S7Y2+QxrEXmKROhG6XT1aA4L0isgZL3OED
+         JfWJ8ckX5mlTI5pxvC597tXlBNNCSsaPmmh5EbFib4vyqa4UTqtlxyf/UbZxytxXTF
+         UiYpbO+9qBlTfMdY3uFBJfs3cRU1weXgPxxE2TcjfCqtPF8JZ8kw0zZ6w8NzunWdHf
+         OD9zCdlDQ0ehUtUd+LF66u5dQMh7O2q7529Q2bYPCc1uN5m+XWAMEudgqZJye5Ae0D
+         7LEl+p9MObGlw==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.3 at mail
-Date:   Wed, 08 Jul 2020 20:04:10 +0200
-Message-Id: <63121e624012996a2f6f5f3763270ad834667a12.1594231056.git.mirq-linux@rere.qmqm.pl>
+Date:   Wed, 08 Jul 2020 20:04:09 +0200
+Message-Id: <ab8ef3e2bf15fa75572f9ad51d6e7b10c67cb494.1594231056.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1594231056.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1594231056.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH RESEND 3/3] usb: gadget: udc: atmel: implement .pullup
- callback
+Subject: [PATCH RESEND 1/3] usb: gadget: udc: atmel: remove outdated comment
+ in usba_ep_disable()
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,60 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement udc->pullup callback, so that udc_connect/disconnect work.
-This is needed for composite gadget, as it assumes udc_disconnect()
-actually works and calls its ->disconnect callback.
+Fixed commit removed the offending behaviour from the driver, but missed
+the comment and associated test. Remove them now.
 
+Fixes: 38e58986e6fc ("usb: gadget: udc: atmel: don't disable enpdoints we don't own")
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/usb/gadget/udc/atmel_usba_udc.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/usb/gadget/udc/atmel_usba_udc.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 9342a3d24963..c5128c229c52 100644
+index d69f61ff0181..9153e220848d 100644
 --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
 +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -1028,6 +1028,7 @@ usba_udc_set_selfpowered(struct usb_gadget *gadget, int is_selfpowered)
- 	return 0;
- }
+@@ -676,13 +676,7 @@ static int usba_ep_disable(struct usb_ep *_ep)
  
-+static int atmel_usba_pullup(struct usb_gadget *gadget, int is_on);
- static int atmel_usba_start(struct usb_gadget *gadget,
- 		struct usb_gadget_driver *driver);
- static int atmel_usba_stop(struct usb_gadget *gadget);
-@@ -1101,6 +1102,7 @@ static const struct usb_gadget_ops usba_udc_ops = {
- 	.get_frame		= usba_udc_get_frame,
- 	.wakeup			= usba_udc_wakeup,
- 	.set_selfpowered	= usba_udc_set_selfpowered,
-+	.pullup			= atmel_usba_pullup,
- 	.udc_start		= atmel_usba_start,
- 	.udc_stop		= atmel_usba_stop,
- 	.match_ep		= atmel_usba_match_ep,
-@@ -1957,6 +1959,24 @@ static irqreturn_t usba_vbus_irq_thread(int irq, void *devid)
- 	return IRQ_HANDLED;
- }
- 
-+static int atmel_usba_pullup(struct usb_gadget *gadget, int is_on)
-+{
-+	struct usba_udc *udc = container_of(gadget, struct usba_udc, gadget);
-+	unsigned long flags;
-+	u32 ctrl;
-+
-+	spin_lock_irqsave(&udc->lock, flags);
-+	ctrl = usba_readl(udc, CTRL);
-+	if (is_on)
-+		ctrl &= ~USBA_DETACH;
-+	else
-+		ctrl |= USBA_DETACH;
-+	usba_writel(udc, CTRL, ctrl);
-+	spin_unlock_irqrestore(&udc->lock, flags);
-+
-+	return 0;
-+}
-+
- static int atmel_usba_start(struct usb_gadget *gadget,
- 		struct usb_gadget_driver *driver)
- {
+ 	if (!ep->ep.desc) {
+ 		spin_unlock_irqrestore(&udc->lock, flags);
+-		/* REVISIT because this driver disables endpoints in
+-		 * reset_all_endpoints() before calling disconnect(),
+-		 * most gadget drivers would trigger this non-error ...
+-		 */
+-		if (udc->gadget.speed != USB_SPEED_UNKNOWN)
+-			DBG(DBG_ERR, "ep_disable: %s not enabled\n",
+-					ep->ep.name);
++		DBG(DBG_ERR, "ep_disable: %s not enabled\n", ep->ep.name);
+ 		return -EINVAL;
+ 	}
+ 	ep->ep.desc = NULL;
 -- 
 2.20.1
 
