@@ -2,639 +2,344 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9605BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5723D20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81394206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 23:33:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dAODQjNk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H++xhRz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgGHXcR (ORCPT
+        id S1726261AbgGHXdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 19:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgGHXcQ (ORCPT
+        Wed, 8 Jul 2020 19:33:32 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44318 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725903AbgGHXdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 19:32:16 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 652E1C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 16:32:16 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id e8so100507pgc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 16:32:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=xYxHA+VH8Pn4IFSJQ98LL4KXo0QVKGxRjggucrpXiwA=;
-        b=dAODQjNkvZuWO3UkyEARIDBODdgq0m6FAZg1rg20VWD4HpD6oBJXTWTXIoCWD8Mjq0
-         8dd3ilt+mmP/gAZKxwiJbHJc6eWI0IArCn8Kt9e+f/iyXEor7/WXF16UH/F3KWpHJe3g
-         Qddmu1teQ1viJxgmxvZ/UaL6jkBwls7spLlc4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=xYxHA+VH8Pn4IFSJQ98LL4KXo0QVKGxRjggucrpXiwA=;
-        b=aB4mi2GasvXA1g2Gieo+LUsf1IbNMc9Yx/vUZc++ERiB0YqUxZyX/dTLF0K11MwztM
-         TVsRRnkmwjLSDM8wHvGeHCmDILPdp/IaPaOs8k0KfVMIJaTY7Krl1egalGx/YY+MBwb3
-         KcbMR5gtVseG83ry5ozu6kd2SmJt0+WU9M4UTKoF93C6myDhepPkmWcrDE7ZSdZFRdeq
-         SCvi5mCuhGdIw5nH59fPlhvI6LfKeQCleJRtqlBOTfplPPEl/SkUTx8c2S1amwLY5uxB
-         /r9LEwsfXR7lEaFJJGACOccnrDCz1lOj7qB4X/SnVHqE6+mbIG85gH0LZ7u43Xswl5le
-         DlGQ==
-X-Gm-Message-State: AOAM533OVgkjGY8xJvSMEswOfRfMsoTybpOknOsYAzym659oaaPNJ7xW
-        aV6Jvj8OXeDWXiajSsxRWBWHVA==
-X-Google-Smtp-Source: ABdhPJyg9Bljfwnl0+RqwzxRl2Z9i8O+HC7GVN+3KsqhkbY845Sa7GmHjk9fS3PiVHF8ZSkeHJIzfg==
-X-Received: by 2002:a63:c509:: with SMTP id f9mr51786048pgd.144.1594251135539;
-        Wed, 08 Jul 2020 16:32:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y6sm789275pfp.7.2020.07.08.16.32.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 16:32:14 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 16:32:13 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Kevin Hilman <khilman@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] genpd: Fix up terminology with parent/child
-Message-ID: <202007081629.0840B4CB78@keescook>
+        Wed, 8 Jul 2020 19:33:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594251208;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DK0dDEv/oGFGzA84BbhSrhoS0K/w9mJ+dNCkPgJpQSU=;
+        b=H++xhRz7b5eqsjrmeJf4YIEud4+f3z5XumaEn0FnKK4kgunV2QMRaIBNSxvNjKTAQIB2oD
+        BoJVW+LfsJnm3Kp6KlqIIwnV/UH7/ygEPytLRDVHNwkdJ61YcAsNqY8+o7MnPjX2kW7Grn
+        fWy3Pz2Y2v2Cj1lehKGg+0+XS+H45Tg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-307-YTLLVlCaPQWq-k7PsApz2Q-1; Wed, 08 Jul 2020 19:33:26 -0400
+X-MC-Unique: YTLLVlCaPQWq-k7PsApz2Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC56080183C;
+        Wed,  8 Jul 2020 23:33:24 +0000 (UTC)
+Received: from Whitewolf.redhat.com (unknown [10.10.115.252])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 255E37F8A9;
+        Wed,  8 Jul 2020 23:33:20 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     Lee Shawn C <shawn.c.lee@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/2] drm/probe_helper: Add drm_connector_helper_funcs.mode_valid_ctx
+Date:   Wed,  8 Jul 2020 19:33:10 -0400
+Message-Id: <20200708233311.200024-2-lyude@redhat.com>
+In-Reply-To: <20200708233311.200024-1-lyude@redhat.com>
+References: <20200708233311.200024-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The genpd infrastructure uses the terms master/slave, but such uses have
-no external exposures (not even in Documentation/driver-api/pm/*) and are
-not mandated by nor associated with any external specifications. Change
-the language used through-out to parent/child.
+This is just an atomic version of mode_valid, which is intended to be
+used for situations where a driver might need to check the atomic state
+of objects other than the connector itself. One such example is with
+MST, where the maximum possible bandwidth on a connector can change
+dynamically irregardless of the display configuration.
 
-There was one possible exception in the debugfs node
-"pm_genpd/pm_genpd_summary" but its path has no hits outside of the
-kernel itself when performing a code search[1], and it seems even this
-single usage has been non-functional since it was introduced due to a
-typo in the Python ("apend" instead of correct "append"). Fix the typo
-while we're at it.
+Changes since v1:
+* Use new drm logging functions
+* Make some corrections in the mode_valid_ctx kdoc
+* Return error codes or 0 from ->mode_valid_ctx() on fail, and store the
+  drm_mode_status in an additional function parameter
 
-[1] https://codesearch.debian.net/
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Cc: Lee Shawn C <shawn.c.lee@intel.com>
 ---
-v2: leader/follower -> parent/child (ulf, rafael)
-v1: https://lore.kernel.org/lkml/202007080131.3E6D0858@keescook
-This is motivated by the recent discussions over coding style:
-https://lore.kernel.org/lkml/159419296487.2464622.863943877093636532.stgit@dwillia2-desk3.amr.corp.intel.com/
----
- drivers/base/power/domain.c          | 194 +++++++++++++--------------
- drivers/base/power/domain_governor.c |  12 +-
- include/linux/pm_domain.h            |  12 +-
- scripts/gdb/linux/genpd.py           |  12 +-
- 4 files changed, 115 insertions(+), 115 deletions(-)
+ drivers/gpu/drm/drm_crtc_helper_internal.h |  7 +-
+ drivers/gpu/drm/drm_probe_helper.c         | 97 +++++++++++++++-------
+ include/drm/drm_modes.h                    |  4 +-
+ include/drm/drm_modeset_helper_vtables.h   | 42 ++++++++++
+ 4 files changed, 114 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index 0a01df608849..2cb5e04cf86c 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -263,18 +263,18 @@ static int _genpd_reeval_performance_state(struct generic_pm_domain *genpd,
- 	/*
- 	 * Traverse all sub-domains within the domain. This can be
- 	 * done without any additional locking as the link->performance_state
--	 * field is protected by the master genpd->lock, which is already taken.
-+	 * field is protected by the parent genpd->lock, which is already taken.
- 	 *
- 	 * Also note that link->performance_state (subdomain's performance state
--	 * requirement to master domain) is different from
--	 * link->slave->performance_state (current performance state requirement
-+	 * requirement to parent domain) is different from
-+	 * link->child->performance_state (current performance state requirement
- 	 * of the devices/sub-domains of the subdomain) and so can have a
- 	 * different value.
- 	 *
- 	 * Note that we also take vote from powered-off sub-domains into account
- 	 * as the same is done for devices right now.
- 	 */
--	list_for_each_entry(link, &genpd->master_links, master_node) {
-+	list_for_each_entry(link, &genpd->parent_links, parent_node) {
- 		if (link->performance_state > state)
- 			state = link->performance_state;
- 	}
-@@ -285,40 +285,40 @@ static int _genpd_reeval_performance_state(struct generic_pm_domain *genpd,
- static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
- 					unsigned int state, int depth)
+diff --git a/drivers/gpu/drm/drm_crtc_helper_internal.h b/drivers/gpu/drm/drm_crtc_helper_internal.h
+index f0a66ef47e5ad..25ce42e799952 100644
+--- a/drivers/gpu/drm/drm_crtc_helper_internal.h
++++ b/drivers/gpu/drm/drm_crtc_helper_internal.h
+@@ -73,8 +73,11 @@ enum drm_mode_status drm_crtc_mode_valid(struct drm_crtc *crtc,
+ 					 const struct drm_display_mode *mode);
+ enum drm_mode_status drm_encoder_mode_valid(struct drm_encoder *encoder,
+ 					    const struct drm_display_mode *mode);
+-enum drm_mode_status drm_connector_mode_valid(struct drm_connector *connector,
+-					      struct drm_display_mode *mode);
++int
++drm_connector_mode_valid(struct drm_connector *connector,
++			 struct drm_display_mode *mode,
++			 struct drm_modeset_acquire_ctx *ctx,
++			 enum drm_mode_status *status);
+ 
+ struct drm_encoder *
+ drm_connector_get_single_encoder(struct drm_connector *connector);
+diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
+index e0ed58d291ed9..0b929f776f1db 100644
+--- a/drivers/gpu/drm/drm_probe_helper.c
++++ b/drivers/gpu/drm/drm_probe_helper.c
+@@ -86,17 +86,19 @@ drm_mode_validate_flag(const struct drm_display_mode *mode,
+ 	return MODE_OK;
+ }
+ 
+-static enum drm_mode_status
++static int
+ drm_mode_validate_pipeline(struct drm_display_mode *mode,
+-			    struct drm_connector *connector)
++			   struct drm_connector *connector,
++			   struct drm_modeset_acquire_ctx *ctx,
++			   enum drm_mode_status *status)
  {
--	struct generic_pm_domain *master;
-+	struct generic_pm_domain *parent;
- 	struct gpd_link *link;
--	int master_state, ret;
-+	int parent_state, ret;
+ 	struct drm_device *dev = connector->dev;
+-	enum drm_mode_status ret = MODE_OK;
+ 	struct drm_encoder *encoder;
++	int ret;
  
- 	if (state == genpd->performance_state)
- 		return 0;
+ 	/* Step 1: Validate against connector */
+-	ret = drm_connector_mode_valid(connector, mode);
+-	if (ret != MODE_OK)
++	ret = drm_connector_mode_valid(connector, mode, ctx, status);
++	if (ret || *status != MODE_OK)
+ 		return ret;
  
--	/* Propagate to masters of genpd */
--	list_for_each_entry(link, &genpd->slave_links, slave_node) {
--		master = link->master;
-+	/* Propagate to parents of genpd */
-+	list_for_each_entry(link, &genpd->child_links, child_node) {
-+		parent = link->parent;
+ 	/* Step 2: Validate against encoders and crtcs */
+@@ -104,8 +106,8 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
+ 		struct drm_bridge *bridge;
+ 		struct drm_crtc *crtc;
  
--		if (!master->set_performance_state)
-+		if (!parent->set_performance_state)
- 			continue;
- 
--		/* Find master's performance state */
-+		/* Find parent's performance state */
- 		ret = dev_pm_opp_xlate_performance_state(genpd->opp_table,
--							 master->opp_table,
-+							 parent->opp_table,
- 							 state);
- 		if (unlikely(ret < 0))
- 			goto err;
- 
--		master_state = ret;
-+		parent_state = ret;
- 
--		genpd_lock_nested(master, depth + 1);
-+		genpd_lock_nested(parent, depth + 1);
- 
- 		link->prev_performance_state = link->performance_state;
--		link->performance_state = master_state;
--		master_state = _genpd_reeval_performance_state(master,
--						master_state);
--		ret = _genpd_set_performance_state(master, master_state, depth + 1);
-+		link->performance_state = parent_state;
-+		parent_state = _genpd_reeval_performance_state(parent,
-+						parent_state);
-+		ret = _genpd_set_performance_state(parent, parent_state, depth + 1);
- 		if (ret)
- 			link->performance_state = link->prev_performance_state;
- 
--		genpd_unlock(master);
-+		genpd_unlock(parent);
- 
- 		if (ret)
- 			goto err;
-@@ -333,26 +333,26 @@ static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
- 
- err:
- 	/* Encountered an error, lets rollback */
--	list_for_each_entry_continue_reverse(link, &genpd->slave_links,
--					     slave_node) {
--		master = link->master;
-+	list_for_each_entry_continue_reverse(link, &genpd->child_links,
-+					     child_node) {
-+		parent = link->parent;
- 
--		if (!master->set_performance_state)
-+		if (!parent->set_performance_state)
- 			continue;
- 
--		genpd_lock_nested(master, depth + 1);
-+		genpd_lock_nested(parent, depth + 1);
- 
--		master_state = link->prev_performance_state;
--		link->performance_state = master_state;
-+		parent_state = link->prev_performance_state;
-+		link->performance_state = parent_state;
- 
--		master_state = _genpd_reeval_performance_state(master,
--						master_state);
--		if (_genpd_set_performance_state(master, master_state, depth + 1)) {
-+		parent_state = _genpd_reeval_performance_state(parent,
-+						parent_state);
-+		if (_genpd_set_performance_state(parent, parent_state, depth + 1)) {
- 			pr_err("%s: Failed to roll back to %d performance state\n",
--			       master->name, master_state);
-+			       parent->name, parent_state);
+-		ret = drm_encoder_mode_valid(encoder, mode);
+-		if (ret != MODE_OK) {
++		*status = drm_encoder_mode_valid(encoder, mode);
++		if (*status != MODE_OK) {
+ 			/* No point in continuing for crtc check as this encoder
+ 			 * will not accept the mode anyway. If all encoders
+ 			 * reject the mode then, at exit, ret will not be
+@@ -114,10 +116,10 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
  		}
  
--		genpd_unlock(master);
-+		genpd_unlock(parent);
- 	}
+ 		bridge = drm_bridge_chain_get_first_bridge(encoder);
+-		ret = drm_bridge_chain_mode_valid(bridge,
+-						  &connector->display_info,
+-						  mode);
+-		if (ret != MODE_OK) {
++		*status = drm_bridge_chain_mode_valid(bridge,
++						      &connector->display_info,
++						      mode);
++		if (*status != MODE_OK) {
+ 			/* There is also no point in continuing for crtc check
+ 			 * here. */
+ 			continue;
+@@ -127,8 +129,8 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
+ 			if (!drm_encoder_crtc_ok(encoder, crtc))
+ 				continue;
  
- 	return ret;
-@@ -552,7 +552,7 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
- 
- 		/*
- 		 * If sd_count > 0 at this point, one of the subdomains hasn't
--		 * managed to call genpd_power_on() for the master yet after
-+		 * managed to call genpd_power_on() for the parent yet after
- 		 * incrementing it.  In that case genpd_power_on() will wait
- 		 * for us to drop the lock, so we can call .power_off() and let
- 		 * the genpd_power_on() restore power for us (this shouldn't
-@@ -566,22 +566,22 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
- 	genpd->status = GPD_STATE_POWER_OFF;
- 	genpd_update_accounting(genpd);
- 
--	list_for_each_entry(link, &genpd->slave_links, slave_node) {
--		genpd_sd_counter_dec(link->master);
--		genpd_lock_nested(link->master, depth + 1);
--		genpd_power_off(link->master, false, depth + 1);
--		genpd_unlock(link->master);
-+	list_for_each_entry(link, &genpd->child_links, child_node) {
-+		genpd_sd_counter_dec(link->parent);
-+		genpd_lock_nested(link->parent, depth + 1);
-+		genpd_power_off(link->parent, false, depth + 1);
-+		genpd_unlock(link->parent);
- 	}
- 
- 	return 0;
+-			ret = drm_crtc_mode_valid(crtc, mode);
+-			if (ret == MODE_OK) {
++			*status = drm_crtc_mode_valid(crtc, mode);
++			if (*status == MODE_OK) {
+ 				/* If we get to this point there is at least
+ 				 * one combination of encoder+crtc that works
+ 				 * for this mode. Lets return now. */
+@@ -198,16 +200,27 @@ enum drm_mode_status drm_encoder_mode_valid(struct drm_encoder *encoder,
+ 	return encoder_funcs->mode_valid(encoder, mode);
  }
  
- /**
-- * genpd_power_on - Restore power to a given PM domain and its masters.
-+ * genpd_power_on - Restore power to a given PM domain and its parents.
-  * @genpd: PM domain to power up.
-  * @depth: nesting count for lockdep.
-  *
-- * Restore power to @genpd and all of its masters so that it is possible to
-+ * Restore power to @genpd and all of its parents so that it is possible to
-  * resume a device belonging to it.
-  */
- static int genpd_power_on(struct generic_pm_domain *genpd, unsigned int depth)
-@@ -594,20 +594,20 @@ static int genpd_power_on(struct generic_pm_domain *genpd, unsigned int depth)
+-enum drm_mode_status drm_connector_mode_valid(struct drm_connector *connector,
+-					      struct drm_display_mode *mode)
++int
++drm_connector_mode_valid(struct drm_connector *connector,
++			 struct drm_display_mode *mode,
++			 struct drm_modeset_acquire_ctx *ctx,
++			 enum drm_mode_status *status)
+ {
+ 	const struct drm_connector_helper_funcs *connector_funcs =
+ 		connector->helper_private;
  
- 	/*
- 	 * The list is guaranteed not to change while the loop below is being
--	 * executed, unless one of the masters' .power_on() callbacks fiddles
-+	 * executed, unless one of the parents' .power_on() callbacks fiddles
- 	 * with it.
- 	 */
--	list_for_each_entry(link, &genpd->slave_links, slave_node) {
--		struct generic_pm_domain *master = link->master;
-+	list_for_each_entry(link, &genpd->child_links, child_node) {
-+		struct generic_pm_domain *parent = link->parent;
+-	if (!connector_funcs || !connector_funcs->mode_valid)
+-		return MODE_OK;
++	if (!connector_funcs) {
++		*status = MODE_OK;
++		return 0;
++	}
  
--		genpd_sd_counter_inc(master);
-+		genpd_sd_counter_inc(parent);
- 
--		genpd_lock_nested(master, depth + 1);
--		ret = genpd_power_on(master, depth + 1);
--		genpd_unlock(master);
-+		genpd_lock_nested(parent, depth + 1);
-+		ret = genpd_power_on(parent, depth + 1);
-+		genpd_unlock(parent);
- 
- 		if (ret) {
--			genpd_sd_counter_dec(master);
-+			genpd_sd_counter_dec(parent);
- 			goto err;
- 		}
- 	}
-@@ -623,12 +623,12 @@ static int genpd_power_on(struct generic_pm_domain *genpd, unsigned int depth)
- 
-  err:
- 	list_for_each_entry_continue_reverse(link,
--					&genpd->slave_links,
--					slave_node) {
--		genpd_sd_counter_dec(link->master);
--		genpd_lock_nested(link->master, depth + 1);
--		genpd_power_off(link->master, false, depth + 1);
--		genpd_unlock(link->master);
-+					&genpd->child_links,
-+					child_node) {
-+		genpd_sd_counter_dec(link->parent);
-+		genpd_lock_nested(link->parent, depth + 1);
-+		genpd_power_off(link->parent, false, depth + 1);
-+		genpd_unlock(link->parent);
- 	}
- 
- 	return ret;
-@@ -932,13 +932,13 @@ late_initcall(genpd_power_off_unused);
- #ifdef CONFIG_PM_SLEEP
- 
- /**
-- * genpd_sync_power_off - Synchronously power off a PM domain and its masters.
-+ * genpd_sync_power_off - Synchronously power off a PM domain and its parents.
-  * @genpd: PM domain to power off, if possible.
-  * @use_lock: use the lock.
-  * @depth: nesting count for lockdep.
-  *
-  * Check if the given PM domain can be powered off (during system suspend or
-- * hibernation) and do that if so.  Also, in that case propagate to its masters.
-+ * hibernation) and do that if so.  Also, in that case propagate to its parents.
-  *
-  * This function is only called in "noirq" and "syscore" stages of system power
-  * transitions. The "noirq" callbacks may be executed asynchronously, thus in
-@@ -963,21 +963,21 @@ static void genpd_sync_power_off(struct generic_pm_domain *genpd, bool use_lock,
- 
- 	genpd->status = GPD_STATE_POWER_OFF;
- 
--	list_for_each_entry(link, &genpd->slave_links, slave_node) {
--		genpd_sd_counter_dec(link->master);
-+	list_for_each_entry(link, &genpd->child_links, child_node) {
-+		genpd_sd_counter_dec(link->parent);
- 
- 		if (use_lock)
--			genpd_lock_nested(link->master, depth + 1);
-+			genpd_lock_nested(link->parent, depth + 1);
- 
--		genpd_sync_power_off(link->master, use_lock, depth + 1);
-+		genpd_sync_power_off(link->parent, use_lock, depth + 1);
- 
- 		if (use_lock)
--			genpd_unlock(link->master);
-+			genpd_unlock(link->parent);
- 	}
+-	return connector_funcs->mode_valid(connector, mode);
++	if (connector_funcs->mode_valid_ctx)
++		return connector_funcs->mode_valid_ctx(connector, mode, ctx,
++						       status);
++	else if (connector_funcs->mode_valid)
++		*status = connector_funcs->mode_valid(connector, mode);
++
++	return 0;
  }
  
- /**
-- * genpd_sync_power_on - Synchronously power on a PM domain and its masters.
-+ * genpd_sync_power_on - Synchronously power on a PM domain and its parents.
-  * @genpd: PM domain to power on.
-  * @use_lock: use the lock.
-  * @depth: nesting count for lockdep.
-@@ -994,16 +994,16 @@ static void genpd_sync_power_on(struct generic_pm_domain *genpd, bool use_lock,
- 	if (genpd_status_on(genpd))
- 		return;
+ #define DRM_OUTPUT_POLL_PERIOD (10*HZ)
+@@ -385,8 +398,9 @@ EXPORT_SYMBOL(drm_helper_probe_detect);
+  *      (if specified)
+  *    - drm_mode_validate_flag() checks the modes against basic connector
+  *      capabilities (interlace_allowed,doublescan_allowed,stereo_allowed)
+- *    - the optional &drm_connector_helper_funcs.mode_valid helper can perform
+- *      driver and/or sink specific checks
++ *    - the optional &drm_connector_helper_funcs.mode_valid or
++ *      &drm_connector_helper_funcs.mode_valid_ctx helpers can perform driver
++ *      and/or sink specific checks
+  *    - the optional &drm_crtc_helper_funcs.mode_valid,
+  *      &drm_bridge_funcs.mode_valid and &drm_encoder_helper_funcs.mode_valid
+  *      helpers can perform driver and/or source specific checks which are also
+@@ -517,22 +531,41 @@ int drm_helper_probe_single_connector_modes(struct drm_connector *connector,
+ 		mode_flags |= DRM_MODE_FLAG_3D_MASK;
  
--	list_for_each_entry(link, &genpd->slave_links, slave_node) {
--		genpd_sd_counter_inc(link->master);
-+	list_for_each_entry(link, &genpd->child_links, child_node) {
-+		genpd_sd_counter_inc(link->parent);
+ 	list_for_each_entry(mode, &connector->modes, head) {
+-		if (mode->status == MODE_OK)
+-			mode->status = drm_mode_validate_driver(dev, mode);
++		if (mode->status != MODE_OK)
++			continue;
  
- 		if (use_lock)
--			genpd_lock_nested(link->master, depth + 1);
-+			genpd_lock_nested(link->parent, depth + 1);
+-		if (mode->status == MODE_OK)
+-			mode->status = drm_mode_validate_size(mode, maxX, maxY);
++		mode->status = drm_mode_validate_driver(dev, mode);
++		if (mode->status != MODE_OK)
++			continue;
  
--		genpd_sync_power_on(link->master, use_lock, depth + 1);
-+		genpd_sync_power_on(link->parent, use_lock, depth + 1);
+-		if (mode->status == MODE_OK)
+-			mode->status = drm_mode_validate_flag(mode, mode_flags);
++		mode->status = drm_mode_validate_size(mode, maxX, maxY);
++		if (mode->status != MODE_OK)
++			continue;
  
- 		if (use_lock)
--			genpd_unlock(link->master);
-+			genpd_unlock(link->parent);
+-		if (mode->status == MODE_OK)
+-			mode->status = drm_mode_validate_pipeline(mode,
+-								  connector);
++		mode->status = drm_mode_validate_flag(mode, mode_flags);
++		if (mode->status != MODE_OK)
++			continue;
+ 
+-		if (mode->status == MODE_OK)
+-			mode->status = drm_mode_validate_ycbcr420(mode,
+-								  connector);
++		ret = drm_mode_validate_pipeline(mode, connector, &ctx,
++						 &mode->status);
++		if (ret) {
++			drm_dbg_kms(dev,
++				    "drm_mode_validate_pipeline failed: %d\n",
++				    ret);
++
++			if (drm_WARN_ON_ONCE(dev, ret != -EDEADLK)) {
++				mode->status = MODE_ERROR;
++			} else {
++				drm_modeset_backoff(&ctx);
++				goto retry;
++			}
++		} else {
++			mode->status = ret;
++		}
++
++		if (mode->status != MODE_OK)
++			continue;
++		mode->status = drm_mode_validate_ycbcr420(mode, connector);
  	}
  
- 	_genpd_power_on(genpd, false);
-@@ -1443,12 +1443,12 @@ static void genpd_update_cpumask(struct generic_pm_domain *genpd,
- 	if (!genpd_is_cpu_domain(genpd))
- 		return;
+ prune:
+diff --git a/include/drm/drm_modes.h b/include/drm/drm_modes.h
+index eee3c9de6c4f9..03a3a0190251c 100644
+--- a/include/drm/drm_modes.h
++++ b/include/drm/drm_modes.h
+@@ -126,9 +126,9 @@ enum drm_mode_status {
+ 	MODE_NO_REDUCED,
+ 	MODE_NO_STEREO,
+ 	MODE_NO_420,
+-	MODE_STALE = -3,
++	MODE_ERROR = -1,
+ 	MODE_BAD = -2,
+-	MODE_ERROR = -1
++	MODE_STALE = -3,
+ };
  
--	list_for_each_entry(link, &genpd->slave_links, slave_node) {
--		struct generic_pm_domain *master = link->master;
-+	list_for_each_entry(link, &genpd->child_links, child_node) {
-+		struct generic_pm_domain *parent = link->parent;
- 
--		genpd_lock_nested(master, depth + 1);
--		genpd_update_cpumask(master, cpu, set, depth + 1);
--		genpd_unlock(master);
-+		genpd_lock_nested(parent, depth + 1);
-+		genpd_update_cpumask(parent, cpu, set, depth + 1);
-+		genpd_unlock(parent);
- 	}
- 
- 	if (set)
-@@ -1636,17 +1636,17 @@ static int genpd_add_subdomain(struct generic_pm_domain *genpd,
- 		goto out;
- 	}
- 
--	list_for_each_entry(itr, &genpd->master_links, master_node) {
--		if (itr->slave == subdomain && itr->master == genpd) {
-+	list_for_each_entry(itr, &genpd->parent_links, parent_node) {
-+		if (itr->child == subdomain && itr->parent == genpd) {
- 			ret = -EINVAL;
- 			goto out;
- 		}
- 	}
- 
--	link->master = genpd;
--	list_add_tail(&link->master_node, &genpd->master_links);
--	link->slave = subdomain;
--	list_add_tail(&link->slave_node, &subdomain->slave_links);
-+	link->parent = genpd;
-+	list_add_tail(&link->parent_node, &genpd->parent_links);
-+	link->child = subdomain;
-+	list_add_tail(&link->child_node, &subdomain->child_links);
- 	if (genpd_status_on(subdomain))
- 		genpd_sd_counter_inc(genpd);
- 
-@@ -1660,7 +1660,7 @@ static int genpd_add_subdomain(struct generic_pm_domain *genpd,
- 
- /**
-  * pm_genpd_add_subdomain - Add a subdomain to an I/O PM domain.
-- * @genpd: Master PM domain to add the subdomain to.
-+ * @genpd: Leader PM domain to add the subdomain to.
-  * @subdomain: Subdomain to be added.
-  */
- int pm_genpd_add_subdomain(struct generic_pm_domain *genpd,
-@@ -1678,7 +1678,7 @@ EXPORT_SYMBOL_GPL(pm_genpd_add_subdomain);
- 
- /**
-  * pm_genpd_remove_subdomain - Remove a subdomain from an I/O PM domain.
-- * @genpd: Master PM domain to remove the subdomain from.
-+ * @genpd: Leader PM domain to remove the subdomain from.
-  * @subdomain: Subdomain to be removed.
-  */
- int pm_genpd_remove_subdomain(struct generic_pm_domain *genpd,
-@@ -1693,19 +1693,19 @@ int pm_genpd_remove_subdomain(struct generic_pm_domain *genpd,
- 	genpd_lock(subdomain);
- 	genpd_lock_nested(genpd, SINGLE_DEPTH_NESTING);
- 
--	if (!list_empty(&subdomain->master_links) || subdomain->device_count) {
-+	if (!list_empty(&subdomain->parent_links) || subdomain->device_count) {
- 		pr_warn("%s: unable to remove subdomain %s\n",
- 			genpd->name, subdomain->name);
- 		ret = -EBUSY;
- 		goto out;
- 	}
- 
--	list_for_each_entry_safe(link, l, &genpd->master_links, master_node) {
--		if (link->slave != subdomain)
-+	list_for_each_entry_safe(link, l, &genpd->parent_links, parent_node) {
-+		if (link->child != subdomain)
- 			continue;
- 
--		list_del(&link->master_node);
--		list_del(&link->slave_node);
-+		list_del(&link->parent_node);
-+		list_del(&link->child_node);
- 		kfree(link);
- 		if (genpd_status_on(subdomain))
- 			genpd_sd_counter_dec(genpd);
-@@ -1770,8 +1770,8 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
- 	if (IS_ERR_OR_NULL(genpd))
- 		return -EINVAL;
- 
--	INIT_LIST_HEAD(&genpd->master_links);
--	INIT_LIST_HEAD(&genpd->slave_links);
-+	INIT_LIST_HEAD(&genpd->parent_links);
-+	INIT_LIST_HEAD(&genpd->child_links);
- 	INIT_LIST_HEAD(&genpd->dev_list);
- 	genpd_lock_init(genpd);
- 	genpd->gov = gov;
-@@ -1848,15 +1848,15 @@ static int genpd_remove(struct generic_pm_domain *genpd)
- 		return -EBUSY;
- 	}
- 
--	if (!list_empty(&genpd->master_links) || genpd->device_count) {
-+	if (!list_empty(&genpd->parent_links) || genpd->device_count) {
- 		genpd_unlock(genpd);
- 		pr_err("%s: unable to remove %s\n", __func__, genpd->name);
- 		return -EBUSY;
- 	}
- 
--	list_for_each_entry_safe(link, l, &genpd->slave_links, slave_node) {
--		list_del(&link->master_node);
--		list_del(&link->slave_node);
-+	list_for_each_entry_safe(link, l, &genpd->child_links, child_node) {
-+		list_del(&link->parent_node);
-+		list_del(&link->child_node);
- 		kfree(link);
- 	}
- 
-@@ -2827,12 +2827,12 @@ static int genpd_summary_one(struct seq_file *s,
- 
- 	/*
- 	 * Modifications on the list require holding locks on both
--	 * master and slave, so we are safe.
-+	 * parent and child, so we are safe.
- 	 * Also genpd->name is immutable.
+ #define DRM_MODE(nm, t, c, hd, hss, hse, ht, hsk, vd, vss, vse, vt, vs, f) \
+diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
+index 421a30f084631..4efec30f8badc 100644
+--- a/include/drm/drm_modeset_helper_vtables.h
++++ b/include/drm/drm_modeset_helper_vtables.h
+@@ -968,6 +968,48 @@ struct drm_connector_helper_funcs {
  	 */
--	list_for_each_entry(link, &genpd->master_links, master_node) {
--		seq_printf(s, "%s", link->slave->name);
--		if (!list_is_last(&link->master_node, &genpd->master_links))
-+	list_for_each_entry(link, &genpd->parent_links, parent_node) {
-+		seq_printf(s, "%s", link->child->name);
-+		if (!list_is_last(&link->parent_node, &genpd->parent_links))
- 			seq_puts(s, ", ");
- 	}
- 
-@@ -2860,7 +2860,7 @@ static int summary_show(struct seq_file *s, void *data)
- 	struct generic_pm_domain *genpd;
- 	int ret = 0;
- 
--	seq_puts(s, "domain                          status          slaves\n");
-+	seq_puts(s, "domain                          status          children\n");
- 	seq_puts(s, "    /device                                             runtime status\n");
- 	seq_puts(s, "----------------------------------------------------------------------\n");
- 
-@@ -2915,8 +2915,8 @@ static int sub_domains_show(struct seq_file *s, void *data)
- 	if (ret)
- 		return -ERESTARTSYS;
- 
--	list_for_each_entry(link, &genpd->master_links, master_node)
--		seq_printf(s, "%s\n", link->slave->name);
-+	list_for_each_entry(link, &genpd->parent_links, parent_node)
-+		seq_printf(s, "%s\n", link->child->name);
- 
- 	genpd_unlock(genpd);
- 	return ret;
-diff --git a/drivers/base/power/domain_governor.c b/drivers/base/power/domain_governor.c
-index daa8c7689f7e..490ed7deb99a 100644
---- a/drivers/base/power/domain_governor.c
-+++ b/drivers/base/power/domain_governor.c
-@@ -135,8 +135,8 @@ static bool __default_power_down_ok(struct dev_pm_domain *pd,
+ 	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
+ 					   struct drm_display_mode *mode);
++
++	/**
++	 * @mode_valid_ctx:
++	 *
++	 * Callback to validate a mode for a connector, irrespective of the
++	 * specific display configuration.
++	 *
++	 * This callback is used by the probe helpers to filter the mode list
++	 * (which is usually derived from the EDID data block from the sink).
++	 * See e.g. drm_helper_probe_single_connector_modes().
++	 *
++	 * This function is optional, and is the atomic version of
++	 * &drm_connector_helper_funcs.mode_valid.
++	 *
++	 * To allow for accessing the atomic state of modesetting objects, the
++	 * helper libraries always call this with ctx set to a valid context,
++	 * and &drm_mode_config.connection_mutex will always be locked with
++	 * the ctx parameter set to @ctx. This allows for taking additional
++	 * locks as required.
++	 *
++	 * Even though additional locks may be acquired, this callback is
++	 * still expected not to take any constraints into account which would
++	 * be influenced by the currently set display state - such constraints
++	 * should be handled in the driver's atomic check. For example, if a
++	 * connector shares display bandwidth with other connectors then it
++	 * would be ok to validate the minimum bandwidth requirement of a mode
++	 * against the maximum possible bandwidth of the connector. But it
++	 * wouldn't be ok to take the current bandwidth usage of other
++	 * connectors into account, as this would change depending on the
++	 * display state.
++	 *
++	 * Returns:
++	 * 0 if &drm_connector_helper_funcs.mode_valid_ctx succeeded and wrote
++	 * the &enum drm_mode_status value to @status, or a negative error
++	 * code otherwise.
++	 *
++	 */
++	int (*mode_valid_ctx)(struct drm_connector *connector,
++			      struct drm_display_mode *mode,
++			      struct drm_modeset_acquire_ctx *ctx,
++			      enum drm_mode_status *status);
++
+ 	/**
+ 	 * @best_encoder:
  	 *
- 	 * All subdomains have been powered off already at this point.
- 	 */
--	list_for_each_entry(link, &genpd->master_links, master_node) {
--		struct generic_pm_domain *sd = link->slave;
-+	list_for_each_entry(link, &genpd->parent_links, parent_node) {
-+		struct generic_pm_domain *sd = link->child;
- 		s64 sd_max_off_ns = sd->max_off_time_ns;
- 
- 		if (sd_max_off_ns < 0)
-@@ -217,13 +217,13 @@ static bool default_power_down_ok(struct dev_pm_domain *pd)
- 	}
- 
- 	/*
--	 * We have to invalidate the cached results for the masters, so
-+	 * We have to invalidate the cached results for the parents, so
- 	 * use the observation that default_power_down_ok() is not
--	 * going to be called for any master until this instance
-+	 * going to be called for any parent until this instance
- 	 * returns.
- 	 */
--	list_for_each_entry(link, &genpd->slave_links, slave_node)
--		link->master->max_off_time_changed = true;
-+	list_for_each_entry(link, &genpd->child_links, child_node)
-+		link->parent->max_off_time_changed = true;
- 
- 	genpd->max_off_time_ns = -1;
- 	genpd->max_off_time_changed = false;
-diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index 9ec78ee53652..574a1fadb1e5 100644
---- a/include/linux/pm_domain.h
-+++ b/include/linux/pm_domain.h
-@@ -95,8 +95,8 @@ struct generic_pm_domain {
- 	struct device dev;
- 	struct dev_pm_domain domain;	/* PM domain operations */
- 	struct list_head gpd_list_node;	/* Node in the global PM domains list */
--	struct list_head master_links;	/* Links with PM domain as a master */
--	struct list_head slave_links;	/* Links with PM domain as a slave */
-+	struct list_head parent_links;	/* Links with PM domain as a parent */
-+	struct list_head child_links;/* Links with PM domain as a child */
- 	struct list_head dev_list;	/* List of devices */
- 	struct dev_power_governor *gov;
- 	struct work_struct power_off_work;
-@@ -151,10 +151,10 @@ static inline struct generic_pm_domain *pd_to_genpd(struct dev_pm_domain *pd)
- }
- 
- struct gpd_link {
--	struct generic_pm_domain *master;
--	struct list_head master_node;
--	struct generic_pm_domain *slave;
--	struct list_head slave_node;
-+	struct generic_pm_domain *parent;
-+	struct list_head parent_node;
-+	struct generic_pm_domain *child;
-+	struct list_head child_node;
- 
- 	/* Sub-domain's per-master domain performance state */
- 	unsigned int performance_state;
-diff --git a/scripts/gdb/linux/genpd.py b/scripts/gdb/linux/genpd.py
-index 6ca93bd2949e..39cd1abd8559 100644
---- a/scripts/gdb/linux/genpd.py
-+++ b/scripts/gdb/linux/genpd.py
-@@ -49,17 +49,17 @@ Output is similar to /sys/kernel/debug/pm_genpd/pm_genpd_summary'''
-         else:
-             status_string = 'off-{}'.format(genpd['state_idx'])
- 
--        slave_names = []
-+        child_names = []
-         for link in list_for_each_entry(
--                genpd['master_links'],
-+                genpd['parent_links'],
-                 device_link_type.get_type().pointer(),
--                'master_node'):
--            slave_names.apend(link['slave']['name'])
-+                'parent_node'):
-+            child_names.append(link['child']['name'])
- 
-         gdb.write('%-30s  %-15s %s\n' % (
-                 genpd['name'].string(),
-                 status_string,
--                ', '.join(slave_names)))
-+                ', '.join(child_names)))
- 
-         # Print devices in domain
-         for pm_data in list_for_each_entry(genpd['dev_list'],
-@@ -70,7 +70,7 @@ Output is similar to /sys/kernel/debug/pm_genpd/pm_genpd_summary'''
-             gdb.write('    %-50s  %s\n' % (kobj_path, rtpm_status_str(dev)))
- 
-     def invoke(self, arg, from_tty):
--        gdb.write('domain                          status          slaves\n');
-+        gdb.write('domain                          status          children\n');
-         gdb.write('    /device                                             runtime status\n');
-         gdb.write('----------------------------------------------------------------------\n');
-         for genpd in list_for_each_entry(
 -- 
-2.25.1
+2.26.2
 
-
--- 
-Kees Cook
