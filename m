@@ -2,96 +2,335 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18FE820786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B9F20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 15:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594223010;
-	bh=XTUF+o5CIluzJxCVc/liIpiAQyJPlLkC0DzwQTYaWYY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9ttKNZM/kriUemN2mZY6aPsLmFcvu7cPieVgvwBW/G38fjHOc1uedHRc6jqJLU7a
-	 Lo+6nWctuCYZIItIIqIW0N+ugij0hvK32pYDDVt/mcLhndU5YHmyp0d6xqtWQDIo2U
-	 I37gZxmMmKmvk+9ra0sZntZg/u5feNCSWR9T7Yws=
+	s=default; t=1594223011;
+	bh=LG+yI2JSgbxPAhiA09qHJUbZLFpGgq3Hqrsq8nWnin8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1aPG2TK/9QUZ/1tkzKQh6O8cj+egJQK3CdS2J/wP5ABj8wHeVAa1WEVCoL+8W2za1
+	 JCtI6wuevF/KaNH/k1hGyqUmovT8ZoK0IYuqx41yie6s692FyVcXZc41ER5VkNNxvy
+	 6ftHenZEG+Ox4bxKIJB2Gu8FJHJ9nyF5rqUfH0KY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbgGHPn2 (ORCPT
+        id S1730555AbgGHPlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 11:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48834 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 11:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730560AbgGHPls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 11:41:48 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1730460AbgGHPll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 11:41:41 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8C9D207D0;
-        Wed,  8 Jul 2020 15:41:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEA372089D;
+        Wed,  8 Jul 2020 15:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594222908;
-        bh=XTUF+o5CIluzJxCVc/liIpiAQyJPlLkC0DzwQTYaWYY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DbcTNnuK4E83N4uXKG+Gb4AI7TSBAzw+G6aweOFrHPghOA5u3aLve8pJcY/j8YHDP
-         XWOFfY+FfbHyRTIicb6K/Z3VsmHDNTJ09zhEEcO7LgxfayUinvbQXCfqWgScti4cCm
-         iXLH41rAp3IaeaFV1QGQrbAYL0JFx1lvJtJlaYfE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Angelo Dureghello <angelo.dureghello@timesys.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH AUTOSEL 5.4 10/16] m68k: mm: fix node memblock init
-Date:   Wed,  8 Jul 2020 11:41:29 -0400
-Message-Id: <20200708154135.3199907-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200708154135.3199907-1-sashal@kernel.org>
-References: <20200708154135.3199907-1-sashal@kernel.org>
+        s=default; t=1594222899;
+        bh=LG+yI2JSgbxPAhiA09qHJUbZLFpGgq3Hqrsq8nWnin8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=p7CZvOQNDRLx7mTv27J6wHhMmIvYWQ+vnWc2JnRH4ypRnQvsHsecZ9BKLthjq9N0x
+         XzvRHotDBSCLg+bgvkAYUp/MDJH0nVAL9KFAr+DoqpIF2U0scCtHsM6B2pIGgCk/xV
+         Yke4rqmOLUQ9Y7BNL7PmCDWnpH6VaJmbrUJXl5GY=
+Received: by mail-oi1-f170.google.com with SMTP id e4so30018187oib.1;
+        Wed, 08 Jul 2020 08:41:39 -0700 (PDT)
+X-Gm-Message-State: AOAM5320vQS7dI5W5PDtKVAK5IKTstBbDq8pFaE+2DuKBVDwUhDE9A8o
+        4iSFYoz3L+8H4/ddDgH3ujixGYZyXzIroDEWqag=
+X-Google-Smtp-Source: ABdhPJzcL6rUZSAWH6003PAqBlOP8WLexmMzsraMgk78/azrEzyTwFeVbDQ58i4u92flRnXJMtxl2BTiNS31/0VuUAA=
+X-Received: by 2002:aca:f257:: with SMTP id q84mr7955517oih.174.1594222898992;
+ Wed, 08 Jul 2020 08:41:38 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200708131424.18729-1-masahisa.kojima@linaro.org> <20200708131424.18729-2-masahisa.kojima@linaro.org>
+In-Reply-To: <20200708131424.18729-2-masahisa.kojima@linaro.org>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 8 Jul 2020 18:41:27 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXE2bbXR0Yrm009g7917KH7AC9R0AjCNyvdiv1k4r74YiQ@mail.gmail.com>
+Message-ID: <CAMj1kXE2bbXR0Yrm009g7917KH7AC9R0AjCNyvdiv1k4r74YiQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] tpm: tis: add support for MMIO TPM on SynQuacer
+To:     Masahisa Kojima <masahisa.kojima@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Dureghello <angelo.dureghello@timesys.com>
+On Wed, 8 Jul 2020 at 16:15, Masahisa Kojima <masahisa.kojima@linaro.org> wrote:
+>
+> When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
+> window that is backed by the SPI command sequencer in the SPI bus
+> controller. This arrangement has the limitation that only byte size
+> accesses are supported, and so we'll need to provide a separate module
+> that take this into account.
+>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
 
-[ Upstream commit c43e55796dd4d13f4855971a4d7970ce2cd94db4 ]
+Hello Masahisa,
 
-After pulling 5.7.0 (linux-next merge), mcf5441x mmu boot was
-hanging silently.
+This looks fine to me, but I won't be able to test it any time soon,
+unfortunately.
 
-memblock_add() seems not appropriate, since using MAX_NUMNODES
-as node id, while memblock_add_node() sets up memory for node id 0.
+One suggestion: could you allocate a ACPI _HID for this device, and
+add support for it to the driver as well?
 
-Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/m68k/mm/mcfmmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/m68k/mm/mcfmmu.c b/arch/m68k/mm/mcfmmu.c
-index 6cb1e41d58d00..70a5f55ea6647 100644
---- a/arch/m68k/mm/mcfmmu.c
-+++ b/arch/m68k/mm/mcfmmu.c
-@@ -164,7 +164,7 @@ void __init cf_bootmem_alloc(void)
- 	m68k_memory[0].addr = _rambase;
- 	m68k_memory[0].size = _ramend - _rambase;
- 
--	memblock_add(m68k_memory[0].addr, m68k_memory[0].size);
-+	memblock_add_node(m68k_memory[0].addr, m68k_memory[0].size, 0);
- 
- 	/* compute total pages in system */
- 	num_pages = PFN_DOWN(_ramend - _rambase);
--- 
-2.25.1
-
+> ---
+>  drivers/char/tpm/Kconfig             |  12 ++
+>  drivers/char/tpm/Makefile            |   1 +
+>  drivers/char/tpm/tpm_tis_synquacer.c | 196 +++++++++++++++++++++++++++
+>  3 files changed, 209 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
+>
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index 58b4c573d176..a18c314da211 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
+>           If you have a H1 secure module running Cr50 firmware on SPI bus,
+>           say Yes and it will be accessible from within Linux.
+>
+> +config TCG_TIS_SYNQUACER
+> +       tristate "TPM Interface Specification 1.2 Interface / TPM 2.0 FIFO Interface (MMIO - SynQuacer)"
+> +       depends on ARCH_SYNQUACER
+> +       select TCG_TIS_CORE
+> +       help
+> +         If you have a TPM security chip that is compliant with the
+> +         TCG TIS 1.2 TPM specification (TPM1.2) or the TCG PTP FIFO
+> +         specification (TPM2.0) say Yes and it will be accessible from
+> +         within Linux on Socionext SynQuacer platform.
+> +         To compile this driver as a module, choose  M here;
+> +         the module will be called tpm_tis_synquacer.
+> +
+>  config TCG_TIS_I2C_ATMEL
+>         tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
+>         depends on I2C
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 9567e5197f74..84db4fb3a9c9 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -21,6 +21,7 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
+>  tpm-$(CONFIG_OF) += eventlog/of.o
+>  obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
+>  obj-$(CONFIG_TCG_TIS) += tpm_tis.o
+> +obj-$(CONFIG_TCG_TIS_SYNQUACER) += tpm_tis_synquacer.o
+>
+>  obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
+>  tpm_tis_spi-y := tpm_tis_spi_main.o
+> diff --git a/drivers/char/tpm/tpm_tis_synquacer.c b/drivers/char/tpm/tpm_tis_synquacer.c
+> new file mode 100644
+> index 000000000000..51f0aedcedcc
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_tis_synquacer.c
+> @@ -0,0 +1,196 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Linaro Ltd.
+> + *
+> + * This device driver implements MMIO TPM on SynQuacer Platform.
+> + */
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/kernel.h>
+> +#include "tpm.h"
+> +#include "tpm_tis_core.h"
+> +
+> +struct tpm_info {
+> +       struct resource res;
+> +       /* irq > 0 means: use irq $irq;
+> +        * irq = 0 means: autoprobe for an irq;
+> +        * irq = -1 means: no irq support
+> +        */
+> +       int irq;
+> +};
+> +
+> +struct tpm_tis_tcg_phy {
+> +       struct tpm_tis_data priv;
+> +       void __iomem *iobase;
+> +};
+> +
+> +static inline struct tpm_tis_tcg_phy *to_tpm_tis_tcg_phy(struct tpm_tis_data *data)
+> +{
+> +       return container_of(data, struct tpm_tis_tcg_phy, priv);
+> +}
+> +
+> +static int tpm_tcg_read_bytes(struct tpm_tis_data *data, u32 addr, u16 len,
+> +                             u8 *result)
+> +{
+> +       struct tpm_tis_tcg_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +       while (len--)
+> +               *result++ = ioread8(phy->iobase + addr);
+> +
+> +       return 0;
+> +}
+> +
+> +static int tpm_tcg_write_bytes(struct tpm_tis_data *data, u32 addr, u16 len,
+> +                              const u8 *value)
+> +{
+> +       struct tpm_tis_tcg_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +       while (len--)
+> +               iowrite8(*value++, phy->iobase + addr);
+> +
+> +       return 0;
+> +}
+> +
+> +static int tpm_tcg_read16_bw(struct tpm_tis_data *data, u32 addr, u16 *result)
+> +{
+> +       struct tpm_tis_tcg_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +       /*
+> +        * Due to the limitation of SPI controller on SynQuacer,
+> +        * 16/32 bits access must be done in byte-wise and descending order.
+> +        */
+> +       *result = (ioread8(phy->iobase + addr + 1) << 8) |
+> +                 (ioread8(phy->iobase + addr));
+> +
+> +       return 0;
+> +}
+> +
+> +static int tpm_tcg_read32_bw(struct tpm_tis_data *data, u32 addr, u32 *result)
+> +{
+> +       struct tpm_tis_tcg_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +       /*
+> +        * Due to the limitation of SPI controller on SynQuacer,
+> +        * 16/32 bits access must be done in byte-wise and descending order.
+> +        */
+> +       *result = (ioread8(phy->iobase + addr + 3) << 24) |
+> +                 (ioread8(phy->iobase + addr + 2) << 16) |
+> +                 (ioread8(phy->iobase + addr + 1) << 8) |
+> +                 (ioread8(phy->iobase + addr));
+> +
+> +       return 0;
+> +}
+> +
+> +static int tpm_tcg_write32_bw(struct tpm_tis_data *data, u32 addr, u32 value)
+> +{
+> +       struct tpm_tis_tcg_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +       /*
+> +        * Due to the limitation of SPI controller on SynQuacer,
+> +        * 16/32 bits access must be done in byte-wise and descending order.
+> +        */
+> +       iowrite8(value >> 24, phy->iobase + addr + 3);
+> +       iowrite8(value >> 16, phy->iobase + addr + 2);
+> +       iowrite8(value >> 8, phy->iobase + addr + 1);
+> +       iowrite8(value, phy->iobase + addr);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct tpm_tis_phy_ops tpm_tcg_bw = {
+> +       .read_bytes     = tpm_tcg_read_bytes,
+> +       .write_bytes    = tpm_tcg_write_bytes,
+> +       .read16         = tpm_tcg_read16_bw,
+> +       .read32         = tpm_tcg_read32_bw,
+> +       .write32        = tpm_tcg_write32_bw,
+> +};
+> +
+> +static int tpm_tis_synquacer_init(struct device *dev, struct tpm_info *tpm_info)
+> +{
+> +       struct tpm_tis_tcg_phy *phy;
+> +       int irq = -1;
+> +
+> +       phy = devm_kzalloc(dev, sizeof(struct tpm_tis_tcg_phy), GFP_KERNEL);
+> +       if (phy == NULL)
+> +               return -ENOMEM;
+> +
+> +       phy->iobase = devm_ioremap_resource(dev, &tpm_info->res);
+> +       if (IS_ERR(phy->iobase))
+> +               return PTR_ERR(phy->iobase);
+> +
+> +       return tpm_tis_core_init(dev, &phy->priv, irq, &tpm_tcg_bw,
+> +                                ACPI_HANDLE(dev));
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(tpm_tis_synquacer_pm, tpm_pm_suspend, tpm_tis_resume);
+> +
+> +static int tpm_tis_synquacer_probe(struct platform_device *pdev)
+> +{
+> +       struct tpm_info tpm_info = {};
+> +       struct resource *res;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       if (res == NULL) {
+> +               dev_err(&pdev->dev, "no memory resource defined\n");
+> +               return -ENODEV;
+> +       }
+> +       tpm_info.res = *res;
+> +
+> +       tpm_info.irq = -1;
+> +
+> +       return tpm_tis_synquacer_init(&pdev->dev, &tpm_info);
+> +}
+> +
+> +static int tpm_tis_synquacer_remove(struct platform_device *pdev)
+> +{
+> +       struct tpm_chip *chip = dev_get_drvdata(&pdev->dev);
+> +
+> +       tpm_chip_unregister(chip);
+> +       tpm_tis_remove(chip);
+> +
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id tis_synquacer_of_platform_match[] = {
+> +       {.compatible = "socionext,synquacer-tpm-mmio"},
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, tis_synquacer_of_platform_match);
+> +#endif
+> +
+> +static struct platform_driver tis_synquacer_drv = {
+> +       .probe = tpm_tis_synquacer_probe,
+> +       .remove = tpm_tis_synquacer_remove,
+> +       .driver = {
+> +               .name           = "tpm_tis_synquacer",
+> +               .pm             = &tpm_tis_synquacer_pm,
+> +               .of_match_table = of_match_ptr(tis_synquacer_of_platform_match),
+> +       },
+> +};
+> +
+> +static int __init init_tis_synquacer(void)
+> +{
+> +       int rc;
+> +
+> +       rc = platform_driver_register(&tis_synquacer_drv);
+> +       if (rc)
+> +               return rc;
+> +
+> +       return 0;
+> +}
+> +
+> +static void __exit cleanup_tis_synquacer(void)
+> +{
+> +       platform_driver_unregister(&tis_synquacer_drv);
+> +}
+> +
+> +module_init(init_tis_synquacer);
+> +module_exit(cleanup_tis_synquacer);
+> +MODULE_AUTHOR("Masahisa Kojima (masahisa.kojima@linaro.org)");
+> +MODULE_DESCRIPTION("TPM MMIO Driver for Socionext SynQuacer platform");
+> +MODULE_VERSION("2.0");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.20.1
+>
