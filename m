@@ -2,77 +2,116 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB48CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51A0820760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D55B320739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730341AbgGHHWu (ORCPT
+        id S1730399AbgGHHXC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:22:50 -0400
-Received: from smtp21.cstnet.cn ([159.226.251.21]:53318 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730047AbgGHHWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:22:49 -0400
-Received: from localhost (unknown [159.226.5.99])
-        by APP-01 (Coremail) with SMTP id qwCowAAnCOk2dAVfs4CkBA--.31422S2;
-        Wed, 08 Jul 2020 15:22:31 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        vulab@iscas.ac.cn, linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] arch: powerpc: Remove unnecessary cast in kfree()
-Date:   Wed,  8 Jul 2020 07:22:28 +0000
-Message-Id: <20200708072228.30776-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: qwCowAAnCOk2dAVfs4CkBA--.31422S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JrWxWw4rXr1rWr1xuw17Wrg_yoW3GrbEk3
-        yvkFnFkrW0qrsavanxXF1xGFn2y393Xrs5KrnFga9rt345Xw15C3W3ZrW8Gay8Jry0yrZx
-        G3Z8tr98Zas3KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbzAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
-        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-        xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-        cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-        AvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-        7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUY6wZUUUUU
-X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwcLA102Yl76WQAAs8
+        Wed, 8 Jul 2020 03:23:02 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:43667 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729887AbgGHHXB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:23:01 -0400
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MD9Kp-1k1YsS10oD-009Bpy; Wed, 08 Jul 2020 09:22:57 +0200
+Received: by mail-qk1-f174.google.com with SMTP id k18so40595913qke.4;
+        Wed, 08 Jul 2020 00:22:56 -0700 (PDT)
+X-Gm-Message-State: AOAM531Ao9c8bH8WoE5qvjA7oR9rRwnqW6BN5uTxdxQpCeKqNmwjYWvE
+        TX/PfbVyVwlg71qIqb8nZwqe7xuLOc13eRRlVa4=
+X-Google-Smtp-Source: ABdhPJwUBcG/1BpiC+qdY+LuFzWvg9XDNkC9mO5dIZPmuPnsoF/bIile11NCgXsXdn50Udu/UrGJ9q4uKoPO8k6xQnA=
+X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr48812583qko.138.1594192975528;
+ Wed, 08 Jul 2020 00:22:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200707180955.53024-1-mic@digikod.net> <20200707180955.53024-10-mic@digikod.net>
+In-Reply-To: <20200707180955.53024-10-mic@digikod.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 8 Jul 2020 09:22:39 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0docCqHkEn9C7=e0GC_ieN1dsYgKQ9PbUmSZYxh9MRnw@mail.gmail.com>
+Message-ID: <CAK8P3a0docCqHkEn9C7=e0GC_ieN1dsYgKQ9PbUmSZYxh9MRnw@mail.gmail.com>
+Subject: Re: [PATCH v19 09/12] arch: Wire up landlock() syscall
+To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
+        Richard Weinberger <richard@nod.at>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:54NRw1C3ud7yaXwsDrOd/GoWcgIn8PrBSXpNEPKRDJ07a38YjAa
+ fRe0DbjudiX//y9B/2Q7TjMkX8N2Pk4mcWoFORSRZnfcYQP0fecoj89KkY5ctbHDoHzjtiJ
+ /krwi+bdtt85jBnNon7Wn3P1yIcUbi62dFhyfqEDkJePew/ow9aK3NN75MuWiDBAi6TrW9Q
+ QxDnDTzRoOBzQV6IFe1mg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LVeoa5/caPU=:khu0qv2J2g0myi8u7k17ig
+ bIYa6+/GI+nu5ZRnN2SU+D7AWzUNS+2ylYksn30ahSpwbech2IX7S43zNgFNtnjUSId+fdCIq
+ xSwjC+cyn9z2mzQcSEeDKYoz0RdmkHn8iHQTifNqtFCmd8XyHeA6UNTkSk2kMrv0JN3v64A9O
+ brEJLrsdSjMvkl7Mm74s6Lkfq88luCcNbA4nSg/rkDRL3p+MeFUrQbABjo8zkwzWChib7Mf/w
+ JzYC/gKGAxxyZYXH4upG/7BZWAF6TCVbs3AFWHiShf3DXagQCA/bnerjss1iVs2DTdod1Qox7
+ uKEMEcz+t5PLLPSphTGrV9xttZRLdXqc1DHoeopex4ZbGJXJFDMmD/mEg3iim49XHaoq7WZb1
+ 6SAB/ApMXFVQWlArmmIYT1O4z1FG3/trG/OQ+vdUYO+AEIkmxlzcRJC1NLi0cnW7KN6BAkKIg
+ szDVYZ8GhVTJMC1Javxfog5QlUGkXmtbJwNFjfVanGoMp017s+6P+823yOfJrBRWVEItshOUm
+ VvF1wP5iWhZOMW81ihKMWPPVK25t373uppN42MDNMFANNZpxEBImkIDRXKjlt3QCq93l762aQ
+ mbPTTN7YSjYCC+oGvdvJLoT4tpWl2U7ApCkGtG6d226v0xamxhFD9lvJyyWy+1btAkfELlzwk
+ GjsdzQHZW6QxsBZe3MTlDpBMp7/QqUvJNkBlL9GEVAId/Rd+kRzEbnNUTzeFQpgy3413ZBuWy
+ dRbs4VnRE+Wcp/EHCppclgSw6y7PZbIt1QdH/RgUPC0BMsg/Y1AX4tQvAXKN2sVq6kas7kCor
+ tAksJ3UU6OcxIEq0ZSr1H9vPzgYSnMC5eO8Si7tFrOCrPdmvYM0ynk9VZA5BMIFYdolpFi6tV
+ KwaMgh8f6vBCJzMZCnMfxs+Eo2FaauwEHBbrN/S0IZ4C4MD5vzjahC5zdvYsjuQXElTMuUslz
+ ZDE8LRZFk4/F55oIoPTtu5hSk85FIrVUrQ2MC7P6edfh9X75CsIn3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecassary casts in the argument to kfree.
+On Tue, Jul 7, 2020 at 8:10 PM Mickaël Salaün <mic@digikod.net> wrote:
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- arch/powerpc/platforms/pseries/dlpar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> index f4a01305d9a6..a63a411a74d5 100644
+> --- a/include/uapi/asm-generic/unistd.h
+> +++ b/include/uapi/asm-generic/unistd.h
+> @@ -857,9 +857,11 @@ __SYSCALL(__NR_openat2, sys_openat2)
+>  __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
+>  #define __NR_faccessat2 439
+>  __SYSCALL(__NR_faccessat2, sys_faccessat2)
+> +#define __NR_landlock 440
+> +__SYSCALL(__NR_landlock, sys_landlock)
+>
+>  #undef __NR_syscalls
+> -#define __NR_syscalls 440
+> +#define __NR_syscalls 441
 
-diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
-index 16e86ba8aa20..1f3d26806295 100644
---- a/arch/powerpc/platforms/pseries/dlpar.c
-+++ b/arch/powerpc/platforms/pseries/dlpar.c
-@@ -379,7 +379,7 @@ static void pseries_hp_work_fn(struct work_struct *work)
- 	handle_dlpar_errorlog(hp_work->errlog);
- 
- 	kfree(hp_work->errlog);
--	kfree((void *)work);
-+	kfree(work);
- }
- 
- void queue_hotplug_event(struct pseries_hp_errorlog *hp_errlog)
--- 
-2.17.1
+In linux-next, we already have:
 
++#define __NR_watch_mount 440
++#define __NR_watch_sb 441
++#define __NR_fsinfo 442
++#define __NR_process_madvise 443
+
+You may want to increase the number again.
+
+      Arnd
