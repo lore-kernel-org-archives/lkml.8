@@ -2,201 +2,374 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91508C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79862C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5946220708
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UbUNMvUe"
+	by mail.kernel.org (Postfix) with ESMTP id 531A120760
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgGHHQP (ORCPT
+        id S1730141AbgGHHQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:16:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56922 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729881AbgGHHQO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:16:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594192572;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=dx3HZ+yedwYcaidK+QZbCcB6z1aYUQHDgwu6LUEYe/4=;
-        b=UbUNMvUeC/lodaXM+IRgCoHShNxvHrSF53gIVKvQIoDrYDeVbubOTKdW8NJ1UKfE3zkeNd
-        VADa4L6BqTDTb31wrvHGcjzl6uA5wHPRKM9dkuODt9q/1cq6LWLmJVK29s4pebwSEvuCpp
-        EL9VK5UeeqOfy7XUriogwCcgnQEOLCk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-g9Z8KC3yNxm1InmXP6I2-g-1; Wed, 08 Jul 2020 03:16:08 -0400
-X-MC-Unique: g9Z8KC3yNxm1InmXP6I2-g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 078DD107ACCA;
-        Wed,  8 Jul 2020 07:16:06 +0000 (UTC)
-Received: from [10.36.113.117] (ovpn-113-117.ams2.redhat.com [10.36.113.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E375A10013D7;
-        Wed,  8 Jul 2020 07:16:02 +0000 (UTC)
-Subject: Re: [PATCH v2 1/3] arm64/numa: export memory_add_physaddr_to_nid as
- EXPORT_SYMBOL_GPL
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>, Justin He <Justin.He@arm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+        Wed, 8 Jul 2020 03:16:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:48172 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729757AbgGHHQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:16:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2A751FB;
+        Wed,  8 Jul 2020 00:16:42 -0700 (PDT)
+Received: from [192.168.0.129] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E53553F718;
+        Wed,  8 Jul 2020 00:16:38 -0700 (PDT)
+Subject: Re: [PATCH V3] mm/vmstat: Add events for THP migration without split
+To:     John Hubbard <jhubbard@nvidia.com>, linux-mm@kvack.org
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Kaly Xin <Kaly.Xin@arm.com>
-References: <20200707055917.143653-1-justin.he@arm.com>
- <20200707055917.143653-2-justin.he@arm.com>
- <20200707115454.GN5913@dhcp22.suse.cz>
- <AM6PR08MB406907F9F2B13DA6DC893AD9F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
- <CAPcyv4ipu4qwKhk4pzJ8nZB2sp+=AndahS8eCgUvFvVP6dEkeA@mail.gmail.com>
- <AM6PR08MB4069D0D1FD8FB31B6A56DDB5F7670@AM6PR08MB4069.eurprd08.prod.outlook.com>
- <CAPcyv4ivyJsyzcbkBWcqBYZMx3VdJF7+VPCNs177DU2rYqtz_A@mail.gmail.com>
- <20200708062217.GE386073@linux.ibm.com>
- <c4ee0a94-c980-80ca-c43d-15729e1a3663@redhat.com>
- <CAPcyv4inaZgmv=S36_DofA9prKhWg4KBNPkTvzSALO6Vtb9ddw@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <6aae78fa-b505-0f76-087b-d8b2146c62f1@redhat.com>
-Date:   Wed, 8 Jul 2020 09:16:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org
+References: <1594080415-27924-1-git-send-email-anshuman.khandual@arm.com>
+ <18a3af27-7cab-63d3-29b8-e253021622cc@nvidia.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <f252caee-0af6-8110-b36d-7a92092c34ad@arm.com>
+Date:   Wed, 8 Jul 2020 12:44:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4inaZgmv=S36_DofA9prKhWg4KBNPkTvzSALO6Vtb9ddw@mail.gmail.com>
+In-Reply-To: <18a3af27-7cab-63d3-29b8-e253021622cc@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.07.20 09:04, Dan Williams wrote:
-> On Tue, Jul 7, 2020 at 11:59 PM David Hildenbrand <david@redhat.com> wrote:
+
+On 07/08/2020 05:31 AM, John Hubbard wrote:
+> On 2020-07-06 17:06, Anshuman Khandual wrote:
+>> Add following new vmstat events which will help in validating THP migration
+>> without split. Statistics reported through these new VM events will help in
+>> performance debugging.
 >>
->> On 08.07.20 08:22, Mike Rapoport wrote:
->>> On Tue, Jul 07, 2020 at 09:27:43PM -0700, Dan Williams wrote:
->>>> On Tue, Jul 7, 2020 at 9:08 PM Justin He <Justin.He@arm.com> wrote:
->>>> [..]
->>>>>> Especially for architectures that use memblock info for numa info
->>>>>> (which seems to be everyone except x86) why not implement a generic
->>>>>> memory_add_physaddr_to_nid() that does:
->>>>>>
->>>>>> int memory_add_physaddr_to_nid(u64 addr)
->>>>>> {
->>>>>>         unsigned long start_pfn, end_pfn, pfn = PHYS_PFN(addr);
->>>>>>         int nid;
->>>>>>
->>>>>>         for_each_online_node(nid) {
->>>>>>                 get_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
->>>>>>                 if (pfn >= start_pfn && pfn <= end_pfn)
->>>>>>                         return nid;
->>>>>>         }
->>>>>>         return NUMA_NO_NODE;
->>>>>> }
->>>>>
->>>>> Thanks for your suggestion,
->>>>> Could I wrap the codes and let memory_add_physaddr_to_nid simply invoke
->>>>> phys_to_target_node()?
->>>>
->>>> I think it needs to be the reverse. phys_to_target_node() should call
->>>> memory_add_physaddr_to_nid() by default, but fall back to searching
->>>> reserved memory address ranges in memblock. See phys_to_target_node()
->>>> in arch/x86/mm/numa.c. That one uses numa_meminfo instead of memblock,
->>>> but the principle is the same i.e. that a target node may not be
->>>> represented in memblock.memory, but memblock.reserved. I'm working on
->>>> a patch to provide a function similar to get_pfn_range_for_nid() that
->>>> operates on reserved memory.
->>>
->>> Do we really need yet another memblock iterator?
->>> I think only x86 has memory that is not in memblock.memory but only in
->>> memblock.reserved.
+>> 1. THP_MIGRATION_SUCCESS
+>> 2. THP_MIGRATION_FAILURE
+>> 3. THP_MIGRATION_SPLIT
 >>
->> Reading about abusing the memblock allcoator once again in memory
->> hotplug paths makes me shiver.
+>> In addition, these new events also update normal page migration statistics
+>> appropriately via PGMIGRATE_SUCCESS and PGMIGRATE_FAILURE. While here, this
+>> updates current trace event 'mm_migrate_pages' to accommodate now available
+>> THP statistics.
+>>
+>> Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Zi Yan <ziy@nvidia.com>
+>> Cc: John Hubbard <jhubbard@nvidia.com>
+>> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > 
-> Technical reasoning please?
+> 
+> This is missing the Documentation/ Cc's, did you run scripts/get_maintainer.pl? I'm
+> adding linux-doc and Jonathan Corbet, for now at least. And I'll refrain from
+> trimming the reply.
 
-ARCH_KEEP_MEMBLOCK is (AFAIK) only a hack for arm64 to implement
-pfn_valid(), because they zap out individual pages corresponding to
-memory holes of full sections.
-
-I am not a friend of adding more post-init code to rely on memblock
-data. It just makes it harder to eventually get rid of ARCH_KEEP_MEMBLOCK.
+I had missed the Documention/ Cc's, thanks for adding them here. Will
+update the Cc list next time around.
 
 > 
-> arm64 numa information is established from memblock data. It seems
-> counterproductive to ignore that fact if we're already touching
-> memory_add_physaddr_to_nid() and have a use case for a driver to call
-> it.
+> 
+>> ---
+>> Changes in V3:
+>>
+>> - Formatted new events documentation with 'fmt' tool per Matthew
+>> - Made events universally available i.e dropped ARCH_ENABLE_THP_MIGRATION
+>> - Added THP_MIGRATION_SPLIT
+>> - Updated trace_mm_migrate_pages() with THP events
+>> - Made THP events update normal page migration events as well
+>>
+>> Changes in V2: (https://patchwork.kernel.org/patch/11586893/)
+>>
+>> - Dropped PMD reference both from code and commit message per Matthew
+>> - Added documentation and updated the commit message per Daniel
+>>
+>> Changes in V1: (https://patchwork.kernel.org/patch/11564497/)
+>>
+>> - Changed function name as thp_pmd_migration_success() per John
+>> - Folded in a fix (https://patchwork.kernel.org/patch/11563009/) from Hugh
+>>
+>> Changes in RFC V2: (https://patchwork.kernel.org/patch/11554861/)
+>>
+>> - Decopupled and renamed VM events from their implementation per Zi and John
+>> - Added THP_PMD_MIGRATION_FAILURE VM event upon allocation failure and split
+>>
+>> Changes in RFC V1: (https://patchwork.kernel.org/patch/11542055/)
+>>
+>>   Documentation/vm/page_migration.rst | 19 +++++++++++
+>>   include/linux/vm_event_item.h       |  3 ++
+>>   include/trace/events/migrate.h      | 17 ++++++++--
+>>   mm/migrate.c                        | 49 ++++++++++++++++++++++++++---
+>>   mm/vmstat.c                         |  3 ++
+>>   5 files changed, 84 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/Documentation/vm/page_migration.rst b/Documentation/vm/page_migration.rst
+>> index 1d6cd7db4e43..e65d49f3cf86 100644
+>> --- a/Documentation/vm/page_migration.rst
+>> +++ b/Documentation/vm/page_migration.rst
+>> @@ -253,5 +253,24 @@ which are function pointers of struct address_space_operations.
+>>        PG_isolated is alias with PG_reclaim flag so driver shouldn't use the flag
+>>        for own purpose.
+>>   +Quantifying Migration
+>> +=====================
+>> +Following events can be used to quantify page migration.
+>> +
+>> +1. PGMIGRATE_SUCCESS       /* Normal page migration success */
+> 
+> 
+> This doesn't explain what's going on with the new combined counter
+> behavior. See the proposal below.
+> 
+> 
+>> +2. PGMIGRATE_FAIL          /* Normal page migration failure */
+>> +3. THP_MIGRATION_SUCCESS   /* Transparent huge page migration success */
+>> +4. THP_MIGRATION_FAILURE   /* Transparent huge page migration failure */
+> 
+> 
+> Shouldn't that be THP_MIGRATION_FAIL, in order to match the existing naming
+> scheme here?
 
-... and we are trying to handle the "only a single dummy node" case
-(patch #2), or what am I missing? What is there to optimize currently?
+Sure, will change it.
 
--- 
-Thanks,
+> 
+> 
+>> +5. THP_MIGRATION_SPLIT     /* Transparent huge page got split, retried */
+>> +
+>> +THP_MIGRATION_SUCCESS is when THP is migrated successfully without getting
+>> +split into it's subpages. THP_MIGRATION_FAILURE is when THP could neither
+>> +be migrated nor be split. THP_MIGRATION_SPLIT is when THP could not
+>> +just be migrated as is but instead get split into it's subpages and later
+>> +retried as normal pages. THP events would also update normal page migration
+>> +statistics PGMIGRATE_SUCCESS and PGMIGRATE_FAILURE. These events will help
+>> +in quantifying and analyzing various THP migration events including both
+>> +success and failure cases.
+>> +
+> 
+> 
+> I would like to propose the following instead of the above. It's rewritten
+> so as to add explanations for the new behavior, remove the redundancy (the last
+> sentence in particular is a justification, and belongs in a commit log if anywhere,
+> not in the doc itself), fix a few typos, use the full 80 columns, and clarify a
+> bit as well. It uses the new THP_MIGRATION_FAIL name:
+> 
+> 
+> Monitoring Migration
+> =====================
+> 
+> The following events (counters) can be used to monitor page migration.
+> 
+> 1. PGMIGRATE_SUCCESS: Normal page migration success. Each count means that a
+>    page was migrated. If the page was a non-THP page, then this counter is
+>    increased by one. If the page was a THP, then this counter is increased by
+>    the number of THP subpages. For example, migration of a single 2MB THP that
+>    has 4KB-size base pages (subpages) will cause this counter to increase by
+>    512.
+> 
+> 2. PGMIGRATE_FAIL: Normal page migration failure. Same counting rules as for
+>    _SUCCESS, above: this will be increased by the number of subpages, if it was
+>    a THP.
+> 
+> 3. THP_MIGRATION_SUCCESS: A THP was migrated without being split.
+> 
+> 4. THP_MIGRATION_FAIL: A THP could not be migrated at all, even after being
+>    split.
+> 
+> 5. THP_MIGRATION_SPLIT: A THP was migrated, but not as such: first, the THP had
+>    to be split. After splitting, a migration retry was used for the sub-pages,
+>    and that retry succeeded.
 
-David / dhildenb
+The last part might not be true. All that THP_MIGRATION_SPLIT tracks is whether
+the THP was split or not. Whether it's subpages got successfully migrated later
+or not, would be hidden in overall PGMIGRATE_SUCCESS and PGMIGRATE_FAIL values.
 
+> 
+> THP_MIGRATION_* events also update the appropriate PGMIGRATE_SUCCESS or
+> PGMIGRATE_FAILURE events. For example, a THP migration failure will cause both
+> THP_MIGRATION_FAIL and PGMIGRATE_FAIL to increase.
+
+Above explanation (probably with some changes) looks better, will update. 
+
+> 
+> 
+>>   Christoph Lameter, May 8, 2006.
+>>   Minchan Kim, Mar 28, 2016.
+>> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
+>> index 24fc7c3ae7d6..5e7ffa025589 100644
+>> --- a/include/linux/vm_event_item.h
+>> +++ b/include/linux/vm_event_item.h
+>> @@ -95,6 +95,9 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+>>           THP_ZERO_PAGE_ALLOC_FAILED,
+>>           THP_SWPOUT,
+>>           THP_SWPOUT_FALLBACK,
+>> +        THP_MIGRATION_SUCCESS,
+>> +        THP_MIGRATION_FAILURE,
+>> +        THP_MIGRATION_SPLIT,
+>>   #endif
+>>   #ifdef CONFIG_MEMORY_BALLOON
+>>           BALLOON_INFLATE,
+>> diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
+>> index 705b33d1e395..4d434398d64d 100644
+>> --- a/include/trace/events/migrate.h
+>> +++ b/include/trace/events/migrate.h
+>> @@ -46,13 +46,18 @@ MIGRATE_REASON
+>>   TRACE_EVENT(mm_migrate_pages,
+>>         TP_PROTO(unsigned long succeeded, unsigned long failed,
+>> -         enum migrate_mode mode, int reason),
+>> +         unsigned long thp_succeeded, unsigned long thp_failed,
+>> +         unsigned long thp_split, enum migrate_mode mode, int reason),
+>>   -    TP_ARGS(succeeded, failed, mode, reason),
+>> +    TP_ARGS(succeeded, failed, thp_succeeded, thp_failed,
+>> +        thp_split, mode, reason),
+>>         TP_STRUCT__entry(
+>>           __field(    unsigned long,        succeeded)
+>>           __field(    unsigned long,        failed)
+>> +        __field(    unsigned long,        thp_succeeded)
+>> +        __field(    unsigned long,        thp_failed)
+>> +        __field(    unsigned long,        thp_split)
+>>           __field(    enum migrate_mode,    mode)
+>>           __field(    int,            reason)
+>>       ),
+>> @@ -60,13 +65,19 @@ TRACE_EVENT(mm_migrate_pages,
+>>       TP_fast_assign(
+>>           __entry->succeeded    = succeeded;
+>>           __entry->failed        = failed;
+>> +        __entry->thp_succeeded    = thp_succeeded;
+>> +        __entry->thp_failed    = thp_failed;
+>> +        __entry->thp_split    = thp_split;
+>>           __entry->mode        = mode;
+>>           __entry->reason        = reason;
+>>       ),
+>>   -    TP_printk("nr_succeeded=%lu nr_failed=%lu mode=%s reason=%s",
+>> +    TP_printk("nr_succeeded=%lu nr_failed=%lu nr_thp_succeeded=%lu nr_thp_failed=%lu nr_thp_split=%lu mode=%s reason=%s",
+>>           __entry->succeeded,
+>>           __entry->failed,
+>> +        __entry->thp_succeeded,
+>> +        __entry->thp_failed,
+>> +        __entry->thp_split,
+>>           __print_symbolic(__entry->mode, MIGRATE_MODE),
+>>           __print_symbolic(__entry->reason, MIGRATE_REASON))
+>>   );
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index f37729673558..baf3cc477d11 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1429,22 +1429,35 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
+>>           enum migrate_mode mode, int reason)
+>>   {
+>>       int retry = 1;
+>> +    int thp_retry = 1;
+>>       int nr_failed = 0;
+>>       int nr_succeeded = 0;
+>> +    int nr_thp_succeeded = 0;
+>> +    int nr_thp_failed = 0;
+>> +    int nr_thp_split = 0;
+>>       int pass = 0;
+>> +    bool is_thp = false;
+>>       struct page *page;
+>>       struct page *page2;
+>>       int swapwrite = current->flags & PF_SWAPWRITE;
+>> -    int rc;
+>> +    int rc, thp_nr_pages;
+>>         if (!swapwrite)
+>>           current->flags |= PF_SWAPWRITE;
+>>   -    for(pass = 0; pass < 10 && retry; pass++) {
+>> +    for (pass = 0; pass < 10 && (retry || thp_retry); pass++) {
+>>           retry = 0;
+>> +        thp_retry = 0;
+>>             list_for_each_entry_safe(page, page2, from, lru) {
+>>   retry:
+>> +            /*
+>> +             * THP statistics is based on the source huge page.
+>> +             * Capture required information that might get lost
+>> +             * during migration.
+>> +             */
+>> +            is_thp = PageTransHuge(page);
+>> +            thp_nr_pages = hpage_nr_pages(page);
+>>               cond_resched();
+>>                 if (PageHuge(page))
+>> @@ -1475,15 +1488,30 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
+>>                       unlock_page(page);
+>>                       if (!rc) {
+>>                           list_safe_reset_next(page, page2, lru);
+>> +                        nr_thp_split++;
+>>                           goto retry;
+>>                       }
+>>                   }
+>> +                if (is_thp) {
+>> +                    nr_thp_failed++;
+>> +                    nr_failed += thp_nr_pages;
+>> +                    goto out;
+>> +                }
+>>                   nr_failed++;
+>>                   goto out;
+>>               case -EAGAIN:
+>> +                if (is_thp) {
+>> +                    thp_retry++;
+>> +                    break;
+>> +                }
+>>                   retry++;
+>>                   break;
+>>               case MIGRATEPAGE_SUCCESS:
+>> +                if (is_thp) {
+>> +                    nr_thp_succeeded++;
+>> +                    nr_succeeded += thp_nr_pages;
+>> +                    break;
+>> +                }
+>>                   nr_succeeded++;
+>>                   break;
+>>               default:
+>> @@ -1493,19 +1521,32 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
+>>                    * removed from migration page list and not
+>>                    * retried in the next outer loop.
+>>                    */
+>> +                if (is_thp) {
+>> +                    nr_thp_failed++;
+>> +                    nr_failed += thp_nr_pages;
+>> +                    break;
+>> +                }
+>>                   nr_failed++;
+>>                   break;
+>>               }
+>>           }
+>>       }
+>> -    nr_failed += retry;
+>> +    nr_failed += retry + thp_retry;
+>> +    nr_thp_failed += thp_retry;
+>>       rc = nr_failed;
+>>   out:
+>>       if (nr_succeeded)
+>>           count_vm_events(PGMIGRATE_SUCCESS, nr_succeeded);
+>>       if (nr_failed)
+>>           count_vm_events(PGMIGRATE_FAIL, nr_failed);
+>> -    trace_mm_migrate_pages(nr_succeeded, nr_failed, mode, reason);
+>> +    if (nr_thp_succeeded)
+>> +        count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
+>> +    if (nr_thp_failed)
+>> +        count_vm_events(THP_MIGRATION_FAILURE, nr_thp_failed);
+>> +    if (nr_thp_split)
+>> +        count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
+> 
+> As mentioned in the other thread, those "ifs" should be removed. I think you
+> can also get away with removing the two pre-existing "ifs" in the same
+> patch, too, just to keep the whole set consistent and more readable.
+
+Makes sense, will do.
