@@ -6,172 +6,230 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB498C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF6C820772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3DB20786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594207179;
-	bh=eUgIo/46QmRmLemfChQoEWZQ6jErzhl1bOJQgWf5Cz4=;
+	s=default; t=1594207279;
+	bh=uEMpqJPXyTKnzmhKTl4BDaBptKj9HPBB3NJEF8PgMZQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IQWEjeiubvYJcOnztFpVncYlcjyvS7bOuj5PMiK0xGpWcQDCoX9TvM2zAPv0VE2eG
-	 iEL6H8+qD3AWN3TveM36OmNG06Mfo7kpY9GyPDm+3XV56Wa70dhI3XQ3bGu9y800OZ
-	 wAycpGBkw4q+PWm/5FQg0Dg9LexdZgJIBzafTuGs=
+	b=cga0iAxhx5WZWMxtHqqBaYQZZAzYsHxTwDaZ7WqxYBbKhEA7UGsjlUmN7RHuwLIOJ
+	 tE4CR4OKAzxZXROyEvqVuMwYvKXnK5HvUOu8y9Vf9eXw41R9TxKGoAdGbSUBwo3rLw
+	 reUXW9gk3A6E/TiGaCH8hkOYwQj8SinTfplsl+4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgGHLTi (ORCPT
+        id S1728757AbgGHLVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:19:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47236 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 07:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728763AbgGHLTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:19:38 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.179.83.96])
+        id S1728658AbgGHLVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 07:21:17 -0400
+Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C87220739;
-        Wed,  8 Jul 2020 11:19:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A3DD20772;
+        Wed,  8 Jul 2020 11:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594207177;
-        bh=eUgIo/46QmRmLemfChQoEWZQ6jErzhl1bOJQgWf5Cz4=;
+        s=default; t=1594207277;
+        bh=uEMpqJPXyTKnzmhKTl4BDaBptKj9HPBB3NJEF8PgMZQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x2Cu0abvdpzB9DdgFpKtPVV61a7eK8lqrnKy3W8XW016M3yrVw7i73ZvlO7RMDgrF
-         E9tEmq2EMV8PPcrt82ifFv4mqaQOY/Rwk8CTmRBIFoygAV2uNes8aRkDbFpNX2uIvx
-         08/pHGKDZ71HWeeNx37QeQazCES7qVb4xA7C3FI4=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 529E1405FF; Wed,  8 Jul 2020 08:19:35 -0300 (-03)
-Date:   Wed, 8 Jul 2020 08:19:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        b=D8pTFkZUH8jeoGYRQT7C/Ic0J8K38qjB1S6wFeIuEBzVZ4zt8DIMD6UQUArwaAV2K
+         Bp3KXeserCR9C/OsmSXM114UEHcmEbTnUvvxbWJ09de9YXXSojhz0b95gY6+BiInJI
+         2+Tj90Z4C4OYCYYLKx41rBtSY/TqH73enFJQDA1s=
+Date:   Wed, 8 Jul 2020 16:51:13 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf parse-events: report bpf errors
-Message-ID: <20200708111935.GK1320@kernel.org>
-References: <20200707211449.3868944-1-irogers@google.com>
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RESEND PATCH v7 2/2] devicetree: bindings: phy: Document
+ ipq806x dwc3 qcom phy
+Message-ID: <20200708112113.GG34333@vkoul-mobl>
+References: <20200615205333.20747-1-ansuelsmth@gmail.com>
+ <20200615205333.20747-2-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200707211449.3868944-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200615205333.20747-2-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jul 07, 2020 at 02:14:49PM -0700, Ian Rogers escreveu:
-> Setting the parse_events_error directly doesn't increment num_errors
-> causing the error message not to be displayed. Use the
-> parse_events__handle_error function that sets num_errors and handle
-> multiple errors.
+On 15-06-20, 22:53, Ansuel Smith wrote:
+> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+> inizialize and use usb on ipq806x SoC.
 
-What was the command line you used to exercise the error and then the
-fix?
+Rob ?
 
-- Arnaldo
-
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
->  tools/perf/util/parse-events.c | 38 ++++++++++++++++++----------------
->  1 file changed, 20 insertions(+), 18 deletions(-)
+> v7:
+> * Drop useless AllOf 
+> v6:
+> * Add maximum value
+> v5:
+> * Fix dt_binding_check error
+> v4:
+> * Add qcom to specific bindings
+> v3:
+> * Use explicit reg instead of regmap
 > 
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index c4906a6a9f1a..e88e4c7a2a9a 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -767,8 +767,8 @@ int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
->  
->  	return 0;
->  errout:
-> -	parse_state->error->help = strdup("(add -v to see detail)");
-> -	parse_state->error->str = strdup(errbuf);
-> +	parse_events__handle_error(parse_state->error, 0,
-> +				strdup(errbuf), strdup("(add -v to see detail)"));
->  	return err;
->  }
->  
-> @@ -784,36 +784,38 @@ parse_events_config_bpf(struct parse_events_state *parse_state,
->  		return 0;
->  
->  	list_for_each_entry(term, head_config, list) {
-> -		char errbuf[BUFSIZ];
->  		int err;
->  
->  		if (term->type_term != PARSE_EVENTS__TERM_TYPE_USER) {
-> -			snprintf(errbuf, sizeof(errbuf),
-> -				 "Invalid config term for BPF object");
-> -			errbuf[BUFSIZ - 1] = '\0';
-> -
-> -			parse_state->error->idx = term->err_term;
-> -			parse_state->error->str = strdup(errbuf);
-> +			parse_events__handle_error(parse_state->error, term->err_term,
-> +						strdup("Invalid config term for BPF object"),
-> +						NULL);
->  			return -EINVAL;
->  		}
->  
->  		err = bpf__config_obj(obj, term, parse_state->evlist, &error_pos);
->  		if (err) {
-> +			char errbuf[BUFSIZ];
-> +			int idx;
+>  .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 55 ++++++++++++++
+>  .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 73 +++++++++++++++++++
+>  2 files changed, 128 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+> new file mode 100644
+> index 000000000000..23887ebe08fd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  			bpf__strerror_config_obj(obj, term, parse_state->evlist,
->  						 &error_pos, err, errbuf,
->  						 sizeof(errbuf));
-> -			parse_state->error->help = strdup(
+> +title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
 > +
-> +			if (err == -BPF_LOADER_ERRNO__OBJCONF_MAP_VALUE)
-> +				idx = term->err_val;
-> +			else
-> +				idx = term->err_term + error_pos;
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
 > +
-> +			parse_events__handle_error(parse_state->error, idx,
-> +						strdup(errbuf),
-> +						strdup(
->  "Hint:\tValid config terms:\n"
->  "     \tmap:[<arraymap>].value<indices>=[value]\n"
->  "     \tmap:[<eventmap>].event<indices>=[event]\n"
->  "\n"
->  "     \twhere <indices> is something like [0,3...5] or [all]\n"
-> -"     \t(add -v to see detail)");
-> -			parse_state->error->str = strdup(errbuf);
-> -			if (err == -BPF_LOADER_ERRNO__OBJCONF_MAP_VALUE)
-> -				parse_state->error->idx = term->err_val;
-> -			else
-> -				parse_state->error->idx = term->err_term + error_pos;
-> +"     \t(add -v to see detail)"));
->  			return err;
->  		}
->  	}
-> @@ -877,8 +879,8 @@ int parse_events_load_bpf(struct parse_events_state *parse_state,
->  						   -err, errbuf,
->  						   sizeof(errbuf));
->  
-> -		parse_state->error->help = strdup("(add -v to see detail)");
-> -		parse_state->error->str = strdup(errbuf);
-> +		parse_events__handle_error(parse_state->error, 0,
-> +					strdup(errbuf), strdup("(add -v to see detail)"));
->  		return err;
->  	}
->  
+> +description:
+> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
+> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
+> +  own node.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq806x-usb-phy-hs
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: ref
+> +      - const: xo
+> +
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    hs_phy_0: phy@110f8800 {
+> +      compatible = "qcom,ipq806x-usb-phy-hs";
+> +      reg = <0x110f8800 0x30>;
+> +      clocks = <&gcc USB30_0_UTMI_CLK>;
+> +      clock-names = "ref";
+> +      #phy-cells = <0>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> new file mode 100644
+> index 000000000000..fa30c24b4405
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
+> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
+> +  own node.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq806x-usb-phy-ss
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: ref
+> +      - const: xo
+> +
+> +  qcom,rx-eq:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Override value for rx_eq.
+> +    default: 4
+> +    maximum: 7
+> +
+> +  qcom,tx-deamp-3_5db:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Override value for transmit preemphasis.
+> +    default: 23
+> +    maximum: 63
+> +
+> +  qcom,mpll:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Override value for mpll.
+> +    default: 0
+> +    maximum: 7
+> +
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    ss_phy_0: phy@110f8830 {
+> +      compatible = "qcom,ipq806x-usb-phy-ss";
+> +      reg = <0x110f8830 0x30>;
+> +      clocks = <&gcc USB30_0_MASTER_CLK>;
+> +      clock-names = "ref";
+> +      #phy-cells = <0>;
+> +    };
 > -- 
-> 2.27.0.383.g050319c2ae-goog
-> 
+> 2.25.1
 
 -- 
-
-- Arnaldo
+~Vinod
