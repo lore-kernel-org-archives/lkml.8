@@ -2,105 +2,137 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A053C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77DD620775
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:32:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcODy2Gu"
+	by mail.kernel.org (Postfix) with ESMTP id 7818720772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594240457;
+	bh=zDK5NXXZRSdLUVKIgw4PNxUgvgIS7unDdJHqM90eKH8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kFXoAf34U5afRGrFdS/OvFGcXa0m3FnLVR4U+iEgyUyGmSFgMQVt9Ln2JSzBHNv6K
+	 nqT1EkFzTvQtaaD8wEC129k+l/X/5YyS47QeKFi16dAal5xGZAW5ktruVRGi6i+pUd
+	 MbvwPIWaB0JSw49ICVG7H13X8URkksx8POPOYrUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgGHUcp (ORCPT
+        id S1726262AbgGHUeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGHUco (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:32:44 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C12BC061A0B;
-        Wed,  8 Jul 2020 13:32:44 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id o2so4518907wmh.2;
-        Wed, 08 Jul 2020 13:32:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BWHchiefPK+XOTzjJQ+4nudfM6T1kJ3R4r+KV6BHsM0=;
-        b=lcODy2Gu+QWAnBnAkIOmzziVbPMqUlV/u08v4JxX6n59setch3cdOg7Hq+L8IoooSh
-         jXaGfkSnRN6t5NwIYkX5gUoz5mrxUsAVHP1nI7u+D4gP/+qvFtVqrFEOyI14nenT6NBt
-         J+fFm6j1eC1x2TPqFEZSJ+6/G/hT48VopmGoQN+vvy/qLeeUGb93iZJ6rxDRfiRQDFjh
-         8f+o8AHY4j2nja/A6o3xHl2SXUyN0YGTXP56b9l0cc9InbsIMRxb22a4K1h4iIs24V/V
-         yLK/QNE0U1lGO6mdD5Dr3642DwlnZ3dAdkFWJwg53Hd3Kw3NnUL9DSanL+RajIvBnf3a
-         QLGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BWHchiefPK+XOTzjJQ+4nudfM6T1kJ3R4r+KV6BHsM0=;
-        b=VE3OnmbpU50CfDfxEgzUScRTEFvIivor+JwvUQfakTTOXDcOgppbuFKdXjcrjBiOR3
-         8mDZAWJSRtHwgTKNN3D7UnbxfJ9jIJM063j1cjGZi8bbiH/TTkDtZnINSFlivQoOTiAO
-         bn6fOrbdYU1ShVqupp5ThMsnNexUCS3OGZfM4xQsUgED+B/uz0BhmzowutHnD4q5vLhe
-         V7lACPMciqoCBCNWKiCavw04KGDsWlLOZ08SsDLh9WcN9p1OkptLzUcbqdVAg0YeLEG1
-         kAf/9LWRyFrK4z9vCEoG7BBNG4kFy4KtbUMsGMiuW8WCMETnpGIQhV7zIHLpolyffJqq
-         8g2A==
-X-Gm-Message-State: AOAM533hS4BcHT2l6zUHcqVLUwjA6N+7F1rzCSh+5m/U2c/clDhsS4LL
-        Zzowphl+wlOz0NE1RrwACLbdiQGi
-X-Google-Smtp-Source: ABdhPJxvTN6Wu8aBc/hXBxREqaAtUlzZSvk/MJVq7oOYj/XUSs/Kn0NZKzfin8g+fvkp4bQRtUmOiA==
-X-Received: by 2002:a7b:cb92:: with SMTP id m18mr9057074wmi.94.1594240362948;
-        Wed, 08 Jul 2020 13:32:42 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id s10sm1428653wme.31.2020.07.08.13.32.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 13:32:41 -0700 (PDT)
-Subject: Re: [PATCH][next] net: systemport: fix double shift of a vlan_tci by
- VLAN_PRIO_SHIFT
-To:     Colin King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200708183723.1212652-1-colin.king@canonical.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <3e581bfd-7447-881f-1e0b-9ab1ccd4496d@gmail.com>
-Date:   Wed, 8 Jul 2020 13:32:38 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Wed, 8 Jul 2020 16:34:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgGHUeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 16:34:12 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C08620739;
+        Wed,  8 Jul 2020 20:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594240451;
+        bh=zDK5NXXZRSdLUVKIgw4PNxUgvgIS7unDdJHqM90eKH8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zwFjDrTOyFTMMCbXLVvpwCsAWdyt8k2oQYfhW7sf9rTaJ5slRw+zUWaMZKwda7pNB
+         UHuaDeq7ISwU/NUhtK9hIzqSKb3fLqfIpydeaS3yCbrovgNzjDtF5JTmsoR0O8JJjH
+         fJsKLwclEhtcvO13tweH5wWCMPCeSNSLZMwcKy6E=
+Date:   Wed, 8 Jul 2020 13:34:09 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Alex Elder <elder@linaro.org>, "# 3.4.x" <stable@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH] bitfield.h: don't compile-time validate _val in
+ FIELD_FIT
+Message-ID: <20200708133409.72c037bd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <CAKwvOd=PrNG9WqBc4P43-XK7pOD4rQg4FA8Gd27OdUYb2qMDdw@mail.gmail.com>
+References: <20200707211642.1106946-1-ndesaulniers@google.com>
+        <bca8cff8-3ffe-e5ab-07a5-2ab29d5e394a@linaro.org>
+        <CAKwvOdmtv2EdNQz+c_DZm_47EEibkaXfDW8dGPwNPA3OrcoC9g@mail.gmail.com>
+        <20997cd9-91e5-ca83-218d-4fd5af128893@linaro.org>
+        <CAKwvOd=PrNG9WqBc4P43-XK7pOD4rQg4FA8Gd27OdUYb2qMDdw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200708183723.1212652-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/8/2020 11:37 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Wed, 8 Jul 2020 10:56:43 -0700 Nick Desaulniers wrote:
+> On Wed, Jul 8, 2020 at 10:34 AM Alex Elder <elder@linaro.org> wrote:
+> >
+> > I understand why something needs to be done to handle that case.
+> > There's fancy macro gymnastics in "bitfield.h" to add convenient
+> > build-time checks for usage problems; I just thought there might
+> > be something we could do to preserve the checking--even in this
+> > case.  But figuring that out takes more time than I was willing
+> > to spend on it yesterday...  
 > 
-> Currently the u16 skb->vlan_tci is being right  shifted twice by
-> VLAN_PRIO_SHIFT, once in the macro skb_vlan_tag_get_pri and explicitly
-> by VLAN_PRIO_SHIFT afterwards. The combined shift amount is larger than
-> the u16 so the end result is always zero.  Remove the second explicit
-> shift as this is extraneous.
+> I also find the use of 0U in FIELD_GET sticks out from the use of 0ULL
+> or (0ull) in these macros (hard to notice, but I changed it in my diff
+> to 0ULL).  Are there implicit promotion+conversion bugs here?  I don't
+> know, but I'd rather not think about it by just using types of the
+> same width and signedness.
+
+TBH I just copied the type from other arguments. It doesn't matter
+in practice now in this case. I have no preference.
+
+> > >> A second comment about this is that it might be nice to break
+> > >> __BF_FIELD_CHECK() into the parts that verify the mask (which
+> > >> could be used by FIELD_FIT() here) and the parts that verify
+> > >> other things.  
+> > >
+> > > Like so? Jakub, WDYT? Or do you prefer v1+Alex's suggestion about
+> > > using `(typeof(_mask))0` in place of 0ULL?  
+> >
+> > Yes, very much like that!  But you could do that as a follow-on
+> > instead, so as not to delay or confuse things.  
 > 
-> Fixes: 6e9fdb60d362 ("net: systemport: Add support for VLAN transmit acceleration")
-> Addresses-Coverity: ("Operands don't affect result")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> No rush; let's get it right.
+> 
+> So I can think of splitting this into maybe 3 patches, based on feedback:
+> 1. there's a bug in compile time validating _val in FIELD_FIT, since
+> we want to be able to call it at runtime with "bad" values.
+> 2. the FIELD_* macros use constants (0ull, 0ULL, 0U) that don't match
+> typeof(_mask).
+> 3. It might be nice to break up __BF_FIELD_CHECK.
+>
+> I don't think anyone's raised an objection to 1.
+> 
+> Assuming Jakub is ok with 3, fixing 3 will actually also address 2.
+> So then we don't need 3 patches; only 2.  But if we don't do 3 first,
+> then I have to resend a v2 of 1 anyways to address 2 (which was Alex's
+> original feedback).
+> 
+> My above diff was all three in one go, but I don't think it would be
+> unreasonable to break it up into 3 then 1.
+> 
+> If we prefer not to do 3, then I can send a v2 of 1 that addresses the
+> inconsistent use of types, as one or two patches.
+> 
+> Jakub, what is your preference?
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+I don't see much point in breaking up the checking macro. But even less
+in arguing either way :)
 
-The change was forward ported from a 4.9 kernel where the shift is not
-done, I should have checked the helper usage, thanks!
--- 
-Florian
+> (Also, noting that I'm sending to David, assuming he'll pick up the
+> patches once we have everyone's buy in? Or is there someone else more
+> appropriate to accept changes to this header? I guess Jakub and David
+> are the listed maintainers for
+> drivers/net/ethernet/netronome/nfp/nfpcore/nfp_nsp_eth.c)
+
+Seems reasonable, put [PATCH net] in the subject to make that explicit.
