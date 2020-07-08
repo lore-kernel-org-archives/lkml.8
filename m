@@ -2,556 +2,272 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E41C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61054C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF8320739
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C10220708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 01:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="k74T35OZ"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="oPOUs7hu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbgGHBUK (ORCPT
+        id S1729296AbgGHBUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jul 2020 21:20:10 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39683 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbgGHBUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jul 2020 21:20:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1hLW29nyz9sQt;
-        Wed,  8 Jul 2020 11:20:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594171205;
-        bh=1SRs0qM/XCA9VtNC+LXwvIDQOGghg+mZ1IRULHhvWZ0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=k74T35OZkD2JdCEtInGOkU88Fll1h9wS2bGhSdAnYUzzPfgrjEqnhNym6AQHnQXPa
-         X2cUcEaizIQpu+r/HeKWue0iyHkE79gSBme1fUhDKFNfnOTgV0yy3lSGouTFVyClPY
-         8aSKerozBBsQ4mcIrR7wBeenCz9Kx//vF+VqPdhlh87Ac0Ap4uyNSojTlIBmwRfTPe
-         NiSs/aqEnwevUgISJV6LPNauraXDIQdn3ByWA9C8VapCB4v+G0eNGBz8qBdQ6NXynB
-         +PhNCZOzoG+YeJw6lxR/VXnAUhvxHRZsaBD0WDodKMPHaTTP7gQ7sGTN6anh4/ABaH
-         Wvb7EFUt8mGyg==
-Date:   Wed, 8 Jul 2020 11:20:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jonathan Corbet <corbet@lwn.net>, Theodore Ts'o <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chao Yu <yuchao0@huawei.com>,
-        Satya Tangirala <satyat@google.com>
-Subject: linux-next: manual merge of the jc_docs tree with the fscrypt and
- f2fs trees
-Message-ID: <20200708112002.26a87970@canb.auug.org.au>
+        Tue, 7 Jul 2020 21:20:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728589AbgGHBUt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jul 2020 21:20:49 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C9CC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jul 2020 18:20:48 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id k18so40062899qke.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jul 2020 18:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=T4M1B4qM+7ZvUDq044qTiNIFQ+YmibanY8+olYKTuis=;
+        b=oPOUs7hui+vx+MfAq53b7oyxVn9FPPpZJcI2qOZGjRKdoLs503PtAH1IYUaqGmaVdB
+         HGLtS5DYEqGKw/6DGVF91mlmkABv+Sqg6HiR1Y2peF7oj95iyBn7pC4D5rpWYxmTTsGG
+         7fpUuIc7i0XYQGOnIvdhiVGpXr2MNzE5l1eP/SNMoC/TW2tTfY7OLhADrnMGBSRYoY/L
+         bYCFp9hLddKoX0xHaVGB5kMBauaBb4eaaocA/nbxlTBUwUHMBD2fTIcWUczhTxxnyCWV
+         o5z7S7xfAHrUzG7XyGbinhUQwHQhKpoOJt6+04iUZf3RUP51qo4L10uf6VGSKwwQBSSG
+         VSsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=T4M1B4qM+7ZvUDq044qTiNIFQ+YmibanY8+olYKTuis=;
+        b=LuC6cAyBFJigyoMf0ZNt2MSe1WjPWbANXS3Jov2eKzPEF6c6S8JdQSojcGByPCEhWk
+         Q5u119XMwo3WDkEv7z27g2QW+e6hVSRd/PerPPfpUO/YgpwQiNU8tmN1jjylzYG6IgSe
+         Ioz4BjlPledbIFCx8lJCN6ADZug58w51vkRiM3e1LcxCGs3UkjcUbCY/TCPNue78zczM
+         WEAHxNPXXW69Fgr1+yqvxw6e6SurdY+qOoxQtUCbgSUWRFq2H4NlrJS6sZUAap3wueQ8
+         /fDdeHJLaNqlXxnRF45LxYylKlUirerfNzFthhF2UgVtW0FMTTopNaqJNIFX0hCMOfGU
+         uuXg==
+X-Gm-Message-State: AOAM5316grlyRbhhsFKMx5V091B7h4YFU+JqxGgNAPFTZlLIOJWSrub5
+        pWlJuevDe1HoRj/y1SexNnsnJQ==
+X-Google-Smtp-Source: ABdhPJzZAOBZ9qmphfIpmS50P4guPlKVzwppY95PUCu8u0a/NhfJ7V0x1+mP14gm92imEAw1uDHvcA==
+X-Received: by 2002:a37:4fd1:: with SMTP id d200mr16320898qkb.163.1594171247229;
+        Tue, 07 Jul 2020 18:20:47 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q189sm25794624qke.21.2020.07.07.18.20.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 18:20:46 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 21:20:44 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH v3 7/8] mm/mempolicy: use a standard migration target
+ allocation callback
+Message-ID: <20200708012044.GC992@lca.pw>
+References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592892828-1934-8-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/OUgRDeQ9kLxtghygOoSqwd5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592892828-1934-8-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/OUgRDeQ9kLxtghygOoSqwd5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 23, 2020 at 03:13:47PM +0900, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> There is a well-defined migration target allocation callback.
+> Use it.
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> ---
+>  mm/internal.h  |  1 -
+>  mm/mempolicy.c | 30 ++++++------------------------
+>  mm/migrate.c   |  8 ++++++--
+>  3 files changed, 12 insertions(+), 27 deletions(-)
+> 
+> diff --git a/mm/internal.h b/mm/internal.h
+> index fb7f7fe..4f9f6b6 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -613,7 +613,6 @@ static inline bool is_migrate_highatomic_page(struct page *page)
+>  }
+>  
+>  void setup_zone_pageset(struct zone *zone);
+> -extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
+>  
+>  struct migration_target_control {
+>  	int nid;		/* preferred node id */
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index a3abf64..85a3f21 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -1065,28 +1065,6 @@ static int migrate_page_add(struct page *page, struct list_head *pagelist,
+>  	return 0;
+>  }
+>  
+> -/* page allocation callback for NUMA node migration */
+> -struct page *alloc_new_node_page(struct page *page, unsigned long node)
+> -{
+> -	if (PageHuge(page)) {
+> -		return alloc_huge_page_nodemask(
+> -			page_hstate(compound_head(page)), node,
+> -			NULL, __GFP_THISNODE, false);
+> -	} else if (PageTransHuge(page)) {
+> -		struct page *thp;
+> -
+> -		thp = alloc_pages_node(node,
+> -			(GFP_TRANSHUGE | __GFP_THISNODE),
+> -			HPAGE_PMD_ORDER);
+> -		if (!thp)
+> -			return NULL;
+> -		prep_transhuge_page(thp);
+> -		return thp;
+> -	} else
+> -		return __alloc_pages_node(node, GFP_HIGHUSER_MOVABLE |
+> -						    __GFP_THISNODE, 0);
+> -}
+> -
+>  /*
+>   * Migrate pages from one node to a target node.
+>   * Returns error or the number of pages not migrated.
+> @@ -1097,6 +1075,10 @@ static int migrate_to_node(struct mm_struct *mm, int source, int dest,
+>  	nodemask_t nmask;
+>  	LIST_HEAD(pagelist);
+>  	int err = 0;
+> +	struct migration_target_control mtc = {
+> +		.nid = dest,
+> +		.gfp_mask = GFP_HIGHUSER_MOVABLE | __GFP_THISNODE,
+> +	};
+>  
+>  	nodes_clear(nmask);
+>  	node_set(source, nmask);
+> @@ -1111,8 +1093,8 @@ static int migrate_to_node(struct mm_struct *mm, int source, int dest,
+>  			flags | MPOL_MF_DISCONTIG_OK, &pagelist);
+>  
+>  	if (!list_empty(&pagelist)) {
+> -		err = migrate_pages(&pagelist, alloc_new_node_page, NULL, dest,
+> -					MIGRATE_SYNC, MR_SYSCALL);
+> +		err = migrate_pages(&pagelist, alloc_migration_target, NULL,
+> +				(unsigned long)&mtc, MIGRATE_SYNC, MR_SYSCALL);
+>  		if (err)
+>  			putback_movable_pages(&pagelist);
+>  	}
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 7c4cd74..1c943b0 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1590,9 +1590,13 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+>  		struct list_head *pagelist, int node)
+>  {
+>  	int err;
+> +	struct migration_target_control mtc = {
+> +		.nid = node,
+> +		.gfp_mask = GFP_HIGHUSER_MOVABLE | __GFP_THISNODE,
+> +	};
+>  
+> -	err = migrate_pages(pagelist, alloc_new_node_page, NULL, node,
+> -			MIGRATE_SYNC, MR_SYSCALL);
+> +	err = migrate_pages(pagelist, alloc_migration_target, NULL,
+> +			(unsigned long)&mtc, MIGRATE_SYNC, MR_SYSCALL);
 
-Hi all,
+migrate_pages() starts failing like this apparently using the new
+callback on NUMA systems,
 
-Today's linux-next merge of the jc_docs tree got a conflict in:
+[ 6147.019063][T45242] LTP: starting move_pages12
+[ 6147.475680][T64921] BUG: unable to handle page fault for address: ffffffffffffffe0
+[ 6147.483301][T64921] #PF: supervisor read access in kernel mode
+[ 6147.489170][T64921] #PF: error_code(0x0000) - not-present page
+[ 6147.495040][T64921] PGD 5df817067 P4D 5df817067 PUD 5df819067 PMD 0 
+[ 6147.501438][T64921] Oops: 0000 [#1] SMP KASAN NOPTI
+[ 6147.506348][T64921] CPU: 35 PID: 64921 Comm: move_pages12 Tainted: G           O      5.8.0-rc4-next-20200707 #1
+[ 6147.516586][T64921] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+[ 6147.525866][T64921] RIP: 0010:anon_vma_interval_tree_iter_first+0xa2/0x170
+avc_start_pgoff at mm/interval_tree.c:63
+(inlined by) __anon_vma_interval_tree_iter_first at mm/interval_tree.c:71
+(inlined by) anon_vma_interval_tree_iter_first at mm/interval_tree.c:95
+[ 6147.532787][T64921] Code: 00 00 00 00 fc ff df 48 8b 6d 08 48 8d 7d e0 48 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 b3 00 00 00 48 b8 00 00 00 00 00 fc ff df <48> 8b 6d e0 48 8d bd 98 00 00 00 48 89 f9 48 c1 e9 03 80 3c 01 00
+[ 6147.552370][T64921] RSP: 0018:ffffc9000bfdfa98 EFLAGS: 00010246
+[ 6147.558327][T64921] RAX: dffffc0000000000 RBX: ffff888524019b28 RCX: 1ffffffffffffffc
+[ 6147.566205][T64921] RDX: 00000000000003ff RSI: 0000000000000200 RDI: ffffffffffffffe0
+[ 6147.574084][T64921] RBP: 0000000000000000 R08: fffff94002b1c001 R09: fffff94002b1c001
+[ 6147.581962][T64921] R10: ffffea00158e0007 R11: fffff94002b1c000 R12: 0000000000000009
+[ 6147.589839][T64921] R13: ffffea00158e0008 R14: ffffea00158e0000 R15: ffffea00158e0000
+[ 6147.597717][T64921] FS:  00007f329cf18b80(0000) GS:ffff88881f7c0000(0000) knlGS:0000000000000000
+[ 6147.606557][T64921] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 6147.613037][T64921] CR2: ffffffffffffffe0 CR3: 000000081122a000 CR4: 00000000003506e0
+[ 6147.620914][T64921] Call Trace:
+[ 6147.624078][T64921]  rmap_walk_anon+0x141/0xa30
+rmap_walk_anon at mm/rmap.c:1864
+[ 6147.628639][T64921]  try_to_unmap+0x209/0x2d0
+try_to_unmap at mm/rmap.c:1763
+[ 6147.633026][T64921]  ? rmap_walk_locked+0x140/0x140
+[ 6147.637936][T64921]  ? page_remove_rmap+0x1190/0x1190
+[ 6147.643020][T64921]  ? page_not_mapped+0x10/0x10
+[ 6147.647668][T64921]  ? page_get_anon_vma+0x290/0x290
+[ 6147.652664][T64921]  ? page_mapcount_is_zero+0x10/0x10
+[ 6147.657838][T64921]  ? hugetlb_page_mapping_lock_write+0x97/0x180
+[ 6147.663972][T64921]  migrate_pages+0x1005/0x1fb0
+unmap_and_move_huge_page at mm/migrate.c:1383
+(inlined by) migrate_pages at mm/migrate.c:1468
+[ 6147.668617][T64921]  ? remove_migration_pte+0xac0/0xac0
+[ 6147.673875][T64921]  move_pages_and_store_status.isra.47+0xd7/0x1a0
+do_move_pages_to_node at mm/migrate.c:1595
+(inlined by) move_pages_and_store_status at mm/migrate.c:1683
+[ 6147.680181][T64921]  ? migrate_pages+0x1fb0/0x1fb0
+[ 6147.685002][T64921]  __x64_sys_move_pages+0xa5c/0x1100
+[ 6147.690176][T64921]  ? trace_hardirqs_on+0x20/0x1b5
+[ 6147.695084][T64921]  ? move_pages_and_store_status.isra.47+0x1a0/0x1a0
+[ 6147.701653][T64921]  ? rcu_read_lock_sched_held+0xaa/0xd0
+[ 6147.707088][T64921]  ? switch_fpu_return+0x196/0x400
+[ 6147.712083][T64921]  ? lockdep_hardirqs_on_prepare+0x38c/0x550
+[ 6147.717954][T64921]  ? do_syscall_64+0x24/0x310
+[ 6147.722513][T64921]  do_syscall_64+0x5f/0x310
+[ 6147.726897][T64921]  ? trace_hardirqs_off+0x12/0x1a0
+[ 6147.731894][T64921]  ? asm_exc_page_fault+0x8/0x30
+[ 6147.736714][T64921]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 6147.742495][T64921] RIP: 0033:0x7f329c3fe6ed
+[ 6147.746791][T64921] Code: Bad RIP value.
+[ 6147.750738][T64921] RSP: 002b:00007fff5b6b5f88 EFLAGS: 00000246 ORIG_RAX: 0000000000000117
+[ 6147.759055][T64921] RAX: ffffffffffffffda RBX: 00007f329cf18af8 RCX: 00007f329c3fe6ed
+[ 6147.766933][T64921] RDX: 00000000019b0ee0 RSI: 0000000000000400 RDI: 000000000000fd98
+[ 6147.774809][T64921] RBP: 0000000000000400 R08: 00000000019b3f00 R09: 0000000000000004
+[ 6147.782686][T64921] R10: 00000000019b2ef0 R11: 0000000000000246 R12: 0000000000000400
+[ 6147.790563][T64921] R13: 00000000019b0ee0 R14: 00000000019b2ef0 R15: 00000000019b3f00
+[ 6147.798440][T64921] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio loop kvm_amd ses enclosure kvm irqbypass efivars acpi_cpufreq nls_ascii nls_cp437 vfat fat efivarfs ip_tables x_tables sd_mod smartpqi scsi_transport_sas tg3 mlx5_core libphy firmware_class dm_mirror dm_region_hash dm_log dm_mod [last unloaded: dummy_del_mod]
+[ 6147.828701][T64921] CR2: ffffffffffffffe0
+[ 6147.832736][T64921] ---[ end trace 40323b256f1c74a8 ]---
+[ 6147.838083][T64921] RIP: 0010:anon_vma_interval_tree_iter_first+0xa2/0x170
+[ 6147.845001][T64921] Code: 00 00 00 00 fc ff df 48 8b 6d 08 48 8d 7d e0 48 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 b3 00 00 00 48 b8 00 00 00 00 00 fc ff df <48> 8b 6d e0 48 8d bd 98 00 00 00 48 89 f9 48 c1 e9 03 80 3c 01 00
+[ 6147.864583][T64921] RSP: 0018:ffffc9000bfdfa98 EFLAGS: 00010246
+[ 6147.870539][T64921] RAX: dffffc0000000000 RBX: ffff888524019b28 RCX: 1ffffffffffffffc
+[ 6147.878417][T64921] RDX: 00000000000003ff RSI: 0000000000000200 RDI: ffffffffffffffe0
+[ 6147.886294][T64921] RBP: 0000000000000000 R08: fffff94002b1c001 R09: fffff94002b1c001
+[ 6147.894172][T64921] R10: ffffea00158e0007 R11: fffff94002b1c000 R12: 0000000000000009
+[ 6147.902049][T64921] R13: ffffea00158e0008 R14: ffffea00158e0000 R15: ffffea00158e0000
+[ 6147.909932][T64921] FS:  00007f329cf18b80(0000) GS:ffff88881f7c0000(0000) knlGS:0000000000000000
+[ 6147.918771][T64921] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 6147.925251][T64921] CR2: ffffffffffffffe0 CR3: 000000081122a000 CR4: 00000000003506e0
+[ 6147.933130][T64921] Kernel panic - not syncing: Fatal exception
+[ 6147.939493][T64921] Kernel Offset: 0x28c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[ 6147.951090][T64921] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-  Documentation/filesystems/f2fs.rst
-
-between commits:
-
-  38dff4e50c12 ("f2fs: add inline encryption support")
-  a7c77c387b60 ("f2fs: fix to document reserved special compression extensi=
-on")
-
-from the fscrypt and f2fs trees and commit:
-
-  9aa1ccb4e588 ("docs: f2fs: fix a broken table")
-
-from the jc_docs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/filesystems/f2fs.rst
-index 7b2649ee2ad7,1e7dade24a19..000000000000
---- a/Documentation/filesystems/f2fs.rst
-+++ b/Documentation/filesystems/f2fs.rst
-@@@ -101,173 -101,164 +101,173 @@@ Mount Option
-  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- =20
- =20
-- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-- background_gc=3D%s       Turn on/off cleaning operations, namely garbage
--                        collection, triggered in background when I/O subsy=
-stem is
--                        idle. If background_gc=3Don, it will turn on the g=
-arbage
--                        collection and if background_gc=3Doff, garbage col=
-lection
--                        will be turned off. If background_gc=3Dsync, it wi=
-ll turn
--                        on synchronous garbage collection running in backg=
-round.
--                        Default value for this option is on. So garbage
--                        collection is on by default.
-- disable_roll_forward   Disable the roll-forward recovery routine
-- norecovery             Disable the roll-forward recovery routine, mounted=
- read-
--                        only (i.e., -o ro,disable_roll_forward)
-- discard/nodiscard      Enable/disable real-time discard in f2fs, if disca=
-rd is
--                        enabled, f2fs will issue discard/TRIM commands whe=
-n a
-- 		       segment is cleaned.
-- no_heap                Disable heap-style segment allocation which finds =
-free
--                        segments for data from the beginning of main area,=
- while
-- 		       for node from the end of main area.
-- nouser_xattr           Disable Extended User Attributes. Note: xattr is e=
-nabled
--                        by default if CONFIG_F2FS_FS_XATTR is selected.
-- noacl                  Disable POSIX Access Control List. Note: acl is en=
-abled
--                        by default if CONFIG_F2FS_FS_POSIX_ACL is selected.
-- active_logs=3D%u         Support configuring the number of active logs. I=
-n the
--                        current design, f2fs supports only 2, 4, and 6 log=
-s.
--                        Default number is 6.
-- disable_ext_identify   Disable the extension list configured by mkfs, so =
-f2fs
--                        does not aware of cold files such as media files.
-- inline_xattr           Enable the inline xattrs feature.
-- noinline_xattr         Disable the inline xattrs feature.
-- inline_xattr_size=3D%u   Support configuring inline xattr size, it depend=
-s on
-- 		       flexible inline xattr feature.
-- inline_data            Enable the inline data feature: New created small(=
-<~3.4k)
--                        files can be written into inode block.
-- inline_dentry          Enable the inline dir feature: data in new created
--                        directory entries can be written into inode block.=
- The
--                        space of inode block which is used to store inline
--                        dentries is limited to ~3.4k.
-- noinline_dentry        Disable the inline dentry feature.
-- flush_merge	       Merge concurrent cache_flush commands as much as possi=
-ble
--                        to eliminate redundant command issues. If the unde=
-rlying
-- 		       device handles the cache_flush command relatively slowly,
-- 		       recommend to enable this option.
-- nobarrier              This option can be used if underlying storage guar=
-antees
--                        its cached data should be written to the novolatil=
-e area.
-- 		       If this option is set, no cache_flush commands are issued
-- 		       but f2fs still guarantees the write ordering of all the
-- 		       data writes.
-- fastboot               This option is used when a system wants to reduce =
-mount
--                        time as much as possible, even though normal perfo=
-rmance
-- 		       can be sacrificed.
-- extent_cache           Enable an extent cache based on rb-tree, it can ca=
-che
--                        as many as extent which map between contiguous log=
-ical
--                        address and physical address per inode, resulting =
-in
--                        increasing the cache hit ratio. Set by default.
-- noextent_cache         Disable an extent cache based on rb-tree explicitl=
-y, see
--                        the above extent_cache mount option.
-- noinline_data          Disable the inline data feature, inline data featu=
-re is
--                        enabled by default.
-- data_flush             Enable data flushing before checkpoint in order to
--                        persist data of regular and symlink.
-- reserve_root=3D%d        Support configuring reserved space which is used=
- for
--                        allocation from a privileged user with specified u=
-id or
--                        gid, unit: 4KB, the default limit is 0.2% of user =
-blocks.
-- resuid=3D%d              The user ID which may use the reserved blocks.
-- resgid=3D%d              The group ID which may use the reserved blocks.
-- fault_injection=3D%d     Enable fault injection in all supported types wi=
-th
--                        specified injection rate.
-- fault_type=3D%d          Support configuring fault injection type, should=
- be
--                        enabled with fault_injection option, fault type va=
-lue
--                        is shown below, it supports single or combined typ=
-e.
-+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+ background_gc=3D%s	 Turn on/off cleaning operations, namely garbage
-+ 			 collection, triggered in background when I/O subsystem is
-+ 			 idle. If background_gc=3Don, it will turn on the garbage
-+ 			 collection and if background_gc=3Doff, garbage collection
-+ 			 will be turned off. If background_gc=3Dsync, it will turn
-+ 			 on synchronous garbage collection running in background.
-+ 			 Default value for this option is on. So garbage
-+ 			 collection is on by default.
-+ disable_roll_forward	 Disable the roll-forward recovery routine
-+ norecovery		 Disable the roll-forward recovery routine, mounted read-
-+ 			 only (i.e., -o ro,disable_roll_forward)
-+ discard/nodiscard	 Enable/disable real-time discard in f2fs, if discard is
-+ 			 enabled, f2fs will issue discard/TRIM commands when a
-+ 			 segment is cleaned.
-+ no_heap			 Disable heap-style segment allocation which finds free
-+ 			 segments for data from the beginning of main area, while
-+ 			 for node from the end of main area.
-+ nouser_xattr		 Disable Extended User Attributes. Note: xattr is enabled
-+ 			 by default if CONFIG_F2FS_FS_XATTR is selected.
-+ noacl			 Disable POSIX Access Control List. Note: acl is enabled
-+ 			 by default if CONFIG_F2FS_FS_POSIX_ACL is selected.
-+ active_logs=3D%u		 Support configuring the number of active logs. In the
-+ 			 current design, f2fs supports only 2, 4, and 6 logs.
-+ 			 Default number is 6.
-+ disable_ext_identify	 Disable the extension list configured by mkfs, so f=
-2fs
-+ 			 does not aware of cold files such as media files.
-+ inline_xattr		 Enable the inline xattrs feature.
-+ noinline_xattr		 Disable the inline xattrs feature.
-+ inline_xattr_size=3D%u	 Support configuring inline xattr size, it depends=
- on
-+ 			 flexible inline xattr feature.
-+ inline_data		 Enable the inline data feature: New created small(<~3.4k)
-+ 			 files can be written into inode block.
-+ inline_dentry		 Enable the inline dir feature: data in new created
-+ 			 directory entries can be written into inode block. The
-+ 			 space of inode block which is used to store inline
-+ 			 dentries is limited to ~3.4k.
-+ noinline_dentry		 Disable the inline dentry feature.
-+ flush_merge		 Merge concurrent cache_flush commands as much as possible
-+ 			 to eliminate redundant command issues. If the underlying
-+ 			 device handles the cache_flush command relatively slowly,
-+ 			 recommend to enable this option.
-+ nobarrier		 This option can be used if underlying storage guarantees
-+ 			 its cached data should be written to the novolatile area.
-+ 			 If this option is set, no cache_flush commands are issued
-+ 			 but f2fs still guarantees the write ordering of all the
-+ 			 data writes.
-+ fastboot		 This option is used when a system wants to reduce mount
-+ 			 time as much as possible, even though normal performance
-+ 			 can be sacrificed.
-+ extent_cache		 Enable an extent cache based on rb-tree, it can cache
-+ 			 as many as extent which map between contiguous logical
-+ 			 address and physical address per inode, resulting in
-+ 			 increasing the cache hit ratio. Set by default.
-+ noextent_cache		 Disable an extent cache based on rb-tree explicitly, see
-+ 			 the above extent_cache mount option.
-+ noinline_data		 Disable the inline data feature, inline data feature is
-+ 			 enabled by default.
-+ data_flush		 Enable data flushing before checkpoint in order to
-+ 			 persist data of regular and symlink.
-+ reserve_root=3D%d		 Support configuring reserved space which is used for
-+ 			 allocation from a privileged user with specified uid or
-+ 			 gid, unit: 4KB, the default limit is 0.2% of user blocks.
-+ resuid=3D%d		 The user ID which may use the reserved blocks.
-+ resgid=3D%d		 The group ID which may use the reserved blocks.
-+ fault_injection=3D%d	 Enable fault injection in all supported types with
-+ 			 specified injection rate.
-+ fault_type=3D%d		 Support configuring fault injection type, should be
-+ 			 enabled with fault_injection option, fault type value
-+ 			 is shown below, it supports single or combined type.
- =20
--                        =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
--                        Type_Name		Type_Value
--                        =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
--                        FAULT_KMALLOC		0x000000001
--                        FAULT_KVMALLOC		0x000000002
--                        FAULT_PAGE_ALLOC		0x000000004
--                        FAULT_PAGE_GET		0x000000008
--                        FAULT_ALLOC_BIO		0x000000010
--                        FAULT_ALLOC_NID		0x000000020
--                        FAULT_ORPHAN		0x000000040
--                        FAULT_BLOCK		0x000000080
--                        FAULT_DIR_DEPTH		0x000000100
--                        FAULT_EVICT_INODE	0x000000200
--                        FAULT_TRUNCATE		0x000000400
--                        FAULT_READ_IO		0x000000800
--                        FAULT_CHECKPOINT		0x000001000
--                        FAULT_DISCARD		0x000002000
--                        FAULT_WRITE_IO		0x000004000
--                        =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-- mode=3D%s                Control block allocation mode which supports "ad=
-aptive"
--                        and "lfs". In "lfs" mode, there should be no random
--                        writes towards main area.
-- io_bits=3D%u             Set the bit size of write IO requests. It should=
- be set
--                        with "mode=3Dlfs".
-- usrquota               Enable plain user disk quota accounting.
-- grpquota               Enable plain group disk quota accounting.
-- prjquota               Enable plain project quota accounting.
-- usrjquota=3D<file>       Appoint specified file and type during mount, so=
- that quota
-- grpjquota=3D<file>       information can be properly updated during recov=
-ery flow,
-- prjjquota=3D<file>       <quota file>: must be in root directory;
-- jqfmt=3D<quota type>     <quota type>: [vfsold,vfsv0,vfsv1].
-- offusrjquota           Turn off user journelled quota.
-- offgrpjquota           Turn off group journelled quota.
-- offprjjquota           Turn off project journelled quota.
-- quota                  Enable plain user disk quota accounting.
-- noquota                Disable all plain disk quota option.
-- whint_mode=3D%s          Control which write hints are passed down to blo=
-ck
--                        layer. This supports "off", "user-based", and
--                        "fs-based".  In "off" mode (default), f2fs does no=
-t pass
--                        down hints. In "user-based" mode, f2fs tries to pa=
-ss
--                        down hints given by users. And in "fs-based" mode,=
- f2fs
--                        passes down hints with its policy.
-- alloc_mode=3D%s          Adjust block allocation policy, which supports "=
-reuse"
--                        and "default".
-- fsync_mode=3D%s          Control the policy of fsync. Currently supports =
-"posix",
--                        "strict", and "nobarrier". In "posix" mode, which =
-is
--                        default, fsync will follow POSIX semantics and doe=
-s a
--                        light operation to improve the filesystem performa=
-nce.
--                        In "strict" mode, fsync will be heavy and behaves =
-in line
--                        with xfs, ext4 and btrfs, where xfstest generic/34=
-2 will
--                        pass, but the performance will regress. "nobarrier=
-" is
--                        based on "posix", but doesn't issue flush command =
-for
--                        non-atomic files likewise "nobarrier" mount option.
-+ 			 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	  =3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-+ 			 Type_Name		  Type_Value
-+ 			 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	  =3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-+ 			 FAULT_KMALLOC		  0x000000001
-+ 			 FAULT_KVMALLOC		  0x000000002
-+ 			 FAULT_PAGE_ALLOC	  0x000000004
-+ 			 FAULT_PAGE_GET		  0x000000008
-+ 			 FAULT_ALLOC_BIO	  0x000000010
-+ 			 FAULT_ALLOC_NID	  0x000000020
-+ 			 FAULT_ORPHAN		  0x000000040
-+ 			 FAULT_BLOCK		  0x000000080
-+ 			 FAULT_DIR_DEPTH	  0x000000100
-+ 			 FAULT_EVICT_INODE	  0x000000200
-+ 			 FAULT_TRUNCATE		  0x000000400
-+ 			 FAULT_READ_IO		  0x000000800
-+ 			 FAULT_CHECKPOINT	  0x000001000
-+ 			 FAULT_DISCARD		  0x000002000
-+ 			 FAULT_WRITE_IO		  0x000004000
-+ 			 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	  =3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-+ mode=3D%s			 Control block allocation mode which supports "adaptive"
-+ 			 and "lfs". In "lfs" mode, there should be no random
-+ 			 writes towards main area.
-+ io_bits=3D%u		 Set the bit size of write IO requests. It should be set
-+ 			 with "mode=3Dlfs".
-+ usrquota		 Enable plain user disk quota accounting.
-+ grpquota		 Enable plain group disk quota accounting.
-+ prjquota		 Enable plain project quota accounting.
-+ usrjquota=3D<file>	 Appoint specified file and type during mount, so that=
- quota
-+ grpjquota=3D<file>	 information can be properly updated during recovery f=
-low,
-+ prjjquota=3D<file>	 <quota file>: must be in root directory;
-+ jqfmt=3D<quota type>	 <quota type>: [vfsold,vfsv0,vfsv1].
-+ offusrjquota		 Turn off user journelled quota.
-+ offgrpjquota		 Turn off group journelled quota.
-+ offprjjquota		 Turn off project journelled quota.
-+ quota			 Enable plain user disk quota accounting.
-+ noquota			 Disable all plain disk quota option.
-+ whint_mode=3D%s		 Control which write hints are passed down to block
-+ 			 layer. This supports "off", "user-based", and
-+ 			 "fs-based".  In "off" mode (default), f2fs does not pass
-+ 			 down hints. In "user-based" mode, f2fs tries to pass
-+ 			 down hints given by users. And in "fs-based" mode, f2fs
-+ 			 passes down hints with its policy.
-+ alloc_mode=3D%s		 Adjust block allocation policy, which supports "reuse"
-+ 			 and "default".
-+ fsync_mode=3D%s		 Control the policy of fsync. Currently supports "posix",
-+ 			 "strict", and "nobarrier". In "posix" mode, which is
-+ 			 default, fsync will follow POSIX semantics and does a
-+ 			 light operation to improve the filesystem performance.
-+ 			 In "strict" mode, fsync will be heavy and behaves in line
-+ 			 with xfs, ext4 and btrfs, where xfstest generic/342 will
-+ 			 pass, but the performance will regress. "nobarrier" is
-+ 			 based on "posix", but doesn't issue flush command for
-+ 			 non-atomic files likewise "nobarrier" mount option.
-  test_dummy_encryption
-  test_dummy_encryption=3D%s
--                        Enable dummy encryption, which provides a fake fsc=
-rypt
--                        context. The fake fscrypt context is used by xfste=
-sts.
--                        The argument may be either "v1" or "v2", in order =
-to
--                        select the corresponding fscrypt policy version.
-- checkpoint=3D%s[:%u[%]]  Set to "disable" to turn off checkpointing. Set =
-to "enable"
--                        to reenable checkpointing. Is enabled by default. =
-While
--                        disabled, any unmounting or unexpected shutdowns w=
-ill cause
--                        the filesystem contents to appear as they did when=
- the
--                        filesystem was mounted with that option.
--                        While mounting with checkpoint=3Ddisabled, the fil=
-esystem must
--                        run garbage collection to ensure that all availabl=
-e space can
--                        be used. If this takes too much time, the mount ma=
-y return
--                        EAGAIN. You may optionally add a value to indicate=
- how much
--                        of the disk you would be willing to temporarily gi=
-ve up to
--                        avoid additional garbage collection. This can be g=
-iven as a
--                        number of blocks, or as a percent. For instance, m=
-ounting
--                        with checkpoint=3Ddisable:100% would always succee=
-d, but it may
--                        hide up to all remaining free space. The actual sp=
-ace that
--                        would be unusable can be viewed at /sys/fs/f2fs/<d=
-isk>/unusable
--                        This space is reclaimed once checkpoint=3Denable.
-- compress_algorithm=3D%s  Control compress algorithm, currently f2fs suppo=
-rts "lzo",
--                        "lz4", "zstd" and "lzo-rle" algorithm.
-- compress_log_size=3D%u   Support configuring compress cluster size, the s=
-ize will
--                        be 4KB * (1 << %u), 16KB is minimum size, also it's
--                        default size.
-- compress_extension=3D%s  Support adding specified extension, so that f2fs=
- can enable
--                        compression on those corresponding files, e.g. if =
-all files
--                        with '.ext' has high compression rate, we can set =
-the '.ext'
--                        on compression extension list and enable compressi=
-on on
--                        these file by default rather than to enable it via=
- ioctl.
--                        For other files, we can still enable compression v=
-ia ioctl.
--                        Note that, there is one reserved special extension=
- '*', it
--                        can be set to enable compression for all files.
-+ 			 Enable dummy encryption, which provides a fake fscrypt
-+ 			 context. The fake fscrypt context is used by xfstests.
-+ 			 The argument may be either "v1" or "v2", in order to
-+ 			 select the corresponding fscrypt policy version.
-+ checkpoint=3D%s[:%u[%]]	 Set to "disable" to turn off checkpointing. Set =
-to "enable"
-+ 			 to reenable checkpointing. Is enabled by default. While
-+ 			 disabled, any unmounting or unexpected shutdowns will cause
-+ 			 the filesystem contents to appear as they did when the
-+ 			 filesystem was mounted with that option.
-+ 			 While mounting with checkpoint=3Ddisabled, the filesystem must
-+ 			 run garbage collection to ensure that all available space can
-+ 			 be used. If this takes too much time, the mount may return
-+ 			 EAGAIN. You may optionally add a value to indicate how much
-+ 			 of the disk you would be willing to temporarily give up to
-+ 			 avoid additional garbage collection. This can be given as a
-+ 			 number of blocks, or as a percent. For instance, mounting
-+ 			 with checkpoint=3Ddisable:100% would always succeed, but it may
-+ 			 hide up to all remaining free space. The actual space that
-+ 			 would be unusable can be viewed at /sys/fs/f2fs/<disk>/unusable
-+ 			 This space is reclaimed once checkpoint=3Denable.
-+ compress_algorithm=3D%s	 Control compress algorithm, currently f2fs suppo=
-rts "lzo",
-+ 			 "lz4", "zstd" and "lzo-rle" algorithm.
-+ compress_log_size=3D%u	 Support configuring compress cluster size, the si=
-ze will
-+ 			 be 4KB * (1 << %u), 16KB is minimum size, also it's
-+ 			 default size.
-+ compress_extension=3D%s	 Support adding specified extension, so that f2fs=
- can enable
-+ 			 compression on those corresponding files, e.g. if all files
-+ 			 with '.ext' has high compression rate, we can set the '.ext'
-+ 			 on compression extension list and enable compression on
-+ 			 these file by default rather than to enable it via ioctl.
-+ 			 For other files, we can still enable compression via ioctl.
-++			 Note that, there is one reserved special extension '*', it
-++			 can be set to enable compression for all files.
- +inlinecrypt
--                        When possible, encrypt/decrypt the contents of enc=
-rypted
--                        files using the blk-crypto framework rather than
--                        filesystem-layer encryption. This allows the use of
--                        inline encryption hardware. The on-disk format is
--                        unaffected. For more details, see
--                        Documentation/block/inline-encryption.rst.
-- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-++			 When possible, encrypt/decrypt the contents of encrypted
-++			 files using the blk-crypto framework rather than
-++			 filesystem-layer encryption. This allows the use of
-++			 inline encryption hardware. The on-disk format is
-++			 unaffected. For more details, see
-++			 Documentation/block/inline-encryption.rst.
-+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- =20
-  Debugfs Entries
-  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
---Sig_/OUgRDeQ9kLxtghygOoSqwd5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8FH0IACgkQAVBC80lX
-0Gznfgf+PtY97YBK2z7iP9PDsnGIG6k1l8eLd2nleyJmLBwBZw4K62WqK1AUFe13
-n6P8npCT/nveUvvf3+XVO0wyeFEzV45eTArYJBDCxWMcqtCJp478kPZS3z9YUYHe
-84j9dDqMdECZI9I+lWXHxV2Enrr+/UB4aYJdYR3nQef1CPnuE7hxMZiUurovq96W
-I3AEzxoZucWSjql7JiMD4hQc/6mzeyPC36wLHvG7+23X8DaQi96euMJxDA614Yfl
-zSt6EGjIKOmb+hNNhR0U2tzOd3JqAUGy5Dfm734Ae3YJEWbrMIQYMeWpwW1pKdf6
-kgGUVb3p374NvaId4FZZ4c+PMG6FtA==
-=Igz8
------END PGP SIGNATURE-----
-
---Sig_/OUgRDeQ9kLxtghygOoSqwd5--
+>  	if (err)
+>  		putback_movable_pages(pagelist);
+>  	return err;
+> -- 
+> 2.7.4
+> 
+> 
