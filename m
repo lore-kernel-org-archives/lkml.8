@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 963EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D09E2206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7459C206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 09:36:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GtqTc5+k"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HZr7MO37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgGHJgb (ORCPT
+        id S1728309AbgGHJg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:36:31 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46477 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728266AbgGHJg1 (ORCPT
+        Wed, 8 Jul 2020 05:36:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37277 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726900AbgGHJgY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:36:27 -0400
+        Wed, 8 Jul 2020 05:36:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594200984;
+        s=mimecast20190719; t=1594200982;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0ch8uULRQ2eBy6MnhXZkwyEhlau2JCPGdpOTRmLuBXg=;
-        b=GtqTc5+k8VtDQiYZQRfVoLy5Mo6wIgBhSx0gq2QoucI+yTId61YUKfa0Goc3+ValcMDHjx
-        Q7ptf++iMjOtF9zLbhjuN3dljQlg5cVBT6LVlZipmMxDu6xdwka95LoYxGyKEIpf8PsYpP
-        56pADDwyjPhKccikXMJQs3otSNPopTk=
+        bh=kALeRmOWsqvS9H2G8O5iL3YR6FPN8mEcBZ5niY5TzRs=;
+        b=HZr7MO37D5Ofzg9JRLJlWHX4M8ChMTH5Z4YLUutHW8JSIACLeFSQ6WrJ5U54BiF5tfQeZV
+        AHS++rZXVF/1mJQikJ/QPq02H0KJm+QVLDR4ojyUjm+Cd2KH5n9AMXfyEcFRqhxFXWws6d
+        nEUqVzJX7kyoc9EXU/AyqlYdW+VU6SE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-451-t0u0OeNXNfeWi3kqKl7lSw-1; Wed, 08 Jul 2020 05:36:21 -0400
-X-MC-Unique: t0u0OeNXNfeWi3kqKl7lSw-1
+ us-mta-75-xp9Mlz1-P3C9M_UVthjrdg-1; Wed, 08 Jul 2020 05:36:19 -0400
+X-MC-Unique: xp9Mlz1-P3C9M_UVthjrdg-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C62C97BB1;
-        Wed,  8 Jul 2020 09:36:19 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BA3D5C3F8;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A92E718CB722;
         Wed,  8 Jul 2020 09:36:17 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 853BD5C221;
+        Wed,  8 Jul 2020 09:36:15 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -52,9 +52,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Junaid Shahid <junaids@google.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] KVM: nSVM: properly call kvm_mmu_new_pgd() upon switching to guest
-Date:   Wed,  8 Jul 2020 11:36:10 +0200
-Message-Id: <20200708093611.1453618-3-vkuznets@redhat.com>
+Subject: [PATCH v2 1/3] KVM: nSVM: split kvm_init_shadow_npt_mmu() from kvm_init_shadow_mmu()
+Date:   Wed,  8 Jul 2020 11:36:09 +0200
+Message-Id: <20200708093611.1453618-2-vkuznets@redhat.com>
 In-Reply-To: <20200708093611.1453618-1-vkuznets@redhat.com>
 References: <20200708093611.1453618-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -65,101 +65,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Undesired triple fault gets injected to L1 guest on SVM when L2 is
-launched with certain CR3 values. #TF is raised by mmu_check_root()
-check in fast_pgd_switch() and the root cause is that when
-kvm_set_cr3() is called from nested_prepare_vmcb_save() with NPT
-enabled CR3 points to a nGPA so we can't check it with
-kvm_is_visible_gfn().
+As a preparatory change for moving kvm_mmu_new_pgd() from
+nested_prepare_vmcb_save() to nested_svm_init_mmu_context() split
+kvm_init_shadow_npt_mmu() from kvm_init_shadow_mmu(). This also makes
+the code look more like nVMX (kvm_init_shadow_ept_mmu()).
 
-Calling kvm_mmu_new_pgd() with L2's CR3 idea when NPT is in use
-seems to be wrong, an acceptable place for it seems to be
-kvm_init_shadow_npt_mmu(). This also matches nVMX code.
+No functional change intended.
 
-Fixes: 7c390d350f8b ("kvm: x86: Add fast CR3 switch code path")
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h | 7 ++++++-
- arch/x86/kvm/mmu/mmu.c          | 2 ++
- arch/x86/kvm/svm/nested.c       | 2 +-
- arch/x86/kvm/x86.c              | 8 +++++---
- 4 files changed, 14 insertions(+), 5 deletions(-)
+ arch/x86/kvm/mmu.h        |  3 ++-
+ arch/x86/kvm/mmu/mmu.c    | 31 ++++++++++++++++++++++++-------
+ arch/x86/kvm/svm/nested.c |  3 ++-
+ 3 files changed, 28 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index be5363b21540..49b62f024f51 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1459,7 +1459,12 @@ int kvm_task_switch(struct kvm_vcpu *vcpu, u16 tss_selector, int idt_index,
- 		    int reason, bool has_error_code, u32 error_code);
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index 444bb9c54548..94378ef1df54 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -57,7 +57,8 @@ void
+ reset_shadow_zero_bits_mask(struct kvm_vcpu *vcpu, struct kvm_mmu *context);
  
- int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0);
--int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3);
-+int __kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool cr3_is_nested);
-+static inline int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
-+{
-+	return __kvm_set_cr3(vcpu, cr3, false);
-+}
-+
- int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4);
- int kvm_set_cr8(struct kvm_vcpu *vcpu, unsigned long cr8);
- int kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val);
+ void kvm_init_mmu(struct kvm_vcpu *vcpu, bool reset_roots);
+-void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer);
++void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer,
++			     gpa_t nested_cr3);
+ void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
+ 			     bool accessed_dirty, gpa_t new_eptp);
+ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu);
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 167d12ab957a..ebf0cb3f1ce0 100644
+index 76817d13c86e..167d12ab957a 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4987,6 +4987,8 @@ void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer,
- 	union kvm_mmu_role new_role =
- 		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
- 
-+	__kvm_mmu_new_pgd(vcpu, nested_cr3, new_role.base, true, true);
-+
- 	if (new_role.as_u64 != context->mmu_role.as_u64)
- 		shadow_mmu_init_context(vcpu, cr0, cr4, efer, new_role);
+@@ -4952,14 +4952,10 @@ kvm_calc_shadow_mmu_root_page_role(struct kvm_vcpu *vcpu, bool base_only)
+ 	return role;
  }
+ 
+-void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer)
++static void shadow_mmu_init_context(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4,
++				    u32 efer, union kvm_mmu_role new_role)
+ {
+ 	struct kvm_mmu *context = vcpu->arch.mmu;
+-	union kvm_mmu_role new_role =
+-		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
+-
+-	if (new_role.as_u64 == context->mmu_role.as_u64)
+-		return;
+ 
+ 	if (!(cr0 & X86_CR0_PG))
+ 		nonpaging_init_context(vcpu, context);
+@@ -4973,7 +4969,28 @@ void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer)
+ 	context->mmu_role.as_u64 = new_role.as_u64;
+ 	reset_shadow_zero_bits_mask(vcpu, context);
+ }
+-EXPORT_SYMBOL_GPL(kvm_init_shadow_mmu);
++
++static void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer)
++{
++	struct kvm_mmu *context = vcpu->arch.mmu;
++	union kvm_mmu_role new_role =
++		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
++
++	if (new_role.as_u64 != context->mmu_role.as_u64)
++		shadow_mmu_init_context(vcpu, cr0, cr4, efer, new_role);
++}
++
++void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer,
++			     gpa_t nested_cr3)
++{
++	struct kvm_mmu *context = vcpu->arch.mmu;
++	union kvm_mmu_role new_role =
++		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
++
++	if (new_role.as_u64 != context->mmu_role.as_u64)
++		shadow_mmu_init_context(vcpu, cr0, cr4, efer, new_role);
++}
++EXPORT_SYMBOL_GPL(kvm_init_shadow_npt_mmu);
+ 
+ static union kvm_mmu_role
+ kvm_calc_shadow_ept_root_page_role(struct kvm_vcpu *vcpu, bool accessed_dirty,
 diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index e424bce13e6c..b467917a9784 100644
+index 6bceafb19108..e424bce13e6c 100644
 --- a/arch/x86/kvm/svm/nested.c
 +++ b/arch/x86/kvm/svm/nested.c
-@@ -324,7 +324,7 @@ static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_v
- 	svm_set_efer(&svm->vcpu, nested_vmcb->save.efer);
- 	svm_set_cr0(&svm->vcpu, nested_vmcb->save.cr0);
- 	svm_set_cr4(&svm->vcpu, nested_vmcb->save.cr4);
--	(void)kvm_set_cr3(&svm->vcpu, nested_vmcb->save.cr3);
-+	(void)__kvm_set_cr3(&svm->vcpu, nested_vmcb->save.cr3, npt_enabled);
+@@ -87,7 +87,8 @@ static void nested_svm_init_mmu_context(struct kvm_vcpu *vcpu)
+ 	WARN_ON(mmu_is_nested(vcpu));
  
- 	svm->vmcb->save.cr2 = svm->vcpu.arch.cr2 = nested_vmcb->save.cr2;
- 	kvm_rax_write(&svm->vcpu, nested_vmcb->save.rax);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 3b92db412335..3761135eb052 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1004,7 +1004,7 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- }
- EXPORT_SYMBOL_GPL(kvm_set_cr4);
- 
--int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
-+int __kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool cr3_is_nested)
- {
- 	bool skip_tlb_flush = false;
- #ifdef CONFIG_X86_64
-@@ -1031,13 +1031,15 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- 		 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
- 		return 1;
- 
--	kvm_mmu_new_pgd(vcpu, cr3, skip_tlb_flush, skip_tlb_flush);
-+	if (!cr3_is_nested)
-+		kvm_mmu_new_pgd(vcpu, cr3, skip_tlb_flush, skip_tlb_flush);
-+
- 	vcpu->arch.cr3 = cr3;
- 	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
- 
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(kvm_set_cr3);
-+EXPORT_SYMBOL_GPL(__kvm_set_cr3);
- 
- int kvm_set_cr8(struct kvm_vcpu *vcpu, unsigned long cr8)
- {
+ 	vcpu->arch.mmu = &vcpu->arch.guest_mmu;
+-	kvm_init_shadow_mmu(vcpu, X86_CR0_PG, hsave->save.cr4, hsave->save.efer);
++	kvm_init_shadow_npt_mmu(vcpu, X86_CR0_PG, hsave->save.cr4, hsave->save.efer,
++				svm->nested.ctl.nested_cr3);
+ 	vcpu->arch.mmu->get_guest_pgd     = nested_svm_get_tdp_cr3;
+ 	vcpu->arch.mmu->get_pdptr         = nested_svm_get_tdp_pdptr;
+ 	vcpu->arch.mmu->inject_page_fault = nested_svm_inject_npf_exit;
 -- 
 2.25.4
 
