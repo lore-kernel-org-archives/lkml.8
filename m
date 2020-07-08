@@ -2,202 +2,114 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D953C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C74C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D062E20658
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:50:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RPPqgFfx"
+	by mail.kernel.org (Postfix) with ESMTP id 15A1C20739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:53:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594209210;
+	bh=E+EUipXnOwiceYUQyD8gaieTahdEDGfXPzYwNDoTWCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ByGa+Fx+XYpAZDpisv1Fb3N/wGWlYv6lLMI/KERiE0WccuKw01jzIC7pcKdgRyuHG
+	 0JUd2F9Es+OFnKYvi/ALaI1Yd5CIZ/rfoO5sBt7irW0uFQOfPoIjQsRlvZjnAAYwwN
+	 BOPZ92h/TLTMP9FoPKY+Iga7TeL/7VUnotpZrt3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgGHLuC (ORCPT
+        id S1728870AbgGHLx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:50:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41856 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728592AbgGHLuC (ORCPT
+        Wed, 8 Jul 2020 07:53:28 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36433 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728598AbgGHLx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:50:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594209000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xM3KNO4zTe2DwnAsh9jy5dc/gc1QWSrQFG/k46eKNXU=;
-        b=RPPqgFfxBK/AetqXiSZq2+A5Y71UgIUyeDF8JKMCui1d5Xxj3Mp/xNO3f89IUzjuqznuwR
-        6siqhRHRsyWV7jT9GBNCsdFxlDTlENDiNLBJItR1XOSASAFjO9qUMEyEGV4mMkWP7agbh6
-        GJewrY+Okc4oE3Ki7RKWHyww6Fnrl6w=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-9bc_NpN_Ot2zGTh9jqqaYg-1; Wed, 08 Jul 2020 07:49:58 -0400
-X-MC-Unique: 9bc_NpN_Ot2zGTh9jqqaYg-1
-Received: by mail-wr1-f72.google.com with SMTP id b14so51887192wrp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 04:49:58 -0700 (PDT)
+        Wed, 8 Jul 2020 07:53:28 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d10so6052130pll.3;
+        Wed, 08 Jul 2020 04:53:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xM3KNO4zTe2DwnAsh9jy5dc/gc1QWSrQFG/k46eKNXU=;
-        b=N01Cfblh1BaOi+mxeHiBnIQEkIUnuhZe+vUst18YDh1XurQraqq3g4EVcwLlFzvFu+
-         RGNaIUwdd67Sc2GEzmH4kGaWTFl/3mE3vw6CqSlwp8s4FhCOsN7fARlV8HvVzudz/MP6
-         sKWH9wlaXGCo3l0li3VeO4JbIxYxW70EOUrTVoRW8+lqWlT56x5449ab4vmSdd5WhWld
-         eMqXrtZtNcrTpzHX8KxyOvSEFBgjxiQBUgeiZnwDHUieEZi+aDrIYH6RFRqUNfHt6AZ2
-         Ab7/bYXDgHk+NkwqHFLF8O+ocMXscCHMcCsMMoJEfe5TxcSvevAn6k0nZOPaOlxeQAz8
-         3hmA==
-X-Gm-Message-State: AOAM532kuh8A6/ZjqDFL0KZGTlXGYyNQZKszfMPydb844/z7p9PTsFkr
-        bKK/srNta567kswvkTyP/NaIvpBHlQidFIdomR2/EVGBILtWmwHR0HKpbVql3XiMKUaDDGbaH/a
-        534Ju9pJQ6PjrdgAg/71TbbUP
-X-Received: by 2002:adf:f34e:: with SMTP id e14mr57807331wrp.299.1594208997411;
-        Wed, 08 Jul 2020 04:49:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyugNuqxN5rzVdPBX5slxGKgyferLOH3BJsa69EiZC8VmURNSyq7nrqd1rqYUrnGgu/1A3QIg==
-X-Received: by 2002:adf:f34e:: with SMTP id e14mr57807317wrp.299.1594208997184;
-        Wed, 08 Jul 2020 04:49:57 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id 22sm6269944wmb.11.2020.07.08.04.49.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 04:49:56 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] KVM: nSVM: properly call kvm_mmu_new_pgd() upon
- switching to guest
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        linux-kernel@vger.kernel.org
-References: <20200708093611.1453618-1-vkuznets@redhat.com>
- <20200708093611.1453618-3-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <b7989497-562e-c9a1-3f62-dd5afb9fd3d5@redhat.com>
-Date:   Wed, 8 Jul 2020 13:49:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Sa8n1TRJl8q0W3/65oG3rXoiqfk7+dLp1Myv9f9hyk0=;
+        b=LF063OQiMTO+ZVsKMRzbLjt9c3j1UWV0rQsv47aQCNGSdiXlDknth9QJUmCJplkFwv
+         OkI140aryqPgV27evGkx0AztsrtgeS13gKL2keKT2nYYHBj8ILY73ORSPeNwKZah9qtI
+         PRchJZS8NPVXvafslx+ml+09d80aKoYUucr02dH8V1xFqyV4DdZK9ucSGKmf583Q4x0w
+         YtpI23l5oPGqsGG/pv4EmMAPPis4yLhtLBEJfwiAS20szsMjG4rqVYz/qBUwYom8z/eu
+         6VdOfnZEBwOjq2V6q4Eo0BwkKxjaGM1y2r8PT610LCes7u4b8EEdF7X0HhEULIJIHYyx
+         N2Jw==
+X-Gm-Message-State: AOAM5324kSu97CGNX9KLBGyvh2QTdnNzd+Ba1walutANR0Mb3afegAhO
+        d66e5vslkRKpgtB+oOx4SG4=
+X-Google-Smtp-Source: ABdhPJxjHXf1yB+wkqMfjw38cNqjbu5cvN3h2X2giW8Tg6UVZvLPEsbiaOISZ/qPNmEY+x69Z7lFLw==
+X-Received: by 2002:a17:902:6b86:: with SMTP id p6mr49774517plk.47.1594209207638;
+        Wed, 08 Jul 2020 04:53:27 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id j2sm6092410pjy.1.2020.07.08.04.53.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 04:53:25 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id F151D401AE; Wed,  8 Jul 2020 11:53:24 +0000 (UTC)
+Date:   Wed, 8 Jul 2020 11:53:24 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>, shuah@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: KMOD KERNEL MODULE
+ LOADER - USERMODE HELPER
+Message-ID: <20200708115324.GE4332@42.do-not-panic.com>
+References: <20200708071337.13108-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200708093611.1453618-3-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708071337.13108-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/20 11:36, Vitaly Kuznetsov wrote:
-> Undesired triple fault gets injected to L1 guest on SVM when L2 is
-> launched with certain CR3 values. #TF is raised by mmu_check_root()
-> check in fast_pgd_switch() and the root cause is that when
-> kvm_set_cr3() is called from nested_prepare_vmcb_save() with NPT
-> enabled CR3 points to a nGPA so we can't check it with
-> kvm_is_visible_gfn().
+On Wed, Jul 08, 2020 at 09:13:37AM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Calling kvm_mmu_new_pgd() with L2's CR3 idea when NPT is in use
-> seems to be wrong, an acceptable place for it seems to be
-> kvm_init_shadow_npt_mmu(). This also matches nVMX code.
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 > 
-> Fixes: 7c390d350f8b ("kvm: x86: Add fast CR3 switch code path")
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+
+Shuah, can this go through your tree?
+
+  Luis
+
 > ---
->  arch/x86/include/asm/kvm_host.h | 7 ++++++-
->  arch/x86/kvm/mmu/mmu.c          | 2 ++
->  arch/x86/kvm/svm/nested.c       | 2 +-
->  arch/x86/kvm/x86.c              | 8 +++++---
->  4 files changed, 14 insertions(+), 5 deletions(-)
+>  tools/testing/selftests/kmod/kmod.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index be5363b21540..49b62f024f51 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1459,7 +1459,12 @@ int kvm_task_switch(struct kvm_vcpu *vcpu, u16 tss_selector, int idt_index,
->  		    int reason, bool has_error_code, u32 error_code);
+> diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
+> index 3702dbcc90a7..84409020a40f 100755
+> --- a/tools/testing/selftests/kmod/kmod.sh
+> +++ b/tools/testing/selftests/kmod/kmod.sh
+> @@ -128,7 +128,7 @@ test_reqs()
+>  	if [[ $KMOD_VERSION  -le 19 ]]; then
+>  		echo "$0: You need at least kmod 20" >&2
+>  		echo "kmod <= 19 is buggy, for details see:" >&2
+> -		echo "http://git.kernel.org/cgit/utils/kernel/kmod/kmod.git/commit/libkmod/libkmod-module.c?id=fd44a98ae2eb5eb32161088954ab21e58e19dfc4" >&2
+> +		echo "https://git.kernel.org/cgit/utils/kernel/kmod/kmod.git/commit/libkmod/libkmod-module.c?id=fd44a98ae2eb5eb32161088954ab21e58e19dfc4" >&2
+>  		exit $ksft_skip
+>  	fi
 >  
->  int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0);
-> -int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3);
-> +int __kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool cr3_is_nested);
-> +static inline int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
-> +{
-> +	return __kvm_set_cr3(vcpu, cr3, false);
-> +}
-> +
->  int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4);
->  int kvm_set_cr8(struct kvm_vcpu *vcpu, unsigned long cr8);
->  int kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val);
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 167d12ab957a..ebf0cb3f1ce0 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4987,6 +4987,8 @@ void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer,
->  	union kvm_mmu_role new_role =
->  		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
->  
-> +	__kvm_mmu_new_pgd(vcpu, nested_cr3, new_role.base, true, true);
-> +
->  	if (new_role.as_u64 != context->mmu_role.as_u64)
->  		shadow_mmu_init_context(vcpu, cr0, cr4, efer, new_role);
->  }
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index e424bce13e6c..b467917a9784 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -324,7 +324,7 @@ static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_v
->  	svm_set_efer(&svm->vcpu, nested_vmcb->save.efer);
->  	svm_set_cr0(&svm->vcpu, nested_vmcb->save.cr0);
->  	svm_set_cr4(&svm->vcpu, nested_vmcb->save.cr4);
-> -	(void)kvm_set_cr3(&svm->vcpu, nested_vmcb->save.cr3);
-> +	(void)__kvm_set_cr3(&svm->vcpu, nested_vmcb->save.cr3, npt_enabled);
->  
->  	svm->vmcb->save.cr2 = svm->vcpu.arch.cr2 = nested_vmcb->save.cr2;
->  	kvm_rax_write(&svm->vcpu, nested_vmcb->save.rax);
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 3b92db412335..3761135eb052 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1004,7 +1004,7 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
->  }
->  EXPORT_SYMBOL_GPL(kvm_set_cr4);
->  
-> -int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
-> +int __kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool cr3_is_nested)
->  {
->  	bool skip_tlb_flush = false;
->  #ifdef CONFIG_X86_64
-> @@ -1031,13 +1031,15 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
->  		 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
->  		return 1;
->  
-> -	kvm_mmu_new_pgd(vcpu, cr3, skip_tlb_flush, skip_tlb_flush);
-> +	if (!cr3_is_nested)
-> +		kvm_mmu_new_pgd(vcpu, cr3, skip_tlb_flush, skip_tlb_flush);
-> +
->  	vcpu->arch.cr3 = cr3;
->  	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
->  
->  	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(kvm_set_cr3);
-> +EXPORT_SYMBOL_GPL(__kvm_set_cr3);
->  
->  int kvm_set_cr8(struct kvm_vcpu *vcpu, unsigned long cr8)
->  {
+> -- 
+> 2.27.0
 > 
-
-Instead of the new argument (which is not really named right since it's
-never true for !NPT) you could perhaps check vcpu->arch.mmu.  But also,
-for NPT=1 the kvm_mmu_new_pgd is also unnecessary on vmexit, because the
-old roots are still valid (or has been invalidated otherwise) while L2
-was running.
-
-I'm also not sure if skip_tlb_flush can use X86_CR3_PCID_NOFLUSH the way
-kvm_set_cr3 does, so I wouldn't mind duplicating the code completely as
-is already the case for nested_vmx_load_cr3.  It would introduce some
-code duplication, but overall the code would be better.  For now, there
-need not be an equivalent to nested_vmx_transition_mmu_sync, ASID
-handling can be left for later.
-
-Paolo
-
