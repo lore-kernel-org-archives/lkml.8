@@ -2,190 +2,187 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBCAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C846206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A1420674
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:52:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtJBpujU"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IOgkAyBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgGHKwu (ORCPT
+        id S1728601AbgGHKw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:52:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgGHKwt (ORCPT
+        Wed, 8 Jul 2020 06:52:58 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54365 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgGHKw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:52:49 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56F93C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 03:52:49 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id l2so2458365wmf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 03:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BVfbx6JYCGybhSp5VVxSRuzJ6+B1uWCcaOWMtHryf0k=;
-        b=PtJBpujULM2X5uBTwGpWQUIIb3qnMZp4m00DLUidRI/xfPKr7uZ5pTE0oWgDc+CdNs
-         uAL7y/qEN2eUuMzzw+tzJipsO7SfdSPGX6GzxwKqXwPGKx1zx7OcmPb66cSH/L0hePhV
-         jTGLM4PFJoMoMIe+zN7Ex6l5aS1epKST8lTobPcn+KUw3rgpfN4JmzkczfJL60hKqp0A
-         v0vLWcayNIpfAkokPzSk/3s5ld58UDrgeJsvpn0fxTbGcaMIFBGmlj0YVmICv1Q7h5Vu
-         s4U2yrnvnFKzt0uLXlGrJxHlDbbI/0R/QbUWMdEUz01BKDUBMZyLAwHQGyrJlm6bWQhV
-         2KtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=BVfbx6JYCGybhSp5VVxSRuzJ6+B1uWCcaOWMtHryf0k=;
-        b=ZzJLQJ8Iow9PMNgEHk98jK1rPcCuMOPtPPu2UQp+0tWAfGnPmw+sZ4Ayo/gHOBx/7j
-         ofqHTOFWvSuvcAbhBjPBDaJotvIG2NfX/iLccxOuBZ2uyOSW4Lh/JfSBuDNJ1mpaQmHD
-         koLj2Opb1/NlM69JhMcsWS6hbYo7MOxkCWN6+BjYC4LuAFgXG/B81Jiaj6Vl62jQm+Mm
-         deMdNI5BsMUNCmMzKkvAE+bL5HkUFcSxvEzi9pmG/5jX2qwspZ43/wZki/f5jCW7VClh
-         CZWpJWcxcjzgwFev56sGHwtLVAPz+c6SPoo5sHxBQk+e7teIQ9lKGR/Pu+4z6KL6ifPB
-         9YEw==
-X-Gm-Message-State: AOAM531HU22R0oz/1WjjZAeG73DZFxrbYtH/Azi0HEeBm4CXnZB9sPD6
-        FHWe8v/pLvdbSVOakcZEipP1p0Bl
-X-Google-Smtp-Source: ABdhPJyXEeTOA8g3Gt6XB63ddVgA+ZzMuR+OR4SDeabkCqtR5R6dy5v+8jms4sVWhnl3JrHRHSH0yA==
-X-Received: by 2002:a1c:bb03:: with SMTP id l3mr8285826wmf.24.1594205567975;
-        Wed, 08 Jul 2020 03:52:47 -0700 (PDT)
-Received: from [192.168.43.42] ([5.100.193.69])
-        by smtp.gmail.com with ESMTPSA id u16sm5331600wmn.11.2020.07.08.03.52.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 03:52:47 -0700 (PDT)
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        ksummit-discuss@lists.linuxfoundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        tech-board-discuss@lists.linuxfoundation.org
-References: <159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com>
- <1cceba0f-c8ad-260d-9a09-5417bee32d50@gmail.com>
- <20200706181052.174c290a@oasis.local.home>
- <717030b7-ecba-2ca4-39ff-6a5a04a732d4@gmail.com>
- <20200706182819.3467fa32@oasis.local.home>
- <4592008a-16ee-d8c4-4ec3-5e36a268e5d6@gmail.com>
- <20200707204241.36bea66a@hermes.lan>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFmKBOQBEAC76ZFxLAKpDw0bKQ8CEiYJRGn8MHTUhURL02/7n1t0HkKQx2K1fCXClbps
- bdwSHrhOWdW61pmfMbDYbTj6ZvGRvhoLWfGkzujB2wjNcbNTXIoOzJEGISHaPf6E2IQx1ik9
- 6uqVkK1OMb7qRvKH0i7HYP4WJzYbEWVyLiAxUj611mC9tgd73oqZ2pLYzGTqF2j6a/obaqha
- +hXuWTvpDQXqcOZJXIW43atprH03G1tQs7VwR21Q1eq6Yvy2ESLdc38EqCszBfQRMmKy+cfp
- W3U9Mb1w0L680pXrONcnlDBCN7/sghGeMHjGKfNANjPc+0hzz3rApPxpoE7HC1uRiwC4et83
- CKnncH1l7zgeBT9Oa3qEiBlaa1ZCBqrA4dY+z5fWJYjMpwI1SNp37RtF8fKXbKQg+JuUjAa9
- Y6oXeyEvDHMyJYMcinl6xCqCBAXPHnHmawkMMgjr3BBRzODmMr+CPVvnYe7BFYfoajzqzq+h
- EyXSl3aBf0IDPTqSUrhbmjj5OEOYgRW5p+mdYtY1cXeK8copmd+fd/eTkghok5li58AojCba
- jRjp7zVOLOjDlpxxiKhuFmpV4yWNh5JJaTbwCRSd04sCcDNlJj+TehTr+o1QiORzc2t+N5iJ
- NbILft19Izdn8U39T5oWiynqa1qCLgbuFtnYx1HlUq/HvAm+kwARAQABtDFQYXZlbCBCZWd1
- bmtvdiAoc2lsZW5jZSkgPGFzbWwuc2lsZW5jZUBnbWFpbC5jb20+iQJOBBMBCAA4FiEE+6Ju
- PTjTbx479o3OWt5b1Glr+6UFAlmKBOQCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQ
- Wt5b1Glr+6WxZA//QueaKHzgdnOikJ7NA/Vq8FmhRlwgtP0+E+w93kL+ZGLzS/cUCIjn2f4Q
- Mcutj2Neg0CcYPX3b2nJiKr5Vn0rjJ/suiaOa1h1KzyNTOmxnsqE5fmxOf6C6x+NKE18I5Jy
- xzLQoktbdDVA7JfB1itt6iWSNoOTVcvFyvfe5ggy6FSCcP+m1RlR58XxVLH+qlAvxxOeEr/e
- aQfUzrs7gqdSd9zQGEZo0jtuBiB7k98t9y0oC9Jz0PJdvaj1NZUgtXG9pEtww3LdeXP/TkFl
- HBSxVflzeoFaj4UAuy8+uve7ya/ECNCc8kk0VYaEjoVrzJcYdKP583iRhOLlZA6HEmn/+Gh9
- 4orG67HNiJlbFiW3whxGizWsrtFNLsSP1YrEReYk9j1SoUHHzsu+ZtNfKuHIhK0sU07G1OPN
- 2rDLlzUWR9Jc22INAkhVHOogOcc5ajMGhgWcBJMLCoi219HlX69LIDu3Y34uIg9QPZIC2jwr
- 24W0kxmK6avJr7+n4o8m6sOJvhlumSp5TSNhRiKvAHB1I2JB8Q1yZCIPzx+w1ALxuoWiCdwV
- M/azguU42R17IuBzK0S3hPjXpEi2sK/k4pEPnHVUv9Cu09HCNnd6BRfFGjo8M9kZvw360gC1
- reeMdqGjwQ68o9x0R7NBRrtUOh48TDLXCANAg97wjPoy37dQE7e5Ag0EWYoE5AEQAMWS+aBV
- IJtCjwtfCOV98NamFpDEjBMrCAfLm7wZlmXy5I6o7nzzCxEw06P2rhzp1hIqkaab1kHySU7g
- dkpjmQ7Jjlrf6KdMP87mC/Hx4+zgVCkTQCKkIxNE76Ff3O9uTvkWCspSh9J0qPYyCaVta2D1
- Sq5HZ8WFcap71iVO1f2/FEHKJNz/YTSOS/W7dxJdXl2eoj3gYX2UZNfoaVv8OXKaWslZlgqN
- jSg9wsTv1K73AnQKt4fFhscN9YFxhtgD/SQuOldE5Ws4UlJoaFX/yCoJL3ky2kC0WFngzwRF
- Yo6u/KON/o28yyP+alYRMBrN0Dm60FuVSIFafSqXoJTIjSZ6olbEoT0u17Rag8BxnxryMrgR
- dkccq272MaSS0eOC9K2rtvxzddohRFPcy/8bkX+t2iukTDz75KSTKO+chce62Xxdg62dpkZX
- xK+HeDCZ7gRNZvAbDETr6XI63hPKi891GeZqvqQVYR8e+V2725w+H1iv3THiB1tx4L2bXZDI
- DtMKQ5D2RvCHNdPNcZeldEoJwKoA60yg6tuUquvsLvfCwtrmVI2rL2djYxRfGNmFMrUDN1Xq
- F3xozA91q3iZd9OYi9G+M/OA01husBdcIzj1hu0aL+MGg4Gqk6XwjoSxVd4YT41kTU7Kk+/I
- 5/Nf+i88ULt6HanBYcY/+Daeo/XFABEBAAGJAjYEGAEIACAWIQT7om49ONNvHjv2jc5a3lvU
- aWv7pQUCWYoE5AIbDAAKCRBa3lvUaWv7pfmcEACKTRQ28b1y5ztKuLdLr79+T+LwZKHjX++P
- 4wKjEOECCcB6KCv3hP+J2GCXDOPZvdg/ZYZafqP68Yy8AZqkfa4qPYHmIdpODtRzZSL48kM8
- LRzV8Rl7J3ItvzdBRxf4T/Zseu5U6ELiQdCUkPGsJcPIJkgPjO2ROG/ZtYa9DvnShNWPlp+R
- uPwPccEQPWO/NP4fJl2zwC6byjljZhW5kxYswGMLBwb5cDUZAisIukyAa8Xshdan6C2RZcNs
- rB3L7vsg/R8UCehxOH0C+NypG2GqjVejNZsc7bgV49EOVltS+GmGyY+moIzxsuLmT93rqyII
- 5rSbbcTLe6KBYcs24XEoo49Zm9oDA3jYvNpeYD8rDcnNbuZh9kTgBwFN41JHOPv0W2FEEWqe
- JsCwQdcOQ56rtezdCJUYmRAt3BsfjN3Jn3N6rpodi4Dkdli8HylM5iq4ooeb5VkQ7UZxbCWt
- UVMKkOCdFhutRmYp0mbv2e87IK4erwNHQRkHUkzbsuym8RVpAZbLzLPIYK/J3RTErL6Z99N2
- m3J6pjwSJY/zNwuFPs9zGEnRO4g0BUbwGdbuvDzaq6/3OJLKohr5eLXNU3JkT+3HezydWm3W
- OPhauth7W0db74Qd49HXK0xe/aPrK+Cp+kU1HRactyNtF8jZQbhMCC8vMGukZtWaAwpjWiiH bA==
-Subject: Re: [Ksummit-discuss] [Tech-board-discuss] [PATCH] CodingStyle:
- Inclusive Terminology
-Message-ID: <058cea17-7009-c3e9-8c58-9b9ef44b85eb@gmail.com>
-Date:   Wed, 8 Jul 2020 13:51:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 8 Jul 2020 06:52:57 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200708105256euoutp01d8f6f8b293da2f4ff859265de6c4ffb4~fwYZoPl3J1678216782euoutp01L
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 10:52:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200708105256euoutp01d8f6f8b293da2f4ff859265de6c4ffb4~fwYZoPl3J1678216782euoutp01L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594205576;
+        bh=8cv3BY8rhZiowdOYtWgygGS3Rx7HHvw149D4xWAek5I=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=IOgkAyBe9rai7kVAAu2QAZFlsXPPukhVQgHPkbFJzDcf6uJ+Djcl0dZL/hQax0ATm
+         rW5KZTWo2yzXYgotabHBzNM+P4blYvn5/fCMRXLHZSmI+KRQ9byDgV1LKg2Gotrkzt
+         8mdstTMz1Rd+0FN8ettgstiPwqxuO4hB9sQhYFeU=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200708105255eucas1p2548e027b63151ddbc3930e14a909af0f~fwYZKwzd51536015360eucas1p2V;
+        Wed,  8 Jul 2020 10:52:55 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 3B.1C.06456.785A50F5; Wed,  8
+        Jul 2020 11:52:55 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200708105255eucas1p229180d35b47e4a350fbb72ea5e2df2a9~fwYY45EE11334013340eucas1p2W;
+        Wed,  8 Jul 2020 10:52:55 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200708105255eusmtrp1930ecde1efb1a571e8a06dc715f2a286~fwYY4Lw011950319503eusmtrp1o;
+        Wed,  8 Jul 2020 10:52:55 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-ea-5f05a587f0e1
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 5B.6B.06017.785A50F5; Wed,  8
+        Jul 2020 11:52:55 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200708105254eusmtip233ca8aacc24a7fc9b0dafeafbd0a6fc0~fwYYRV4Cb0877408774eusmtip2J;
+        Wed,  8 Jul 2020 10:52:54 +0000 (GMT)
+Subject: Re: [RFC PATCH 0/2] PM / devfreq: Add delayed timer for polling
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     lukasz.luba@arm.com, k.konieczny@samsung.com, krzk@kernel.org,
+        kgene@kernel.org, s.nawrocki@samsung.com,
+        willy.mh.wolff.ml@gmail.com, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <bb3a5b29-c90f-5668-e46d-9eeeb5a9b973@samsung.com>
+Date:   Wed, 8 Jul 2020 12:52:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200707204241.36bea66a@hermes.lan>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200703062622.11773-1-cw00.choi@samsung.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMKsWRmVeSWpSXmKPExsWy7djP87rtS1njDY7NUrWYeOMKi8X1L89Z
+        LRZ8msFq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XCphZ2i9uNK9gs
+        Dr9pZ7X4duIRowOfx5p5axg9ds66y+6xaVUnm8fmJfUefVtWMXp83iQXwBbFZZOSmpNZllqk
+        b5fAlfH3yU7Wgm/CFWsW/GFuYJwt0MXIySEhYCJxbeVSxi5GLg4hgRWMEntmr2KBcL4wSsx/
+        d58JwvnMKHFg+Sd2mJaTbz5DtSxnlFja8wzKecsoMf3HCmaQKmEBD4m797vBOkQENCRm/r0C
+        VsQscItJ4tThG4wgCTYBK4mJ7avAbF4BO4mFV26CNbMIqEj8P3CVCcQWFYiQ+PTgMCtEjaDE
+        yZlPWEBsTgFriTs999hAbGYBcYlbT+YzQdjyEtvfzmEGWSYh8JZd4veNu8wQd7tIfDnwCuoH
+        YYlXx7dA2TISpyf3sEA0rGOU+NvxAqp7O6PE8sn/2CCqgNad+wVkcwCt0JRYv0sfxJQQcJS4
+        1CUFYfJJ3HgrCHEDn8SkbdOZIcK8Eh1tQhAz1CQ2LNvABrO1a+dK5gmMSrOQfDYLyTezkHwz
+        C2HtAkaWVYziqaXFuempxYZ5qeV6xYm5xaV56XrJ+bmbGIFJ7fS/4592MH69lHSIUYCDUYmH
+        NyORJV6INbGsuDL3EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWlOanFhxilOViUxHmNF72MFRJI
+        TyxJzU5NLUgtgskycXBKNTC6TEhKsdwrlboobJ1PvaLfus16S86funKyW4f5g3DwhLX/7P9M
+        2XMy9Ntua+73r/sUjLTuHLjioWC4ccbFJQwfWNdeOJ29Iyhhe0RV1OygBgfe73NWnfa5sXTB
+        Htf0Sa4Cp9/71V+zSzO7fO51rkZmQswWTU0uwXsXZh86tvD5v7PGl0Jfhn/eqsRSnJFoqMVc
+        VJwIAAvvUe1mAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsVy+t/xe7rtS1njDVZ/F7SYeOMKi8X1L89Z
+        LRZ8msFq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XCphZ2i9uNK9gs
+        Dr9pZ7X4duIRowOfx5p5axg9ds66y+6xaVUnm8fmJfUefVtWMXp83iQXwBalZ1OUX1qSqpCR
+        X1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl/H3yU7Wgm/CFWsW/GFu
+        YJwt0MXIySEhYCJx8s1nxi5GLg4hgaWMEg+XfgJyOIASMhLH15dB1AhL/LnWxQZR85pR4lFH
+        CxtIQljAQ+Lu/W52EFtEQENi5t8rjCA2s8AtJokVr0JB5ggJ9DFKfIoDCbMJWElMbF8FVsIr
+        YCex8MpNZhCbRUBF4v+Bq0wgtqhAhMThHbOgagQlTs58wgJicwpYS9zpuccGMV5d4s+8S8wQ
+        trjErSfzmSBseYntb+cwT2AUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3PbfYSK84Mbe4NC9d
+        Lzk/dxMjMH63Hfu5ZQdj17vgQ4wCHIxKPLwZiSzxQqyJZcWVuYcYJTiYlUR4nc6ejhPiTUms
+        rEotyo8vKs1JLT7EaAr03ERmKdHkfGBqySuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKa
+        nZpakFoE08fEwSnVwJhqd0DUlXGCz9YDIYH1E6eYyzzMPq23TvBdxddJt7OPC0+5bXGhilXM
+        K8hHJeuVRMgsH1/9NPEv5VVp/IaOuyYb/nnx/a2w9AuPn29Xdfv4f7/yksHgJLNAjYdarTz7
+        78P6rS+k/lwQbl2xs0nh2CyFFVHv07aIHZQ7PVEi/FSrILdo+S3PiUosxRmJhlrMRcWJACZW
+        R3/1AgAA
+X-CMS-MailID: 20200708105255eucas1p229180d35b47e4a350fbb72ea5e2df2a9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200703061508epcas1p171aa3c0ab832b77e5837d8bd1e563742
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200703061508epcas1p171aa3c0ab832b77e5837d8bd1e563742
+References: <CGME20200703061508epcas1p171aa3c0ab832b77e5837d8bd1e563742@epcas1p1.samsung.com>
+        <20200703062622.11773-1-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/2020 06:42, Stephen Hemminger wrote:
-> On Tue, 7 Jul 2020 02:03:36 +0300
-> Pavel Begunkov <asml.silence@gmail.com> wrote:
-> 
->> On 07/07/2020 01:28, Steven Rostedt wrote:
->>> On Tue, 7 Jul 2020 01:17:47 +0300
->>> Pavel Begunkov <asml.silence@gmail.com> wrote:
->>>   
->>>> Totally agree with you! But do we care then whether two _devices_ or _objects_
->>>> are slave-master? Can't see how it fundamentally differs.  
->>>
->>> The term slave carries a lot more meaning than subordinate. I replied to
->>> someone else but later realized that the person sent me their reply
->>> offlist, so my reply to them was also offlist. What I told them was,
->>> back in college (decades ago), when I first mentioned "master/slave" in
->>> conversation (I think it was about hard drives), a person in that
->>> conversation stated that those were not very nice terms to use. I blew
->>> it off back then, but after listening to more people, I found that
->>> using "slave" even to describe a device is not something that people
->>> care to hear about.  
->>
->> That's cultural, but honestly I've never seen such a person. I still
->> don't understand, why having secondary or subordinate object belittling
->> the owned side by not providing it the same rights and freedom is OK,
->> but slave/master objects are not. Where is the line?
->>
->>
->>>
->>> And in actuality, does one device actually enslave another device? I
->>> think that terminology is misleading to begin with.  
->>
->> As mentioned, I do like good clear terminology, and if it conveys the idea
->> better, etc., then it's worth to try. And IMHO that's the right reasoning
->> that should be behind. Otherwise, for almost every word we can find a person
->> seeing something subjectively offensive or at least bad in it.
-> 
-> Wherever possible the kernel should use the same terminology as the current
-> standard in that area. Many of the master/slave references in the networking
-> code are for protocols based on IEEE 802 standards (unfortunately paywalled).
-> The current version of those standards do not use this kind of wording and the
-> standards committees are also actively working on inclusive language statemets.
-> 
-> As far as the use of master/slave for bonding, bridge, team etc, it
-> looks like Linux just invented using those terms since I don't see it
-> any other vendors implementations Cisco/Juniper/Arista/... Linux terms
-> are different than industry norms in networking, this is not a good
-> thing. But changing human expectations is hard.
 
-And that's a perfectly convincing argument for a change -- consistency makes
-it easier to work with specs and code. I've never said anything against.
+Hi Chanwoo,
 
-I care about arguments being logically sound, as yours are. And the author
-neither provides such, nor IMHO actually helps the issues it raised.
+On 7/3/20 8:26 AM, Chanwoo Choi wrote:
+> Add the delayed timer to devfreq framework in order to support
+> the periodical polling mode without stop caused by CPU idle state.
 
--- 
-Pavel Begunkov
+Thank you, this patchset looks fine to me and is a step in the right
+direction:
+
+Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+
+> Some Non-CPU device must need to monitor the device status like
+> utilization regardless of CPU state.
+
+This is probably true for all devfreq devices using simple_ondemand
+governor by default:
+
+drivers/devfreq/exynos-bus.c
+drivers/devfreq/rk3399_dmc.c
+drivers/devfreq/tegra20-devfreq.c
+drivers/gpu/drm/lima/lima_devfreq.c
+drivers/gpu/drm/msm/msm_gpu.c
+drivers/gpu/drm/panfrost/panfrost_devfreq.c
+drivers/memory/samsung/exynos5422-dmc.c
+drivers/scsi/ufs/ufshcd.c
+
+With devfreq device polling being "coupled" to CPU idle state
+the devfreq subsystem behavior is completely unpredictable and
+unreliable.
+
+It affects both performance (device opp change up happening too
+late) and power consumption (device opp change down happening too
+late).
+
+It also causes hardware usage counters support to report too high
+values (because of CPU idle "coupling" the real polling period
+becomes larger than maximum period supported by the counter and
+the counter becomes fully "saturated") which negatively affects
+power consumption (as has been observed when using Odroid XU3/4).
+
+[ The only upside of using such "coupling" is lowered CPU power
+  usage (in some situations) but at the (unacceptable IMHO) cost
+  of the correctness of operations of devfreq subsystem. ]
+
+Unfortunately this patchset currently fixes only exynos5422-dmc
+devfreq driver. To fix problems for Exynos platforms we need to
+also fix exynos-bus devfreq driver.
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> - patch1 explains the detailed reason why the delayed timer is required.
+> - patch2 initializes that exynos5422-dmc device use delayed timer as default
+> instead of deferrable timer.
+> 
+> Chanwoo Choi (2):
+>   PM / devfreq: Add support delayed timer for polling mode
+>   memory: samsung: exynos5422-dmc: Use delayed timer as default
+> 
+>  Documentation/ABI/testing/sysfs-class-devfreq | 12 +++
+>  drivers/devfreq/devfreq.c                     | 83 ++++++++++++++++++-
+>  drivers/memory/samsung/exynos5422-dmc.c       |  1 +
+>  include/linux/devfreq.h                       |  9 ++
+>  4 files changed, 104 insertions(+), 1 deletion(-)
