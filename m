@@ -2,119 +2,81 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73112C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42DFE2065F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:36:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="PTpAiqd5"
+	by mail.kernel.org (Postfix) with ESMTP id 51C2F2065F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 13:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbgGHNgo (ORCPT
+        id S1729804AbgGHNgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:36:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729136AbgGHNgn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 09:36:43 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5CD2C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 06:36:42 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id o18so46140895eje.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 06:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=03JonGFN41nMFJlGEFKXl9Bpzl1Ujvr23TaWRry9onc=;
-        b=PTpAiqd5RBCVgLGXWMXrunrli3T+E2DRzw707sA1qaIazkk1zVS3jiycB3+KP5jLb6
-         m5YAmUwQ53ftCOo62gFY/HYloYVnKUhS7Iq5KBCW7w/UDdy9bMPKAXqQwU2jz85e2vGC
-         ALkviGT9PZvm4uM+oxth8Xd38yi3gsX+t8fkglimpP1cl2PmLCsHae2moo7n0uXKfUkC
-         x9jXy10+LnxamCFwmlbp5Z4LbzKA6B2rPgPjXdo+raNSneJhTjdyYqESlCLAcPmbcOL3
-         pF6A9AIhJ+bvbpu/AiGswEK3ZxopazEVxQuVGD9j3jsGzaXppove6apHUkvn5LQRItim
-         kxOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=03JonGFN41nMFJlGEFKXl9Bpzl1Ujvr23TaWRry9onc=;
-        b=CqbpF9W3aA4ygY/p2fF/iq1j3cC30iGCyTGeA/r/sq3jRmZ9Bb0I8NMPXNOlRb4CEx
-         NqhnAcErkgEvw3pVx4uzM4enJ8qbhQPt3h0D8fJm/envKrePkzukzQlgSgSJLV7kYaX3
-         fDz3p933yAcl2/HW1DL7lMbQIxpJo6A5x4uooZ9Jow93sfPHIsGTr0M1WQBAbCUbB8gO
-         7ZaD4BmxFiSQ+AkFUCLE89NKnf9bkRx7wLSlUix/YXOgR3NpaM43djitSz1dorcnYoum
-         pa9mli3fRYbQjhUYxqxcnF+U0ZCFIBRxosv+OZnN/BxsxrZhZAMFB8jNtKA7fXNUc3dP
-         O/9Q==
-X-Gm-Message-State: AOAM533GgLHElFl23o0k5hJrZL+FtNJJSxZuK3LBoylqA4P/7g3W314b
-        myvhfLOcS6TlkZg3GUBMsX+fmw==
-X-Google-Smtp-Source: ABdhPJwVfFoW6iQQ+fqbd7xp/1R/wW/saRz131MOzHu2XUHAvs/Onqzqo2VydVyKgnOzuUcxyR0yLw==
-X-Received: by 2002:a17:906:7b54:: with SMTP id n20mr50913962ejo.144.1594215401541;
-        Wed, 08 Jul 2020 06:36:41 -0700 (PDT)
-Received: from [192.168.178.33] (i5C746C99.versanet.de. [92.116.108.153])
-        by smtp.gmail.com with ESMTPSA id d26sm26632583edz.93.2020.07.08.06.36.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 06:36:41 -0700 (PDT)
-Subject: Re: [PATCH 1/6] md: switch to ->check_events for media change
- notifications
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <song@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20200708122546.214579-1-hch@lst.de>
- <20200708122546.214579-2-hch@lst.de>
- <09cd4827-52ae-0e7c-c3d3-e9a6cd27ff2b@cloud.ionos.com>
- <20200708132338.GO25523@casper.infradead.org>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <69412063-07eb-ddd1-2fee-2d3e1258cecf@cloud.ionos.com>
-Date:   Wed, 8 Jul 2020 15:36:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 8 Jul 2020 09:36:52 -0400
+Received: from mga09.intel.com ([134.134.136.24]:28566 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729136AbgGHNgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 09:36:47 -0400
+IronPort-SDR: vDi9TIsAiLgs3ZjvNWcK/INI6BYBW05cSV5551oSWgDgvtPRqq5NWRUOxP//gdSHnAc5tk3enY
+ rirNfaHMclVQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="149303332"
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="149303332"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 06:36:46 -0700
+IronPort-SDR: sBjCS0bDzDZEStrVmswPSJTukdpM2T4Cpc8vJ1rdc5wyfQEHRCQvLOHemHrDeCSkqGdXbCtW+R
+ FlnjpsDTWaXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="306048061"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Jul 2020 06:36:46 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 2D515301B2A; Wed,  8 Jul 2020 06:36:46 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 06:36:46 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, wei.w.wang@intel.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v12 06/11] KVM: vmx/pmu: Expose LBR to guest via
+ MSR_IA32_PERF_CAPABILITIES
+Message-ID: <20200708133646.GM3448022@tassilo.jf.intel.com>
+References: <20200613080958.132489-1-like.xu@linux.intel.com>
+ <20200613080958.132489-7-like.xu@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200708132338.GO25523@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200613080958.132489-7-like.xu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 3:23 PM, Matthew Wilcox wrote:
-> On Wed, Jul 08, 2020 at 03:17:31PM +0200, Guoqing Jiang wrote:
->> On 7/8/20 2:25 PM, Christoph Hellwig wrote:
->>> -static int md_media_changed(struct gendisk *disk)
->>> -{
->>> -	struct mddev *mddev = disk->private_data;
->>> -
->>> -	return mddev->changed;
->>> -}
->> Maybe we can remove "changed" from struct mddev since no one reads it
->> after the change.
-> You missed this hunk:
->
-> +static unsigned int md_check_events(struct gendisk *disk, unsigned int clearing)
->   {
->          struct mddev *mddev = disk->private_data;
-> +	unsigned int ret = 0;
->
-> +	if (mddev->changed)
-> +               ret = DISK_EVENT_MEDIA_CHANGE;
->          mddev->changed = 0;
-> -	return 0;
-> +	return ret;
->   }
->
+> +	/*
+> +	 * As a first step, a guest could only enable LBR feature if its cpu
+> +	 * model is the same as the host because the LBR registers would
+> +	 * be pass-through to the guest and they're model specific.
+> +	 */
+> +	if (boot_cpu_data.x86_model != guest_cpuid_model(vcpu))
+> +		return false;
 
-Yes, sorry for the noise.
+Could we relax this in a followon patch? (after this series is merged)
 
-Thanks,
-Guoqing
+It's enough of the perf cap LBR version matches, don't need full model
+number match. This would require a way to configure the LBR version
+from qemu.
 
+This would allow more flexibility, for example migration from
+Icelake to Skylake and vice versa.
+
+-Andi
