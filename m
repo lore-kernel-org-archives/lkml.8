@@ -2,92 +2,135 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE380C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36AA620672
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:16:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mjlo4UFs"
+	by mail.kernel.org (Postfix) with ESMTP id B9F8320708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594239485;
+	bh=K5Lg+VMXda9w1UJGY2IYhWtxKTo+Uepce6z7xUkDdpo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=g49kpTHZrsG3utWfpznMDA3pKoRH63oB6Z/+QSwf6cqnjpYaQCbkr3KmE+IlTyxRd
+	 hDEDpD3n+ysxhpn74ZOu2oUkmjRxarDn2WkAC1l5pSHuzB82D9ZiymwcsaN/qFxBMV
+	 whEUf1K1ST3PSFIGinZHUioj/deb43remhN9rW68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgGHUQe (ORCPT
+        id S1726371AbgGHUSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgGHUQe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:16:34 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF40CC061A0B;
-        Wed,  8 Jul 2020 13:16:33 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id o3so66877ilo.12;
-        Wed, 08 Jul 2020 13:16:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tM+7BVPh8bMDO5y+heD1FnDYRPNX3xnpgeW4SZPgUBs=;
-        b=Mjlo4UFs8AnPv/x6lCF+93YSRpR+fKu6PkR5OT2yzA8OJwy3OISUHmMMI2LYDfAt9n
-         zWzVNek5CF637yYus2Ob5sFoXxK5Q0nEQVw6fLzbXqqfqu/QWo/iDLfsecc+USn8gQga
-         ZbtMu5rU2Knx5ze8ujrMw08ywsd1t/TrbvLH588u+xiQSWrUFh/T5MPMy03pR8OUBrvg
-         4Ht780LJFEjDbYjXAHdhGYOcL4fjtWOpn1R2eYBykZTZIMly8wGoONrS0TGTsa+aoKaB
-         fW3K+MK/gyO2+ViudQD+xpElbmtKoX83nX3Gqm3vE0gd3IP9j7DhoN3ZIBRe9aCkRujL
-         IBuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tM+7BVPh8bMDO5y+heD1FnDYRPNX3xnpgeW4SZPgUBs=;
-        b=PmY/8MUhi0yLyc1913t11OvK455FwSPChzvq/uVrdB3ZXxFEJAFVwXGMF5nQge8dA8
-         bu8L1D7HvUuz82f8rcYOi6C0gS4wVLiOHlHruUQOvvHJsA54CGaiRtj5JjoWFjlvy/Ua
-         OmVIHu5SlaJzW3aSI8rXoH1jYE7Y0rLuz9CzXT+vOiR/p7RDoTL1qR/4oB3Px7624Rv6
-         NY7sII7Cn1SQpNI+TU2xCXI6CaeJH31+iv/OuGksJ4o9fGLcZP7PtwLKp9EEPkD6DNKo
-         0h45ZqkcfOTXgmYvFhFZbbrMrALEN7+efEI4IW08meJnbbOM3Z/Bt5KRSy2x6AzvABvr
-         Zlhw==
-X-Gm-Message-State: AOAM5325XHkS2nAIcpVBhES9Mt9igQOg052YC1KliT7QfSfi0vgYNBSm
-        G/mDOQrDeAPRWLj08EzHjOUciA/4ipzX7PpRrh4fj06WvW4=
-X-Google-Smtp-Source: ABdhPJxpXGW/XExlj6KBTGiyRrFl/+MjnQ+qdbj4oYc+N0X3PIgJ62PIGVETRSlrpuixkk1XzG9K9wbBJuYIlvkYfJA=
-X-Received: by 2002:a92:5857:: with SMTP id m84mr42874500ilb.144.1594239393335;
- Wed, 08 Jul 2020 13:16:33 -0700 (PDT)
+        Wed, 8 Jul 2020 16:18:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725964AbgGHUSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 16:18:04 -0400
+Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B8C820672;
+        Wed,  8 Jul 2020 20:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594239483;
+        bh=K5Lg+VMXda9w1UJGY2IYhWtxKTo+Uepce6z7xUkDdpo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vqi2sw4jvjVXqJNUckduzP/bJGnZLr0IpJ8RS18LE8x4iSXUc6sPS/bF9Chpy4svu
+         2wpfLl28X3KkiZOxjrragrPUpUnTRSVbf0zqBlYmFCr9tFtMyBSODjD9DUkwbW0sIq
+         /mfMIbEfZBj2f5fvzvKHGuqxptv+gp/Ne7VWX0oA=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-security-module@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>
+Cc:     syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
+Subject: [PATCH] Smack: fix use-after-free in smk_write_relabel_self()
+Date:   Wed,  8 Jul 2020 13:15:20 -0700
+Message-Id: <20200708201520.140376-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <0000000000000279c705a799ae31@google.com>
+References: <0000000000000279c705a799ae31@google.com>
 MIME-Version: 1.0
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
- <20200623134259.8197-1-mzhivich@akamai.com> <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
- <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
- <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
- <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com> <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
- <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com> <e54b0fe2ab12f6d078cdc6540f03478c32fe5735.camel@redhat.com>
-In-Reply-To: <e54b0fe2ab12f6d078cdc6540f03478c32fe5735.camel@redhat.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Wed, 8 Jul 2020 13:16:22 -0700
-Message-ID: <CAM_iQpVZ4_AEV6JR__u-ooF7-=ozABVr_XPXGqwj2AK-VM1U5w@mail.gmail.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-To:     Paolo Abeni <pabeni@redhat.com>
-Cc:     Josh Hunt <johunt@akamai.com>,
-        Jonas Bonn <jonas.bonn@netrounds.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 7:18 AM Paolo Abeni <pabeni@redhat.com> wrote:
-> So the regression with 2 pktgen threads is still relevant. 'perf' shows
-> relevant time spent into net_tx_action() and __netif_schedule().
+From: Eric Biggers <ebiggers@google.com>
 
-So, touching the __QDISC_STATE_SCHED bit in __dev_xmit_skb() is
-not a good idea.
+smk_write_relabel_self() frees memory from the task's credentials with
+no locking, which can easily cause a use-after-free because multiple
+tasks can share the same credentials structure.
 
-Let me see if there is any other way to fix this.
+Fix this by using prepare_creds() and commit_creds() to correctly modify
+the task's credentials.
 
-Thanks.
+Reproducer for "BUG: KASAN: use-after-free in smk_write_relabel_self":
+
+	#include <fcntl.h>
+	#include <pthread.h>
+	#include <unistd.h>
+
+	static void *thrproc(void *arg)
+	{
+		int fd = open("/sys/fs/smackfs/relabel-self", O_WRONLY);
+		for (;;) write(fd, "foo", 3);
+	}
+
+	int main()
+	{
+		pthread_t t;
+		pthread_create(&t, NULL, thrproc, NULL);
+		thrproc(NULL);
+	}
+
+Reported-by: syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
+Fixes: 38416e53936e ("Smack: limited capability for changing process label")
+Cc: <stable@vger.kernel.org> # v4.4+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ security/smack/smackfs.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+index c21b656b3263..840a192e9337 100644
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -2720,7 +2720,6 @@ static int smk_open_relabel_self(struct inode *inode, struct file *file)
+ static ssize_t smk_write_relabel_self(struct file *file, const char __user *buf,
+ 				size_t count, loff_t *ppos)
+ {
+-	struct task_smack *tsp = smack_cred(current_cred());
+ 	char *data;
+ 	int rc;
+ 	LIST_HEAD(list_tmp);
+@@ -2745,11 +2744,21 @@ static ssize_t smk_write_relabel_self(struct file *file, const char __user *buf,
+ 	kfree(data);
+ 
+ 	if (!rc || (rc == -EINVAL && list_empty(&list_tmp))) {
++		struct cred *new;
++		struct task_smack *tsp;
++
++		new = prepare_creds();
++		if (!new) {
++			rc = -ENOMEM;
++			goto out;
++		}
++		tsp = smack_cred(new);
+ 		smk_destroy_label_list(&tsp->smk_relabel);
+ 		list_splice(&list_tmp, &tsp->smk_relabel);
++		commit_creds(new);
+ 		return count;
+ 	}
+-
++out:
+ 	smk_destroy_label_list(&list_tmp);
+ 	return rc;
+ }
+-- 
+2.27.0
+
