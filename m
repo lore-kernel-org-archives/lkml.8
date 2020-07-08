@@ -2,114 +2,67 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1C3520786
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:11:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nCZG6pOP"
+	by mail.kernel.org (Postfix) with ESMTP id 2544F20739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 11:14:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594206870;
+	bh=HuTn2+p7wIhJTjMMiQ1v3hdP2M2atw3I9rw/YACMxDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R0mxOTyn9giZooDZQi7m/CpvpbjmFAW4k8p7roJCE5lS44Wf0nmF81ObqvC1QQsxu
+	 rNpyF3E2HaE4xz1YWROYhV8neYq9Im5tkfyovWpbVbe/ibbxPD4xPxrz+rjm/r5+Q7
+	 HXj8QzwcnxN+O0TqNKCp774qmSMoE8MgYLJFdatU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgGHLLM (ORCPT
+        id S1728701AbgGHLO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:11:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728700AbgGHLLM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 07:11:12 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A36C08C5DC;
-        Wed,  8 Jul 2020 04:11:12 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id m9so9566100pfh.0;
-        Wed, 08 Jul 2020 04:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zSjyM6g1C34TxuHd9W0ErF1Cg927sxQ1oq29ZbJpSug=;
-        b=nCZG6pOPxnpDrleuRASYW8PXQBsvs3SnMsj6Ni9nGc0zPbEcTx9u0HKEwAgSA7h1Di
-         ifBOf8/D4Z/0ZHURa+MSt6tstvqtHvAVqMi65CE0JLzUnkBer7XLhU25mctSV1BZc+Bh
-         fTRfe6TP5I/mj8OmcEWTsKtC8NNxIJ9xegOrDOvToWSMqbUqp2PCi2TfckgUtuAabBOd
-         WZtVYFjgaYAI53/JW23LUlYQcMRD5XusOZSlJ4O4Lb3xxvr6V+qn8JQQ2c2MnQc07rVk
-         iP6BQ9+zgAz6mlXbSpYMFoY6JX28dhvEP2Vakv1ipavaLweUF+7gv2VPzBgxSZZfAI1I
-         pycw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zSjyM6g1C34TxuHd9W0ErF1Cg927sxQ1oq29ZbJpSug=;
-        b=ePMxmZo+D+WOQh7Kd8oP+TiWXA0zIR9riXsz5Tsq58koYLZfe9JCJFmN8QM+D7mKnW
-         zq7JYYd6UvgFiM5ZfpIBxGrIedxUjle3/lOAJXgKwDxoumG/bzhydpPNRKoq8HXcWCWO
-         t230Wt03/r3h9rktM8UbtNoAt/D2ldRRdH4wgmBzJs8dUcl4v3wUueoQZz75H9mgw6fh
-         CDnvp7kQcho0Q2elrBT1I9XDjZGmyWjqDIFUffnCnqx9/2PJb3eXrwlYRyyyb0LuKq/Q
-         AC3YIYrTOPU0dy3pmcb9AT73K4WBXy4LGFGXNsNKItlhncCGv2MMnXC7G63FaeLAILbY
-         Rc4w==
-X-Gm-Message-State: AOAM533VGNFgYKljUM2vOfZ2R3dVTFEvpLiyS+16POBHrn5wEtvMRrLB
-        wsdce+wAaKaQyltNiRFY9ws=
-X-Google-Smtp-Source: ABdhPJzlBCQcbdO/pjB3HwANwtrwUPpeRd3/sBgg7PASPwSq4Vk3+7wvcnAxanPDH7mQvBqRhBD0NQ==
-X-Received: by 2002:a62:16:: with SMTP id 22mr36905734pfa.120.1594206671579;
-        Wed, 08 Jul 2020 04:11:11 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id o1sm5035018pjf.17.2020.07.08.04.11.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 04:11:11 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 04:11:09 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Sergey Organov <sorganov@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH  3/5] net: fec: initialize clock with 0 rather than
- current kernel time
-Message-ID: <20200708111109.GE9080@hoboy>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200706142616.25192-4-sorganov@gmail.com>
- <20200706152721.3j54m73bm673zlnj@skbuf>
- <874kqksdrb.fsf@osv.gnss.ru>
- <20200707063651.zpt6bblizo5r3kir@skbuf>
- <87sge371hv.fsf@osv.gnss.ru>
- <20200707164329.pm4p73nzbsda3sfv@skbuf>
+        Wed, 8 Jul 2020 07:14:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgGHLO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 07:14:28 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86E9220739;
+        Wed,  8 Jul 2020 11:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594206868;
+        bh=HuTn2+p7wIhJTjMMiQ1v3hdP2M2atw3I9rw/YACMxDw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0wfsx9LQy82GvY+kxArYcegb6A8taFC77/zCYSD265KrweGPDC1hbb6VP9UkOwq17
+         6Fd5qcb18RPRUAmwTL+DRgz6v4ocx8/E7UTYRQgB5kCej9jXiwke5iVQicuQ9dz8EG
+         TgKY8XEEmLaTQ3Q2g2DhQXJK1xBig4BKXSycRFdM=
+Date:   Wed, 8 Jul 2020 16:44:24 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] phy: core: fix code style in
+ devm_of_phy_provider_unregister
+Message-ID: <20200708111424.GE34333@vkoul-mobl>
+References: <20200629145010.122675-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200707164329.pm4p73nzbsda3sfv@skbuf>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200629145010.122675-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 07:43:29PM +0300, Vladimir Oltean wrote:
-> And overall, my argument is: you are making a user-visible change, for
-> basically no strong reason, other than the fact that you like zero
-> better. You're trying to reduce confusion, not increase it, right?
+On 29-06-20, 20:20, Vinod Koul wrote:
+> Documentation/process/coding-style.rst says:
+> "functions: they have the opening brace at the beginning of the next
+> line"
+> 
+> devm_of_phy_provider_unregister() function has opening brace at same
+> line, so fix it up.
 
-;^)
- 
-> I agree with the basic fact that zero is a simpler and more consistent
-> value to initialize a PHC with, than the system time. As I've already
-> shown to you, I even attempted to make a similar change to the ptp_qoriq
-> driver which was rejected. So I hoped that you could bring some better
-> arguments than "I believe 0 is simpler". Since no value is right, no
-> value is wrong either, so why make a change in the first place? The only
-> value in _changing_ to zero would be if all drivers were changed to use
-> it consistently, IMO.
-
-Right.
-
-I would not appose making all PHCs start with zero.  If you feel
-strongly about starting all PHCs at zero, please prepare a patch set
-and get the ACKs of the appropriate driver maintainers.
-
-(The effort seems pointless to me because the user needs to consult
-the synchronization flags in any case.)
-
-Thanks,
-Richard
+Applied all these
+-- 
+~Vinod
