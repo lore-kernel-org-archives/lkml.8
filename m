@@ -2,155 +2,127 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF60C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE62C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC2CA20774
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F375120774
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 04:38:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IT2uQZXV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p8q3DCgq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgGHEiI (ORCPT
+        id S1729333AbgGHEiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 00:38:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
+        Wed, 8 Jul 2020 00:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgGHEiH (ORCPT
+        with ESMTP id S1726185AbgGHEiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 00:38:07 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4EB5C061755;
-        Tue,  7 Jul 2020 21:38:06 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B1mkx3glbz9sDX;
-        Wed,  8 Jul 2020 14:38:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594183083;
-        bh=ZsMcG70EzyVoGxShgO4kLHS/DyIAqpINTFPJBiPhCWU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IT2uQZXV3/7XQNOLkkYoasFrMKQLzR4jB3xm7wNtSFUhxgGcZWfjwcwZ1zzpoZ4wE
-         iXaFlujqV4ZoGC4eSVX0frW/TRpB5BGo0MicIUHHPJZIBZpN1jaRxzAc7FqKO/BdKs
-         ztKtwOcBDIEeHrw7g9SlUitpPjfjcKkwKlpZnSIJSJjaSlTEfzmEa0yhkUV/sdSG5L
-         vUpfsPGhgHCdcVLpUotau2j/j9UH0H7nxCy2lYpMCnTIyty2QzMaT/rfiXn7LvT/wX
-         AV/XSJX9mnVGgQHpo2pv1NQiSb+rjfHPJHebvf175skl1aTbnh5DEjXWDDGRgP12SN
-         +SdaMfVps7Zeg==
-Date:   Wed, 8 Jul 2020 14:37:59 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Richard Weinberger <richard.weinberger@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christophe Kerello <christophe.kerello@st.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: linux-next: manual merge of the spi tree with the mtd tree
-Message-ID: <20200708143759.50246487@canb.auug.org.au>
+        Wed, 8 Jul 2020 00:38:22 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66217C061755;
+        Tue,  7 Jul 2020 21:38:22 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id j18so1485179wmi.3;
+        Tue, 07 Jul 2020 21:38:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=06Hzq2VRyI6UIt88Dp3b82i5/9v//2xu8xecyFLZ6F8=;
+        b=p8q3DCgqjwzsoCr7bSNkRvfBW4kSwZKR6Yn4LN/XneUEg3TfLt+TnMkBnDooJB2adw
+         7Ctv+ExHMl9a14uHnLMjD24lI83nztqURJDfQKLrSRtgb1Nv3VOE09B2TdPLhedkAqZj
+         y+VQniCP9WvlhgsCAoIYtBS9ttVFG1wltvpAj8K6i2fnSX8FfXmI/TcXoqxZflp8JB23
+         UW80W0VvIj/SolCiVVuyCuGejIPfIylgx7BMbc3csLCEtA9EPtsnnFAiZ4eHr332s2pJ
+         Ek7XnYg9VwDsEnL02WnwQEF169FYBLswe843gYZw+G3CGvLT/80L+0A9OouSFQoKgGOu
+         AC3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=06Hzq2VRyI6UIt88Dp3b82i5/9v//2xu8xecyFLZ6F8=;
+        b=kWRJuOkSpVjEz1PumhnuyEwesvqVsD2ABmIbmFep59H6jgn2Tq0uoXrYYGR5HF42l6
+         0fpT6qSpEzY/hXFi+K4Ck/ype8MAjRN/wjtIvth6q4I7yUo32kx+hKWjnwFVDFNou2E4
+         KoDkN/ap2vmoO3ue4qJXvKPIz9BNVLcl8/xZf7yrhzEkqvmdzbQsV5/HB3OFytL5JMZY
+         zbha9WyGjddZdJx2J4wvBFavcxPo4m16xyZ9BtRyqdgHo0vL45mRMkdDlLoSzoQXsQFm
+         Jj7yTFc9GzP+C3F0TJM7pFFETgrvUzGXZ3+9OK3A80XL2bwNwdIjW1akTcbTByXRPRoK
+         TgCQ==
+X-Gm-Message-State: AOAM531MHQ0Wjny6R6F3Oi6aeWzBOIr5RY17RZddNOzbuzaIKc+aImny
+        3bhHkvONG656p8fVEdEmuZkpdNom
+X-Google-Smtp-Source: ABdhPJzFNbynHxzghcviq7OHt7Ns5zaJAl0bcRMp1hwy3+kBx3Go3m/5LroH6bVLAX0SonyxRMi8pg==
+X-Received: by 2002:a1c:c904:: with SMTP id f4mr7224279wmb.69.1594183100840;
+        Tue, 07 Jul 2020 21:38:20 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id w128sm4489452wmb.19.2020.07.07.21.38.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 21:38:20 -0700 (PDT)
+Subject: Re: [PATCH v10 0/9] firmware: add request_partial_firmware_into_buf
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+References: <20200706232309.12010-1-scott.branden@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <c8bbabe6-0b25-a816-f95d-8af63010eaf2@gmail.com>
+Date:   Tue, 7 Jul 2020 21:38:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/oy0nep/YG9.oD.7jA5usSxT";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200706232309.12010-1-scott.branden@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/oy0nep/YG9.oD.7jA5usSxT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the spi tree got conflicts in:
+On 7/6/2020 4:23 PM, Scott Branden wrote:
+> This patch series adds partial read support via a new call
+> request_partial_firmware_into_buf.
+> Such support is needed when the whole file is not needed and/or
+> only a smaller portion of the file will fit into allocated memory
+> at any one time.
+> In order to accept the enhanced API it has been requested that kernel
+> selftests and upstreamed driver utilize the API enhancement and so
+> are included in this patch series.
+> 
+> Also in this patch series is the addition of a new Broadcom VK driver
+> utilizing the new request_firmware_into_buf enhanced API.
+> 
+> Further comment followed to add IMA support of the partial reads
+> originating from request_firmware_into_buf calls.  And another request
+> to move existing kernel_read_file* functions to its own include file.
 
-  drivers/memory/Kconfig
-  drivers/memory/Makefile
-
-between commit:
-
-  66b8173a197f ("memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driv=
-er")
-
-from the mtd tree and commit:
-
-  ca7d8b980b67 ("memory: add Renesas RPC-IF driver")
-
-from the spi tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/memory/Kconfig
-index be69c07b8941,e438d79857da..000000000000
---- a/drivers/memory/Kconfig
-+++ b/drivers/memory/Kconfig
-@@@ -174,16 -174,15 +174,25 @@@ config PL353_SM
-  	  This driver is for the ARM PL351/PL353 Static Memory
-  	  Controller(SMC) module.
- =20
-+ config RENESAS_RPCIF
-+ 	tristate "Renesas RPC-IF driver"
-+ 	depends on ARCH_RENESAS
-+ 	select REGMAP_MMIO
-+ 	help
-+ 	  This supports Renesas R-Car Gen3 RPC-IF which provides either SPI
-+ 	  host or HyperFlash. You'll have to select individual components
-+ 	  under the corresponding menu.
-+=20
- +config STM32_FMC2_EBI
- +	tristate "Support for FMC2 External Bus Interface on STM32MP SoCs"
- +	depends on MACH_STM32MP157 || COMPILE_TEST
- +	select MFD_SYSCON
- +	help
- +	  Select this option to enable the STM32 FMC2 External Bus Interface
- +	  controller. This driver configures the transactions with external
- +	  devices (like SRAM, ethernet adapters, FPGAs, LCD displays, ...) on
- +	  SOCs containing the FMC2 External Bus Interface.
- +
-  source "drivers/memory/samsung/Kconfig"
-  source "drivers/memory/tegra/Kconfig"
- =20
-diff --cc drivers/memory/Makefile
-index d3d8d6ced342,d105f8ebe8b8..000000000000
---- a/drivers/memory/Makefile
-+++ b/drivers/memory/Makefile
-@@@ -22,7 -22,7 +22,8 @@@ obj-$(CONFIG_JZ4780_NEMC)	+=3D jz4780-nem
-  obj-$(CONFIG_MTK_SMI)		+=3D mtk-smi.o
-  obj-$(CONFIG_DA8XX_DDRCTL)	+=3D da8xx-ddrctl.o
-  obj-$(CONFIG_PL353_SMC)		+=3D pl353-smc.o
-+ obj-$(CONFIG_RENESAS_RPCIF)	+=3D renesas-rpc-if.o
- +obj-$(CONFIG_STM32_FMC2_EBI)	+=3D stm32-fmc2-ebi.o
- =20
-  obj-$(CONFIG_SAMSUNG_MC)	+=3D samsung/
-  obj-$(CONFIG_TEGRA_MC)		+=3D tegra/
-
---Sig_/oy0nep/YG9.oD.7jA5usSxT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8FTacACgkQAVBC80lX
-0GxCUQf+IA49MSifIWTN1d90F+RjckUEh8j/Ovj98n29ZkzaWB9z7jVu4TUwEPS5
-AiqCVV4WBruEusSVwoW3+Hxxn34v2ZZ0VEs0dex68F1qf4MO60FfIjARPsq74U0u
-8LU3GJ73P7L9f4bqIhUZH4iwu34oYgSIqH+yASNSnZuIybzbaNyUV0nXcjqp40ZF
-Pe0OZ+d36RYukuRNfCdfoKoThScBZT4PwgnsO1u/KwF4LlLyruy/izAIbmrKPYtA
-WkPnjzS6zgjk7rXcdBHE7m4s8zJ8rv7aoKae+9HH69Mij3PT5hfErXbte/3ylpbf
-UyNDC6L2//e0KLEI7WsuV5wLRDQBAw==
-=m89a
------END PGP SIGNATURE-----
-
---Sig_/oy0nep/YG9.oD.7jA5usSxT--
+Do you have any way to separate the VK drivers submission from the
+request_partial_firmware_into_buf() work that you are doing? It looks
+like it is going to require quite a few iterations of this patch set for
+the firmware/fs/IMA part to be ironed out, so if you could get your
+driver separated out, it might help you achieve partial success here.
+-- 
+Florian
