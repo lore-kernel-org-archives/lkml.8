@@ -2,123 +2,162 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDA8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E3C20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64CEB206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 16:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPaJPdoz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuE/b2Wb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbgGHQpf (ORCPT
+        id S1730512AbgGHQqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43078 "EHLO
+        Wed, 8 Jul 2020 12:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730278AbgGHQpf (ORCPT
+        with ESMTP id S1728148AbgGHQqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:45:35 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A6BC061A0B;
-        Wed,  8 Jul 2020 09:45:35 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id md7so1436832pjb.1;
-        Wed, 08 Jul 2020 09:45:35 -0700 (PDT)
+        Wed, 8 Jul 2020 12:46:32 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F721C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 09:46:32 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id f16so1442390pjt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 09:46:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/0QaE6E8CXzLAPNfsNVNICr8uQjOJBz75blux9yeZRY=;
-        b=ZPaJPdozMAQiL2Gq+tWHaGQ/IRAzrfgb72YMuC5chBqeUEHy/NNFCnayfq122lo6K4
-         lTNNaNgPZykcZ4Thl5hIfwvvuGI6hwji6HqDBIg86i9xQWhTqJ5PoOBCszgwClJ3a9gK
-         n6jVRhwMzu1fHl5uA1+jkWu5vV7cLzFxh0PM00rJwfjNu+6lqmGtEN1iViLcawmwYMWx
-         ttPt9TMxbyzUV2vBMJi+jRv6qeyHGXzbFp1LfXVmdNTcxXgRIkAUINAeUWrDI4t2th/y
-         BhqKtQoZOfMIGvUsYFeJX744JCIXSgX4ElOZ1SAlrYpqgw+9q9BPpp0PikQh3/3if5As
-         5avA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EJTign6MliNTEWA32StLMXy4e4kp/d+/7WiDwup1TOY=;
+        b=EuE/b2WbTAKSka87OF4QGfSu3+Xx9wLSlpsbQil3e4X/7GtvPxuMLzCd2uudXAFu3m
+         IM5U+38x+28nAi6o94E31+fv2hK+5nXH5I75O8l5CYpyZMcxMwsdEssyZJaByzTaGMjb
+         q2uCbzuNZFX35efOh8gvfD06vuGlTf7oTj0uZgFhuSVvU+at5y2rcqwSEeboWQW0nkmm
+         QOcV4O5Gq3cYRAds0EFA4pBP6Kj2iEG9D3UjxhfyvugVrcn7LZWlSZ6D0ut8temxnf2h
+         CX+1oBXoxTTEvQziRs5YWlizeL96xBRolSaM0b7BHr+ONK0DcXmD7hPa89TjlHO5Yp1f
+         fe7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/0QaE6E8CXzLAPNfsNVNICr8uQjOJBz75blux9yeZRY=;
-        b=uoNm1umtbcLQ4EXP91QqmVuWda4TSYyuo4jrIwjIN0L2pE8I8VqShsT6s1C106M19/
-         bKduJoCinQh3SADSFZRUmPtQNbb3/UeVbUdkyQMqriBUF3Ftvh62WX5zYL84XI+9YvsW
-         ogz+ZwzI8fyCMgNRBz3XpAE3E2xlP1AdT9m0i9c2R2a9o+kSYExdda1s9HaxfVz0nhuc
-         qCYf4EglUQG//r+8j3Yba78x9oZrsNF7aJINLUL2NBVfCUawn96slthy4quVN5ZqZhul
-         +mant38PmXRFjw2Kig8POOUQNfvcpW0V5fqKo5OJBfByKIEp5tlz12r2gw72zf3GNsES
-         Lqcw==
-X-Gm-Message-State: AOAM533cYThngN9WelUz4bGDJJKwSd9uMzVW0KpKthKzvb5UoIbn/L9+
-        K6e3inh1Iu0vAT3vwED7k2GyygrdEo0VFH1yT2g=
-X-Google-Smtp-Source: ABdhPJw/9tCiF8Lg8K1frvEARIekU3Ycw+ZcCSwFx5Jcd6FFxgQUP1wz5lTVdVNaeVg63WLJLPKx9iXKjUcpc1CCYqs=
-X-Received: by 2002:a17:902:7288:: with SMTP id d8mr51792321pll.18.1594226734775;
- Wed, 08 Jul 2020 09:45:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EJTign6MliNTEWA32StLMXy4e4kp/d+/7WiDwup1TOY=;
+        b=H0Jy7o72Tq3lUtBu+ACwdKnZaKnbHGnkMjkVIzly0Vjrg448XQRcGXlpClrM4Dcl17
+         X4v5qz2D8LSiM4bKAhk1Dwjo1HCg1G0sy3MtPLFMcireaqk8mjsZXacOz7gISG1Uynx1
+         wxTHhZyo8cfvBpFFgsTCtSC34Vqcksoh3Nyb8j/po1jxn/MPLMh9pGs8bI7z3B7xMViL
+         bV4h8ZdQPh0buh2K3da8Mej0LZz6Qfo2qNCN9/FGfHTVTQw+0CTm9pL1i9ubRq1GV4bv
+         Mxp4hBJ8sMZbBe9lzfQjz/Dx98FFRSYbErsaZB0r9S+1Fr4ZpiWGG3aRyuOXVjxycPqh
+         lfpw==
+X-Gm-Message-State: AOAM532uck6yHkpmnnvMrkpTMQarqLGogtEAn7137e0QzMmmCGjJ2xHw
+        9MwqmCBwWtBpvR0r4JXHH2Z8FJivncs=
+X-Google-Smtp-Source: ABdhPJzYj/aSHRwu+wSh3YthtkwXxLjTkAxJ718YynBLMr7DOCCaKvwoeVbkwSBozmBBaFmX/PQhIA==
+X-Received: by 2002:a17:90b:f16:: with SMTP id br22mr11071885pjb.170.1594226791477;
+        Wed, 08 Jul 2020 09:46:31 -0700 (PDT)
+Received: from vultr.guest ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id r8sm310803pfg.147.2020.07.08.09.46.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 09:46:30 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v3 00/17] perf: ftrace enhancement
+Date:   Thu,  9 Jul 2020 00:45:48 +0800
+Message-Id: <20200708164605.31245-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200708155834.19762-1-digetx@gmail.com> <20200708155834.19762-3-digetx@gmail.com>
-In-Reply-To: <20200708155834.19762-3-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 8 Jul 2020 19:45:18 +0300
-Message-ID: <CAHp75VeKKDevnYgu-te9DzND5nm1EfZQFCjEsGhaDg3yJn9-Kw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: max77620: Replace 8 with MAX77620_GPIO_NR
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 6:58 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> The MAX77620_GPIO_NR enum value represents the total number of GPIOs,
-> let's use it instead of a raw value in order to improve the code's
-> readability a tad.
+The perf has basic kernel ftrace support but lack support of most tracing
+options. This serias is target to enhance the perf ftrace functionality so
+that we can make full use of kernel ftrace with perf.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+In general, this serias be cataloged into two main changes:
+  1) Improve usability of existing functions. For example, we don't need to type
+     extra option to select the tracer.
+  2) Add new options to support all other ftrace functions.
 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/gpio/gpio-max77620.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-> index 970ad6397a56..08bd5b141437 100644
-> --- a/drivers/gpio/gpio-max77620.c
-> +++ b/drivers/gpio/gpio-max77620.c
-> @@ -19,8 +19,8 @@ struct max77620_gpio {
->         struct regmap           *rmap;
->         struct device           *dev;
->         struct mutex            buslock; /* irq_bus_lock */
-> -       unsigned int            irq_type[8];
-> -       bool                    irq_enabled[8];
-> +       unsigned int            irq_type[MAX77620_GPIO_NR];
-> +       bool                    irq_enabled[MAX77620_GPIO_NR];
->  };
->
->  static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
-> @@ -38,7 +38,7 @@ static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
->
->         pending = value;
->
-> -       for_each_set_bit(offset, &pending, 8) {
-> +       for_each_set_bit(offset, &pending, MAX77620_GPIO_NR) {
->                 unsigned int virq;
->
->                 virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
-> --
-> 2.26.0
->
+Here is a glance of all ftrace functions with this serias:
 
+$ sudo perf ftrace -h
+
+ Usage: perf ftrace [<options>] [<command>]
+    or: perf ftrace [<options>] -- <command> [<options>]
+
+    -a, --all-cpus        system-wide collection from all CPUs
+    -C, --cpu <cpu>       list of cpus to monitor
+    -d, --delay <n>       ms to wait before starting tracing after program start
+    -D, --graph-depth <n>
+                          Max depth for function graph tracer (This option is deprecated)
+    -F, --funcs           Show available functions to filter
+    -G, --graph-funcs <func>
+                          trace given functions using function_graph tracer
+    -g, --nograph-funcs <func>
+                          Set nograph filter on given functions
+    -m, --buffer-size <size>
+                          size of per cpu buffer
+    -N, --notrace-funcs <func>
+                          do not trace given functions
+    -p, --pid <pid>       trace on existing process id
+    -t, --tid <tid>       trace on existing thread id (exclusive to --pid)
+    -T, --trace-funcs <func>
+                          trace given functions using function tracer
+    -t, --tracer <tracer>
+                          tracer to use: function or function_graph (This option is deprecated)
+    -v, --verbose         be more verbose
+        --func-opts <options>
+                          function tracer options, available options: call-graph,irq-info
+        --graph-opts <options>
+                          graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>
+        --inherit         trace children processes
+
+v3:
+  o add --func-opts and --graph-opts to set tracer specific options.
+  o support units as a suffix for option '-m/--buffer-size'.
+v2:
+  o patches for option '-u/--userstacktrace' and '--no-pager' are dropped.
+  o update all related perf documentation.
+  o rename some options. Now all funcgraph tracer options are prefixed with
+    '--graph-', while all function tracer options are prefixed with '--func-'.
+  o mark old options deprecated instead of removing them.
+
+Changbin Du (17):
+  perf ftrace: select function/function_graph tracer automatically
+  perf ftrace: add option '-F/--funcs' to list available functions
+  perf ftrace: add option -t/--tid to filter by thread id
+  perf ftrace: add option -d/--delay to delay tracing
+  perf ftrace: factor out function write_tracing_file_int()
+  perf ftrace: add option '-m/--buffer-size' to set per-cpu buffer size
+  perf ftrace: show trace column header
+  perf ftrace: add option '--inherit' to trace children processes
+  perf: util: add general function to parse sublevel options
+  perf ftrace: add support for tracing option 'func_stack_trace'
+  perf ftrace: add support for trace option sleep-time
+  perf ftrace: add support for trace option funcgraph-irqs
+  perf ftrace: add support for tracing option 'irq-info'
+  perf ftrace: add option 'verbose' to show more info for graph tracer
+  perf ftrace: add support for trace option tracing_thresh
+  perf: ftrace: allow set graph depth by '--graph-opts'
+  perf ftrace: add change log
+
+ tools/perf/Documentation/perf-config.txt |   5 -
+ tools/perf/Documentation/perf-ftrace.txt |  38 ++-
+ tools/perf/builtin-ftrace.c              | 367 ++++++++++++++++++++++-
+ tools/perf/util/debug.c                  |  61 ++--
+ tools/perf/util/util.c                   |  56 ++++
+ tools/perf/util/util.h                   |   7 +
+ 6 files changed, 469 insertions(+), 65 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
