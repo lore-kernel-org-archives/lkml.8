@@ -2,96 +2,138 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77366C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A100720760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506EF20786
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:17:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v23iSweX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNfRXPKQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbgGHHQy (ORCPT
+        id S1730158AbgGHHRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:16:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39004 "EHLO
+        Wed, 8 Jul 2020 03:17:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729757AbgGHHQy (ORCPT
+        with ESMTP id S1727937AbgGHHRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:16:54 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7CB6C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:16:53 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h22so45768244lji.9
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:16:53 -0700 (PDT)
+        Wed, 8 Jul 2020 03:17:13 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA1BC061755
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:17:13 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id t11so14712735pfq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:17:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QkfJYzPGnOMpKG+ZFcmubOHnwB8gAssiAAxbH64D1Os=;
-        b=v23iSweXgVsXKUdOxxg/lno3rnKJT5so4Q1FckB4o54uePZGBH6Bv5dwLjdKxdoHyF
-         Ire9DkQ0wSOBZ/6+Jg0AAYC8wtkDKf9/siUYTIZlgUbzqixFTP6895Ra1GAk6YCFuohl
-         x+y6i/RbUv3YdzwivmLgScI07z0O8dweZdrBp3weUksD0J3EzNTxc7Hz0lXYE8K+TP3X
-         w6vLfF4fvpDjs4j7dxgXrgeMh5hlwNXsGxQgWwtEM83O7OTsu5RiGQhltl1N1vEznQW0
-         lGAHJO34oeAR5ItX7GtTa8pCAwAUodck/cFiyzl8m1xuauaxTJ+jdoQUA5tXtLqxzwjR
-         Za/w==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IhMuuI5vNcbnBvarMRQMrOcWmQnCGKtCgfJJZCjZZRM=;
+        b=gNfRXPKQJZyOCLqMKok3dCryQtTE9/l1IcM0VmU8OFetxR7WB71YQF11TpSSoW4Sn4
+         VLCi4m7zC6+cohJpaeELP2a6E4QZRC5WhnTKw4ocvf4xrO8qxLGs01vHRKGPylIOTxKT
+         GBrEriUZYwcs4L3N/G0tufYPgknTWKTFexQY0GMBUc48SVZg9Sm5UfvlvPQZ4vwNdQ8+
+         KgnsLAcRA5dHScSIYPDN+ZWanVGco7eR8oPkJ+5Z9JswxOPDgbkdy2DiYETxUqdjZ5z/
+         IRBf6P/FwXk9KdJn3Kku9ztHVqG16lDk+6spVHaX+cWKSjx8CD6oojvdUQBF79PY63Qx
+         4Guw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QkfJYzPGnOMpKG+ZFcmubOHnwB8gAssiAAxbH64D1Os=;
-        b=DQGZPH3I//418Z/+d9uEpmNxWt/khAYYqyBDiGuYI1SFDtds81XJDl1B2ZXZk5h/PR
-         BUP4bx2fvfwUTdnXe6cmkD/U1yqdTqRdQUbb9lAZrXRsspLpL/OQP4+gvLCrmuqRFPG1
-         0BRzqW1wFF8Zp42sTiv1C7pdHMb5X0dml5az4TH6TTNUD1Ntpb7FzHJmQaJNGuegbpvJ
-         PQmMqMUee/sHMRGSG5xFR+z13VCHcTJKmgfALYbyXTTqpGIXTp22IBN/V/VcbnQJI9Jq
-         se+4NOOue4S7dWZ1l7+tg0+J78Bryqa6sqYtkM56L3vP3PW8MPZcuPtiX0OPkAQ+I0T6
-         QlJg==
-X-Gm-Message-State: AOAM5308Z+y6x9A2ErFJ3p9ioeOyeOu2zCrZ+vIGpYjnRHwhU+YcXwEf
-        bAfplgXU1c6DvdEFmvycsgrz1RprsIrpjkGduQmMCg==
-X-Google-Smtp-Source: ABdhPJz/BY0ubh5lFlvcwaCxE8m83cbsKbPYMczIH7G8X19q2JkKCkjg6IDxFGQ4sceQqyL82aY2xnRQoeGrU76PwIQ=
-X-Received: by 2002:a2e:810a:: with SMTP id d10mr26808667ljg.144.1594192612283;
- Wed, 08 Jul 2020 00:16:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IhMuuI5vNcbnBvarMRQMrOcWmQnCGKtCgfJJZCjZZRM=;
+        b=mxew1qIragskVu4lDt9sxv1xXemPq75r4KXdwtE7AaANM99qHDFDLl3yfrhJdusG6t
+         XjEQv6K2zPxQDb5wZourssyqdwPR1uybQ8kWLKLwT+dZf9oYS4tp+uCDnb9A8tMSa7jp
+         FbCQ7Ze4LbaikodxVG9u/6o++a0BHCE8EkYMHQgYveQ9Xl2eIZS27Ck9E7yVdx4lodgf
+         5jfd25BfIaruaxPKVLMaBidNsa4Hd1kdKK7pJUrfMtZ87AwBnLQrk6rbXLoSjx6W4WHD
+         TcVVjPH0ub+qaFBmIfQVJMUVlQbZcCocnhiUOYG7WeT4Tdlg9VZl/OsacOgkx9aSMSMX
+         WaWQ==
+X-Gm-Message-State: AOAM533gQsbv8HwQ/uuqDyiPU4tmxi8WzV4kl5Ixgi3YPaipLKHQaNkW
+        dcwUCCrp54Z3iLmIHKDdVIU=
+X-Google-Smtp-Source: ABdhPJyaEcs2L+01gHh1rdVBeWSbBV54fLp/Ma/ouZFhVGdL/DzwfSoHeSyt+K6Q0TCKnYzTiIIjrw==
+X-Received: by 2002:a65:5b05:: with SMTP id y5mr47628834pgq.90.1594192632697;
+        Wed, 08 Jul 2020 00:17:12 -0700 (PDT)
+Received: from js1304-desktop ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id a26sm2961234pgm.20.2020.07.08.00.17.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jul 2020 00:17:12 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 16:17:07 +0900
+From:   Joonsoo Kim <js1304@gmail.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v4 05/11] mm/migrate: clear __GFP_RECLAIM for THP
+ allocation for migration
+Message-ID: <20200708071706.GC16543@js1304-desktop>
+References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com>
+ <e72709dd-c7e2-ff26-f450-dbd2a719b2e4@suse.cz>
 MIME-Version: 1.0
-References: <20200630133345.2232932-1-lee.jones@linaro.org> <20200630133345.2232932-5-lee.jones@linaro.org>
-In-Reply-To: <20200630133345.2232932-5-lee.jones@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 8 Jul 2020 09:16:41 +0200
-Message-ID: <CACRpkdbUpWSNur2thrZ4Cea-eNazMopcQRt5uc9cyKOuHX4dBQ@mail.gmail.com>
-Subject: Re: [PATCH 04/10] gpio: gpio-pmic-eic-sprd: Fix incorrectly named
- property 'map'
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e72709dd-c7e2-ff26-f450-dbd2a719b2e4@suse.cz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 3:33 PM Lee Jones <lee.jones@linaro.org> wrote:
+On Tue, Jul 07, 2020 at 02:17:55PM +0200, Vlastimil Babka wrote:
+> On 7/7/20 9:44 AM, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > 
+> > In mm/migrate.c, THP allocation for migration is called with the provided
+> > gfp_mask | GFP_TRANSHUGE. This gfp_mask contains __GFP_RECLAIM and it
+> > would be conflict with the intention of the GFP_TRANSHUGE.
+> > 
+> > GFP_TRANSHUGE/GFP_TRANSHUGE_LIGHT is introduced to control the reclaim
+> > behaviour by well defined manner since overhead of THP allocation is
+> > quite large and the whole system could suffer from it. So, they deals
+> > with __GFP_RECLAIM mask deliberately. If gfp_mask contains __GFP_RECLAIM
+> > and uses gfp_mask | GFP_TRANSHUGE(_LIGHT) for THP allocation, it means
+> > that it breaks the purpose of the GFP_TRANSHUGE(_LIGHT).
+> > 
+> > This patch fixes this situation by clearing __GFP_RECLAIM in provided
+> > gfp_mask. Note that there are some other THP allocations for migration
+> > and they just uses GFP_TRANSHUGE(_LIGHT) directly. This patch would make
+> > all THP allocation for migration consistent.
+> > 
+> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > ---
+> >  mm/migrate.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/mm/migrate.c b/mm/migrate.c
+> > index 02b31fe..ecd7615 100644
+> > --- a/mm/migrate.c
+> > +++ b/mm/migrate.c
+> > @@ -1547,6 +1547,11 @@ struct page *new_page_nodemask(struct page *page,
+> >  	}
+> >  
+> >  	if (PageTransHuge(page)) {
+> > +		/*
+> > +		 * clear __GFP_RECALIM since GFP_TRANSHUGE is the gfp_mask
+> > +		 * that chooses the reclaim masks deliberately.
+> > +		 */
+> > +		gfp_mask &= ~__GFP_RECLAIM;
+> >  		gfp_mask |= GFP_TRANSHUGE;
+> 
+> In addition to what Michal said...
+> 
+> The mask is not passed to this function, so I would just redefine it, as is done
+> in the hugetlb case. We probably don't even need the __GFP_RETRY_MAYFAIL for the
+> THP case asi it's just there to prevent OOM kill (per commit 0f55685627d6d ) and
+> the costly order of THP is enough for that.
 
-> A good attempt has been made to properly document 'struct
-> sprd_pmic_eic', but 'map' has been incorrectly described as
-> 'regmap' since the driver's inception in 2018.
->
-> Fixes the following W=1 kernel build warning:
->
->  drivers/gpio/gpio-pmic-eic-sprd.c:65: warning: Function parameter or member 'map' not described in 'sprd_pmic_eic'
->
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Baolin Wang <baolin.wang7@gmail.com>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Will check.
 
-Patch applied!
+Thanks.
 
-Yours,
-Linus Walleij
