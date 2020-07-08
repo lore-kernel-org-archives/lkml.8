@@ -2,246 +2,585 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49430C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 701C3206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B1B206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=jm0.eu header.i=@jm0.eu header.b="PkZPrTIc"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="BLhQNuqG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sFa4mmjf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgGHRsO (ORCPT
+        id S1726353AbgGHRsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:48:14 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:18136 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgGHRsF (ORCPT
+        Wed, 8 Jul 2020 13:48:17 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:40345 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726118AbgGHRmg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:48:05 -0400
-X-Greylist: delayed 533 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 13:48:01 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594230480;
-        s=strato-dkim-0002; d=jm0.eu;
-        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=EZeg6fI6ttKUi7UP14G00kZ70cwnxfgmSdSYiNxnja4=;
-        b=PkZPrTIc3fhirFL/TM4M9QJ83uc62xOXnf9kVYnqdYPGHW6KTYm4nEIonWL8vF1ppU
-        I+EtqGxb1smxUMzfF/YOyNYKgDc6iz6xvy8oR3+7RNFxX8QKli+hr+n4aXhhtXr5xm2/
-        2bXtrr8GY0NIxiP39B8CZO25T4hkfSIV5pjzCOmLUp4jCtTLfBNH8q2Pbnij0ryjM2Ww
-        xKCpN4epZwAABdKb5dFALRUPQ9XEkMkNEHshgybFVSgaYmszJMUgrQgF1N9KQk/9aRSJ
-        7vKZ48k2jmB7eoPx+c9ZozcogZZWGN5Q1e9CeZSneIqxlCIQQj2LRsBYyXmTt7rPMuKe
-        PwTA==
-X-RZG-AUTH: ":JmMXYEHmdv4HaV2cbPh7iS0wbr/uKIfGM0EPXvQCbXgI7t69COvnl6LERsNcX+38fzXJ1XO/JvLGWj59ag=="
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2003:c6:1f3d:7510::f30]
-        by smtp.strato.de (RZmta 46.10.5 AUTH)
-        with ESMTPSA id c08c89w68Ha0tHd
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 8 Jul 2020 19:36:00 +0200 (CEST)
-Subject: Re: use-after-free in Bluetooth: 6lowpan (was Re: KASAN:
- use-after-free Write in refcount_warn_saturate)
-To:     Kees Cook <keescook@chromium.org>,
-        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Cc:     davem@davemloft.net, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+7dd7f2f77a7a01d1dc14@syzkaller.appspotmail.com>,
-        Michael Scott <mike@foundries.io>,
-        Josua Mayer <josua.mayer@jm0.eu>
-References: <00000000000055e1a9059f9e169f@google.com>
- <202007052022.984BAD97@keescook>
-From:   "Ing. Josua Mayer" <josua.mayer@jm0.eu>
-Autocrypt: addr=josua.mayer@jm0.eu; prefer-encrypt=mutual; keydata=
- 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
- Si21CLNeIbliI0CNR5kPUY1ntw1JCOmOjKZm
-Message-ID: <2f14ae85-6ec7-2a37-a54c-ab9a68bbc40a@jm0.eu>
-Date:   Wed, 8 Jul 2020 19:36:00 +0200
+        Wed, 8 Jul 2020 13:42:36 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id D8807333;
+        Wed,  8 Jul 2020 13:42:34 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:42:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=ppH80rUaTcmgL
+        UfH5otEnIxb+3uj84Yw2ROcZ0UESKE=; b=BLhQNuqG/JefnOzIcTpRguo3bk94B
+        F0Fv18PMTHmyefkmWVzK+sN6q+fws1Y/nTw9OQIhHKAzk5z71SHPHn582ge230nm
+        n15d7vwPJZgIxR5bkS8bXbOG9wU8brzBAKWh70ndAaNC5GR/Dn9n0yajsB92bsHM
+        xuYjeryYp0LLjkTLoys3iLR1pfROHJD3Q7S8BWPxJ0jhRaJZmWGEsz1zg+VOzXIj
+        I8qF01VZgwdpHEBntjrG4hPTdagK3S4loCN8VYiS359OUXCib9N0CUc0pjDs4UZg
+        zoK/KmLJAQ6s3odoRnPGTh/ugj8W0QrDUEBBpIpYpLKcIxxqywWXmV7Jg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=ppH80rUaTcmgLUfH5otEnIxb+3uj84Yw2ROcZ0UESKE=; b=sFa4mmjf
+        0bYSr2MkUbNnFimaUIGJ4gVUvncS2lwce+uCSQCdhjCDCMm2ZxnMqKm3aM3tCYEP
+        V39AvfxS3FJLmNoV7+yCHNb7WTdQnjR+wivriCm9CAgc1a0Q8rm4HENLLGV26kBQ
+        ACXP572c1J+sIIk7izk2i3EMkL5+SbKg29eZyznjnSycHUk8F1BNA6sxug/HNF6r
+        Gvc44Y3Uz7fvDJnVTnueMu5Eilv/v18UlwwZHMx6mgHCko/wvV9nK4GLSZBRxmxg
+        8zqPTBj8SVTewEL2fAZReKQfyYNB4Am1QsVZzMVOFUGyq6Ht/e2cZRiOoebPlj62
+        unlyRE+JSrJNIA==
+X-ME-Sender: <xms:igUGXwZ8x97liOML1V7-hfoe2QEbYplHg1Es28fuRPeZAH4ycGhuZg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:igUGX7ZO2-VAeXhPNaVXX7Zo8E-Ym6o-PpGO5F67ReSLQbC7ul5NjQ>
+    <xmx:igUGX69fQEJ_DkSu8ywEhSR9vrMutr-YS4x2I_W760Ob18j9jGIn7A>
+    <xmx:igUGX6pjl0fDCaksQ4rX_FdStcMa7xW0DO-M6BWB-_nCQduhzj1m_w>
+    <xmx:igUGX3LyLfCczztW5YeG9HcnmLwIlpTc8u3go9QijE0vpVCiyP5Xr4uIF1g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 181B63280059;
+        Wed,  8 Jul 2020 13:42:34 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH v4 02/78] drm/vc4: Add support for the BCM2711 HVS5
+Date:   Wed,  8 Jul 2020 19:41:10 +0200
+Message-Id: <1990182f4cabd44c98ce485d9933d5b8e212c381.1594230107.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-In-Reply-To: <202007052022.984BAD97@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greetings everybody,
-Am 06.07.20 um 05:32 schrieb Kees Cook:
-> On Thu, Feb 27, 2020 at 11:50:11PM -0800, syzbot wrote:
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    f8788d86 Linux 5.6-rc3
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=13005fd9e00000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
->> dashboard link: https://syzkaller.appspot.com/bug?extid=7dd7f2f77a7a01d1dc14
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> userspace arch: i386
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e3ebede00000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a9f8f9e00000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+7dd7f2f77a7a01d1dc14@syzkaller.appspotmail.com
->>
->> ==================================================================
->> BUG: KASAN: use-after-free in atomic_set include/asm-generic/atomic-instrumented.h:44 [inline]
->> BUG: KASAN: use-after-free in refcount_set include/linux/refcount.h:123 [inline]
->> BUG: KASAN: use-after-free in refcount_warn_saturate+0x1f/0x1f0 lib/refcount.c:15
->> Write of size 4 at addr ffff888090eb4018 by task kworker/1:24/2888
->>
->> CPU: 1 PID: 2888 Comm: kworker/1:24 Not tainted 5.6.0-rc3-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->> Workqueue: events do_enable_set
->> Call Trace:
->>  __dump_stack lib/dump_stack.c:77 [inline]
->>  dump_stack+0x197/0x210 lib/dump_stack.c:118
->>  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
->>  __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
->>  kasan_report+0x12/0x20 mm/kasan/common.c:641
->>  check_memory_region_inline mm/kasan/generic.c:185 [inline]
->>  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
->>  __kasan_check_write+0x14/0x20 mm/kasan/common.c:101
->>  atomic_set include/asm-generic/atomic-instrumented.h:44 [inline]
->>  refcount_set include/linux/refcount.h:123 [inline]
->>  refcount_warn_saturate+0x1f/0x1f0 lib/refcount.c:15
->>  refcount_sub_and_test include/linux/refcount.h:261 [inline]
->>  refcount_dec_and_test include/linux/refcount.h:281 [inline]
->>  kref_put include/linux/kref.h:64 [inline]
->>  l2cap_chan_put+0x1d9/0x240 net/bluetooth/l2cap_core.c:498
->>  do_enable_set+0x54b/0x960 net/bluetooth/6lowpan.c:1075
->>  process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
->>  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
->>  kthread+0x361/0x430 kernel/kthread.c:255
->>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->>
->> Allocated by task 2888:
->>  save_stack+0x23/0x90 mm/kasan/common.c:72
->>  set_track mm/kasan/common.c:80 [inline]
->>  __kasan_kmalloc mm/kasan/common.c:515 [inline]
->>  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
->>  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
->>  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
->>  kmalloc include/linux/slab.h:555 [inline]
->>  kzalloc include/linux/slab.h:669 [inline]
->>  l2cap_chan_create+0x45/0x3a0 net/bluetooth/l2cap_core.c:446
->>  chan_create+0x10/0xe0 net/bluetooth/6lowpan.c:640
->>  bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
->>  do_enable_set+0x583/0x960 net/bluetooth/6lowpan.c:1078
->>  process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
->>  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
->>  kthread+0x361/0x430 kernel/kthread.c:255
->>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->>
->> Freed by task 2975:
->>  save_stack+0x23/0x90 mm/kasan/common.c:72
->>  set_track mm/kasan/common.c:80 [inline]
->>  kasan_set_free_info mm/kasan/common.c:337 [inline]
->>  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
->>  kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
->>  __cache_free mm/slab.c:3426 [inline]
->>  kfree+0x10a/0x2c0 mm/slab.c:3757
->>  l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
->>  kref_put include/linux/kref.h:65 [inline]
->>  l2cap_chan_put+0x1b7/0x240 net/bluetooth/l2cap_core.c:498
->>  do_enable_set+0x54b/0x960 net/bluetooth/6lowpan.c:1075
->>  process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
->>  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
->>  kthread+0x361/0x430 kernel/kthread.c:255
->>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> 
-> The free and use-after-free are both via the same do_enable_set() path
-> which implies there are racing writes to the debugfs write handler. It
-> seems locking is missing for both listen_chan and enable_6lowpan. The
-> latter seems misused in is_bt_6lowpan(), which should likely just be
-> checking for chan->ops == &bt_6lowpan_chan_ops, I think?
-> 
-> I have no way to actually test changes to this code...
-> 
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-I do have limited hardware for testing bluetooth 6lowpan connections,
-but am a little busy these weeks. So some time by the end of this month
-I should be able to at least verify if my use-case would be broken by a
-change, if somebody were to propose one ;)
+The HVS found in the BCM2711 is slightly different from the previous
+generations.
 
-br
-Josua Mayer
+Most notably, the display list layout changes a bit, the LBM doesn't have
+the same size and the formats ordering for some formats is swapped.
+
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ drivers/gpu/drm/vc4/vc4_drv.h   |   4 +-
+ drivers/gpu/drm/vc4/vc4_hvs.c   |  34 ++++--
+ drivers/gpu/drm/vc4/vc4_plane.c | 194 ++++++++++++++++++++++++---------
+ drivers/gpu/drm/vc4/vc4_regs.h  |  67 +++++++++++-
+ 4 files changed, 240 insertions(+), 59 deletions(-)
+
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
+index fa19160c801f..e4cde1f9224b 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.h
++++ b/drivers/gpu/drm/vc4/vc4_drv.h
+@@ -329,7 +329,11 @@ struct vc4_hvs {
+ 	spinlock_t mm_lock;
+ 
+ 	struct drm_mm_node mitchell_netravali_filter;
++
+ 	struct debugfs_regset32 regset;
++
++	/* HVS version 5 flag, therefore requires updated dlist structures */
++	bool hvs5;
+ };
+ 
+ struct vc4_plane {
+diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
+index 2d2bf59c0503..836d8799d79e 100644
+--- a/drivers/gpu/drm/vc4/vc4_hvs.c
++++ b/drivers/gpu/drm/vc4/vc4_hvs.c
+@@ -277,11 +277,19 @@ void vc4_hvs_atomic_enable(struct drm_crtc *crtc,
+ 	 * mode.
+ 	 */
+ 	dispctrl = SCALER_DISPCTRLX_ENABLE;
+-	dispctrl |= VC4_SET_FIELD(mode->hdisplay,
+-				  SCALER_DISPCTRLX_WIDTH) |
+-		    VC4_SET_FIELD(mode->vdisplay,
+-				  SCALER_DISPCTRLX_HEIGHT) |
+-		    (oneshot ? SCALER_DISPCTRLX_ONESHOT : 0);
++
++	if (!vc4->hvs->hvs5)
++		dispctrl |= VC4_SET_FIELD(mode->hdisplay,
++					  SCALER_DISPCTRLX_WIDTH) |
++			    VC4_SET_FIELD(mode->vdisplay,
++					  SCALER_DISPCTRLX_HEIGHT) |
++			    (oneshot ? SCALER_DISPCTRLX_ONESHOT : 0);
++	else
++		dispctrl |= VC4_SET_FIELD(mode->hdisplay,
++					  SCALER5_DISPCTRLX_WIDTH) |
++			    VC4_SET_FIELD(mode->vdisplay,
++					  SCALER5_DISPCTRLX_HEIGHT) |
++			    (oneshot ? SCALER5_DISPCTRLX_ONESHOT : 0);
+ 
+ 	HVS_WRITE(SCALER_DISPCTRLX(vc4_crtc->channel), dispctrl);
+ }
+@@ -521,6 +529,9 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
+ 
+ 	hvs->pdev = pdev;
+ 
++	if (of_device_is_compatible(pdev->dev.of_node, "brcm,bcm2711-hvs"))
++		hvs->hvs5 = true;
++
+ 	hvs->regs = vc4_ioremap_regs(pdev, 0);
+ 	if (IS_ERR(hvs->regs))
+ 		return PTR_ERR(hvs->regs);
+@@ -529,7 +540,10 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
+ 	hvs->regset.regs = hvs_regs;
+ 	hvs->regset.nregs = ARRAY_SIZE(hvs_regs);
+ 
+-	hvs->dlist = hvs->regs + SCALER_DLIST_START;
++	if (!hvs->hvs5)
++		hvs->dlist = hvs->regs + SCALER_DLIST_START;
++	else
++		hvs->dlist = hvs->regs + SCALER5_DLIST_START;
+ 
+ 	spin_lock_init(&hvs->mm_lock);
+ 
+@@ -547,7 +561,12 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
+ 	 * between planes when they don't overlap on the screen, but
+ 	 * for now we just allocate globally.
+ 	 */
+-	drm_mm_init(&hvs->lbm_mm, 0, 96 * 1024);
++	if (!hvs->hvs5)
++		/* 96kB */
++		drm_mm_init(&hvs->lbm_mm, 0, 96 * 1024);
++	else
++		/* 70k words */
++		drm_mm_init(&hvs->lbm_mm, 0, 70 * 2 * 1024);
+ 
+ 	/* Upload filter kernels.  We only have the one for now, so we
+ 	 * keep it around for the lifetime of the driver.
+@@ -632,6 +651,7 @@ static int vc4_hvs_dev_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id vc4_hvs_dt_match[] = {
++	{ .compatible = "brcm,bcm2711-hvs" },
+ 	{ .compatible = "brcm,bcm2835-hvs" },
+ 	{}
+ };
+diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
+index d040d9f12c6d..20c949b57827 100644
+--- a/drivers/gpu/drm/vc4/vc4_plane.c
++++ b/drivers/gpu/drm/vc4/vc4_plane.c
+@@ -32,45 +32,60 @@ static const struct hvs_format {
+ 	u32 drm; /* DRM_FORMAT_* */
+ 	u32 hvs; /* HVS_FORMAT_* */
+ 	u32 pixel_order;
++	u32 pixel_order_hvs5;
+ } hvs_formats[] = {
+ 	{
+-		.drm = DRM_FORMAT_XRGB8888, .hvs = HVS_PIXEL_FORMAT_RGBA8888,
++		.drm = DRM_FORMAT_XRGB8888,
++		.hvs = HVS_PIXEL_FORMAT_RGBA8888,
+ 		.pixel_order = HVS_PIXEL_ORDER_ABGR,
++		.pixel_order_hvs5 = HVS_PIXEL_ORDER_ARGB,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_ARGB8888, .hvs = HVS_PIXEL_FORMAT_RGBA8888,
++		.drm = DRM_FORMAT_ARGB8888,
++		.hvs = HVS_PIXEL_FORMAT_RGBA8888,
+ 		.pixel_order = HVS_PIXEL_ORDER_ABGR,
++		.pixel_order_hvs5 = HVS_PIXEL_ORDER_ARGB,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_ABGR8888, .hvs = HVS_PIXEL_FORMAT_RGBA8888,
++		.drm = DRM_FORMAT_ABGR8888,
++		.hvs = HVS_PIXEL_FORMAT_RGBA8888,
+ 		.pixel_order = HVS_PIXEL_ORDER_ARGB,
++		.pixel_order_hvs5 = HVS_PIXEL_ORDER_ABGR,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_XBGR8888, .hvs = HVS_PIXEL_FORMAT_RGBA8888,
++		.drm = DRM_FORMAT_XBGR8888,
++		.hvs = HVS_PIXEL_FORMAT_RGBA8888,
+ 		.pixel_order = HVS_PIXEL_ORDER_ARGB,
++		.pixel_order_hvs5 = HVS_PIXEL_ORDER_ABGR,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_RGB565, .hvs = HVS_PIXEL_FORMAT_RGB565,
++		.drm = DRM_FORMAT_RGB565,
++		.hvs = HVS_PIXEL_FORMAT_RGB565,
+ 		.pixel_order = HVS_PIXEL_ORDER_XRGB,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_BGR565, .hvs = HVS_PIXEL_FORMAT_RGB565,
++		.drm = DRM_FORMAT_BGR565,
++		.hvs = HVS_PIXEL_FORMAT_RGB565,
+ 		.pixel_order = HVS_PIXEL_ORDER_XBGR,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_ARGB1555, .hvs = HVS_PIXEL_FORMAT_RGBA5551,
++		.drm = DRM_FORMAT_ARGB1555,
++		.hvs = HVS_PIXEL_FORMAT_RGBA5551,
+ 		.pixel_order = HVS_PIXEL_ORDER_ABGR,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_XRGB1555, .hvs = HVS_PIXEL_FORMAT_RGBA5551,
++		.drm = DRM_FORMAT_XRGB1555,
++		.hvs = HVS_PIXEL_FORMAT_RGBA5551,
+ 		.pixel_order = HVS_PIXEL_ORDER_ABGR,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_RGB888, .hvs = HVS_PIXEL_FORMAT_RGB888,
++		.drm = DRM_FORMAT_RGB888,
++		.hvs = HVS_PIXEL_FORMAT_RGB888,
+ 		.pixel_order = HVS_PIXEL_ORDER_XRGB,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_BGR888, .hvs = HVS_PIXEL_FORMAT_RGB888,
++		.drm = DRM_FORMAT_BGR888,
++		.hvs = HVS_PIXEL_FORMAT_RGB888,
+ 		.pixel_order = HVS_PIXEL_ORDER_XBGR,
+ 	},
+ 	{
+@@ -776,35 +791,6 @@ static int vc4_plane_mode_set(struct drm_plane *plane,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Control word */
+-	vc4_dlist_write(vc4_state,
+-			SCALER_CTL0_VALID |
+-			(rotation & DRM_MODE_REFLECT_X ? SCALER_CTL0_HFLIP : 0) |
+-			(rotation & DRM_MODE_REFLECT_Y ? SCALER_CTL0_VFLIP : 0) |
+-			VC4_SET_FIELD(SCALER_CTL0_RGBA_EXPAND_ROUND, SCALER_CTL0_RGBA_EXPAND) |
+-			(format->pixel_order << SCALER_CTL0_ORDER_SHIFT) |
+-			(hvs_format << SCALER_CTL0_PIXEL_FORMAT_SHIFT) |
+-			VC4_SET_FIELD(tiling, SCALER_CTL0_TILING) |
+-			(vc4_state->is_unity ? SCALER_CTL0_UNITY : 0) |
+-			VC4_SET_FIELD(scl0, SCALER_CTL0_SCL0) |
+-			VC4_SET_FIELD(scl1, SCALER_CTL0_SCL1));
+-
+-	/* Position Word 0: Image Positions and Alpha Value */
+-	vc4_state->pos0_offset = vc4_state->dlist_count;
+-	vc4_dlist_write(vc4_state,
+-			VC4_SET_FIELD(state->alpha >> 8, SCALER_POS0_FIXED_ALPHA) |
+-			VC4_SET_FIELD(vc4_state->crtc_x, SCALER_POS0_START_X) |
+-			VC4_SET_FIELD(vc4_state->crtc_y, SCALER_POS0_START_Y));
+-
+-	/* Position Word 1: Scaled Image Dimensions. */
+-	if (!vc4_state->is_unity) {
+-		vc4_dlist_write(vc4_state,
+-				VC4_SET_FIELD(vc4_state->crtc_w,
+-					      SCALER_POS1_SCL_WIDTH) |
+-				VC4_SET_FIELD(vc4_state->crtc_h,
+-					      SCALER_POS1_SCL_HEIGHT));
+-	}
+-
+ 	/* Don't waste cycles mixing with plane alpha if the set alpha
+ 	 * is opaque or there is no per-pixel alpha information.
+ 	 * In any case we use the alpha property value as the fixed alpha.
+@@ -812,20 +798,120 @@ static int vc4_plane_mode_set(struct drm_plane *plane,
+ 	mix_plane_alpha = state->alpha != DRM_BLEND_ALPHA_OPAQUE &&
+ 			  fb->format->has_alpha;
+ 
+-	/* Position Word 2: Source Image Size, Alpha */
+-	vc4_state->pos2_offset = vc4_state->dlist_count;
+-	vc4_dlist_write(vc4_state,
+-			VC4_SET_FIELD(fb->format->has_alpha ?
+-				      SCALER_POS2_ALPHA_MODE_PIPELINE :
+-				      SCALER_POS2_ALPHA_MODE_FIXED,
+-				      SCALER_POS2_ALPHA_MODE) |
+-			(mix_plane_alpha ? SCALER_POS2_ALPHA_MIX : 0) |
+-			(fb->format->has_alpha ? SCALER_POS2_ALPHA_PREMULT : 0) |
+-			VC4_SET_FIELD(vc4_state->src_w[0], SCALER_POS2_WIDTH) |
+-			VC4_SET_FIELD(vc4_state->src_h[0], SCALER_POS2_HEIGHT));
++	if (!vc4->hvs->hvs5) {
++	/* Control word */
++		vc4_dlist_write(vc4_state,
++				SCALER_CTL0_VALID |
++				(rotation & DRM_MODE_REFLECT_X ? SCALER_CTL0_HFLIP : 0) |
++				(rotation & DRM_MODE_REFLECT_Y ? SCALER_CTL0_VFLIP : 0) |
++				VC4_SET_FIELD(SCALER_CTL0_RGBA_EXPAND_ROUND, SCALER_CTL0_RGBA_EXPAND) |
++				(format->pixel_order << SCALER_CTL0_ORDER_SHIFT) |
++				(hvs_format << SCALER_CTL0_PIXEL_FORMAT_SHIFT) |
++				VC4_SET_FIELD(tiling, SCALER_CTL0_TILING) |
++				(vc4_state->is_unity ? SCALER_CTL0_UNITY : 0) |
++				VC4_SET_FIELD(scl0, SCALER_CTL0_SCL0) |
++				VC4_SET_FIELD(scl1, SCALER_CTL0_SCL1));
++
++		/* Position Word 0: Image Positions and Alpha Value */
++		vc4_state->pos0_offset = vc4_state->dlist_count;
++		vc4_dlist_write(vc4_state,
++				VC4_SET_FIELD(state->alpha >> 8, SCALER_POS0_FIXED_ALPHA) |
++				VC4_SET_FIELD(vc4_state->crtc_x, SCALER_POS0_START_X) |
++				VC4_SET_FIELD(vc4_state->crtc_y, SCALER_POS0_START_Y));
++
++		/* Position Word 1: Scaled Image Dimensions. */
++		if (!vc4_state->is_unity) {
++			vc4_dlist_write(vc4_state,
++					VC4_SET_FIELD(vc4_state->crtc_w,
++						      SCALER_POS1_SCL_WIDTH) |
++					VC4_SET_FIELD(vc4_state->crtc_h,
++						      SCALER_POS1_SCL_HEIGHT));
++		}
++
++		/* Position Word 2: Source Image Size, Alpha */
++		vc4_state->pos2_offset = vc4_state->dlist_count;
++		vc4_dlist_write(vc4_state,
++				VC4_SET_FIELD(fb->format->has_alpha ?
++					      SCALER_POS2_ALPHA_MODE_PIPELINE :
++					      SCALER_POS2_ALPHA_MODE_FIXED,
++					      SCALER_POS2_ALPHA_MODE) |
++				(mix_plane_alpha ? SCALER_POS2_ALPHA_MIX : 0) |
++				(fb->format->has_alpha ?
++						SCALER_POS2_ALPHA_PREMULT : 0) |
++				VC4_SET_FIELD(vc4_state->src_w[0],
++					      SCALER_POS2_WIDTH) |
++				VC4_SET_FIELD(vc4_state->src_h[0],
++					      SCALER_POS2_HEIGHT));
++
++		/* Position Word 3: Context.  Written by the HVS. */
++		vc4_dlist_write(vc4_state, 0xc0c0c0c0);
++
++	} else {
++		u32 hvs_pixel_order = format->pixel_order;
+ 
+-	/* Position Word 3: Context.  Written by the HVS. */
+-	vc4_dlist_write(vc4_state, 0xc0c0c0c0);
++		if (format->pixel_order_hvs5)
++			hvs_pixel_order = format->pixel_order_hvs5;
++
++		/* Control word */
++		vc4_dlist_write(vc4_state,
++				SCALER_CTL0_VALID |
++				(hvs_pixel_order << SCALER_CTL0_ORDER_SHIFT) |
++				(hvs_format << SCALER_CTL0_PIXEL_FORMAT_SHIFT) |
++				VC4_SET_FIELD(tiling, SCALER_CTL0_TILING) |
++				(vc4_state->is_unity ?
++						SCALER5_CTL0_UNITY : 0) |
++				VC4_SET_FIELD(scl0, SCALER_CTL0_SCL0) |
++				VC4_SET_FIELD(scl1, SCALER_CTL0_SCL1) |
++				SCALER5_CTL0_ALPHA_EXPAND |
++				SCALER5_CTL0_RGB_EXPAND);
++
++		/* Position Word 0: Image Positions and Alpha Value */
++		vc4_state->pos0_offset = vc4_state->dlist_count;
++		vc4_dlist_write(vc4_state,
++				(rotation & DRM_MODE_REFLECT_Y ?
++						SCALER5_POS0_VFLIP : 0) |
++				VC4_SET_FIELD(vc4_state->crtc_x,
++					      SCALER_POS0_START_X) |
++				(rotation & DRM_MODE_REFLECT_X ?
++					      SCALER5_POS0_HFLIP : 0) |
++				VC4_SET_FIELD(vc4_state->crtc_y,
++					      SCALER5_POS0_START_Y)
++			       );
++
++		/* Control Word 2 */
++		vc4_dlist_write(vc4_state,
++				VC4_SET_FIELD(state->alpha >> 4,
++					      SCALER5_CTL2_ALPHA) |
++				fb->format->has_alpha ?
++					SCALER5_CTL2_ALPHA_PREMULT : 0 |
++				(mix_plane_alpha ?
++					SCALER5_CTL2_ALPHA_MIX : 0) |
++				VC4_SET_FIELD(fb->format->has_alpha ?
++				      SCALER5_CTL2_ALPHA_MODE_PIPELINE :
++				      SCALER5_CTL2_ALPHA_MODE_FIXED,
++				      SCALER5_CTL2_ALPHA_MODE)
++			       );
++
++		/* Position Word 1: Scaled Image Dimensions. */
++		if (!vc4_state->is_unity) {
++			vc4_dlist_write(vc4_state,
++					VC4_SET_FIELD(vc4_state->crtc_w,
++						      SCALER_POS1_SCL_WIDTH) |
++					VC4_SET_FIELD(vc4_state->crtc_h,
++						      SCALER_POS1_SCL_HEIGHT));
++		}
++
++		/* Position Word 2: Source Image Size */
++		vc4_state->pos2_offset = vc4_state->dlist_count;
++		vc4_dlist_write(vc4_state,
++				VC4_SET_FIELD(vc4_state->src_w[0],
++					      SCALER5_POS2_WIDTH) |
++				VC4_SET_FIELD(vc4_state->src_h[0],
++					      SCALER5_POS2_HEIGHT));
++
++		/* Position Word 3: Context.  Written by the HVS. */
++		vc4_dlist_write(vc4_state, 0xc0c0c0c0);
++	}
+ 
+ 
+ 	/* Pointer Word 0/1/2: RGB / Y / Cb / Cr Pointers
+@@ -1203,6 +1289,10 @@ static bool vc4_format_mod_supported(struct drm_plane *plane,
+ 		default:
+ 			return false;
+ 		}
++	case DRM_FORMAT_RGBX1010102:
++	case DRM_FORMAT_BGRX1010102:
++	case DRM_FORMAT_RGBA1010102:
++	case DRM_FORMAT_BGRA1010102:
+ 	case DRM_FORMAT_YUV422:
+ 	case DRM_FORMAT_YVU422:
+ 	case DRM_FORMAT_YUV420:
+diff --git a/drivers/gpu/drm/vc4/vc4_regs.h b/drivers/gpu/drm/vc4/vc4_regs.h
+index 324462cc9cd4..91b785725555 100644
+--- a/drivers/gpu/drm/vc4/vc4_regs.h
++++ b/drivers/gpu/drm/vc4/vc4_regs.h
+@@ -327,6 +327,20 @@
+ # define SCALER_DISPCTRLX_HEIGHT_MASK		VC4_MASK(11, 0)
+ # define SCALER_DISPCTRLX_HEIGHT_SHIFT		0
+ 
++# define SCALER5_DISPCTRLX_WIDTH_MASK		VC4_MASK(28, 16)
++# define SCALER5_DISPCTRLX_WIDTH_SHIFT		16
++/* Generates a single frame when VSTART is seen and stops at the last
++ * pixel read from the FIFO.
++ */
++# define SCALER5_DISPCTRLX_ONESHOT		BIT(15)
++/* Processes a single context in the dlist and then task switch,
++ * instead of an entire line.
++ */
++# define SCALER5_DISPCTRLX_ONECTX_MASK		VC4_MASK(14, 13)
++# define SCALER5_DISPCTRLX_ONECTX_SHIFT		13
++# define SCALER5_DISPCTRLX_HEIGHT_MASK		VC4_MASK(12, 0)
++# define SCALER5_DISPCTRLX_HEIGHT_SHIFT		0
++
+ #define SCALER_DISPBKGND0                       0x00000044
+ # define SCALER_DISPBKGND_AUTOHS		BIT(31)
+ # define SCALER_DISPBKGND_INTERLACE		BIT(30)
+@@ -460,6 +474,8 @@
+ #define SCALER_DLIST_START                      0x00002000
+ #define SCALER_DLIST_SIZE                       0x00004000
+ 
++#define SCALER5_DLIST_START			0x00004000
++
+ #define VC4_HDMI_CORE_REV			0x000
+ 
+ #define VC4_HDMI_SW_RESET_CONTROL		0x004
+@@ -825,6 +841,8 @@ enum hvs_pixel_format {
+ 	HVS_PIXEL_FORMAT_PALETTE = 13,
+ 	HVS_PIXEL_FORMAT_YUV444_RGB = 14,
+ 	HVS_PIXEL_FORMAT_AYUV444_RGB = 15,
++	HVS_PIXEL_FORMAT_RGBA1010102 = 16,
++	HVS_PIXEL_FORMAT_YCBCR_10BIT = 17,
+ };
+ 
+ /* Note: the LSB is the rightmost character shown.  Only valid for
+@@ -879,6 +897,10 @@ enum hvs_pixel_format {
+ #define SCALER_CTL0_RGBA_EXPAND_MSB		2
+ #define SCALER_CTL0_RGBA_EXPAND_ROUND		3
+ 
++#define SCALER5_CTL0_ALPHA_EXPAND		BIT(12)
++
++#define SCALER5_CTL0_RGB_EXPAND			BIT(11)
++
+ #define SCALER_CTL0_SCL1_MASK			VC4_MASK(10, 8)
+ #define SCALER_CTL0_SCL1_SHIFT			8
+ 
+@@ -896,10 +918,13 @@ enum hvs_pixel_format {
+ 
+ /* Set to indicate no scaling. */
+ #define SCALER_CTL0_UNITY			BIT(4)
++#define SCALER5_CTL0_UNITY			BIT(15)
+ 
+ #define SCALER_CTL0_PIXEL_FORMAT_MASK		VC4_MASK(3, 0)
+ #define SCALER_CTL0_PIXEL_FORMAT_SHIFT		0
+ 
++#define SCALER5_CTL0_PIXEL_FORMAT_MASK		VC4_MASK(4, 0)
++
+ #define SCALER_POS0_FIXED_ALPHA_MASK		VC4_MASK(31, 24)
+ #define SCALER_POS0_FIXED_ALPHA_SHIFT		24
+ 
+@@ -909,12 +934,48 @@ enum hvs_pixel_format {
+ #define SCALER_POS0_START_X_MASK		VC4_MASK(11, 0)
+ #define SCALER_POS0_START_X_SHIFT		0
+ 
++#define SCALER5_POS0_START_Y_MASK		VC4_MASK(27, 16)
++#define SCALER5_POS0_START_Y_SHIFT		16
++
++#define SCALER5_POS0_START_X_MASK		VC4_MASK(13, 0)
++#define SCALER5_POS0_START_X_SHIFT		0
++
++#define SCALER5_POS0_VFLIP			BIT(31)
++#define SCALER5_POS0_HFLIP			BIT(15)
++
++#define SCALER5_CTL2_ALPHA_MODE_MASK		VC4_MASK(31, 30)
++#define SCALER5_CTL2_ALPHA_MODE_SHIFT		30
++#define SCALER5_CTL2_ALPHA_MODE_PIPELINE		0
++#define SCALER5_CTL2_ALPHA_MODE_FIXED		1
++#define SCALER5_CTL2_ALPHA_MODE_FIXED_NONZERO	2
++#define SCALER5_CTL2_ALPHA_MODE_FIXED_OVER_0x07	3
++
++#define SCALER5_CTL2_ALPHA_PREMULT		BIT(29)
++
++#define SCALER5_CTL2_ALPHA_MIX			BIT(28)
++
++#define SCALER5_CTL2_ALPHA_LOC			BIT(25)
++
++#define SCALER5_CTL2_MAP_SEL_MASK		VC4_MASK(18, 17)
++#define SCALER5_CTL2_MAP_SEL_SHIFT		17
++
++#define SCALER5_CTL2_GAMMA			BIT(16)
++
++#define SCALER5_CTL2_ALPHA_MASK			VC4_MASK(15, 4)
++#define SCALER5_CTL2_ALPHA_SHIFT		4
++
+ #define SCALER_POS1_SCL_HEIGHT_MASK		VC4_MASK(27, 16)
+ #define SCALER_POS1_SCL_HEIGHT_SHIFT		16
+ 
+ #define SCALER_POS1_SCL_WIDTH_MASK		VC4_MASK(11, 0)
+ #define SCALER_POS1_SCL_WIDTH_SHIFT		0
+ 
++#define SCALER5_POS1_SCL_HEIGHT_MASK		VC4_MASK(28, 16)
++#define SCALER5_POS1_SCL_HEIGHT_SHIFT		16
++
++#define SCALER5_POS1_SCL_WIDTH_MASK		VC4_MASK(12, 0)
++#define SCALER5_POS1_SCL_WIDTH_SHIFT		0
++
+ #define SCALER_POS2_ALPHA_MODE_MASK		VC4_MASK(31, 30)
+ #define SCALER_POS2_ALPHA_MODE_SHIFT		30
+ #define SCALER_POS2_ALPHA_MODE_PIPELINE		0
+@@ -930,6 +991,12 @@ enum hvs_pixel_format {
+ #define SCALER_POS2_WIDTH_MASK			VC4_MASK(11, 0)
+ #define SCALER_POS2_WIDTH_SHIFT			0
+ 
++#define SCALER5_POS2_HEIGHT_MASK		VC4_MASK(28, 16)
++#define SCALER5_POS2_HEIGHT_SHIFT		16
++
++#define SCALER5_POS2_WIDTH_MASK			VC4_MASK(12, 0)
++#define SCALER5_POS2_WIDTH_SHIFT		0
++
+ /* Color Space Conversion words.  Some values are S2.8 signed
+  * integers, except that the 2 integer bits map as {0x0: 0, 0x1: 1,
+  * 0x2: 2, 0x3: -1}
+-- 
+git-series 0.9.1
