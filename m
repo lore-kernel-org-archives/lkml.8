@@ -2,71 +2,117 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BACC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55DF0206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DB1206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 22:39:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="rg0dcHkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgGHWiA (ORCPT
+        id S1726314AbgGHWj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 18:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41094 "EHLO
+        Wed, 8 Jul 2020 18:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgGHWhb (ORCPT
+        with ESMTP id S1725915AbgGHWix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 18:37:31 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58258C061A0B;
-        Wed,  8 Jul 2020 15:37:31 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 65BDA1277ED54;
-        Wed,  8 Jul 2020 15:37:30 -0700 (PDT)
-Date:   Wed, 08 Jul 2020 15:37:29 -0700 (PDT)
-Message-Id: <20200708.153729.1570943134510183928.davem@davemloft.net>
-To:     jarod@redhat.com
-Cc:     linux-kernel@vger.kernel.org, huyn@mellanox.com,
-        saeedm@mellanox.com, j.vosburgh@gmail.com, vfalico@gmail.com,
-        andy@greyhouse.net, jeffrey.t.kirsher@intel.com, kuba@kernel.org,
-        steffen.klassert@secunet.com, herbert@gondor.apana.org.au,
-        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org
-Subject: Re: [PATCH net-next] bonding: deal with xfrm state in all modes
- and add more error-checking
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200708174631.15286-1-jarod@redhat.com>
-References: <20200708174631.15286-1-jarod@redhat.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 8 Jul 2020 18:38:53 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F052C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 15:38:53 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x72so110384pfc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 15:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0IDR+Jdn/swMjriOk89kNCPU0czu+vBFpA+hJGhx0VU=;
+        b=rg0dcHkxPIVVrYjkS34uSdILXxUhoqLXohzmIYDsJMLstyvORLpsfkj2HW06TsOpdW
+         pPK8pUxjKa133FVWqYPrJMvTtY5DsTH5iPcIj71bWRo4I0a6/WuNJInZLBm/wqCEgPt4
+         LPm71+MdEKvcACPKGkaUGxAxihomelQNS+TAgD4lm+TVlYRbuWIk81nhoomGM2yeUfIY
+         He94kpz/oOD+0IPxf6i+5pN5dSJO1Ukp78RjPCkhgDWj++70sccbt+L+6OIYCRBcpQ03
+         +rChcmq4N1f1Xz//Qv+2Pqxqe8deIcaVz7YkMSSX2ZdAU2flEY4HByWb0S4YkwVJp1Ey
+         dj6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0IDR+Jdn/swMjriOk89kNCPU0czu+vBFpA+hJGhx0VU=;
+        b=L2+jclA/eq193T3TwPbZOPSYwejtQ8sqon2aCTldoMez+0vfv0+eQUXrtZ+ulMc37e
+         hpMuL79kClWVN56dSj4aOFZf3fGbbY57Dv1H0ACF7ZDiOIG1o6/9gZiIIl3nPP/9zAcl
+         Zd7dBulh9CmrbwnNLoe/VTxqevSQhUrdQn9hGp+NEXMvgE9TRg1fKe1sctZTQCg/+hNl
+         YvgPnoPkJAeu6iiMjOI0hIhXH6aF2g8Oskq660Pefh98EkeAV25ISfVaQvxZqnbwNZOC
+         8F4fkrT5b0nAJSniiOwoncEoMfnuFcudsMEpw7jhSG1JuuhkZVNGftwOkyOhH1KEhd53
+         cU3A==
+X-Gm-Message-State: AOAM530fSN3SryBqxK8PSQjCa9RUhfOoeksx9Ed+uhiTzXuNKly6JZQx
+        YgCuKOUi3hvkROECo/UaqSF+NA==
+X-Google-Smtp-Source: ABdhPJzU0QCgwB29x3U5ahxJfjqWMwTCjZWeHX8Ch1hjXQRSaxDVY/HeShauYg4FvnhP1AF82X9d2w==
+X-Received: by 2002:a65:5682:: with SMTP id v2mr51087824pgs.231.1594247933001;
+        Wed, 08 Jul 2020 15:38:53 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id e5sm480906pjv.18.2020.07.08.15.38.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 15:38:52 -0700 (PDT)
+Subject: Re: [PATCH 2/2] fs: Remove kiocb->ki_complete
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kanchan Joshi <joshi.k@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <20200708222637.23046-1-willy@infradead.org>
+ <20200708222637.23046-3-willy@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <33e0220c-242d-1856-9d4e-31528011a06e@kernel.dk>
+Date:   Wed, 8 Jul 2020 16:38:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200708222637.23046-3-willy@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 08 Jul 2020 15:37:30 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
-Date: Wed,  8 Jul 2020 13:46:31 -0400
+On 7/8/20 4:26 PM, Matthew Wilcox (Oracle) wrote:
+> @@ -341,12 +343,25 @@ struct kiocb {
+>  	randomized_struct_fields_end
+>  };
+>  
+> +static inline int kiocb_completion_id(struct kiocb *kiocb)
+> +{
+> +	return kiocb->ki_flags >> _IOCB_COMPLETION_SHIFT;
+> +}
+> +
+> +static inline void kiocb_set_completion(struct kiocb *kiocb, int id)
+> +{
+> +	kiocb->ki_flags = (kiocb->ki_flags & (~IOCB_COMPLETION_FNS)) |
+> +				(id << _IOCB_COMPLETION_SHIFT);
+> +}
+> +
+>  static inline bool is_sync_kiocb(struct kiocb *kiocb)
+>  {
+> -	return kiocb->ki_complete == NULL;
+> +	return kiocb_completion_id(kiocb) == 0;
+>  }
+>  
+>  void complete_kiocb(struct kiocb *kiocb, long ret, long ret2);
+> +int register_kiocb_completion(void (*)(struct kiocb *, long, long));
+> +void unregister_kiocb_completion(int id);
 
-> It's possible that device removal happens when the bond is in non-AB mode,
-> and addition happens in AB mode, so bond_ipsec_del_sa() never gets called,
-> which leaves security associations in an odd state if bond_ipsec_add_sa()
-> then gets called after switching the bond into AB. Just call add and
-> delete universally for all modes to keep things consistent.
-> 
-> However, it's also possible that this code gets called when the system is
-> shutting down, and the xfrm subsystem has already been disconnected from
-> the bond device, so we need to do some error-checking and bail, lest we
-> hit a null ptr deref.
-> 
-> Fixes: a3b658cfb664 ("bonding: allow xfrm offload setup post-module-load")
-> Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Same here, you seem to mix and match whether you prefix with kiocb or
+not. Why not make them all kiocb_*?
 
-Applied, thanks Jarod.
+kiocb_register_completion() and so forth.
+
+-- 
+Jens Axboe
+
