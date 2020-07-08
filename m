@@ -2,144 +2,99 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C12DC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E8A206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SquIMpq9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oR+mI9ew"
+	by mail.kernel.org (Postfix) with ESMTP id 766DA206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 17:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgGHRmg (ORCPT
+        id S1727831AbgGHRsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:42:36 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:52409 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725810AbgGHRmf (ORCPT
+        Wed, 8 Jul 2020 13:48:39 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:48841 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725953AbgGHRsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:42:35 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 7B643FE4;
-        Wed,  8 Jul 2020 13:42:33 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 08 Jul 2020 13:42:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=VvkOrdp0/W1H7
-        d2xBkajwWCmAwyF4FN0KGbgAuGNezY=; b=SquIMpq9vxvq8BuyxMlKG1BQo7jKN
-        o6wc+OthGN8GJ1fMBuMoMHRFGSbN3FnwSiTjFKe1eUTeHsJgWROtx6OJeU0cf7GR
-        rYkUuzcenfjpydpBvPBfwK7FQyE+pw5wkdqmny9pZQFw0ymcHnFAMQDfOY4VODvh
-        mIG4qRC3VjAmZP+LYNBiV8orHujf0sitKtVl/d8Owr9Lqu/8gnycB91w58aCIlUF
-        TkPER58YpB6I2KighEIDu9mZOH5nfP1ECSSrcPzzOQUM4qv73a4leCNKLw3O0JHt
-        YtQZjOEnOQPfdsYc35y0oqKpr2+u7PULuaTp2vEosSR0clGWEWokPNWKA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=VvkOrdp0/W1H7d2xBkajwWCmAwyF4FN0KGbgAuGNezY=; b=oR+mI9ew
-        wrI9jHcIrJZ273QLwFe0ETJToJPZb9/tLA+gG2IGXwdMZjycPJA1syYEux+Cd4RZ
-        +sJFG4E4TR3nMIUOzuS2hAtoJlU5QcqxRY5Oo7yqvW4FWJY9+BhVzL+z18OssUz3
-        gI07YZ6jtT6XIx2ZHHmIxZ2f+hhdIanktlqQZ+Rzm1S1wGakrOvSpv4/Hd73g7Hi
-        mm5UT9/6fjAbo7RAQDRhI1t8088PfSbXP8NoGb/q+0oL3CQun6Xd9rt4RBi9Ha2m
-        xJXJrqLc4pLrR6Yv8HqRfuP71mGPEQrRitayjftHBsr9a3j5vRtn5K2EnpkRNDn2
-        IIZOpn4ImqZaZw==
-X-ME-Sender: <xms:iAUGX6NWKBsc_-T-JRmnOnS-15jTckt4kDZlbPxKyUIYRWovyNsqHQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudejgdduudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:iAUGX49xPU4bKR6bUumDizPLJ3J6VWR55y3G1koVdafn9cEFTJYFPQ>
-    <xmx:iAUGXxQsZC22oJbsD5atXbxOyD-gN9u1O3PZLQFZRMhHIAXYWMNuMg>
-    <xmx:iAUGX6solJI4EjchgVbQ5qG8raqfNDeOjvCxwyhwkwzZbMEbG66DPQ>
-    <xmx:iQUGX4t9sl_pZo8fI_RKZ5ZCH2R8gBgvido-3rqLHDU1aaoM-oqCVRZZn0w>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A7E4B30600B2;
-        Wed,  8 Jul 2020 13:42:32 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
+        Wed, 8 Jul 2020 13:48:39 -0400
+X-IronPort-AV: E=Sophos;i="5.75,328,1589209200"; 
+   d="scan'208";a="51641764"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 09 Jul 2020 02:48:36 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id E89474005E3D;
+        Thu,  9 Jul 2020 02:48:32 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 01/78] dt-bindings: display: Add support for the BCM2711 HVS
-Date:   Wed,  8 Jul 2020 19:41:09 +0200
-Message-Id: <2e95580cd3dbd1d9acd6b528c069c82e6ffe5ae7.1594230107.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/8] Add basic DT support for R8A774E1 SoC enabling HiHope RZ/G2H board
+Date:   Wed,  8 Jul 2020 18:48:23 +0100
+Message-Id: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HVS found in the BCM2711 is slightly different from the previous
-generations, let's add a compatible for it.
+Hi All,
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml | 18 ++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+This patch series adds basic SOC DT support for RZ/G2H and enabling
+HiHope RZ/G2H board. With these minimalist DT the HiHope RZ/G2H
+board can be booted from initramfs/eMMC.
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
-index 02410f8d6d49..e826ab0adb75 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
-@@ -11,7 +11,9 @@ maintainers:
- 
- properties:
-   compatible:
--    const: brcm,bcm2835-hvs
-+    enum:
-+      - brcm,bcm2711-hvs
-+      - brcm,bcm2835-hvs
- 
-   reg:
-     maxItems: 1
-@@ -19,6 +21,10 @@ properties:
-   interrupts:
-     maxItems: 1
- 
-+  clocks:
-+    maxItems: 1
-+    description: Core Clock
-+
- required:
-   - compatible
-   - reg
-@@ -26,6 +32,16 @@ required:
- 
- additionalProperties: false
- 
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: brcm,bcm2711-hvs"
-+
-+then:
-+  required:
-+    - clocks
-+
- examples:
-   - |
-     hvs@7e400000 {
+This patch series is dependent [1].
+
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=314235
+
+Cheers,
+Prabhakar
+
+
+Lad Prabhakar (3):
+  dt-bindings: serial: renesas,scif: Document r8a774e1 bindings
+  dt-bindings: serial: renesas,hscif: Document r8a774e1 bindings
+  dt-bindings: mmc: renesas,sdhi: Add r8a774e1 support
+
+Marian-Cristian Rotariu (5):
+  dt-bindings: irqchip: renesas-irqc: Document r8a774e1 bindings
+  arm64: defconfig: Enable R8A774E1 SoC
+  arm64: dts: renesas: Initial r8a774e1 SoC device tree
+  arm64: dts: renesas: Add HiHope RZ/G2H main board support
+  arm64: dts: renesas: Add HiHope RZ/G2H sub board support
+
+ .../interrupt-controller/renesas,irqc.yaml    |   1 +
+ .../devicetree/bindings/mmc/renesas,sdhi.txt  |   1 +
+ .../bindings/serial/renesas,hscif.yaml        |   1 +
+ .../bindings/serial/renesas,scif.yaml         |   1 +
+ arch/arm64/boot/dts/renesas/Makefile          |   2 +
+ .../arm64/boot/dts/renesas/hihope-common.dtsi |   4 +-
+ arch/arm64/boot/dts/renesas/hihope-rev4.dtsi  |   4 +-
+ .../boot/dts/renesas/hihope-rzg2-ex.dtsi      |   2 +-
+ .../dts/renesas/r8a774e1-hihope-rzg2h-ex.dts  |  15 +
+ .../dts/renesas/r8a774e1-hihope-rzg2h.dts     |  26 +
+ arch/arm64/boot/dts/renesas/r8a774e1.dtsi     | 652 ++++++++++++++++++
+ arch/arm64/configs/defconfig                  |   1 +
+ 12 files changed, 705 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h-ex.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+
 -- 
-git-series 0.9.1
+2.17.1
+
