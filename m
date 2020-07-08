@@ -2,140 +2,71 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B81C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117D320BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:27:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SkecUDhf"
+	by mail.kernel.org (Postfix) with ESMTP id C812C20DD4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgGHI1O (ORCPT
+        id S1727941AbgGHI1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:27:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25889 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726006AbgGHI1N (ORCPT
+        Wed, 8 Jul 2020 04:27:19 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:40435 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726006AbgGHI1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:27:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594196832;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=nkl9/v1z2n5oTxi5AR2lnE/ZboSNKokLUsnZ/l22yc8=;
-        b=SkecUDhfo7kNxlmVCgYY552MEzCV/2owcxRJsfHg0Ms/ZGrC9Rl5069hDWNJJbfqZefaMN
-        r0MxxuKirh4GT+rDd5IjDkgDx064pA4buP1wGawMD45BNe9zG9rXlPKtuZAWiSL/4uVpDr
-        +RTeTvYcvt2AS6dJ+jL6nhamvma9CEs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-EekmgsW0PuybJaMHpAOPKA-1; Wed, 08 Jul 2020 04:27:10 -0400
-X-MC-Unique: EekmgsW0PuybJaMHpAOPKA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 663F919057A1;
-        Wed,  8 Jul 2020 08:27:09 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 74F4860E3E;
-        Wed,  8 Jul 2020 08:27:08 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Fix interruption of operations
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 08 Jul 2020 09:27:07 +0100
-Message-ID: <159419682767.3479071.15857808307874696111.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Wed, 8 Jul 2020 04:27:18 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3919662|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.05864-0.00417621-0.937184;FP=16269809178823979455|2|1|16|0|-1|-1|-1;HT=e02c03268;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I-BX2cf_1594196829;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I-BX2cf_1594196829)
+          by smtp.aliyun-inc.com(10.147.40.2);
+          Wed, 08 Jul 2020 16:27:14 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
+        icenowy@aosc.io, clabbe@baylibre.com, megous@megous.com,
+        frank@allwinnertech.com, georgii.staroselskii@emlid.com,
+        tiny.windzz@gmail.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com
+Subject: [PATCH v3 15/16] dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
+Date:   Wed,  8 Jul 2020 16:27:19 +0800
+Message-Id: <20200708082719.5644-1-frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The afs filesystem driver allows unstarted operations to be cancelled by
-signal, but most of these can easily be restarted (mkdir for example).  The
-primary culprits for reproducing this are those applications that use
-SIGALRM to display a progress counter.
+Document board compatible names for Allwinner A100 Perf1 Board.
 
-File lock-extension operation is marked uninterruptible as we have a
-limited time in which to do it, and the release op is marked
-uninterruptible also as if we fail to unlock a file, we'll have to wait 20
-mins before anyone can lock it again.
-
-The store operation logs a warning if it gets interruption, e.g.:
-
-	kAFS: Unexpected error from FS.StoreData -4
-
-because it's run from the background - but it can also be run from
-fdatasync()-type things.  However, store options aren't marked
-interruptible at the moment.
-
-Fix this in the following ways:
-
- (1) Mark store operations as uninterruptible.  It might make sense to
-     relax this for certain situations, but I'm not sure how to make sure
-     that background store ops aren't affected by signals to foreground
-     processes that happen to trigger them.
-
- (2) In afs_get_io_locks(), where we're getting the serialisation lock for
-     talking to the fileserver, return ERESTARTSYS rather than EINTR
-     because a lot of the operations (e.g. mkdir) are restartable if we
-     haven't yet started sending the op to the server.
-
-Fixes: e49c7b2f6de7 ("afs: Build an abstraction around an "operation" concept")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Frank Lee <frank@allwinnertech.com>
 ---
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- fs/afs/fs_operation.c |    4 ++--
- fs/afs/write.c        |    1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/fs/afs/fs_operation.c b/fs/afs/fs_operation.c
-index c264839b2fd0..24fd163c6323 100644
---- a/fs/afs/fs_operation.c
-+++ b/fs/afs/fs_operation.c
-@@ -71,7 +71,7 @@ static bool afs_get_io_locks(struct afs_operation *op)
- 		swap(vnode, vnode2);
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index abf2d97..8cdc677 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -16,6 +16,11 @@ properties:
+   compatible:
+     oneOf:
  
- 	if (mutex_lock_interruptible(&vnode->io_lock) < 0) {
--		op->error = -EINTR;
-+		op->error = -ERESTARTSYS;
- 		op->flags |= AFS_OPERATION_STOP;
- 		_leave(" = f [I 0]");
- 		return false;
-@@ -80,7 +80,7 @@ static bool afs_get_io_locks(struct afs_operation *op)
- 
- 	if (vnode2) {
- 		if (mutex_lock_interruptible_nested(&vnode2->io_lock, 1) < 0) {
--			op->error = -EINTR;
-+			op->error = -ERESTARTSYS;
- 			op->flags |= AFS_OPERATION_STOP;
- 			mutex_unlock(&vnode->io_lock);
- 			op->flags &= ~AFS_OPERATION_LOCK_0;
-diff --git a/fs/afs/write.c b/fs/afs/write.c
-index abfc8d3dc20c..60918b80b729 100644
---- a/fs/afs/write.c
-+++ b/fs/afs/write.c
-@@ -449,6 +449,7 @@ static int afs_store_data(struct address_space *mapping,
- 	op->store.first_offset = offset;
- 	op->store.last_to = to;
- 	op->mtime = vnode->vfs_inode.i_mtime;
-+	op->flags |= AFS_OPERATION_UNINTR;
- 	op->ops = &afs_store_data_operation;
- 
- try_next_key:
-
++      - description: Allwinner A100 Perf1 Board
++        items:
++          - const: allwinner,a100-perf1
++          - const: allwinner,sun50i-a100
++
+       - description: Allwinner A23 Evaluation Board
+         items:
+           - const: allwinner,sun8i-a23-evb
+-- 
+1.9.1
 
