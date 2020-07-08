@@ -2,135 +2,100 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE380C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F8320708
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A46120772
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594239485;
-	bh=K5Lg+VMXda9w1UJGY2IYhWtxKTo+Uepce6z7xUkDdpo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g49kpTHZrsG3utWfpznMDA3pKoRH63oB6Z/+QSwf6cqnjpYaQCbkr3KmE+IlTyxRd
-	 hDEDpD3n+ysxhpn74ZOu2oUkmjRxarDn2WkAC1l5pSHuzB82D9ZiymwcsaN/qFxBMV
-	 whEUf1K1ST3PSFIGinZHUioj/deb43remhN9rW68=
+	s=default; t=1594239578;
+	bh=S84KvemR4M6dpgIi8v4v9eUz3FpWojXbsMcXjZdI0HE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=b016g53zojorqxKXs/km5jtacaTKGL0p3fRkrm2ZYXQyMQz6KktPn1N/6U1LCZcpz
+	 PyxT7j8dq09abhLMAJ5TFOe24ntuwHCDYJuM9jm7Qo1u1+UjD3wzcX2jzFfHHuI0RC
+	 0mgZLEQTi+GvCdZJWW0QeQVQlFQb/bNaQzFjoY1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgGHUSE (ORCPT
+        id S1726496AbgGHUTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:18:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35392 "EHLO mail.kernel.org"
+        Wed, 8 Jul 2020 16:19:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725964AbgGHUSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:18:04 -0400
-Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726122AbgGHUTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 16:19:37 -0400
+Received: from embeddedor (unknown [201.162.240.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B8C820672;
-        Wed,  8 Jul 2020 20:18:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D902620672;
+        Wed,  8 Jul 2020 20:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594239483;
-        bh=K5Lg+VMXda9w1UJGY2IYhWtxKTo+Uepce6z7xUkDdpo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vqi2sw4jvjVXqJNUckduzP/bJGnZLr0IpJ8RS18LE8x4iSXUc6sPS/bF9Chpy4svu
-         2wpfLl28X3KkiZOxjrragrPUpUnTRSVbf0zqBlYmFCr9tFtMyBSODjD9DUkwbW0sIq
-         /mfMIbEfZBj2f5fvzvKHGuqxptv+gp/Ne7VWX0oA=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-security-module@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>
-Cc:     syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
-Subject: [PATCH] Smack: fix use-after-free in smk_write_relabel_self()
-Date:   Wed,  8 Jul 2020 13:15:20 -0700
-Message-Id: <20200708201520.140376-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <0000000000000279c705a799ae31@google.com>
-References: <0000000000000279c705a799ae31@google.com>
+        s=default; t=1594239576;
+        bh=S84KvemR4M6dpgIi8v4v9eUz3FpWojXbsMcXjZdI0HE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=weUr/blubCR5NpqUVcA2gNZD7HfiGJu4ukvmAQrs8BO7LOjwgQRhyYwztWJWORaxs
+         SOZspislB67pt+1oKgI+XZ9Agd2Gus49p6dxI+EzcZXPITwrwU3GNAQuuTz5K5HSTR
+         6OVMfB+MhqXDHa11OPQRt3zeYxH3ocGNZmkIRbqE=
+Date:   Wed, 8 Jul 2020 15:25:05 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH] Bluetooth: RFCOMM: Use fallthrough pseudo-keyword
+Message-ID: <20200708202505.GA1733@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-smk_write_relabel_self() frees memory from the task's credentials with
-no locking, which can easily cause a use-after-free because multiple
-tasks can share the same credentials structure.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Fix this by using prepare_creds() and commit_creds() to correctly modify
-the task's credentials.
-
-Reproducer for "BUG: KASAN: use-after-free in smk_write_relabel_self":
-
-	#include <fcntl.h>
-	#include <pthread.h>
-	#include <unistd.h>
-
-	static void *thrproc(void *arg)
-	{
-		int fd = open("/sys/fs/smackfs/relabel-self", O_WRONLY);
-		for (;;) write(fd, "foo", 3);
-	}
-
-	int main()
-	{
-		pthread_t t;
-		pthread_create(&t, NULL, thrproc, NULL);
-		thrproc(NULL);
-	}
-
-Reported-by: syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
-Fixes: 38416e53936e ("Smack: limited capability for changing process label")
-Cc: <stable@vger.kernel.org> # v4.4+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- security/smack/smackfs.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ net/bluetooth/rfcomm/core.c | 2 +-
+ net/bluetooth/rfcomm/sock.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
-index c21b656b3263..840a192e9337 100644
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -2720,7 +2720,6 @@ static int smk_open_relabel_self(struct inode *inode, struct file *file)
- static ssize_t smk_write_relabel_self(struct file *file, const char __user *buf,
- 				size_t count, loff_t *ppos)
- {
--	struct task_smack *tsp = smack_cred(current_cred());
- 	char *data;
- 	int rc;
- 	LIST_HEAD(list_tmp);
-@@ -2745,11 +2744,21 @@ static ssize_t smk_write_relabel_self(struct file *file, const char __user *buf,
- 	kfree(data);
+diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
+index 2e20af317cea..f2bacb464ccf 100644
+--- a/net/bluetooth/rfcomm/core.c
++++ b/net/bluetooth/rfcomm/core.c
+@@ -479,7 +479,7 @@ static int __rfcomm_dlc_close(struct rfcomm_dlc *d, int err)
+ 		/* if closing a dlc in a session that hasn't been started,
+ 		 * just close and unlink the dlc
+ 		 */
+-		/* fall through */
++		fallthrough;
  
- 	if (!rc || (rc == -EINVAL && list_empty(&list_tmp))) {
-+		struct cred *new;
-+		struct task_smack *tsp;
-+
-+		new = prepare_creds();
-+		if (!new) {
-+			rc = -ENOMEM;
-+			goto out;
-+		}
-+		tsp = smack_cred(new);
- 		smk_destroy_label_list(&tsp->smk_relabel);
- 		list_splice(&list_tmp, &tsp->smk_relabel);
-+		commit_creds(new);
- 		return count;
- 	}
--
-+out:
- 	smk_destroy_label_list(&list_tmp);
- 	return rc;
- }
+ 	default:
+ 		rfcomm_dlc_clear_timer(d);
+diff --git a/net/bluetooth/rfcomm/sock.c b/net/bluetooth/rfcomm/sock.c
+index df14eebe80da..0afc4bc5ab41 100644
+--- a/net/bluetooth/rfcomm/sock.c
++++ b/net/bluetooth/rfcomm/sock.c
+@@ -218,7 +218,7 @@ static void __rfcomm_sock_close(struct sock *sk)
+ 	case BT_CONFIG:
+ 	case BT_CONNECTED:
+ 		rfcomm_dlc_close(d, 0);
+-		/* fall through */
++		fallthrough;
+ 
+ 	default:
+ 		sock_set_flag(sk, SOCK_ZAPPED);
 -- 
 2.27.0
 
