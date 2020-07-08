@@ -2,112 +2,95 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C22C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED6F206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92AD206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgGHUYP (ORCPT
+        id S1726213AbgGHUY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 16:24:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:35762 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgGHUYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 16:24:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C6E21FB;
-        Wed,  8 Jul 2020 13:24:14 -0700 (PDT)
-Received: from bogus (unknown [10.37.8.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 32C033F66E;
-        Wed,  8 Jul 2020 13:24:12 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 21:24:00 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Dien Pham <dien.pham.ry@renesas.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 2/2] clk: scmi: Fix min and max rate when registering
- clocks with discrete rates
-Message-ID: <20200708202349.GA31671@bogus>
-References: <20200708110725.18017-1-sudeep.holla@arm.com>
- <20200708110725.18017-2-sudeep.holla@arm.com>
+        Wed, 8 Jul 2020 16:24:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgGHUY0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 16:24:26 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F742C061A0B;
+        Wed,  8 Jul 2020 13:24:26 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 56704BC0D4;
+        Wed,  8 Jul 2020 20:24:23 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     minyard@acm.org, corbet@lwn.net,
+        openipmi-developer@lists.sourceforge.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] IPMI SUBSYSTEM: Replace HTTP links with HTTPS ones
+Date:   Wed,  8 Jul 2020 22:24:17 +0200
+Message-Id: <20200708202417.22375-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200708110725.18017-2-sudeep.holla@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 12:07:25PM +0100, Sudeep Holla wrote:
-> Currently we are not initializing the scmi clock with discrete rates
-> correctly. We fetch the min_rate and max_rate value only for clocks with
-> ranges and ignore the ones with discrete rates. This will lead to wrong
-> initialization of rate range when clock supports discrete rate.
-> 
-> Fix this by using the first and the last rate in the sorted list of the
-> discrete clock rates while registering the clock.
-> 
-> Fixes: 6d6a1d82eaef7 ("clk: add support for clocks provided by SCMI")
-> Reported-by: Dien Pham <dien.pham.ry@renesas.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/clk/clk-scmi.c | 22 +++++++++++++++++++---
->  1 file changed, 19 insertions(+), 3 deletions(-)
-> 
-> Hi Stephen,
-> 
-> If you fine, I can take this via ARM SoC along with the change in firmware
-> driver. But it is fine if you want to merge this independently as it should
-> be fine. Let me know either way.
-> 
-> Regards,
-> Sudeep
-> 
-> diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
-> index c491f5de0f3f..ea65b7bf1408 100644
-> --- a/drivers/clk/clk-scmi.c
-> +++ b/drivers/clk/clk-scmi.c
-> @@ -103,6 +103,8 @@ static const struct clk_ops scmi_clk_ops = {
->  static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
->  {
->  	int ret;
-> +	unsigned long min_rate, max_rate;
-> +
->  	struct clk_init_data init = {
->  		.flags = CLK_GET_RATE_NOCACHE,
->  		.num_parents = 0,
-> @@ -112,9 +114,23 @@ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
-> 
->  	sclk->hw.init = &init;
->  	ret = devm_clk_hw_register(dev, &sclk->hw);
-> -	if (!ret)
-> -		clk_hw_set_rate_range(&sclk->hw, sclk->info->range.min_rate,
-> -				      sclk->info->range.max_rate);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (sclk->info->rate_discrete) {
-> +		int num_rates = sclk->info->list.num_rates;
-> +
-> +		if (num_rates <= 0)
-> +			return -EINVAL;
-> +
-> +		min_rate = sclk->info->list.rates[0]
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-I seem to have sent a version with ; missing above though I fixed but
-sent the old stale version as I had written a note to you 🙁 
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+
+ Documentation/driver-api/ipmi.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/driver-api/ipmi.rst b/Documentation/driver-api/ipmi.rst
+index 5ef1047e2e66..292f587fccdd 100644
+--- a/Documentation/driver-api/ipmi.rst
++++ b/Documentation/driver-api/ipmi.rst
+@@ -18,7 +18,7 @@ management software that can use the IPMI system.
+ 
+ This document describes how to use the IPMI driver for Linux.  If you
+ are not familiar with IPMI itself, see the web site at
+-http://www.intel.com/design/servers/ipmi/index.htm.  IPMI is a big
++https://www.intel.com/design/servers/ipmi/index.htm.  IPMI is a big
+ subject and I can't cover it all here!
+ 
+ Configuration
 -- 
-Regards,
-Sudeep
+2.27.0
+
