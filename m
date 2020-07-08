@@ -2,152 +2,134 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C98C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25495C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4006E20658
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F70206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 20:01:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fi54/RK7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZ8r90rc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgGHTz3 (ORCPT
+        id S1726222AbgGHUBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:55:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55549 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725915AbgGHTz2 (ORCPT
+        Wed, 8 Jul 2020 16:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgGHUBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:55:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594238126;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k4zYLdQwkBISSt97sZJVBWHYyMqX21StTgcEywwSVHM=;
-        b=fi54/RK7YG4KV8Z+hF1d78z964SS9VdGhAlcgi+87U/h94QvF5Kj+NwJifHmmnREADTLTq
-        AOgcC5Rm2KEhVG3dDnb0rj3jgamPQFqkF50hD+R4qzZ8PhvHaMYHYZ277XJrQepDvfqM4W
-        Qe9zs66+Vg95zBkI68CIN8dgSI5hJTE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-7z3WF3iqMRmKuVNARq36Gw-1; Wed, 08 Jul 2020 15:55:22 -0400
-X-MC-Unique: 7z3WF3iqMRmKuVNARq36Gw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E18580BCC7;
-        Wed,  8 Jul 2020 19:55:17 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A5D246FEC4;
-        Wed,  8 Jul 2020 19:54:44 +0000 (UTC)
-Date:   Wed, 8 Jul 2020 13:54:44 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
- (alloc/free)
-Message-ID: <20200708135444.4eac48a4@x1.home>
-In-Reply-To: <DM5PR11MB1435B159DA10C8301B89A6F0C3670@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-        <1592988927-48009-7-git-send-email-yi.l.liu@intel.com>
-        <20200702151832.048b44d1@x1.home>
-        <CY4PR11MB1432DD97F44EB8AA5CCC87D8C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
-        <DM5PR11MB1435B159DA10C8301B89A6F0C3670@DM5PR11MB1435.namprd11.prod.outlook.com>
-Organization: Red Hat
+        Wed, 8 Jul 2020 16:01:07 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15892C061A0B;
+        Wed,  8 Jul 2020 13:01:07 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so6798741pfm.4;
+        Wed, 08 Jul 2020 13:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ToVQ5jnkfZO4cOvrMVw/H9BXTF3xW5Rfd911FLp9ico=;
+        b=kZ8r90rckl0NlrYmrKQUzD7195fxWcl6FsDYLaiWSm+kJpqCHhhnvjqYyNVeTBypFy
+         a1hmy5bXHYVEgHLj8tGPNhfaDLMTyzxL9RDrlmnhDwvz84kvtwDbsT/6En2qYvZ3BIjl
+         eIN50Nsw40HHfUC6h2MhCGX8TIe7SysD3qIhJX2fjSCX5WxAq4FsSw5a4RKPifAHLmai
+         9kysYE6+IxYYiUc53bdKJWZx+Nljg/gr7LYasG0kUbsVlLils+EMZI1vli3eKqZk2XnA
+         0hx1JsOUPuxkwz80IYqU/FrDb/Zi63jMefNA5hwZpZuZAl/X2uaaJD5YLcZBFCHh5jNk
+         D7ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ToVQ5jnkfZO4cOvrMVw/H9BXTF3xW5Rfd911FLp9ico=;
+        b=CgucVkimv6AP7yxb8DG5gQmIFEufIASeDuRU26mE0frBglQI+7/0HsfxxJxirdFNEt
+         Zl2/t7wO7gnGJHg3lUi4Pzjmr8Za+hNDw82gLXIHaLKJHmDHFnhX6Smae5JkE89IHmqz
+         /J+a8ny9/1AN89GcpppwzULesR/x0DgO5ecroLzt5JbXJOxkA6acJDTJ5s1OKLYJxONw
+         DMVmH5IDJ2e/KtYWrnFnuiUraILjok182DhxHVB+6uH10gD3lQS9bvvQsZX6q7zb0yEL
+         axdAQ5sbCMXj6dxR8m+Uf26EeEUc+RabqoPpUEeDeiOn9nr1CiZiD3yWr+ZiV+3QvAvD
+         xq8A==
+X-Gm-Message-State: AOAM533n+FMWWhdf9vtUvX46fBdudjExP35ATZxwb1hU5wOiBeu5EzIr
+        HlzwC5olgjzD8DcU/Zl4He1XtsUPnaQ/cBHZ3xM=
+X-Google-Smtp-Source: ABdhPJyK38F+wgnctkrrB+nr3gsimZfQjgyvXOlUwuiutIHYJ0mNmVzLBopyqSrYFyAUZpSzmXllHuyMrGx/71R9Atc=
+X-Received: by 2002:a63:a05f:: with SMTP id u31mr44326488pgn.4.1594238466508;
+ Wed, 08 Jul 2020 13:01:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <CAHk-=wiKCXEWKJ9dWUimGbrVRo_N2RosESUw8E7m9AEtyZcu=w@mail.gmail.com>
+ <20200708190756.16810-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20200708190756.16810-1-rikard.falkeborn@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 8 Jul 2020 23:00:50 +0300
+Message-ID: <CAHp75VeA1GGvaxyzraWOO-4zQNC3sbcawsYwWXCNBWavtZGBuA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Move -Wtype-limits to W=2
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        mm-commits@vger.kernel.org,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020 08:16:16 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+On Wed, Jul 8, 2020 at 10:08 PM Rikard Falkeborn
+<rikard.falkeborn@gmail.com> wrote:
+>
+> -Wtype-limits is included in -Wextra which is added at W=1. It warns
+> (among other things) that 'comparison of an unsigned variable `< 0` is
+> always false. This causes noisy warnings, especially when used in
+> macros, hence it is more suitable for W=2.
+>
 
-> Hi Alex,
-> 
-> > From: Liu, Yi L < yi.l.liu@intel.com>
-> > Sent: Friday, July 3, 2020 2:28 PM
-> > 
-> > Hi Alex,
-> >   
-> > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > Sent: Friday, July 3, 2020 5:19 AM
-> > >
-> > > On Wed, 24 Jun 2020 01:55:19 -0700
-> > > Liu Yi L <yi.l.liu@intel.com> wrote:
-> > >  
-> > > > This patch allows user space to request PASID allocation/free, e.g.
-> > > > when serving the request from the guest.
-> > > >
-> > > > PASIDs that are not freed by userspace are automatically freed when
-> > > > the IOASID set is destroyed when process exits.  
-> [...]
-> > > > +static int vfio_iommu_type1_pasid_request(struct vfio_iommu *iommu,
-> > > > +					  unsigned long arg)
-> > > > +{
-> > > > +	struct vfio_iommu_type1_pasid_request req;
-> > > > +	unsigned long minsz;
-> > > > +
-> > > > +	minsz = offsetofend(struct vfio_iommu_type1_pasid_request, range);
-> > > > +
-> > > > +	if (copy_from_user(&req, (void __user *)arg, minsz))
-> > > > +		return -EFAULT;
-> > > > +
-> > > > +	if (req.argsz < minsz || (req.flags & ~VFIO_PASID_REQUEST_MASK))
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (req.range.min > req.range.max)  
-> > >
-> > > Is it exploitable that a user can spin the kernel for a long time in
-> > > the case of a free by calling this with [0, MAX_UINT] regardless of their actual  
-> > allocations?
-> > 
-> > IOASID can ensure that user can only free the PASIDs allocated to the user. but
-> > it's true, kernel needs to loop all the PASIDs within the range provided by user. it
-> > may take a long time. is there anything we can do? one thing may limit the range
-> > provided by user?  
-> 
-> thought about it more, we have per-VM pasid quota (say 1000), so even if
-> user passed down [0, MAX_UNIT], kernel will only loop the 1000 pasids at
-> most. do you think we still need to do something on it?
+Suggested-by: Arnd ?
 
-How do you figure that?  vfio_iommu_type1_pasid_request() accepts the
-user's min/max so long as (max > min) and passes that to
-vfio_iommu_type1_pasid_free(), then to vfio_pasid_free_range()  which
-loops as:
+LGTM!
 
-	ioasid_t pasid = min;
-	for (; pasid <= max; pasid++)
-		ioasid_free(pasid);
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> ---
+> See also discussion at https://lore.kernel.org/lkml/CAHk-=wiKCXEWKJ9dWUimGbrVRo_N2RosESUw8E7m9AEtyZcu=w@mail.gmail.com/
+>
+>  scripts/Makefile.extrawarn | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> index 4aea7cf71d11..62c275685b75 100644
+> --- a/scripts/Makefile.extrawarn
+> +++ b/scripts/Makefile.extrawarn
+> @@ -35,6 +35,7 @@ KBUILD_CFLAGS += $(call cc-option, -Wstringop-truncation)
+>  # The following turn off the warnings enabled by -Wextra
+>  KBUILD_CFLAGS += -Wno-missing-field-initializers
+>  KBUILD_CFLAGS += -Wno-sign-compare
+> +KBUILD_CFLAGS += -Wno-type-limits
+>
+>  KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN1
+>
+> @@ -66,6 +67,7 @@ KBUILD_CFLAGS += -Wshadow
+>  KBUILD_CFLAGS += $(call cc-option, -Wlogical-op)
+>  KBUILD_CFLAGS += -Wmissing-field-initializers
+>  KBUILD_CFLAGS += -Wsign-compare
+> +KBUILD_CFLAGS += -Wtype-limits
+>  KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
+>  KBUILD_CFLAGS += $(call cc-option, -Wunused-macros)
+>
+> --
+> 2.27.0
+>
 
-A user might only be able to allocate 1000 pasids, but apparently they
-can ask to free all they want.
 
-It's also not obvious to me that calling ioasid_free() is only allowing
-the user to free their own passid.  Does it?  It would be a pretty
-gaping hole if a user could free arbitrary pasids.  A r-b tree of
-passids might help both for security and to bound spinning in a loop.
-Thanks,
-
-Alex
-
+-- 
+With Best Regards,
+Andy Shevchenko
