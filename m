@@ -2,90 +2,101 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2945C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E63C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5F342084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F7EA20739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 10:57:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iYtUxZGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbgGHKzj (ORCPT
+        id S1728601AbgGHK55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:55:39 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:60226 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbgGHKzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:55:39 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 8F8C0BC0CB;
-        Wed,  8 Jul 2020 10:55:36 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     lenb@kernel.org, linux-pm@vger.kernel.org,
+        Wed, 8 Jul 2020 06:57:57 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:49890 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726586AbgGHK55 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:57:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594205876; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=XH6S1HvL7E7qoaCSA4Oa2h+z4LdFnJsuWn/J2aZDrbY=; b=iYtUxZGoH8wFbVFRKZCE46dpz2TmrATa8EA02mQPemff78bZZGgdNgcwlVoK0yWu/sAxbg1g
+ R5BoJAyOxY9xvzhn1YuAfw1vNtJ5qGgEIE2o40NRGS84pU9kqSInzLNW6slmhTXsnW04nQqH
+ fuk22RqtUih+5IzwleR36qnRqAQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f05a6b355886724ffb1047e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 10:57:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 605EFC43391; Wed,  8 Jul 2020 10:57:55 +0000 (UTC)
+Received: from [192.168.0.129] (unknown [183.83.142.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C084C433C8;
+        Wed,  8 Jul 2020 10:57:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7C084C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+Subject: Re: [RESEND][PATCH v3 7/8] ASoC: qcom: lpass-sc7180: Add platform
+ driver for lpass audio
+To:     Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com,
+        robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
+        srinivas.kandagatla@linaro.org, Ajit Pandey <ajitp@codeaurora.org>,
         linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: TURBOSTAT UTILITY
-Date:   Wed,  8 Jul 2020 12:55:30 +0200
-Message-Id: <20200708105530.13993-1-grandmaster@al2klimov.de>
+References: <1594185286-11323-1-git-send-email-rohitkr@codeaurora.org>
+ <20200708103301.GG4655@sirena.org.uk>
+From:   Rohit Kumar <rohitkr@codeaurora.org>
+Message-ID: <e7986896-3ffd-f565-7590-0638eb6f7641@codeaurora.org>
+Date:   Wed, 8 Jul 2020 16:27:43 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+In-Reply-To: <20200708103301.GG4655@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+On 7/8/2020 4:03 PM, Mark Brown wrote:
+> On Wed, Jul 08, 2020 at 10:44:46AM +0530, Rohit kumar wrote:
+>> From: Ajit Pandey <ajitp@codeaurora.org>
+>>
+>> Add platform driver for configuring sc7180 lpass core I2S and
+>> DMA configuration to support playback & capture to external codecs
+>> connected over primary & secondary MI2S interfaces.
+> I only have patch 7 here, no other patches or cover letter.  What is
+> going on?
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Hello Mark,
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Sorry for the confusion. I posted complete patchset and resend only 7th 
+patch as
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+it had invalid mail id in Signed-off. I should have probably updated it 
+in Patch v4.
 
- If you apply the patch, please let me know.
+Thanks,
 
+Rohit
 
- tools/power/x86/turbostat/turbostat.8 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/power/x86/turbostat/turbostat.8 b/tools/power/x86/turbostat/turbostat.8
-index a6db83a88e85..f6b7e85b121c 100644
---- a/tools/power/x86/turbostat/turbostat.8
-+++ b/tools/power/x86/turbostat/turbostat.8
-@@ -335,7 +335,7 @@ that they count at TSC rate, which is true on all processors tested to date.
- 
- .SH REFERENCES
- Volume 3B: System Programming Guide"
--http://www.intel.com/products/processor/manuals/
-+https://www.intel.com/products/processor/manuals/
- 
- .SH FILES
- .ta
 -- 
-2.27.0
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
 
