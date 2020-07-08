@@ -2,370 +2,110 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D30C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9986C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 414A0206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBDF8205CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 19:36:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tbgVP82C"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N5awc+9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgGHTfv (ORCPT
+        id S1726306AbgGHTgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:35:51 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:60723 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726347AbgGHTfu (ORCPT
+        Wed, 8 Jul 2020 15:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgGHTga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:35:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594236949; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=LC9f74TU7sRenomNvH9Jl50KN/ZMUzl3hwIz8duJSio=; b=tbgVP82Cj+3JCYysg71P9D4AYn0cOJM2a95fu7uiw8pzjM+K2k/MgMNuUEXkzsYGO9Ra36Re
- UENgSoTKv+P3rpYAZ3+g8YbbR2Ud071rd0gDuvcuhzDgMOvSOX0rAb3y+LCjil01azRh0Vxl
- 7Ety+x7hj2Qp1pfJ0ZxhwSW/tqY=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5f062014f97e988aabd77a45 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 19:35:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DDFB8C433A1; Wed,  8 Jul 2020 19:35:47 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 24DA9C433CB;
-        Wed,  8 Jul 2020 19:35:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 24DA9C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Wed, 8 Jul 2020 13:35:41 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        John Stultz <john.stultz@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno@lists.freedesktop.org
-Subject: Re: [PATCH v2 4/6] drm/msm: Add support to create a local pagetable
-Message-ID: <20200708193541.GB21059@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-msm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        John Stultz <john.stultz@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>, freedreno@lists.freedesktop.org
-References: <20200626200414.14382-1-jcrouse@codeaurora.org>
- <20200626200414.14382-5-jcrouse@codeaurora.org>
- <3feed674-5eb9-ca2f-76a7-f888f431c409@arm.com>
+        Wed, 8 Jul 2020 15:36:30 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851D3C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 12:36:30 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p3so22150934pgh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 12:36:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UlOQFGlZj5bWzar4eWUzhZTqr0UJgpfAN8IY8nJf+RI=;
+        b=N5awc+9vcqKaNfH6/xYgwOeaQfQB0YwP6yIiVn1wsvCaiKySEe1x1zWCE3R+vcjzQ3
+         qAk3o+IN/npi3/WeXRGBmgS2V5tE2EjRLEbxeqiEKuP0u5BmsR5t2P8iDuxBKCqVstcK
+         MDKJ635HQ9j11wxyRs/vB7hSBbZv1xgNq4nU+hXegCB2RgHfnkqPv4hSR7vgvD+R/ZEw
+         yDz6WTUXqM46dIGiFSx7/AqR+F/ppwtWERVa6VLYH/y9VVXML9n76um2BkSUCBQ84CtP
+         Yx4TcXwavwr7rle/1JAfOQm3WAtKRTxftUOljH6JF53hMips5c5N7giUvN+vqHh5eHba
+         dBcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UlOQFGlZj5bWzar4eWUzhZTqr0UJgpfAN8IY8nJf+RI=;
+        b=mbk5/9GByEbMDiCtC3fbsNivy8sika9tmL5KN6v6ehaW4FcGqtdw6yGNMiQwvaxq/f
+         X0fSQHIOWEigHteu2xm3zZbw2PWRoX3BMVcLpGJPvAEhEN94cfIAlWoOyOyVV+wS2kig
+         C5ovp1UPYRIM9PjrLranLpfEKcL5MOF9NHlPjJuVaZOUCjY1QIdAOKDl57ddbfhUFlbv
+         qxDS8NR5oFK7GTVjhWjSZ+OcwtJZpoySJzyPLQV92on2qaK/EvFF5R/ubzFMSiVLI2zw
+         Xx6eqZsCR8Gl7IR5PGJa+GpPCFdi7CqIy+KoUjgmJct4tH9LKyZq1fhdbeZlWEf88M3n
+         MD6w==
+X-Gm-Message-State: AOAM533AngccZRObNcZ1Zd2rf4zjyEy3nOtDyWoj9oA3D2CElIdySeBn
+        1NuORlEAtwoaYrrUIx2NgWT90rzgnoru1qKhUwO587u9
+X-Google-Smtp-Source: ABdhPJzeL6Hgnk5RDvSRSo+5JR09vEJ6Vq0mcOPo4Xa3R4L1j8fff0tIdNST+X8EkC6QT9qV1j8pfYKiWn/CY1twvec=
+X-Received: by 2002:a63:a119:: with SMTP id b25mr49682689pgf.10.1594236989911;
+ Wed, 08 Jul 2020 12:36:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3feed674-5eb9-ca2f-76a7-f888f431c409@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200530221127.459704-1-brgerst@gmail.com> <CAKwvOdn7Ugu_687b9CnOnL8RA9hbi+ONCb10gS=3VqtkTsmduw@mail.gmail.com>
+In-Reply-To: <CAKwvOdn7Ugu_687b9CnOnL8RA9hbi+ONCb10gS=3VqtkTsmduw@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 8 Jul 2020 12:36:18 -0700
+Message-ID: <CAKwvOdm4gMe_-DcB_H4mDGm8Yy++_7G20sg9xuZoom-rF2j1Sw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] x86: Clean up percpu operations
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Alistair Delva <adelva@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 12:36:42PM +0100, Robin Murphy wrote:
-> On 2020-06-26 21:04, Jordan Crouse wrote:
-> >Add support to create a io-pgtable for use by targets that support
-> >per-instance pagetables.  In order to support per-instance pagetables the
-> >GPU SMMU device needs to have the qcom,adreno-smmu compatible string and
-> >split pagetables and auxiliary domains need to be supported and enabled.
+On Mon, Jun 1, 2020 at 2:00 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> On Sat, May 30, 2020 at 3:11 PM Brian Gerst <brgerst@gmail.com> wrote:
 > >
-> >Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> >---
-> >
-> >  drivers/gpu/drm/msm/msm_gpummu.c |   2 +-
-> >  drivers/gpu/drm/msm/msm_iommu.c  | 180 ++++++++++++++++++++++++++++++-
-> >  drivers/gpu/drm/msm/msm_mmu.h    |  16 ++-
-> >  3 files changed, 195 insertions(+), 3 deletions(-)
-> >
-> >diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
-> >index 310a31b05faa..aab121f4beb7 100644
-> >--- a/drivers/gpu/drm/msm/msm_gpummu.c
-> >+++ b/drivers/gpu/drm/msm/msm_gpummu.c
-> >@@ -102,7 +102,7 @@ struct msm_mmu *msm_gpummu_new(struct device *dev, struct msm_gpu *gpu)
-> >  	}
-> >  	gpummu->gpu = gpu;
-> >-	msm_mmu_init(&gpummu->base, dev, &funcs);
-> >+	msm_mmu_init(&gpummu->base, dev, &funcs, MSM_MMU_GPUMMU);
-> >  	return &gpummu->base;
-> >  }
-> >diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-> >index 1b6635504069..f455c597f76d 100644
-> >--- a/drivers/gpu/drm/msm/msm_iommu.c
-> >+++ b/drivers/gpu/drm/msm/msm_iommu.c
-> >@@ -4,15 +4,192 @@
-> >   * Author: Rob Clark <robdclark@gmail.com>
-> >   */
-> >+#include <linux/io-pgtable.h>
-> >  #include "msm_drv.h"
-> >  #include "msm_mmu.h"
-> >  struct msm_iommu {
-> >  	struct msm_mmu base;
-> >  	struct iommu_domain *domain;
-> >+	struct iommu_domain *aux_domain;
-> >  };
-> >+
-> >  #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
-> >+struct msm_iommu_pagetable {
-> >+	struct msm_mmu base;
-> >+	struct msm_mmu *parent;
-> >+	struct io_pgtable_ops *pgtbl_ops;
-> >+	phys_addr_t ttbr;
-> >+	u32 asid;
-> >+};
-> >+
-> >+static struct msm_iommu_pagetable *to_pagetable(struct msm_mmu *mmu)
-> >+{
-> >+	return container_of(mmu, struct msm_iommu_pagetable, base);
-> >+}
-> >+
-> >+static int msm_iommu_pagetable_unmap(struct msm_mmu *mmu, u64 iova,
-> >+		size_t size)
-> >+{
-> >+	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
-> >+	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
-> >+	size_t unmapped = 0;
-> >+
-> >+	/* Unmap the block one page at a time */
-> >+	while (size) {
-> >+		unmapped += ops->unmap(ops, iova, 4096, NULL);
-> >+		iova += 4096;
-> >+		size -= 4096;
-> >+	}
-> >+
-> >+	iommu_flush_tlb_all(to_msm_iommu(pagetable->parent)->domain);
-> >+
-> >+	return (unmapped == size) ? 0 : -EINVAL;
-> >+}
-> 
-> Remember in patch #1 when you said "Then 'domain' can be used like any other
-> iommu domain to map and unmap iova addresses in the pagetable."?
-> 
-> This appears to be very much not that :/
- 
-The code changed but the commit log stayed the same.  I'll reword.
+> > The core percpu operations already have a switch on the width of the
+> > data type, which resulted in an extra amount of dead code being
+> > generated with the x86 operations having another switch.  This patch set
+> > rewrites the x86 ops to remove the switch.  Additional cleanups are to
+> > use named assembly operands, and to cast variables to the width used in
+> > the assembly to make Clang happy.
+>
+> Thanks for all of the work that went into this series.  I think I've
+> reviewed all of them.
+> With this series plus this hunk:
+> https://github.com/ClangBuiltLinux/continuous-integration/blob/master/patches/llvm-all/linux-next/x86/x86-support-i386-with-Clang.patch#L219-L237
+> I can build and boot i386_defconfig with Clang! So for the series:
+>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Jordan
-
-> Robin.
-> 
-> >+
-> >+static int msm_iommu_pagetable_map(struct msm_mmu *mmu, u64 iova,
-> >+		struct sg_table *sgt, size_t len, int prot)
-> >+{
-> >+	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
-> >+	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
-> >+	struct scatterlist *sg;
-> >+	size_t mapped = 0;
-> >+	u64 addr = iova;
-> >+	unsigned int i;
-> >+
-> >+	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
-> >+		size_t size = sg->length;
-> >+		phys_addr_t phys = sg_phys(sg);
-> >+
-> >+		/* Map the block one page at a time */
-> >+		while (size) {
-> >+			if (ops->map(ops, addr, phys, 4096, prot)) {
-> >+				msm_iommu_pagetable_unmap(mmu, iova, mapped);
-> >+				return -EINVAL;
-> >+			}
-> >+
-> >+			phys += 4096;
-> >+			addr += 4096;
-> >+			size -= 4096;
-> >+			mapped += 4096;
-> >+		}
-> >+	}
-> >+
-> >+	return 0;
-> >+}
-> >+
-> >+static void msm_iommu_pagetable_destroy(struct msm_mmu *mmu)
-> >+{
-> >+	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
-> >+
-> >+	free_io_pgtable_ops(pagetable->pgtbl_ops);
-> >+	kfree(pagetable);
-> >+}
-> >+
-> >+/*
-> >+ * Given a parent device, create and return an aux domain. This will enable the
-> >+ * TTBR0 region
-> >+ */
-> >+static struct iommu_domain *msm_iommu_get_aux_domain(struct msm_mmu *parent)
-> >+{
-> >+	struct msm_iommu *iommu = to_msm_iommu(parent);
-> >+	struct iommu_domain *domain;
-> >+	int ret;
-> >+
-> >+	if (iommu->aux_domain)
-> >+		return iommu->aux_domain;
-> >+
-> >+	if (!iommu_dev_has_feature(parent->dev, IOMMU_DEV_FEAT_AUX))
-> >+		return ERR_PTR(-ENODEV);
-> >+
-> >+	domain = iommu_domain_alloc(&platform_bus_type);
-> >+	if (!domain)
-> >+		return ERR_PTR(-ENODEV);
-> >+
-> >+	ret = iommu_aux_attach_device(domain, parent->dev);
-> >+	if (ret) {
-> >+		iommu_domain_free(domain);
-> >+		return ERR_PTR(ret);
-> >+	}
-> >+
-> >+	iommu->aux_domain = domain;
-> >+	return domain;
-> >+}
-> >+
-> >+int msm_iommu_pagetable_params(struct msm_mmu *mmu,
-> >+		phys_addr_t *ttbr, int *asid)
-> >+{
-> >+	struct msm_iommu_pagetable *pagetable;
-> >+
-> >+	if (mmu->type != MSM_MMU_IOMMU_PAGETABLE)
-> >+		return -EINVAL;
-> >+
-> >+	pagetable = to_pagetable(mmu);
-> >+
-> >+	if (ttbr)
-> >+		*ttbr = pagetable->ttbr;
-> >+
-> >+	if (asid)
-> >+		*asid = pagetable->asid;
-> >+
-> >+	return 0;
-> >+}
-> >+
-> >+static const struct msm_mmu_funcs pagetable_funcs = {
-> >+		.map = msm_iommu_pagetable_map,
-> >+		.unmap = msm_iommu_pagetable_unmap,
-> >+		.destroy = msm_iommu_pagetable_destroy,
-> >+};
-> >+
-> >+struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
-> >+{
-> >+	static int next_asid = 16;
-> >+	struct msm_iommu_pagetable *pagetable;
-> >+	struct iommu_domain *aux_domain;
-> >+	struct io_pgtable_cfg cfg;
-> >+	int ret;
-> >+
-> >+	/* Make sure that the parent has a aux domain attached */
-> >+	aux_domain = msm_iommu_get_aux_domain(parent);
-> >+	if (IS_ERR(aux_domain))
-> >+		return ERR_CAST(aux_domain);
-> >+
-> >+	/* Get the pagetable configuration from the aux domain */
-> >+	ret = iommu_domain_get_attr(aux_domain, DOMAIN_ATTR_PGTABLE_CFG, &cfg);
-> >+	if (ret)
-> >+		return ERR_PTR(ret);
-> >+
-> >+	pagetable = kzalloc(sizeof(*pagetable), GFP_KERNEL);
-> >+	if (!pagetable)
-> >+		return ERR_PTR(-ENOMEM);
-> >+
-> >+	msm_mmu_init(&pagetable->base, parent->dev, &pagetable_funcs,
-> >+		MSM_MMU_IOMMU_PAGETABLE);
-> >+
-> >+	cfg.tlb = NULL;
-> >+
-> >+	pagetable->pgtbl_ops = alloc_io_pgtable_ops(ARM_64_LPAE_S1,
-> >+		&cfg, aux_domain);
-> >+
-> >+	if (!pagetable->pgtbl_ops) {
-> >+		kfree(pagetable);
-> >+		return ERR_PTR(-ENOMEM);
-> >+	}
-> >+
-> >+
-> >+	/* Needed later for TLB flush */
-> >+	pagetable->parent = parent;
-> >+	pagetable->ttbr = cfg.arm_lpae_s1_cfg.ttbr;
-> >+
-> >+	pagetable->asid = next_asid;
-> >+	next_asid = (next_asid + 1)  % 255;
-> >+	if (next_asid < 16)
-> >+		next_asid = 16;
-> >+
-> >+	return &pagetable->base;
-> >+}
-> >+
-> >  static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
-> >  		unsigned long iova, int flags, void *arg)
-> >  {
-> >@@ -40,6 +217,7 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
-> >  	if (iova & BIT_ULL(48))
-> >  		iova |= GENMASK_ULL(63, 49);
-> >+
-> >  	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
-> >  	WARN_ON(!ret);
-> >@@ -85,7 +263,7 @@ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
-> >  		return ERR_PTR(-ENOMEM);
-> >  	iommu->domain = domain;
-> >-	msm_mmu_init(&iommu->base, dev, &funcs);
-> >+	msm_mmu_init(&iommu->base, dev, &funcs, MSM_MMU_IOMMU);
-> >  	iommu_set_fault_handler(domain, msm_fault_handler, iommu);
-> >  	ret = iommu_attach_device(iommu->domain, dev);
-> >diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
-> >index 3a534ee59bf6..61ade89d9e48 100644
-> >--- a/drivers/gpu/drm/msm/msm_mmu.h
-> >+++ b/drivers/gpu/drm/msm/msm_mmu.h
-> >@@ -17,18 +17,26 @@ struct msm_mmu_funcs {
-> >  	void (*destroy)(struct msm_mmu *mmu);
-> >  };
-> >+enum msm_mmu_type {
-> >+	MSM_MMU_GPUMMU,
-> >+	MSM_MMU_IOMMU,
-> >+	MSM_MMU_IOMMU_PAGETABLE,
-> >+};
-> >+
-> >  struct msm_mmu {
-> >  	const struct msm_mmu_funcs *funcs;
-> >  	struct device *dev;
-> >  	int (*handler)(void *arg, unsigned long iova, int flags);
-> >  	void *arg;
-> >+	enum msm_mmu_type type;
-> >  };
-> >  static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
-> >-		const struct msm_mmu_funcs *funcs)
-> >+		const struct msm_mmu_funcs *funcs, enum msm_mmu_type type)
-> >  {
-> >  	mmu->dev = dev;
-> >  	mmu->funcs = funcs;
-> >+	mmu->type = type;
-> >  }
-> >  struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain);
-> >@@ -41,7 +49,13 @@ static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
-> >  	mmu->handler = handler;
-> >  }
-> >+struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent);
-> >+
-> >  void msm_gpummu_params(struct msm_mmu *mmu, dma_addr_t *pt_base,
-> >  		dma_addr_t *tran_error);
-> >+
-> >+int msm_iommu_pagetable_params(struct msm_mmu *mmu, phys_addr_t *ttbr,
-> >+		int *asid);
-> >+
-> >  #endif /* __MSM_MMU_H__ */
-> >
+tglx, Ingo, Boris, Linus,
+Do you all have thoughts on this series?  I can understand "let
+sleeping dogs lie" but some Android folks are really interested in
+i386 testing, and randconfigs/allnoconfigs are doing i386 builds which
+are currently broken w/ Clang. This series gets us closer to having
+test coverage of this ISA with another toolchain, FWIW.
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks,
+~Nick Desaulniers
