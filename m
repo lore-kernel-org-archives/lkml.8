@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ED9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E2E20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DA820739
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 12:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oE7zSyqN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z3S73qsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgGHMER (ORCPT
+        id S1729085AbgGHMCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55422 "EHLO
+        Wed, 8 Jul 2020 08:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729098AbgGHMCr (ORCPT
+        with ESMTP id S1729061AbgGHMCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:02:47 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE659C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:02:46 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id q5so48641522wru.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:02:46 -0700 (PDT)
+        Wed, 8 Jul 2020 08:02:42 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1989C08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 05:02:40 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o8so2707684wmh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 05:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=u+pt3rF/aF9MXBxaxOWkhoV3OTeQnwTFN7tbYNZX5zs=;
-        b=oE7zSyqND80DYg6poQGupsJ8X6JD6kP5o9tqMqKexmIZ5T1XZjMpjTu+uc7XV6qG7C
-         kgRV15okIHcFVrQO3kFLU1I/IukiFmYdYwspufNCTRM1gYnW9u4QQmEd4wNPjU9bXeY1
-         4F54e1h99u1e3nHDUhuna8VpdSI0KEA8ciSGQSTWgQcJPnBXfHbNoj0+Myq6rxp/eRmo
-         ykuFjG2I1w+jLuHT3F04K3g0Nc5DtiGlrm1JnI/1KFlsdjpK91/142ie+NT+ae16cS8T
-         Ubys/GUaWZV1JQrnzxbGaWGDvtMlqqZ63FShQOSNGLNQQeM8svaxthO8fb8w6nQJAEyV
-         APvg==
+        bh=Uxo2DH0sWgHFikhlDzsPIQecz45jNH2LIUT7ZFPJRdc=;
+        b=Z3S73qsah5B8+M25GHxcQW+vj3SVCTqzm1ZlGRZ0+H8kgseFbUABdfEfgOjC57ppOK
+         Q97RVVqZ637x9jvt5B2zLnHqSjfhVMYGCu1bls1xTQ3YttGwRZGOZfAa7PBYMTI2ClVg
+         SmMBa+L1gVMEbt8QpDFbITW3gGVAhE4favEtUYlxg5OuzdFwhtOwoYqhXRkLSdDi/DDe
+         fao1vr/hLdJ69C2pQdevkwSQz4cST/FiGxoBI9rzcw72I4tfvpnVIa4HcJ5oWMTDRLEi
+         geLBR44wwsUeYQbwIi+/mky8bLBcjUfK1HtyoqvSLiBmpEeGxzTLGSg7/8+OApchBLhj
+         PaYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=u+pt3rF/aF9MXBxaxOWkhoV3OTeQnwTFN7tbYNZX5zs=;
-        b=aN4w8AtQ7ysutz4VFym++QlU5avPsWr4/el0yusyE5c+nvjC4DAKuNo3/QiBgG/t1G
-         iJzx0vAHEwaoetf5fyq5brgoLm7BCVST9nMlcQ8vVlyYhbbpQu034YCnkKnT4H6Np4Zj
-         Yreynnw2z2eafOa3rPcZQsSQUTAutfZiPz0iLNeqj2X5eBZ/IcvCegCl5MDPRT5de0o9
-         Tze+Pm7HRvKazwM1g5MfVAynyZit/Nrr4uX26AvOiJuIqpsOaqeKcXVsnZ/EMe+6WWpL
-         VeXWOUeRzh9ndWaXQN7K5ySRZnlhXNQNYpNDutqy2klYm3jZY53yo+zk3iD9G+i6XE88
-         iUUQ==
-X-Gm-Message-State: AOAM5320TUIJAdk9Pthp5ykjEtyXilqV+pwncuvt+IoefA3mTA4Igpl8
-        Ro4a2JJcVZt0q5l9Km3hl3IAPA==
-X-Google-Smtp-Source: ABdhPJxURppvfG7DEhP9spdQjCHFBwUzs5wOqtlXraGeSTbxLP6VMc4VjMRGbCLjqZhSHFVRG8rCJA==
-X-Received: by 2002:a5d:5084:: with SMTP id a4mr60185807wrt.191.1594209765523;
-        Wed, 08 Jul 2020 05:02:45 -0700 (PDT)
+        bh=Uxo2DH0sWgHFikhlDzsPIQecz45jNH2LIUT7ZFPJRdc=;
+        b=KW1HsdpaGAbIOJcsryyRe70AEQ9dr0bsctD4fVg73MBSfs8mIAaRBvR2N5C51QQxjQ
+         CJnYMDyB+cU24j/afTFHXrW0fv96GT6HC0BTVjtloYygERtXsWuZtwnkxYCEtNnKx0Zz
+         rtIj3nWriJl5li+4amykKOR0zEe1OdHhPWs/CXJAnPhKX2JRUU1SBT7tEXqIoWlDEUVD
+         1DK697Fpesm4C0QRrLLw+wWs4vQPf36GxX4ZTu6OnUOUpV0SIkTzT5UhW80fo4EdyMYd
+         j2w0WCpursrINYAXsN7Eg0JbEz9ZNss5Z5VLVNzFc7mxsfnLdG+AWCaj9Cc9gZPwVYcd
+         +HOw==
+X-Gm-Message-State: AOAM5310/AZAUBvX+4lt7ng8k6+1g/slXM7bfh+opRXN0kZU0zpuazUX
+        6FJpAYDp1NupXbDIu2uoHh+39w==
+X-Google-Smtp-Source: ABdhPJxFIlIFPqh41Y8DKlp3BF/310Wa9qNRIhGkrdPXnp1+GeFiGn2wK8WWSc2XAV6/+rhh3J8i6g==
+X-Received: by 2002:a1c:2485:: with SMTP id k127mr8790621wmk.138.1594209759339;
+        Wed, 08 Jul 2020 05:02:39 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.02.43
+        by smtp.gmail.com with ESMTPSA id m62sm3964997wmm.42.2020.07.08.05.02.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:02:44 -0700 (PDT)
+        Wed, 08 Jul 2020 05:02:38 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        QLogic-Storage-Upstream@qlogic.com,
-        Prakash Gollapudi <bprakash@broadcom.com>
-Subject: [PATCH 14/30] scsi: bnx2fc: bnx2fc_hwi: Fix a couple  of bitrotted function documentation headers
-Date:   Wed,  8 Jul 2020 13:02:05 +0100
-Message-Id: <20200708120221.3386672-15-lee.jones@linaro.org>
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH 10/30] scsi: libfc: fc_lport: Repair function parameter documentation
+Date:   Wed,  8 Jul 2020 13:02:01 +0100
+Message-Id: <20200708120221.3386672-11-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708120221.3386672-1-lee.jones@linaro.org>
 References: <20200708120221.3386672-1-lee.jones@linaro.org>
@@ -78,48 +77,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Likely a result of documentation not keeping up with API updates (a.k.a. bitrot).
+Either misdocumentation and/or bitrot.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/bnx2fc/bnx2fc_hwi.c:493: warning: Function parameter or member 'hba' not described in 'bnx2fc_send_session_destroy_req'
- drivers/scsi/bnx2fc/bnx2fc_hwi.c:493: warning: Excess function parameter 'port' description in 'bnx2fc_send_session_destroy_req'
- drivers/scsi/bnx2fc/bnx2fc_hwi.c:1345: warning: Function parameter or member 'context' not described in 'bnx2fc_indicate_kcqe'
- drivers/scsi/bnx2fc/bnx2fc_hwi.c:1345: warning: Function parameter or member 'kcq' not described in 'bnx2fc_indicate_kcqe'
- drivers/scsi/bnx2fc/bnx2fc_hwi.c:1345: warning: Excess function parameter 'hba' description in 'bnx2fc_indicate_kcqe'
- drivers/scsi/bnx2fc/bnx2fc_hwi.c:1345: warning: Excess function parameter 'kcqe' description in 'bnx2fc_indicate_kcqe'
+ drivers/scsi/libfc/fc_lport.c:412: warning: Function parameter or member 'in_fp' not described in 'fc_lport_recv_echo_req'
+ drivers/scsi/libfc/fc_lport.c:412: warning: Excess function parameter 'fp' description in 'fc_lport_recv_echo_req'
+ drivers/scsi/libfc/fc_lport.c:447: warning: Function parameter or member 'in_fp' not described in 'fc_lport_recv_rnid_req'
+ drivers/scsi/libfc/fc_lport.c:447: warning: Excess function parameter 'fp' description in 'fc_lport_recv_rnid_req'
+ drivers/scsi/libfc/fc_lport.c:1330: warning: Function parameter or member 'state' not described in 'fc_lport_enter_ns'
+ drivers/scsi/libfc/fc_lport.c:1428: warning: Function parameter or member 'state' not described in 'fc_lport_enter_ms'
+ drivers/scsi/libfc/fc_lport.c:1939: warning: Function parameter or member 'tov' not described in 'fc_lport_els_request'
 
-Cc: QLogic-Storage-Upstream@qlogic.com
-Cc: Prakash Gollapudi <bprakash@broadcom.com>
+Cc: Hannes Reinecke <hare@suse.de>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/bnx2fc/bnx2fc_hwi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/libfc/fc_lport.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/bnx2fc/bnx2fc_hwi.c b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-index 8c0d6866cf3b8..e72d7bb7f4f42 100644
---- a/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-@@ -485,7 +485,7 @@ int bnx2fc_send_session_disable_req(struct fcoe_port *port,
+diff --git a/drivers/scsi/libfc/fc_lport.c b/drivers/scsi/libfc/fc_lport.c
+index 684c5e361a286..b84dbc316df15 100644
+--- a/drivers/scsi/libfc/fc_lport.c
++++ b/drivers/scsi/libfc/fc_lport.c
+@@ -405,7 +405,7 @@ static void fc_lport_recv_rlir_req(struct fc_lport *lport, struct fc_frame *fp)
  /**
-  * bnx2fc_send_session_destroy_req - initiates FCoE Session destroy
-  *
-- * @port:		port structure pointer
-+ * @hba:		adapter structure pointer
-  * @tgt:		bnx2fc_rport structure pointer
+  * fc_lport_recv_echo_req() - Handle received ECHO request
+  * @lport: The local port receiving the ECHO
+- * @fp:	   ECHO request frame
++ * @in_fp: ECHO request frame
   */
- int bnx2fc_send_session_destroy_req(struct bnx2fc_hba *hba,
-@@ -1334,8 +1334,8 @@ static void bnx2fc_init_failure(struct bnx2fc_hba *hba, u32 err_code)
+ static void fc_lport_recv_echo_req(struct fc_lport *lport,
+ 				   struct fc_frame *in_fp)
+@@ -440,7 +440,7 @@ static void fc_lport_recv_echo_req(struct fc_lport *lport,
  /**
-  * bnx2fc_indicae_kcqe - process KCQE
-  *
-- * @hba:	adapter structure pointer
-- * @kcqe:	kcqe pointer
-+ * @context:	adapter structure pointer
-+ * @kcq:	kcqe pointer
-  * @num_cqe:	Number of completion queue elements
-  *
-  * Generic KCQ event handler
+  * fc_lport_recv_rnid_req() - Handle received Request Node ID data request
+  * @lport: The local port receiving the RNID
+- * @fp:	   The RNID request frame
++ * @in_fp: The RNID request frame
+  */
+ static void fc_lport_recv_rnid_req(struct fc_lport *lport,
+ 				   struct fc_frame *in_fp)
+@@ -1325,6 +1325,7 @@ static void fc_lport_enter_scr(struct fc_lport *lport)
+ /**
+  * fc_lport_enter_ns() - register some object with the name server
+  * @lport: Fibre Channel local port to register
++ * @state: Local port state
+  */
+ static void fc_lport_enter_ns(struct fc_lport *lport, enum fc_lport_state state)
+ {
+@@ -1423,6 +1424,7 @@ static void fc_lport_enter_dns(struct fc_lport *lport)
+ /**
+  * fc_lport_enter_ms() - management server commands
+  * @lport: Fibre Channel local port to register
++ * @state: Local port state
+  */
+ static void fc_lport_enter_ms(struct fc_lport *lport, enum fc_lport_state state)
+ {
+@@ -1932,6 +1934,7 @@ static void fc_lport_bsg_resp(struct fc_seq *sp, struct fc_frame *fp,
+  * @job:   The BSG Passthrough job
+  * @lport: The local port sending the request
+  * @did:   The destination port id
++ * @tov:   The timeout period (in ms)
+  */
+ static int fc_lport_els_request(struct bsg_job *job,
+ 				struct fc_lport *lport,
 -- 
 2.25.1
 
