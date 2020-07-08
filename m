@@ -2,101 +2,159 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E059C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 801CF20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DEB20708
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 07:17:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Qv/05JX7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dDF9q1dn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbgGHHRT (ORCPT
+        id S1730175AbgGHHRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:17:19 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48354 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgGHHRP (ORCPT
+        Wed, 8 Jul 2020 03:17:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729825AbgGHHRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:17:15 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0687Gc2w148209;
-        Wed, 8 Jul 2020 07:17:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=mLdPzD39oSR6PMplntqvZvNFRRfQ6owLsJmJqM6nmqw=;
- b=Qv/05JX7Z/xOPVwdxPX6IpB0QuKRM1m509UQsTiD09D5zJptoUgT/4/gL04sJvA5W2x3
- RQTCLeoZPvWLPWwcXdw0PBNMdfZdpwy/YpgcIoBCQ35maYeZs3sR0eDSTiF8c3ScX+WX
- +XsrZklWAced9QnU6ukDrvFm9q0yjFJeyTocqcP8shVignNZy/WPlqF6k53X/JWcxyvG
- lnr0sahKhAbJtMTTiOpTT1uNBQexuoQH4o7VjzsW+GmTkIPv5aM8hsaJ9it2tCNHdp2M
- wFPkwtSdNzE1Rb6lFGap8oIx69QGBtge58C7bl+QzOsykoN228MyOPpOGZ6rx6/iljDz Sg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 322kv6gka4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 08 Jul 2020 07:17:12 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06879Duc176863;
-        Wed, 8 Jul 2020 07:17:12 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 3233bqdryj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Jul 2020 07:17:12 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0687HASw010537;
-        Wed, 8 Jul 2020 07:17:11 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 Jul 2020 00:17:10 -0700
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        jejb@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 00/10] Fix a bunch SCSI related W=1 warnings
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1mu4azea8.fsf@ca-mkp.ca.oracle.com>
-References: <20200707140055.2956235-1-lee.jones@linaro.org>
-        <159418828150.5152.12521251265216774568.b4-ty@oracle.com>
-        <20200708065100.GK3500@dell>
-Date:   Wed, 08 Jul 2020 03:17:08 -0400
-In-Reply-To: <20200708065100.GK3500@dell> (Lee Jones's message of "Wed, 8 Jul
-        2020 07:51:00 +0100")
+        Wed, 8 Jul 2020 03:17:50 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656E8C08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 00:17:50 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id e13so40600031qkg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 00:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1bJsktqs/Kukntyns73/JkjWH8D//Ik43R5boH5UyhE=;
+        b=dDF9q1dnuhvm64jzDp7J8FVZCQQ3Lcr312l7qp4jKj8+mFxaOuVmTkoRk0X0pTVyWV
+         K930IcoUJ3+YEIEWr4uKHhM9qkvPzVn11m6yzf9h+FKjYw5+bDwbfEq6Ys3qXK/Gz2nJ
+         6DldAItKBVJe57q9ADVXpbfQoXaUCGyz1/va3H0QF39FlMaNCP4WIYUUHN/LMLPHLNLq
+         JIa80BXLin6mQxwKG3RfJ2ETi1yWaBZXYXnGvWlhsM9xcGoM6jb9aw5awFKRw/tdvZPc
+         s/nE7eTnkjq++WMgY7HYsteohIWFjuG57Qf3O2ZNfVrNrLVqW5wLYEQJFXUGyxS8kBU2
+         Bowg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1bJsktqs/Kukntyns73/JkjWH8D//Ik43R5boH5UyhE=;
+        b=GufLDHN382Rbdj4Jbp/agMCPR0L2BqrUfdqy0QMt9cloCD6ymCcMAmCGlK7semDvZv
+         HfkUflWWMyyQXWL+tQeOdgKyka+ubzCg/aczqrBYzAS5DYxIiCirkAl5X9lv3ExNVbDp
+         42OcwKn7gnypFlRaliTu4/qLZ6guk0E/xisPMK7sQJo3G2uHLdTMyiuYdM2SbV4/2fnI
+         9JXj1ne455YSRxQjPhnfHueYG7YH/lfWB1zj7nWFdsQcAoA3YcPF/pp0Z5i89uut9Q5w
+         biysu2/yhi8ssMMFnnHIq4kISA64xT+v8yv94FmLeugU2UY6MMrRftreURbUpRd2r058
+         fDJg==
+X-Gm-Message-State: AOAM531IwUMyghOgX39AH0FWpqzoDztruKpuBDzpyv2zIftWyd8kwdT7
+        oBwoi0imOXuZhDIRT7ZpwGj8Ne1NOUmW1hD+1VPqHr8vjkQ=
+X-Google-Smtp-Source: ABdhPJx0i8eiKdwT255I1AmqPTuEenUx24n4OSkV8lWkY5VpcIy0FLXJgF3J/6rrmGNHCVsA4iP6wtWOJ9hUO3M917o=
+X-Received: by 2002:a37:4e58:: with SMTP id c85mr14498322qkb.8.1594192669338;
+ Wed, 08 Jul 2020 00:17:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9675 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 adultscore=0
- malwarescore=0 spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007080049
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9675 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
- malwarescore=0 suspectscore=1 mlxlogscore=999 phishscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 impostorscore=0 mlxscore=0 adultscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007080050
+References: <000000000000a47ace05a9c7b825@google.com> <20200707152411.GD25069@quack2.suse.cz>
+ <20200707181710.GD32331@gaia>
+In-Reply-To: <20200707181710.GD32331@gaia>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 8 Jul 2020 09:17:37 +0200
+Message-ID: <CACT4Y+ZLx3wT3uvsMr9EOQ35wF+tw3SN_kzgwn2B+K5dTtHrOg@mail.gmail.com>
+Subject: Re: memory leak in inotify_update_watch
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        syzbot <syzbot+dec34b033b3479b9ef13@syzkaller.appspotmail.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 7, 2020 at 8:17 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> On Tue, Jul 07, 2020 at 05:24:11PM +0200, Jan Kara wrote:
+> > On Mon 06-07-20 08:42:24, syzbot wrote:
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=17644c05100000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5ee23b9caef4e07a
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=dec34b033b3479b9ef13
+> > > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1478a67b100000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+dec34b033b3479b9ef13@syzkaller.appspotmail.com
+> > >
+> > > BUG: memory leak
+> > > unreferenced object 0xffff888115db8480 (size 576):
+> > >   comm "systemd-udevd", pid 11037, jiffies 4295104591 (age 56.960s)
+> > >   hex dump (first 32 bytes):
+> > >     00 04 00 00 00 00 00 00 80 fd e8 15 81 88 ff ff  ................
+> > >     a0 02 dd 20 81 88 ff ff b0 81 d0 09 81 88 ff ff  ... ............
+> > >   backtrace:
+> > >     [<00000000288c0066>] radix_tree_node_alloc.constprop.0+0xc1/0x140 lib/radix-tree.c:252
+> > >     [<00000000f80ba6a7>] idr_get_free+0x231/0x3b0 lib/radix-tree.c:1505
+> > >     [<00000000ec9ab938>] idr_alloc_u32+0x91/0x120 lib/idr.c:46
+> > >     [<00000000aea98d29>] idr_alloc_cyclic+0x84/0x110 lib/idr.c:125
+> > >     [<00000000dbad44a4>] inotify_add_to_idr fs/notify/inotify/inotify_user.c:365 [inline]
+> > >     [<00000000dbad44a4>] inotify_new_watch fs/notify/inotify/inotify_user.c:578 [inline]
+> > >     [<00000000dbad44a4>] inotify_update_watch+0x1af/0x2d0 fs/notify/inotify/inotify_user.c:617
+> > >     [<00000000e141890d>] __do_sys_inotify_add_watch fs/notify/inotify/inotify_user.c:755 [inline]
+> > >     [<00000000e141890d>] __se_sys_inotify_add_watch fs/notify/inotify/inotify_user.c:698 [inline]
+> > >     [<00000000e141890d>] __x64_sys_inotify_add_watch+0x12f/0x180 fs/notify/inotify/inotify_user.c:698
+> > >     [<00000000d872d7cc>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:359
+> > >     [<000000005c62d8da>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > I've been looking into this for a while and I don't think this is related
+> > to inotify at all. Firstly the reproducer looks totally benign:
+> >
+> > prlimit64(0x0, 0xe, &(0x7f0000000280)={0x9, 0x8d}, 0x0)
+> > sched_setattr(0x0, &(0x7f00000000c0)={0x38, 0x2, 0x0, 0x0, 0x9}, 0x0)
+> > vmsplice(0xffffffffffffffff, 0x0, 0x0, 0x0)
+> > perf_event_open(0x0, 0x0, 0xffffffffffffffff, 0xffffffffffffffff, 0x0)
+> > clone(0x20000103, 0x0, 0xfffffffffffffffe, 0x0, 0xffffffffffffffff)
+> > syz_mount_image$vfat(0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
+> >
+> > So we seem to set SCHED_RR class and prio 9 to itself, the rest of syscalls
+> > seem to be invalid and should fail. Secondly, the kernel log shows that we
+> > hit OOM killer frequently and after one of these kills, many leaked objects
+> > (among them this radix tree node from inotify idr) are reported. I'm not
+> > sure if it could be the leak detector getting confused (e.g. because it got
+> > ENOMEM at some point) or something else... Catalin, any idea?
+>
+> Kmemleak never performs well under heavy load. Normally you'd need to
+> let the system settle for a bit before checking whether the leaks are
+> still reported. The issue is caused by the memory scanning not stopping
+> the whole machine, so pointers may be hidden in registers on different
+> CPUs (list insertion/deletion for example causes transient kmemleak
+> confusion).
+>
+> I think the syzkaller guys tried a year or so ago to run it in parallel
+> with kmemleak and gave up shortly. The proposal was to add a "stopscan"
+> command to kmemleak which would do this under stop_machine(). However,
+> no-one got to implementing it.
+>
+> So, in this case, does the leak still appear with the reproducer, once
+> the system went idle?
 
-Lee,
+Hi Catalin,
 
-> Out of interest, do you know of any other efforts to fix W=1 warnings
-> in SCSI?
+This report came from syzbot, so obviously we did not give up :)
 
-I am not.
-
-I try to encourage that all new patches get compiled with C=1/W=1. If I
-could, I would strictly enforce this. However, there is just too much
-vintage code around at this point. And even some of the most actively
-developed "contemporary" drivers suffer from a large amount of sparse
-warnings. Would love to see things cleaned up.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+We don't run scanning in parallel with fuzzing and do a very intricate
+multi-step dance to overcome false positives:
+https://github.com/google/syzkaller/blob/5962a2dc88f6511b77100acdf687c1088f253f6b/executor/common_linux.h#L3407-L3478
+and only report leaks that are reproducible.
+So far I have not seen any noticable amount of false positives, and
+you can see 70 already fixed leaks here:
+https://syzkaller.appspot.com/upstream/fixed?manager=ci-upstream-gce-leak
+https://syzkaller.appspot.com/upstream?manager=ci-upstream-gce-leak
