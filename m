@@ -2,65 +2,124 @@ Return-Path: <SRS0=/IhT=AT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF430C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0177521534
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C779221D80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jul 2020 08:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGHIbd (ORCPT
+        id S1726834AbgGHIbj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:31:33 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:46408 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgGHIbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 04:31:32 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jt5U7-0004Zt-GV; Wed, 08 Jul 2020 08:31:19 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jt5U7-000757-Ca; Wed, 08 Jul 2020 10:31:19 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Carlos O'Donell <carlos@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Neel Natu <neelnatu@google.com>
-Subject: Re: [RFC PATCH for 5.8 3/4] rseq: Introduce RSEQ_FLAG_RELIABLE_CPU_ID
-References: <20200706204913.20347-1-mathieu.desnoyers@efficios.com>
-        <20200706204913.20347-4-mathieu.desnoyers@efficios.com>
-        <87fta3zstr.fsf@mid.deneb.enyo.de>
-        <2088331919.943.1594118895344.JavaMail.zimbra@efficios.com>
-        <874kqjzhkb.fsf@mid.deneb.enyo.de>
-        <378862525.1039.1594123580789.JavaMail.zimbra@efficios.com>
-        <d6b28b3e-9866-ce6f-659e-2c0dba4cd527@redhat.com>
-        <1834900818.710.1594148361942.JavaMail.zimbra@efficios.com>
-Date:   Wed, 08 Jul 2020 10:31:19 +0200
-In-Reply-To: <1834900818.710.1594148361942.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Tue, 7 Jul 2020 14:59:21 -0400
-        (EDT)")
-Message-ID: <87o8oq2yso.fsf@mid.deneb.enyo.de>
+        Wed, 8 Jul 2020 04:31:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgGHIbj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 04:31:39 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC05EC08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 01:31:38 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jt5UL-0008CP-Vq; Wed, 08 Jul 2020 10:31:33 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jt5UL-0006jo-Ge; Wed, 08 Jul 2020 10:31:33 +0200
+Message-ID: <a55b91f01a2e795fe2dd38d860e63a63c8c8871c.camel@pengutronix.de>
+Subject: Re: [PATCH] drm: imx: Fix occasional screen corruption on modeset.
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date:   Wed, 08 Jul 2020 10:31:33 +0200
+In-Reply-To: <1594137527-15201-1-git-send-email-martin.fuzzey@flowbird.group>
+References: <1594137527-15201-1-git-send-email-martin.fuzzey@flowbird.group>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+Hi Martin,
 
-> Allright, thanks for the insight! I'll drop these patches and focus only
-> on the bugfix.
+On Tue, 2020-07-07 at 17:56 +0200, Martin Fuzzey wrote:
+> When performing a modeset the atomic core calls
+> ipu_crtc_atomic_disable() which switches off the DC and DI.
+> 
+> When we immediately restart as in the modeset case this sometimes
+> leads to corruption at the bottom of the screen looking like a mirror
+> image of the top.
 
-Thanks, much appreciated!
+Could this be just a panel getting confused because the pixel clock is
+disabled, or is there really an issue with the IPU? Have you tried just
+keeping clk_di_pixel enabled in ipu_di_disable(), but continuing
+to disable DI and DC?
+
+> The exact reason isn't understood but it seems timing related.
+> 
+> This was observed on i.MX6DL on a system that does 2 mode
+> transitions on boot (fbcon->android boot animation->android homescreen)
+> then no more during normal operation resulting in corruption
+> about once every 10 boots that lasted for variable durations
+> from a few seconds to several hours.
+> 
+> Dumping the buffers confirmed that they were correct in memory,
+> just the display was wrong.
+> 
+> For tests the problem was reproduced systematically by forcing
+> a full modeset every 10 frames even if when not required.
+> 
+> Leaving the DC and DI on if the CRTC is staying on fixes this.
+> 
+> Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+> ---
+>  drivers/gpu/drm/imx/ipuv3-crtc.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+> index 63c0284..9137b64 100644
+> --- a/drivers/gpu/drm/imx/ipuv3-crtc.c
+> +++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+> @@ -84,8 +84,15 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
+>  	struct ipu_crtc *ipu_crtc = to_ipu_crtc(crtc);
+>  	struct ipu_soc *ipu = dev_get_drvdata(ipu_crtc->dev->parent);
+>  
+> -	ipu_dc_disable_channel(ipu_crtc->dc);
+> -	ipu_di_disable(ipu_crtc->di);
+> +	/*
+> +	 * If we are just doing a modeset don't disable dc/di as that
+> +	 * sometimes leads to corruption at the bottom of the screen
+> +	 */
+> +	if (!crtc->state->active) {
+> +		ipu_dc_disable_channel(ipu_crtc->dc);
+> +		ipu_di_disable(ipu_crtc->di);
+
+Just removing ipu_di_disable() leaks a clk_prepare_enable refcount on
+the di->clk_di_pixel clock.
+
+Also this is followed by an ipu_dc_disable(), which should remove the DC
+module's clock if this is the only display. So the DC should be disabled
+anyway.
+
+> +	}
+> +
+>  	/*
+>  	 * Planes must be disabled before DC clock is removed, as otherwise the
+>  	 * attached IDMACs will be left in undefined state, possibly hanging
+
+regards
+Philipp
