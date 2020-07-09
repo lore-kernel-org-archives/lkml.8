@@ -2,158 +2,190 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A657FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3106FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB0420672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0615D20672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:43:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ETwEaFeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGIIkY (ORCPT
+        id S1726376AbgGIInO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:40:24 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:40464 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726247AbgGIIkX (ORCPT
+        Thu, 9 Jul 2020 04:43:14 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:51536 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgGIInO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:40:23 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0U2BKMOd_1594284015;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U2BKMOd_1594284015)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 09 Jul 2020 16:40:16 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        dhowells@redhat.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, jmorris@namei.org, serge@hallyn.com,
-        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        zohar@linux.ibm.com, vt@altlinux.org, gilad@benyossef.com,
-        pvanleeuwen@rambus.com, zhang.jia@linux.alibaba.com
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, tianjia.zhang@linux.alibaba.com
-Subject: [PATCH v5 0/8] crpyto: introduce OSCCA certificate and SM2 asymmetric algorithm 
-Date:   Thu,  9 Jul 2020 16:40:07 +0800
-Message-Id: <20200709084015.21886-1-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 9 Jul 2020 04:43:14 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EC265289;
+        Thu,  9 Jul 2020 10:43:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1594284191;
+        bh=/VoKmI/DiBrtBJiaTvk1IXoOMWdrKG9Lxw4goxipK6Y=;
+        h=Subject:To:References:From:Reply-To:Date:In-Reply-To:From;
+        b=ETwEaFeE4nHWgv3yOt5Q4Pa0ZjXfQiEIGfmQS9Emqs3f7vG43WziN/s4rARiu64pZ
+         C3Fnbv0mo3jdm2Q6gyqO61f9Yhe/WHPSbcjWCYy8RC1pRQIO7EXtbwr/mPrNreK2WG
+         JDQKA6ntcmaqms3+Qz6DTJ55pyTiy+9nCxJn6Wbc=
+Subject: Re: [PATCH] TI DAVINCI SERIES MEDIA DRIVER: Replace HTTP links with
+ HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        prabhakar.csengg@gmail.com, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200709072814.24218-1-grandmaster@al2klimov.de>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Organization: Ideas on Board
+Message-ID: <dab6510d-4b3a-7439-bff0-e927ddd2622f@ideasonboard.com>
+Date:   Thu, 9 Jul 2020 09:43:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200709072814.24218-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello all,
+Hi Alexander,
 
-This new module implement the OSCCA certificate and SM2 public key
-algorithm. It was published by State Encryption Management Bureau, China.
-List of specifications for OSCCA certificate and SM2 elliptic curve
-public key cryptography:
+On 09/07/2020 08:28, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-* GM/T 0003.1-2012
-* GM/T 0003.2-2012
-* GM/T 0003.3-2012
-* GM/T 0003.4-2012
-* GM/T 0003.5-2012
-* GM/T 0015-2012
-* GM/T 0009-2012 
+This non-https link redirects to the https link already with a 301, so
+the content is expectedly the same.
 
-IETF: https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02
-oscca: http://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
-scctc: http://www.gmbz.org.cn/main/bzlb.html
+I doubt many people click on these links, as I guess they're usually
+rendered as text so it depends on the editor, I expect as much as
+anything it's 'advertising' or confirmation of the copyright notice.
 
-These patchs add the OID object identifier defined by OSCCA. The
-x509 certificate supports sm2-with-sm3 type certificate parsing
-and verification.
+But still, I've just clicked on them ... and I think this is a
+reasonable step.
 
-The sm2 algorithm is based on libgcrypt's mpi implementation, and has
-made some additions to the kernel's original mpi library, and added the
-implementation of ec to better support elliptic curve-like algorithms.
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 
-sm2 has good support in both openssl and gnupg projects, and sm3 and sm4
-of the OSCCA algorithm family have also been implemented in the kernel.
-
-Among them, sm3 and sm4 have been well implemented in the kernel.
-This group of patches has newly introduced sm2. In order to implement
-sm2 more perfectly, I expanded the mpi library and introduced the
-ec implementation of the mpi library as the basic algorithm. Compared
-to the kernel's crypto/ecc.c, the implementation of mpi/ec.c is more
-complete and elegant, sm2 is implemented based on these algorithms.
-
----
-v5 changes:
-  1. fix compilation failure when SM2 is configured as a module.
-  2. simplify the mpi and ec code, remove unused functions reported by test robot.
-
-v4 changes:
-  1. Pass data directly when calculating sm2 certificate digest
-  2. rebase on mainline.
-
-v3 changes:
-  1. integrity asymmetric digsig support sm2-with-sm3 algorithm.
-  2. remove unused sm2_set_priv_key().
-  3. rebase on mainline.
-
-v2 changes:
-  1. simplify the sm2 algorithm and only retain the verify function.
-  2. extract the sm2 certificate code into a separate file.
-
-Tianjia Zhang (8):
-  crypto: sm3 - export crypto_sm3_final function
-  lib/mpi: Extend the MPI library
-  lib/mpi: Introduce ec implementation to MPI library
-  crypto: sm2 - introduce OSCCA SM2 asymmetric cipher algorithm
-  crypto: testmgr - support test with different ciphertext per
-    encryption
-  X.509: support OSCCA certificate parse
-  X.509: support OSCCA sm2-with-sm3 certificate verification
-  integrity: Asymmetric digsig supports SM2-with-SM3 algorithm
-
- crypto/Kconfig                            |   17 +
- crypto/Makefile                           |    8 +
- crypto/asymmetric_keys/Makefile           |    1 +
- crypto/asymmetric_keys/public_key.c       |    6 +
- crypto/asymmetric_keys/public_key_sm2.c   |   61 +
- crypto/asymmetric_keys/x509_cert_parser.c |   14 +-
- crypto/asymmetric_keys/x509_public_key.c  |    3 +
- crypto/sm2.c                              |  473 +++++++
- crypto/sm2signature.asn1                  |    4 +
- crypto/sm3_generic.c                      |    7 +-
- crypto/testmgr.c                          |    7 +-
- include/crypto/public_key.h               |   15 +
- include/crypto/sm2.h                      |   25 +
- include/crypto/sm3.h                      |    2 +
- include/linux/mpi.h                       |  193 +++
- include/linux/oid_registry.h              |    6 +
- lib/mpi/Makefile                          |    6 +
- lib/mpi/ec.c                              | 1509 +++++++++++++++++++++
- lib/mpi/mpi-add.c                         |  207 +++
- lib/mpi/mpi-bit.c                         |  251 ++++
- lib/mpi/mpi-cmp.c                         |   46 +-
- lib/mpi/mpi-div.c                         |  238 ++++
- lib/mpi/mpi-internal.h                    |   53 +
- lib/mpi/mpi-inv.c                         |  143 ++
- lib/mpi/mpi-mod.c                         |  155 +++
- lib/mpi/mpi-mul.c                         |   94 ++
- lib/mpi/mpicoder.c                        |  336 +++++
- lib/mpi/mpih-div.c                        |  294 ++++
- lib/mpi/mpih-mul.c                        |   25 +
- lib/mpi/mpiutil.c                         |  204 +++
- security/integrity/digsig_asymmetric.c    |   14 +-
- 31 files changed, 4399 insertions(+), 18 deletions(-)
- create mode 100644 crypto/asymmetric_keys/public_key_sm2.c
- create mode 100644 crypto/sm2.c
- create mode 100644 crypto/sm2signature.asn1
- create mode 100644 include/crypto/sm2.h
- create mode 100644 lib/mpi/ec.c
- create mode 100644 lib/mpi/mpi-add.c
- create mode 100644 lib/mpi/mpi-div.c
- create mode 100644 lib/mpi/mpi-inv.c
- create mode 100644 lib/mpi/mpi-mod.c
- create mode 100644 lib/mpi/mpi-mul.c
-
--- 
-2.17.1
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+> 
+>  drivers/media/platform/davinci/vpbe_display.c | 2 +-
+>  drivers/media/platform/davinci/vpif.c         | 2 +-
+>  drivers/media/platform/davinci/vpif.h         | 2 +-
+>  drivers/media/platform/davinci/vpif_display.c | 2 +-
+>  drivers/media/platform/davinci/vpif_display.h | 2 +-
+>  include/media/davinci/vpbe_display.h          | 2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/platform/davinci/vpbe_display.c b/drivers/media/platform/davinci/vpbe_display.c
+> index 7ab13eb7527d..d19bad997f30 100644
+> --- a/drivers/media/platform/davinci/vpbe_display.c
+> +++ b/drivers/media/platform/davinci/vpbe_display.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+> - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
+>   */
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+> diff --git a/drivers/media/platform/davinci/vpif.c b/drivers/media/platform/davinci/vpif.c
+> index df66461f5d4f..e9794c9fc7fe 100644
+> --- a/drivers/media/platform/davinci/vpif.c
+> +++ b/drivers/media/platform/davinci/vpif.c
+> @@ -5,7 +5,7 @@
+>   * The hardware supports SDTV, HDTV formats, raw data capture.
+>   * Currently, the driver supports NTSC and PAL standards.
+>   *
+> - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+>   *
+>   * This program is free software; you can redistribute it and/or
+>   * modify it under the terms of the GNU General Public License as
+> diff --git a/drivers/media/platform/davinci/vpif.h b/drivers/media/platform/davinci/vpif.h
+> index 2466c7c77deb..c6d1d890478a 100644
+> --- a/drivers/media/platform/davinci/vpif.h
+> +++ b/drivers/media/platform/davinci/vpif.h
+> @@ -1,7 +1,7 @@
+>  /*
+>   * VPIF header file
+>   *
+> - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+>   *
+>   * This program is free software; you can redistribute it and/or
+>   * modify it under the terms of the GNU General Public License as
+> diff --git a/drivers/media/platform/davinci/vpif_display.c b/drivers/media/platform/davinci/vpif_display.c
+> index 7d55fd45240e..46afc029138f 100644
+> --- a/drivers/media/platform/davinci/vpif_display.c
+> +++ b/drivers/media/platform/davinci/vpif_display.c
+> @@ -2,7 +2,7 @@
+>   * vpif-display - VPIF display driver
+>   * Display driver for TI DaVinci VPIF
+>   *
+> - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+>   * Copyright (C) 2014 Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>   *
+>   * This program is free software; you can redistribute it and/or
+> diff --git a/drivers/media/platform/davinci/vpif_display.h b/drivers/media/platform/davinci/vpif_display.h
+> index af2765fdcea8..f731a65eefd6 100644
+> --- a/drivers/media/platform/davinci/vpif_display.h
+> +++ b/drivers/media/platform/davinci/vpif_display.h
+> @@ -1,7 +1,7 @@
+>  /*
+>   * VPIF display header file
+>   *
+> - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+>   *
+>   * This program is free software; you can redistribute it and/or
+>   * modify it under the terms of the GNU General Public License as
+> diff --git a/include/media/davinci/vpbe_display.h b/include/media/davinci/vpbe_display.h
+> index 56d05a855140..6d2a93740130 100644
+> --- a/include/media/davinci/vpbe_display.h
+> +++ b/include/media/davinci/vpbe_display.h
+> @@ -1,6 +1,6 @@
+>  /* SPDX-License-Identifier: GPL-2.0-only */
+>  /*
+> - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
+>   */
+>  #ifndef VPBE_DISPLAY_H
+>  #define VPBE_DISPLAY_H
+> 
 
