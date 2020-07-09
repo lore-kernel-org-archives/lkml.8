@@ -2,104 +2,126 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 695EC20672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D71EE20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:17:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ekb99TF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgGIVMz (ORCPT
+        id S1726449AbgGIVRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:12:55 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48641 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgGIVMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:12:54 -0400
-IronPort-SDR: zYmXNkegbqZW8ttBVqW+Fb9OPMitK+9NJngz/+TbgxgVnoU3D8mdRsJjjFX5DF5hHeWbfAUSwC
- L4phwt6RBvPQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="147200600"
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="147200600"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 14:12:53 -0700
-IronPort-SDR: HL1NxPNKrlVgGsyiHBtUvZOy7JZ9ONOwA/QDyK5kyklSsh/Edk5Q8Scsc3DgwBI0El5KtpVVxg
- uqD2y2SHHsOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="358569577"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga001.jf.intel.com with ESMTP; 09 Jul 2020 14:12:53 -0700
-Date:   Thu, 9 Jul 2020 14:12:53 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Xiong Zhang <xiong.y.zhang@intel.com>,
-        Wayne Boyer <wayne.boyer@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>
-Subject: Re: [PATCH] KVM: x86/mmu: Add capability to zap only sptes for the
- affected memslot
-Message-ID: <20200709211253.GW24919@linux.intel.com>
-References: <20200703025047.13987-1-sean.j.christopherson@intel.com>
- <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
+        Thu, 9 Jul 2020 17:17:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgGIVRM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 17:17:12 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BEEC08E806
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 14:17:11 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f2so1330663plr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 14:17:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OdZDweBCXIY5hOfHC/pzwDJUpC5RDbUGhkzQWryCGXU=;
+        b=Ekb99TF0TfmRaA9hW6hG4dBbVri8QR1MMxv9/mRy/x0ImlbCX507ivj5lU7T+5R4Pb
+         DsC3NKoXWhj5yyGBbqvxD/A1SXEK2191ZyAwulgr1lDggvHGTgyiCcn8kMCbFzRYi9TU
+         5Pipg4QaZAq+z2XgKxlu7h0Za08DFYoJM93GI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OdZDweBCXIY5hOfHC/pzwDJUpC5RDbUGhkzQWryCGXU=;
+        b=SQwCS9ZUwPkcAil7exzJZWz6yibpJ7L8nsIhG90mYZwvOlvyXvO4Vy/sf+ANsfMp/x
+         Ndn7TGWuxkvJSEFH6gbK0qG7g05lGpCvx22zQGWersNHFyEZjBbl4s9AH8cjDzAYUhH0
+         Ipn5upce0Tgs9QmawOMDlgY9OsDygGY29hV0i+XbCcguL9hTTnDqQWl3qZ3U7+lp357o
+         0Y56eMBX12+myIl9GLuQaeAQr6LyeIufGuhKEvgWS7CKP59gT2GMHC/lXkb9jV/nWYLx
+         46UrMPap9f5frfoIPGgTv4wRgzBxLLzVfugf++dgNcbNyaS1Z1CW1m/h5l+WtvMbVhsm
+         cHHA==
+X-Gm-Message-State: AOAM532S1tDAmGLkbBu1OqG8d86nnB2sS12eOMyYA5IvbWOxkZ38/RFV
+        nBLUDc45eDJizIsBXB9drncU6Q==
+X-Google-Smtp-Source: ABdhPJzIErmRrR6qma2jb3xZPC+8eFY/GKXvK8O6767phNef8KK0PNwVAWZMl7fyfoDxnU3LZlOzzw==
+X-Received: by 2002:a17:902:c38b:: with SMTP id g11mr9718711plg.340.1594329431105;
+        Thu, 09 Jul 2020 14:17:11 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y22sm3411040pjp.41.2020.07.09.14.17.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 14:17:09 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 14:17:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@aculab.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v7 2/9] pidfd: Add missing sock updates for pidfd_getfd()
+Message-ID: <202007091416.42530A9C@keescook>
+References: <20200709182642.1773477-1-keescook@chromium.org>
+ <20200709182642.1773477-3-keescook@chromium.org>
+ <CAG48ez1gz3mtAO5QdvGEMt5KnRBq7hhWJMGS6piGDrcGNEdSrQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAG48ez1gz3mtAO5QdvGEMt5KnRBq7hhWJMGS6piGDrcGNEdSrQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 06:08:24PM +0200, Paolo Bonzini wrote:
-> On 03/07/20 04:50, Sean Christopherson wrote:
-> > Introduce a new capability, KVM_CAP_MEMSLOT_ZAP_CONTROL, to allow
-> > userspace to control the memslot zapping behavior on a per-VM basis.
-> > x86's default behavior is to zap all SPTEs, including the root shadow
-> > page, across all memslots.  While effective, the nuke and pave approach
-> > isn't exactly performant, especially for large VMs and/or VMs that
-> > heavily utilize RO memslots for MMIO devices, e.g. option ROMs.
-> > 
-> > On a vanilla VM with 6gb of RAM, the targeted zap reduces the number of
-> > EPT violations during boot by ~14% with THP enabled in the host, and by
-> > ~7% with THP disabled in the host.  On a much more custom VM with 32gb
-> > and a significant amount of memslot zapping, this can reduce the number
-> > of EPT violations by 50% during guest boot, and improve boot time by
-> > as much as 25%.
-> > 
-> > Keep the current x86 memslot zapping behavior as the default, as there's
-> > an unresolved bug that pops up when zapping only the affected memslot,
-> > and the exact conditions that trigger the bug are not fully known.  See
-> > https://patchwork.kernel.org/patch/10798453 for details.
-> > 
-> > Implement the capability as a set of flags so that other architectures
-> > might be able to use the capability without having to conform to x86's
-> > semantics.
+On Thu, Jul 09, 2020 at 10:00:42PM +0200, Jann Horn wrote:
+> On Thu, Jul 9, 2020 at 8:26 PM Kees Cook <keescook@chromium.org> wrote:
+> > The sock counting (sock_update_netprioidx() and sock_update_classid())
+> > was missing from pidfd's implementation of received fd installation. Add
+> > a call to the new __receive_sock() helper.
+> [...]
+> > diff --git a/kernel/pid.c b/kernel/pid.c
+> [...]
+> > @@ -642,10 +643,12 @@ static int pidfd_getfd(struct pid *pid, int fd)
+> >         }
+> >
+> >         ret = get_unused_fd_flags(O_CLOEXEC);
+> > -       if (ret < 0)
+> > +       if (ret < 0) {
+> >                 fput(file);
+> > -       else
+> > +       } else {
+> >                 fd_install(ret, file);
+> > +               __receive_sock(file);
+> > +       }
 > 
-> It's bad that we have no clue what's causing the bad behavior, but I
-> don't think it's wise to have a bug that is known to happen when you
-> enable the capability. :/
+> __receive_sock() has to be before fd_install(), otherwise `file` can
+> be a dangling pointer.
 
-I don't necessarily disagree, but at the same time it's entirely possible
-it's a Qemu bug.  If the bad behavior doesn't occur with other VMMs, those
-other VMMs shouldn't be penalized because we can't figure out what Qemu is
-getting wrong.
+Burned by fd_install()'s API again. Thanks. I will respin.
 
-Even if this is a kernel bug, I'm fairly confident at this point that it's
-not a KVM bug.  Or rather, if it's a KVM "bug", then there's a fundamental
-dependency in memslot management that needs to be rooted out and documented.
-
-And we're kind of in a catch-22; it'll be extremely difficult to narrow down
-exactly who is breaking what without being able to easily test the optimized
-zapping with other VMMs and/or setups.
+-- 
+Kees Cook
