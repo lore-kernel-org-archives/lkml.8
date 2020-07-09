@@ -2,401 +2,476 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7210C20672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671EE2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:51:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="dUx19oJI";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="u82UdBO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgGIIuR (ORCPT
+        id S1726371AbgGIIv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:50:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgGIIuQ (ORCPT
+        Thu, 9 Jul 2020 04:51:57 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:60290 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726261AbgGIIv4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:50:16 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0B2C061A0B
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 01:50:16 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jtSFw-0008EV-8U; Thu, 09 Jul 2020 10:50:12 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jtSFq-0005Cr-D3; Thu, 09 Jul 2020 10:50:06 +0200
-Date:   Thu, 9 Jul 2020 10:50:06 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200709085006.b54ype3p4yu64upl@pengutronix.de>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-8-michael@walle.cc>
+        Thu, 9 Jul 2020 04:51:56 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9F23CC09CC;
+        Thu,  9 Jul 2020 08:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1594284715; bh=htyux7DvBTtATaq8OIlIFXKFfHGdBqSm3UU/TIijJs8=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=dUx19oJITDnztw6afFmWaNFRN4xBYpZMQOGAJIfalsnIlozfyzdmKz6Xlx+pEziuu
+         1XJcOuFL/gMwgZebpsZUolZ4zglE63zufpau17VFbXESbEqQHbHwWdhWnDfJZY1ANI
+         LFhZmIPKrh7C7Rt8W+sT/x6mo5yI5VV2BL2ykgWyV8ZgDdixOWZVH5g/CwBnz1bm1n
+         +3F9UAuw+ISCGezfRBnzntB2FATS9zc87dFYpz8WPl5xgsukSetNfrMpsZX589+A0Y
+         pSlBt7jI01qZcYEdcl+0FtGqG9qMo0TgVljmveoRTGaKYRdS5Le7lkdNK12g3tmtpC
+         i1/oIPfA02I+g==
+Received: from o365relay-in.synopsys.com (us03-o365relay3.synopsys.com [10.4.161.139])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 0438AA0067;
+        Thu,  9 Jul 2020 08:51:48 +0000 (UTC)
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (mail-co1nam04lp2051.outbound.protection.outlook.com [104.47.45.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 0E439800DF;
+        Thu,  9 Jul 2020 08:51:45 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=angelor@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="u82UdBO3";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MvaZ0S0ZNb+hsveDi3N0tLHQb/BoxUMtu+1nm0rsyijaNCciDA4uuTLFYhMePU+7PMlhh+iNgLnSCF3Cu28MSPqdmgLAQga1NWfSRW9sKP1rQe1LUH121JgyWgKFxu+iKd7k1HAGBG/TS3rkiopqMlFXfqPxmsV51lrJ+IludWq4LRS8m92BeG8hmxsbYI+eVkfPnJ0v52glKAmJaINas4Li2hddpeFZcqHjcE7XEraZUE2rfEjd0bM4i7HAsbe3tSL4GM/GRIhjo/EYYR3SnzVAodE+1HcVEXK2LI5p8WCML/DAXpBJiB/qb20HusBkXYANpeBZaje7+wdyDYTpEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+mx0IZzSCEEHg5CUclWvF5ydt/W+o+X7VpvsGFDHgTA=;
+ b=TKWuTFWZ88SwEQ292XnTrst44cYOVKaxcDllEWBpXES+SSK+OwBmva123so3bYX2Ll90Rz791M7Ca9gwGgsmfSPOQ6+3/8OlBl3fbAXV8hFCIHApIYa2rvVl6JM5ooUMo1Oj7fZeRS64rUseyePa3Fs186JGfMJ/+32Ug9amdDP7wfPWl5nEf9n01mk8AX9cOB2lIFAHib9v4f/J5E/6SQGmZiIl7s92mUaH9yHYgM6kb6/k5cY09AoZSg59S1nmR4bXKw9ak2mwwRFKJ9w/jUmW1YuJwGruhaOqWSjDGXT1Hg29vnEJX399dCs289XJMPqo03bnRx88j5+h19uq3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+mx0IZzSCEEHg5CUclWvF5ydt/W+o+X7VpvsGFDHgTA=;
+ b=u82UdBO3RvOinUPcJ5+08H8tXKgexFaBBRIxkOK3s59YAxXWQ05/pUASV110VamM3nwW8Fse0T/r69akl3SJSxufnGhHsEU/g4Mgn5bIXVQ47tqtv+U0+cECJ3a917/D0IxAuLzuTdlyF9yBN6y2345mr+DBJuIiKIaYWYNJnxY=
+Received: from MN2PR12MB3789.namprd12.prod.outlook.com (2603:10b6:208:16a::20)
+ by MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Thu, 9 Jul
+ 2020 08:51:43 +0000
+Received: from MN2PR12MB3789.namprd12.prod.outlook.com
+ ([fe80::a452:4793:5e37:e9db]) by MN2PR12MB3789.namprd12.prod.outlook.com
+ ([fe80::a452:4793:5e37:e9db%5]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
+ 08:51:43 +0000
+X-SNPS-Relay: synopsys.com
+From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+To:     Philippe CORNU <philippe.cornu@st.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pop.adrian61@gmail.com" <pop.adrian61@gmail.com>
+CC:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: RE: [PATCH v2] drm/bridge: dw-mipi-dsi.c: Add VPG runtime config
+ through debugfs
+Thread-Topic: [PATCH v2] drm/bridge: dw-mipi-dsi.c: Add VPG runtime config
+ through debugfs
+Thread-Index: AQHWDBo6Hn96DzA7REmPZBpLU636BqjoYdsAgBYY4fCAAPngAIAACRcg
+Date:   Thu, 9 Jul 2020 08:51:43 +0000
+Message-ID: <MN2PR12MB3789022F127910E8A3A00E51CB640@MN2PR12MB3789.namprd12.prod.outlook.com>
+References: <a809feb7d7153a92e323416f744f1565e995da01.1586180592.git.angelo.ribeiro@synopsys.com>
+ <d46d3aaf-d3cd-e5e1-81b9-c019537bd09a@st.com>
+ <CH2PR12MB37823C45C7CC1A142ACC4BBECB670@CH2PR12MB3782.namprd12.prod.outlook.com>
+ <8b34476f-61b6-0d28-cf0c-1d6a08df71c8@st.com>
+In-Reply-To: <8b34476f-61b6-0d28-cf0c-1d6a08df71c8@st.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYW5nZWxvclxh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTY3NTJkZjk1LWMxYzEtMTFlYS05ZDdjLWZjNzc3?=
+ =?us-ascii?Q?NGVlZGMyZVxhbWUtdGVzdFw2NzUyZGY5Ni1jMWMxLTExZWEtOWQ3Yy1mYzc3?=
+ =?us-ascii?Q?NzRlZWRjMmVib2R5LnR4dCIgc3o9IjgwMzciIHQ9IjEzMjM4NzU4MzAwOTQz?=
+ =?us-ascii?Q?MTMzNyIgaD0iUk10Slk1WU9KZExJTFhta0Qrb29ERkphQURZPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFB?=
+ =?us-ascii?Q?cEgvTXB6bFhXQWM5YzkrOWtVUzFwejF6MzcyUlJMV2tPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFIYVd5TkFBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: st.com; dkim=none (message not signed)
+ header.d=none;st.com; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [95.136.124.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cd65fca7-d188-4cde-8f1c-08d823e54df0
+x-ms-traffictypediagnostic: MN2PR12MB4192:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR12MB4192D3EC48FC6E8B1EBFD06FCB640@MN2PR12MB4192.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3TekYIwSpUoT9Q6pqx66d3nU7fKVY7/NPOAKTqIFilY6xlb5jMhsG5/v3nhnYJhs+YlOSR9+O6DF+IJ5NQYkf4QhLBYl5ZH3wZnjaJZEehh1X+aV2Jh99k6H4vZMzx4+0KGG93xCq0wGBu0RZtq6Fu86AJcVrVE2+mciMyqrW5FjDiLV4Pg3i4TmXImSQXX2l148BnvEbZcHiiAB57P5Cryyvp+Yc0La43xpr79ts93iVH5umNV4uNL5lwF8Ct5BcHbwTUfpuhOIhbc37YqtGLj2O4yC/6k1SYwLYk68eoZE5lZldhFJK3Bti+grtegnrml+EFAALfMAKz2c4++t01BKyLzVF0RIAgCupIUBrhYksCQNHtNQcjhgIaY5aLPwLxg0YpZbac2jmHJXq8TPepiG1Hnv+sZAkP5xWdv3FDgzjoM8HIrgI4QjhKhC0gmi
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3789.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(376002)(346002)(39860400002)(136003)(966005)(66946007)(76116006)(5660300002)(54906003)(7696005)(86362001)(110136005)(52536014)(53546011)(6506007)(316002)(66446008)(478600001)(9686003)(83380400001)(8936002)(71200400001)(64756008)(26005)(66556008)(66476007)(55016002)(186003)(107886003)(2906002)(4326008)(7416002)(8676002)(33656002)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: H1JEBqaSV0uuaaJQDl+J1rKVknZsXVzdT+VluBqbDMyPUCzvG3H/ezb46EARnxmjg+IOFfU4faqjh8khOconDkoc3D89JTNzodE08pQjBNROQJqXaCVz91CqnqKftoXlEssWv3tDrSPFbIMgj192MuUvzKn2bnR/aiQcyxtatkdvFrsALPEn1oVuGphRu6swA7Bg0cop3nYm1p/eaToxu99hDgSXKR58KIDLQnB0+xLOXZM3zruOYDxeIRqtdWRUMNUU4cquzODZortBT0RaKXcdDQ/6wEMEeEU05nTB86HCBtn794/tak5EGhzVsziRirdaaxVcsCZHNUJG4DGSECcwqDnBiPSEzNsy2VOaE36IjnmkqXxDFaq1vzcvoWjkGhzXm/30WAn0h3BHcqPm9ZM/ry+n6IhNjAthj60iVBk6ExdYxEfgIIylxajalGe8mwJPftBe6XFZieNAMRu6EYAA9lrNZcPjY3qUd9+Hg9M=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zo5wkjqhpntpevbs"
-Content-Disposition: inline
-In-Reply-To: <20200706175353.16404-8-michael@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3789.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd65fca7-d188-4cde-8f1c-08d823e54df0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 08:51:43.3609
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: B/sqTONIIwoPDxl5WiO0/o1tqzVzowqqeVvNBlThWiHd5WA6I+25e4pM0ggxuIH2Plu76G/gkr5wLg30Euvb8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4192
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Philippe,
 
---zo5wkjqhpntpevbs
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: Philippe CORNU <philippe.cornu@st.com>
+Date: Thu, Jul 09, 2020 at 08:56:10
 
-Hello Michael,
+>=20
+> On 7/8/20 7:08 PM, Angelo Ribeiro wrote:
+> > Hi,
+> >=20
+> > Is this patch good to go?
+> > @daniel@ffwll.ch, @Philippe CORNU
+> >=20
+> > Was already tested by @Yannick FERTRE
+> > and @Adrian Pop
+> > on https://urldefense.com/v3/__https://lkml.org/lkml/2020/4/6/691__;!!A=
+4F2R9G_pg!Kt4QZq004dTCJ3GJ6t6RIaJMBrP5tWWgTlboJo1ZICktSxRegGKtp1VxYM1i2PiM$=
+  .
+> >=20
+> > Thanks,
+> > Angelo
+> >=20
+> > From: Yannick
+> > FERTRE <yannick.fertre@st.com>
+> > Date: Wed, Jun 24, 2020 at 16:35:04
+> >=20
+> >> Hello Angelo,
+> >> thanks for the patch.
+> >> Tested-by: Yannick Fertre <yannick.fertre@st.com>
+> >> Tested OK on STM32MP1-DISCO, DSI v1.31
+> >>
+> >> Best regards
+> >>
+> >>
+> >> On 4/6/20 3:49 PM, Angelo Ribeiro wrote:
+> >>> Add support for the video pattern generator (VPG) BER pattern mode an=
+d
+> >>> configuration in runtime.
+> >>>
+> >>> This enables using the debugfs interface to manipulate the VPG after
+> >>> the pipeline is set.
+> >>> Also, enables the usage of the VPG BER pattern.
+> >>>
+> >>> Changes in v2:
+> >>>     - Added VID_MODE_VPG_MODE
+> >>>     - Solved incompatible return type on __get and __set
+> >>>
+> >>> Reported-by: kbuild test robot <lkp@intel.com>
+> >>> Reported-by: Adrian Pop <pop.adrian61@gmail.com>
+> >>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> >>> Cc: Joao Pinto <jpinto@synopsys.com>
+> >>> Cc: Jose Abreu <jose.abreu@synopsys.com>
+> >>> Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> >>> ---
+> >>>    drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 98 +++++++++++++++=
++++++++++---
+> >>>    1 file changed, 90 insertions(+), 8 deletions(-)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/=
+gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> >>> index b18351b..9de3645 100644
+> >>> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> >>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> >>> @@ -91,6 +91,7 @@
+> >>>    #define VID_MODE_TYPE_BURST			0x2
+> >>>    #define VID_MODE_TYPE_MASK			0x3
+> >>>    #define VID_MODE_VPG_ENABLE		BIT(16)
+> >>> +#define VID_MODE_VPG_MODE		BIT(20)
+> >>>    #define VID_MODE_VPG_HORIZONTAL		BIT(24)
+> >>>   =20
+> >>>    #define DSI_VID_PKT_SIZE		0x3c
+> >>> @@ -221,6 +222,21 @@
+> >>>    #define PHY_STATUS_TIMEOUT_US		10000
+> >>>    #define CMD_PKT_STATUS_TIMEOUT_US	20000
+> >>>   =20
+> >>> +#ifdef CONFIG_DEBUG_FS
+> >>> +#define VPG_DEFS(name, dsi) \
+> >>> +	((void __force *)&((*dsi).vpg_defs.name))
+> >>> +
+> >>> +#define REGISTER(name, mask, dsi) \
+> >>> +	{ #name, VPG_DEFS(name, dsi), mask, dsi }
+> >>> +
+> >>> +struct debugfs_entries {
+> >>> +	const char				*name;
+> >>> +	bool					*reg;
+> >>> +	u32					mask;
+> >>> +	struct dw_mipi_dsi			*dsi;
+> >>> +};
+> >>> +#endif /* CONFIG_DEBUG_FS */
+> >>> +
+> >>>    struct dw_mipi_dsi {
+> >>>    	struct drm_bridge bridge;
+> >>>    	struct mipi_dsi_host dsi_host;
+> >>> @@ -238,9 +254,12 @@ struct dw_mipi_dsi {
+> >>>   =20
+> >>>    #ifdef CONFIG_DEBUG_FS
+> >>>    	struct dentry *debugfs;
+> >>> -
+> >>> -	bool vpg;
+> >>> -	bool vpg_horizontal;
+> >>> +	struct debugfs_entries *debugfs_vpg;
+> >>> +	struct {
+> >>> +		bool vpg;
+> >>> +		bool vpg_horizontal;
+> >>> +		bool vpg_ber_pattern;
+> >>> +	} vpg_defs;
+> >>>    #endif /* CONFIG_DEBUG_FS */
+> >>>   =20
+> >>>    	struct dw_mipi_dsi *master; /* dual-dsi master ptr */
+> >>> @@ -530,9 +549,11 @@ static void dw_mipi_dsi_video_mode_config(struct=
+ dw_mipi_dsi *dsi)
+> >>>    		val |=3D VID_MODE_TYPE_NON_BURST_SYNC_EVENTS;
+> >>>   =20
+> >>>    #ifdef CONFIG_DEBUG_FS
+> >>> -	if (dsi->vpg) {
+> >>> +	if (dsi->vpg_defs.vpg) {
+> >>>    		val |=3D VID_MODE_VPG_ENABLE;
+> >>> -		val |=3D dsi->vpg_horizontal ? VID_MODE_VPG_HORIZONTAL : 0;
+> >>> +		val |=3D dsi->vpg_defs.vpg_horizontal ?
+> >>> +		       VID_MODE_VPG_HORIZONTAL : 0;
+> >>> +		val |=3D dsi->vpg_defs.vpg_ber_pattern ? VID_MODE_VPG_MODE : 0;
+> >>>    	}
+> >>>    #endif /* CONFIG_DEBUG_FS */
+> >>>   =20
+> >>> @@ -961,6 +982,68 @@ static const struct drm_bridge_funcs dw_mipi_dsi=
+_bridge_funcs =3D {
+> >>>   =20
+> >>>    #ifdef CONFIG_DEBUG_FS
+> >>>   =20
+> >>> +int dw_mipi_dsi_debugfs_write(void *data, u64 val)
+> >>> +{
+> >>> +	struct debugfs_entries *vpg =3D data;
+> >>> +	struct dw_mipi_dsi *dsi;
+> >>> +	u32 mode_cfg;
+> >>> +
+> >>> +	if (!vpg)
+> >>> +		return -ENODEV;
+> >>> +
+> >>> +	dsi =3D vpg->dsi;
+> >>> +
+> >>> +	*vpg->reg =3D (bool)val;
+> >>> +
+> >>> +	mode_cfg =3D dsi_read(dsi, DSI_VID_MODE_CFG);
+> >>> +
+> >>> +	if (*vpg->reg)
+> >>> +		mode_cfg |=3D vpg->mask;
+> >>> +	else
+> >>> +		mode_cfg &=3D ~vpg->mask;
+> >>> +
+> >>> +	dsi_write(dsi, DSI_VID_MODE_CFG, mode_cfg);
+> >>> +
+> >>> +	return 0;
+> >>> +}
+> >>> +
+> >>> +int dw_mipi_dsi_debugfs_show(void *data, u64 *val)
+> >>> +{
+> >>> +	struct debugfs_entries *vpg =3D data;
+> >>> +
+> >>> +	if (!vpg)
+> >>> +		return -ENODEV;
+> >>> +
+> >>> +	*val =3D *vpg->reg;
+> >>> +
+> >>> +	return 0;
+> >>> +}
+> >>> +
+> >>> +DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_mipi_dsi_debugfs_show,
+> >>> +			 dw_mipi_dsi_debugfs_write, "%llu\n");
+> >>> +
+> >>> +static void debugfs_create_files(void *data)
+> >>> +{
+> >>> +	struct dw_mipi_dsi *dsi =3D data;
+> >>> +	struct debugfs_entries debugfs[] =3D {
+> >>> +		REGISTER(vpg, VID_MODE_VPG_ENABLE, dsi),
+> >>> +		REGISTER(vpg_horizontal, VID_MODE_VPG_HORIZONTAL, dsi),
+> >>> +		REGISTER(vpg_ber_pattern, VID_MODE_VPG_MODE, dsi),
+> >>> +	};
+> >>> +	int i;
+> >>> +
+> >>> +	dsi->debugfs_vpg =3D kmalloc(sizeof(debugfs), GFP_KERNEL);
+> >>> +	if (!dsi->debugfs_vpg)
+> >>> +		return;
+> >>> +
+> >>> +	memcpy(dsi->debugfs_vpg, debugfs, sizeof(debugfs));
+> >>> +
+> >>> +	for (i =3D 0; i < ARRAY_SIZE(debugfs); i++)
+> >>> +		debugfs_create_file(dsi->debugfs_vpg[i].name, 0644,
+> >>> +				    dsi->debugfs, &dsi->debugfs_vpg[i],
+> >>> +				    &fops_x32);
+> >>> +}
+> >>> +
+> >>>    static void dw_mipi_dsi_debugfs_init(struct dw_mipi_dsi *dsi)
+> >>>    {
+> >>>    	dsi->debugfs =3D debugfs_create_dir(dev_name(dsi->dev), NULL);
+> >>> @@ -969,14 +1052,13 @@ static void dw_mipi_dsi_debugfs_init(struct dw=
+_mipi_dsi *dsi)
+> >>>    		return;
+> >>>    	}
+> >>>   =20
+> >>> -	debugfs_create_bool("vpg", 0660, dsi->debugfs, &dsi->vpg);
+> >>> -	debugfs_create_bool("vpg_horizontal", 0660, dsi->debugfs,
+> >>> -			    &dsi->vpg_horizontal);
+> >>> +	debugfs_create_files(dsi);
+>=20
+> Hi Angelo,
+> And thank you for your patch.
+> Could you please explain why you have "so many lines" for adding the ber=
+=20
+> pattern, instead of these 4 lines :
+>=20
+> +#define VID_MODE_VPG_MODE		BIT(20)
+> +bool vpg_ber_pattern;
+> +val |=3D dsi->vpg_ber_pattern ? VID_MODE_VPG_MODE : 0;
+> +debugfs_create_bool("vpg_ber_pattern", 0660, dsi->debugfs,=20
+> &dsi->vpg_ber_pattern);
+>=20
+> Many thanks
+> Philippe :-)
 
-On Mon, Jul 06, 2020 at 07:53:47PM +0200, Michael Walle wrote:
-> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
-> new file mode 100644
-> index 000000000000..8ee286b605bf
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-sl28cpld.c
-> @@ -0,0 +1,187 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * sl28cpld PWM driver
-> + *
-> + * Copyright 2020 Kontron Europe GmbH
-> + */
+Thank you for the review.
 
-Is there publically available documenation available? If so please add a
-link here.
+With this implementation you only need to set the debugfs file
+to control the VPG. Since the internal VPG is used for debug=20
+purposes it eases the use during your development.
 
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +
-> +/*
-> + * PWM timer block registers.
-> + */
-> +#define PWM_CTRL		0x00
-> +#define   PWM_ENABLE		BIT(7)
-> +#define   PWM_MODE_250HZ	0
-> +#define   PWM_MODE_500HZ	1
-> +#define   PWM_MODE_1KHZ		2
-> +#define   PWM_MODE_2KHZ		3
-> +#define   PWM_MODE_MASK		GENMASK(1, 0)
-> +#define PWM_CYCLE		0x01
-> +#define   PWM_CYCLE_MAX		0x7f
+Thanks,
+Angelo
 
-Please use a less generic prefix for your defines. Also I like having
-the defines for field names include register name. Something like:
+>=20
+> >>>    }
+> >>>   =20
+> >>>    static void dw_mipi_dsi_debugfs_remove(struct dw_mipi_dsi *dsi)
+> >>>    {
+> >>>    	debugfs_remove_recursive(dsi->debugfs);
+> >>> +	kfree(dsi->debugfs_vpg);
+> >>>    }
+> >>>   =20
+> >>>    #else
+> >>>
+> >> _______________________________________________
+> >> dri-devel mailing list
+> >> dri-devel@lists.freedesktop.org
+> >> https://urldefense.com/v3/__https://lists.freedesktop.org/mailman/list=
+info/dri-devel__;!!A4F2R9G_pg!PaD758-TpCHJcJG4biB5oM3WJXd1mTbLitD8K1qzSVQ4Z=
+06nc__06MR_sz-ITMIl$
+> >=20
+> >=20
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://urldefense.com/v3/__https://lists.freedesktop.org/mailman/listinf=
+o/dri-devel__;!!A4F2R9G_pg!Kt4QZq004dTCJ3GJ6t6RIaJMBrP5tWWgTlboJo1ZICktSxRe=
+gGKtp1VxYH7H4Xjz$=20
 
-	#define PWM_SL28CPLD_CTRL		0x00
-	#define PWM_SL28CPLD_CTRL_ENABLE		BIT(7)
-	#define PWM_SL28CPLD_CTRL_MODE_MASK		GENMASK(1, 0)
-	#define PWM_SL28CPLD_CTRL_MODE_250HZ		FIELD_PREP(PWM_SL28CPLD_CTRL_MODE_MA=
-SK, 0)
 
-> +struct sl28cpld_pwm {
-> +	struct pwm_chip pwm_chip;
-> +	struct regmap *regmap;
-> +	u32 offset;
-> +};
-> +
-> +struct sl28cpld_pwm_periods {
-> +	u8 ctrl;
-> +	unsigned long duty_cycle;
-> +};
-> +
-> +struct sl28cpld_pwm_config {
-> +	unsigned long period_ns;
-> +	u8 max_duty_cycle;
-> +};
-> +
-> +static struct sl28cpld_pwm_config sl28cpld_pwm_config[] =3D {
-
-const ? (Or drop as the values can be easily computed, see below.)
-
-> +	[PWM_MODE_250HZ] =3D { .period_ns =3D 4000000, .max_duty_cycle =3D 0x80=
- },
-> +	[PWM_MODE_500HZ] =3D { .period_ns =3D 2000000, .max_duty_cycle =3D 0x40=
- },
-> +	[PWM_MODE_1KHZ]  =3D { .period_ns =3D 1000000, .max_duty_cycle =3D 0x20=
- },
-> +	[PWM_MODE_2KHZ]  =3D { .period_ns =3D  500000, .max_duty_cycle =3D 0x10=
- },
-> +};
-> +
-> +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
-> +				   struct pwm_device *pwm,
-> +				   struct pwm_state *state)
-> +{
-> +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
-> +	static struct sl28cpld_pwm_config *config;
-> +	unsigned int reg;
-> +	unsigned int mode;
-> +
-> +	regmap_read(priv->regmap, priv->offset + PWM_CTRL, &reg);
-> +
-> +	state->enabled =3D reg & PWM_ENABLE;
-
-Would it be more consisted to use FIELD_GET here, too?
-
-> +
-> +	mode =3D FIELD_GET(PWM_MODE_MASK, reg);
-> +	config =3D &sl28cpld_pwm_config[mode];
-> +	state->period =3D config->period_ns;
-
-I wonder if this could be done more effectively without the above table.
-Something like:
-
-	state->period =3D 4000000 >> mode.
-=09
-(with a #define for 4000000 of course).
-
-> +	regmap_read(priv->regmap, priv->offset + PWM_CYCLE, &reg);
-> +	pwm_set_relative_duty_cycle(state, reg, config->max_duty_cycle);
-
-Oh, what a creative idea to use pwm_set_relative_duty_cycle here.
-Unfortunately it's using the wrong rounding strategy. Please enable
-PWM_DEBUG which should diagnose these problems (given enough testing).
-
-(Hmm, on second thought I'm not sure that rounding is relevant with the
-numbers of this hardware. Still it's wrong in general and I don't want
-to have others copy this.)
-
-> +}
-> +
-> +static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-> +			      const struct pwm_state *state)
-> +{
-> +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
-> +	struct sl28cpld_pwm_config *config;
-> +	unsigned int cycle;
-> +	int ret;
-> +	int mode;
-> +	u8 ctrl;
-> +
-> +	/* Get the configuration by comparing the period */
-> +	for (mode =3D 0; mode < ARRAY_SIZE(sl28cpld_pwm_config); mode++) {
-> +		config =3D &sl28cpld_pwm_config[mode];
-> +		if (state->period =3D=3D config->period_ns)
-> +			break;
-> +	}
-> +
-> +	if (mode =3D=3D ARRAY_SIZE(sl28cpld_pwm_config))
-> +		return -EINVAL;
-
-You're supposed to pick the biggest period that isn't bigger than the
-requested period. So something like:
-
-	switch(period) {
-	case 4000000 ... UINT_MAX:
-		mode =3D 0;
-		break;
-	case 2000000 ... 3999999:
-		mode =3D 1;
-		break;
-	...
-	}
-
-(or:
-
-	if period >=3D 4000000:
-		mode =3D 0
-	else:
-		// I think ... please double-check
-		mode =3D ilog2(4000000 / (period + 1)) + 1
-
-	if mode > 3:
-		return -ERANGE;
-)
-
-	real_period =3D 4000000 >> mode;
-
-> +	ctrl =3D FIELD_PREP(PWM_MODE_MASK, mode);
-> +	if (state->enabled)
-> +		ctrl |=3D PWM_ENABLE;
-> +
-> +	cycle =3D pwm_get_relative_duty_cycle(state, config->max_duty_cycle);
-
-Again the rounding is wrong. You need need to round down the requested
-duty_cycle to the next possible value. So something like:
-
-	duty_cycle =3D min(real_period, state->duty_cycle);
-
-	cycle =3D duty_cycle * (0x80 >> mode) / (4000000 >> mode);
-
-which can be further simplified to
-
-	cycle =3D duty_cycle / 31250
-
-=2E
-
-> +	/*
-> +	 * The hardware doesn't allow to set max_duty_cycle if the
-> +	 * 250Hz mode is enabled, thus we have to trap that here.
-> +	 * But because a 100% duty cycle is equal on all modes, i.e.
-
-It depends on how picky you are if you can agree here. Please document
-this in a Limitations paragraph at the top of the driver similar to
-drivers/pwm/pwm-rcar.c and others.
-
-> +	 * it is just a "all-high" output, we trap any case with a
-> +	 * 100% duty cycle and use the 500Hz mode.
-
-Please only trap on 250Hz mode. (Can be done using: if (cycle =3D=3D 0x80) I
-think)
-
-> +	 */
-> +	if (cycle =3D=3D config->max_duty_cycle) {
-> +		ctrl &=3D ~PWM_MODE_MASK;
-> +		ctrl |=3D FIELD_PREP(PWM_MODE_MASK, PWM_MODE_500HZ);
-> +		cycle =3D PWM_CYCLE_MAX;
-=09
-I would have expected 0x40 here instead of 0x7f?
-
-> +	}
-> +
-> +	ret =3D regmap_write(priv->regmap, priv->offset + PWM_CTRL, ctrl);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write(priv->regmap, priv->offset + PWM_CYCLE, (u8)cycle);
-
-I assume this can result in broken output? Consider the hardware runs
-with mode =3D 1 & cycle =3D 0x23 and you want to go to mode =3D 0 & cycle =
-=3D
-0x42: Can this result in a period that has mode =3D 0 & cycle =3D 0x23?
-
-If this cannot be avoided, please document this in the Limitations
-paragraph.
-
-> +}
-> +
-> +static const struct pwm_ops sl28cpld_pwm_ops =3D {
-> +	.apply =3D sl28cpld_pwm_apply,
-> +	.get_state =3D sl28cpld_pwm_get_state,
-> +	.owner =3D THIS_MODULE,
-> +};
-> +
-> +static int sl28cpld_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct sl28cpld_pwm *priv;
-> +	struct pwm_chip *chip;
-> +	int ret;
-> +
-> +	if (!pdev->dev.parent)
-> +		return -ENODEV;
-> +
-> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!priv->regmap)
-> +		return -ENODEV;
-> +
-> +	ret =3D device_property_read_u32(&pdev->dev, "reg", &priv->offset);
-> +	if (ret)
-> +		return -EINVAL;
-> +
-> +	/* Initialize the pwm_chip structure */
-> +	chip =3D &priv->pwm_chip;
-> +	chip->dev =3D &pdev->dev;
-> +	chip->ops =3D &sl28cpld_pwm_ops;
-> +	chip->base =3D -1;
-> +	chip->npwm =3D 1;
-> +
-> +	ret =3D pwmchip_add(&priv->pwm_chip);
-> +	if (ret)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	return 0;
-> +}
-
-Please add error messages with some details for the error paths
-(preferable using %pe to indicate the error code).
-
-> +static int sl28cpld_pwm_remove(struct platform_device *pdev)
-> +{
-> +	struct sl28cpld_pwm *priv =3D platform_get_drvdata(pdev);
-> +
-> +	return pwmchip_remove(&priv->pwm_chip);
-> +}
-> +
-> +static const struct of_device_id sl28cpld_pwm_of_match[] =3D {
-> +	{ .compatible =3D "kontron,sl28cpld-pwm" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, sl28cpld_pwm_of_match);
-> +
-> +static struct platform_driver sl28cpld_pwm_driver =3D {
-> +	.probe =3D sl28cpld_pwm_probe,
-> +	.remove	=3D sl28cpld_pwm_remove,
-> +	.driver =3D {
-> +		.name =3D "sl28cpld-pwm",
-> +		.of_match_table =3D sl28cpld_pwm_of_match,
-> +	},
-> +};
-> +module_platform_driver(sl28cpld_pwm_driver);
-> +
-> +MODULE_DESCRIPTION("sl28cpld PWM Driver");
-> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> +MODULE_LICENSE("GPL");
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---zo5wkjqhpntpevbs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8G2joACgkQwfwUeK3K
-7AmJGgf/WBxR5LIpn0VH8Eu7pe5XA6Ic/I7iL7pbWV+u7KttKvKeJSKDQP+Rj7w/
-oTgVpPOzquY7nsgi8Xc+X980NILKIg3h/GOOWCie31utloJHocy4Xva3W4AtfJFi
-vtu5Aeunx9zaStCDvwrA/5QKsxYuMSAKWoTqzRW8gdGyyUFKG5rnS4Sz5A1Zk7Tj
-kv2pVpbVAU4JsnS8FUGQnXG32UhrZddYZKb6h6NoOIP13OybadiQ11dcsfrjguPg
-0NgNL+VHwM1nFEOOTza5u3WfaEXSFIInFev55g3TYnjOIk1mY980eNLc682VqhZX
-djlTan09K0g6k9nD5qjkmhAT8tntQw==
-=pWwP
------END PGP SIGNATURE-----
-
---zo5wkjqhpntpevbs--
