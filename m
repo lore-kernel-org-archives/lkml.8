@@ -4,206 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F884C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC98C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D8C20672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF714206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594328694;
-	bh=FEalt9eXC1vsK4wuxaFcsK1DhBBbQM4hzPWdy1gRjH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uEcqjuCwa0uA8Gj/u05oAyK7HCgog5h+rGfFg5A4ZL693EPHKR4ewLWRavS0kgcvj
-	 kCQwPkYtoJZbg8V5F8o7UcQVpZkhnK/yuR6WwANeKN1e0L0SR0pfOAlHQSoS77Wyea
-	 582NKJC1owChMRbZw2rhXu589R2TVV0hc3XuyJas=
+	s=default; t=1594328731;
+	bh=yMAOXr1oRk4UKwWtkpx3u9hzj0GthE8WiORwgpF6Z0Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=ptCNJLivcFtBifLg3AZOa14rgNO5QZhRRp3Nz47lGbq4xfX2HkGel18AeRoMMOgEr
+	 +ZQ1wGlQFqwpH6wIUKmrAXcapztOMIc/i9bs1tlIQh6fO5wRkS4Vts9IIPP+iqBNj7
+	 gOpcVTiSbfW4x84N9GDtlgIXVHQLcROD+AorU5no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgGIVEx (ORCPT
+        id S1726523AbgGIVFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:04:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40453 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgGIVEw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:04:52 -0400
-Received: by mail-io1-f67.google.com with SMTP id q8so3830856iow.7;
-        Thu, 09 Jul 2020 14:04:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ep2BUalGoUDMYiRgPfHR0K5E7uXRpZtzmzl5wMZRFHs=;
-        b=AA7h/I7bauQk7abixJNncQ1aG7YAueNZEsj/fiA9sBsdq8245RqKrRTJXTgoMUIpt/
-         4Q0TW0wHHs2hzkI0D3HXUx4wFAu4sx4o3u0reOT40nu4PXaORKVn93G4ZbnXmHkdWwFI
-         96JGzwoXWFMIOgcWw9OuYKNvZCXs9SfW0lwIFruNsQvymFgAHmxyK1Gd+qUQvURqrkZ+
-         M93nafNiQ2jRwcG+6WXqtSCEubJsrFGz6VkxmwsdbsoqzaqqwO1/qjPIn5Aa3dRumZ82
-         g+ec7sAabgIemW01IlMMyncuBLa8tmtHzUqFPU0Y56G9pOF10VAtTjdsVNo44Q1zvWBy
-         1jFw==
-X-Gm-Message-State: AOAM530528xuNMhoaWv0viItMQMdr+5m0B0qkWYTD3O+DpAVGb+bI66Q
-        SS3j0oTEqEvXfdqtvNqiiw==
-X-Google-Smtp-Source: ABdhPJzzckh793p74m62K2t6bgxJyhqTwep2hglKcjMTiXCsSoxr/OlqW/k8gyAtxdeWk6fveOx07A==
-X-Received: by 2002:a02:cd06:: with SMTP id g6mr43286633jaq.37.1594328690447;
-        Thu, 09 Jul 2020 14:04:50 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id g8sm2399655ilq.49.2020.07.09.14.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 14:04:49 -0700 (PDT)
-Received: (nullmailer pid 883283 invoked by uid 1000);
-        Thu, 09 Jul 2020 21:04:48 -0000
-Date:   Thu, 9 Jul 2020 15:04:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     georgi.djakov@linaro.org, cw00.choi@samsung.com, krzk@kernel.org,
-        devicetree@vger.kernel.org, a.swigon@samsung.com,
-        myungjoo.ham@samsung.com, inki.dae@samsung.com,
-        sw0312.kim@samsung.com, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC v6 1/6] dt-bindings: exynos-bus: Add documentation
- for interconnect properties
-Message-ID: <20200709210448.GA876103@bogus>
-References: <20200702163724.2218-1-s.nawrocki@samsung.com>
- <CGME20200702163748eucas1p2cf7eab70bc072dea9a95183018b38ad3@eucas1p2.samsung.com>
- <20200702163724.2218-2-s.nawrocki@samsung.com>
+        Thu, 9 Jul 2020 17:05:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgGIVFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 17:05:30 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BE2C20672;
+        Thu,  9 Jul 2020 21:05:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594328729;
+        bh=yMAOXr1oRk4UKwWtkpx3u9hzj0GthE8WiORwgpF6Z0Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nZ+gfclGCmdQDdH60kGOcV2gsQrlKEEopaZ3LEvaFtEiuOJUlyKwXUgVUfGs1OrR8
+         b6jL6r+P6hiCRcVwrD3MtnPn+V6zUbZHx9sttXGXjv4NtLbOX5p4O/zKCv3fnzKyp1
+         w3fcn0UqBf8+rPNFrfKW/l0he8MwAkHH/3Vau/5M=
+Date:   Thu, 9 Jul 2020 16:05:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
+Subject: Re: [PATCH] PCI: Replace kmalloc with kzalloc in the comment/message
+Message-ID: <20200709210527.GA17678@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200702163724.2218-2-s.nawrocki@samsung.com>
+In-Reply-To: <1594279708-34369-1-git-send-email-wang.yi59@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 06:37:19PM +0200, Sylwester Nawrocki wrote:
-> Add documentation for new optional properties in the exynos bus nodes:
-> samsung,interconnect-parent, #interconnect-cells, bus-width.
-> These properties allow to specify the SoC interconnect structure which
-> then allows the interconnect consumer devices to request specific
-> bandwidth requirements.
+On Thu, Jul 09, 2020 at 03:28:28PM +0800, Yi Wang wrote:
+> From: Liao Pingfang <liao.pingfang@zte.com.cn>
 > 
-> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Use kzalloc instead of kmalloc in the comment/message according to
+> the previous kzalloc() call.
+> 
+> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
+> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+
+I applied the setup-bus.c change to pci/misc for v5.9, thanks!
+
+I dropped the ibmphp_pci.c comment change because (a) it's not clear
+the comment is correct even after the change, and (b) that file is so
+out-of-date and hard to read that I don't want to touch it unless
+we're really fixing something significant.
+
 > ---
-> Changes for v6:
->  - added dts example of bus hierarchy definition and the interconnect
->    consumer,
->  - added new bus-width property.
+>  drivers/pci/hotplug/ibmphp_pci.c | 2 +-
+>  drivers/pci/setup-bus.c          | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> Changes for v5:
->  - exynos,interconnect-parent-node renamed to samsung,interconnect-parent
-> ---
->  .../devicetree/bindings/devfreq/exynos-bus.txt     | 68 +++++++++++++++++++++-
->  1 file changed, 66 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> index e71f752..4035e3e 100644
-> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> @@ -51,6 +51,13 @@ Optional properties only for parent bus device:
->  - exynos,saturation-ratio: the percentage value which is used to calibrate
->  			the performance count against total cycle count.
+> diff --git a/drivers/pci/hotplug/ibmphp_pci.c b/drivers/pci/hotplug/ibmphp_pci.c
+> index e22d023..2d36992 100644
+> --- a/drivers/pci/hotplug/ibmphp_pci.c
+> +++ b/drivers/pci/hotplug/ibmphp_pci.c
+> @@ -205,7 +205,7 @@ int ibmphp_configure_card(struct pci_func *func, u8 slotno)
+>  								cur_func->next = newfunc;
 >  
-> +Optional properties for interconnect functionality (QoS frequency constraints):
-> +- samsung,interconnect-parent: phandle to the parent interconnect node; for
-> +  passive devices should point to same node as the exynos,parent-bus property.
-
-Adding vendor specific properties for a common binding defeats the 
-point.
-
-> +- #interconnect-cells: should be 0.
-> +- bus-width: the interconnect bus width in bits, default value is 8 when this
-> +  property is missing.
-
-Your bus is 8-bits or 4-bits as the example?
-
-> +
->  Detailed correlation between sub-blocks and power line according to Exynos SoC:
->  - In case of Exynos3250, there are two power line as following:
->  	VDD_MIF |--- DMC
-> @@ -135,7 +142,7 @@ Detailed correlation between sub-blocks and power line according to Exynos SoC:
->  		|--- PERIC (Fixed clock rate)
->  		|--- FSYS  (Fixed clock rate)
+>  							rc = ibmphp_configure_card(newfunc, slotno);
+> -							/* This could only happen if kmalloc failed */
+> +							/* This could only happen if kzalloc failed */
+>  							if (rc) {
+>  								/* We need to do this in case bridge itself got configured properly, but devices behind it failed */
+>  								func->bus = 1; /* To indicate to the unconfigure function that this is a PPB */
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index bbcef1a..13c5a44 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -151,7 +151,7 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
 >  
-> -Example1:
-> +Example 1:
->  	Show the AXI buses of Exynos3250 SoC. Exynos3250 divides the buses to
->  	power line (regulator). The MIF (Memory Interface) AXI bus is used to
->  	transfer data between DRAM and CPU and uses the VDD_MIF regulator.
-> @@ -184,7 +191,7 @@ Example1:
->  	|L5   |200000 |200000  |400000 |300000 |       ||1000000 |
->  	----------------------------------------------------------
+>  		tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
+>  		if (!tmp)
+> -			panic("pdev_sort_resources(): kmalloc() failed!\n");
+> +			panic("%s: kzalloc() failed!\n", __func__);
+>  		tmp->res = r;
+>  		tmp->dev = dev;
 >  
-> -Example2 :
-> +Example 2:
->  	The bus of DMC (Dynamic Memory Controller) block in exynos3250.dtsi
->  	is listed below:
->  
-> @@ -419,3 +426,60 @@ Example2 :
->  		devfreq = <&bus_leftbus>;
->  		status = "okay";
->  	};
-> +
-> +Example 3:
-> +	An interconnect path "bus_display -- bus_leftbus -- bus_dmc" on
-> +	Exynos4412 SoC with video mixer as an interconnect consumer device.
-> +
-> +	soc {
-> +		bus_dmc: bus_dmc {
-> +			compatible = "samsung,exynos-bus";
-> +			clocks = <&clock CLK_DIV_DMC>;
-> +			clock-names = "bus";
-> +			operating-points-v2 = <&bus_dmc_opp_table>;
-> +			bus-width = <4>;
-> +			#interconnect-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		bus_leftbus: bus_leftbus {
-> +			compatible = "samsung,exynos-bus";
-> +			clocks = <&clock CLK_DIV_GDL>;
-> +			clock-names = "bus";
-> +			operating-points-v2 = <&bus_leftbus_opp_table>;
-> +			samsung,interconnect-parent = <&bus_dmc>;
-> +			#interconnect-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		bus_display: bus_display {
-> +			compatible = "samsung,exynos-bus";
-> +			clocks = <&clock CLK_ACLK160>;
-> +			clock-names = "bus";
-> +			operating-points-v2 = <&bus_display_opp_table>;
-> +			samsung,interconnect-parent = <&bus_leftbus>;
-> +			#interconnect-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		bus_dmc_opp_table: opp_table1 {
-> +			compatible = "operating-points-v2";
-> +			/* ... */
-> +		}
-> +
-> +		bus_leftbus_opp_table: opp_table3 {
-> +			compatible = "operating-points-v2";
-> +			/* ... */
-> +		};
-> +
-> +		bus_display_opp_table: opp_table4 {
-> +			compatible = "operating-points-v2";
-> +			/* .. */
-> +		};
-> +
-> +		&mixer {
-> +			compatible = "samsung,exynos4212-mixer";
-> +			interconnects = <&bus_display &bus_dmc>;
-> +			/* ... */
-> +		};
-> +	};
 > -- 
-> 2.7.4
+> 2.9.5
 > 
