@@ -2,141 +2,210 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29273C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22616C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A0720774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:17:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OBlspvbI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xKU5ebe2"
+	by mail.kernel.org (Postfix) with ESMTP id 01D472074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594297108;
+	bh=0d67Y8UvYLgaPIhr1Hlc+Z6U3OE3Kp6d4ia4b+j8cEc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CFFrg55bYcbIffbASOATvavevDlrIkyOH3R7E66Aq3HAzyoXwP7/AE2cRnKVwbpRp
+	 Kj9TxIi3jPva7Jh3Z+hz37PwVcS3qj9TYBZ75QCU1BylCmwOGO6wrB9ZbsqTiyGs/Y
+	 EAHzjJOgjVIFWvFZmnph1k2TVrZ1h3An9vK2nVA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgGIMRi (ORCPT
+        id S1727913AbgGIMS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:17:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgGIMRi (ORCPT
+        Thu, 9 Jul 2020 08:18:26 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43278 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgGIMS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:17:38 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D923C061A0B
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 05:17:38 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 14:17:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594297055;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=E9/XX5HXM2ll8OjdCHVTJjYmYRVPDW/XbrVT+FdrMNw=;
-        b=OBlspvbIUcaBak4Y1ndWpexkjNjSW75cNJrVdxsOjjbwduC27L6mt9Bxr6WtvIhaMOaSCQ
-        2fFAadDPlC7IciFYsH6nzMUVEsVzQ+Ij2eMKkG4QsbKLDgKI4YGjtDQj+8Li39FaNxMudQ
-        NLDYYDGY51p0S2e502a1Q+6JY7/v4i+uC+nhc3+W4SaSXfv8wCiBR9j/UYR22qIGjtAkj8
-        rViVMVQFfr5l+silHtw2IkuFAFdhjpu3ypvaqgqvoFu7lGb50GaadaiD3TO33p79mpm0pI
-        jG3XlDtxan9E/udJu17u2HPGY3aZy3k/AjLV8EdM6l3sidhQcBZoON7flPWGfw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594297055;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=E9/XX5HXM2ll8OjdCHVTJjYmYRVPDW/XbrVT+FdrMNw=;
-        b=xKU5ebe2U8GVpH9dgXDqKX5CtTQAvp7hhdSySYNDPsCLrSxxVZfYgCH3rS4f4cCBxiFWJG
-        bQwDiEMlAVGQfeCA==
-From:   Anna-Maria Behnsen <anna-maria@linutronix.de>
-To:     Frederic Weisbecker <frederic@kernel.org>
-cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH 1/9] timer: Move trigger_dyntick_cpu() to
- enqueue_timer()
-In-Reply-To: <20200707013253.26770-2-frederic@kernel.org>
-Message-ID: <alpine.DEB.2.21.2007091312340.4020@somnus>
-References: <20200707013253.26770-1-frederic@kernel.org> <20200707013253.26770-2-frederic@kernel.org>
+        Thu, 9 Jul 2020 08:18:26 -0400
+Received: by mail-oi1-f194.google.com with SMTP id x83so1671643oif.10;
+        Thu, 09 Jul 2020 05:18:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BHVNxL+/4Dut3OSZTR+rYs7XqFLN3i0nnfmN8u7+xOA=;
+        b=HsPvqGX/GQ4OR4PD8qcCtxVGfclDRun1lAmESdkuU5btq7AutoGcvN2+yohnLpnadd
+         tO60+9ABX4LJe7VCGmwf3pMI0Wt1N8tamr/dvrWsGebqc3FP3mb9sonTbgnWOl2SQJlL
+         XrMcCPoWHbBo1ReQEkC5cDiVhkDhg/amdZE7fFBqo6gU3bkQKQ/Af52flG6sJY2c8EI7
+         d8f/IOU/hs3D5OqeNUDtC5WOWMs620lKXhe0IQgsWQZWUMi/uGVUYieMxucFV7xyzYcs
+         EzH+gn1USAQ2/QGft1FL1b4AIs4vs8pz6/nhGibMmQkjTqmyS7KOxkq3mjRBGnsYvNiJ
+         HYeQ==
+X-Gm-Message-State: AOAM532wTK2f2HpwOkCilCgt7dQ/Nsva5wPIK2qVvOttSL6JD3fYtrE9
+        5NR/R1T7hZM+PT3ikdyQUQB0WiT8/B8serd8Okc=
+X-Google-Smtp-Source: ABdhPJxtj1vjB44EgNVrKbINxMf3MLBQQVOimbtqX57PoimFmHD9A3C9Fv4wq87LSAfsDKch7XlhTuenX5e7j0W2xjI=
+X-Received: by 2002:aca:4a89:: with SMTP id x131mr11420648oia.103.1594297104569;
+ Thu, 09 Jul 2020 05:18:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <1594005196-16327-1-git-send-email-neal.liu@mediatek.com> <1594005196-16327-2-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1594005196-16327-2-git-send-email-neal.liu@mediatek.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 9 Jul 2020 14:18:13 +0200
+Message-ID: <CAJZ5v0ihB5AJwSRpjaOnXAmciregzxARL5xfudu1h+=_LXaE_w@mail.gmail.com>
+Subject: Re: [PATCH v2] cpuidle: change enter_s2idle() prototype
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Frederic,
+On Mon, Jul 6, 2020 at 5:13 AM Neal Liu <neal.liu@mediatek.com> wrote:
+>
+> Control Flow Integrity(CFI) is a security mechanism that disallows
+> changes to the original control flow graph of a compiled binary,
+> making it significantly harder to perform such attacks.
+>
+> init_state_node() assign same function callback to different
+> function pointer declarations.
+>
+> static int init_state_node(struct cpuidle_state *idle_state,
+>                            const struct of_device_id *matches,
+>                            struct device_node *state_node) { ...
+>         idle_state->enter = match_id->data; ...
+>         idle_state->enter_s2idle = match_id->data; }
+>
+> Function declarations:
+>
+> struct cpuidle_state { ...
+>         int (*enter) (struct cpuidle_device *dev,
+>                       struct cpuidle_driver *drv,
+>                       int index);
+>
+>         void (*enter_s2idle) (struct cpuidle_device *dev,
+>                               struct cpuidle_driver *drv,
+>                               int index); };
+>
+> In this case, either enter() or enter_s2idle() would cause CFI check
+> failed since they use same callee.
 
-On Tue, 7 Jul 2020, Frederic Weisbecker wrote:
+Can you please explain this in a bit more detail?
 
-> Consolidate the code by calling trigger_dyntick_cpu() from
-> enqueue_timer() instead of calling it from all its callers.
+As it stands, I don't understand the problem statement enough to apply
+the patch.
 
-Looks good, but maybe you could also update the comments in the code (see
-remarks below)?
+> Align function prototype of enter() since it needs return value for
+> some use cases. The return value of enter_s2idle() is no
+> need currently.
 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Anna-Maria Gleixner <anna-maria@linutronix.de>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
+So last time I requested you to document why ->enter_s2idle needs to
+return an int in the code, which has not been done.  Please do that.
+
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
 > ---
->  kernel/time/timer.c | 46 +++++++++++++++++++--------------------------
->  1 file changed, 19 insertions(+), 27 deletions(-)
-> 
-> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-> index 9a838d38dbe6..4c977df3610b 100644
-> --- a/kernel/time/timer.c
-> +++ b/kernel/time/timer.c
-> @@ -596,13 +573,29 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
->  	wake_up_nohz_cpu(base->cpu);
+>  drivers/acpi/processor_idle.c   |    6 ++++--
+>  drivers/cpuidle/cpuidle-tegra.c |    8 +++++---
+>  drivers/idle/intel_idle.c       |    6 ++++--
+>  include/linux/cpuidle.h         |    6 +++---
+>  4 files changed, 16 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+> index 75534c5..6ffb6c9 100644
+> --- a/drivers/acpi/processor_idle.c
+> +++ b/drivers/acpi/processor_idle.c
+> @@ -655,8 +655,8 @@ static int acpi_idle_enter(struct cpuidle_device *dev,
+>         return index;
 >  }
->  
-> -static void
-> -internal_add_timer(struct timer_base *base, struct timer_list *timer)
-> +/*
-> + * Enqueue the timer into the hash bucket, mark it pending in
-> + * the bitmap and store the index in the timer flags.
-> + */
-
-enqueue_timer() also calls trigger_dyntick_cpu().
-
-> +static void enqueue_timer(struct timer_base *base, struct timer_list *timer,
-> +			  unsigned int idx)
+>
+> -static void acpi_idle_enter_s2idle(struct cpuidle_device *dev,
+> -                                  struct cpuidle_driver *drv, int index)
+> +static int acpi_idle_enter_s2idle(struct cpuidle_device *dev,
+> +                                 struct cpuidle_driver *drv, int index)
 >  {
-> -	__internal_add_timer(base, timer);
-> +	hlist_add_head(&timer->entry, base->vectors + idx);
-> +	__set_bit(idx, base->pending_map);
-> +	timer_set_idx(timer, idx);
+>         struct acpi_processor_cx *cx = per_cpu(acpi_cstate[index], dev->cpu);
+>
+> @@ -674,6 +674,8 @@ static void acpi_idle_enter_s2idle(struct cpuidle_device *dev,
+>                 }
+>         }
+>         acpi_idle_do_entry(cx);
 > +
-> +	trace_timer_start(timer, timer->expires, timer->flags);
->  	trigger_dyntick_cpu(base, timer);
+> +       return 0;
 >  }
->  
-> +static void internal_add_timer(struct timer_base *base, struct timer_list *timer)
-> +{
-> +	unsigned int idx;
+>
+>  static int acpi_processor_setup_cpuidle_cx(struct acpi_processor *pr,
+> diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
+> index 1500458..a12fb14 100644
+> --- a/drivers/cpuidle/cpuidle-tegra.c
+> +++ b/drivers/cpuidle/cpuidle-tegra.c
+> @@ -253,11 +253,13 @@ static int tegra_cpuidle_enter(struct cpuidle_device *dev,
+>         return err ? -1 : index;
+>  }
+>
+> -static void tegra114_enter_s2idle(struct cpuidle_device *dev,
+> -                                 struct cpuidle_driver *drv,
+> -                                 int index)
+> +static int tegra114_enter_s2idle(struct cpuidle_device *dev,
+> +                                struct cpuidle_driver *drv,
+> +                                int index)
+>  {
+>         tegra_cpuidle_enter(dev, drv, index);
 > +
-> +	idx = calc_wheel_index(timer->expires, base->clk);
-> +	enqueue_timer(base, timer, idx);
-> +}
+> +       return 0;
+>  }
+>
+>  /*
+> diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+> index f449584..b178da3 100644
+> --- a/drivers/idle/intel_idle.c
+> +++ b/drivers/idle/intel_idle.c
+> @@ -175,13 +175,15 @@ static __cpuidle int intel_idle(struct cpuidle_device *dev,
+>   * Invoked as a suspend-to-idle callback routine with frozen user space, frozen
+>   * scheduler tick and suspended scheduler clock on the target CPU.
+>   */
+> -static __cpuidle void intel_idle_s2idle(struct cpuidle_device *dev,
+> -                                       struct cpuidle_driver *drv, int index)
+> +static __cpuidle int intel_idle_s2idle(struct cpuidle_device *dev,
+> +                                      struct cpuidle_driver *drv, int index)
+>  {
+>         unsigned long eax = flg2MWAIT(drv->states[index].flags);
+>         unsigned long ecx = 1; /* break on interrupt flag */
+>
+>         mwait_idle_with_hints(eax, ecx);
 > +
->  #ifdef CONFIG_DEBUG_OBJECTS_TIMERS
->  
->  static struct debug_obj_descr timer_debug_descr;
-> @@ -1059,7 +1052,6 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
->  	 */
-
-The comment above still mentions that trigger_dyntick_cpu() is called which
-is now part of enqueue_timer(). Might be a little confusing.
-
->  	if (idx != UINT_MAX && clk == base->clk) {
->  		enqueue_timer(base, timer, idx);
-> -		trigger_dyntick_cpu(base, timer);
->  	} else {
->  		internal_add_timer(base, timer);
->  	}
-
-
-Thanks,
-
-	Anna-Maria
+> +       return 0;
+>  }
+>
+>  /*
+> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+> index ec2ef63..bee10c0 100644
+> --- a/include/linux/cpuidle.h
+> +++ b/include/linux/cpuidle.h
+> @@ -66,9 +66,9 @@ struct cpuidle_state {
+>          * suspended, so it must not re-enable interrupts at any point (even
+>          * temporarily) or attempt to change states of clock event devices.
+>          */
+> -       void (*enter_s2idle) (struct cpuidle_device *dev,
+> -                             struct cpuidle_driver *drv,
+> -                             int index);
+> +       int (*enter_s2idle)(struct cpuidle_device *dev,
+> +                           struct cpuidle_driver *drv,
+> +                           int index);
+>  };
+>
+>  /* Idle State Flags */
+> --
+> 1.7.9.5
