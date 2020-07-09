@@ -2,77 +2,122 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7896C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 977B120708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECCE206A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594286985;
-	bh=gpkObb//2/k0Iy0WmqlzWU+vJjSNziglB/IVJFbeIMQ=;
+	s=default; t=1594287010;
+	bh=ty0qNkQb+mQZVOrqCFXZLCcTcwuD2qX6+r/mjdgtvss=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0uXVy9N5ACLUDuFZ4G7GWOCJZRldu2VVqrSpqvJvnmGqo/bDaJ9J19R9nfBQXxHEt
-	 4w7ApP/PuHe1tVmt+gbn6hHhnzjy+Jm78sfSW9nzYzpgdhhdcjj6H4jsFk0gOYtS37
-	 LYJDbOROFQ+9RiHwUAbaCSvTm/UwkCAVS8pPR778=
+	b=GbdsfnCVHD+9nF4g/FfZt6/ZZzfx7kkO8KbS1waBhoSvvgxF/Htesw5hcbP1Z7gjL
+	 mUrSy/oQHjiERnngcmN3KlqdyuJPFFGjejFeqp19DTKbw+fDNhJo45b/SrWu4cngPU
+	 TKaNNEhr7p9g11gkjQBRaVe9IJt0wbJhROmcBGxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgGIJ3o (ORCPT
+        id S1726889AbgGIJaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:29:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34794 "EHLO mail.kernel.org"
+        Thu, 9 Jul 2020 05:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726538AbgGIJ3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:29:44 -0400
+        id S1726444AbgGIJaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 05:30:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52FCD206A1;
-        Thu,  9 Jul 2020 09:29:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CB9F20663;
+        Thu,  9 Jul 2020 09:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594286983;
-        bh=gpkObb//2/k0Iy0WmqlzWU+vJjSNziglB/IVJFbeIMQ=;
+        s=default; t=1594287005;
+        bh=ty0qNkQb+mQZVOrqCFXZLCcTcwuD2qX6+r/mjdgtvss=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JbrH5P0UfjfmLA22jpnIW4y1hcmj9RH8Pi3sXPv+zRe86ZDiJkbHqpwHa8QuILNRv
-         GvQf5aE2zNDgJrdKkww5GMKqi2ipPIihF48pxLapCC2tmTWKTTDTmj2WssFco5/SU+
-         H4gC9H2wKu4j8ZddiXt5CbnvZYQdoFrbDKzYKKVk=
-Date:   Thu, 9 Jul 2020 11:29:50 +0200
+        b=0XezFJWdt8TX5AKXsCYPtKd4Mbqc6+K1SQGPJCabkV0wgzanLVbsqTJac9JtmblwL
+         fOpdX0CZSwSgr1NRmUEjZPUfVSSoX0j4rzL2HnIz+VKinMU0MCazWveO59bczXTBue
+         vduNcNlN/gFA2/ID6tXitgwC2pbgIDPDRKYIp1ZI=
+Date:   Thu, 9 Jul 2020 11:30:12 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
+To:     Jon Hunter <jonathanh@nvidia.com>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 000/112] 5.7.8-rc1 review
-Message-ID: <20200709092950.GA46127@kroah.com>
-References: <20200707145800.925304888@linuxfoundation.org>
- <20200708175339.GF224053@roeck-us.net>
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.4 00/65] 5.4.51-rc1 review
+Message-ID: <20200709093012.GB46127@kroah.com>
+References: <20200707145752.417212219@linuxfoundation.org>
+ <6fbcdd30-68d3-e8c5-d762-7b8a8c48d112@nvidia.com>
+ <20200708151500.GA710412@kroah.com>
+ <14d23282-c871-3f9d-372c-06da693666e1@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708175339.GF224053@roeck-us.net>
+In-Reply-To: <14d23282-c871-3f9d-372c-06da693666e1@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 10:53:39AM -0700, Guenter Roeck wrote:
-> On Tue, Jul 07, 2020 at 05:16:05PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.7.8 release.
-> > There are 112 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Wed, Jul 08, 2020 at 05:58:27PM +0100, Jon Hunter wrote:
+> 
+> On 08/07/2020 16:15, Greg Kroah-Hartman wrote:
+> > On Wed, Jul 08, 2020 at 09:41:33AM +0100, Jon Hunter wrote:
+> >>
+> >> On 07/07/2020 16:16, Greg Kroah-Hartman wrote:
+> >>> This is the start of the stable review cycle for the 5.4.51 release.
+> >>> There are 65 patches in this series, all will be posted as a response
+> >>> to this one.  If anyone has any issues with these being applied, please
+> >>> let me know.
+> >>>
+> >>> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
+> >>> Anything received after that time might be too late.
+> >>>
+> >>> The whole patch series can be found in one patch at:
+> >>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.51-rc1.gz
+> >>> or in the git tree and branch at:
+> >>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> >>> and the diffstat can be found below.
+> >>>
+> >>> thanks,
+> >>>
+> >>> greg k-h
+> >>
+> >> All tests are passing for Tegra ...
+> >>
+> >> Test results for stable-v5.4:
+> >>     11 builds:	11 pass, 0 fail
+> >>     26 boots:	26 pass, 0 fail
+> >>     56 tests:	56 pass, 0 fail
+> >>
+> >> Linux version:	5.4.51-rc1-g47d410b54275
+> >> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+> >>                 tegra194-p2972-0000, tegra20-ventana,
+> >>                 tegra210-p2371-2180, tegra210-p3450-0000,
+> >>                 tegra30-cardhu-a04
 > > 
-> > Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-> > Anything received after that time might be too late.
-> > 
-> Build results:
-> 	total: 155 pass: 155 fail: 0
-> Qemu test results:
-> 	total: 431 pass: 431 fail: 0
+> > Thanks for testing all of these and letting me know.
+> 
+> No problem. For some reason the v5.7 review email never made it to my
+> inbox AFAICT. Who knows if it will show up tomorrow, but anyway it all
+> looks good to Tegra ...
+> 
+> Test results for stable-v5.7:
+>     11 builds:	11 pass, 0 fail
+>     26 boots:	26 pass, 0 fail
+>     56 tests:	56 pass, 0 fail
+> 
+> Linux version:	5.7.8-rc1-gb371afd12a48
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>                 tegra30-cardhu-a04
 
-Thanks for testing all of these and letting me know.
+Oh, nice, I was wondering why you didn't respond for that.
+
+thanks for letting me know.
 
 greg k-h
