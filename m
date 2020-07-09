@@ -2,114 +2,100 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7151EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE373C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9D720767
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:06:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIMYWZNG"
+	by mail.kernel.org (Postfix) with ESMTP id C49AB20842
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgGIQGa (ORCPT
+        id S1728248AbgGIQHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbgGIQG3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:06:29 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82558C08C5CE;
-        Thu,  9 Jul 2020 09:06:29 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so1168505pgb.6;
-        Thu, 09 Jul 2020 09:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a9l+tYk/85riUuxTuUt4kuJT2J7SexvNZ2Qs7Rkx7Yo=;
-        b=UIMYWZNGO9j/+zxVwaG/pEaMhgQBDOz4sVQUc96onnh3Km64D+wPEh6h63Qz4TWSP2
-         XsRY+ISPSZbxWrsDHzOqVd3DwO+jn13q7r7UYZokOo3s1FiG2nwMwWwZmqd5bFtKwxQ+
-         7min4joP/kLnjFue26kvH4McDc7c5GblSG7uorFlGZ1P99NsSe0V1sqwQJZB4X76mdCu
-         i6xYF2pb+ijEansklByBwX3lMG37FMLYsZDj5qGeE1VcWDp4k58yGsiDHg61qtsqLdZf
-         yX2vc1mZYM0hIQBguHbDQseqkSVx1Y72XZwWvUrLszIzAplDVdOmRTluucejQGA4GE03
-         8YdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a9l+tYk/85riUuxTuUt4kuJT2J7SexvNZ2Qs7Rkx7Yo=;
-        b=GtX/uKXrSAitsAhJEefctt6eFVW8OGo/Dqc4bwKTr6vqnw37IBlSaeso6gF4AeuEV7
-         fB9kwjhBLwgH/Ym/kdzoAZjuwj5rI/HT94aFhHJ3Y0v9fqDU6hlyONVWSt4aWZcHjgLy
-         sXmUSdM1Qt6NQEczZpaJmYdD8ow8BIwjdncRSWRjgiyawBG93FAXdFvplGhYhtnefRwf
-         MJE0dtXAuLkJjBQ4kw2DznBr38BDBCrg17cKcGJ4XBZEaXiKHP2wHquSCgxuZL8Yk3oW
-         QYbre/xONnt4SP7xWbI1ug0wvHgOc7ry+SdRXn9i9nJLLreuuc59awri9NFfuIAV6za0
-         Pf/Q==
-X-Gm-Message-State: AOAM533AkOdLiMd3mF504GE6mRL2L7YnOXzD0Rr6zPDUg0bLhsc1bfm7
-        QVKUTJLplXbdJ4Y5VrclU7loj58sqccTrMNq3YIiWdw/
-X-Google-Smtp-Source: ABdhPJw90IfU29sKTmXTJq8bdQnP0yZs7hx9knd5n/D85O14jgfWNCfjuyKFo/9tQ7e8RF9+ZB+nLooFp1k14LQoezE=
-X-Received: by 2002:a62:7657:: with SMTP id r84mr56878331pfc.130.1594310789004;
- Thu, 09 Jul 2020 09:06:29 -0700 (PDT)
+        Thu, 9 Jul 2020 12:07:12 -0400
+Received: from mga03.intel.com ([134.134.136.65]:11904 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726357AbgGIQHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:07:12 -0400
+IronPort-SDR: cj4VP/hHGP/KAuKfLwurHvyc4FDM/ejuB+UmV/ynnRVs6gp1QHzqrqutHR45ZzNUAhubp/uW8n
+ PEWVUhjkC6pg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="148019961"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="148019961"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 09:07:10 -0700
+IronPort-SDR: yU5zitncKz0vM5sDufqsVRGMPN603OF4gvTaLcUcM+HowzejvgfYaCTeUcfj7oI5UgEW47uaob
+ pHlmD8IrZ20A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="484328744"
+Received: from lkp-server01.sh.intel.com (HELO 5019aad283e6) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Jul 2020 09:07:08 -0700
+Received: from kbuild by 5019aad283e6 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jtZ4l-000072-Mw; Thu, 09 Jul 2020 16:07:07 +0000
+Date:   Fri, 10 Jul 2020 00:06:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     kbuild-all@lists.01.org,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: mscc: fix ptr_ret.cocci warnings
+Message-ID: <20200709160618.GA43595@e574ca468740>
+References: <202007100043.AqyWtI2n%lkp@intel.com>
 MIME-Version: 1.0
-References: <20200601091851.5491-1-vadimp@mellanox.com> <20200601091851.5491-2-vadimp@mellanox.com>
-In-Reply-To: <20200601091851.5491-2-vadimp@mellanox.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jul 2020 19:06:13 +0300
-Message-ID: <CAHp75VfFdf=ZxuURpVR6LRaDm+x4VQsPgR6FLrcZPhLMn8MOpw@mail.gmail.com>
-Subject: Re: [PATCH platform-next v1 1/8] platform/mellanox: mlxreg-hotplug:
- Use capability register for attribute creation
-To:     Vadim Pasternak <vadimp@mellanox.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202007100043.AqyWtI2n%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 12:19 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
->
-> Create the 'sysfs' attributes according to configuration provided
-> through the capability register, which purpose is to indicate the
-> actual number of the components within the particular group.
-> Such components could be, for example the FAN or power supply units.
-> The motivation is to avoid adding a new code in the future in order to
-> distinct between the systems types supported different number of the
+From: kernel test robot <lkp@intel.com>
 
-supported -> supporting a
+drivers/net/phy/mscc/mscc_ptp.c:1496:1-3: WARNING: PTR_ERR_OR_ZERO can be used
 
-> components like power supplies, FANs, ASICs, line cards.
 
-...
+ Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
 
->                 /* Go over all units within the item. */
-> -               for (j = 0; j < item->count; j++, data++, id++) {
-> +               for (j = 0, k = 0; j < item->count; j++, data++) {
-> +                       /* Skip if bit in mask is not set. */
-> +                       if (!(item->mask & BIT(j)))
-> +                               continue;
+Generated by: scripts/coccinelle/api/ptr_ret.cocci
 
-Instead of splitted comments and this code, perhaps
+Fixes: 7d272e63e097 ("net: phy: mscc: timestamping and PHC support")
+CC: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
 
-/* Go over all unmasked units within item */
-for_each_set_bit(j, &item->mask, item->count) {
-...
-}
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+head:   b966b5cf71790478be7726593d011cb085a97a94
+commit: 7d272e63e0979d38a6256108adbe462d621c26c5 [2625/6900] net: phy: mscc: timestamping and PHC support
 
-It might require a mask defined as unsigned long, though. Or temporary
-variables.
+ mscc_ptp.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
->                 }
-> +               num_attrs += k;
->         }
-
--- 
-With Best Regards,
-Andy Shevchenko
+--- a/drivers/net/phy/mscc/mscc_ptp.c
++++ b/drivers/net/phy/mscc/mscc_ptp.c
+@@ -1493,10 +1493,7 @@ static int __vsc8584_init_ptp(struct phy
+ 
+ 	vsc8531->ptp->ptp_clock = ptp_clock_register(&vsc8531->ptp->caps,
+ 						     &phydev->mdio.dev);
+-	if (IS_ERR(vsc8531->ptp->ptp_clock))
+-		return PTR_ERR(vsc8531->ptp->ptp_clock);
+-
+-	return 0;
++	return PTR_ERR_OR_ZERO(vsc8531->ptp->ptp_clock);
+ }
+ 
+ void vsc8584_config_ts_intr(struct phy_device *phydev)
