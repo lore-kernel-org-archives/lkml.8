@@ -2,177 +2,97 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBA9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB297C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9222076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594295896;
-	bh=76nQ2Hp+y7ZbwUBp2j1Hko+LRj2SOlSV2iD2teGfL3E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ISiMYmoanbBkko+GtZzvBxpFSCc3yH9k8i88aS6svh7gcaS81aYCe4JpjfscuaAjk
-	 6F+PgdHbeAxAR0HRn0yR7PpcEJafwaD7OUtRqQLC9Dbhbp2vvdAzD1zfopExUPEcl9
-	 nyAVEdwU3pBPvGvPqjp69xoy3COGXSvYaRs2Wsyg=
+	by mail.kernel.org (Postfix) with ESMTP id 946A220774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:59:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tnHPMiKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgGIL6O (ORCPT
+        id S1726433AbgGIL67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:58:14 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38341 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgGIL6N (ORCPT
+        Thu, 9 Jul 2020 07:58:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbgGIL66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:58:13 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t18so1496429otq.5;
-        Thu, 09 Jul 2020 04:58:12 -0700 (PDT)
+        Thu, 9 Jul 2020 07:58:58 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5967EC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 04:58:58 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s10so2013979wrw.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 04:58:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=gHgWXTMGTgSJ9NzYNTwxkcCv5i1cvCfL1OrkN27Xvho=;
+        b=tnHPMiKoFwJCftAE8SCg0kw8XH99fwSKXcvrjclQk5KumZPLQx8iVZbjVHV01m5o31
+         b7Ajh+U/4PD7rAc6ZOhSWoQaHUp9f97KeTfDZIwK2Ty9dTc+62IYRmUPf22orpGpxm0a
+         eXacwtRdXeteEBT6ljePIFJsgtXHM8COLkEXPVSwQxguBgqaK0rQBlEouxg7ow+ob0rW
+         /zD4eYoi+YVEJOsQrJXLKPGMUYpSxrZqEHXbEMBeX7FoGShcixB86bnOVYpMQoX9jFXt
+         AjayRUt9ET3KIFz1nMOa8WLOMcCuILTPfTiS/uAMBAumBNj243HdfpxuGlSL0OTT6MQF
+         okEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YRGv8i1NLqF5y2cs67EYKyYOieD8C2J3kdBQDbuxrSI=;
-        b=pAUWclLshRVyqEbv0JlwPDmuho7COzzOulHdseu51BTzo3+s0qhRNSXI8EtjNi1S3S
-         qGO/zbHghsnOaL0ABAWW/BAjK/3CLqe43sgOCpkNyUqJE7wAZscyA4krAgFrvMTE9/kI
-         89Zz7OJsqCWYoXQSS2BUGPiUlHBejdzO8lAJcSZNLai4rlj2P0ZvKQJ+fnrfFXevm+RC
-         qIQSbo3Ego1l+nTKaPQu58gRNOprm9k58UB+kuWCjkewW9WwEUqYvezMQMsYa0Y243mM
-         Rnf0ozoFh/S6nlneOM4n4LN1ecpPh+CzI8C3c92X7504hQsnubybUwujedf7CceECG61
-         RT5A==
-X-Gm-Message-State: AOAM530w0vr0tQ+UfKBuBs+qEoHNFGnmB78DyCJiAHsAe/leIVJaM2id
-        0F9xGWsji8Bs/OWSVz6pFPVKQ2Gc0xeKp9lp/dY=
-X-Google-Smtp-Source: ABdhPJxXX40XCYqyYoXnFPXuGC6w2vY526oEHE9rnBiN6/5mfIiE0GqaHMVLu8jaKzIOCRf+RJf4vBQmtnBeafw4MzU=
-X-Received: by 2002:a9d:590a:: with SMTP id t10mr17093644oth.262.1594295891970;
- Thu, 09 Jul 2020 04:58:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200413134611.478441-1-enric.balletbo@collabora.com>
- <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
- <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com> <10490419.gsntqH5CaE@kreacher>
- <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com> <59771d3689da41a5bbc67541aa6f4777@AUSX13MPC105.AMER.DELL.COM>
- <20200610214033.GB248110@dtor-ws> <adf9daaf08f1464684e48ec203194fe9@AUSX13MPC105.AMER.DELL.COM>
- <20200610224305.GC248110@dtor-ws> <1e32b7db-5457-e0cf-5e5e-36f21d5a91eb@collabora.com>
- <b9e46ec7-c362-da76-a532-8d380b16d915@collabora.com>
-In-Reply-To: <b9e46ec7-c362-da76-a532-8d380b16d915@collabora.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 9 Jul 2020 13:57:59 +0200
-Message-ID: <CAJZ5v0gSRZnSfQ-c3md+1O+0zzpde=btzKMBijGRa2WgvhW7iw@mail.gmail.com>
-Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gHgWXTMGTgSJ9NzYNTwxkcCv5i1cvCfL1OrkN27Xvho=;
+        b=P4LM98XMM5O0FBbjNBBqTAwCgHgER1IdKKcs2Vi+ttehVE1xvyZnlTWdUYrnliEyc6
+         vxnu1AZGq9H/tgrcm0URqvwLu+12v6pNDQIqYhf60YxggOwXnd8Ss8cMyqIFAbtKmzYq
+         Fuj+BYOkyJ14jEikNgiDjbbBIwDQKyXzmplg+9Nf0QcQv5vRuGHx9p81FNGQNKrw1hrJ
+         F9D78/wia8wDcy8xXwpB7fyF4ShY5bqHUmE4t8wByHzgHqXdcviuuhc/bh/H0LWllKon
+         BZ+GCegrxFF5tVxAZZdqay7vjSo1WzxDl566LF23qQdUQTDhgUbxRvh2OV06G8ZXHdCT
+         TCZA==
+X-Gm-Message-State: AOAM531kywdI//ILrT88qYNTaM8mvM4XTbOJXx34VddAVseTNQDd4twT
+        tOhP4EjLn4A4pmItDiyTzt6Y6w==
+X-Google-Smtp-Source: ABdhPJyCuhps/FwjgEGCNRrbS5o38e0SWuvhsNtaS+uo0Brld9JdD09WDpyF2aDUN4l3vMi+qlU9vA==
+X-Received: by 2002:adf:e68d:: with SMTP id r13mr59987094wrm.141.1594295937009;
+        Thu, 09 Jul 2020 04:58:57 -0700 (PDT)
+Received: from localhost.localdomain (212-5-158-112.ip.btc-net.bg. [212.5.158.112])
+        by smtp.gmail.com with ESMTPSA id v7sm5140737wrp.45.2020.07.09.04.58.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 04:58:56 -0700 (PDT)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Elliot Berman <eberman@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH 0/2] Venus - fix firmware load failure
+Date:   Thu,  9 Jul 2020 14:58:27 +0300
+Message-Id: <20200709115829.8194-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 11:31 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Rafael,
->
-> On 11/6/20 13:06, Enric Balletbo i Serra wrote:
-> > Hi,
-> >
-> > On 11/6/20 0:43, Dmitry Torokhov wrote:
-> >> On Wed, Jun 10, 2020 at 09:52:12PM +0000, Mario.Limonciello@dell.com wrote:
-> >>>> -----Original Message-----
-> >>>> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> >>>> Sent: Wednesday, June 10, 2020 4:41 PM
-> >>>> To: Limonciello, Mario
-> >>>> Cc: enric.balletbo@collabora.com; rjw@rjwysocki.net; rafael@kernel.org;
-> >>>> linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; lenb@kernel.org;
-> >>>> kernel@collabora.com; groeck@chromium.org; bleung@chromium.org;
-> >>>> dtor@chromium.org; gwendal@chromium.org; vbendeb@chromium.org;
-> >>>> andy@infradead.org; ayman.bagabas@gmail.com; benjamin.tissoires@redhat.com;
-> >>>> blaz@mxxn.io; dvhart@infradead.org; gregkh@linuxfoundation.org;
-> >>>> hdegoede@redhat.com; jeremy@system76.com; 2pi@mok.nu;
-> >>>> mchehab+samsung@kernel.org; rajatja@google.com;
-> >>>> srinivas.pandruvada@linux.intel.com; platform-driver-x86@vger.kernel.org
-> >>>> Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-> >>>>
-> >>>>
-> >>>> [EXTERNAL EMAIL]
-> >>>>
-> >>>> On Wed, Jun 10, 2020 at 09:28:36PM +0000, Mario.Limonciello@dell.com wrote:
-> >>>>>>
-> >>>>>> To give you some references, if I'm not wrong, this prefix is used in
-> >>>> all
-> >>>>>> or
-> >>>>>> almost all Intel Chromebook devices (auron, cyan, eve, fizz, hatch,
-> >>>>>> octopus,
-> >>>>>> poppy, strago ...) The ACPI source for this device can be found here
-> >>>> [1],
-> >>>>>> and,
-> >>>>>> if not all, almost all Intel based Chromebooks are shipped with the
-> >>>>>> firmware
-> >>>>>> that supports this.
-> >>>>>
-> >>>>> You can potentially carry a small patch in your downstream kernel for the
-> >>>>> legacy stuff until it reaches EOL.  At least for the new stuff you could
-> >>>>> enact a process that properly reserves unique numbers and changes the
-> >>>> driver
-> >>>>> when the interface provided by the ACPI device has changed.
-> >>>>
-> >>>> If we use this prefix for hatch EOL is ~7 years from now.
-> >>>>
-> >>>
-> >>> Isn't the whole point of the ACPI registry and choosing an ID?  You know internally
-> >>> if you need to change the interface that a new ID is needed and a new driver will
-> >>> be needed that comprehends that ID change.  So if you can't guarantee that 0001 is
-> >>> the same driver interface in every firmware implementation google used then that is
-> >>> where this falls apart.
-> >>>
-> >
-> > As far as I know GGL0001 has the same driver interface in every firmware
-> > implementation Google used. But I'll ask to make sure.
-> >
-> >>> I know there is a long support lifecycle but you're talking about rebasing
-> >>> to new LTS kernels a handful of times between now and then.  If the interface really
-> >>> is stable the patch should be small and it shouldn't be a large amount of technical
-> >>> debt to carry downstream until EOL.
-> >>
-> >> I think we are talking about different things actually. Let's forget
-> >> about Chrome OS and downstream kernels. We have devices that have
-> >> already been shipped and in hands of users. Some of them are old, some
-> >> of them are new. We can't not enforce that firmware for these devices
-> >> will be either released or updated. Therefore, if we want expose this
-> >> device in mainline kernel, we need to have it handle "GGL0001" HID in
-> >> addition to whatever proper HID we may select for it.
-> >>
-> >
-> > FWIW, after investigate a bit more, although GGL is not in the ACPI ID list it
-> > is in the PNP ID list [1]. So as far as I understand GGL0001 is valid ID. I know
-> > that PNP ID is the legacy identifier but since this was here for long time and
-> > will be here also for long time, I am wondering if we can take that as an
-> > argument to have GGL0001 as a valid device to be exposed in the kernel.
-> >
->
-> So, as the GGL prefix is a valid ID in the PNP ID list, is this a valid argument
-> to take in consideration this patch and resolves your concern regarding the ID?
+Hi,
 
-Yes, it does, thanks!
+These two patches fixed the problem with "failed to reset venus core"
+seen with various firmware versions (including the one from linux-firmware)
+on sdm845 and sdm850.
+
+regards,
+Stan
+
+Stanimir Varbanov (2):
+  firmware: qcom_scm: Add memory protect virtual address ranges
+  venus: firmware: Set virtual address ranges
+
+ drivers/firmware/qcom_scm.c                  | 24 ++++++++++++++++++++
+ drivers/firmware/qcom_scm.h                  |  1 +
+ drivers/media/platform/qcom/venus/core.c     |  4 ++++
+ drivers/media/platform/qcom/venus/core.h     |  4 ++++
+ drivers/media/platform/qcom/venus/firmware.c | 18 ++++++++++++++-
+ include/linux/qcom_scm.h                     |  8 ++++++-
+ 6 files changed, 57 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
