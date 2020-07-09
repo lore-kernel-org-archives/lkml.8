@@ -2,92 +2,167 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9297C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8C3207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:37:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="bVs7Sqtv"
+	by mail.kernel.org (Postfix) with ESMTP id C7A052077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594309128;
+	bh=L0YHyaVnrGtsrYU/MOJaw8jpmow7WmEpb0uvKXYmZ/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qxj7gsFyhmqiNi8KCCVhxPhGRaYxAhuAYi3pi3inxe/pRrSZJbcOg6FPVx/dREt+2
+	 44Xnl0LZ2X8aaiM3JfFo3x+znXWsBG9DX6cNr7NdLbleo4JSxikXNERjJ2HAGAriUD
+	 dwydN493wpcMrMtEEwuvCuBKwXGT78SEBUWxTZHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgGIPhf (ORCPT
+        id S1727972AbgGIPir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:37:35 -0400
-Received: from m15112.mail.126.com ([220.181.15.112]:51555 "EHLO
-        m15112.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgGIPhe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:37:34 -0400
-X-Greylist: delayed 1828 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jul 2020 11:37:32 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=nlTBb/0mf2htxgi1qK
-        4HyVVy5Vg0edIYoQo4K6WIOA0=; b=bVs7SqtviqcojpZxxESbFENwtF0N5+Ab2a
-        f7UmuS5NAj3foCnQHW+TZOQdgsPte6WhxvgmQXzD4jh90M1nOZ8tX2L3v+VQJKjS
-        qsFvGYISU9nz65sEO9rGenPiNzwFqISZz/lIVc7MGfw9/P6aJ6oTJNvZGVBcjIWE
-        I59Y9gkLo=
-Received: from 192.168.137.252 (unknown [112.10.74.133])
-        by smtp2 (Coremail) with SMTP id DMmowABX1SFfMgdfeNahFA--.52098S3;
-        Thu, 09 Jul 2020 23:06:09 +0800 (CST)
-From:   Xianting Tian <xianting_tian@126.com>
-To:     mst@redhat.com, jasowang@redhat.com, pbonzini@redhat.com,
-        stefanha@redhat.com, jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: virtio_scsi: remove unnecessary condition check
-Date:   Thu,  9 Jul 2020 11:06:07 -0400
-Message-Id: <1594307167-8807-1-git-send-email-xianting_tian@126.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: DMmowABX1SFfMgdfeNahFA--.52098S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Xw47tryktw1xZr18WrW8Xrb_yoWDWFc_XF
-        40qrsrGr15KFn2krWIkrWfArZ09anrZa1j9ryFgFWfCr1Yq3909r4jqryrZF1fWw1jk3W7
-        Cw40yryS9r13CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8Tv3UUUUUU==
-X-Originating-IP: [112.10.74.133]
-X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbi5gtcpFpD+5LX2gABsp
+        Thu, 9 Jul 2020 11:38:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgGIPir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 11:38:47 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 012D720720;
+        Thu,  9 Jul 2020 15:38:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594309126;
+        bh=L0YHyaVnrGtsrYU/MOJaw8jpmow7WmEpb0uvKXYmZ/w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BbT1W8mOKlsd9oZlX+zEwJ+k4sQrfbiB+LYaqVy6quzl84kh3UMvL9E1ZEqLes9kv
+         jDh9/S7dyTE+tehwP+Ctr+jup7P9ZqNHyc1HjpYaGbAxzNvdKHj1YlAROST2en5Ka8
+         7LAW7cT5QZHXANkqGHgq8FWp34kCXYUh55kU/RuA=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 11AD4405FF; Thu,  9 Jul 2020 12:38:44 -0300 (-03)
+Date:   Thu, 9 Jul 2020 12:38:44 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>, mbd@fb.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2] Fix annotate.c use of uninitialized value error
+Message-ID: <20200709153844.GA7487@kernel.org>
+References: <20190726194044.GC24867@kernel.org>
+ <20190729205750.193289-1-nums@google.com>
+ <20190807113244.GA9605@krava>
+ <CAP-5=fW8k6YWBYno2RWV5_mojn-0crvmPcLynKGBO_3WMCXfEA@mail.gmail.com>
+ <CAP-5=fVx1YqNOja4GCAVApQ05BW5Z6CWbAENU3kVCzxJOyKySA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVx1YqNOja4GCAVApQ05BW5Z6CWbAENU3kVCzxJOyKySA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmem_cache_destroy and mempool_destroy can correctly handle
-null pointer parameter, so there is no need to check if the
-parameter is null before calling kmem_cache_destroy and
-mempool_destroy.
+Em Wed, Jul 08, 2020 at 05:54:47PM -0700, Ian Rogers escreveu:
+> On Fri, Oct 25, 2019 at 3:11 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > It looks like this wasn't merged to tip. Does anything need addressing
+> > to get it merged?
 
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
----
- drivers/scsi/virtio_scsi.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+Finally processed, thanks for the multiple reminders,
 
-diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-index bfec84a..54ac83e 100644
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -1003,14 +1003,10 @@ static int __init init(void)
- 	return 0;
- 
- error:
--	if (virtscsi_cmd_pool) {
--		mempool_destroy(virtscsi_cmd_pool);
--		virtscsi_cmd_pool = NULL;
--	}
--	if (virtscsi_cmd_cache) {
--		kmem_cache_destroy(virtscsi_cmd_cache);
--		virtscsi_cmd_cache = NULL;
--	}
-+	mempool_destroy(virtscsi_cmd_pool);
-+	virtscsi_cmd_pool = NULL;
-+	kmem_cache_destroy(virtscsi_cmd_cache);
-+	virtscsi_cmd_cache = NULL;
- 	return ret;
- }
- 
+- Arnaldo
+
+> > Thanks,
+> > Ian
+> >
+> > On Wed, Aug 7, 2019 at 4:32 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > >
+> > > On Mon, Jul 29, 2019 at 01:57:50PM -0700, Numfor Mbiziwo-Tiapo wrote:
+> > > > Our local MSAN (Memory Sanitizer) build of perf throws a warning
+> > > > that comes from the "dso__disassemble_filename" function in
+> > > > "tools/perf/util/annotate.c" when running perf record.
+> > > >
+> > > > The warning stems from the call to readlink, in which "build_id_path"
+> > > > was being read into "linkname". Since readlink does not null terminate,
+> > > > an uninitialized memory access would later occur when "linkname" is
+> > > > passed into the strstr function. This is simply fixed by null-terminating
+> > > > "linkname" after the call to readlink.
+> > > >
+> > > > To reproduce this warning, build perf by running:
+> > > > make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
+> > > >  -fsanitize-memory-track-origins"
+> > > >
+> > > > (Additionally, llvm might have to be installed and clang might have to
+> > > > be specified as the compiler - export CC=/usr/bin/clang)
+> > > >
+> > > > then running:
+> > > > tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
+> > > >  -i - --stdio
+> > > >
+> > > > Please see the cover letter for why false positive warnings may be
+> > > > generated.
+> > > >
+> > > > Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+> > >
+> > > Acked-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+> 
+> Arnaldo, I think this got overlooked. Thanks,
+> 
+> Ian
+> 
+> > > thanks,
+> > > jirka
+> > >
+> > > > ---
+> > > >  tools/perf/util/annotate.c | 15 +++++++++++----
+> > > >  1 file changed, 11 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> > > > index 70de8f6b3aee..e1b075b52dce 100644
+> > > > --- a/tools/perf/util/annotate.c
+> > > > +++ b/tools/perf/util/annotate.c
+> > > > @@ -1627,6 +1627,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+> > > >       char *build_id_filename;
+> > > >       char *build_id_path = NULL;
+> > > >       char *pos;
+> > > > +     int len;
+> > > >
+> > > >       if (dso->symtab_type == DSO_BINARY_TYPE__KALLSYMS &&
+> > > >           !dso__is_kcore(dso))
+> > > > @@ -1655,10 +1656,16 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+> > > >       if (pos && strlen(pos) < SBUILD_ID_SIZE - 2)
+> > > >               dirname(build_id_path);
+> > > >
+> > > > -     if (dso__is_kcore(dso) ||
+> > > > -         readlink(build_id_path, linkname, sizeof(linkname)) < 0 ||
+> > > > -         strstr(linkname, DSO__NAME_KALLSYMS) ||
+> > > > -         access(filename, R_OK)) {
+> > > > +     if (dso__is_kcore(dso))
+> > > > +             goto fallback;
+> > > > +
+> > > > +     len = readlink(build_id_path, linkname, sizeof(linkname) - 1);
+> > > > +     if (len < 0)
+> > > > +             goto fallback;
+> > > > +
+> > > > +     linkname[len] = '\0';
+> > > > +     if (strstr(linkname, DSO__NAME_KALLSYMS) ||
+> > > > +             access(filename, R_OK)) {
+> > > >  fallback:
+> > > >               /*
+> > > >                * If we don't have build-ids or the build-id file isn't in the
+> > > > --
+> > > > 2.22.0.709.g102302147b-goog
+> > > >
+
 -- 
-1.8.3.1
 
+- Arnaldo
