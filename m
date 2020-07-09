@@ -2,144 +2,132 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622E0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E975020720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F182073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:17:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+3u2bih"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ivX/wcA8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xr1H0has"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgGIHRK (ORCPT
+        id S1726345AbgGIHRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgGIHRJ (ORCPT
+        Thu, 9 Jul 2020 03:17:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33240 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgGIHRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:17:09 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FDB3C061A0B
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 00:17:09 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id u8so508384qvj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 00:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1h9hVyMdDTclBK3/1w4oe9XLN0atp9mtAvhs8SlUBmI=;
-        b=g+3u2bih4uowCA884qHq+VmLkDKONLAf8gzEmX8yKeaHdxWGltwlSrLncUwJqhJcbA
-         nWzP8CRWLWahZbt289cyjsiumve0sm340Wp7dLS6kNpRTG4Wms8XBNggk99fjRXORYGZ
-         L4DHoHTiV2tNcZpivoiB7jYkUkxVgGcvBLw6iwKXgNIj4Wky2BF6tzLD0NRvPU4s5R5V
-         SYT9rOiZbIP6UWUWqcOxR80bh6z2mRqyFLIa0Y5ClV5FWiSg6M/UaLaDKGaiMH6sQ7+a
-         vfJUoUABqMlyiPZZ2cVVV/Wwt1Y1OVThXT4985Qj2AwgGuROs81wzt1SPX3PRSNc1JsG
-         geDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1h9hVyMdDTclBK3/1w4oe9XLN0atp9mtAvhs8SlUBmI=;
-        b=Pp9NahFBXl/elykLFLT8uUnBtQFgzT33y/y4DJubbJOrqG6tcIsN1pyeyGLa+WK/3F
-         JH7P9/LWkze0A0uxiLyYbCojfp6j405sL3Kk2bWcRGFtQ/mdIrN69AtuIkXAHuyWkvb4
-         Lwgx+tpijBshmd2BeC3EwW7qXMfTpSRm77JmTk5VCwmr5ZfjL/gyOIQ6Ih//JHQT0nl1
-         wBqyT48VZzCER8jbEtBzGaFL76lDwLpmVAWRW7wE5sSjAJK+INcRF3XMqyXcxt4DMUWt
-         r+hsUsJ/M8bcJ0tQiF6NMEjvkWQ/rAGNFgpRwJ2f3Xko4WEL34ianFnYKiw0htHbkI/z
-         UtZg==
-X-Gm-Message-State: AOAM533cHClgti0gxncBQahjVZwMorvttQpudErn54JkZVUpe9U9tqr4
-        xeDBMNywc5KYijDl38iNbdnJe97e8VnPU9Mti+k=
-X-Google-Smtp-Source: ABdhPJzAz1NpOlRR93dBItEctK+mP/Znt4rMOYhjdQZltbJbofLUiwAuipdskYLUIwvhTvD3fAb0GDgwvgY6WGjf1ng=
-X-Received: by 2002:a0c:99c5:: with SMTP id y5mr38274997qve.66.1594279028564;
- Thu, 09 Jul 2020 00:17:08 -0700 (PDT)
+        Thu, 9 Jul 2020 03:17:20 -0400
+Date:   Thu, 9 Jul 2020 09:17:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594279037;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6uvYIItZIOK0R4wH3joTqVI6bbknAt5GZqDgVVXvw94=;
+        b=ivX/wcA8yl6+WDr/PSAfeuS1zFMv0eLbo59MePRqPlK2V7NvwFhv0Ro419IEM1gKsPV3XI
+        m9WBXD5kfNaivslg2UKv/BPaPI3g5H+cI8fRYI0YsAeLg+qk1FmdHkPUq8DuwnsLI45Sjo
+        LDpntlgZigKa7o6aSdaGa5ZCnrYg2znt+rPszYEk9HU7XtTEqbGrGc/w1pK2f6O1WCsGGe
+        sc1oJMLUsAHzB718sQgYlMabkOYD7pdaTG7KTrJkBRRWy1KYpEpJPvSiXiFew1l+NZHkVn
+        kDT8e/kbTu6jIvukJ35/Fcd6SGQILl3Okd4MG8OK1ZiRRkmEJJAOgxoQrxDgIQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594279037;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6uvYIItZIOK0R4wH3joTqVI6bbknAt5GZqDgVVXvw94=;
+        b=Xr1H0hash7LO3/io7vz4F1I6IM9WHpheIVNzUMTTxFv2OgsEZceeeIr4kkfcxWgBrGP2xW
+        6g3qguXMUqJekdCA==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+        Mahipal Challa <mahipalreddy2006@gmail.com>,
+        Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: Re: [PATCH v4] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Message-ID: <20200709071714.32m7hatmkr4pk2f4@linutronix.de>
+References: <20200707125210.33256-1-song.bao.hua@hisilicon.com>
+ <20200708145934.4w3qk53mgavyyln7@linutronix.de>
+ <B926444035E5E2439431908E3842AFD2560DE6@DGGEMI525-MBS.china.huawei.com>
 MIME-Version: 1.0
-References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com> <e72709dd-c7e2-ff26-f450-dbd2a719b2e4@suse.cz>
-In-Reply-To: <e72709dd-c7e2-ff26-f450-dbd2a719b2e4@suse.cz>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Thu, 9 Jul 2020 16:17:08 +0900
-Message-ID: <CAAmzW4M5kAFgS_P3D8R-1qM+Gpex1Zu=G7aQC3uAYno4UeKBrg@mail.gmail.com>
-Subject: Re: [PATCH v4 05/11] mm/migrate: clear __GFP_RECLAIM for THP
- allocation for migration
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <B926444035E5E2439431908E3842AFD2560DE6@DGGEMI525-MBS.china.huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 7=EC=9B=94 7=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 9:17, Vl=
-astimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 7/7/20 9:44 AM, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > In mm/migrate.c, THP allocation for migration is called with the provid=
-ed
-> > gfp_mask | GFP_TRANSHUGE. This gfp_mask contains __GFP_RECLAIM and it
-> > would be conflict with the intention of the GFP_TRANSHUGE.
-> >
-> > GFP_TRANSHUGE/GFP_TRANSHUGE_LIGHT is introduced to control the reclaim
-> > behaviour by well defined manner since overhead of THP allocation is
-> > quite large and the whole system could suffer from it. So, they deals
-> > with __GFP_RECLAIM mask deliberately. If gfp_mask contains __GFP_RECLAI=
-M
-> > and uses gfp_mask | GFP_TRANSHUGE(_LIGHT) for THP allocation, it means
-> > that it breaks the purpose of the GFP_TRANSHUGE(_LIGHT).
-> >
-> > This patch fixes this situation by clearing __GFP_RECLAIM in provided
-> > gfp_mask. Note that there are some other THP allocations for migration
-> > and they just uses GFP_TRANSHUGE(_LIGHT) directly. This patch would mak=
-e
-> > all THP allocation for migration consistent.
-> >
-> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > ---
-> >  mm/migrate.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/mm/migrate.c b/mm/migrate.c
-> > index 02b31fe..ecd7615 100644
-> > --- a/mm/migrate.c
-> > +++ b/mm/migrate.c
-> > @@ -1547,6 +1547,11 @@ struct page *new_page_nodemask(struct page *page=
-,
-> >       }
-> >
-> >       if (PageTransHuge(page)) {
-> > +             /*
-> > +              * clear __GFP_RECALIM since GFP_TRANSHUGE is the gfp_mas=
-k
-> > +              * that chooses the reclaim masks deliberately.
-> > +              */
-> > +             gfp_mask &=3D ~__GFP_RECLAIM;
-> >               gfp_mask |=3D GFP_TRANSHUGE;
->
-> In addition to what Michal said...
->
-> The mask is not passed to this function, so I would just redefine it, as =
-is done
-> in the hugetlb case. We probably don't even need the __GFP_RETRY_MAYFAIL =
-for the
-> THP case asi it's just there to prevent OOM kill (per commit 0f55685627d6=
-d ) and
-> the costly order of THP is enough for that.
+On 2020-07-08 21:45:47 [+0000], Song Bao Hua (Barry Song) wrote:
+> > On 2020-07-08 00:52:10 [+1200], Barry Song wrote:
+> > > @@ -127,9 +129,17 @@
+> > > +struct crypto_acomp_ctx {
+> > > +	struct crypto_acomp *acomp;
+> > > +	struct acomp_req *req;
+> > > +	struct crypto_wait wait;
+> > > +	u8 *dstmem;
+> > > +	struct mutex mutex;
+> > > +};
+> > =E2=80=A6
+> > > @@ -1074,12 +1138,32 @@ static int zswap_frontswap_store(unsigned
+> > type, pgoff_t offset,
+> > >  	}
+> > >
+> > >  	/* compress */
+> > > -	dst =3D get_cpu_var(zswap_dstmem);
+> > > -	tfm =3D *get_cpu_ptr(entry->pool->tfm);
+> > > -	src =3D kmap_atomic(page);
+> > > -	ret =3D crypto_comp_compress(tfm, src, PAGE_SIZE, dst, &dlen);
+> > > -	kunmap_atomic(src);
+> > > -	put_cpu_ptr(entry->pool->tfm);
+> > > +	acomp_ctx =3D *this_cpu_ptr(entry->pool->acomp_ctx);
+> > > +
+> > > +	mutex_lock(&acomp_ctx->mutex);
+> > > +
+> > > +	src =3D kmap(page);
+> > > +	dst =3D acomp_ctx->dstmem;
+> >=20
+> > that mutex is per-CPU, per-context. The dstmem pointer is per-CPU. So if
+> > I read this right, you can get preempted after crypto_wait_req() and
+> > another context in this CPU writes its data to the same dstmem and then=
+=E2=80=A6
+> >=20
+>=20
+> This isn't true. Another thread in this cpu will be blocked by the mutex.
+> It is impossible for two threads to write the same dstmem.
+> If thread1 ran on cpu1, it held cpu1's mutex; if another thread wants to =
+run on cpu1, it is blocked.
+> If thread1 ran on cpu1 first, it held cpu1's mutex, then it migrated to c=
+pu2 (with very rare chance)
+> 	a. if another thread wants to run on cpu1, it is blocked;
 
-As I said in another reply, provided __GFP_THISNODE should be handled
-so just redefining it would not work.
+How it is blocked? That "struct crypto_acomp_ctx" is
+"this_cpu_ptr(entry->pool->acomp_ctx)" - which is per-CPU of a pool
+which you can have multiple of. But `dstmem' you have only one per-CPU
+no matter have many pools you have.
+So pool1 on CPU1 uses the same `dstmem' as pool2 on CPU1. But pool1 and
+pool2 on CPU1 use a different mutex for protection of this `dstmem'.
 
-Thanks.
+> Thanks
+> Barry
+
+Sebastian
