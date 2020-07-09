@@ -2,135 +2,128 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 480E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7132FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B75620775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFEE207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:01:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MSo0ZWXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgGISBA (ORCPT
+        id S1727807AbgGISBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 14:01:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgGISA6 (ORCPT
+        Thu, 9 Jul 2020 14:01:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45557 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726755AbgGISBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 14:00:58 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C741C08C5CE;
-        Thu,  9 Jul 2020 11:00:58 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 9C1B42A65F9
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        peterz@infradead.org
-Cc:     krisman@collabora.com, kernel@collabora.com,
-        andrealmeid@collabora.com, dvhart@infradead.org, mingo@redhat.com,
-        pgriffais@valvesoftware.com, fweimer@redhat.com,
-        libc-alpha@sourceware.org, malteskarupke@web.de,
-        linux-api@vger.kernel.org, arnd@arndb.de
-Subject: [RFC v2 4/4] selftests: futex: Add futex2 wouldblock test
-Date:   Thu,  9 Jul 2020 14:59:21 -0300
-Message-Id: <20200709175921.211387-5-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200709175921.211387-1-andrealmeid@collabora.com>
-References: <20200709175921.211387-1-andrealmeid@collabora.com>
+        Thu, 9 Jul 2020 14:01:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594317669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P+Smn+qbrEaL68M0kp1IAVljg+f544E0Mx1LSyAW08k=;
+        b=MSo0ZWXIPQ/g88bBiAPHs3VG/e5d7SbJkHfwnIWkLHD8/HURjbETTO4oHASH4k9FD6s57+
+        uZM6eEaSi+V/AGAQajW2jBEM+J7SMtvXVxuGZnXthyz/WEZypo41KArgVoI4lK43sCqFez
+        wVVE5wfmuouaUiOA+ZxqtBbOPJ2BUTg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-V4wNcWrdMKuJuKhkFC94dw-1; Thu, 09 Jul 2020 14:01:08 -0400
+X-MC-Unique: V4wNcWrdMKuJuKhkFC94dw-1
+Received: by mail-wr1-f69.google.com with SMTP id j16so2672436wrw.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 11:01:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=P+Smn+qbrEaL68M0kp1IAVljg+f544E0Mx1LSyAW08k=;
+        b=ZF+8+ln1KHpdhURs++ub/zRz80OTcFTk8aqmf/+MxEwgVgCggxoCJq3V2gwgXMfhgV
+         8TSKHkTmlYKu3SRirbAOExnm7ddktVRS4f48VjiOTIEi+yGFo9j+nn6P5xBnkmV8ZmDw
+         MDCMabaYd1kqcauauwIuZG5v3PLcdYILpXMaKsBFP4VWmvTCJXlRsFC51qGbA7qDwnWQ
+         wVTp+B3vChpeTl+AUJ062wWaeJkpDIor5ql+QJqXfAGNqaGKCcSKnAfyD48rxmhprmxb
+         ZwIJkpAlFH1axqOQzMng4+jK6ikR6ah9T2Xq9skfMhRUNZHBg/eZyB07wpIlHi69pXrw
+         psEQ==
+X-Gm-Message-State: AOAM531tYUh2Ii5Mt4/NqnzRDjwYUt6CdS6+pLyGP5AAdEGDDpIvnuGO
+        3mGcv/tNMc+w9A3q68hNicXdcuqHJvVoUcwaJpp/Dk0oWjxz8KzfArHhO+5yWvV6WsDZ5s7z1R2
+        0a3XZ5fcFt+2nNjzDaWzxmJlR
+X-Received: by 2002:a5d:5151:: with SMTP id u17mr34275351wrt.154.1594317666624;
+        Thu, 09 Jul 2020 11:01:06 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx3GYXLHf1eEB36ksMDjvbW000ZwH159y2USM6sITXUNHpZ8wwObz8hqscS/TMYpvSXCY1m9A==
+X-Received: by 2002:a5d:5151:: with SMTP id u17mr34275321wrt.154.1594317666393;
+        Thu, 09 Jul 2020 11:01:06 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.gmail.com with ESMTPSA id h5sm7296815wrc.97.2020.07.09.11.01.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 11:01:05 -0700 (PDT)
+Subject: Re: [PATCH v3 0/9] KVM: nSVM: fixes for CR3/MMU switch upon nested
+ guest entry/exit
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        linux-kernel@vger.kernel.org
+References: <20200709145358.1560330-1-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8bc0fbf7-98a2-3e10-37df-aaf19e4d218d@redhat.com>
+Date:   Thu, 9 Jul 2020 20:01:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709145358.1560330-1-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adapt existing futex wait wouldblock file to test the same mechanism for
-futex2.
+On 09/07/20 16:53, Vitaly Kuznetsov wrote:
+> This is a successor of "[PATCH v2 0/3] KVM: nSVM: fix #TF from CR3 switch
+> when entering guest" and "[PATCH] KVM: x86: drop erroneous mmu_check_root()
+> from fast_pgd_switch()".
+> 
+> The snowball is growing fast! It all started with an intention to fix
+> the particular 'tripple fault' issue (now fixed by PATCH7) but now we
+> also get rid of unconditional kvm_mmu_reset_context() upon nested guest
+> entry/exit and make the code resemble nVMX. There is still a huge room
+> for further improvement (proper error propagation, removing unconditional
+> MMU sync/TLB flush,...) but at least we're making some progress.
+> 
+> Tested with kvm selftests/kvm-unit-tests and by running nested Hyper-V
+> on KVM. The series doesn't seem to introduce any new issues.
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
- .../futex/functional/futex_wait_wouldblock.c  | 33 ++++++++++++++++---
- 1 file changed, 29 insertions(+), 4 deletions(-)
+Looks like a v4 is needed but we're converging at least, it won't have
+27 patches. :)
 
-diff --git a/tools/testing/selftests/futex/functional/futex_wait_wouldblock.c b/tools/testing/selftests/futex/functional/futex_wait_wouldblock.c
-index 0ae390ff8164..8187f0754cd2 100644
---- a/tools/testing/selftests/futex/functional/futex_wait_wouldblock.c
-+++ b/tools/testing/selftests/futex/functional/futex_wait_wouldblock.c
-@@ -12,6 +12,7 @@
-  *
-  * HISTORY
-  *      2009-Nov-14: Initial version by Gowrishankar <gowrishankar.m@in.ibm.com>
-+ *      2020-Jul-9: Add futex2 test by André <andrealmeid@collabora.com>
-  *
-  *****************************************************************************/
- 
-@@ -21,7 +22,7 @@
- #include <stdlib.h>
- #include <string.h>
- #include <time.h>
--#include "futextest.h"
-+#include "futex2test.h"
- #include "logging.h"
- 
- #define TEST_NAME "futex-wait-wouldblock"
-@@ -39,6 +40,7 @@ void usage(char *prog)
- int main(int argc, char *argv[])
- {
- 	struct timespec to = {.tv_sec = 0, .tv_nsec = timeout_ns};
-+	struct timespec64 to64;
- 	futex_t f1 = FUTEX_INITIALIZER;
- 	int res, ret = RET_PASS;
- 	int c;
-@@ -61,18 +63,41 @@ int main(int argc, char *argv[])
- 	}
- 
- 	ksft_print_header();
--	ksft_set_plan(1);
-+	ksft_set_plan(2);
- 	ksft_print_msg("%s: Test the unexpected futex value in FUTEX_WAIT\n",
- 	       basename(argv[0]));
- 
- 	info("Calling futex_wait on f1: %u @ %p with val=%u\n", f1, &f1, f1+1);
- 	res = futex_wait(&f1, f1+1, &to, FUTEX_PRIVATE_FLAG);
- 	if (!res || errno != EWOULDBLOCK) {
--		fail("futex_wait returned: %d %s\n",
-+		ksft_test_result_fail("futex_wait returned: %d %s\n",
- 		     res ? errno : res, res ? strerror(errno) : "");
- 		ret = RET_FAIL;
-+	} else {
-+		ksft_test_result_pass("futex_wait wouldblock succeeds\n");
- 	}
- 
--	print_result(TEST_NAME, ret);
-+	/* setting absolute timeout for futex2 */
-+	if (gettime64(CLOCK_MONOTONIC, &to64))
-+		error("gettime64 failed\n", errno);
-+
-+	to64.tv_nsec += timeout_ns;
-+
-+	if (to64.tv_nsec >= 1000000000) {
-+		to64.tv_sec++;
-+		to64.tv_nsec -= 1000000000;
-+	}
-+
-+	info("Calling futex2_wait on f1: %u @ %p with val=%u\n", f1, &f1, f1+1);
-+	res = futex2_wait(&f1, f1+1, FUTEX_PRIVATE_FLAG | FUTEX_32, &to64);
-+	if (!res || errno != EWOULDBLOCK) {
-+		ksft_test_result_fail("futex2_wait returned: %d %s\n",
-+		     res ? errno : res, res ? strerror(errno) : "");
-+		ret = RET_FAIL;
-+	} else {
-+		ksft_test_result_pass("futex2_wait wouldblock succeeds\n");
-+	}
-+
-+	ksft_print_cnts();
- 	return ret;
- }
--- 
-2.27.0
+> Vitaly Kuznetsov (9):
+>   KVM: nSVM: split kvm_init_shadow_npt_mmu() from kvm_init_shadow_mmu()
+>   KVM: nSVM: stop dereferencing vcpu->arch.mmu to get the context in
+>     kvm_init_shadow{,_npt}_mmu()
+>   KVM: nSVM: reset nested_run_pending upon nested_svm_vmrun_msrpm()
+>     failure
+>   KVM: nSVM: prepare to handle errors from enter_svm_guest_mode()
+>   KVM: nSVM: introduce nested_svm_load_cr3()
+>   KVM: nSVM: move kvm_set_cr3() after nested_svm_uninit_mmu_context()
+>   KVM: nSVM: implement nested_svm_load_cr3() and use it for host->guest
+>     switch
+>   KVM: nSVM: use nested_svm_load_cr3() on guest->host switch
+>   KVM: x86: drop superfluous mmu_check_root() from fast_pgd_switch()
+> 
+>  arch/x86/kvm/mmu.h        |   3 +-
+>  arch/x86/kvm/mmu/mmu.c    |  39 ++++++++++----
+>  arch/x86/kvm/svm/nested.c | 108 ++++++++++++++++++++++++++++----------
+>  arch/x86/kvm/svm/svm.c    |   6 ++-
+>  arch/x86/kvm/svm/svm.h    |   4 +-
+>  5 files changed, 116 insertions(+), 44 deletions(-)
+> 
 
