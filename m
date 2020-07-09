@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26316C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D793C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01D1B207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F932207FB
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgGIPWv (ORCPT
+        id S1728412AbgGIPW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:22:51 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:49467 "EHLO
+        Thu, 9 Jul 2020 11:22:56 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:36951 "EHLO
         relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728258AbgGIPWs (ORCPT
+        with ESMTP id S1728258AbgGIPWy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:22:48 -0400
+        Thu, 9 Jul 2020 11:22:54 -0400
 X-Originating-IP: 195.189.32.242
 Received: from pc.localdomain (unknown [195.189.32.242])
         (Authenticated sender: contact@artur-rojek.eu)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id D6818C0013;
-        Thu,  9 Jul 2020 15:22:44 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 433CAC000B;
+        Thu,  9 Jul 2020 15:22:50 +0000 (UTC)
 From:   Artur Rojek <contact@artur-rojek.eu>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,9 +37,9 @@ Cc:     Heiko Stuebner <heiko@sntech.de>,
         Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
         devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v8 3/6] IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
-Date:   Thu,  9 Jul 2020 17:21:57 +0200
-Message-Id: <20200709152200.10039-4-contact@artur-rojek.eu>
+Subject: [PATCH v8 5/6] dt-bindings: iio/adc: Add touchscreen idx for JZ47xx SoC ADC
+Date:   Thu,  9 Jul 2020 17:21:59 +0200
+Message-Id: <20200709152200.10039-6-contact@artur-rojek.eu>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200709152200.10039-1-contact@artur-rojek.eu>
 References: <20200709152200.10039-1-contact@artur-rojek.eu>
@@ -50,8 +50,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide an of_xlate callback in order to retrieve the correct channel
-specifier index from the IIO channels array.
+Introduce support for touchscreen channels found in JZ47xx SoCs.
 
 Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
 Tested-by: Paul Cercueil <paul@crapouillou.net>
@@ -59,45 +58,29 @@ Tested-by: Paul Cercueil <paul@crapouillou.net>
 
  Changes:
 
- v2-v8: no change
+ v2-v7: no change
 
- drivers/iio/adc/ingenic-adc.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ v8: add XN/YN and XD/YD channels
 
-diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
-index c1946a9f1cca..89019fb59d48 100644
---- a/drivers/iio/adc/ingenic-adc.c
-+++ b/drivers/iio/adc/ingenic-adc.c
-@@ -400,6 +400,21 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
- 	}
- }
+ include/dt-bindings/iio/adc/ingenic,adc.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/include/dt-bindings/iio/adc/ingenic,adc.h b/include/dt-bindings/iio/adc/ingenic,adc.h
+index 42f871ab3272..4627a00e369e 100644
+--- a/include/dt-bindings/iio/adc/ingenic,adc.h
++++ b/include/dt-bindings/iio/adc/ingenic,adc.h
+@@ -7,5 +7,11 @@
+ #define INGENIC_ADC_AUX		0
+ #define INGENIC_ADC_BATTERY	1
+ #define INGENIC_ADC_AUX2	2
++#define INGENIC_ADC_TOUCH_XP	3
++#define INGENIC_ADC_TOUCH_YP	4
++#define INGENIC_ADC_TOUCH_XN	5
++#define INGENIC_ADC_TOUCH_YN	6
++#define INGENIC_ADC_TOUCH_XD	7
++#define INGENIC_ADC_TOUCH_YD	8
  
-+static int ingenic_adc_of_xlate(struct iio_dev *iio_dev,
-+				const struct of_phandle_args *iiospec)
-+{
-+	int i;
-+
-+	if (!iiospec->args_count)
-+		return -EINVAL;
-+
-+	for (i = 0; i < iio_dev->num_channels; ++i)
-+		if (iio_dev->channels[i].channel == iiospec->args[0])
-+			return i;
-+
-+	return -EINVAL;
-+}
-+
- static void ingenic_adc_clk_cleanup(void *data)
- {
- 	clk_unprepare(data);
-@@ -409,6 +424,7 @@ static const struct iio_info ingenic_adc_info = {
- 	.write_raw = ingenic_adc_write_raw,
- 	.read_raw = ingenic_adc_read_raw,
- 	.read_avail = ingenic_adc_read_avail,
-+	.of_xlate = ingenic_adc_of_xlate,
- };
- 
- static const struct iio_chan_spec ingenic_channels[] = {
+ #endif
 -- 
 2.27.0
 
