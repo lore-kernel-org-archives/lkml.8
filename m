@@ -2,163 +2,110 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8968C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46408C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16C9207BC
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2183820672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgGIIjw (ORCPT
+        id S1726757AbgGIIk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:39:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49138 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726247AbgGIIju (ORCPT
+        Thu, 9 Jul 2020 04:40:26 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:44238 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726313AbgGIIkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:39:50 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0698ab4u111432;
-        Thu, 9 Jul 2020 04:39:44 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 325r2caevj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 04:39:44 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0698akDJ112286;
-        Thu, 9 Jul 2020 04:39:43 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 325r2caerd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 04:39:42 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0698a3Dt031648;
-        Thu, 9 Jul 2020 08:39:24 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 325k1vgm6b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 08:39:24 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0698dLdR56164776
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jul 2020 08:39:21 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8869D42056;
-        Thu,  9 Jul 2020 08:39:21 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6F5642061;
-        Thu,  9 Jul 2020 08:39:20 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.34.67])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jul 2020 08:39:20 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v5 0/2] s390: virtio: let arch validate VIRTIO features
-Date:   Thu,  9 Jul 2020 10:39:17 +0200
-Message-Id: <1594283959-13742-1-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_04:2020-07-08,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxlogscore=975
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007090064
+        Thu, 9 Jul 2020 04:40:23 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0U2BnT9d_1594284016;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U2BnT9d_1594284016)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 09 Jul 2020 16:40:17 +0800
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+To:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        dhowells@redhat.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, jmorris@namei.org, serge@hallyn.com,
+        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        zohar@linux.ibm.com, vt@altlinux.org, gilad@benyossef.com,
+        pvanleeuwen@rambus.com, zhang.jia@linux.alibaba.com
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, tianjia.zhang@linux.alibaba.com
+Subject: [PATCH v5 1/8] crypto: sm3 - export crypto_sm3_final function
+Date:   Thu,  9 Jul 2020 16:40:08 +0800
+Message-Id: <20200709084015.21886-2-tianjia.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200709084015.21886-1-tianjia.zhang@linux.alibaba.com>
+References: <20200709084015.21886-1-tianjia.zhang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Both crypto_sm3_update and crypto_sm3_finup have been
+exported, exporting crypto_sm3_final, to avoid having to
+use crypto_sm3_finup(desc, NULL, 0, dgst) to calculate
+the hash in some cases.
 
-The goal of the series is to give a chance to the architecture
-to validate VIRTIO device features.
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+---
+ crypto/sm3_generic.c | 7 ++++---
+ include/crypto/sm3.h | 2 ++
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-in this respin:
-
-1) I kept removed the ack from Jason as I reworked the patch
-   @Jason, the nature and goal of the patch did not really changed
-           please can I get back your acked-by with these changes?
-
-2) I suppressed the unnecessary verbosity of the architecture
-   specific patch
-
-3) put back the arch specific code inside arch/s390/mm/init.c
-   after offline discussion with Christian.
-
-Regards,
-Pierre
-
-Pierre Morel (2):
-  virtio: let arch validate VIRTIO features
-  s390: virtio: PV needs VIRTIO I/O device protection
-
- arch/s390/mm/init.c           | 27 +++++++++++++++++++++++++++
- drivers/virtio/virtio.c       | 19 +++++++++++++++++++
- include/linux/virtio_config.h |  1 +
- 3 files changed, 47 insertions(+)
-
+diff --git a/crypto/sm3_generic.c b/crypto/sm3_generic.c
+index 3468975215ca..193c4584bd00 100644
+--- a/crypto/sm3_generic.c
++++ b/crypto/sm3_generic.c
+@@ -149,17 +149,18 @@ int crypto_sm3_update(struct shash_desc *desc, const u8 *data,
+ }
+ EXPORT_SYMBOL(crypto_sm3_update);
+ 
+-static int sm3_final(struct shash_desc *desc, u8 *out)
++int crypto_sm3_final(struct shash_desc *desc, u8 *out)
+ {
+ 	sm3_base_do_finalize(desc, sm3_generic_block_fn);
+ 	return sm3_base_finish(desc, out);
+ }
++EXPORT_SYMBOL(crypto_sm3_final);
+ 
+ int crypto_sm3_finup(struct shash_desc *desc, const u8 *data,
+ 			unsigned int len, u8 *hash)
+ {
+ 	sm3_base_do_update(desc, data, len, sm3_generic_block_fn);
+-	return sm3_final(desc, hash);
++	return crypto_sm3_final(desc, hash);
+ }
+ EXPORT_SYMBOL(crypto_sm3_finup);
+ 
+@@ -167,7 +168,7 @@ static struct shash_alg sm3_alg = {
+ 	.digestsize	=	SM3_DIGEST_SIZE,
+ 	.init		=	sm3_base_init,
+ 	.update		=	crypto_sm3_update,
+-	.final		=	sm3_final,
++	.final		=	crypto_sm3_final,
+ 	.finup		=	crypto_sm3_finup,
+ 	.descsize	=	sizeof(struct sm3_state),
+ 	.base		=	{
+diff --git a/include/crypto/sm3.h b/include/crypto/sm3.h
+index 1438942dc773..42ea21289ba9 100644
+--- a/include/crypto/sm3.h
++++ b/include/crypto/sm3.h
+@@ -35,6 +35,8 @@ struct shash_desc;
+ extern int crypto_sm3_update(struct shash_desc *desc, const u8 *data,
+ 			      unsigned int len);
+ 
++extern int crypto_sm3_final(struct shash_desc *desc, u8 *out);
++
+ extern int crypto_sm3_finup(struct shash_desc *desc, const u8 *data,
+ 			     unsigned int len, u8 *hash);
+ #endif
 -- 
-2.25.1
-
-Changelog
-
-to v5:
-
-- return directly from S390 arch_validate_virtio_features()
-  when the guest is not protected.
-  (Connie)
-
-- Somme rewording
-  (Connie, Michael)
-
-- moved back code from arch/s390/ ...kernel/uv.c to ...mm/init.c
-  (Christian)
-
-to v4:
-
-- separate virtio and arch code
-  (Pierre)
-
-- moved code from arch/s390/mm/init.c to arch/s390/kernel/uv.c
-  (as interpreted from Heiko's comment)
-
-- moved validation inside the arch code
-  (Connie)
-
-- moved the call to arch validation before VIRTIO_F_1 test
-  (Michael)
-
-to v3:
-
-- add warning
-  (Connie, Christian)
-
-- add comment
-  (Connie)
-
-- change hook name
-  (Halil, Connie)
-
-to v2:
-
-- put the test in virtio_finalize_features()
-  (Connie)
-
-- put the test inside VIRTIO core
-  (Jason)
-
-- pass a virtio device as parameter
-  (Halil)
-
+2.17.1
 
