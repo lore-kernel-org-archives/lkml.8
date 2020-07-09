@@ -4,25 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE41C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A45E6207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E7F207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgGIQTf (ORCPT
+        id S1728283AbgGIQTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:19:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39104 "EHLO mx2.suse.de"
+        Thu, 9 Jul 2020 12:19:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39146 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726357AbgGIQTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:19:33 -0400
+        id S1728132AbgGIQTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:19:36 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7ADF6AEC4;
-        Thu,  9 Jul 2020 16:19:32 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id EA3F0AEC8;
+        Thu,  9 Jul 2020 16:19:33 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     hch@lst.de, Robin Murphy <robin.murphy@arm.com>,
         David Rientjes <rientjes@google.com>,
@@ -31,9 +32,9 @@ To:     hch@lst.de, Robin Murphy <robin.murphy@arm.com>,
 Cc:     linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] dma-direct: Provide function to check physical memory area validity
-Date:   Thu,  9 Jul 2020 18:19:01 +0200
-Message-Id: <20200709161903.26229-2-nsaenzjulienne@suse.de>
+Subject: [PATCH 3/4] dma-pool: Introduce dma_guess_pool()
+Date:   Thu,  9 Jul 2020 18:19:03 +0200
+Message-Id: <20200709161903.26229-4-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200709161903.26229-1-nsaenzjulienne@suse.de>
 References: <20200709161903.26229-1-nsaenzjulienne@suse.de>
@@ -44,40 +45,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_coherent_ok() checks if a physical memory area fits a device's DMA
-constraints.
+dma-pool's dev_to_pool() creates the false impression that there is a
+way to grantee a mapping between a device's DMA constraints and an
+atomic pool. It tuns out it's just a guess, and the device might need to
+use an atomic pool containing memory from a 'safer' (or lower) memory
+zone.
+
+To help mitigate this, introduce dma_guess_pool() which can be fed a
+device's DMA constraints or an atomic pool already known to be faulty in
+order for it to provide a better guess at which pool to use.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- include/linux/dma-direct.h | 1 +
- kernel/dma/direct.c        | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ kernel/dma/pool.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index cdfa400f89b3..cb23a8305132 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -69,6 +69,7 @@ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
- u64 dma_direct_get_required_mask(struct device *dev);
- gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- 				  u64 *phys_mask);
-+bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size);
- void *dma_direct_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
- 		gfp_t gfp, unsigned long attrs);
- void dma_direct_free(struct device *dev, size_t size, void *cpu_addr,
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 93f578a8e613..4de864cacd22 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -70,7 +70,7 @@ gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- 	return 0;
+diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+index 7363640fc91c..3d518de07617 100644
+--- a/kernel/dma/pool.c
++++ b/kernel/dma/pool.c
+@@ -203,7 +203,7 @@ static int __init dma_atomic_pool_init(void)
+ }
+ postcore_initcall(dma_atomic_pool_init);
+ 
+-static inline struct gen_pool *dev_to_pool(struct device *dev)
++static inline struct gen_pool *dma_guess_pool_from_device(struct device *dev)
+ {
+ 	u64 phys_mask;
+ 	gfp_t gfp;
+@@ -217,10 +217,30 @@ static inline struct gen_pool *dev_to_pool(struct device *dev)
+ 	return atomic_pool_kernel;
  }
  
--static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
-+bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
++static inline struct gen_pool *dma_get_safer_pool(struct gen_pool *bad_pool)
++{
++	if (bad_pool == atomic_pool_kernel)
++		return atomic_pool_dma32 ? : atomic_pool_dma;
++
++	if (bad_pool == atomic_pool_dma32)
++		return atomic_pool_dma;
++
++	return NULL;
++}
++
++static inline struct gen_pool *dma_guess_pool(struct device *dev,
++					      struct gen_pool *bad_pool)
++{
++	if (bad_pool)
++		return dma_get_safer_pool(bad_pool);
++
++	return dma_guess_pool_from_device(dev);
++}
++
+ void *dma_alloc_from_pool(struct device *dev, size_t size,
+ 			  struct page **ret_page, gfp_t flags)
  {
- 	return phys_to_dma_direct(dev, phys) + size - 1 <=
- 			min_not_zero(dev->coherent_dma_mask, dev->bus_dma_limit);
+-	struct gen_pool *pool = dev_to_pool(dev);
++	struct gen_pool *pool = dma_guess_pool(dev, NULL);
+ 	unsigned long val;
+ 	void *ptr = NULL;
+ 
+@@ -245,7 +265,7 @@ void *dma_alloc_from_pool(struct device *dev, size_t size,
+ 
+ bool dma_free_from_pool(struct device *dev, void *start, size_t size)
+ {
+-	struct gen_pool *pool = dev_to_pool(dev);
++	struct gen_pool *pool = dma_guess_pool(dev, NULL);
+ 
+ 	if (!pool || !gen_pool_has_addr(pool, (unsigned long)start, size))
+ 		return false;
 -- 
 2.27.0
 
