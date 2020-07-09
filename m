@@ -2,126 +2,100 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE97C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4413920767
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B68E0207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:54:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WkTWta+y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dgbeH73g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgGIOwF (ORCPT
+        id S1727124AbgGIOyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgGIOwB (ORCPT
+        Thu, 9 Jul 2020 10:54:09 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55232 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726475AbgGIOyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:52:01 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439CCC08E6DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 07:52:01 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p3so1087403pgh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 07:52:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wCNwMOLhre6TIcq+xE46mgH66EUQUlkzmi0iFanIr+c=;
-        b=WkTWta+ygkvsjDeZrol+0SHhzLZKtwtnb673F6gAaZMkqleJ8hiEXTNVtZz0D5wm35
-         HIiDkEuL8lED8JHA1IRt2pWRlS0BU4poa+UoVJ9MFyPpuYrBGbwLf3DtpNv0iflVbEyW
-         RL/AP0progn0ni332mJbpS8NZX0+9QA5viaQI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wCNwMOLhre6TIcq+xE46mgH66EUQUlkzmi0iFanIr+c=;
-        b=ihUnDDxSwFAJpzmdZaVT5Mc7/h2OVFuMwriwaYWoJ8b7/vq8uHmYvbb/xtl5NfwHz9
-         i7GlTEcLfaO+ZTgZ1MwWYbWeRMoLEPHl6DkdDrMoWSuPo2zwvaPb0/xPbQUcfkdQ5pzS
-         pz7gheDKm8XlCZcgKEdUmFuLGI03ODt38N8UEJMJaAUSUXSeiz2UxqLBEOvvBJHOt2Gh
-         NP+1ntcQVxYeCxTgdihNp/ocLCFV4Ca2MDtmvrnswjyazYSW290kMRQUxTGutGVXKVdS
-         wgF8keNUZSWyzqTLr7twT2Ygj7YP+5yeiY/FwwTdncvlXc3uanZuN8QHSt5+jdZQ5TkO
-         t50w==
-X-Gm-Message-State: AOAM533PUiEyJ5C2+KPlOpsQUzzSFJc3CVMXmimF0fkazRCtEj6A/9Nt
-        jbnUcVDE4IjUzZZw2mx8QiTdfw==
-X-Google-Smtp-Source: ABdhPJxldIWJwLmpIX2peiSkmv54/xjNeufkBsdu52lnXuDQk24y73KFZqffxuh+HiL7VvA/bCniyg==
-X-Received: by 2002:aa7:8ac3:: with SMTP id b3mr61856209pfd.45.1594306320783;
-        Thu, 09 Jul 2020 07:52:00 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id m1sm2791322pjy.0.2020.07.09.07.51.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 07:52:00 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
-        ctheegal@codeaurora.org, mkshah@codeaurora.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        akashast@codeaurora.org, georgi.djakov@linaro.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Mukesh Kumar Savaliya <msavaliy@codeaurora.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: [PATCH v2 2/2] spi: spi-qcom-qspi: Set an autosuspend delay of 250 ms
-Date:   Thu,  9 Jul 2020 07:51:45 -0700
-Message-Id: <20200709075113.v2.2.I3c56d655737c89bd9b766567a04b0854db1a4152@changeid>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-In-Reply-To: <20200709145145.4055619-1-dianders@chromium.org>
-References: <20200709145145.4055619-1-dianders@chromium.org>
+        Thu, 9 Jul 2020 10:54:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594306447;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=h49iUghddx6q/28Q3GpO3NfUnwfKQascXywErp2c0+8=;
+        b=dgbeH73gAd1T9wAGptB5rKeU3K6M3CytHccI1PACMX9SH9tvn+obROtUp/Z5GV5W5mQH2c
+        d68AnLno8tkhD4OWL/yimLXvLIJOIjk+eXdcgVTSmuUazcvIRymACPhhJyeMTOhPB5Ky/r
+        1XqgXrHrtnswlvrBO/EUtJbtmwFZG9I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-92-lKFlz2d7PPKoAmMNMXLf5w-1; Thu, 09 Jul 2020 10:54:06 -0400
+X-MC-Unique: lKFlz2d7PPKoAmMNMXLf5w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8EC18005B0;
+        Thu,  9 Jul 2020 14:54:04 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 01C1E6106A;
+        Thu,  9 Jul 2020 14:53:59 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/9] KVM: nSVM: fixes for CR3/MMU switch upon nested guest entry/exit
+Date:   Thu,  9 Jul 2020 16:53:49 +0200
+Message-Id: <20200709145358.1560330-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit cff80645d6d3 ("spi: spi-qcom-qspi: Add interconnect support")
-the spi_geni_runtime_suspend() and spi_geni_runtime_resume()
-became a bit slower.  Measuring on my hardware I see numbers in the
-hundreds of microseconds now.
+This is a successor of "[PATCH v2 0/3] KVM: nSVM: fix #TF from CR3 switch
+when entering guest" and "[PATCH] KVM: x86: drop erroneous mmu_check_root()
+from fast_pgd_switch()".
 
-Let's use autosuspend to help avoid some of the overhead.  Now if
-we're doing a bunch of transfers we won't need to be constantly
-chruning.
+The snowball is growing fast! It all started with an intention to fix
+the particular 'tripple fault' issue (now fixed by PATCH7) but now we
+also get rid of unconditional kvm_mmu_reset_context() upon nested guest
+entry/exit and make the code resemble nVMX. There is still a huge room
+for further improvement (proper error propagation, removing unconditional
+MMU sync/TLB flush,...) but at least we're making some progress.
 
-The number 250 ms for the autosuspend delay was picked a bit
-arbitrarily, so if someone has measurements showing a better value we
-could easily change this.
+Tested with kvm selftests/kvm-unit-tests and by running nested Hyper-V
+on KVM. The series doesn't seem to introduce any new issues.
 
-Fixes: cff80645d6d3 ("spi: spi-qcom-qspi: Add interconnect support")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-Tested-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Mukesh Kumar Savaliya <msavaliy@codeaurora.org>
----
-This patch could go through the SPI tree or land in the Qualcomm tree.
-The patch it Fixes is currently in the Qualcomm tree so if it lands in
-the main SPI tree there'd be a bit of a perf regression in the
-Qualcomm tree until things merge together in mainline.
+Vitaly Kuznetsov (9):
+  KVM: nSVM: split kvm_init_shadow_npt_mmu() from kvm_init_shadow_mmu()
+  KVM: nSVM: stop dereferencing vcpu->arch.mmu to get the context in
+    kvm_init_shadow{,_npt}_mmu()
+  KVM: nSVM: reset nested_run_pending upon nested_svm_vmrun_msrpm()
+    failure
+  KVM: nSVM: prepare to handle errors from enter_svm_guest_mode()
+  KVM: nSVM: introduce nested_svm_load_cr3()
+  KVM: nSVM: move kvm_set_cr3() after nested_svm_uninit_mmu_context()
+  KVM: nSVM: implement nested_svm_load_cr3() and use it for host->guest
+    switch
+  KVM: nSVM: use nested_svm_load_cr3() on guest->host switch
+  KVM: x86: drop superfluous mmu_check_root() from fast_pgd_switch()
 
-Changes in v2: None
+ arch/x86/kvm/mmu.h        |   3 +-
+ arch/x86/kvm/mmu/mmu.c    |  39 ++++++++++----
+ arch/x86/kvm/svm/nested.c | 108 ++++++++++++++++++++++++++++----------
+ arch/x86/kvm/svm/svm.c    |   6 ++-
+ arch/x86/kvm/svm/svm.h    |   4 +-
+ 5 files changed, 116 insertions(+), 44 deletions(-)
 
- drivers/spi/spi-qcom-qspi.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
-index 8fedc605ab7f..b8857a97f40a 100644
---- a/drivers/spi/spi-qcom-qspi.c
-+++ b/drivers/spi/spi-qcom-qspi.c
-@@ -553,6 +553,8 @@ static int qcom_qspi_probe(struct platform_device *pdev)
- 		goto exit_probe_master_put;
- 	}
- 
-+	pm_runtime_use_autosuspend(dev);
-+	pm_runtime_set_autosuspend_delay(dev, 250);
- 	pm_runtime_enable(dev);
- 
- 	ret = spi_register_master(master);
 -- 
-2.27.0.383.g050319c2ae-goog
+2.25.4
 
