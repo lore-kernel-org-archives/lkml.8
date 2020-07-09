@@ -2,155 +2,125 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE92EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C81C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2AE20708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD402074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfE8rgv9"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="cEsrczv/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbgGIN4T (ORCPT
+        id S1727888AbgGIN6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:56:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41582 "EHLO
+        Thu, 9 Jul 2020 09:58:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgGIN4S (ORCPT
+        with ESMTP id S1726729AbgGIN6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:56:18 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E53CFC08C5CE;
-        Thu,  9 Jul 2020 06:56:18 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d4so1018552pgk.4;
-        Thu, 09 Jul 2020 06:56:18 -0700 (PDT)
+        Thu, 9 Jul 2020 09:58:07 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF21EC08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:58:07 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id e64so2359529iof.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:58:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h558bNdz+ALdoIojIxtZwctE+fRhBkDe5PAZGaAvP6U=;
-        b=gfE8rgv9qIBnyKW/75JmtNyFErM6yZ/5v1BNZp17ZRVhmLS6VD6T/MsryG9qTXczSg
-         LyphMEP2M7vaMSN6luQGosY5Y6sXO3rhFBUK9iJZKMygJafb8Ob+qKyTOmiW9CQgGhIx
-         cKizsEU/JGEFzrxuZ2Zsg8FTM2r3O1Arhx7EwyPNQSsXeYr7c8+wzYKlV6i61VOgv7n9
-         A4O2EdKUzmOtRTxMCEa6l7Bz9UWSPEPS1TShhwyr0e++5w3WK4697xaqh2Q4ae7du9Rz
-         18mRIuv/+m/kwjDSupZ5ykxqyU+y5C/f3QaxcsOknGEnZ6iiTeWa7vLNFKAP7XkvU50B
-         cPxw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K1J6vHRKQNut7E/ykKpZDEQEYTSIWHWf2BiyemlGh+0=;
+        b=cEsrczv/wMmZdKUu1QVtCZtuKtgrPWO86Etf19dvSEzgyJujKDalDgMnt7XnCfwAfH
+         TKLF9QfYqstM1U3BQHxjKHyavzHGdQvsnFaYDfLmcGd0rmWmWscTtrhHJxwBLksLtHq8
+         E4n6fZdF7VqGKy3Vz+UncPL0dmZtLUTCmlXxyuzLEcxVkrnKLZ8Izg+wadh4WPvHWaDT
+         m5nxfUhqrAnAh+MAxEfiLO6M+vfH4IgENELQ+DPQUw8g2JsPdNv6/wJOMsctqFnnsTX9
+         K4uqUzht1jivlSFEhs2Msd92F5vJBburQCgTq2XiWsQferxTvKLbzZzEAKbNbjhV7S1G
+         eHhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=h558bNdz+ALdoIojIxtZwctE+fRhBkDe5PAZGaAvP6U=;
-        b=QSH3DTVqq6RuwMsHwC8mEn6Xu5uomKXtlSlIN1sxA9htjaQrta7F8WslWsSy/XqjFN
-         TELAbT7AS6WTUT4gnjhh6612s66aRYUbf5YUbb6LSeUPbQteFcxc7+mEsA6jv1Co8yiz
-         VFFm//RAnB7SG4aAm+eRCdvmjWxqR4uYC2Hya9n0ivQrKrx/ogy99KgKBChSOhYWHHwe
-         qL6Uk/bWl5GNck3l/WH5N8KR0ltuRk/m6WZk+xbmQ7r6klNgf0B2QjNwf7cT5sVJ8Bjo
-         NaxBrR2RH9AHjg8m8Qsu69/13geK7WmSIbltsYuClbQ/wkxyyziKrbGSUCGhS5gRqPHI
-         kKAQ==
-X-Gm-Message-State: AOAM5321ANN7feVKdeqtigkEgoSjC45OPZo2aZylvXaHZq0KuZmV6xp/
-        L3GSGG78f08RwmSG0+UwJv8=
-X-Google-Smtp-Source: ABdhPJx9jxxv75YnWC6v4T0SESzp6aFF4h7ok+oXm33OzoALrK0dC2u3FzFw0Oi6J/lLKcld3amVmg==
-X-Received: by 2002:a62:84d5:: with SMTP id k204mr54550112pfd.66.1594302978512;
-        Thu, 09 Jul 2020 06:56:18 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id o129sm2474929pfg.14.2020.07.09.06.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 06:56:17 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] serial: mxs-auart: add missed iounmap() in probe failure and remove
-Date:   Thu,  9 Jul 2020 21:56:08 +0800
-Message-Id: <20200709135608.68290-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        bh=K1J6vHRKQNut7E/ykKpZDEQEYTSIWHWf2BiyemlGh+0=;
+        b=TYutmsCjx1Zoumakk1fRB5i5ul67HAsVedj2qpdkmFQ6UypqwVWHiobNW1WFNUVIZ1
+         1HoBFL3IXwN9cRm1LDFZjWWu7fPbBhiByq3xsLHbfCE5M0WrTeUF5JF7qYSB0RWDtKnX
+         qpWywKcb+dXfNsi93i19obUmqB/DziTQrbeQ0Q/ZhJ7zpKZSe9u9QMR1t2phGYx8duGN
+         xkPcPx1dL/XyLqL0K77Qv7ZIODk9/kv9+rF6OsIB3LHX8pztABsdwO1WpH8FsjliXbs+
+         wP0h1ezExUMHDiDTHOwiRrtvMZmaH1wZ4vyixDh5ww7LjIPxALfGCOz5TZSs74Yd22Kk
+         QYKA==
+X-Gm-Message-State: AOAM5325qbBNnkoUu1kwAWUe8b+SUKKQqxN5motf9jp3e+nB4oUlbhDv
+        LX7OgkzA/+S4kVbUB+9JlhlaOw==
+X-Google-Smtp-Source: ABdhPJzxSF/xDWCEbyyN69qZnnq2x64VZr67MJX+V63IE3WqiyXyP3TjTXLwVC6fKu9skJUx9zE/qQ==
+X-Received: by 2002:a05:6638:118:: with SMTP id x24mr74022628jao.48.1594303086919;
+        Thu, 09 Jul 2020 06:58:06 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id z78sm2045041ilk.72.2020.07.09.06.58.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 06:58:06 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
+        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
+ <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+ <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+ <20200709085501.GA64935@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
+Date:   Thu, 9 Jul 2020 07:58:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200709085501.GA64935@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver calls ioremap() in probe, but it misses calling iounmap() in 
-probe's error handler and remove.
-Add the missed calls to fix it.
+On 7/9/20 4:15 AM, Christoph Hellwig wrote:
+> On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
+>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>>> index 155f3d8..cbde4df 100644
+>>> --- a/fs/io_uring.c
+>>> +++ b/fs/io_uring.c
+>>> @@ -402,6 +402,8 @@ struct io_rw {
+>>>  	struct kiocb			kiocb;
+>>>  	u64				addr;
+>>>  	u64				len;
+>>> +	/* zone-relative offset for append, in sectors */
+>>> +	u32			append_offset;
+>>>  };
+>>
+>> I don't like this very much at all. As it stands, the first cacheline
+>> of io_kiocb is set aside for request-private data. io_rw is already
+>> exactly 64 bytes, which means that you're now growing io_rw beyond
+>> a cacheline and increasing the size of io_kiocb as a whole.
+>>
+>> Maybe you can reuse io_rw->len for this, as that is only used on the
+>> submission side of things.
+> 
+> We don't actually need any new field at all.  By the time the write
+> returned ki_pos contains the offset after the write, and the res
+> argument to ->ki_complete contains the amount of bytes written, which
+> allow us to trivially derive the starting position.
 
-Fixes: 47d37d6f94cc ("serial: Add auart driver for i.MX23/28")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Use iounmap() instead of devm_ioremap() to fix the bugs.
-  - Modify the subject and the description.
+Then let's just do that instead of jumping through hoops either
+justifying growing io_rw/io_kiocb or turning kiocb into a global
+completion thing.
 
- drivers/tty/serial/mxs-auart.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
-index b4f835e7de23..b784323a6a7b 100644
---- a/drivers/tty/serial/mxs-auart.c
-+++ b/drivers/tty/serial/mxs-auart.c
-@@ -1698,21 +1698,21 @@ static int mxs_auart_probe(struct platform_device *pdev)
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
- 		ret = irq;
--		goto out_disable_clks;
-+		goto out_iounmap;
- 	}
- 
- 	s->port.irq = irq;
- 	ret = devm_request_irq(&pdev->dev, irq, mxs_auart_irq_handle, 0,
- 			       dev_name(&pdev->dev), s);
- 	if (ret)
--		goto out_disable_clks;
-+		goto out_iounmap;
- 
- 	platform_set_drvdata(pdev, s);
- 
- 	ret = mxs_auart_init_gpios(s, &pdev->dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to initialize GPIOs.\n");
--		goto out_disable_clks;
-+		goto out_iounmap;
- 	}
- 
- 	/*
-@@ -1720,7 +1720,7 @@ static int mxs_auart_probe(struct platform_device *pdev)
- 	 */
- 	ret = mxs_auart_request_gpio_irq(s);
- 	if (ret)
--		goto out_disable_clks;
-+		goto out_iounmap;
- 
- 	auart_port[s->port.line] = s;
- 
-@@ -1746,6 +1746,9 @@ static int mxs_auart_probe(struct platform_device *pdev)
- 	mxs_auart_free_gpio_irq(s);
- 	auart_port[pdev->id] = NULL;
- 
-+out_iounmap:
-+	iounmap(s->port.membase);
-+
- out_disable_clks:
- 	if (is_asm9260_auart(s)) {
- 		clk_disable_unprepare(s->clk);
-@@ -1761,6 +1764,7 @@ static int mxs_auart_remove(struct platform_device *pdev)
- 	uart_remove_one_port(&auart_driver, &s->port);
- 	auart_port[pdev->id] = NULL;
- 	mxs_auart_free_gpio_irq(s);
-+	iounmap(s->port.membase);
- 	if (is_asm9260_auart(s)) {
- 		clk_disable_unprepare(s->clk);
- 		clk_disable_unprepare(s->clk_ahb);
 -- 
-2.26.2
+Jens Axboe
 
