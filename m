@@ -2,55 +2,62 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A81C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C51C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92F2F206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884A2206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbgGIAhd (ORCPT
+        id S1726261AbgGIAlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 20:37:33 -0400
-Received: from mga07.intel.com ([134.134.136.100]:40665 "EHLO mga07.intel.com"
+        Wed, 8 Jul 2020 20:41:42 -0400
+Received: from mga06.intel.com ([134.134.136.31]:8726 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgGIAhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 20:37:33 -0400
-IronPort-SDR: t9ln6vmKnbcmkc/Qt24+TK5efxaH/IfjsoO3JXsyrzcW0UNv55h0gAkWShHThlE5hOCrjetDjz
- K02ai0fL8uyQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="212837542"
+        id S1726100AbgGIAlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 20:41:42 -0400
+IronPort-SDR: NLXCV/FOSQCSeOon9APhKXhJ8ouBIaFREr5HQ5M1ImGPG13/9fe2GEK6fCvTH1dZOXUR8Dh+wc
+ HFzuJCAau+Mw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="209449201"
 X-IronPort-AV: E=Sophos;i="5.75,329,1589266800"; 
-   d="scan'208";a="212837542"
+   d="scan'208";a="209449201"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 17:37:29 -0700
-IronPort-SDR: FRSukxGomovbvLa/bRUaRvnnXnpt2T8oghk5I2Q2/bRGibcNSRUvQ+t0rKsm7aBw6jbGSs1PTb
- KnL/RnMXHtDg==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 17:41:41 -0700
+IronPort-SDR: uFYAuuFAEeKqUbfSVzwhGtPX1KZ8Z0GGOB6JqZTlsOu0uIlRAMezTlwtEZlfmko2Zj5RIF0TLo
+ tk/URUk9oIQg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,329,1589266800"; 
-   d="scan'208";a="457699458"
+   d="scan'208";a="457700177"
 Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jul 2020 17:37:27 -0700
-Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] iommu/vt-d: Add page response ops support
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-References: <20200706002535.9381-1-baolu.lu@linux.intel.com>
- <20200706002535.9381-5-baolu.lu@linux.intel.com>
- <MWHPR11MB1645D608AF261AA7DE8FF6CE8C690@MWHPR11MB1645.namprd11.prod.outlook.com>
+  by orsmga005.jf.intel.com with ESMTP; 08 Jul 2020 17:41:38 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] iommu: iommu_aux_at(de)tach_device() extension
+To:     Alex Williamson <alex.williamson@redhat.com>
+References: <20200707013957.23672-1-baolu.lu@linux.intel.com>
+ <20200707013957.23672-2-baolu.lu@linux.intel.com>
+ <20200707150408.474d81f1@x1.home>
+ <dc98a109-7121-36b7-0854-f899b09692a4@linux.intel.com>
+ <20200708130749.1b1e1421@x1.home>
 From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <1a8af358-80bb-3a92-3a26-906276bb772d@linux.intel.com>
-Date:   Thu, 9 Jul 2020 08:32:57 +0800
+Message-ID: <f1946060-d01c-70d2-7dd5-7730694a4d46@linux.intel.com>
+Date:   Thu, 9 Jul 2020 08:37:08 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <MWHPR11MB1645D608AF261AA7DE8FF6CE8C690@MWHPR11MB1645.namprd11.prod.outlook.com>
+In-Reply-To: <20200708130749.1b1e1421@x1.home>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -59,186 +66,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+Hi Alex,
 
-On 7/6/20 9:47 AM, Tian, Kevin wrote:
->> From: Lu Baolu
->> Sent: Monday, July 6, 2020 8:26 AM
+On 7/9/20 3:07 AM, Alex Williamson wrote:
+> On Wed, 8 Jul 2020 10:53:12 +0800
+> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> 
+>> Hi Alex,
 >>
->> After a page request is handled, software must response the device which
->> raised the page request with the handling result. This is done through
-> 
-> 'response' is a noun.
-
-Yes.
-
-> 
->> the iommu ops.page_response if the request was reported to outside of
->> vendor iommu driver through iommu_report_device_fault(). This adds the
->> VT-d implementation of page_response ops.
+>> Thanks a lot for your comments. Please check my reply inline.
 >>
->> Co-developed-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Co-developed-by: Liu Yi L <yi.l.liu@intel.com>
->> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel/iommu.c |  1 +
->>   drivers/iommu/intel/svm.c   | 74
->> +++++++++++++++++++++++++++++++++++++
->>   include/linux/intel-iommu.h |  3 ++
->>   3 files changed, 78 insertions(+)
+>> On 7/8/20 5:04 AM, Alex Williamson wrote:
+>>> On Tue,  7 Jul 2020 09:39:56 +0800
+>>> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+>>>    
+>>>> The hardware assistant vfio mediated device is a use case of iommu
+>>>> aux-domain. The interactions between vfio/mdev and iommu during mdev
+>>>> creation and passthr are:
+>>>>
+>>>> - Create a group for mdev with iommu_group_alloc();
+>>>> - Add the device to the group with
+>>>>           group = iommu_group_alloc();
+>>>>           if (IS_ERR(group))
+>>>>                   return PTR_ERR(group);
+>>>>
+>>>>           ret = iommu_group_add_device(group, &mdev->dev);
+>>>>           if (!ret)
+>>>>                   dev_info(&mdev->dev, "MDEV: group_id = %d\n",
+>>>>                            iommu_group_id(group));
+>>>> - Allocate an aux-domain
+>>>>           iommu_domain_alloc()
+>>>> - Attach the aux-domain to the physical device from which the mdev is
+>>>>     created.
+>>>>           iommu_aux_attach_device()
+>>>>
+>>>> In the whole process, an iommu group was allocated for the mdev and an
+>>>> iommu domain was attached to the group, but the group->domain leaves
+>>>> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
+>>>>
+>>>> The iommu_get_domain_for_dev() is a necessary interface for device
+>>>> drivers that want to support aux-domain. For example,
+>>>>
+>>>>           struct iommu_domain *domain;
+>>>>           struct device *dev = mdev_dev(mdev);
+>>>>           unsigned long pasid;
+>>>>
+>>>>           domain = iommu_get_domain_for_dev(dev);
+>>>>           if (!domain)
+>>>>                   return -ENODEV;
+>>>>
+>>>>           pasid = iommu_aux_get_pasid(domain, dev->parent);
+>>> How did we know this was an aux domain? ie. How did we know we could
+>>> use it with iommu_aux_get_pasid()?
 >>
->> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
->> index de17952ed133..7eb29167e8f9 100644
->> --- a/drivers/iommu/intel/iommu.c
->> +++ b/drivers/iommu/intel/iommu.c
->> @@ -6057,6 +6057,7 @@ const struct iommu_ops intel_iommu_ops = {
->>   	.sva_bind		= intel_svm_bind,
->>   	.sva_unbind		= intel_svm_unbind,
->>   	.sva_get_pasid		= intel_svm_get_pasid,
->> +	.page_response		= intel_svm_page_response,
->>   #endif
->>   };
+>> Yes. It's a bit confusing if iommu_get_domain_for_dev() is reused here
+>> for aux-domain.
 >>
->> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
->> index 08c58c2b1a06..1c7d8a9ea124 100644
->> --- a/drivers/iommu/intel/svm.c
->> +++ b/drivers/iommu/intel/svm.c
->> @@ -1078,3 +1078,77 @@ int intel_svm_get_pasid(struct iommu_sva *sva)
+>>>
+>>> Why did we assume the parent device is the iommu device for the aux
+>>> domain?  Should that level of detail be already known by the aux domain?
+>>>
+>>> Nits - The iomu device of an mdev device is found via
+>>> mdev_get_iommu_device(dev), it should not be assumed to be the parent.
+>>> The parent of an mdev device is found via mdev_parent_dev(mdev).
 >>
->>   	return pasid;
->>   }
->> +
->> +int intel_svm_page_response(struct device *dev,
->> +			    struct iommu_fault_event *evt,
->> +			    struct iommu_page_response *msg)
->> +{
->> +	struct iommu_fault_page_request *prm;
->> +	struct intel_svm_dev *sdev;
->> +	struct intel_iommu *iommu;
->> +	struct intel_svm *svm;
->> +	bool private_present;
->> +	bool pasid_present;
->> +	bool last_page;
->> +	u8 bus, devfn;
->> +	int ret = 0;
->> +	u16 sid;
->> +
->> +	if (!dev || !dev_is_pci(dev))
->> +		return -ENODEV;
+>> My bad. The driver should use mdev_get_iommu_device() instead.
+>>
+>>>
+>>> The leaps in logic here make me wonder if we should instead be exposing
+>>> more of an aux domain API rather than blurring the differences between
+>>> these domains.  Thanks,
+>>
+>> How about add below API?
+>>
+>> /**
+>>    * iommu_aux_get_domain_for_dev - get aux domain for a device
+>>    * @dev: the accessory device
+>>    *
+>>    * The caller should pass a valid @dev to iommu_aux_attach_device() before
+>>    * calling this api. Return an attached aux-domain, or NULL otherwise.
 > 
-> but we didn't do same check when reporting fault?
+> That's not necessarily the caller's responsibility, that might happen
+> elsewhere, this function simply returns an aux domain for the device if
+> it's attached to one.
 
-For now, we only support PCI devices, so I will add this check in report
-as well.
+Yes. Fair enough. This piece of comments will be removed.
 
 > 
->> +
->> +	iommu = device_to_iommu(dev, &bus, &devfn);
->> +	if (!iommu)
->> +		return -ENODEV;
->> +
->> +	if (!msg || !evt)
->> +		return -EINVAL;
->> +
->> +	mutex_lock(&pasid_mutex);
->> +
->> +	prm = &evt->fault.prm;
->> +	sid = PCI_DEVID(bus, devfn);
->> +	pasid_present = prm->flags &
->> IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
->> +	private_present = prm->flags &
->> IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA;
->> +	last_page = prm->flags &
->> IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
->> +
->> +	if (pasid_present) {
->> +		if (prm->pasid == 0 || prm->pasid >= PASID_MAX) {
->> +			ret = -EINVAL;
->> +			goto out;
->> +		}
->> +
->> +		ret = pasid_to_svm_sdev(dev, prm->pasid, &svm, &sdev);
->> +		if (ret || !sdev) {
->> +			ret = -ENODEV;
->> +			goto out;
->> +		}
->> +	}
+>>    */
+>> struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
+>> {
+>>           struct iommu_domain *domain = NULL;
+>>           struct iommu_group *group;
+>>
+>>           group = iommu_group_get(dev);
+>>           if (!group)
+>>                   return NULL;
+>>
+>>           if (group->aux_domain_attached)
+>>                   domain = group->domain;
+>>
+>>           iommu_group_put(group);
+>>
+>>           return domain;
+>> }
+>> EXPORT_SYMBOL_GPL(iommu_aux_get_domain_for_dev);
 > 
-> what about pasid_present==0? Do we support recoverable fault now
-> with this patch?
-
-For now, we don't support reporting a prq without pasid to outside.
-prq_event_thread() handles such requests explicitly. I will add a
-check in response ops.
-
+> For your example use case, this seems more clear to me.  Thanks,
 > 
-> and who guarantees that the external fault handler (e.g. guest)
-> cannot do bad thing with this interface, e.g. by specifying a PASID
-> belonging to other guests (when Scalable IOV is enabled)?
 
-I will check below if the response is from user space.
+Okay, thank you!
 
-(svm->mm ==  get_task_mm(current))
-
-> 
-> Thanks
-> Kevin
+> Alex
 
 Best regards,
 baolu
 
->> +
->> +	/*
->> +	 * Per VT-d spec. v3.0 ch7.7, system software must respond
->> +	 * with page group response if private data is present (PDP)
->> +	 * or last page in group (LPIG) bit is set. This is an
->> +	 * additional VT-d requirement beyond PCI ATS spec.
->> +	 */
->> +	if (last_page || private_present) {
->> +		struct qi_desc desc;
->> +
->> +		desc.qw0 = QI_PGRP_PASID(prm->pasid) | QI_PGRP_DID(sid)
->> |
->> +				QI_PGRP_PASID_P(pasid_present) |
->> +				QI_PGRP_PDP(private_present) |
->> +				QI_PGRP_RESP_CODE(msg->code) |
->> +				QI_PGRP_RESP_TYPE;
->> +		desc.qw1 = QI_PGRP_IDX(prm->grpid) |
->> QI_PGRP_LPIG(last_page);
->> +		desc.qw2 = 0;
->> +		desc.qw3 = 0;
->> +		if (private_present)
->> +			memcpy(&desc.qw2, prm->private_data,
->> +			       sizeof(prm->private_data));
->> +
->> +		qi_submit_sync(iommu, &desc, 1, 0);
->> +	}
->> +out:
->> +	mutex_unlock(&pasid_mutex);
->> +	return ret;
->> +}
->> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
->> index fc2cfc3db6e1..bf6009a344f5 100644
->> --- a/include/linux/intel-iommu.h
->> +++ b/include/linux/intel-iommu.h
->> @@ -741,6 +741,9 @@ struct iommu_sva *intel_svm_bind(struct device
->> *dev, struct mm_struct *mm,
->>   				 void *drvdata);
->>   void intel_svm_unbind(struct iommu_sva *handle);
->>   int intel_svm_get_pasid(struct iommu_sva *handle);
->> +int intel_svm_page_response(struct device *dev, struct iommu_fault_event
->> *evt,
->> +			    struct iommu_page_response *msg);
->> +
->>   struct svm_dev_ops;
->>
->>   struct intel_svm_dev {
->> --
->> 2.17.1
->>
->> _______________________________________________
->> iommu mailing list
->> iommu@lists.linux-foundation.org
->> https://lists.linuxfoundation.org/mailman/listinfo/iommu
