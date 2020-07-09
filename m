@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDF2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA30CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60EAC2076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85F22076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ajd0g1rM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="EpLSzplE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgGIKCV (ORCPT
+        id S1726817AbgGIKCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:02:21 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:27704 "EHLO
+        Thu, 9 Jul 2020 06:02:01 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:27637 "EHLO
         esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbgGIKCS (ORCPT
+        with ESMTP id S1726770AbgGIKB7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:02:18 -0400
+        Thu, 9 Jul 2020 06:01:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594288938; x=1625824938;
+  t=1594288918; x=1625824918;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=bDsPDcBsqLSCU8wYG3pcNrGvWrN5XQXdrnUKLu6IKAM=;
-  b=ajd0g1rM0jjkrRYBpAfH8d0U40Zljyzisa1bTxrXwBl+soRcRc1HdVjO
-   h21TgUbYuIwO9Hgv07VrrUsLS9WDtUHjhyJNbv56Bm9KMza2a8+guljqy
-   6M2lknK2DRpdXN5eUznBSN+bBeqE5kLchLzNwaOX1FV+BfSX10RpbAXha
-   iL9tJQ6U7l1FcPljuc1kMIL80akjy4iVwP1x53DfvBNn6zon98X8qKHGv
-   +bQxGWoMfucU3yre+mNz3mxxlIQWYP31CkSi6sCDc7NbwFH48R6b2k490
-   xGBxsPitM0IU3fnXy7MT+d+0Vk7NT5F+cPp6zyVZFlhtJj7lGojMHxryr
+  bh=hhjb7b7BFHDhGUIJfkFuTZrIsTfwhOn+hS3mtT2Mho8=;
+  b=EpLSzplEm1xt4+wqQ+mJlNnlwmC78mfdgj5udCL2HTQBeeQmGjqt4SrW
+   Pd7z1LapJzULdPggCGr5rc5fT0xIGABquI12y6icAARe0fT7yOJAi+27S
+   JkvnSFTrgi39X9j0ObQ5Skl+Wj8oeGIkaz5QacVsjta7by3nPpk/j7lv4
+   72AEiAeiUM1xUS2HF7wVwiXppY/UCwbuwgF00QKvwdmiMbHDxLZ4K8GG4
+   x7sT++MwQLdHBfqA0OBM69Zyj3aqP4lbEHdJnm+wGol2be2RIKOTQ9Ka+
+   gB/UMIIaKwsgOipxUfni2BXtOd/+etYEWRKitt1kNCqGaPbzrVPLKWhzz
    Q==;
-IronPort-SDR: Bmsu01Dh6BcY4C8ginB9CRJtxIRy7jB1/iIUCmXegdH2rwsxZMiWYxRfGgBWVmMMZ2A9l2pX0+
- QOugWCrP34kQVuLumq38agjCL6ncVKNCIqQsRjIV7I8EfZaAV4LCf97CFDxa4IBI4unbWOY40k
- BRkGFX7l1G/SZp+DIvW8kXOPbOx+KCEiYJX9ZTdR+OGjK+cBDqQpITJcYBghmy5btv90HvYWdR
- Yu/7NkTbnbm5mxI9gwp/P54fPJVkah8FFjD86we++4cNPuvOY+C5rvfYbi+NNH15v2ktbYPk/W
- qss=
+IronPort-SDR: a+Wgtk69i6vxPORJkSNeJtqf/LjtSPXo8DmrrEXhjsmtFh4La30FDWCIwdki2f6OB3NiVOKjrJ
+ 5NwjZNwtwD/8agnVxLv588QR6o/YGyy/KCEWeCs8oDmf6cnugVPjYX2iL0DYfBDLQdT5zYDDMP
+ oqRTNOHLzPLI6Izlph10n+vG9v5xuYiXk9UT/mgsZB/4V442Tu1rwKBc9jDk8HpHLpiPhNoUA5
+ dYZFcuCjSPw6fuADpFJdJI00KIIBhDd3QPE2Mmen/LyVHNfKlL5FU0+T2qXsSVBUoaljV2sADa
+ H/w=
 X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="82397798"
+   d="scan'208";a="82397742"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:02:17 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:01:58 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 9 Jul 2020 03:02:09 -0700
+ 15.1.1979.3; Thu, 9 Jul 2020 03:01:57 -0700
 Received: from soft-dev3.localdomain (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:02:06 -0700
+ 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:01:54 -0700
 From:   Horatiu Vultur <horatiu.vultur@microchip.com>
 To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
@@ -59,9 +59,9 @@ To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
 CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v2 10/12] bridge: uapi: mrp: Extend MRP_INFO attributes for interconnect status
-Date:   Thu, 9 Jul 2020 12:00:38 +0200
-Message-ID: <20200709100040.554623-11-horatiu.vultur@microchip.com>
+Subject: [PATCH net-next v2 07/12] bridge: switchdev: mrp: Extend MRP API for switchdev for MRP Interconnect
+Date:   Thu, 9 Jul 2020 12:00:35 +0200
+Message-ID: <20200709100040.554623-8-horatiu.vultur@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200709100040.554623-1-horatiu.vultur@microchip.com>
 References: <20200709100040.554623-1-horatiu.vultur@microchip.com>
@@ -73,31 +73,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend the existing MRP_INFO to return status of MRP interconnect. In
-case there is no MRP interconnect on the node then the role will be
-disabled so the other attributes can be ignored.
+Implement the MRP API for interconnect switchdev. Similar with the other
+br_mrp_switchdev function, these function will just eventually call the
+switchdev functions: switchdev_port_obj_add/del.
 
 Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 ---
- include/uapi/linux/if_bridge.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/bridge/br_mrp_switchdev.c | 62 +++++++++++++++++++++++++++++++++++
+ net/bridge/br_private_mrp.h   |  7 ++++
+ 2 files changed, 69 insertions(+)
 
-diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-index d840a3e37a37c..c1227aecd38fd 100644
---- a/include/uapi/linux/if_bridge.h
-+++ b/include/uapi/linux/if_bridge.h
-@@ -243,6 +243,11 @@ enum {
- 	IFLA_BRIDGE_MRP_INFO_TEST_INTERVAL,
- 	IFLA_BRIDGE_MRP_INFO_TEST_MAX_MISS,
- 	IFLA_BRIDGE_MRP_INFO_TEST_MONITOR,
-+	IFLA_BRIDGE_MRP_INFO_I_IFINDEX,
-+	IFLA_BRIDGE_MRP_INFO_IN_STATE,
-+	IFLA_BRIDGE_MRP_INFO_IN_ROLE,
-+	IFLA_BRIDGE_MRP_INFO_IN_TEST_INTERVAL,
-+	IFLA_BRIDGE_MRP_INFO_IN_TEST_MAX_MISS,
- 	__IFLA_BRIDGE_MRP_INFO_MAX,
- };
+diff --git a/net/bridge/br_mrp_switchdev.c b/net/bridge/br_mrp_switchdev.c
+index 0da68a0da4b5a..ed547e03ace17 100644
+--- a/net/bridge/br_mrp_switchdev.c
++++ b/net/bridge/br_mrp_switchdev.c
+@@ -107,6 +107,68 @@ int br_mrp_switchdev_set_ring_state(struct net_bridge *br,
+ 	return 0;
+ }
  
++int br_mrp_switchdev_set_in_role(struct net_bridge *br, struct br_mrp *mrp,
++				 u16 in_id, u32 ring_id,
++				 enum br_mrp_in_role_type role)
++{
++	struct switchdev_obj_in_role_mrp mrp_role = {
++		.obj.orig_dev = br->dev,
++		.obj.id = SWITCHDEV_OBJ_ID_IN_ROLE_MRP,
++		.in_role = role,
++		.in_id = mrp->in_id,
++		.ring_id = mrp->ring_id,
++		.i_port = rtnl_dereference(mrp->i_port)->dev,
++	};
++	int err;
++
++	if (role == BR_MRP_IN_ROLE_DISABLED)
++		err = switchdev_port_obj_del(br->dev, &mrp_role.obj);
++	else
++		err = switchdev_port_obj_add(br->dev, &mrp_role.obj, NULL);
++
++	return err;
++}
++
++int br_mrp_switchdev_set_in_state(struct net_bridge *br, struct br_mrp *mrp,
++				  enum br_mrp_in_state_type state)
++{
++	struct switchdev_obj_in_state_mrp mrp_state = {
++		.obj.orig_dev = br->dev,
++		.obj.id = SWITCHDEV_OBJ_ID_IN_STATE_MRP,
++		.in_state = state,
++		.in_id = mrp->in_id,
++	};
++	int err;
++
++	err = switchdev_port_obj_add(br->dev, &mrp_state.obj, NULL);
++
++	if (err && err != -EOPNOTSUPP)
++		return err;
++
++	return 0;
++}
++
++int br_mrp_switchdev_send_in_test(struct net_bridge *br, struct br_mrp *mrp,
++				  u32 interval, u8 max_miss, u32 period)
++{
++	struct switchdev_obj_in_test_mrp test = {
++		.obj.orig_dev = br->dev,
++		.obj.id = SWITCHDEV_OBJ_ID_IN_TEST_MRP,
++		.interval = interval,
++		.max_miss = max_miss,
++		.in_id = mrp->in_id,
++		.period = period,
++	};
++	int err;
++
++	if (interval == 0)
++		err = switchdev_port_obj_del(br->dev, &test.obj);
++	else
++		err = switchdev_port_obj_add(br->dev, &test.obj, NULL);
++
++	return err;
++}
++
+ int br_mrp_port_switchdev_set_state(struct net_bridge_port *p,
+ 				    enum br_mrp_port_state_type state)
+ {
+diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
+index 384cb69b47e02..50dbf046a9be3 100644
+--- a/net/bridge/br_private_mrp.h
++++ b/net/bridge/br_private_mrp.h
+@@ -72,6 +72,13 @@ int br_mrp_port_switchdev_set_state(struct net_bridge_port *p,
+ 				    enum br_mrp_port_state_type state);
+ int br_mrp_port_switchdev_set_role(struct net_bridge_port *p,
+ 				   enum br_mrp_port_role_type role);
++int br_mrp_switchdev_set_in_role(struct net_bridge *br, struct br_mrp *mrp,
++				 u16 in_id, u32 ring_id,
++				 enum br_mrp_in_role_type role);
++int br_mrp_switchdev_set_in_state(struct net_bridge *br, struct br_mrp *mrp,
++				  enum br_mrp_in_state_type state);
++int br_mrp_switchdev_send_in_test(struct net_bridge *br, struct br_mrp *mrp,
++				  u32 interval, u8 max_miss, u32 period);
+ 
+ /* br_mrp_netlink.c  */
+ int br_mrp_ring_port_open(struct net_device *dev, u8 loc);
 -- 
 2.27.0
 
