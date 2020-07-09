@@ -2,55 +2,56 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E15C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE227C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5BE420708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A87C620708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CqcyMsT3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="cSBMP19e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgGIKBe (ORCPT
+        id S1726771AbgGIKBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:01:34 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:42139 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgGIKBc (ORCPT
+        Thu, 9 Jul 2020 06:01:50 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:27589 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgGIKBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:01:32 -0400
+        Thu, 9 Jul 2020 06:01:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594288891; x=1625824891;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fuqrA3hBx0oUTK0Wob6y9NOyZ1ajsJ7JRJ0RnMkhdjo=;
-  b=CqcyMsT35MTjV4QodYuegZ12fdhoTLMi4HL9MtXoNo0zlf1nGFY2El7w
-   Y56oiBfHBn7V4pO6dcIZ7Nx2VIVadsnmlvEsIyBBtiBf1v/w8YxQ5k3Gj
-   70zSwCQAYqJSfT0m2qH2f9mPeyjpxdMDEB1MpSNWIe+A2/bHX457NBj4y
-   mF6h+EWJLEGVJujmCHEkGbR+aKLz29wDQdO1y99rJILcuaVebDeM0FNYI
-   SL37q/tqrTRsVC2qJxri7rppjtmErlO31H0IKiJzmkIuNRX1i00V1ej+P
-   3Fj7rvZPb4moAYHAItG4qsH0jts8oM0KnDrEYOpgRtnZYcp4iLltXCAT1
-   Q==;
-IronPort-SDR: 64psNRRJhtW3KqC9wHTgA3Wgo1LJBlHL8RpkY1y+xlNEVkbVG7CPJdElzikMpknXaRgHB+xqNx
- IxEcpaqyIqFzgD3dAs1jozH681udk11GNr0BdlByVYS9ez/8gouoK1i6F6tlsdAKoYcrQH+BXh
- FhEplFBUAwyZQHXQcPpkQ8wtXPa3CWc1NAua28GCf3CcKPQgDeXGBS5yCexTM9BOYyJPWxogzP
- upa33CGIwWBNfpDxmY9EeBJM2l27is+/bNjC+YwziGj67mEqmLunD0woq9xKPk5Cv5wSqeYiPs
- vGU=
+  t=1594288899; x=1625824899;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=YrFb0GHYJSVnxx4wY0JWDfV+FNkiN88T+WCC0hZkD+w=;
+  b=cSBMP19e93x0kyMafAgj0ncGZZXnL5rZgWgeTPGbaVgRzBgzZKJp3HsR
+   dl7kzm1V4MYfMzWB45pzrADhKI0DTxdyAzpDLHtwNhTkbxDuSpIVB7oe0
+   cS9z2h1B0DQdN+Ys+0Po233PFGT8HtqdN/HZuXFjMI7aEEfZO2ghZA9n3
+   dVArYweyK91U4pAaw9gdkxxuROCJouTIFpihaQVPigEwRrZybjBEKsOBC
+   aBjrXOrg9235I7mSrY2zSGja051DA4tiUoh+nolXmzBwiNpAy70KYpPBo
+   kjmT/feWzcaBUJtuO2FSte8FUKuBeObfJWIMhizr5idacQS9tB10vU/Ij
+   A==;
+IronPort-SDR: H+lu3KFO/njvveRiO7eU1/abKsY3L05ku0bXUtLx2SFAWrCxi1YLl/LCbH/bC5wPkuX8qgxUlN
+ G1PjvVoodiauKDWxbu7WBGSflGnFr3ncuUdSqir8/46F3c7VhxK4GjNu0mpKp6kujpF8MDkoWx
+ fEAFeujgncziLu7YHgKz7oEpHgOgvDMkZCCb3rAq71lIo/gE/XSNejuqvm5uQSz0Fgcq3TwVIy
+ ZgcpaBkGQyt37HqIfkONK4rGxDhFfcd7jfznh3taEfJ1mVrDKqSI7/U0y3TlreuAgN/hWwYkk7
+ ID4=
 X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="79261621"
+   d="scan'208";a="82397707"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:01:30 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:01:38 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 9 Jul 2020 03:01:04 -0700
+ 15.1.1979.3; Thu, 9 Jul 2020 03:01:38 -0700
 Received: from soft-dev3.localdomain (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:01:27 -0700
+ 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:01:34 -0700
 From:   Horatiu Vultur <horatiu.vultur@microchip.com>
 To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
@@ -58,10 +59,12 @@ To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
 CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v2 00/12] bridge: mrp: Add support for interconnect ring
-Date:   Thu, 9 Jul 2020 12:00:28 +0200
-Message-ID: <20200709100040.554623-1-horatiu.vultur@microchip.com>
+Subject: [PATCH net-next v2 02/12] bridge: uapi: mrp: Extend MRP attributes for MRP interconnect
+Date:   Thu, 9 Jul 2020 12:00:30 +0200
+Message-ID: <20200709100040.554623-3-horatiu.vultur@microchip.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200709100040.554623-1-horatiu.vultur@microchip.com>
+References: <20200709100040.554623-1-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -70,98 +73,179 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series extends existing MRP to add support for interconnect ring.  An
-interconnect ring is a ring that connects 2 rings. In this way is possible to
-connect multiple rings. Each interconnect ring is form of 4 nodes, in which 3
-have the role MIC(Media Redundancy Interconnect Client) and one has the role
-MIM(Media Redundancy Interconnect Manager). All these nodes need to have the
-same ID and the ID needs to be unique between multiple interconnect rings. And 2
-nodes needs to be part of one ring and the other 2 nodes needs to be part of the
-other ring that is connected.
+Extend the existing MRP netlink attributes to allow to configure MRP
+Interconnect:
 
-                 +---------+
-                 |         |
-      +----------|   MRM   |---------------+
-      |          |         |               |
-      |          +---------+               |
-      |                                    |
-      |                                    |
-      |                                    |
-+--------------+                  +-----------------+
-|              |                  |                 |
-|  MRC/MIC     |------------------|    MRC/MIM      |
-|              |                  |                 |
-+--------------+                  +-----------------+
-      |                                     |
-      |Interconnect port                    |Interconnect port
-      |                                     |
-      |                                     |
-+--------------+                  +-----------------+
-|              |                  |                 |
-|  MRC/MIC     |----------------- |   MRC/MIC       |
-|              |                  |                 |
-+--------------+                  +-----------------+
-      |                                     |
-      |                                     |
-      |          +---------+                |
-      |          |         |                |
-      +----------|  MRM    |----------------+
-                 |         |
-                 +---------+
+IFLA_BRIDGE_MRP_IN_ROLE - the parameter type is br_mrp_in_role which
+  contains the interconnect id, the ring id, the interconnect role(MIM
+  or MIC) and the port ifindex that represents the interconnect port.
 
-Each node in a ring needs to have one of the following ring roles, MRM or MRC.
-And it can also have an interconnect role like MIM or MIC if it is part of an
-interconnect ring. In the figure above the MRM doesn't have any interconnect
-role but the MRC from the top ring have the interconnect roles MIC respectively
-MIM. Therefore it is not possible for a node to have only an interconnect role.
+IFLA_BRIDGE_MRP_IN_STATE - the parameter type is br_mrp_in_state which
+  contains the interconnect id and the interconnect state.
 
-There are 2 ways for interconnect ring to detect when is open or closed:
-1. To use CCM frames on the interconnect port to detect when the interconnect
-   link goes down/up. This mode is called LC-mode.
-2. To send InTest frames on all 3 ports(2 ring ports and 1 interconnect port)
-   and detect when these frames are received back. This mode is called RC-mode.
+IFLA_BRIDGE_MRP_IN_TEST - the parameter type is br_mrp_start_in_test
+  which contains the interconnect id, the interval at which to send
+  MRP_InTest frames, how many test frames can be missed before declaring
+  the interconnect ring open and the period which represents for how long
+  to send MRP_InTest frames.
 
-This patch series adds support only for RC-mode. Where MIM sends InTest frames
-on all 3 ports and detects when it receives back the InTest. When it receives
-the InTest it means that the ring is closed so it would set the interconnect
-port in blocking state. If it stops receiving the InTest frames then it would
-set the port in forwarding state and it would send InTopo frames. These InTopo
-frames will be received by MRM nodes and process them. And then the MRM will
-send Topo frames in the rings so each client will clear its FDB.
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+---
+ include/uapi/linux/if_bridge.h  | 53 +++++++++++++++++++++++++++++++++
+ include/uapi/linux/mrp_bridge.h | 38 +++++++++++++++++++++++
+ 2 files changed, 91 insertions(+)
 
-v2:
-  - rearrange structures not to contain holes
-  - stop sending MRP_InTest frames when the MRP instance is deleted
-
-Horatiu Vultur (12):
-  switchdev: mrp: Extend switchdev API for MRP Interconnect
-  bridge: uapi: mrp: Extend MRP attributes for MRP interconnect
-  bridge: mrp: Extend bridge interface
-  bridge: mrp: Extend br_mrp for MRP interconnect
-  bridge: mrp: Rename br_mrp_port_open to br_mrp_ring_port_open
-  bridge: mrp: Add br_mrp_in_port_open function
-  bridge: switchdev: mrp: Extend MRP API for switchdev for MRP
-    Interconnect
-  bridge: mrp: Implement the MRP Interconnect API
-  bridge: mrp: Extend MRP netlink interface for configuring MRP
-    interconnect
-  bridge: uapi: mrp: Extend MRP_INFO attributes for interconnect status
-  bridge: mrp: Extend br_mrp_fill_info
-  net: bridge: Add port attribute IFLA_BRPORT_MRP_IN_OPEN
-
- include/linux/if_bridge.h          |   1 +
- include/net/switchdev.h            |  38 ++
- include/uapi/linux/if_bridge.h     |  58 ++++
- include/uapi/linux/if_link.h       |   1 +
- include/uapi/linux/mrp_bridge.h    |  38 ++
- net/bridge/br_mrp.c                | 537 +++++++++++++++++++++++++++--
- net/bridge/br_mrp_netlink.c        | 182 +++++++++-
- net/bridge/br_mrp_switchdev.c      |  62 ++++
- net/bridge/br_netlink.c            |   3 +
- net/bridge/br_private_mrp.h        |  27 +-
- tools/include/uapi/linux/if_link.h |   1 +
- 11 files changed, 912 insertions(+), 36 deletions(-)
-
+diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
+index c114c1c2bd533..d840a3e37a37c 100644
+--- a/include/uapi/linux/if_bridge.h
++++ b/include/uapi/linux/if_bridge.h
+@@ -167,6 +167,9 @@ enum {
+ 	IFLA_BRIDGE_MRP_RING_ROLE,
+ 	IFLA_BRIDGE_MRP_START_TEST,
+ 	IFLA_BRIDGE_MRP_INFO,
++	IFLA_BRIDGE_MRP_IN_ROLE,
++	IFLA_BRIDGE_MRP_IN_STATE,
++	IFLA_BRIDGE_MRP_START_IN_TEST,
+ 	__IFLA_BRIDGE_MRP_MAX,
+ };
+ 
+@@ -245,6 +248,37 @@ enum {
+ 
+ #define IFLA_BRIDGE_MRP_INFO_MAX (__IFLA_BRIDGE_MRP_INFO_MAX - 1)
+ 
++enum {
++	IFLA_BRIDGE_MRP_IN_STATE_UNSPEC,
++	IFLA_BRIDGE_MRP_IN_STATE_IN_ID,
++	IFLA_BRIDGE_MRP_IN_STATE_STATE,
++	__IFLA_BRIDGE_MRP_IN_STATE_MAX,
++};
++
++#define IFLA_BRIDGE_MRP_IN_STATE_MAX (__IFLA_BRIDGE_MRP_IN_STATE_MAX - 1)
++
++enum {
++	IFLA_BRIDGE_MRP_IN_ROLE_UNSPEC,
++	IFLA_BRIDGE_MRP_IN_ROLE_RING_ID,
++	IFLA_BRIDGE_MRP_IN_ROLE_IN_ID,
++	IFLA_BRIDGE_MRP_IN_ROLE_ROLE,
++	IFLA_BRIDGE_MRP_IN_ROLE_I_IFINDEX,
++	__IFLA_BRIDGE_MRP_IN_ROLE_MAX,
++};
++
++#define IFLA_BRIDGE_MRP_IN_ROLE_MAX (__IFLA_BRIDGE_MRP_IN_ROLE_MAX - 1)
++
++enum {
++	IFLA_BRIDGE_MRP_START_IN_TEST_UNSPEC,
++	IFLA_BRIDGE_MRP_START_IN_TEST_IN_ID,
++	IFLA_BRIDGE_MRP_START_IN_TEST_INTERVAL,
++	IFLA_BRIDGE_MRP_START_IN_TEST_MAX_MISS,
++	IFLA_BRIDGE_MRP_START_IN_TEST_PERIOD,
++	__IFLA_BRIDGE_MRP_START_IN_TEST_MAX,
++};
++
++#define IFLA_BRIDGE_MRP_START_IN_TEST_MAX (__IFLA_BRIDGE_MRP_START_IN_TEST_MAX - 1)
++
+ struct br_mrp_instance {
+ 	__u32 ring_id;
+ 	__u32 p_ifindex;
+@@ -270,6 +304,25 @@ struct br_mrp_start_test {
+ 	__u32 monitor;
+ };
+ 
++struct br_mrp_in_state {
++	__u32 in_state;
++	__u16 in_id;
++};
++
++struct br_mrp_in_role {
++	__u32 ring_id;
++	__u32 in_role;
++	__u32 i_ifindex;
++	__u16 in_id;
++};
++
++struct br_mrp_start_in_test {
++	__u32 interval;
++	__u32 max_miss;
++	__u32 period;
++	__u16 in_id;
++};
++
+ struct bridge_stp_xstats {
+ 	__u64 transition_blk;
+ 	__u64 transition_fwd;
+diff --git a/include/uapi/linux/mrp_bridge.h b/include/uapi/linux/mrp_bridge.h
+index bee3665402129..6aeb13ef0b1ec 100644
+--- a/include/uapi/linux/mrp_bridge.h
++++ b/include/uapi/linux/mrp_bridge.h
+@@ -21,11 +21,22 @@ enum br_mrp_ring_role_type {
+ 	BR_MRP_RING_ROLE_MRA,
+ };
+ 
++enum br_mrp_in_role_type {
++	BR_MRP_IN_ROLE_DISABLED,
++	BR_MRP_IN_ROLE_MIC,
++	BR_MRP_IN_ROLE_MIM,
++};
++
+ enum br_mrp_ring_state_type {
+ 	BR_MRP_RING_STATE_OPEN,
+ 	BR_MRP_RING_STATE_CLOSED,
+ };
+ 
++enum br_mrp_in_state_type {
++	BR_MRP_IN_STATE_OPEN,
++	BR_MRP_IN_STATE_CLOSED,
++};
++
+ enum br_mrp_port_state_type {
+ 	BR_MRP_PORT_STATE_DISABLED,
+ 	BR_MRP_PORT_STATE_BLOCKED,
+@@ -36,6 +47,7 @@ enum br_mrp_port_state_type {
+ enum br_mrp_port_role_type {
+ 	BR_MRP_PORT_ROLE_PRIMARY,
+ 	BR_MRP_PORT_ROLE_SECONDARY,
++	BR_MRP_PORT_ROLE_INTER,
+ };
+ 
+ enum br_mrp_tlv_header_type {
+@@ -45,6 +57,10 @@ enum br_mrp_tlv_header_type {
+ 	BR_MRP_TLV_HEADER_RING_TOPO = 0x3,
+ 	BR_MRP_TLV_HEADER_RING_LINK_DOWN = 0x4,
+ 	BR_MRP_TLV_HEADER_RING_LINK_UP = 0x5,
++	BR_MRP_TLV_HEADER_IN_TEST = 0x6,
++	BR_MRP_TLV_HEADER_IN_TOPO = 0x7,
++	BR_MRP_TLV_HEADER_IN_LINK_DOWN = 0x8,
++	BR_MRP_TLV_HEADER_IN_LINK_UP = 0x9,
+ 	BR_MRP_TLV_HEADER_OPTION = 0x7f,
+ };
+ 
+@@ -118,4 +134,26 @@ struct br_mrp_oui_hdr {
+ 	__u8 oui[MRP_OUI_LENGTH];
+ };
+ 
++struct br_mrp_in_test_hdr {
++	__be16 id;
++	__u8 sa[ETH_ALEN];
++	__be16 port_role;
++	__be16 state;
++	__be16 transitions;
++	__be32 timestamp;
++};
++
++struct br_mrp_in_topo_hdr {
++	__u8 sa[ETH_ALEN];
++	__be16 id;
++	__be16 interval;
++};
++
++struct br_mrp_in_link_hdr {
++	__u8 sa[ETH_ALEN];
++	__be16 port_role;
++	__be16 id;
++	__be16 interval;
++};
++
+ #endif
 -- 
 2.27.0
 
