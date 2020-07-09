@@ -2,119 +2,105 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B64C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D189C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5162070E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E182070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594336547;
-	bh=WKp2RVFe68SGsfy7Hqg46eACLbZJztj8u5UjJnydzJw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=I2Yj81D1oUxo9LHEsseeJeydIiai9RPQOmqPw8ekkM/WUkWT8KFaIWyuTKs7S78bU
-	 bFFz9UsHF38+QCpMKkBUBUXhrUsgXb/k0wfFyGAGYvRW9qXDI7vE1IlKrGJVG1GzYG
-	 wBHtkf+6XerMWRX64X6hCjWmNNIm1E/Lg7Buzeqw=
+	s=default; t=1594336574;
+	bh=mNyk9N4alJQfoIxQDdG6TbNcCeQqLvhEwItt5YuNIbQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eMs65S+/dgYclZEZJBPZEp3si1sIM/xCbV/pDqXVOMqC5jbhtZ5wPauvU5f5ls2GJ
+	 KX334xVhVrNN601VognC8G4u4h0WMQusrsbZpS1XDRMnTwis4dQ45OsbjEMOEyuO/I
+	 9nXZ1lB+tti7HQqWaEe4hL2eWM2qlhpep5QgU80g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgGIXPp (ORCPT
+        id S1726908AbgGIXQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:15:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbgGIXPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:15:45 -0400
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9373420786;
-        Thu,  9 Jul 2020 23:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594336544;
-        bh=WKp2RVFe68SGsfy7Hqg46eACLbZJztj8u5UjJnydzJw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sTKNHyrGxjZHVmElPsUrMB0oPbGEmh5sIBbuCWoItrDYOtZOQtKBzRCD1UOwRW0ps
-         xYuzzensHJN29VXkbSU6m244+1lhHoeEjAUc8IQj6dY7k1sZULyLeqTvV0ZhOND5I2
-         qIvmbbAXmhQevnKbX//nYKBoVOqX97awD/JvDNdA=
-Received: by mail-lj1-f180.google.com with SMTP id h19so4255625ljg.13;
-        Thu, 09 Jul 2020 16:15:44 -0700 (PDT)
-X-Gm-Message-State: AOAM532uWMyOy5m3fbk7zDok68KOihMBZRyldLWzAHuloYpDFEvb4KkP
-        U8SjEndGk57z1Lt/5BO+kC3sQNO0yZBP2V3UvjM=
-X-Google-Smtp-Source: ABdhPJwP3mup+JqlbZ3i4TpJbfsI0x3PxwcNYP4Z+8OXIGKrTQvFVgXB2+LnS3GVk56FcdbCumxmhbXp3nvJtI9dPx4=
-X-Received: by 2002:a05:651c:111:: with SMTP id a17mr16456695ljb.265.1594336542920;
- Thu, 09 Jul 2020 16:15:42 -0700 (PDT)
+        Thu, 9 Jul 2020 19:16:13 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46452 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726311AbgGIXQM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 19:16:12 -0400
+Received: by mail-il1-f196.google.com with SMTP id a6so3468935ilq.13;
+        Thu, 09 Jul 2020 16:16:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iKzcctYs0QvUJ6q2sy3GcGzx+xLjicf/+aR5rbD4H3M=;
+        b=idaUOSIP8jLKCq5j8Mdildpk6iT+FliCqUomAXtv4iTioDV36i+YRQ6VnVrytSOkUz
+         tqvHFRBQgylZJ0Im/fx1/Yd2QCEe2wrtT5rH+C+0cO3PFIk2oXjrNjXvbczZCMrOAitC
+         9PnUYQ8jecNE7fXY05AaXVUy5zQXb0smEAkFeI+Mzxzx6qdrn6rmTSwrDh3F5kmwIoeu
+         IV83dYOjAOgHYg23wL16fEo7suqqSOBgfd939Nu8EHJCI/6hxGF55UeutbMlQsJoHUEg
+         k9pKYEninLudPY7nQGamlwkx3jLb4uA0XbPtCvhAzygO3IuQR4vgafRHRQmBr7IvJ90r
+         bf+w==
+X-Gm-Message-State: AOAM533X03ww90oSHBtl4ETE0OcaupPUmh3hBaSXmLFFhGjNMGlMt1fc
+        SKgZ1WmAHrg3oxlPSLB8M2q72piMXcky
+X-Google-Smtp-Source: ABdhPJyGoYqtu1pgdnf0oNWJV1iPyQWBtsQqraNlXKAUYkIRszTj3i+FNESTxpecxYcJhm2Um4HTmQ==
+X-Received: by 2002:a92:40cf:: with SMTP id d76mr50233534ill.198.1594336571851;
+        Thu, 09 Jul 2020 16:16:11 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id k24sm2642537ilg.66.2020.07.09.16.16.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 16:16:11 -0700 (PDT)
+Received: (nullmailer pid 1077936 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:16:10 -0000
+Date:   Thu, 9 Jul 2020 17:16:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Ravi Kumar Bokka <rbokka@codeaurora.org>, rnayak@codeaurora.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, dhavalp@codeaurora.org,
+        linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
+        sparate@codeaurora.org, saiprakash.ranjan@codeaurora.org,
+        Rob Herring <robh+dt@kernel.org>, mkurumel@codeaurora.org,
+        Andy Gross <agross@kernel.org>, mturney@codeaurora.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: nvmem: qfprom: Convert to yaml
+Message-ID: <20200709231610.GA1077879@bogus>
+References: <20200622144929.230498-1-dianders@chromium.org>
+ <20200622074845.v4.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
 MIME-Version: 1.0
-References: <1593266228-61125-1-git-send-email-guoren@kernel.org> <mhng-af022fcc-7dce-4d1b-9204-d31241538412@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-af022fcc-7dce-4d1b-9204-d31241538412@palmerdabbelt-glaptop1>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Fri, 10 Jul 2020 07:15:31 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRQkEM7zR06GYOGhT_Aerhc9vRNaxsDZ-jVCHyEodnXcg@mail.gmail.com>
-Message-ID: <CAJF2gTRQkEM7zR06GYOGhT_Aerhc9vRNaxsDZ-jVCHyEodnXcg@mail.gmail.com>
-Subject: Re: [PATCH V2 0/3] riscv: Enable LOCKDEP
-To:     Palmer Dabbelt <palmerdabbelt@google.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Zong Li <zong.li@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Nick Hu <nickhu@andestech.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622074845.v4.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you, Palmer
+On Mon, 22 Jun 2020 07:49:26 -0700, Douglas Anderson wrote:
+> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> 
+> This switches the bindings over from txt to yaml.
+> 
+> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+> Changes in v4:
+> - Maintainer now listed as Srinivas.
+> - Example under "soc" to get #address-cells and #size-cells.
+> 
+> Changes in v3:
+> - Split conversion to yaml into separate patch new in v3.
+> - Use 'const' for compatible instead of a 1-entry enum.
+> - Changed filename to match compatible string.
+> - Add #address-cells and #size-cells to list of properties.
+> - Fixed up example.
+> 
+>  .../bindings/nvmem/qcom,qfprom.yaml           | 50 +++++++++++++++++++
+>  .../devicetree/bindings/nvmem/qfprom.txt      | 35 -------------
+>  2 files changed, 50 insertions(+), 35 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
+> 
 
-On Fri, Jul 10, 2020 at 6:06 AM Palmer Dabbelt <palmerdabbelt@google.com> wrote:
->
-> On Sat, 27 Jun 2020 06:57:05 PDT (-0700), guoren@kernel.org wrote:
-> > From: Guo Ren <guoren@linux.alibaba.com>
-> >
-> > Lockdep is needed by proving the spinlocks and rwlocks. To support it,
-> > we need to add TRACE_IRQFLAGS codes in kernel/entry.S. These patches
-> > follow Documentation/irqflags-tracing.txt.
-> >
-> > Fixup 2 bugs that block the lockdep implementation.
-> >
-> > ---
-> > Changes in v2
-> >  - Remove sX regs recovery codes which are unnecessary, because
-> >    callee will handle them. Thx Greentime :)
-> >
-> >  - Move "restore a0 - a7" to handle_syscall, but if _TIF_SYSCALL_WORK
-> >    is set, "restore a1 - a7" is still duplicated. I prefer a C wrapper
-> >    for syscall.
-> >
-> > Guo Ren (2):
-> >   riscv: Fixup static_obj() fail
-> >   riscv: Enable LOCKDEP_SUPPORT & fixup TRACE_IRQFLAGS_SUPPORT
-> >
-> > Zong Li (1):
-> >   riscv: Fixup lockdep_assert_held with wrong param cpu_running
-> >
-> >  arch/riscv/Kconfig              |  3 +++
-> >  arch/riscv/kernel/entry.S       | 33 ++++++++++++++++++++++++++++++++-
-> >  arch/riscv/kernel/smpboot.c     |  1 -
-> >  arch/riscv/kernel/vmlinux.lds.S |  2 +-
-> >  4 files changed, 36 insertions(+), 3 deletions(-)
->
-> These are on for-next.  As far as I can tell lockdep is working, but I'm just
-> doing some simple boot tests.
->
-> Thanks!
-
-
-
--- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+Reviewed-by: Rob Herring <robh@kernel.org>
