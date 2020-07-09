@@ -2,140 +2,132 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C36CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09DB320663
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:09:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="WbXnCsJa"
+	by mail.kernel.org (Postfix) with ESMTP id 4891020663
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgGIKJr (ORCPT
+        id S1726497AbgGIKLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:09:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbgGIKJq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:09:46 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9663C061A0B
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 03:09:46 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d10so655594pll.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 03:09:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=76l8qPKsbcZxqhpyjedMoRnwYdl4LVn9sy/6xNrRrrU=;
-        b=WbXnCsJa1ka6PH6CfdDjTVuqByC+UzWjszjU+Idcv/JK7yz/NP3lIkuU8hYVlyaxRl
-         DrdSG31UM0F49GmgjSn2SJQ8pHDu7YCgS71wbcLf6g1M7AvjxL6KLqQMIas8LXeHww0/
-         at0XdMEvfeIqclNagcu7IbnozCnzb3eWx3ji4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=76l8qPKsbcZxqhpyjedMoRnwYdl4LVn9sy/6xNrRrrU=;
-        b=IAxGp6LAy19AdG4jUDjnkRIdydacuHnakS8YzxzFl9S6isr+Xtsp4PFVoJGE1mtzdp
-         MaV3FV8f4GUrXPjtGdVIeGkCtDYL+t1LYqB4kxybmabIUf/s4Km8oJjIa9OcFOhQ/jnu
-         8WmdveJRD80dA9C0zsa6gw4jTlBhQvaxuWoazCydjUcXhYrmYt2jvTdn2oFIrH1p4+yf
-         lYNEhuTrZzTIVkjKlzD0z+q1aicNE3cfRKzjanLPfopZ1XO/uMJoU7wZsxORL83vTnJ6
-         IFXztJUEmBTLsNgMNpyZqDREAc3iDWaqxnRsnHwG5EIM5N6UwqVWuByLDkScEv5IZJv6
-         0FXw==
-X-Gm-Message-State: AOAM533ahFUp4/Ekq69vQ8kPxFIW1lyezktlrTM6YO7eAvrUpJHnPmi5
-        fGEigzo9HAFyHKFdgE0hIixiVA==
-X-Google-Smtp-Source: ABdhPJwjbGs5toMFCehlDdTP7g7sB4jU8QEfsIKM6Pai0ZGMN7QTYg3cUzf5HMRNF53SMb6yYx65Tw==
-X-Received: by 2002:a17:90a:a60a:: with SMTP id c10mr14992743pjq.117.1594289386275;
-        Thu, 09 Jul 2020 03:09:46 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:24b9:69b0:e917:1d11])
-        by smtp.gmail.com with ESMTPSA id ji2sm2076527pjb.1.2020.07.09.03.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 03:09:45 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v5 4/4] ARM: dts: rockchip: Add Radxa Rock Pi N8 initial support
-Date:   Thu,  9 Jul 2020 15:37:56 +0530
-Message-Id: <20200709100756.42384-5-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200709100756.42384-1-jagan@amarulasolutions.com>
-References: <20200709100756.42384-1-jagan@amarulasolutions.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 9 Jul 2020 06:11:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58286 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbgGIKLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:11:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 738F3B04C;
+        Thu,  9 Jul 2020 10:11:50 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 65DBB60567; Thu,  9 Jul 2020 12:11:50 +0200 (CEST)
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net] ethtool: fix genlmsg_put() failure handling in
+ ethnl_default_dumpit()
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Message-Id: <20200709101150.65DBB60567@lion.mk-sys.cz>
+Date:   Thu,  9 Jul 2020 12:11:50 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rock Pi N8 is a Rockchip RK3288 based SBC, which has
-- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
-- Compatible carrier board from Radxa.
+If the genlmsg_put() call in ethnl_default_dumpit() fails, we bail out
+without checking if we already have some messages in current skb like we do
+with ethnl_default_dump_one() failure later. Therefore if existing messages
+almost fill up the buffer so that there is not enough space even for
+netlink and genetlink header, we lose all prepared messages and return and
+error.
 
-VAMRC RK3288 SOM need to mount on top of radxa dalang
-carrier board for making Rock Pi N8 SBC.
+Rather than duplicating the skb->len check, move the genlmsg_put(),
+genlmsg_cancel() and genlmsg_end() calls into ethnl_default_dump_one().
+This is also more logical as all message composition will be in
+ethnl_default_dump_one() and only iteration logic will be left in
+ethnl_default_dumpit().
 
-So, add initial support for Rock Pi N8 by including rk3288,
-rk3288 vamrc-som and raxda dalang carrier board dtsi files.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Fixes: 728480f12442 ("ethtool: default handlers for GET requests")
+Reported-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 ---
-Changes for v5, v4, v3:
-- none
-Changes for v2:
-- reorder dtsi include so-that common properties will
-  visible to main dts.
+ net/ethtool/netlink.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
- arch/arm/boot/dts/Makefile              |  1 +
- arch/arm/boot/dts/rk3288-rock-pi-n8.dts | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..1d1b6ac26394 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -964,6 +964,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3288-popmetal.dtb \
- 	rk3288-r89.dtb \
- 	rk3288-rock2-square.dtb \
-+	rk3288-rock-pi-n8.dtb \
- 	rk3288-tinker.dtb \
- 	rk3288-tinker-s.dtb \
- 	rk3288-veyron-brain.dtb \
-diff --git a/arch/arm/boot/dts/rk3288-rock-pi-n8.dts b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-new file mode 100644
-index 000000000000..b19593021713
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Vamrs Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index 88fd07f47040..dd8a1c1dc07d 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -376,10 +376,17 @@ static int ethnl_default_doit(struct sk_buff *skb, struct genl_info *info)
+ }
+ 
+ static int ethnl_default_dump_one(struct sk_buff *skb, struct net_device *dev,
+-				  const struct ethnl_dump_ctx *ctx)
++				  const struct ethnl_dump_ctx *ctx,
++				  struct netlink_callback *cb)
+ {
++	void *ehdr;
+ 	int ret;
+ 
++	ehdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
++			   &ethtool_genl_family, 0, ctx->ops->reply_cmd);
++	if (!ehdr)
++		return -EMSGSIZE;
 +
-+/dts-v1/;
-+#include "rk3288.dtsi"
-+#include <arm/rockchip-radxa-dalang-carrier.dtsi>
-+#include "rk3288-vmarc-som.dtsi"
-+
-+/ {
-+	model = "Radxa ROCK Pi N8";
-+	compatible = "radxa,rockpi-n8", "vamrs,rk3288-vmarc-som",
-+		     "rockchip,rk3288";
-+};
+ 	ethnl_init_reply_data(ctx->reply_data, ctx->ops, dev);
+ 	rtnl_lock();
+ 	ret = ctx->ops->prepare_data(ctx->req_info, ctx->reply_data, NULL);
+@@ -395,6 +402,10 @@ static int ethnl_default_dump_one(struct sk_buff *skb, struct net_device *dev,
+ 	if (ctx->ops->cleanup_data)
+ 		ctx->ops->cleanup_data(ctx->reply_data);
+ 	ctx->reply_data->dev = NULL;
++	if (ret < 0)
++		genlmsg_cancel(skb, ehdr);
++	else
++		genlmsg_end(skb, ehdr);
+ 	return ret;
+ }
+ 
+@@ -411,7 +422,6 @@ static int ethnl_default_dumpit(struct sk_buff *skb,
+ 	int s_idx = ctx->pos_idx;
+ 	int h, idx = 0;
+ 	int ret = 0;
+-	void *ehdr;
+ 
+ 	rtnl_lock();
+ 	for (h = ctx->pos_hash; h < NETDEV_HASHENTRIES; h++, s_idx = 0) {
+@@ -431,26 +441,15 @@ static int ethnl_default_dumpit(struct sk_buff *skb,
+ 			dev_hold(dev);
+ 			rtnl_unlock();
+ 
+-			ehdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
+-					   cb->nlh->nlmsg_seq,
+-					   &ethtool_genl_family, 0,
+-					   ctx->ops->reply_cmd);
+-			if (!ehdr) {
+-				dev_put(dev);
+-				ret = -EMSGSIZE;
+-				goto out;
+-			}
+-			ret = ethnl_default_dump_one(skb, dev, ctx);
++			ret = ethnl_default_dump_one(skb, dev, ctx, cb);
+ 			dev_put(dev);
+ 			if (ret < 0) {
+-				genlmsg_cancel(skb, ehdr);
+ 				if (ret == -EOPNOTSUPP)
+ 					goto lock_and_cont;
+ 				if (likely(skb->len))
+ 					ret = skb->len;
+ 				goto out;
+ 			}
+-			genlmsg_end(skb, ehdr);
+ lock_and_cont:
+ 			rtnl_lock();
+ 			if (net->dev_base_seq != seq) {
 -- 
-2.25.1
+2.27.0
 
