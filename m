@@ -2,174 +2,396 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA855C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B891C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7B2A20739
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EADD9206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:57:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bmSQQ6nu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgGIE4C (ORCPT
+        id S1726220AbgGIE4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 00:56:02 -0400
-Received: from mga17.intel.com ([192.55.52.151]:30715 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgGIE4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 00:56:01 -0400
-IronPort-SDR: uotb+ZhqJL9rl/MQMbS/xLuIWnTtRh04zccGY1FPGG01aJoSNQ8VZbKx+6mR8R17pcjFdsIAvD
- vAuxvZ0hv9gQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="128007830"
-X-IronPort-AV: E=Sophos;i="5.75,330,1589266800"; 
-   d="scan'208";a="128007830"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 21:56:01 -0700
-IronPort-SDR: IvPR29umbfUPvj6t7MskItNErhnlcuvlpD0Z46MoNFUW0F7nsB0ThPBjBGlkrk+cqbze4bMXTT
- ALuhRsnTCu0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,330,1589266800"; 
-   d="scan'208";a="324103571"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by orsmga007.jf.intel.com with ESMTP; 08 Jul 2020 21:55:55 -0700
-Date:   Thu, 9 Jul 2020 12:55:54 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     "Huang, Ying" <ying.huang@intel.com>,
-        Andi Kleen <andi.kleen@intel.com>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>
-Cc:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, tim.c.chen@intel.com,
-        dave.hansen@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, lkp@lists.01.org
-Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
-Message-ID: <20200709045554.GA56190@shbuild999.sh.intel.com>
-References: <FAAE2B23-2565-4F36-B278-018A5AD219EE@lca.pw>
- <20200705125854.GA66252@shbuild999.sh.intel.com>
- <20200705155232.GA608@lca.pw>
- <20200706014313.GB66252@shbuild999.sh.intel.com>
- <20200706023614.GA1231@lca.pw>
- <20200706132443.GA34488@shbuild999.sh.intel.com>
- <20200706133434.GA3483883@tassilo.jf.intel.com>
- <20200707023829.GA85993@shbuild999.sh.intel.com>
- <87zh8c7z5i.fsf@yhuang-dev.intel.com>
- <20200707054120.GC21741@shbuild999.sh.intel.com>
+        Thu, 9 Jul 2020 00:56:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgGIE4w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 00:56:52 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27850C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 21:56:52 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b25so851573ljp.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 21:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=k6xBJfX7syhGMwe00DwS5UHKXggCL3urTpYpvhNxS5k=;
+        b=bmSQQ6nu11a6CREEi4k2dEsXRfaMuTJEq+M6Tvfg0g0ZSjIMKtHskn9aSQxbyjJl1s
+         gLBVrdvgAOqwJ6uljvFi1xW72Ph2kdGrUotkwli2HXJcVhohAcDdi/a0zSNOkQkuqXbw
+         FuPvta7X0OLzDP2Jg7tz/hHD3KPCtJtfSpGA6yJNrHOim/4a+k1SiPbsVP4HmTPHdR6q
+         HNCcd4iJEIjfcpoekay8KHUAkW8zEXk8DKFe+PT3J2QEvypzL1Wb1R9z4d19ZZ6rikqB
+         JLYz/gtdzha70fnadwrKeYT1qvEr0/o4BuPDt1qoiha83nPTa9ctgGufRNTwdgvRX9s7
+         adgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=k6xBJfX7syhGMwe00DwS5UHKXggCL3urTpYpvhNxS5k=;
+        b=JaNYvAfYQmilg8k0GwNjZYLd/ZHQu3UeyR1zgbuxZIiiij7zQlQ5/Oj+hywAkcJBXN
+         0s7tSEQWElejId5zxzH08WRgeWTOMko78c7uwt+j+auM073mk33RAPY3uNrpIf0Bx8CL
+         FhN5iutHGt3K48zHZ0jG27vcJ7Aoh75D6B5XVAqWEveMNzgYc3G5bdLM1r/6npOXUMn6
+         iifd25U20qJljUSS+5EgssrX5mGU/9+gcwL7o/lRHiOmhkkHrDSUPq8RVX2HFDcwQkVg
+         rGekzEncBkqYsHE7xjGoMBW3q+BHkg+kxTEc6Y8NVagbn5IqlZdmpFB00a9o00RIKXGz
+         xwHg==
+X-Gm-Message-State: AOAM532+PvHqYBNwrry7qaXCmu1zpgSKOEKw2GuHxNEu5pGr/5137diy
+        xS+bRh3JWzkg3pUVf2G7G055p3a3RUEc62W4CjMyLwxZbNKRCw==
+X-Google-Smtp-Source: ABdhPJzDC7UW1QipkG9uvZQhP9amW0ofWjY+7tNhN0CxON3S+kpIdGcRcQYaW1nzqf7gSmdehs5TS5ZatM3+znXEomc=
+X-Received: by 2002:a2e:b88c:: with SMTP id r12mr35264498ljp.266.1594270609674;
+ Wed, 08 Jul 2020 21:56:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707054120.GC21741@shbuild999.sh.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 9 Jul 2020 10:26:38 +0530
+Message-ID: <CA+G9fYvgYnXLN_K=cz5u2FpH+Kx3HaZOFhkDOdN8vxsuTcEWmA@mail.gmail.com>
+Subject: WARNING: kernel stack regs at 00000000de0bac5a in cpuacct.sh:5923 has
+ bad 'bp' value
+To:     open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, LTP List <ltp@lists.linux.it>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 01:41:20PM +0800, Feng Tang wrote:
-> On Tue, Jul 07, 2020 at 12:00:09PM +0800, Huang, Ying wrote:
-> > Feng Tang <feng.tang@intel.com> writes:
-> > 
-> > > On Mon, Jul 06, 2020 at 06:34:34AM -0700, Andi Kleen wrote:
-> > >> >  	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-> > >> > -	if (ret == 0 && write)
-> > >> > +	if (ret == 0 && write) {
-> > >> > +		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
-> > >> > +			schedule_on_each_cpu(sync_overcommit_as);
-> > >> 
-> > >> The schedule_on_each_cpu is not atomic, so the problem could still happen
-> > >> in that window.
-> > >> 
-> > >> I think it may be ok if it eventually resolves, but certainly needs
-> > >> a comment explaining it. Can you do some stress testing toggling the
-> > >> policy all the time on different CPUs and running the test on
-> > >> other CPUs and see if the test fails?
-> > >
-> > > For the raw test case reported by 0day, this patch passed in 200 times
-> > > run. And I will read the ltp code and try stress testing it as you
-> > > suggested.
-> > >
-> > >
-> > >> The other alternative would be to define some intermediate state
-> > >> for the sysctl variable and only switch to never once the schedule_on_each_cpu
-> > >> returned. But that's more complexity.
-> > >
-> > > One thought I had is to put this schedule_on_each_cpu() before
-> > > the proc_dointvec_minmax() to do the sync before sysctl_overcommit_memory
-> > > is really changed. But the window still exists, as the batch is
-> > > still the larger one. 
-> > 
-> > Can we change the batch firstly, then sync the global counter, finally
-> > change the overcommit policy?
-> 
-> These reorderings are really head scratching :)
-> 
-> I've thought about this before when Qian Cai first reported the warning
-> message, as kernel had a check: 
-> 
-> 	VM_WARN_ONCE(percpu_counter_read(&vm_committed_as) <
-> 			-(s64)vm_committed_as_batch * num_online_cpus(),
-> 			"memory commitment underflow");
-> 
-> If the batch is decreased first, the warning will be easier/earlier to be
-> triggered, so I didn't brought this up when handling the warning message.
-> 
-> But it might work now, as the warning has been removed.
+While running LTP controllers on mainline 5.8.0-rc4 the kernel warning was
+noticed on x86_64 KASAN enabled kernel.
 
-I tested the reorder way, and the test could pass in 100 times run. The
-new order when changing policy to OVERCOMMIT_NEVER:
-  1. re-compute the batch ( to the smaller one)
-  2. do the on_each_cpu sync
-  3. really change the policy to NEVER.
+steps to reproduce:
+- boot KASAN enabled x86_64 device
+- cd /opt/ltp
+- ./runltp -f controllers
 
-It solves one of previous concern, that after the sync is done on cpuX,
-but before the whole sync on all cpus are done, there is a window that
-the percpu-counter could be enlarged again.
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git commit: 63e1968a2c87e9461e9694a96991935116e0cec7
+  kernel-config:
+https://builds.tuxbuild.com/Vo6kJCXrQFAecvpDYbsNfA/kernel.config
+  vmlinux: https://builds.tuxbuild.com/Vo6kJCXrQFAecvpDYbsNfA/vmlinux.xz
+  system.map: https://builds.tuxbuild.com/Vo6kJCXrQFAecvpDYbsNfA/System.map
 
-IIRC Andi had concern about read side cost when doing the sync, my
-understanding is most of the readers (malloc/free/map/unmap) are using
-percpu_counter_read_positive, which is a fast path without involving lock.
+test log:
+cpuacct 1 TINFO: cpuacct: /sys/fs/cgroup/cpu,cpuacct
+cpuacct 1 TINFO: Creating 100 subgroups each with 100 processes
+[ 2065.217708] WARNING: kernel stack regs at 00000000de0bac5a in
+cpuacct.sh:5923 has bad 'bp' value 0000000000000000
+[ 2065.217710] unwind stack type:0 next_sp:0000000000000000 mask:0x6 graph_idx:0
+[ 2065.217713] 00000000dccf3e29: ffff8882308899d0 (0xffff8882308899d0)
+[ 2065.217718] 000000000ced5e7d: ffffffff88520337 (arch_stack_walk+0x87/0xf0)
+[ 2065.217719] 00000000c3b8b4a3: 0000000000000000 ...
+[ 2065.217720] 00000000a5100dde: ffff8881dd300000 (0xffff8881dd300000)
+[ 2065.217722] 00000000d26471bd: ffff8881dd308000 (0xffff8881dd308000)
+[ 2065.217723] 00000000c0fb7603: 0000000000000000 ...
+[ 2065.217724] 000000000a0685f8: 0000000000000006 (0x6)
+[ 2065.217725] 00000000c4e89127: ffff8881e09cbd00 (0xffff8881e09cbd00)
+[ 2065.217727] 0000000047505be5: 0000010100000000 (0x10100000000)
+[ 2065.217727] 00000000806a2e76: 0000000000000000 ...
+[ 2065.217729] 00000000f07cebbf: ffff888230889938 (0xffff888230889938)
+[ 2065.217731] 000000004fc275e8: ffffffff88402b4d (ret_from_fork+0xd/0x30)
+[ 2065.217732] 0000000090ee713c: 0000000000000000 ...
+[ 2065.217734] 00000000fbfdc4ef: ffff8881dd307ea8 (0xffff8881dd307ea8)
+[ 2065.217735] 000000008475d463: 19bfbd057188fd00 (0x19bfbd057188fd00)
+[ 2065.217737] 00000000ad790ad9: ffffed104611133c (0xffffed104611133c)
+[ 2065.217738] 00000000fb59349d: 0000000000000a20 (0xa20)
+[ 2065.217739] 0000000019732c4b: ffff8881dd2b1b80 (0xffff8881dd2b1b80)
+[ 2065.217740] 00000000236b0212: 0000000000000000 ...
+[ 2065.217742] 00000000b4714969: ffff888230889a68 (0xffff888230889a68)
+[ 2065.217745] 00000000101a1272: ffffffff8870efcf (stack_trace_save+0x8f/0xc0)
+[ 2065.217746] 00000000822328ce: 0000000041b58ab3 (0x41b58ab3)
+[ 2065.217748] 0000000078676158: ffffffff8a6340cc (0xffffffff8a6340cc)
+[ 2065.217750] 00000000245fa723: ffffffff8870ef40
+(stack_trace_consume_entry+0x90/0x90)
+[ 2065.217751] 000000009a7b06c9: 0000000000000000 ...
+[ 2065.217752] 00000000686e9812: ffff888230889a78 (0xffff888230889a78)
+[ 2065.217754] 000000000eb43e1c: 0000000000000040 (0x40)
+[ 2065.217755] 000000000c034512: 000000000000000f (0xf)
+[ 2065.217758] 000000008dc113ec: ffffffff88671a53
+(kernel_text_address+0xe3/0xf0)
+[ 2065.217759] 00000000c5bfdc59: ffff8881dd2f7f58 (0xffff8881dd2f7f58)
+[ 2065.217761] 00000000076a9187: ffff888230889ac0 (0xffff888230889ac0)
+[ 2065.217762] 0000000020020bf7: ffff888230889a48 (0xffff888230889a48)
+[ 2065.217765] 00000000b602adf1: ffffffff88671a6d
+(__kernel_text_address+0xd/0x40)
+[ 2065.217767] 00000000fd3561b8: ffff888230889a78 (0xffff888230889a78)
+[ 2065.217768] 000000001fbe04e1: ffff888230889a68 (0xffff888230889a68)
+[ 2065.217771] 000000008333f971: ffffffff8855b581
+(unwind_get_return_address+0x31/0x50)
+[ 2065.217773] 000000004c0dbeef: 19bfbd057188fd00 (0x19bfbd057188fd00)
+[ 2065.217774] 00000000bbb9110b: ffff8881dd2b1c60 (0xffff8881dd2b1c60)
+[ 2065.217776] 00000000cc8b0486: ffff888230889c80 (0xffff888230889c80)
+[ 2065.217778] 000000008b439a46: ffffffff888dcae3 (save_stack+0x23/0x50)
+[ 2065.217780] 00000000a66b6692: ffffffff888dcae3 (save_stack+0x23/0x50)
+[ 2065.217782] 0000000075588e36: ffffffff888dcf3f
+(__kasan_kmalloc.constprop.0+0xcf/0xe0)
+[ 2065.217784] 00000000a050be3e: ffffffff888dd2ce (kasan_slab_alloc+0xe/0x10)
+[ 2065.217787] 00000000029235b1: ffffffff888d8200 (kmem_cache_alloc+0xc0/0x240)
+[ 2065.217791] 000000005e6a28dd: ffffffff896567cf (__build_skb+0x1f/0x50)
+[ 2065.217793] 00000000fb80faf7: ffffffff89656814 (build_skb+0x14/0xd0)
+[ 2065.217796] 000000008e683902: ffffffff892ddc92 (igb_poll+0x15d2/0x1e20)
+[ 2065.217799] 000000006a844143: ffffffff89687297 (net_rx_action+0x2a7/0x690)
+[ 2065.217802] 00000000bd9d4055: ffffffff89e00107 (__do_softirq+0x107/0x3a9)
+[ 2065.217804] 0000000083f57728: ffffffff89c00f82 (asm_call_on_stack+0x12/0x20)
+[ 2065.217807] 00000000411a40b2: ffffffff8850a3aa
+(do_softirq_own_stack+0x3a/0x50)
+[ 2065.217809] 00000000e88ca3a4: ffffffff88640d75 (irq_exit_rcu+0xd5/0xe0)
+[ 2065.217812] 00000000851e0f2c: ffffffff89af256b (common_interrupt+0x7b/0x130)
+[ 2065.217814] 00000000684bd52e: ffffffff89c00b9e
+(asm_common_interrupt+0x1e/0x40)
+[ 2065.217816] 0000000064414bca: ffffffff88402b4d (ret_from_fork+0xd/0x30)
+[ 2065.217818] 00000000073e925d: ffff88820a919000 (0xffff88820a919000)
+[ 2065.217819] 00000000f122296d: ffff88822f8af200 (0xffff88822f8af200)
+[ 2065.217821] 00000000e10c5497: ffff888230889b98 (0xffff888230889b98)
+[ 2065.217823] 0000000028d3382d: ffffffff8870efcf (stack_trace_save+0x8f/0xc0)
+[ 2065.217825] 000000006b7fb39e: 0000000041b58ab3 (0x41b58ab3)
+[ 2065.217826] 00000000f924ad41: ffffffff8a6340cc (0xffffffff8a6340cc)
+[ 2065.217829] 0000000087059204: ffffffff8870ef40
+(stack_trace_consume_entry+0x90/0x90)
+[ 2065.217830] 0000000073ede54b: ffff888230889bb0 (0xffff888230889bb0)
+[ 2065.217832] 0000000085b11a7d: ffff888230889ba8 (0xffff888230889ba8)
+[ 2065.217833] 000000008217a967: 0000000000000040 (0x40)
+[ 2065.217834] 00000000fe8ad12e: 0000000000000017 (0x17)
+[ 2065.217835] 000000007bbfeff6: 0000000000000001 (0x1)
+[ 2065.217836] 0000000027198798: 0000000000000800 (0x800)
+[ 2065.217838] 00000000e6419aef: ffff8881d3c52b40 (0xffff8881d3c52b40)
+[ 2065.217838] 00000000452bc7f0: 0000000000000000 ...
+[ 2065.217840] 00000000fabdf465: 90408c4f2bb7b700 (0x90408c4f2bb7b700)
+[ 2065.217841] 00000000d8fe77a2: 0000000000000001 (0x1)
+[ 2065.217842] 0000000065e3df2c: 0000000000000800 (0x800)
+[ 2065.217844] 00000000e9ea3d89: ffff88820a919000 (0xffff88820a919000)
+[ 2065.217845] 00000000c9018e53: ffff88822f8af200 (0xffff88822f8af200)
+[ 2065.217848] 000000005a537a52: ffffffff8867a450 (override_creds+0x60/0x60)
+[ 2065.217849] 000000001ea1ed18: ffff888230889db0 (0xffff888230889db0)
+[ 2065.217851] 000000000417db74: ffffffff888dcb02 (save_stack+0x42/0x50)
+[ 2065.217853] 00000000aab6b893: ffffffff888dcae3 (save_stack+0x23/0x50)
+[ 2065.217855] 00000000644a981e: ffffffff888dcc47
+(__kasan_slab_free+0x137/0x180)
+[ 2065.217857] 00000000b792c150: ffffffff888dd2be (kasan_slab_free+0xe/0x10)
+[ 2065.217860] 00000000f6221ac5: ffffffff888da3b2 (kmem_cache_free+0x82/0x2b0)
+[ 2065.217862] 000000004e5ae0ab: ffffffff8867a54f (put_cred_rcu+0xff/0x160)
+[ 2065.217864] 0000000075168244: ffffffff88703a19 (rcu_core+0x399/0xc40)
+[ 2065.217866] 000000002728b51f: ffffffff887042c9 (rcu_core_si+0x9/0x10)
+[ 2065.217868] 00000000b403ee72: ffffffff89e00107 (__do_softirq+0x107/0x3a9)
+[ 2065.217870] 00000000d2d3b47d: ffffffff89c00f82 (asm_call_on_stack+0x12/0x20)
+[ 2065.217873] 0000000095f6159f: ffffffff8850a3aa
+(do_softirq_own_stack+0x3a/0x50)
+[ 2065.217875] 00000000dc8f0843: ffffffff88640d75 (irq_exit_rcu+0xd5/0xe0)
+[ 2065.217877] 00000000b0e90ea0: ffffffff89af3728
+(sysvec_apic_timer_interrupt+0x38/0x90)
+[ 2065.217880] 000000002d06feeb: ffffffff89c00c42
+(asm_sysvec_apic_timer_interrupt+0x12/0x20)
+[ 2065.217883] 000000004af6baee: ffffffff88bda269
+(security_file_open+0x99/0x1d0)
+[ 2065.217886] 00000000aa5c50ff: ffffffff88907ae1 (do_dentry_open+0x1e1/0x6e0)
+[ 2065.217888] 00000000b552d22b: ffffffff8890a5e3 (vfs_open+0x53/0x60)
+[ 2065.217891] 00000000953ac892: ffffffff8892b366 (path_openat+0x1536/0x1ab0)
+[ 2065.217893] 00000000504c321d: ffffffff8892e12f (do_filp_open+0x11f/0x1b0)
+[ 2065.217896] 00000000ce4575ec: ffffffff88908698 (do_sys_openat2+0x318/0x410)
+[ 2065.217898] 00000000e922c185: ffffffff8890ab94 (do_sys_open+0x94/0xf0)
+[ 2065.217900] 000000002098b96c: ffffffff8890ad64 (__x64_sys_openat+0x54/0x60)
+[ 2065.217903] 000000007b74cb79: ffffffff89af1743 (do_syscall_64+0x43/0x70)
+[ 2065.217906] 00000000be4f75e1: ffffffff89c0007c
+(entry_SYSCALL_64_after_hwframe+0x44/0xa9)
+[ 2065.217907] 000000008677182e: 0000000000000038 (0x38)
+[ 2065.217909] 00000000648e334c: ffffffff888dce58
+(kasan_unpoison_shadow+0x38/0x50)
+[ 2065.217910] 000000000ced8d53: ffff8881dd2b1c60 (0xffff8881dd2b1c60)
+[ 2065.217912] 000000005a2ee9d8: 0000000000000a20 (0xa20)
+[ 2065.217913] 00000000eb8e65e1: ffff888230889cc0 (0xffff888230889cc0)
+[ 2065.217915] 000000000371eef7: ffffffff888dcf3f
+(__kasan_kmalloc.constprop.0+0xcf/0xe0)
+[ 2065.217917] 0000000063843d58: ffff8881dd2b1c5f (0xffff8881dd2b1c5f)
+[ 2065.217918] 000000001fadd034: ffff8881dd2b1cc0 (0xffff8881dd2b1cc0)
+[ 2065.217920] 00000000e600c4f3: 0000000000000a20 (0xa20)
+[ 2065.217921] 00000000d5f3e840: ffff88822fb6e800 (0xffff88822fb6e800)
+[ 2065.217923] 00000000556a6f19: ffffffff896567cf (__build_skb+0x1f/0x50)
+[ 2065.217925] 000000001e36897b: ffff88822fb6e800 (0xffff88822fb6e800)
+[ 2065.217926] 00000000d90856cd: ffff888230889cd0 (0xffff888230889cd0)
+[ 2065.217928] 000000001c61318d: ffffffff888dd2ce (kasan_slab_alloc+0xe/0x10)
+[ 2065.217930] 00000000909b137a: ffff888230889d10 (0xffff888230889d10)
+[ 2065.217933] 00000000ec6e5450: ffffffff888d8200 (kmem_cache_alloc+0xc0/0x240)
+[ 2065.217936] 00000000da4e42f2: ffffffff88cf4180
+(refcount_warn_saturate+0x120/0x120)
+[ 2065.217937] 000000003d8541b4: ffff88822ae27000 (0xffff88822ae27000)
+[ 2065.217939] 00000000598c531a: ffff88822ae27000 (0xffff88822ae27000)
+[ 2065.217940] 0000000056f42daa: 0000000000000800 (0x800)
+[ 2065.217941] 000000007d82b2b6: ffff88822b87fb28 (0xffff88822b87fb28)
+[ 2065.217943] 00000000b2dedf85: ffff88822b87fb28 (0xffff88822b87fb28)
+[ 2065.217944] 0000000031b01c2b: ffff888230889d30 (0xffff888230889d30)
+[ 2065.217947] 00000000a79d4256: ffffffff896567cf (__build_skb+0x1f/0x50)
+[ 2065.217948] 00000000bf7acdea: ffff88822ae27040 (0xffff88822ae27040)
+[ 2065.217949] 00000000652bc003: 0000000000000800 (0x800)
+[ 2065.217951] 000000007365a42b: ffff888230889d58 (0xffff888230889d58)
+[ 2065.217953] 0000000063091786: ffffffff89656814 (build_skb+0x14/0xd0)
+[ 2065.217955] 000000002e215bc7: ffffc900000e04d0 (0xffffc900000e04d0)
+[ 2065.217956] 000000009f2cf86f: ffff88822ae27040 (0xffff88822ae27040)
+[ 2065.217958] 00000000200e0479: ffff88822b87fb00 (0xffff88822b87fb00)
+[ 2065.217959] 0000000023f2494a: ffff888230889e60 (0xffff888230889e60)
+[ 2065.217961] 00000000d12804c8: ffffffff892ddc92 (igb_poll+0x15d2/0x1e20)
+[ 2065.217963] 00000000d82607b5: ffffffff8a8f2200 (0xffffffff8a8f2200)
+[ 2065.217964] 0000000026831a8a: ffff888229011960 (0xffff888229011960)
+[ 2065.217966] 00000000d7ca89a6: ffff88820a919090 (0xffff88820a919090)
+[ 2065.217967] 000000002878cf06: ffff88822b87fb68 (0xffff88822b87fb68)
+[ 2065.217969] 00000000754941a9: ffff88822b87f838 (0xffff88822b87f838)
+[ 2065.217970] 0000000019841795: ffff88822b87f820 (0xffff88822b87f820)
+[ 2065.217971] 0000000042011cdf: 0000000000000800 (0x800)
+[ 2065.217973] 000000000315f18a: ffff888200000000 (0xffff888200000000)
+[ 2065.217974] 000000004142ab12: 0000000000000001 (0x1)
+[ 2065.217975] 00000000d90e8400: ffff88822b87f800 (0xffff88822b87f800)
+[ 2065.217977] 000000009b22dab5: ffff88822b87fb10 (0xffff88822b87fb10)
+[ 2065.217978] 000000008f6051b6: ffff8882000000a6 (0xffff8882000000a6)
+[ 2065.217980] 0000000020ccc3f5: ffff88822b87fb18 (0xffff88822b87fb18)
+[ 2065.217981] 000000007f072e75: ffff888200000000 (0xffff888200000000)
+[ 2065.217983] 00000000c2285ddc: ffffffff00000080 (0xffffffff00000080)
+[ 2065.217984] 00000000f53529b8: ffff88822b87fb20 (0xffff88822b87fb20)
+[ 2065.217985] 00000000a05489e0: ffff88822b87fb28 (0xffff88822b87fb28)
+[ 2065.217987] 000000005fbd03b0: ffffc900000e04e4 (0xffffc900000e04e4)
+[ 2065.217988] 00000000daa604a1: ffff88822b87fb5c (0xffff88822b87fb5c)
+[ 2065.217989] 000000009f2bec6d: 0000000000000000 ...
+[ 2065.217991] 00000000a1759e01: ffff88822b87f850 (0xffff88822b87f850)
+[ 2065.217992] 00000000d80a5c30: ffffc900000e04e0 (0xffffc900000e04e0)
+[ 2065.217993] 000000003629c73d: 00000040308b2280 (0x40308b2280)
+[ 2065.217995] 00000000249b5639: ffff88822b2c1de0 (0xffff88822b2c1de0)
+[ 2065.217996] 0000000006e4c93a: ffffc900000e04d8 (0xffffc900000e04d8)
+[ 2065.217997] 00000000f2c4a28b: 0000000000000000 ...
+[ 2065.217999] 00000000bf6c1587: ffff88822b87f850 (0xffff88822b87f850)
+[ 2065.218000] 0000000087f5c602: 0000000000000040 (0x40)
+[ 2065.218001] 000000000e09f38c: ffff88822b87f858 (0xffff88822b87f858)
+[ 2065.218002] 0000000028a56fa8: 0000000000000000 ...
+[ 2065.218003] 00000000346dd6a8: ffff888230889f68 (0xffff888230889f68)
+[ 2065.218006] 00000000201547f3: ffffffff89687297 (net_rx_action+0x2a7/0x690)
+[ 2065.218009] 000000009d0615ec: ffffffff892cdd40
+(igb_tx_ctxtdesc.isra.0+0x170/0x170)
+[ 2065.218010] 00000000b629dc43: ffff8882308b2280 (0xffff8882308b2280)
+[ 2065.218012] 000000000245f5ca: 1ffff110461113d8 (0x1ffff110461113d8)
+[ 2065.218013] 000000005df0facf: ffff888230889f00 (0xffff888230889f00)
+[ 2065.218015] 0000000031baa86a: ffff88822b87f888 (0xffff88822b87f888)
+[ 2065.218016] 00000000e4863c01: ffff88822b87f858 (0xffff88822b87f858)
+[ 2065.218018] 000000005fe1e86c: ffff88822b87f860 (0xffff88822b87f860)
+[ 2065.218019] 00000000a6667df1: 00000001001ae97e (0x1001ae97e)
+[ 2065.218020] 00000000644a0f7f: 19bfbd050000012c (0x19bfbd050000012c)
+[ 2065.218022] 0000000042f1b82c: ffff888230889ee0 (0xffff888230889ee0)
+[ 2065.218023] 000000007248341d: 0000000041b58ab3 (0x41b58ab3)
+[ 2065.218025] 0000000066f00eb1: ffffffff8a6baa30 (0xffffffff8a6baa30)
+[ 2065.218027] 00000000a0da6fe1: ffffffff89686ff0 (napi_busy_loop+0x390/0x390)
+[ 2065.218028] 00000000f0ea585f: ffff88822b9f1c38 (0xffff88822b9f1c38)
+[ 2065.218030] 0000000070cb6c1c: ffff888230889ee0 (0xffff888230889ee0)
+[ 2065.218031] 00000000b76628ad: ffff888230889ee0 (0xffff888230889ee0)
+[ 2065.218033] 00000000cf31de85: ffff888230889f70 (0xffff888230889f70)
+[ 2065.218035] 00000000e6fd5522: ffffffff89b007e6 (_raw_spin_lock+0x76/0xd0)
+[ 2065.218037] 000000008a5116c4: ffff888230889f00 (0xffff888230889f00)
+[ 2065.218038] 00000000c472efcf: ffff888230889f00 (0xffff888230889f00)
+[ 2065.218041] 00000000a9e0bef3: ffffffff89b00770 (_raw_read_lock_irq+0x40/0x40)
+[ 2065.218043] 000000006590c7f6: ffffffff888dcab4
+(__kasan_check_write+0x14/0x20)
+[ 2065.218044] 000000003aee8490: ffff888200000000 (0xffff888200000000)
+[ 2065.218047] 000000009ee4511e: ffffffff89b007e6 (_raw_spin_lock+0x76/0xd0)
+[ 2065.218048] 000000009fb0d836: 0000000041b58ab3 (0x41b58ab3)
+[ 2065.218050] 0000000093977e42: 19bfbd057188fd00 (0x19bfbd057188fd00)
+[ 2065.218051] 00000000b79a804c: ffffffff8a8090d8 (0xffffffff8a8090d8)
+[ 2065.218052] 00000000be700778: 0000000000000003 (0x3)
+[ 2065.218053] 0000000027082d0a: 0000000000000004 (0x4)
+[ 2065.218054] 000000003d814a62: 0000000000000003 (0x3)
+[ 2065.218055] 0000000098449ef1: 0000000000000003 (0x3)
+[ 2065.218057] 00000000138b4a4d: ffff888230889fe8 (0xffff888230889fe8)
+[ 2065.218059] 0000000048477c25: ffffffff89e00107 (__do_softirq+0x107/0x3a9)
+[ 2065.218060] 000000001f7f52ff: 00404040886e265b (0x404040886e265b)
+[ 2065.218062] 000000002e524b5b: ffff8881e09cbd00 (0xffff8881e09cbd00)
+[ 2065.218063] 00000000250433e5: 00000001001ae97e (0x1001ae97e)
+[ 2065.218065] 00000000448ae2c9: ffff8881e09cbd00 (0xffff8881e09cbd00)
+[ 2065.218066] 0000000007ef4278: 0000000000000003 (0x3)
+[ 2065.218067] 000000003acf9028: 0000000000000020 (0x20)
+[ 2065.218068] 00000000882bd382: 000001000000000a (0x1000000000a)
+[ 2065.218070] 000000006773b48b: ffffffff8a8090c0 (0xffffffff8a8090c0)
+[ 2065.218071] 000000008cc7ee6d: 0000000800000004 (0x800000004)
+[ 2065.218072] 0000000036b5ba5f: 0000000000000000 ...
+[ 2065.218073] 00000000acdb00d8: ffff8881dd307ea8 (0xffff8881dd307ea8)
+[ 2065.218075] 0000000012b9c66e: 0000000000000024 (0x24)
+[ 2065.218075] 0000000025c24041: 0000000000000000 ...
+[ 2065.218077] 00000000422c2426: ffff88822b9f1c00 (0xffff88822b9f1c00)
+[ 2065.218078] 00000000fe7cef50: ffff8881dd307e28 (0xffff8881dd307e28)
+[ 2065.218080] 00000000dd7be13c: ffffffff89c00f82 (asm_call_on_stack+0x12/0x20)
+[ 2065.218082] 000000000514276e: ffff8881dd307e28 (0xffff8881dd307e28)
+[ 2065.218083] 00000000f8c67c31: ffff8881dd307e38 (0xffff8881dd307e38)
+[ 2065.218086] 0000000085474f5d: ffffffff8850a3aa
+(do_softirq_own_stack+0x3a/0x50)
+[ 2065.218087] 000000005e5fcdab: ffff8881dd307e58 (0xffff8881dd307e58)
+[ 2065.218090] 00000000869cbe71: ffffffff88640d75 (irq_exit_rcu+0xd5/0xe0)
+[ 2065.218090] 00000000a67280f3: 0000000000000000 ...
+[ 2065.218092] 00000000840e78ef: ffff8881dd307ea8 (0xffff8881dd307ea8)
+[ 2065.218093] 000000007dfa3b5b: ffff8881dd307e98 (0xffff8881dd307e98)
+[ 2065.218095] 000000002aa004b1: ffffffff89af256b (common_interrupt+0x7b/0x130)
+[ 2065.218097] 00000000634077c3: 00000024e09cc280 (0x24e09cc280)
+[ 2065.218097] 00000000ee25d102: 0000000000000000 ...
+[ 2065.218099] 00000000119cbc0d: ffff8881dd307ea9 (0xffff8881dd307ea9)
+[ 2065.218102] 000000008671cab1: ffffffff89c00b9e
+(asm_common_interrupt+0x1e/0x40)
+[ 2065.218102] 00000000de0bac5a: 0000000000000000 ...
+[ 2065.218104] 00000000022fd802: ffffed103c1397a0 (0xffffed103c1397a0)
+[ 2065.218105] 000000006b3bc02c: ffff8881e09cbd07 (0xffff8881e09cbd07)
+[ 2065.218107] 000000008deab4ac: ffffed103c1397a1 (0xffffed103c1397a1)
+[ 2065.218108] 00000000c3155b7e: 0000000000000001 (0x1)
+[ 2065.218109] 000000008088a783: 0000000000000000 ...
+[ 2065.218111] 0000000084b6c1a8: ffffffff8864eab8
+(calculate_sigpending+0x58/0x70)
+[ 2065.218113] 000000003e3d4d4a: 1ffff1103d0b9578 (0x1ffff1103d0b9578)
+[ 2065.218114] 00000000b293e950: 0000000000000008 (0x8)
+[ 2065.218115] 00000000170fa8f8: ffff8881e85cabc0 (0xffff8881e85cabc0)
+[ 2065.218117] 000000009ccb6f0c: ffffffffffffffff (0xffffffffffffffff)
+[ 2065.218119] 000000006d279176: ffffffff88402b4d (ret_from_fork+0xd/0x30)
+[ 2065.218120] 00000000a1aa63ed: 0000000000000010 (0x10)
+[ 2065.218121] 0000000062a1a8aa: 0000000000000246 (0x246)
+[ 2065.218123] 00000000705c1601: ffff8881dd307f58 (0xffff8881dd307f58)
+[ 2065.218124] 00000000c4d240a0: 0000000000000018 (0x18)
+[ 2065.218126] 000000000146cae8: ffffffff88402b48 (ret_from_fork+0x8/0x30)
+[ 2065.218127] 00000000f3f0aa64: 0000000000001722 (0x1722)
+[ 2065.218128] 00000000cf433a88: 0000000001084980 (0x1084980)
+[ 2065.218129] 000000001b33ad97: 0000000000000000 ...
+[ 2065.218130] 0000000084c6a791: 00007f6964a29000 (0x7f6964a29000)
+[ 2065.218132] 00000000159ffcac: 00007ffc7dcf4d80 (0x7ffc7dcf4d80)
+[ 2065.218132] 0000000055ec9d88: 0000000000000000 ...
+[ 2065.218134] 00000000f8918b9d: 0000000000000246 (0x246)
+[ 2065.218135] 00000000493c5745: 00007f6964a1ea10 (0x7f6964a1ea10)
+[ 2065.218136] 000000003deea9ea: 0000000000000000 ...
+[ 2065.218137] 00000000497f6564: 00007f6964a1e740 (0x7f6964a1e740)
+[ 2065.218138] 00000000bb7c2a9d: 0000000000000000 ...
+[ 2065.218139] 00000000d4ae9c4a: 00007f69640e554d (0x7f69640e554d)
+[ 2065.218140] 00000000e2ed7997: 0000000000000000 ...
+[ 2065.218141] 00000000e43a036d: 0000000001200011 (0x1200011)
+[ 2065.218143] 000000009c3a1ae4: 0000000000000038 (0x38)
+[ 2065.218144] 0000000050e162ab: 00007f69640e554d (0x7f69640e554d)
+[ 2065.218145] 0000000039559293: 0000000000000033 (0x33)
+[ 2065.218146] 00000000731a3277: 0000000000000246 (0x246)
+[ 2065.218148] 0000000085619c4a: 00007ffc7dcf4d40 (0x7ffc7dcf4d40)
+[ 2065.218149] 00000000ca95ed67: 000000000000002b (0x2b)
+cpuacct 1 TPASS: cpuacct.usage is not equal to 0 for every subgroup
+cpuacct 1 TPASS: cpuacct.usage equal to subgroup*/cpuacct.usage
+cpuacct 2 TINFO: removing created directories
 
-As for the problem itself, I agree with Michal's point, that usually there
-is no normal case that will change the overcommit_policy too frequently.
+Full test log link,
+https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.8-rc4-81-g63e1968a2c87/testrun/2910545/suite/linux-log-parser/test/check-kernel-warning-1548249/log
 
-The code logic is mainly in overcommit_policy_handler(), based on the
-previous sync fix. please help to review, thanks!
-
-int overcommit_policy_handler(struct ctl_table *table, int write, void *buffer,
-		size_t *lenp, loff_t *ppos)
-{
-	int ret;
-
-	if (write) {
-		int new_policy;
-		struct ctl_table t;
-
-		t = *table;
-		t.data = &new_policy;
-		ret = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
-		if (ret)
-			return ret;
-
-		mm_compute_batch(new_policy);
-		if (new_policy == OVERCOMMIT_NEVER)
-			schedule_on_each_cpu(sync_overcommit_as);
-		sysctl_overcommit_memory = new_policy;
-	} else {
-		ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-	}
-
-	return ret;
-}
-
-- Feng
-
-
+-- 
+Linaro LKFT
+https://lkft.linaro.org
