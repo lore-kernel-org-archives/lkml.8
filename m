@@ -2,109 +2,171 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 452A6206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058142076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:31:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="r5kd3Cc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgGIIaj (ORCPT
+        id S1726309AbgGIIb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:30:39 -0400
-Received: from mga12.intel.com ([192.55.52.136]:11690 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgGIIaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:30:39 -0400
-IronPort-SDR: JgX9nfpcq+TENKXiD9xiM35D2c7IrgfNq2w+Zl8UW4srpy08DhkslI4dGYBwzIaBvsVoSmawIL
- uqvsJlYVEPmg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="127543224"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="127543224"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 01:30:37 -0700
-IronPort-SDR: qnYzIlQgQt+nxNchKqado3en+5FR0Hmt5y8GKskuFJhX8R+0ia3AWdmGNqtAWVQZWjG3Sf2BiO
- PSHw3k4RzOcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="267348926"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Jul 2020 01:30:37 -0700
-Received: from [10.249.229.62] (abudanko-mobl.ccr.corp.intel.com [10.249.229.62])
-        by linux.intel.com (Postfix) with ESMTP id CF3135805F0;
-        Thu,  9 Jul 2020 01:30:35 -0700 (PDT)
-Subject: Re: [PATCH 0/2] perf: Allow closing siblings' file descriptors
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>, adrian.hunter@intel.com
-References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <9a6e9cd6-1ba2-3519-563f-c1eb45329539@linux.intel.com>
-Date:   Thu, 9 Jul 2020 11:30:34 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 04:31:27 -0400
+Received: from mail-bn8nam11on2130.outbound.protection.outlook.com ([40.107.236.130]:8608
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726151AbgGIIb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 04:31:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KCDOatpyytzK1Lgbp1JKaIh+GEbq8Lx2T7sG6YljMQCTISSYtjev2rD8koqjw8aAZrD67pdEiGZ4Sg2xR3xmS+k6vB2rYbrMPbvq/XH0BDtz04mIo+5xnJICQ9HXmpCgEaJM9Yj5tutEQba9nSPGEsnSgUnsuZ+pXUT4T7CLscM1HL4yAMu30chxfIG8TCs+rAwlZzo2RudgcfU4MOX6QZGkyZi6w8Ujoka4QpdHvPOaOw63Rq6V6ioTtUzCrs/W/fkA+IRrw2Xv7eVmhLj8ZOltTHQEUdjn72Ry2ZHAkTi0pZ9d/Sfmv3nHJqcAmuOGYEgaRmNDSAozacuq9tYlKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cp+tfucsku7aI364laS9+4ItpkcVKBrKXR1VKWA+MBE=;
+ b=U8RvFRwgCQQANC+ZxvE2KkpAUnXgej6UQ/9HwH1+PIjBOkyGBUHu7/7BqY0JxEQXEARkNUS3vQFcXzTs1OB+rlPEE/tPIt1Cd6VfOg2jORK3CjjNOqmwgl5FIAqlSDOEOPowbCnUPIhhaO59vybo8I46ks5V4j/PyEDmNfgLzAaETlvU41+NvI8pjeaKf0JYDQwhpLajF3X6Sv3iKBgpXfqsGbHNzx+N8I61kXYSeD/0eaI4dXyjYdxnB158PfPWwrWPmaf2UhKP4a26oySMm/S5/ktBs+GklcK+LzjsLNthrkmbTACU5pQBbrBC+/LDaiUfVGrUwBGxfArX4874EA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cp+tfucsku7aI364laS9+4ItpkcVKBrKXR1VKWA+MBE=;
+ b=r5kd3Cc7CTeFurMn3SNRIwqVDVRKL7Usc+637CteuqfhtdksV5vnATzYiz3qinfYNaONTXOMMLtMLZj5m72uzLVYX6ZdvWU/jB0EGSj/x04K2gzpFCcn6uMsu/wVdBt0rI/yhXwIMnXhzLY8MVeW6jgeB0uJSGgsMMPZT4wiusM=
+Authentication-Results: analogixsemi.com; dkim=none (message not signed)
+ header.d=none;analogixsemi.com; dmarc=none action=none
+ header.from=analogixsemi.com;
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BYAPR04MB5462.namprd04.prod.outlook.com (2603:10b6:a03:c4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Thu, 9 Jul
+ 2020 08:31:22 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::844e:398b:2165:631b]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::844e:398b:2165:631b%5]) with mapi id 15.20.3153.031; Thu, 9 Jul 2020
+ 08:31:22 +0000
+Date:   Thu, 9 Jul 2020 16:31:09 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v14 0/2] Add initial support for slimport anx7625
+Message-ID: <cover.1594283160.git.xji@analogixsemi.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK2P15301CA0023.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:202:1::33) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
 MIME-Version: 1.0
-In-Reply-To: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK2P15301CA0023.APCP153.PROD.OUTLOOK.COM (2603:1096:202:1::33) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.3195.5 via Frontend Transport; Thu, 9 Jul 2020 08:31:21 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d3c6d926-ba77-4e5e-77eb-08d823e275ca
+X-MS-TrafficTypeDiagnostic: BYAPR04MB5462:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR04MB5462760621AD3F99A9DB00ABC7640@BYAPR04MB5462.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 04599F3534
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yuT3fblASby832hMdDTdzfoviDxTV0wzw2d3ygSfBxl9TLP+PIL0AF/PjvUPYkrGvmE1LIowIfRMIvw7wk/pOKLw7kRzKMCEsWt4RTjhqf5XjTxBRk2+/MXQtIZmhsqIz+ius8lHhi7baLs5utNAM7dPaGQC521Cd6dmiQmMkG+/3NV5adq3o16f5Y0NOvAjdLIH3fPJVRFpOG7e6p5TIFN5MsPBXQHaBevP6Xks/imYTcf1Xt4mj3Ok6x0189jSF3Nevtu/J0g/dzejCvD69QoO+CZX1GWiOc0TrxhotPG2YvxuBkh41vIIA3FpJsbu
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(396003)(366004)(136003)(39840400004)(54906003)(110136005)(316002)(6666004)(8676002)(6486002)(2906002)(36756003)(5660300002)(83380400001)(66476007)(52116002)(16526019)(66556008)(186003)(66946007)(26005)(4326008)(6496006)(8936002)(107886003)(478600001)(956004)(86362001)(7416002)(2616005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: CS7orSMtzWmcYv3sTQn98yhJ4oLDd5yjjQAXO/qdh5SQfFQziy6YHf3bIQXifhstBGEq+JB+JDrXa25PnpsPDFpzzFe5W0Jgv7p5wvFI4byON4zon7qJJEPx2YKyc7auG5MAYnCEdLRFCXUI86cY6uuBq6wx4aT/kzYXRlo13drRyWVUvDYllx/2hnK2aBjW5KtTihqeIso7jNkYXGEpjLEOUsaXrERky0notnnHclmksVZZWNIbYmsIPaWkC2OwFbNar1u0UdBPUdQChjRIeGMniU5t5lvQJfTbGEYqSASIXe4pN1CBeW9SDsx1i0xoaRZ3qnbFkejtyRExpGi/vgCYO6aZoEL7NLBvW2TAd+/P7EowYQ7+zuWeU3df8jPk2gyyO2LbrYhaWFzn8IyH0LAzR3CSNiKViNnfV8AahnMd2Kv1NEpe4tehhmuUrLLtrSToMvKu38egI83GOLYMKHBHVj1SpZrKDtmjYAtTz6lf4LMEsSaSbgtqkS+vuKen
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3c6d926-ba77-4e5e-77eb-08d823e275ca
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR04MB6739.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2020 08:31:22.1965
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5jVu5zHguaAKOQNpODBt4kesRsRuKuq3TJWnMfX8DjIi/N8vnkhV85U9NQoGwDlZk9RsbJMO9c/PK3Ds3uq1QQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5462
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Hi all,
 
-On 08.07.2020 18:16, Alexander Shishkin wrote:
-> Hi guys,
-> 
-> I've been looking at reducing the number of open file descriptors per perf
-> session. If we retain one descriptor per event, in a large group they add
-> up. At the same time, we're not actually using them for anything after the
-> SET_OUTPUT and maybe SET_FILTER ioctls. So, this series is a stab at that.
+The following series add support for the Slimport ANX7625 transmitter, a
+ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
 
-PERF_EVENT_IOC_ENABLE, PERF_EVENT_IOC_DISABLE ioctls are still assumed to
-work, right?
 
-Asking w.r.t. functionality on --control fd:ctl_fd[,ack_fd] option for stat
-and record modes [1].
+This is the v14 version, any mistakes, please let me know, I will fix it in
+the next series.
 
-Thanks,
-Alexey
+Change history:
+v14: Fix comments from Sam and Nicolas
+ - Check flags at drm_bridge_attach
+ - Use panel_bridge instead of drm_panel
+ - Fix not correct return value
 
-[1] https://lore.kernel.org/lkml/4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com/
+v13: Fix comments from Launrent Pinchart and Rob Herring
+ - Picked up Rob's Reviewed-By
+ - Add .detect and .get_edid interface in bridge funcs.
 
-> 
-> So, I added a new flag to the perf_event_open() that tells perf to keep
-> the event around after its file descriptor gets closed, for as long as its
-> group leader is alive. Since this is a new behavior, the flag is an opt-in.
-> 
-> I also hacked this into the perf tool (mostly perf record, but I'll hack
-> stat as well if this general approach is agreeable).
-> 
-> Alexander Shishkin (2):
->   perf: Add closing sibling events' file descriptors
->   perf record: Support closing siblings' file descriptors
-> 
->  include/linux/perf_event.h              |   7 ++
->  include/uapi/linux/perf_event.h         |   1 +
->  kernel/events/core.c                    | 149 +++++++++++++++++-------
->  tools/include/uapi/linux/perf_event.h   |   1 +
->  tools/lib/perf/evlist.c                 |  30 ++++-
->  tools/lib/perf/evsel.c                  |  21 ++++
->  tools/lib/perf/include/internal/evsel.h |   4 +
->  tools/perf/builtin-record.c             |  48 ++++++--
->  tools/perf/util/cpumap.c                |   4 +
->  tools/perf/util/evlist.c                |   4 +-
->  tools/perf/util/evsel.c                 |  17 ++-
->  tools/perf/util/evsel.h                 |   3 +
->  12 files changed, 234 insertions(+), 55 deletions(-)
-> 
+v12: Fix comments from Hsin-Yi Wang
+ - Rebase the code on kernel 5.7, fix DRM interface not match issue.
+
+v11: Fix comments from Rob Herring
+ - Update commit message.
+ - Remove unused label.
+
+v10: Fix comments from Rob Herring, Daniel.
+ - Fix dt_binding_check warning.
+ - Update description.
+
+v9: Fix comments from Sam, Nicolas, Daniel
+ - Remove extcon interface.
+ - Remove DPI support.
+ - Fix dt_binding_check complains.
+ - Code clean up and update description.
+
+v8: Fix comments from Nicolas.
+ - Fix several coding format.
+ - Update description.
+
+v7:
+ - Fix critical timing(eg:odd hfp/hbp) in "mode_fixup" interface,
+   enhance MIPI RX tolerance by setting register MIPI_DIGITAL_ADJ_1 to 0x3D.
+
+
+Xin Ji (2):
+  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter DT schema
+  drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP
+
+ .../bindings/display/bridge/analogix,anx7625.yaml  |   95 +
+ drivers/gpu/drm/bridge/analogix/Kconfig            |    9 +
+ drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
+ drivers/gpu/drm/bridge/analogix/anx7625.c          | 1939 ++++++++++++++++++++
+ drivers/gpu/drm/bridge/analogix/anx7625.h          |  391 ++++
+ 5 files changed, 2435 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+
+-- 
+2.7.4
+
