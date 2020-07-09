@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D31C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C984F207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6F02077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWQDN8WS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKU3CMKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgGIRMo (ORCPT
+        id S1728332AbgGIRMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:12:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43704 "EHLO
+        Thu, 9 Jul 2020 13:12:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728110AbgGIRMk (ORCPT
+        with ESMTP id S1728110AbgGIRMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:12:40 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F3B8C08C5CE;
-        Thu,  9 Jul 2020 10:12:40 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e8so3284780ljb.0;
-        Thu, 09 Jul 2020 10:12:40 -0700 (PDT)
+        Thu, 9 Jul 2020 13:12:44 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5821BC08C5CE;
+        Thu,  9 Jul 2020 10:12:44 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h19so3221664ljg.13;
+        Thu, 09 Jul 2020 10:12:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pPsaxFMPGXuMGU5xfWvs2V1FaJ6pHtqnWBB2UZa9jss=;
-        b=WWQDN8WS7ffY7kViOBOudsX+3MPTwXEkwgebt8Ts0heK67MX/ag0axE0zMSPngNDqA
-         C3B1FmAYr+f3ohkOHiJv810O6dtfNx4eJ1+vdiYmlV4mDhDOEqxka9JdE7rz7MWC9Gi4
-         +9dQpIsbB2uARwTK6lcB/iS+WOcTes0C1Egt04RM/X3AOq9e9iDhRsRl6VLdNA8VV9ZP
-         zQeidcgxW9Yf/5RleJtDwi7rrLhOjkZ6CnH6Iyc/dhB9X/I7a88zUQdJcOaR8qMtA31K
-         E3CPxr2yic6Bn5YlmPJ4KrOi+jwJgBw4EaJjy/tzlaa7ykumkEu5SqLFk3U37SXfPgLP
-         3g9Q==
+        bh=NUzStD0JlDE1+lpeM+4rnfbYioBhG7w/IUJEkdm0/Vw=;
+        b=DKU3CMKH/guvcv3nfGgGymRWfTw3P7mw/dEdLUiHeq1wNhKqBxXuKQsEOfJgeBRO65
+         5P3Z9zsSVaybXf9pY+SNVzD/Bn5Agev7/tMieza0uUyAfb0mUmpuYhtrrPiINM4z22b/
+         qpV22FW4SilWASZY/MXlAkCh0M9PU+rKHf8sJ/lPS1gOLImiM0Pco6wgFCrBhtOavrvi
+         Iw8TkYAywqEbxa7Ky0Ao1BycccozFxm1bLuyyk66zi0tu9HDsZrW0dHsbTyq+HDUp+5l
+         8SEF2imCZpJuXSCNfbUMMEVFp4Mvl7qqO2GfnqR2HQ0v/ii91XOYgNPEjSHip55D7e/V
+         +aBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pPsaxFMPGXuMGU5xfWvs2V1FaJ6pHtqnWBB2UZa9jss=;
-        b=ksNEazePHBMTzebeLI5Ks5JbKP4gIWauXBhH/6+jEGW03ezUVFxqFrKug4ZZ9VQubW
-         zw1eK9Df4oLFAKS40u22qfl5GpLN0Q+Pox/yr2tObSC8G4UMa/wqYC/Mm0dOsvQEoizq
-         oJgiy8dTLIxwuL5pXko65zeiCc7TaH0D7ghZ6LxnM1zor19huJRvqc5w5GlPYu1QmJjn
-         uAjvz5JpDpc0zklfv5IRRtvBBdQWr9mKAVQzA1Ziz5YX/UNdxhXkgH30df07WeM47jjM
-         z4BM2RYiJZtCRZ6qkYg/7nkpnhaczu6uOWrN1c3nRm/u5lDpQN+K9yzwUtYGzGSS9cjb
-         NIgg==
-X-Gm-Message-State: AOAM533VyKIRNcIRhXjAJHd84j6RgCdQ0JEOqtAuS7c7Jhv/SDyi9vL2
-        nixmpZSkWiWZ/tGnC7bj1RI=
-X-Google-Smtp-Source: ABdhPJyivzoUWxEAKZ4DmW38Uy/Ab5dtgH6ExKZAg389uvzhBUuj+dManw2W8JkbgzScuCODCd6ebQ==
-X-Received: by 2002:a2e:9dd6:: with SMTP id x22mr18890532ljj.199.1594314758700;
-        Thu, 09 Jul 2020 10:12:38 -0700 (PDT)
+        bh=NUzStD0JlDE1+lpeM+4rnfbYioBhG7w/IUJEkdm0/Vw=;
+        b=ry1eo/AX43/9Z04d/J5XmSYyfYvEm9CNiJvhmCZ2j6yoZ4w0gaJmCYcQWDi0p8De8v
+         lrt54O7ltc0/U8TkmhtXO45IB+hUEDJ9rT/en673kBflRxclMQNeaYQfLAwpLVeJ9MqX
+         XTBugG93eveU5yBbDbRwIIzakFdVRQPkIdV/1Wc6gbmMnUcdxyqS2QMICGEZl+kBvyMG
+         jYw2BnIt14ASAoaz+Ae5E8iypBhMLj6eePFJqGQVNB7hNYB0t9xAEGh1X0YHL4eU+SA/
+         LjI0P95GRbmhK/BWoPaxonfE3UlvwcMEpWdge4sZ27RWaFNtd6g/NuUf9kgDpkhqLyF6
+         xNXQ==
+X-Gm-Message-State: AOAM5309s4U5Bw7jKP1TpsAfs3hhrPuXko/Kjnfi9UXBK4fawYsy9ymz
+        e7iteN31KPZ1XymSKKuUP1g=
+X-Google-Smtp-Source: ABdhPJwaQ99lPcWRXF96Ez8T787FoH+S6jQcqAmeZzmGoAr/zqbL62PN2IiIPwE04RUUCzzIPXNQCQ==
+X-Received: by 2002:a2e:7a03:: with SMTP id v3mr33520604ljc.141.1594314762811;
+        Thu, 09 Jul 2020 10:12:42 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.gmail.com with ESMTPSA id y22sm998314ljn.2.2020.07.09.10.12.37
+        by smtp.gmail.com with ESMTPSA id y22sm998314ljn.2.2020.07.09.10.12.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:12:38 -0700 (PDT)
+        Thu, 09 Jul 2020 10:12:42 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,9 +69,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/6] gpio: max77620: Fix missing release of interrupt
-Date:   Thu,  9 Jul 2020 20:11:59 +0300
-Message-Id: <20200709171203.12950-3-digetx@gmail.com>
+Subject: [PATCH v4 6/6] gpio: max77620: Initialize hardware state of interrupts
+Date:   Thu,  9 Jul 2020 20:12:03 +0300
+Message-Id: <20200709171203.12950-7-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200709171203.12950-1-digetx@gmail.com>
 References: <20200709171203.12950-1-digetx@gmail.com>
@@ -82,34 +82,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The requested interrupt is never released by the driver. Fix this by
-using the resource-managed variant of request_threaded_irq().
+I noticed on Nexus 7 that after rebooting from downstream kernel to
+upstream, the GPIO interrupt is triggering non-stop despite interrupts
+being disabled for all of GPIOs. This happens because Nexus 7 uses a
+soft-reboot, meaning that bootloader should take care of resetting
+hardware, but the bootloader doesn't do it well. As a result, GPIO
+interrupt may be left ON at a boot time. Let's mask all GPIO interrupts
+at the driver's initialization time in order to resolve the issue.
 
-Fixes: ab3dd9cc24d4 ("gpio: max77620: Fix interrupt handling")
-Cc: <stable@vger.kernel.org> # 5.5+
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpio/gpio-max77620.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-max77620.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index 4c0c9ec2587d..7f7e8d4bf0d3 100644
+index 6c516aa7732d..e090979659eb 100644
 --- a/drivers/gpio/gpio-max77620.c
 +++ b/drivers/gpio/gpio-max77620.c
-@@ -305,8 +305,9 @@ static int max77620_gpio_probe(struct platform_device *pdev)
- 	gpiochip_irqchip_add_nested(&mgpio->gpio_chip, &max77620_gpio_irqchip,
- 				    0, handle_edge_irq, IRQ_TYPE_NONE);
+@@ -260,6 +260,30 @@ static int max77620_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+ 	return -ENOTSUPP;
+ }
  
--	ret = request_threaded_irq(gpio_irq, NULL, max77620_gpio_irqhandler,
--				   IRQF_ONESHOT, "max77620-gpio", mgpio);
-+	ret = devm_request_threaded_irq(&pdev->dev, gpio_irq, NULL,
-+					max77620_gpio_irqhandler, IRQF_ONESHOT,
-+					"max77620-gpio", mgpio);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to request IRQ: %d\n", ret);
- 		return ret;
++static int max77620_gpio_irq_init_hw(struct gpio_chip *gc)
++{
++	struct max77620_gpio *gpio = gpiochip_get_data(gc);
++	unsigned int i;
++	int err;
++
++	/*
++	 * GPIO interrupts may be left ON after bootloader, hence let's
++	 * pre-initialize hardware to the expected state by disabling all
++	 * the interrupts.
++	 */
++	for (i = 0; i < MAX77620_GPIO_NR; i++) {
++		err = regmap_update_bits(gpio->rmap, GPIO_REG_ADDR(i),
++					 MAX77620_CNFG_GPIO_INT_MASK, 0);
++		if (err < 0) {
++			dev_err(gpio->dev,
++				"failed to disable interrupt: %d\n", err);
++			return err;
++		}
++	}
++
++	return 0;
++}
++
+ static int max77620_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct max77620_chip *chip =  dev_get_drvdata(pdev->dev.parent);
+@@ -295,6 +319,7 @@ static int max77620_gpio_probe(struct platform_device *pdev)
+ 	mgpio->gpio_chip.irq.chip = &max77620_gpio_irqchip;
+ 	mgpio->gpio_chip.irq.default_type = IRQ_TYPE_NONE;
+ 	mgpio->gpio_chip.irq.handler = handle_edge_irq;
++	mgpio->gpio_chip.irq.init_hw = max77620_gpio_irq_init_hw,
+ 	mgpio->gpio_chip.irq.threaded = true;
+ 
+ 	platform_set_drvdata(pdev, mgpio);
 -- 
 2.26.0
 
