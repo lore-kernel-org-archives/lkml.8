@@ -2,154 +2,257 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B27DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3B42067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1392067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:54:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIElqN7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgGIIx6 (ORCPT
+        id S1726428AbgGIIyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:53:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:44016 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbgGIIx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:53:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D48331B;
-        Thu,  9 Jul 2020 01:53:56 -0700 (PDT)
-Received: from localhost (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 397383F887;
-        Thu,  9 Jul 2020 01:53:56 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 09:53:54 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/8] cpufreq: allow drivers to flag custom support for
- freq invariance
-Message-ID: <20200709085354.GA5623@arm.com>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
- <20200701090751.7543-2-ionela.voinescu@arm.com>
- <20200701094417.ffuvduz6pqknjcks@vireshk-i7>
- <20200701133330.GA32736@arm.com>
- <CAJZ5v0gT+xWwxcx3OZjXBnDLr9i4VOt2Vp3ScWBxbu+NiopkbA@mail.gmail.com>
- <20200702025818.s4oh7rzz3tr6zwqr@vireshk-i7>
- <20200702114425.GB28120@arm.com>
- <389dd87f-fed0-e4ea-81f3-5491fd2a54d1@arm.com>
+        Thu, 9 Jul 2020 04:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726122AbgGIIyT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 04:54:19 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 489D1C061A0B;
+        Thu,  9 Jul 2020 01:54:19 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id a6so1341932ilq.13;
+        Thu, 09 Jul 2020 01:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=6EBAlhyT2LqnCvhAp5nm2Oc+mt6CCfGyEk4uocdE6Qs=;
+        b=IIElqN7QwKl0uE6aNTZKcsfK0HLjoK3IKmLSai3s3CHISpD124XQ4Xc4f1AlmxItL4
+         RCZbCzcnFtHEp+uNpuy9/ufVOw5MoKECkulKWU2wcXdVf2Eqri1jztUxL1jmvd9RJOog
+         jt9Vl6Uqr2ypFlwV0cmNhE/L3+fH7rJN/+AcgkuTtpMHMIZJIhOkhU/tq6aAjG1hg1L6
+         PJ3DSy5UMbueiYkZo2jLsvetiz9zDqhpkdEzV3nq6bKqtwOpLAN0rCOJ2uGdytgP15Dx
+         t5tUA0yFz3x+msBhbRXQunOJs9eBhzRfxdO/Itl7kl7uIM6fvYRF9clHd4bJEvsIP4kv
+         9fKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=6EBAlhyT2LqnCvhAp5nm2Oc+mt6CCfGyEk4uocdE6Qs=;
+        b=LiO1fdoGMMilSJ0wajULzDuGfLeRQsP/U/8DUdihkjN6vU1G93+eoXy5QX8re+i8ks
+         7IKLctdGwZ00ggPqJ/v9VJXiBA8uOMSzdaflgeQqUIOBQslLz6EppSCPmPfs49s0HctO
+         IDk1yLdGbwPynvNYVWjiuNlI0SQpbmWej3LMIrvO0x0pErZpSqha0mhFKefpjHl2ZS8C
+         PqxPUy4kR+oObPR0HP2dCjGHp+kY7Z4RVLoRQ/2L7+9jMYqHiPK2h4aAVAg7YXFU7OkI
+         MXrQh8BO+K5pcUu3fxkS6Uws5G4Dj3HsxqVAqkqQmUfN+/oBcJTfkYWteQINLZWoqQ2k
+         Pl7g==
+X-Gm-Message-State: AOAM530UaoweD1a0cDna3a9ucTRvkmKJaKTB8Akpztk6S/Og7BkogBhD
+        C/J3vKWhyKs/CaL0rUl3SBvArls0zirGpBsQcZY=
+X-Google-Smtp-Source: ABdhPJxwtbPG7W/rhlhBrRkD3l1jrUaB1vUqCjVW96u8BSHagLJfY836C/WmFcST7MKHOpjY3f2nP7BObfRGStbqvaw=
+X-Received: by 2002:a92:5fc9:: with SMTP id i70mr47971850ill.176.1594284858531;
+ Thu, 09 Jul 2020 01:54:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <389dd87f-fed0-e4ea-81f3-5491fd2a54d1@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200708185024.2767937-1-nickrterrell@gmail.com>
+In-Reply-To: <20200708185024.2767937-1-nickrterrell@gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 9 Jul 2020 10:54:07 +0200
+Message-ID: <CA+icZUV4WM3oLpRYBTeNqikqP1VeWqKjA_yOdQqg_jTEWah8Qg@mail.gmail.com>
+Subject: Re: [GIT PULL][PATCH v7 0/7] Add support for ZSTD-compressed kernel
+ and initramfs
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>, Nick Terrell <terrelln@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+On Wed, Jul 8, 2020 at 8:55 PM Nick Terrell <nickrterrell@gmail.com> wrote:
+>
+> From: Nick Terrell <terrelln@fb.com>
+>
+> Please pull from
+>
+>   git@github.com:terrelln/linux.git tags/v7-zstd
+>
+> to get these changes. Alternatively the patchset is included.
+>
+> Hi all,
+>
+> This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+> initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+> are supported on all architectures. The ZSTD-compressed kernel is only
+> hooked up to x86 in this patch set.
+>
+> Zstandard requires slightly more memory during the kernel decompression
+> on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+> window size.
+>
+> Zstandard requires memory proprortional to the window size used during
+> compression for decompressing the ramdisk image, since streaming mode is
+> used. Newer versions of zstd (1.3.2+) list the window size of a file
+> with `zstd -lv <file>'. The absolute maximum amount of memory required
+> is just over 8 MB, but it can be controlled at compression time.
+>
+> This patch set has been boot tested with buildroot and QEMU based off
+> of linux-5.6-rc6.
+>
+> On i386 and x86_64 I have tested the following configurations:
+> * zstd compressed kernel and a separate zstd compressed initramfs
+> * zstd compressed kernel and a built-in zstd compressed initramfs
+> * gzip compressed kernel and a separate gzip compressed initramfs
+> * gzip compressed kernel and a built-in gzip compressed initramfs
+>
+> On arm and aarch64 I tested the same configurations, except that the kernel is
+> always gzip compressed.
+>
+> Facebook has been using v1 of these patches on x86_64 devices for more than 6
+> months. When we switched from a xz compressed initramfs to a zstd compressed
+> initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+> switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+> seconds of boot time.
+>
+> Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+> When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+> decompression time shrunk from 27 seconds to 8 seconds.
+>
+> The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+> than the xz or lzma compressed kernels, and it decompresses faster than
+> everything except lz4. See the table below for the measurement of an x86_64
+> kernel ordered by compressed size:
+>
+> algo    size
+> xz       6,509,792
+> lzma     6,856,576
+> zstd     7,399,157
+> gzip     8,522,527
+> bzip     8,629,603
+> lzo      9,808,035
+> lz4     10,705,570
+> none    32,565,672
+>
+> Alex Xu ran benchmarks in https://lkml.org/lkml/2020/7/1/722.
+>
+> v1 -> v2:
+> - Rebase
+>   - usr/Makefile and init/Kconfig were changed so the patches were updated
+> - No functional changes except to rebase
+> - Split the patches up into smaller chunks
+>
+> v2 -> v3:
+> - Add *.zst to the .gitignore in patch 8
+> - Style nits in patch 3
+> - Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+>   1 through 3
+>
+> v3 -> v4:
+> - Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
+>   With this change I switch from malloc() to large_malloc() for the
+>   buffers.
+> - Increase the maximum allowed window size from 8 MB to 128 MB, which is
+>   the max that zstd in the kernel supports.
+>
+> v4 -> v5:
+> - Update commit message for patch 6 in response to comments
+> - Rebase onto next-20200408
+>
+> v5 -> v6:
+> - Rebase onto v5.8-rc4
+>
+> v6 -> v7:
+> - (1/7) Don't define or use 'ZSTD_PREBOOT' to hide exports
+> - (2/8) Drop 'lib: prepare xxhash for preboot environment'
+> - (2/7) Use '__DISABLE_EXPORTS' in unzstd to hide exports
+> - (3/7) Update zstd compression cmd to follow other compressors
+> - (3/7) Add zstd22 cmd
+> - (6/7) Use zstd -22 --ultra (zstd22) for x86 kernel compression
+>
 
-On Monday 06 Jul 2020 at 14:14:47 (+0200), Dietmar Eggemann wrote:
-> On 02/07/2020 13:44, Ionela Voinescu wrote:
-> > Hi,
-> > 
-> > On Thursday 02 Jul 2020 at 08:28:18 (+0530), Viresh Kumar wrote:
-> >> On 01-07-20, 18:05, Rafael J. Wysocki wrote:
-> >>> On Wed, Jul 1, 2020 at 3:33 PM Ionela Voinescu <ionela.voinescu@arm.com> wrote:
-> >>>> On Wednesday 01 Jul 2020 at 16:16:17 (+0530), Viresh Kumar wrote:
-> 
-> [...]
-> 
-> >> There can be other reasons which we aren't able to imagine at this
-> >> point of time.
-> >>
-> > 
-> > But I understand both the points you and Rafael raised so it's obvious
-> > that a 'opt in' flag would be the better option.
-> 
-> Why can't we just move the arch_set_freq_scale() call from cpufreq
-> driver to cpufreq core w/o introducing a FIE related driver flag?
-> 
-> Current scenario for Frequency Invariance Engine (FIE) on arm/arm64.
-> 
-> +------------------------------+       +------------------------------+
-> |                              |       |                              |
-> | cpufreq core:                |       | arch: (arm, arm64)           |
-> 
-> |                              |       |                              |
-> | weak arch_set_freq_scale() {}|       |                              |
-> |                              |       |                              |
-> +------------------------------+       |                              |
->                                        |                              |
-> +------------------------------+       |                              |
-> |                              |       |                              |
-> | cpufreq driver:              |       |                              |
-> |                            +-----------> arch_set_freq_scale()      |
-> |                              |       |   {                          |
-> +------------------------------+       |      if (use counters)       |
->                                        |        return;               |
-> +------------------------------+       |      ...                     |
-> |                              |       |   }                          |
-> | task scheduler:              |       |                              |
-> |                            +-----------> arch_scale_freq_tick()*    |
-> |                              |       |   {                          |
-> 
-> |                              |       |      if (!use counters)      |
-> |                              |       |        return;               |
-> |                              |       |      ...                     |
-> |                              |       |   }                          |
-> +------------------------------+       +------------------------------+
-> 
-> * defined as topology_scale_freq_tick() in arm64
-> 
-> Only Arm/Arm64 defines arch_set_freq_scale() to get the 'legacy' CPUfreq
-> based FIE. This would still be the case when we move
-> arch_set_freq_scale() from individual cpufreq drivers to cpufreq core.
-> 
-> Arm64 is the only arch which has to runtime-choose between two different
-> FIEs. This is currently done by bailing out early in one of the FIE
-> functions based on 'use counters'.
-> 
-> X86 (and others) will continue to not define arch_set_freq_scale().
-> 
-> The issue with CONFIG_BL_SWITCHER (vexpress-spc-cpufreq.c) could be
-> solved arm/arm64 internally (arch_topology.c) by putting
-> arch_set_freq_scale() under a !CONFIG_BL_SWITCHER guard.
-> I doubt that there are any arm bL systems out there running it. At least
-> I'm not aware of any complaints due to missing FIE support in bl
-> switcher setups so far.
+Hi Nick,
 
-Thank you Dietmar, for your review.
+I have tested version 7 on top of Linux v5.8-rc4+ with LLVM/Clang
+version 1:11~++20200701093119+ffee8040534-1~exp1 from
+Debian/experimental.
 
-I was trying to suggest the same in my other replies. Given that BL_SWITCHER
-can be removed as an argument for introducing a flag, I would also find it
-cleaner to just skip on introducing a flag altogether, at least until we
-have a driver/scenario in the kernel that will functionally benefit from it.
-This would also give us the chance to reconsider the best meaning of the
-flag we later introduce.
+I changed initramfs-tools accordingly:
 
-The introduction of the 'opt in' flag would be the next best thing as
-suggested in the other replies, but currently it would not result in
-anything functionally different.
+--- /usr/sbin/mkinitramfs.orig  2020-04-28 05:56:17.000000000 +0200
++++ /usr/sbin/mkinitramfs.zstd-v7       2020-07-09 10:35:35.119280519 +0200
+@@ -189,6 +189,7 @@ xz) compress="xz --check=crc32"
+        # If we're not doing a reproducible build, enable multithreading
+        test -z "${SOURCE_DATE_EPOCH}" && compress="$compress --threads=0"
+        ;;
++zstd)  compress="zstd -22 --ultra -v" ;;
+ bzip2|lzma|lzop)
+        # no parameters needed
+        ;;
 
+build-log says:
 
-Rafael, Viresh, would you mind confirming whether you still consider
-having an 'opt in' flag is preferable here?
+{ cat arch/x86/boot/compressed/vmlinux.bin
+arch/x86/boot/compressed/vmlinux.relocs | zstd -22 --ultra; printf
+\010\015\315\001; } > arch/x86/boot/compressed/vmlinux.bin.zst
 
-Many thanks,
-Ionela.
+It's a disc-usage save of approx. 500kiB between zstd-v6 and zstd-v7
+concerning initrd-images.
+
+Regards,
+- Sedat -
+
+> Best,
+> Nick Terrell
+>
+> Adam Borowski (1):
+>   .gitignore: add ZSTD-compressed files
+>
+> Nick Terrell (6):
+>   lib: prepare zstd for preboot environment
+>   lib: add zstd support to decompress
+>   init: add support for zstd compressed kernel
+>   usr: add support for zstd compressed initramfs
+>   x86: bump ZO_z_extra_bytes margin for zstd
+>   x86: Add support for ZSTD compressed kernel
+>
+>  .gitignore                        |   1 +
+>  Documentation/x86/boot.rst        |   6 +-
+>  Makefile                          |   3 +-
+>  arch/x86/Kconfig                  |   1 +
+>  arch/x86/boot/compressed/Makefile |   5 +-
+>  arch/x86/boot/compressed/misc.c   |   4 +
+>  arch/x86/boot/header.S            |   8 +-
+>  arch/x86/include/asm/boot.h       |   6 +-
+>  include/linux/decompress/unzstd.h |  11 +
+>  init/Kconfig                      |  15 +-
+>  lib/Kconfig                       |   4 +
+>  lib/Makefile                      |   1 +
+>  lib/decompress.c                  |   5 +
+>  lib/decompress_unzstd.c           | 345 ++++++++++++++++++++++++++++++
+>  lib/zstd/fse_decompress.c         |   9 +-
+>  lib/zstd/zstd_internal.h          |  14 +-
+>  scripts/Makefile.lib              |  22 ++
+>  usr/Kconfig                       |  20 ++
+>  usr/Makefile                      |   1 +
+>  19 files changed, 462 insertions(+), 19 deletions(-)
+>  create mode 100644 include/linux/decompress/unzstd.h
+>  create mode 100644 lib/decompress_unzstd.c
+>
+> --
+> 2.27.0
+>
