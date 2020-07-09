@@ -2,354 +2,144 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 189A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9C4E20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E975020720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:17:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="su7h2LT0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+3u2bih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgGIHQg (ORCPT
+        id S1726327AbgGIHRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:16:36 -0400
-Received: from mga06.intel.com ([134.134.136.31]:51156 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgGIHQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:16:35 -0400
-IronPort-SDR: dQH01+ACODqfMhwx6qo2O9A43Cq2y7dNDfm+/cHb7oRhcIoFfBp0hWMfnTllvkbVVSH/i9MpuB
- b+JmocZeMkpg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="209478648"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="209478648"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 00:16:35 -0700
-IronPort-SDR: mEcuIXPpo+CSnr9+iRLdSYH3DhPDGFKphqXGmv/9qu6AHU1/MdC6jsrCgHHkGjSyXX/uWJo5E4
- Ly2Dq+Vp0XRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="297976929"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga002.jf.intel.com with ESMTP; 09 Jul 2020 00:16:34 -0700
-Received: from fmsmsx122.amr.corp.intel.com (10.18.125.37) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jul 2020 00:16:34 -0700
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- fmsmsx122.amr.corp.intel.com (10.18.125.37) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jul 2020 00:16:34 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.104)
- by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 9 Jul 2020 00:16:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dHIHxdZRzmr9l6BvUSc48IeVS6fLVbQNHKoxBb8rhEmaCfwC9M8ZK5CmGYmdy6LD/Vb0zbaPsnZJX3mkJJXMXTtQLCHALWQyqGOBaHprv73YqikLQPMSXe0nP6h9ugz5Qq0QsJaVWuERtGFrIfJhuqM1R2MY7KDkYSUavQCczy8Na/0baXDIk1CEiFHo+Ih4tGNdCY29RD2YJav57shzF2HtWBVfHfJzd3KlY0IEu4uigmkSSERygI3s1dpwE541M5fDPoZtlOdX9oQDrxQe3694HUgD0BDp7jX402o/xDJh6bY1VUcTJdMJ0CNciTkbBmoQd7HFgqXeGWCh7IqAZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HzDah4G83ePvZ/0nG7MtEK3LcdAJXzIxAOjhRA/YxyQ=;
- b=jF5mGmUZzQkwkvPxE3o8v+H0uz+h3pIekUV/wMjpX7RQwhCMvx7LMPnroyZ4YYkHVtnQs/w94azcSwrOt2cv2ZKfcYyK3ebXt++PWbmcyKrLtdjMslopQltu14OlrKW6/iznCLa4VUb7PiKFXdlc37LVpYAUV2kU5U/ofGReZXNzph4jJkfNAW3Qa4IzEWQun3LEoWl0imkmSSSS4YSZALS8p0/8da8XNxbBeJS0QcH3fWh2z6l3G3UH1EbVhbyib02Q6w8KgoPZ047kO+HaAqsn1gAXq0AjUdc7slfqXMmBP98oAXhTJRuf3mo5jbIHJ4O9YqF14Wnp8gkBPZ6LZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HzDah4G83ePvZ/0nG7MtEK3LcdAJXzIxAOjhRA/YxyQ=;
- b=su7h2LT0MyL38ixDn2ARU3AZbQ4A8pBkHHZCWmjYN7PK6gvBAZpqDxO4H82Gmb4pMDxx5D1XodWuV/wMBuQ5ipNfrKAkN7nSzEzvDoN6b92srSgFzE7VAOw6UIu42dJXnEKP6g4QV4Cs1PkTwmbO03Ltrd2xEelw3lwRH4bSUgM=
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
- DM6PR11MB4724.namprd11.prod.outlook.com (2603:10b6:5:2ad::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3174.22; Thu, 9 Jul 2020 07:16:32 +0000
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::9002:97a2:d8c0:8364]) by DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::9002:97a2:d8c0:8364%10]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
- 07:16:31 +0000
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
- (alloc/free)
-Thread-Topic: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
- (alloc/free)
-Thread-Index: AQHWSgRRzB2G/Oy5QEmxCHQWFS0FB6j02KQAgACUCyCAB/5SUIAAxDYAgABLnwCAABmKAIAAAO4wgAAFFYCAAAD78IAASzDw
-Date:   Thu, 9 Jul 2020 07:16:31 +0000
-Message-ID: <DM5PR11MB143584D5A0AAE13E0D2D04B7C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-        <1592988927-48009-7-git-send-email-yi.l.liu@intel.com>
-        <20200702151832.048b44d1@x1.home>
-        <CY4PR11MB1432DD97F44EB8AA5CCC87D8C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
-        <DM5PR11MB1435B159DA10C8301B89A6F0C3670@DM5PR11MB1435.namprd11.prod.outlook.com>
- <20200708135444.4eac48a4@x1.home>
- <DM5PR11MB14358A8797E3C02E50B37FFEC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
- <MWHPR11MB16456D12135AA36BA16CE4208C640@MWHPR11MB1645.namprd11.prod.outlook.com>
- <DM5PR11MB14357DC99EFCDE7E02944E2EC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
- <MWHPR11MB1645F822D9267005AE5BCE528C640@MWHPR11MB1645.namprd11.prod.outlook.com>
- <DM5PR11MB143577F0C21EDB82B82EEB35C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-In-Reply-To: <DM5PR11MB143577F0C21EDB82B82EEB35C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [117.169.230.114]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 23d46618-6e4b-474a-a195-08d823d80199
-x-ms-traffictypediagnostic: DM6PR11MB4724:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB4724E5ADD8953A15A670A0BBC3640@DM6PR11MB4724.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Y/nYPKYhx+yaWUMQ56GeEQsyaI5q25OoZBDyeEzyboze7nJM0LQAqZEyHrn7tQDcqN9jG6KQ8ZHMCWGWGBwpFzt9tsRa8bhqNdxVQSLouwzNuz7uYkQ9aFCpjiSPswNRxQUguGvd0WZpCtZkNyStoHYgvyCbJIecYZXBuZq4l+cvU9AdJuJdt3pH6YNSR6bTT/34aMh65ctS0lhAnfqehUy2Vscuff+OGYiQBJ7ZMiwqTi5fld8MvuBJd0TKX+Yy5nv1wBevLdce3I33qYBgfV8qlVzzcdKkwbcZHx63yFuzP+P2PeeSGBEJ6frq5uyR+iE5FV3BlRvjw8ltve7we1E0Qe3VLham5k1YeWQSEbWp8ibbmDmdffilukowqPqFFYoB35qTap2L3S3xJ65Hvg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(136003)(39860400002)(346002)(478600001)(26005)(4326008)(966005)(86362001)(7696005)(2906002)(186003)(6506007)(83380400001)(52536014)(2940100002)(8936002)(8676002)(5660300002)(316002)(66946007)(66476007)(64756008)(110136005)(76116006)(66556008)(33656002)(9686003)(71200400001)(66446008)(55016002)(54906003)(7416002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: RJ1u42vVOC6cs2OZRhSFSN47Ha0FKYO1zZc9hKCBq1DUfTvInhbltm1OYoqaY9lODXxU6fMe1DmdtnYcHwy/cPzhlyzr4IH70Mu/dWrSNuLHbP1Mqb1f/QUhCtF3nEXCMiRrvdoLRt/9vlhsjxb6S2NSXqiHxsQGCDUCR++EutDT+XCsHWs87C4VFgyXFCpHvKwhxmAPmF4l4ynwEFUABpf0bDsVF3jBY3OD/lVZu1ulKtNyjEqpXw5vD7DIq+lhhZKnyrTF6fbp4WSQt1G3xlvJ9lS1RjdLwIWbSOaE+HZUWUCFBMFaqNaqWQYzWhebF3PA/xcAz9jsNTF7mYqEEsQigy1G9Vag6eXPH6t5zYPVd7gF1HtqN6LjYLYyVOIT2Li1W4rUGqUEtyl1cWG+eQmTXu98fGLWC+AtAMxa5As5mi3WXJgate2P25Mrr+M/Ok5UWVuIsU5JE/AB9nVCnoGU3CcxJKSfNgG/PffGLroxCGdXPpwoYBwKLamFOAJl
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jul 2020 03:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgGIHRJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 03:17:09 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FDB3C061A0B
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 00:17:09 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id u8so508384qvj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 00:17:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1h9hVyMdDTclBK3/1w4oe9XLN0atp9mtAvhs8SlUBmI=;
+        b=g+3u2bih4uowCA884qHq+VmLkDKONLAf8gzEmX8yKeaHdxWGltwlSrLncUwJqhJcbA
+         nWzP8CRWLWahZbt289cyjsiumve0sm340Wp7dLS6kNpRTG4Wms8XBNggk99fjRXORYGZ
+         L4DHoHTiV2tNcZpivoiB7jYkUkxVgGcvBLw6iwKXgNIj4Wky2BF6tzLD0NRvPU4s5R5V
+         SYT9rOiZbIP6UWUWqcOxR80bh6z2mRqyFLIa0Y5ClV5FWiSg6M/UaLaDKGaiMH6sQ7+a
+         vfJUoUABqMlyiPZZ2cVVV/Wwt1Y1OVThXT4985Qj2AwgGuROs81wzt1SPX3PRSNc1JsG
+         geDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1h9hVyMdDTclBK3/1w4oe9XLN0atp9mtAvhs8SlUBmI=;
+        b=Pp9NahFBXl/elykLFLT8uUnBtQFgzT33y/y4DJubbJOrqG6tcIsN1pyeyGLa+WK/3F
+         JH7P9/LWkze0A0uxiLyYbCojfp6j405sL3Kk2bWcRGFtQ/mdIrN69AtuIkXAHuyWkvb4
+         Lwgx+tpijBshmd2BeC3EwW7qXMfTpSRm77JmTk5VCwmr5ZfjL/gyOIQ6Ih//JHQT0nl1
+         wBqyT48VZzCER8jbEtBzGaFL76lDwLpmVAWRW7wE5sSjAJK+INcRF3XMqyXcxt4DMUWt
+         r+hsUsJ/M8bcJ0tQiF6NMEjvkWQ/rAGNFgpRwJ2f3Xko4WEL34ianFnYKiw0htHbkI/z
+         UtZg==
+X-Gm-Message-State: AOAM533cHClgti0gxncBQahjVZwMorvttQpudErn54JkZVUpe9U9tqr4
+        xeDBMNywc5KYijDl38iNbdnJe97e8VnPU9Mti+k=
+X-Google-Smtp-Source: ABdhPJzAz1NpOlRR93dBItEctK+mP/Znt4rMOYhjdQZltbJbofLUiwAuipdskYLUIwvhTvD3fAb0GDgwvgY6WGjf1ng=
+X-Received: by 2002:a0c:99c5:: with SMTP id y5mr38274997qve.66.1594279028564;
+ Thu, 09 Jul 2020 00:17:08 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23d46618-6e4b-474a-a195-08d823d80199
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 07:16:31.8129
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: K+jZcsbDhFY0n1/ReFi1dMlCgDsHrnJPYfhPYfxJRgCWm4n5Miy/lhu151mvt3HlHrgkE5kQm4qBux+WGbuDPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4724
-X-OriginatorOrg: intel.com
+References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1594107889-32228-6-git-send-email-iamjoonsoo.kim@lge.com> <e72709dd-c7e2-ff26-f450-dbd2a719b2e4@suse.cz>
+In-Reply-To: <e72709dd-c7e2-ff26-f450-dbd2a719b2e4@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Thu, 9 Jul 2020 16:17:08 +0900
+Message-ID: <CAAmzW4M5kAFgS_P3D8R-1qM+Gpex1Zu=G7aQC3uAYno4UeKBrg@mail.gmail.com>
+Subject: Re: [PATCH v4 05/11] mm/migrate: clear __GFP_RECLAIM for THP
+ allocation for migration
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
-
-After more thinking, looks like adding a r-b tree is still not enough to
-solve the potential problem for free a range of PASID in one ioctl. If
-caller gives [0, MAX_UNIT] in the free request, kernel anyhow should
-loop all the PASIDs and search in the r-b tree. Even VFIO can track the
-smallest/largest allocated PASID, and limit the free range to an accurate
-range, it is still no efficient. For example, user has allocated two PASIDs
-( 1 and 999), and user gives the [0, MAX_UNIT] range in free request. VFIO
-will limit the free range to be [1, 999], but still needs to loop PASID 1 -
-999, and search in r-b tree.
-
-So I'm wondering can we fall back to prior proposal which only free one
-PASID for a free request. how about your opinion?
-
-https://lore.kernel.org/linux-iommu/20200416084031.7266ad40@w520.home/
-
-Regards,
-Yi Liu
-
-> From: Liu, Yi L <yi.l.liu@intel.com>
-> Sent: Thursday, July 9, 2020 10:26 AM
->=20
-> Hi Kevin,
->=20
-> > From: Tian, Kevin <kevin.tian@intel.com>
-> > Sent: Thursday, July 9, 2020 10:18 AM
+2020=EB=85=84 7=EC=9B=94 7=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 9:17, Vl=
+astimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On 7/7/20 9:44 AM, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > >
-> > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > Sent: Thursday, July 9, 2020 10:08 AM
-> > >
-> > > Hi Kevin,
-> > >
-> > > > From: Tian, Kevin <kevin.tian@intel.com>
-> > > > Sent: Thursday, July 9, 2020 9:57 AM
-> > > >
-> > > > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > > > Sent: Thursday, July 9, 2020 8:32 AM
-> > > > >
-> > > > > Hi Alex,
-> > > > >
-> > > > > > Alex Williamson <alex.williamson@redhat.com>
-> > > > > > Sent: Thursday, July 9, 2020 3:55 AM
-> > > > > >
-> > > > > > On Wed, 8 Jul 2020 08:16:16 +0000 "Liu, Yi L"
-> > > > > > <yi.l.liu@intel.com> wrote:
-> > > > > >
-> > > > > > > Hi Alex,
-> > > > > > >
-> > > > > > > > From: Liu, Yi L < yi.l.liu@intel.com>
-> > > > > > > > Sent: Friday, July 3, 2020 2:28 PM
-> > > > > > > >
-> > > > > > > > Hi Alex,
-> > > > > > > >
-> > > > > > > > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > > > > > > > Sent: Friday, July 3, 2020 5:19 AM
-> > > > > > > > >
-> > > > > > > > > On Wed, 24 Jun 2020 01:55:19 -0700 Liu Yi L
-> > > > > > > > > <yi.l.liu@intel.com> wrote:
-> > > > > > > > >
-> > > > > > > > > > This patch allows user space to request PASID
-> > > > > > > > > > allocation/free,
-> > > e.g.
-> > > > > > > > > > when serving the request from the guest.
-> > > > > > > > > >
-> > > > > > > > > > PASIDs that are not freed by userspace are
-> > > > > > > > > > automatically freed
-> > > > > when
-> > > > > > > > > > the IOASID set is destroyed when process exits.
-> > > > > > > [...]
-> > > > > > > > > > +static int vfio_iommu_type1_pasid_request(struct
-> > > > > > > > > > +vfio_iommu
-> > > > > *iommu,
-> > > > > > > > > > +					  unsigned long arg) {
-> > > > > > > > > > +	struct vfio_iommu_type1_pasid_request req;
-> > > > > > > > > > +	unsigned long minsz;
-> > > > > > > > > > +
-> > > > > > > > > > +	minsz =3D offsetofend(struct
-> > vfio_iommu_type1_pasid_request,
-> > > > > > range);
-> > > > > > > > > > +
-> > > > > > > > > > +	if (copy_from_user(&req, (void __user *)arg, minsz))
-> > > > > > > > > > +		return -EFAULT;
-> > > > > > > > > > +
-> > > > > > > > > > +	if (req.argsz < minsz || (req.flags &
-> > > > > > ~VFIO_PASID_REQUEST_MASK))
-> > > > > > > > > > +		return -EINVAL;
-> > > > > > > > > > +
-> > > > > > > > > > +	if (req.range.min > req.range.max)
-> > > > > > > > >
-> > > > > > > > > Is it exploitable that a user can spin the kernel for a
-> > > > > > > > > long time in the case of a free by calling this with [0,
-> > > > > > > > > MAX_UINT] regardless of their
-> > > > > > actual
-> > > > > > > > allocations?
-> > > > > > > >
-> > > > > > > > IOASID can ensure that user can only free the PASIDs
-> > > > > > > > allocated to the
-> > > > > user.
-> > > > > > but
-> > > > > > > > it's true, kernel needs to loop all the PASIDs within the
-> > > > > > > > range provided by user.
-> > > > > > it
-> > > > > > > > may take a long time. is there anything we can do? one
-> > > > > > > > thing may limit
-> > > > > the
-> > > > > > range
-> > > > > > > > provided by user?
-> > > > > > >
-> > > > > > > thought about it more, we have per-VM pasid quota (say
-> > > > > > > 1000), so even if user passed down [0, MAX_UNIT], kernel
-> > > > > > > will only loop the
-> > > > > > > 1000 pasids at most. do you think we still need to do somethi=
-ng on it?
-> > > > > >
-> > > > > > How do you figure that?  vfio_iommu_type1_pasid_request()
-> > > > > > accepts the user's min/max so long as (max > min) and passes
-> > > > > > that to vfio_iommu_type1_pasid_free(), then to
-> > > > > > vfio_pasid_free_range() which loops as:
-> > > > > >
-> > > > > > 	ioasid_t pasid =3D min;
-> > > > > > 	for (; pasid <=3D max; pasid++)
-> > > > > > 		ioasid_free(pasid);
-> > > > > >
-> > > > > > A user might only be able to allocate 1000 pasids, but
-> > > > > > apparently they can ask to free all they want.
-> > > > > >
-> > > > > > It's also not obvious to me that calling ioasid_free() is only
-> > > > > > allowing the user to free their own passid.  Does it?  It
-> > > > > > would be a pretty
-> > > >
-> > > > Agree. I thought ioasid_free should at least carry a token since
-> > > > the user
-> > > space is
-> > > > only allowed to manage PASIDs in its own set...
-> > > >
-> > > > > > gaping hole if a user could free arbitrary pasids.  A r-b tree
-> > > > > > of passids might help both for security and to bound spinning i=
-n a loop.
-> > > > >
-> > > > > oh, yes. BTW. instead of r-b tree in VFIO, maybe we can add an
-> > > > > ioasid_set parameter for ioasid_free(), thus to prevent the user
-> > > > > from freeing PASIDs that doesn't belong to it. I remember Jacob
-> > > > > mentioned it
-> > > before.
-> > > > >
-> > > >
-> > > > check current ioasid_free:
-> > > >
-> > > >         spin_lock(&ioasid_allocator_lock);
-> > > >         ioasid_data =3D xa_load(&active_allocator->xa, ioasid);
-> > > >         if (!ioasid_data) {
-> > > >                 pr_err("Trying to free unknown IOASID %u\n", ioasid=
-);
-> > > >                 goto exit_unlock;
-> > > >         }
-> > > >
-> > > > Allow an user to trigger above lock paths with MAX_UINT times
-> > > > might still
-> > > be bad.
-> > >
-> > > yeah, how about the below two options:
-> > >
-> > > - comparing the max - min with the quota before calling ioasid_free()=
-.
-> > >   If max - min > current quota of the user, then should fail it. If
-> > >   max - min < quota, then call ioasid_free() one by one. still trigge=
-r
-> > >   the above lock path with quota times.
+> > In mm/migrate.c, THP allocation for migration is called with the provid=
+ed
+> > gfp_mask | GFP_TRANSHUGE. This gfp_mask contains __GFP_RECLAIM and it
+> > would be conflict with the intention of the GFP_TRANSHUGE.
 > >
-> > This is definitely wrong. [min, max] is about the range of the PASID
-> > value, while quota is about the number of allocated PASIDs. It's a bit
-> > weird to mix two together.
->=20
-> got it.
->=20
-> > btw what is the main purpose of allowing batch PASID free requests?
-> > Can we just simplify to allow one PASID in each free just like how is
-> > it done in allocation path?
->=20
-> it's an intention to reuse the [min, max] range as allocation path. curre=
-ntly, we
-> don't have such request as far as I can see.
->=20
-> > >
-> > > - pass the max and min to ioasid_free(), let ioasid_free() decide. sh=
-ould
-> > >   be able to avoid trigger the lock multiple times, and ioasid has ha=
-ve a
-> > >   track on how may PASIDs have been allocated, if max - min is larger=
- than
-> > >   the allocated number, should fail anyway.
+> > GFP_TRANSHUGE/GFP_TRANSHUGE_LIGHT is introduced to control the reclaim
+> > behaviour by well defined manner since overhead of THP allocation is
+> > quite large and the whole system could suffer from it. So, they deals
+> > with __GFP_RECLAIM mask deliberately. If gfp_mask contains __GFP_RECLAI=
+M
+> > and uses gfp_mask | GFP_TRANSHUGE(_LIGHT) for THP allocation, it means
+> > that it breaks the purpose of the GFP_TRANSHUGE(_LIGHT).
 > >
-> > What about Alex's r-b tree suggestion? Is there any downside in you min=
-d?
->=20
-> no downside, I was just wanting to reuse the tracks in ioasid_set. I can =
-add a r-b
-> for allocated PASIDs and find the PASIDs in the r-b tree only do free for=
- the
-> PASIDs found in r-b tree, others in the range would be ignored.
-> does it look good?
->=20
-> Regards,
-> Yi Liu
->=20
-> > Thanks,
-> > Kevin
+> > This patch fixes this situation by clearing __GFP_RECLAIM in provided
+> > gfp_mask. Note that there are some other THP allocations for migration
+> > and they just uses GFP_TRANSHUGE(_LIGHT) directly. This patch would mak=
+e
+> > all THP allocation for migration consistent.
+> >
+> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > ---
+> >  mm/migrate.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/mm/migrate.c b/mm/migrate.c
+> > index 02b31fe..ecd7615 100644
+> > --- a/mm/migrate.c
+> > +++ b/mm/migrate.c
+> > @@ -1547,6 +1547,11 @@ struct page *new_page_nodemask(struct page *page=
+,
+> >       }
+> >
+> >       if (PageTransHuge(page)) {
+> > +             /*
+> > +              * clear __GFP_RECALIM since GFP_TRANSHUGE is the gfp_mas=
+k
+> > +              * that chooses the reclaim masks deliberately.
+> > +              */
+> > +             gfp_mask &=3D ~__GFP_RECLAIM;
+> >               gfp_mask |=3D GFP_TRANSHUGE;
+>
+> In addition to what Michal said...
+>
+> The mask is not passed to this function, so I would just redefine it, as =
+is done
+> in the hugetlb case. We probably don't even need the __GFP_RETRY_MAYFAIL =
+for the
+> THP case asi it's just there to prevent OOM kill (per commit 0f55685627d6=
+d ) and
+> the costly order of THP is enough for that.
+
+As I said in another reply, provided __GFP_THISNODE should be handled
+so just redefining it would not work.
+
+Thanks.
