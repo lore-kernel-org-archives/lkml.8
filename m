@@ -2,227 +2,90 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A607C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB81C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E708B20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1999320663
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:57:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qQqVLN9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgGIO5S (ORCPT
+        id S1728137AbgGIO5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:57:18 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:41066 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgGIO5R (ORCPT
+        Thu, 9 Jul 2020 10:57:40 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16147 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbgGIO5k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:57:17 -0400
-Received: from 89-64-83-236.dynamic.chello.pl (89.64.83.236) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 6f4b9f3a7ac1aaf9; Thu, 9 Jul 2020 16:57:14 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm@lists.01.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/12] PM, libnvdimm: Add 'mem-quiet' state and callback for firmware activation
-Date:   Thu, 09 Jul 2020 16:57:12 +0200
-Message-ID: <23449996.3uVv1d17cZ@kreacher>
-In-Reply-To: <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <159408711335.2385045.2567600405906448375.stgit@dwillia2-desk3.amr.corp.intel.com> <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Thu, 9 Jul 2020 10:57:40 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f07302d0000>; Thu, 09 Jul 2020 07:56:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 09 Jul 2020 07:57:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 09 Jul 2020 07:57:39 -0700
+Received: from [10.19.64.157] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jul
+ 2020 14:57:36 +0000
+Subject: Re: [PATCH v3 2/6] gpio: max77620: Fix missing release of interrupt
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20200708202355.28507-1-digetx@gmail.com>
+ <20200708202355.28507-3-digetx@gmail.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Laxman Dewangan <ldewangan@nvidia.com>
+Message-ID: <80f4d1ff-8096-9060-3cf0-a59448866c40@nvidia.com>
+Date:   Thu, 9 Jul 2020 20:27:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200708202355.28507-3-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594306605; bh=fpFkTV2lUtk91L2bYAU77/7Lg3zTXgUb3k+Hg51MCfQ=;
+        h=X-PGP-Universal:Subject:To:References:CC:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding;
+        b=qQqVLN9wngC//dx2qrXZv//b39BIvaw9zxCJ7yy6+tzGbz/dROUqIQwqz4hjO4JcJ
+         5dBOvT9bW3xx7MbdMprwQfCBQZDEQOcbtq/376FU7W1LP3plg910I5lVBZlKp7FQB1
+         QxQgPxgNvLmbOeOi6nmdxhcr6HtCZn5QjAzPbDqhwd+PHTTewWJJBx0RvAG635GizN
+         xdKZdl5681cPtjx+HEWyygzxWkFOQlaw9y1Fxi24Sq/NNRt9CPesIHzsXepcbRGTfh
+         bMj8fkrXTu0fX81F1K9ac5/dOjzJByHcd7M8+s2KxA1WoyVadTKeNh3SlXRjL721ZQ
+         IME8S/dTBnpBg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, July 7, 2020 3:59:32 AM CEST Dan Williams wrote:
-> The runtime firmware activation capability of Intel NVDIMM devices
-> requires memory transactions to be disabled for 100s of microseconds.
-> This timeout is large enough to cause in-flight DMA to fail and other
-> application detectable timeouts. Arrange for firmware activation to be
-> executed while the system is "quiesced", all processes and device-DMA
-> frozen.
-> 
-> It is already required that invoking device ->freeze() callbacks is
-> sufficient to cease DMA. A device that continues memory writes outside
-> of user-direction violates expectations of the PM core to be to
-> establish a coherent hibernation image.
-> 
-> That said, RDMA devices are an example of a device that access memory
-> outside of user process direction. RDMA drivers also typically assume
-> the system they are operating in will never be hibernated. A solution
-> for RDMA collisions with firmware activation is outside the scope of
-> this change and may need to rely on being able to survive the platform
-> imposed memory controller quiesce period.
 
-Thanks for following my suggestion to use the hibernation infrastructure
-rather than the suspend one, but I think it would be better to go a bit
-further with that.
 
-Namely, after thinking about this a bit more I have come to the conclusion
-that what is needed is an ability to execute a function, inside of the
-kernel, in a "quiet" environment in which memory updates are unlikely.
+On Thursday 09 July 2020 01:53 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> The requested interrupt is never released by the driver. Fix this by
+> using the resource-managed variant of request_threaded_irq().
+>
+> Fixes: ab3dd9cc24d4 ("gpio: max77620: Fix interrupt handling")
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-While the hibernation infrastructure as is can be used for that, kind of, IMO
-it would be cleaner to introduce a helper for that, like in the (untested)
-patch below, so if the "quiet execution environment" is needed, whoever
-needs it may simply pass a function to hibernate_quiet_exec() and provide
-whatever user-space I/F is suitable on top of that.
 
-Please let me know what you think.
-
-Cheers!
-
----
- include/linux/suspend.h  |    6 ++
- kernel/power/hibernate.c |   97 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 103 insertions(+)
-
-Index: linux-pm/kernel/power/hibernate.c
-===================================================================
---- linux-pm.orig/kernel/power/hibernate.c
-+++ linux-pm/kernel/power/hibernate.c
-@@ -795,6 +795,103 @@ int hibernate(void)
- 	return error;
- }
- 
-+/**
-+ * hibernate_quiet_exec - Execute a function with all devices frozen.
-+ * @func: Function to execute.
-+ * @data: Data pointer to pass to @func.
-+ *
-+ * Return the @func return value or an error code if it cannot be executed.
-+ */
-+int hibernate_quiet_exec(int (*func)(void *data), void *data)
-+{
-+	int error, nr_calls = 0;
-+
-+	lock_system_sleep();
-+
-+	if (!hibernate_acquire()) {
-+		error = -EBUSY;
-+		goto unlock;
-+	}
-+
-+	pm_prepare_console();
-+
-+	error = __pm_notifier_call_chain(PM_HIBERNATION_PREPARE, -1, &nr_calls);
-+	if (error) {
-+		nr_calls--;
-+		goto exit;
-+	}
-+
-+	error = freeze_processes();
-+	if (error)
-+		goto exit;
-+
-+	lock_device_hotplug();
-+
-+	pm_suspend_clear_flags();
-+
-+	error = platform_begin(true);
-+	if (error)
-+		goto thaw;
-+
-+	error = freeze_kernel_threads();
-+	if (error)
-+		goto thaw;
-+
-+	error = dpm_prepare(PMSG_FREEZE);
-+	if (error)
-+		goto dpm_complete;
-+
-+	suspend_console();
-+
-+	error = dpm_suspend(PMSG_FREEZE);
-+	if (error)
-+		goto dpm_resume;
-+
-+	error = dpm_suspend_end(PMSG_FREEZE);
-+	if (error)
-+		goto dpm_resume;
-+
-+	error = platform_pre_snapshot(true);
-+	if (error)
-+		goto skip;
-+
-+	error = func(data);
-+
-+skip:
-+	platform_finish(true);
-+
-+	dpm_resume_start(PMSG_THAW);
-+
-+dpm_resume:
-+	dpm_resume(PMSG_THAW);
-+
-+	resume_console();
-+
-+dpm_complete:
-+	dpm_complete(PMSG_THAW);
-+
-+	thaw_kernel_threads();
-+
-+thaw:
-+	platform_end(true);
-+
-+	unlock_device_hotplug();
-+
-+	thaw_processes();
-+
-+exit:
-+	__pm_notifier_call_chain(PM_POST_HIBERNATION, nr_calls, NULL);
-+
-+	pm_restore_console();
-+
-+	hibernate_release();
-+
-+unlock:
-+	unlock_system_sleep();
-+
-+	return error;
-+}
-+EXPORT_SYMBOL_GPL(hibernate_quiet_exec);
- 
- /**
-  * software_resume - Resume from a saved hibernation image.
-Index: linux-pm/include/linux/suspend.h
-===================================================================
---- linux-pm.orig/include/linux/suspend.h
-+++ linux-pm/include/linux/suspend.h
-@@ -453,6 +453,8 @@ extern bool hibernation_available(void);
- asmlinkage int swsusp_save(void);
- extern struct pbe *restore_pblist;
- int pfn_is_nosave(unsigned long pfn);
-+
-+int hibernate_quiet_exec(int (*func)(void *data), void *data);
- #else /* CONFIG_HIBERNATION */
- static inline void register_nosave_region(unsigned long b, unsigned long e) {}
- static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
-@@ -464,6 +466,10 @@ static inline void hibernation_set_ops(c
- static inline int hibernate(void) { return -ENOSYS; }
- static inline bool system_entering_hibernation(void) { return false; }
- static inline bool hibernation_available(void) { return false; }
-+
-+static inline hibernate_quiet_exec(int (*func)(void *data), void *data) {
-+	return -ENOTSUPP;
-+}
- #endif /* CONFIG_HIBERNATION */
- 
- #ifdef CONFIG_HIBERNATION_SNAPSHOT_DEV
-
+Looks good to me.
+Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
 
 
