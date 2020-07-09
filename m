@@ -4,81 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52380C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50171C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314942070E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FC820720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgGIIRI (ORCPT
+        id S1726428AbgGIIRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:17:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:32538 "EHLO mga03.intel.com"
+        Thu, 9 Jul 2020 04:17:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:41840 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbgGIIRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:17:07 -0400
-IronPort-SDR: +a+eELCkLkUIIPLx+MWpM2lsL7j3nUESNalSkk7tIRS+u1grET9Imql88v7VkILAir0ziLcY8c
- GjHyP0JQV92Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="147950937"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="147950937"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 01:17:06 -0700
-IronPort-SDR: tl157UJ5Lokz2tGjMlFsd+rRse5OqowuhlpbDRKzp4jhSmRw1oQmUjeEYl3oICwdp/G0Zwa5XM
- 1MUTkTbLgJVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="268698048"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Jul 2020 01:17:04 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, lgoncalv@redhat.com,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: [RESEND PATCH 2/2] fpga: dfl: fix bug in port reset handshake
-Date:   Thu,  9 Jul 2020 16:12:17 +0800
-Message-Id: <1594282337-32125-3-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594282337-32125-1-git-send-email-yilun.xu@intel.com>
-References: <1594282337-32125-1-git-send-email-yilun.xu@intel.com>
+        id S1726124AbgGIIRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 04:17:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE78F31B;
+        Thu,  9 Jul 2020 01:17:12 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CD7EA3F887;
+        Thu,  9 Jul 2020 01:17:11 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Dien Pham <dien.pham.ry@renesas.com>
+Subject: [PATCH v2 1/2] firmware: arm_scmi: Keep the discrete clock rates sorted
+Date:   Thu,  9 Jul 2020 09:17:04 +0100
+Message-Id: <20200709081705.46084-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Instead of relying on the firmware to keep the clock rates sorted, let
+us sort the list. This is not essential for clock layer but it helps
+to find the min and max rates easily from the list.
 
-When putting the port in reset, driver must wait for the soft reset
-acknowledgment bit instead of the soft reset bit.
-
-Fixes: 47c1b19c160f (fpga: dfl: afu: add port ops support)
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Acked-by: Wu Hao <hao.wu@intel.com>
+Link: https://lore.kernel.org/r/20200708110725.18017-1-sudeep.holla@arm.com
+Fixes: 5f6c6430e904 ("firmware: arm_scmi: add initial support for clock protocol")
+Reported-by: Dien Pham <dien.pham.ry@renesas.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/fpga/dfl-afu-main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/firmware/arm_scmi/clock.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-index 7c84fee..753cda4 100644
---- a/drivers/fpga/dfl-afu-main.c
-+++ b/drivers/fpga/dfl-afu-main.c
-@@ -83,7 +83,8 @@ int __afu_port_disable(struct platform_device *pdev)
- 	 * on this port and minimum soft reset pulse width has elapsed.
- 	 * Driver polls port_soft_reset_ack to determine if reset done by HW.
- 	 */
--	if (readq_poll_timeout(base + PORT_HDR_CTRL, v, v & PORT_CTRL_SFTRST,
-+	if (readq_poll_timeout(base + PORT_HDR_CTRL, v,
-+			       v & PORT_CTRL_SFTRST_ACK,
- 			       RST_POLL_INVL, RST_POLL_TIMEOUT)) {
- 		dev_err(&pdev->dev, "timeout, fail to reset device\n");
- 		return -ETIMEDOUT;
--- 
-2.7.4
+
+Hi Dien-san,
+
+If you could review/test these patches, I can queue them ASAP.
+I am planning to send the PR for ARM SoC later this week, so I need
+your tested-by.
+
+v1[1]->v2:
+	- Fixed the warning, sent the wrong version earlier
+
+Regards,
+Sudeep
+
+[1] https://lore.kernel.org/r/20200708110725.18017-1-sudeep.holla@arm.com
+
+diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+index 4c2227662b26..c90f23a812f5 100644
+--- a/drivers/firmware/arm_scmi/clock.c
++++ b/drivers/firmware/arm_scmi/clock.c
+@@ -5,6 +5,8 @@
+  * Copyright (C) 2018 ARM Ltd.
+  */
+
++#include <linux/sort.h>
++
+ #include "common.h"
+
+ enum scmi_clock_protocol_cmd {
+@@ -121,6 +123,13 @@ static int scmi_clock_attributes_get(const struct scmi_handle *handle,
+ 	return ret;
+ }
+
++static int rate_cmp_func(const void *_r1, const void *_r2)
++{
++	const u64 *r1 = _r1, *r2 = _r2;
++
++	return r1 - r2;
++}
++
+ static int
+ scmi_clock_describe_rates_get(const struct scmi_handle *handle, u32 clk_id,
+ 			      struct scmi_clock_info *clk)
+@@ -184,8 +193,10 @@ scmi_clock_describe_rates_get(const struct scmi_handle *handle, u32 clk_id,
+ 		 */
+ 	} while (num_returned && num_remaining);
+
+-	if (rate_discrete)
++	if (rate_discrete) {
+ 		clk->list.num_rates = tot_rate_cnt;
++		sort(rate, tot_rate_cnt, sizeof(*rate), rate_cmp_func, NULL);
++	}
+
+ 	clk->rate_discrete = rate_discrete;
+
+--
+2.17.1
 
