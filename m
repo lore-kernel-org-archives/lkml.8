@@ -2,101 +2,157 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA37AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C26272065D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B59B2070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:52:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tTqe9fN6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jJWpSWZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgGIGwb (ORCPT
+        id S1726372AbgGIGwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 02:52:31 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:57722 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbgGIGw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 02:52:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594277548; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=FduXKrGEYtQxuGDpvIdMVnnvzBix5AEgLPzAi4lPSHU=; b=tTqe9fN63EH6h5pGYjg7qE69GUE2IaBHOuXjBCPVMioA6EdDW+duqHKXVI3mmUH14rQP6IxR
- W2MOR2T/XhdngA3MnFNRnzKhaPRNve89ZKxCouURxzMAZkiVb9I3lwgva1EFw08HgAUsvpx9
- OhmjYoWbMwhi5UIfvSg8jTKhwEk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
- 5f06bea9d07c135855367008 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 06:52:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7BF49C433C6; Thu,  9 Jul 2020 06:52:24 +0000 (UTC)
-Received: from [192.168.0.104] (unknown [123.201.173.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: msavaliy)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E9713C433CA;
-        Thu,  9 Jul 2020 06:51:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E9713C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=msavaliy@codeaurora.org
-Subject: Re: [PATCH 0/2] spi: spi-qcom-qspi: Avoid some per-transfer overhead
-To:     Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mka@chromium.org, Akash Asthana <akashast@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
-        linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org,
-        ctheegal@codeaurora.org, mkshah@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20200707201641.2030532-1-dianders@chromium.org>
-From:   "Mukesh, Savaliya" <msavaliy@codeaurora.org>
-Message-ID: <d5d10877-d24d-3e60-afa9-78d00b6c07a7@codeaurora.org>
-Date:   Thu, 9 Jul 2020 12:20:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 02:52:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgGIGwy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 02:52:54 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF60CC061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 23:52:54 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o13so574759pgf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 23:52:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xi0IjXZT0vlAn+aLE/RD/PtWZze7khXZnjoaecCKN1M=;
+        b=jJWpSWZ0U1zA1yILc3YaBGQs7u1fLp3eg6M+JC6uPvP26eNchIerrsO8/U0B7XZKc5
+         3nHVMfK78KaQSwJsKScWm/1BI0cBmhgknmhpfvtHN8luFokG5nMn7gEG7MD8n8xSVvMt
+         nu4Fs40ttO/wMoOti/Cuwqk1ZH4IDhoKTKSPlmDNk9ykwC5vH/1G/fo0Jm1YgBO4xKsU
+         Q62jQpaDESE46iJpl2Y5n7aBPLWYlo5HcwnKlAyLtbB9ttMCG8BAMcHCl+Cv4I7SaBd7
+         AfGeE5vufhYP5jAKVMFk7OUw3IIlASsJikFyLu+nD7uS6F/f63y+7YGvggxOuFE/fCXJ
+         /BvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xi0IjXZT0vlAn+aLE/RD/PtWZze7khXZnjoaecCKN1M=;
+        b=CIkcKoXCsYa+YUvDRw2fjoeYtmGBEQbhc8LzGQCs+NWCjzdLf+fX4M9PPen/qA9+cR
+         yhIEpwv/M9oInu5twXkuV3XEDL1nAf2M5xTDqZIkvB22zWVvxOgGeye37myQ3Vhq9ge5
+         q3by7UHTxHFV0Ge2btClAlopIJtdURzButJO+hKtYeizCFXLL3LES6rMadBdsw3riAgn
+         R1AJQ4fhlMep1cHUJbLo3rChPhAnBGX2rHSwFnjwNxsU085MTtY6Q8il9J2mNx/w0qJg
+         W+WOLG+jXyeP6XIHLRcbSRS5b2ZJ0qy56HWzYyQjeeJl6Y6ewNm4vSoRb/jn0JJFjx0z
+         Mx6A==
+X-Gm-Message-State: AOAM532xblOxSd6m21/sgS0/TWst7khzZ+zlJ6Oz5ohxMHxe4WkTydUS
+        mzFOLsISvawgMWOTBcM6LVh5yO8JBIQ=
+X-Google-Smtp-Source: ABdhPJyakv2z/Yj0ViE4yrP6D4rSzJtc+69r45BNRWe9J9ut1E1xICUdWAeLHyU5Zig+MEgceti5Zw==
+X-Received: by 2002:a63:20d:: with SMTP id 13mr53135099pgc.166.1594277574260;
+        Wed, 08 Jul 2020 23:52:54 -0700 (PDT)
+Received: from localhost ([122.172.40.201])
+        by smtp.gmail.com with ESMTPSA id p127sm1710281pfb.17.2020.07.08.23.52.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jul 2020 23:52:53 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: topology: Don't support AMU without cpufreq
+Date:   Thu,  9 Jul 2020 12:22:45 +0530
+Message-Id: <a710fc4e4e0f1d2e561320130b99bcb5167d73b4.1594277563.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
 MIME-Version: 1.0
-In-Reply-To: <20200707201641.2030532-1-dianders@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit cd0ed03a8903 ("arm64: use activity monitors for frequency
+invariance"), mentions that:
 
-On 7/8/2020 1:46 AM, Douglas Anderson wrote:
-> Not to be confused with the similar series I posed for the _other_
-> Qualcomm SPI controller (spi-geni-qcom) [1], this one avoids the
-> overhead on the Quad SPI controller.
->
-> It's based atop the current Qualcomm tree including Rajendra's ("spi:
-> spi-qcom-qspi: Use OPP API to set clk/perf state").  As discussed in
-> individual patches, these could ideally land through the Qualcomm tree
-> with Mark's Ack.
->
-> Measuring:
-> * Before OPP / Interconnect patches reading all flash takes: ~3.4 seconds
-> * After OPP / Interconnect patches reading all flash takes: ~4.7 seconds
-> * After this patch reading all flash takes: ~3.3 seconds
->
-> [1] https://lore.kernel.org/r/20200702004509.2333554-1-dianders@chromium.org
-> [2] https://lore.kernel.org/r/1593769293-6354-2-git-send-email-rnayak@codeaurora.org
->
->
-> Douglas Anderson (2):
->    spi: spi-qcom-qspi: Avoid clock setting if not needed
->    spi: spi-qcom-qspi: Set an autosuspend delay of 250 ms
->
->   drivers/spi/spi-qcom-qspi.c | 45 ++++++++++++++++++++++++++++---------
->   1 file changed, 35 insertions(+), 10 deletions(-)
+  "if CONFIG_CPU_FREQ is not enabled, the use of counters is
+   enabled on all CPUs only if all possible CPUs correctly support
+   the necessary counters"
 
-Reviewed-by: Mukesh Kumar Savaliya <msavaliy@codeaurora.org>
+But that's not really true as validate_cpu_freq_invariance_counters()
+fails if max_freq_hz is returned as 0 (in case there is no policy for
+the CPU). And the AMUs won't be supported in that case.
+
+Make the code reflect this reality.
+
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ arch/arm64/kernel/topology.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
+
+diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+index 0801a0f3c156..b7da372819fc 100644
+--- a/arch/arm64/kernel/topology.c
++++ b/arch/arm64/kernel/topology.c
+@@ -187,14 +187,13 @@ static int validate_cpu_freq_invariance_counters(int cpu)
+ 	return 0;
+ }
+ 
+-static inline bool
+-enable_policy_freq_counters(int cpu, cpumask_var_t valid_cpus)
++static inline void update_amu_fie_cpus(int cpu, cpumask_var_t valid_cpus)
+ {
+ 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+ 
+ 	if (!policy) {
+ 		pr_debug("CPU%d: No cpufreq policy found.\n", cpu);
+-		return false;
++		return;
+ 	}
+ 
+ 	if (cpumask_subset(policy->related_cpus, valid_cpus))
+@@ -202,8 +201,6 @@ enable_policy_freq_counters(int cpu, cpumask_var_t valid_cpus)
+ 			   amu_fie_cpus);
+ 
+ 	cpufreq_cpu_put(policy);
+-
+-	return true;
+ }
+ 
+ static DEFINE_STATIC_KEY_FALSE(amu_fie_key);
+@@ -212,7 +209,6 @@ static DEFINE_STATIC_KEY_FALSE(amu_fie_key);
+ static int __init init_amu_fie(void)
+ {
+ 	cpumask_var_t valid_cpus;
+-	bool have_policy = false;
+ 	int ret = 0;
+ 	int cpu;
+ 
+@@ -228,18 +224,9 @@ static int __init init_amu_fie(void)
+ 		if (validate_cpu_freq_invariance_counters(cpu))
+ 			continue;
+ 		cpumask_set_cpu(cpu, valid_cpus);
+-		have_policy |= enable_policy_freq_counters(cpu, valid_cpus);
++		update_amu_fie_cpus(cpu, valid_cpus);
+ 	}
+ 
+-	/*
+-	 * If we are not restricted by cpufreq policies, we only enable
+-	 * the use of the AMU feature for FIE if all CPUs support AMU.
+-	 * Otherwise, enable_policy_freq_counters has already enabled
+-	 * policy cpus.
+-	 */
+-	if (!have_policy && cpumask_equal(valid_cpus, cpu_present_mask))
+-		cpumask_or(amu_fie_cpus, amu_fie_cpus, valid_cpus);
+-
+ 	if (!cpumask_empty(amu_fie_cpus)) {
+ 		pr_info("CPUs[%*pbl]: counters will be used for FIE.",
+ 			cpumask_pr_args(amu_fie_cpus));
+-- 
+2.25.0.rc1.19.g042ed3e048af
+
