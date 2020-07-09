@@ -2,95 +2,105 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457D9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A36A20674
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49AD20674
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgGIHIP (ORCPT
+        id S1726275AbgGIHJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgGIHIP (ORCPT
+        Thu, 9 Jul 2020 03:09:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58664 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726185AbgGIHJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:08:15 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2678AC061A0B;
-        Thu,  9 Jul 2020 00:08:15 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 66F7ABC06E;
-        Thu,  9 Jul 2020 07:08:10 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     mchehab@kernel.org, bp@alien8.de, tony.luck@intel.com,
-        james.morse@arm.com, rrichter@marvell.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] EDAC-GHES: Replace HTTP links with HTTPS ones
-Date:   Thu,  9 Jul 2020 09:08:04 +0200
-Message-Id: <20200709070804.24135-1-grandmaster@al2klimov.de>
+        Thu, 9 Jul 2020 03:09:03 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06971lSw152666;
+        Thu, 9 Jul 2020 03:08:56 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 325s3jfh0n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 03:08:55 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06977DhS012064;
+        Thu, 9 Jul 2020 07:08:54 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03fra.de.ibm.com with ESMTP id 325k2c09e4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 07:08:53 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06978pJE10289426
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Jul 2020 07:08:51 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B88D8A4054;
+        Thu,  9 Jul 2020 07:08:51 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 618B1A4060;
+        Thu,  9 Jul 2020 07:08:51 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Jul 2020 07:08:51 +0000 (GMT)
+Received: from [9.206.191.171] (unknown [9.206.191.171])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0EDB1A00F2;
+        Thu,  9 Jul 2020 17:08:50 +1000 (AEST)
+Subject: Re: [PATCH v2 3/3] misc: cxl: flash: Remove unused variable
+ 'drc_index'
+To:     Lee Jones <lee.jones@linaro.org>, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20200708125711.3443569-1-lee.jones@linaro.org>
+ <20200708125711.3443569-4-lee.jones@linaro.org> <20200709065651.GY3500@dell>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Message-ID: <88cb0955-c7ab-e100-4048-374364610333@linux.ibm.com>
+Date:   Thu, 9 Jul 2020 17:08:49 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200709065651.GY3500@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-09_01:2020-07-08,2020-07-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=821
+ suspectscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ impostorscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0
+ bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007090051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On 9/7/20 4:56 pm, Lee Jones wrote:
+> Keeping the pointer increment though.
+> 
+> Fixes the following W=1 kernel build warning:
+> 
+>   drivers/misc/cxl/flash.c: In function ‘update_devicetree’:
+>   drivers/misc/cxl/flash.c:178:16: warning: variable ‘drc_index’ set but not used [-Wunused-but-set-variable]
+>   178 | __be32 *data, drc_index, phandle;
+>   | ^~~~~~~~~
+> 
+> Cc: Frederic Barrat <fbarrat@linux.ibm.com>
+> Cc: Andrew Donnellan <ajd@linux.ibm.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
-
- drivers/edac/ghes_edac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index cb3dab56a875..e019319d7c2d 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -4,7 +4,7 @@
-  *
-  * Copyright (c) 2013 by Mauro Carvalho Chehab
-  *
-- * Red Hat Inc. http://www.redhat.com
-+ * Red Hat Inc. https://www.redhat.com
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 -- 
-2.27.0
-
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
