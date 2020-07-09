@@ -2,109 +2,127 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD37C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A115C2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FF320786
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:23:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QskeIAbB"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bqukxlMh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rL47dvpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgGINWd (ORCPT
+        id S1726820AbgGINXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:22:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbgGINWd (ORCPT
+        Thu, 9 Jul 2020 09:23:54 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37502 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbgGINXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:22:33 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CD2DC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:22:33 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id k5so1101500pjg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:22:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QXLrUMHB0nCEwvB1Ac392tWUxQyyKOk9dkQPn+DmJ1w=;
-        b=QskeIAbBk/ESXbQrUJ3ZV1ckuVRN6E+X+ciJnrGSYoXB/TRM97t6bycljABVXYuPtg
-         xj21VnWypO/cVRG3n1/nQfa6rjczqiqY3xD9aZd0PaXMIhMXoLw6MlhLcSNm2VLgf2sH
-         YU1em6aD5yC4Ww5MabwWAqQbfy6oW87/Zyls0q6i2m2+mOGWcy29l/TCFVGyR+ADCt9C
-         huYfy8iKlPLyyGplZ5AVYnNA8ZvK50lTsNIasrCKAUJUcj5zW/FlH9gmYqvmr09hvzfX
-         r8uNDkdM72H3njSVuySbBNGIkeqYd1DXG/n5JCD3sbGGIrKJHCAUNqTHfeZKSd3TMhEG
-         LjuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QXLrUMHB0nCEwvB1Ac392tWUxQyyKOk9dkQPn+DmJ1w=;
-        b=cF2GZWfVR9wSj5a6oAjYigNL7G2h2avBIZfN167sYHN0YmlgcNLG6BRResRLpX9ffU
-         U96Ot0Q75YrhXB5oH5+7XwvffZe1qtn9Jq5FntIFzcopyWw1RY3RxHnYn4gZJZ7YS9WX
-         zDBmsGRSTOSJC+XwzwRDi6zxcDd3Qf4JNL5ov1bliSo9hmVGUKNFj7/D/oEyNxVDn028
-         l4PFB6dCxpJmP6gIXkS5CyrP09dwHImbks37sz39nbYAsrT9wtX2kkzuJ7Z7wQjgDwiO
-         1VYju+Y/XiD5LAMceSc32CfKMNIrn2+0HK7BK+G2DATtmSY1cEQDaTs6FXIkl+LifKt+
-         C/5Q==
-X-Gm-Message-State: AOAM531iU3gknPQ9QWYXBfPNgJTtgIjyHX2LH5ghrALM3J5s9+0Rr1wg
-        2n5/7Is5oJw02qMQ/ZXLgBs=
-X-Google-Smtp-Source: ABdhPJz1N1kRgfTY0cVsqNATEfnwHRc3ytlT4RZEplJSn3YCLmmQDBxcVj8aRj1fEESS5c+vcHsy6A==
-X-Received: by 2002:a17:902:6194:: with SMTP id u20mr55925017plj.333.1594300952424;
-        Thu, 09 Jul 2020 06:22:32 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id q11sm2701311pjj.17.2020.07.09.06.22.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 06:22:31 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Thu, 9 Jul 2020 22:22:29 +0900
+        Thu, 9 Jul 2020 09:23:53 -0400
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594301032;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=w+n6OxHUPqDUjezjmzQQ+q/N430M63eFVjSjWykE69w=;
+        b=bqukxlMh0huifO3XHgPvZZsBMnBlntY4qGpAg7gWxCxJsAkfEAUeYIvXGxxzcAoyEhuX7f
+        aylm0GSsgUnHgBYmLAFpRPfcz6SEhR9GP1DfCN8kslmn6pymmTb6TmguXqUCDfDB4DIthZ
+        Eo24v0T8ClTd4L11w8QujmHNMYuVQUfDea0Y/QqrAKDsa3tu//giMauE2rdCoxN3JmN+8O
+        m/B7nR68hA6GL6cDWQsRSZ+NQ3TmJdIjbgrDTbu7UU+3lmUr9otmhYNiYqEHSwo0xqkZOe
+        bxgdPDRcT8z/9nWQiy94bdU+IAJoD9gwU48g9roDzjKW7LOt/BESdi0ZrEPK6A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594301032;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=w+n6OxHUPqDUjezjmzQQ+q/N430M63eFVjSjWykE69w=;
+        b=rL47dvpAPr0fqZl7AzlMfykqJijLWsTKAyRRdOlhcHCFFBpPbS9dw17I7Hf2Z0Rz4TECqO
+        nIHwEoCJN3tILmAA==
 To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Kurt Kanzenbach <kurt@linutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Raul Rangel <rrangel@google.com>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "S, Shirish" <Shirish.S@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: UART/TTY console deadlock
-Message-ID: <20200709132229.GD4380@jagdpanzerIV.localdomain>
-References: <20200630180255.GD37466@atomide.com>
- <20200702051213.GB3450@jagdpanzerIV.localdomain>
- <20200702160514.GK37466@atomide.com>
- <20200703103241.GB182102@jagdpanzerIV.localdomain>
- <CAHp75VdvNi_LWv7QhEsm1vQikeiMpi68qmCwoVttjnp7oq0ahg@mail.gmail.com>
- <877dvg6ft6.fsf@kurt>
- <20200706144314.GB1485@jagdpanzerIV.localdomain>
- <87o8oqa1zy.fsf@kurt>
- <20200708080712.GC571@jagdpanzerIV.localdomain>
- <20200708095215.GB4751@alley>
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/4] printk: replace ringbuffer
+Date:   Thu,  9 Jul 2020 15:29:40 +0206
+Message-Id: <20200709132344.760-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708095215.GB4751@alley>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/07/08 11:52), Petr Mladek wrote:
-> 
-> I still believe that this is a false positive.
+Hello,
 
-I've no problems with that. The thing that I'm trying to improve here is the
-fact that from lockdep's point of view there are no false positives. lockdep
-reports the problem and then waves good bye. It disables itself. There might
-be some real suspend locking problems on some particular setups, but it's
-hard to tell, because console startup blows up the lockdep first.
+Here is a v5 for the first series to rework the printk
+subsystem. The v4 is here [0]. This first series
+only replaces the existing ringbuffer implementation. No locking
+is removed. The semantics/behavior of printk are kept the same
+except for a minor optimization that is reverted (patch 3).
 
-	-ss
+RFC patches for various userspace tools to dump the kernel log
+are available: crash [1], makedumpfile [2], kexec-tools [3].
+
+This series is based on v5.8-rc4.
+
+The list of changes since v4:
+
+printk_ringbuffer
+=================
+
+- added new prb_first_valid_seq() for readers to retrieve the
+  oldest valid sequence number
+
+- prb_first_seq(): now static
+
+printk.c
+========
+
+- devkmsg_read(): fixed returning EPIPE on buffer wrap [4]
+
+- setup_log_buf(): fixed printk conversion specifier [5]
+
+- replace all prb_first_seq() usage with the new
+  prb_first_valid_seq() (because that is what the readers are
+  actually interested in)
+
+[0] https://lkml.kernel.org/r/20200707145932.8752-1-john.ogness@linutronix.de
+[1] https://github.com/Linutronix/crash.git (printk branch)
+[2] https://github.com/Linutronix/makedumpfile.git (printk branch)
+[3] https://github.com/Linutronix/kexec-tools.git (printk branch)
+[4] https://lkml.kernel.org/r/87zh89kkek.fsf@jogness.linutronix.de
+[5] https://lkml.kernel.org/r/87r1tmcfhf.fsf@jogness.linutronix.de
+
+John Ogness (4):
+  crash: add VMCOREINFO macro to define offset in a struct declared by
+    typedef
+  printk: add lockless ringbuffer
+  Revert "printk: lock/unlock console only for new logbuf entries"
+  printk: use the lockless ringbuffer
+
+ include/linux/crash_core.h        |    3 +
+ kernel/printk/Makefile            |    1 +
+ kernel/printk/printk.c            |  950 ++++++++--------
+ kernel/printk/printk_ringbuffer.c | 1687 +++++++++++++++++++++++++++++
+ kernel/printk/printk_ringbuffer.h |  399 +++++++
+ 5 files changed, 2586 insertions(+), 454 deletions(-)
+ create mode 100644 kernel/printk/printk_ringbuffer.c
+ create mode 100644 kernel/printk/printk_ringbuffer.h
+
+-- 
+2.20.1
+
