@@ -2,138 +2,120 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3426C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C605BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C601F20708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7F62077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rCiEZYZ9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F14FqFFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgGINTp (ORCPT
+        id S1726410AbgGINUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:19:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726941AbgGINTa (ORCPT
+        Thu, 9 Jul 2020 09:20:53 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25918 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726497AbgGINUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:19:30 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C80E8C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:19:29 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id ed14so906961qvb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wDgz11ShYk/Rb+cjhB3hGNA4H8iFe+o/AJhL/6TvR/c=;
-        b=rCiEZYZ9CED5ElkKfWtMCX8ixiQqplvTeIu+Ibn+QBVy3wXBuDBikSfnSKeNCRj/VB
-         EqrVchTsBbGc2W4JWOIzzNVs1qy4idQxgXy97+072cnPMGKGFuMvjU3yMnu4EE5TT6mj
-         ooFWv3xAjwHTB7RfTTbBACSQ7WhJUIzjDqmPKM91EatqfR1ThIFZ0bhRDCUVl230P+P2
-         pW3pfIm3zvrjncMfAhRrznCBtGEMNIqV8f4UKRPrlh0GmAqAnTpZ3MidAZEOM8F0zIvp
-         rH2B5Xpi3y5E/XAeSdtuqt5ODAyaLxUXME5yc/FwYj2cReLsn6uLB+MOM284lCaJi6/8
-         BmXQ==
+        Thu, 9 Jul 2020 09:20:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594300851;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=76OSvzSCUloauOhafR66c4WpoHtn6DispnTVDGjMLOA=;
+        b=F14FqFFxuiKSLLFqgzu+RYBot9hYlGWH02C0TvimgrmSQmAOp8+O5WmTZh5NvasNjoN5Tg
+        UAXFXbOiT0dTjaqF73nD8qM5Jgy4r6VW7oQogiFgN2jXCmCyzPz42g1enqeqBb6dcz2+Oq
+        cSeuF6cfvpPu3F4eJkFlDw61RLDfeJk=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-47-B5tOiIXGO3S0QoEVJD4hng-1; Thu, 09 Jul 2020 09:20:50 -0400
+X-MC-Unique: B5tOiIXGO3S0QoEVJD4hng-1
+Received: by mail-qk1-f198.google.com with SMTP id p126so1725495qkf.15
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:20:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wDgz11ShYk/Rb+cjhB3hGNA4H8iFe+o/AJhL/6TvR/c=;
-        b=qjl1qFT7cqRfkN/UWxcQkR2YwdS25/5H/zyEPtO4g7CN2mphRWLg3pj1dDfFegUKey
-         17yVEul1nWHLCsA1WkfRw/dmANSUfObNQGqGhMCnOO1Vw/kmTZYM0SHR9QoThEn4ErrI
-         TUy/tsONs33gHzUkqSdamN9CWXlevZeVR4maog4ARJilakv0eL64L4WD19ylVi19PScq
-         SA6T/lUTbo4niaT0wdJBh5oap5yKj8PXmvzBjYiigwdb85h9k+vKArpJCwfGjP4XuJs3
-         nmCICW4HOkojPqkCQ3V3GdJdFa3RJPdtYeN7/E1vBl2eKqDUGG0WSgzXkrS3CLdjfkqf
-         +JAQ==
-X-Gm-Message-State: AOAM533qzuscgl4Mmxufs/AuQmSqXfTKZnBX+ijIcV6fl1RMlawMAWS1
-        1y6nr2a2XLndvNYxfC5Ds+nwIqy+Liek8tmzRngcEA==
-X-Google-Smtp-Source: ABdhPJyBlDePeobZPrB/H+vNSKy8PsVTe99vnGiqo586PyF/ZAgTRfMF07tYml4pg+RfsX6MJuGd7z9oI42LX8hANPA=
-X-Received: by 2002:a05:6214:72c:: with SMTP id c12mr59335115qvz.76.1594300768959;
- Thu, 09 Jul 2020 06:19:28 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=76OSvzSCUloauOhafR66c4WpoHtn6DispnTVDGjMLOA=;
+        b=bw+q8Kh5L/V/Xy7NcJ8u+Rd1ZGL6vEGAc2OOKfchcrZVnIeSc1Ds5cqNZs0o5r6r8N
+         zeh+BEg21DvC2haNJLkctal3XEWbQ6UMSbN92ET3GH4KO4YsGEwzJXsPQ0yM36f+E9tX
+         7vfPuZ5raQlOHgbIwMYPSpvs/Lwfqb2Opz0bVhon4OB8ArWS/LYLzco9sEIwescdjj3Y
+         WMdP0w0X93mKUmwyInTz77g3bTY7SXwjBx84xUld+65R/qJKdaweomU4ItWUyFdU31Py
+         tgUmTWcetN3ce+xpgLxKFSEqgoOBcoyBEnEyj6bGEW7LcCPfr7j7GGwXeXCsugBtqiji
+         dyyw==
+X-Gm-Message-State: AOAM531kD80uVarjUni7yS69wLBsx0R0ip84KYxkePVWVItZudbW6CJT
+        7jlEiNEMpfeU+Twrfz9bWNnAwFwIg7bujEVj0a2r1P8YXTg77QszTZKAcawd9yyyrdddwCPWgzD
+        kaPE/ldMSCJPZQmOF2GtynZHD
+X-Received: by 2002:aed:3621:: with SMTP id e30mr65943938qtb.190.1594300847802;
+        Thu, 09 Jul 2020 06:20:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxwv9y/2XVgBqXA0qajhFxXtzwcjgCuGpUXH3oak5UIWbJ6fZG4M6hi43XJBds9zBMjZoNTfw==
+X-Received: by 2002:aed:3621:: with SMTP id e30mr65943687qtb.190.1594300844420;
+        Thu, 09 Jul 2020 06:20:44 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id p36sm3873647qta.0.2020.07.09.06.20.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 06:20:43 -0700 (PDT)
+Subject: Re: [RESEND PATCH 2/2] fpga: dfl: fix bug in port reset handshake
+To:     Xu Yilun <yilun.xu@intel.com>, mdf@kernel.org,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     lgoncalv@redhat.com,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>
+References: <1594282337-32125-1-git-send-email-yilun.xu@intel.com>
+ <1594282337-32125-3-git-send-email-yilun.xu@intel.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <c6984a5b-ce56-2094-a30e-a019d8721420@redhat.com>
+Date:   Thu, 9 Jul 2020 06:20:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200708041600.768775-1-warthog618@gmail.com>
-In-Reply-To: <20200708041600.768775-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 9 Jul 2020 15:19:18 +0200
-Message-ID: <CAMpxmJUtD_GrQObd=1-6pVv4xDb4GO52J6sDyvVvtxzySjBzJw@mail.gmail.com>
-Subject: Re: [PATCH 00/17] gpiolib: cdev: pre-uAPI v2 cleanups
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1594282337-32125-3-git-send-email-yilun.xu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 6:18 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> This collection of patches provides improvements to or
-> address minor problems in gpiolib-cdev.
->
-> The majority of the patches (1-7, 9-11) have been pulled directly from
-> my "gpio: cdev: add uAPI V2" patch set, as they are not related to any
-> uAPI changes.
-> The remaining patches were either split out of the remaining patches
-> from that set, as they are not directly part of the uAPI changes, or
-> were inspired by fixes for issues in that set, or were only noticed
-> subsequent to that set.
->
-> Changes since "gpio: cdev: add uAPI V2":
->  - rebase onto latest gpio/devel
->  - fix typo in patch 1 commit description
->  - replace patch 8 with the blocking notifier call chain patch
->  - rename priv to cdev instead of gcdev in patch 9
->  - fix error handling in patch 10
->  - add patches 12 to 17
->
-> Kent Gibson (17):
->   gpiolib: move gpiolib-sysfs function declarations into their own
->     header
->   gpiolib: cdev: sort includes
->   gpiolib: cdev: minor indentation fixes
->   gpiolib: cdev: refactor gpiohandle_flags_to_desc_flags
->   gpiolib: cdev: rename 'filep' and 'filp' to 'file' to be consistent
->     with other use
->   gpiolib: cdev: rename numdescs to num_descs
->   gpiolib: cdev: remove pointless decrement of i
->   gpiolib: cdev: use blocking notifier call chain instead of atomic
->   gpiolib: cdev: rename priv to cdev
->   gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
->   gpiolib: cdev: remove recalculation of offset
->   gpiolib: cdev: refactor linehandle cleanup into linehandle_free
->   gpiolib: cdev: refactor lineevent cleanup into lineevent_free
->   gpio: uapi: fix misplaced comment line
->   tools: gpio: fix spurious close warning in lsgpio
->   tools: gpio: fix spurious close warning in gpio-utils
->   tools: gpio: fix spurious close warning in gpio-event-mon
->
->  drivers/gpio/gpiolib-cdev.c  | 385 ++++++++++++++++-------------------
->  drivers/gpio/gpiolib-sysfs.c |   1 +
->  drivers/gpio/gpiolib-sysfs.h |  24 +++
->  drivers/gpio/gpiolib.c       |  15 +-
->  drivers/gpio/gpiolib.h       |  20 +-
->  include/uapi/linux/gpio.h    |   2 +-
->  tools/gpio/gpio-event-mon.c  |   3 +-
->  tools/gpio/gpio-utils.c      |   4 +-
->  tools/gpio/lsgpio.c          |   3 +-
->  9 files changed, 217 insertions(+), 240 deletions(-)
->  create mode 100644 drivers/gpio/gpiolib-sysfs.h
->
->
-> base-commit: b239e4454e59bc85d466eb5630da46f6a876df77
-> --
-> 2.27.0
->
 
-Hi Kent,
+On 7/9/20 1:12 AM, Xu Yilun wrote:
+> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>
+> When putting the port in reset, driver must wait for the soft reset
+> acknowledgment bit instead of the soft reset bit.
+>
+> Fixes: 47c1b19c160f (fpga: dfl: afu: add port ops support)
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Acked-by: Wu Hao <hao.wu@intel.com>
+> ---
+>  drivers/fpga/dfl-afu-main.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> index 7c84fee..753cda4 100644
+> --- a/drivers/fpga/dfl-afu-main.c
+> +++ b/drivers/fpga/dfl-afu-main.c
+> @@ -83,7 +83,8 @@ int __afu_port_disable(struct platform_device *pdev)
+>  	 * on this port and minimum soft reset pulse width has elapsed.
+>  	 * Driver polls port_soft_reset_ack to determine if reset done by HW.
+>  	 */
+> -	if (readq_poll_timeout(base + PORT_HDR_CTRL, v, v & PORT_CTRL_SFTRST,
+> +	if (readq_poll_timeout(base + PORT_HDR_CTRL, v,
+> +			       v & PORT_CTRL_SFTRST_ACK,
+>  			       RST_POLL_INVL, RST_POLL_TIMEOUT)) {
+>  		dev_err(&pdev->dev, "timeout, fail to reset device\n");
+>  		return -ETIMEDOUT;
 
-The entire series looks good to me, thanks for doing this. I'll pick
-it up into my tree and send a PR to Linus.
+Looks ok to me.
 
-Bartosz
+Reviewed-by: Tom Rix <trix@redhat.com>
+
