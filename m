@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A91C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89679C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC3E32078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693D6207DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:37:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgGIRhU (ORCPT
+        id S1728493AbgGIRhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:37:20 -0400
+        Thu, 9 Jul 2020 13:37:24 -0400
 Received: from mga09.intel.com ([134.134.136.24]:35028 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728449AbgGIRhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:37:18 -0400
-IronPort-SDR: FP5hK1yei5pLzKqnmHVrQ4FDSviRwxdwlupKakqeeEYbTXf86fJhQWKXp3bSPoKqEj6XKjJwMF
- ixCUw2TGD6gA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="149537111"
+        id S1728470AbgGIRhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 13:37:20 -0400
+IronPort-SDR: KHOOLKXDHc4OeF0YfXVQXpI9MR35Q8VC0XT/MYG9fL/t9HZ0Zb2YslQO7VdPsjVCLl/9bqQ9qz
+ tmoxr806oMIg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="149537115"
 X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="149537111"
+   d="scan'208";a="149537115"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 10:37:18 -0700
-IronPort-SDR: l5LhRx/uf5Ddtqo8gdJxOi+gNWgn4CIEH7+FIuykqrQGFoM3BEf0/rMVJSxZU5E3Ry4NEn3lk/
- RlP7Mu3PrYcg==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 10:37:19 -0700
+IronPort-SDR: KUuUl8mwMN0XJzQUh3KRpGbmxerBrBPJtzKsMgzYCw4fs2DjhdrTeokJLgmBPmZdVRWF0BJcuh
+ KGUnhEkkArrg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="324292515"
+   d="scan'208";a="324292520"
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
-  by orsmga007.jf.intel.com with ESMTP; 09 Jul 2020 10:37:16 -0700
+  by orsmga007.jf.intel.com with ESMTP; 09 Jul 2020 10:37:18 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/11] perf auxtrace: Add optional error flags to the itrace 'e' option
-Date:   Thu,  9 Jul 2020 20:36:21 +0300
-Message-Id: <20200709173628.5613-5-adrian.hunter@intel.com>
+Subject: [PATCH 05/11] perf intel-pt: Use itrace error flags to suppress some errors
+Date:   Thu,  9 Jul 2020 20:36:22 +0300
+Message-Id: <20200709173628.5613-6-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200709173628.5613-1-adrian.hunter@intel.com>
 References: <20200709173628.5613-1-adrian.hunter@intel.com>
@@ -51,60 +51,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow the 'e' option to be followed by an architecture-specific number
-which flags what kind of errors will or will not be reported.
+The itrace "e" option may be followed by a number which has the
+following effect for Intel PT:
+	1	Suppress overflow events
+	2	Suppress trace data lost events
+The values may be combined by bitwise OR'ing them.
+
+Suppressing those errors can be useful for testing and debugging
+because they are not due to decoding.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/Documentation/itrace.txt | 3 +++
- tools/perf/util/auxtrace.c          | 2 ++
- tools/perf/util/auxtrace.h          | 2 ++
- 3 files changed, 7 insertions(+)
+ tools/perf/Documentation/perf-intel-pt.txt |  7 ++++++-
+ tools/perf/util/intel-pt.c                 | 12 ++++++++++++
+ 2 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index e817179c5027..34864b4047ed 100644
---- a/tools/perf/Documentation/itrace.txt
-+++ b/tools/perf/Documentation/itrace.txt
-@@ -47,3 +47,6 @@
- 	--itrace=i0nss1000000
+diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+index f4cd49a7fcdb..0fcd8ad897b0 100644
+--- a/tools/perf/Documentation/perf-intel-pt.txt
++++ b/tools/perf/Documentation/perf-intel-pt.txt
+@@ -871,7 +871,11 @@ Developer Manuals.
  
- 	skips the first million instructions.
+ Error events show where the decoder lost the trace.  Error events
+ are quite important.  Users must know if what they are seeing is a complete
+-picture or not.
++picture or not. The "e" option may be followed by a number which has the
++following effect:
++	1	Suppress overflow events
++	2	Suppress trace data lost events
++The values may be combined by bitwise OR'ing them.
+ 
+ The "d" option will cause the creation of a file "intel_pt.log" containing all
+ decoded packets and instructions.  Note that this option slows down the decoder
+@@ -956,6 +960,7 @@ at the beginning. This is useful to ignore initialization code.
+ 
+ skips the first million instructions.
+ 
 +
-+	The 'e' option may be followed by an architecture-specific number which
-+	flags what kind of errors will or will not be reported.
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 25c639ac4ad4..5cfc0b12b2b3 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1436,6 +1436,8 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
- 			break;
- 		case 'e':
- 			synth_opts->errors = true;
-+			synth_opts->error_flags = strtoul(p, &endptr, 0);
-+			p = endptr;
- 			break;
- 		case 'd':
- 			synth_opts->log = true;
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 142ccf7d34df..a04475f41f28 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -91,6 +91,7 @@ enum itrace_period_type {
-  * @cpu_bitmap: CPUs for which to synthesize events, or NULL for all
-  * @ptime_range: time intervals to trace or NULL
-  * @range_num: number of time intervals to trace
-+ * @error_flags: arch-specific flags to affect what errors are reported
-  */
- struct itrace_synth_opts {
- 	bool			set;
-@@ -124,6 +125,7 @@ struct itrace_synth_opts {
- 	unsigned long		*cpu_bitmap;
- 	struct perf_time_interval *ptime_range;
- 	int			range_num;
-+	unsigned int		error_flags;
- };
+ dump option
+ ~~~~~~~~~~~
  
- /**
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 8c441b815d73..a8e8e8acbcc8 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -46,6 +46,9 @@
+ 
+ #define MAX_TIMESTAMP (~0ULL)
+ 
++#define INTEL_PT_ERR_SUPPRESS_OVF	1
++#define INTEL_PT_ERR_SUPPRESS_LOST	2
++
+ struct range {
+ 	u64 start;
+ 	u64 end;
+@@ -1863,6 +1866,15 @@ static int intel_pt_synth_error(struct intel_pt *pt, int code, int cpu,
+ 	char msg[MAX_AUXTRACE_ERROR_MSG];
+ 	int err;
+ 
++	if (pt->synth_opts.error_flags) {
++		if (code == INTEL_PT_ERR_OVR &&
++		    pt->synth_opts.error_flags & INTEL_PT_ERR_SUPPRESS_OVF)
++			return 0;
++		if (code == INTEL_PT_ERR_LOST &&
++		    pt->synth_opts.error_flags & INTEL_PT_ERR_SUPPRESS_LOST)
++			return 0;
++	}
++
+ 	intel_pt__strerror(code, msg, MAX_AUXTRACE_ERROR_MSG);
+ 
+ 	auxtrace_synth_error(&event.auxtrace_error, PERF_AUXTRACE_ERROR_ITRACE,
 -- 
 2.25.1
 
