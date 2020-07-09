@@ -2,80 +2,116 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 767A320767
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA2D20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594279938;
-	bh=osjNtW7Vcsl6XAmexC2cVHsdXszVbxZeargjrRySMuA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lv8019WF9NGo6Cbvb4xcVuJk+o0xUV8Za45VBoroT3JW1D/GipN8b1+5pcXGX7F4i
-	 P9GuRuXGNVCfbOf2AQHclwFEONG/dG+BC7pVJES1mHyz7gSS/Jdvo/yb/jXNY9Q8Iq
-	 sjtAJ0x3N2Sd4D9XTr5DkwxyWi0Nd64WL8H2RG2Y=
+	s=default; t=1594279979;
+	bh=qtKXUw7SgjgQcTBkUhxdUs/hh9nEmqm9RFtxqfv1xl0=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=nWtAkhfZKlyrcs62V3NMGsLrZfsWqI/ExufNIO8odMmWdACbkF+PIKYYT64CvH+ul
+	 YgTjQajrj4f5yXpA4+sQn7aS/kITR29bylLLoGnqwoauH9VZ0Om4zgW7qk7Ox99Bm/
+	 1A7P6uy6PH3BtapSv3OQ37XNx11o0EjCWo8eXl2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgGIHcP (ORCPT
+        id S1726476AbgGIHc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbgGIHcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:32:14 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C24F220767;
-        Thu,  9 Jul 2020 07:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594279934;
-        bh=osjNtW7Vcsl6XAmexC2cVHsdXszVbxZeargjrRySMuA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FgM48asAEyYqqo3pNtHvbbzcmAGnCiHesy6730e5O/fCk7lM/Mi80rry/VUTwf9fP
-         iCxgGhQv7KrE3E5FzDK+J74umYvxzhuYbw2wsqKAURVMoT3Xvwa/Bh2wzI0j2DeJog
-         InFdiK7M+/Xf97CQNv+GgyzC6wUOhANqppmEsb/M=
-Date:   Thu, 9 Jul 2020 13:02:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jonathan Marek <jonathan@marek.ca>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 4/5] iommu/arm-smmu-qcom: Consstently initialize stream
- mappings
-Message-ID: <20200709073204.GH34333@vkoul-mobl>
-References: <20200709050145.3520931-1-bjorn.andersson@linaro.org>
- <20200709050145.3520931-5-bjorn.andersson@linaro.org>
+        Thu, 9 Jul 2020 03:32:57 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39018 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgGIHc4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 03:32:56 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d18so1023768edv.6;
+        Thu, 09 Jul 2020 00:32:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j7DqbPSyBqq2qwNcdYTCxivolsap4LLnpECg1M+YJYk=;
+        b=qZiNwlyRJ57VPjR+dosZ69Gym7GNS4FukUdkgaYsGriBesMWF22pXa3pVLiOfXPOJQ
+         tqPklsHrjCnY4xSsVGStmBcWYDca3eRq3xqpWrLoLZuZkxUTIRZSAS5SVCN/jt7UBvfC
+         JWkPCkrp2b7mAm7VCHEy3g5i2dU2f5qBGCOYds9I/9NHL+mxbckjgBUxczwV44RdlwiX
+         VuOd4cuKP7tVGADCX94TArCvW7SI+nzGX6N/nbOwRfqgA+xd2Rvlyo+rGQW756j6YjI8
+         RNUMh0ewYcb483hIjKyOB8jrUfNHW6gpl6RZ6jCN72lxM9HmtY9eqJ4CJ1sZY+/I4NUG
+         Tx/Q==
+X-Gm-Message-State: AOAM531GEd/SInI4qyhu3bABdWnHgQNCsywdZCeke95PuT+Mo+P9zEBG
+        EuYDAHLIhUr+a0PVB8zlGxQ=
+X-Google-Smtp-Source: ABdhPJwrkOg1VmskPen0ndAgGUffYWkrKR783vprCdOePKnp0T8h/KXoPOC3hmTqCSglRRVLLvqDkw==
+X-Received: by 2002:a50:d8c2:: with SMTP id y2mr62468108edj.114.1594279973653;
+        Thu, 09 Jul 2020 00:32:53 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id sa10sm1258696ejb.79.2020.07.09.00.32.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 Jul 2020 00:32:52 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 09:32:49 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        virtualization@lists.linux-foundation.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] iomap: Constify ioreadX() iomem argument (as in
+ generic implementation)
+Message-ID: <20200709073249.GA6335@kozik-lap>
+References: <20200709072837.5869-1-krzk@kernel.org>
+ <20200709072837.5869-2-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200709050145.3520931-5-bjorn.andersson@linaro.org>
+In-Reply-To: <20200709072837.5869-2-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-07-20, 22:01, Bjorn Andersson wrote:
-> Firmware that traps writes to S2CR to translate BYPASS into FAULT also
-> ignores writes of type FAULT. As such booting with "disable_bypass" set
-> will result in all S2CR registers left as configured by the bootloader.
+On Thu, Jul 09, 2020 at 09:28:34AM +0200, Krzysztof Kozlowski wrote:
+> The ioreadX() and ioreadX_rep() helpers have inconsistent interface.  On
+> some architectures void *__iomem address argument is a pointer to const,
+> on some not.
 > 
-> This has been seen to result in indeterministic results, as these
-> mappings might linger and reference context banks that Linux is
-> reconfiguring.
+> Implementations of ioreadX() do not modify the memory under the address
+> so they can be converted to a "const" version for const-safety and
+> consistency among architectures.
 > 
-> Use the fact that BYPASS writes result in FAULT type to force all stream
-> mappings to FAULT.
+> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-s/Consstently/Consistently in patch subject
+I forgot to put here one more Ack, for PowerPC:
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
--- 
-~Vinod
+https://lore.kernel.org/lkml/87ftedj0zz.fsf@mpe.ellerman.id.au/
+
+Best regards,
+Krzysztof
+
