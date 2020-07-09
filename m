@@ -2,141 +2,237 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B4DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C24D2076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA30120672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594328300;
-	bh=Xkf48gTToGHllmUfrT0K4xurBoHvQ3uI/4oa3YEsiwc=;
-	h=To:Cc:From:Subject:Date:List-ID:From;
-	b=TOkjrMLnCb3GbdFxzPqe1xRrPts7WRMu6OajQ/tBTWgE3ntlUpLTKdvHrOI3JHWk8
-	 XuzTkPFg9zFocACrPOMrM4JVRdsmxC9xl2vcuB3LrBTmzDkU98OK0w2EDnQLXGF50z
-	 hghYuY8g+RDj5rQmvdrO3w2pfCJ06wNHSbiONxyA=
+	s=default; t=1594328361;
+	bh=hdl5vLIXdN/DqrdtjtQ2V6wbMQ43599XFBbNtCqqK5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=epkRXAHpV9Sal1CyhHrZYNEYBwGBwEalKMDr9VubwmJPHM1LYPNhw06yzIlMnak1h
+	 Pss5wrY0IDZUIr/dVi/Jd/yXK7ujzUZAfRJJ5/4WLF7MdMz/3/iLU0O3B+ttEsz/sk
+	 eU3zDYiElyv5bmRS6O75noXW595xg+lhrYrqPMUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgGIU6T (ORCPT
+        id S1726449AbgGIU7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGIU6S (ORCPT
+        Thu, 9 Jul 2020 16:59:19 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36025 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgGIU7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:58:18 -0400
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425E3C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 13:58:18 -0700 (PDT)
-Received: by mail-oi1-x22d.google.com with SMTP id t198so3013177oie.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 13:58:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=EDWW8ZPjyoebchhz2GeXwkSC4GQIj8hrZuuqox3N7vI=;
-        b=bBHUN6OrbVFW8ceOMeAHbEHtBJUcTipUpBqltr2dVz+TlhHHs5pB+MtFBe4Gpm2SMH
-         np9N0u/xz0XqMfDOwx4i4gYWv4ZXNlnsLKLZknNaLuxns3QKjEo4D9Px25Ev1HTSyNJv
-         1w6uG33jIB2kPxfk+Zu16fXFpvxJkTXJz8euA=
+        Thu, 9 Jul 2020 16:59:18 -0400
+Received: by mail-io1-f67.google.com with SMTP id y2so3825941ioy.3;
+        Thu, 09 Jul 2020 13:59:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=EDWW8ZPjyoebchhz2GeXwkSC4GQIj8hrZuuqox3N7vI=;
-        b=TTyIeP13KSOTI00wymm1nns0LBManL0Fy+Uer5XevlNLDXiT6teUTVnC82E/7dGcF3
-         PasuNLGH62bxjkhSAW/RU/1UtIH2y7v+qty8QaVbWzoeTrF4AgVRLFXzqaTmyeLB1jZI
-         4vRek7Gnl9Y6J6sMkEUhYGG21yt8fcLSFZSCD3zHWhWKHWzIkw3Qs4r+pLgQS7mFR4Y3
-         Qn6aiFpbWYYMP0ZKnZeyf790cAQ5Cxh+e2+Hvd6A+dJ6MhI2DllgB7Y3EyZqz6BGoNh8
-         BrCzZ5AjMmh8HICw3ggv4jLSzAhfxrdA3fUAMEMpBXiX/eKRw/y9GNNMO/TuFi/wRGWQ
-         4Uyw==
-X-Gm-Message-State: AOAM533gbvkbFj8fqxGtsF3iXaB0HwxFaFSe0vEhPLJPl/6xA7Qjao7s
-        7cAr9JlPKiuZtZ2CpaqMntxiTQ==
-X-Google-Smtp-Source: ABdhPJytgSEh45RvMZKy1z5ZYTrYSnGPT/HMB+mqjdUMUGmtsq60LuL3wXhvh7+HhOi76fn4nN2I0g==
-X-Received: by 2002:aca:5c03:: with SMTP id q3mr1769738oib.132.1594328296417;
-        Thu, 09 Jul 2020 13:58:16 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id d193sm704681oib.53.2020.07.09.13.58.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 13:58:15 -0700 (PDT)
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-safety@lists.elisa.tech
-Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
-        "lukas.bulwahn@bmw.de" <lukas.bulwahn@bmw.de>,
-        skhan@linuxfoundation.org
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: [ANNOUNCE][CFP] Kernel Dependability & Assurance Micro Conference -
- LPC 2020
-Message-ID: <675ed25a-3fa8-e288-1be4-41710a807d1f@linuxfoundation.org>
-Date:   Thu, 9 Jul 2020 14:58:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=59KG2c36B73L5TCxEaW5iyr7aT9GnhJz2toja/ityzo=;
+        b=A1DDDAX8Of3VAYBaf5twc9L3XAzTOwb8mXv8uAzBCMGPIAuz7djXDfiiweblJOExEA
+         kPUbdFROFs7zMbzXJQRskMPGTuo9r2RYTePoC938ZqEzIj9e2yPYJucnQKWtzOJ5Rs0e
+         r14HuxWiZ/Kvg95r0FACgJQCkKCt03d/xUd/omx8m4k+pmMB17b4idrkVJzi+qHXvTji
+         m3DX6qgsSBc5y2wqsxXLT7SP0EdbovAt9QfUZM9jYqMSd5Jfc4Bno6Ug+DKS9EDij/w2
+         m7j81Q8Di84WXWOngb/VaQ5Gt4dx50TLwHrdMeUUCfod2M/5sO/zliVjNPU81l8iuxVi
+         ScdA==
+X-Gm-Message-State: AOAM5337FGLQV5VppFRuB+Qpjt6U9OCctpV1r4plx0bIYI1p6K69xziu
+        +XjP7a/VfPcTszb9Go906g==
+X-Google-Smtp-Source: ABdhPJz1XtipgZZTRvbo4upYYiZEu374WcNQ5YcX9yvzP6F343WQAYYz7MPsvmWiJt7sYOukO69ulw==
+X-Received: by 2002:a05:6638:2591:: with SMTP id s17mr23248116jat.23.1594328357549;
+        Thu, 09 Jul 2020 13:59:17 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id h11sm2372624ilh.69.2020.07.09.13.59.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 13:59:16 -0700 (PDT)
+Received: (nullmailer pid 875925 invoked by uid 1000);
+        Thu, 09 Jul 2020 20:59:15 -0000
+Date:   Thu, 9 Jul 2020 14:59:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     EastL Lee <EastL.Lee@mediatek.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>, vkoul@kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        wsd_upstream@mediatek.com, cc.hwang@mediatek.com
+Subject: Re: [PATCH v6 1/4] dt-bindings: dmaengine: Add MediaTek
+ Command-Queue DMA controller bindings
+Message-ID: <20200709205915.GA865123@bogus>
+References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
+ <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the call for proposals for the Kernel Dependability & Assurance
-Micro Conference at the Linux Plumbers Conference 2020. It will take
-place online during the Linux Plumbers Conference on August 24th-28th,
-2020.
+On Thu, Jul 02, 2020 at 03:06:01PM +0800, EastL Lee wrote:
+> Document the devicetree bindings for MediaTek Command-Queue DMA controller
+> which could be found on MT6779 SoC or other similar Mediatek SoCs.
+> 
+> Signed-off-by: EastL Lee <EastL.Lee@mediatek.com>
+> ---
+>  .../devicetree/bindings/dma/mtk-cqdma.yaml         | 113 +++++++++++++++++++++
+>  1 file changed, 113 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> new file mode 100644
+> index 0000000..83ed742
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> @@ -0,0 +1,113 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/mtk-cqdma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek Command-Queue DMA controller Device Tree Binding
+> +
+> +maintainers:
+> +  - EastL Lee <EastL.Lee@mediatek.com>
+> +
+> +description:
+> +  MediaTek Command-Queue DMA controller (CQDMA) on Mediatek SoC
+> +  is dedicated to memory-to-memory transfer through queue based
+> +  descriptor management.
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  "#dma-cells":
+> +    minimum: 1
+> +    maximum: 255
+> +    description:
+> +      Used to provide DMA controller specific information.
 
-The Kernel Dependability & Assurance Micro Conference is intended to
-bring the safety-critical systems community and the kernel community
-together to start a dialogue and collaboration on making sure that the
-kernel is fit to be used in safety-critical systems and that questions
-from the safety community and other wrt. software quality can be
-answered adequately.
+No, for a specific binding like this, it should be 1 defined value.
 
-The goal for this conference is to explore kernel dependability as it
-relates to safety-critical applications in the areas of uptime, tooling,
-and processes. The focus is going to be on the following topics.
+> +
+> +  compatible:
+> +    oneOf:
+> +      - const: mediatek,mt6765-cqdma
+> +      - const: mediatek,mt6779-cqdma
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 5
+> +    description:
+> +        A base address of MediaTek Command-Queue DMA controller,
+> +        a channel will have a set of base address.
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 5
+> +    description:
+> +        A interrupt number of MediaTek Command-Queue DMA controller,
+> +        one interrupt number per dma-channels.
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: cqdma
+> +
+> +  dma-channel-mask:
+> +    $ref: /schemas/types.yaml#definitions/uint32
 
-- Kernel Quality Assurance beyond Testing and CI?
+Alreay has a type, don't redefine it here.
 
-- Understanding the User's Expectations on Software Quality for
-   business-critical systems
+> +    description:
+> +       For DMA capability, We will know the addressing capability of
+> +       MediaTek Command-Queue DMA controller through dma-channel-mask.
 
-- Define safety requirements for overall kernel: features, tests etc.
+This sounds like the kernel's DMA masks which is not what this property 
+is.
 
-- Define run-time characteristics and requirements
+> +    items:
+> +      minItems: 1
+> +      maxItems: 63
 
-- Identify missing features necessary to operate in safety critical
-   environments.
+An array of 63 elements?
 
-- Discuss safety features
+I think you want:
 
-- Regression Testing for safety: Identify configurations and tests
-   critical and important for safety quality and dependability
+minimum: 1
+maximum: 63
 
-- Discuss and identify gaps in tests.
+Or:
 
-- Add tests and add configurations to existing test rings.
+enum: [ 1, 3, 7, 0xf, 0x1f, 0x3f ]
 
-- Understanding the Kernel Development Organization and Management
+(Though if this works, then just 'dma-channels' is enough.)
 
-- Assessing, Measuring and Evaluating the Development Process
+> +
+> +  dma-channels:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +      Number of DMA channels supported by MediaTek Command-Queue DMA
+> +      controller, support up to five.
 
-We encourage submissions that do not present a final solution. Instead,
-that serves to get feedback from the community, to point to action items
-for future development, and that can result in patches for the Linux
-Kernel and Linux ecosystem in the future.
+Is it 5 or 6 channels? You're off by one somewhere.
 
-Please submit your proposals on the LPC website at:
+> +    items:
+> +      minItems: 1
+> +      maxItems: 5
+> +
+> +  dma-requests:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +      Number of DMA request (virtual channel) supported by MediaTek
+> +      Command-Queue DMA controller, support up to 32.
+> +    items:
+> +      minItems: 1
+> +      maxItems: 32
 
-https://www.linuxplumbersconf.org/event/7/abstracts/#submit-abstract
+You are describing how many elements in an array and this is a scalar.
 
-And be sure to select "Kernel Dependability & Assurance MC" in the Track
-pulldown menu.
-
-Proposals must be submitted by August 2nd, and submitters will be
-notified of acceptance by August 9th.
-
-thanks,
--- Shuah
+> +
+> +required:
+> +  - "#dma-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - dma-channel-mask
+> +  - dma-channels
+> +  - dma-requests
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/mt6779-clk.h>
+> +    cqdma: dma-controller@10212000 {
+> +        compatible = "mediatek,mt6779-cqdma";
+> +        reg = <0x10212000 0x80>,
+> +            <0x10212080 0x80>,
+> +            <0x10212100 0x80>;
+> +        interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>,
+> +            <GIC_SPI 140 IRQ_TYPE_LEVEL_LOW>,
+> +            <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
+> +        clocks = <&infracfg_ao CLK_INFRA_CQ_DMA>;
+> +        clock-names = "cqdma";
+> +        dma-channel-mask = <63>;
+> +        dma-channels = <3>;
+> +        dma-requests = <32>;
+> +        #dma-cells = <1>;
+> +    };
+> +
+> +...
+> -- 
+> 1.9.1
