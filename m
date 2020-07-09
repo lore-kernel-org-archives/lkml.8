@@ -2,126 +2,101 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA65C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9E5F206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95278206A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:21:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S0FIwz36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgGIJTi (ORCPT
+        id S1726357AbgGIJVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:19:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45860 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726283AbgGIJTi (ORCPT
+        Thu, 9 Jul 2020 05:21:10 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31040 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726211AbgGIJVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:19:38 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06992P92149548;
-        Thu, 9 Jul 2020 05:18:25 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 325n5eh6s2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 05:18:25 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06992TWC149958;
-        Thu, 9 Jul 2020 05:18:24 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 325n5eh6r2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 05:18:24 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0699A2Fw014205;
-        Thu, 9 Jul 2020 09:18:22 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 325k1vgqjt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 09:18:22 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0699IJQc54919672
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jul 2020 09:18:20 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB9DCAE05A;
-        Thu,  9 Jul 2020 09:18:19 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D5DF8AE045;
-        Thu,  9 Jul 2020 09:18:16 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.204.222])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  9 Jul 2020 09:18:16 +0000 (GMT)
-Date:   Thu, 9 Jul 2020 12:18:15 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jia He <justin.he@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        David Hildenbrand <david@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [PATCH v3 4/6] mm: don't export memory_add_physaddr_to_nid in
- arch specific directory
-Message-ID: <20200709091815.GF781326@linux.ibm.com>
-References: <20200709020629.91671-1-justin.he@arm.com>
- <20200709020629.91671-5-justin.he@arm.com>
- <20200709021104.GZ25523@casper.infradead.org>
+        Thu, 9 Jul 2020 05:21:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594286467;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fpT1tlU+FAIRvHikZIQn2nvVl9NUNq40o1v5G/MxGTw=;
+        b=S0FIwz36oVS/P+UUik7Zoi+d3nBSYGS311tvJ3B49x4WS4NuQeF2Ka9xmBXfA027YEIrTE
+        2mZp7RGUyzwZgOIiY+qSbXpv5zvF2X6873SfFZYLmthbECJeu6Gp55cMm9z5hiHGvvM0rV
+        yd3IcWGaMPYAk7aQmlKo36C76+AgNT4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-459-S4HiYPomPzuTzsOAv4VZxQ-1; Thu, 09 Jul 2020 05:21:03 -0400
+X-MC-Unique: S4HiYPomPzuTzsOAv4VZxQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA0AD107ACF7;
+        Thu,  9 Jul 2020 09:21:01 +0000 (UTC)
+Received: from ovpn-113-239.ams2.redhat.com (ovpn-113-239.ams2.redhat.com [10.36.113.239])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CA7F6106A;
+        Thu,  9 Jul 2020 09:20:59 +0000 (UTC)
+Message-ID: <9dbb08f05890cc4130b54c80e4f4072b49d9f0ed.camel@redhat.com>
+Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Josh Hunt <johunt@akamai.com>,
+        Jonas Bonn <jonas.bonn@netrounds.com>,
+        Michael Zhivich <mzhivich@akamai.com>,
+        David Miller <davem@davemloft.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>
+Date:   Thu, 09 Jul 2020 11:20:58 +0200
+In-Reply-To: <CAM_iQpVZ4_AEV6JR__u-ooF7-=ozABVr_XPXGqwj2AK-VM1U5w@mail.gmail.com>
+References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+         <20200623134259.8197-1-mzhivich@akamai.com>
+         <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
+         <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
+         <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
+         <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com>
+         <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
+         <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
+         <e54b0fe2ab12f6d078cdc6540f03478c32fe5735.camel@redhat.com>
+         <CAM_iQpVZ4_AEV6JR__u-ooF7-=ozABVr_XPXGqwj2AK-VM1U5w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709021104.GZ25523@casper.infradead.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_04:2020-07-08,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 spamscore=0
- impostorscore=0 mlxscore=0 adultscore=0 suspectscore=1 mlxlogscore=603
- phishscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007090068
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 03:11:04AM +0100, Matthew Wilcox wrote:
-> On Thu, Jul 09, 2020 at 10:06:27AM +0800, Jia He wrote:
-> > After a general version of __weak memory_add_physaddr_to_nid implemented
-> > and exported , it is no use exporting twice in arch directory even if
-> > e,g, ia64/x86 have their specific version.
-> > 
-> > This is to suppress the modpost warning:
-> > WARNING: modpost: vmlinux: 'memory_add_physaddr_to_nid' exported twice.
-> > Previous export was in vmlinux
+On Wed, 2020-07-08 at 13:16 -0700, Cong Wang wrote:
+> On Tue, Jul 7, 2020 at 7:18 AM Paolo Abeni <pabeni@redhat.com> wrote:
+> > So the regression with 2 pktgen threads is still relevant. 'perf' shows
+> > relevant time spent into net_tx_action() and __netif_schedule().
 > 
-> It's bad form to introduce a warning and then send a follow-up patch to
-> fix the warning.  Just fold this patch into patch 1/6.
+> So, touching the __QDISC_STATE_SCHED bit in __dev_xmit_skb() is
+> not a good idea.
+> 
+> Let me see if there is any other way to fix this.
 
-Moreover, I think that patches 1-4 can be merged into one.
+Thank you very much for the effort! I'm personally out of ideas for a
+real fix that would avoid regressions. 
 
--- 
-Sincerely yours,
-Mike.
+To be more exaustive this are the sources of overhead, as far as I can
+observe them with perf:
+
+- contention on q->state, in __netif_schedule()
+- execution of net_tx_action() when there are no packet to be served
+
+Cheers,
+
+Paolo
+
