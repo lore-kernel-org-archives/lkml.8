@@ -2,92 +2,133 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5B6C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50F9020708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594291414;
-	bh=uNc6urMDYEeEmMvXXpMgqHV9kij6NIXUjNyMzhu4DjQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mcE2AWUmiUKWhS21vZZtvDTdLwUHEApeB/PyLYwneL4dIe6q0J2aNC76KDTh/zo0G
-	 lYO19yk4PetiU7vyXipacq785tfwck9z29hIS/h66ADROVY2CeMDt/qO8RdaQHAwWI
-	 yP/gg40+fZsfL9qevs7OIPVbhrzWEqs7ptNDZusY=
+	by mail.kernel.org (Postfix) with ESMTP id 660FE2076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:47:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgGIKnd (ORCPT
+        id S1726769AbgGIKrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgGIKnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:43:32 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 446C5206DF;
-        Thu,  9 Jul 2020 10:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594291412;
-        bh=uNc6urMDYEeEmMvXXpMgqHV9kij6NIXUjNyMzhu4DjQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mD0T2ixnSRoHqc276cedOlp1oDHfFgItmqMtMtNB4t/i1mNMP6ECXXeid4oEHpflB
-         AFwgNVFNK4ZjKvkShtfvLrWyCtuyEpRkydKG9AAPBiKURxlZFo+J7mPaCGPsq43dHU
-         v/xPItLyiyzd15qwrS1g6k51T/zMmWvqLpyYwRBc=
-Date:   Thu, 9 Jul 2020 12:43:27 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Tibor Raschko <tibrasch@gmail.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        torvalds@linux-foundation.org,
-        ksummit-discuss@lists.linuxfoundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>, skhan@linuxfoundation.org
-Subject: Re: [Ksummit-discuss] [Tech-board-discuss] [PATCH] CodingStyle:
- Inclusive Terminology
-Message-ID: <20200709124327.369781a0@coco.lan>
-In-Reply-To: <e41ded21-1432-afa8-2e42-e509539281c4@gmail.com>
-References: <79214066-3886-e0ef-f26e-8cb3d53404be@linuxfoundation.org>
-        <e41ded21-1432-afa8-2e42-e509539281c4@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 9 Jul 2020 06:47:20 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57096 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgGIKrT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:47:19 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 72D912A3CAC
+Subject: Re: [RESEND PATCH 3/3] drm/mediatek: mtk_dpi: Use simple encoder
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        narmstrong@baylibre.com, a.hajda@samsung.com,
+        laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20200518173909.2259259-1-enric.balletbo@collabora.com>
+ <20200518173909.2259259-4-enric.balletbo@collabora.com>
+ <20200701134128.6a967a89@collabora.com>
+ <3f7338ad-b83d-da1d-2b07-f5225c56d7f9@collabora.com>
+Message-ID: <dba9e359-6f58-e283-d39a-82bfbec15d5a@collabora.com>
+Date:   Thu, 9 Jul 2020 12:47:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <3f7338ad-b83d-da1d-2b07-f5225c56d7f9@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 7 Jul 2020 01:58:21 +0200
-Tibor Raschko <tibrasch@gmail.com> escreveu:
+Hi again,
 
-> > Allowlist/denylist terms are intuitive and action based which have a
-> > globally uniform meaning.  
+On 8/7/20 17:12, Enric Balletbo i Serra wrote:
+> Hi Boris,
 > 
-> Nobody has a problem understanding "blacklist" and "whitelist". These
-> are universally understood words even outside of computing. Claiming
-> that we need clearer alternatives is smoke and mirrors.
+> Thank you to spend some time to review the patches.
+> 
+> On 1/7/20 13:41, Boris Brezillon wrote:
+>> On Mon, 18 May 2020 19:39:09 +0200
+>> Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+>>
+>>> The mtk_dpi driver uses an empty implementation for its encoder. Replace
+>>> the code with the generic simple encoder.
+>>>
+>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+>>> ---
+>>>
+>>>  drivers/gpu/drm/mediatek/mtk_dpi.c | 14 +++-----------
+>>>  1 file changed, 3 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+>>> index baad198c69eb..80778b2aac2a 100644
+>>> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+>>> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+>>> @@ -20,6 +20,7 @@
+>>>  #include <drm/drm_bridge.h>
+>>>  #include <drm/drm_crtc.h>
+>>>  #include <drm/drm_of.h>
+>>> +#include <drm/drm_simple_kms_helper.h>
+>>>  
+>>>  #include "mtk_dpi_regs.h"
+>>>  #include "mtk_drm_ddp_comp.h"
+>>> @@ -510,15 +511,6 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+>>>  	return 0;
+>>>  }
+>>>  
+>>> -static void mtk_dpi_encoder_destroy(struct drm_encoder *encoder)
+>>> -{
+>>> -	drm_encoder_cleanup(encoder);
+>>> -}
+>>> -
+>>> -static const struct drm_encoder_funcs mtk_dpi_encoder_funcs = {
+>>> -	.destroy = mtk_dpi_encoder_destroy,
+>>> -};
+>>> -
+>>>  static int mtk_dpi_bridge_attach(struct drm_bridge *bridge,
+>>>  				 enum drm_bridge_attach_flags flags)
+>>>  {
+>>> @@ -591,8 +583,8 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
+>>>  		return ret;
+>>>  	}
+>>>  
+>>> -	ret = drm_encoder_init(drm_dev, &dpi->encoder, &mtk_dpi_encoder_funcs,
+>>> -			       DRM_MODE_ENCODER_TMDS, NULL);
+>>> +	ret = drm_simple_encoder_init(drm_dev, &dpi->encoder,
+>>> +				      DRM_MODE_ENCODER_TMDS);
+>>
+>> Not related to this change, but shouldn't we have DRM_MODE_ENCODER_DPI
+>> here?
+>>
+> 
 
-Actually, as a non-native English speaker, the first time I saw 
-"<color>list", I had to do some research in order to understand what it
-means :-)
+Thinking a bit more about this and this patchset in general, I think I'll drop
+this patch from the series, at the end, all the encoder creation stuff should be
+moved to mtk_drm_drv.
 
-That reminds me: what about "graylist"?
 
-For coherency, if "blacklist/whitelist" won't be used anymore, an
-alternative to graylist should also be provided.
-
-Right now, it seems that only ACPI uses it:
-
-	$ git grep -i graylist
-	drivers/clocksource/acpi_pm.c:static void acpi_pm_check_graylist(struct pci_dev *dev)
-	drivers/clocksource/acpi_pm.c:                  acpi_pm_check_graylist);
-	drivers/clocksource/acpi_pm.c:                  acpi_pm_check_graylist);
-
-Thanks,
-Mauro
+> Right, I'll add a patch to fix this.
+> 
+>>>  	if (ret) {
+>>>  		dev_err(dev, "Failed to initialize decoder: %d\n", ret);
+>>>  		goto err_unregister;
+>>
+> 
