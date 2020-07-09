@@ -2,144 +2,168 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D598CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE063C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B645B206E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9890A206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:09:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vRZqKThI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgGIJJN (ORCPT
+        id S1726353AbgGIJJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:09:13 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2539 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726140AbgGIJJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:09:12 -0400
-Received: from dggemi403-hub.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 8F8E03A7B6D4AD727A89;
-        Thu,  9 Jul 2020 17:09:09 +0800 (CST)
-Received: from DGGEMI423-HUB.china.huawei.com (10.1.199.152) by
- dggemi403-hub.china.huawei.com (10.3.17.136) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Thu, 9 Jul 2020 17:09:08 +0800
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.177]) by
- dggemi423-hub.china.huawei.com ([10.1.199.152]) with mapi id 14.03.0487.000;
- Thu, 9 Jul 2020 17:09:02 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
-        Mahipal Challa <mahipalreddy2006@gmail.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
-        "Colin Ian King" <colin.king@canonical.com>
-Subject: RE: [PATCH v4] mm/zswap: move to use crypto_acomp API for hardware
- acceleration
-Thread-Topic: [PATCH v4] mm/zswap: move to use crypto_acomp API for hardware
- acceleration
-Thread-Index: AQHWVF24fP2q5El5/U63jMMAkQc326j9QfAAgAE0U2D//+LwgIAAht1A//+KWACAAIZeoA==
-Date:   Thu, 9 Jul 2020 09:09:02 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD2561F4F@DGGEMI525-MBS.china.huawei.com>
-References: <20200707125210.33256-1-song.bao.hua@hisilicon.com>
- <20200708145934.4w3qk53mgavyyln7@linutronix.de>
- <B926444035E5E2439431908E3842AFD25610B7@DGGEMI525-MBS.china.huawei.com>
- <20200709073905.lgs5kvccnz6eqsyd@linutronix.de>
- <B926444035E5E2439431908E3842AFD2561D4E@DGGEMI525-MBS.china.huawei.com>
- <20200709084040.cf3jzkndiaefky4r@linutronix.de>
-In-Reply-To: <20200709084040.cf3jzkndiaefky4r@linutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.202.83]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 9 Jul 2020 05:09:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgGIJJQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 05:09:16 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A592C061A0B
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 02:09:16 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id f16so834657pjt.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 02:09:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dfRkitREAl1cCOBzHtF2sXnD7um5XaadlgUl3USHzOw=;
+        b=vRZqKThIDXkF1WZVYjCd+lAU6Yw2xjVCcYtJIao696XqXbwd91uA7uJ5g1mR35cCFB
+         rZr5VYDRmnjk9boh6Jl5KyqMTPrY2H0G8FIPX9kZMMCJPuMs+cBqkQKxNe1W3lYR78eH
+         FaDvwzxnmHT5f6eztfFL7bkqinHccld+C1fydY+Qf2Rf7XdsUzJs1yIBEsg04ZFanFWe
+         CFTvMh7apsM6QnpAVOUY5cjzNo85yhDwcicI+HX+8QaqeD9tHp0W2Rw4UnVEHSDGHPIR
+         LEpTCKYLqF5yE0phZTENtyuOY4JTQ61JAFBPpDquOfQkBPwEsUM6VfBzbZKzL88cLkdf
+         uAlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dfRkitREAl1cCOBzHtF2sXnD7um5XaadlgUl3USHzOw=;
+        b=ZmTsgvTVKuC73JCgsRR4Al8wLizMrEgkTDBxyGLlViYzgvTJF9bE52YVAKUd0hLy80
+         c5q7J/qiIcs7Y/YA2AEB14abYDlXqBA/mYXMyPCgW547WiuadIsXefAAZmRxkwtFMmvc
+         chMAl3bQBOSSo3JmbXR2LA/D3X7yBG0ABfUCtmvxnBqLDavBSMH/lPnh60SQu4tvHA9Y
+         /B1wCe/yYlg3U5xP+wF0DHzG7YS4rHUnJv6KH5KwLnHAe3Th9Dj4Id0hqFDmF1uUktY4
+         dfrybN0MUP11sDnDvqxNejhdtAGdbplckSmUSLU12H0YwJ12nExW48mElhQ3No1Yq0K7
+         GBeQ==
+X-Gm-Message-State: AOAM531M1kRoebOpzdKEgSxoOxn/ytVjLMGJgG9g4r2xX9RdQTtGL+vH
+        N9CCV1kABYBBT44bcltrL5ROvw==
+X-Google-Smtp-Source: ABdhPJxrn0x/9eaXzBdCUMoLFcH5nlz8yRsfA6f4zpfmqLIKKts2GJNGLlHeTT9csCf0DTwa8Bx4bA==
+X-Received: by 2002:a17:90a:b00e:: with SMTP id x14mr14377506pjq.57.1594285755440;
+        Thu, 09 Jul 2020 02:09:15 -0700 (PDT)
+Received: from localhost ([122.172.40.201])
+        by smtp.gmail.com with ESMTPSA id u19sm2364195pfk.98.2020.07.09.02.09.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Jul 2020 02:09:14 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 14:39:12 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/8] cpufreq: allow drivers to flag custom support for
+ freq invariance
+Message-ID: <20200709090912.vapouiruidgypxzc@vireshk-i7>
+References: <20200701090751.7543-1-ionela.voinescu@arm.com>
+ <20200701090751.7543-2-ionela.voinescu@arm.com>
+ <20200701094417.ffuvduz6pqknjcks@vireshk-i7>
+ <20200701133330.GA32736@arm.com>
+ <CAJZ5v0gT+xWwxcx3OZjXBnDLr9i4VOt2Vp3ScWBxbu+NiopkbA@mail.gmail.com>
+ <20200702025818.s4oh7rzz3tr6zwqr@vireshk-i7>
+ <20200702114425.GB28120@arm.com>
+ <389dd87f-fed0-e4ea-81f3-5491fd2a54d1@arm.com>
+ <20200709085354.GA5623@arm.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709085354.GA5623@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogb3duZXItbGludXgtbW1A
-a3ZhY2sub3JnIFttYWlsdG86b3duZXItbGludXgtbW1Aa3ZhY2sub3JnXSBPbg0KPiBCZWhhbGYg
-T2YgU2ViYXN0aWFuIEFuZHJ6ZWogU2lld2lvcg0KPiBTZW50OiBUaHVyc2RheSwgSnVseSA5LCAy
-MDIwIDg6NDEgUE0NCj4gVG86IFNvbmcgQmFvIEh1YSAoQmFycnkgU29uZykgPHNvbmcuYmFvLmh1
-YUBoaXNpbGljb24uY29tPg0KPiBDYzogYWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZzsgaGVyYmVy
-dEBnb25kb3IuYXBhbmEub3JnLmF1Ow0KPiBkYXZlbUBkYXZlbWxvZnQubmV0OyBsaW51eC1jcnlw
-dG9Admdlci5rZXJuZWwub3JnOyBsaW51eC1tbUBrdmFjay5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IExpbnV4YXJtIDxsaW51eGFybUBodWF3ZWkuY29tPjsgTHVpcyBDbGF1
-ZGlvDQo+IFIgLiBHb25jYWx2ZXMgPGxnb25jYWx2QHJlZGhhdC5jb20+OyBNYWhpcGFsIENoYWxs
-YQ0KPiA8bWFoaXBhbHJlZGR5MjAwNkBnbWFpbC5jb20+OyBTZXRoIEplbm5pbmdzIDxzamVubmlu
-Z0ByZWRoYXQuY29tPjsNCj4gRGFuIFN0cmVldG1hbiA8ZGRzdHJlZXRAaWVlZS5vcmc+OyBWaXRh
-bHkgV29vbA0KPiA8dml0YWx5Lndvb2xAa29uc3Vsa28uY29tPjsgV2FuZ3pob3UgKEIpIDx3YW5n
-emhvdTFAaGlzaWxpY29uLmNvbT47DQo+IENvbGluIElhbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9u
-aWNhbC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjRdIG1tL3pzd2FwOiBtb3ZlIHRvIHVz
-ZSBjcnlwdG9fYWNvbXAgQVBJIGZvcg0KPiBoYXJkd2FyZSBhY2NlbGVyYXRpb24NCj4gDQo+IE9u
-IDIwMjAtMDctMDkgMDc6NTU6MjIgWyswMDAwXSwgU29uZyBCYW8gSHVhIChCYXJyeSBTb25nKSB3
-cm90ZToNCj4gPiBIZWxsbyBTZWJhc3RpYW4sIHRoYW5rcyBmb3IgeW91ciByZXBseSBhbmQgY2Fy
-ZWZ1bCByZXZpZXcuDQo+IEhpLA0KPiANCj4gPiBJIGRvbid0IHRoaW5rIHdlIGNhbiBzaW1wbHkg
-ImZvcndhcmQgdGhlIHJlc3VsdCB0byB0aGUgY2FsbGVyIGFuZCBsZXQgaGltDQo+IGRlY2lkZSIu
-DQo+ID4gV291bGQgeW91IGxpa2UgdG8gcHJlc2VudCBzb21lIHBzZXVkbyBjb2RlPw0KPiANCj4g
-SSBwcm92aWRlZCBqdXN0IHNvbWUgcHNldWRvIGNvZGUgdG8gaWxsdXN0cmF0ZSBhbiBleGFtcGxl
-IGhvdyB0aGUgYXN5bmMNCj4gaW50ZXJmYWNlIHNob3VsZCBsb29rIGxpa2UgKG1vcmUgb3IgbGVz
-cykuIFRoZSBlc3NlbnRpYWwgcGFydCBpcyB3aGVyZQ0KPiB5b3UgYWxsb3cgdG8gZmVlZCBtdWx0
-aXBsZSByZXF1ZXN0cyB3aXRob3V0IGJsb2NraW5nLg0KDQpTZWJhc3RpYW4sIERvIHlvdSBtZWFu
-IHRoZSBiZWxvdyBjb2RlPw0KDQpAQCAtMjUyLDEyICsyNTIsMTUgQEAgaW50IHN3YXBfd3JpdGVw
-YWdlKHN0cnVjdCBwYWdlICpwYWdlLCBzdHJ1Y3Qgd3JpdGViYWNrX2NvbnRyb2wgKndiYykNCiAg
-ICAgICAgICAgICAgICB1bmxvY2tfcGFnZShwYWdlKTsNCiAgICAgICAgICAgICAgICBnb3RvIG91
-dDsNCiAgICAgICAgfQ0KLSAgICAgICBpZiAoZnJvbnRzd2FwX3N0b3JlKHBhZ2UpID09IDApIHsN
-CisgICAgICAgcmV0ID0gZnJvbnRzd2FwX3N0b3JlKHBhZ2UpOw0KKyAgICAgICBpZiAocmV0ID09
-IDApIHsNCiAgICAgICAgICAgICAgICBzZXRfcGFnZV93cml0ZWJhY2socGFnZSk7DQogICAgICAg
-ICAgICAgICAgdW5sb2NrX3BhZ2UocGFnZSk7DQogICAgICAgICAgICAgICAgZW5kX3BhZ2Vfd3Jp
-dGViYWNrKHBhZ2UpOw0KICAgICAgICAgICAgICAgIGdvdG8gb3V0Ow0KICAgICAgICB9DQorICAg
-ICAgIGlmIChyZXQgPSAtRUlOUFJPR1JFU1MpDQorICAgICAgICAgICAgICAgZ290byBvdXQ7DQog
-ICAgICAgIHJldCA9IF9fc3dhcF93cml0ZXBhZ2UocGFnZSwgd2JjLCBlbmRfc3dhcF9iaW9fd3Jp
-dGUpOw0KIG91dDoNCiAgICAgICAgcmV0dXJuIHJldDsNCg0KSSB0aGluayB0aGlzIHdvbicgd29y
-ay4gLUVJTlBST0dSRVNTIHdvbid0IGJlIGFibGUgdG8gZGVjaWRlIGlmIHdlIHNob3VsZCBnb3Rv
-IG91dC4gV2UgY2FuIG9ubHkgZ290byBvdXQgaWYgdGhlIGNvbXByZXNzaW9uDQpoYXMgZG9uZSB3
-aXRob3V0IGFueSBlcnJvci4gVGhlIGVycm9yIG1pZ2h0IGJlIGJlY2F1c2Ugb2YgSFcgbGlrZSBF
-SU8gb3IgYmVjYXVzZSB0aGUgZGF0YSBpcyBub3Qgc3VpdGFibGUgdG8gY29tcHJlc3MuIFdlIGNh
-bg0Kb25seSBrbm93IHRoZSByZXN1bHQgYWZ0ZXIgdGhlIGNvbXByZXNzaW9uIGlzIHJlYWxseSBk
-b25lIGFuZCB0aGUgY29tcGxldGlvbiBjYWxsYmFjayBpcyBjYWxsZWQgYnkgWklQIGRyaXZlcnMu
-DQoNCklmIHRoZSBjb21wcmVzc2lvbiBpcyBzdGlsbCBJTlBST0dSRVNTLCB3ZSBkb24ndCBrbm93
-IHdoYXQgd2lsbCBoYXBwZW4uDQoNCj4gSSB3ZW50IHVwIHRoZSBjYWxsLWNoYWluIGFuZCBmb3Vu
-ZCBvbmUgcG90ZW50aWFsIHVzZXIgd2hpY2ggc2VlbSB0byBoYXZlDQo+IGEgbGlzdCBvZiBwYWdl
-cyB3aGljaCBhcmUgcHJvY2Vzc2VkLiBUaGlzIGxvb2tlZCBsaWtlIGEgbmljZSBleGFtcGxlLiBJ
-DQo+IGhhdmVuJ3QgbG9va2VkIGF0IHRoZSBkZXRhaWxzLg0KPiANCj4gSSBoYXZlIG5vIG9waW5p
-b24gd2hldGhlciBvciBub3QgaXQgbWFrZXMgc2Vuc2UgdG8gc3dpdGNoIHRvIHRoZSBhc3luYw0K
-PiBpbnRlcmZhY2UgaW4gYSBzeW5jIHdheS4NCg0KSSBhbHdheXMgYXBwcmVjaWF0ZSB5b3VyIGNv
-bW1lbnQgYW5kIHlvdXIgb3Bpbmlvbi4NCg0KVGhlIHJlYWwgcHJvYmxlbSBoZXJlIGlzIHRoYXQg
-YWxsIG9mIHRob3NlIG5ldyB6aXAgZHJpdmVycyBhcmUgYWRhcHRlZCB0byBhc3luYyBpbnRlcmZh
-Y2UuIFRoZXJlIGlzIG5vIG9sZCBpbnRlcmZhY2Ugc3VwcG9ydA0KZm9yIHRob3NlIG5ldyBkcml2
-ZXJzIG1haW5saW5lZCB0aGVzZSB5ZWFycy4genN3YXAgZG9lc27igJl0IHdvcmsgb24gdGhvc2Ug
-bmV3IGRyaXZlcnMgYXMgdGhleSB0b3RhbGx5IGRvbid0IHN1cHBvcnQNCmNyeXB0b19jb21wX2Nv
-bXByZXNzKCkNCmNyeXB0b19jb21wX2RlY29tcHJlc3MoKQ0KLi4uDQoNClNvIHRoZSBpbml0aWFs
-IGdvYWwgb2YgdGhpcyBwYXRjaCBpcyBmaXhpbmcgdGhlIGRpc2Nvbm5lY3RlZCBicmlkZ2UgYmV0
-d2VlbiBuZXcgemlwIGRyaXZlcnMgYW5kIHpzd2FwLg0KDQpNYWtpbmcgZnJvbnRzd2FwIGFzeW5j
-IGNhbiBwcm9iYWJseSBoYXBwZW4gaWYgd2Ugc2VlIHBlcmZvcm1hbmNlIGltcHJvdmVtZW50LiBC
-dXQgaXQgc2VlbXMgaXQgaXMgYSBiaWcgcHJvamVjdCwgbm90DQp0aGF0IHNpbXBsZS4gT24gdGhl
-IG90aGVyIGhhbmQsIGl0IHNlZW1zIGhpc2lfemlwIGluIGRyaXZlcnMvY3J5cHRvIGlzIHRoZSBv
-bmx5IGFzeW5jIGRyaXZlciB0aWxsIG5vdy4gU29ycnkgaWYgSSBhbSBtaXNzaW5nDQphbnkgb25l
-LiBvdGhlciBkcml2ZXJzIGFyZSBhZGFwdGVkIHRvIGFjb21wIEFQSXMgYnkgc2NvbXAgQVBJcy4g
-Rm9yIGV4YW1wbGU6DQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVs
-L2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0L2NyeXB0by9sejQuYz9pZD04Y2Q5MzMwZTBh
-DQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxk
-cy9saW51eC5naXQvY29tbWl0L2NyeXB0by9sem8uYz9pZD1hYzlkMmM0YjMNCg0KU28gZXZlbiB3
-ZSBtYWtlIGZyb250c3dhcCB0b3RhbGx5IGFzeW5jLCBtb3N0IHppcCBkcml2ZXJzIGFyZSBzdGls
-bCBzeW5jIGFuZCB3ZSBkb24ndCBnZXQgdGhlIGJlbmVmaXQuIEZyb20gbXkgcHJvc3BlY3RpdmUs
-DQpJIGFtIGdsYWQgdG8gdHJ5IHRoZSBwb3NzaWJpbGl0eSBvZiBtYWtpbmcgZnJvbnRzd2FwIGFz
-eW5jIHRvIGxldmVyYWdlIHRoZSBwb3dlciBvZiBaSVAgaGFyZHdhcmUuIFRoaXMgd291bGQgcHJv
-YmFibHkgYW5kDQpvbmx5IGhhcHBlbiBhZnRlciB3ZSBoYXZlIGEgYmFzZSB0byBzdXBwb3J0IGFj
-b21wIEFQSXMuDQoNClRoYW5rcw0KQmFycnkNCg==
+On 09-07-20, 09:53, Ionela Voinescu wrote:
+> On Monday 06 Jul 2020 at 14:14:47 (+0200), Dietmar Eggemann wrote:
+> > Why can't we just move the arch_set_freq_scale() call from cpufreq
+> > driver to cpufreq core w/o introducing a FIE related driver flag?
+> > 
+> > Current scenario for Frequency Invariance Engine (FIE) on arm/arm64.
+> > 
+> > +------------------------------+       +------------------------------+
+> > |                              |       |                              |
+> > | cpufreq core:                |       | arch: (arm, arm64)           |
+> > 
+> > |                              |       |                              |
+> > | weak arch_set_freq_scale() {}|       |                              |
+> > |                              |       |                              |
+> > +------------------------------+       |                              |
+> >                                        |                              |
+> > +------------------------------+       |                              |
+> > |                              |       |                              |
+> > | cpufreq driver:              |       |                              |
+> > |                            +-----------> arch_set_freq_scale()      |
+> > |                              |       |   {                          |
+> > +------------------------------+       |      if (use counters)       |
+> >                                        |        return;               |
+> > +------------------------------+       |      ...                     |
+> > |                              |       |   }                          |
+> > | task scheduler:              |       |                              |
+> > |                            +-----------> arch_scale_freq_tick()*    |
+> > |                              |       |   {                          |
+> > 
+> > |                              |       |      if (!use counters)      |
+> > |                              |       |        return;               |
+> > |                              |       |      ...                     |
+> > |                              |       |   }                          |
+> > +------------------------------+       +------------------------------+
+> > 
+> > * defined as topology_scale_freq_tick() in arm64
+> > 
+> > Only Arm/Arm64 defines arch_set_freq_scale() to get the 'legacy' CPUfreq
+> > based FIE. This would still be the case when we move
+> > arch_set_freq_scale() from individual cpufreq drivers to cpufreq core.
+> > 
+> > Arm64 is the only arch which has to runtime-choose between two different
+> > FIEs. This is currently done by bailing out early in one of the FIE
+> > functions based on 'use counters'.
+> > 
+> > X86 (and others) will continue to not define arch_set_freq_scale().
+> > 
+> > The issue with CONFIG_BL_SWITCHER (vexpress-spc-cpufreq.c) could be
+> > solved arm/arm64 internally (arch_topology.c) by putting
+> > arch_set_freq_scale() under a !CONFIG_BL_SWITCHER guard.
+> > I doubt that there are any arm bL systems out there running it. At least
+> > I'm not aware of any complaints due to missing FIE support in bl
+> > switcher setups so far.
+
+I agree to that.
+
+> Thank you Dietmar, for your review.
+> 
+> I was trying to suggest the same in my other replies.
+
+I am sorry, I must have overlooked that part in your replies,
+otherwise I may agreed to it :)
+
+> Rafael, Viresh, would you mind confirming whether you still consider
+> having an 'opt in' flag is preferable here?
+
+Well, we wanted an opt-in flag instead of an opt-out one. And no flag
+is certainly better.
+
+-- 
+viresh
