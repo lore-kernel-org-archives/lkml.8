@@ -2,119 +2,143 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F028C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59170C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03E2220786
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C07D20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:51:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="npT9p+MK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/LxY9o8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgGIVtj (ORCPT
+        id S1726795AbgGIVvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:49:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGIVtj (ORCPT
+        Thu, 9 Jul 2020 17:51:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33835 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726228AbgGIVvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:49:39 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09354C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 14:49:39 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mn17so1698534pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 14:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=hFr4sv4HqUSHsiMLFrScOT9Ngpz9Cto5b81cd6f0i7M=;
-        b=npT9p+MKNUWXQYWnllvP0dSbLmAXzhuZ/YaLbF3/8MW4bc+uhAX1qaA89d9JVJxBR6
-         PbUgRXSVwJZeFnp0E9X5JZoApnSJT0NfL23ffg22fwzr5sxzXEzHcL/uaMA6f5Ni2Acd
-         zT37F2Hko+N8k9JdOa4Txvp0uVcibFkV+cndLptq13d8npFhI8UlM2fR2zoAjgawPoTi
-         eTPoxLFxZ3n/VbBci5vXHlMUlSvVgr/66p04oUNOMaidVbaLVmcpnaoKHdWCcCCq+jkA
-         qtaAbzyPWkqMl390vWaIOCRnfftDYD1rUZt8xxobcI7XIrplNI2Xvy5x6HaBo4NjhGMZ
-         L3UQ==
+        Thu, 9 Jul 2020 17:51:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594331462;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7G6B2009DX8rgdJqYq+U2U+PjSYBEAPjrZTKPAYQ4X0=;
+        b=b/LxY9o8WyWzKvy1ew2n3VTAxCp6HDvFk1qvOGVQ3GLXw07o4AhabCfhrLi8RQHdw0AEsA
+        bCilz/16C5CkqundmS8EO1xyUIOARH9qj9yVosQS3k2bJbGovpxRLVlcbldofGlgXObO+z
+        s3eevkuap9NkSC6rMPlMamrzQzc76po=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-434-Luo_3HJUOMG8JNwpvaC5xw-1; Thu, 09 Jul 2020 17:50:58 -0400
+X-MC-Unique: Luo_3HJUOMG8JNwpvaC5xw-1
+Received: by mail-qk1-f200.google.com with SMTP id i145so2887419qke.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 14:50:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=hFr4sv4HqUSHsiMLFrScOT9Ngpz9Cto5b81cd6f0i7M=;
-        b=oTf7dpwBLozWl4zIK/rw4Avic0ArhQrxJAH7cGLb65HaAcwJZf3qCt2VZCxDgz5aoj
-         ptN9dJV5Kw7q//nSFKjVm5Vfq2aZTZuZaUuz3lRQtUu/vRcgrkuyu0OFuV/sVm1kEXcm
-         fUueTeyfGXmLBVRz6Ze2/Xj5I6kJAfnrBG9UlB1TkwwYAQQLRNO1tNOKFZSApQuheLQF
-         YyoJO34Nm9Jt05RObexrXkwWBnrkA85NdCA6n5fMjstS27d9c46Nl5JHT7KVZeNZf0lT
-         eAhSbGkheyi14Z5+6jzWzt6O54fncGWsHoO6xhuQTsk9wjYjSyteYbMO9NlkCuEim2Z/
-         gXBQ==
-X-Gm-Message-State: AOAM533VwgPIyTLj4gQ8aM0uszYmv2leAcPheetd4JLJXfGoHFGNPRLw
-        3dLzOBepe67RHmOs9o2v5QkHjw==
-X-Google-Smtp-Source: ABdhPJxifzME9k8oQf7I8/PrwyXLawsOmZkDIwApjP8xedu3YYKr6okgkKrdw3W2Hz9t2cE8c+Pk6Q==
-X-Received: by 2002:a17:90b:3c1:: with SMTP id go1mr2110948pjb.129.1594331378329;
-        Thu, 09 Jul 2020 14:49:38 -0700 (PDT)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id u74sm3454482pgc.58.2020.07.09.14.49.37
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7G6B2009DX8rgdJqYq+U2U+PjSYBEAPjrZTKPAYQ4X0=;
+        b=uACw4DslQ6BPQz1nN59XhnZV0o9zmf42C8rlEOpkrWfpsMNDeFdxe9h/ghjVQ2LxeM
+         MuTNeyeMoOXOcgECk26YOxC/B3VMDGHC0K11Lb3a2+zWo1AmV61QFhsCe0c1SuOOLKY8
+         p2WdnhtH1tzNg3Ja0PXzSujwFkRgjaJSCNnfJ6dtBLQDfP/Nqy2++BYq+6cjtNPMawb6
+         TT+MkWg/QRNST7K4sPmJwknOAZweCRu/icSXC6Bi5X3IB8t969IC7Ro22Y0z4Hut+uAN
+         U6NVW9IZOJNFAi/+tkI7SdxkAz1zLvOTSFPY8e7LSEz7CeDNUjjRibau13lz/Pfi8+Mc
+         knAA==
+X-Gm-Message-State: AOAM533iKfU3+uOZEWNnv81F35c1nxHkcP80ZtyTkTOOTrqornQcEbqQ
+        s35iXl9ekgRZtUHFtfVneppyFbuvpTnNwqXxsdOkG+Rk8ae2vPc/LpE0yuuEjyRPwUgCuY3DP/l
+        zhKe8Ydn1Z80rNE1+848d7+48
+X-Received: by 2002:a05:620a:1233:: with SMTP id v19mr50454231qkj.119.1594331458069;
+        Thu, 09 Jul 2020 14:50:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw6LZYRhshzZyYbH12rRvHvRkx/eD2Ird8z6I0EFHOCtFnypYj0i/SxXRObCM34za83auq0+g==
+X-Received: by 2002:a05:620a:1233:: with SMTP id v19mr50454212qkj.119.1594331457733;
+        Thu, 09 Jul 2020 14:50:57 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c8:6f::1f4f])
+        by smtp.gmail.com with ESMTPSA id t9sm5350125qke.68.2020.07.09.14.50.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 14:49:37 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 14:49:37 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma-pool: use single atomic pool for both DMA zones
-In-Reply-To: <20200708161010.GA30184@lst.de>
-Message-ID: <alpine.DEB.2.23.453.2007091448550.972523@chino.kir.corp.google.com>
-References: <20200707122804.21262-1-nsaenzjulienne@suse.de> <20200708153509.GA26743@lst.de> <e81db35628a22a0d1635699d1e87bacde706ad25.camel@suse.de> <20200708161010.GA30184@lst.de>
-User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
+        Thu, 09 Jul 2020 14:50:56 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 17:50:46 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
+Message-ID: <20200709215046.GJ199122@xz-x1>
+References: <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
+ <20200625162540.GC3437@linux.intel.com>
+ <20200626180732.GB175520@xz-x1>
+ <20200626181820.GG6583@linux.intel.com>
+ <47b90b77-cf03-6087-b25f-fcd2fd313165@redhat.com>
+ <20200630154726.GD7733@linux.intel.com>
+ <20200709182220.GG199122@xz-x1>
+ <20200709192440.GD24919@linux.intel.com>
+ <20200709210919.GI199122@xz-x1>
+ <20200709212652.GX24919@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200709212652.GX24919@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020, Christoph Hellwig wrote:
-
-> On Wed, Jul 08, 2020 at 06:00:35PM +0200, Nicolas Saenz Julienne wrote:
-> > On Wed, 2020-07-08 at 17:35 +0200, Christoph Hellwig wrote:
-> > > On Tue, Jul 07, 2020 at 02:28:04PM +0200, Nicolas Saenz Julienne wrote:
-> > > > When allocating atomic DMA memory for a device, the dma-pool core
-> > > > queries __dma_direct_optimal_gfp_mask() to check which atomic pool to
-> > > > use. It turns out the GFP flag returned is only an optimistic guess.
-> > > > The pool selected might sometimes live in a zone higher than the
-> > > > device's view of memory.
-> > > > 
-> > > > As there isn't a way to grantee a mapping between a device's DMA
-> > > > constraints and correct GFP flags this unifies both DMA atomic pools.
-> > > > The resulting pool is allocated in the lower DMA zone available, if any,
-> > > > so as for devices to always get accessible memory while having the
-> > > > flexibility of using dma_pool_kernel for the non constrained ones.
-> > > > 
-> > > > Fixes: c84dc6e68a1d ("dma-pool: add additional coherent pools to map to gfp
-> > > > mask")
-> > > > Reported-by: Jeremy Linton <jeremy.linton@arm.com>
-> > > > Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > 
-> > > Hmm, this is not what I expected from the previous thread.  I thought
-> > > we'd just use one dma pool based on runtime available of the zones..
-> > 
-> > I may be misunderstanding you, but isn't that going back to how things used to
-> > be before pulling in David Rientjes' work? The benefit of having a GFP_KERNEL
-> > pool is that non-address-constrained devices can get their atomic memory there,
-> > instead of consuming somewhat scarcer low memory.
+On Thu, Jul 09, 2020 at 02:26:52PM -0700, Sean Christopherson wrote:
+> On Thu, Jul 09, 2020 at 05:09:19PM -0400, Peter Xu wrote:
+> > Again, using host_initiated or not should be a different issue?  Frankly
+> > speaking, I don't know whether it's an issue or not, but it's different from
+> > what this series wants to do, because it'll be the same before/after this
+> > series. Am I right?
 > 
-> Yes, I think we are misunderstanding each other.  I don't want to remove
-> any pool, just make better runtime decisions when to use them.
+> I'm arguing that the TSX thing should be
 > 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 5eb618dbf211..e1fd5ac0df96 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -1015,7 +1015,7 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>                 *edx = entry->edx;
+>                 if (function == 7 && index == 0) {
+>                         u64 data;
+> -                       if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+> +                       if (!kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data) &&
+>                             (data & TSX_CTRL_CPUID_CLEAR))
+>                                 *ebx &= ~(F(RTM) | F(HLE));
+>                 }
+> 
+> At which point hoisting the ignored message up a few levels is pointless
+> because the only users of __kvm_*et_msr() will do the explicit ignored_check.
+> And I'm also arguing that KVM should never use __kvm_get_msr() for its own
+> actions, as host_initiated=true should only be used for host VMM accesses and
+> host_initiated=false actions should go through the proper checks and never
+> get to the ignored_msrs logic (assuming no KVM bug).
+> 
+> > Or, please explain what's the "overruled objection" that you're talking about..
+> 
+> Sean: Objection your honor.
+> Paolo: Overruled, you're wrong.
+> Sean: Phooey.
+> 
+> My point is that even though I still object to this series, Paolo has final
+> say.
 
-Just to be extra explicit for the record and for my own understanding: 
-Nicolas, your patch series "dma-pool: Fix atomic pool selection" obsoletes 
-this patch, right? :)
+I could be wrong, but I feel like Paolo was really respecting your input, as
+always. It's just as simple as a 2:1 vote, isn't it? (I can still count myself
+in for the vote, right? :)
+
+Btw, you didn't reply to my other email:
+
+  https://lore.kernel.org/kvm/20200626191118.GC175520@xz-x1/
+
+Let me change the question a bit - Do you think e.g. we should never use
+rdmsr*_safe() in the Linux kernel as long as the MSR has a bit somewhere
+telling whether the MSR exists (so we should never trigger #GP on these MSRs)?
+I think it's a similar question that we're discussing here..
+
+-- 
+Peter Xu
+
