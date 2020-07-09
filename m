@@ -2,122 +2,72 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB23DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0745C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 979E12076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B1D20672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kiYzVtoZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XxH5eZ79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgGILJk (ORCPT
+        id S1727798AbgGILKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:09:40 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:30099 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726923AbgGILJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:09:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594292979; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=x4m6NkhtSK7m0N67OblPvMfBvcT5m7GhZdNzWJ4eB+I=; b=kiYzVtoZjVvmzBtdn8x9DbbJLN75JJBATD/D9yhQFe+YoSScRD4OjqxtmQIjtNxrIcEWJoT/
- aHW6ZUHBkGQ0iM3EoEQ+RqXW6ZjKVWwg+KJZ3ommCjOrNijczTXzF+PsrdlBERhfazw80r1a
- M5xviFwbXEO3mRxxUu9zrnZhDrY=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
- 5f06fae50082b278484b5d9f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 11:09:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C0706C433CA; Thu,  9 Jul 2020 11:09:25 +0000 (UTC)
-Received: from [192.168.1.11] (unknown [61.3.20.152])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A525AC433C6;
-        Thu,  9 Jul 2020 11:09:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A525AC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v2] dt-bindings: media: venus: Add an optional power
- domain for perf voting
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-References: <1589349807-10163-1-git-send-email-rnayak@codeaurora.org>
- <20200527193638.GA2604206@bogus>
- <448cc4c0-0714-dc62-df19-7fa8fba91758@codeaurora.org>
- <1e8c07c8-0954-462a-cfe6-a1ccde1bedea@codeaurora.org>
-Message-ID: <43b6f7ee-503c-1036-3f00-9fbb4d531ea0@codeaurora.org>
-Date:   Thu, 9 Jul 2020 16:39:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 07:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgGILKj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 07:10:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9F8FC061A0B;
+        Thu,  9 Jul 2020 04:10:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/myYpnCCMiEJKy/mwmtgXMuLa5s6GUxQEGJeQoTY/qo=; b=XxH5eZ79FQ6Y0woPfTeuaD54pl
+        H/6h/M2RYn7YtWi4MfADnd89/zW9fUsOsSEO8dgMM+qrLTro1qeEyCDIDmgJUlYdfWFzhsmDzap7r
+        57naCnIVOixvdegCXiPMLuSq8QV/Hsk+CjJEY3keFNWufiEX7lbFKclmPDDtgOeGBFIn59ehXCWI2
+        3RKz9V3H3JCptMz0ED2DcbA+f4h0C/VfPVcaScu7IuGKPAgv+wSnrRlGrVx8CIYIgnu4ROpJiFYrH
+        qABucRQpDAB84/bON3Zc4bCuEVcCw32oClvC+85XeYuvedbaFxE0+Lb+omrtkC9qPwhsY0+flhgYE
+        QVCjOcxw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtURo-0003ii-7X; Thu, 09 Jul 2020 11:10:36 +0000
+Date:   Thu, 9 Jul 2020 12:10:36 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH 0/2] Remove kiocb ki_complete
+Message-ID: <20200709111036.GA12769@casper.infradead.org>
+References: <20200708222637.23046-1-willy@infradead.org>
+ <20200709101705.GA2095@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <1e8c07c8-0954-462a-cfe6-a1ccde1bedea@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709101705.GA2095@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 09, 2020 at 11:17:05AM +0100, Christoph Hellwig wrote:
+> I really don't like this series at all.  If saves a single pointer
+> but introduces a complicated machinery that just doesn't follow any
+> natural flow.  And there doesn't seem to be any good reason for it to
+> start with.
 
-On 7/1/2020 4:50 PM, Rajendra Nayak wrote:
-> 
-> On 6/1/2020 11:26 AM, Rajendra Nayak wrote:
->>
->> On 5/28/2020 1:06 AM, Rob Herring wrote:
->>> On Wed, May 13, 2020 at 11:33:27AM +0530, Rajendra Nayak wrote:
->>>> Add an optional power domain which when specified can be used for
->>>> setting the performance state of Venus.
->>>>
->>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->>>> ---
->>>>   Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
->>>>   Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
->>>>   2 files changed, 10 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->>>> index 764affa..ac1ed64 100644
->>>> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->>>> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->>>> @@ -25,12 +25,16 @@ properties:
->>>>       maxItems: 1
->>>>     power-domains:
->>>> -    maxItems: 2
->>>> +    minItems: 2
->>>> +    maxItems: 3
->>>>     power-domain-names:
->>>> +    minItems: 2
->>>> +    maxItems: 3
->>>>       items:
->>>>         - const: venus
->>>>         - const: vcodec0
->>>> +      - const: opp-pd
->>>
->>> Humm, looks suspicious. This is a phyical power island in this block?
->>
->> yes, this is used to represent the physical 'cx' power island in the SoC
->> (Its a shared power island, not a power island specific to this block)
->> that can be scaled to different 'performance levels' based on the frequency
->> the codec is expected to run at.
-> 
-> Rob, Did you have any other concerns here? Should I be re-posting this?
+Jens doesn't want the kiocb to grow beyond a single cacheline, and we
+want the ability to set the loff_t in userspace for an appending write,
+so the plan was to replace the ki_complete member in kiocb with an
+loff_t __user *ki_posp.
 
-Rob, ping.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+I don't think it's worth worrying about growing kiocb, personally,
+but this seemed like the easiest way to make room for a new pointer.
