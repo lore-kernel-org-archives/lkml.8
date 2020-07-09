@@ -2,171 +2,102 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 058142076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01FE2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="r5kd3Cc7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F0s0r0RG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgGIIb1 (ORCPT
+        id S1726352AbgGIIbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:31:27 -0400
-Received: from mail-bn8nam11on2130.outbound.protection.outlook.com ([40.107.236.130]:8608
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726151AbgGIIb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:31:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KCDOatpyytzK1Lgbp1JKaIh+GEbq8Lx2T7sG6YljMQCTISSYtjev2rD8koqjw8aAZrD67pdEiGZ4Sg2xR3xmS+k6vB2rYbrMPbvq/XH0BDtz04mIo+5xnJICQ9HXmpCgEaJM9Yj5tutEQba9nSPGEsnSgUnsuZ+pXUT4T7CLscM1HL4yAMu30chxfIG8TCs+rAwlZzo2RudgcfU4MOX6QZGkyZi6w8Ujoka4QpdHvPOaOw63Rq6V6ioTtUzCrs/W/fkA+IRrw2Xv7eVmhLj8ZOltTHQEUdjn72Ry2ZHAkTi0pZ9d/Sfmv3nHJqcAmuOGYEgaRmNDSAozacuq9tYlKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cp+tfucsku7aI364laS9+4ItpkcVKBrKXR1VKWA+MBE=;
- b=U8RvFRwgCQQANC+ZxvE2KkpAUnXgej6UQ/9HwH1+PIjBOkyGBUHu7/7BqY0JxEQXEARkNUS3vQFcXzTs1OB+rlPEE/tPIt1Cd6VfOg2jORK3CjjNOqmwgl5FIAqlSDOEOPowbCnUPIhhaO59vybo8I46ks5V4j/PyEDmNfgLzAaETlvU41+NvI8pjeaKf0JYDQwhpLajF3X6Sv3iKBgpXfqsGbHNzx+N8I61kXYSeD/0eaI4dXyjYdxnB158PfPWwrWPmaf2UhKP4a26oySMm/S5/ktBs+GklcK+LzjsLNthrkmbTACU5pQBbrBC+/LDaiUfVGrUwBGxfArX4874EA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cp+tfucsku7aI364laS9+4ItpkcVKBrKXR1VKWA+MBE=;
- b=r5kd3Cc7CTeFurMn3SNRIwqVDVRKL7Usc+637CteuqfhtdksV5vnATzYiz3qinfYNaONTXOMMLtMLZj5m72uzLVYX6ZdvWU/jB0EGSj/x04K2gzpFCcn6uMsu/wVdBt0rI/yhXwIMnXhzLY8MVeW6jgeB0uJSGgsMMPZT4wiusM=
-Authentication-Results: analogixsemi.com; dkim=none (message not signed)
- header.d=none;analogixsemi.com; dmarc=none action=none
- header.from=analogixsemi.com;
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
- by BYAPR04MB5462.namprd04.prod.outlook.com (2603:10b6:a03:c4::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Thu, 9 Jul
- 2020 08:31:22 +0000
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::844e:398b:2165:631b]) by BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::844e:398b:2165:631b%5]) with mapi id 15.20.3153.031; Thu, 9 Jul 2020
- 08:31:22 +0000
-Date:   Thu, 9 Jul 2020 16:31:09 +0800
-From:   Xin Ji <xji@analogixsemi.com>
-To:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: [PATCH v14 0/2] Add initial support for slimport anx7625
-Message-ID: <cover.1594283160.git.xji@analogixsemi.com>
+        Thu, 9 Jul 2020 04:31:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgGIIb2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 04:31:28 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6457AC061A0B;
+        Thu,  9 Jul 2020 01:31:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2u6IXv0WvuYmLy64Ol8ToLNhgDQTw8a7diWyD8qQt08=; b=F0s0r0RGrn5TfKzoVnYXlTKpg+
+        KGNajxhzv6v7lQl2vblqcIsoUZOfS0vFJigwA3e9/RP28IYSY/w/fMOqFWMDqdBjISV03OsTlM8hu
+        LZqsSCgVytkRYh5ISkCcBLr4Le1Nh2Ql7PK1dzZdVgSQAlgUSnSTvqEkqAHfaeJXFaWg+DTGddS1c
+        4rKztouBM+OG3AGJvLZScssnBagjrXd+I0tpCAUr7QuU+cpcf+lja0j1YbFdUWenzhQa1pfrdaTlJ
+        sGnWvmh+F87Ou5hBRP3Mbqxb15xqCM+gQyE5R0kCel3LAyVegAqk0RpHYPBIsqc2Un1Oji38WRzKa
+        ybx7cLnw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtRxb-00026c-Cs; Thu, 09 Jul 2020 08:31:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BD0133013E5;
+        Thu,  9 Jul 2020 10:31:13 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A7C6C29E916A5; Thu,  9 Jul 2020 10:31:13 +0200 (CEST)
+Date:   Thu, 9 Jul 2020 10:31:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+        Anton Blanchard <anton@ozlabs.org>,
+        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
+Message-ID: <20200709083113.GI597537@hirez.programming.kicks-ass.net>
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+ <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
+ <1594101082.hfq9x5yact.astroid@bobo.none>
+ <20200708084106.GE597537@hirez.programming.kicks-ass.net>
+ <a9834278-25bf-90e9-10f2-cd10e5407ff6@redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HK2P15301CA0023.APCP153.PROD.OUTLOOK.COM
- (2603:1096:202:1::33) To BY5PR04MB6739.namprd04.prod.outlook.com
- (2603:10b6:a03:229::8)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xin-VirtualBox (114.247.245.254) by HK2P15301CA0023.APCP153.PROD.OUTLOOK.COM (2603:1096:202:1::33) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.3195.5 via Frontend Transport; Thu, 9 Jul 2020 08:31:21 +0000
-X-Originating-IP: [114.247.245.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d3c6d926-ba77-4e5e-77eb-08d823e275ca
-X-MS-TrafficTypeDiagnostic: BYAPR04MB5462:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR04MB5462760621AD3F99A9DB00ABC7640@BYAPR04MB5462.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 04599F3534
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yuT3fblASby832hMdDTdzfoviDxTV0wzw2d3ygSfBxl9TLP+PIL0AF/PjvUPYkrGvmE1LIowIfRMIvw7wk/pOKLw7kRzKMCEsWt4RTjhqf5XjTxBRk2+/MXQtIZmhsqIz+ius8lHhi7baLs5utNAM7dPaGQC521Cd6dmiQmMkG+/3NV5adq3o16f5Y0NOvAjdLIH3fPJVRFpOG7e6p5TIFN5MsPBXQHaBevP6Xks/imYTcf1Xt4mj3Ok6x0189jSF3Nevtu/J0g/dzejCvD69QoO+CZX1GWiOc0TrxhotPG2YvxuBkh41vIIA3FpJsbu
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(396003)(366004)(136003)(39840400004)(54906003)(110136005)(316002)(6666004)(8676002)(6486002)(2906002)(36756003)(5660300002)(83380400001)(66476007)(52116002)(16526019)(66556008)(186003)(66946007)(26005)(4326008)(6496006)(8936002)(107886003)(478600001)(956004)(86362001)(7416002)(2616005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: CS7orSMtzWmcYv3sTQn98yhJ4oLDd5yjjQAXO/qdh5SQfFQziy6YHf3bIQXifhstBGEq+JB+JDrXa25PnpsPDFpzzFe5W0Jgv7p5wvFI4byON4zon7qJJEPx2YKyc7auG5MAYnCEdLRFCXUI86cY6uuBq6wx4aT/kzYXRlo13drRyWVUvDYllx/2hnK2aBjW5KtTihqeIso7jNkYXGEpjLEOUsaXrERky0notnnHclmksVZZWNIbYmsIPaWkC2OwFbNar1u0UdBPUdQChjRIeGMniU5t5lvQJfTbGEYqSASIXe4pN1CBeW9SDsx1i0xoaRZ3qnbFkejtyRExpGi/vgCYO6aZoEL7NLBvW2TAd+/P7EowYQ7+zuWeU3df8jPk2gyyO2LbrYhaWFzn8IyH0LAzR3CSNiKViNnfV8AahnMd2Kv1NEpe4tehhmuUrLLtrSToMvKu38egI83GOLYMKHBHVj1SpZrKDtmjYAtTz6lf4LMEsSaSbgtqkS+vuKen
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3c6d926-ba77-4e5e-77eb-08d823e275ca
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR04MB6739.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2020 08:31:22.1965
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5jVu5zHguaAKOQNpODBt4kesRsRuKuq3TJWnMfX8DjIi/N8vnkhV85U9NQoGwDlZk9RsbJMO9c/PK3Ds3uq1QQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5462
+In-Reply-To: <a9834278-25bf-90e9-10f2-cd10e5407ff6@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Wed, Jul 08, 2020 at 07:54:34PM -0400, Waiman Long wrote:
+> On 7/8/20 4:41 AM, Peter Zijlstra wrote:
+> > On Tue, Jul 07, 2020 at 03:57:06PM +1000, Nicholas Piggin wrote:
+> > > Yes, powerpc could certainly get more performance out of the slow
+> > > paths, and then there are a few parameters to tune.
+> > Can you clarify? The slow path is already in use on ARM64 which is weak,
+> > so I doubt there's superfluous serialization present. And Will spend a
+> > fair amount of time on making that thing guarantee forward progressm, so
+> > there just isn't too much room to play.
+> > 
+> > > We don't have a good alternate patching for function calls yet, but
+> > > that would be something to do for native vs pv.
+> > Going by your jump_label implementation, support for static_call should
+> > be fairly straight forward too, no?
+> > 
+> >    https://lkml.kernel.org/r/20200624153024.794671356@infradead.org
+> > 
+> Speaking of static_call, I am also looking forward to it. Do you have an
+> idea when that will be merged?
 
-The following series add support for the Slimport ANX7625 transmitter, a
-ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
+0day had one crash on the last round, I think Steve send a fix for that
+last night and I'll go look at it.
 
+That said, the last posting got 0 feedback, so either everybody is
+really happy with it, or not interested. So let us know in the thread,
+with some review feedback.
 
-This is the v14 version, any mistakes, please let me know, I will fix it in
-the next series.
-
-Change history:
-v14: Fix comments from Sam and Nicolas
- - Check flags at drm_bridge_attach
- - Use panel_bridge instead of drm_panel
- - Fix not correct return value
-
-v13: Fix comments from Launrent Pinchart and Rob Herring
- - Picked up Rob's Reviewed-By
- - Add .detect and .get_edid interface in bridge funcs.
-
-v12: Fix comments from Hsin-Yi Wang
- - Rebase the code on kernel 5.7, fix DRM interface not match issue.
-
-v11: Fix comments from Rob Herring
- - Update commit message.
- - Remove unused label.
-
-v10: Fix comments from Rob Herring, Daniel.
- - Fix dt_binding_check warning.
- - Update description.
-
-v9: Fix comments from Sam, Nicolas, Daniel
- - Remove extcon interface.
- - Remove DPI support.
- - Fix dt_binding_check complains.
- - Code clean up and update description.
-
-v8: Fix comments from Nicolas.
- - Fix several coding format.
- - Update description.
-
-v7:
- - Fix critical timing(eg:odd hfp/hbp) in "mode_fixup" interface,
-   enhance MIPI RX tolerance by setting register MIPI_DIGITAL_ADJ_1 to 0x3D.
-
-
-Xin Ji (2):
-  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter DT schema
-  drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP
-
- .../bindings/display/bridge/analogix,anx7625.yaml  |   95 +
- drivers/gpu/drm/bridge/analogix/Kconfig            |    9 +
- drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
- drivers/gpu/drm/bridge/analogix/anx7625.c          | 1939 ++++++++++++++++++++
- drivers/gpu/drm/bridge/analogix/anx7625.h          |  391 ++++
- 5 files changed, 2435 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
- create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
- create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
-
--- 
-2.7.4
-
+Once I get through enough of the inbox to actually find the fix and test
+it, I'll also update the thread, and maybe threaten to merge it if
+everybody stays silent :-)
