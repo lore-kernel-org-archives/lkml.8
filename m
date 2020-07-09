@@ -2,201 +2,76 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F979C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA68C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8DC206E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9D520672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594334967;
-	bh=ZERvbEu3oP+8uFS+ohcuN+W19cPMgieB6CxNafaOMqA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B6X3dfuFSipILDEo0lH2g/VErpYUTHpKt13VJejxtsQuijM9BckItmNwXXQyMPOgl
-	 XNF52irD1ndOUQIassuOenDagXNYqiBdcNXupj9kjEG5L3nS9VJkDoK3bX8TlxhjJF
-	 czmazS062cBAIJR2n8mlU+D3+8aO+6qFTLFZCEhY=
+	s=default; t=1594335075;
+	bh=roZLSbx21j3G3eSkCI1wgvCoE595TsZU94qEPul4Oc0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kJKg8/0iyX7WDW+A9fyj5k8Y/XGB8AdoJFFGcPoHGLixLLJVZoQ2Nye4aPVkZCfDz
+	 4oi21VMlYcX/DuEhyxLNrmSnMbnKXj7jabmSyp6vxjU3E7PO53HJpoQRvlq2LmHLC2
+	 ff0oTKsrH6lrEqyG8wH/7W13+dP5TkeDJ02Wc100=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgGIWt0 (ORCPT
+        id S1726840AbgGIWvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:49:26 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39586 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgGIWtZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:49:25 -0400
-Received: by mail-io1-f67.google.com with SMTP id f23so4085771iof.6;
-        Thu, 09 Jul 2020 15:49:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=on6I1QaqksTzTjlk5LO0XNZUtfYL91/HKW7wZAJpRps=;
-        b=X9Fni4qy1ScpWGGNSFSsKQrdETImTZ5Y+zcLhH8CATmuMZclhRTlieqHevm+9OzJ2/
-         ZeFMIbaoctiOa87wn9jFT2GXT4a1XuL2sa62eFD3sSlVnyqJD0ZgYJ+SB4WhzSQOyDgN
-         TkrDfCf+tdvipieitTivLbsVt0Sv4Z4cLe6DivVtYEIWU/enxuQ3mP6n2rmkNjc3qbPC
-         NdQdHgRVYd1EiF4N7/KOXrOy9BDaoLbW98oJ0hDtFtfilMUbezfXtIQxDo3IV0ztxo//
-         1QxvNpFq3MvloemtF1+/C5b6AKxvBpzya4Kb2q4YZMiIT93w7Kfe46gNMU9Z3v9+aQL6
-         Q46Q==
-X-Gm-Message-State: AOAM5316gUiVdEEX2QN/cWx0qp396MynMXfGHlcPuwN4ABIBZnXgIbe0
-        DptKx3VRzH3SwsWRCV+IJw==
-X-Google-Smtp-Source: ABdhPJwmhaOV9WAsplbi/ssPpb80zMM6ajMx8LL+irUXuxYUPiVWDy14EPJ4V7O8B0jvp25RjJRaag==
-X-Received: by 2002:a6b:440d:: with SMTP id r13mr43363375ioa.114.1594334964718;
-        Thu, 09 Jul 2020 15:49:24 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id p11sm2595327ilb.55.2020.07.09.15.49.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 15:49:24 -0700 (PDT)
-Received: (nullmailer pid 1033224 invoked by uid 1000);
-        Thu, 09 Jul 2020 22:49:23 -0000
-Date:   Thu, 9 Jul 2020 16:49:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, daniel.lezcano@linaro.org,
-        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: Re: [PATCH v5 1/2] dt-bindings: timer: Add Ingenic X1000 OST
- bindings.
-Message-ID: <20200709224923.GA1029808@bogus>
-References: <20200705140353.53093-1-zhouyanjie@wanyeetech.com>
- <20200705140353.53093-2-zhouyanjie@wanyeetech.com>
+        Thu, 9 Jul 2020 18:51:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726228AbgGIWvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 18:51:14 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D17020672;
+        Thu,  9 Jul 2020 22:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594335073;
+        bh=roZLSbx21j3G3eSkCI1wgvCoE595TsZU94qEPul4Oc0=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=Dw0W7B4+6L/Ua29pgOi44mw8wP5+4d+tiaMlTazDDnXnUtI98AezyrUgGbUb+QVAK
+         rW5RsCThCftZOLKcIZLhwFOrWRR3+bv8CuvStKsMbql+P6bqppsvQo0SofyrAApMF4
+         ZOYbB9Vj169bs9lflL66nxUZeUrGZSqifcUJhgdM=
+Date:   Fri, 10 Jul 2020 00:50:51 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        security@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation/security-bugs: Explain why plain text is
+ preferred
+In-Reply-To: <202007091110.205DC6A9@keescook>
+Message-ID: <nycvar.YFH.7.76.2007100050360.23768@cbobk.fhfr.pm>
+References: <202007091110.205DC6A9@keescook>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200705140353.53093-2-zhouyanjie@wanyeetech.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 10:03:52PM +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Add the OST bindings for the X10000 SoC from Ingenic.
-> 
-> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v1->v2:
->     No change.
->     
->     v2->v3:
->     Fix wrong parameters in "clocks".
->     
->     v3->v4:
->     1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
->     2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
->     3.Modify the description in "ingenic,sysost.yaml".
->     
->     v4->v5:
->     No change.
-> 
->  .../devicetree/bindings/timer/ingenic,sysost.yaml  | 60 ++++++++++++++++++++++
->  include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
->  2 files changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
->  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-> new file mode 100644
-> index 000000000000..03257ed806fc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for SYSOST in Ingenic XBurst family SoCs
-> +
-> +maintainers:
-> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> +
-> +description:
-> +  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
-> +  and one or more 32bit timers for clockevent.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +
-> +      - enum:
+On Thu, 9 Jul 2020, Kees Cook wrote:
 
-Only 1 entry, drop 'oneOf' and the blank line.
-
-> +          - ingenic,x1000-ost
-> +          - ingenic,x2000-ost
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: ost
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#clock-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/x1000-cgu.h>
-> +
-> +    ost: timer@12000000 {
-> +    		compatible = "ingenic,x1000-ost";
-> +    		reg = <0x12000000 0x3c>;
-> +
-> +    		#clock-cells = <1>;
-> +
-> +    		clocks = <&cgu X1000_CLK_OST>;
-> +    		clock-names = "ost";
-> +
-> +    		interrupt-parent = <&cpuintc>;
-> +    		interrupts = <3>;
-> +    	};
-> +...
-> diff --git a/include/dt-bindings/clock/ingenic,sysost.h b/include/dt-bindings/clock/ingenic,sysost.h
-> new file mode 100644
-> index 000000000000..9ac88e90babf
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/ingenic,sysost.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This header provides clock numbers for the ingenic,tcu DT binding.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-> +#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-> +
-> +#define OST_CLK_PERCPU_TIMER	0
-> +#define OST_CLK_GLOBAL_TIMER	1
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
-> -- 
-> 2.11.0
+> The security contact list gets regular reports contained in archive
+> attachments. This tends to add some back-and-forth delay in dealing with
+> security reports since we have to ask for plain text, etc.
 > 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Acked-by: Jiri Kosina <jkosina@suse.cz>
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
