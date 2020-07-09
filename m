@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C45C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B351D2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A882076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Ul6QLbcs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="H7cCDw7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgGIKBr (ORCPT
+        id S1727031AbgGIKCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:01:47 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:3869 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgGIKBh (ORCPT
+        Thu, 9 Jul 2020 06:02:54 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:27253 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbgGIKBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:01:37 -0400
+        Thu, 9 Jul 2020 06:01:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594288896; x=1625824896;
+  t=1594288906; x=1625824906;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=uci+63N0XBlAvV0QBr++Adpov2aPMsyTOj+m1Y0wXT8=;
-  b=Ul6QLbcs8X85dh0gIBh+vY4KpVNSb2AieFToo/4EwvZG2lxIGzTnzOJf
-   i89bHGvRPN9gaanoXZ39QpwA520qN+aSdyQJpZ7RIGWxMn2V5eqoJLZGW
-   w9M57Qj4wic3CF+3m6+UIWhx48XP9B+cuz1BiJAQQIDlkWSoOoYQeujP6
-   RIRxY9u6PadyDbkzrX38n4O8ZuiUzuOyTvlPMnE3EJuAQeMuyoCjvcabH
-   LWY8k1rxvGl3NEZrtvE5w2rs0fcyxJq+8dC8d4qI4RJh1Up3kNmxRHoRU
-   FofPJ8PcvzsIpOHzN4x0Gnb6YglfS1EkZ7r3hUY1qzNaF5kdY2d6i/voA
-   Q==;
-IronPort-SDR: dnqaWMqAToYVQQX9wHZ+mLdhSrjtWXnMOmBio5T0ofFrByPfpgwqhQD8M10z7K2teepBCmsBrl
- ZGxxJhOlJum5XHfoOaCdJlQ73fbyxYTIW38buXDr2ZuHfs1pyC/aDzNur373r7LhsAmPECcluY
- vz9bw75l3/hPfEi/UaaXgxQwH3TYq73n6xkZu66zwUr2FjQ1n79r1SbRhRvtZeILen1genE8mx
- llr8h4pynTbKBK2RTu2bbTWtWwRZPg8+Ks65t58h2x9OJ9Em0O3e6U1fSIQf0CImSgr+4mDVVD
- e0Y=
+  bh=RxV1KZrdzbJyskdAsZ/YrXLvu6nRz5FlWX+QDk+qvDg=;
+  b=H7cCDw7RVanhqBflSsD2ocODU6e65I8nd+zSzX+fGGJcwQnNpijRtvKe
+   gUFMbsROoh5T+7kBQ6vkr/71clvL2Bs6+rzHGUsekCPGdHwwaxiHe7Tsx
+   IGaazRa3HspgePyLddeIkwPE4W071fRF5ApoQO7fKNJdz0/Jri3gq9Vga
+   oCc0UPdca6MznIGarcwPXyokSLbwdv35L4xiHavRMEHwYPuVl0INl6Qws
+   2vBbnTi/TaajawmC+3CHYImHZneKuCiM4cSwUmjnfRoCmCRTnfYZQSjki
+   TFmjEKMI3Snp3yOaqbRYYuoQbkD0Xr+vTAlQ28XbHSE/zXmOxjk77hWDe
+   w==;
+IronPort-SDR: IuU8vM4aXGo+2co2tPKfuLcezOG/c91s+iafzl1SrdsJIfzmMA7q2W6qcA/3bRsl5gKyZr3kej
+ PDU/dynUgWd3l2wAStiduWjTNyX69fYh9RtUw4pYhofcxKQdxaTCdowYyAOI1XOPey/0OSDx5b
+ xNhkUGDvlLQyz4zIk103fXBvbc8DM/V7i4xDx72UGN/TGMzbcarI7dLikbkC521Oh4h1fv9Tdj
+ hBw047xwVSS//HXkdXW17GSl0UVFYcgtxKu7YQB/cW5h8XvK1TEd6AkfZA2ZuNWEkB/IzZY1LC
+ R14=
 X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="83138399"
+   d="scan'208";a="86823022"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:01:34 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:01:46 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 9 Jul 2020 03:01:08 -0700
+ 15.1.1979.3; Thu, 9 Jul 2020 03:01:45 -0700
 Received: from soft-dev3.localdomain (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:01:30 -0700
+ 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:01:42 -0700
 From:   Horatiu Vultur <horatiu.vultur@microchip.com>
 To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
@@ -59,9 +59,9 @@ To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
 CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v2 01/12] switchdev: mrp: Extend switchdev API for MRP Interconnect
-Date:   Thu, 9 Jul 2020 12:00:29 +0200
-Message-ID: <20200709100040.554623-2-horatiu.vultur@microchip.com>
+Subject: [PATCH net-next v2 04/12] bridge: mrp: Extend br_mrp for MRP interconnect
+Date:   Thu, 9 Jul 2020 12:00:32 +0200
+Message-ID: <20200709100040.554623-5-horatiu.vultur@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200709100040.554623-1-horatiu.vultur@microchip.com>
 References: <20200709100040.554623-1-horatiu.vultur@microchip.com>
@@ -73,80 +73,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend switchdev API to add support for MRP interconnect. The HW is
-notified in the following cases:
-
-SWITCHDEV_OBJ_ID_IN_ROLE_MRP: This is used when the interconnect role
-  of the node changes. The supported roles are MIM and MIC.
-
-SWITCHDEV_OBJ_ID_IN_STATE_MRP: This is used when the interconnect ring
-  changes it states to open or closed.
-
-SWITCHDEV_OBJ_ID_IN_TEST_MRP: This is used to start/stop sending
-  MRP_InTest frames on all MRP ports. This is called only on nodes that
-  have the interconnect role MIM.
+This patch extends the 'struct br_mrp' to contain information regarding
+the MRP interconnect. It contains the following:
+- the interconnect port 'i_port', which is NULL if the node doesn't have
+  a interconnect role
+- the interconnect id, which is similar with the ring id, but this field
+  is also part of the MRP_InTest frames.
+- the interconnect role, which can be MIM or MIC.
+- the interconnect state, which can be open or closed.
+- the interconnect delayed_work for sending MRP_InTest frames and check
+  for lost of continuity.
 
 Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 ---
- include/net/switchdev.h | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ net/bridge/br_private_mrp.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/include/net/switchdev.h b/include/net/switchdev.h
-index b8c059b4e06d9..ff22469143013 100644
---- a/include/net/switchdev.h
-+++ b/include/net/switchdev.h
-@@ -76,6 +76,10 @@ enum switchdev_obj_id {
- 	SWITCHDEV_OBJ_ID_RING_TEST_MRP,
- 	SWITCHDEV_OBJ_ID_RING_ROLE_MRP,
- 	SWITCHDEV_OBJ_ID_RING_STATE_MRP,
-+	SWITCHDEV_OBJ_ID_IN_TEST_MRP,
-+	SWITCHDEV_OBJ_ID_IN_ROLE_MRP,
-+	SWITCHDEV_OBJ_ID_IN_STATE_MRP,
-+
- #endif
- };
+diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
+index 33b255e38ffec..5e612123c5605 100644
+--- a/net/bridge/br_private_mrp.h
++++ b/net/bridge/br_private_mrp.h
+@@ -12,8 +12,10 @@ struct br_mrp {
  
-@@ -155,6 +159,40 @@ struct switchdev_obj_ring_state_mrp {
- #define SWITCHDEV_OBJ_RING_STATE_MRP(OBJ) \
- 	container_of((OBJ), struct switchdev_obj_ring_state_mrp, obj)
+ 	struct net_bridge_port __rcu	*p_port;
+ 	struct net_bridge_port __rcu	*s_port;
++	struct net_bridge_port __rcu	*i_port;
  
-+/* SWITCHDEV_OBJ_ID_IN_TEST_MRP */
-+struct switchdev_obj_in_test_mrp {
-+	struct switchdev_obj obj;
-+	/* The value is in us and a value of 0 represents to stop */
-+	u32 interval;
-+	u32 in_id;
-+	u32 period;
-+	u8 max_miss;
-+};
-+
-+#define SWITCHDEV_OBJ_IN_TEST_MRP(OBJ) \
-+	container_of((OBJ), struct switchdev_obj_in_test_mrp, obj)
-+
-+/* SWICHDEV_OBJ_ID_IN_ROLE_MRP */
-+struct switchdev_obj_in_role_mrp {
-+	struct switchdev_obj obj;
-+	struct net_device *i_port;
-+	u32 ring_id;
-+	u16 in_id;
-+	u8 in_role;
-+};
-+
-+#define SWITCHDEV_OBJ_IN_ROLE_MRP(OBJ) \
-+	container_of((OBJ), struct switchdev_obj_in_role_mrp, obj)
-+
-+struct switchdev_obj_in_state_mrp {
-+	struct switchdev_obj obj;
-+	u32 in_id;
-+	u8 in_state;
-+};
-+
-+#define SWITCHDEV_OBJ_IN_STATE_MRP(OBJ) \
-+	container_of((OBJ), struct switchdev_obj_in_state_mrp, obj)
-+
- #endif
+ 	u32				ring_id;
++	u16				in_id;
+ 	u16				prio;
  
- typedef int switchdev_obj_dump_cb_t(struct switchdev_obj *obj);
+ 	enum br_mrp_ring_role_type	ring_role;
+@@ -21,6 +23,11 @@ struct br_mrp {
+ 	enum br_mrp_ring_state_type	ring_state;
+ 	u32				ring_transitions;
+ 
++	enum br_mrp_in_role_type	in_role;
++	u8				in_role_offloaded;
++	enum br_mrp_in_state_type	in_state;
++	u32				in_transitions;
++
+ 	struct delayed_work		test_work;
+ 	u32				test_interval;
+ 	unsigned long			test_end;
+@@ -28,6 +35,12 @@ struct br_mrp {
+ 	u32				test_max_miss;
+ 	bool				test_monitor;
+ 
++	struct delayed_work		in_test_work;
++	u32				in_test_interval;
++	unsigned long			in_test_end;
++	u32				in_test_count_miss;
++	u32				in_test_max_miss;
++
+ 	u32				seq_id;
+ 
+ 	struct rcu_head			rcu;
 -- 
 2.27.0
 
