@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD85C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5D52073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182C12073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eG810+zn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YJd1nQ2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgGIPSY (ORCPT
+        id S1728076AbgGIPSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54366 "EHLO
+        Thu, 9 Jul 2020 11:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbgGIPSV (ORCPT
+        with ESMTP id S1727978AbgGIPSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:18:21 -0400
+        Thu, 9 Jul 2020 11:18:24 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC7DFC08C5CE;
-        Thu,  9 Jul 2020 08:18:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0D6C08C5CE;
+        Thu,  9 Jul 2020 08:18:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=LpqL9i2xKT/stdVPfY21iDNhXvNHas6++utf6Lf7se8=; b=eG810+znGFJ0jodsUY6aF07eBO
-        AB3RD4sYAjgVhjGXyrR43g+H5/QjLPSvBpx/7uV3utulCdUNJhZDsnJy//bbpiAmif0QV8rQLXm54
-        GSLSF70Yn8OV6cB+BjsdpAf5QR64eHxR6LqAOGSubLpEmS4wud4MWB80I5NEkHJ4QeK9NkINX5ftY
-        4w/v47AyYXhmFvbtSEQ4GqSsbnQBiXt/RMQotRVVPfH7mPhKsBdRtgnJBi73ZlcEWLVCiQf92bBr9
-        b4AzY+ZxlImGMB1OOzJ46L2MKU2TeJuqUmaw6++nSk+injzC/tZomsEJf5ju3OPrvj9JKghYOm2bj
-        IvZKvV6A==;
+        bh=igmuI7FT2PlLpNvSIQhC5NOf4lwLGTOJ/vt07sRMgDU=; b=YJd1nQ2UE0s3hD7fkUi5YtXUoc
+        xPEjsF4aWexDXYsNQgdkGzM1j2Hnarmx7TumUYZXwWRPaaRa9Y834y8R3gcO00uRui+Ct+9N6kkT9
+        48nICk3mgKDoIjInbUVTHcsdL526g0HW+6GTjlRfV0+UCDFJPNA/DvKCBPMZFaMMMEVgvL7tif1YZ
+        bTskgMFKbylvO96UkojqYXSOqLvPerndbDchHjFIMZv4fqYtrIjjdeCIA95UddHeNE0lhe7x+urMg
+        9PmVTP8o5uqCziM2aZlRppjIrgVMTysFuImLfvxZ8pqWezKsF60F9SN0LFA8Ys7pPX7Aq0dZELJzH
+        5pairsSg==;
 Received: from [2001:4bb8:188:5f50:7053:304b:bf82:82cf] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtYJX-0005K5-1L; Thu, 09 Jul 2020 15:18:19 +0000
+        id 1jtYJb-0005KV-03; Thu, 09 Jul 2020 15:18:23 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 02/17] md: move the early init autodetect code to drivers/md/
-Date:   Thu,  9 Jul 2020 17:17:59 +0200
-Message-Id: <20200709151814.110422-3-hch@lst.de>
+Subject: [PATCH 05/17] md: remove the kernel version of md_u.h
+Date:   Thu,  9 Jul 2020 17:18:02 +0200
+Message-Id: <20200709151814.110422-6-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200709151814.110422-1-hch@lst.de>
 References: <20200709151814.110422-1-hch@lst.de>
@@ -59,130 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just like the NFS and CIFS root code this better lives with the
-driver it is tightly integrated with.
+mdp_major can just move to drivers/md/md.h.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/md/Makefile                               |  3 +++
- init/do_mounts_md.c => drivers/md/md-autodetect.c | 15 +++++++++++++--
- include/linux/raid/detect.h                       |  8 ++++++++
- init/Makefile                                     |  1 -
- init/do_mounts.c                                  |  1 +
- init/do_mounts.h                                  | 10 ----------
- 6 files changed, 25 insertions(+), 13 deletions(-)
- rename init/do_mounts_md.c => drivers/md/md-autodetect.c (96%)
+ drivers/md/md.h           |  1 +
+ include/linux/raid/md_u.h | 13 -------------
+ 2 files changed, 1 insertion(+), 13 deletions(-)
+ delete mode 100644 include/linux/raid/md_u.h
 
-diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-index 31840f95cd408b..6d3e234dc46a5d 100644
---- a/drivers/md/Makefile
-+++ b/drivers/md/Makefile
-@@ -43,6 +43,9 @@ obj-$(CONFIG_MD_FAULTY)		+= faulty.o
- obj-$(CONFIG_MD_CLUSTER)	+= md-cluster.o
- obj-$(CONFIG_BCACHE)		+= bcache/
- obj-$(CONFIG_BLK_DEV_MD)	+= md-mod.o
-+ifeq ($(CONFIG_BLK_DEV_MD),y)
-+obj-y				+= md-autodetect.o
-+endif
- obj-$(CONFIG_BLK_DEV_DM)	+= dm-mod.o
- obj-$(CONFIG_BLK_DEV_DM_BUILTIN) += dm-builtin.o
- obj-$(CONFIG_DM_UNSTRIPED)	+= dm-unstripe.o
-diff --git a/init/do_mounts_md.c b/drivers/md/md-autodetect.c
-similarity index 96%
-rename from init/do_mounts_md.c
-rename to drivers/md/md-autodetect.c
-index 359363e85ccd0b..fe806f7b9759a1 100644
---- a/init/do_mounts_md.c
-+++ b/drivers/md/md-autodetect.c
-@@ -1,10 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/blkdev.h>
-+#include <linux/init.h>
-+#include <linux/syscalls.h>
-+#include <linux/mount.h>
-+#include <linux/major.h>
- #include <linux/delay.h>
-+#include <linux/raid/detect.h>
- #include <linux/raid/md_u.h>
- #include <linux/raid/md_p.h>
- 
--#include "do_mounts.h"
--
- /*
-  * When md (and any require personalities) are compiled into the kernel
-  * (not a module), arrays can be assembles are boot time using with AUTODETECT
-@@ -114,6 +119,12 @@ static int __init md_setup(char *str)
- 	return 1;
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 37315a3f28e97d..6f8fff77ce10a5 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -801,6 +801,7 @@ static inline void mddev_check_write_zeroes(struct mddev *mddev, struct bio *bio
+ 		mddev->queue->limits.max_write_zeroes_sectors = 0;
  }
  
-+static inline int create_dev(char *name, dev_t dev)
-+{
-+	ksys_unlink(name);
-+	return ksys_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
-+}
-+
- static void __init md_setup_drive(void)
- {
- 	int minor, i, ent, partitioned;
-diff --git a/include/linux/raid/detect.h b/include/linux/raid/detect.h
-index 37dd3f40cd316e..1f029a71c3ef05 100644
---- a/include/linux/raid/detect.h
-+++ b/include/linux/raid/detect.h
-@@ -1,3 +1,11 @@
- /* SPDX-License-Identifier: GPL-2.0 */
++extern int mdp_major;
+ void md_autostart_arrays(int part);
  
- void md_autodetect_dev(dev_t dev);
-+
-+#ifdef CONFIG_BLK_DEV_MD
-+void md_run_setup(void);
-+#else
-+static inline void md_run_setup(void)
-+{
-+}
-+#endif
-diff --git a/init/Makefile b/init/Makefile
-index 57499b1ff4714d..6bc37f64b3617c 100644
---- a/init/Makefile
-+++ b/init/Makefile
-@@ -18,7 +18,6 @@ obj-y                          += init_task.o
- mounts-y			:= do_mounts.o
- mounts-$(CONFIG_BLK_DEV_RAM)	+= do_mounts_rd.o
- mounts-$(CONFIG_BLK_DEV_INITRD)	+= do_mounts_initrd.o
--mounts-$(CONFIG_BLK_DEV_MD)	+= do_mounts_md.o
- 
- # dependencies on generated files need to be listed explicitly
- $(obj)/version.o: include/generated/compile.h
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 29d326b6c29d2d..1a4dfa17fb2899 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -23,6 +23,7 @@
- #include <linux/nfs_fs.h>
- #include <linux/nfs_fs_sb.h>
- #include <linux/nfs_mount.h>
-+#include <linux/raid/detect.h>
- #include <uapi/linux/mount.h>
- 
- #include "do_mounts.h"
-diff --git a/init/do_mounts.h b/init/do_mounts.h
-index 7513d1c14d13fe..50d6c8941e15a1 100644
---- a/init/do_mounts.h
-+++ b/init/do_mounts.h
-@@ -41,13 +41,3 @@ bool __init initrd_load(void);
- static inline bool initrd_load(void) { return false; }
- 
- #endif
+ #endif /* _MD_MD_H */
+diff --git a/include/linux/raid/md_u.h b/include/linux/raid/md_u.h
+deleted file mode 100644
+index 8dfec085a20ee1..00000000000000
+--- a/include/linux/raid/md_u.h
++++ /dev/null
+@@ -1,13 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
+-/*
+-   md_u.h : user <=> kernel API between Linux raidtools and RAID drivers
+-          Copyright (C) 1998 Ingo Molnar
+-	  
+-*/
+-#ifndef _MD_U_H
+-#define _MD_U_H
 -
--#ifdef CONFIG_BLK_DEV_MD
+-#include <uapi/linux/raid/md_u.h>
 -
--void md_run_setup(void);
--
--#else
--
--static inline void md_run_setup(void) {}
--
--#endif
+-extern int mdp_major;
+-#endif 
 -- 
 2.26.2
 
