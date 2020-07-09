@@ -2,167 +2,127 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A052077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594309128;
-	bh=L0YHyaVnrGtsrYU/MOJaw8jpmow7WmEpb0uvKXYmZ/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qxj7gsFyhmqiNi8KCCVhxPhGRaYxAhuAYi3pi3inxe/pRrSZJbcOg6FPVx/dREt+2
-	 44Xnl0LZ2X8aaiM3JfFo3x+znXWsBG9DX6cNr7NdLbleo4JSxikXNERjJ2HAGAriUD
-	 dwydN493wpcMrMtEEwuvCuBKwXGT78SEBUWxTZHM=
+	by mail.kernel.org (Postfix) with ESMTP id EF6CF207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:39:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="hYAGZqEz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgGIPir (ORCPT
+        id S1728089AbgGIPjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgGIPir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:38:47 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 012D720720;
-        Thu,  9 Jul 2020 15:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594309126;
-        bh=L0YHyaVnrGtsrYU/MOJaw8jpmow7WmEpb0uvKXYmZ/w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BbT1W8mOKlsd9oZlX+zEwJ+k4sQrfbiB+LYaqVy6quzl84kh3UMvL9E1ZEqLes9kv
-         jDh9/S7dyTE+tehwP+Ctr+jup7P9ZqNHyc1HjpYaGbAxzNvdKHj1YlAROST2en5Ka8
-         7LAW7cT5QZHXANkqGHgq8FWp34kCXYUh55kU/RuA=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 11AD4405FF; Thu,  9 Jul 2020 12:38:44 -0300 (-03)
-Date:   Thu, 9 Jul 2020 12:38:44 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, mbd@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] Fix annotate.c use of uninitialized value error
-Message-ID: <20200709153844.GA7487@kernel.org>
-References: <20190726194044.GC24867@kernel.org>
- <20190729205750.193289-1-nums@google.com>
- <20190807113244.GA9605@krava>
- <CAP-5=fW8k6YWBYno2RWV5_mojn-0crvmPcLynKGBO_3WMCXfEA@mail.gmail.com>
- <CAP-5=fVx1YqNOja4GCAVApQ05BW5Z6CWbAENU3kVCzxJOyKySA@mail.gmail.com>
-MIME-Version: 1.0
+        Thu, 9 Jul 2020 11:39:02 -0400
+Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:5684
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726339AbgGIPjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 11:39:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VbiDuCcM8RbaaEd6HeUGBwYPu/LhmKvMu8wqxFowgo/y6iZsDROpgT1OdoP06d8QYu2Cbqm9941RjbejMTWdC9b4OUKBWsdv9g1YEQiyqmPz3IfSbzwrzKKWucdGX1tFikno1Xlu0t1R2agrK/NYHlzAUhOkF7wmH99BzSxKV6ArraEP8hZ3YUOO8E+it4LKjhkHLIJyTP4i4J3F0Z2TLVOG/HwkU2sqLxuusTxqykJY8V5nz/M5ExnJvNTY4GHOeWNlNnBLpDpxqOnjpj1bDwOvUNemzD4dphplgIgqStQSD5n5S6h1hnl+VcZHr1kLwCSKvLU0zID9zvsElYYy4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZgiIUBTYJic1QyvZ2OdAzJ9zzRqqPPjobQ+VttQtYCA=;
+ b=NsSSu8+07QosHkzhTZVzuhLJiURNW2Qm3CDzfjNNV0ctq98mJYkxauHIMTZzHdrtY7riBnX4myCJ+Jo2JF/JqjyNHNkv65xdDNtjS6aDeS8BGE+0Maka7P8sBjTjxwiEgnHOY8uP3PZV8bJSxg1HEJIaAILO70mNChMghhn2Zc6j3OIbjGb4SEg8R/2PUDY3JRZOEuSTEq9TtP/jLUXPQazr9BHv4yAYTE53QWYfIvZqsJdimgSHF04BpqNVo5yxIXoCd3c0/wamrk/NuOIJOpUGOfDJI/7XKjqQnxAOgchkoiBHUeAmd5GMODs8O0TZmk6zgRvEyntcgGXTvE3y5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZgiIUBTYJic1QyvZ2OdAzJ9zzRqqPPjobQ+VttQtYCA=;
+ b=hYAGZqEzUZYfZWr9yRLW8U4JnOfObQNqLjXSR5x0PL6pgHTnVc8zMpUOuFzPsjQtNKNnBcqxdPp4e7uL6HCz7xeAUT5eUozbLEcjkeMSM5F/H1vnOHJpfHBgMVRZ0GFAszDIYokXk0vXtsIBoDEQEBM+Am9cqzUVs2tajgeVL+Q=
+Authentication-Results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR0501MB2494.eurprd05.prod.outlook.com (2603:10a6:800:71::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Thu, 9 Jul
+ 2020 15:38:58 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3174.022; Thu, 9 Jul 2020
+ 15:38:58 +0000
+Date:   Thu, 9 Jul 2020 12:38:54 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 11/12] PM, libnvdimm: Add 'mem-quiet' state and
+ callback for firmware activation
+Message-ID: <20200709153854.GY23821@mellanox.com>
+References: <159408711335.2385045.2567600405906448375.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200709150051.GA17342@infradead.org>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fVx1YqNOja4GCAVApQ05BW5Z6CWbAENU3kVCzxJOyKySA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200709150051.GA17342@infradead.org>
+X-ClientProxiedBy: MN2PR08CA0003.namprd08.prod.outlook.com
+ (2603:10b6:208:239::8) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR08CA0003.namprd08.prod.outlook.com (2603:10b6:208:239::8) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Thu, 9 Jul 2020 15:38:57 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jtYdS-007dM5-Ec; Thu, 09 Jul 2020 12:38:54 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: af5f7a7c-4f35-4e3b-4de4-08d8241e31e7
+X-MS-TrafficTypeDiagnostic: VI1PR0501MB2494:
+X-Microsoft-Antispam-PRVS: <VI1PR0501MB249425F6FCE3C20702820DC7CF640@VI1PR0501MB2494.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: s5BItQgEdUp/U57fAtkFTGtjZY70QqgOBjvgyyrgIin7NdwILXRTI0uUzbFREZUoavAb2uX/CXM83CzV9SIQcX6S3X5VUjQyJixqKTdyls5tJ35Ura+xPt9kgZzr2koOuVwhDYLKIO/rOA3uXNioScfcgz8ta82lN3OUuLMqdz7EYuuXf/sN/uvFcpZ0oGFDGTvnk82l4leM61iMsBy8C+gxWJVWjNiGQYLwAmPFAvRdH9BlR9qs87ST6hj3hRQWNv9dtgGJKVGxvF0RzTu81fpUoM+b4LlBW1781BAr+S/nodM/5CAgvmma6SEnXC0/fQDgsi8NDqNQbeYDmmo3FA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(376002)(396003)(366004)(2906002)(186003)(36756003)(8936002)(6916009)(7416002)(316002)(54906003)(478600001)(86362001)(4326008)(8676002)(1076003)(2616005)(33656002)(26005)(9746002)(9786002)(5660300002)(66556008)(66946007)(66476007)(83380400001)(426003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 41VY4oW5LCWMv1eRyfnIFMHXPJ0AiR8ofnbveUTWHfiduARBIbwUCTamkA3oDnALxp64MchI/HcnKN9lTcDbpQL02z8/7h/jU2+qX+8JeaD+LMWr0K3GZ+/35jlZP+aasoAsjj8B59wYHdv9grcPQk4gmMr8vnlM7HyNGjzIducyn576jxqokNDsxzzIN3bSi/ZPAczrATN7kv/b6Flr1SlJfiR5QJdq4kzR2uW/9QfMj812GqcRKlCE/Q6wgeVE0amNbBib0yKISvUvSpgOkObZN+b+u2+7pA2FO6NNk3iu84FmLr9Bsfg1yD+Przd8QGpMnDQ5rFGbu92aMJ2x/YOuOuS/9Mv12HB71W8TYAsft+uwQPqCXSdzC9ro0MwnX+yWgrfvYwLmx7mQUUWrgNa3DObWDv6/W+Cu2OYp1EF71S2eJiRAPeIAQqYEqOqO71CruK6iW+ePkrl3dmKZlLo+RFC5r5uo8zS1mjKGsvw=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af5f7a7c-4f35-4e3b-4de4-08d8241e31e7
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2020 15:38:58.0304
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FYbYHTu5h+VFoRrobwRczlgtfjKTwyOMterIE7d1RTLKrDDvGZgplR26EKejiJK7E8Tf4weygPCOxLIwg/b7FA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2494
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Jul 08, 2020 at 05:54:47PM -0700, Ian Rogers escreveu:
-> On Fri, Oct 25, 2019 at 3:11 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > It looks like this wasn't merged to tip. Does anything need addressing
-> > to get it merged?
+On Thu, Jul 09, 2020 at 04:00:51PM +0100, Christoph Hellwig wrote:
+> On Mon, Jul 06, 2020 at 06:59:32PM -0700, Dan Williams wrote:
+> > The runtime firmware activation capability of Intel NVDIMM devices
+> > requires memory transactions to be disabled for 100s of microseconds.
+> > This timeout is large enough to cause in-flight DMA to fail and other
+> > application detectable timeouts. Arrange for firmware activation to be
+> > executed while the system is "quiesced", all processes and device-DMA
+> > frozen.
+> > 
+> > It is already required that invoking device ->freeze() callbacks is
+> > sufficient to cease DMA. A device that continues memory writes outside
+> > of user-direction violates expectations of the PM core to be to
+> > establish a coherent hibernation image.
+> > 
+> > That said, RDMA devices are an example of a device that access memory
+> > outside of user process direction.
 
-Finally processed, thanks for the multiple reminders,
+Are you saying freeze doesn't work for some RDMA drivers? That would
+be a driver bug, I think.
 
-- Arnaldo
+The consequences of doing freeze are pretty serious, but it should
+still stop DMA.
 
-> > Thanks,
-> > Ian
-> >
-> > On Wed, Aug 7, 2019 at 4:32 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > >
-> > > On Mon, Jul 29, 2019 at 01:57:50PM -0700, Numfor Mbiziwo-Tiapo wrote:
-> > > > Our local MSAN (Memory Sanitizer) build of perf throws a warning
-> > > > that comes from the "dso__disassemble_filename" function in
-> > > > "tools/perf/util/annotate.c" when running perf record.
-> > > >
-> > > > The warning stems from the call to readlink, in which "build_id_path"
-> > > > was being read into "linkname". Since readlink does not null terminate,
-> > > > an uninitialized memory access would later occur when "linkname" is
-> > > > passed into the strstr function. This is simply fixed by null-terminating
-> > > > "linkname" after the call to readlink.
-> > > >
-> > > > To reproduce this warning, build perf by running:
-> > > > make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
-> > > >  -fsanitize-memory-track-origins"
-> > > >
-> > > > (Additionally, llvm might have to be installed and clang might have to
-> > > > be specified as the compiler - export CC=/usr/bin/clang)
-> > > >
-> > > > then running:
-> > > > tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
-> > > >  -i - --stdio
-> > > >
-> > > > Please see the cover letter for why false positive warnings may be
-> > > > generated.
-> > > >
-> > > > Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-> > >
-> > > Acked-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
-> 
-> Arnaldo, I think this got overlooked. Thanks,
-> 
-> Ian
-> 
-> > > thanks,
-> > > jirka
-> > >
-> > > > ---
-> > > >  tools/perf/util/annotate.c | 15 +++++++++++----
-> > > >  1 file changed, 11 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> > > > index 70de8f6b3aee..e1b075b52dce 100644
-> > > > --- a/tools/perf/util/annotate.c
-> > > > +++ b/tools/perf/util/annotate.c
-> > > > @@ -1627,6 +1627,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
-> > > >       char *build_id_filename;
-> > > >       char *build_id_path = NULL;
-> > > >       char *pos;
-> > > > +     int len;
-> > > >
-> > > >       if (dso->symtab_type == DSO_BINARY_TYPE__KALLSYMS &&
-> > > >           !dso__is_kcore(dso))
-> > > > @@ -1655,10 +1656,16 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
-> > > >       if (pos && strlen(pos) < SBUILD_ID_SIZE - 2)
-> > > >               dirname(build_id_path);
-> > > >
-> > > > -     if (dso__is_kcore(dso) ||
-> > > > -         readlink(build_id_path, linkname, sizeof(linkname)) < 0 ||
-> > > > -         strstr(linkname, DSO__NAME_KALLSYMS) ||
-> > > > -         access(filename, R_OK)) {
-> > > > +     if (dso__is_kcore(dso))
-> > > > +             goto fallback;
-> > > > +
-> > > > +     len = readlink(build_id_path, linkname, sizeof(linkname) - 1);
-> > > > +     if (len < 0)
-> > > > +             goto fallback;
-> > > > +
-> > > > +     linkname[len] = '\0';
-> > > > +     if (strstr(linkname, DSO__NAME_KALLSYMS) ||
-> > > > +             access(filename, R_OK)) {
-> > > >  fallback:
-> > > >               /*
-> > > >                * If we don't have build-ids or the build-id file isn't in the
-> > > > --
-> > > > 2.22.0.709.g102302147b-goog
-> > > >
-
--- 
-
-- Arnaldo
+Jason
