@@ -2,792 +2,726 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB92C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57CDE2076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10CA20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BR6/l1sy"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="A6V2pP9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgGIVju (ORCPT
+        id S1726615AbgGIVkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:39:50 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:34144 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGIVjt (ORCPT
+        Thu, 9 Jul 2020 17:40:55 -0400
+Received: from pb-smtp1.pobox.com ([64.147.108.70]:65106 "EHLO
+        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgGIVky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:39:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594330787; x=1625866787;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OJQ+Ha6f2Z7X4jAp/T1BjvYHaobv2uJTCkcqtn/c0Po=;
-  b=BR6/l1syAw+DG3/JPBRiQh0AzGGCh6ZwxuN4naGkZPSQKybJtDrtCb4u
-   TLLXVdbP01oYxBQqNtiWKZOrhn5dkYD8Ve48juoasQXg3JVj4yYzSNNRN
-   pf149jLVnNEY1PbPDdjtV4lOxl55IKWr0vUB3TFBKBGzsfYftNMrZ+l5S
-   GbBPLzL2emfTFnrAwVML3pmSc8dS+yRKhhymbE9ZRI4LZyLEhVIWr6sv+
-   K4nsN5VDo+ptEjSytIKayvubvquf15MgNPCcbrG4LeL9/M1M94DNnsqdt
-   DIlSsioDy7tb0D1juC70tyGVA7y5FnEIIapqzlen2JnP2gDEpYMgrLdzb
-   w==;
-IronPort-SDR: 1rbPU1F6qVT21eKXXxR4Of+qjEf5bHkFFNikKw21/bMufsPR5QXVK5ryK1pEyG2Q0IJvM9SgRl
- zLh6hPJ+Va74QHCJPV/eb+7oKcUgUuBjuAG0D1JQH11yOe435Jo3X4dhdpV5XTy2L2J4SPfnbU
- L6NRtvvdQarHMCU9cwIjb0ufNdm4GWXoVhYXUUe4BIadR0qaRdIVJ9fAQbD+jPn+16x2uxMjep
- zUC+QuuuYiizcEFLqVAeRJv0gOW5lLWzdHhT00dcwZv1wXocjifqJxDP/gMIo6XYaDV34kpzDu
- auo=
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="79361175"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 14:39:46 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 9 Jul 2020 14:39:46 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Thu, 9 Jul 2020 14:39:45 -0700
-Date:   Thu, 9 Jul 2020 23:39:44 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <jiri@resnulli.us>, <ivecera@redhat.com>,
-        <andrew@lunn.ch>, <UNGLinuxDriver@microchip.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>
-Subject: Re: [PATCH net-next v2 08/12] bridge: mrp: Implement the MRP
- Interconnect API
-Message-ID: <20200709213944.zq5q7ivzceiapcbi@soft-dev3.localdomain>
-References: <20200709100040.554623-1-horatiu.vultur@microchip.com>
- <20200709100040.554623-9-horatiu.vultur@microchip.com>
- <224f2435-214d-6440-1b63-eb4139b8caf0@cumulusnetworks.com>
+        Thu, 9 Jul 2020 17:40:54 -0400
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 26D54625BD;
+        Thu,  9 Jul 2020 17:40:47 -0400 (EDT)
+        (envelope-from junio@pobox.com)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-type
+        :content-transfer-encoding; s=sasl; bh=ffCBtyIpDb4+od0kSLTD48jtL
+        jU=; b=A6V2pP9Xwjuqw41no6+eJ555Q/FPVSr70UWAn57T4wT7F8+VtmROEy94q
+        1fvp1phrWKX9xIfg3vSO8KCoC4foM/hby6vVsH8u0D/1M8e85Y5+SrT6v81gL+KC
+        jECdPc8yMnfZmrbsQrbRzCH06Brk4xvJ96Ylbwrh1rhwX9qLP0=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-type
+        :content-transfer-encoding; q=dns; s=sasl; b=uuTp/UP8qCspuebIvim
+        NYE5Ud7GgB2euvjq9yU28B+YhwCWA/DClUUqXWz9XZn6VTnoU1uCjZmDktg957N+
+        g4eWVHJNM5x+kQIF3ueF8FWsA8Sv+y9AopXG9mMggLixhCHkz6iddOTPiEhfHinm
+        gX1C6eWDo70EyURBfg1VZTQg=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 1E484625BC;
+        Thu,  9 Jul 2020 17:40:47 -0400 (EDT)
+        (envelope-from junio@pobox.com)
+Received: from pobox.com (unknown [35.231.104.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 82FBF625BA;
+        Thu,  9 Jul 2020 17:40:46 -0400 (EDT)
+        (envelope-from junio@pobox.com)
+From:   Junio C Hamano <gitster@pobox.com>
+To:     git@vger.kernel.org
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com
+Subject: [ANNOUNCE] Git v2.28.0-rc0
+Date:   Thu, 09 Jul 2020 14:40:45 -0700
+Message-ID: <xmqqh7ugwen6.fsf@gitster.c.googlers.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <224f2435-214d-6440-1b63-eb4139b8caf0@cumulusnetworks.com>
+Content-Type: text/plain; charset=utf-8
+X-Pobox-Relay-ID: D9234858-C22C-11EA-A339-01D9BED8090B-77302942!pb-smtp1.pobox.com
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 07/09/2020 15:26, Nikolay Aleksandrov wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On 09/07/2020 13:00, Horatiu Vultur wrote:
-> > Thie patch adds support for MRP Interconnect. Similar with the MRP ring,
-> > if the HW can't generate MRP_InTest frames, then the SW will try to
-> > generate them. And if also the SW fails to generate the frames then an
-> > error is return to userspace.
-> >
-> > The forwarding/termination of MRP_In frames is happening in the kernel
-> > and is done by MRP instances.
-> >
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> > ---
-> >  net/bridge/br_mrp.c         | 531 +++++++++++++++++++++++++++++++++---
-> >  net/bridge/br_private_mrp.h |   4 +
-> >  2 files changed, 504 insertions(+), 31 deletions(-)
-> >
+An early preview release Git v2.28.0-rc0 is now available for
+testing at the usual places.  It is comprised of 284 non-merge
+commits since v2.27.0, contributed by 42 people, 9 of which are
+new faces.
 
-Hi Nik,
+The tarballs are found at:
 
-> 
-> Hi,
-> Few comments below.
-> 
-> > diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-> > index d4176f8956d05..26eb40d610b3a 100644
-> > --- a/net/bridge/br_mrp.c
-> > +++ b/net/bridge/br_mrp.c
-> > @@ -4,6 +4,27 @@
-> >  #include "br_private_mrp.h"
-> >
-> >  static const u8 mrp_test_dmac[ETH_ALEN] = { 0x1, 0x15, 0x4e, 0x0, 0x0, 0x1 };
-> > +static const u8 mrp_in_test_dmac[ETH_ALEN] = { 0x1, 0x15, 0x4e, 0x0, 0x0, 0x3 };
-> > +
-> > +static bool br_mrp_is_ring_port(struct net_bridge_port *p_port,
-> > +                             struct net_bridge_port *s_port,
-> > +                             struct net_bridge_port *port)
-> > +{
-> > +     if (port == p_port ||
-> > +         port == s_port)
-> > +             return true;
-> > +
-> > +     return false;
-> > +}
-> > +
-> > +static bool br_mrp_is_in_port(struct net_bridge_port *i_port,
-> > +                           struct net_bridge_port *port)
-> > +{
-> > +     if (port == i_port)
-> > +             return true;
-> > +
-> > +     return false;
-> > +}
-> >
-> >  static struct net_bridge_port *br_mrp_get_port(struct net_bridge *br,
-> >                                              u32 ifindex)
-> > @@ -37,6 +58,22 @@ static struct br_mrp *br_mrp_find_id(struct net_bridge *br, u32 ring_id)
-> >       return res;
-> >  }
-> >
-> > +static struct br_mrp *br_mrp_find_in_id(struct net_bridge *br, u32 in_id)
-> > +{
-> > +     struct br_mrp *res = NULL;
-> > +     struct br_mrp *mrp;
-> > +
-> > +     list_for_each_entry_rcu(mrp, &br->mrp_list, list,
-> > +                             lockdep_rtnl_is_held()) {
-> > +             if (mrp->in_id == in_id) {
-> > +                     res = mrp;
-> > +                     break;
-> > +             }
-> > +     }
-> > +
-> > +     return res;
-> > +}
-> > +
-> >  static bool br_mrp_unique_ifindex(struct net_bridge *br, u32 ifindex)
-> >  {
-> >       struct br_mrp *mrp;
-> > @@ -52,6 +89,10 @@ static bool br_mrp_unique_ifindex(struct net_bridge *br, u32 ifindex)
-> >               p = rtnl_dereference(mrp->s_port);
-> >               if (p && p->dev->ifindex == ifindex)
-> >                       return false;
-> > +
-> > +             p = rtnl_dereference(mrp->i_port);
-> > +             if (p && p->dev->ifindex == ifindex)
-> > +                     return false;
-> >       }
-> >
-> >       return true;
-> > @@ -66,7 +107,8 @@ static struct br_mrp *br_mrp_find_port(struct net_bridge *br,
-> >       list_for_each_entry_rcu(mrp, &br->mrp_list, list,
-> >                               lockdep_rtnl_is_held()) {
-> >               if (rcu_access_pointer(mrp->p_port) == p ||
-> > -                 rcu_access_pointer(mrp->s_port) == p) {
-> > +                 rcu_access_pointer(mrp->s_port) == p ||
-> > +                 rcu_access_pointer(mrp->i_port) == p) {
-> >                       res = mrp;
-> >                       break;
-> >               }
-> > @@ -160,6 +202,36 @@ static struct sk_buff *br_mrp_alloc_test_skb(struct br_mrp *mrp,
-> >       return skb;
-> >  }
-> >
-> > +static struct sk_buff *br_mrp_alloc_in_test_skb(struct br_mrp *mrp,
-> > +                                             struct net_bridge_port *p,
-> > +                                             enum br_mrp_port_role_type port_role)
-> > +{
-> > +     struct br_mrp_in_test_hdr *hdr = NULL;
-> > +     struct sk_buff *skb = NULL;
-> > +
-> > +     if (!p)
-> > +             return NULL;
-> > +
-> > +     skb = br_mrp_skb_alloc(p, p->dev->dev_addr, mrp_in_test_dmac);
-> > +     if (!skb)
-> > +             return NULL;
-> > +
-> > +     br_mrp_skb_tlv(skb, BR_MRP_TLV_HEADER_IN_TEST, sizeof(*hdr));
-> > +     hdr = skb_put(skb, sizeof(*hdr));
-> > +
-> > +     hdr->id = cpu_to_be16(mrp->in_id);
-> > +     ether_addr_copy(hdr->sa, p->br->dev->dev_addr);
-> > +     hdr->port_role = cpu_to_be16(port_role);
-> > +     hdr->state = cpu_to_be16(mrp->in_state);
-> > +     hdr->transitions = cpu_to_be16(mrp->in_transitions);
-> > +     hdr->timestamp = cpu_to_be32(jiffies_to_msecs(jiffies));
-> > +
-> > +     br_mrp_skb_common(skb, mrp);
-> > +     br_mrp_skb_tlv(skb, BR_MRP_TLV_HEADER_END, 0x0);
-> > +
-> > +     return skb;
-> > +}
-> > +
-> >  /* This function is continuously called in the following cases:
-> >   * - when node role is MRM, in this case test_monitor is always set to false
-> >   *   because it needs to notify the userspace that the ring is open and needs to
-> > @@ -239,6 +311,83 @@ static void br_mrp_test_work_expired(struct work_struct *work)
-> >                          usecs_to_jiffies(mrp->test_interval));
-> >  }
-> >
-> > +/* This function is continuously called when the node has the interconnect rol
-> 
-> role ?
+    https://www.kernel.org/pub/software/scm/git/testing/
 
-Yes, that is a typo. I will fix it the next version.
+The following public repositories all have a copy of the
+'v2.28.0-rc0' tag and the 'master' branch that the tag points at:
 
-> 
-> > + * MIM. It would generate interconnect test frames and will send them on all 3
-> > + * ports. But will also check if it stop receiving interconnect test frames.
-> > + */
-> > +static void br_mrp_in_test_work_expired(struct work_struct *work)
-> > +{
-> > +     struct delayed_work *del_work = to_delayed_work(work);
-> > +     struct br_mrp *mrp = container_of(del_work, struct br_mrp, in_test_work);
-> > +     struct net_bridge_port *p;
-> > +     bool notify_open = false;
-> > +     struct sk_buff *skb;
-> > +
-> > +     if (time_before_eq(mrp->in_test_end, jiffies))
-> > +             return;
-> > +
-> > +     if (mrp->in_test_count_miss < mrp->in_test_max_miss) {
-> > +             mrp->in_test_count_miss++;
-> > +     } else {
-> > +             /* Notify that the interconnect ring is open only if the
-> > +              * interconnect ring state is closed, otherwise it would
-> > +              * continue to notify at every interval.
-> > +              */
-> > +             if (mrp->in_state == BR_MRP_IN_STATE_CLOSED)
-> > +                     notify_open = true;
-> > +     }
-> > +
-> > +     rcu_read_lock();
-> > +
-> > +     p = rcu_dereference(mrp->p_port);
-> > +     if (p) {
-> > +             skb = br_mrp_alloc_in_test_skb(mrp, p,
-> > +                                            BR_MRP_PORT_ROLE_PRIMARY);
-> > +             if (!skb)
-> > +                     goto out;
-> > +
-> > +             skb_reset_network_header(skb);
-> > +             dev_queue_xmit(skb);
-> > +
-> > +             if (notify_open && !mrp->in_role_offloaded)
-> > +                     br_mrp_in_port_open(p->dev, true);
-> > +     }
-> > +
-> > +     p = rcu_dereference(mrp->s_port);
-> > +     if (p) {
-> > +             skb = br_mrp_alloc_in_test_skb(mrp, p,
-> > +                                            BR_MRP_PORT_ROLE_SECONDARY);
-> > +             if (!skb)
-> > +                     goto out;
-> > +
-> > +             skb_reset_network_header(skb);
-> > +             dev_queue_xmit(skb);
-> > +
-> > +             if (notify_open && !mrp->in_role_offloaded)
-> > +                     br_mrp_in_port_open(p->dev, true);
-> > +     }
-> > +
-> > +     p = rcu_dereference(mrp->i_port);
-> > +     if (p) {
-> > +             skb = br_mrp_alloc_in_test_skb(mrp, p,
-> > +                                            BR_MRP_PORT_ROLE_INTER);
-> > +             if (!skb)
-> > +                     goto out;
-> > +
-> > +             skb_reset_network_header(skb);
-> > +             dev_queue_xmit(skb);
-> > +
-> > +             if (notify_open && !mrp->in_role_offloaded)
-> > +                     br_mrp_in_port_open(p->dev, true);
-> > +     }
-> > +
-> > +out:
-> > +     rcu_read_unlock();
-> > +
-> > +     queue_delayed_work(system_wq, &mrp->in_test_work,
-> > +                        usecs_to_jiffies(mrp->in_test_interval));
-> > +}
-> > +
-> >  /* Deletes the MRP instance.
-> >   * note: called under rtnl_lock
-> >   */
-> > @@ -251,6 +400,12 @@ static void br_mrp_del_impl(struct net_bridge *br, struct br_mrp *mrp)
-> >       cancel_delayed_work_sync(&mrp->test_work);
-> >       br_mrp_switchdev_send_ring_test(br, mrp, 0, 0, 0, 0);
-> >
-> > +     /* Stop sending MRP_InTest frames if has an interconnect role */
-> > +     if (mrp->in_role != BR_MRP_IN_ROLE_DISABLED) {
-> > +             cancel_delayed_work_sync(&mrp->in_test_work);
-> 
-> I think both of these (in_role & in_test_work) are controlled by user-space
-> and if that is the case what stops user-space from starting in_test_work and
-> then setting in_role == BR_MRP_IN_ROLE_DISABLED ?
+  url =3D https://kernel.googlesource.com/pub/scm/git/git
+  url =3D git://repo.or.cz/alt-git.git
+  url =3D https://github.com/gitster/git
 
-You are correct. Currently there is nothing that stops the user-space of
-doing this. The function 'br_mrp_set_in_role' needs to be extend. To
-check if the in_role is disable in that case to cancel the work and then
-to remove the port.
+New contributors whose contributions weren't in v2.27.0 are as follows.
+Welcome to the Git development community!
 
-> 
-> > +             br_mrp_switchdev_send_in_test(br, mrp, 0, 0, 0);
-> > +     }
-> > +
-> >       br_mrp_switchdev_del(br, mrp);
-> >
-> >       /* Reset the ports */
-> > @@ -278,6 +433,18 @@ static void br_mrp_del_impl(struct net_bridge *br, struct br_mrp *mrp)
-> >               rcu_assign_pointer(mrp->s_port, NULL);
-> >       }
-> >
-> > +     p = rtnl_dereference(mrp->i_port);
-> > +     if (p) {
-> > +             spin_lock_bh(&br->lock);
-> > +             state = netif_running(br->dev) ?
-> > +                             BR_STATE_FORWARDING : BR_STATE_DISABLED;
-> > +             p->state = state;
-> > +             p->flags &= ~BR_MRP_AWARE;
-> > +             spin_unlock_bh(&br->lock);
-> > +             br_mrp_port_switchdev_set_state(p, state);
-> > +             rcu_assign_pointer(mrp->i_port, NULL);
-> > +     }
-> > +
-> >       list_del_rcu(&mrp->list);
-> >       kfree_rcu(mrp, rcu);
-> >  }
-> > @@ -511,6 +678,140 @@ int br_mrp_start_test(struct net_bridge *br,
-> >       return 0;
-> >  }
-> >
-> > +/* Set in state, int state can be only Open or Closed
-> > + * note: already called with rtnl_lock
-> > + */
-> > +int br_mrp_set_in_state(struct net_bridge *br, struct br_mrp_in_state *state)
-> > +{
-> > +     struct br_mrp *mrp = br_mrp_find_in_id(br, state->in_id);
-> > +
-> > +     if (!mrp)
-> > +             return -EINVAL;
-> > +
-> > +     if (mrp->in_state == BR_MRP_IN_STATE_CLOSED &&
-> > +         state->in_state != BR_MRP_IN_STATE_CLOSED)
-> > +             mrp->in_transitions++;
-> > +
-> > +     mrp->in_state = state->in_state;
-> > +
-> > +     br_mrp_switchdev_set_in_state(br, mrp, state->in_state);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +/* Set in role, in role can be only MIM(Media Interconnection Manager) or
-> > + * MIC(Media Interconnection Client).
-> > + * note: already called with rtnl_lock
-> > + */
-> > +int br_mrp_set_in_role(struct net_bridge *br, struct br_mrp_in_role *role)
-> > +{
-> 
-> Is there anything preventing user-space from calling this multiple times ?
-> I'm not sure how safe it is to modify in_test_work if it's in use.
+  Andrew Ng, Chris Torek, Don Goodman-Wilson, Jiuyang Xie, Luc
+  Van Oostenryck, Marco Trevisan (Trevi=C3=B1o), Miroslav Ko=C5=A1k=C3=A1=
+r,
+  Rafael Aquini, and Srinidhi Kaushik.
 
-Nope, nothing prevents user-space to call this multiple times.
-> 
-> Also what happens if the below code is called with 2 different ports ?
-> We'll be left with a port having BR_MRP_AWARE flag which we can't remove.
+Returning contributors who helped this release are as follows.
+Thanks for your continued support.
 
-That is a problem. Needs to be fixed.
+  Abhishek Kumar, Ben Keene, brian m. carlson, Carlo Marcelo Arenas
+  Bel=C3=B3n, Christian Couder, Denton Liu, Derrick Stolee, =C4=90o=C3=A0=
+n
+  Tr=E1=BA=A7n C=C3=B4ng Danh, Elijah Newren, Emily Shaffer, Eric Sunshin=
+e,
+  Han-Wen Nienhuys, Jacob Keller, Jeff King, Johannes Schindelin,
+  John Lin, Jonathan Nieder, Jonathan Tan, Josh Steadmon, Junio C
+  Hamano, Laurent Arnoud, Martin =C3=85gren, Matheus Tavares, Paolo
+  Bonzini, Patrick Steinhardt, Ramsay Jones, Randall S. Becker,
+  Ren=C3=A9 Scharfe, Shourya Shukla, SZEDER G=C3=A1bor, Taylor Blau,
+  Ville Skytt=C3=A4, and Xin Li.
 
-As you point out, there are multiple cases that can introduce bugs. I
-need to add more checks in this function to take in consideration all
-these cases. As in the previous comment, it needs to check if the
-in_role is disable but also needs to check if the MRP instance has
-already an interconnect port and in that case it needs to return an
-error.
+----------------------------------------------------------------
 
-Thanks for all the comments. I will fix all these in the next version.
+Git 2.28 Release Notes (draft)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
-> 
-> > +     struct br_mrp *mrp = br_mrp_find_id(br, role->ring_id);
-> > +     struct net_bridge_port *p;
-> > +     int err;
-> > +
-> > +     if (!mrp)
-> > +             return -EINVAL;
-> > +
-> > +     if (!br_mrp_get_port(br, role->i_ifindex))
-> > +             return -EINVAL;
-> > +
-> > +     /* It is not possible to have the same port part of multiple rings */
-> > +     if (!br_mrp_unique_ifindex(br, role->i_ifindex))
-> > +             return -EINVAL;
-> > +
-> > +     p = br_mrp_get_port(br, role->i_ifindex);
-> > +     spin_lock_bh(&br->lock);
-> > +     p->state = BR_STATE_FORWARDING;
-> > +     p->flags |= BR_MRP_AWARE;
-> > +     spin_unlock_bh(&br->lock);
-> > +     rcu_assign_pointer(mrp->i_port, p);
-> > +
-> > +     mrp->in_role = role->in_role;
-> > +     mrp->in_id = role->in_id;
-> > +
-> > +     INIT_DELAYED_WORK(&mrp->in_test_work, br_mrp_in_test_work_expired);
-> > +
-> > +     /* If there is an error just bailed out */
-> > +     err = br_mrp_switchdev_set_in_role(br, mrp, role->in_id,
-> > +                                        role->ring_id, role->in_role);
-> > +     if (err && err != -EOPNOTSUPP)
-> > +             return err;
-> > +
-> > +     /* Now detect if the HW actually applied the role or not. If the HW
-> > +      * applied the role it means that the SW will not to do those operations
-> > +      * anymore. For example if the role is MIM then the HW will notify the
-> > +      * SW when interconnect ring is open, but if the is not pushed to the HW
-> > +      * the SW will need to detect when the interconnect ring is open.
-> > +      */
-> > +     mrp->in_role_offloaded = err == -EOPNOTSUPP ? 0 : 1;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +int br_mrp_start_in_test(struct net_bridge *br,
-> > +                      struct br_mrp_start_in_test *in_test)
-> > +{
-> > +     struct br_mrp *mrp = br_mrp_find_in_id(br, in_test->in_id);
-> > +
-> > +     if (!mrp)
-> > +             return -EINVAL;
-> > +
-> > +     /* Try to push it to the HW and if it fails then continue with SW
-> > +      * implementation and if that also fails then return error.
-> > +      */
-> > +     if (!br_mrp_switchdev_send_in_test(br, mrp, in_test->interval,
-> > +                                        in_test->max_miss, in_test->period))
-> > +             return 0;
-> > +
-> > +     mrp->in_test_interval = in_test->interval;
-> > +     mrp->in_test_end = jiffies + usecs_to_jiffies(in_test->period);
-> > +     mrp->in_test_max_miss = in_test->max_miss;
-> > +     mrp->in_test_count_miss = 0;
-> > +     queue_delayed_work(system_wq, &mrp->in_test_work,
-> > +                        usecs_to_jiffies(in_test->interval));
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +/* Determin if the frame type is a ring frame */
-> > +static bool br_mrp_ring_frame(struct sk_buff *skb)
-> > +{
-> > +     const struct br_mrp_tlv_hdr *hdr;
-> > +     struct br_mrp_tlv_hdr _hdr;
-> > +
-> > +     hdr = skb_header_pointer(skb, sizeof(uint16_t), sizeof(_hdr), &_hdr);
-> > +     if (!hdr)
-> > +             return false;
-> > +
-> > +     if (hdr->type == BR_MRP_TLV_HEADER_RING_TEST ||
-> > +         hdr->type == BR_MRP_TLV_HEADER_RING_TOPO ||
-> > +         hdr->type == BR_MRP_TLV_HEADER_RING_LINK_DOWN ||
-> > +         hdr->type == BR_MRP_TLV_HEADER_RING_LINK_UP ||
-> > +         hdr->type == BR_MRP_TLV_HEADER_OPTION)
-> > +             return true;
-> > +
-> > +     return false;
-> > +}
-> > +
-> > +/* Determin if the frame type is an interconnect frame */
-> > +static bool br_mrp_in_frame(struct sk_buff *skb)
-> > +{
-> > +     const struct br_mrp_tlv_hdr *hdr;
-> > +     struct br_mrp_tlv_hdr _hdr;
-> > +
-> > +     hdr = skb_header_pointer(skb, sizeof(uint16_t), sizeof(_hdr), &_hdr);
-> > +     if (!hdr)
-> > +             return false;
-> > +
-> > +     if (hdr->type == BR_MRP_TLV_HEADER_IN_TEST ||
-> > +         hdr->type == BR_MRP_TLV_HEADER_IN_TOPO ||
-> > +         hdr->type == BR_MRP_TLV_HEADER_IN_LINK_DOWN ||
-> > +         hdr->type == BR_MRP_TLV_HEADER_IN_LINK_UP)
-> > +             return true;
-> > +
-> > +     return false;
-> > +}
-> > +
-> >  /* Process only MRP Test frame. All the other MRP frames are processed by
-> >   * userspace application
-> >   * note: already called with rcu_read_lock
-> > @@ -591,17 +892,92 @@ static void br_mrp_mra_process(struct br_mrp *mrp, struct net_bridge *br,
-> >               mrp->test_count_miss = 0;
-> >  }
-> >
-> > -/* This will just forward the frame to the other mrp ring port(MRC role) or will
-> > - * not do anything.
-> > +/* Process only MRP InTest frame. All the other MRP frames are processed by
-> > + * userspace application
-> > + * note: already called with rcu_read_lock
-> > + */
-> > +static bool br_mrp_mim_process(struct br_mrp *mrp, struct net_bridge_port *port,
-> > +                            struct sk_buff *skb)
-> > +{
-> > +     const struct br_mrp_in_test_hdr *in_hdr;
-> > +     struct br_mrp_in_test_hdr _in_hdr;
-> > +     const struct br_mrp_tlv_hdr *hdr;
-> > +     struct br_mrp_tlv_hdr _hdr;
-> > +
-> > +     /* Each MRP header starts with a version field which is 16 bits.
-> > +      * Therefore skip the version and get directly the TLV header.
-> > +      */
-> > +     hdr = skb_header_pointer(skb, sizeof(uint16_t), sizeof(_hdr), &_hdr);
-> > +     if (!hdr)
-> > +             return false;
-> > +
-> > +     /* The check for InTest frame type was already done */
-> > +     in_hdr = skb_header_pointer(skb, sizeof(uint16_t) + sizeof(_hdr),
-> > +                                 sizeof(_in_hdr), &_in_hdr);
-> > +     if (!in_hdr)
-> > +             return false;
-> > +
-> > +     /* It needs to process only it's own InTest frames. */
-> > +     if (mrp->in_id != ntohs(in_hdr->id))
-> > +             return false;
-> > +
-> > +     mrp->in_test_count_miss = 0;
-> > +
-> > +     /* Notify the userspace that the ring is closed only when the ring is
-> > +      * not closed
-> > +      */
-> > +     if (mrp->in_state != BR_MRP_IN_STATE_CLOSED)
-> > +             br_mrp_in_port_open(port->dev, false);
-> > +
-> > +     return true;
-> > +}
-> > +
-> > +/* Get the MRP frame type
-> > + * note: already called with rcu_read_lock
-> > + */
-> > +static u8 br_mrp_get_frame_type(struct sk_buff *skb)
-> > +{
-> > +     const struct br_mrp_tlv_hdr *hdr;
-> > +     struct br_mrp_tlv_hdr _hdr;
-> > +
-> > +     /* Each MRP header starts with a version field which is 16 bits.
-> > +      * Therefore skip the version and get directly the TLV header.
-> > +      */
-> > +     hdr = skb_header_pointer(skb, sizeof(uint16_t), sizeof(_hdr), &_hdr);
-> > +     if (!hdr)
-> > +             return 0xff;
-> > +
-> > +     return hdr->type;
-> > +}
-> > +
-> > +static bool br_mrp_mrm_behaviour(struct br_mrp *mrp)
-> > +{
-> > +     if (mrp->ring_role == BR_MRP_RING_ROLE_MRM ||
-> > +         (mrp->ring_role == BR_MRP_RING_ROLE_MRA && !mrp->test_monitor))
-> > +             return true;
-> > +
-> > +     return false;
-> > +}
-> > +
-> > +static bool br_mrp_mrc_behaviour(struct br_mrp *mrp)
-> > +{
-> > +     if (mrp->ring_role == BR_MRP_RING_ROLE_MRC ||
-> > +         (mrp->ring_role == BR_MRP_RING_ROLE_MRA && mrp->test_monitor))
-> > +             return true;
-> > +
-> > +     return false;
-> > +}
-> > +
-> > +/* This will just forward the frame to the other mrp ring ports, depending on
-> > + * the frame type, ring role and interconnect role
-> >   * note: already called with rcu_read_lock
-> >   */
-> >  static int br_mrp_rcv(struct net_bridge_port *p,
-> >                     struct sk_buff *skb, struct net_device *dev)
-> >  {
-> > -     struct net_device *s_dev, *p_dev, *d_dev;
-> > -     struct net_bridge_port *p_port, *s_port;
-> > +     struct net_bridge_port *p_port, *s_port, *i_port = NULL;
-> > +     struct net_bridge_port *p_dst, *s_dst, *i_dst = NULL;
-> >       struct net_bridge *br;
-> > -     struct sk_buff *nskb;
-> >       struct br_mrp *mrp;
-> >
-> >       /* If port is disabled don't accept any frames */
-> > @@ -616,46 +992,139 @@ static int br_mrp_rcv(struct net_bridge_port *p,
-> >       p_port = rcu_dereference(mrp->p_port);
-> >       if (!p_port)
-> >               return 0;
-> > +     p_dst = p_port;
-> >
-> >       s_port = rcu_dereference(mrp->s_port);
-> >       if (!s_port)
-> >               return 0;
-> > +     s_dst = s_port;
-> >
-> > -     /* If the role is MRM then don't forward the frames */
-> > -     if (mrp->ring_role == BR_MRP_RING_ROLE_MRM) {
-> > -             br_mrp_mrm_process(mrp, p, skb);
-> > -             return 1;
-> > -     }
-> > -
-> > -     /* If the role is MRA then don't forward the frames if it behaves as
-> > -      * MRM node
-> > +     /* If the frame is a ring frame then it is not required to check the
-> > +      * interconnect role and ports to process or forward the frame
-> >        */
-> > -     if (mrp->ring_role == BR_MRP_RING_ROLE_MRA) {
-> > -             if (!mrp->test_monitor) {
-> > +     if (br_mrp_ring_frame(skb)) {
-> > +             /* If the role is MRM then don't forward the frames */
-> > +             if (mrp->ring_role == BR_MRP_RING_ROLE_MRM) {
-> >                       br_mrp_mrm_process(mrp, p, skb);
-> > -                     return 1;
-> > +                     goto no_forward;
-> >               }
-> >
-> > -             br_mrp_mra_process(mrp, br, p, skb);
-> > +             /* If the role is MRA then don't forward the frames if it
-> > +              * behaves as MRM node
-> > +              */
-> > +             if (mrp->ring_role == BR_MRP_RING_ROLE_MRA) {
-> > +                     if (!mrp->test_monitor) {
-> > +                             br_mrp_mrm_process(mrp, p, skb);
-> > +                             goto no_forward;
-> > +                     }
-> > +
-> > +                     br_mrp_mra_process(mrp, br, p, skb);
-> > +             }
-> > +
-> > +             goto forward;
-> >       }
-> >
-> > -     /* Clone the frame and forward it on the other MRP port */
-> > -     nskb = skb_clone(skb, GFP_ATOMIC);
-> > -     if (!nskb)
-> > -             return 0;
-> > +     if (br_mrp_in_frame(skb)) {
-> > +             u8 in_type = br_mrp_get_frame_type(skb);
-> >
-> > -     p_dev = p_port->dev;
-> > -     s_dev = s_port->dev;
-> > +             i_port = rcu_dereference(mrp->i_port);
-> > +             i_dst = i_port;
-> >
-> > -     if (p_dev == dev)
-> > -             d_dev = s_dev;
-> > -     else
-> > -             d_dev = p_dev;
-> > +             /* If the ring port is in block state it should not forward
-> > +              * In_Test frames
-> > +              */
-> > +             if (br_mrp_is_ring_port(p_port, s_port, p) &&
-> > +                 p->state == BR_STATE_BLOCKING &&
-> > +                 in_type == BR_MRP_TLV_HEADER_IN_TEST)
-> > +                     goto no_forward;
-> > +
-> > +             /* Nodes that behaves as MRM needs to stop forwarding the
-> > +              * frames in case the ring is closed, otherwise will be a loop.
-> > +              * In this case the frame is no forward between the ring ports.
-> > +              */
-> > +             if (br_mrp_mrm_behaviour(mrp) &&
-> > +                 br_mrp_is_ring_port(p_port, s_port, p) &&
-> > +                 (s_port->state != BR_STATE_FORWARDING ||
-> > +                  p_port->state != BR_STATE_FORWARDING)) {
-> > +                     p_dst = NULL;
-> > +                     s_dst = NULL;
-> > +             }
-> > +
-> > +             /* A node that behaves as MRC and doesn't have a interconnect
-> > +              * role then it should forward all frames between the ring ports
-> > +              * because it doesn't have an interconnect port
-> > +              */
-> > +             if (br_mrp_mrc_behaviour(mrp) &&
-> > +                 mrp->in_role == BR_MRP_IN_ROLE_DISABLED)
-> > +                     goto forward;
-> > +
-> > +             if (mrp->in_role == BR_MRP_IN_ROLE_MIM) {
-> > +                     if (in_type == BR_MRP_TLV_HEADER_IN_TEST) {
-> > +                             /* MIM should not forward it's own InTest
-> > +                              * frames
-> > +                              */
-> > +                             if (br_mrp_mim_process(mrp, p, skb)) {
-> > +                                     goto no_forward;
-> > +                             } else {
-> > +                                     if (br_mrp_is_ring_port(p_port, s_port,
-> > +                                                             p))
-> > +                                             i_dst = NULL;
-> > +
-> > +                                     if (br_mrp_is_in_port(i_port, p))
-> > +                                             goto no_forward;
-> > +                             }
-> > +                     } else {
-> > +                             /* MIM should forward IntLinkChange and
-> > +                              * IntTopoChange between ring ports but MIM
-> > +                              * should not forward IntLinkChange and
-> > +                              * IntTopoChange if the frame was received at
-> > +                              * the interconnect port
-> > +                              */
-> > +                             if (br_mrp_is_ring_port(p_port, s_port, p))
-> > +                                     i_dst = NULL;
-> > +
-> > +                             if (br_mrp_is_in_port(i_port, p))
-> > +                                     goto no_forward;
-> > +                     }
-> > +             }
-> > +
-> > +             if (mrp->in_role == BR_MRP_IN_ROLE_MIC) {
-> > +                     /* MIC should forward InTest frames on all ports
-> > +                      * regardless of the received port
-> > +                      */
-> > +                     if (in_type == BR_MRP_TLV_HEADER_IN_TEST)
-> > +                             goto forward;
-> > +
-> > +                     /* MIC should forward IntLinkChange frames only if they
-> > +                      * are received on ring ports to all the ports
-> > +                      */
-> > +                     if (br_mrp_is_ring_port(p_port, s_port, p) &&
-> > +                         (in_type == BR_MRP_TLV_HEADER_IN_LINK_UP ||
-> > +                          in_type == BR_MRP_TLV_HEADER_IN_LINK_DOWN))
-> > +                             goto forward;
-> > +
-> > +                     /* Should forward the InTopo frames only between the
-> > +                      * ring ports
-> > +                      */
-> > +                     if (in_type == BR_MRP_TLV_HEADER_IN_TOPO) {
-> > +                             i_dst = NULL;
-> > +                             goto forward;
-> > +                     }
-> > +
-> > +                     /* In all the other cases don't forward the frames */
-> > +                     goto no_forward;
-> > +             }
-> > +     }
-> >
-> > -     nskb->dev = d_dev;
-> > -     skb_push(nskb, ETH_HLEN);
-> > -     dev_queue_xmit(nskb);
-> > +forward:
-> > +     if (p_dst)
-> > +             br_forward(p_dst, skb, true, false);
-> > +     if (s_dst)
-> > +             br_forward(s_dst, skb, true, false);
-> > +     if (i_dst)
-> > +             br_forward(i_dst, skb, true, false);
-> >
-> > +no_forward:
-> >       return 1;
-> >  }
-> >
-> > diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-> > index 50dbf046a9be3..81e7955190456 100644
-> > --- a/net/bridge/br_private_mrp.h
-> > +++ b/net/bridge/br_private_mrp.h
-> > @@ -57,6 +57,10 @@ int br_mrp_set_ring_state(struct net_bridge *br,
-> >                         struct br_mrp_ring_state *state);
-> >  int br_mrp_set_ring_role(struct net_bridge *br, struct br_mrp_ring_role *role);
-> >  int br_mrp_start_test(struct net_bridge *br, struct br_mrp_start_test *test);
-> > +int br_mrp_set_in_state(struct net_bridge *br, struct br_mrp_in_state *state);
-> > +int br_mrp_set_in_role(struct net_bridge *br, struct br_mrp_in_role *role);
-> > +int br_mrp_start_in_test(struct net_bridge *br,
-> > +                      struct br_mrp_start_in_test *test);
-> >
-> >  /* br_mrp_switchdev.c */
-> >  int br_mrp_switchdev_add(struct net_bridge *br, struct br_mrp *mrp);
-> >
-> 
+Updates since v2.27
+-------------------
 
--- 
-/Horatiu
+Backward compatibility notes
+
+ * "fetch.writeCommitGraph" is deemed to be still a bit too risky and
+   is no longer part of the "feature.experimental" set.
+
+ * It used to be that setting extensions.* configuration variables
+   alone, while leaving core.repositoryFormatVersion=3D0, made these
+   settings effective, which was a wrong thing to do.  In version 0,
+   there was no special meaning in extensions.* configuration
+   variables.  This has been corrected.  If you need these repository
+   extensions to be effective, the core.repositoryFormatVersion
+   variable needs to be updated to 1 after vetting these extensions.*
+   variables are set correctly.
+
+
+UI, Workflows & Features
+
+ * The commands in the "diff" family learned to honor "diff.relative"
+   configuration variable.
+
+ * The check in "git fsck" to ensure that the tree objects are sorted
+   still had corner cases it missed unsorted entries.
+
+ * The interface to redact sensitive information in the trace output
+   has been simplified.
+
+ * The command line completion (in contrib/) learned to complete
+   options that the "git switch" command takes.
+
+ * "git diff" used to take arguments in random and nonsense range
+   notation, e.g. "git diff A..B C", "git diff A..B C...D", etc.,
+   which has been cleaned up.
+
+ * "git diff-files" has been taught to say paths that are marked as
+   intent-to-add are new files, not modified from an empty blob.
+
+ * "git status" learned to report the status of sparse checkout.
+
+ * "git difftool" has trouble dealing with paths added to the index
+   with the intent-to-add bit.
+
+ * "git fast-export --anonymize" learned to take customized mapping to
+   allow its users to tweak its output more usable for debugging.
+
+ * The command line completion support (in contrib/) used to be
+   prepared to work with "set -u" but recent changes got a bit more
+   sloppy.  This has been corrected.
+
+
+Performance, Internal Implementation, Development Support etc.
+
+ * Code optimization for a common case.
+   (merge 8777616e4d an/merge-single-strategy-optim later to maint).
+
+ * We've adopted a convention that any on-stack structure can be
+   initialized to have zero values in all fields with "=3D { 0 }",
+   even when the first field happens to be a pointer, but sparse
+   complained that a null pointer should be spelled NULL for a long
+   time.  Start using -Wno-universal-initializer option to squelch
+   it (the latest sparse has it on by default).
+
+ * "git log -L..." now takes advantage of the "which paths are touched
+   by this commit?" info stored in the commit-graph system.
+
+ * As FreeBSD is not the only platform whose regexp library reports
+   a REG_ILLSEQ error when fed invalid UTF-8, add logic to detect that
+   automatically and skip the affected tests.
+
+ * "git bugreport" learns to report what shell is in use.
+
+ * Support for GIT_CURL_VERBOSE has been rewritten in terms of
+   GIT_TRACE_CURL.
+
+ * Preliminary clean-ups around refs API, plus file format
+   specification documentation for the reftable backend.
+
+ * Workaround breakage in MSVC build, where "curl-config --cflags"
+   gives settings appropriate for GCC build.
+
+ * Code clean-up of "git clean" resulted in a fix of recent
+   performance regression.
+
+ * Code clean-up in the codepath that serves "git fetch" continues.
+
+ * "git merge-base --is-ancestor" is taught to take advantage of the
+   commit graph.
+
+ * Rewrite of parts of the scripted "git submodule" Porcelain command
+   continues; this time it is "git submodule set-branch" subcommand's
+   turn.
+
+ * The "fetch/clone" protocol has been updated to allow the server to
+   instruct the clients to grab pre-packaged packfile(s) in addition
+   to the packed object data coming over the wire.
+
+ * A misdesigned strbuf_write_fd() function has been retired.
+
+ * SHA-256 migration work continues, including CVS/SVN interface.
+
+ * A few fields in "struct commit" that do not have to always be
+   present have been moved to commit slabs.
+
+ * API cleanup for get_worktrees()
+
+ * By renumbering object flag bits, "struct object" managed to lose
+   bloated inter-field padding.
+
+ * The name of the primary branch in existing repositories, and the
+   default name used for the first branch in newly created
+   repositories, is made configurable, so that we can eventually wean
+   ourselves off of the hardcoded 'master'.
+
+ * The effort to avoid using test_must_fail on non-git command continues.
+
+
+Fixes since v2.27
+-----------------
+
+ * The "--prepare-p4-only" option of "git p4" is supposed to stop
+   after replaying one changeset, but kept going (by mistake?)
+
+ * The error message from "git checkout -b foo -t bar baz" was
+   confusing.
+
+ * Some repositories in the wild have commits that record nonsense
+   committer timezone (e.g. rails.git); "git fast-import" learned an
+   option to pass these nonsense timestamps intact to allow recreating
+   existing repositories as-is.
+   (merge d42a2fb72f en/fast-import-looser-date later to maint).
+
+ * The command line completion script (in contrib/) tried to complete
+   "git stash -p" as if it were "git stash push -p", but it was too
+   aggressive and also affected "git stash show -p", which has been
+   corrected.
+   (merge fffd0cf520 vs/complete-stash-show-p-fix later to maint).
+
+ * On-the-wire protocol v2 easily falls into a deadlock between the
+   remote-curl helper and the fetch-pack process when the server side
+   prematurely throws an error and disconnects.  The communication has
+   been updated to make it more robust.
+
+ * "git checkout -p" did not handle a newly added path at all.
+   (merge 2c8bd8471a js/checkout-p-new-file later to maint).
+
+ * The code to parse "git bisect start" command line was lax in
+   validating the arguments.
+   (merge 4d9005ff5d cb/bisect-helper-parser-fix later to maint).
+
+ * Reduce memory usage during "diff --quiet" in a worktree with too
+   many stat-unmatched paths.
+   (merge d2d7fbe129 jk/diff-memuse-optim-with-stat-unmatch later to main=
+t).
+
+ * The reflog entries for "git clone" and "git fetch" did not
+   anonymize the URL they operated on.
+   (merge 46da295a77 js/reflog-anonymize-for-clone-and-fetch later to mai=
+nt).
+
+ * The behaviour of "sparse-checkout" in the state "git clone
+   --no-checkout" left was changed accidentally in 2.27, which has
+   been corrected.
+
+ * Use of negative pathspec, while collecting paths including
+   untracked ones in the working tree, was broken.
+
+ * The same worktree directory must be registered only once, but
+   "git worktree move" allowed this invariant to be violated, which
+   has been corrected.
+   (merge 810382ed37 es/worktree-duplicate-paths later to maint).
+
+ * The effect of sparse checkout settings on submodules is documented.
+   (merge e7d7c73249 en/sparse-with-submodule-doc later to maint).
+
+ * Code clean-up around "git branch" with a minor bugfix.
+   (merge dc44639904 dl/branch-cleanup later to maint).
+
+ * A branch name used in a test has been clarified to match what is
+   going on.
+   (merge 08dc26061f pb/t4014-unslave later to maint).
+
+ * An in-code comment in "git diff" has been updated.
+   (merge c592fd4c83 dl/diff-usage-comment-update later to maint).
+
+ * The documentation and some tests have been adjusted for the recent
+   renaming of "pu" branch to "seen".
+   (merge 6dca5dbf93 js/pu-to-seen later to maint).
+
+ * The code to push changes over "dumb" HTTP had a bad interaction
+   with the commit reachability code due to incorrect allocation of
+   object flag bits, which has been corrected.
+   (merge 64472d15e9 bc/http-push-flagsfix later to maint).
+
+ * "git send-email --in-reply-to=3D<msg>" did not use the In-Reply-To:
+   header with the value given from the command line, and let it be
+   overridden by the value on In-Reply-To: header in the messages
+   being sent out (if exists).
+   (merge f9f60d7066 ra/send-email-in-reply-to-from-command-line-wins lat=
+er to maint).
+
+ * "git log -Lx,y:path --before=3Ddate" lost track of where the range
+   should be because it didn't take the changes made by the youngest
+   commits that are omitted from the output into account.
+
+ * When "fetch.writeCommitGraph" configuration is set in a shallow
+   repository and a fetch moves the shallow boundary, we wrote out
+   broken commit-graph files that do not match the reality, which has
+   been corrected.
+
+ * "git checkout" failed to catch an error from fstat() after updating
+   a path in the working tree.
+   (merge 35e6e212fd mt/entry-fstat-fallback-fix later to maint).
+
+ * Other code cleanup, docfix, build fix, etc.
+   (merge 2c31a7aa44 jx/pkt-line-doc-count-fix later to maint).
+   (merge d63ae31962 cb/t5608-cleanup later to maint).
+   (merge 788db145c7 dl/t-readme-spell-git-correctly later to maint).
+   (merge 45a87a83bb dl/python-2.7-is-the-floor-version later to maint).
+   (merge b75a219904 es/advertise-contribution-doc later to maint).
+   (merge 0c9a4f638a rs/pull-leakfix later to maint).
+   (merge d546fe2874 rs/commit-reach-leakfix later to maint).
+   (merge 087bf5409c mk/pb-pretty-email-without-domain-part-fix later to =
+maint).
+   (merge 5f4ee57ad9 es/worktree-code-cleanup later to maint).
+   (merge 0172f7834a cc/cat-file-usage-update later to maint).
+   (merge 81de0c01cf ma/rebase-doc-typofix later to maint).
+
+----------------------------------------------------------------
+
+Changes since v2.27.0 are as follows:
+
+Abhishek Kumar (4):
+      object: drop parsed_object_pool->commit_count
+      commit-graph: introduce commit_graph_data_slab
+      commit: move members graph_pos, generation to a slab
+      commit-graph: minimize commit_graph_data_slab access
+
+Andrew Ng (1):
+      merge: optimization to skip evaluate_result for single strategy
+
+Ben Keene (1):
+      git-p4.py: fix --prepare-p4-only error with multiple commits
+
+Carlo Marcelo Arenas Bel=C3=B3n (5):
+      t/helper: teach test-regex to report pattern errors (like REG_ILLSE=
+Q)
+      t4210: detect REG_ILLSEQ dynamically and skip affected tests
+      bisect--helper: avoid segfault with bad syntax in `start --term-*`
+      t5608: avoid say() and use "skip_all" instead for consistency
+      commit-reach: avoid is_descendant_of() shim
+
+Chris Torek (3):
+      t/t3430: avoid undefined git diff behavior
+      git diff: improve range handling
+      Documentation: usage for diff combined commits
+
+Christian Couder (40):
+      upload-pack: remove unused 'wants' from upload_pack_data
+      upload-pack: move {want,have}_obj to upload_pack_data
+      upload-pack: move 'struct upload_pack_data' around
+      upload-pack: use 'struct upload_pack_data' in upload_pack()
+      upload-pack: pass upload_pack_data to get_common_commits()
+      upload-pack: pass upload_pack_data to receive_needs()
+      upload-pack: use upload_pack_data writer in receive_needs()
+      upload-pack: move symref to upload_pack_data
+      upload-pack: pass upload_pack_data to send_ref()
+      upload-pack: pass upload_pack_data to check_non_tip()
+      upload-pack: remove static variable 'stateless_rpc'
+      upload-pack: pass upload_pack_data to create_pack_file()
+      upload-pack: use upload_pack_data fields in receive_needs()
+      upload-pack: annotate upload_pack_data fields
+      upload-pack: move static vars to upload_pack_data
+      upload-pack: move use_sideband to upload_pack_data
+      upload-pack: move filter_capability_requested to upload_pack_data
+      upload-pack: move multi_ack to upload_pack_data
+      upload-pack: change multi_ack to an enum
+      upload-pack: pass upload_pack_data to upload_pack_config()
+      upload-pack: move keepalive to upload_pack_data
+      upload-pack: move allow_filter to upload_pack_data
+      upload-pack: move allow_ref_in_want to upload_pack_data
+      upload-pack: move allow_sideband_all to upload_pack_data
+      upload-pack: move pack_objects_hook to upload_pack_data
+      upload-pack: pass upload_pack_data to send_shallow_list()
+      upload-pack: pass upload_pack_data to deepen()
+      upload-pack: pass upload_pack_data to deepen_by_rev_list()
+      upload-pack: pass upload_pack_data to send_unshallow()
+      upload-pack: move shallow_nr to upload_pack_data
+      upload-pack: move extra_edge_obj to upload_pack_data
+      upload-pack: move allow_unadvertised_object_request to upload_pack_=
+data
+      upload-pack: change allow_unadvertised_object_request to an enum
+      upload-pack: pass upload_pack_data to process_haves()
+      upload-pack: pass upload_pack_data to send_acks()
+      upload-pack: pass upload_pack_data to ok_to_give_up()
+      upload-pack: pass upload_pack_data to got_oid()
+      upload-pack: move oldest_have to upload_pack_data
+      upload-pack: refactor common code into do_got_oid()
+      cat-file: add missing [=3D<format>] to usage/synopsis
+
+Denton Liu (18):
+      lib-submodule-update: add space after function name
+      lib-submodule-update: consolidate --recurse-submodules
+      remote-curl: fix typo
+      remote-curl: remove label indentation
+      transport: extract common fetch_pack() call
+      pkt-line: extern packet_length()
+      remote-curl: error on incomplete packet
+      pkt-line: define PACKET_READ_RESPONSE_END
+      stateless-connect: send response end packet
+      t/README: avoid poor-man's small caps GIT
+      CodingGuidelines: specify Python 2.7 is the oldest version
+      lib-submodule-update: prepend "git" to $command
+      t3200: rename "expected" to "expect"
+      t3200: test for specific errors
+      branch: don't mix --edit-description
+      builtin/diff: update usage comment
+      builtin/diff: fix botched update of usage comment
+      lib-submodule-update: pass 'test_must_fail' as an argument
+
+Derrick Stolee (3):
+      line-log: integrate with changed-path Bloom filters
+      commit-reach: create repo_is_descendant_of()
+      commit-reach: use fast logic in repo_in_merge_base
+
+Don Goodman-Wilson (1):
+      init: allow setting the default for the initial branch name via the=
+ config
+
+Elijah Newren (11):
+      fast-import: add new --date-format=3Draw-permissive format
+      sparse-checkout: avoid staging deletions of all files
+      dir: fix treatment of negated pathspecs
+      git-sparse-checkout: clarify interactions with submodules
+      dir: fix a few confusing comments
+      dir, clean: avoid disallowed behavior
+      clean: consolidate handling of ignored parameters
+      clean: optimize and document cases where we recurse into subdirecto=
+ries
+      wt-status: show sparse checkout status as well
+      git-prompt: document how in-progress operations affect the prompt
+      git-prompt: include sparsity state as well
+
+Emily Shaffer (3):
+      help: add shell-path to --build-options
+      bugreport: include user interactive shell
+      docs: mention MyFirstContribution in more places
+
+Eric Sunshine (10):
+      worktree: factor out repeated string literal
+      worktree: give "should be pruned?" function more meaningful name
+      worktree: make high-level pruning re-usable
+      worktree: prune duplicate entries referencing same worktree path
+      worktree: prune linked worktree referencing main worktree path
+      worktree: generalize candidate worktree path validation
+      worktree: make "move" refuse to move atop missing registered worktr=
+ee
+      worktree: drop get_worktrees() special-purpose sorting option
+      worktree: drop get_worktrees() unused 'flags' argument
+      worktree: avoid dead-code in conditional
+
+Han-Wen Nienhuys (5):
+      refs.h: clarify reflog iteration order
+      t: use update-ref and show-ref to reading/writing refs
+      refs: improve documentation for ref iterator
+      reftable: clarify how empty tables should be written
+      reftable: define version 2 of the spec to accomodate SHA256
+
+Jacob Keller (16):
+      completion: add test showing subpar git switch completion
+      completion: add tests showing subpar DWIM logic for switch/checkout
+      completion: add tests showing subar checkout --detach logic
+      completion: add tests showing subpar switch/checkout --track logic
+      completion: add tests showing subpar -c/-C startpoint completion
+      completion: add tests showing subpar -c/C argument completion
+      completion: add tests showing subpar switch/checkout --orphan logic
+      completion: replace overloaded track term for __git_complete_refs
+      completion: extract function __git_dwim_remote_heads
+      completion: perform DWIM logic directly in __git_complete_refs
+      completion: improve handling of DWIM mode for switch/checkout
+      completion: improve completion for git switch with no options
+      completion: improve handling of --detach in checkout
+      completion: improve handling of --track in switch/checkout
+      completion: improve handling of -c/-C and -b/-B in switch/checkout
+      completion: improve handling of --orphan option of switch/checkout
+
+Jeff King (14):
+      diff: discard blob data from stat-unmatched pairs
+      upload-pack: actually use some upload_pack_data bitfields
+      t9351: derive anonymized tree checks from original repo
+      fast-export: use xmemdupz() for anonymizing oids
+      fast-export: store anonymized oids as hex strings
+      fast-export: tighten anonymize_mem() interface to handle only strin=
+gs
+      fast-export: stop storing lengths in anonymized hashmaps
+      fast-export: use a flex array to store anonymized entries
+      fast-export: move global "idents" anonymize hashmap into function
+      fast-export: add a "data" callback parameter to anonymize_str()
+      fast-export: allow seeding the anonymized mapping
+      fast-export: anonymize "master" refname
+      fast-export: use local array to store anonymized oid
+      diff: check for merge bases before assigning sym->base
+
+Jiuyang Xie (1):
+      doc: fix wrong 4-byte length of pkt-line message
+
+Johannes Schindelin (16):
+      checkout -p: handle new files correctly
+      clone/fetch: anonymize URLs in the reflog
+      msvc: fix "REG_STARTEND" issue
+      fmt-merge-msg: stop treating `master` specially
+      send-pack/transport-helper: avoid mentioning a particular branch
+      submodule: fall back to remote's HEAD for missing remote.<name>.bra=
+nch
+      docs: add missing diamond brackets
+      init: allow specifying the initial branch name for the new reposito=
+ry
+      clone: use configured default branch name when appropriate
+      remote: use the configured default branch name when appropriate
+      testsvn: respect `init.defaultBranch`
+      docs: adjust for the recent rename of `pu` to `seen`
+      docs: adjust the technical overview for the rename `pu` -> `seen`
+      tests: reference `seen` wherever `pu` was referenced
+      diff-files --raw: show correct post-image of intent-to-add files
+      difftool -d: ensure that intent-to-add files are handled correctly
+
+John Lin (1):
+      bash-completion: add git-prune into bash completion
+
+Jonathan Nieder (3):
+      config: let feature.experimental imply protocol.version=3D2
+      reftable: file format documentation
+      experimental: default to fetch.writeCommitGraph=3Dfalse
+
+Jonathan Tan (12):
+      t5551: test that GIT_TRACE_CURL redacts password
+      http, imap-send: stop using CURLOPT_VERBOSE
+      http: redact all cookies, teach GIT_TRACE_REDACT=3D0
+      http: use --stdin when indexing dumb HTTP pack
+      http: refactor finish_http_pack_request()
+      http-fetch: refactor into function
+      http-fetch: support fetching packfiles by URL
+      Documentation: order protocol v2 sections
+      Documentation: add Packfile URIs design doc
+      upload-pack: refactor reading of pack-objects out
+      fetch-pack: support more than one pack lockfile
+      upload-pack: send part of packfile response as uri
+
+Josh Steadmon (1):
+      fuzz-commit-graph: properly free graph struct
+
+Junio C Hamano (8):
+      Start the post 2.27 cycle
+      The second batch
+      The third batch
+      The fourth batch
+      The fifth batch
+      The sixth batch
+      The seventh batch
+      Git 2.28-rc0
+
+Laurent Arnoud (1):
+      diff: add config option relative
+
+Luc Van Oostenryck (1):
+      sparse: allow '{ 0 }' to be used without warnings
+
+Marco Trevisan (Trevi=C3=B1o) (1):
+      completion: use native ZSH array pattern matching
+
+Martin =C3=85gren (1):
+      git-rebase.txt: fix description list separator
+
+Matheus Tavares (1):
+      entry: check for fstat() errors after checkout
+
+Miroslav Ko=C5=A1k=C3=A1r (1):
+      doc: fix author vs. committer copy/paste error
+
+Paolo Bonzini (1):
+      t4014: do not use "slave branch" nomenclature
+
+Patrick Steinhardt (1):
+      refs: implement reference transaction hook
+
+Rafael Aquini (1):
+      send-email: restore --in-reply-to superseding behavior
+
+Ramsay Jones (1):
+      upload-pack: fix a sparse '0 as NULL pointer' warning
+
+Randall S. Becker (2):
+      bugreport.c: replace strbuf_write_fd with write_in_full
+      strbuf: remove unreferenced strbuf_write_fd method.
+
+Ren=C3=A9 Scharfe (10):
+      fsck: fix a typo in a comment
+      t1450: increase test coverage of in-tree d/f detection
+      t1450: demonstrate undetected in-tree d/f conflict
+      fsck: detect more in-tree d/f conflicts
+      checkout: add tests for -b and --track
+      checkout: improve error messages for -b with extra argument
+      commit-reach: plug minor memory leak after using is_descendant_of()
+      pull: plug minor memory leak after using is_descendant_of()
+      revision: reallocate TOPO_WALK object flags
+      revision: disable min_age optimization with line-log
+
+SZEDER G=C3=A1bor (4):
+      line-log: remove unused fields from 'struct line_log_data'
+      t4211-line-log: add tests for parent oids
+      line-log: more responsive, incremental 'git log -L'
+      line-log: try to use generation number-based topo-ordering
+
+Shourya Shukla (1):
+      submodule: port subcommand 'set-branch' from shell to C
+
+Srinidhi Kaushik (1):
+      diff-files: treat "i-t-a" files as "not-in-index"
+
+Taylor Blau (11):
+      commit-graph.c: extract 'refs_cb_data'
+      commit-graph.c: show progress of finding reachable commits
+      commit-graph.c: peel refs in 'add_ref_to_set'
+      builtin/commit-graph.c: extract 'read_one_commit()'
+      builtin/commit-graph.c: dereference tags in builtin
+      commit-graph.c: simplify 'fill_oids_from_commits'
+      t5318: reorder test below 'graph_read_expect'
+      commit-graph: drop COMMIT_GRAPH_WRITE_CHECK_OIDS flag
+      t5318: use 'test_must_be_empty'
+      t5318: test that '--stdin-commits' respects '--[no-]progress'
+      commit.c: don't persist substituted parents when unshallowing
+
+Ville Skytt=C3=A4 (2):
+      completion: don't override given stash subcommand with -p
+      completion: nounset mode fixes
+
+Xin Li (4):
+      repository: add a helper function to perform repository format upgr=
+ade
+      fetch: allow adding a filter after initial clone
+      sparse-checkout: upgrade repository to version 1 when enabling exte=
+nsion
+      check_repository_format_gently(): refuse extensions for old reposit=
+ories
+
+brian m. carlson (61):
+      t1050: match object ID paths in a hash-insensitive way
+      Documentation: document v1 protocol object-format capability
+      builtin/checkout: simplify metadata initialization
+      t2060: add a test for switch with --orphan and --discard-changes
+      connect: have ref processing code take struct packet_reader
+      wrapper: add function to compare strings with different NUL termina=
+tion
+      remote: advertise the object-format capability on the server side
+      connect: add function to parse multiple v1 capability values
+      connect: add function to fetch value of a v2 server capability
+      pkt-line: add a member for hash algorithm
+      transport: add a hash algorithm member
+      connect: add function to detect supported v1 hash functions
+      send-pack: detect when the server doesn't support our hash
+      connect: make parse_feature_value extern
+      fetch-pack: detect when the server doesn't support our hash
+      connect: detect algorithm when fetching refs
+      builtin/receive-pack: detect when the server doesn't support our ha=
+sh
+      docs: update remote helper docs for object-format extensions
+      transport-helper: implement object-format extensions
+      remote-curl: implement object-format extensions
+      builtin/clone: initialize hash algorithm properly
+      t5562: pass object-format in synthesized test data
+      fetch-pack: parse and advertise the object-format capability
+      setup: set the_repository's hash algo when checking format
+      t3200: mark assertion with SHA1 prerequisite
+      packfile: compute and use the index CRC offset
+      t5302: modernize test formatting
+      builtin/show-index: provide options to determine hash algo
+      t1302: expect repo format version 1 for SHA-256
+      Documentation/technical: document object-format for protocol v2
+      connect: pass full packet reader when parsing v2 refs
+      connect: parse v2 refs with correct hash algorithm
+      serve: advertise object-format capability for protocol v2
+      t5500: make hash independent
+      builtin/ls-remote: initialize repository based on fetch
+      remote-curl: detect algorithm for dumb HTTP by size
+      builtin/index-pack: add option to specify hash algorithm
+      t1050: pass algorithm to index-pack when outside repo
+      remote-curl: avoid truncating refs with ls-remote
+      t/helper: initialize the repository for test-sha1-array
+      t5702: offer an object-format capability in the test
+      t5703: use object-format serve option
+      t5704: send object-format capability with SHA-256
+      t5300: pass --object-format to git index-pack
+      bundle: detect hash algorithm when reading refs
+      remote-testgit: adapt for object-format
+      t9109: make test hash independent
+      t9168: make test hash independent
+      t9108: make test hash independent
+      t9100: make test work with SHA-256
+      t9104: make hash size independent
+      t9101: make hash independent
+      t/lib-git-svn: make hash size independent
+      perl: create and switch variables for hash constants
+      perl: make Git::IndexInfo work with SHA-256
+      perl: make SVN code hash independent
+      git-svn: set the OID length based on hash algorithm
+      git-cvsserver: port to SHA-256
+      git-cvsimport: port to SHA-256
+      git-cvsexportcommit: port to SHA-256
+      http-push: ensure unforced pushes fail when data would be lost
+
+=C4=90o=C3=A0n Tr=E1=BA=A7n C=C3=B4ng Danh (1):
+      contrib: subtree: adjust test to change in fmt-merge-msg
+
