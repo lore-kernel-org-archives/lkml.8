@@ -2,138 +2,140 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A13FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F557C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 026C120836
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C83A207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jRYy5lBl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AqhuIu0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbgGIRrx (ORCPT
+        id S1727825AbgGIRqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48888 "EHLO
+        Thu, 9 Jul 2020 13:46:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728401AbgGIRqD (ORCPT
+        with ESMTP id S1726758AbgGIRqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:46:03 -0400
+        Thu, 9 Jul 2020 13:46:00 -0400
 Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52C4DC08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:03 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k6so3302714wrn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852DEC08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:00 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f2so3272154wrp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z87wYd9sTBTgWM4PfTqIXybXjZhO9Ay2HDdpb30MaC4=;
-        b=jRYy5lBldTck93hbAO3wZOubSpIDvgxm3p1B5mF4K1ZUKb6VnlFqm/ru/Al4l+4Cp6
-         OfVsOsS549wwYMyKyt46/ZPKciS+cIHAYULljGRITq61EvjFy3fScyXk8bVuVG3k+h/y
-         uZhg8NaPwvGFFwT3L3XsoExEgiFYFAp71MrF65x1/NttAniy2EUVaGlP0QPsNKl3Z7Td
-         eNndREpoHeiexDIf8YAnVnHJjNu5eZZxycDg0ixlToq/M94/6xP5pJ7xMaDJHiE+6Dq/
-         r1lXHBi3y26nN2Q7Wg8WF2049yUL9eWi6Ao2dodogn55PmiaLKxuFqltNGNBZLuCBbAS
-         zQdA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ez9cZtUnYXcwHobMCwZ6WRbdQJMWO8OSEw13aOAjRF4=;
+        b=AqhuIu0+Io42DkyiAGeDTpM8gtYQc7ga2djYpn77xw0TkcqCSEhW2kQpy0Qq9ceesu
+         rB9qyDdO2XEqWsMxs7k/BbWi+qt71wgCu+ayLaWPBbc6Htup9TqEpBNtaioqqKPFl37e
+         DZ5stDKVn/D37q3VBXCXcpvtAcNFomHsZRlyt+GQGo8Mtc7chva9JEREVyJwNOlSGH+N
+         Na3Jk+7ArS7AR8iAlFeJFTP+tKG17q4sSY83QBqFT+4cg5y9yyZBm7E8iepcFOTuoTrT
+         TnLs4ys4H3ziGMmZLlR0CBKRgxw+xQmxPNAUWsazjGMetZdeuImNrXPoduAm0ocW2dcr
+         rVVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z87wYd9sTBTgWM4PfTqIXybXjZhO9Ay2HDdpb30MaC4=;
-        b=mf8JiNWTB+s8ldO8BMw0Abgcp9jGO/W5ijN3lkQz44e1MmJFIlO7rhODkXwfQLBQgj
-         +hHMGRhHUFGiBdRjSNaaEuOQG10cLdY49DfNIAf+VxdSz3EYHNHJoZq9URwKjDm9i61M
-         5TBEopIV6KUAlhExiH77GBopL+m0e/j5xQrDHg7xb2xTT8WqMhqTEWByzaePt9wOsNhA
-         cLEXQiv5JY/ysd2G6Q3K6bTzckCzOJuCM8boLrLG9srD6VWFSVdx3+0lEgR6lOzrpotO
-         095Kb5RNKaKJ9+NFZL0XvVLYYcxJDTi94ViUE0z0cJ8dlLWu+wK7bjCnros3Ds680CT7
-         4lxw==
-X-Gm-Message-State: AOAM531jaqy58CDFPRqKlxELHVXkMQKk5IyzKAotdSqMLmwzen6UsDku
-        0VUucA3oQtyG72DZbnd9ydSbSw==
-X-Google-Smtp-Source: ABdhPJw74IIpxGu451wZhiSLooPNuUzLwpOCg3k0jbl/8Kuhol8fCf1eck9BWLR34bAFfo6cdNGNKQ==
-X-Received: by 2002:adf:ef89:: with SMTP id d9mr68461569wro.124.1594316762040;
-        Thu, 09 Jul 2020 10:46:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ez9cZtUnYXcwHobMCwZ6WRbdQJMWO8OSEw13aOAjRF4=;
+        b=S6FlFjWtOjTpY4AS4WQd+kMtdRFv5k/mPxyqtE4vJN1pgW6V3tG1/JuyTiQw90/kaJ
+         bZii4CX2GFYZDWAz1R4pZK7uIh4EOJ2DuMAcrTJzYrUWH9j+7nhQXupdXUBOVYJv5yEC
+         DHhP7WAntR9+q8aNdiLtBkHiwGrjZQO4wx8i8FucsBcYAabQYpz58tOoz1bHJ6TuGLoj
+         cQRfDc/hoV3Pldd+uXXiHVEH0sjYQQvjSo2Jdria3FiVLjKVzb/QESY322HKBFLZxn9X
+         tg1ETd8c0vzIUcQEGtp4vazOi27zw6sh1FNt4n4rt07/JjKUMxRdmVf3yAB63zh3eiNJ
+         1NxA==
+X-Gm-Message-State: AOAM530Y6wf5Qj3ty2L1eiwnj+OZ+9Q1RwzFEt3yvrAgvHg09BNE4uvM
+        1X73CH+Hyd/RENZqItMGgOZOfg==
+X-Google-Smtp-Source: ABdhPJzEkFZJGyQA3CvHpF0B9hca7kSIEVMwChoMPGrpvSLjRr/U+S8sF1cWgSlUhyKupiS0v3BHmQ==
+X-Received: by 2002:adf:8b5a:: with SMTP id v26mr63641254wra.165.1594316758752;
+        Thu, 09 Jul 2020 10:45:58 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.46.01
+        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.45.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:46:01 -0700 (PDT)
+        Thu, 09 Jul 2020 10:45:58 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
         linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
-Subject: [PATCH 03/24] scsi: aacraid: dpcsup: Fix logical bug when !DBG
-Date:   Thu,  9 Jul 2020 18:45:35 +0100
-Message-Id: <20200709174556.7651-4-lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 00/24] Set 3: Fix another set of SCSI related W=1 warnings
+Date:   Thu,  9 Jul 2020 18:45:32 +0100
+Message-Id: <20200709174556.7651-1-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200709174556.7651-1-lee.jones@linaro.org>
-References: <20200709174556.7651-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When DBG is not enabled FIB_COUNTER_INCREMENT() results in an
-empty statement, leaving the contents of if() and else() empty.
+This set is part of a larger effort attempting to clean-up W=1
+kernel builds, which are currently overwhelmingly riddled with
+niggly little warnings.
 
-Fixes the following W=1 kernel build warning(s):
+Slowly working through the SCSI related ones.  There are many.
 
- drivers/scsi/aacraid/dpcsup.c: In function ‘aac_response_normal’:
- drivers/scsi/aacraid/dpcsup.c:105:50: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
- 105 | FIB_COUNTER_INCREMENT(aac_config.AsyncRecved);
- | ^
- drivers/scsi/aacraid/dpcsup.c: In function ‘aac_intr_normal’:
- drivers/scsi/aacraid/dpcsup.c:411:30: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
- 411 | aac_config.AsyncRecved);
- | ^
+This brings the total of W=1 SCSI wanings from 1690 in v5.8-rc1 to 1109.
 
-Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/scsi/aacraid/dpcsup.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Lee Jones (24):
+  scsi: aacraid: aachba: Repair two kerneldoc headers
+  scsi: aacraid: commctrl: Fix a few kerneldoc issues
+  scsi: aacraid: dpcsup: Fix logical bug when !DBG
+  scsi: aacraid: dpcsup: Remove unused variable 'status'
+  scsi: aacraid: dpcsup: Demote partially documented function header
+  scsi: aic94xx: aic94xx_seq: Document 'lseq' and repair
+    asd_update_port_links() header
+  scsi: aacraid: commsup: Fix a bunch of function header issues
+  scsi: aic94xx: aic94xx_scb: Fix a couple of formatting and bitrot
+    issues
+  scsi: aacraid: rx: Fill in the very parameter descriptions for
+    rx_sync_cmd()
+  scsi: pm8001: pm8001_ctl: Provide descriptions for the many
+    undocumented 'attr's
+  scsi: ipr: Fix a mountain of kerneldoc misdemeanours
+  scsi: virtio_scsi: Demote seemingly unintentional kerneldoc header
+  scsi: ipr: Remove a bunch of set but checked variables
+  scsi: ipr: Fix struct packed-not-aligned issues
+  scsi: myrs: Demote obvious misuse of kerneldoc to standard comment
+    blocks
+  scsi: megaraid: Fix a whole bunch of function header formatting issues
+  scsi: be2iscsi: be_iscsi: Fix API/documentation slip
+  scsi: be2iscsi: be_main: Fix misdocumentation of 'pcontext'
+  scsi: be2iscsi: be_mgmt: Add missing function parameter description
+  scsi: lpfc: lpfc_nvme: Correct some pretty obvious misdocumentation
+  scsi: aic7xxx: aic79xx_osm: Remove unused variable 'ahd'
+  scsi: aic7xxx: aic79xx_osm: Remove unused variables 'wait' and
+    'paused'
+  scsi: aic7xxx: aic79xx_osm: Fix 'amount_xferred' set but not used
+    issue
+  scsi: aic7xxx: aic79xx_osm: Remove set but unused variabes
+    'saved_scsiid' and 'saved_modes'
 
-diff --git a/drivers/scsi/aacraid/dpcsup.c b/drivers/scsi/aacraid/dpcsup.c
-index a557aa629827e..25ebb94368f2c 100644
---- a/drivers/scsi/aacraid/dpcsup.c
-+++ b/drivers/scsi/aacraid/dpcsup.c
-@@ -99,10 +99,11 @@ unsigned int aac_response_normal(struct aac_queue * q)
- 		}
- 		if (hwfib->header.XferState & cpu_to_le32(NoResponseExpected | Async)) 
- 		{
--	        	if (hwfib->header.XferState & cpu_to_le32(NoResponseExpected))
-+			if (hwfib->header.XferState & cpu_to_le32(NoResponseExpected)) {
- 				FIB_COUNTER_INCREMENT(aac_config.NoResponseRecved);
--			else 
-+			} else {
- 				FIB_COUNTER_INCREMENT(aac_config.AsyncRecved);
-+			}
- 			/*
- 			 *	NOTE:  we cannot touch the fib after this
- 			 *	    call, because it may have been deallocated.
-@@ -403,12 +404,13 @@ unsigned int aac_intr_normal(struct aac_dev *dev, u32 index, int isAif,
- 			if (hwfib->header.XferState &
- 				cpu_to_le32(NoResponseExpected | Async)) {
- 				if (hwfib->header.XferState & cpu_to_le32(
--					NoResponseExpected))
-+					NoResponseExpected)) {
- 					FIB_COUNTER_INCREMENT(
- 						aac_config.NoResponseRecved);
--				else
-+				} else {
- 					FIB_COUNTER_INCREMENT(
- 						aac_config.AsyncRecved);
-+				}
- 				start_callback = 1;
- 			} else {
- 				unsigned long flagv;
+ drivers/scsi/aacraid/aachba.c      |   5 +-
+ drivers/scsi/aacraid/commctrl.c    |  14 +-
+ drivers/scsi/aacraid/commsup.c     |  12 +-
+ drivers/scsi/aacraid/dpcsup.c      |  15 +-
+ drivers/scsi/aacraid/rx.c          |  12 +-
+ drivers/scsi/aic7xxx/aic79xx_osm.c |  16 +--
+ drivers/scsi/aic94xx/aic94xx_scb.c |   6 +-
+ drivers/scsi/aic94xx/aic94xx_seq.c |   6 +-
+ drivers/scsi/be2iscsi/be_iscsi.c   |  11 +-
+ drivers/scsi/be2iscsi/be_main.c    |   4 +-
+ drivers/scsi/be2iscsi/be_mgmt.c    |   3 +-
+ drivers/scsi/ipr.c                 |  90 +++++++-----
+ drivers/scsi/ipr.h                 |   4 +-
+ drivers/scsi/lpfc/lpfc_nvme.c      |  38 +++--
+ drivers/scsi/megaraid.c            | 218 ++++++++++++++---------------
+ drivers/scsi/myrs.c                |  34 ++---
+ drivers/scsi/pm8001/pm8001_ctl.c   |  14 ++
+ drivers/scsi/virtio_scsi.c         |   2 +-
+ 18 files changed, 275 insertions(+), 229 deletions(-)
+
 -- 
 2.25.1
 
