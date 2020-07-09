@@ -2,76 +2,68 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFF8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC29C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B25820720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:44:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="roDisFVP"
+	by mail.kernel.org (Postfix) with ESMTP id DB5952077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594309446;
+	bh=8ytVIfDHI66zNr6vAoKeazuzts/sZ5dzFtn/KOgPomM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lwo4mF4EVilEmKHGjHZVOoTvjxiwNkAO8UCB/llwKILZlzHCLhKYlZDdpDFB5u7DD
+	 ZXsHQWKk4SkeUfH5ud494+RZ4cpCV5Ee71zMeYkR8/XIB8MxjF5ZfR94JtEWGtCpNJ
+	 husuf4tjPEjZ4ADHuOf0lhxDLSr4btlCJBc0Tzoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgGIPn6 (ORCPT
+        id S1727975AbgGIPoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:43:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGIPn5 (ORCPT
+        Thu, 9 Jul 2020 11:44:05 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42384 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGIPoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:43:57 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772CDC08C5CE;
-        Thu,  9 Jul 2020 08:43:57 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mn17so1292274pjb.4;
-        Thu, 09 Jul 2020 08:43:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5aSR39Y673gK4LGy+pomYrdhftpjF5NzAVJPOxgGDA8=;
-        b=roDisFVPKLpYmdVp11RgxCQVrZnqxRmEM5k2L+abqUHYtxCJKkeCwNctIul+/pax8W
-         Mbe2HIMo63hDHBD221lNxo4JQifsrDKRyBYOSXgNibMyXSHrWouzA/eV5WSNnXNDACOE
-         dlIhnaVD31AD+hRu2cmd91xSo4JK+GbKdDjUoegM60F3us7yUeAVc/XwhwIiRViW1gEJ
-         21YJxdwTRjrKqEpQz3Drr77ZV3DlEJEuelFNLRM6I74+pk+A+Pne1wwrg6jS7jzVloAB
-         ckNUkhVbfz34eovP+IOBlBpKnh0Wm+j//BobyB0Oh0Ab6CffALrkReGnSw/oWDdGhqQE
-         yCSg==
+        Thu, 9 Jul 2020 11:44:04 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g37so1994678otb.9;
+        Thu, 09 Jul 2020 08:44:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5aSR39Y673gK4LGy+pomYrdhftpjF5NzAVJPOxgGDA8=;
-        b=Mow9gznm8Grl9RUa1Qcu6hxVHd/erqB6zK1d4aVxiapuvz/UzXV3QVRKuiN5R8siee
-         D9VhFTz2ef7h1XbGCPfXgxvZDrPrvmsbh3tXqJbYPPxcz0c8us19ctFS4TcUQontJUjC
-         26vAahzYSbsg9IpakwKqPvurIMf2ldwcVVoX8nAYcH9j7F1USF4VejNXNshe7YBMzsLX
-         t9hqNX08LbovK1Qn9cxVVppm/2HZHCyDtXGk77oN+UdYSUZaz0TfZ6DjHpOLGBLYWUTE
-         5ElTQvkVCM3gis3YvT1Q/BUkRjDbonTUOm2PSq9Y/vmsnvkNp9yTWUfNBzYNHs9KDS8I
-         q7Hw==
-X-Gm-Message-State: AOAM530i9JPzrR7YmJA/o5n2fI+F0ZD2bISdd+7g/YNRuDLrucSbQIwM
-        F1j11jB2ogNcxymtDb1RFuCw/nydJ5VM3cNrrjo=
-X-Google-Smtp-Source: ABdhPJymrDoI28s7I5KmpXMuqSAKOHB4T6Mn8hum7vi5/FRCdzLui7I/tE3BYrOAP4DxBG27lCVshjmLSxleGLqiP3E=
-X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr673895pjb.129.1594309436972;
- Thu, 09 Jul 2020 08:43:56 -0700 (PDT)
+        bh=+Sym5KQVj8VqaMlSDW0Jc0j+Tk3pFvysmGFqfcg2Rvs=;
+        b=oWOn4R78xsxEibGz6deMujXww252NtLv0VBrjgaSpDo/xjC4TCDjgm2dcsNS3WCQ1P
+         Zj/29agFt3vjOxviDPacHioHRYXNY7Qtqqj+HXR34htRBQm2Fkuv65LrvT5kAkHadOsl
+         1IF1IzIZInVRV2NgX8CJ4LWsFaNDVQgAcoDE26aK9NMbYQST+dohQQR+SFHkpixwzKJt
+         //I/U2F+pFa8L6zgwsBsXy+4uKAlOwcG7hj8oSGEDnjb1Z6AxQ9GSYJbdz5YdrviVb98
+         xk3yd3yvIUYJJncYUVH7tYA9rKyIog4Eu0T/i2o13EW01ApjtxIBQGRRPZtG2wYZiXmE
+         6tDA==
+X-Gm-Message-State: AOAM531pu32WD9yL7Uk3bxP5OdDZFHPTqt1/FNQwEg/hGNi9jliw6LH6
+        RDicyP266Y2MnyJFZ+5J8MHkzuE5V1hlvqGzlJI=
+X-Google-Smtp-Source: ABdhPJyl5cUpGVf4J6oVAx/ugmkS7qnUi0jZS8XkXNGXgHJrgdpNOsltf7QnMuVARuoppuhb/s8y3Fa214SXcCONguY=
+X-Received: by 2002:a9d:1c82:: with SMTP id l2mr36010851ota.167.1594309443612;
+ Thu, 09 Jul 2020 08:44:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200709152200.10039-1-contact@artur-rojek.eu>
-In-Reply-To: <20200709152200.10039-1-contact@artur-rojek.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jul 2020 18:43:40 +0300
-Message-ID: <CAHp75VcwgL8pH+pH9TnsuwbWr=wSFu37sX8sTkbkfk+iBv7Jng@mail.gmail.com>
-Subject: Re: [PATCH v8 0/6] iio/adc: ingenic: Cleanups & add touchscreen mode.
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
+References: <159408711335.2385045.2567600405906448375.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200709150051.GA17342@infradead.org> <20200709153854.GY23821@mellanox.com>
+In-Reply-To: <20200709153854.GY23821@mellanox.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 9 Jul 2020 17:43:52 +0200
+Message-ID: <CAJZ5v0hW79nEe1P5YqNx0o0jHAMuPw-i02GY3TCvG_uFu48ETg@mail.gmail.com>
+Subject: Re: [PATCH v2 11/12] PM, libnvdimm: Add 'mem-quiet' state and
+ callback for firmware activation
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,53 +71,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 6:22 PM Artur Rojek <contact@artur-rojek.eu> wrote:
+On Thu, Jul 9, 2020 at 5:39 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
 >
-> Hi all,
+> On Thu, Jul 09, 2020 at 04:00:51PM +0100, Christoph Hellwig wrote:
+> > On Mon, Jul 06, 2020 at 06:59:32PM -0700, Dan Williams wrote:
+> > > The runtime firmware activation capability of Intel NVDIMM devices
+> > > requires memory transactions to be disabled for 100s of microseconds.
+> > > This timeout is large enough to cause in-flight DMA to fail and other
+> > > application detectable timeouts. Arrange for firmware activation to be
+> > > executed while the system is "quiesced", all processes and device-DMA
+> > > frozen.
+> > >
+> > > It is already required that invoking device ->freeze() callbacks is
+> > > sufficient to cease DMA. A device that continues memory writes outside
+> > > of user-direction violates expectations of the PM core to be to
+> > > establish a coherent hibernation image.
+> > >
+> > > That said, RDMA devices are an example of a device that access memory
+> > > outside of user process direction.
 >
-> v8 of this patchset introduces some structural changes, which I deemed
-> worthy highlighting here:
+> Are you saying freeze doesn't work for some RDMA drivers? That would
+> be a driver bug, I think.
+>
+> The consequences of doing freeze are pretty serious, but it should
+> still stop DMA.
 
-Can you remind me if I gave you tags on the previous version?
-If so, is the above the reason to drop them?
+Yes, it should.  The "freeze" callbacks are expected to prevent any
+DMA transfers from being carried out after they have been executed.
 
->
->  - adc-joystick related changes have been dropped from this patchset and
->    will be upstreamed separately. Their only connection to this patchset
->    was that they used INGENIC_ADC_TOUCH_* defines in the DTS example,
->    causing trouble to Rob's scripts.
->
->  - Integrated Paul's changes, which introduce an ADCMD low-level command
->    feature. These changes affect patches 5/6 and 6/6, with the former
->    requiring Rob to re-ack.
->
-> Cheers,
-> Artur
->
-> Artur Rojek (5):
->   dt-bindings: iio/adc: Convert ingenic-adc docs to YAML.
->   IIO: Ingenic JZ47xx: Error check clk_enable calls.
->   IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
->   dt-bindings: iio/adc: Add touchscreen idx for JZ47xx SoC ADC
->   IIO: Ingenic JZ47xx: Add touchscreen mode.
->
-> Paul Cercueil (1):
->   iio/adc: ingenic: Retrieve channels list from soc data struct
->
->  .../bindings/iio/adc/ingenic,adc.txt          |  49 ---
->  .../bindings/iio/adc/ingenic,adc.yaml         |  71 ++++
->  drivers/iio/adc/Kconfig                       |   1 +
->  drivers/iio/adc/ingenic-adc.c                 | 386 ++++++++++++++++--
->  include/dt-bindings/iio/adc/ingenic,adc.h     |   6 +
->  5 files changed, 426 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
->
-> --
-> 2.27.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks!
