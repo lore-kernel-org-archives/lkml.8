@@ -2,69 +2,120 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3313C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9508920774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28E32076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594296063;
+	bh=G9bmSFELKRxQPZ+NTn/InZnU9Px+G3f6WIIbF0sa7VQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aDPpFPNfcPKbE98NWZPr+MBvpXbSD/fJZa2unE5uaV6Utm4v67vBmJUQMNsJhPxEW
+	 Cy4KJqOKwIn2UIRt3aAs34aLqfleHX0BQon/ZrK4VydmLGKF/ExTsqFsMzDPkWw47Z
+	 vlp2sSw5vuyDYEWct57l2PfO3TgqWFwR3xJjmCEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgGIMAO (ORCPT
+        id S1727094AbgGIMBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:00:14 -0400
-Received: from mga09.intel.com ([134.134.136.24]:64922 "EHLO mga09.intel.com"
+        Thu, 9 Jul 2020 08:01:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbgGIMAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:00:13 -0400
-IronPort-SDR: VoXYPPbBcEogUJ3D8gFVzaH3n/DU1Qs/z5xPb4Ptnggq3TyfVUKJtRATsN+zg2+ZsrehSeGIEP
- IWef8HzfL88Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="149467367"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="149467367"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 05:00:11 -0700
-IronPort-SDR: yeTdKlI4dprMjnusNpvYhmX12shyjq70DohI/oNO837KzfmT0OT9kjR1/KQ0YEmhGyDNEI9hPI
- 5sSeqAjVJMvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="316205409"
-Received: from nk4-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.52.252])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Jul 2020 05:00:07 -0700
-Date:   Thu, 9 Jul 2020 15:00:06 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Masahisa Kojima <masahisa.kojima@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ardb@kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
-Subject: Re: [PATCH v3 0/2] synquacer: add TPM support
-Message-ID: <20200709120006.GC683620@linux.intel.com>
-References: <20200708131424.18729-1-masahisa.kojima@linaro.org>
- <20200708162017.GB549022@linux.intel.com>
- <CADQ0-X9im8yVVVJbJL5Ssaa49UTOw+M=tYrfhNoODUaY723O8A@mail.gmail.com>
- <CADQ0-X8xF0NpMakEB_Kqd2hVSrMsMB5FqFd7V9F1eLryJbEeFA@mail.gmail.com>
+        id S1726327AbgGIMBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:01:02 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B28E206C3;
+        Thu,  9 Jul 2020 12:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594296061;
+        bh=G9bmSFELKRxQPZ+NTn/InZnU9Px+G3f6WIIbF0sa7VQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=W3B8WlB78HBGwrFnK785PkNtYGqHBvxgmEZjQ6cwZYSKsdt/WKie6QVgUhSwSY17R
+         umEt+YyxTxQ/57mWnWm1QNwPOYsuNrwoXnueLtkQFIorEJNiR/AZATrJb8RRL5Gqgx
+         t/yEKgISVcv5GEhh8CZqzE+IqhpZY3M3CSeJw9JQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jtVEZ-00ANHv-S1; Thu, 09 Jul 2020 13:00:59 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADQ0-X8xF0NpMakEB_Kqd2hVSrMsMB5FqFd7V9F1eLryJbEeFA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 09 Jul 2020 13:00:59 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org,
+        Sushma Kalakota <sushmax.kalakota@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] irqdomain/treewide: Keep firmware node unconditionally
+ allocated
+In-Reply-To: <873661qakd.fsf@nanos.tec.linutronix.de>
+References: <20200706154410.GA117493@bjorn-Precision-5520>
+ <873661qakd.fsf@nanos.tec.linutronix.de>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <b90acf9f348f2eb7b7244913c130cbff@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, helgaas@kernel.org, andriy.shevchenko@linux.intel.com, jonathan.derrick@intel.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, sushmax.kalakota@intel.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 08:46:35AM +0900, Masahisa Kojima wrote:
-> Hi Jarkko,
+Hi Thomas,
+
+Catching up on email...
+
+On 2020-07-09 10:53, Thomas Gleixner wrote:
+> Quite some non OF/ACPI users of irqdomains allocate firmware nodes of 
+> type
+> IRQCHIP_FWNODE_NAMED or IRQCHIP_FWNODE_NAMED_ID and free them right 
+> after
+> creating the irqdomain. The only purpose of these FW nodes is to convey
+> name information. When this was introduced the core code did not store 
+> the
+> pointer to the node in the irqdomain. A recent change stored the 
+> firmware
+> node pointer in irqdomain for other reasons and missed to notice that 
+> the
+> usage sites which do the alloc_fwnode/create_domain/free_fwnode 
+> sequence
+> are broken by this. Storing a dangling pointer is dangerous itself, but 
+> in
+> case that the domain is destroyed later on this leads to a double free.
 > 
-> > Hi Jakko,
-> I apologize for mis-spelling of your name.
-> Same mistake also appears in my another reply to "[PATCH v3 1/2] tpm:
-> tis: add support for MMIO TPM on SynQuacer"
+> Remove the freeing of the firmware node after creating the irqdomain 
+> from
+> all affected call sites to cure this.
+> 
+> Fixes: 711419e504eb ("irqdomain: Add the missing assignment of
+> domain->fwnode for named fwnode")
+> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: stable@vger.kernel.org
 
-No worries :-)
+Urgh, that's pretty disastrous. My bad. Thanks a lot for having
+put this patch together.
 
-/Jarkko
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+If you can take it directly into Linus' tree, that'd be greatly
+appreciated.
+
+Thanks again,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
