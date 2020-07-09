@@ -2,234 +2,171 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74704C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4382073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5242073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgGIOOh (ORCPT
+        id S1726772AbgGIOPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:14:37 -0400
-Received: from ms-10.1blu.de ([178.254.4.101]:58628 "EHLO ms-10.1blu.de"
+        Thu, 9 Jul 2020 10:15:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:62380 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbgGIOOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:14:36 -0400
-Received: from [78.43.71.214] (helo=marius.fritz.box)
-        by ms-10.1blu.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <mail@mariuszachmann.de>)
-        id 1jtXJm-00085F-Ka; Thu, 09 Jul 2020 16:14:30 +0200
-From:   Marius Zachmann <mail@mariuszachmann.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Marius Zachmann <mail@mariuszachmann.de>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] hwmon: corsair-cpro: add fan_target
-Date:   Thu,  9 Jul 2020 16:14:13 +0200
-Message-Id: <20200709141413.30790-1-mail@mariuszachmann.de>
-X-Mailer: git-send-email 2.27.0
+        id S1726371AbgGIOPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 10:15:25 -0400
+IronPort-SDR: kf/v/xi/lbApu2CPuguPZpZgNtH+kekjNo7D+n03n6xG4JvZS2Zmt8jOBuKftsHZq5Au0YrJz9
+ m0oVFd8WRd5A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="145495431"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="145495431"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 07:15:24 -0700
+IronPort-SDR: NP5zU4anmdD83tg0hQfVCEP9q7HN/mnqLsUuV9QRfIUoG0m64JhpUQPiEBSCuJLSjNNiABF6K+
+ kJdmtCCQBFyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="389153088"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Jul 2020 07:15:20 -0700
+Date:   Thu, 9 Jul 2020 22:15:19 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Huang, Ying" <ying.huang@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>, tim.c.chen@intel.com,
+        dave.hansen@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, lkp@lists.01.org
+Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
+Message-ID: <20200709141519.GA81727@shbuild999.sh.intel.com>
+References: <20200705155232.GA608@lca.pw>
+ <20200706014313.GB66252@shbuild999.sh.intel.com>
+ <20200706023614.GA1231@lca.pw>
+ <20200706132443.GA34488@shbuild999.sh.intel.com>
+ <20200706133434.GA3483883@tassilo.jf.intel.com>
+ <20200707023829.GA85993@shbuild999.sh.intel.com>
+ <87zh8c7z5i.fsf@yhuang-dev.intel.com>
+ <20200707054120.GC21741@shbuild999.sh.intel.com>
+ <20200709045554.GA56190@shbuild999.sh.intel.com>
+ <20200709134040.GA1110@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Con-Id: 241080
-X-Con-U: 0-mail
-X-Originating-IP: 78.43.71.214
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709134040.GA1110@lca.pw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds fan_target entries to the corsair-cpro driver.
-Reading the attribute from the device does not seem possible, so
-it returns the last set value. (same as pwm)
+Hi Qian Cai,
 
-send_usb_cmd now has one more argument, which is needed for the
-  fan_target command.
+On Thu, Jul 09, 2020 at 09:40:40AM -0400, Qian Cai wrote:
+> > > > Can we change the batch firstly, then sync the global counter, finally
+> > > > change the overcommit policy?
+> > > 
+> > > These reorderings are really head scratching :)
+> > > 
+> > > I've thought about this before when Qian Cai first reported the warning
+> > > message, as kernel had a check: 
+> > > 
+> > > 	VM_WARN_ONCE(percpu_counter_read(&vm_committed_as) <
+> > > 			-(s64)vm_committed_as_batch * num_online_cpus(),
+> > > 			"memory commitment underflow");
+> > > 
+> > > If the batch is decreased first, the warning will be easier/earlier to be
+> > > triggered, so I didn't brought this up when handling the warning message.
+> > > 
+> > > But it might work now, as the warning has been removed.
+> > 
+> > I tested the reorder way, and the test could pass in 100 times run. The
+> > new order when changing policy to OVERCOMMIT_NEVER:
+> >   1. re-compute the batch ( to the smaller one)
+> >   2. do the on_each_cpu sync
+> >   3. really change the policy to NEVER.
+> > 
+> > It solves one of previous concern, that after the sync is done on cpuX,
+> > but before the whole sync on all cpus are done, there is a window that
+> > the percpu-counter could be enlarged again.
+> > 
+> > IIRC Andi had concern about read side cost when doing the sync, my
+> > understanding is most of the readers (malloc/free/map/unmap) are using
+> > percpu_counter_read_positive, which is a fast path without involving lock.
+> > 
+> > As for the problem itself, I agree with Michal's point, that usually there
+> > is no normal case that will change the overcommit_policy too frequently.
+> > 
+> > The code logic is mainly in overcommit_policy_handler(), based on the
+> > previous sync fix. please help to review, thanks!
+> > 
+> > int overcommit_policy_handler(struct ctl_table *table, int write, void *buffer,
+> > 		size_t *lenp, loff_t *ppos)
+> > {
+> > 	int ret;
+> > 
+> > 	if (write) {
+> > 		int new_policy;
+> > 		struct ctl_table t;
+> > 
+> > 		t = *table;
+> > 		t.data = &new_policy;
+> > 		ret = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
+> > 		if (ret)
+> > 			return ret;
+> > 
+> > 		mm_compute_batch(new_policy);
+> > 		if (new_policy == OVERCOMMIT_NEVER)
+> > 			schedule_on_each_cpu(sync_overcommit_as);
+> > 		sysctl_overcommit_memory = new_policy;
+> > 	} else {
+> > 		ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+> > 	}
+> > 
+> > 	return ret;
+> > }
+> 
+> Rather than having to indent those many lines, how about this?
 
-Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
----
-Change from v1:
-- use clamp_val instead of bounds checking
+Thanks for the cleanup suggestion.
 
----
- Documentation/hwmon/corsair-cpro.rst |  3 ++
- drivers/hwmon/corsair-cpro.c         | 61 ++++++++++++++++++++++------
- 2 files changed, 52 insertions(+), 12 deletions(-)
+> t = *table;
+> t.data = &new_policy;
 
-diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
-index 5913e23d764c..78820156f07d 100644
---- a/Documentation/hwmon/corsair-cpro.rst
-+++ b/Documentation/hwmon/corsair-cpro.rst
-@@ -33,6 +33,9 @@ in2_input		Voltage on SATA 3.3v
- temp[1-4]_input		Temperature on connected temperature sensors
- fan[1-6]_input		Connected fan rpm.
- fan[1-6]_label		Shows fan type as detected by the device.
-+fan[1-6]_target		Sets fan speed target rpm.
-+			When reading, it reports the last value if it was set by the driver.
-+			Otherwise returns 0.
- pwm[1-6]		Sets the fan speed. Values from 0-255.
- 			When reading, it reports the last value if it was set by the driver.
- 			Otherwise returns 0.
-diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
-index a22583acc229..fe625190e3a1 100644
---- a/drivers/hwmon/corsair-cpro.c
-+++ b/drivers/hwmon/corsair-cpro.c
-@@ -5,8 +5,8 @@
-  */
+The input table->data is actually &sysctl_overcommit_memory, so
+there is a problem for "read" case, it will return the 'new_policy'
+value instead of real sysctl_overcommit_memory.
 
- #include <linux/bitops.h>
--#include <linux/kernel.h>
- #include <linux/hwmon.h>
-+#include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
-@@ -51,6 +51,12 @@
- 					 * send: byte 1 is fan number
- 					 * send: byte 2 is percentage from 0 - 100
- 					 */
-+#define CTL_SET_FAN_TARGET	0x24	/*
-+					 * set target rpm
-+					 * send: byte 1 is fan number
-+					 * send: byte 2-3 is target
-+					 * device accepts all values from 0x00 - 0xFFFF
-+					 */
+It should work after adding a check
+	if (write)
+		t.data = &new_policy;
 
- #define NUM_FANS		6
- #define NUM_TEMP_SENSORS	4
-@@ -60,13 +66,14 @@ struct ccp_device {
- 	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
- 	u8 *buffer;
- 	int pwm[6];
-+	int target[6];
- 	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
- 	DECLARE_BITMAP(fan_cnct, NUM_FANS);
- 	char fan_label[6][LABEL_LENGTH];
- };
+> ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+			    --> &t
 
- /* send command, check for error in response, response in ccp->buffer */
--static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2)
-+static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2, u8 byte3)
- {
- 	int actual_length;
- 	int ret;
-@@ -75,6 +82,7 @@ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2)
- 	ccp->buffer[0] = command;
- 	ccp->buffer[1] = byte1;
- 	ccp->buffer[2] = byte2;
-+	ccp->buffer[3] = byte3;
-
- 	ret = usb_bulk_msg(ccp->udev, usb_sndintpipe(ccp->udev, 2), ccp->buffer, OUT_BUFFER_SIZE,
- 			   &actual_length, 1000);
-@@ -103,7 +111,7 @@ static int get_data(struct ccp_device *ccp, int command, int channel)
-
- 	mutex_lock(&ccp->mutex);
-
--	ret = send_usb_cmd(ccp, command, channel, 0);
-+	ret = send_usb_cmd(ccp, command, channel, 0, 0);
- 	if (ret)
- 		goto out_unlock;
-
-@@ -128,7 +136,22 @@ static int set_pwm(struct ccp_device *ccp, int channel, long val)
-
- 	mutex_lock(&ccp->mutex);
-
--	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val);
-+	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val, 0);
-+
-+	mutex_unlock(&ccp->mutex);
-+	return ret;
-+}
-+
-+static int set_target(struct ccp_device *ccp, int channel, long val)
-+{
-+	int ret;
-+
-+	val = clamp_val(val, 0, 0xFFFF);
-+	ccp->target[channel] = val;
-+
-+	mutex_lock(&ccp->mutex);
-+
-+	ret = send_usb_cmd(ccp, CTL_SET_FAN_TARGET, channel, val >> 8, val);
-
- 	mutex_unlock(&ccp->mutex);
- 	return ret;
-@@ -183,6 +206,11 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
- 				return ret;
- 			*val = ret;
- 			return 0;
-+		case hwmon_fan_target:
-+			/* how to read target values from the device is unknown */
-+			/* driver returns last set value or 0			*/
-+			*val = ccp->target[channel];
-+			return 0;
- 		default:
- 			break;
- 		}
-@@ -231,6 +259,13 @@ static int ccp_write(struct device *dev, enum hwmon_sensor_types type,
- 			break;
- 		}
- 		break;
-+	case hwmon_fan:
-+		switch (attr) {
-+		case hwmon_fan_target:
-+			return set_target(ccp, channel, val);
-+		default:
-+			break;
-+		}
- 	default:
- 		break;
- 	}
-@@ -266,6 +301,8 @@ static umode_t ccp_is_visible(const void *data, enum hwmon_sensor_types type,
- 			return 0444;
- 		case hwmon_fan_label:
- 			return 0444;
-+		case hwmon_fan_target:
-+			return 0644;
- 		default:
- 			break;
- 		}
-@@ -313,12 +350,12 @@ static const struct hwmon_channel_info *ccp_info[] = {
- 			   HWMON_T_INPUT
- 			   ),
- 	HWMON_CHANNEL_INFO(fan,
--			   HWMON_F_INPUT | HWMON_F_LABEL,
--			   HWMON_F_INPUT | HWMON_F_LABEL,
--			   HWMON_F_INPUT | HWMON_F_LABEL,
--			   HWMON_F_INPUT | HWMON_F_LABEL,
--			   HWMON_F_INPUT | HWMON_F_LABEL,
--			   HWMON_F_INPUT | HWMON_F_LABEL
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET
- 			   ),
- 	HWMON_CHANNEL_INFO(pwm,
- 			   HWMON_PWM_INPUT,
-@@ -348,7 +385,7 @@ static int get_fan_cnct(struct ccp_device *ccp)
- 	int mode;
- 	int ret;
-
--	ret = send_usb_cmd(ccp, CTL_GET_FAN_CNCT, 0, 0);
-+	ret = send_usb_cmd(ccp, CTL_GET_FAN_CNCT, 0, 0, 0);
- 	if (ret)
- 		return ret;
-
-@@ -385,7 +422,7 @@ static int get_temp_cnct(struct ccp_device *ccp)
- 	int mode;
- 	int ret;
-
--	ret = send_usb_cmd(ccp, CTL_GET_TMP_CNCT, 0, 0);
-+	ret = send_usb_cmd(ccp, CTL_GET_TMP_CNCT, 0, 0, 0);
- 	if (ret)
- 		return ret;
-
---
-2.27.0
+Thanks,
+Feng
+	
+> if (ret || !write)
+> 	return ret;
+> mm_compute_batch(new_policy);
+> if (new_policy == OVERCOMMIT_NEVER)
+> 	schedule_on_each_cpu(sync_overcommit_as);
+> 
+> sysctl_overcommit_memory = new_policy;
+> return ret;
