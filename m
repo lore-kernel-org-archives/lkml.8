@@ -2,88 +2,244 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B23C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04FBF2070E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32B620720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594336037;
-	bh=nuY8B7MtSnrkeveXJ136EeuRvMPEqGlBV84ZUBNpRV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jt3h9BUHq9GojGuvMFk9h3hYkxsg6aVUuW9iDy0bkHVl9t7+e4E32T6LKnvFMfsIU
-	 I09DmPzJZmXt8Ps2kiRLcAdkPHzFCKXepiDqzkRWOoRe4pQB3BOVLUTvbDFovBEZSj
-	 q14Ee1z4LqnoQVpvTZqypITiUmbi9zqcocKwmBTA=
+	s=default; t=1594336042;
+	bh=pG0hyJgy3HfHmmTIp7+CAj4hzgrKbxBJXzWFRVXMh2M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=wlEgylaipbuE4mHPaYKcJ7tiYb3GtUvRKOjh1KPIisfPn71RFI+B4KEBnp1GqVII5
+	 5D4SVlsoYMNU/X719boqGwRpKltySUT1pD8pBkY4yf86NnYHi9zbFpTBFr828w7yl+
+	 fGJOMBLpFQYy5vpArxXVFoMvf1GjCyHUshrb0u0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgGIXHQ (ORCPT
+        id S1727796AbgGIXHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:07:16 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43406 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgGIXHP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:07:15 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so4088079iom.10;
-        Thu, 09 Jul 2020 16:07:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kpUPxSg4+S4VKiL42RctcMIj4F/VgQ6lAZPDiD3WZ1c=;
-        b=ZeTnPOo3ZOoOX4XMg2KJe3J23TDhOO1Xxx9fXdS2MRSdi7+3fKBFAEh8zd1RtuG+79
-         gys1YrjijNzy3qzss+c9sOjFAYgcD6YjcdgmPiC+1ve8LujKzladAcB/O8dW09wLaTjV
-         MR/y1mSRsHyUtY+3X9UPfJu/ameC5M8n0t+CuMP57cizZKrb9frzfaPz79lAj+MveKcl
-         EQteb0bXjHpluLSSg4kpmkLtWSTlF5yo9ujAgV/xEuSoDRu0qqYf6sE9PQGcX9IE+nUk
-         7Y9uZDtNxCQByvtPJgmRzcRa+0ZOYsqgYWEl98cENkJtHtNByI3V+/XNqSxRsT6f2KB9
-         P/NA==
-X-Gm-Message-State: AOAM530WsQXWaDe6ZShgg+MWiK4SWNtfTSHmUAeOUbvk3QtWvXb/DkWv
-        HpNo3cf2TM5vJowbTcuDtg==
-X-Google-Smtp-Source: ABdhPJwaXaUIQd+wSZRsx/L/XhnFNFY/DGeEFJ7JNWbK+VHIBsG3tfiZgEqUQ8jf1hhuDf+OE7e2aQ==
-X-Received: by 2002:a5d:94cc:: with SMTP id y12mr23644866ior.133.1594336034560;
-        Thu, 09 Jul 2020 16:07:14 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id c77sm2720628ill.13.2020.07.09.16.07.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 16:07:14 -0700 (PDT)
-Received: (nullmailer pid 1063353 invoked by uid 1000);
-        Thu, 09 Jul 2020 23:07:12 -0000
-Date:   Thu, 9 Jul 2020 17:07:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        yin1.li@intel.com, p.zabel@pengutronix.de,
-        linux-kernel@vger.kernel.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, cheol.yong.kim@intel.com,
-        linux-usb@vger.kernel.org, qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: usb: Add USB PHY support for Intel
- LGM SoC
-Message-ID: <20200709230712.GA1063293@bogus>
-References: <20200617035818.54110-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200617035818.54110-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Thu, 9 Jul 2020 19:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgGIXHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 19:07:20 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 513802070E;
+        Thu,  9 Jul 2020 23:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594336038;
+        bh=pG0hyJgy3HfHmmTIp7+CAj4hzgrKbxBJXzWFRVXMh2M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NXQjvGGmtO6et9wR19CUrKLO845nLiIq3bmlehsbNBo78+GFJ+5lpXWlWACXcuT0U
+         0UiHXPbg906rZhejqB283nyCnnyG8ZjqiJEOsv5uuOBJCPACUwx+9LjMQUJN6SxNZE
+         nSJRIz+0g49K6izzsrtQ1P2N7Supc/bAcqOd8KmE=
+Date:   Thu, 9 Jul 2020 18:07:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v6 1/4] ACPI/PCI: Ignore _OSC negotiation result if
+ pcie_ports_native is set.
+Message-ID: <20200709230716.GA23972@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200617035818.54110-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <80eae2d1cf4e593da7a83a00ad59915ec398f748.1593195899.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 11:58:17 +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Fri, Jun 26, 2020 at 11:32:33AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> Add the dt-schema to support USB PHY on Intel LGM SoC
+> pcie_ports_native is set only if user requests native handling
+> of PCIe capabilities via pcie_port_setup command line option.
+> User input takes precedence over _OSC based control negotiation
+> result. So consider the _OSC negotiated result only if
+> pcie_ports_native is unset.
 > 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Also, since struct pci_host_bridge ->native_* members caches the
+> ownership status of various PCIe capabilities, use them instead
+> of distributed checks for pcie_ports_native.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->  .../devicetree/bindings/usb/intel,lgm-usb-phy.yaml | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/intel,lgm-usb-phy.yaml
+>  drivers/acpi/pci_root.c           | 26 ++++++++++++++------------
+>  drivers/pci/hotplug/pciehp_core.c |  2 +-
+>  drivers/pci/pci-acpi.c            |  3 ---
+>  drivers/pci/pcie/aer.c            |  2 +-
+>  drivers/pci/pcie/portdrv_core.c   |  9 +++------
+>  drivers/pci/probe.c               |  5 +++--
+>  6 files changed, 22 insertions(+), 25 deletions(-)
 > 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index f90e841c59f5..02fab8b0118e 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -914,18 +914,20 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>  		goto out_release_info;
+>  
+>  	host_bridge = to_pci_host_bridge(bus->bridge);
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
+> -		host_bridge->native_pcie_hotplug = 0;
+> -	if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
+> -		host_bridge->native_shpc_hotplug = 0;
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
+> -		host_bridge->native_aer = 0;
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
+> -		host_bridge->native_pme = 0;
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+> -		host_bridge->native_ltr = 0;
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+> -		host_bridge->native_dpc = 0;
+> +	if (!pcie_ports_native) {
+> +		if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
+> +			host_bridge->native_pcie_hotplug = 0;
+> +		if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
+> +			host_bridge->native_shpc_hotplug = 0;
+> +		if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
+> +			host_bridge->native_aer = 0;
+> +		if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
+> +			host_bridge->native_pme = 0;
+> +		if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+> +			host_bridge->native_ltr = 0;
+> +		if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+> +			host_bridge->native_dpc = 0;
+> +	}
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+When the user boots with "pcie_ports=native", should we evaluate _OSC
+at all?  It seems confusing to say "OK, Mr. Firmware, here are the
+features we want to use", and then turn around and use them all
+regardless of what the platform said.  Why not just ignore the
+firmware completely and go ahead and use everything?
+
+I can't remember if there's a reason we need to call
+negotiate_os_control() so early and then hang on to the results until
+we get here:
+
+  acpi_pci_root_add
+    negotiate_os_control                      <--- eval _OSC
+    pci_acpi_scan_root
+      acpi_pci_root_create
+        pci_create_root_bus
+        if (!(root->osc_control_set & ...))   <--- use results
+          host_bridge->native_... = 0;
+
+I think it would be a lot simpler if we could do the _OSC negotiation
+right here where we need most of the results.  It would be even better
+if we could update the host_bridge->native_... items directly inside
+negotiate_os_control() so we wouldn't have to hang onto the
+osc_control_set mask.
+
+>  	/*
+>  	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+> index bf779f291f15..5fc999bf6f1b 100644
+> --- a/drivers/pci/hotplug/pciehp_core.c
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -255,7 +255,7 @@ static bool pme_is_native(struct pcie_device *dev)
+>  	const struct pci_host_bridge *host;
+>  
+>  	host = pci_find_host_bridge(dev->port->bus);
+> -	return pcie_ports_native || host->native_pme;
+> +	return host->native_pme;
+>  }
+>  
+>  static void pciehp_disable_interrupt(struct pcie_device *dev)
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 7224b1e5f2a8..e09589571a9d 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -800,9 +800,6 @@ bool pciehp_is_native(struct pci_dev *bridge)
+>  	if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
+>  		return false;
+>  
+> -	if (pcie_ports_native)
+> -		return true;
+> -
+>  	host = pci_find_host_bridge(bridge->bus);
+>  	return host->native_pcie_hotplug;
+>  }
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 3acf56683915..d663bd9c7257 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -219,7 +219,7 @@ int pcie_aer_is_native(struct pci_dev *dev)
+>  	if (!dev->aer_cap)
+>  		return 0;
+>  
+> -	return pcie_ports_native || host->native_aer;
+> +	return host->native_aer;
+>  }
+>  
+>  int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 50a9522ab07d..ccd5e0ce5605 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -208,8 +208,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+>  	int services = 0;
+>  
+> -	if (dev->is_hotplug_bridge &&
+> -	    (pcie_ports_native || host->native_pcie_hotplug)) {
+> +	if (dev->is_hotplug_bridge && host->native_pcie_hotplug) {
+>  		services |= PCIE_PORT_SERVICE_HP;
+>  
+>  		/*
+> @@ -221,8 +220,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  	}
+>  
+>  #ifdef CONFIG_PCIEAER
+> -	if (dev->aer_cap && pci_aer_available() &&
+> -	    (pcie_ports_native || host->native_aer)) {
+> +	if (dev->aer_cap && pci_aer_available() && host->native_aer) {
+>  		services |= PCIE_PORT_SERVICE_AER;
+>  
+>  		/*
+> @@ -238,8 +236,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  	 * Event Collectors can also generate PMEs, but we don't handle
+>  	 * those yet.
+>  	 */
+> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
+> -	    (pcie_ports_native || host->native_pme)) {
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT && host->native_pme) {
+>  		services |= PCIE_PORT_SERVICE_PME;
+
+I *love* that you removed pcie_ports_native from all these places.
+
+>  		/*
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 2f66988cea25..5fb90bb9b4e3 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -588,13 +588,14 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+>  	 * may implement its own AER handling and use _OSC to prevent the
+>  	 * OS from interfering.
+>  	 */
+> +#ifdef CONFIG_PCIEPORTBUS
+>  	bridge->native_aer = 1;
+>  	bridge->native_pcie_hotplug = 1;
+> -	bridge->native_shpc_hotplug = 1;
+>  	bridge->native_pme = 1;
+>  	bridge->native_ltr = 1;
+>  	bridge->native_dpc = 1;
+> -
+> +#endif
+> +	bridge->native_shpc_hotplug = 1;
+
+This looks like a bugfix that should be its own patch.
+
+>  	device_initialize(&bridge->dev);
+>  }
+>  
+> -- 
+> 2.17.1
+> 
