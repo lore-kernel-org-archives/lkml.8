@@ -2,45 +2,55 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D45C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6192073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77D12070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:07:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594282021;
+	bh=Xq0HhldQJjIqVceZma9RR/Iq0hTiyoPSHamuX31b3H4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ynztJcHjDX7RQz8F87L2hw7IownZe4DOTvLuPGLhWADxcTl8flYP5k7Nj9TWyPmBs
+	 ZtJqP+b+4DL0NFMZh61rFf6q3gTYCjadcWUt1n648V77spooWJ4vsb4pYrFWibrDai
+	 Fyfh3eDARIYO43Ibbu0zP8GA1B5wLOS6JjGuWlmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgGIICt (ORCPT
+        id S1726278AbgGIIG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:02:49 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:50387 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgGIICJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:02:09 -0400
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 09394E0003;
-        Thu,  9 Jul 2020 08:02:04 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-i3c@lists.infradead.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Conor Culhane <conor.culhane@silvaco.com>,
-        Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 2/4] dt-bindings: i3c: Describe Silvaco master binding
-Date:   Thu,  9 Jul 2020 10:01:57 +0200
-Message-Id: <20200709080159.2178-2-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200709080159.2178-1-miquel.raynal@bootlin.com>
-References: <20200709080159.2178-1-miquel.raynal@bootlin.com>
+        Thu, 9 Jul 2020 04:06:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgGIIG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 04:06:56 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E69D82070E;
+        Thu,  9 Jul 2020 08:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594282016;
+        bh=Xq0HhldQJjIqVceZma9RR/Iq0hTiyoPSHamuX31b3H4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fhA/htY437eypjArUNMqIUNJoDc63rJ/fDYWBCIUYQqCBf9SzX32tzUreEYiksTYj
+         JiiAs8NloPm9dqi3G05t28+3NNbPtdl2vzD9DwgWVBnftxPWut20Ru0feJ/IHFs07J
+         YleckON+HuGLkkWzc/wyd1FzpIjFb6pG4hvmNKGs=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        Andi Kleen <andi@firstfloor.org>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 0/4] perf-probe: Fix GNU IFUNC probe issue etc.
+Date:   Thu,  9 Jul 2020 17:06:51 +0900
+Message-Id: <159428201109.56570.3802208017109058146.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -49,82 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Silvaco provide a dual-role I3C master.
+Hi,
 
-Description is rather simple: it needs a register mapping, three
-clocks and an interrupt.
+Here are patches to fix some issues of probing on GNU IFUNC, duplicated
+symbols, and memory leak, which were reported by Andi.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Andi reported that some issues on probing memcpy function in glibc,
+which was related to GNU IFUNC (indirect function). As I described
+in the patch [4/4], it is hard to support probing on the functions
+which are selected by GNU indirect function because those are chosen
+at runtime. I think we need a user-mode helper in uprobes to find which
+one is chosen at runtime. (Oleg, Srikar, would you have any idea?)
+
+While cleaning up the patches, I also found a memory leak problem
+so fixed it ([3/4]).
+
+Thank you,
+
 ---
- .../bindings/i3c/svc,i3c-master.yaml          | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i3c/svc,i3c-master.yaml
 
-diff --git a/Documentation/devicetree/bindings/i3c/svc,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/svc,i3c-master.yaml
-new file mode 100644
-index 000000000000..11e670c6b76f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i3c/svc,i3c-master.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/i3c/svc,i3c-master.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Silvaco I3C master
-+
-+maintainers:
-+  - Conor Culhane <conor.culhane@silvaco.com>
-+
-+properties:
-+  compatible:
-+    const: svc,i3c-master
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clock-names:
-+    description: |
-+      There are three clocks:
-+        pclk:     System clock
-+        fast_clk: Fast clock (for the bus)
-+        slow_clk: Slow clock (for other events)
-+
-+    items:
-+      - const: pclk
-+      - const: fast_clk
-+      - const: slow_clk
-+
-+  clocks:
-+    minItems: 3
-+    maxItems: 3
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clock-names
-+  - clocks
-+
-+examples:
-+  - |
-+    i3c-master@a0000000 {
-+        compatible = "svc,i3c-master";
-+        clocks = <&zynqmp_clk 71>, <&fclk>, <&sclk>;
-+        clock-names = "pclk", "fast_clk", "slow_clk";
-+        interrupt-parent = <&gic>;
-+        interrupts = <0 89 4>;
-+        reg = <0x0 0xa0000000 0x0 0x1000>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
--- 
-2.20.1
+Masami Hiramatsu (4):
+      perf-probe: Avoid setting probes on same address on same event
+      perf-probe: Fix wrong variable warning when the probe point is not found
+      perf-probe: Fix memory leakage when the probe point is not found
+      perf-probe: Warn if the target function is GNU Indirect function
 
+
+ tools/perf/util/probe-event.c  |   14 ++++++++++++++
+ tools/perf/util/probe-finder.c |    5 ++++-
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
