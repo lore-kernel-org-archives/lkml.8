@@ -2,98 +2,114 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99734C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5C120708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:11:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tF7Q2jEX"
+	by mail.kernel.org (Postfix) with ESMTP id 7AAC9206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgGIJLT (ORCPT
+        id S1726581AbgGIJLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:11:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgGIJLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:11:17 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17624C061A0B;
-        Thu,  9 Jul 2020 02:11:17 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2Vlh6qk4z9sDX;
-        Thu,  9 Jul 2020 19:11:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594285873;
-        bh=eKKoa9UiaTun/mZu3cBLZr4GwLJ5z0u8yViLMEtWqZ8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tF7Q2jEXpsygtx14D8Or+ZZEAh9Llz+lMJv1ssVoPiFfuiesY2pszLOFgG+gKhn/A
-         rNL0lL0SB8p903FzlYpUB7EKsa5Jh/oYzVkSGl4dZ+EE539wop1QWQitNi0hIUYmmw
-         4fOTtbNjWOK/iH9kobAnR+h8KpcWpnBXutUY9/CT4wYWEE46GleZ0WAAgEv+fRWvHD
-         D9S+sgcVKF22oOixIeKjtQyFhpaAMlrTKmPlpE9u71hXBt2tKGq176d3faNqk1mrW/
-         Y/7BSr+olfkvsKl9o3JBu7VAIBHFDTFSyoJ0c1SolNwsUVvk4giIe0trgfhzQtqckM
-         KMB/8UP9/esaw==
-Date:   Thu, 9 Jul 2020 19:11:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Barry Song <song.bao.hua@hisilicon.com>
-Subject: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20200709191111.0b63f84d@canb.auug.org.au>
+        Thu, 9 Jul 2020 05:11:21 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39340 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726140AbgGIJLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 05:11:18 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 76495708DF8D9AF885BE;
+        Thu,  9 Jul 2020 17:11:15 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.174.186.75) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 9 Jul 2020 17:11:04 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
+        <guohanjun@huawei.com>, <olof@lixom.net>
+CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+Subject: [PATCH v1 1/2] arm64: tlb: Detect the ARMv8.4 TLBI RANGE feature
+Date:   Thu, 9 Jul 2020 17:10:53 +0800
+Message-ID: <20200709091054.1698-2-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
+In-Reply-To: <20200709091054.1698-1-yezhenyu2@huawei.com>
+References: <20200709091054.1698-1-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bw8uQ8Y4eFgkGjZ4vGn6bcG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.186.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bw8uQ8Y4eFgkGjZ4vGn6bcG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+range of input addresses. This patch detect this feature.
 
-Hi all,
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+---
+ arch/arm64/include/asm/cpucaps.h |  3 ++-
+ arch/arm64/include/asm/sysreg.h  |  3 +++
+ arch/arm64/kernel/cpufeature.c   | 10 ++++++++++
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
-After merging the akpm-current tree, today's linux-next build (i386
-defconfig) produced this warning:
+diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+index d44ba903d11d..8fe4aa1d372b 100644
+--- a/arch/arm64/include/asm/cpucaps.h
++++ b/arch/arm64/include/asm/cpucaps.h
+@@ -63,7 +63,8 @@
+ #define ARM64_HAS_32BIT_EL1			53
+ #define ARM64_BTI				54
+ #define ARM64_HAS_ARMv8_4_TTL			55
++#define ARM64_HAS_TLBI_RANGE			56
+ 
+-#define ARM64_NCAPS				56
++#define ARM64_NCAPS				57
+ 
+ #endif /* __ASM_CPUCAPS_H */
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 8c209aa17273..a5f24a26d86a 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -617,6 +617,9 @@
+ #define ID_AA64ISAR0_SHA1_SHIFT		8
+ #define ID_AA64ISAR0_AES_SHIFT		4
+ 
++#define ID_AA64ISAR0_TLBI_RANGE_NI	0x0
++#define ID_AA64ISAR0_TLBI_RANGE		0x2
++
+ /* id_aa64isar1 */
+ #define ID_AA64ISAR1_I8MM_SHIFT		52
+ #define ID_AA64ISAR1_DGH_SHIFT		48
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index e877f56ff1ab..ba0f0ce06fee 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -2067,6 +2067,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.sign = FTR_UNSIGNED,
+ 	},
+ #endif
++	{
++		.desc = "TLB range maintenance instruction",
++		.capability = ARM64_HAS_TLBI_RANGE,
++		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.matches = has_cpuid_feature,
++		.sys_reg = SYS_ID_AA64ISAR0_EL1,
++		.field_pos = ID_AA64ISAR0_TLB_SHIFT,
++		.sign = FTR_UNSIGNED,
++		.min_field_value = ID_AA64ISAR0_TLBI_RANGE,
++	},
+ 	{},
+ };
+ 
+-- 
+2.19.1
 
-mm/hugetlb.c:49:20: warning: 'hugetlb_cma' defined but not used [-Wunused-v=
-ariable]
-   49 | static struct cma *hugetlb_cma[MAX_NUMNODES];
-      |                    ^~~~~~~~~~~
 
-Maybe introduced by commit
-
-  c70205bf186e ("mm/hugetlb: avoid hardcoding while checking if cma is enab=
-le")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/bw8uQ8Y4eFgkGjZ4vGn6bcG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8G3y8ACgkQAVBC80lX
-0Gy56AgAlijdLI9UPsK1qR2wEj+EEko4wpIMBUfOtLvKC1ab3hxe04eyMc70lgfn
-C2PZFn4a3fZMmi+f6EaeeVami/TghWs7Y5Q2I73i43GFFc1+wFV5QTo3BXUdlZNp
-zXood1FciSdxQHkC8BBgwPSxFCkalSf//6/xwe9hlplRO6h4c0cW/ZOAN0Eb5dma
-H1rxtnyaSHF5845di0JIj22/SsfxtS9E6YLdDhfHPLd3sDDksx1bgCoGGxGEDiij
-w871U91pQJA6AIh5LupBaew0p6qq67dpvrJttcE+bJstUFuoxiYK8Jj6DxqE12gQ
-dhsG+67CDUTFJtwit1Hw9OdB/T7fBg==
-=HWiM
------END PGP SIGNATURE-----
-
---Sig_/bw8uQ8Y4eFgkGjZ4vGn6bcG--
