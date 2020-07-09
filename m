@@ -2,75 +2,111 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED89C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA9F2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE0E2077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:36:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V84W7Vc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGIQfU (ORCPT
+        id S1728143AbgGIQgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:35:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgGIQfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:35:19 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 519D62077D;
-        Thu,  9 Jul 2020 16:35:18 +0000 (UTC)
-Date:   Thu, 9 Jul 2020 12:35:16 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        ksummit-discuss@lists.linuxfoundation.org,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        tech-board-discuss@lists.linuxfoundation.org,
-        Chris Mason <clm@fb.clm>, torvalds@linux-foundation.org,
-        Tibor Raschko <tibrasch@gmail.com>
-Subject: Re: [Tech-board-discuss] [Ksummit-discuss] [PATCH] CodingStyle:
- Inclusive Terminology
-Message-ID: <20200709123516.3972dee8@oasis.local.home>
-In-Reply-To: <20200709161351.GF4960@sirena.org.uk>
-References: <79214066-3886-e0ef-f26e-8cb3d53404be@linuxfoundation.org>
-        <e41ded21-1432-afa8-2e42-e509539281c4@gmail.com>
-        <20200709124327.369781a0@coco.lan>
-        <93fc3afb-8c3f-0fb9-3b92-adfb6571e060@linuxfoundation.org>
-        <20200709161351.GF4960@sirena.org.uk>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Jul 2020 12:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgGIQgI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:36:08 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE8CC08C5CE;
+        Thu,  9 Jul 2020 09:36:08 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id m26so1505630lfo.13;
+        Thu, 09 Jul 2020 09:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hcIcw3vIFIIqOlNLiBPfaOEOm7u6K/228i2wplr1dBk=;
+        b=V84W7Vc1jDhuxWPhLzfvPMUmAt+49OsJrxRktyWHYvg6+0lgrUNtM8M4zwhdjCLDXz
+         2EhM7vzLc98fLDE8SOX//oMUMwGbvXSUg1SvcGeaCN06FQNO5xE8RCKxp4zPzYsvK/Ub
+         LOqlQiZUcvrj1t6l/WMchBAS1WYi2Qb3TPsraGQYTg6mLMTGyBoRoP6zCbK632Palvlb
+         F18AlbtrC8jQHfl0/NO24BrH1k3dvq/kdDTRXCQqxGuqo1MP+p8Tw2tXe66InfWXU/rL
+         UfnTXHY7MAzksWSw+8JZwpgtJxA6MExaaTWKLMZcegypUHOMZclsGgInmam/WgfYGbL4
+         azgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hcIcw3vIFIIqOlNLiBPfaOEOm7u6K/228i2wplr1dBk=;
+        b=npg1kBH3H8kycqHnSm0EMGXv3gr+Wn+XnJnXTHBAS596VjaKKZr3CBWwizAQ1cF0gI
+         nwutKO+M+6zu5Z+DZVTww4movnCfC5g0IDo/VZ2KcFrRB8tzidgBSbnR+2/vEHOQqch7
+         IF/QJ2Rvsps/YZPJeDfTOpcKILxRQIQhH0rN7icuDruNP5RJ47C1ptJxVbd8Xl6ym9N5
+         FCwyRgQx7xcpbe5bYNvElpG+h3nM3+aCz0XmKQLZikw3bQ4LN+bM/qQEN5/teH+kEvxW
+         hwm3pu2lBH2heZ5qqJ3k2nFKnnATb1KEqqeLaurFmD00y9w1IU6OFDs3ysXt85dtWYp6
+         1Hfw==
+X-Gm-Message-State: AOAM531DU9DDI2pfDfOpceoeZsQ+pNRIAsU69xitdkf+xqvPMowYrtOL
+        YVSzeJOY6apZpIhgG39b2JGXufL/
+X-Google-Smtp-Source: ABdhPJxxVjnrs9wMWMphmJYs/yYhcfX9aaNR/yzIXoPJ7//uu00YdKnQR/QagWC+5hbj1nUcEXNIZQ==
+X-Received: by 2002:a19:a417:: with SMTP id q23mr39715338lfc.181.1594312566150;
+        Thu, 09 Jul 2020 09:36:06 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.googlemail.com with ESMTPSA id v20sm1098646lfr.74.2020.07.09.09.36.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 09:36:05 -0700 (PDT)
+Subject: Re: [PATCH v3 2/6] gpio: max77620: Fix missing release of interrupt
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200708202355.28507-1-digetx@gmail.com>
+ <20200708202355.28507-3-digetx@gmail.com>
+ <80f4d1ff-8096-9060-3cf0-a59448866c40@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <89592ba5-f62e-3145-6f0b-9289f80a3171@gmail.com>
+Date:   Thu, 9 Jul 2020 19:36:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <80f4d1ff-8096-9060-3cf0-a59448866c40@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 17:13:51 +0100
-Mark Brown <broonie@kernel.org> wrote:
-
-> On Thu, Jul 09, 2020 at 10:01:18AM -0600, Shuah Khan wrote:
-> > On 7/9/20 4:43 AM, Mauro Carvalho Chehab wrote:  
+09.07.2020 17:57, Laxman Dewangan пишет:
 > 
-> > > For coherency, if "blacklist/whitelist" won't be used anymore, an
-> > > alternative to graylist should also be provided.  
 > 
-> > What is "graylist"? Does it mean in between allow/deny?  
+> On Thursday 09 July 2020 01:53 AM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> The requested interrupt is never released by the driver. Fix this by
+>> using the resource-managed variant of request_threaded_irq().
+>>
+>> Fixes: ab3dd9cc24d4 ("gpio: max77620: Fix interrupt handling")
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > 
-> Yes.  Typically it's used in situations where you don't want to deny
-> something but might for example want to do extra checks to verify that
-> things are OK.
+> 
+> Looks good to me.
+> Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
 
-The only time I use greylist is for postgrey, that when an email comes
-in, it will initially reject it, expecting the mail server to try
-again, and the second time it lets it through. This does stop a lot of
-spam, at the cost of waiting up to a few hours for email :-/
+Hello, Laxman! Thank you very much for taking a look at this series!
 
--- Steve
+I missed to add the stable tag to this patch, so will prepare a v4 with
+the corrected tag. I'll also add yours acks and Andy's r-bs to the
+patches. Thanks!
