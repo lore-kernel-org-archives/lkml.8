@@ -2,182 +2,137 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01527C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 935A72074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE33A2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgGIKwN (ORCPT
+        id S1726928AbgGIKxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:52:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47754 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726339AbgGIKwN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:52:13 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069AX7Cc090673;
-        Thu, 9 Jul 2020 06:52:05 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 325wbv7gtj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 06:52:05 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 069AXgrM091981;
-        Thu, 9 Jul 2020 06:52:04 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 325wbv7gt1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 06:52:04 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 069ApOtI015883;
-        Thu, 9 Jul 2020 10:52:02 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04fra.de.ibm.com with ESMTP id 325k2drdgf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 10:52:02 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 069Apxrw46727170
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jul 2020 10:51:59 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8A50FAE056;
-        Thu,  9 Jul 2020 10:51:59 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4B58AE051;
-        Thu,  9 Jul 2020 10:51:58 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.34.67])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jul 2020 10:51:58 +0000 (GMT)
-Subject: Re: [PATCH v5 2/2] s390: virtio: PV needs VIRTIO I/O device
- protection
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-References: <1594283959-13742-1-git-send-email-pmorel@linux.ibm.com>
- <1594283959-13742-3-git-send-email-pmorel@linux.ibm.com>
- <20200709105733.6d68fa53.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <270d8674-0f73-0a38-a2a7-fbc1caa44301@linux.ibm.com>
-Date:   Thu, 9 Jul 2020 12:51:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 9 Jul 2020 06:53:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25233 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbgGIKxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:53:18 -0400
+IronPort-SDR: 5bAOzo8vPO0qiBySoGeyAmQc8XplNZo/kY3UwKt35RYS3ppVxSc0OH3KJzWSDiK4rPMsyiMwdw
+ dBVkqq9dSqjw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="127557441"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="127557441"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 03:53:17 -0700
+IronPort-SDR: P4hWY/sye1VYuLTzDCkFtKV52yM7tKk5/vXcJpES3ptC2WS01pmaVpqjBuZ+rp+5rbNRAgTcIZ
+ 5oWMsWZ+jzpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="323208484"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Jul 2020 03:53:15 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 9D3E01EA; Thu,  9 Jul 2020 13:53:14 +0300 (EEST)
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jann Horn <jannh@google.com>, stable@vger.kernel.org,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH] mm: Close race between munmap() and expand_upwards()/downwards()
+Date:   Thu,  9 Jul 2020 13:53:09 +0300
+Message-Id: <20200709105309.42495-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200709105733.6d68fa53.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_05:2020-07-09,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 malwarescore=0
- phishscore=0 suspectscore=0 adultscore=0 spamscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007090084
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+VMA with VM_GROWSDOWN or VM_GROWSUP flag set can change their size under
+mmap_read_lock(). It can lead to race with __do_munmap():
 
+	Thread A			Thread B
+__do_munmap()
+  detach_vmas_to_be_unmapped()
+  mmap_write_downgrade()
+				expand_downwards()
+				  vma->vm_start = address;
+				  // The VMA now overlaps with
+				  // VMAs detached by the Thread A
+				// page fault populates expanded part
+				// of the VMA
+  unmap_region()
+    // Zaps pagetables partly
+    // populated by Thread B
 
-On 2020-07-09 10:57, Cornelia Huck wrote:
-> On Thu,  9 Jul 2020 10:39:19 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> If protected virtualization is active on s390, the virtio queues are
->> not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
->> negotiated. Use the new arch_validate_virtio_features() interface to
->> fail probe if that's not the case, preventing a host error on access
->> attempt
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   arch/s390/mm/init.c | 27 +++++++++++++++++++++++++++
->>   1 file changed, 27 insertions(+)
->>
->> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->> index 6dc7c3b60ef6..b8e6f90117da 100644
->> --- a/arch/s390/mm/init.c
->> +++ b/arch/s390/mm/init.c
->> @@ -45,6 +45,7 @@
->>   #include <asm/kasan.h>
->>   #include <asm/dma-mapping.h>
->>   #include <asm/uv.h>
->> +#include <linux/virtio_config.h>
->>   
->>   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
->>   
->> @@ -161,6 +162,32 @@ bool force_dma_unencrypted(struct device *dev)
->>   	return is_prot_virt_guest();
->>   }
->>   
->> +/*
->> + * arch_validate_virtio_features
->> + * @dev: the VIRTIO device being added
->> + *
->> + * Return an error if required features are missing on a guest running
->> + * with protected virtualization.
->> + */
->> +int arch_validate_virtio_features(struct virtio_device *dev)
->> +{
->> +	if (!is_prot_virt_guest())
->> +		return 0;
->> +
->> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
->> +		dev_warn(&dev->dev, "device must provide VIRTIO_F_VERSION_1\n");
-> 
-> I'd probably use "legacy virtio not supported with protected
-> virtualization".
-> 
->> +		return -ENODEV;
->> +	}
->> +
->> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
->> +		dev_warn(&dev->dev,
->> +			 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");
-> 
-> "support for limited memory access required for protected
-> virtualization"
-> 
-> ?
-> 
-> Mentioning the feature flag is shorter in both cases, though.
+Similar race exists for expand_upwards().
 
-And I think easier to look for in case of debugging purpose.
-I change it if there is more demands.
+The fix is to avoid downgrading mmap_lock in __do_munmap() if detached
+VMAs are next to VM_GROWSDOWN or VM_GROWSUP VMA.
 
-> 
->> +		return -ENODEV;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   /* protected virtualization */
->>   static void pv_init(void)
->>   {
-> 
-> Either way,
-> 
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> 
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reported-by: Jann Horn <jannh@google.com>
+Fixes: dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
+Cc: <stable@vger.kernel.org> # 4.20
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+---
+ mm/mmap.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-Thanks,
-Pierre
-
-
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 59a4682ebf3f..71df4b36b42a 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -2620,7 +2620,7 @@ static void unmap_region(struct mm_struct *mm,
+  * Create a list of vma's touched by the unmap, removing them from the mm's
+  * vma list as we go..
+  */
+-static void
++static bool
+ detach_vmas_to_be_unmapped(struct mm_struct *mm, struct vm_area_struct *vma,
+ 	struct vm_area_struct *prev, unsigned long end)
+ {
+@@ -2645,6 +2645,17 @@ detach_vmas_to_be_unmapped(struct mm_struct *mm, struct vm_area_struct *vma,
+ 
+ 	/* Kill the cache */
+ 	vmacache_invalidate(mm);
++
++	/*
++	 * Do not downgrade mmap_sem if we are next to VM_GROWSDOWN or
++	 * VM_GROWSUP VMA. Such VMAs can change their size under
++	 * down_read(mmap_sem) and collide with the VMA we are about to unmap.
++	 */
++	if (vma && (vma->vm_flags & VM_GROWSDOWN))
++		return false;
++	if (prev && (prev->vm_flags & VM_GROWSUP))
++		return false;
++	return true;
+ }
+ 
+ /*
+@@ -2825,7 +2836,8 @@ int __do_munmap(struct mm_struct *mm, unsigned long start, size_t len,
+ 	}
+ 
+ 	/* Detach vmas from rbtree */
+-	detach_vmas_to_be_unmapped(mm, vma, prev, end);
++	if (!detach_vmas_to_be_unmapped(mm, vma, prev, end))
++		downgrade = false;
+ 
+ 	if (downgrade)
+ 		mmap_write_downgrade(mm);
 -- 
-Pierre Morel
-IBM Lab Boeblingen
+2.26.2
+
