@@ -2,98 +2,93 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC31C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C70AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8255320772
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7951820772
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:43:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NFgYwB4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgGINlj (ORCPT
+        id S1727910AbgGINnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:41:39 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55302 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbgGINlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:41:39 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jtWnb-004L5F-7c; Thu, 09 Jul 2020 15:41:15 +0200
-Date:   Thu, 9 Jul 2020 15:41:15 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     linux-mediatek@lists.infradead.org,
-        =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
-        Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: ethernet: mtk_eth_soc: fix mtu warning
-Message-ID: <20200709134115.GK928075@lunn.ch>
-References: <20200709055742.3425-1-frank-w@public-files.de>
+        Thu, 9 Jul 2020 09:43:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgGINnW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 09:43:22 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 401B4C08C5CE;
+        Thu,  9 Jul 2020 06:43:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7rOYKU4XztveD5i31wb3QbJ+1+S+S7EVYyvxSdJ1iFM=; b=NFgYwB4AfSfixGSTDV5fwWhcoX
+        DO23STOr9Z3uquozmLEMTByMzstm5nYsixXwt7Y/NCLJqsAXLxmWiSerp+pMIiMnxPII+HB3CACGp
+        oXJb3/YWxiPidACkUAcynOQ+moJc4SH4SCAhYL0wiMY38IzGb3po79KWdr4BNs44B6jJyJazldxS5
+        mr7FD6hblNBolK+BSxnnLsy5jJmhxXtZyK4lcmRfsXtDsce6hc+NjEE6Jsbd8t+ltZv6zCUjrBX3t
+        xENvTNVLNh8fzy7IQM48Tu/JXAgrM1uWSGfTQYBNN4BWECFb+fiRFQ6oVzWrGIh8c07Vsz1/K97et
+        1e0VhbWQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtWpb-0001Gb-5I; Thu, 09 Jul 2020 13:43:19 +0000
+Date:   Thu, 9 Jul 2020 14:43:19 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH 0/2] Remove kiocb ki_complete
+Message-ID: <20200709134319.GD12769@casper.infradead.org>
+References: <20200708222637.23046-1-willy@infradead.org>
+ <20200709101705.GA2095@infradead.org>
+ <20200709111036.GA12769@casper.infradead.org>
+ <20200709132611.GA1382@infradead.org>
+ <ffbd272c-32f3-8c8c-6395-5eab47725929@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200709055742.3425-1-frank-w@public-files.de>
+In-Reply-To: <ffbd272c-32f3-8c8c-6395-5eab47725929@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 07:57:42AM +0200, Frank Wunderlich wrote:
-> From: René van Dorst <opensource@vdorst.com>
+On Thu, Jul 09, 2020 at 04:37:59PM +0300, Pavel Begunkov wrote:
+> On 09/07/2020 16:26, Christoph Hellwig wrote:
+> > On Thu, Jul 09, 2020 at 12:10:36PM +0100, Matthew Wilcox wrote:
+> >> On Thu, Jul 09, 2020 at 11:17:05AM +0100, Christoph Hellwig wrote:
+> >>> I really don't like this series at all.  If saves a single pointer
+> >>> but introduces a complicated machinery that just doesn't follow any
+> >>> natural flow.  And there doesn't seem to be any good reason for it to
+> >>> start with.
+> >>
+> >> Jens doesn't want the kiocb to grow beyond a single cacheline, and we
+> >> want the ability to set the loff_t in userspace for an appending write,
+> >> so the plan was to replace the ki_complete member in kiocb with an
+> >> loff_t __user *ki_posp.
+> >>
+> >> I don't think it's worth worrying about growing kiocb, personally,
+> >> but this seemed like the easiest way to make room for a new pointer.
+> > 
+> > The user offset pointer has absolutely no business in the the kiocb
+> > itself - it is a io_uring concept which needs to go into the io_kiocb,
+> > which has 14 bytes left in the last cache line in my build.  It would
+> > fit in very well there right next to the result and user pointer.
 > 
-> in recent Kernel-Versions there are warnings about incorrect MTU-Size
-> like these:
+> After getting a valid offset, io_uring shouldn't do anything but
+> complete the request. And as io_kiocb implicitly contains a CQE entry,
+> not sure we need @append_offset in the first place.
 > 
-> mt7530 mdio-bus:00: nonfatal error -95 setting MTU on port x
-> eth0: mtu greater than device maximum
-> mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA overhead
-> 
-> Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
-> Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set the MTU")
-> Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
-> Signed-off-by: René van Dorst <opensource@vdorst.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
-> changes in v2:
->   Fixes: tag show 12-chars of sha1 and moved above other tags
-> ---
->  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> index 85735d32ecb0..00e3d70f7d07 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> @@ -2891,6 +2891,10 @@ static int mtk_add_mac(struct mtk_eth *eth, struct device_node *np)
->  	eth->netdev[id]->irq = eth->irq[0];
->  	eth->netdev[id]->dev.of_node = np;
-> 
-> +	eth->netdev[id]->mtu = 1536;
+> Kanchan, could you take a look if you can hide it in req->cflags?
 
-Hi Frank
-
-Don't change to MTU from the default. Anybody using this interface for
-non-DSA traffic expects the default MTU. DSA will change it as needed.
-
-> +	eth->netdev[id]->min_mtu = ETH_MIN_MTU;
-
-No need to set the minimum. ether_setup() will initialize it.
-
-> +	eth->netdev[id]->max_mtu = 1536;
-
-I assume this is enough to make the DSA warning go away, but it is the
-true max? I have a similar patch for the FEC driver which i should
-post sometime. Reviewing the FEC code and after some testing, i found
-the real max was 2K - 64.
-
-     Andrew
+No, that's not what cflags are for.  And besides, there's only 32 bits
+there.
