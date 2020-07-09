@@ -2,100 +2,101 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 421F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF78C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E61206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6A92074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594290892;
+	bh=Ve16z8d0/OmeosfL6WB4kROdn8JZr9L6Cq+RoMEYqsc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wvytZPeWB6ByPW7C9tjFAY3FUe85wIz+7hyj+uUaSqzhQMhrc/lCuZw0JGEhYmSrZ
+	 Lp3xDnsYPtoZInv9RIfd7/63ybf5tUlKQrh4oBa4A2rMUUMBX/4p4jQb995EHmyJ5n
+	 a1UgTCzo3h13Ftbihg6s6hYw4pEPN/EpDFxSBj1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgGIKeN (ORCPT
+        id S1726761AbgGIKev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:34:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbgGIKeN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:34:13 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F21C061A0B
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 03:34:13 -0700 (PDT)
-Received: from cap.home.8bytes.org (p549adb3d.dip0.t-ipconnect.de [84.154.219.61])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Thu, 9 Jul 2020 06:34:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbgGIKev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:34:51 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id CC3B2189;
-        Thu,  9 Jul 2020 12:34:09 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        joro@8bytes.org
-Subject: [PATCH] x86/idt: Make sure idt_table takes a whole page
-Date:   Thu,  9 Jul 2020 12:33:55 +0200
-Message-Id: <20200709103355.11359-1-joro@8bytes.org>
-X-Mailer: git-send-email 2.27.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 02AD7206DF;
+        Thu,  9 Jul 2020 10:34:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594290890;
+        bh=Ve16z8d0/OmeosfL6WB4kROdn8JZr9L6Cq+RoMEYqsc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aVwvYBUwBUuEW0pkIHTrs9bE3A4h2qeVhqqez6sjtu2k5HzziDf3u5+O3IDo3PWMl
+         P60+jIRnglEr37wZtmpDJTj0VQ4BN8AG3boz+joAmCDx943/KIvU+mkDgy17J+lJdB
+         0D+MKW4LdlmlWtN9ZR+T7XdnLPKPQD20C+isnMkI=
+Date:   Thu, 9 Jul 2020 11:34:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rohit Kumar <rohitkr@codeaurora.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
+        perex@perex.cz, tiwai@suse.com, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/8] dt-bindings: sound: lpass-cpu: Add sc7180 lpass
+ cpu node
+Message-ID: <20200709103444.GA4960@sirena.org.uk>
+References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
+ <1594184896-10629-7-git-send-email-rohitkr@codeaurora.org>
+ <6b6b0e38-9c04-e065-8a43-ccfec260d60c@linaro.org>
+ <430e0d24-c5c2-84ec-fe7b-b6b27192666d@codeaurora.org>
+ <de07f84b-40bc-d9ae-932d-623a5e8341e2@linaro.org>
+ <40ca93fe-5bf0-ace3-4f95-90624d29a409@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
+Content-Disposition: inline
+In-Reply-To: <40ca93fe-5bf0-ace3-4f95-90624d29a409@codeaurora.org>
+X-Cookie: You will be married within a year.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
 
-On x86-32 the idt_table with 256 entries needs only 2048 bytes. It is
-page-aligned, but the end of the .bss..page_aligned section is not
-guaranteed to be page-aligned.
+--82I3+IH0IqGh5yIs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-As a result, symbols from other .bss sections may end up on the same
-4k page as the idt_table, and will accidentially get mapped read-only
-during boot, causing unexpected page-faults when the kernel writes to
-them.
+On Thu, Jul 09, 2020 at 03:42:38PM +0530, Rohit Kumar wrote:
+> On 7/9/2020 3:38 PM, Srinivas Kandagatla wrote:
 
-Avoid this by making the idt_table 4kb in size even on x86-32. On
-x86-64 the idt_table is already 4kb large, so nothing changes there.
+> > May be reverse the order, Convert to Yaml first and then add sc7180!
 
-Fixes: 3e77abda65b1c ("x86/idt: Consolidate idt functionality")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/kernel/idt.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+> Actually Mark suggested to keep yaml change at the end of patch series as
+> there
 
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 0db21206f2f3..83e24f837127 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -157,8 +157,13 @@ static const __initconst struct idt_data apic_idts[] = {
- #endif
- };
- 
--/* Must be page-aligned because the real IDT is used in the cpu entry area */
--static gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
-+/*
-+ * Must be page-aligned because the real IDT is used in the cpu entry area.
-+ * Allocate more entries than needed so that idt_table takes a whole page, so it
-+ * is safe to map the idt_table read-only and into the user-space page-table.
-+ */
-+#define IDT_ENTRIES_ALLOCATED	(PAGE_SIZE / sizeof(gate_desc))
-+static gate_desc idt_table[IDT_ENTRIES_ALLOCATED] __page_aligned_bss;
- 
- struct desc_ptr idt_descr __ro_after_init = {
- 	.size		= IDT_TABLE_SIZE - 1,
-@@ -335,6 +340,9 @@ void __init idt_setup_apic_and_irq_gates(void)
- 	idt_map_in_cea();
- 	load_idt(&idt_descr);
- 
-+	BUILD_BUG_ON(IDT_ENTRIES_ALLOCATED < IDT_ENTRIES);
-+	BUILD_BUG_ON(sizeof(idt_table) != PAGE_SIZE);
-+
- 	/* Make the IDT table read only */
- 	set_memory_ro((unsigned long)&idt_table, 1);
- 
--- 
-2.27.0
+Right, there's a huge backlog on YAML reviews so they lead to all the
+other work getting held up waiting for them.
 
+--82I3+IH0IqGh5yIs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8G8sQACgkQJNaLcl1U
+h9AnEAf/YHvrShAx1/pj+fdRXz49S71JBPuvSBgRcSqt4qlyV3PrDCkwNro0KXYy
+IWTh+2YJGdiJ9yNIvnrKIpIg1g0Lu96uSCKTa+uKHA8obTEFV/ko5+t6KrhJXv6B
+6ISMw+pInNBvj7moHWn+px9+JZw6ygIxro9okvk7pCu9PA4nkpHWvCrzNzlwMVna
+yElISmNvkpgWsg1eqlpOu78MD37akxzqPm9mrPzrq/ge2ktcM+ivm4qOJmBdnc23
+dIES/kgmWtEq6jnuzwZ2cdDn/1FDbKpllkPtj4Q3Ymvz4sGxdlgE8SlyQXrzl/iU
+l0vuLU8mntAPLdpRb9s4neWhCYl7cA==
+=bZZZ
+-----END PGP SIGNATURE-----
+
+--82I3+IH0IqGh5yIs--
