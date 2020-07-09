@@ -2,101 +2,100 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF78C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C379C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6A92074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594290892;
-	bh=Ve16z8d0/OmeosfL6WB4kROdn8JZr9L6Cq+RoMEYqsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wvytZPeWB6ByPW7C9tjFAY3FUe85wIz+7hyj+uUaSqzhQMhrc/lCuZw0JGEhYmSrZ
-	 Lp3xDnsYPtoZInv9RIfd7/63ybf5tUlKQrh4oBa4A2rMUUMBX/4p4jQb995EHmyJ5n
-	 a1UgTCzo3h13Ftbihg6s6hYw4pEPN/EpDFxSBj1Q=
+	by mail.kernel.org (Postfix) with ESMTP id 270CA2076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="gQfMi2T6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgGIKev (ORCPT
+        id S1726816AbgGIKfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:34:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgGIKev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:34:51 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02AD7206DF;
-        Thu,  9 Jul 2020 10:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594290890;
-        bh=Ve16z8d0/OmeosfL6WB4kROdn8JZr9L6Cq+RoMEYqsc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aVwvYBUwBUuEW0pkIHTrs9bE3A4h2qeVhqqez6sjtu2k5HzziDf3u5+O3IDo3PWMl
-         P60+jIRnglEr37wZtmpDJTj0VQ4BN8AG3boz+joAmCDx943/KIvU+mkDgy17J+lJdB
-         0D+MKW4LdlmlWtN9ZR+T7XdnLPKPQD20C+isnMkI=
-Date:   Thu, 9 Jul 2020 11:34:44 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rohit Kumar <rohitkr@codeaurora.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
-        perex@perex.cz, tiwai@suse.com, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/8] dt-bindings: sound: lpass-cpu: Add sc7180 lpass
- cpu node
-Message-ID: <20200709103444.GA4960@sirena.org.uk>
-References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
- <1594184896-10629-7-git-send-email-rohitkr@codeaurora.org>
- <6b6b0e38-9c04-e065-8a43-ccfec260d60c@linaro.org>
- <430e0d24-c5c2-84ec-fe7b-b6b27192666d@codeaurora.org>
- <de07f84b-40bc-d9ae-932d-623a5e8341e2@linaro.org>
- <40ca93fe-5bf0-ace3-4f95-90624d29a409@codeaurora.org>
+        Thu, 9 Jul 2020 06:35:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbgGIKfB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:35:01 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE126C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 03:35:00 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y13so849217lfe.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 03:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3U/7ZV9xpswgkJcBW8XUKStVETeILR3YImCVsvlVP7c=;
+        b=gQfMi2T6XnBK1vnut1rjEGYSgc76BZNbsuiIfiqKHrRjHdivzSdz8+3sAmzMKXuYrc
+         PCafJKU02DcJrANiZ788Fh91wxrsaK832wCZnlfkYIzXpbRkQ/DYKsn8F3CzJvsv7wq9
+         8oQHR0Nj/KLma64boKj3jn7ervRG82PnUcJXeqLrmzsG6F5IDi2z1G/mrIDhrBkKeB30
+         0NreVpostpd8OjSlU13dHLHxm8foPyGETcf/Jl5UzBC5UPI5eochoXYK2mE4SbNQErb/
+         b95p5duIRuCO6t7F0kCo6DbCqEog9mGkO9Mp9eTbE8U8XHH8QuG73UvKgHnjzRyBLh3s
+         jf6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3U/7ZV9xpswgkJcBW8XUKStVETeILR3YImCVsvlVP7c=;
+        b=gPJs/zJhwq/Tz5KVGDjMktszDtvnvqVR8J1U/k8GH0roV4fF+ULFNt2amn/cN2wsyJ
+         PosqOTmsdERRbgjq0aaANpRontsLLwqJGRSuoiMArQ5rItIWnjiJkF+n+z0q7WHtTdPj
+         FnYPeKtH60urALMiNQeA6pzbKZ8wezw9l+LH8qPArxYKfiAqtOFBvSGiYJt0PneFgM5Q
+         tt3hR5yQDcdCBMKW41yck0gcqEI1BaHwXIhLAPhI5u11niwUUJfJsjLSFJpJNB5Kabv+
+         9VOMe+jAXKUCx9/0E1mqguKQe740+72mSMHBw5ZK9v3/bqiXncKgqUgpBXFExVz1JGBn
+         oodw==
+X-Gm-Message-State: AOAM530tR8jAtlkcKhXJ69paO900jhCPTkYzyNUmjvIr/tCGnCeulbUt
+        YFeJ71rN/XGZkiLayKSYqiOxNA==
+X-Google-Smtp-Source: ABdhPJzgL8KuDBss2CZu23sJQ7h/8TM18HIroVn70bnt+dgvPmaIJNVKHgDZ9ljnBb2diH8RPw1k5Q==
+X-Received: by 2002:a05:6512:203b:: with SMTP id s27mr22289235lfs.158.1594290899219;
+        Thu, 09 Jul 2020 03:34:59 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id m2sm656023ljc.58.2020.07.09.03.34.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 03:34:58 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id C350610222B; Thu,  9 Jul 2020 13:34:59 +0300 (+03)
+Date:   Thu, 9 Jul 2020 13:34:59 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        linux-efi <linux-efi@vger.kernel.org>
+Subject: Re: [GIT PULL] EFI fixes
+Message-ID: <20200709103459.wenqhbp52vesr7e5@box>
+References: <20200628182601.GA84577@gmail.com>
+ <CAHk-=wgD+q+oDdtukYC74_cDX5i0Ynf0GLhuNe2Faaokejj6fQ@mail.gmail.com>
+ <20200708162053.GU4800@hirez.programming.kicks-ass.net>
+ <CAHk-=wggLLv8dY7ViOm7rdHxVNKJUkZMuR90vXO307WkBT8qrw@mail.gmail.com>
+ <CAK8P3a1GFjM5-ENf7XL6jjUvRdJhgjzYpSGD5R7TmW6oWEhYRA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <40ca93fe-5bf0-ace3-4f95-90624d29a409@codeaurora.org>
-X-Cookie: You will be married within a year.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAK8P3a1GFjM5-ENf7XL6jjUvRdJhgjzYpSGD5R7TmW6oWEhYRA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 09, 2020 at 11:30:27AM +0200, Arnd Bergmann wrote:
+> The most interesting version to require in the future would be
+> gcc-7, which IIRC is the point at which we can just use -std=gnu99
+> or -std=gnu11 instead of -std=gnu89 without running into the
+> problem with compound literals[1].
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It is gcc-5, not gcc-7. This commit: 
 
-On Thu, Jul 09, 2020 at 03:42:38PM +0530, Rohit Kumar wrote:
-> On 7/9/2020 3:38 PM, Srinivas Kandagatla wrote:
+https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=d303aeafa9b4
 
-> > May be reverse the order, Convert to Yaml first and then add sc7180!
-
-> Actually Mark suggested to keep yaml change at the end of patch series as
-> there
-
-Right, there's a huge backlog on YAML reviews so they lead to all the
-other work getting held up waiting for them.
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8G8sQACgkQJNaLcl1U
-h9AnEAf/YHvrShAx1/pj+fdRXz49S71JBPuvSBgRcSqt4qlyV3PrDCkwNro0KXYy
-IWTh+2YJGdiJ9yNIvnrKIpIg1g0Lu96uSCKTa+uKHA8obTEFV/ko5+t6KrhJXv6B
-6ISMw+pInNBvj7moHWn+px9+JZw6ygIxro9okvk7pCu9PA4nkpHWvCrzNzlwMVna
-yElISmNvkpgWsg1eqlpOu78MD37akxzqPm9mrPzrq/ge2ktcM+ivm4qOJmBdnc23
-dIES/kgmWtEq6jnuzwZ2cdDn/1FDbKpllkPtj4Q3Ymvz4sGxdlgE8SlyQXrzl/iU
-l0vuLU8mntAPLdpRb9s4neWhCYl7cA==
-=bZZZ
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
+-- 
+ Kirill A. Shutemov
