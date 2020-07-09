@@ -2,134 +2,98 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA15C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD4B207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:57:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="N1NuZpOr"
+	by mail.kernel.org (Postfix) with ESMTP id 8A21F207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594313976;
+	bh=MjLxmKFsCwQKcejuUVJLBgHqXfK23AAaD9TAFxzTGAo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Sc8UAxWge1AdP3uytqLUsQW6AOpJ0qjI+7vOTTp2edjMrJngDzs5qSefngGTPoNch
+	 HKOqck5jW/A50qjnB4JH9ouTc2VtorTStcwBBrAUV1Rr2/l+0mCEeRkUIh2dFI0IGi
+	 aSQhe1p28gJr/p5v3iI2MSJtvN8BJj+LTkf8BzsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgGIQ5f (ORCPT
+        id S1727972AbgGIQ7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:57:35 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15845 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgGIQ51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:57:27 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f074c0b0001>; Thu, 09 Jul 2020 09:55:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 09 Jul 2020 09:57:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 09 Jul 2020 09:57:27 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jul
- 2020 16:57:19 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 9 Jul 2020 16:57:20 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f074c6f0005>; Thu, 09 Jul 2020 09:57:19 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>, <kvm-ppc@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Bharata B Rao" <bharata@linux.ibm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH 2/2] mm/migrate: add migrate-shared test for migrate_vma_*()
-Date:   Thu, 9 Jul 2020 09:57:11 -0700
-Message-ID: <20200709165711.26584-3-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200709165711.26584-1-rcampbell@nvidia.com>
-References: <20200709165711.26584-1-rcampbell@nvidia.com>
+        Thu, 9 Jul 2020 12:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726722AbgGIQ7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:59:34 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7554D2078B;
+        Thu,  9 Jul 2020 16:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594313974;
+        bh=MjLxmKFsCwQKcejuUVJLBgHqXfK23AAaD9TAFxzTGAo=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=KSVyWHH2ritXsbDHAwt85ewJORhs7pRZVmsaIl1rUWFIoSrcLmzxfKg1Zqtqwsujj
+         h/HYzcc7kN+kQjyc+bBie7dfANi6hBh8xZLQtKw5UP8MWhsf5lSHNrSjPKM2fdrK8P
+         niekjdreA1SFdFZqVzJ+k74RUULknxQX1aojKLJ0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5AB3A3522CE7; Thu,  9 Jul 2020 09:59:34 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 09:59:34 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Kaitao Cheng <pilgrimtao@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] kernel/smp: Fix an off by one in csd_lock_wait_toolong()
+Message-ID: <20200709165934.GD9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200709104818.GC20875@mwanda>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594313739; bh=7bNg4+W9LUQA56P48nlUXj5006Ok1vcN7L9AinD3FBk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=N1NuZpOrbvHrgSl7AhEeXOCRv63B9Q2lx5GBdR7wv1/EB/1YG+Wv3031VziHsXXKj
-         ERMrBXcnO322IhTci24SV9muQZuCMkihqa5YOUoduSZEXCH2iM1s4NJ0UoifO+UFf+
-         gUq32l0b3sU0GwN9X1Wmd5IC9wcGmGAlVXco8PLHiBQFFgmdpc5LJzkQdroOLE3OOx
-         pAzTgDdTOD70Rpnk39ftF2js0MNcVLi7moL2LsdS87z0KlTms5+mdlBkJdrQHLxkD1
-         ndFpfVSGAI6HCiNEp/dSCWoiPEvsk0r2ZZ1MHFVozfe/Z65zDygxjoj5ARcJhA36a/
-         hCRojLyFcxRNQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709104818.GC20875@mwanda>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a migrate_vma_*() self test for mmap(MAP_SHARED) to verify that
-!vma_anonymous() ranges won't be migrated.
+On Thu, Jul 09, 2020 at 01:48:18PM +0300, Dan Carpenter wrote:
+> The __per_cpu_offset[] array has "nr_cpu_ids" elements so change the >
+> >= to prevent a read one element beyond the end of the array.
+> 
+> Fixes: 0504bc41a62c ("kernel/smp: Provide CSD lock timeout diagnostics")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
----
- tools/testing/selftests/vm/hmm-tests.c | 35 ++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Good eyes, thank you!  Folding this into the original with
+attribution.
 
-diff --git a/tools/testing/selftests/vm/hmm-tests.c b/tools/testing/selftes=
-ts/vm/hmm-tests.c
-index 79db22604019..e83d3ab37697 100644
---- a/tools/testing/selftests/vm/hmm-tests.c
-+++ b/tools/testing/selftests/vm/hmm-tests.c
-@@ -931,6 +931,41 @@ TEST_F(hmm, migrate_fault)
- 	hmm_buffer_free(buffer);
- }
-=20
-+/*
-+ * Migrate anonymous shared memory to device private memory.
-+ */
-+TEST_F(hmm, migrate_shared)
-+{
-+	struct hmm_buffer *buffer;
-+	unsigned long npages;
-+	unsigned long size;
-+	int ret;
-+
-+	npages =3D ALIGN(HMM_BUFFER_SIZE, self->page_size) >> self->page_shift;
-+	ASSERT_NE(npages, 0);
-+	size =3D npages << self->page_shift;
-+
-+	buffer =3D malloc(sizeof(*buffer));
-+	ASSERT_NE(buffer, NULL);
-+
-+	buffer->fd =3D -1;
-+	buffer->size =3D size;
-+	buffer->mirror =3D malloc(size);
-+	ASSERT_NE(buffer->mirror, NULL);
-+
-+	buffer->ptr =3D mmap(NULL, size,
-+			   PROT_READ | PROT_WRITE,
-+			   MAP_SHARED | MAP_ANONYMOUS,
-+			   buffer->fd, 0);
-+	ASSERT_NE(buffer->ptr, MAP_FAILED);
-+
-+	/* Migrate memory to device. */
-+	ret =3D hmm_dmirror_cmd(self->fd, HMM_DMIRROR_MIGRATE, buffer, npages);
-+	ASSERT_EQ(ret, -ENOENT);
-+
-+	hmm_buffer_free(buffer);
-+}
-+
- /*
-  * Try to migrate various memory types to device private memory.
-  */
---=20
-2.20.1
+							Thanx, Paul
 
+> ---
+>  kernel/smp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/smp.c b/kernel/smp.c
+> index 78b602cae6c2..f49966713ac3 100644
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
+> @@ -171,7 +171,7 @@ static __always_inline bool csd_lock_wait_toolong(call_single_data_t *csd, u64 t
+>  		*bug_id = atomic_inc_return(&csd_bug_count);
+>  	cpu = csd_lock_wait_getcpu(csd);
+>  	smp_mb(); // No stale cur_csd values!
+> -	if (WARN_ONCE(cpu < 0 || cpu > nr_cpu_ids, "%s: cpu = %d\n", __func__, cpu))
+> +	if (WARN_ONCE(cpu < 0 || cpu >= nr_cpu_ids, "%s: cpu = %d\n", __func__, cpu))
+>  		cpu_cur_csd = READ_ONCE(per_cpu(cur_csd, 0));
+>  	else
+>  		cpu_cur_csd = READ_ONCE(per_cpu(cur_csd, cpu));
+> -- 
+> 2.27.0
+> 
