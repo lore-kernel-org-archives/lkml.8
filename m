@@ -2,148 +2,124 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A548C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E62C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A63F206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:33:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nPoR3y+1"
+	by mail.kernel.org (Postfix) with ESMTP id 1117620708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:35:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594272942;
+	bh=HnMPp4djMszVkfw4r5dGwJ5cLHl1tQrLKeBR4bWUeV4=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=TIE+cZbpM0/qmrO6c+AIe018JlIJ3BCzE5EyPEYx3WZ0KC7NS1e6hormsQr5KyAAo
+	 2iUsS8Spk4gGplK2p0dR243sOlvj3XxDRxGoCul+nFfLHXdwHcPEWCxo8xPmKnkEjb
+	 Y5r/klF3+tuXCRk2lI7WdtPQzwWb//V0Cs/gT7wE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgGIFds (ORCPT
+        id S1726408AbgGIFfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 01:33:48 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:17527 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgGIFdp (ORCPT
+        Thu, 9 Jul 2020 01:35:40 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:38468 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgGIFfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 01:33:45 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200709053343epoutp02424d3a7e4435625c4d6996fc879dfa67~f-q_NeJJ_1546015460epoutp024
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 05:33:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200709053343epoutp02424d3a7e4435625c4d6996fc879dfa67~f-q_NeJJ_1546015460epoutp024
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594272823;
-        bh=svvG9bfEaBwsMMJ2sZbl29gt4nnz77D4sLbE0v99Y1Y=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=nPoR3y+1lSiYFdAti3w12gk47ipF6lFFK9RYCb/APzbEtFIeTL361srugikKmB45p
-         bPD5y/WRSdYNAxuQ3/YrHn126ZGOaZigoSit1MBJ8l3eLFyp2PpP+2gQUhBKKVWYME
-         /DLvpendlkbKjtbVFlN7rtFbewa3FOLaa+7nXe9U=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200709053342epcas1p4e82981b7d32a17c37afd53c18107f3de~f-q9x9KWZ1953219532epcas1p4e;
-        Thu,  9 Jul 2020 05:33:42 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4B2Pwh31YqzMqYm9; Thu,  9 Jul
-        2020 05:33:40 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7C.89.28578.43CA60F5; Thu,  9 Jul 2020 14:33:40 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200709053339epcas1p23fb1c080b21c758940514c4672949cfa~f-q7NtslJ1480714807epcas1p2B;
-        Thu,  9 Jul 2020 05:33:39 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200709053339epsmtrp2a3a11e617c782e343e3515a7b9d5d062~f-q7MyvIT0317203172epsmtrp2k;
-        Thu,  9 Jul 2020 05:33:39 +0000 (GMT)
-X-AuditID: b6c32a39-8dfff70000006fa2-be-5f06ac34671c
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        74.F6.08303.33CA60F5; Thu,  9 Jul 2020 14:33:39 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200709053339epsmtip1f3f7f400e515b20002a5a4ef51f31e4d~f-q65kJYo0804408044epsmtip19;
-        Thu,  9 Jul 2020 05:33:39 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     lukasz.luba@arm.com, k.konieczny@samsung.com, krzk@kernel.org,
-        kgene@kernel.org
-Cc:     s.nawrocki@samsung.com, willy.mh.wolff.ml@gmail.com,
-        b.zolnierkie@samsung.com, cw00.choi@samsung.com,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 0/2] PM / devfreq: Add delayed timer for polling
-Date:   Thu,  9 Jul 2020 14:45:02 +0900
-Message-Id: <20200709054504.656-1-cw00.choi@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDKsWRmVeSWpSXmKPExsWy7bCmrq7JGrZ4g8czxCw2zljPajHxxhUW
-        i+tfnrNaLPg0g9Wi//FrZovz5zewW5xtesNusenxNVaLy7vmsFl87j3CaDHj/D4mi4VNLewW
-        txtXsFkcftPOavHtxCNGB36PNfPWMHrsnHWX3WPTqk42j81L6j36tqxi9Pi8SS6ALSrbJiM1
-        MSW1SCE1Lzk/JTMv3VbJOzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwfoZCWFssScUqBQ
-        QGJxsZK+nU1RfmlJqkJGfnGJrVJqQUpOgWWBXnFibnFpXrpecn6ulaGBgZEpUGFCdsakae+Y
-        CuZzVJw7/4WlgXELWxcjB4eEgInE4s1FXYxcHEICOxgluo+vZIZwPjFKfNz2A8r5zCjR0bKb
-        tYuRE6xj7r3nTBCJXYwSd1e/YYVwvjBKvPk2HayKTUBLYv+LG2wgtohAqMTse1PBRjEL7GKS
-        +DJtJjNIQljAWeLv1RnsIIewCKhKnD7rBhLmFbCQeLajmR1im7zE6g0HwHolBD6ySyx5cQcq
-        4SIx6/wqFghbWOLV8S1QcSmJz+/2skHY1RIrTx5hg2juYJTYsv8C1A/GEvuXTmYCWcwsoCmx
-        fpc+RFhRYufvuYwgNrMAn8S7rz2skEDilehoE4IoUZa4/OAuE4QtKbG4vRNqlYfEjfNrwc4R
-        EoiVOP7pB/MERtlZCAsWMDKuYhRLLSjOTU8tNiwwRY6lTYzgZKhluYNx+tsPeocYmTgYDzFK
-        cDArifAaKLLGC/GmJFZWpRblxxeV5qQWH2I0BYbXRGYp0eR8YDrOK4k3NDUyNja2MDE0MzU0
-        VBLn/bSALV5IID2xJDU7NbUgtQimj4mDU6qBqehZSEru6y9/zryflyryMJDL6VzynO99s79a
-        thTNu3aArdFJ5rz8+0fv9jBFFFe/nv7VzmbzP0WHzrtPxI9Umkze8ZlTf2f5FCcXZa/t1q5f
-        /80/XejPkeIkVvh6rZRnwZLdqaFmjkL2Xtq7jBmj7KwTjBUOv6+ft0731pN3d4Ti3I8vlP3S
-        kShpfDUzzG3F3YKY5csrmo5uqOvZdPrwrS0vWZ90ik26F/ebccOzGDnnrxaCjxRVVvZ+2D39
-        9g+TRrWzng4v+Q/v+9J3ZP7nDfO4HI/JVJ4N5/zvIag2VeDnp42zBZcYT03ZICAc2PIq8tC7
-        XfKNT1audfswVdhaMNlfrUSfIYdbQMava0/uPCWW4oxEQy3mouJEAK/vhN4PBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFLMWRmVeSWpSXmKPExsWy7bCSnK7xGrZ4g8472hYbZ6xntZh44wqL
-        xfUvz1ktFnyawWrR//g1s8X58xvYLc42vWG32PT4GqvF5V1z2Cw+9x5htJhxfh+TxcKmFnaL
-        240r2CwOv2lntfh24hGjA7/HmnlrGD12zrrL7rFpVSebx+Yl9R59W1YxenzeJBfAFsVlk5Ka
-        k1mWWqRvl8CVMWnaO6aC+RwV585/YWlg3MLWxcjJISFgIjH33nOmLkYuDiGBHYwSUw43s0Mk
-        JCWmXTzK3MXIAWQLSxw+XAxR84lRYnXHYSaQGjYBLYn9L26ADRIRiJQ433CUDaSIWeAYk8Ty
-        t+0sIAlhAWeJv1dnsIMMYhFQlTh91g0kzCtgIfFsB8wueYnVGw4wT2DkWcDIsIpRMrWgODc9
-        t9iwwCgvtVyvODG3uDQvXS85P3cTIzg4tbR2MO5Z9UHvECMTB+MhRgkOZiURXgNF1ngh3pTE
-        yqrUovz4otKc1OJDjNIcLErivF9nLYwTEkhPLEnNTk0tSC2CyTJxcEo1MAX+kf+w1UoyZh2b
-        uKEDl5X/kZnnW4Oql/E/WniF9axhxzshvZVTH84Sko5cI+cVfq540+TlJ8w41m+b7bVsJ986
-        /rTdbvXLPPYv3agxl9N+MU/Q3xXfNv7hSG79ePPOvJ4/7XufJbEv/Sp1pt7mh8z6vr75i5ht
-        0t478S/6uy7B1cZOPmjFihO83ztdgn4xBE8vmGU250Rvyoyfv3jm+wQ7JVQUiwZ941iUZfd0
-        k5DIbCON+MQ3EZZebDJHo2dUu/TxK7ZWtnbnqKstSP595M5M9xWHrk5cbvCqWGta4YSAfzcW
-        GFvVnUq8ZOO9dQFD3eNQHwOP7enWrJtWSi75XP+pZHWln5urqYZzqUd0mRJLcUaioRZzUXEi
-        AEos+we9AgAA
-X-CMS-MailID: 20200709053339epcas1p23fb1c080b21c758940514c4672949cfa
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200709053339epcas1p23fb1c080b21c758940514c4672949cfa
-References: <CGME20200709053339epcas1p23fb1c080b21c758940514c4672949cfa@epcas1p2.samsung.com>
+        Thu, 9 Jul 2020 01:35:39 -0400
+Received: by mail-ej1-f68.google.com with SMTP id w16so938023ejj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 22:35:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=x/YkVRh01cwCdEzkOpoy/DTTQYnq+R76yuGpXCDqef4=;
+        b=WVKjXKFXcnH7RXPN/I0zplDdRu59a/VIguAa3P8ZOXT6CPNG/ewlIW8tNejiTqGx1p
+         C5bVC/bcbNr21c1uBMdqJy2YncBHZIa9pH75BAmdawbDEKBy0fTw5TF8gshJUHvRlF4w
+         mXL2LOyeFOIGJphOev44xTs6YqmnQfbbpi7cQs62rLDIo3F3hHalm8nF+iYlHGcGhBXT
+         F7itQ6zWF+JNKWL+WDvypdrF4QT3AcgnjA3a7OqroEGqXQkd6vPVt9dRU5aa44+sVMrP
+         mNiy1U8EPNTbVLmx+YPN122Ah6q9+/Ag7GWinSgraMS8cagj51HszeF3uqgBjZpUc8uM
+         M6sQ==
+X-Gm-Message-State: AOAM5318dNS+oJL+8UWXYyxQ2Hd+vAzY5qQoj5Oz2GS0nHpIH/xDddqC
+        cD7HCjYb91VYMajZrutxVWjKepI1
+X-Google-Smtp-Source: ABdhPJzelNhKnlXU7ubXmtvObjEJ5uzY6drzw2lK4lwiTFlIRsXILmGgO6tpfOp4to6oLok3FcVoOg==
+X-Received: by 2002:a17:907:2654:: with SMTP id ar20mr51976160ejc.62.1594272937511;
+        Wed, 08 Jul 2020 22:35:37 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id u18sm1174665edx.34.2020.07.08.22.35.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 22:35:36 -0700 (PDT)
+Subject: Re: [PATCH v2] dmaengine: check device and channel list for empty
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org
+Cc:     Swathi Kovvuri <swathi.kovvuri@intel.com>, peter.ujfalusi@ti.com,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+References: <159319496403.69045.16298280729899651363.stgit@djiang5-desk3.ch.intel.com>
+ <ea3ef860-0b7a-e8da-8cf9-5930a8f3b7ed@kernel.org>
+ <b9e8f171-6961-b483-c698-18a89e58f361@intel.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Message-ID: <852318ec-9e18-3dee-a91d-1cf4dddb8906@kernel.org>
+Date:   Thu, 9 Jul 2020 07:35:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <b9e8f171-6961-b483-c698-18a89e58f361@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the delayed timer to devfreq framework in order to support
-the periodical polling mode without stop caused by CPU idle state.
-Some Non-CPU device must need to monitor the device status like
-utilization regardless of CPU state.
+On 07. 07. 20, 17:42, Dave Jiang wrote:
+> On 7/6/2020 11:05 PM, Jiri Slaby wrote:
+>> On 26. 06. 20, 20:09, Dave Jiang wrote:
+>>> Check dma device list and channel list for empty before iterate as the
+>>> iteration function assume the list to be not empty. With devices and
+>>> channels now being hot pluggable this is a condition that needs to be
+>>> checked. Otherwise it can cause the iterator to spin forever.
+>>
+>> Could you be a little bit more specific how this can spin forever? I.e.
+>> can you attach a stacktrace of such a behaviour?
+> 
+> I can't seem to find the original splat that lead me to the conclusion
+> of it's spinning forever. As I recall, the issue seems to produce
+> different splats and not always consistent in being reproduced. Here's a
+> partial splat that was tracked by the internal bug database. Since with
+> the dma device and channel list being are hot added and removed, the
+> device and channel lists can be empty. The list_entry() and friends
+> expect the list to not be empty (according to header comment), I added
+> the check to ensure that isn't the case before using them in dmaengine.
 
-- patch1 explains the detailed reason why the delayed timer is required.
-- patch2 initializes that exynos5422-dmc device use delayed timer as default
-instead of deferrable timer.
+Yes, the comment states that as it is true: you receive a
+wild/non-checkable pointer if you do list_entry on an empty list. BUT
+have you actually read what I wrote:
 
-Changes from v2:
-- Add reviewed-by tag
-- Fix typo on patch description
-- Remove 'RFC' work from patch title
-- Check whether 'df->governor' is NULL or not on timer_store()
+>> As in the empty case, "&pos->member" is "head" (look into
+>> list_for_each_entry) and the for loop should loop exactly zero times.
 
-Chanwoo Choi (2):
-  PM / devfreq: Add support delayed timer for polling mode
-  memory: samsung: exynos5422-dmc: Use delayed timer as default
+HERE ^^^^
 
- Documentation/ABI/testing/sysfs-class-devfreq | 12 +++
- drivers/devfreq/devfreq.c                     | 86 ++++++++++++++++++-
- drivers/memory/samsung/exynos5422-dmc.c       |  1 +
- include/linux/devfreq.h                       |  9 ++
- 4 files changed, 107 insertions(+), 1 deletion(-)
+> With the fix, we can no longer produce any of the splats. So maybe the
+> above was a bad description of the issue.
 
+No, not only the description, worse, the patch proper looks wrong.
+
+> [ 4216.048375]  ? dma_channel_rebalance+0x7b/0x250
+> [ 4216.056360]  dma_async_device_register+0x349/0x3a0
+> [ 4216.064604]  idxd_register_dma_device+0x90/0xc0 [idxd]
+> [ 4216.073175]  idxd_config_bus_probe.cold+0x7d/0x1fc [idxd]
+
+So, the good part in the patch is the fixed locking in
+dma_async_device_register. Otherwise it adds nonsense checks. So you
+fixed the issue only by a chance, by a side effect as Peter pointed out.
+Leaving aside that you broke dma_request_chan -- that could happen to
+anybody.
+
+Vinod, please drop/revert this patch. Then start over only with
+dma_async_device_register fixed locking.
+
+thanks,
 -- 
-2.17.1
-
+js
