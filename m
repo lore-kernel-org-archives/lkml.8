@@ -2,175 +2,157 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF91C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A46320708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B36206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTHrsHjF"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="KguSYg6m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgGIJKy (ORCPT
+        id S1726476AbgGIJK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:10:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43273 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726418AbgGIJKx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:10:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594285851;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=FdfoFQjpgiNtZWSFBHj/7nzvOM1EzQEIkUtwS/EdNs4=;
-        b=MTHrsHjFx54Bmbgc13+x9CLppoE/sZQeTD3N77ZAlQnLOIOXu2UdB8phTSqVdY1+hzQZRc
-        dhwSaFhc98IaWKvFmnINIo98Wq4vDFmYrEsEVtuwUmQ+9mCp0IkDpY9od9ot/AxJ+m8cIv
-        UbA1PeP2AW3ZyygHvlxEHamu/KVvs+0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-458-MOeGgnKhNx2d_3uf2L-FWQ-1; Thu, 09 Jul 2020 05:10:46 -0400
-X-MC-Unique: MOeGgnKhNx2d_3uf2L-FWQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B4C3107ACF4;
-        Thu,  9 Jul 2020 09:10:43 +0000 (UTC)
-Received: from [10.36.114.174] (ovpn-114-174.ams2.redhat.com [10.36.114.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8711D70100;
-        Thu,  9 Jul 2020 09:10:37 +0000 (UTC)
-Subject: Re: [PATCH v3 3/6] sh/mm: use default dummy
- memory_add_physaddr_to_nid()
-To:     Jia He <justin.he@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Kaly Xin <Kaly.Xin@arm.com>
-References: <20200709020629.91671-1-justin.he@arm.com>
- <20200709020629.91671-4-justin.he@arm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <f1a172b2-80c2-1ec7-483f-f3fba761ccb0@redhat.com>
-Date:   Thu, 9 Jul 2020 11:10:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200709020629.91671-4-justin.he@arm.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 9 Jul 2020 05:10:59 -0400
+Received: from mga17.intel.com ([192.55.52.151]:55765 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbgGIJK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 05:10:57 -0400
+IronPort-SDR: rAJFDEqfaRvQbO4z1o8ghJcHdU07BDGg1f2OgbZaOIxoKIlJOqwBAEXhgX9GuZx+oXS2i+HxEj
+ JF0iXTVIY/qA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="128031583"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="128031583"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 02:10:55 -0700
+IronPort-SDR: +YeLPHZJTmf1BR25adBS9jBNbtSVuDHJhHnOtDCkhZUIOZkCVnSoSwHOuucDlDijaGAoALMG9O
+ CtY2wibdekkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="284085509"
+Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
+  by orsmga006.jf.intel.com with ESMTP; 09 Jul 2020 02:10:55 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 9 Jul 2020 02:10:54 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 9 Jul 2020 02:10:54 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.109)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 9 Jul 2020 02:10:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mO7LX324RQAIYQvYgmYu7FS8K9/BULt6j1S3vL2/KreYoUotK+hoQodxs5IVAPlDUxrhtv+sJyVL/DUqqzaVZsQOIfiOX8aBi77i4LzOqjUzRHpbjKrxsWNhpd9D6CPnUnIE6RwjeAKgMBRn+J92FmhVJAIrjFTZ3/eA90yN4TdeXf0G/Yigc31oM738O7QATJ3i70DHGwPQ+IPS/w2KECjm9bQJSfYjoIk3B1GmZUa9TDL/dxxO7/TRvythnlx9u6gMBVqWTG4EjiXZkHP/ojoyRpV1QCzkgTBoQxRTagJzT00wM5Yf9bchTzHk5RIUudQ0wCU9dfr4ivtREqXFeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uQHGn+UmsUbQcOVBpWh5/F5Z4W3U3HXuPaNngoNq3hE=;
+ b=XRMi1ywHp4qmMYBF6sPsIPblwXxBlQ+ek6Sim38IykEf96/+HEQ4r7DzZaAaQemACIimmRb/+zaxgy7rUd2bAlzybsWmPSEMPgtxyHFhZvVyYllm7Aun7+E1ChlT1MKjYI5I4Vfrw4Vc79ZSJgwFfjZH5aTx4XT/aeAKTHenJVwLU2VWot1KJkIP0nK2ktitE6JvskhtCyNEWB7BhOo9jq2i1NzNLMHOijpawvusjeZzwVz06rNTFc2fQpNkO8FF5DCmRMeN1GxUSLjzYSLDIxOk7IsowtEhQ0j4BgeKDCFTeqmwuogo/qMsC24n0ibpWHOSEiVGLj8x2ao0HRDk1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uQHGn+UmsUbQcOVBpWh5/F5Z4W3U3HXuPaNngoNq3hE=;
+ b=KguSYg6msXYdis6lnTjbXBuvZBmxZMVWKWw6zFM5AsCzH/LzRvZPvjgRd4QaB5c+J5arQOzf2QRvBC7Kl5n4NH9pa78d7BX+qs5fnA9VwceuL2ZLPSL7D8gksuzwqovt+lVChqf4baHlxKdntVvh2dva8/Uu+wwULBiPLmX4Lh8=
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
+ by DM6PR11MB4219.namprd11.prod.outlook.com (2603:10b6:5:14e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.27; Thu, 9 Jul
+ 2020 09:10:49 +0000
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::c1c1:6930:f17d:a80a]) by DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::c1c1:6930:f17d:a80a%4]) with mapi id 15.20.3153.031; Thu, 9 Jul 2020
+ 09:10:49 +0000
+From:   "Wu, Hao" <hao.wu@intel.com>
+To:     "Xu, Yilun" <yilun.xu@intel.com>,
+        "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "trix@redhat.com" <trix@redhat.com>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: RE: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+Thread-Topic: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+Thread-Index: AQHWVcomDnRuf5Ios0uozSMTJLBb7aj+8y7g
+Date:   Thu, 9 Jul 2020 09:10:49 +0000
+Message-ID: <DM6PR11MB3819117029F124067F7EA8B985640@DM6PR11MB3819.namprd11.prod.outlook.com>
+References: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
+In-Reply-To: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.192]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0c9cc859-b6b8-4bf2-6180-08d823e7f8db
+x-ms-traffictypediagnostic: DM6PR11MB4219:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB42197F04F6F701C2EE6D69B385640@DM6PR11MB4219.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2043;
+x-forefront-prvs: 04599F3534
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RbcBNomy9D99VgdQuDyKBu/fFPJq5pzPsWZUDWRu23OUBhD3Qhw0j7v8YLU5nzchYrqMZ33/7RXk1xvqVk8GarSzLNEMFfmkE8RWRZI5jGkV5xyK94hR75bHEtH3mpMZm+DUYmpXvW+e4/t/uLvtR2EiC9w6K8EA1miHunbJh5Nm29OFj4AOEokzjf3WktuEmYngD8hUOq9Yfa7tjC/um6b5RN4s+LRw6gYYXiJKELtsLb61rAAyMgf3oTyPUQ5VmSrBVeHAxNZLsZMfWGkA2usWjNLMXW/bYRblYaNxqFHXPztEyn1zIDz4xf1u+Hud9czPvxAUg2tbWSUOmAYMkA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(136003)(39860400002)(366004)(6506007)(71200400001)(4744005)(33656002)(8676002)(52536014)(478600001)(66946007)(66556008)(64756008)(26005)(7696005)(66446008)(66476007)(76116006)(55016002)(110136005)(54906003)(4326008)(86362001)(186003)(2906002)(8936002)(316002)(5660300002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 9VJf6d2KtNHdJSIqpCb+BsswEVccOrZmHOzh4u5+ULxSOCTBXsX68J3Olm/4NORDSOkgsT+R2BTOp1/V23Ur0l7YSLgsA8nqDknX1cDuKWjlAO/Xv8+Bs3oUCEo+39f4CZzlmOxR3aCOvcao7Iltrd0AXg8nmqoI0os9AL9bCoCzB6aGbv/LrGs+eQ8/PwAHcxQyUHIJqi31dc6eSGSgT6cpawNfNpzSHEQpWiNDaqVbi0CrODrMv7VVJ4dJr6NIFr7xYnzcEI81yH9//kySr1cqXc6uafAae5fIM+LAWhRheUIvsnwZ0aAvYIwPKORZi1W0itcJrwzUQzm0UNyJZ320s7lTOnrLx74VltVldPz8843L0N1X6+yg50R2PcLAcUzEA4T2LJf9yWKvhum9edS9+shh/Gl2vXz9aeR9xzZZqFncfPhfE9+SbUtMVsw1SgmTisbzAneNzGxGO98HF7zbztLNmiC5+DW3aBEfNNuO3SAtHZv1N6woQwSu3eB2
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3819.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c9cc859-b6b8-4bf2-6180-08d823e7f8db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 09:10:49.1380
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: o8Kal3cURwv2MrRbAsIY/9Xlnnj3HFR9bZnMKSCkARUQVltkiYa7VpTiXmThwYFh5KP3/sDDvmNrhzaUX9fn5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4219
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.07.20 04:06, Jia He wrote:
-> After making default memory_add_physaddr_to_nid in mm/memory_hotplug,
-> there is no use to define a similar one in arch specific directory.
-> 
-> Signed-off-by: Jia He <justin.he@arm.com>
+> Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+>=20
+> Add PCIe Device ID for Intel FPGA PAC N3000.
+>=20
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
 > ---
->  arch/sh/mm/init.c | 9 ---------
->  1 file changed, 9 deletions(-)
-> 
-> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-> index a70ba0fdd0b3..f75932ba87a6 100644
-> --- a/arch/sh/mm/init.c
-> +++ b/arch/sh/mm/init.c
-> @@ -430,15 +430,6 @@ int arch_add_memory(int nid, u64 start, u64 size,
->  	return ret;
->  }
->  
-> -#ifdef CONFIG_NUMA
-> -int memory_add_physaddr_to_nid(u64 addr)
-> -{
-> -	/* Node 0 for now.. */
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
-> -#endif
-> -
->  void arch_remove_memory(int nid, u64 start, u64 size,
->  			struct vmem_altmap *altmap)
->  {
-> 
+>  drivers/fpga/dfl-pci.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> index 73b5153..824aecf 100644
+> --- a/drivers/fpga/dfl-pci.c
+> +++ b/drivers/fpga/dfl-pci.c
+> @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev)
+>  #define PCIE_DEVICE_ID_PF_INT_5_X	0xBCBD
+>  #define PCIE_DEVICE_ID_PF_INT_6_X	0xBCC0
+>  #define PCIE_DEVICE_ID_PF_DSC_1_X	0x09C4
+> +#define PCIE_DEVICE_ID_PF_PAC_N3000	0x0B30
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Should we drop _PF_ here? and also do you want _INTEL_ here?
 
--- 
-Thanks,
-
-David / dhildenb
-
+Thanks
+Hao
