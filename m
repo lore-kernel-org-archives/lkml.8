@@ -2,90 +2,138 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A9AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B51AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F35DF20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF56206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:06:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v+kVGjQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgGID5h (ORCPT
+        id S1726194AbgGIEGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 23:57:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:57814 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgGID5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 23:57:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2392F31B;
-        Wed,  8 Jul 2020 20:57:36 -0700 (PDT)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC4053F71E;
-        Wed,  8 Jul 2020 20:57:32 -0700 (PDT)
-Subject: Re: mmotm 2020-07-08-19-28 uploaded (mm/migrate.c)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-References: <20200709022901.FTEvQ122j%akpm@linux-foundation.org>
- <11c5e928-1227-286d-ef7d-6d6e554747db@infradead.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <dc6430f5-19e6-2957-1060-1b43c67996be@arm.com>
-Date:   Thu, 9 Jul 2020 09:26:55 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <11c5e928-1227-286d-ef7d-6d6e554747db@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 9 Jul 2020 00:06:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgGIEGV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 00:06:21 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404D9C08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 21:06:21 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id e14so1334533ybk.17
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 21:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=1y2c3rjVWMDvkKdYX8ZNaWmxEBIIQ3QnKUzqSw9YCtw=;
+        b=v+kVGjQtYzAabSAO2hVKtBYznz8uI02EUUuXTacWLcGXnVXhea9CwSYIsZtGhtthah
+         h/+cSWroxJWyTyGcFs465H2HD9/sIjqtZFwUH03rkplMnoTi1vTfMBerm5WA517N4Qfg
+         EJeH/U3ffEFGZCS3iICsNNefitXPX3j3iy9S1ip8ujMtHfAGmuiBmxovYam+sjIF1B04
+         HFwkf3qBzbRKekmUJ68IpQMvcUg611xkelANY1Fltk4u7wAbpBNEOcXalgIV1Rw0lSIW
+         vv3tnHZ1ZDyPuikQ9k9xf1EK/mhOQPeSrLKQUH4q36ZNQ5u8zfRk8t3yIJ5iaBPNn4qH
+         92gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=1y2c3rjVWMDvkKdYX8ZNaWmxEBIIQ3QnKUzqSw9YCtw=;
+        b=s1KykfTnGsyntfYmH71s0TbHy3+fmMBpDNpm5jNXy28MlxqrbeJ0yHjd43kDnh4I94
+         heLKE5bNraek7oHqYAyucG7Ae8Zb74G3PlXxuB0uEQU4agx1XOLnolXJHRFt7z9JyCWO
+         b4h/+wvwIFtSiUXBRgajrq/76FCT94oLR/tOzbHXk2Ad7r5In5AlWtTom5D1V9PKjxMx
+         MsI+B1j5aoiqMOwbt7zYKzqxdikvUAK5OVOybF8THei9yRFHKo7BlfdoPn3n7LE8Bd3+
+         qF8nBWU1PMGyMLtVAHgG1dLXarI0f3cenJOz8uLihOhQdevCzcCug6goSbcEZA+aKeaL
+         KoWQ==
+X-Gm-Message-State: AOAM533sQgGcTCLIJp/C4MrLo5i3Xzchjg+2Arhgrntrz8o96Por4OHu
+        t9wbgRWqFN6PsWhRqjisZTetiwNobrzD2Rg4
+X-Google-Smtp-Source: ABdhPJysVuabU1/EIYkuOguPqwUhvSghCQ6RiPLy3m040sjW13pEIAe6T9sUlWstOcS5Rovj8NjC7SwRQ2He9Hk+
+X-Received: by 2002:a25:4143:: with SMTP id o64mr17348936yba.226.1594267580232;
+ Wed, 08 Jul 2020 21:06:20 -0700 (PDT)
+Date:   Thu,  9 Jul 2020 04:06:12 +0000
+Message-Id: <20200709040612.3977094-1-linchuyuan@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+Subject: [PATCH v2] hwmon: adm1275: Make sure we are reading enough data for
+ different chips
+From:   Chu Lin <linchuyuan@google.com>
+To:     linux@roeck-us.net
+Cc:     belgaied@google.com, jasonling@google.com, jdelvare@suse.com,
+        linchuyuan@google.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhongqil@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Issue:
+When PEC is enabled, binding adm1272 to the adm1275 would
+fail due to PEC error. See below:
+adm1275: probe of xxxx failed with error -74
+
+Diagnosis:
+Per the datasheet of adm1272, adm1278, adm1293 and amd1294,
+PMON_CONFIG (0xd4) is 16bits wide. On the other hand,
+PMON_CONFIG (0xd4) for adm1275 is 8bits wide. The driver should not
+assume everything is 8bits wide and read only 8bits from it.
+
+Solution:
+If it is adm1272, adm1278, adm1293 and adm1294, use i2c_read_word.
+Else, use i2c_read_byte
+
+Testing:
+Binding adm1272 to the driver.
+The change is only tested on adm1272.
+
+Signed-off-by: Chu Lin <linchuyuan@google.com>
+---
+
+ChangeLog v1 -> v2
+  - Rename config_read_fn_ptr to config_read_fn
+  - Move config_read_fn to the first line as it is the longest
+    variable declaration
+  - Include adm1293 and adm1294
+  - Remove the inline comment as I think the purpose is obvious
 
 
-On 07/09/2020 09:17 AM, Randy Dunlap wrote:
-> On 7/8/20 7:29 PM, Andrew Morton wrote:
->> The mm-of-the-moment snapshot 2020-07-08-19-28 has been uploaded to
->>
->>    http://www.ozlabs.org/~akpm/mmotm/
->>
->> mmotm-readme.txt says
->>
->> README for mm-of-the-moment:
->>
->> http://www.ozlabs.org/~akpm/mmotm/
->>
->> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->> more than once a week.
->>
-> 
-> on i386:
-> 
-> CONFIG_MIGRATION=y
-> # CONFIG_TRANSPARENT_HUGEPAGE is not set
-> 
-> ../mm/migrate.c: In function ‘migrate_pages’:
-> ../mm/migrate.c:1528:19: error: ‘THP_MIGRATION_SUCCESS’ undeclared (first use in this function); did you mean ‘PGMIGRATE_SUCCESS’?
->    count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
->                    ^~~~~~~~~~~~~~~~~~~~~
->                    PGMIGRATE_SUCCESS
-> ../mm/migrate.c:1528:19: note: each undeclared identifier is reported only once for each function it appears in
-> ../mm/migrate.c:1530:19: error: ‘THP_MIGRATION_FAILURE’ undeclared (first use in this function); did you mean ‘THP_MIGRATION_SUCCESS’?
->    count_vm_events(THP_MIGRATION_FAILURE, nr_thp_failed);
->                    ^~~~~~~~~~~~~~~~~~~~~
->                    THP_MIGRATION_SUCCESS
-> ../mm/migrate.c:1532:19: error: ‘THP_MIGRATION_SPLIT’ undeclared (first use in this function); did you mean ‘THP_MIGRATION_FAILURE’?
->    count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
->                    ^~~~~~~~~~~~~~~~~~~
->                    THP_MIGRATION_FAILURE
+ drivers/hwmon/pmbus/adm1275.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-These events should always be available without any config dependency
-including CONFIG_TRANSPARENT_HUGEPAGE. Will fix this and update the
-patch.
+diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+index e25f541227da..19317575d1c6 100644
+--- a/drivers/hwmon/pmbus/adm1275.c
++++ b/drivers/hwmon/pmbus/adm1275.c
+@@ -465,6 +465,7 @@ MODULE_DEVICE_TABLE(i2c, adm1275_id);
+ static int adm1275_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
++	s32 (*config_read_fn)(const struct i2c_client *client, u8 reg);
+ 	u8 block_buffer[I2C_SMBUS_BLOCK_MAX + 1];
+ 	int config, device_config;
+ 	int ret;
+@@ -510,11 +511,16 @@ static int adm1275_probe(struct i2c_client *client,
+ 			   "Device mismatch: Configured %s, detected %s\n",
+ 			   id->name, mid->name);
+ 
+-	config = i2c_smbus_read_byte_data(client, ADM1275_PMON_CONFIG);
++	if (mid->driver_data == adm1272 || mid->driver_data == adm1278 ||
++	    mid->driver_data == adm1293 || mid->driver_data == adm1294)
++		config_read_fn = i2c_smbus_read_word_data;
++	else
++		config_read_fn = i2c_smbus_read_byte_data;
++	config = config_read_fn(client, ADM1275_PMON_CONFIG);
+ 	if (config < 0)
+ 		return config;
+ 
+-	device_config = i2c_smbus_read_byte_data(client, ADM1275_DEVICE_CONFIG);
++	device_config = config_read_fn(client, ADM1275_DEVICE_CONFIG);
+ 	if (device_config < 0)
+ 		return device_config;
+ 
+-- 
+2.27.0.383.g050319c2ae-goog
+
