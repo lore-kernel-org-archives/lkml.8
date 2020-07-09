@@ -2,93 +2,101 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E081C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9B57206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85CAF2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgGIMXI (ORCPT
+        id S1726874AbgGIMYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:23:08 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:54130 "EHLO smtp.al2klimov.de"
+        Thu, 9 Jul 2020 08:24:06 -0400
+Received: from mga17.intel.com ([192.55.52.151]:9232 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbgGIMXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:23:07 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 44010BC0EE;
-        Thu,  9 Jul 2020 12:23:02 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
-        gregkh@linuxfoundation.org, alexander.sverdlin@nokia.com,
-        dinghao.liu@zju.edu.cn, yuehaibing@huawei.com,
-        ben.dooks@codethink.co.uk, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] HARDWARE RANDOM NUMBER GENERATOR CORE: Replace HTTP links with HTTPS ones
-Date:   Thu,  9 Jul 2020 12:35:39 +0200
-Message-Id: <20200709103539.24319-1-grandmaster@al2klimov.de>
+        id S1726327AbgGIMYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:24:05 -0400
+IronPort-SDR: RiZqg/TZoIsx8K3kehihIpnYtvk2jFUwAmrLfVZixk6GKfbaVbQ8DHSG2ax1Pu97xKRdlrEasI
+ fAw86KDxbugw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="128052799"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="128052799"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 05:24:05 -0700
+IronPort-SDR: y4vJ4FSs9Z6jcJbUsoaKk2oiO26qlStbYq75/4DVBLgd7FD/0d0q/yAHnvQa53UgJnyEX3cm2y
+ JZvKe7vq82Gw==
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="484256280"
+Received: from unknown (HELO dalessan-mobl1.ir.intel.com) ([10.252.6.39])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 05:24:01 -0700
+Message-ID: <491f994c6f87a542e49fe37c8a75ab46f1b3712b.camel@linux.intel.com>
+Subject: Re: [PATCH 2/7] mailbox: keembay-scmi-mailbox: Add support for Keem
+ Bay mailbox
+From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>, paul.j.murphy@linux.intel.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Paul Murphy <paul.j.murphy@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Date:   Thu, 09 Jul 2020 13:23:56 +0100
+In-Reply-To: <20200708203428.GB31671@bogus>
+References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+         <20200616155613.121242-3-daniele.alessandrelli@linux.intel.com>
+         <20200708203428.GB31671@bogus>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Hi Sudeep,
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Thanks for your review.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+On Wed, 2020-07-08 at 21:34 +0100, Sudeep Holla wrote:
+> On Tue, Jun 16, 2020 at 04:56:08PM +0100, Daniele Alessandrelli
+> wrote:
+> > From: Paul Murphy <paul.j.murphy@intel.com>
+> > 
+> > Keem Bay SoC has a ARM trusted firmware-based secure monitor which
+> > acts
+> > as the SCP for the purposes of power management over SCMI.
+> > 
+> > This driver implements the transport layer for SCMI to function.
+> > 
+> 
+> Please use the smc transport support in
+> driver/firmware/arm_scmi/smc.c
+> for this. You don't need mailbox support for SMC/HVC. Basically you
+> don't need this driver at all and you have everything you need to
+> support
+> what you want.
+> 
+> Let me know if you face issues.
+> 
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Sorry, we didn't know about the SMC transport support for SCMI. Looks
+like it was added only recently, while our driver was already developed
+and waiting to be upstreamed.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+I agree that we can drop this driver and switch to the SMC transport as
+you suggested, but I think we'll have to modify our bootloader SiP
+service slightly. Paul, can you elaborate?
 
- If you apply the patch, please let me know.
+Regards,
+Daniele
 
-
- drivers/char/hw_random/ks-sa-rng.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/char/hw_random/ks-sa-rng.c b/drivers/char/hw_random/ks-sa-rng.c
-index 001617033d6a..8f1d47ff9799 100644
---- a/drivers/char/hw_random/ks-sa-rng.c
-+++ b/drivers/char/hw_random/ks-sa-rng.c
-@@ -2,7 +2,7 @@
- /*
-  * Random Number Generator driver for the Keystone SOC
-  *
-- * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2016 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Authors:	Sandeep Nair
-  *		Vitaly Andrianov
--- 
-2.27.0
 
