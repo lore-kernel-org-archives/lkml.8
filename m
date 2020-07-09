@@ -2,112 +2,93 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD59C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8739DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7AC5206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 677E9206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:13:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XR04+03w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgGICMp (ORCPT
+        id S1726276AbgGICNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 22:12:45 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60244 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726118AbgGICMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 22:12:44 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 772BA91C3703B6672BBD;
-        Thu,  9 Jul 2020 10:12:43 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Jul 2020
- 10:12:41 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <io-uring@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <axboe@kernel.dk>
-Subject: [PATCH] io_uring: fix memleak in __io_sqe_files_update()
-Date:   Thu, 9 Jul 2020 10:11:41 +0000
-Message-ID: <20200709101141.3261977-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 8 Jul 2020 22:13:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgGICNx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 22:13:53 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38444C061A0B;
+        Wed,  8 Jul 2020 19:13:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qi5089B5TBHI+zy9mDefYNvDdHyy2eklBkVImsmfAA8=; b=XR04+03woT3Wc7Z/57jVKd4hjt
+        3/E+cPTx2AQKCpc/7RreVQxlA9fQYhnyQYvjGihVTwBeUhMvD1az1bE+aXIowHLHsO4PPVi+sxQwA
+        w3nQAbkppGId8GQAhA5vINNi51acayCJgaGvH8tDYh9hhuTWECwDBu6AGIzdVjzzQC3Zgoo+4Dbnz
+        AZjcV2gbkzzZX2ShVFGcqhY1KThJMO/jobs64MREKH5Ezengt4WKDQkr3yw0rrWp+e+/1nIZ1URDR
+        u8M4sp6A3rWRF3TEykU38Xw06lEG6SCF2w3ZwXpgRBaTt6syvQbk7T5XdAmus0UblYhhdytIy8B1y
+        yTszHv4A==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtM1h-0006v4-Cd; Thu, 09 Jul 2020 02:11:06 +0000
+Date:   Thu, 9 Jul 2020 03:11:04 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jia He <justin.he@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        David Hildenbrand <david@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kaly Xin <Kaly.Xin@arm.com>
+Subject: Re: [PATCH v3 4/6] mm: don't export memory_add_physaddr_to_nid in
+ arch specific directory
+Message-ID: <20200709021104.GZ25523@casper.infradead.org>
+References: <20200709020629.91671-1-justin.he@arm.com>
+ <20200709020629.91671-5-justin.he@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709020629.91671-5-justin.he@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I got a memleak report when doing some fuzz test:
+On Thu, Jul 09, 2020 at 10:06:27AM +0800, Jia He wrote:
+> After a general version of __weak memory_add_physaddr_to_nid implemented
+> and exported , it is no use exporting twice in arch directory even if
+> e,g, ia64/x86 have their specific version.
+> 
+> This is to suppress the modpost warning:
+> WARNING: modpost: vmlinux: 'memory_add_physaddr_to_nid' exported twice.
+> Previous export was in vmlinux
 
-BUG: memory leak
-unreferenced object 0xffff888113e02300 (size 488):
-comm "syz-executor401", pid 356, jiffies 4294809529 (age 11.954s)
-hex dump (first 32 bytes):
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-a0 a4 ce 19 81 88 ff ff 60 ce 09 0d 81 88 ff ff ........`.......
-backtrace:
-[<00000000129a84ec>] kmem_cache_zalloc include/linux/slab.h:659 [inline]
-[<00000000129a84ec>] __alloc_file+0x25/0x310 fs/file_table.c:101
-[<000000003050ad84>] alloc_empty_file+0x4f/0x120 fs/file_table.c:151
-[<000000004d0a41a3>] alloc_file+0x5e/0x550 fs/file_table.c:193
-[<000000002cb242f0>] alloc_file_pseudo+0x16a/0x240 fs/file_table.c:233
-[<00000000046a4baa>] anon_inode_getfile fs/anon_inodes.c:91 [inline]
-[<00000000046a4baa>] anon_inode_getfile+0xac/0x1c0 fs/anon_inodes.c:74
-[<0000000035beb745>] __do_sys_perf_event_open+0xd4a/0x2680 kernel/events/core.c:11720
-[<0000000049009dc7>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
-[<00000000353731ca>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881152dd5e0 (size 16):
-comm "syz-executor401", pid 356, jiffies 4294809529 (age 11.954s)
-hex dump (first 16 bytes):
-01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 ................
-backtrace:
-[<0000000074caa794>] kmem_cache_zalloc include/linux/slab.h:659 [inline]
-[<0000000074caa794>] lsm_file_alloc security/security.c:567 [inline]
-[<0000000074caa794>] security_file_alloc+0x32/0x160 security/security.c:1440
-[<00000000c6745ea3>] __alloc_file+0xba/0x310 fs/file_table.c:106
-[<000000003050ad84>] alloc_empty_file+0x4f/0x120 fs/file_table.c:151
-[<000000004d0a41a3>] alloc_file+0x5e/0x550 fs/file_table.c:193
-[<000000002cb242f0>] alloc_file_pseudo+0x16a/0x240 fs/file_table.c:233
-[<00000000046a4baa>] anon_inode_getfile fs/anon_inodes.c:91 [inline]
-[<00000000046a4baa>] anon_inode_getfile+0xac/0x1c0 fs/anon_inodes.c:74
-[<0000000035beb745>] __do_sys_perf_event_open+0xd4a/0x2680 kernel/events/core.c:11720
-[<0000000049009dc7>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
-[<00000000353731ca>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-If io_sqe_file_register() failed, we need put the file that get by fget()
-to avoid the memleak.
-
-Fixes: c3a31e605620 ("io_uring: add support for IORING_REGISTER_FILES_UPDATE")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- fs/io_uring.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index e507737f044e..5c2487d954b2 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -6814,8 +6814,10 @@ static int __io_sqe_files_update(struct io_ring_ctx *ctx,
- 			}
- 			table->files[index] = file;
- 			err = io_sqe_file_register(ctx, file, i);
--			if (err)
-+			if (err) {
-+				fput(file);
- 				break;
-+			}
- 		}
- 		nr_args--;
- 		done++;
--- 
-2.17.1
-
+It's bad form to introduce a warning and then send a follow-up patch to
+fix the warning.  Just fold this patch into patch 1/6.
