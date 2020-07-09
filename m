@@ -3,126 +3,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6EEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF6CF207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B25820720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="hYAGZqEz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="roDisFVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgGIPjC (ORCPT
+        id S1727092AbgGIPn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:39:02 -0400
-Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:5684
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726339AbgGIPjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:39:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VbiDuCcM8RbaaEd6HeUGBwYPu/LhmKvMu8wqxFowgo/y6iZsDROpgT1OdoP06d8QYu2Cbqm9941RjbejMTWdC9b4OUKBWsdv9g1YEQiyqmPz3IfSbzwrzKKWucdGX1tFikno1Xlu0t1R2agrK/NYHlzAUhOkF7wmH99BzSxKV6ArraEP8hZ3YUOO8E+it4LKjhkHLIJyTP4i4J3F0Z2TLVOG/HwkU2sqLxuusTxqykJY8V5nz/M5ExnJvNTY4GHOeWNlNnBLpDpxqOnjpj1bDwOvUNemzD4dphplgIgqStQSD5n5S6h1hnl+VcZHr1kLwCSKvLU0zID9zvsElYYy4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZgiIUBTYJic1QyvZ2OdAzJ9zzRqqPPjobQ+VttQtYCA=;
- b=NsSSu8+07QosHkzhTZVzuhLJiURNW2Qm3CDzfjNNV0ctq98mJYkxauHIMTZzHdrtY7riBnX4myCJ+Jo2JF/JqjyNHNkv65xdDNtjS6aDeS8BGE+0Maka7P8sBjTjxwiEgnHOY8uP3PZV8bJSxg1HEJIaAILO70mNChMghhn2Zc6j3OIbjGb4SEg8R/2PUDY3JRZOEuSTEq9TtP/jLUXPQazr9BHv4yAYTE53QWYfIvZqsJdimgSHF04BpqNVo5yxIXoCd3c0/wamrk/NuOIJOpUGOfDJI/7XKjqQnxAOgchkoiBHUeAmd5GMODs8O0TZmk6zgRvEyntcgGXTvE3y5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZgiIUBTYJic1QyvZ2OdAzJ9zzRqqPPjobQ+VttQtYCA=;
- b=hYAGZqEzUZYfZWr9yRLW8U4JnOfObQNqLjXSR5x0PL6pgHTnVc8zMpUOuFzPsjQtNKNnBcqxdPp4e7uL6HCz7xeAUT5eUozbLEcjkeMSM5F/H1vnOHJpfHBgMVRZ0GFAszDIYokXk0vXtsIBoDEQEBM+Am9cqzUVs2tajgeVL+Q=
-Authentication-Results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR0501MB2494.eurprd05.prod.outlook.com (2603:10a6:800:71::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Thu, 9 Jul
- 2020 15:38:58 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3174.022; Thu, 9 Jul 2020
- 15:38:58 +0000
-Date:   Thu, 9 Jul 2020 12:38:54 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/12] PM, libnvdimm: Add 'mem-quiet' state and
- callback for firmware activation
-Message-ID: <20200709153854.GY23821@mellanox.com>
-References: <159408711335.2385045.2567600405906448375.stgit@dwillia2-desk3.amr.corp.intel.com>
- <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200709150051.GA17342@infradead.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709150051.GA17342@infradead.org>
-X-ClientProxiedBy: MN2PR08CA0003.namprd08.prod.outlook.com
- (2603:10b6:208:239::8) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Thu, 9 Jul 2020 11:43:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGIPn5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 11:43:57 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772CDC08C5CE;
+        Thu,  9 Jul 2020 08:43:57 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mn17so1292274pjb.4;
+        Thu, 09 Jul 2020 08:43:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5aSR39Y673gK4LGy+pomYrdhftpjF5NzAVJPOxgGDA8=;
+        b=roDisFVPKLpYmdVp11RgxCQVrZnqxRmEM5k2L+abqUHYtxCJKkeCwNctIul+/pax8W
+         Mbe2HIMo63hDHBD221lNxo4JQifsrDKRyBYOSXgNibMyXSHrWouzA/eV5WSNnXNDACOE
+         dlIhnaVD31AD+hRu2cmd91xSo4JK+GbKdDjUoegM60F3us7yUeAVc/XwhwIiRViW1gEJ
+         21YJxdwTRjrKqEpQz3Drr77ZV3DlEJEuelFNLRM6I74+pk+A+Pne1wwrg6jS7jzVloAB
+         ckNUkhVbfz34eovP+IOBlBpKnh0Wm+j//BobyB0Oh0Ab6CffALrkReGnSw/oWDdGhqQE
+         yCSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5aSR39Y673gK4LGy+pomYrdhftpjF5NzAVJPOxgGDA8=;
+        b=Mow9gznm8Grl9RUa1Qcu6hxVHd/erqB6zK1d4aVxiapuvz/UzXV3QVRKuiN5R8siee
+         D9VhFTz2ef7h1XbGCPfXgxvZDrPrvmsbh3tXqJbYPPxcz0c8us19ctFS4TcUQontJUjC
+         26vAahzYSbsg9IpakwKqPvurIMf2ldwcVVoX8nAYcH9j7F1USF4VejNXNshe7YBMzsLX
+         t9hqNX08LbovK1Qn9cxVVppm/2HZHCyDtXGk77oN+UdYSUZaz0TfZ6DjHpOLGBLYWUTE
+         5ElTQvkVCM3gis3YvT1Q/BUkRjDbonTUOm2PSq9Y/vmsnvkNp9yTWUfNBzYNHs9KDS8I
+         q7Hw==
+X-Gm-Message-State: AOAM530i9JPzrR7YmJA/o5n2fI+F0ZD2bISdd+7g/YNRuDLrucSbQIwM
+        F1j11jB2ogNcxymtDb1RFuCw/nydJ5VM3cNrrjo=
+X-Google-Smtp-Source: ABdhPJymrDoI28s7I5KmpXMuqSAKOHB4T6Mn8hum7vi5/FRCdzLui7I/tE3BYrOAP4DxBG27lCVshjmLSxleGLqiP3E=
+X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr673895pjb.129.1594309436972;
+ Thu, 09 Jul 2020 08:43:56 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR08CA0003.namprd08.prod.outlook.com (2603:10b6:208:239::8) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Thu, 9 Jul 2020 15:38:57 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jtYdS-007dM5-Ec; Thu, 09 Jul 2020 12:38:54 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: af5f7a7c-4f35-4e3b-4de4-08d8241e31e7
-X-MS-TrafficTypeDiagnostic: VI1PR0501MB2494:
-X-Microsoft-Antispam-PRVS: <VI1PR0501MB249425F6FCE3C20702820DC7CF640@VI1PR0501MB2494.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: s5BItQgEdUp/U57fAtkFTGtjZY70QqgOBjvgyyrgIin7NdwILXRTI0uUzbFREZUoavAb2uX/CXM83CzV9SIQcX6S3X5VUjQyJixqKTdyls5tJ35Ura+xPt9kgZzr2koOuVwhDYLKIO/rOA3uXNioScfcgz8ta82lN3OUuLMqdz7EYuuXf/sN/uvFcpZ0oGFDGTvnk82l4leM61iMsBy8C+gxWJVWjNiGQYLwAmPFAvRdH9BlR9qs87ST6hj3hRQWNv9dtgGJKVGxvF0RzTu81fpUoM+b4LlBW1781BAr+S/nodM/5CAgvmma6SEnXC0/fQDgsi8NDqNQbeYDmmo3FA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(376002)(396003)(366004)(2906002)(186003)(36756003)(8936002)(6916009)(7416002)(316002)(54906003)(478600001)(86362001)(4326008)(8676002)(1076003)(2616005)(33656002)(26005)(9746002)(9786002)(5660300002)(66556008)(66946007)(66476007)(83380400001)(426003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 41VY4oW5LCWMv1eRyfnIFMHXPJ0AiR8ofnbveUTWHfiduARBIbwUCTamkA3oDnALxp64MchI/HcnKN9lTcDbpQL02z8/7h/jU2+qX+8JeaD+LMWr0K3GZ+/35jlZP+aasoAsjj8B59wYHdv9grcPQk4gmMr8vnlM7HyNGjzIducyn576jxqokNDsxzzIN3bSi/ZPAczrATN7kv/b6Flr1SlJfiR5QJdq4kzR2uW/9QfMj812GqcRKlCE/Q6wgeVE0amNbBib0yKISvUvSpgOkObZN+b+u2+7pA2FO6NNk3iu84FmLr9Bsfg1yD+Przd8QGpMnDQ5rFGbu92aMJ2x/YOuOuS/9Mv12HB71W8TYAsft+uwQPqCXSdzC9ro0MwnX+yWgrfvYwLmx7mQUUWrgNa3DObWDv6/W+Cu2OYp1EF71S2eJiRAPeIAQqYEqOqO71CruK6iW+ePkrl3dmKZlLo+RFC5r5uo8zS1mjKGsvw=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af5f7a7c-4f35-4e3b-4de4-08d8241e31e7
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2020 15:38:58.0304
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FYbYHTu5h+VFoRrobwRczlgtfjKTwyOMterIE7d1RTLKrDDvGZgplR26EKejiJK7E8Tf4weygPCOxLIwg/b7FA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2494
+References: <20200709152200.10039-1-contact@artur-rojek.eu>
+In-Reply-To: <20200709152200.10039-1-contact@artur-rojek.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Jul 2020 18:43:40 +0300
+Message-ID: <CAHp75VcwgL8pH+pH9TnsuwbWr=wSFu37sX8sTkbkfk+iBv7Jng@mail.gmail.com>
+Subject: Re: [PATCH v8 0/6] iio/adc: ingenic: Cleanups & add touchscreen mode.
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 04:00:51PM +0100, Christoph Hellwig wrote:
-> On Mon, Jul 06, 2020 at 06:59:32PM -0700, Dan Williams wrote:
-> > The runtime firmware activation capability of Intel NVDIMM devices
-> > requires memory transactions to be disabled for 100s of microseconds.
-> > This timeout is large enough to cause in-flight DMA to fail and other
-> > application detectable timeouts. Arrange for firmware activation to be
-> > executed while the system is "quiesced", all processes and device-DMA
-> > frozen.
-> > 
-> > It is already required that invoking device ->freeze() callbacks is
-> > sufficient to cease DMA. A device that continues memory writes outside
-> > of user-direction violates expectations of the PM core to be to
-> > establish a coherent hibernation image.
-> > 
-> > That said, RDMA devices are an example of a device that access memory
-> > outside of user process direction.
+On Thu, Jul 9, 2020 at 6:22 PM Artur Rojek <contact@artur-rojek.eu> wrote:
+>
+> Hi all,
+>
+> v8 of this patchset introduces some structural changes, which I deemed
+> worthy highlighting here:
 
-Are you saying freeze doesn't work for some RDMA drivers? That would
-be a driver bug, I think.
+Can you remind me if I gave you tags on the previous version?
+If so, is the above the reason to drop them?
 
-The consequences of doing freeze are pretty serious, but it should
-still stop DMA.
+>
+>  - adc-joystick related changes have been dropped from this patchset and
+>    will be upstreamed separately. Their only connection to this patchset
+>    was that they used INGENIC_ADC_TOUCH_* defines in the DTS example,
+>    causing trouble to Rob's scripts.
+>
+>  - Integrated Paul's changes, which introduce an ADCMD low-level command
+>    feature. These changes affect patches 5/6 and 6/6, with the former
+>    requiring Rob to re-ack.
+>
+> Cheers,
+> Artur
+>
+> Artur Rojek (5):
+>   dt-bindings: iio/adc: Convert ingenic-adc docs to YAML.
+>   IIO: Ingenic JZ47xx: Error check clk_enable calls.
+>   IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
+>   dt-bindings: iio/adc: Add touchscreen idx for JZ47xx SoC ADC
+>   IIO: Ingenic JZ47xx: Add touchscreen mode.
+>
+> Paul Cercueil (1):
+>   iio/adc: ingenic: Retrieve channels list from soc data struct
+>
+>  .../bindings/iio/adc/ingenic,adc.txt          |  49 ---
+>  .../bindings/iio/adc/ingenic,adc.yaml         |  71 ++++
+>  drivers/iio/adc/Kconfig                       |   1 +
+>  drivers/iio/adc/ingenic-adc.c                 | 386 ++++++++++++++++--
+>  include/dt-bindings/iio/adc/ingenic,adc.h     |   6 +
+>  5 files changed, 426 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+>
+> --
+> 2.27.0
+>
 
-Jason
+
+-- 
+With Best Regards,
+Andy Shevchenko
