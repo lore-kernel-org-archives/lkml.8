@@ -2,84 +2,99 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E65D20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594327859;
-	bh=vHNqEaHtjDcxkxJq5T7L67yj9rqAojna/KKLUbWHNjA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JlPkXUBo0EulAoUxvmVOCJ0JguOnA8qaNfGpeO729u6jZ0Tlg9XeXsnnsi5r5sfp4
-	 8viYreozRdJACIqUtzwdeIS+Juess3LpNzGBcWMaYLQiLKkya7TqNdKhUgR5CUiutI
-	 7V8ldHsBmFI9H7szVlrnZ8z9U4Xu22D3J6mFDZO8=
+	by mail.kernel.org (Postfix) with ESMTP id 6F45320672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:51:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLAM8adN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgGIUu6 (ORCPT
+        id S1726778AbgGIUvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:50:58 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43935 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgGIUu5 (ORCPT
+        Thu, 9 Jul 2020 16:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgGIUvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:50:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so3760336iom.10;
-        Thu, 09 Jul 2020 13:50:57 -0700 (PDT)
+        Thu, 9 Jul 2020 16:51:16 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7DAC08C5CE;
+        Thu,  9 Jul 2020 13:51:16 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id m16so108191pls.5;
+        Thu, 09 Jul 2020 13:51:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6aAUMrDgu/dRMO1PKFcJzl15krQUj9/NrmpmX2igbSU=;
+        b=QLAM8adNoWwlxAY3sKExkNjz7ranKdOekEgyi9t/Sjm1NULpynsg98SCvqGKj++2my
+         IK6ockcKb2udy/ZF5A5MSGWuMXga8YnRQfwMlegNJLeMokYho+ff0W/PU+kagdruvlXN
+         9gkP+eAM5WjaKP96HoniGYjaNKLpDPvFyQT2H1OFmpiP/4SzVsYo3F9vJoOESX7nhgHg
+         z1uJVBFWOPaPNtXVby+4aZ67Ytn5WneI4d5WL6X2FVAZoECT+cfFbRB0DPMAY+V7JMGo
+         ohQCrGq+5zpYfdb5EivFa/KEV6oa4C/xLRl7xx7z5q04HZE18PRyhet427kCuxzbd+PE
+         IBKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=q4goypXlSfIbKuZsx6rZOOklIur5zL9+5WS2m3yf6L8=;
-        b=azAPxUt6P/BO+bw4BLcjYqpAjCbby0avvLpzw1Tbs6YPkTR6NMnMSmMPFAOob7gBU9
-         Y7BCG8ya+fnLoyuWx+JLDmRfwEn+1nRxLvBoJhoNPIwW8URpKqk2klNsF0ugmu1iHk4P
-         OorfzxmeBNXnARnJ+KZHsTASQprPgiYYX8vEVpaBX7PmfHTD9jLsYi9CnQfEy34mQett
-         TI2YSaAwcMTXSUiC91p/yMNfs2hoC7A+yNKE+B1SFmbznryYfYkZ2+eDtZbQeQUW9m7D
-         SfDsJI+eSMtD8QbR0airONK2oEd6/EZlDO5Ce26u/EWyayZzePa21UnnGUITxkk46CIo
-         zO3w==
-X-Gm-Message-State: AOAM531gOzZEGW9QRVBJJj/eZx0olq66cfGt+B9ejZt/vQm46DpSlOEs
-        IRNJ9LTOd3vo8Zs0uvAnjw==
-X-Google-Smtp-Source: ABdhPJwp7A93nPBgC5fckCqt0ndWgAzxen2kDIkyo9KV3eSdH1FK32VaRJmA/NZgzmm/uQR3ITv7Zg==
-X-Received: by 2002:a02:1784:: with SMTP id 126mr76296906jah.53.1594327857243;
-        Thu, 09 Jul 2020 13:50:57 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id y12sm2422600ilm.38.2020.07.09.13.50.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 13:50:56 -0700 (PDT)
-Received: (nullmailer pid 864966 invoked by uid 1000);
-        Thu, 09 Jul 2020 20:50:55 -0000
-Date:   Thu, 9 Jul 2020 14:50:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     andriy.shevchenko@intel.com, sureshkumar.mp@intel.com,
-        lakshmi.bai.raja.subramanian@intel.com, devicetree@vger.kernel.org,
-        vkoul@kernel.org, kishon@ti.com, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: phy: intel: Add Keem Bay eMMC PHY
- bindings
-Message-ID: <20200709205055.GA864918@bogus>
-References: <20200702000934.3258-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200702000934.3258-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6aAUMrDgu/dRMO1PKFcJzl15krQUj9/NrmpmX2igbSU=;
+        b=ZWHl+OHnnrviZisTXNCcx1BccUg1ffmY1YZn4XV3+zxDoBiLm/fAsmexMITtX9j09+
+         e5Xr2IE+07KArNUGlee6XKDVOC/rQw6jocho1zo5SiEhmBkZ/qicrpox/T6Uaa/2q2vd
+         pf/aTaLRUvxoT9yCufCjVpDcdTecaoieP+EMf9I/gyXXZ/m+culCsHrACAMweTv71QLS
+         PkkqYa05RREOCNXdrdvAO8WSlI2A6JoPvViU5EpP1+SMMTRqXNRvx4TdA3fFn2EeT56c
+         p4vP5p4SKEc37YvuP0TLDcYRiL90ktO+VRnv2ueP59IP/5CHhdSZRk0GGMbrQkTIHpp9
+         bBOQ==
+X-Gm-Message-State: AOAM530UOZHZrlWBV+DG7rCMbvBRB73HsUvRRXf/ZXwa8wqAwnXWyP4E
+        4sJPtgNzWDhnP7Yxh+Hiqwm0ZCTbHuyUZH4Gpxe5gidE
+X-Google-Smtp-Source: ABdhPJxsjKxantzTRftMX6bNh0Ka3ytqBm/pi7VsMJfjHY2qg0YOKAp3gqWXkrp8PGXSVI7piz191sxizMiURXgpxig=
+X-Received: by 2002:a17:902:8491:: with SMTP id c17mr47735913plo.262.1594327876126;
+ Thu, 09 Jul 2020 13:51:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702000934.3258-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+References: <20200709201220.13736-1-eajames@linux.ibm.com> <20200709201220.13736-3-eajames@linux.ibm.com>
+In-Reply-To: <20200709201220.13736-3-eajames@linux.ibm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Jul 2020 23:50:59 +0300
+Message-ID: <CAHp75VcE9skpqa32bZ4AAcOa08WYSqqZodnveLSF+sZej5KnWw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] leds: pca955x: Add an IBM software implementation of
+ the PCA9552 chip
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        vishwa@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 02 Jul 2020 08:09:33 +0800, Wan Ahmad Zainie wrote:
-> Binding description for Intel Keem Bay eMMC PHY.
-> 
-> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-> ---
->  .../bindings/phy/intel,keembay-emmc-phy.yaml  | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
-> 
+On Thu, Jul 9, 2020 at 11:16 PM Eddie James <eajames@linux.ibm.com> wrote:
+>
+> IBM created an implementation of the PCA9552 on a PIC16F
+> microcontroller. The I2C device addresses are different from the
+> hardware PCA9552, so add a new compatible string and associated
+> platform data to be able to probe this device.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is weird. I would rather expect ibm prefix with corresponding part number.
+
+> +       pca9552_ibm,
+
+> +       [pca9552_ibm] = {
+
+> +       { "pca9552-ibm", pca9552_ibm },
+
+> +       { .compatible = "nxp,pca9552-ibm", .data = (void *)pca9552_ibm },
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
