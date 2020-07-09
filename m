@@ -2,120 +2,151 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF35C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C45C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA6BB2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B351D2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LGaTTpT2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Ul6QLbcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgGIKCi (ORCPT
+        id S1726480AbgGIKBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:02:38 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:22780 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726918AbgGIKCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:02:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594288952; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=Vcf4pT1GA5PBOflu7PbMdZ+iJ9F8+ASAMkKs46dXbG8=; b=LGaTTpT2BUO8ciqlU0nvjwg5mtreNdE7gW8mdtpXXQOC8HY4PrpuItBxSYbrHvdwKfzHwDFq
- c3fceC4Xy+4/rh8S7zuWOTett1NfcWTbOhxlztARc+j0udu9aVg5DGO0hvOesuSwVUtoBFt8
- RgfRZL/ARQFp9oB3EAeKjiExI+8=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
- 5f06eaf2c746eb6f00f30ef4 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 10:01:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 511BFC433CB; Thu,  9 Jul 2020 10:01:21 +0000 (UTC)
-Received: from [192.168.0.129] (unknown [183.83.142.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 50F85C433C8;
-        Thu,  9 Jul 2020 10:01:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 50F85C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-Subject: Re: [PATCH v3 6/8] dt-bindings: sound: lpass-cpu: Add sc7180 lpass
- cpu node
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
- <1594184896-10629-7-git-send-email-rohitkr@codeaurora.org>
- <6b6b0e38-9c04-e065-8a43-ccfec260d60c@linaro.org>
-From:   Rohit Kumar <rohitkr@codeaurora.org>
-Message-ID: <430e0d24-c5c2-84ec-fe7b-b6b27192666d@codeaurora.org>
-Date:   Thu, 9 Jul 2020 15:31:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 06:01:47 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:3869 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgGIKBh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:01:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594288896; x=1625824896;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uci+63N0XBlAvV0QBr++Adpov2aPMsyTOj+m1Y0wXT8=;
+  b=Ul6QLbcs8X85dh0gIBh+vY4KpVNSb2AieFToo/4EwvZG2lxIGzTnzOJf
+   i89bHGvRPN9gaanoXZ39QpwA520qN+aSdyQJpZ7RIGWxMn2V5eqoJLZGW
+   w9M57Qj4wic3CF+3m6+UIWhx48XP9B+cuz1BiJAQQIDlkWSoOoYQeujP6
+   RIRxY9u6PadyDbkzrX38n4O8ZuiUzuOyTvlPMnE3EJuAQeMuyoCjvcabH
+   LWY8k1rxvGl3NEZrtvE5w2rs0fcyxJq+8dC8d4qI4RJh1Up3kNmxRHoRU
+   FofPJ8PcvzsIpOHzN4x0Gnb6YglfS1EkZ7r3hUY1qzNaF5kdY2d6i/voA
+   Q==;
+IronPort-SDR: dnqaWMqAToYVQQX9wHZ+mLdhSrjtWXnMOmBio5T0ofFrByPfpgwqhQD8M10z7K2teepBCmsBrl
+ ZGxxJhOlJum5XHfoOaCdJlQ73fbyxYTIW38buXDr2ZuHfs1pyC/aDzNur373r7LhsAmPECcluY
+ vz9bw75l3/hPfEi/UaaXgxQwH3TYq73n6xkZu66zwUr2FjQ1n79r1SbRhRvtZeILen1genE8mx
+ llr8h4pynTbKBK2RTu2bbTWtWwRZPg8+Ks65t58h2x9OJ9Em0O3e6U1fSIQf0CImSgr+4mDVVD
+ e0Y=
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="83138399"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:01:34 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 9 Jul 2020 03:01:08 -0700
+Received: from soft-dev3.localdomain (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:01:30 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <andrew@lunn.ch>,
+        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net-next v2 01/12] switchdev: mrp: Extend switchdev API for MRP Interconnect
+Date:   Thu, 9 Jul 2020 12:00:29 +0200
+Message-ID: <20200709100040.554623-2-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200709100040.554623-1-horatiu.vultur@microchip.com>
+References: <20200709100040.554623-1-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <6b6b0e38-9c04-e065-8a43-ccfec260d60c@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Extend switchdev API to add support for MRP interconnect. The HW is
+notified in the following cases:
 
-On 7/9/2020 2:57 PM, Srinivas Kandagatla wrote:
->
->
-> On 08/07/2020 06:08, Rohit kumar wrote:
->> Add dt-bindings to support "qcom,lpass-cpu-sc7180" node.
->>
->> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git 
->> a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt 
->> b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
->> index 32c2cdb..04e34cc 100644
->> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
->> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
->> @@ -4,7 +4,8 @@ This node models the Qualcomm Technologies Low-Power 
->> Audio SubSystem (LPASS).
->>     Required properties:
->>   -- compatible        : "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu"
->> +- compatible        : "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
->> +              "qcom,lpass-cpu-sc7180"
->>   - clocks        : Must contain an entry for each entry in clock-names.
->>   - clock-names        : A list which must include the following 
->> entries:
->>                   * "ahbix-clk"
->
-> Can you also list the clocks that are mandatory for this SoC.
->
-> --srini
->
-Will it be fine if I update it in patch 8 only where we have moved to 
-yaml format?
+SWITCHDEV_OBJ_ID_IN_ROLE_MRP: This is used when the interconnect role
+  of the node changes. The supported roles are MIM and MIC.
 
-Thanks,
+SWITCHDEV_OBJ_ID_IN_STATE_MRP: This is used when the interconnect ring
+  changes it states to open or closed.
 
-Rohit
+SWITCHDEV_OBJ_ID_IN_TEST_MRP: This is used to start/stop sending
+  MRP_InTest frames on all MRP ports. This is called only on nodes that
+  have the interconnect role MIM.
 
->
->>
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+---
+ include/net/switchdev.h | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/include/net/switchdev.h b/include/net/switchdev.h
+index b8c059b4e06d9..ff22469143013 100644
+--- a/include/net/switchdev.h
++++ b/include/net/switchdev.h
+@@ -76,6 +76,10 @@ enum switchdev_obj_id {
+ 	SWITCHDEV_OBJ_ID_RING_TEST_MRP,
+ 	SWITCHDEV_OBJ_ID_RING_ROLE_MRP,
+ 	SWITCHDEV_OBJ_ID_RING_STATE_MRP,
++	SWITCHDEV_OBJ_ID_IN_TEST_MRP,
++	SWITCHDEV_OBJ_ID_IN_ROLE_MRP,
++	SWITCHDEV_OBJ_ID_IN_STATE_MRP,
++
+ #endif
+ };
+ 
+@@ -155,6 +159,40 @@ struct switchdev_obj_ring_state_mrp {
+ #define SWITCHDEV_OBJ_RING_STATE_MRP(OBJ) \
+ 	container_of((OBJ), struct switchdev_obj_ring_state_mrp, obj)
+ 
++/* SWITCHDEV_OBJ_ID_IN_TEST_MRP */
++struct switchdev_obj_in_test_mrp {
++	struct switchdev_obj obj;
++	/* The value is in us and a value of 0 represents to stop */
++	u32 interval;
++	u32 in_id;
++	u32 period;
++	u8 max_miss;
++};
++
++#define SWITCHDEV_OBJ_IN_TEST_MRP(OBJ) \
++	container_of((OBJ), struct switchdev_obj_in_test_mrp, obj)
++
++/* SWICHDEV_OBJ_ID_IN_ROLE_MRP */
++struct switchdev_obj_in_role_mrp {
++	struct switchdev_obj obj;
++	struct net_device *i_port;
++	u32 ring_id;
++	u16 in_id;
++	u8 in_role;
++};
++
++#define SWITCHDEV_OBJ_IN_ROLE_MRP(OBJ) \
++	container_of((OBJ), struct switchdev_obj_in_role_mrp, obj)
++
++struct switchdev_obj_in_state_mrp {
++	struct switchdev_obj obj;
++	u32 in_id;
++	u8 in_state;
++};
++
++#define SWITCHDEV_OBJ_IN_STATE_MRP(OBJ) \
++	container_of((OBJ), struct switchdev_obj_in_state_mrp, obj)
++
+ #endif
+ 
+ typedef int switchdev_obj_dump_cb_t(struct switchdev_obj *obj);
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
+2.27.0
 
