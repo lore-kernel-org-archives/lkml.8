@@ -2,188 +2,104 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B80C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C060C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23E1F20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594334798;
-	bh=dtlzcr0QvM7s/s8aUqSHa/DeH/oh6yuUyMb1mVo9rNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IHXCAdfDfbmSPZM0sNpT2o8lloeivALJSsm02C8Lu9QrH1sWKci/kLEqS3QI2Gh4I
-	 zMhC1fURaaUlYn2ebSnu4c0DCfGvFf0F/Dpp5HEelL1xVN30TDchPKFm2MHmfK3iww
-	 4jdGwViSnA1f5ShRo8ToMGkPe17tvpAOswWlUr0U=
+	by mail.kernel.org (Postfix) with ESMTP id 7209420775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgGIWqg (ORCPT
+        id S1727873AbgGIWqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:46:36 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44044 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgGIWq3 (ORCPT
+        Thu, 9 Jul 2020 18:46:44 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48234 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbgGIWqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:46:29 -0400
-Received: by mail-io1-f65.google.com with SMTP id i4so4030742iov.11;
-        Thu, 09 Jul 2020 15:46:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QXFKaIMVMvoCqLqiHJ2gAavHpO+CjG0ilPbgcK2+QFs=;
-        b=OVGZQIbQF1+vcqb1L6GeXRw5pW1d/A4vcjQJ4Pa55elc44WgLSmpAr0OKEARSNABvc
-         cvy1bqKiHOHxWeAW3n38IhZE7ExDPKsvzybq59ClQ+5k0myaCqAF0F+Giv3IvzYoahHw
-         SEp4m7LVxZuEpB6TUPs915bqoKH/qn/jQZuxwlTuKgnp/+7VvFU7AMFXmZOC8IdpJE9C
-         561QMBsMsAYTOih+NNDPejoQtODTUewVmkzkOOfg6G5kFowDxujK4/9cGh578eXUQgmc
-         Mq8fRicWY2w+Um1ItpUgDhKuWr/Omcf5SUuXuDQrcaCPNiPoiKjgZ3jlDWhRcm9O5tNo
-         rLTA==
-X-Gm-Message-State: AOAM530Pv4zObmmMqn+GHEh4jPsI2V8VSEbVXGTgbmWTVdWI5Lwr4krw
-        E+/RxiApbmVZBVU/S7TEmQ==
-X-Google-Smtp-Source: ABdhPJyKXp0NnPd3+aWgOm1nwSaG7xmAY38yYWlsy/z8UNBc0kMfraXWzB4Dxdq1HDX525Ov/1rOuw==
-X-Received: by 2002:a05:6602:1544:: with SMTP id h4mr45081721iow.24.1594334788520;
-        Thu, 09 Jul 2020 15:46:28 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id g8sm2510122ilq.49.2020.07.09.15.46.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 15:46:27 -0700 (PDT)
-Received: (nullmailer pid 1029281 invoked by uid 1000);
-        Thu, 09 Jul 2020 22:46:26 -0000
-Date:   Thu, 9 Jul 2020 16:46:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     lgirdwood@gmail.com, mark.rutland@arm.com, agross@kernel.org,
-        broonie@kernel.org, heikki.krogerus@linux.intel.com,
-        gregkh@linuxfoundation.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jackp@codeaurora.org, rdunlap@infradead.org,
-        bryan.odonoghue@linaro.org
-Subject: Re: [PATCH v5 2/6] dt-bindings: usb: Add Qualcomm PMIC type C
- controller dt-binding
-Message-ID: <20200709224626.GA1021653@bogus>
-References: <20200703015102.27295-1-wcheng@codeaurora.org>
- <20200703015102.27295-3-wcheng@codeaurora.org>
+        Thu, 9 Jul 2020 18:46:20 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BB18D8040A69;
+        Thu,  9 Jul 2020 22:46:14 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yPXxnBfw2rZ6; Fri, 10 Jul 2020 01:46:14 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 08/11] dmaengine: dw: Add dummy device_caps callback
+Date:   Fri, 10 Jul 2020 01:45:47 +0300
+Message-ID: <20200709224550.15539-9-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703015102.27295-3-wcheng@codeaurora.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 06:50:58PM -0700, Wesley Cheng wrote:
-> Introduce the dt-binding for enabling USB type C orientation and role
-> detection using the PM8150B.  The driver will be responsible for receiving
-> the interrupt at a state change on the CC lines, reading the orientation/role,
-> and communicating this information to the remote clients, which can include
-> a role switch node and a type C switch.
-> 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> ---
->  .../bindings/usb/qcom,pmic-typec.yaml         | 130 ++++++++++++++++++
->  1 file changed, 130 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
-> new file mode 100644
-> index 000000000000..735b1f74664b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
-> @@ -0,0 +1,130 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/usb/qcom,pmic-typec.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm PMIC based USB type C Detection Driver
-> +
-> +maintainers:
-> +  - Wesley Cheng <wcheng@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm PMIC Type C Detect
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,pm8150b-usb-typec
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: Type C base address
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: CC change interrupt from PMIC
-> +
-> +  connector:
-> +    description: Connector type for remote endpoints
-> +    type: object
-> +    $ref: /schemas/connector/usb-connector.yaml#
+Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
+have non-uniform DMA capabilities per device channels, let's add
+the DW DMA specific device_caps callback to expose that specifics up to
+the DMA consumer. It's a dummy function for now. We'll fill it in with
+capabilities overrides in the next commits.
 
-Why is all the connector schema duplicated here? You only need things 
-that are further constrained like 'compatible'.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
-> +
-> +    properties:
-> +      compatible:
-> +        enum:
-> +          - usb-c-connector
-> +
-> +      power-role:
-> +       enum:
-> +         - dual
-> +         - source
-> +         - sink
-> +
-> +      data-role:
-> +        enum:
-> +          - dual
-> +          - host
-> +          - device
-> +
-> +      ports:
-> +        description: Remote endpoint connections
-> +        type: object
-> +
-> +        properties:
-> +          port@0:
-> +            description: Remote endpoints for the High Speed path
-> +            type: object
-> +
-> +          port@1:
-> +            description: Remote endpoints for the Super Speed path
-> +            type: object
-> +
-> +            properties:
-> +              endpoint@0:
-> +                description: Connection to USB type C mux node
-> +                type: object
-> +
-> +                properties:
-> +                  remote-endpoint:
-> +                    maxItems: 1
+---
 
-'remote-endpoint' in not an array.
+Changelog v3:
+- This is a new patch created as a result of the discussion with Vinud and
+  Andy in the framework of DW DMA burst and LLP capabilities.
+---
+ drivers/dma/dw/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> +                    description: Node reference to the type C mux
-> +
-> +              endpoint@1:
-> +                description: Connection to role switch node
-> +                type: object
-> +
-> +                properties:
-> +                  remote-endpoint:
-> +                    maxItems: 1
-> +                    description: Node reference to the role switch node
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index fb95920c429e..ceded21537e2 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -1049,6 +1049,11 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
+ 	dev_vdbg(chan2dev(chan), "%s: done\n", __func__);
+ }
+ 
++static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
++{
++
++}
++
+ int do_dma_probe(struct dw_dma_chip *chip)
+ {
+ 	struct dw_dma *dw = chip->dw;
+@@ -1214,6 +1219,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 	dw->dma.device_prep_dma_memcpy = dwc_prep_dma_memcpy;
+ 	dw->dma.device_prep_slave_sg = dwc_prep_slave_sg;
+ 
++	dw->dma.device_caps = dwc_caps;
+ 	dw->dma.device_config = dwc_config;
+ 	dw->dma.device_pause = dwc_pause;
+ 	dw->dma.device_resume = dwc_resume;
+-- 
+2.26.2
 
-So USB-SS data can come from 'type C mux' or 'role switch node'? That 
-seems odd.
-
-Rob
