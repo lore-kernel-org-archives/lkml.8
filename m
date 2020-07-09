@@ -2,113 +2,67 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B074C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44148C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2603A2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F962206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgGILfN (ORCPT
+        id S1727101AbgGILmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:35:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:52594 "EHLO foss.arm.com"
+        Thu, 9 Jul 2020 07:42:20 -0400
+Received: from mga17.intel.com ([192.55.52.151]:5195 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbgGILfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:35:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C18D21FB;
-        Thu,  9 Jul 2020 04:35:12 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53A4F3F7D7;
-        Thu,  9 Jul 2020 04:35:11 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 12:35:09 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
-References: <20200528143141.29956-1-pali@kernel.org>
- <20200702083036.12230-1-pali@kernel.org>
+        id S1726433AbgGILmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 07:42:20 -0400
+IronPort-SDR: skiGhcDJ0FQz83L6XuKIPDsQbBB8jmZeHqVBIAknAoZxmchflmVeDdRTKjoQHNsQmzMLnYi3XC
+ W4qeCSVQjlQQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="128046864"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="128046864"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 04:42:19 -0700
+IronPort-SDR: XE0d1mBqu7YGw3U+LrPHZjvrWGV04Jh6iYCGGr5seNBGkinrOOER7Cws5lhVPO97K6NPbKyLsU
+ 3uEAC/sbeqiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="324195429"
+Received: from nk4-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.52.252])
+  by orsmga007.jf.intel.com with ESMTP; 09 Jul 2020 04:42:15 -0700
+Date:   Thu, 9 Jul 2020 14:42:13 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Masahisa Kojima <masahisa.kojima@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ardb@kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: Re: [PATCH v3 0/2] synquacer: add TPM support
+Message-ID: <20200709114213.GB683620@linux.intel.com>
+References: <20200708131424.18729-1-masahisa.kojima@linaro.org>
+ <20200708162017.GB549022@linux.intel.com>
+ <CADQ0-X9im8yVVVJbJL5Ssaa49UTOw+M=tYrfhNoODUaY723O8A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200702083036.12230-1-pali@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CADQ0-X9im8yVVVJbJL5Ssaa49UTOw+M=tYrfhNoODUaY723O8A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 10:30:36AM +0200, Pali Rohár wrote:
-> When there is no PCIe card connected and advk_pcie_rd_conf() or
-> advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-> root bridge, the aardvark driver throws the following error message:
+On Thu, Jul 09, 2020 at 08:34:27AM +0900, Masahisa Kojima wrote:
+> Hi Jakko,
 > 
->   advk-pcie d0070000.pcie: config read/write timed out
+> > Overally the code looks great. You've run it through checkpatch.pl?
 > 
-> Obviously accessing PCIe registers of disconnected card is not possible.
-> 
-> Extend check in advk_pcie_valid_device() function for validating
-> availability of PCIe bus. If PCIe link is down, then the device is marked
-> as Not Found and the driver does not try to access these registers.
-> 
-> This is just an optimization to prevent accessing PCIe registers when card
-> is disconnected. Trying to access PCIe registers of disconnected card does
-> not cause any crash, kernel just needs to wait for a timeout. So if card
-> disappear immediately after checking for PCIe link (before accessing PCIe
-> registers), it does not cause any problems.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> 
-> ---
-> Changes in V3:
-> * Add comment to the code
-> Changes in V2:
-> * Update commit message, mention that this is optimization
-> ---
->  drivers/pci/controller/pci-aardvark.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 90ff291c24f0..d18f389b36a1 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -644,6 +644,13 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
->  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
->  		return false;
->  
-> +	/*
-> +	 * If the link goes down after we check for link-up, nothing bad
-> +	 * happens but the config access times out.
-> +	 */
-> +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-> +		return false;
-> +
->  	return true;
->  }
+> Yes, I have run checkpatch.pl and removed errors.
 
-Question: this basically means that you can only effectively enumerate
-bus number == root_bus_nr and AFAICS if at probe the link did not
-come up it will never do, will it ?
+OK, cool.
 
-Isn't this equivalent to limiting the bus numbers the bridge is capable
-of handling ?
-
-Reworded: if in advk_pcie_setup_hw() the link does not come up, what's
-the point of trying to enumerate the bus hierarchy below the root bus ?
-
-Thanks,
-Lorenzo
+/Jarkko
