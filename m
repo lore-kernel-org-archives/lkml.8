@@ -5,47 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C61FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF91C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 404A720708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A46320708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S8YywSIC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTHrsHjF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgGIJKp (ORCPT
+        id S1726444AbgGIJKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:10:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34899 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726140AbgGIJKp (ORCPT
+        Thu, 9 Jul 2020 05:10:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43273 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726418AbgGIJKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:10:45 -0400
+        Thu, 9 Jul 2020 05:10:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594285842;
+        s=mimecast20190719; t=1594285851;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=dA+qSSX4hlkrP6EOyaLccE7p1sh78cX63ZSeWPLvmmw=;
-        b=S8YywSICZov4mFfjQldlDottjRyFB103wCzVLIBMnipX8v7QmejReuPnRr+AQgJgaJMRaH
-        bUkR78GTdpMtrC+2Llss70vDmNOkk7PPChBSBvuEwUWD8jcNrFooKfGU88zIRk6/3DyARy
-        emJPIvLIZswlyEgvzMdtkMVeBWLwsu4=
+        bh=FdfoFQjpgiNtZWSFBHj/7nzvOM1EzQEIkUtwS/EdNs4=;
+        b=MTHrsHjFx54Bmbgc13+x9CLppoE/sZQeTD3N77ZAlQnLOIOXu2UdB8phTSqVdY1+hzQZRc
+        dhwSaFhc98IaWKvFmnINIo98Wq4vDFmYrEsEVtuwUmQ+9mCp0IkDpY9od9ot/AxJ+m8cIv
+        UbA1PeP2AW3ZyygHvlxEHamu/KVvs+0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-173-s1tVhfvJO42GZwpsQfB-UQ-1; Thu, 09 Jul 2020 05:10:40 -0400
-X-MC-Unique: s1tVhfvJO42GZwpsQfB-UQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-458-MOeGgnKhNx2d_3uf2L-FWQ-1; Thu, 09 Jul 2020 05:10:46 -0400
+X-MC-Unique: MOeGgnKhNx2d_3uf2L-FWQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 496D8107AFD0;
-        Thu,  9 Jul 2020 09:10:37 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B4C3107ACF4;
+        Thu,  9 Jul 2020 09:10:43 +0000 (UTC)
 Received: from [10.36.114.174] (ovpn-114-174.ams2.redhat.com [10.36.114.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1ADF87F8BE;
-        Thu,  9 Jul 2020 09:10:30 +0000 (UTC)
-Subject: Re: [PATCH v3 2/6] arm64/mm: use default dummy
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8711D70100;
+        Thu,  9 Jul 2020 09:10:37 +0000 (UTC)
+Subject: Re: [PATCH v3 3/6] sh/mm: use default dummy
  memory_add_physaddr_to_nid()
 To:     Jia He <justin.he@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -75,7 +75,7 @@ Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Kaly Xin <Kaly.Xin@arm.com>
 References: <20200709020629.91671-1-justin.he@arm.com>
- <20200709020629.91671-3-justin.he@arm.com>
+ <20200709020629.91671-4-justin.he@arm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -121,48 +121,50 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <ca61d0b2-7f8f-3412-f754-d89906c9c52c@redhat.com>
-Date:   Thu, 9 Jul 2020 11:10:29 +0200
+Message-ID: <f1a172b2-80c2-1ec7-483f-f3fba761ccb0@redhat.com>
+Date:   Thu, 9 Jul 2020 11:10:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200709020629.91671-3-justin.he@arm.com>
+In-Reply-To: <20200709020629.91671-4-justin.he@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 09.07.20 04:06, Jia He wrote:
-> After making default memory_add_physaddr_to_nid() in mm/memory_hotplug,
-> it is no use defining a similar one in arch specific directory.
+> After making default memory_add_physaddr_to_nid in mm/memory_hotplug,
+> there is no use to define a similar one in arch specific directory.
 > 
 > Signed-off-by: Jia He <justin.he@arm.com>
 > ---
->  arch/arm64/mm/numa.c | 10 ----------
->  1 file changed, 10 deletions(-)
+>  arch/sh/mm/init.c | 9 ---------
+>  1 file changed, 9 deletions(-)
 > 
-> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> index aafcee3e3f7e..73f8b49d485c 100644
-> --- a/arch/arm64/mm/numa.c
-> +++ b/arch/arm64/mm/numa.c
-> @@ -461,13 +461,3 @@ void __init arm64_numa_init(void)
->  
->  	numa_init(dummy_numa_init);
+> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
+> index a70ba0fdd0b3..f75932ba87a6 100644
+> --- a/arch/sh/mm/init.c
+> +++ b/arch/sh/mm/init.c
+> @@ -430,15 +430,6 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  	return ret;
 >  }
-> -
-> -/*
-> - * We hope that we will be hotplugging memory on nodes we already know about,
-> - * such that acpi_get_node() succeeds and we never fall back to this...
-> - */
+>  
+> -#ifdef CONFIG_NUMA
 > -int memory_add_physaddr_to_nid(u64 addr)
 > -{
-> -	pr_warn("Unknown node for memory at 0x%llx, assuming node 0\n", addr);
+> -	/* Node 0 for now.. */
 > -	return 0;
 > -}
+> -EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+> -#endif
+> -
+>  void arch_remove_memory(int nid, u64 start, u64 size,
+>  			struct vmem_altmap *altmap)
+>  {
 > 
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
