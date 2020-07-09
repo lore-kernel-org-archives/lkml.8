@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2924C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3FD320786
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A072074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HGv+hdUV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L+DITdhg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgGIMJQ (ORCPT
+        id S1727916AbgGIMJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:09:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54575 "EHLO
+        Thu, 9 Jul 2020 08:09:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49645 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727821AbgGIMJN (ORCPT
+        with ESMTP id S1727775AbgGIMJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:09:13 -0400
+        Thu, 9 Jul 2020 08:09:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594296551;
+        s=mimecast20190719; t=1594296554;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OflM3KINZ8ZH/8/hsPpASWlGbxu0eRweDcZhdiCW/Zk=;
-        b=HGv+hdUVV6TAmVJEY45Z2gjnuSNpXa9KMzbOhf6j/Cc7MpRmk4CmsT/eIkgH8Hx4mR/UrA
-        Clsmmu8lSNFXcKJab/u4YD6A3IbC9cpzrXBHB/ZLVRF8qfC5Du1M57DAKXdv/lboNutxjt
-        d717II6romrL5P66R/JMEgEFRfRFNzk=
+        bh=rfqzY8t/qD9qb7tKq0QFXQRv/H0BIw8xYY7YrQUWrqk=;
+        b=L+DITdhg+L8/Evdja5nvF/Mf+xdIzXVTNAqfqx9XasgLyDXmtfQVWzs2xXL92a5mdd/H7W
+        dEIuqw23j+0X+YrKRu58kFwZZ5+hgTptziwg5TZYWpvj2ezLiqrM4QMoEvYrXz5ZjW6EFK
+        mLwTaBCRKKmwAgE8cdjLMVBJFAN5Dn8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-314-_R2WZxzEOh6yxNrzDVtg6A-1; Thu, 09 Jul 2020 08:09:09 -0400
-X-MC-Unique: _R2WZxzEOh6yxNrzDVtg6A-1
+ us-mta-394-yhNG12U9NACrd-r7HxIkSw-1; Thu, 09 Jul 2020 08:09:11 -0400
+X-MC-Unique: yhNG12U9NACrd-r7HxIkSw-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D6E971902EA2;
-        Thu,  9 Jul 2020 12:09:08 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD2FB88C79B;
+        Thu,  9 Jul 2020 12:09:10 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-115-29.ams2.redhat.com [10.36.115.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AF4351053B28;
-        Thu,  9 Jul 2020 12:09:07 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E4951053B28;
+        Thu,  9 Jul 2020 12:09:09 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH resend v2 3/8] virt: vbox: Rename guest_caps struct members to set_guest_caps
-Date:   Thu,  9 Jul 2020 14:08:53 +0200
-Message-Id: <20200709120858.63928-4-hdegoede@redhat.com>
+Subject: [PATCH resend v2 4/8] virt: vbox: Add vbg_set_host_capabilities() helper function
+Date:   Thu,  9 Jul 2020 14:08:54 +0200
+Message-Id: <20200709120858.63928-5-hdegoede@redhat.com>
 In-Reply-To: <20200709120858.63928-1-hdegoede@redhat.com>
 References: <20200709120858.63928-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -62,100 +62,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename guest_caps[_tracker] struct members to set_guest_caps[_tracker]
-this is a preparation patch for adding support for the
-VBGL_IOCTL_GUEST_CAPS_ACQUIRE ioctl.
+Add vbg_set_host_capabilities() helper function,  this is a preparation
+patch for adding support for the VBGL_IOCTL_GUEST_CAPS_ACQUIRE ioctl.
 
 Acked-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/virt/vboxguest/vboxguest_core.c | 20 ++++++++++----------
- drivers/virt/vboxguest/vboxguest_core.h |  9 +++++----
- 2 files changed, 15 insertions(+), 14 deletions(-)
+ drivers/virt/vboxguest/vboxguest_core.c | 79 ++++++++++++++-----------
+ 1 file changed, 46 insertions(+), 33 deletions(-)
 
 diff --git a/drivers/virt/vboxguest/vboxguest_core.c b/drivers/virt/vboxguest/vboxguest_core.c
-index 18ebd7a6af98..aee5eff229f2 100644
+index aee5eff229f2..15b3cb618c6e 100644
 --- a/drivers/virt/vboxguest/vboxguest_core.c
 +++ b/drivers/virt/vboxguest/vboxguest_core.c
-@@ -699,17 +699,17 @@ static int vbg_set_session_capabilities(struct vbg_dev *gdev,
+@@ -661,6 +661,48 @@ static int vbg_reset_host_capabilities(struct vbg_dev *gdev)
+ 	return vbg_status_code_to_errno(rc);
+ }
+ 
++/**
++ * Set guest capabilities on the host.
++ * Must be called with gdev->session_mutex hold.
++ * Return: 0 or negative errno value.
++ * @gdev:			The Guest extension device.
++ * @session:			The session.
++ * @session_termination:	Set if we're called by the session cleanup code.
++ */
++static int vbg_set_host_capabilities(struct vbg_dev *gdev,
++				     struct vbg_session *session,
++				     bool session_termination)
++{
++	struct vmmdev_mask *req;
++	u32 caps;
++	int rc;
++
++	WARN_ON(!mutex_is_locked(&gdev->session_mutex));
++
++	caps = gdev->set_guest_caps_tracker.mask;
++
++	if (gdev->guest_caps_host == caps)
++		return 0;
++
++	/* On termination the requestor is the kernel, as we're cleaning up. */
++	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_GUEST_CAPABILITIES,
++			    session_termination ? VBG_KERNEL_REQUEST :
++						  session->requestor);
++	if (!req) {
++		gdev->guest_caps_host = U32_MAX;
++		return -ENOMEM;
++	}
++
++	req->or_mask = caps;
++	req->not_mask = ~caps;
++	rc = vbg_req_perform(gdev, req);
++	vbg_req_free(req, sizeof(*req));
++
++	gdev->guest_caps_host = (rc >= 0) ? caps : U32_MAX;
++
++	return vbg_status_code_to_errno(rc);
++}
++
+ /**
+  * Sets the guest capabilities for a session. Takes the session spinlock.
+  * Return: 0 or negative errno value.
+@@ -678,23 +720,8 @@ static int vbg_set_session_capabilities(struct vbg_dev *gdev,
+ 					u32 or_mask, u32 not_mask,
+ 					bool session_termination)
+ {
+-	struct vmmdev_mask *req;
+ 	u32 changed, previous;
+-	int rc, ret = 0;
+-
+-	/*
+-	 * Allocate a request buffer before taking the spinlock, when
+-	 * the session is being terminated the requestor is the kernel,
+-	 * as we're cleaning up.
+-	 */
+-	req = vbg_req_alloc(sizeof(*req), VMMDEVREQ_SET_GUEST_CAPABILITIES,
+-			    session_termination ? VBG_KERNEL_REQUEST :
+-						  session->requestor);
+-	if (!req) {
+-		if (!session_termination)
+-			return -ENOMEM;
+-		/* Ignore allocation failure, we must do session cleanup. */
+-	}
++	int ret = 0;
+ 
  	mutex_lock(&gdev->session_mutex);
  
- 	/* Apply the changes to the session mask. */
--	previous = session->guest_caps;
--	session->guest_caps |= or_mask;
--	session->guest_caps &= ~not_mask;
-+	previous = session->set_guest_caps;
-+	session->set_guest_caps |= or_mask;
-+	session->set_guest_caps &= ~not_mask;
- 
- 	/* If anything actually changed, update the global usage counters. */
--	changed = previous ^ session->guest_caps;
-+	changed = previous ^ session->set_guest_caps;
- 	if (!changed)
+@@ -709,23 +736,10 @@ static int vbg_set_session_capabilities(struct vbg_dev *gdev,
  		goto out;
  
--	vbg_track_bit_usage(&gdev->guest_caps_tracker, changed, previous);
--	or_mask = gdev->guest_caps_tracker.mask;
-+	vbg_track_bit_usage(&gdev->set_guest_caps_tracker, changed, previous);
-+	or_mask = gdev->set_guest_caps_tracker.mask;
+ 	vbg_track_bit_usage(&gdev->set_guest_caps_tracker, changed, previous);
+-	or_mask = gdev->set_guest_caps_tracker.mask;
+-
+-	if (gdev->guest_caps_host == or_mask || !req)
+-		goto out;
+-
+-	gdev->guest_caps_host = or_mask;
+-	req->or_mask = or_mask;
+-	req->not_mask = ~or_mask;
+-	rc = vbg_req_perform(gdev, req);
+-	if (rc < 0) {
+-		ret = vbg_status_code_to_errno(rc);
+-
+-		/* Failed, roll back (unless it's session termination time). */
+-		gdev->guest_caps_host = U32_MAX;
+-		if (session_termination)
+-			goto out;
  
- 	if (gdev->guest_caps_host == or_mask || !req)
- 		goto out;
-@@ -726,9 +726,9 @@ static int vbg_set_session_capabilities(struct vbg_dev *gdev,
- 		if (session_termination)
- 			goto out;
- 
--		vbg_track_bit_usage(&gdev->guest_caps_tracker, changed,
--				    session->guest_caps);
--		session->guest_caps = previous;
-+		vbg_track_bit_usage(&gdev->set_guest_caps_tracker, changed,
-+				    session->set_guest_caps);
-+		session->set_guest_caps = previous;
- 	}
++	ret = vbg_set_host_capabilities(gdev, session, session_termination);
++	/* Roll back on failure, unless it's session termination time. */
++	if (ret < 0 && !session_termination) {
+ 		vbg_track_bit_usage(&gdev->set_guest_caps_tracker, changed,
+ 				    session->set_guest_caps);
+ 		session->set_guest_caps = previous;
+@@ -733,7 +747,6 @@ static int vbg_set_session_capabilities(struct vbg_dev *gdev,
  
  out:
-@@ -1452,7 +1452,7 @@ static int vbg_ioctl_change_guest_capabilities(struct vbg_dev *gdev,
- 	if (ret)
- 		return ret;
+ 	mutex_unlock(&gdev->session_mutex);
+-	vbg_req_free(req, sizeof(*req));
  
--	caps->u.out.session_caps = session->guest_caps;
-+	caps->u.out.session_caps = session->set_guest_caps;
- 	caps->u.out.global_caps = gdev->guest_caps_host;
- 
- 	return 0;
-diff --git a/drivers/virt/vboxguest/vboxguest_core.h b/drivers/virt/vboxguest/vboxguest_core.h
-index 77c3a9c8255d..dc745a033164 100644
---- a/drivers/virt/vboxguest/vboxguest_core.h
-+++ b/drivers/virt/vboxguest/vboxguest_core.h
-@@ -118,11 +118,12 @@ struct vbg_dev {
- 	u32 event_filter_host;
- 
- 	/**
--	 * Usage counters for guest capabilities. Indexed by capability bit
-+	 * Usage counters for guest capabilities requested through
-+	 * vbg_set_session_capabilities(). Indexed by capability bit
- 	 * number, one count per session using a capability.
- 	 * Protected by session_mutex.
- 	 */
--	struct vbg_bit_usage_tracker guest_caps_tracker;
-+	struct vbg_bit_usage_tracker set_guest_caps_tracker;
- 	/**
- 	 * The guest capabilities last reported to the host (or UINT32_MAX).
- 	 * Protected by session_mutex.
-@@ -164,11 +165,11 @@ struct vbg_session {
- 	 */
- 	u32 event_filter;
- 	/**
--	 * Guest capabilities for this session.
-+	 * Guest capabilities set through vbg_set_session_capabilities().
- 	 * A capability claimed by any guest session will be reported to the
- 	 * host. Protected by vbg_gdev.session_mutex.
- 	 */
--	u32 guest_caps;
-+	u32 set_guest_caps;
- 	/** VMMDEV_REQUESTOR_* flags */
- 	u32 requestor;
- 	/** Set on CANCEL_ALL_WAITEVENTS, protected by vbg_devevent_spinlock. */
+ 	return ret;
+ }
 -- 
 2.26.2
 
