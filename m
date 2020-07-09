@@ -2,85 +2,77 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23BB72076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A872073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:24:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbgGIIWy (ORCPT
+        id S1726289AbgGIIYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:22:54 -0400
-Received: from mga04.intel.com ([192.55.52.120]:28547 "EHLO mga04.intel.com"
+        Thu, 9 Jul 2020 04:24:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:42260 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgGIIWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:22:53 -0400
-IronPort-SDR: 8GVPbMB/TdwT+YzEHdBm+9aiWW9xqji+Klf1ic9BYV/Xe1pz2bWUk3MOztgBVKrsIqExZxB9Xe
- RJI4xHNsYStg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="145450275"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="145450275"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 01:22:48 -0700
-IronPort-SDR: HgabUgEHzhTKJMlrn/f8oWUal2Nu61e4o4VL+Ip5I4+SZcY8NUctaTZmQUF6D2mKgcyCSWeRYl
- CXHaC/+qylrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="483714216"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by fmsmga006.fm.intel.com with ESMTP; 09 Jul 2020 01:22:46 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, lgoncalv@redhat.com,
-        Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
-Date:   Thu,  9 Jul 2020 16:18:25 +0800
-Message-Id: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726151AbgGIIYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 04:24:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8ECF531B;
+        Thu,  9 Jul 2020 01:24:07 -0700 (PDT)
+Received: from e119603-lin.cambridge.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D55AA3F887;
+        Thu,  9 Jul 2020 01:24:06 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 09:24:04 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 3/4] firmware: arm_scmi: Fix scmi_event_header fields
+ typing
+Message-ID: <20200709082348.GA20219@e119603-lin.cambridge.arm.com>
+References: <20200708122248.52771-1-cristian.marussi@arm.com>
+ <20200708122248.52771-3-cristian.marussi@arm.com>
+ <CAK8P3a3mH4h9=MZiLmqk=YY8_pzQnUUvsvcL1TZQ6uJEdGUf=w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3mH4h9=MZiLmqk=YY8_pzQnUUvsvcL1TZQ6uJEdGUf=w@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe Device ID for Intel FPGA PAC N3000.
+On Wed, Jul 08, 2020 at 10:38:08PM +0200, Arnd Bergmann wrote:
+> On Wed, Jul 8, 2020 at 2:24 PM Cristian Marussi
+> <cristian.marussi@arm.com> wrote:
+> >
+> > Drop size_t in favour of fixed size u32 for consistency and shuffle
+> > around fields definitions to minimize implicit padding.
+> >
+> > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> 
+> As you still have implicit padding at the end, I'd either make
+> that explicit now, or leave the __packed attribute.
 
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Signed-off-by: Russ Weight <russell.h.weight@intel.com>
----
- drivers/fpga/dfl-pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+Do you mean expliciting that with a comment, right ? being the last member 'payld'
+a flexible array must be the last in order to even compile.
 
-diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-index 73b5153..824aecf 100644
---- a/drivers/fpga/dfl-pci.c
-+++ b/drivers/fpga/dfl-pci.c
-@@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev)
- #define PCIE_DEVICE_ID_PF_INT_5_X	0xBCBD
- #define PCIE_DEVICE_ID_PF_INT_6_X	0xBCC0
- #define PCIE_DEVICE_ID_PF_DSC_1_X	0x09C4
-+#define PCIE_DEVICE_ID_PF_PAC_N3000	0x0B30
- /* VF Device */
- #define PCIE_DEVICE_ID_VF_INT_5_X	0xBCBF
- #define PCIE_DEVICE_ID_VF_INT_6_X	0xBCC1
-@@ -76,6 +77,7 @@ static struct pci_device_id cci_pcie_id_tbl[] = {
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_VF_INT_6_X),},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_PF_DSC_1_X),},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_VF_DSC_1_X),},
-+	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_PF_PAC_N3000),},
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, cci_pcie_id_tbl);
--- 
-2.7.4
+I'm a bit confused anyway on how the trailing padding works on a struct like
+this which ends with a flexible array definition, so I was expecting that the
+trailing pads would have made no difference, given that it's used to basically
+give some know layout to a blob of data via casting...
 
+Thanks
+
+Cristian
+
+> 
+> The payld_sz is not actually force to be misaligned with the
+> reordered layout, which is what's most important.
+> 
+>      Arnd
