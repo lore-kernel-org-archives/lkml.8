@@ -2,178 +2,102 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D01C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6688CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 245392076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463CB2076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rZq/aTL/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OqrgBYRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgGILG0 (ORCPT
+        id S1727790AbgGILHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:06:26 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:24972 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727099AbgGILGY (ORCPT
+        Thu, 9 Jul 2020 07:07:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgGILHL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:06:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594292783; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=ggRFkfl9YyLD7mY4oeLkJ+x3v/aJ3gbpkHLIEFZvpb4=; b=rZq/aTL/XNSCm56yShWqjoVbA6l7oV8tVCacvPhx3WkcbVDdqpqRPSNxDpnrnF51L2+zDgPh
- zlD4tf28ZrXv6mb4xQcVMxBE7v/a0JXum/P6GFlv126VHOjCx8t/4fTZQCHMApN0grv14JNj
- sw1Mla/JY3a5Pb3raXpocQEmUSk=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
- 5f06f9e555886724ff0b2cfc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 11:05:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 09D51C433C6; Thu,  9 Jul 2020 11:05:09 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8164CC433CB;
-        Thu,  9 Jul 2020 11:05:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8164CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 3/4] arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
-Date:   Thu,  9 Jul 2020 16:34:33 +0530
-Message-Id: <1594292674-15632-4-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594292674-15632-1-git-send-email-rnayak@codeaurora.org>
-References: <1594292674-15632-1-git-send-email-rnayak@codeaurora.org>
+        Thu, 9 Jul 2020 07:07:11 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0230C061A0B
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 04:07:10 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f2so1879684wrp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 04:07:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dj6DLJ5JhwDTZpg1cYa8Jkc5nI2WU1SZemCOoY6JQX8=;
+        b=OqrgBYRSXu4WOjIThWIY9Klk6Hlc6dgDpPB9PYoq4FN8And4dQWC6+puoCGj3yaq75
+         j9q0lGCyqBZQAkZwJg6iiss5/kkNG0TMRYOMDn2LRE9RL0Fe4cbltQomN4Q6xNZ8XM1y
+         re+ahL/J+J6C2CSXl1lvfk3EanLYT8zGvPefqudhF4HJ6ITNyEid5gMvuSetJy9BPj2p
+         3GgCPuRygIdzH8PlHJiavWAC7FfCR4oIxpqWyH1ppd0AiZBBPlD9OJDYggTka8+Dn1Gi
+         U9VYl73QdCyTZ7t6ZlYL5H95Kky8L+P+kd+nXkQdlWraeb6wVviZK9S6pqLqQjH6EMp4
+         hu/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dj6DLJ5JhwDTZpg1cYa8Jkc5nI2WU1SZemCOoY6JQX8=;
+        b=b/iewPC1Zs7SbqFH4jpE0GrVsFHY1Gf+jWhsfbu9u72p+AykLBmGVmxUM1tfEwLszf
+         RzDznIzMWA7bPQowgJ3CFwLk+SQpgNSeeMEu8ylaCk7iWbN+ez39UgpMXS7Z8qRxfc7n
+         +6ecKpXltyF6X8W7yvZCB2UV3Rma4K8NxdmQCEqrMkBrfawAL7viiHnOSFFfXGWb18AT
+         OsYlX+cpq9/3qFjppyXc5pauD9HFt62s74U4NuyJzfmNgkYVFCV0MWjJIwRErACK+X4D
+         dZq4Ntzpe27ctQOkZpw8xSSZQbe7l3UcZczIKPwx/h5IqjcKhRBsYDTdDqSBWrDkVylc
+         qo+A==
+X-Gm-Message-State: AOAM530Gv49tTdHXVHKBCdBq00sUnBlj/UTPTZWebFYz6PH/29lHlcqH
+        6Vbo8jhVLiD7q5DexbsmJd+Bsw==
+X-Google-Smtp-Source: ABdhPJw0n0b9xmJ1DTGx8Qu+06hCLhlnCq+s0l6b+Go1hvpg1cmoxac2TKGjZrYL69bFn2sVkH5Nbw==
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr61842492wrj.273.1594292829308;
+        Thu, 09 Jul 2020 04:07:09 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id q7sm5375578wrs.27.2020.07.09.04.07.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Jul 2020 04:07:08 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org
+Cc:     saravanak@google.com, mdtipton@codeaurora.org,
+        okukatla@codeaurora.org, bjorn.andersson@linaro.org,
+        vincent.guittot@linaro.org, georgi.djakov@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] Add interconnect sync state support
+Date:   Thu,  9 Jul 2020 14:07:01 +0300
+Message-Id: <20200709110705.30359-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the OPP tables for DSI and MDP based on the perf state/clk
-requirements, and add the power-domains property to specify the
-scalable power domain.
+Bootloaders often leave some system resources enabled such as clocks,
+regulators, interconnects etc. We want to keep these resources enabled
+until all their consumers are probed. These resources are often shared,
+so we must wait for all the consumers to come up, before deciding
+whether to turn them off or change the configuration. This patchset is
+trying to solve the above problem just for the on-chip interconnects.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 59 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+The problem is solved by allowing the interconnect providers to specify
+an initial bandwidth value, which is enforced during boot as a floor
+value, while the requests from all consumers are being collected.
+Then the sync_state() callback is used to signal when all consumers have
+been probed, meaning that the floor bandwidth is not needed anymore and
+the framework is ready to re-aggregate and process all requests.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index fee50d9..3efdd70 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3296,6 +3296,35 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		dsi_opp_table: dsi-opp-table {
-+			compatible = "operating-points-v2";
-+
-+			opp-19200000 {
-+				opp-hz = /bits/ 64 <19200000>;
-+				required-opps = <&rpmhpd_opp_min_svs>;
-+			};
-+
-+			opp-180000000 {
-+				opp-hz = /bits/ 64 <180000000>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
-+			};
-+
-+			opp-275000000 {
-+				opp-hz = /bits/ 64 <275000000>;
-+				required-opps = <&rpmhpd_opp_svs>;
-+			};
-+
-+			opp-328580000 {
-+				opp-hz = /bits/ 64 <328580000>;
-+				required-opps = <&rpmhpd_opp_svs_l1>;
-+			};
-+
-+			opp-358000000 {
-+				opp-hz = /bits/ 64 <358000000>;
-+				required-opps = <&rpmhpd_opp_nom>;
-+			};
-+		};
-+
- 		mdss: mdss@ae00000 {
- 			compatible = "qcom,sdm845-mdss";
- 			reg = <0 0x0ae00000 0 0x1000>;
-@@ -3340,6 +3369,8 @@
- 						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
- 				assigned-clock-rates = <300000000>,
- 						       <19200000>;
-+				operating-points-v2 = <&mdp_opp_table>;
-+				power-domains = <&rpmhpd SDM845_CX>;
- 
- 				interrupt-parent = <&mdss>;
- 				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-@@ -3364,6 +3395,30 @@
- 						};
- 					};
- 				};
-+
-+				mdp_opp_table: mdp-opp-table {
-+					compatible = "operating-points-v2";
-+
-+					opp-19200000 {
-+						opp-hz = /bits/ 64 <19200000>;
-+						required-opps = <&rpmhpd_opp_min_svs>;
-+					};
-+
-+					opp-171428571 {
-+						opp-hz = /bits/ 64 <171428571>;
-+						required-opps = <&rpmhpd_opp_low_svs>;
-+					};
-+
-+					opp-344000000 {
-+						opp-hz = /bits/ 64 <344000000>;
-+						required-opps = <&rpmhpd_opp_svs_l1>;
-+					};
-+
-+					opp-430000000 {
-+						opp-hz = /bits/ 64 <430000000>;
-+						required-opps = <&rpmhpd_opp_nom>;
-+					};
-+				};
- 			};
- 
- 			dsi0: dsi@ae94000 {
-@@ -3386,6 +3441,8 @@
- 					      "core",
- 					      "iface",
- 					      "bus";
-+				operating-points-v2 = <&dsi_opp_table>;
-+				power-domains = <&rpmhpd SDM845_CX>;
- 
- 				phys = <&dsi0_phy>;
- 				phy-names = "dsi";
-@@ -3450,6 +3507,8 @@
- 					      "core",
- 					      "iface",
- 					      "bus";
-+				operating-points-v2 = <&dsi_opp_table>;
-+				power-domains = <&rpmhpd SDM845_CX>;
- 
- 				phys = <&dsi1_phy>;
- 				phy-names = "dsi";
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Georgi Djakov (4):
+  interconnect: Add sync state support
+  interconnect: Add get_bw() callback
+  interconnect: qcom: smd845: Use icc_sync_state
+  interconnect: qcom: osm-l3: Use icc_sync_state
+
+ drivers/interconnect/core.c           | 57 +++++++++++++++++++++++++++
+ drivers/interconnect/qcom/osm-l3.c    |  9 +++++
+ drivers/interconnect/qcom/sdm845.c    |  9 +++++
+ include/linux/interconnect-provider.h |  5 +++
+ 4 files changed, 80 insertions(+)
 
