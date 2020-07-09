@@ -2,149 +2,205 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A85C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416CE20748
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4B520720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:51:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="e7IvaRLp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fXZg2Zbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgGITuL (ORCPT
+        id S1726220AbgGITvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:50:11 -0400
-Received: from mout.gmx.net ([212.227.17.22]:58935 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgGITsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 15:48:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1594324081;
-        bh=qjjKU85vWrmvdFue2XV3Qb2IIMAX9y66v6AoZZPoc2M=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=e7IvaRLpDkT/47bzRnTddtiimKHgCOu//u3jijFPYjXMYg+NwEdyW8xhh/2wlymUH
-         tChSZTTaaVLRdjGn7cNFEpwFWuHkAcOSqFg5XFHSYYOh+whMzslBnIA8N7zaJom7vM
-         bDPbsC3UElWQU7/ODWeeoMn3+uh5uZlNRL8KIojU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [80.208.213.58] ([80.208.213.58]) by web-mail.gmx.net
- (3c-app-gmx-bap65.server.lan [172.19.172.65]) (via HTTP); Thu, 9 Jul 2020
- 21:48:01 +0200
+        Thu, 9 Jul 2020 15:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgGITuw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 15:50:52 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ACC2C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 12:50:51 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 145so3019009qke.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 12:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jBhiNdJcKWpDIzUtXlvuF+3cyZgX7DpFBBALLEpqqcI=;
+        b=fXZg2ZbhLJFFCCYqF4ZSseLLp6ZerePMTDWKvhEaTTUG5r+0DGuVQTFoOP8tb0qHb4
+         dqKXWN4HmZbbeLhJ333fFkXQ61wZ0cjFfPaOaYXOH4f2GhjGxoYunvWeRvEalalfEx8x
+         5UDB7arIjU/KeYFGsYUxBltjP2CDzR3plB8pM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jBhiNdJcKWpDIzUtXlvuF+3cyZgX7DpFBBALLEpqqcI=;
+        b=SPTZrnLT0qM3Y3keRUmfbdb55slBNKMuRxbwHEhcY5vjsZ6/5e/R08e+hLRnWXLe19
+         0+dkqlKqc8E9OQgHfn315rHwwMP2uNeS85cgUocyfzgK2B3FaWsrUQginiDheEMyozcp
+         /uZezt+zEC0edTIxra7Xe7NkOyv1DrYcifwCLI7oPB9IJjSY1TtO/7STR9QpdvxQaXUQ
+         xVU5mMo1yj9Jv52FuFxeRRgDkwdbK9p513FwVOhulQFdRVZ29mNRObztnrJkJ60Rb1MU
+         7lDhe5plgjNU5YqKW7FWACwbm01v/ossiaECWAnp7VvGPu+EjbTm8YIgKO9NsWSud7om
+         HaRg==
+X-Gm-Message-State: AOAM533eB1Ntz7Fj39mri4TrdDTaLSYz8358kDHYhq/PMXozAnaL99ub
+        PEjL16wqF5OMWWrRJD0gxsy6tCy905s=
+X-Google-Smtp-Source: ABdhPJzT6LW+XnLwbr0i1CTs9EW2gFaozjT1V1EHyV+4wrwSM28SIiAFWA07xanG6AqqFuvywJdQkw==
+X-Received: by 2002:a05:620a:15ca:: with SMTP id o10mr37623620qkm.57.1594324250207;
+        Thu, 09 Jul 2020 12:50:50 -0700 (PDT)
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com. [209.85.219.44])
+        by smtp.gmail.com with ESMTPSA id e9sm4554287qtq.70.2020.07.09.12.50.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 12:50:49 -0700 (PDT)
+Received: by mail-qv1-f44.google.com with SMTP id ed14so1530432qvb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 12:50:49 -0700 (PDT)
+X-Received: by 2002:a67:ec0f:: with SMTP id d15mr38876582vso.121.1594323788853;
+ Thu, 09 Jul 2020 12:43:08 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <trinity-487c0605-faeb-462e-a373-bc393ce3dbfa-1594324081639@3c-app-gmx-bap65>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     linux-mediatek@lists.infradead.org,
-        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
-        Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Landen Chao <landen.chao@mediatek.com>
-Subject: Aw: Re: [PATCH v2] net: ethernet: mtk_eth_soc: fix mtu warning
-Content-Type: text/plain; charset=UTF-8
-Date:   Thu, 9 Jul 2020 21:48:01 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20200709134115.GK928075@lunn.ch>
-References: <20200709055742.3425-1-frank-w@public-files.de>
- <20200709134115.GK928075@lunn.ch>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:n4zQntLiWUydrYDQKBFrQyQq/zGUb616R6yRiuIW4EkJfjq+54nieuV/hYKY/1qyo45o+
- T2AV17jN910J1AYgwwgjqWXNF94zV6gLBYMT9Hl4WOnfgtJTvXNzcnqT/xY+bj7KTOvcfPBe2qLH
- iufWNu521oC6dI9gX0kLgb9Ft7IHy4L3NXJ8+w0rSZudmHd/G3VMlJ4H2z+UG2OBzWIm2Q5L2Glg
- rZbzX/ZP8wO9W5+MuBod2H8YjmwO4CiGt4uOWYEiWOSID3DQ8+IH6TSyRDTaIzL/nUQZcmB2n/mo
- BQ=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RyfU1bnrcBs=:QIrBsHWDa406vNbEkzdDWM
- tUp9/4HQvksPc36DfD8pCJggCEq1HLpFMZ7/stSKtdVeygNt+Y9lxt6OLVvw1xaZv2RbU7Tag
- E+21kkdjiVq7f8kNpC+/gFAUrn05JhzoawIW5TbrzE8GjMF50uCs22GqGuVSg3cJrWx375YGV
- wQkx2xFQNnLIVMGmIVLbxxnlWc/J1EFlJdYuksr4e5IOz0tuQ8/DdV3T5DyI4eYbR/UjC80/T
- 4aoGD8Si03yFjIOl5qiW8CsqmO8v0HCQzKfPp4P/oYq8iZ9oCNUtFl+ltDcNtK58geEcS2UHw
- vDJYXH+3VBpKRfWuylYykkNYowZGoKSMjiWrs6O+Qujl9IuHf0HUGdY+XaDO6MMYW4D3DbSuP
- ME+TY3YICgPwVLz+6JmG2F1J+8T4Wm4/EBIh9hDf3LrfanI1SENfD0iYP3ivPVqLrIJRifAaG
- fiTazWXG5d12bqqs9u+yKR73kvLIA1wGeyB8hREZf+94XoJe5mw6npVuvXI+EmxNkiyRkHz3Q
- YnVQGnw3vmJI1Iv8oK0uRTZD/uudXQNQxvdOa2e/kVmUpw3V5cO7wR30jP2AejfrmaxHr1ZdL
- QWbXmCoyHuQ67WV28L+oyZuzVS4C98uUsZDamcYVFORyri17iJcAOiOM0oe9P6IZ5Fjf406fr
- +ou5Av5QPvuUnc4CJmeCTwbubuDE48AmBESyFn4O0+cahSCSQ5Ej5hB9Ua7fNAX5mc3M=
-Content-Transfer-Encoding: quoted-printable
+References: <20200708194715.4073300-1-abhishekbh@google.com> <87y2ntotah.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87y2ntotah.fsf@nanos.tec.linutronix.de>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 9 Jul 2020 12:42:57 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WCu7o41iyn27vNBWo4f_X_XVy+PPPjBKc+70g5jd5+8w@mail.gmail.com>
+Message-ID: <CAD=FV=WCu7o41iyn27vNBWo4f_X_XVy+PPPjBKc+70g5jd5+8w@mail.gmail.com>
+Subject: Re: [PATCH v5] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Abhishek Bhardwaj <abhishekbh@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86 <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Gesendet: Donnerstag, 09. Juli 2020 um 15:41 Uhr
-> Von: "Andrew Lunn" <andrew@lunn.ch>
+Hi,
 
-> > +	eth->netdev[id]->max_mtu =3D 1536;
+On Thu, Jul 9, 2020 at 3:51 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> I assume this is enough to make the DSA warning go away, but it is the
-> true max? I have a similar patch for the FEC driver which i should
-> post sometime. Reviewing the FEC code and after some testing, i found
-> the real max was 2K - 64.
+> Abhishek Bhardwaj <abhishekbh@google.com> writes:
+> > This change adds a new kernel configuration that sets the l1d cache
+> > flush setting at compile time rather than at run time.
+> >
+> > The reasons for this change are as follows -
+> >
+> >  - Kernel command line arguments are getting unwieldy. These parameters
+> >  are not a scalable way to set the kernel config. They're intended as a
+> >  super limited way for the bootloader to pass info to the kernel and
+> >  also as a way for end users who are not compiling the kernel themselves
+> >  to tweak the kernel behavior.
+> >
+> >  - Also, if a user wants this setting from the start. It's a definite
+> >  smell that it deserves to be a compile time thing rather than adding
+> >  extra code plus whatever miniscule time at runtime to pass an
+> >  extra argument.
+> >
+> >  - Finally, it doesn't preclude the runtime / kernel command line way.
+> >  Users are free to use those as well.
+>
+> TBH, I don't see why this is a good idea.
+>
+>  1) I'm not following your argumentation that the command line option is
+>     a poor Kconfig replacement. The L1TF mode is a boot time (module
+>     load time) decision and the command line parameter is there to
+>     override the carefully chosen and sensible default behaviour.
 
-i tried setting only the max_mtu, but the dsa-error is still present
+When you say that the default behavior is carefully chosen and
+sensible, are you saying that (in your opinion) there would never be a
+good reason for someone distributing a kernel to others to change the
+default?  Certainly I agree that having the kernel command line
+parameter is nice to allow someone to override whatever the person
+building the kernel chose, but IMO it's not a good way to change the
+default built-in to the kernel.
 
-mt7530 mdio-bus:00: nonfatal error -95 setting MTU on port 0
+The current plan (as I understand it) is that we'd like to ship
+Chromebook kernels with this option changed from the default that's
+there now.  In your opinion, is that a sane thing to do?
 
-but i got it too, if i revert the change...mhm, strange that these were ab=
-sent last time...
 
-the other 2 are fixed with only max_mtu.
-@andrew where did you got the 2k-64 (=3D1984) information? sounds like orw=
-ell ;)
+>  2) You can add the desired mode to the compiled in (partial) kernel
+>     command line today.
 
--95 is EOPNOTSUPP
+This might be easier on x86 than it is on ARM.  ARM (and ARM64)
+kernels only have two modes: kernel provides cmdline and bootloader
+provides cmdline.  There are out-of-mainline ANDROID patches to
+address this but nothing in mainline.
 
-as so far, commit 72579e14a1d3d3d561039dfe7e5f47aaf22e3fd3 introduces the =
-warning,
-but the change is making it non-fatal...so i need to adjust my fixes-tag.
-i guess the real problem lies in this:
+The patch we're discussing now is x86-only so it's not such a huge
+deal, but the fact that combining the kernel and bootloader
+commandline never landed in mainline for arm/arm64 means that this
+isn't a super common/expected thing to do.
 
-bfcb813203e6 net: dsa: configure the MTU for switch ports
 
-it looks like dsa_slave_change_mtu failes because of missing callback in m=
-tk_driver (mt7530 for mt7531 in my case).
+>  3) Boot loaders are well capable of handling large kernel command lines
+>     and the extra time spend for reading the parameter does not matter
+>     at all.
 
-net/dsa/slave.c
-1405 static int dsa_slave_change_mtu(struct net_device *dev, int new_mtu)
-...
-1420     if (!ds->ops->port_change_mtu)
-1421         return -EOPNOTSUPP;
+Long command lines can still be a bit of a chore for humans to deal
+with.  Many times I've needed to look at "/proc/cmdline" and make
+sense of it.  The longer the command line is and the more cruft
+stuffed into it the more of a chore it is.  Yes, this is just one
+thing to put in the command line, but if 10 different drivers all have
+their "one thing" to put there it gets really long.  If 100 different
+drivers all want their one config option there it gets really really
+long.  IMO the command line should be a last resort place to put
+things and should just contain:
 
-i added an empty callback to avoid this message, but mtu should be set in =
-hardware too...
-here i will ne some assistance from mtk ethernet experts and mt7531 driver=
- (from landen chao) to be merged first (after some needed changes)
+1. Legacy things that _have_ to be in the command line because they've
+always been there.
 
-=2D-- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2259,6 +2259,12 @@ mt753x_phy_write(struct dsa_switch *ds, int port, i=
-nt regnum, u16 val)
-        return priv->info->phy_write(ds, port, regnum, val);
- }
+2. Things that the bootloader/BIOS needs to communicate to the kernel
+and has no better way to communicate.
 
-+static int
-+mt753x_port_change_mtu(struct dsa_switch *ds, int port, int new_mtu)
-+{
-+       return 0;
-+}
-+
- static const struct dsa_switch_ops mt7530_switch_ops =3D {
-        .get_tag_protocol       =3D mtk_get_tag_protocol,
-        .setup                  =3D mt753x_setup,
-@@ -2281,6 +2287,7 @@ static const struct dsa_switch_ops mt7530_switch_ops=
- =3D {
-        .port_vlan_del          =3D mt7530_port_vlan_del,
-        .port_mirror_add        =3D mt7530_port_mirror_add,
-        .port_mirror_del        =3D mt7530_port_mirror_del,
-+       .port_change_mtu        =3D mt753x_port_change_mtu,
-        .phylink_validate       =3D mt753x_phylink_validate,
-        .phylink_mac_link_state =3D mt7530_phylink_mac_link_state,
-        .phylink_mac_config     =3D mt753x_phylink_mac_config,
+3. Cases where the person running the kernel needs to override a
+default set by the person compiling the kernel.
+
+
+>  4) It's just a tiny part of the whole speculation maze. If we go there
+>     for L1TF then we open the flood gates for a gazillion other config
+>     options.
+
+It seems like the only options that we'd need CONFIG option for would
+be the ones where it would be sane to change the default compiled into
+the kernel.  Hopefully that's not too many things?
+
+
+>  5) It's completely useless for distro kernels.
+>
+>  6) The implementation is horrible. We have proper choice selectors
+>     which allow to add parseable information instead of random numbers
+>     and a help text.
+
+If my other arguments make sense and Abhishek could just fix #6, would
+that work?
+
+
+Obviously, like many design choices, the above is all subjective.
+It's really your call and if these arguments don't convince you it
+sounds like the way forward is just to use "CONFIG_CMDLINE" and take
+advantage of the fact that on x86 this will get merged with the
+bootloader's command line.
+
+
+-Doug
