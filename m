@@ -4,89 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5510DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9318C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 309222064B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83222064B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594337314;
-	bh=O5SE62dqWsSj+L7Qn1Fu2tuIFqp4+bUIneCVkPaDDkA=;
+	s=default; t=1594337334;
+	bh=4hp6k3ny7Z/2XnkTcTlnaCSb1SWKHC398nw1kC9DhkI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PNGRt/MzDjCEnkaCdk0fh88tgsCZC0u8u4B79asIzc2KV+f59EL5SJw5jq8hmFbSI
-	 c5JUE6frDVlbiZence4k+w4Uc4/NQZ4NBp+PYjtI5FSrMmX3q+Tsq70ehqClbP5EXW
-	 excCWGYj+CZjqCs5oRvMr1YCI2bra2kAACropDnU=
+	b=Fo6Ur3mCd2d8YRB3zfQAc0iLThWWfmN7kfoM00lhbYE0QiKB9xrL92WDT/I9eMQFW
+	 m9158CU1fOJbbEKqGenl8F/0DzBsaAOBLVH/MeTh0CzqDlYcrFbvq92vxs5zWysPpY
+	 iRjebEtdXdAXf5FQJKycOZSAoLCEoxRaN0qY2LH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgGIX2c (ORCPT
+        id S1726973AbgGIX2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:28:32 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38875 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726311AbgGIX2c (ORCPT
+        Thu, 9 Jul 2020 19:28:53 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45170 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgGIX2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:28:32 -0400
-Received: by mail-io1-f68.google.com with SMTP id l1so4169691ioh.5;
-        Thu, 09 Jul 2020 16:28:32 -0700 (PDT)
+        Thu, 9 Jul 2020 19:28:53 -0400
+Received: by mail-io1-f66.google.com with SMTP id e64so4129742iof.12;
+        Thu, 09 Jul 2020 16:28:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=N0F6d02rpbZNASOsvBZdX7VJjxs2imsa5ZI8mX+lbSY=;
-        b=kWyk5mT8vw4a1BSmaVgFZiP/NkG4sEJIAZTetZiLxS7vtd56EuK4HIf4a2P0CIwPZV
-         2Tt/Wjwmd+n3B4iFl8vmx8o8xAQ9vt+jJ+ZEOuqKyjNZ0/fv/s9LWh3+rOlkLYne5B1Y
-         Uj/UDdjhB6z5w7yDyKXH4SLH0zB5PfPDe8Zdn0Olc4cAfnvLSKsW/L1FXpKPnydpjj9v
-         iCjxa6GNMhXfJIafsKt8rLAWJBv1zveKZtnVMi4h4afTeiSY8Z20MXhPU/5qMkVDD4DJ
-         NgnrOEryJ0YTmo3VZteDBKiqpK/8CoTw69Sef+iUabtORDcOa7ohG7I1we81hPTJtnDJ
-         YjCA==
-X-Gm-Message-State: AOAM533/SvCv5zmtKV+9BsRz1amY6uyuMt7xW+SPlvyBPCsUbuctWVGU
-        i4u05XjwfOwT/uzGJJvhMQ==
-X-Google-Smtp-Source: ABdhPJxh3+kNFZegJWX/MqCXps1jwBYVMzv5ZaXQliSqmJHszgsRAQRbkL/jQmt8WNJekbSGIjQMPA==
-X-Received: by 2002:a5d:9752:: with SMTP id c18mr21131081ioo.10.1594337311795;
-        Thu, 09 Jul 2020 16:28:31 -0700 (PDT)
+        bh=+Au39COXULcLItjiF+6L8MUVVfSHmQLmmw2aIEwpt5Q=;
+        b=q4mfYNIfENgqaRCjtnHEdk2o53nPzwDz+alqtEUW0J7w31aV0fClJHY/K30CMm19wt
+         9qrOwmTE15XgRethQGE3ktl4MhENdJlzkxro3q66FIY6d7GQ3vUp06T7xSowqk9rmvVR
+         7nYosgNHfR0LWju0yzcdrhFXaloGNAFBjQ9EXHSeBu/vTdYQ26B3+527v7rnvEb67ccA
+         Gv4MuUN8Q5e1hbjyhS7z0wWdwM7UNgR0y5vSzxv3/mJi07gn/DwesQ8n3J40EFM6cvW4
+         lrTEF0kLxpRFsdLc3YEeSL2MH0cJ0y0Ym7/XEEzTFA1Mmue4cb9uIwEV4xqhsISTdO3e
+         yq3Q==
+X-Gm-Message-State: AOAM530rWAzuUsE7WFh5f2PIMLNcpYXeUpU/rfUEl/u4f28Y3RZXo5NE
+        Y2wFSzgkM6b4hJSKlVOu1w==
+X-Google-Smtp-Source: ABdhPJyozy/fAk+3uupOWcOK06YXVnwlglg0aKM37J+l4lJVLCzIF+edk4spk2R4pUR/B8/H07hTBQ==
+X-Received: by 2002:a05:6602:229a:: with SMTP id d26mr44698583iod.57.1594337332315;
+        Thu, 09 Jul 2020 16:28:52 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id v16sm3095056iow.19.2020.07.09.16.28.30
+        by smtp.gmail.com with ESMTPSA id v62sm2684847ila.37.2020.07.09.16.28.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 16:28:31 -0700 (PDT)
-Received: (nullmailer pid 1099057 invoked by uid 1000);
-        Thu, 09 Jul 2020 23:28:29 -0000
-Date:   Thu, 9 Jul 2020 17:28:29 -0600
+        Thu, 09 Jul 2020 16:28:51 -0700 (PDT)
+Received: (nullmailer pid 1099701 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:28:50 -0000
+Date:   Thu, 9 Jul 2020 17:28:50 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Linux-imx@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
-        linux-input@vger.kernel.org, dmitry.torokhov@gmail.com,
-        s.hauer@pengutronix.de, olof@lixom.net, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        gnuiyl@gmail.com, linux-arm-kernel@lists.infradead.org,
-        festevam@gmail.com
-Subject: Re: [PATCH V2 2/2] dt-bindings: input: Convert imx keypad to
- json-schema
-Message-ID: <20200709232829.GA1099006@bogus>
-References: <1592285467-18371-1-git-send-email-Anson.Huang@nxp.com>
- <1592285467-18371-2-git-send-email-Anson.Huang@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     benjamin.gaignard@st.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: st,stmfx: Remove I2C unit name
+Message-ID: <20200709232850.GA1099649@bogus>
+References: <20200702113233.5327-1-festevam@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592285467-18371-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200702113233.5327-1-festevam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 13:31:07 +0800, Anson Huang wrote:
-> Convert the i.MX KEYPAD binding to DT schema format using json-schema
+On Thu, 02 Jul 2020 08:32:33 -0300, Fabio Estevam wrote:
+> Remove the I2C unit name to fix the following build warning with
+> 'make dt_binding_check':
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Warning (unit_address_vs_reg): /example-0/i2c@0: node has a unit name, but no reg or ranges property
+> 
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
 > ---
-> Changes since V1:
-> 	- include matrix-keymap.yaml and "linux,keymap" is unnecessary now, remove it.
-> ---
->  .../devicetree/bindings/input/imx-keypad.txt       | 53 --------------
->  .../devicetree/bindings/input/imx-keypad.yaml      | 85 ++++++++++++++++++++++
->  2 files changed, 85 insertions(+), 53 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/imx-keypad.txt
->  create mode 100644 Documentation/devicetree/bindings/input/imx-keypad.yaml
+>  Documentation/devicetree/bindings/mfd/st,stmfx.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Applied, thanks!
+Acked-by: Rob Herring <robh@kernel.org>
