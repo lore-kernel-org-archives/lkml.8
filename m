@@ -2,66 +2,141 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE1A206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41032076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:52:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ZtbKjxMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgGILtm (ORCPT
+        id S1727818AbgGILwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:49:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38260 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726387AbgGILtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:49:42 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5895B6936C31BE6C6F6A;
-        Thu,  9 Jul 2020 19:49:40 +0800 (CST)
-Received: from [10.174.185.226] (10.174.185.226) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 9 Jul 2020 19:49:33 +0800
-Subject: Re: [REPORT] possible circular locking dependency when booting a VM
- on arm64 host
-To:     Salil Mehta <salil.mehta@huawei.com>
-CC:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
-        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>
-References: <7225eba7-6e5e-ec7e-953b-d1fef0b1775b@huawei.com>
- <134ee452eda74f0cbdc10354fe66c48e@huawei.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <7c1bb3c1-3f64-8c24-ed59-eb3da7bf6643@huawei.com>
-Date:   Thu, 9 Jul 2020 19:49:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 9 Jul 2020 07:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbgGILwV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 07:52:21 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332ACC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 04:52:21 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id w3so1487251wmi.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 04:52:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RgnLFkfDlMduGKE/ztPFGecYYc7s1DxZ/PWGRQJJLRs=;
+        b=ZtbKjxMvYP/9FTODupwovxGroCNIJmYSlsUpzaQ0CEcJTMNqQB9k02e8gNtpuMlUGS
+         YkOAXNIFqxplT/lIOV1voPg4Xw2jsXMdoOM5W+quL5iJp77pYnViJ+wsOj/m8VRnNOiY
+         4lHtvYKQRtS7Msyq1+AbHrymke6YGaWmtisdc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RgnLFkfDlMduGKE/ztPFGecYYc7s1DxZ/PWGRQJJLRs=;
+        b=tM5NvkXAgHMolatufx52Y9Pix0JHywq5mRMu0T7OJ8XUntI+E63+uu6PIcdmHw69fi
+         YvoE7epYO7K2+QIBeytAa+8QZLBI+oRJUVq1Z1HcvVHpY5Eom0liRwZgRBMwND/Ji6Xo
+         drpQkCCTebKtE2MAVe86EhEYtP+Z0nvLQuBGBH4R1GLjjIyS2cfofhmQeenDZaNlmiMZ
+         ua9pQD6hIKz8RALFRtF81HfHHgmdQTc0YAqNQEs6OL7zKjGqKQQPnRqEzVV1O0t6IZqg
+         GWbGdqiFTdCnzJqVNm/3sBr3oDsJI2Po0eRQ6KaGPScYGsbXwJk8Lqz0Mjg+nJs7VPdh
+         L4GQ==
+X-Gm-Message-State: AOAM531f/xQef01nN+Z79TR9mjNzzK0B4/sQ2vMeHn5WIcYmeTtXp8Pa
+        iiTQ0O5IE0VkPuRA0FMeRzTrHMtASoQbcw==
+X-Google-Smtp-Source: ABdhPJw2JnRN/XTa6+WZL2sIDnwotc3qUGVnnswUvYbo913hMwzPuzrdX231q7/X1v5wKPOQ0hYQ4A==
+X-Received: by 2002:a1c:7916:: with SMTP id l22mr13271541wme.115.1594295539736;
+        Thu, 09 Jul 2020 04:52:19 -0700 (PDT)
+Received: from antares.lan (6.b.4.5.a.4.9.1.1.9.d.d.1.2.d.8.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:8d21:dd91:194a:54b6])
+        by smtp.gmail.com with ESMTPSA id u1sm6331001wrb.78.2020.07.09.04.52.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 04:52:18 -0700 (PDT)
+From:   Lorenz Bauer <lmb@cloudflare.com>
+To:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Lorenz Bauer <lmb@cloudflare.com>
+Cc:     kernel-team@cloudflare.com, Martin KaFai Lau <kafai@fb.com>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf] selftests: bpf: fix detach from sockmap tests
+Date:   Thu,  9 Jul 2020 12:51:51 +0100
+Message-Id: <20200709115151.75829-1-lmb@cloudflare.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <134ee452eda74f0cbdc10354fe66c48e@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.185.226]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/9 18:54, Salil Mehta wrote:
-> Hi Yuzenghui,
-> I will try to reproduce it today at our platform. Just one question is it easily
-> reproducible or is a rare occurrence?
+Fix sockmap tests which rely on old bpf_prog_dispatch behaviour.
+In the first case, the tests check that detaching without giving
+a program succeeds. Since these are not the desired semantics,
+invert the condition. In the second case, the clean up code doesn't
+supply the necessary program fds.
 
-Salil, it's 100% reproducible once you start a guest. You don't even
-need to assign hostdev to the VM.
+Reported-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Fixes: bb0de3131f4c ("bpf: sockmap: Require attach_bpf_fd when detaching a program")
+---
+ tools/testing/selftests/bpf/test_maps.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/tools/testing/selftests/bpf/test_maps.c b/tools/testing/selftests/bpf/test_maps.c
+index 6a12a0e01e07..754cf611723e 100644
+--- a/tools/testing/selftests/bpf/test_maps.c
++++ b/tools/testing/selftests/bpf/test_maps.c
+@@ -789,19 +789,19 @@ static void test_sockmap(unsigned int tasks, void *data)
+ 	}
+ 
+ 	err = bpf_prog_detach(fd, BPF_SK_SKB_STREAM_PARSER);
+-	if (err) {
++	if (!err) {
+ 		printf("Failed empty parser prog detach\n");
+ 		goto out_sockmap;
+ 	}
+ 
+ 	err = bpf_prog_detach(fd, BPF_SK_SKB_STREAM_VERDICT);
+-	if (err) {
++	if (!err) {
+ 		printf("Failed empty verdict prog detach\n");
+ 		goto out_sockmap;
+ 	}
+ 
+ 	err = bpf_prog_detach(fd, BPF_SK_MSG_VERDICT);
+-	if (err) {
++	if (!err) {
+ 		printf("Failed empty msg verdict prog detach\n");
+ 		goto out_sockmap;
+ 	}
+@@ -1090,19 +1090,19 @@ static void test_sockmap(unsigned int tasks, void *data)
+ 		assert(status == 0);
+ 	}
+ 
+-	err = bpf_prog_detach(map_fd_rx, __MAX_BPF_ATTACH_TYPE);
++	err = bpf_prog_detach2(parse_prog, map_fd_rx, __MAX_BPF_ATTACH_TYPE);
+ 	if (!err) {
+ 		printf("Detached an invalid prog type.\n");
+ 		goto out_sockmap;
+ 	}
+ 
+-	err = bpf_prog_detach(map_fd_rx, BPF_SK_SKB_STREAM_PARSER);
++	err = bpf_prog_detach2(parse_prog, map_fd_rx, BPF_SK_SKB_STREAM_PARSER);
+ 	if (err) {
+ 		printf("Failed parser prog detach\n");
+ 		goto out_sockmap;
+ 	}
+ 
+-	err = bpf_prog_detach(map_fd_rx, BPF_SK_SKB_STREAM_VERDICT);
++	err = bpf_prog_detach2(verdict_prog, map_fd_rx, BPF_SK_SKB_STREAM_VERDICT);
+ 	if (err) {
+ 		printf("Failed parser prog detach\n");
+ 		goto out_sockmap;
+-- 
+2.25.1
 
-Thanks,
-Zenghui
