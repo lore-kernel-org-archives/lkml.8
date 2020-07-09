@@ -2,113 +2,59 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D41C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE710206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594337454;
-	bh=Bv/ub4CQqHwvYCfl+YYJjzybFA59mDcgMIlvajDLMI4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=en7hFUvbOhxCgXHuldNAaKvMJIsLycMBMt812Bggxt5qgZkRbAdtrMjrklWdV9zPO
-	 mKfy2i/dd0Il6Ewq41UCD7aecZz0QRfIB0rY/ogFirUGQEhx1xC+HW8OJ6U05ejJO8
-	 OpmipGJZ67FMX/51AbcndcgMJu0e5fRkANin7lX8=
+	by mail.kernel.org (Postfix) with ESMTP id 87D142064B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgGIXaw (ORCPT
+        id S1726795AbgGIXa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:30:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbgGIXaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:30:52 -0400
-Received: from embeddedor (unknown [201.162.245.14])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49A172064B;
-        Thu,  9 Jul 2020 23:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594337451;
-        bh=Bv/ub4CQqHwvYCfl+YYJjzybFA59mDcgMIlvajDLMI4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=TovEyNTrcUkiwQ8FzBnAzVv3mTlzmedw6jUKrgrjKJZiS82whlgAyFBh4AX5WtACH
-         m23su+pUhI9nmju/CyONCbYFZ1YwJIldT1MjeM1GZkNj1mMLUKHQyboEzH2NC216W7
-         S9QSkvjSymBGiQZ7CeYfj6rTe5U3VRTFM2dBzha8=
-Date:   Thu, 9 Jul 2020 18:36:23 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] IB/hfi1: Remove unnecessary fall-through markings
-Message-ID: <20200709233623.GA21949@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 9 Jul 2020 19:30:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgGIXaz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 19:30:55 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC99C08C5CE;
+        Thu,  9 Jul 2020 16:30:55 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id F1EBD120F93FA;
+        Thu,  9 Jul 2020 16:30:54 -0700 (PDT)
+Date:   Thu, 09 Jul 2020 16:30:54 -0700 (PDT)
+Message-Id: <20200709.163054.1621115392152399823.davem@davemloft.net>
+To:     mark.tomlinson@alliedtelesis.co.nz
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ipv6: Support more than 32 MIFS
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200709232734.12814-1-mark.tomlinson@alliedtelesis.co.nz>
+References: <20200709232734.12814-1-mark.tomlinson@alliedtelesis.co.nz>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 Jul 2020 16:30:55 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reorganize the code a bit in a more standard way[1] and remove
-unnecessary fall-through markings.
+From: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Date: Fri, 10 Jul 2020 11:27:34 +1200
 
-[1] https://lore.kernel.org/lkml/20200708054703.GR207186@unreal/
+> As background to this patch, we have MAXMIFS set to 1025 in our kernel.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/infiniband/hw/hfi1/chip.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+This patch is pointless without that adjustment, so it really doesn't
+belong upstream until you tackle the whole entire problem and therefore
+make the limit able to be set higher or at run time.
 
-diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-index 15f9c635f292..674c07590af8 100644
---- a/drivers/infiniband/hw/hfi1/chip.c
-+++ b/drivers/infiniband/hw/hfi1/chip.c
-@@ -7317,11 +7317,11 @@ static u16 link_width_to_bits(struct hfi1_devdata *dd, u16 width)
- 	case 1: return OPA_LINK_WIDTH_1X;
- 	case 2: return OPA_LINK_WIDTH_2X;
- 	case 3: return OPA_LINK_WIDTH_3X;
-+	case 4: return OPA_LINK_WIDTH_4X;
- 	default:
- 		dd_dev_info(dd, "%s: invalid width %d, using 4\n",
- 			    __func__, width);
--		/* fall through */
--	case 4: return OPA_LINK_WIDTH_4X;
-+		return OPA_LINK_WIDTH_4X;
- 	}
- }
- 
-@@ -12898,10 +12898,6 @@ u32 chip_to_opa_pstate(struct hfi1_devdata *dd, u32 chip_pstate)
- {
- 	/* look at the HFI meta-states only */
- 	switch (chip_pstate & 0xf0) {
--	default:
--		dd_dev_err(dd, "Unexpected chip physical state of 0x%x\n",
--			   chip_pstate);
--		/* fall through */
- 	case PLS_DISABLED:
- 		return IB_PORTPHYSSTATE_DISABLED;
- 	case PLS_OFFLINE:
-@@ -12914,6 +12910,10 @@ u32 chip_to_opa_pstate(struct hfi1_devdata *dd, u32 chip_pstate)
- 		return IB_PORTPHYSSTATE_LINKUP;
- 	case PLS_PHYTEST:
- 		return IB_PORTPHYSSTATE_PHY_TEST;
-+	default:
-+		dd_dev_err(dd, "Unexpected chip physical state of 0x%x\n",
-+			   chip_pstate);
-+		return IB_PORTPHYSSTATE_DISABLED;
- 	}
- }
- 
--- 
-2.27.0
-
+I'm not applying this.
