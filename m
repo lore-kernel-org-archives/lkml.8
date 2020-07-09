@@ -2,67 +2,129 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1209C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8312FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A442720786
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFF220774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594331160;
+	bh=+RssMVtEkTTV+VIeflNjuFnmtDfFnF7OA/q9gx97MSk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1wmh7BNjY8P8nZ1nfaJVE9f1Bk9S6DUCri357Pi+MNBj8j7u88w6Ja3GZKHWwuIEZ
+	 enXhPXMn4gnjx3AOmZW1tsyF+5Ab/HlgjEHNR+BsuSum7tZQTvnzK3s/abL6LzSbn2
+	 BDCUB89C1NvnN+kvRjGK3EfZbHEcGLETuVwUbWKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGIVni (ORCPT
+        id S1726433AbgGIVp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:43:38 -0400
-Received: from www62.your-server.de ([213.133.104.62]:33874 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgGIVnh (ORCPT
+        Thu, 9 Jul 2020 17:45:58 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40872 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgGIVp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:43:37 -0400
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jteKL-00029M-Gu; Thu, 09 Jul 2020 23:43:33 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jteKL-00085h-9X; Thu, 09 Jul 2020 23:43:33 +0200
-Subject: Re: [PATCH bpf] selftests: bpf: fix detach from sockmap tests
-To:     Lorenz Bauer <lmb@cloudflare.com>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     kernel-team@cloudflare.com, Martin KaFai Lau <kafai@fb.com>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200709115151.75829-1-lmb@cloudflare.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <98ec53fe-7766-2b0a-42f4-89ce9aad04dd@iogearbox.net>
-Date:   Thu, 9 Jul 2020 23:43:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 9 Jul 2020 17:45:58 -0400
+Received: by mail-io1-f66.google.com with SMTP id q8so3934712iow.7;
+        Thu, 09 Jul 2020 14:45:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cm4M9dwes8x03niEEdU7bFOP7a6MNWa2UIuDCHSOETA=;
+        b=fg4qaRmWeRM8GTogI0OfWx9OnPQHO+x6FhWY5D7zDPJP8l9WXBOGXVcI60VfszqSxo
+         I8Aj1TWav1yXZXQ4FiXDVJEIJlrO2OSLs+DWCTQluLKgUFAofynl8zPeamULGUmw405q
+         dFq/NrmFYeVFWYkC7ww63DQgg0YO4FeQ31gcLKiQ1dOFc3rYWqL8nHv/Qj4vQ//3FrUR
+         AatVarlX1hcBGQuYku1hHfyFmOXvCLLslwK+wvj31uxB4x4VBu4VVoVniHm6m2lIaHLj
+         03d9dVPmVmYbVkcxiSu+xmWP2k/0q52kB7U+wDqj4DTmBbHjMb00vmrs+s+ydRUIWGaf
+         4WPA==
+X-Gm-Message-State: AOAM532Rfw7Dz8QO/UuXI1geGG7c9hApSTyBUM6WmQGzNctvd18rdYVu
+        FAb5zjVjaxWE5wmxmLG+ew==
+X-Google-Smtp-Source: ABdhPJxMyLOsUDzCdfKL53+BYbKXk7Kr9ScXgbUfbqOa4CSYjACMyINv95ZFOb6Qxjd9sFBEAddj1Q==
+X-Received: by 2002:a05:6638:25cf:: with SMTP id u15mr65297352jat.19.1594331156767;
+        Thu, 09 Jul 2020 14:45:56 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id t6sm2725359ioi.20.2020.07.09.14.45.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 14:45:56 -0700 (PDT)
+Received: (nullmailer pid 942496 invoked by uid 1000);
+        Thu, 09 Jul 2020 21:45:55 -0000
+Date:   Thu, 9 Jul 2020 15:45:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 08/14] PCI: cadence: Fix updating Vendor ID and
+ Subsystem Vendor ID register
+Message-ID: <20200709214555.GA939109@bogus>
+References: <20200708093018.28474-1-kishon@ti.com>
+ <20200708093018.28474-9-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200709115151.75829-1-lmb@cloudflare.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25868/Thu Jul  9 15:58:00 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708093018.28474-9-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/20 1:51 PM, Lorenz Bauer wrote:
-> Fix sockmap tests which rely on old bpf_prog_dispatch behaviour.
-> In the first case, the tests check that detaching without giving
-> a program succeeds. Since these are not the desired semantics,
-> invert the condition. In the second case, the clean up code doesn't
-> supply the necessary program fds.
+On Wed, Jul 08, 2020 at 03:00:12PM +0530, Kishon Vijay Abraham I wrote:
+> Commit 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe
+> controller") in order to update Vendor ID, directly wrote to
+> PCI_VENDOR_ID register. However PCI_VENDOR_ID in root port configuration
+> space is read-only register and writing to it will have no effect.
+> Use local management register to configure Vendor ID and Subsystem Vendor
+> ID.
 > 
-> Reported-by: Martin KaFai Lau <kafai@fb.com>
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> Fixes: bb0de3131f4c ("bpf: sockmap: Require attach_bpf_fd when detaching a program")
+> Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 10127ea71b83..8935f7a37e5a 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -82,6 +82,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+>  	u32 value, ctrl;
+> +	u32 id;
+>  
+>  	/*
+>  	 * Set the root complex BAR configuration register:
+> @@ -101,8 +102,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+>  
+>  	/* Set root port configuration space */
+> -	if (rc->vendor_id != 0xffff)
+> -		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
 
-Applied, thanks!
+If this is read-only, then...
+
+> +	if (rc->vendor_id != 0xffff) {
+> +		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
+> +			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
+> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
+> +	}
+> +
+>  	if (rc->device_id != 0xffff)
+>  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
+
+...isn't this read-only too?
+
+>  
+> -- 
+> 2.17.1
+> 
