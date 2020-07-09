@@ -2,172 +2,99 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E51C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E43E62083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9117220738
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lvW2ellQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgGIDqb (ORCPT
+        id S1726340AbgGIDqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 23:46:31 -0400
-Received: from mga07.intel.com ([134.134.136.100]:59229 "EHLO mga07.intel.com"
+        Wed, 8 Jul 2020 23:46:37 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:39349 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726117AbgGIDqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 23:46:30 -0400
-IronPort-SDR: a3xOKUYa6BQGOvzxSh4Q8NHoD67aNM3w4IT07yEBQsCjMESrbsdOqDHXf9NvaYkk5cGAZXhx5X
- //oSNkII/YDA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="212850002"
-X-IronPort-AV: E=Sophos;i="5.75,330,1589266800"; 
-   d="scan'208";a="212850002"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 20:46:30 -0700
-IronPort-SDR: HDUm5QmuV/5aWGurSXu8QguKFjxB2LrrdTwxAVaib/CU2fDXGTBlgVAxDWb3PbNZoRIGwvlG5C
- bt1dCus2NPwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,330,1589266800"; 
-   d="scan'208";a="457746314"
-Received: from lkp-server01.sh.intel.com (HELO 6136dd46483e) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jul 2020 20:46:28 -0700
-Received: from kbuild by 6136dd46483e with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jtNW0-0000P8-A8; Thu, 09 Jul 2020 03:46:28 +0000
-Date:   Thu, 09 Jul 2020 11:45:38 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:perf/core] BUILD SUCCESS
- c085fb8774671e83f6199a8e838fbc0e57094029
-Message-ID: <5f0692e2.pWEvtdlSLHXyFz9f%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726117AbgGIDqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 23:46:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594266394; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ClVKfwV1sejEfp520mgp/j3raQqoqw5b6t+T4bASRgo=; b=lvW2ellQIRrW8+KAwx7Vva1IwwOxB9EIYl1y6knp25DzV932Sr8tOFURQJmq/bX6QEx+Qz1P
+ MZFQ8UG5FEwPsWe8pZ3ul+5jr6q4phDV93kFejSG2+eBWmOBged3yUU2xD0Jxf0FJHJ7bDdG
+ W7ZIhuu/V6mbF5QShuIX4u4G+N4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5f06931a71d7ca1d3a4fdf91 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 03:46:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F024EC433C6; Thu,  9 Jul 2020 03:46:32 +0000 (UTC)
+Received: from [192.168.0.129] (unknown [183.83.142.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F3ADC433C6;
+        Thu,  9 Jul 2020 03:46:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F3ADC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+Subject: Re: [PATCH v3 5/8] ASoC: qcom: lpass-platform: Replace card->dev with
+ component->dev
+To:     Mark Brown <broonie@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
+        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ajit Pandey <ajitp@codeaurora.org>
+References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
+ <1594184896-10629-6-git-send-email-rohitkr@codeaurora.org>
+ <20200708165041.GX4655@sirena.org.uk>
+From:   Rohit Kumar <rohitkr@codeaurora.org>
+Message-ID: <79221e43-c4f0-8e75-e97e-f0f255f3f68c@codeaurora.org>
+Date:   Thu, 9 Jul 2020 09:16:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200708165041.GX4655@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  perf/core
-branch HEAD: c085fb8774671e83f6199a8e838fbc0e57094029  perf/x86/intel/lbr: Support XSAVES for arch LBR read
 
-elapsed time: 728m
+On 7/8/2020 10:20 PM, Mark Brown wrote:
+> On Wed, Jul 08, 2020 at 10:38:13AM +0530, Rohit kumar wrote:
+>> From: Ajit Pandey <ajitp@codeaurora.org>
+>>
+>> We are allocating dma memory for component->dev but trying to mmap
+>> such memory for substream->pcm->card->dev. Replace device argument
+>> in mmap with component->dev to fix this.
+> This is a bug fix and should've been at the start of the series (or sent
+> separately) so that it can be applied without the rest of the series.
 
-configs tested: 102
-configs skipped: 1
+Thanks Mark for the suggestion. I will send it separately.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+For other patches in series, I will wait for comments before posting next
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-xtensa                         virt_defconfig
-parisc                            allnoconfig
-mips                      pic32mzda_defconfig
-arm                       netwinder_defconfig
-openrisc                 simple_smp_defconfig
-powerpc                      pasemi_defconfig
-arm                        cerfcube_defconfig
-xtensa                          iss_defconfig
-sh                           se7343_defconfig
-arm                          ixp4xx_defconfig
-sh                           se7780_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20200708
-i386                 randconfig-a001-20200708
-i386                 randconfig-a006-20200708
-i386                 randconfig-a005-20200708
-i386                 randconfig-a004-20200708
-i386                 randconfig-a003-20200708
-i386                 randconfig-a011-20200708
-i386                 randconfig-a015-20200708
-i386                 randconfig-a014-20200708
-i386                 randconfig-a016-20200708
-i386                 randconfig-a012-20200708
-i386                 randconfig-a013-20200708
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allyesconfig
-um                               allmodconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+patchset.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Thanks,
+
+Rohit
+
+-- 
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
+
