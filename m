@@ -2,122 +2,122 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DF0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECCE206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594287010;
-	bh=ty0qNkQb+mQZVOrqCFXZLCcTcwuD2qX6+r/mjdgtvss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GbdsfnCVHD+9nF4g/FfZt6/ZZzfx7kkO8KbS1waBhoSvvgxF/Htesw5hcbP1Z7gjL
-	 mUrSy/oQHjiERnngcmN3KlqdyuJPFFGjejFeqp19DTKbw+fDNhJo45b/SrWu4cngPU
-	 TKaNNEhr7p9g11gkjQBRaVe9IJt0wbJhROmcBGxk=
+	by mail.kernel.org (Postfix) with ESMTP id 4479320663
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgGIJaI (ORCPT
+        id S1726896AbgGIJas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:30:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbgGIJaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:30:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CB9F20663;
-        Thu,  9 Jul 2020 09:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594287005;
-        bh=ty0qNkQb+mQZVOrqCFXZLCcTcwuD2qX6+r/mjdgtvss=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0XezFJWdt8TX5AKXsCYPtKd4Mbqc6+K1SQGPJCabkV0wgzanLVbsqTJac9JtmblwL
-         fOpdX0CZSwSgr1NRmUEjZPUfVSSoX0j4rzL2HnIz+VKinMU0MCazWveO59bczXTBue
-         vduNcNlN/gFA2/ID6tXitgwC2pbgIDPDRKYIp1ZI=
-Date:   Thu, 9 Jul 2020 11:30:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.4 00/65] 5.4.51-rc1 review
-Message-ID: <20200709093012.GB46127@kroah.com>
-References: <20200707145752.417212219@linuxfoundation.org>
- <6fbcdd30-68d3-e8c5-d762-7b8a8c48d112@nvidia.com>
- <20200708151500.GA710412@kroah.com>
- <14d23282-c871-3f9d-372c-06da693666e1@nvidia.com>
+        Thu, 9 Jul 2020 05:30:48 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:40663 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgGIJar (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 05:30:47 -0400
+Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N1PLB-1kukYx37et-012nFH; Thu, 09 Jul 2020 11:30:44 +0200
+Received: by mail-qt1-f180.google.com with SMTP id o38so1141868qtf.6;
+        Thu, 09 Jul 2020 02:30:44 -0700 (PDT)
+X-Gm-Message-State: AOAM533iGCYVcsfLjfbLQ+hhH0hRC2iv0+NWTa+MtIg5LCFhi3og8f0O
+        GbZDZSTJ4PiBa3B11XgDyLneCer+nyn226KYyyY=
+X-Google-Smtp-Source: ABdhPJya8KYSjP4Vpazo2pyPOtp1xixDd/LrBpy7KWM87TVOcxWC9KZT2AhHFlbVXr6XdAAgrM3BYamH6NXqKGbmOGs=
+X-Received: by 2002:ac8:4507:: with SMTP id q7mr63620552qtn.142.1594287043518;
+ Thu, 09 Jul 2020 02:30:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14d23282-c871-3f9d-372c-06da693666e1@nvidia.com>
+References: <20200628182601.GA84577@gmail.com> <CAHk-=wgD+q+oDdtukYC74_cDX5i0Ynf0GLhuNe2Faaokejj6fQ@mail.gmail.com>
+ <20200708162053.GU4800@hirez.programming.kicks-ass.net> <CAHk-=wggLLv8dY7ViOm7rdHxVNKJUkZMuR90vXO307WkBT8qrw@mail.gmail.com>
+In-Reply-To: <CAHk-=wggLLv8dY7ViOm7rdHxVNKJUkZMuR90vXO307WkBT8qrw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 9 Jul 2020 11:30:27 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1GFjM5-ENf7XL6jjUvRdJhgjzYpSGD5R7TmW6oWEhYRA@mail.gmail.com>
+Message-ID: <CAK8P3a1GFjM5-ENf7XL6jjUvRdJhgjzYpSGD5R7TmW6oWEhYRA@mail.gmail.com>
+Subject: Re: [GIT PULL] EFI fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:gf6Do5RSBjDjAUrRhYphUARohS0MGye5iw38Wi20Q7K2qIlDRP+
+ nAtuzPHSIWVTJJh+Y9XzbrQ8HUsjk0g+0VrrWwtlYKkk/u6VDC8dDz/567uerK+/GrHsinM
+ nL2hlzEktiiOeAgjU/1FQUXfA4yXOpEjtYeGNUQ8lmpcPjZz+ucjQAY2G9jO5jlMrtLdyW4
+ pbyg1MF8u9pLnRktzZOIg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:30W8Tdkdp4U=:vv8aO2cKSp5Sm58Sw5kbJS
+ epZWaWDnKpWamfcZ2cgP3VjylRAcvbfwdbiX5+12CbiA/ueKzMPMKdVTY43d6Mn5srjfqE1HQ
+ x5sjcVN7uHeZ9+oMCeBW7eZlfiR66ZXJYZda2MvSCCy2RWTqRy35jDr93g4VvDYZmssAF3cbk
+ uwW84mrcR+tDVIicZs8XDnM2HbLkbFNNBf5hq2qRTw2Msq78PLYeEAhkboEf6jIZGM3VLjyWc
+ wxf1raheuYgMWzeKj/xZWPvMdsOGzlHKlQ0GMxW9z7wtmj2DdcGN2zPRMtRSt8fRe17MFeh0l
+ ZzMRX6Bc5Q9VXPDwAtnRGTwSJH/dhEGdzuABy8NMdMVru7xjZzvESCkHWQaouov4PEe5Vt6pw
+ pJxsCHIakhA36eaQOcecEUmPe7pq3kTzmo0e4k9dXKclPxcpGoNrMycZOMB4ttCXJFaKw19gS
+ ADiy2dCwPcqgTyZGUTfMk0IeyBl+CkAuJoMcZbLo5H2Dg6zhQR24iStC7s4uIUHmrxX0/YsyL
+ rQPFc2mqsh2G6OBLctad/PQBNLdS2KhC5ZoQf37k674BtpCouNLBH4B4nf2A7tkUyic0PqTXT
+ 57KqPNUWujlJoftytHO5Mkx9s8n5DdwheSUszCioek5VlkLIcGPpgdlePpKSSmmParu0sKlZE
+ pDezrveeuX266eXPTJyPjaLi8d08ipeZJA9p3FGoM/4br6xXASsocEdU6VCYhmk6pZU+lz3/t
+ oHiJgzntNxDd0vbfxGUn9caV9bIaA6CZziWtvpUCeLPNnZYJfwHn/+RK71HICmIaVA8yynK0X
+ KtoACepfSvNWIhehmMaSwkK3OfPF8ijgybLK1CPWfhVyThvGHPybAhxrA9hxAnZ97B4t4Kp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 05:58:27PM +0100, Jon Hunter wrote:
-> 
-> On 08/07/2020 16:15, Greg Kroah-Hartman wrote:
-> > On Wed, Jul 08, 2020 at 09:41:33AM +0100, Jon Hunter wrote:
-> >>
-> >> On 07/07/2020 16:16, Greg Kroah-Hartman wrote:
-> >>> This is the start of the stable review cycle for the 5.4.51 release.
-> >>> There are 65 patches in this series, all will be posted as a response
-> >>> to this one.  If anyone has any issues with these being applied, please
-> >>> let me know.
-> >>>
-> >>> Responses should be made by Thu, 09 Jul 2020 14:57:34 +0000.
-> >>> Anything received after that time might be too late.
-> >>>
-> >>> The whole patch series can be found in one patch at:
-> >>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.51-rc1.gz
-> >>> or in the git tree and branch at:
-> >>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> >>> and the diffstat can be found below.
-> >>>
-> >>> thanks,
-> >>>
-> >>> greg k-h
-> >>
-> >> All tests are passing for Tegra ...
-> >>
-> >> Test results for stable-v5.4:
-> >>     11 builds:	11 pass, 0 fail
-> >>     26 boots:	26 pass, 0 fail
-> >>     56 tests:	56 pass, 0 fail
-> >>
-> >> Linux version:	5.4.51-rc1-g47d410b54275
-> >> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-> >>                 tegra194-p2972-0000, tegra20-ventana,
-> >>                 tegra210-p2371-2180, tegra210-p3450-0000,
-> >>                 tegra30-cardhu-a04
-> > 
-> > Thanks for testing all of these and letting me know.
-> 
-> No problem. For some reason the v5.7 review email never made it to my
-> inbox AFAICT. Who knows if it will show up tomorrow, but anyway it all
-> looks good to Tegra ...
-> 
-> Test results for stable-v5.7:
->     11 builds:	11 pass, 0 fail
->     26 boots:	26 pass, 0 fail
->     56 tests:	56 pass, 0 fail
-> 
-> Linux version:	5.7.8-rc1-gb371afd12a48
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra210-p3450-0000,
->                 tegra30-cardhu-a04
+On Wed, Jul 8, 2020 at 8:00 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, Jul 8, 2020 at 9:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > It's perhaps yet another reason to just skip gcc-4.8 too, since
+> > > apparently 4.9 works.
+> > >
+> > > gcc-4.9 really has a lot of advantages. It's where (I think) gcc
+> > > basically supports all C11 things, including _Generic() but also
+> > > __auto_type.
+> >
+> > +1
+> >
+> > Anybody for nay, or should we just do this?
+>
+> I'll just do it. Let's see if anybody screams with a good reason. I
+> hate the whole "support old compilers", it ends up not only making for
+> complex code, it tends to cause these unnecessary kinds of "guys, we
+> tested this really well, but that crazy compiler had a very particular
+> odd issue, and it wasn't in any test box.
 
-Oh, nice, I was wondering why you didn't respond for that.
+Cool, thanks for changing it, this is clearly a better suited compiler
+version. Aside from the added C11 features, this is also where a lot of
+the optimizations changed, so code generation is more predictable
+if we don't need to worry about gcc-4.8.
 
-thanks for letting me know.
+On the flip side, gcc-4.8 was used by old enterprise distros that
+are still supported (SUSE 12, RHEL 7), whereas gcc-4.9 was only
+shipped in Debian Jessie and Android releases that are both
+EOL now (Android never moved beyond a buggy gcc-4.9 prerelease
+but now uses clang for everything).
 
-greg k-h
+I don't see any technical reasons to go even further, but if
+something does come up, the users of these Long-term supported
+distros would be most impacted by a change:
+
+gcc-4.9: Used in Debian 8 (Jessie), EOL June 2020
+gcc-5: Used in Ubuntu 16.04 (Xenial, Mint 18, ...), EOL April 2021
+gcc-6: Used in Debian 9 (Stretch), EOL 2022
+gcc-7: Used in SLES 15, Ubuntu 18.04 (Bionic, Mint 19, ...)
+gcc-8: Used in RHEL-8 (centos, oracle, ...), OpenWRT
+
+The most interesting version to require in the future would be
+gcc-7, which IIRC is the point at which we can just use -std=gnu99
+or -std=gnu11 instead of -std=gnu89 without running into the
+problem with compound literals[1].
+
+       Arnd
+
+[1] https://patchwork.kernel.org/patch/11195831/
