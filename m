@@ -2,227 +2,98 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C483C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC63420774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1901B20672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:40:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g6xv4XrK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TB7jk4ii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGIIkm (ORCPT
+        id S1726874AbgGIIkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:40:42 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:57673 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726765AbgGIIkb (ORCPT
+        Thu, 9 Jul 2020 04:40:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34672 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgGIIko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:40:31 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0U2BK-9Y_1594284022;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U2BK-9Y_1594284022)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 09 Jul 2020 16:40:22 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        dhowells@redhat.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, jmorris@namei.org, serge@hallyn.com,
-        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        zohar@linux.ibm.com, vt@altlinux.org, gilad@benyossef.com,
-        pvanleeuwen@rambus.com, zhang.jia@linux.alibaba.com
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, tianjia.zhang@linux.alibaba.com
-Subject: [PATCH v5 7/8] X.509: support OSCCA sm2-with-sm3 certificate verification
-Date:   Thu,  9 Jul 2020 16:40:14 +0800
-Message-Id: <20200709084015.21886-8-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200709084015.21886-1-tianjia.zhang@linux.alibaba.com>
-References: <20200709084015.21886-1-tianjia.zhang@linux.alibaba.com>
+        Thu, 9 Jul 2020 04:40:44 -0400
+Date:   Thu, 9 Jul 2020 10:40:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594284042;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ieSBot/weRM1U5QEdd7MCkjc4QsLbq7KhjhwH8iFh8o=;
+        b=g6xv4XrKRyQ3aPVu6RyEH2opLJSzoWIezuhAdkoJQlr6HdURCxra93x8IV8pGbnpn7Wqxp
+        oIX2mNGvsZX4dlbIH33sun9YPonGswuB5r4Jxg0gjLkD8kvALBGsyAg1ClSFbfMOg9G+dp
+        X8a7+NNABkaPl+lURmisc5FOelII2pMzcKsdrHrKbctKJu+dHq+ZKJtvyN8H/HFyEdK6yS
+        YgsTDBTD3UlEaXIj/vq67lwqmn/rnSkTpbB+/Qkx/ngP2l8d5VMHMRE+6kAR9OECszU8z4
+        bEVszu8x+mn+maLRzLN6d/nmsQgYgnQD7CbMcWwwHkAbGTvnsSi6+PfvcUaBTQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594284042;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ieSBot/weRM1U5QEdd7MCkjc4QsLbq7KhjhwH8iFh8o=;
+        b=TB7jk4iiWHREpoBXtKoUJDi3kx2Hxev64lmh1lDE+9keDrgXurcyq91Z2CSwcV2J38JQcS
+        7bOUrK+lgNH/W2BQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+        Mahipal Challa <mahipalreddy2006@gmail.com>,
+        Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: Re: [PATCH v4] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Message-ID: <20200709084040.cf3jzkndiaefky4r@linutronix.de>
+References: <20200707125210.33256-1-song.bao.hua@hisilicon.com>
+ <20200708145934.4w3qk53mgavyyln7@linutronix.de>
+ <B926444035E5E2439431908E3842AFD25610B7@DGGEMI525-MBS.china.huawei.com>
+ <20200709073905.lgs5kvccnz6eqsyd@linutronix.de>
+ <B926444035E5E2439431908E3842AFD2561D4E@DGGEMI525-MBS.china.huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <B926444035E5E2439431908E3842AFD2561D4E@DGGEMI525-MBS.china.huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The digital certificate format based on SM2 crypto algorithm as
-specified in GM/T 0015-2012. It was published by State Encryption
-Management Bureau, China.
+On 2020-07-09 07:55:22 [+0000], Song Bao Hua (Barry Song) wrote:
+> Hello Sebastian, thanks for your reply and careful review.
+Hi,
 
-The method of generating Other User Information is defined as
-ZA=H256(ENTLA || IDA || a || b || xG || yG || xA || yA), it also
-specified in https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02.
+> I don't think we can simply "forward the result to the caller and let him decide".
+> Would you like to present some pseudo code?
 
-The x509 certificate supports sm2-with-sm3 type certificate
-verification.  Because certificate verification requires ZA
-in addition to tbs data, ZA also depends on elliptic curve
-parameters and public key data, so you need to access tbs in sig
-and calculate ZA. Finally calculate the digest of the
-signature and complete the verification work. The calculation
-process of ZA is declared in specifications GM/T 0009-2012
-and GM/T 0003.2-2012.
+I provided just some pseudo code to illustrate an example how the async
+interface should look like (more or less). The essential part is where
+you allow to feed multiple requests without blocking.
+I went up the call-chain and found one potential user which seem to have
+a list of pages which are processed. This looked like a nice example. I
+haven't looked at the details.
 
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
----
- crypto/asymmetric_keys/Makefile          |  1 +
- crypto/asymmetric_keys/public_key.c      |  6 +++
- crypto/asymmetric_keys/public_key_sm2.c  | 61 ++++++++++++++++++++++++
- crypto/asymmetric_keys/x509_public_key.c |  3 ++
- include/crypto/public_key.h              | 15 ++++++
- 5 files changed, 86 insertions(+)
- create mode 100644 crypto/asymmetric_keys/public_key_sm2.c
+I have no opinion whether or not it makes sense to switch to the async
+interface in a sync way.
 
-diff --git a/crypto/asymmetric_keys/Makefile b/crypto/asymmetric_keys/Makefile
-index 28b91adba2ae..1a99ea5acb6b 100644
---- a/crypto/asymmetric_keys/Makefile
-+++ b/crypto/asymmetric_keys/Makefile
-@@ -11,6 +11,7 @@ asymmetric_keys-y := \
- 	signature.o
- 
- obj-$(CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE) += public_key.o
-+obj-$(CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE) += public_key_sm2.o
- obj-$(CONFIG_ASYMMETRIC_TPM_KEY_SUBTYPE) += asym_tpm.o
- 
- #
-diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
-index d7f43d4ea925..6b7a6286d5fd 100644
---- a/crypto/asymmetric_keys/public_key.c
-+++ b/crypto/asymmetric_keys/public_key.c
-@@ -298,6 +298,12 @@ int public_key_verify_signature(const struct public_key *pkey,
- 	if (ret)
- 		goto error_free_key;
- 
-+	if (strcmp(sig->pkey_algo, "sm2") == 0 && sig->data_size) {
-+		ret = cert_sig_digest_update(sig, tfm);
-+		if (ret)
-+			goto error_free_key;
-+	}
-+
- 	sg_init_table(src_sg, 2);
- 	sg_set_buf(&src_sg[0], sig->s, sig->s_size);
- 	sg_set_buf(&src_sg[1], sig->digest, sig->digest_size);
-diff --git a/crypto/asymmetric_keys/public_key_sm2.c b/crypto/asymmetric_keys/public_key_sm2.c
-new file mode 100644
-index 000000000000..7325cf21dbb4
---- /dev/null
-+++ b/crypto/asymmetric_keys/public_key_sm2.c
-@@ -0,0 +1,61 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * asymmetric public-key algorithm for SM2-with-SM3 certificate
-+ * as specified by OSCCA GM/T 0003.1-2012 -- 0003.5-2012 SM2 and
-+ * described at https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02
-+ *
-+ * Copyright (c) 2020, Alibaba Group.
-+ * Authors: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-+ */
-+
-+#include <crypto/sm3_base.h>
-+#include <crypto/sm2.h>
-+#include <crypto/public_key.h>
-+
-+#if IS_REACHABLE(CONFIG_CRYPTO_SM2)
-+
-+int cert_sig_digest_update(const struct public_key_signature *sig,
-+				struct crypto_akcipher *tfm_pkey)
-+{
-+	struct crypto_shash *tfm;
-+	struct shash_desc *desc;
-+	size_t desc_size;
-+	unsigned char dgst[SM3_DIGEST_SIZE];
-+	int ret;
-+
-+	BUG_ON(!sig->data);
-+
-+	ret = sm2_compute_z_digest(tfm_pkey, SM2_DEFAULT_USERID,
-+					SM2_DEFAULT_USERID_LEN, dgst);
-+	if (ret)
-+		return ret;
-+
-+	tfm = crypto_alloc_shash(sig->hash_algo, 0, 0);
-+	if (IS_ERR(tfm))
-+		return PTR_ERR(tfm);
-+
-+	desc_size = crypto_shash_descsize(tfm) + sizeof(*desc);
-+	desc = kzalloc(desc_size, GFP_KERNEL);
-+	if (!desc)
-+		goto error_free_tfm;
-+
-+	desc->tfm = tfm;
-+
-+	ret = crypto_shash_init(desc);
-+	if (ret < 0)
-+		goto error_free_desc;
-+
-+	ret = crypto_shash_update(desc, dgst, SM3_DIGEST_SIZE);
-+	if (ret < 0)
-+		goto error_free_desc;
-+
-+	ret = crypto_shash_finup(desc, sig->data, sig->data_size, sig->digest);
-+
-+error_free_desc:
-+	kfree(desc);
-+error_free_tfm:
-+	crypto_free_shash(tfm);
-+	return ret;
-+}
-+
-+#endif /* ! IS_REACHABLE(CONFIG_CRYPTO_SM2) */
-diff --git a/crypto/asymmetric_keys/x509_public_key.c b/crypto/asymmetric_keys/x509_public_key.c
-index d964cc82b69c..ae450eb8be14 100644
---- a/crypto/asymmetric_keys/x509_public_key.c
-+++ b/crypto/asymmetric_keys/x509_public_key.c
-@@ -30,6 +30,9 @@ int x509_get_sig_params(struct x509_certificate *cert)
- 
- 	pr_devel("==>%s()\n", __func__);
- 
-+	sig->data = cert->tbs;
-+	sig->data_size = cert->tbs_size;
-+
- 	if (!cert->pub->pkey_algo)
- 		cert->unsupported_key = true;
- 
-diff --git a/include/crypto/public_key.h b/include/crypto/public_key.h
-index 0588ef3bc6ff..f952f0378c23 100644
---- a/include/crypto/public_key.h
-+++ b/include/crypto/public_key.h
-@@ -12,6 +12,7 @@
- 
- #include <linux/keyctl.h>
- #include <linux/oid_registry.h>
-+#include <crypto/akcipher.h>
- 
- /*
-  * Cryptographic data for the public-key subtype of the asymmetric key type.
-@@ -44,6 +45,8 @@ struct public_key_signature {
- 	const char *pkey_algo;
- 	const char *hash_algo;
- 	const char *encoding;
-+	const void *data;
-+	unsigned int data_size;
- };
- 
- extern void public_key_signature_free(struct public_key_signature *sig);
-@@ -81,4 +84,16 @@ extern int verify_signature(const struct key *,
- int public_key_verify_signature(const struct public_key *pkey,
- 				const struct public_key_signature *sig);
- 
-+#if IS_REACHABLE(CONFIG_CRYPTO_SM2)
-+int cert_sig_digest_update(const struct public_key_signature *sig,
-+				struct crypto_akcipher *tfm_pkey);
-+#else
-+static inline
-+int cert_sig_digest_update(const struct public_key_signature *sig,
-+				struct crypto_akcipher *tfm_pkey)
-+{
-+	return -ENOTSUPP;
-+}
-+#endif
-+
- #endif /* _LINUX_PUBLIC_KEY_H */
--- 
-2.17.1
+> Thanks
+> Barry
 
+Sebastian
