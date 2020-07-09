@@ -2,127 +2,468 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C78FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3FA52074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB93920767
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6Newwhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGIOrs (ORCPT
+        id S1727932AbgGIOrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:47:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35306 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726517AbgGIOrs (ORCPT
+        Thu, 9 Jul 2020 10:47:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727901AbgGIOrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:47:48 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069EWbET029312;
-        Thu, 9 Jul 2020 10:47:40 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32637wcf4u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 10:47:39 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 069EWnJ0030541;
-        Thu, 9 Jul 2020 10:47:39 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32637wcf3a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 10:47:39 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 069Eir4R013124;
-        Thu, 9 Jul 2020 14:47:36 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06fra.de.ibm.com with ESMTP id 325k2qrfw6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 14:47:36 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 069ElXWW57868576
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jul 2020 14:47:33 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5E29AE055;
-        Thu,  9 Jul 2020 14:47:33 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0D72AAE051;
-        Thu,  9 Jul 2020 14:47:33 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.152.61])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jul 2020 14:47:32 +0000 (GMT)
-Date:   Thu, 9 Jul 2020 16:47:00 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v5 2/2] s390: virtio: PV needs VIRTIO I/O device
- protection
-Message-ID: <20200709164700.09a83069.pasic@linux.ibm.com>
-In-Reply-To: <270d8674-0f73-0a38-a2a7-fbc1caa44301@linux.ibm.com>
-References: <1594283959-13742-1-git-send-email-pmorel@linux.ibm.com>
-        <1594283959-13742-3-git-send-email-pmorel@linux.ibm.com>
-        <20200709105733.6d68fa53.cohuck@redhat.com>
-        <270d8674-0f73-0a38-a2a7-fbc1caa44301@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Thu, 9 Jul 2020 10:47:51 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE51C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 07:47:51 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id z5so1074951pgb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 07:47:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9ro8BWZ6Nt1mU3LMw0YQWvIfUyjJ2BroQgSItIneQ5Q=;
+        b=r6Newwhhh4id3vyMleK/DDOTJ5BmSCDsvpopEE2wYlyQO9NJK/TuvaAh4BmqG7uYUw
+         5mIauWSwlKFsSol5wFSU6pgJv/tjAg62Y3toDsZ8fL/X9SAYpg87Rb6ttxNHEe8xiXyQ
+         mTi4rGoEQEDKoyARkto5x8bvekNfCkPLSH8o3t4tjJWeIjjOGwayEAPPjr2YDXFhKTu7
+         ysXpEdAAmLIqsDSPVzDE1zkqQdBVPCPCm7IOc5O2VMmkD2R4srsL2+WLVwMB0y5T4MGw
+         Ead/2CISYR/C9tFCxxiW9Z03MmzOM6vIGa8ye/+1R3BFm9V2HkHPPukBofmQDyEmE5bV
+         YXPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9ro8BWZ6Nt1mU3LMw0YQWvIfUyjJ2BroQgSItIneQ5Q=;
+        b=L/PftEnTizjokrjho16hvw6ylOtL32fF5uCv2mJ8bbIxAoBvX2ri/GG6rEGQgF7BnW
+         n5bShp6q2xYc2a5QEvBeynsfRybc0/Ji74P+CK5/84kQXJc9RwV8d+ySJF5KY6MB1rIV
+         E/ycSoQU+api5M55e2hX9/MfJzNqoaNYKE9wfCd2BDn1zOUUfxPiZ7Ar5B9zqxDVEVhD
+         gN9VzQ/yIK2LiyIu15NsZrxPUliZ9R5mW7Q5GlnS2Xv+RgSgGiLS3huiaL2PZJIkYV67
+         p/RWyg+jwYany2o87aospwa9OQrJQoXR8qtn+09bkN3mgvMwEQDpvj3I8FVQX6haYf/q
+         /6vQ==
+X-Gm-Message-State: AOAM531nYcLgV2IEzv7vseq55PWwPAnTYDA5zC+TSwsveXc3PJGLmEZP
+        KQGE4gsX8jM7zf8RySUwXjQmSQ==
+X-Google-Smtp-Source: ABdhPJymAnrBf8Zxkz/lsMjbxHDbT9CpQ8lZNyy0Mhe4hGauWUspH9zwNPT31V/BWn4VdYarAhLaCQ==
+X-Received: by 2002:a05:6a00:2292:: with SMTP id f18mr58309786pfe.192.1594306071120;
+        Thu, 09 Jul 2020 07:47:51 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id e20sm3122098pfl.212.2020.07.09.07.47.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 07:47:50 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 07:45:34 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, agross@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, saravanak@google.com,
+        dianders@chromium.org, vincent.guittot@linaro.org,
+        amit.kucheria@linaro.org, robdclark@chromium.org
+Subject: Re: [PATCH v2] arm64: dts: qcom: sdm845: Add cpu OPP tables
+Message-ID: <20200709144534.GA1881320@builder.lan>
+References: <20200702204643.25785-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_08:2020-07-09,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxlogscore=999 clxscore=1015 malwarescore=0
- priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0 mlxscore=0
- impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007090104
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702204643.25785-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 12:51:58 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+On Thu 02 Jul 13:46 PDT 2020, Sibi Sankar wrote:
 
-> >> +int arch_validate_virtio_features(struct virtio_device *dev)
-> >> +{
-> >> +	if (!is_prot_virt_guest())
-> >> +		return 0;
-> >> +
-> >> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
-> >> +		dev_warn(&dev->dev, "device must provide VIRTIO_F_VERSION_1\n");  
-> > 
-> > I'd probably use "legacy virtio not supported with protected
-> > virtualization".
-> >   
-> >> +		return -ENODEV;
-> >> +	}
-> >> +
-> >> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> >> +		dev_warn(&dev->dev,
-> >> +			 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");  
-> > 
-> > "support for limited memory access required for protected
-> > virtualization"
-> > 
-> > ?
-> > 
-> > Mentioning the feature flag is shorter in both cases, though.  
+> Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 SoCs.
 > 
-> And I think easier to look for in case of debugging purpose.
-> I change it if there is more demands.
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-Not all our end users are kernel and/or qemu developers. I find the
-messages from v4 less technical, more informative, and way better.
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Regards,
-Halil
+and applied.
+
+Thanks,
+Bjorn
+
+> ---
+> 
+> v2:
+>  * Drop interconnect tags
+>  * Add all possible cpu opps from supported frequency list
+> 
+> v1: https://patchwork.kernel.org/patch/11527589/
+> 
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 285 +++++++++++++++++++++++++++
+>  1 file changed, 285 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 8eb5a31346d28..9a7e27ede7186 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -12,6 +12,7 @@
+>  #include <dt-bindings/clock/qcom,lpass-sdm845.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/clock/qcom,videocc-sdm845.h>
+> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
+>  #include <dt-bindings/interconnect/qcom,sdm845.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+> @@ -198,6 +199,9 @@ &LITTLE_CPU_SLEEP_1
+>  			capacity-dmips-mhz = <607>;
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+> @@ -220,6 +224,9 @@ &LITTLE_CPU_SLEEP_1
+>  			capacity-dmips-mhz = <607>;
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_100>;
+>  			L2_100: l2-cache {
+> @@ -239,6 +246,9 @@ &LITTLE_CPU_SLEEP_1
+>  			capacity-dmips-mhz = <607>;
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_200>;
+>  			L2_200: l2-cache {
+> @@ -258,6 +268,9 @@ &LITTLE_CPU_SLEEP_1
+>  			capacity-dmips-mhz = <607>;
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_300>;
+>  			L2_300: l2-cache {
+> @@ -277,6 +290,9 @@ &BIG_CPU_SLEEP_1
+>  					   &CLUSTER_SLEEP_0>;
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			operating-points-v2 = <&cpu4_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_400>;
+>  			L2_400: l2-cache {
+> @@ -296,6 +312,9 @@ &BIG_CPU_SLEEP_1
+>  					   &CLUSTER_SLEEP_0>;
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			operating-points-v2 = <&cpu4_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_500>;
+>  			L2_500: l2-cache {
+> @@ -315,6 +334,9 @@ &BIG_CPU_SLEEP_1
+>  					   &CLUSTER_SLEEP_0>;
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			operating-points-v2 = <&cpu4_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_600>;
+>  			L2_600: l2-cache {
+> @@ -334,6 +356,9 @@ &BIG_CPU_SLEEP_1
+>  					   &CLUSTER_SLEEP_0>;
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			operating-points-v2 = <&cpu4_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_700>;
+>  			L2_700: l2-cache {
+> @@ -433,6 +458,266 @@ CLUSTER_SLEEP_0: cluster-sleep-0 {
+>  		};
+>  	};
+>  
+> +	cpu0_opp_table: cpu0_opp_table {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		cpu0_opp1: opp-300000000 {
+> +			opp-hz = /bits/ 64 <300000000>;
+> +			opp-peak-kBps = <800000 4800000>;
+> +		};
+> +
+> +		cpu0_opp2: opp-403200000 {
+> +			opp-hz = /bits/ 64 <403200000>;
+> +			opp-peak-kBps = <800000 4800000>;
+> +		};
+> +
+> +		cpu0_opp3: opp-480000000 {
+> +			opp-hz = /bits/ 64 <480000000>;
+> +			opp-peak-kBps = <800000 6451200>;
+> +		};
+> +
+> +		cpu0_opp4: opp-576000000 {
+> +			opp-hz = /bits/ 64 <576000000>;
+> +			opp-peak-kBps = <800000 6451200>;
+> +		};
+> +
+> +		cpu0_opp5: opp-652800000 {
+> +			opp-hz = /bits/ 64 <652800000>;
+> +			opp-peak-kBps = <800000 7680000>;
+> +		};
+> +
+> +		cpu0_opp6: opp-748800000 {
+> +			opp-hz = /bits/ 64 <748800000>;
+> +			opp-peak-kBps = <1804000 9216000>;
+> +		};
+> +
+> +		cpu0_opp7: opp-825600000 {
+> +			opp-hz = /bits/ 64 <825600000>;
+> +			opp-peak-kBps = <1804000 9216000>;
+> +		};
+> +
+> +		cpu0_opp8: opp-902400000 {
+> +			opp-hz = /bits/ 64 <902400000>;
+> +			opp-peak-kBps = <1804000 10444800>;
+> +		};
+> +
+> +		cpu0_opp9: opp-979200000 {
+> +			opp-hz = /bits/ 64 <979200000>;
+> +			opp-peak-kBps = <1804000 11980800>;
+> +		};
+> +
+> +		cpu0_opp10: opp-1056000000 {
+> +			opp-hz = /bits/ 64 <1056000000>;
+> +			opp-peak-kBps = <1804000 11980800>;
+> +		};
+> +
+> +		cpu0_opp11: opp-1132800000 {
+> +			opp-hz = /bits/ 64 <1132800000>;
+> +			opp-peak-kBps = <2188000 13516800>;
+> +		};
+> +
+> +		cpu0_opp12: opp-1228800000 {
+> +			opp-hz = /bits/ 64 <1228800000>;
+> +			opp-peak-kBps = <2188000 15052800>;
+> +		};
+> +
+> +		cpu0_opp13: opp-1324800000 {
+> +			opp-hz = /bits/ 64 <1324800000>;
+> +			opp-peak-kBps = <2188000 16588800>;
+> +		};
+> +
+> +		cpu0_opp14: opp-1420800000 {
+> +			opp-hz = /bits/ 64 <1420800000>;
+> +			opp-peak-kBps = <3072000 18124800>;
+> +		};
+> +
+> +		cpu0_opp15: opp-1516800000 {
+> +			opp-hz = /bits/ 64 <1516800000>;
+> +			opp-peak-kBps = <3072000 19353600>;
+> +		};
+> +
+> +		cpu0_opp16: opp-1612800000 {
+> +			opp-hz = /bits/ 64 <1612800000>;
+> +			opp-peak-kBps = <4068000 19353600>;
+> +		};
+> +
+> +		cpu0_opp17: opp-1689600000 {
+> +			opp-hz = /bits/ 64 <1689600000>;
+> +			opp-peak-kBps = <4068000 20889600>;
+> +		};
+> +
+> +		cpu0_opp18: opp-1766400000 {
+> +			opp-hz = /bits/ 64 <1766400000>;
+> +			opp-peak-kBps = <4068000 22425600>;
+> +		};
+> +	};
+> +
+> +	cpu4_opp_table: cpu4_opp_table {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		cpu4_opp1: opp-300000000 {
+> +			opp-hz = /bits/ 64 <300000000>;
+> +			opp-peak-kBps = <800000 4800000>;
+> +		};
+> +
+> +		cpu4_opp2: opp-403200000 {
+> +			opp-hz = /bits/ 64 <403200000>;
+> +			opp-peak-kBps = <800000 4800000>;
+> +		};
+> +
+> +		cpu4_opp3: opp-480000000 {
+> +			opp-hz = /bits/ 64 <480000000>;
+> +			opp-peak-kBps = <1804000 4800000>;
+> +		};
+> +
+> +		cpu4_opp4: opp-576000000 {
+> +			opp-hz = /bits/ 64 <576000000>;
+> +			opp-peak-kBps = <1804000 4800000>;
+> +		};
+> +
+> +		cpu4_opp5: opp-652800000 {
+> +			opp-hz = /bits/ 64 <652800000>;
+> +			opp-peak-kBps = <1804000 4800000>;
+> +		};
+> +
+> +		cpu4_opp6: opp-748800000 {
+> +			opp-hz = /bits/ 64 <748800000>;
+> +			opp-peak-kBps = <1804000 4800000>;
+> +		};
+> +
+> +		cpu4_opp7: opp-825600000 {
+> +			opp-hz = /bits/ 64 <825600000>;
+> +			opp-peak-kBps = <2188000 9216000>;
+> +		};
+> +
+> +		cpu4_opp8: opp-902400000 {
+> +			opp-hz = /bits/ 64 <902400000>;
+> +			opp-peak-kBps = <2188000 9216000>;
+> +		};
+> +
+> +		cpu4_opp9: opp-979200000 {
+> +			opp-hz = /bits/ 64 <979200000>;
+> +			opp-peak-kBps = <2188000 9216000>;
+> +		};
+> +
+> +		cpu4_opp10: opp-1056000000 {
+> +			opp-hz = /bits/ 64 <1056000000>;
+> +			opp-peak-kBps = <3072000 9216000>;
+> +		};
+> +
+> +		cpu4_opp11: opp-1132800000 {
+> +			opp-hz = /bits/ 64 <1132800000>;
+> +			opp-peak-kBps = <3072000 11980800>;
+> +		};
+> +
+> +		cpu4_opp12: opp-1209600000 {
+> +			opp-hz = /bits/ 64 <1209600000>;
+> +			opp-peak-kBps = <4068000 11980800>;
+> +		};
+> +
+> +		cpu4_opp13: opp-1286400000 {
+> +			opp-hz = /bits/ 64 <1286400000>;
+> +			opp-peak-kBps = <4068000 11980800>;
+> +		};
+> +
+> +		cpu4_opp14: opp-1363200000 {
+> +			opp-hz = /bits/ 64 <1363200000>;
+> +			opp-peak-kBps = <4068000 15052800>;
+> +		};
+> +
+> +		cpu4_opp15: opp-1459200000 {
+> +			opp-hz = /bits/ 64 <1459200000>;
+> +			opp-peak-kBps = <4068000 15052800>;
+> +		};
+> +
+> +		cpu4_opp16: opp-1536000000 {
+> +			opp-hz = /bits/ 64 <1536000000>;
+> +			opp-peak-kBps = <5412000 15052800>;
+> +		};
+> +
+> +		cpu4_opp17: opp-1612800000 {
+> +			opp-hz = /bits/ 64 <1612800000>;
+> +			opp-peak-kBps = <5412000 15052800>;
+> +		};
+> +
+> +		cpu4_opp18: opp-1689600000 {
+> +			opp-hz = /bits/ 64 <1689600000>;
+> +			opp-peak-kBps = <5412000 19353600>;
+> +		};
+> +
+> +		cpu4_opp19: opp-1766400000 {
+> +			opp-hz = /bits/ 64 <1766400000>;
+> +			opp-peak-kBps = <6220000 19353600>;
+> +		};
+> +
+> +		cpu4_opp20: opp-1843200000 {
+> +			opp-hz = /bits/ 64 <1843200000>;
+> +			opp-peak-kBps = <6220000 19353600>;
+> +		};
+> +
+> +		cpu4_opp21: opp-1920000000 {
+> +			opp-hz = /bits/ 64 <1920000000>;
+> +			opp-peak-kBps = <7216000 19353600>;
+> +		};
+> +
+> +		cpu4_opp22: opp-1996800000 {
+> +			opp-hz = /bits/ 64 <1996800000>;
+> +			opp-peak-kBps = <7216000 20889600>;
+> +		};
+> +
+> +		cpu4_opp23: opp-2092800000 {
+> +			opp-hz = /bits/ 64 <2092800000>;
+> +			opp-peak-kBps = <7216000 20889600>;
+> +		};
+> +
+> +		cpu4_opp24: opp-2169600000 {
+> +			opp-hz = /bits/ 64 <2169600000>;
+> +			opp-peak-kBps = <7216000 20889600>;
+> +		};
+> +
+> +		cpu4_opp25: opp-2246400000 {
+> +			opp-hz = /bits/ 64 <2246400000>;
+> +			opp-peak-kBps = <7216000 20889600>;
+> +		};
+> +
+> +		cpu4_opp26: opp-2323200000 {
+> +			opp-hz = /bits/ 64 <2323200000>;
+> +			opp-peak-kBps = <7216000 20889600>;
+> +		};
+> +
+> +		cpu4_opp27: opp-2400000000 {
+> +			opp-hz = /bits/ 64 <2400000000>;
+> +			opp-peak-kBps = <7216000 22425600>;
+> +		};
+> +
+> +		cpu4_opp28: opp-2476800000 {
+> +			opp-hz = /bits/ 64 <2476800000>;
+> +			opp-peak-kBps = <7216000 22425600>;
+> +		};
+> +
+> +		cpu4_opp29: opp-2553600000 {
+> +			opp-hz = /bits/ 64 <2553600000>;
+> +			opp-peak-kBps = <7216000 22425600>;
+> +		};
+> +
+> +		cpu4_opp30: opp-2649600000 {
+> +			opp-hz = /bits/ 64 <2649600000>;
+> +			opp-peak-kBps = <7216000 22425600>;
+> +		};
+> +
+> +		cpu4_opp31: opp-2745600000 {
+> +			opp-hz = /bits/ 64 <2745600000>;
+> +			opp-peak-kBps = <7216000 25497600>;
+> +		};
+> +
+> +		cpu4_opp32: opp-2803200000 {
+> +			opp-hz = /bits/ 64 <2803200000>;
+> +			opp-peak-kBps = <7216000 25497600>;
+> +		};
+> +	};
+> +
+>  	pmu {
+>  		compatible = "arm,armv8-pmuv3";
+>  		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
