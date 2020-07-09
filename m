@@ -2,107 +2,356 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC82C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31665C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1D02064C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E7E207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OP1+pQE6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TQGUZh7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgGIPSU (ORCPT
+        id S1728090AbgGIPWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:18:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54358 "EHLO
+        Thu, 9 Jul 2020 11:22:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgGIPST (ORCPT
+        with ESMTP id S1726806AbgGIPWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:18:19 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD01C08C5CE;
-        Thu,  9 Jul 2020 08:18:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=s9fW2QPvoy1mcA7ve1JdCIVHxc5trSIbAV9MvcAFbd0=; b=OP1+pQE6Je/IEH9QagnzBdZsnv
-        8Zd8zpznJtYY95rcFrqrlh045tWdcsSB9gLuzaPIKOxhVm/ay2tGjuw8YrD8mKvcJNgxOLx1J3Aa+
-        TZF0j1rewa8MmFS57NyFUiBNGN4yCaYiWff0rUZVnJLJndbgy7gEzep5wZlA83xtIxOI5dmV1YNQQ
-        HhxSMPSM743PeP0i5U86Ork8rv0NaQeZJIbvFJk8IcRnZRdL2kJMSA7hhRsY+VKtA3X2RSZaAf8SM
-        4X2xe9L7SDbf5aOtVmCg3iSiBXATxKhYgUqQ5YdWwX59Tp5r3u1ACWrfbMrEErSQMam9ujXzHr05x
-        DzNJtdVg==;
-Received: from [2001:4bb8:188:5f50:7053:304b:bf82:82cf] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtYJT-0005Jr-6A; Thu, 09 Jul 2020 15:18:16 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: decruft the early init / initrd / initramfs code v2
-Date:   Thu,  9 Jul 2020 17:17:57 +0200
-Message-Id: <20200709151814.110422-1-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
+        Thu, 9 Jul 2020 11:22:18 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED1FC08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 08:22:18 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x8so960070plm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 08:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iPn8blZ0MEVGwJOKZlXuKDvgNAX2ZB0tniABOvwydt4=;
+        b=TQGUZh7EoHg8jws9SB2X0XtLZsN7heT0VB1CToeiHcLnv2CpjnSXWnZ0bOOmf/1C3q
+         +y+Qzn7TxzdvNYdqhHluSuEIfotCSaSH7fxRy2Y83ti5cUChmnpJhAHu+A1bQmj4sj/y
+         M0uu20clAR3Z6ljIwF+P+j+Pgfr8uofpC27hg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iPn8blZ0MEVGwJOKZlXuKDvgNAX2ZB0tniABOvwydt4=;
+        b=iLxnhice7XsqwGkiJa1vDx3HHH5Fuzt4I4BqZLqIB6eFDxdINqCAxYUqx8hXW+W5gM
+         JN6yU/P0ZzUdWG0feae2XFl1ffWwQNY/1r1+Wjq8aF8xowUo02caOM+dwU4SEGhFI4y/
+         s0RhVwmxW5YIHLySNyrzdnPQGFwzZh9MHPlwIhARYS2x0lE42ctFtJoCD5bCKBw6ZSOr
+         pYc5aSQrexg+FXimWX6g1QG+OFSfhPtMAOvBXrtxYUqx78WPRvdwdnLJ3xrI5FZLdUqW
+         aO4cP//7MAmfn3ta0iVrTAdnRKT9zr1PEnpvsyxZAJXQcYmgCKAOXpR0lu8armVUeQGG
+         zwOA==
+X-Gm-Message-State: AOAM530uOJE+JZcQIEmFbYUBZowXwEihgxfcepIMrrvPh4V0CVzcr2Q+
+        35G2be/Xiy0DROBJqGEK/9HmPg==
+X-Google-Smtp-Source: ABdhPJzWGR47KGZbrDdKZ6xW5mFoNnppI1YbxfLxw02K2xq/J0qpOtAkOCDvC6skJDqJWMKJqQvFKA==
+X-Received: by 2002:a17:90a:8009:: with SMTP id b9mr612654pjn.190.1594308137502;
+        Thu, 09 Jul 2020 08:22:17 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id 137sm3116462pgg.72.2020.07.09.08.22.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 08:22:16 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     kvalo@codeaurora.org, ath10k@lists.infradead.org
+Cc:     linux-arm-msm@vger.kernel.org, briannorris@chromium.org,
+        saiprakash.ranjan@codeaurora.org, linux-wireless@vger.kernel.org,
+        pillair@codeaurora.org, kuabhs@google.com,
+        Douglas Anderson <dianders@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v2 1/2] ath10k: Keep track of which interrupts fired, don't poll them
+Date:   Thu,  9 Jul 2020 08:21:04 -0700
+Message-Id: <20200709082024.v2.1.I4d2f85ffa06f38532631e864a3125691ef5ffe06@changeid>
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+If we have a per CE (Copy Engine) IRQ then we have no summary
+register.  Right now the code generates a summary register by
+iterating over all copy engines and seeing if they have an interrupt
+pending.
 
-this series starts to move the early init code away from requiring
-KERNEL_DS to be implicitly set during early startup.  It does so by
-first removing legacy unused cruft, and the switches away the code
-from struct file based APIs to our more usual in-kernel APIs.
+This has a problem.  Specifically if _none_ if the Copy Engines have
+an interrupt pending then they might go into low power mode and
+reading from their address space will cause a full system crash.  This
+was seen to happen when two interrupts went off at nearly the same
+time.  Both were handled by a single call of ath10k_snoc_napi_poll()
+but, because there were two interrupts handled and thus two calls to
+napi_schedule() there was still a second call to
+ath10k_snoc_napi_poll() which ran with no interrupts pending.
 
-There is no really good tree for this, so if there are no objections
-I'd like to set up a new one for linux-next.
+Instead of iterating over all the copy engines, let's just keep track
+of the IRQs that fire.  Then we can effectively generate our own
+summary without ever needing to read the Copy Engines.
 
+Tested-on: WCN3990 SNOC WLAN.HL.3.2.2-00490-QCAHLSWMTPL-1
 
-Git tree:
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Rakesh Pillai <pillair@codeaurora.org>
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+---
+This patch continues work to try to squash all instances of the crash
+we've been seeing while reading CE registers and hopefully this patch
+addresses the true root of the issue.
 
-    git://git.infradead.org/users/hch/misc.git init-user-pointers
+The first patch that attempted to address these problems landed as
+commit 8f9ed93d09a9 ("ath10k: Wait until copy complete is actually
+done before completing").  After that Rakesh Pillai posted ("ath10k:
+Add interrupt summary based CE processing") [1] and this patch is
+based atop that one.  Both of those patches significantly reduced the
+instances of problems but didn't fully eliminate them.  Crossing my
+fingers that they're all gone now.
 
-Gitweb:
+[1] https://lore.kernel.org/r/1593193967-29897-1-git-send-email-pillair@codeaurora.org
 
-    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/init-user-pointers
+Changes in v2:
+- Add bitmap_clear() in ath10k_snoc_hif_start().
 
+ drivers/net/wireless/ath/ath10k/ce.c   | 84 ++++++++++----------------
+ drivers/net/wireless/ath/ath10k/ce.h   | 14 ++---
+ drivers/net/wireless/ath/ath10k/snoc.c | 19 ++++--
+ drivers/net/wireless/ath/ath10k/snoc.h |  1 +
+ 4 files changed, 52 insertions(+), 66 deletions(-)
 
-Changes since v1:
- - add a patch to deprecated "classic" initrd support
+diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
+index 1e16f263854a..84ec80c6d08f 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.c
++++ b/drivers/net/wireless/ath/ath10k/ce.c
+@@ -481,38 +481,6 @@ static inline void ath10k_ce_engine_int_status_clear(struct ath10k *ar,
+ 	ath10k_ce_write32(ar, ce_ctrl_addr + wm_regs->addr, mask);
+ }
+ 
+-static bool ath10k_ce_engine_int_status_check(struct ath10k *ar, u32 ce_ctrl_addr,
+-					      unsigned int mask)
+-{
+-	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+-
+-	return ath10k_ce_read32(ar, ce_ctrl_addr + wm_regs->addr) & mask;
+-}
+-
+-u32 ath10k_ce_gen_interrupt_summary(struct ath10k *ar)
+-{
+-	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+-	struct ath10k_ce_pipe *ce_state;
+-	struct ath10k_ce *ce;
+-	u32 irq_summary = 0;
+-	u32 ctrl_addr;
+-	u32 ce_id;
+-
+-	ce = ath10k_ce_priv(ar);
+-
+-	for (ce_id = 0; ce_id < CE_COUNT; ce_id++) {
+-		ce_state = &ce->ce_states[ce_id];
+-		ctrl_addr = ce_state->ctrl_addr;
+-		if (ath10k_ce_engine_int_status_check(ar, ctrl_addr,
+-						      wm_regs->cc_mask)) {
+-			irq_summary |= BIT(ce_id);
+-		}
+-	}
+-
+-	return irq_summary;
+-}
+-EXPORT_SYMBOL(ath10k_ce_gen_interrupt_summary);
+-
+ /*
+  * Guts of ath10k_ce_send.
+  * The caller takes responsibility for any needed locking.
+@@ -1399,45 +1367,55 @@ static void ath10k_ce_per_engine_handler_adjust(struct ath10k_ce_pipe *ce_state)
+ 	ath10k_ce_watermark_intr_disable(ar, ctrl_addr);
+ }
+ 
+-int ath10k_ce_disable_interrupts(struct ath10k *ar)
++void ath10k_ce_disable_interrupt(struct ath10k *ar, int ce_id)
+ {
+ 	struct ath10k_ce *ce = ath10k_ce_priv(ar);
+ 	struct ath10k_ce_pipe *ce_state;
+ 	u32 ctrl_addr;
+-	int ce_id;
+ 
+-	for (ce_id = 0; ce_id < CE_COUNT; ce_id++) {
+-		ce_state  = &ce->ce_states[ce_id];
+-		if (ce_state->attr_flags & CE_ATTR_POLL)
+-			continue;
++	ce_state  = &ce->ce_states[ce_id];
++	if (ce_state->attr_flags & CE_ATTR_POLL)
++		return;
+ 
+-		ctrl_addr = ath10k_ce_base_address(ar, ce_id);
++	ctrl_addr = ath10k_ce_base_address(ar, ce_id);
+ 
+-		ath10k_ce_copy_complete_intr_disable(ar, ctrl_addr);
+-		ath10k_ce_error_intr_disable(ar, ctrl_addr);
+-		ath10k_ce_watermark_intr_disable(ar, ctrl_addr);
+-	}
++	ath10k_ce_copy_complete_intr_disable(ar, ctrl_addr);
++	ath10k_ce_error_intr_disable(ar, ctrl_addr);
++	ath10k_ce_watermark_intr_disable(ar, ctrl_addr);
++}
++EXPORT_SYMBOL(ath10k_ce_disable_interrupt);
+ 
+-	return 0;
++void ath10k_ce_disable_interrupts(struct ath10k *ar)
++{
++	int ce_id;
++
++	for (ce_id = 0; ce_id < CE_COUNT; ce_id++)
++		ath10k_ce_disable_interrupt(ar, ce_id);
+ }
+ EXPORT_SYMBOL(ath10k_ce_disable_interrupts);
+ 
+-void ath10k_ce_enable_interrupts(struct ath10k *ar)
++void ath10k_ce_enable_interrupt(struct ath10k *ar, int ce_id)
+ {
+ 	struct ath10k_ce *ce = ath10k_ce_priv(ar);
+-	int ce_id;
+ 	struct ath10k_ce_pipe *ce_state;
+ 
++	ce_state  = &ce->ce_states[ce_id];
++	if (ce_state->attr_flags & CE_ATTR_POLL)
++		return;
++
++	ath10k_ce_per_engine_handler_adjust(ce_state);
++}
++EXPORT_SYMBOL(ath10k_ce_enable_interrupt);
++
++void ath10k_ce_enable_interrupts(struct ath10k *ar)
++{
++	int ce_id;
++
+ 	/* Enable interrupts for copy engine that
+ 	 * are not using polling mode.
+ 	 */
+-	for (ce_id = 0; ce_id < CE_COUNT; ce_id++) {
+-		ce_state  = &ce->ce_states[ce_id];
+-		if (ce_state->attr_flags & CE_ATTR_POLL)
+-			continue;
+-
+-		ath10k_ce_per_engine_handler_adjust(ce_state);
+-	}
++	for (ce_id = 0; ce_id < CE_COUNT; ce_id++)
++		ath10k_ce_enable_interrupt(ar, ce_id);
+ }
+ EXPORT_SYMBOL(ath10k_ce_enable_interrupts);
+ 
+diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
+index a440aaf74aa4..666ce384a1d8 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.h
++++ b/drivers/net/wireless/ath/ath10k/ce.h
+@@ -255,12 +255,13 @@ int ath10k_ce_cancel_send_next(struct ath10k_ce_pipe *ce_state,
+ /*==================CE Interrupt Handlers====================*/
+ void ath10k_ce_per_engine_service_any(struct ath10k *ar);
+ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id);
+-int ath10k_ce_disable_interrupts(struct ath10k *ar);
++void ath10k_ce_disable_interrupt(struct ath10k *ar, int ce_id);
++void ath10k_ce_disable_interrupts(struct ath10k *ar);
++void ath10k_ce_enable_interrupt(struct ath10k *ar, int ce_id);
+ void ath10k_ce_enable_interrupts(struct ath10k *ar);
+ void ath10k_ce_dump_registers(struct ath10k *ar,
+ 			      struct ath10k_fw_crash_data *crash_data);
+ 
+-u32 ath10k_ce_gen_interrupt_summary(struct ath10k *ar);
+ void ath10k_ce_alloc_rri(struct ath10k *ar);
+ void ath10k_ce_free_rri(struct ath10k *ar);
+ 
+@@ -376,12 +377,9 @@ static inline u32 ath10k_ce_interrupt_summary(struct ath10k *ar)
+ {
+ 	struct ath10k_ce *ce = ath10k_ce_priv(ar);
+ 
+-	if (!ar->hw_params.per_ce_irq)
+-		return CE_WRAPPER_INTERRUPT_SUMMARY_HOST_MSI_GET(
+-			ce->bus_ops->read32((ar), CE_WRAPPER_BASE_ADDRESS +
+-			CE_WRAPPER_INTERRUPT_SUMMARY_ADDRESS));
+-	else
+-		return ath10k_ce_gen_interrupt_summary(ar);
++	return CE_WRAPPER_INTERRUPT_SUMMARY_HOST_MSI_GET(
++		ce->bus_ops->read32((ar), CE_WRAPPER_BASE_ADDRESS +
++		CE_WRAPPER_INTERRUPT_SUMMARY_ADDRESS));
+ }
+ 
+ /* Host software's Copy Engine configuration. */
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index 354d49b1cd45..1ef5fdb8248b 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -3,6 +3,7 @@
+  * Copyright (c) 2018 The Linux Foundation. All rights reserved.
+  */
+ 
++#include <linux/bits.h>
+ #include <linux/clk.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -923,6 +924,7 @@ static int ath10k_snoc_hif_start(struct ath10k *ar)
+ {
+ 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 
++	bitmap_clear(ar_snoc->pending_ce_irqs, 0, CE_COUNT_MAX);
+ 	napi_enable(&ar->napi);
+ 	ath10k_snoc_irq_enable(ar);
+ 	ath10k_snoc_rx_post(ar);
+@@ -1158,7 +1160,9 @@ static irqreturn_t ath10k_snoc_per_engine_handler(int irq, void *arg)
+ 		return IRQ_HANDLED;
+ 	}
+ 
+-	ath10k_snoc_irq_disable(ar);
++	ath10k_ce_disable_interrupt(ar, ce_id);
++	set_bit(ce_id, ar_snoc->pending_ce_irqs);
++
+ 	napi_schedule(&ar->napi);
+ 
+ 	return IRQ_HANDLED;
+@@ -1167,20 +1171,25 @@ static irqreturn_t ath10k_snoc_per_engine_handler(int irq, void *arg)
+ static int ath10k_snoc_napi_poll(struct napi_struct *ctx, int budget)
+ {
+ 	struct ath10k *ar = container_of(ctx, struct ath10k, napi);
++	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 	int done = 0;
++	int ce_id;
+ 
+ 	if (test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
+ 		napi_complete(ctx);
+ 		return done;
+ 	}
+ 
+-	ath10k_ce_per_engine_service_any(ar);
++	for (ce_id = 0; ce_id < CE_COUNT; ce_id++)
++		if (test_and_clear_bit(ce_id, ar_snoc->pending_ce_irqs)) {
++			ath10k_ce_per_engine_service(ar, ce_id);
++			ath10k_ce_enable_interrupt(ar, ce_id);
++		}
++
+ 	done = ath10k_htt_txrx_compl_task(ar, budget);
+ 
+-	if (done < budget) {
++	if (done < budget)
+ 		napi_complete(ctx);
+-		ath10k_snoc_irq_enable(ar);
+-	}
+ 
+ 	return done;
+ }
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.h b/drivers/net/wireless/ath/ath10k/snoc.h
+index a3dd06f6ac62..5095d1893681 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.h
++++ b/drivers/net/wireless/ath/ath10k/snoc.h
+@@ -78,6 +78,7 @@ struct ath10k_snoc {
+ 	unsigned long flags;
+ 	bool xo_cal_supported;
+ 	u32 xo_cal_data;
++	DECLARE_BITMAP(pending_ce_irqs, CE_COUNT_MAX);
+ };
+ 
+ static inline struct ath10k_snoc *ath10k_snoc_priv(struct ath10k *ar)
+-- 
+2.27.0.383.g050319c2ae-goog
 
-Diffstat:
- b/arch/arm/kernel/atags_parse.c |    2 
- b/arch/sh/kernel/setup.c        |    2 
- b/arch/sparc/kernel/setup_32.c  |    2 
- b/arch/sparc/kernel/setup_64.c  |    2 
- b/arch/x86/kernel/setup.c       |    2 
- b/drivers/md/Makefile           |    3 
- b/drivers/md/md-autodetect.c    |  239 ++++++++++++++++++----------------------
- b/drivers/md/md.c               |   34 +----
- b/drivers/md/md.h               |   10 +
- b/fs/file.c                     |    7 -
- b/fs/open.c                     |   18 +--
- b/fs/read_write.c               |    2 
- b/fs/readdir.c                  |   11 -
- b/include/linux/initrd.h        |    6 -
- b/include/linux/raid/detect.h   |    8 +
- b/include/linux/syscalls.h      |   16 --
- b/init/Makefile                 |    1 
- b/init/do_mounts.c              |   70 +----------
- b/init/do_mounts.h              |   21 ---
- b/init/do_mounts_initrd.c       |   13 --
- b/init/do_mounts_rd.c           |  102 +++++++----------
- b/init/initramfs.c              |  103 +++++------------
- b/init/main.c                   |   16 +-
- include/linux/raid/md_u.h       |   13 --
- 24 files changed, 251 insertions(+), 452 deletions(-)
