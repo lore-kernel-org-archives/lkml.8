@@ -2,148 +2,104 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF84C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB350206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF63206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:26:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJkV7KBx"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eQndleMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgGIDZi (ORCPT
+        id S1726298AbgGID0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 23:25:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57252 "EHLO
+        Wed, 8 Jul 2020 23:26:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbgGIDZi (ORCPT
+        with ESMTP id S1726107AbgGID0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 23:25:38 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40F7EC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 20:25:38 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so689363qtg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 20:25:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LOg+f3qhnwQmEv3CzFJxkl1rctpcpyUrfk9aMulJx7M=;
-        b=eJkV7KBxSafkL4HURo1waDCP/9DJQrH839C7BP4d2pLoVRHmry9RD58EEWmKz0pM9W
-         1LR3yhI0QgjCKEX1PFZoeadc4pi1GYakfUUsbd0nuEi1Sx6MR/iGxGN56BTm3mf6A9pf
-         7DBnfpP24Bmllz2R4Ok0BFE03J32LJqFIL2AFlDuc7U3z+nKacRrUz+B4DUp4uvXq3zF
-         +XX6Fex3GkoH18kpM7AYIf/2fET1Zc2qUmFOoCw3L76Auy7OmVCP7QaG4JqW/m+Umfme
-         eLE7nWgEa51HjKovrEDrFAt+/35l4PO0UuWs1/S4aB6swtbR+z5RFpcGk3wgfc+KpZTc
-         nh5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LOg+f3qhnwQmEv3CzFJxkl1rctpcpyUrfk9aMulJx7M=;
-        b=fJNBKcJFyD36vHRNAhlVuZY3hTosFyD5ZHk6KUoBxivzJ+4vLvT7YbZWuLDQJOY3MO
-         JmONZ/TR7LKd7nfqVC15HTttWVOI+q39FKPaMGfHWWre0rLuKPgFZhGZ3MHgjqulMI5P
-         zlUSEbz9ARoQA+kIsaD7kdJxNuCwc/eQmPAeSYH959HTGgbXEJNjfEZuYP986z5QS8+7
-         6NAuk/j+XSq46yoX46/KOJQLITJbFZjN0aatJwTZxgS1pCcr0C2xPuzw281gfJ8sg8KX
-         klswyeogWg00N5d62EyiQx4Qsjkwvfl0PNM1sjAa7L5HPZbG6BBeGfocBAxKjxY0iw7/
-         lfFg==
-X-Gm-Message-State: AOAM531GZh85QTB/nX+8WBS/1//orrLzVOesuErKz/TY0S+YtIasthUy
-        7vTcZhW2JBqSogyMRut7FakNBKZszvZmDUUBS3o=
-X-Google-Smtp-Source: ABdhPJw0Q/Ut7/2bkhotkhqZH5Tfr8SZaQDdE5Ab0dJiE1MatYpXZU5MfcgVESlhklquY7ydZpnJyOi2DHregWhNTbg=
-X-Received: by 2002:aed:22ef:: with SMTP id q44mr60197673qtc.333.1594265137456;
- Wed, 08 Jul 2020 20:25:37 -0700 (PDT)
+        Wed, 8 Jul 2020 23:26:12 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22CD0C061A0B;
+        Wed,  8 Jul 2020 20:26:12 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2M5Z0Lwzz9sSt;
+        Thu,  9 Jul 2020 13:26:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594265170;
+        bh=tm1bGSz8/JmV/fIUWmoWyLspKmHrMYty1alsUC6nMLw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eQndleMjMh07sIb5oj11x2nRFiOvRIL+CGA9upbQBnXBbB068FPrsH4JGMC+v+7xE
+         RFtjN6rcunVE4LsdzClf/rT1D9Vzm7CVIoAJu1hioA7pTm6VvLoAoEScyVwgaOjH9c
+         roTs/G29q637dTKUpGf8UnaKoVn6La7ssPcIsNVTMLPDAQav8KDVJFHvGPsIL1kDAx
+         TTL30k7VZGpcH4tpakpnWfrGLoFAmDQ8Co5Ur0Dtowhzc2qvLZl9sso+wtCovkC3jL
+         jJGwrV8MQHK+6ANVRgdXIY6dqT5JBd8tD+OkYErM8rIkwcIrB2C94LdhWFqh93ucRs
+         7aXfuZKiDEAjQ==
+Date:   Thu, 9 Jul 2020 13:26:09 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alasdair G Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        yangerkun <yangerkun@huawei.com>,
+        Bryan Gurney <bgurney@redhat.com>
+Subject: linux-next: build warning after merge of the device-mapper tree
+Message-ID: <20200709132609.6de53604@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594107889-32228-12-git-send-email-iamjoonsoo.kim@lge.com> <575ab75d-1382-5f12-96df-53c0bb947f8c@suse.cz>
-In-Reply-To: <575ab75d-1382-5f12-96df-53c0bb947f8c@suse.cz>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Thu, 9 Jul 2020 12:25:30 +0900
-Message-ID: <CAAmzW4MdTstiqEccFsw61HHyim2uutA8jd23reX-kOtDnXmzDQ@mail.gmail.com>
-Subject: Re: [PATCH v4 11/11] mm/memory_hotplug: remove a wrapper for alloc_migration_target()
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/2KJrdZRJdMWdjnllffNu.7+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 7=EC=9B=94 8=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 1:34, Vl=
-astimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 7/7/20 9:44 AM, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > To calculate the correct node to migrate the page for hotplug, we need
-> > to check node id of the page. Wrapper for alloc_migration_target() exis=
-ts
-> > for this purpose.
-> >
-> > However, Vlastimil informs that all migration source pages come from
-> > a single node. In this case, we don't need to check the node id for eac=
-h
-> > page and we don't need to re-set the target nodemask for each page by
-> > using the wrapper. Set up the migration_target_control once and use it =
-for
-> > all pages.
-> >
-> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
->
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
->
-> Thanks! Nitpick below.
->
-> > @@ -1345,9 +1324,28 @@ do_migrate_range(unsigned long start_pfn, unsign=
-ed long end_pfn)
-> >               put_page(page);
-> >       }
-> >       if (!list_empty(&source)) {
-> > -             /* Allocate a new page from the nearest neighbor node */
-> > -             ret =3D migrate_pages(&source, new_node_page, NULL, 0,
-> > -                                     MIGRATE_SYNC, MR_MEMORY_HOTPLUG);
-> > +             nodemask_t nmask =3D node_states[N_MEMORY];
-> > +             struct migration_target_control mtc =3D {
-> > +                     .nmask =3D &nmask,
-> > +                     .gfp_mask =3D GFP_USER | __GFP_MOVABLE | __GFP_RE=
-TRY_MAYFAIL,
-> > +             };
-> > +
-> > +             /*
-> > +              * We have checked that migration range is on a single zo=
-ne so
-> > +              * we can use the nid of the first page to all the others=
-.
-> > +              */
-> > +             mtc.nid =3D page_to_nid(list_first_entry(&source, struct =
-page, lru));
-> > +
-> > +             /*
-> > +              * try to allocate from a different node but reuse this n=
-ode
-> > +              * if there are no other online nodes to be used (e.g. we=
- are
-> > +              * offlining a part of the only existing node)
-> > +              */
-> > +             node_clear(mtc.nid, *mtc.nmask);
-> > +             if (nodes_empty(*mtc.nmask))
-> > +                     node_set(mtc.nid, *mtc.nmask);
->
-> You could have kept using 'nmask' instead of '*mtc.nmask'. Actually that =
-applies
-> to patch 6 too, for less churn.
+--Sig_/2KJrdZRJdMWdjnllffNu.7+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-You are right. I will change it.
+Hi all,
 
-Thanks.
+After merging the device-mapper tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
+
+In file included from drivers/md/dm-dust.c:11:
+drivers/md/dm-dust.c: In function 'dust_list_badblocks':
+drivers/md/dm-dust.c:307:10: warning: zero-length gnu_printf format string =
+[-Wformat-zero-length]
+  307 |   DMEMIT("");
+      |          ^~
+include/linux/device-mapper.h:555:46: note: in definition of macro 'DMEMIT'
+  555 |      0 : scnprintf(result + sz, maxlen - sz, x))
+      |                                              ^
+
+Introduced by commit
+
+  20f93ea74f9c ("dm dust: add interface to list all badblocks")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/2KJrdZRJdMWdjnllffNu.7+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8GjlEACgkQAVBC80lX
+0GyQBwgApg7Xvf3KGHULY/CvKqalr1itIeRYKVan3DtLLKDInDQMktdM80Kj89Ve
+Y8YkBfkpaT/pw71CQW9wfQYu4u40lilaab+gkCNx84NG+okhqG0ZSzPG4qzGvgQu
+ADbv6O953lnpNbwCO0SiTtmzWfz9oVdM2zCQ1S9EgwgJUvaEqK7YOQFDDwLuwFZL
+1k/9JIc3gmi8Vkoe+CwdFXPZiE8N1y0xIeG0YG+V7uIpGX+e7s/MSeQPRl3B4EZ1
+vbze4mp2KshveqppitA2xwdY8IvHHZluyx5k57ruQgJ0Vt6m5I9PVVp8xBfR5OJL
+AoqfJneb/1Yu7iNFFN2lNbIt3oQ/jA==
+=uDpm
+-----END PGP SIGNATURE-----
+
+--Sig_/2KJrdZRJdMWdjnllffNu.7+--
