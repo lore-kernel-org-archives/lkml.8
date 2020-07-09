@@ -2,158 +2,112 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914B8C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F36C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61CB0207DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5210620767
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="aTdn7W3a"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K1Y/+Q/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgGISub (ORCPT
+        id S1726409AbgGISvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 14:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59004 "EHLO
+        Thu, 9 Jul 2020 14:51:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGISua (ORCPT
+        with ESMTP id S1726222AbgGISvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 14:50:30 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C9EC08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 11:50:30 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id a11so2953994ilk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 11:50:30 -0700 (PDT)
+        Thu, 9 Jul 2020 14:51:37 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72928C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 11:51:37 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q17so1184664pls.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 11:51:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GrXsYtapGjnrw/pbMa/SCV0S2qwzLccMpD6Nkl4dtwc=;
-        b=aTdn7W3aKnzYYH25d4xjro+x9lOU10DgL79FjCdBUV3lL6pn85CVhfX8oebWA0SyrF
-         3wGWR1q8CnliJkzDuNjGG/kheGgTY670srmrNmeU8Sd//u0Cqy5TRJdSLMmFzFQvbUVN
-         skPESlg+HSvgUiQ2ZKBZHwolc061Tr+bJQC0Ee46M0Sf7+ZPeR9oP3FT+S05JYsHN3/U
-         GvmgVIoRagYR2ZWEo6Yp32ZFfGKmxTXy8DKs3G93V5ovP5hUsX+3cK3lAKwd/PSsHh0P
-         vcqI44/2+bWLTeneFWA/73vV+9RRdw5nkSCAyE26a+UBNA+vanzGfU8UsLBJOzlUo1gU
-         XfLg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=DUAnAB1O1U5HTun6r8ahSdEu6tOLSHOah+bK2fkko5s=;
+        b=K1Y/+Q/83Xk5X187BG8LiM6FTXuxO4382G+rWSxzkl9XZP0mrloSul4PYGI9oNtxKi
+         JM9v3ajjTLlTubL8C/m3hInPk3uid85beWL8fY0ycrWxJnMBoNwePuYTdyFrRVwayUQY
+         QERAbNM2UlYwonrlEOWW5w2J6AlJbKMpA/fhU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GrXsYtapGjnrw/pbMa/SCV0S2qwzLccMpD6Nkl4dtwc=;
-        b=t4oaHETKmCnQ7UFf6cza3nOPURqPVmTflcfUlCDYEA4GNFGzHei36yGSnacq14Hn0i
-         SfQHa2jOV1NrPUPObmo+p/QtSkNUEDiHdAa7eWX2h5lcpMMkjptwjTk2+zEF+uDiYppp
-         Rbegk7iAeFZs9CBJ9FahXtiBtE8mnVxgQKLNMIxGYL0206cl6CkfrA3z9V2K6D+Q1rcp
-         OztauS6pPo7/qCI7ygR8rgJMECRMCpVK+dnoV2GzOqApTSvSN9N2dxbfUHzO5fvHFjdn
-         N2EWGhB58/gUoNPwaNhWjYWDmatXA3fXTjuTxWAVBlKdqb2EnTqJ2EgP35jf2VMc1H3z
-         VEKQ==
-X-Gm-Message-State: AOAM5306kVQMBGRTYQckQkRZVOoJMkVRDmLhyJSUpCSnj7ra9B1ZVTC9
-        LD5Tci9GQ5bXKWvGHRN6v4+POQ==
-X-Google-Smtp-Source: ABdhPJwZ1xv9Tc5lZjBW6qZNaPGzm4EqCDdfI87OUCyodp+1AZC+XJpssQOpb7cvyN7mY5Sa1ZtECw==
-X-Received: by 2002:a92:c806:: with SMTP id v6mr47666474iln.10.1594320629560;
-        Thu, 09 Jul 2020 11:50:29 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id h1sm2629701iob.8.2020.07.09.11.50.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 11:50:29 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Kanchan Joshi <joshiiitr@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
-        linux-fsdevel@vger.kernel.org,
-        =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
- <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
- <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200709085501.GA64935@infradead.org>
- <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
- <20200709140053.GA7528@infradead.org>
- <2270907f-670c-5182-f4ec-9756dc645376@kernel.dk>
- <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f5e3e931-ef1b-2eb6-9a03-44dd5589c8d3@kernel.dk>
-Date:   Thu, 9 Jul 2020 12:50:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=DUAnAB1O1U5HTun6r8ahSdEu6tOLSHOah+bK2fkko5s=;
+        b=sSDiPMeUu089wQqnhg61vXS5XOmLLKUicmzjxBC4oEVm2CsdGHiq3ky0o0eA1kbKRz
+         l06vM1CVFx6gkbW4GMg96O4NpIiD6JJ6sLYzPdFnEIrnjlLnogvYfaGLzvEU2sXU8NaR
+         /+faxeyM76+glmDBA/1w4ewvbXyl1W8gXGr9S1DSVSZ5a6zluUA/H9UlDINJ5Umr1SRU
+         DK2jPg9oGwm1a7x1B+QBZSGF2c379EirVDT2Duzp0ojh/NZoIDEeDrULoBHYBDFd460D
+         qBFS6/K7P2C+8/OnyHQAa0oBONNpS76d9FHoiHr/VZXDn8jlQjjMcE+4Eesnu2oVzNFW
+         1Z5g==
+X-Gm-Message-State: AOAM533BXg62BaxlxsXyF/kMy3MPZ/KG4sq6cYHGLcvtUQrgiUP+cVjH
+        ue5C/9MwSgN/TWiDGLPPIxoMgg==
+X-Google-Smtp-Source: ABdhPJzvtnZrznMl2tRk1z011k29OqQdwV+YAqxrjR9BJNucrcWWqyOT0gXYauRNk/mxEdKLsLyPHQ==
+X-Received: by 2002:a17:902:b093:: with SMTP id p19mr21824068plr.161.1594320696912;
+        Thu, 09 Jul 2020 11:51:36 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 190sm3320718pfz.41.2020.07.09.11.51.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 11:51:36 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 11:51:35 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] doc: yama: Swap HTTP for HTTPS and replace dead link
+Message-ID: <202007091141.C008B89EC@keescook>
 MIME-Version: 1.0
-In-Reply-To: <CA+1E3r+H7WEyfTufNz3xBQQynOVV-uD3myYynkfp7iU+D=Svuw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/20 12:36 PM, Kanchan Joshi wrote:
-> On Thu, Jul 9, 2020 at 7:36 PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 7/9/20 8:00 AM, Christoph Hellwig wrote:
->>> On Thu, Jul 09, 2020 at 07:58:04AM -0600, Jens Axboe wrote:
->>>>> We don't actually need any new field at all.  By the time the write
->>>>> returned ki_pos contains the offset after the write, and the res
->>>>> argument to ->ki_complete contains the amount of bytes written, which
->>>>> allow us to trivially derive the starting position.
-> 
-> Deriving starting position was not the purpose at all.
-> But yes, append-offset is not needed, for a different reason.
-> It was kept for uring specific handling. Completion-result from lower
-> layer was always coming to uring in ret2 via ki_complete(....,ret2).
-> And ret2 goes to CQE (and user-space) without any conversion in between.
-> For polled-completion, there is a short window when we get ret2 but cannot
-> write into CQE immediately, so thought of storing that in append_offset
-> (but should not have done, solving was possible without it).
-> 
-> FWIW, if we move to indirect-offset approach, append_offset gets
-> eliminated automatically, because there is no need to write to CQE
-> itself.
-> 
->>>> Then let's just do that instead of jumping through hoops either
->>>> justifying growing io_rw/io_kiocb or turning kiocb into a global
->>>> completion thing.
->>>
->>> Unfortunately that is a totally separate issue - the in-kernel offset
->>> can be trivially calculated.  But we still need to figure out a way to
->>> pass it on to userspace.  The current patchset does that by abusing
->>> the flags, which doesn't really work as the flags are way too small.
->>> So we somewhere need to have an address to do the put_user to.
->>
->> Right, we're just trading the 'append_offset' for a 'copy_offset_here'
->> pointer, which are stored in the same spot...
-> 
-> The address needs to be stored somewhere. And there does not seem
-> other option but to use io_kiocb?
+Replace one dead link for the same person's original presentation on the
+topic and swap an HTTP URL with HTTPS. While here, linkify the text to
+make it more readable when rendered.
 
-That is where it belongs, not sure this was ever questioned. And inside
-io_rw at that.
+Link: https://lore.kernel.org/lkml/20200708073346.13177-1-grandmaster@al2klimov.de/
+Co-developed-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2:
+- replace storm.net.nz url (kees)
+- refactor with descriptive text (kees)
+v1: https://lore.kernel.org/lkml/20200708073346.13177-1-grandmaster@al2klimov.de/
+---
+ Documentation/admin-guide/LSM/Yama.rst | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> The bigger problem with address/indirect-offset is to be able to write
-> to it during completion as process-context is different. Will that
-> require entering into task_work_add() world, and may make it costly
-> affair?
+diff --git a/Documentation/admin-guide/LSM/Yama.rst b/Documentation/admin-guide/LSM/Yama.rst
+index d0a060de3973..d9cd937ebd2d 100644
+--- a/Documentation/admin-guide/LSM/Yama.rst
++++ b/Documentation/admin-guide/LSM/Yama.rst
+@@ -19,9 +19,10 @@ attach to other running processes (e.g. Firefox, SSH sessions, GPG agent,
+ etc) to extract additional credentials and continue to expand the scope
+ of their attack without resorting to user-assisted phishing.
+ 
+-This is not a theoretical problem. SSH session hijacking
+-(http://www.storm.net.nz/projects/7) and arbitrary code injection
+-(http://c-skills.blogspot.com/2007/05/injectso.html) attacks already
++This is not a theoretical problem. `SSH session hijacking
++<https://www.blackhat.com/presentations/bh-usa-05/bh-us-05-boileau.pdf>`_
++and `arbitrary code injection
++<https://c-skills.blogspot.com/2007/05/injectso.html>`_ attacks already
+ exist and remain possible if ptrace is allowed to operate as before.
+ Since ptrace is not commonly used by non-developers and non-admins, system
+ builders should be allowed the option to disable this debugging system.
+-- 
+2.25.1
 
-It might, if you have IRQ context for the completion. task_work isn't
-expensive, however. It's not like a thread offload.
-
-> Using flags have not been liked here, but given the upheaval involved so
-> far I have begun to feel - it was keeping things simple. Should it be
-> reconsidered?
-
-It's definitely worth considering, especially since we can use cflags
-like Pavel suggested upfront and not need any extra storage. But it
-brings us back to the 32-bit vs 64-bit discussion, and then using blocks
-instead of bytes. Which isn't exactly super pretty.
 
 -- 
-Jens Axboe
-
+Kees Cook
