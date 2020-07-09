@@ -2,96 +2,127 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B323C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9AF206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6695B206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:22:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sVv5b/4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbgGIDFW (ORCPT
+        id S1726194AbgGIDWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 23:05:22 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34002 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726107AbgGIDFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 23:05:21 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B75356259D08A9F78B28;
-        Thu,  9 Jul 2020 11:05:18 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 9 Jul 2020
- 11:05:16 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: ignore when len of range in
- f2fs_sec_trim_file is zero
-To:     Daeho Jeong <daeho43@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
-CC:     Daeho Jeong <daehojeong@google.com>
-References: <20200709015739.1653668-1-daeho43@gmail.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <619af72b-2f8a-4a84-f73e-ac49989ba79f@huawei.com>
-Date:   Thu, 9 Jul 2020 11:05:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 8 Jul 2020 23:22:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbgGIDWB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 23:22:01 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39138C061A0B;
+        Wed,  8 Jul 2020 20:22:01 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2M0l2l7Bz9sDX;
+        Thu,  9 Jul 2020 13:21:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594264919;
+        bh=EFOv/tGLEhs9ibyg95vEdYz7g89lLSFxVbREKqjK2n0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=sVv5b/4uhuvEhGWVrm74HUa+DFsWGUqNnol7pvYfWPHudjXymbmUXF4XcYBBDb2YT
+         9PbpOb4o0E9oM6/DCOiuDct0yBzrp5wwlYw9l8aXtk19MhF39vN8st/YqTKtXYzHvy
+         3jdB0NshqeIIur9oqf3NnS6izzaLDdUywqwhJ4wBXRHnw4sLCGOKkIUVRVcd4bR8M7
+         BnvpujuUfZ5CGbal0ZOtL/f/ALX4uCaHO2qBiC3LBcLVi/hzWtF2/ttOF++nAGTITe
+         wYTrWZa/HLTEPgdFWq/2tgEpsekmq8VZV1v5nNi0pYOMhw0lxT392+cOlZaFyvbF8g
+         kISeJM5pMVmPw==
+Date:   Thu, 9 Jul 2020 13:21:58 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alasdair G Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Ignat Korchagin <ignat@cloudflare.com>
+Subject: linux-next: manual merge of the device-mapper tree with the block
+ tree
+Message-ID: <20200709132158.698042a8@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200709015739.1653668-1-daeho43@gmail.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/wGyrKYCkNBOXWp_/iN5q1lF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/9 9:57, Daeho Jeong wrote:
-> From: Daeho Jeong <daehojeong@google.com>
-> 
-> When end_addr comes to zero, it'll trigger different behaviour.
-> To prevent this, we need to ignore the case of that range.len is
-> zero in the function.
-> 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> ---
->  fs/f2fs/file.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 368c80f8e2a1..98b0a8dbf669 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -3813,15 +3813,14 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
->  	file_start_write(filp);
->  	inode_lock(inode);
->  
-> -	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) {
-> +	if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) ||
-> +			range.start >= inode->i_size) {
->  		ret = -EINVAL;
->  		goto err;
->  	}
->  
-> -	if (range.start >= inode->i_size) {
-> -		ret = -EINVAL;
-> +	if (range.len == 0)
->  		goto err;
-> -	}
->  
->  	if (inode->i_size - range.start < range.len) {
->  		ret = -E2BIG;
+--Sig_/wGyrKYCkNBOXWp_/iN5q1lF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-How about the case trimming last partial written block?
+Hi all,
 
-i_size = 8000
-range.start = 4096
-range.len = 4096
+Today's linux-next merge of the device-mapper tree got a conflict in:
 
-Do we need to roundup(isize, PAGE_SIZE) before comparison?
+  drivers/md/dm-crypt.c
 
-Thanks,
+between commit:
 
-> 
+  ed00aabd5eb9 ("block: rename generic_make_request to submit_bio_noacct")
+
+from the block tree and commit:
+
+  202b8d712016 ("dm crypt: add flags to optionally bypass kcryptd workqueue=
+s")
+
+from the device-mapper tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/md/dm-crypt.c
+index b437a14c4942,bad05c5ed3b5..000000000000
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@@ -1892,8 -1896,9 +1896,9 @@@ static void kcryptd_crypt_write_io_subm
+ =20
+  	clone->bi_iter.bi_sector =3D cc->start + io->sector;
+ =20
+- 	if (likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) {
++ 	if ((likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) ||
++ 	    test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags)) {
+ -		generic_make_request(clone);
+ +		submit_bio_noacct(clone);
+  		return;
+  	}
+ =20
+
+--Sig_/wGyrKYCkNBOXWp_/iN5q1lF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8GjVYACgkQAVBC80lX
+0GyLdQf+KG5YZwnK2CKs7iKXRwOUdoWAUKq6dGVgASdDfqDJcotFtWbHAQl7FgGd
+y3nVXWGpRBvXxMRxQ8y0qQRVeW5fxJlOC7E/fly8wm+3MaQhGJRwXbxMz5z/HpdE
+n+Wbtn2U9fzl6SKUCw0jD4adSszX8KhUczhv8GI8TPGEvyHEKRfSL3GAQIIfWKPQ
+zlABDxCbkpMfazl8at5HhC68uTnbjYUcb4fo1Uzha+PpNsGSt/i3PNx2+rWjv0d5
+AJxUU99CbnbwtuGmJuvPl4PTlylIijPY3hxt3+0/jm7qLBn1OcR11b2yNvRIVLoE
+vT8Xf/R+EAvOmxergdJxKM5rvW/1mw==
+=3TbQ
+-----END PGP SIGNATURE-----
+
+--Sig_/wGyrKYCkNBOXWp_/iN5q1lF--
