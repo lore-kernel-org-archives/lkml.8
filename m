@@ -2,111 +2,76 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED89C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEE0E2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V84W7Vc1"
+	by mail.kernel.org (Postfix) with ESMTP id ED2E82077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgGIQgJ (ORCPT
+        id S1728071AbgGIQgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgGIQgI (ORCPT
+        Thu, 9 Jul 2020 12:36:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60282 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGIQgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:36:08 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE8CC08C5CE;
-        Thu,  9 Jul 2020 09:36:08 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id m26so1505630lfo.13;
-        Thu, 09 Jul 2020 09:36:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hcIcw3vIFIIqOlNLiBPfaOEOm7u6K/228i2wplr1dBk=;
-        b=V84W7Vc1jDhuxWPhLzfvPMUmAt+49OsJrxRktyWHYvg6+0lgrUNtM8M4zwhdjCLDXz
-         2EhM7vzLc98fLDE8SOX//oMUMwGbvXSUg1SvcGeaCN06FQNO5xE8RCKxp4zPzYsvK/Ub
-         LOqlQiZUcvrj1t6l/WMchBAS1WYi2Qb3TPsraGQYTg6mLMTGyBoRoP6zCbK632Palvlb
-         F18AlbtrC8jQHfl0/NO24BrH1k3dvq/kdDTRXCQqxGuqo1MP+p8Tw2tXe66InfWXU/rL
-         UfnTXHY7MAzksWSw+8JZwpgtJxA6MExaaTWKLMZcegypUHOMZclsGgInmam/WgfYGbL4
-         azgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hcIcw3vIFIIqOlNLiBPfaOEOm7u6K/228i2wplr1dBk=;
-        b=npg1kBH3H8kycqHnSm0EMGXv3gr+Wn+XnJnXTHBAS596VjaKKZr3CBWwizAQ1cF0gI
-         nwutKO+M+6zu5Z+DZVTww4movnCfC5g0IDo/VZ2KcFrRB8tzidgBSbnR+2/vEHOQqch7
-         IF/QJ2Rvsps/YZPJeDfTOpcKILxRQIQhH0rN7icuDruNP5RJ47C1ptJxVbd8Xl6ym9N5
-         FCwyRgQx7xcpbe5bYNvElpG+h3nM3+aCz0XmKQLZikw3bQ4LN+bM/qQEN5/teH+kEvxW
-         hwm3pu2lBH2heZ5qqJ3k2nFKnnATb1KEqqeLaurFmD00y9w1IU6OFDs3ysXt85dtWYp6
-         1Hfw==
-X-Gm-Message-State: AOAM531DU9DDI2pfDfOpceoeZsQ+pNRIAsU69xitdkf+xqvPMowYrtOL
-        YVSzeJOY6apZpIhgG39b2JGXufL/
-X-Google-Smtp-Source: ABdhPJxxVjnrs9wMWMphmJYs/yYhcfX9aaNR/yzIXoPJ7//uu00YdKnQR/QagWC+5hbj1nUcEXNIZQ==
-X-Received: by 2002:a19:a417:: with SMTP id q23mr39715338lfc.181.1594312566150;
-        Thu, 09 Jul 2020 09:36:06 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id v20sm1098646lfr.74.2020.07.09.09.36.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 09:36:05 -0700 (PDT)
-Subject: Re: [PATCH v3 2/6] gpio: max77620: Fix missing release of interrupt
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200708202355.28507-1-digetx@gmail.com>
- <20200708202355.28507-3-digetx@gmail.com>
- <80f4d1ff-8096-9060-3cf0-a59448866c40@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <89592ba5-f62e-3145-6f0b-9289f80a3171@gmail.com>
-Date:   Thu, 9 Jul 2020 19:36:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 9 Jul 2020 12:36:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id C6C5F26D012
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com
+Subject: [PATCH v2 0/2] media: hantro/rkvdec handle unsupported H.264 bitstreams
+Date:   Thu,  9 Jul 2020 13:36:33 -0300
+Message-Id: <20200709163635.42996-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <80f4d1ff-8096-9060-3cf0-a59448866c40@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.07.2020 17:57, Laxman Dewangan пишет:
-> 
-> 
-> On Thursday 09 July 2020 01:53 AM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> The requested interrupt is never released by the driver. Fix this by
->> using the resource-managed variant of request_threaded_irq().
->>
->> Fixes: ab3dd9cc24d4 ("gpio: max77620: Fix interrupt handling")
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> 
-> Looks good to me.
-> Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
+Hi all,
 
-Hello, Laxman! Thank you very much for taking a look at this series!
+Small patchset to add a check at TRY_EXT_CTRLS time,
+via the H264 SPS control and reject unsupported bitstreams.
 
-I missed to add the stable tag to this patch, so will prepare a v4 with
-the corrected tag. I'll also add yours acks and Andy's r-bs to the
-patches. Thanks!
+Properly refusing to decode unsupported bitstreams
+allows applications to cleanly fallback to software
+decoding.
+
+Note that Rockchip VDEC hardware is capable of decoding High-10
+and High-422 bitstreams. This needs more work, so for now
+they are refused.
+
+The same approach can be use on Cedrus, but since I'm not
+very familiar there, I'll leave that to others.
+
+Applies on top of media master.
+
+v2:
+* Use p_new instead of p_cur.
+* s/PPS/SPS in commit log.
+
+Ezequiel Garcia (2):
+  rkvdec: h264: Refuse to decode unsupported bitstream
+  hantro: h264: Refuse to decode unsupported bitstream
+
+ drivers/staging/media/hantro/hantro_drv.c | 29 ++++++++++++++++++++---
+ drivers/staging/media/rkvdec/rkvdec.c     | 27 +++++++++++++++++++++
+ 2 files changed, 53 insertions(+), 3 deletions(-)
+
+-- 
+2.27.0
+
