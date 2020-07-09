@@ -2,93 +2,133 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB3EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ADDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8AC8206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869F9206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:38:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AyxM2Hq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgGIKg3 (ORCPT
+        id S1726694AbgGIKia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:36:29 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:2222 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726510AbgGIKg2 (ORCPT
+        Thu, 9 Jul 2020 06:38:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgGIKia (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:36:28 -0400
-X-IronPort-AV: E=Sophos;i="5.75,331,1589209200"; 
-   d="scan'208";a="51715516"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 09 Jul 2020 19:36:26 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5CA88422A5A9;
-        Thu,  9 Jul 2020 19:36:26 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     kishon@ti.com, vkoul@kernel.org
-Cc:     wsa+renesas@sang-engineering.com, geert+renesas@glider.be,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] phy: renesas: rcar-gen3-usb2: fix SError happen if DEBUG_SHIRQ is enabled
-Date:   Thu,  9 Jul 2020 19:36:18 +0900
-Message-Id: <1594290978-8205-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 9 Jul 2020 06:38:30 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB83C061A0B;
+        Thu,  9 Jul 2020 03:38:29 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y13so854228lfe.9;
+        Thu, 09 Jul 2020 03:38:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=b3nvtrFoAaXSkUPmIflmEsQDIojlyJCetyOU5B6Jdkg=;
+        b=AyxM2Hq4isSQgbRSa96E0ZX8J8YHfxYDufGkRFsRULapTaNBLKd7Y4LAd+Bp1rwap5
+         KAYWi72BHe47/GdliDuMBlZNXQu4cHrACIbjX1xBefZ4PQp52W5TR+m+yKbKXZ6XpFlc
+         PGO4yx7gkZITrIudBkMnTGalsgr34guYn2h/z8rMeUBbOFJHHj6y0YF9D7NLHyjhJeVO
+         t1a8cH09ectOXb9XMy24snbB98PRwqnOSCQMbqlVJY8/1R51ULQG/dL4Nub0Sh/Hbonm
+         noYG+JZvCVv5U7lHhd5H5KQGefXecrJX0YkGWWeHqloJK8LqFlEEA2wFO+tbpu9McP1h
+         +ekA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=b3nvtrFoAaXSkUPmIflmEsQDIojlyJCetyOU5B6Jdkg=;
+        b=EBiWuuDJ8GtZpk4BD0BYpXY9nCpwWNJtDClUhGvpQ/eRi+7GOVsQwRpQCEdCMwQtn0
+         Lu1a8e/dYd41/RcLx2AJm2fk8C91TDBUPwBnAR172ZlXXepeAm130Innwn6Ek58092AK
+         tsELTtwZpsKDNDOgmd8C1zmi7Vsw71zuB2dXGdezg/1IThk/nLvei2ubF7l63qnEOSWq
+         23TrjMxVs0asYUWMm9nTnrOD2+h+rozfK30R2N3ODv8f7qxb/rMGEpxowfOr+/zBvJfb
+         m7lZ8U4slhcIWOQi/pOgxcrJyrEztwko0keLiHct6MDoRNVLLGac5VmUDjJeRivdFeR+
+         ybOg==
+X-Gm-Message-State: AOAM5337o0iMf0AH7rmIBWf03OId+rJyP3EFRmiEuL8nKA4h13YFkE4z
+        9r2iVoc+8thuaarUQL2CseaZGYif
+X-Google-Smtp-Source: ABdhPJxST9mVM+8Ql63IDWlaUT39N2nUOtf0lOm6EvnbbfgEPInr6qwSWYX1MW0vNetzORgAXD0ycw==
+X-Received: by 2002:a05:6512:52a:: with SMTP id o10mr39253739lfc.137.1594291108065;
+        Thu, 09 Jul 2020 03:38:28 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.googlemail.com with ESMTPSA id s12sm659627ljd.116.2020.07.09.03.38.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 03:38:27 -0700 (PDT)
+Subject: Re: [PATCH v3 3/6] gpio: max77620: Don't set of_node
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200708202355.28507-1-digetx@gmail.com>
+ <20200708202355.28507-4-digetx@gmail.com>
+ <CAHp75VejftNuSqdYvd1YE1SdRON6=mQ_iD2dEr4K9D8YGgeRBQ@mail.gmail.com>
+ <675c4691-d372-4fe1-d515-c86fdba2f588@gmail.com>
+ <CAHp75Vd89QpwaGvkpzG+pxnLd8S2guPCARLW5xPwhxXL8ZRfFw@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ff7985a4-58be-b466-62c2-abce9ae1c0f0@gmail.com>
+Date:   Thu, 9 Jul 2020 13:38:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75Vd89QpwaGvkpzG+pxnLd8S2guPCARLW5xPwhxXL8ZRfFw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_DEBUG_SHIRQ was enabled, r8a77951-salvator-xs could boot
-correctly. If we appended "earlycon keep_bootcon" to the kernel
-command like, we could get kernel log like below.
+09.07.2020 12:07, Andy Shevchenko пишет:
+> On Thu, Jul 9, 2020 at 12:44 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>> 08.07.2020 23:57, Andy Shevchenko пишет:
+>>> On Wednesday, July 8, 2020, Dmitry Osipenko <digetx@gmail.com
+>>> <mailto:digetx@gmail.com>> wrote:
+> 
+> ...
+> 
+>>> I gave a second look and I think my suggestion is wrong. Here is an
+>>> interesting propagation of the parent device node to its grand son,
+>>> leaving son’s one untouched. Original code has intentions to do that way.
+>>
+>> The [1] says that gpio_chip.parent should point at the "device providing
+>> the GPIOs".
+> 
+> Yes, physical device I believe.
+> 
+>> That's the pdev->dev.parent in the case of this driver.
+>> MAX77620 is an MFD PMIC device that has virtual sub-devices like GPIO
+>> controller, PINCTRL and RTC. The MFD is the parent device that provides
+>> the GPIOs [2].
+>>
+>> [1]
+>> https://elixir.bootlin.com/linux/v5.8-rc3/source/include/linux/gpio/driver.h#L276
+>>
+>> [2]
+>> https://elixir.bootlin.com/linux/v5.8-rc3/source/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi#L48
+>>
+>> I think the old code was wrong and this patch is correct, please correct
+>> me if I'm missing something.
+> 
+> Hmm... I have checked through GPIO drivers I have knowledge of / care
+> about and PMIC ones do like you suggested in this patch, the rest
+> (which are instantiated from MFD) take a virtual platform device.
+> 
+> Looking at DT excerpt I think you're rather right than wrong, so I
+> leave it to you and maintainers.
+> Thanks!
 
-    SError Interrupt on CPU0, code 0xbf000002 -- SError
-    CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-salvator-x-00505-g6c843129e6faaf01 #785
-    Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
-    pstate: 60400085 (nZCv daIf +PAN -UAO BTYPE=--)
-    pc : rcar_gen3_phy_usb2_irq+0x14/0x54
-    lr : free_irq+0xf4/0x27c
+Okay, waiting for the maintainers then :)
 
-This means free_irq() calls the interrupt handler while PM runtime
-is not getting if DEBUG_SHIRQ is enabled and rcar_gen3_phy_usb2_probe()
-failed. To fix the issue, add a condition into the interrupt
-handler to avoid register access if any phys are not initialized.
-
-Note that rcar_gen3_is_any_rphy_initialized() was introduced on v5.2.
-So, if we backports this patch to v5.1 or less, we need to make
-other way.
-
-Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: 9f391c574efc ("phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index bfb22f8..91c732d 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -507,9 +507,13 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
- {
- 	struct rcar_gen3_chan *ch = _ch;
- 	void __iomem *usb2_base = ch->base;
--	u32 status = readl(usb2_base + USB2_OBINTSTA);
-+	u32 status;
- 	irqreturn_t ret = IRQ_NONE;
- 
-+	if (!rcar_gen3_is_any_rphy_initialized(ch))
-+		return ret;
-+
-+	status = readl(usb2_base + USB2_OBINTSTA);
- 	if (status & USB2_OBINT_BITS) {
- 		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
- 		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
--- 
-2.7.4
-
+Thank you very much for the review!
