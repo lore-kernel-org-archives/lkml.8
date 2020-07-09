@@ -2,100 +2,125 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A039C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9404C206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9775206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:45:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F/UUvtPF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nBLjgNyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgGITnr (ORCPT
+        id S1726605AbgGITpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:43:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgGITnq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 15:43:46 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F55C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 12:43:46 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id k27so1428174pgm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 12:43:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=LV8yOlhlgJtmA3PSCn38SrfJWuUPH5OH5CgM+ITjv9s=;
-        b=F/UUvtPF0ou+BvkxR+Sjj6blLxs9Jpw28u9mafBl1/eBpptEmMf14XlHmUbFJ3HlWD
-         XHAbERuI8oh1KiGiynAsWMx10X/1RPU+n5C+cV/nwtRGJMcOR4omdHCnD4N4NK2uKQ0m
-         t3Ie5cQzjRfPglVb2i2SFvjWB+uAXew3qRbikx9Y0X6PNe4ln9JTr/hbjZ1womcUJCyF
-         5d6X8KeczM4q/I6uPG9bvi0xaTuCxyBbRjhY8Cph1sARb+fGIarqDQaYKgrRHT08/Ygl
-         VuVzaDjecGVRLM9PmjswPBK5uF/Svuq23say5GchOdmmyO4Aqua0M3o1VxvNKdE5ggMJ
-         fUCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=LV8yOlhlgJtmA3PSCn38SrfJWuUPH5OH5CgM+ITjv9s=;
-        b=ZVkpACf9jPjPF2CWrJK0SQmTu5bYqpb8AevxmqohLYYx1KVIZt28rYSTAtitTLJPe0
-         LyA6T80EBYEVHLDZfrJsBR+wgrbP18xnO87x0kRnSk7f4tRCsqsHPfJDLpFNVY7sVjfQ
-         n1og8DZbr8w+yNmTF+6i2WK7zWVOOgnf94FfWpw5ZjjmPp8c5mfBhDxHzN2JImpCMwzo
-         uBmyJ2NjGzZdvxKP0coifZAGy0HDKvUtraYkv4sgy69VvAJedk2F5ZbG4mXmQP7SMOlh
-         6hMk4bRIYMyGuZc7CaUxDau7t8S9ruevpGI6PmlzsRFhUaXlosgGtjA/QHO3p2+eixDV
-         1FAQ==
-X-Gm-Message-State: AOAM532FeINL6a548LJw9AIPQtqSa5rDjK4nf/v5JR7XB7V+n8HRz9SR
-        Mx+3GoAB68H01HOMBmnqilSLIxUA5BabSwgbuUVYXkZ5V8k=
-X-Google-Smtp-Source: ABdhPJztaxDMOIbwH/m3iH7aw6zQA08qR8CqwjY526DbYAgi45L5ICY4ryZ9HWZANxAvp0jepV2XviHEbChMTjIkdfQ=
-X-Received: by 2002:a63:a119:: with SMTP id b25mr54079220pgf.10.1594323826101;
- Thu, 09 Jul 2020 12:43:46 -0700 (PDT)
+        Thu, 9 Jul 2020 15:45:06 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:64978 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726213AbgGITpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 15:45:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594323905; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=QE+bNVj/SQwtedJ12CCaAW9op0bzYQQpyVC83CKXLmY=; b=nBLjgNySIjS5/2tE0mtLMPlLdRvte+L1Z/7gMrPqzQ3SJkhg6WZTQbGMVyZr7HnkEB7z0pgL
+ KllouaFTY3DneZTTm68Ws3MZJ3hzMmIPKi0Djjnu+3fNSEb0l0ScOrYuI7l6yIaYbUhLcFOR
+ ndj4tG86ESpSHOmtTHcfJFRURZk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
+ 5f0773c09b7f1f3df712d0ed (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 19:45:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D1D00C433C6; Thu,  9 Jul 2020 19:45:03 +0000 (UTC)
+Received: from [192.168.1.117] (ip70-179-20-127.sd.sd.cox.net [70.179.20.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mdtipton)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 616E4C433CA;
+        Thu,  9 Jul 2020 19:45:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 616E4C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
+Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Add generic qcom bindings
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, agross@kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200623040515.23317-1-mdtipton@codeaurora.org>
+ <20200623040515.23317-2-mdtipton@codeaurora.org>
+ <20200709153527.GJ3191083@google.com>
+From:   Mike Tipton <mdtipton@codeaurora.org>
+Message-ID: <265041af-2a5c-4a09-457f-f4b39cbdb8eb@codeaurora.org>
+Date:   Thu, 9 Jul 2020 12:45:01 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 9 Jul 2020 12:43:34 -0700
-Message-ID: <CAKwvOdnT5ZMjvz2_UJ4MtvDEs9+90bsDp-Rd2SnXZZ+AqebYHw@mail.gmail.com>
-Subject: Plumbers session on GNU+LLVM collab?
-To:     Segher Boessenkool <segher@kernel.crashing.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>
-Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200709153527.GJ3191083@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Segher, Rasmus, and Ramana,
-I am working on finalizing a proposal for an LLVM microconference at
-plumbers, which is focusing on a lot of issues we currently face on
-the LLVM side.
+On 7/9/2020 8:35 AM, Matthias Kaehlcke wrote:
+> On Mon, Jun 22, 2020 at 09:05:14PM -0700, Mike Tipton wrote:
+>> Add generic qcom interconnect bindings that are common across platforms. In
+>> particular, these include QCOM_ICC_TAG_* macros that clients can use when
+>> calling icc_set_tag().
+>>
+>> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
+>> ---
+>>   include/dt-bindings/interconnect/qcom,icc.h | 26 +++++++++++++++++++++
+>>   1 file changed, 26 insertions(+)
+>>   create mode 100644 include/dt-bindings/interconnect/qcom,icc.h
+>>
+>> diff --git a/include/dt-bindings/interconnect/qcom,icc.h b/include/dt-bindings/interconnect/qcom,icc.h
+>> new file mode 100644
+>> index 000000000000..cd34f36daaaa
+>> --- /dev/null
+>> +++ b/include/dt-bindings/interconnect/qcom,icc.h
+>> @@ -0,0 +1,26 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
+>> +#define __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
+>> +
+>> +/*
+>> + * The AMC bucket denotes constraints that are applied to hardware when
+>> + * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
+>> + * when the execution environment transitions between active and low power mode.
+>> + */
+>> +#define QCOM_ICC_BUCKET_AMC		0
+>> +#define QCOM_ICC_BUCKET_WAKE		1
+>> +#define QCOM_ICC_BUCKET_SLEEP		2
+>> +#define QCOM_ICC_NUM_BUCKETS		3
+>> +
+>> +#define QCOM_ICC_TAG_AMC		(1 << QCOM_ICC_BUCKET_AMC)
+>> +#define QCOM_ICC_TAG_WAKE		(1 << QCOM_ICC_BUCKET_WAKE)
+>> +#define QCOM_ICC_TAG_SLEEP		(1 << QCOM_ICC_BUCKET_SLEEP)
+>> +#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
+>> +#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
+>> +					 QCOM_ICC_TAG_SLEEP)
+>> +
+>> +#endif
+> 
+> Would it make sense to squash the two patches of this series into a
+> single patch? This would make it more evident that this was moved
+> from drivers/interconnect/qcom/icc-rpmh.h and avoid duplicate
+> definitions if only this patch was applied.
 
-I'd really like to host a session with more GNU toolchain developers
-to discuss collaboration more.
-
-I was curious; are either of you planning on attending plumbers this year?
-
-If so, would such a session be interesting enough for you to attend?
-
-I was curious too, who else we should explicitly invite?  I ran a
-quick set analysis on who's contributed to both kernel and
-<toolchain>, and the list was much much bigger than I was expecting.
-https://gist.github.com/nickdesaulniers/5330eea6f46dea93e7766bb03311d474
-89 contributors to both linux and llvm
-283 linux+gcc
-159 linux+binutils
-(No one to all four yet...also, not super scientific, since I'm using
-name+email for the set, and emails change. Point being I don't want to
-explicitly invite hundreds of people)
-
-The details of the MC are still being worked out, and it might not
-happen, but I think with more explicit interest it's likely.
--- 
-Thanks,
-~Nick Desaulniers
+Makes sense to me. I'm going to have to move this to my other patch 
+series anyway, so I can squash these two and include it in v2 of 
+"interconnect: qcom: Misc bcm-voter changes and fixes".
