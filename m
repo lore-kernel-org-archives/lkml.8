@@ -2,101 +2,165 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E363EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF50C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF25720738
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C0E20738
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=synology.com header.i=@synology.com header.b="ZLuZ8aCT"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PesDYLn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgGICz1 (ORCPT
+        id S1726251AbgGIC6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 22:55:27 -0400
-Received: from mail.synology.com ([211.23.38.101]:55132 "EHLO synology.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726117AbgGICz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 22:55:26 -0400
-X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 22:55:26 EDT
-Received: from localhost.localdomain (unknown [10.17.32.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 8 Jul 2020 22:58:23 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34107 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726107AbgGIC6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 22:58:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by synology.com (Postfix) with ESMTPSA id 652BACE78121;
-        Thu,  9 Jul 2020 10:48:20 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
-        t=1594262900; bh=joCChp/WKfH+meqYEh6O1+n19ugnHJTEgLQjLh1PDfc=;
-        h=From:To:Cc:Subject:Date;
-        b=ZLuZ8aCT+6gGFY+ohMiEojJ4oOV2pBw2sne/+6IJlx0EL4ZmJHpU/xKVOgKCV3xCD
-         iuYYZqB7D2QpybkJmhU/zjgVvroAWAdjJ6dP6jPd9FlEMXDQEAwCSVuh2YH5bYFGGS
-         vS2c4ageUbB6vN5dJg3a169n7maNQL06LE06niYo=
-From:   robbieko <robbieko@synology.com>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, Robbie Ko <robbieko@synology.com>
-Subject: [PATCH] mm : fix pte _PAGE_DIRTY bit when fallback migrate page
-Date:   Thu,  9 Jul 2020 10:48:08 +0800
-Message-Id: <20200709024808.18466-1-robbieko@synology.com>
-X-Mailer: git-send-email 2.17.1
-X-Synology-MCP-Status: no
-X-Synology-Spam-Flag: no
-X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
-X-Synology-Virus-Status: no
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2LTR0P3vz9sQt;
+        Thu,  9 Jul 2020 12:58:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594263499;
+        bh=fpKkrKE8IB2evZg7xDyDGYYwbjbsssLphcIryri7l/I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PesDYLn3YSAYbJnnkjqQ4RkIBbgNnD20JQAPqv/Vrj0FbFCzzCitco+vkR8xE/Nvg
+         LwFhBTxXrh635CVYRWeIuxBPSjUq9n/k7f/0OZJcQ/VPuUfHuVgtnubb6ptGz+RyiN
+         BHqUamVOzq7HaOKbKWRZyP+LDKc3dmr9PkSPOfoVBt0mvrIaQrPZCSie1VKLa5bekq
+         I9vMQJFaDdXILmoeXqtLiywVCgMKfwiYgsw3vNu6F8G31tZKI+CKoz+5ADEKm58rJF
+         BqgFcAT8V3h/4klvLKszOlflwDNstly3nMfUiaG/YecpwynP4DMG8SSI6SGHLBwcQi
+         oqGyK5eU8MQIw==
+Date:   Thu, 9 Jul 2020 12:58:16 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, David Sterba <dsterba@suse.cz>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Qu Wenruo <wqu@suse.com>
+Subject: linux-next: manual merge of the block tree with the btrfs tree
+Message-ID: <20200709125816.4be1953f@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/L.aRLTf_qBA4bVcYzR07wj=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robbie Ko <robbieko@synology.com>
+--Sig_/L.aRLTf_qBA4bVcYzR07wj=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-When a migrate page occurs, we first create a migration entry
-to replace the original pte, and then go to fallback_migrate_page
-to execute a writeout if the migratepage is not supported.
+Hi all,
 
-In the writeout, we will clear the dirty bit of the page and use
-page_mkclean to clear the dirty bit along with the corresponding pte,
-but page_mkclean does not support migration entry.
+Today's linux-next merge of the block tree got a conflict in:
 
-The page ditry bit is cleared, but the dirty bit of the pte still exists,
-so if mmap continues to write, it will result in data loss.
+  fs/btrfs/disk-io.c
 
-We fix the by first remove the migration entry and then clearing
-the dirty bits of the page, which also clears the pte's dirty bits.
+between commit:
 
-Signed-off-by: Robbie Ko <robbieko@synology.com>
----
- mm/migrate.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+  16e1dd6a777e ("btrfs: preallocate anon block device at first phase of sna=
+pshot creation")
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index f37729673558..5c407434b9ba 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -875,10 +875,6 @@ static int writeout(struct address_space *mapping, struct page *page)
- 		/* No write method for the address space */
- 		return -EINVAL;
- 
--	if (!clear_page_dirty_for_io(page))
--		/* Someone else already triggered a write */
--		return -EAGAIN;
--
- 	/*
- 	 * A dirty page may imply that the underlying filesystem has
- 	 * the page on some queue. So the page must be clean for
-@@ -889,6 +885,10 @@ static int writeout(struct address_space *mapping, struct page *page)
- 	 */
- 	remove_migration_ptes(page, page, false);
- 
-+	if (!clear_page_dirty_for_io(page))
-+		/* Someone else already triggered a write */
-+		return -EAGAIN;
-+
- 	rc = mapping->a_ops->writepage(page, &wbc);
- 
- 	if (rc != AOP_WRITEPAGE_ACTIVATE)
--- 
-2.17.1
+from the btrfs tree and commit:
 
+  21cf86614504 ("writeback: remove bdi->congested_fn")
+
+from the block tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/btrfs/disk-io.c
+index 08140caceb33,eb5f2506cede..000000000000
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@@ -1649,54 -1616,6 +1649,33 @@@ fail
+  	return ERR_PTR(ret);
+  }
+ =20
+ +/*
+ + * Get in-memory reference of a root structure
+ + *
+ + * @objectid:	tree objectid
+ + * @check_ref:	if set, verify that the tree exists and the item has at le=
+ast
+ + *		one reference
+ + */
+ +struct btrfs_root *btrfs_get_fs_root(struct btrfs_fs_info *fs_info,
+ +				     u64 objectid, bool check_ref)
+ +{
+ +	return btrfs_get_root_ref(fs_info, objectid, 0, check_ref);
+ +}
+ +
+ +/*
+ + * Get in-memory reference of a root structure, created as new, optionall=
+y pass
+ + * the anonymous block device id
+ + *
+ + * @objectid:	tree objectid
+ + * @anon_dev:	if zero, allocate a new anonymous block device or use the
+ + *		parameter value
+ + */
+ +struct btrfs_root *btrfs_get_new_fs_root(struct btrfs_fs_info *fs_info,
+ +					 u64 objectid, dev_t anon_dev)
+ +{
+ +	return btrfs_get_root_ref(fs_info, objectid, anon_dev, true);
+ +}
+ +
+- static int btrfs_congested_fn(void *congested_data, int bdi_bits)
+- {
+- 	struct btrfs_fs_info *info =3D (struct btrfs_fs_info *)congested_data;
+- 	int ret =3D 0;
+- 	struct btrfs_device *device;
+- 	struct backing_dev_info *bdi;
+-=20
+- 	rcu_read_lock();
+- 	list_for_each_entry_rcu(device, &info->fs_devices->devices, dev_list) {
+- 		if (!device->bdev)
+- 			continue;
+- 		bdi =3D device->bdev->bd_bdi;
+- 		if (bdi_congested(bdi, bdi_bits)) {
+- 			ret =3D 1;
+- 			break;
+- 		}
+- 	}
+- 	rcu_read_unlock();
+- 	return ret;
+- }
+-=20
+  /*
+   * called by the kthread helper functions to finally call the bio end_io
+   * functions.  This is where read checksum verification actually happens
+
+--Sig_/L.aRLTf_qBA4bVcYzR07wj=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Gh8gACgkQAVBC80lX
+0Gxs3gf9G4+aKo4Lyrmf6KcbHgKgl9zunBAqrJEyPf2OQ6cMyzEE0WXbrWSKbbze
+nKHiRS8obUTm84K14sy6F6/S3nn2sR5Ss2e3olz8CRaZoei9htIXAOPB1qsA7CJL
+lxVYu2ZQEDSzoZ8aSsr+/kwTIO8C9GmZDXP/unv3EEb3Dgd/G1yDb3qQOkXEjYil
+8NbbjhxpGAIv09uiMnI+Tf5+Fl9KGShzhMbSlD/Z1rQtXCMUg36h1NGL0BDola57
+fD02tyjDdd1sT4uC+amFbWJp6RjYMZNRCLm2YWwAy6LYMYOdT7L/Wxet5hdwZy68
+m9JXkdaTCmdUfTodkwiLEXY4pfNqzw==
+=/P+W
+-----END PGP SIGNATURE-----
+
+--Sig_/L.aRLTf_qBA4bVcYzR07wj=--
