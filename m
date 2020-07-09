@@ -2,205 +2,239 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4B520720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39FF920720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fXZg2Zbh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="it/B9r03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgGITvh (ORCPT
+        id S1726759AbgGITwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:51:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
+        Thu, 9 Jul 2020 15:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgGITuw (ORCPT
+        with ESMTP id S1726734AbgGITvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 15:50:52 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ACC2C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 12:50:51 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 145so3019009qke.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 12:50:51 -0700 (PDT)
+        Thu, 9 Jul 2020 15:51:14 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61EBDC08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 12:51:14 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id w2so1417035pgg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 12:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jBhiNdJcKWpDIzUtXlvuF+3cyZgX7DpFBBALLEpqqcI=;
-        b=fXZg2ZbhLJFFCCYqF4ZSseLLp6ZerePMTDWKvhEaTTUG5r+0DGuVQTFoOP8tb0qHb4
-         dqKXWN4HmZbbeLhJ333fFkXQ61wZ0cjFfPaOaYXOH4f2GhjGxoYunvWeRvEalalfEx8x
-         5UDB7arIjU/KeYFGsYUxBltjP2CDzR3plB8pM=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RKoiYmnqg/oFAokvGDIpwpiVhiuKO9b5n8VEE7Z8HE8=;
+        b=it/B9r0362HsDPiIYjY/j7FwYnayXCWDVi1l4DQPuC0o6hvNZZmq/PrrwyNwVi7mCa
+         T97g2TghHXywHle1twFq+JpnT+2uA4Y7Fn5uhc51cdS9dp0iIpn2qzOjLypRXfdmqzk9
+         UQEjCZ6xvm8qPnJkR2LkoLjvx561sN8fmDkHR23CCN5mwAvK0F5NNKyQhYgKJaugdf4N
+         MCckZ0pQKpqcSiaNIhlUqFctXTHPhc9DxMiDKT4sXyZW6uHC2J2gteGTvnRylEZT7vEV
+         EXE0SR2/tjUuDkIBBSAvf26n3trUN4oesMCH3HdQcvssgygJl5csCEKXJ7snC+PGy06U
+         ajUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jBhiNdJcKWpDIzUtXlvuF+3cyZgX7DpFBBALLEpqqcI=;
-        b=SPTZrnLT0qM3Y3keRUmfbdb55slBNKMuRxbwHEhcY5vjsZ6/5e/R08e+hLRnWXLe19
-         0+dkqlKqc8E9OQgHfn315rHwwMP2uNeS85cgUocyfzgK2B3FaWsrUQginiDheEMyozcp
-         /uZezt+zEC0edTIxra7Xe7NkOyv1DrYcifwCLI7oPB9IJjSY1TtO/7STR9QpdvxQaXUQ
-         xVU5mMo1yj9Jv52FuFxeRRgDkwdbK9p513FwVOhulQFdRVZ29mNRObztnrJkJ60Rb1MU
-         7lDhe5plgjNU5YqKW7FWACwbm01v/ossiaECWAnp7VvGPu+EjbTm8YIgKO9NsWSud7om
-         HaRg==
-X-Gm-Message-State: AOAM533eB1Ntz7Fj39mri4TrdDTaLSYz8358kDHYhq/PMXozAnaL99ub
-        PEjL16wqF5OMWWrRJD0gxsy6tCy905s=
-X-Google-Smtp-Source: ABdhPJzT6LW+XnLwbr0i1CTs9EW2gFaozjT1V1EHyV+4wrwSM28SIiAFWA07xanG6AqqFuvywJdQkw==
-X-Received: by 2002:a05:620a:15ca:: with SMTP id o10mr37623620qkm.57.1594324250207;
-        Thu, 09 Jul 2020 12:50:50 -0700 (PDT)
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com. [209.85.219.44])
-        by smtp.gmail.com with ESMTPSA id e9sm4554287qtq.70.2020.07.09.12.50.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 12:50:49 -0700 (PDT)
-Received: by mail-qv1-f44.google.com with SMTP id ed14so1530432qvb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 12:50:49 -0700 (PDT)
-X-Received: by 2002:a67:ec0f:: with SMTP id d15mr38876582vso.121.1594323788853;
- Thu, 09 Jul 2020 12:43:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RKoiYmnqg/oFAokvGDIpwpiVhiuKO9b5n8VEE7Z8HE8=;
+        b=EPhXzBvawuRR/scKEItL6X7lKcVjbuZuq+jl5vJYZtFGIb0KxnFEo3a6v99eg3rO0E
+         4kKzgwYjFz9HqP+82RPy4mMtRd3S/g7xwmRZlSi1snjXUhEqVimYm9hg9PGEIsDJbUAm
+         y5DG1SM3/fRVMUh2qaQ38Nj3MguYZ8IgOo+g8G3Y/QBOy0vWNNnpSkZ5ZqL/uHjA8oNK
+         vsjgjlUD18JCkwMAW7+B+ssCzHZFrrNGaMvxcVYTxTTgf7uJEvdHXH8yzqcwj3t3UM3S
+         JLbHbNDxNViwQAu46x34EYwAcp4TkxU4/535fGofydk25XoNFHH7EjZvCvxShjIwvAUC
+         q+Gg==
+X-Gm-Message-State: AOAM5331Myg5u6lVui45+pTnsXz7guQVIDFWDTh28chGFED7DYMsF8u6
+        rq8adGOCf8pVVy+h7dHo/UhF5A==
+X-Google-Smtp-Source: ABdhPJye/dlKRIG7MMw5hNVxhwmSWEsx9/WxUR6K7A2xxTk7FBJTIGgFEZGNinozbGwd+GarBA9OqQ==
+X-Received: by 2002:a63:405:: with SMTP id 5mr53556062pge.449.1594324273843;
+        Thu, 09 Jul 2020 12:51:13 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id ci23sm3369898pjb.29.2020.07.09.12.51.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 12:51:13 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 13:51:11 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] remoteproc: k3-r5: Add loading support for
+ on-chip SRAM regions
+Message-ID: <20200709195111.GC948668@xps15>
+References: <20200630024922.32491-1-s-anna@ti.com>
+ <20200630024922.32491-5-s-anna@ti.com>
 MIME-Version: 1.0
-References: <20200708194715.4073300-1-abhishekbh@google.com> <87y2ntotah.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87y2ntotah.fsf@nanos.tec.linutronix.de>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 9 Jul 2020 12:42:57 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WCu7o41iyn27vNBWo4f_X_XVy+PPPjBKc+70g5jd5+8w@mail.gmail.com>
-Message-ID: <CAD=FV=WCu7o41iyn27vNBWo4f_X_XVy+PPPjBKc+70g5jd5+8w@mail.gmail.com>
-Subject: Re: [PATCH v5] x86/speculation/l1tf: Add KConfig for setting the L1D
- cache flush mode
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Abhishek Bhardwaj <abhishekbh@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630024922.32491-5-s-anna@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Jun 29, 2020 at 09:49:22PM -0500, Suman Anna wrote:
+> The K3 SoCs has various internal on-chip SRAM memories like the SRAM
+> within the MCU domain or the shared MSMC RAM within NavSS that can be
+> used for multiple purposes. One such purpose is to have the R5F cores
+> use a portion of such on-chip SRAM for fast-access data or to directly
+> execute code.
+> 
+> Add support to the K3 R5 remoteproc driver to parse and support
+> loading into such memories. The SRAM regions need to be mapped as
+> normal non-cacheable memory to avoid kernel crashes when the remoteproc
+> loader code uses the Arm64 memset library function (the "DC ZVA"
+> instruction throws a alignment fault on device type memory).
+> 
+> These SRAM regions are completely optional as not all firmware images
+> require these memories, and any such memory has to be reserved as such
+> in the DTS files.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+> v2:
+>  - Adapted to use various devm_ functions resulting in a smaller patch
+>  - Failure path code is dropped as a result in k3_r5_core_of_exit() and
+>    k3_r5_core_of_get_sram_memories()
+>  - Dropped unneeded whitespaces in a debug trace
+>  - Revised the patch title to move away from remoteproc/k3-r5
+>  - Dropped Mathieu's Acked-by because of the changes
+> v1: https://patchwork.kernel.org/patch/11456373/
+> 
+>  drivers/remoteproc/ti_k3_r5_remoteproc.c | 79 ++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+> index aca0eaf42a38..ac8ae29f38aa 100644
+> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
+> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+> @@ -86,7 +86,9 @@ struct k3_r5_cluster {
+>   * @dev: cached device pointer
+>   * @rproc: rproc handle representing this core
+>   * @mem: internal memory regions data
+> + * @sram: on-chip SRAM memory regions data
+>   * @num_mems: number of internal memory regions
+> + * @num_sram: number of on-chip SRAM memory regions
+>   * @reset: reset control handle
+>   * @tsp: TI-SCI processor control handle
+>   * @ti_sci: TI-SCI handle
+> @@ -100,7 +102,9 @@ struct k3_r5_core {
+>  	struct device *dev;
+>  	struct rproc *rproc;
+>  	struct k3_r5_mem *mem;
+> +	struct k3_r5_mem *sram;
+>  	int num_mems;
+> +	int num_sram;
+>  	struct reset_control *reset;
+>  	struct ti_sci_proc *tsp;
+>  	const struct ti_sci_handle *ti_sci;
+> @@ -588,6 +592,18 @@ static void *k3_r5_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+>  		}
+>  	}
+>  
+> +	/* handle any SRAM regions using SoC-view addresses */
+> +	for (i = 0; i < core->num_sram; i++) {
+> +		dev_addr = core->sram[i].dev_addr;
+> +		size = core->sram[i].size;
+> +
+> +		if (da >= dev_addr && ((da + len) <= (dev_addr + size))) {
+> +			offset = da - dev_addr;
+> +			va = core->sram[i].cpu_addr + offset;
+> +			return (__force void *)va;
+> +		}
+> +	}
+> +
+>  	/* handle static DDR reserved memory regions */
+>  	for (i = 0; i < kproc->num_rmems; i++) {
+>  		dev_addr = kproc->rmem[i].dev_addr;
+> @@ -1030,6 +1046,63 @@ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
+>  	return 0;
+>  }
+>  
+> +static int k3_r5_core_of_get_sram_memories(struct platform_device *pdev,
+> +					   struct k3_r5_core *core)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *sram_np;
+> +	struct resource res;
+> +	int num_sram;
+> +	int i, ret;
+> +
+> +	num_sram = of_property_count_elems_of_size(np, "sram", sizeof(phandle));
+> +	if (num_sram <= 0) {
+> +		dev_dbg(dev, "device does not use reserved on-chip memories, num_sram = %d\n",
+> +			num_sram);
+> +		return 0;
+> +	}
+> +
+> +	core->sram = devm_kcalloc(dev, num_sram, sizeof(*core->sram), GFP_KERNEL);
+> +	if (!core->sram)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_sram; i++) {
+> +		sram_np = of_parse_phandle(np, "sram", i);
+> +		if (!sram_np)
+> +			return -EINVAL;
+> +
+> +		if (!of_device_is_available(sram_np)) {
+> +			of_node_put(sram_np);
+> +			return -EINVAL;
+> +		}
+> +
+> +		ret = of_address_to_resource(sram_np, 0, &res);
+> +		of_node_put(sram_np);
+> +		if (ret)
+> +			return -EINVAL;
+> +
+> +		core->sram[i].bus_addr = res.start;
+> +		core->sram[i].dev_addr = res.start;
+> +		core->sram[i].size = resource_size(&res);
+> +		core->sram[i].cpu_addr = devm_ioremap_wc(dev, res.start,
+> +							 resource_size(&res));
+> +		if (!core->sram[i].cpu_addr) {
+> +			dev_err(dev, "failed to parse and map sram%d memory at %pad\n",
+> +				i, &res.start);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		dev_dbg(dev, "memory sram%d: bus addr %pa size 0x%zx va %pK da 0x%x\n",
+> +			i, &core->sram[i].bus_addr,
+> +			core->sram[i].size, core->sram[i].cpu_addr,
+> +			core->sram[i].dev_addr);
+> +	}
+> +	core->num_sram = num_sram;
+> +
+> +	return 0;
+> +}
+> +
+>  static
+>  struct ti_sci_proc *k3_r5_core_of_get_tsp(struct device *dev,
+>  					  const struct ti_sci_handle *sci)
+> @@ -1143,6 +1216,12 @@ static int k3_r5_core_of_init(struct platform_device *pdev)
+>  		goto err;
+>  	}
+>  
+> +	ret = k3_r5_core_of_get_sram_memories(pdev, core);
+> +	if (ret) {
+> +		dev_err(dev, "failed to get sram memories, ret = %d\n", ret);
+> +		goto err;
+> +	}
+> +
 
-On Thu, Jul 9, 2020 at 3:51 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Abhishek Bhardwaj <abhishekbh@google.com> writes:
-> > This change adds a new kernel configuration that sets the l1d cache
-> > flush setting at compile time rather than at run time.
-> >
-> > The reasons for this change are as follows -
-> >
-> >  - Kernel command line arguments are getting unwieldy. These parameters
-> >  are not a scalable way to set the kernel config. They're intended as a
-> >  super limited way for the bootloader to pass info to the kernel and
-> >  also as a way for end users who are not compiling the kernel themselves
-> >  to tweak the kernel behavior.
-> >
-> >  - Also, if a user wants this setting from the start. It's a definite
-> >  smell that it deserves to be a compile time thing rather than adding
-> >  extra code plus whatever miniscule time at runtime to pass an
-> >  extra argument.
-> >
-> >  - Finally, it doesn't preclude the runtime / kernel command line way.
-> >  Users are free to use those as well.
->
-> TBH, I don't see why this is a good idea.
->
->  1) I'm not following your argumentation that the command line option is
->     a poor Kconfig replacement. The L1TF mode is a boot time (module
->     load time) decision and the command line parameter is there to
->     override the carefully chosen and sensible default behaviour.
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-When you say that the default behavior is carefully chosen and
-sensible, are you saying that (in your opinion) there would never be a
-good reason for someone distributing a kernel to others to change the
-default?  Certainly I agree that having the kernel command line
-parameter is nice to allow someone to override whatever the person
-building the kernel chose, but IMO it's not a good way to change the
-default built-in to the kernel.
-
-The current plan (as I understand it) is that we'd like to ship
-Chromebook kernels with this option changed from the default that's
-there now.  In your opinion, is that a sane thing to do?
-
-
->  2) You can add the desired mode to the compiled in (partial) kernel
->     command line today.
-
-This might be easier on x86 than it is on ARM.  ARM (and ARM64)
-kernels only have two modes: kernel provides cmdline and bootloader
-provides cmdline.  There are out-of-mainline ANDROID patches to
-address this but nothing in mainline.
-
-The patch we're discussing now is x86-only so it's not such a huge
-deal, but the fact that combining the kernel and bootloader
-commandline never landed in mainline for arm/arm64 means that this
-isn't a super common/expected thing to do.
-
-
->  3) Boot loaders are well capable of handling large kernel command lines
->     and the extra time spend for reading the parameter does not matter
->     at all.
-
-Long command lines can still be a bit of a chore for humans to deal
-with.  Many times I've needed to look at "/proc/cmdline" and make
-sense of it.  The longer the command line is and the more cruft
-stuffed into it the more of a chore it is.  Yes, this is just one
-thing to put in the command line, but if 10 different drivers all have
-their "one thing" to put there it gets really long.  If 100 different
-drivers all want their one config option there it gets really really
-long.  IMO the command line should be a last resort place to put
-things and should just contain:
-
-1. Legacy things that _have_ to be in the command line because they've
-always been there.
-
-2. Things that the bootloader/BIOS needs to communicate to the kernel
-and has no better way to communicate.
-
-3. Cases where the person running the kernel needs to override a
-default set by the person compiling the kernel.
-
-
->  4) It's just a tiny part of the whole speculation maze. If we go there
->     for L1TF then we open the flood gates for a gazillion other config
->     options.
-
-It seems like the only options that we'd need CONFIG option for would
-be the ones where it would be sane to change the default compiled into
-the kernel.  Hopefully that's not too many things?
-
-
->  5) It's completely useless for distro kernels.
->
->  6) The implementation is horrible. We have proper choice selectors
->     which allow to add parseable information instead of random numbers
->     and a help text.
-
-If my other arguments make sense and Abhishek could just fix #6, would
-that work?
-
-
-Obviously, like many design choices, the above is all subjective.
-It's really your call and if these arguments don't convince you it
-sounds like the way forward is just to use "CONFIG_CMDLINE" and take
-advantage of the fact that on x86 this will get merged with the
-bootloader's command line.
-
-
--Doug
+>  	ret = ti_sci_proc_request(core->tsp);
+>  	if (ret < 0) {
+>  		dev_err(dev, "ti_sci_proc_request failed, ret = %d\n", ret);
+> -- 
+> 2.26.0
+> 
