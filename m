@@ -7,66 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47208C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1002078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163DC2078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BJrbKWjh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GYXOd0wu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgGIRrW (ORCPT
+        id S1728813AbgGIRr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48920 "EHLO
+        Thu, 9 Jul 2020 13:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728523AbgGIRqL (ORCPT
+        with ESMTP id S1728518AbgGIRqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Jul 2020 13:46:11 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2313CC08E763
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:11 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 17so2756825wmo.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:11 -0700 (PDT)
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E89A6C08E81E
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:09 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z2so3304440wrp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9wNqiWDnOoV7Tq3fUIjX7bWnfvj892xNMMafz42JpFQ=;
-        b=BJrbKWjhzBBh3RMZVhYHcaOZZkUTOhhAMuZGWd99TPgvncnZcAR2gQzAJUhbxHvzaT
-         vcDPLIjTG4BsY5JKOHabnqPAt2Tlq7bfhTLjnzZMe90hTRY6Of+nYm4bZ2xnOnfoL9zq
-         P80f+Yfz3QD4K4PmO+myZ3I+siGXxnKFoN6Bm5c0nchOvxQeRyFdvYcPto1Mjzzifhbe
-         Jp7vU+Hse0BH2ZUv+/K3SkD/RH/mg77jH4Yg5PC38+OcX1D6RwEk3AFudbPG/k/mCR6j
-         hP6wGblrlsnEUpLTL/b7jMih86Q03Fbd4TgLEXrDtJ/WOdRqhArvb8EkisYH1ubMMjF4
-         NAbQ==
+        bh=uh7jTGgLUvWvRRLhz59nl6r+4sZq+HqjUUSpbbMrHCY=;
+        b=GYXOd0wuBdczRMDN8s4/gPG4FoikNnntxhvE9lW59BFIBaqDL0riZHtrvYndU5j0sb
+         MI2Eo17OXvq3mZsgzVgUpaDeZUmsA1qmK7WYoNNLymEeFc8UiadW0tG9kPub/HdLK9Up
+         FcmkaK6f/9m+tUGl0f05ctArSBCO03IfxgI3Baav58gqtvTkpBPq4MdCn8f6t64Nysok
+         BvTJeWctmB4J1MVBxMatEZaZg7NNOuoQFlhkfaSdEdvWDF38eoUK22acWfs2H0dnTy+8
+         aKnX049/CB9vBU2RrN7xEg4XbsL98iNbVo1TSCGUcheVpIuhOKz2TX1c96AGIBZQZ/Kc
+         wIPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9wNqiWDnOoV7Tq3fUIjX7bWnfvj892xNMMafz42JpFQ=;
-        b=qXYXRJ4xin1h0a53MhQNjhULSxyq5BrJn1/6wlHzUS4w/I2zFuBxSMKb9BQ10tdK5v
-         sICgzkG2iVr99mAdMOkNYxQUx6qq01Fv3Beoqdtfvz45sfFGRrC7ZfntstyyJ0nYqRb2
-         aq0FAhHU3HxNMC43LrjCDTmAxHT2Ek/dhJUJleevK8Z7jTvTuwgojaxlL0bKrSdnYoPX
-         9dwzJXWHKRSJcx9xbAWF3NX4PEzpzeOFhSygKPOa0zhNyEDuW95PQ7Fo/dU2Ppmu0k7I
-         0txomSv2AXmKYHbL0XJPPYSG4Na2hZCn3rggzzH7xSaKKxSAjvIoJ/y7TyGiCwQ/dm/k
-         sS1w==
-X-Gm-Message-State: AOAM533loJJXXPUMCPCrilYnk1esr8E0B+/aKkhe31oa/w9wEfzUny8o
-        N1uRlbGTl4O6h5gx1JqjO1WHgg==
-X-Google-Smtp-Source: ABdhPJxFseAbX3st95FnBDylPbgmEJ0aAnhpaK4jDdiDZ+mDaVs7FVhKs/xQXYj6E8zHeXcxQP4S3Q==
-X-Received: by 2002:a7b:ce87:: with SMTP id q7mr1169747wmj.39.1594316769822;
-        Thu, 09 Jul 2020 10:46:09 -0700 (PDT)
+        bh=uh7jTGgLUvWvRRLhz59nl6r+4sZq+HqjUUSpbbMrHCY=;
+        b=DtuM4g4Z0NmBOZA1NNKl3vyzAmPcAhMg1WYFmAezcnfnROUhAkkf5cjIEc9MipGeKs
+         xqrejyL7JBzNQadztj82q8IhhKv+3Bbb70P40BJgEHyDlAT+TxxRwWnJsxQB6XifLI6W
+         UWQUMg/ZIBJRV8WtjRg3xiCy96FwzUgDg1N5e2Balb9cBqM0MzkBqZp8PmYZ6YekRMOz
+         aCzPNohEBODhZ7W9lcp1qgvPrJzasDLw9aVwbnFdL/csmQ4XqEdH3F8ecT1etBH7JeLC
+         gmkFxR9cZnDx+hziLKp+oiZ+CIF5e/V5a4HoXjL+nBKx5T6zsoojaYuGSDpRIUtPrhB2
+         R8Tw==
+X-Gm-Message-State: AOAM532NYA6vtOcP5Hqty3M125dAt9lJivS9ODhfuu39zwuqWvEGAqoW
+        BppeHuIurrT/XjMziJILI1ztgw==
+X-Google-Smtp-Source: ABdhPJxACLMpIJZt5g0hYREZmQbq3DJLBCYVgAeJEiXGAWTaTqUizXTHoI1c/Tx39b6IYs5ELoTGsw==
+X-Received: by 2002:adf:dd83:: with SMTP id x3mr70095952wrl.292.1594316768677;
+        Thu, 09 Jul 2020 10:46:08 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.46.08
+        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.46.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:46:09 -0700 (PDT)
+        Thu, 09 Jul 2020 10:46:07 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
         linux-scsi@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Subject: [PATCH 10/24] scsi: pm8001: pm8001_ctl: Provide descriptions for the many undocumented 'attr's
-Date:   Thu,  9 Jul 2020 18:45:42 +0100
-Message-Id: <20200709174556.7651-11-lee.jones@linaro.org>
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Subject: [PATCH 09/24] scsi: aacraid: rx: Fill in the very parameter descriptions for rx_sync_cmd()
+Date:   Thu,  9 Jul 2020 18:45:41 +0100
+Message-Id: <20200709174556.7651-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200709174556.7651-1-lee.jones@linaro.org>
 References: <20200709174556.7651-1-lee.jones@linaro.org>
@@ -77,153 +78,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-... even if they are completely unused.
+... and document aac_rx_ioremap() 'dev' param.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/pm8001/pm8001_ctl.c:56: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_mpi_interface_rev_show'
- drivers/scsi/pm8001/pm8001_ctl.c:81: warning: Function parameter or member 'attr' not described in 'controller_fatal_error_show'
- drivers/scsi/pm8001/pm8001_ctl.c:100: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_fw_version_show'
- drivers/scsi/pm8001/pm8001_ctl.c:130: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ila_version_show'
- drivers/scsi/pm8001/pm8001_ctl.c:155: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_inactive_fw_version_show'
- drivers/scsi/pm8001/pm8001_ctl.c:181: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_out_io_show'
- drivers/scsi/pm8001/pm8001_ctl.c:204: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_devices_show'
- drivers/scsi/pm8001/pm8001_ctl.c:230: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_sg_list_show'
- drivers/scsi/pm8001/pm8001_ctl.c:274: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_sas_spec_support_show'
- drivers/scsi/pm8001/pm8001_ctl.c:303: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_host_sas_address_show'
- drivers/scsi/pm8001/pm8001_ctl.c:322: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_logging_level_show'
- drivers/scsi/pm8001/pm8001_ctl.c:355: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_aap_log_show'
- drivers/scsi/pm8001/pm8001_ctl.c:390: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ib_queue_log_show'
- drivers/scsi/pm8001/pm8001_ctl.c:423: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ob_queue_log_show'
- drivers/scsi/pm8001/pm8001_ctl.c:454: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_bios_version_show'
- drivers/scsi/pm8001/pm8001_ctl.c:492: warning: Function parameter or member 'attr' not described in 'event_log_size_show'
- drivers/scsi/pm8001/pm8001_ctl.c:510: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_iop_log_show'
- drivers/scsi/pm8001/pm8001_ctl.c:548: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_fatal_log_show'
- drivers/scsi/pm8001/pm8001_ctl.c:566: warning: Function parameter or member 'attr' not described in 'non_fatal_log_show'
- drivers/scsi/pm8001/pm8001_ctl.c:609: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_gsm_log_show'
+ drivers/scsi/aacraid/rx.c:156: warning: Function parameter or member 'p2' not described in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:156: warning: Function parameter or member 'p3' not described in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:156: warning: Function parameter or member 'p4' not described in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:156: warning: Function parameter or member 'p5' not described in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:156: warning: Function parameter or member 'p6' not described in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:156: warning: Function parameter or member 'status' not described in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:156: warning: Function parameter or member 'r1' not described in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:156: warning: Function parameter or member 'r2' not described in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:156: warning: Function parameter or member 'r3' not described in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:156: warning: Function parameter or member 'r4' not described in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:156: warning: Excess function parameter 'ret' description in 'rx_sync_cmd'
+ drivers/scsi/aacraid/rx.c:450: warning: Function parameter or member 'dev' not described in 'aac_rx_ioremap'
 
-Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/pm8001/pm8001_ctl.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/scsi/aacraid/rx.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/pm8001/pm8001_ctl.c b/drivers/scsi/pm8001/pm8001_ctl.c
-index 3c9f42779dd02..a5f3c702ada9f 100644
---- a/drivers/scsi/pm8001/pm8001_ctl.c
-+++ b/drivers/scsi/pm8001/pm8001_ctl.c
-@@ -47,6 +47,7 @@
- /**
-  * pm8001_ctl_mpi_interface_rev_show - MPI interface revision number
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
+diff --git a/drivers/scsi/aacraid/rx.c b/drivers/scsi/aacraid/rx.c
+index 3dea348bd25d2..cdccf9abcdc40 100644
+--- a/drivers/scsi/aacraid/rx.c
++++ b/drivers/scsi/aacraid/rx.c
+@@ -144,7 +144,16 @@ static void aac_rx_enable_interrupt_message(struct aac_dev *dev)
+  *	@dev: Adapter
+  *	@command: Command to execute
+  *	@p1: first parameter
+- *	@ret: adapter status
++ *	@p2: second parameter
++ *	@p3: third parameter
++ *	@p4: forth parameter
++ *	@p5: fifth parameter
++ *	@p6: sixth parameter
++ *	@status: adapter status
++ *	@r1: first return value
++ *	@r2: second return value
++ *	@r3: third return value
++ *	@r4: forth return value
   *
-  * A sysfs 'read-only' shost attribute.
-@@ -72,6 +73,7 @@ DEVICE_ATTR(interface_rev, S_IRUGO, pm8001_ctl_mpi_interface_rev_show, NULL);
+  *	This routine will send a synchronous command to the adapter and wait 
+  *	for its	completion.
+@@ -443,6 +452,7 @@ static int aac_rx_deliver_message(struct fib * fib)
+ 
  /**
-  * controller_fatal_error_show - check controller is under fatal err
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
+  *	aac_rx_ioremap
++ *	@dev: adapter
+  *	@size: mapping resize request
   *
-  * A sysfs 'read only' shost attribute.
-@@ -121,6 +123,7 @@ static DEVICE_ATTR(fw_version, S_IRUGO, pm8001_ctl_fw_version_show, NULL);
- /**
-  * pm8001_ctl_ila_version_show - ila version
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
-  *
-  * A sysfs 'read-only' shost attribute.
-@@ -146,6 +149,7 @@ static DEVICE_ATTR(ila_version, 0444, pm8001_ctl_ila_version_show, NULL);
- /**
-  * pm8001_ctl_inactive_fw_version_show - Inacative firmware version number
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
-  *
-  * A sysfs 'read-only' shost attribute.
-@@ -172,6 +176,7 @@ DEVICE_ATTR(inc_fw_ver, 0444, pm8001_ctl_inactive_fw_version_show, NULL);
- /**
-  * pm8001_ctl_max_out_io_show - max outstanding io supported
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
-  *
-  * A sysfs 'read-only' shost attribute.
-@@ -195,6 +200,7 @@ static DEVICE_ATTR(max_out_io, S_IRUGO, pm8001_ctl_max_out_io_show, NULL);
- /**
-  * pm8001_ctl_max_devices_show - max devices support
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
-  *
-  * A sysfs 'read-only' shost attribute.
-@@ -221,6 +227,7 @@ static DEVICE_ATTR(max_devices, S_IRUGO, pm8001_ctl_max_devices_show, NULL);
-  * pm8001_ctl_max_sg_list_show - max sg list supported iff not 0.0 for no
-  * hardware limitation
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
-  *
-  * A sysfs 'read-only' shost attribute.
-@@ -265,6 +272,7 @@ show_sas_spec_support_status(unsigned int mode, char *buf)
- /**
-  * pm8001_ctl_sas_spec_support_show - sas spec supported
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
-  *
-  * A sysfs 'read-only' shost attribute.
-@@ -292,6 +300,7 @@ static DEVICE_ATTR(sas_spec_support, S_IRUGO,
- /**
-  * pm8001_ctl_sas_address_show - sas address
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
-  *
-  * This is the controller sas address
-@@ -346,6 +355,7 @@ static DEVICE_ATTR(logging_level, S_IRUGO | S_IWUSR,
- /**
-  * pm8001_ctl_aap_log_show - aap1 event log
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
-  *
-  * A sysfs 'read-only' shost attribute.
-@@ -483,6 +493,7 @@ static DEVICE_ATTR(bios_version, S_IRUGO, pm8001_ctl_bios_version_show, NULL);
- /**
-  * event_log_size_show - event log size
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
-  *
-  * A sysfs read  shost attribute.
-@@ -501,6 +512,7 @@ static DEVICE_ATTR_RO(event_log_size);
- /**
-  * pm8001_ctl_aap_log_show - IOP event log
-  * @cdev: pointer to embedded class device
-+ * @attr: device attribute (unused)
-  * @buf: the buffer returned
-  *
-  * A sysfs 'read-only' shost attribute.
-@@ -538,6 +550,7 @@ static DEVICE_ATTR(iop_log, S_IRUGO, pm8001_ctl_iop_log_show, NULL);
- /**
-  ** pm8001_ctl_fatal_log_show - fatal error logging
-  ** @cdev:pointer to embedded class device
-+ ** @attr: device attribute
-  ** @buf: the buffer returned
-  **
-  ** A sysfs 'read-only' shost attribute.
-@@ -557,6 +570,7 @@ static DEVICE_ATTR(fatal_log, S_IRUGO, pm8001_ctl_fatal_log_show, NULL);
- /**
-  ** non_fatal_log_show - non fatal error logging
-  ** @cdev:pointer to embedded class device
-+ ** @attr: device attribute
-  ** @buf: the buffer returned
-  **
-  ** A sysfs 'read-only' shost attribute.
+  */
 -- 
 2.25.1
 
