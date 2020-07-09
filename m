@@ -2,130 +2,144 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47B70206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3E4206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IvgeTeN2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u/NVIzGy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgGIUbm (ORCPT
+        id S1726734AbgGIUcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGIUbm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:31:42 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C471DC08C5CE;
-        Thu,  9 Jul 2020 13:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Koqd6kCw0kFF9cQ+B8QeO0El7U/kaG6Z8/n9tod5TOg=; b=IvgeTeN2x0f/Xu41dh0Jtt43E
-        ab7TM2+A2KH+t+kIXz6OB22IIg/CDFop78jPS70LfusrdJQfLrVK4K42mg+fqKmbW0T9VqwasG526
-        BC/ZzctqVt3zMj2EJCYZLtw6PUoA2ip4gRkjBxil/FBOrz0Rm3UI7HhzuJzGm8sqItDWz8L1/6jIz
-        Jgt8Wh5eSbPHuNaLc0Yz1Uov0lIcnS5XcJMEZSVfozmjzoRi9rLN3XRX20ttGRmC/Skh7UMtA3Ndv
-        81gTPavt8z8Eokby2ne6SXDkBRjmNPYNAtgRCbmF8Yy7fSdvprCxMKclacB/Zqx2WT7uMZvaOZRm7
-        cH2Ipjsyg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37450)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jtdCj-0000xj-W6; Thu, 09 Jul 2020 21:31:38 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jtdCg-0002Xp-Gd; Thu, 09 Jul 2020 21:31:34 +0100
-Date:   Thu, 9 Jul 2020 21:31:34 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
-        linux-mediatek@lists.infradead.org,
-        John Crispin <john@phrozen.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org, Felix Fietkau <nbd@nbd.name>
-Subject: Re: [PATCH v2] net: ethernet: mtk_eth_soc: fix mtu warning
-Message-ID: <20200709203134.GI1551@shell.armlinux.org.uk>
-References: <20200709055742.3425-1-frank-w@public-files.de>
- <20200709134115.GK928075@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200709134115.GK928075@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 9 Jul 2020 16:32:13 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:44440 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbgGIUcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 16:32:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594326730; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=y9AFQoYip2XeCXFE+gS+geLi4ZnXO6Utr/vSQ5yoJVs=; b=u/NVIzGykgKKrnaamZwMXzOSSAQrZx8KgZlEyevfGGG4tYTyKrvjXGx++Dtbq/HqA9KgWaU4
+ YvVZzfdJXgm43WOSZoqnIIvGRNNiIb0L5oZQ1PWkb6hvJu62YtbwE+LWOJRgsPu+fd3sOnkr
+ Zx/0g52+KFOePLn8Y1QK6phijNc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f077ec871d7ca1d3a52763b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 20:32:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 35785C433C8; Thu,  9 Jul 2020 20:32:08 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4ECADC433C6;
+        Thu,  9 Jul 2020 20:32:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4ECADC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
+        tsoni@codeaurora.org, psodagud@codeaurora.org,
+        sidgup@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH v1 2/4] remoteproc: qcom_q6v5_mss: Replace mask based tracking with size
+Date:   Thu,  9 Jul 2020 13:31:54 -0700
+Message-Id: <1594326716-15474-3-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594326716-15474-1-git-send-email-rishabhb@codeaurora.org>
+References: <1594326716-15474-1-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 03:41:15PM +0200, Andrew Lunn wrote:
-> On Thu, Jul 09, 2020 at 07:57:42AM +0200, Frank Wunderlich wrote:
-> > From: René van Dorst <opensource@vdorst.com>
-> > 
-> > in recent Kernel-Versions there are warnings about incorrect MTU-Size
-> > like these:
-> > 
-> > mt7530 mdio-bus:00: nonfatal error -95 setting MTU on port x
-> > eth0: mtu greater than device maximum
-> > mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA overhead
-> > 
-> > Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
-> > Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set the MTU")
-> > Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
-> > Signed-off-by: René van Dorst <opensource@vdorst.com>
-> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> > ---
-> > changes in v2:
-> >   Fixes: tag show 12-chars of sha1 and moved above other tags
-> > ---
-> >  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> > index 85735d32ecb0..00e3d70f7d07 100644
-> > --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> > +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> > @@ -2891,6 +2891,10 @@ static int mtk_add_mac(struct mtk_eth *eth, struct device_node *np)
-> >  	eth->netdev[id]->irq = eth->irq[0];
-> >  	eth->netdev[id]->dev.of_node = np;
-> > 
-> > +	eth->netdev[id]->mtu = 1536;
-> 
-> Hi Frank
-> 
-> Don't change to MTU from the default. Anybody using this interface for
-> non-DSA traffic expects the default MTU. DSA will change it as needed.
-> 
-> > +	eth->netdev[id]->min_mtu = ETH_MIN_MTU;
-> 
-> No need to set the minimum. ether_setup() will initialize it.
-> 
-> > +	eth->netdev[id]->max_mtu = 1536;
-> 
-> I assume this is enough to make the DSA warning go away, but it is the
-> true max? I have a similar patch for the FEC driver which i should
-> post sometime. Reviewing the FEC code and after some testing, i found
-> the real max was 2K - 64.
+From: Sibi Sankar <sibis@codeaurora.org>
 
-Are there any plans to solve these warnings for Marvell 88e6xxx DSA ports?
+In order to land inline coredump support for mss, the dump_segment
+function would need to support granularities less than the segment
+size. This is achieved by replacing mask based tracking with size.
 
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+---
+ drivers/remoteproc/qcom_q6v5_mss.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index feb70283b..c6ce032 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -181,8 +181,8 @@ struct q6v5 {
+ 	bool running;
+ 
+ 	bool dump_mba_loaded;
+-	unsigned long dump_segment_mask;
+-	unsigned long dump_complete_mask;
++	size_t current_dump_size;
++	size_t total_dump_size;
+ 
+ 	phys_addr_t mba_phys;
+ 	void *mba_region;
+@@ -1203,7 +1203,6 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+ {
+ 	int ret = 0;
+ 	struct q6v5 *qproc = rproc->priv;
+-	unsigned long mask = BIT((unsigned long)segment->priv);
+ 	int offset = segment->da - qproc->mpss_reloc;
+ 	void *ptr = NULL;
+ 
+@@ -1229,10 +1228,10 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+ 		memset(dest, 0xff, segment->size);
+ 	}
+ 
+-	qproc->dump_segment_mask |= mask;
++	qproc->current_dump_size += segment->size;
+ 
+ 	/* Reclaim mba after copying segments */
+-	if (qproc->dump_segment_mask == qproc->dump_complete_mask) {
++	if (qproc->current_dump_size == qproc->total_dump_size) {
+ 		if (qproc->dump_mba_loaded) {
+ 			/* Try to reset ownership back to Q6 */
+ 			q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+@@ -1274,7 +1273,7 @@ static int q6v5_start(struct rproc *rproc)
+ 			"Failed to reclaim mba buffer system may become unstable\n");
+ 
+ 	/* Reset Dump Segment Mask */
+-	qproc->dump_segment_mask = 0;
++	qproc->current_dump_size = 0;
+ 	qproc->running = true;
+ 
+ 	return 0;
+@@ -1323,7 +1322,7 @@ static int qcom_q6v5_register_dump_segments(struct rproc *rproc,
+ 
+ 	ehdr = (struct elf32_hdr *)fw->data;
+ 	phdrs = (struct elf32_phdr *)(ehdr + 1);
+-	qproc->dump_complete_mask = 0;
++	qproc->total_dump_size = 0;
+ 
+ 	for (i = 0; i < ehdr->e_phnum; i++) {
+ 		phdr = &phdrs[i];
+@@ -1338,7 +1337,7 @@ static int qcom_q6v5_register_dump_segments(struct rproc *rproc,
+ 		if (ret)
+ 			break;
+ 
+-		qproc->dump_complete_mask |= BIT(i);
++		qproc->total_dump_size += phdr->p_memsz;
+ 	}
+ 
+ 	release_firmware(fw);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
