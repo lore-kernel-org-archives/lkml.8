@@ -2,141 +2,177 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBA9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D41032076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:52:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ZtbKjxMv"
+	by mail.kernel.org (Postfix) with ESMTP id 1C9222076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:58:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594295896;
+	bh=76nQ2Hp+y7ZbwUBp2j1Hko+LRj2SOlSV2iD2teGfL3E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ISiMYmoanbBkko+GtZzvBxpFSCc3yH9k8i88aS6svh7gcaS81aYCe4JpjfscuaAjk
+	 6F+PgdHbeAxAR0HRn0yR7PpcEJafwaD7OUtRqQLC9Dbhbp2vvdAzD1zfopExUPEcl9
+	 nyAVEdwU3pBPvGvPqjp69xoy3COGXSvYaRs2Wsyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgGILwW (ORCPT
+        id S1727098AbgGIL6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:52:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgGILwV (ORCPT
+        Thu, 9 Jul 2020 07:58:14 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38341 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbgGIL6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:52:21 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332ACC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 04:52:21 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id w3so1487251wmi.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 04:52:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RgnLFkfDlMduGKE/ztPFGecYYc7s1DxZ/PWGRQJJLRs=;
-        b=ZtbKjxMvYP/9FTODupwovxGroCNIJmYSlsUpzaQ0CEcJTMNqQB9k02e8gNtpuMlUGS
-         YkOAXNIFqxplT/lIOV1voPg4Xw2jsXMdoOM5W+quL5iJp77pYnViJ+wsOj/m8VRnNOiY
-         4lHtvYKQRtS7Msyq1+AbHrymke6YGaWmtisdc=
+        Thu, 9 Jul 2020 07:58:13 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t18so1496429otq.5;
+        Thu, 09 Jul 2020 04:58:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RgnLFkfDlMduGKE/ztPFGecYYc7s1DxZ/PWGRQJJLRs=;
-        b=tM5NvkXAgHMolatufx52Y9Pix0JHywq5mRMu0T7OJ8XUntI+E63+uu6PIcdmHw69fi
-         YvoE7epYO7K2+QIBeytAa+8QZLBI+oRJUVq1Z1HcvVHpY5Eom0liRwZgRBMwND/Ji6Xo
-         drpQkCCTebKtE2MAVe86EhEYtP+Z0nvLQuBGBH4R1GLjjIyS2cfofhmQeenDZaNlmiMZ
-         ua9pQD6hIKz8RALFRtF81HfHHgmdQTc0YAqNQEs6OL7zKjGqKQQPnRqEzVV1O0t6IZqg
-         GWbGdqiFTdCnzJqVNm/3sBr3oDsJI2Po0eRQ6KaGPScYGsbXwJk8Lqz0Mjg+nJs7VPdh
-         L4GQ==
-X-Gm-Message-State: AOAM531f/xQef01nN+Z79TR9mjNzzK0B4/sQ2vMeHn5WIcYmeTtXp8Pa
-        iiTQ0O5IE0VkPuRA0FMeRzTrHMtASoQbcw==
-X-Google-Smtp-Source: ABdhPJw2JnRN/XTa6+WZL2sIDnwotc3qUGVnnswUvYbo913hMwzPuzrdX231q7/X1v5wKPOQ0hYQ4A==
-X-Received: by 2002:a1c:7916:: with SMTP id l22mr13271541wme.115.1594295539736;
-        Thu, 09 Jul 2020 04:52:19 -0700 (PDT)
-Received: from antares.lan (6.b.4.5.a.4.9.1.1.9.d.d.1.2.d.8.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:8d21:dd91:194a:54b6])
-        by smtp.gmail.com with ESMTPSA id u1sm6331001wrb.78.2020.07.09.04.52.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 04:52:18 -0700 (PDT)
-From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Lorenz Bauer <lmb@cloudflare.com>
-Cc:     kernel-team@cloudflare.com, Martin KaFai Lau <kafai@fb.com>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf] selftests: bpf: fix detach from sockmap tests
-Date:   Thu,  9 Jul 2020 12:51:51 +0100
-Message-Id: <20200709115151.75829-1-lmb@cloudflare.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YRGv8i1NLqF5y2cs67EYKyYOieD8C2J3kdBQDbuxrSI=;
+        b=pAUWclLshRVyqEbv0JlwPDmuho7COzzOulHdseu51BTzo3+s0qhRNSXI8EtjNi1S3S
+         qGO/zbHghsnOaL0ABAWW/BAjK/3CLqe43sgOCpkNyUqJE7wAZscyA4krAgFrvMTE9/kI
+         89Zz7OJsqCWYoXQSS2BUGPiUlHBejdzO8lAJcSZNLai4rlj2P0ZvKQJ+fnrfFXevm+RC
+         qIQSbo3Ego1l+nTKaPQu58gRNOprm9k58UB+kuWCjkewW9WwEUqYvezMQMsYa0Y243mM
+         Rnf0ozoFh/S6nlneOM4n4LN1ecpPh+CzI8C3c92X7504hQsnubybUwujedf7CceECG61
+         RT5A==
+X-Gm-Message-State: AOAM530w0vr0tQ+UfKBuBs+qEoHNFGnmB78DyCJiAHsAe/leIVJaM2id
+        0F9xGWsji8Bs/OWSVz6pFPVKQ2Gc0xeKp9lp/dY=
+X-Google-Smtp-Source: ABdhPJxXX40XCYqyYoXnFPXuGC6w2vY526oEHE9rnBiN6/5mfIiE0GqaHMVLu8jaKzIOCRf+RJf4vBQmtnBeafw4MzU=
+X-Received: by 2002:a9d:590a:: with SMTP id t10mr17093644oth.262.1594295891970;
+ Thu, 09 Jul 2020 04:58:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200413134611.478441-1-enric.balletbo@collabora.com>
+ <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
+ <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com> <10490419.gsntqH5CaE@kreacher>
+ <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com> <59771d3689da41a5bbc67541aa6f4777@AUSX13MPC105.AMER.DELL.COM>
+ <20200610214033.GB248110@dtor-ws> <adf9daaf08f1464684e48ec203194fe9@AUSX13MPC105.AMER.DELL.COM>
+ <20200610224305.GC248110@dtor-ws> <1e32b7db-5457-e0cf-5e5e-36f21d5a91eb@collabora.com>
+ <b9e46ec7-c362-da76-a532-8d380b16d915@collabora.com>
+In-Reply-To: <b9e46ec7-c362-da76-a532-8d380b16d915@collabora.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 9 Jul 2020 13:57:59 +0200
+Message-ID: <CAJZ5v0gSRZnSfQ-c3md+1O+0zzpde=btzKMBijGRa2WgvhW7iw@mail.gmail.com>
+Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sockmap tests which rely on old bpf_prog_dispatch behaviour.
-In the first case, the tests check that detaching without giving
-a program succeeds. Since these are not the desired semantics,
-invert the condition. In the second case, the clean up code doesn't
-supply the necessary program fds.
+On Thu, Jul 9, 2020 at 11:31 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Rafael,
+>
+> On 11/6/20 13:06, Enric Balletbo i Serra wrote:
+> > Hi,
+> >
+> > On 11/6/20 0:43, Dmitry Torokhov wrote:
+> >> On Wed, Jun 10, 2020 at 09:52:12PM +0000, Mario.Limonciello@dell.com wrote:
+> >>>> -----Original Message-----
+> >>>> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> >>>> Sent: Wednesday, June 10, 2020 4:41 PM
+> >>>> To: Limonciello, Mario
+> >>>> Cc: enric.balletbo@collabora.com; rjw@rjwysocki.net; rafael@kernel.org;
+> >>>> linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; lenb@kernel.org;
+> >>>> kernel@collabora.com; groeck@chromium.org; bleung@chromium.org;
+> >>>> dtor@chromium.org; gwendal@chromium.org; vbendeb@chromium.org;
+> >>>> andy@infradead.org; ayman.bagabas@gmail.com; benjamin.tissoires@redhat.com;
+> >>>> blaz@mxxn.io; dvhart@infradead.org; gregkh@linuxfoundation.org;
+> >>>> hdegoede@redhat.com; jeremy@system76.com; 2pi@mok.nu;
+> >>>> mchehab+samsung@kernel.org; rajatja@google.com;
+> >>>> srinivas.pandruvada@linux.intel.com; platform-driver-x86@vger.kernel.org
+> >>>> Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+> >>>>
+> >>>>
+> >>>> [EXTERNAL EMAIL]
+> >>>>
+> >>>> On Wed, Jun 10, 2020 at 09:28:36PM +0000, Mario.Limonciello@dell.com wrote:
+> >>>>>>
+> >>>>>> To give you some references, if I'm not wrong, this prefix is used in
+> >>>> all
+> >>>>>> or
+> >>>>>> almost all Intel Chromebook devices (auron, cyan, eve, fizz, hatch,
+> >>>>>> octopus,
+> >>>>>> poppy, strago ...) The ACPI source for this device can be found here
+> >>>> [1],
+> >>>>>> and,
+> >>>>>> if not all, almost all Intel based Chromebooks are shipped with the
+> >>>>>> firmware
+> >>>>>> that supports this.
+> >>>>>
+> >>>>> You can potentially carry a small patch in your downstream kernel for the
+> >>>>> legacy stuff until it reaches EOL.  At least for the new stuff you could
+> >>>>> enact a process that properly reserves unique numbers and changes the
+> >>>> driver
+> >>>>> when the interface provided by the ACPI device has changed.
+> >>>>
+> >>>> If we use this prefix for hatch EOL is ~7 years from now.
+> >>>>
+> >>>
+> >>> Isn't the whole point of the ACPI registry and choosing an ID?  You know internally
+> >>> if you need to change the interface that a new ID is needed and a new driver will
+> >>> be needed that comprehends that ID change.  So if you can't guarantee that 0001 is
+> >>> the same driver interface in every firmware implementation google used then that is
+> >>> where this falls apart.
+> >>>
+> >
+> > As far as I know GGL0001 has the same driver interface in every firmware
+> > implementation Google used. But I'll ask to make sure.
+> >
+> >>> I know there is a long support lifecycle but you're talking about rebasing
+> >>> to new LTS kernels a handful of times between now and then.  If the interface really
+> >>> is stable the patch should be small and it shouldn't be a large amount of technical
+> >>> debt to carry downstream until EOL.
+> >>
+> >> I think we are talking about different things actually. Let's forget
+> >> about Chrome OS and downstream kernels. We have devices that have
+> >> already been shipped and in hands of users. Some of them are old, some
+> >> of them are new. We can't not enforce that firmware for these devices
+> >> will be either released or updated. Therefore, if we want expose this
+> >> device in mainline kernel, we need to have it handle "GGL0001" HID in
+> >> addition to whatever proper HID we may select for it.
+> >>
+> >
+> > FWIW, after investigate a bit more, although GGL is not in the ACPI ID list it
+> > is in the PNP ID list [1]. So as far as I understand GGL0001 is valid ID. I know
+> > that PNP ID is the legacy identifier but since this was here for long time and
+> > will be here also for long time, I am wondering if we can take that as an
+> > argument to have GGL0001 as a valid device to be exposed in the kernel.
+> >
+>
+> So, as the GGL prefix is a valid ID in the PNP ID list, is this a valid argument
+> to take in consideration this patch and resolves your concern regarding the ID?
 
-Reported-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Fixes: bb0de3131f4c ("bpf: sockmap: Require attach_bpf_fd when detaching a program")
----
- tools/testing/selftests/bpf/test_maps.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/test_maps.c b/tools/testing/selftests/bpf/test_maps.c
-index 6a12a0e01e07..754cf611723e 100644
---- a/tools/testing/selftests/bpf/test_maps.c
-+++ b/tools/testing/selftests/bpf/test_maps.c
-@@ -789,19 +789,19 @@ static void test_sockmap(unsigned int tasks, void *data)
- 	}
- 
- 	err = bpf_prog_detach(fd, BPF_SK_SKB_STREAM_PARSER);
--	if (err) {
-+	if (!err) {
- 		printf("Failed empty parser prog detach\n");
- 		goto out_sockmap;
- 	}
- 
- 	err = bpf_prog_detach(fd, BPF_SK_SKB_STREAM_VERDICT);
--	if (err) {
-+	if (!err) {
- 		printf("Failed empty verdict prog detach\n");
- 		goto out_sockmap;
- 	}
- 
- 	err = bpf_prog_detach(fd, BPF_SK_MSG_VERDICT);
--	if (err) {
-+	if (!err) {
- 		printf("Failed empty msg verdict prog detach\n");
- 		goto out_sockmap;
- 	}
-@@ -1090,19 +1090,19 @@ static void test_sockmap(unsigned int tasks, void *data)
- 		assert(status == 0);
- 	}
- 
--	err = bpf_prog_detach(map_fd_rx, __MAX_BPF_ATTACH_TYPE);
-+	err = bpf_prog_detach2(parse_prog, map_fd_rx, __MAX_BPF_ATTACH_TYPE);
- 	if (!err) {
- 		printf("Detached an invalid prog type.\n");
- 		goto out_sockmap;
- 	}
- 
--	err = bpf_prog_detach(map_fd_rx, BPF_SK_SKB_STREAM_PARSER);
-+	err = bpf_prog_detach2(parse_prog, map_fd_rx, BPF_SK_SKB_STREAM_PARSER);
- 	if (err) {
- 		printf("Failed parser prog detach\n");
- 		goto out_sockmap;
- 	}
- 
--	err = bpf_prog_detach(map_fd_rx, BPF_SK_SKB_STREAM_VERDICT);
-+	err = bpf_prog_detach2(verdict_prog, map_fd_rx, BPF_SK_SKB_STREAM_VERDICT);
- 	if (err) {
- 		printf("Failed parser prog detach\n");
- 		goto out_sockmap;
--- 
-2.25.1
-
+Yes, it does, thanks!
