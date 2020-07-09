@@ -2,36 +2,78 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFA2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4A92053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0A32053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:20:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rR8wMB0W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbgGIFTk (ORCPT
+        id S1726444AbgGIFUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 01:19:40 -0400
-Received: from out28-171.mail.aliyun.com ([115.124.28.171]:48617 "EHLO
-        out28-171.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgGIFTj (ORCPT
+        Thu, 9 Jul 2020 01:20:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgGIFUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 01:19:39 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.48121|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0183385-0.00121183-0.98045;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03310;MF=maochenxi@eswin.com;NM=1;PH=DS;RN=7;RT=7;SR=0;TI=SMTPD_---.I-jIyZp_1594271970;
-Received: from localhost.localdomain(mailfrom:maochenxi@eswin.com fp:SMTPD_---.I-jIyZp_1594271970)
-          by smtp.aliyun-inc.com(10.194.97.171);
-          Thu, 09 Jul 2020 13:19:34 +0800
-From:   Chenxi Mao <maochenxi@eswin.com>
-To:     paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        chenxi.mao2013@gmail.com, Chenxi Mao <maochenxi@eswin.com>
-Subject: [PATCH 1/1] riscv: Enable ARCH_HAS_FAST_MULTIPLIER for RV64I
-Date:   Thu,  9 Jul 2020 13:19:22 +0800
-Message-Id: <20200709051922.13110-1-maochenxi@eswin.com>
+        Thu, 9 Jul 2020 01:20:00 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25B8AC08C5CE;
+        Wed,  8 Jul 2020 22:20:00 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id t7so432913qvl.8;
+        Wed, 08 Jul 2020 22:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h2ey5u0rQyusT9d/zc6U5JsDDVWxF+R85sT24kpAB5c=;
+        b=rR8wMB0WbQzJVmK1fG6vrA9QgvikGKfYsQl+iy+CoUKQ+prDnqBeSkuG178FVewnNR
+         n7PpgaXv02dMHyYy29chR5Ui46SVLx5QcQvAiSauy9uNwq9Tzt47WxTO3BVMOODMgwaL
+         6MHRhl0+ZwymBPoWbQqUVhWwbqvIjmy86Et/RPKmPJ/ZSKZBZTT/KXXhnS+A6U4IDEfw
+         INW6hYTuqzC+srHq80xDOjEV1TEzQbZ1QSWcY9DZzOLwcZzmJDfvKjHy5KbAP3Ll8FgO
+         2aWwhwUq9duT2DQ7p5SbWR3qalA0C9DtOShUzl2J76jUBmG+sDac0gyA0cTw6Y45/Pm4
+         yLhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h2ey5u0rQyusT9d/zc6U5JsDDVWxF+R85sT24kpAB5c=;
+        b=EUwJWHeyHjK5GBDGz1PD8PVHXIeURKxZNpFXGc5Qp61ai9T2WmBNanoVlSHSUITcL+
+         YkIbIvGVP/ioIpKIoHets4qtwP6fCN6TWpIfDlZyjWWPcPiL14MD1qOrj+x8EpMSxEYZ
+         o9Zkxhi4ljF+yRROi26yxeby35USOwmXPluPsjJQPWNpC863yRtjqBNJRR7qNucL2sJz
+         zd1VwxOFJn1pGOO1PaFJpN7oue+4nTV1On09ZvbZfICtl4oKVxPQX29OP7b83myeX+OM
+         UtQcmw1OmDsps5anJzff6ofFeznwyPUWaq9novPan81Xhzwu0wuqEVv0x/inH/oC1yg+
+         uP5A==
+X-Gm-Message-State: AOAM533dZ5XMFb6b6Q9Omgoc+I5cowRughxYQMbLcbvT4dOt1P+tSJXz
+        wZTMx/CM+2a6n/Cvo2O8bk9MrwWDHInM
+X-Google-Smtp-Source: ABdhPJysCYkfIBcts8kENFrUYmdr3eXiSmrlK8fWILE44f0rLD8RRzITYv0N2MTnGAM7xAIdtT++8g==
+X-Received: by 2002:a05:6214:4c4:: with SMTP id ck4mr59679790qvb.202.1594271999346;
+        Wed, 08 Jul 2020 22:19:59 -0700 (PDT)
+Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id p7sm2502952qki.61.2020.07.08.22.19.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 22:19:58 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH] net/bluetooth: Fix slab-out-of-bounds read in hci_extended_inquiry_result_evt()
+Date:   Thu,  9 Jul 2020 01:18:02 -0400
+Message-Id: <20200709051802.185168-1-yepeilin.cs@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -40,28 +82,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable ARCH_HAS_FAST_MULTIPLIER on RV64I
-which works fine on GCC-9.3 and GCC-10.1
+Check upon `num_rsp` is insufficient. A malformed event packet with a
+large `num_rsp` number makes hci_extended_inquiry_result_evt() go out
+of bounds. Fix it. Also, make `num_rsp` unsigned.
 
-PS2: remove ARCH_SUPPORTS_INT128 because of RV64I already enabled.
+This patch fixes the following syzbot bug:
 
-Signed-off-by: Chenxi Mao <maochenxi@eswin.com>
+    https://syzkaller.appspot.com/bug?id=4bf11aa05c4ca51ce0df86e500fce486552dc8d2
+
+Reported-by: syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 ---
- arch/riscv/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ net/bluetooth/hci_event.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 128192e14ff2..84e6777fecad 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -202,6 +202,7 @@ config ARCH_RV64I
- 	bool "RV64I"
- 	select 64BIT
- 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && GCC_VERSION >= 50000
-+	select ARCH_HAS_FAST_MULTIPLIER
- 	select HAVE_DYNAMIC_FTRACE if MMU
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
- 	select HAVE_FTRACE_MCOUNT_RECORD
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 03a0759f2fc2..29aff5e7dec2 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4369,13 +4369,13 @@ static void hci_extended_inquiry_result_evt(struct hci_dev *hdev,
+ 					    struct sk_buff *skb)
+ {
+ 	struct inquiry_data data;
+-	struct extended_inquiry_info *info = (void *) (skb->data + 1);
+-	int num_rsp = *((__u8 *) skb->data);
++	struct extended_inquiry_info *info = (void *)(skb->data + 1);
++	__u8 num_rsp = *((__u8 *)skb->data);
+ 	size_t eir_len;
+ 
+ 	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
+ 
+-	if (!num_rsp)
++	if (!num_rsp || num_rsp * sizeof(*info) > skb->truesize)
+ 		return;
+ 
+ 	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
 -- 
 2.25.1
 
