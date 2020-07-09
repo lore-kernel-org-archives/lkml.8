@@ -2,151 +2,86 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3141BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1686B206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7E2206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H1VGQHOB"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Em65mrx7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EWQJ2mzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgGILrK (ORCPT
+        id S1727118AbgGILtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:47:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgGILrK (ORCPT
+        Thu, 9 Jul 2020 07:49:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36726 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbgGILtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:47:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42227C061A0B
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 04:47:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jwBkggp/9SDR2NBbKDrX7UsLr9nx6UUjUaSdXDeg+/c=; b=H1VGQHOBrIsAiZUkDj9nu8eOaW
-        Zp3FQ6s558T2eW/iAvO8B4Yo6qVV72ZfWuhKt1v/+WUJVEGqVy+AWQ0zXswqJrZ/PEdIlOGz8e5Xu
-        2rSxELHP11pEsakqwu6SIDfLWAJfjElYtkLjuMSAFPVczJAjEuxHLAp4oBy9lw6fW31nCtsyIy0XD
-        NAcPvQGKL1OPJLOm6I5++2V4QLM6RvorJBoQ1pQmH4yIJSjHf/cUOBAy646UHeABXpiTa5JeXmkVi
-        ffd4wGQAK+zc1TdcpkZUKATzc6NgIhEhuh0jYY8rOqx7SmAMYcsgH3OcrwD9YNEUoLr973Blzx+Ew
-        dG8VrBhg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtV18-00057j-TW; Thu, 09 Jul 2020 11:47:07 +0000
-Date:   Thu, 9 Jul 2020 12:47:06 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, Andy Lutomirski <luto@kernel.org>,
-        Paul Gofman <gofmanp@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] kernel: Implement selective syscall userspace
- redirection
-Message-ID: <20200709114706.GB12769@casper.infradead.org>
-References: <20200709043840.4189530-1-krisman@collabora.com>
+        Thu, 9 Jul 2020 07:49:03 -0400
+Date:   Thu, 9 Jul 2020 13:49:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594295341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=n/+Hq2OK1EfVodCGmSK8xZprN98olqCNxMqvpIq5Nt4=;
+        b=Em65mrx7Yrr88xoOBeslkETE8DoNLVI3wENFy3bHD2euiEJIWqv7TTKBgPWOSBO/gubik+
+        Hhwp5ZJiYS04MtRaG1yBdkRTMB6/wefsdUsW59qcFA3Ajun+mgVKbvl5NpaKJXMPsacQjb
+        5N40PRxxIPzIvcIsmWjCH7fYLcbTPl4n0J8aljgPrjTgzfPIelvePmOIYMyIEF6r7x+LsF
+        ACVXEyLuR26JWnBniBOKuF8aF7UK6Bjbr3v4+ltiel4vqVI7F0DUydZHt4JXfie0Z/lvLm
+        xq+USivXCdIGDs+OhcR64/F5LL1NUukTV2oqv8nzydo8yyhN+OnShgELim6g+w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594295341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=n/+Hq2OK1EfVodCGmSK8xZprN98olqCNxMqvpIq5Nt4=;
+        b=EWQJ2mzY07zbTBYIOt3T01wgtud1AQNbQyHydDQVl9HwMFdA7zi2wN+f1cCyYSHV7xinv6
+        LTXVZ+bIZv0VHKBQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kaitao Cheng <pilgrimtao@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] kernel/smp: Fix an off by one in csd_lock_wait_toolong()
+Message-ID: <20200709114900.b475kfqz3447zgfg@linutronix.de>
+References: <20200709104818.GC20875@mwanda>
+ <20200709105906.GR597537@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200709043840.4189530-1-krisman@collabora.com>
+In-Reply-To: <20200709105906.GR597537@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 12:38:40AM -0400, Gabriel Krisman Bertazi wrote:
-> The proposed interface looks like this:
+On 2020-07-09 12:59:06 [+0200], Peter Zijlstra wrote:
+> On Thu, Jul 09, 2020 at 01:48:18PM +0300, Dan Carpenter wrote:
+> > The __per_cpu_offset[] array has "nr_cpu_ids" elements so change the >
+> > >= to prevent a read one element beyond the end of the array.
+> > 
+> > Fixes: 0504bc41a62c ("kernel/smp: Provide CSD lock timeout diagnostics")
 > 
->   prctl(PR_SET_SYSCALL_USER_DISPATCH, <op>, <dispatcher>, [selector])
+> I don't have a copy of that patch in my inbox, even though it says Cc:
+> me.
 > 
-> Dispatcher is the address of a syscall instruction that is allowed to
-> by-pass the blockage, such that in fast paths you don't need to disable
-> the trap nor check the selector.  This is essential to return from
-> SIGSYS to a blocked area without triggering another SIGSYS from the
-> rt_sigreturn.
+> Paul, where do you expect that patch to go? The version I see from my
+> next tree needs a _lot_ of work.
 
-Should <dispatcher> be a single pointer or should the interface specify
-a range from which syscalls may be made without being redirected?  eg,
-one could specify the whole of libc.
+There is also
+ 
+ https://lkml.kernel.org/r/20200705082603.GX3874@shao2-debian
+ https://lkml.kernel.org/r/00000000000042f21905a991ecea@google.com
 
-prctl(PR_SET_SYSCALL_USER_DISPATCH, <op>, <start>, <inclusive-end>, [selector])
+it might be the same thing.
 
-> +++ b/include/linux/syscall_user_dispatch.h
-> @@ -0,0 +1,45 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _SYSCALL_USER_DISPATCH_H
-> +#define _SYSCALL_USER_DISPATCH_H
-> +
-> +struct task_struct;
-> +static void clear_tsk_thread_flag(struct task_struct *tsk, int flag);
-> +
-> +#ifdef CONFIG_SYSCALL_USER_DISPATCH
-> +struct syscall_user_dispatch {
-> +	int __user *selector;
-> +	unsigned long __user dispatcher;
-
-The __user annotation is on the pointer, not the value.  ie, it's
-
-	unsigned long foo;
-	unsigned long __user *p;
-
-	get_user(foo, p)
-
-> +++ b/include/uapi/asm-generic/siginfo.h
-> @@ -285,6 +285,7 @@ typedef struct siginfo {
->   */
->  #define SYS_SECCOMP	1	/* seccomp triggered */
->  #define NSIGSYS		1
-> +#define SYS_USER_REDIRECT 2
-
-I'd suggest that SYS_USER_REDIRECT should be moved up by one line.
-
-> +int set_syscall_user_dispatch(int mode, unsigned long __user dispatcher,
-> +			      int __user *selector)
-> +{
-> +	switch (mode) {
-> +	case PR_SYSCALL_DISPATCH_DISABLE:
-> +		if (dispatcher || selector)
-> +			return -EINVAL;
-> +		break;
-> +	case PR_SYSCALL_DISPATCH_ENABLE:
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (selector) {
-> +		if (!access_ok(selector, sizeof(int)))
-> +			return -EFAULT;
-> +	}
-
-You're not enforcing the alignment requirement here.  
-
-> +	spin_lock_irq(&current->sighand->siglock);
-> +
-> +	current->syscall_dispatch.selector = selector;
-> +	current->syscall_dispatch.dispatcher = dispatcher;
-> +
-> +	/* make sure fastlock is committed before setting the flag. */
-
-fastlock?  ;-)
-I don't think you actually need this.  You're setting per-thread state on
-yourself, so what's the race that you're concerned about?
-
-> +	smp_mb__before_atomic();
-> +
-> +	if (mode == PR_SYSCALL_DISPATCH_ENABLE)
-> +		set_tsk_thread_flag(current, TIF_SYSCALL_USER_DISPATCH);
-> +	else
-> +		clear_tsk_thread_flag(current, TIF_SYSCALL_USER_DISPATCH);
-> +
-> +	spin_unlock_irq(&current->sighand->siglock);
-> +
-> +	return 0;
-> +}
-> -- 
-> 2.27.0
-> 
+Sebastian
