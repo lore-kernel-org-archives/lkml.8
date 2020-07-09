@@ -2,230 +2,129 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2331EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1653AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00A9A2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594296657;
-	bh=B9DiarjoS7dtdUdozXYKFnMARuvylV0tyZzffRUfgh0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0Iww7MsP/CPWWV56LI7mt7cU+p+xqPnt0hr5Kwbp6XYvHqJO4BKRIxQxCYz/qB7sZ
-	 0PlrmwpXhk8jW4KzjldAQgZMW2RoaPERvc8Ijlp5aZ92uMEfWLJv8wbFhNhw17qxCH
-	 MwIYRVtSCPX1elHucRZDmWDcy3/kcWLl6MB27+eo=
+	by mail.kernel.org (Postfix) with ESMTP id EE0B02074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgGIMKz (ORCPT
+        id S1727793AbgGIMOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:10:55 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43453 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgGIMKz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:10:55 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 95so1497874otw.10;
-        Thu, 09 Jul 2020 05:10:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YOjL0UML2dSKlLSP/sqPvKmua2zfxEU3z20Tax7E+dU=;
-        b=Ycmt5KN1TlQ92MyNOHAfWi9PllW2dIhKvgxhzggdU4bznyc5v+Z3rY0RcnxCC4gS/p
-         X2MTr/juJKDsz9P3DNEaZhNfsxazLxGSadLX1NlnyuP4yjYG3fTm9MoxYxFrV9yVy8hK
-         x3g7pEAPMHoQc/tK+AAWPBpKOIAzJZ1AIDAmXvCBmb4g243I3FJJBTEriZreS/NFHqdS
-         jryxS07CEXF9hFr8oWBLAefKwXPAZy+SrvVTa4kP38p8T9ujNzH/yyHl9HzOhMJp7Xlp
-         WTAkJ5TTeqeT8VPqiBf+P5lu9c3JRxBrNBniFxsGNDZ0+uxllQtlFE23JVWwYaQrWo9t
-         zffw==
-X-Gm-Message-State: AOAM5329nuxqcoMscbRHC8oC2v4QQ/jeSOAA/3ixqjiMIL4uQnG7tjOh
-        42MfTpxeBtF8PAfuGIXBzPDB3XU4w/Qc4wUWkD8=
-X-Google-Smtp-Source: ABdhPJzrdCIXJtWpQ57B//JafGA2Ik24qTnJZ4xpWpyPvoIKWIHmwlPcOqcrf6uegkz7DGv/y4jHGoguZ6n44qDt5Cw=
-X-Received: by 2002:a9d:590a:: with SMTP id t10mr17147901oth.262.1594296653915;
- Thu, 09 Jul 2020 05:10:53 -0700 (PDT)
+        Thu, 9 Jul 2020 08:14:25 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2635 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726767AbgGIMOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:14:25 -0400
+Received: from dggemi405-hub.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id E4763ECEA0ED564B8AD5;
+        Thu,  9 Jul 2020 20:14:19 +0800 (CST)
+Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.177]) by
+ dggemi405-hub.china.huawei.com ([10.3.17.143]) with mapi id 14.03.0487.000;
+ Thu, 9 Jul 2020 20:14:09 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+        Mahipal Challa <mahipalreddy2006@gmail.com>,
+        Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        "Colin Ian King" <colin.king@canonical.com>
+Subject: RE: [PATCH v4] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Thread-Topic: [PATCH v4] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Thread-Index: AQHWVF24fP2q5El5/U63jMMAkQc326j9QfAAgADy42CAAB5FAIAAvkpA
+Date:   Thu, 9 Jul 2020 12:14:08 +0000
+Message-ID: <B926444035E5E2439431908E3842AFD25623E4@DGGEMI525-MBS.china.huawei.com>
+References: <20200707125210.33256-1-song.bao.hua@hisilicon.com>
+ <20200708145934.4w3qk53mgavyyln7@linutronix.de>
+ <B926444035E5E2439431908E3842AFD2560DE6@DGGEMI525-MBS.china.huawei.com>
+ <20200709071714.32m7hatmkr4pk2f4@linutronix.de>
+In-Reply-To: <20200709071714.32m7hatmkr4pk2f4@linutronix.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.202.83]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200707200937.GA5056@embeddedor>
-In-Reply-To: <20200707200937.GA5056@embeddedor>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 9 Jul 2020 14:10:41 +0200
-Message-ID: <CAJZ5v0jv-or+gTy2u4hS3Zv6T6XwEqXuifygy5ZoXe8mMEZzbw@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: Use fallthrough pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 10:04 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> fall-through markings when it is the case.
->
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Applied as 5.9 material, thanks!
-
-> ---
->  drivers/acpi/ac.c             |    2 +-
->  drivers/acpi/acpi_processor.c |    2 +-
->  drivers/acpi/button.c         |    2 +-
->  drivers/acpi/dock.c           |    2 +-
->  drivers/acpi/evged.c          |    2 +-
->  drivers/acpi/processor_idle.c |    3 +--
->  drivers/acpi/resource.c       |    2 +-
->  drivers/acpi/spcr.c           |    4 ++--
->  drivers/pci/pci-acpi.c        |    6 +++---
->  9 files changed, 12 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/acpi/ac.c b/drivers/acpi/ac.c
-> index 69d2db13886b..2dfa08f939c6 100644
-> --- a/drivers/acpi/ac.c
-> +++ b/drivers/acpi/ac.c
-> @@ -236,7 +236,7 @@ static void acpi_ac_notify(struct acpi_device *device, u32 event)
->         default:
->                 ACPI_DEBUG_PRINT((ACPI_DB_INFO,
->                                   "Unsupported event [0x%x]\n", event));
-> -       /* fall through */
-> +               fallthrough;
->         case ACPI_AC_NOTIFY_STATUS:
->         case ACPI_NOTIFY_BUS_CHECK:
->         case ACPI_NOTIFY_DEVICE_CHECK:
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-> index 5379bc3f275d..b51ddf3bb616 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -79,7 +79,7 @@ static int acpi_processor_errata_piix4(struct pci_dev *dev)
->                  * PIIX4 models.
->                  */
->                 errata.piix4.throttle = 1;
-> -               /* fall through*/
-> +               fallthrough;
->
->         case 2:         /* PIIX4E */
->         case 3:         /* PIIX4M */
-> diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-> index 3c35e57dd854..a4eda7fe50d3 100644
-> --- a/drivers/acpi/button.c
-> +++ b/drivers/acpi/button.c
-> @@ -405,7 +405,7 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
->         switch (event) {
->         case ACPI_FIXED_HARDWARE_EVENT:
->                 event = ACPI_BUTTON_NOTIFY_STATUS;
-> -               /* fall through */
-> +               fallthrough;
->         case ACPI_BUTTON_NOTIFY_STATUS:
->                 input = button->input;
->                 if (button->type == ACPI_BUTTON_TYPE_LID) {
-> diff --git a/drivers/acpi/dock.c b/drivers/acpi/dock.c
-> index e3414131bfca..9bd72c26ef46 100644
-> --- a/drivers/acpi/dock.c
-> +++ b/drivers/acpi/dock.c
-> @@ -469,7 +469,7 @@ int dock_notify(struct acpi_device *adev, u32 event)
->                 surprise_removal = 1;
->                 event = ACPI_NOTIFY_EJECT_REQUEST;
->                 /* Fall back */
-> -               /* fall through */
-> +               fallthrough;
->         case ACPI_NOTIFY_EJECT_REQUEST:
->                 begin_undock(ds);
->                 if ((immediate_undock && !(ds->flags & DOCK_IS_ATA))
-> diff --git a/drivers/acpi/evged.c b/drivers/acpi/evged.c
-> index ccd900690b6f..b1a7f8d6965e 100644
-> --- a/drivers/acpi/evged.c
-> +++ b/drivers/acpi/evged.c
-> @@ -106,7 +106,7 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
->
->                 if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
->                         break;
-> -               /* fall through */
-> +               fallthrough;
->         default:
->                 if (ACPI_SUCCESS(acpi_get_handle(handle, "_EVT", &evt_handle)))
->                         break;
-> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-> index 75534c5b5433..9325feaac5f8 100644
-> --- a/drivers/acpi/processor_idle.c
-> +++ b/drivers/acpi/processor_idle.c
-> @@ -203,8 +203,7 @@ static void tsc_check_state(int state)
->                  */
->                 if (boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
->                         return;
-> -
-> -               /*FALL THROUGH*/
-> +               fallthrough;
->         default:
->                 /* TSC could halt in idle, so notify users */
->                 if (state > ACPI_STATE_C1)
-> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-> index 3b4448972374..ad04824ca3ba 100644
-> --- a/drivers/acpi/resource.c
-> +++ b/drivers/acpi/resource.c
-> @@ -373,7 +373,7 @@ unsigned int acpi_dev_get_irq_type(int triggering, int polarity)
->         case ACPI_ACTIVE_BOTH:
->                 if (triggering == ACPI_EDGE_SENSITIVE)
->                         return IRQ_TYPE_EDGE_BOTH;
-> -               /* fall through */
-> +               fallthrough;
->         default:
->                 return IRQ_TYPE_NONE;
->         }
-> diff --git a/drivers/acpi/spcr.c b/drivers/acpi/spcr.c
-> index d73b4535e79d..88460bacd5ae 100644
-> --- a/drivers/acpi/spcr.c
-> +++ b/drivers/acpi/spcr.c
-> @@ -111,7 +111,7 @@ int __init acpi_parse_spcr(bool enable_earlycon, bool enable_console)
->                         table->serial_port.access_width))) {
->                 default:
->                         pr_err("Unexpected SPCR Access Width.  Defaulting to byte size\n");
-> -                       /* fall through */
-> +                       fallthrough;
->                 case 8:
->                         iotype = "mmio";
->                         break;
-> @@ -128,7 +128,7 @@ int __init acpi_parse_spcr(bool enable_earlycon, bool enable_console)
->         switch (table->interface_type) {
->         case ACPI_DBG2_ARM_SBSA_32BIT:
->                 iotype = "mmio32";
-> -               /* fall through */
-> +               fallthrough;
->         case ACPI_DBG2_ARM_PL011:
->         case ACPI_DBG2_ARM_SBSA_GENERIC:
->         case ACPI_DBG2_BCM2835:
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 7224b1e5f2a8..0d85025c55fd 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -527,8 +527,8 @@ static void program_hpx_type3_register(struct pci_dev *dev,
->                         return;
->
->                 break;
-> -       case HPX_CFG_VEND_CAP:  /* Fall through */
-> -       case HPX_CFG_DVSEC:     /* Fall through */
-> +       case HPX_CFG_VEND_CAP:
-> +       case HPX_CFG_DVSEC:
->         default:
->                 pci_warn(dev, "Encountered _HPX type 3 with unsupported config space location");
->                 return;
-> @@ -1001,7 +1001,7 @@ static int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
->                         error = -EBUSY;
->                         break;
->                 }
-> -               /* Fall through */
-> +               fallthrough;
->         case PCI_D0:
->         case PCI_D1:
->         case PCI_D2:
->
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtY3J5cHRvLW93
+bmVyQHZnZXIua2VybmVsLm9yZw0KPiBbbWFpbHRvOmxpbnV4LWNyeXB0by1vd25lckB2Z2VyLmtl
+cm5lbC5vcmddIE9uIEJlaGFsZiBPZiBTZWJhc3RpYW4gQW5kcnplag0KPiBTaWV3aW9yDQo+IFNl
+bnQ6IFRodXJzZGF5LCBKdWx5IDksIDIwMjAgNzoxNyBQTQ0KPiBUbzogU29uZyBCYW8gSHVhIChC
+YXJyeSBTb25nKSA8c29uZy5iYW8uaHVhQGhpc2lsaWNvbi5jb20+DQo+IENjOiBha3BtQGxpbnV4
+LWZvdW5kYXRpb24ub3JnOyBoZXJiZXJ0QGdvbmRvci5hcGFuYS5vcmcuYXU7DQo+IGRhdmVtQGRh
+dmVtbG9mdC5uZXQ7IGxpbnV4LWNyeXB0b0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LW1tQGt2YWNr
+Lm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgTGludXhhcm0gPGxpbnV4YXJt
+QGh1YXdlaS5jb20+OyBMdWlzIENsYXVkaW8NCj4gUiAuIEdvbmNhbHZlcyA8bGdvbmNhbHZAcmVk
+aGF0LmNvbT47IE1haGlwYWwgQ2hhbGxhDQo+IDxtYWhpcGFscmVkZHkyMDA2QGdtYWlsLmNvbT47
+IFNldGggSmVubmluZ3MgPHNqZW5uaW5nQHJlZGhhdC5jb20+Ow0KPiBEYW4gU3RyZWV0bWFuIDxk
+ZHN0cmVldEBpZWVlLm9yZz47IFZpdGFseSBXb29sDQo+IDx2aXRhbHkud29vbEBrb25zdWxrby5j
+b20+OyBXYW5nemhvdSAoQikgPHdhbmd6aG91MUBoaXNpbGljb24uY29tPjsNCj4gQ29saW4gSWFu
+IEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
+NF0gbW0venN3YXA6IG1vdmUgdG8gdXNlIGNyeXB0b19hY29tcCBBUEkgZm9yDQo+IGhhcmR3YXJl
+IGFjY2VsZXJhdGlvbg0KPiANCj4gT24gMjAyMC0wNy0wOCAyMTo0NTo0NyBbKzAwMDBdLCBTb25n
+IEJhbyBIdWEgKEJhcnJ5IFNvbmcpIHdyb3RlOg0KPiA+ID4gT24gMjAyMC0wNy0wOCAwMDo1Mjox
+MCBbKzEyMDBdLCBCYXJyeSBTb25nIHdyb3RlOg0KPiA+ID4gPiBAQCAtMTI3LDkgKzEyOSwxNyBA
+QA0KPiA+ID4gPiArc3RydWN0IGNyeXB0b19hY29tcF9jdHggew0KPiA+ID4gPiArCXN0cnVjdCBj
+cnlwdG9fYWNvbXAgKmFjb21wOw0KPiA+ID4gPiArCXN0cnVjdCBhY29tcF9yZXEgKnJlcTsNCj4g
+PiA+ID4gKwlzdHJ1Y3QgY3J5cHRvX3dhaXQgd2FpdDsNCj4gPiA+ID4gKwl1OCAqZHN0bWVtOw0K
+PiA+ID4gPiArCXN0cnVjdCBtdXRleCBtdXRleDsNCj4gPiA+ID4gK307DQo+ID4gPiDigKYNCj4g
+PiA+ID4gQEAgLTEwNzQsMTIgKzExMzgsMzIgQEAgc3RhdGljIGludCB6c3dhcF9mcm9udHN3YXBf
+c3RvcmUodW5zaWduZWQNCj4gPiA+IHR5cGUsIHBnb2ZmX3Qgb2Zmc2V0LA0KPiA+ID4gPiAgCX0N
+Cj4gPiA+ID4NCj4gPiA+ID4gIAkvKiBjb21wcmVzcyAqLw0KPiA+ID4gPiAtCWRzdCA9IGdldF9j
+cHVfdmFyKHpzd2FwX2RzdG1lbSk7DQo+ID4gPiA+IC0JdGZtID0gKmdldF9jcHVfcHRyKGVudHJ5
+LT5wb29sLT50Zm0pOw0KPiA+ID4gPiAtCXNyYyA9IGttYXBfYXRvbWljKHBhZ2UpOw0KPiA+ID4g
+PiAtCXJldCA9IGNyeXB0b19jb21wX2NvbXByZXNzKHRmbSwgc3JjLCBQQUdFX1NJWkUsIGRzdCwg
+JmRsZW4pOw0KPiA+ID4gPiAtCWt1bm1hcF9hdG9taWMoc3JjKTsNCj4gPiA+ID4gLQlwdXRfY3B1
+X3B0cihlbnRyeS0+cG9vbC0+dGZtKTsNCj4gPiA+ID4gKwlhY29tcF9jdHggPSAqdGhpc19jcHVf
+cHRyKGVudHJ5LT5wb29sLT5hY29tcF9jdHgpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJbXV0ZXhf
+bG9jaygmYWNvbXBfY3R4LT5tdXRleCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlzcmMgPSBrbWFw
+KHBhZ2UpOw0KPiA+ID4gPiArCWRzdCA9IGFjb21wX2N0eC0+ZHN0bWVtOw0KPiA+ID4NCj4gPiA+
+IHRoYXQgbXV0ZXggaXMgcGVyLUNQVSwgcGVyLWNvbnRleHQuIFRoZSBkc3RtZW0gcG9pbnRlciBp
+cyBwZXItQ1BVLg0KPiA+ID4gU28gaWYgSSByZWFkIHRoaXMgcmlnaHQsIHlvdSBjYW4gZ2V0IHBy
+ZWVtcHRlZCBhZnRlcg0KPiA+ID4gY3J5cHRvX3dhaXRfcmVxKCkgYW5kIGFub3RoZXIgY29udGV4
+dCBpbiB0aGlzIENQVSB3cml0ZXMgaXRzIGRhdGEgdG8NCj4gPiA+IHRoZSBzYW1lIGRzdG1lbSBh
+bmQgdGhlbuKApg0KPiA+ID4NCj4gPg0KPiA+IFRoaXMgaXNuJ3QgdHJ1ZS4gQW5vdGhlciB0aHJl
+YWQgaW4gdGhpcyBjcHUgd2lsbCBiZSBibG9ja2VkIGJ5IHRoZSBtdXRleC4NCj4gPiBJdCBpcyBp
+bXBvc3NpYmxlIGZvciB0d28gdGhyZWFkcyB0byB3cml0ZSB0aGUgc2FtZSBkc3RtZW0uDQo+ID4g
+SWYgdGhyZWFkMSByYW4gb24gY3B1MSwgaXQgaGVsZCBjcHUxJ3MgbXV0ZXg7IGlmIGFub3RoZXIg
+dGhyZWFkIHdhbnRzIHRvIHJ1bg0KPiBvbiBjcHUxLCBpdCBpcyBibG9ja2VkLg0KPiA+IElmIHRo
+cmVhZDEgcmFuIG9uIGNwdTEgZmlyc3QsIGl0IGhlbGQgY3B1MSdzIG11dGV4LCB0aGVuIGl0IG1p
+Z3JhdGVkIHRvIGNwdTINCj4gKHdpdGggdmVyeSByYXJlIGNoYW5jZSkNCj4gPiAJYS4gaWYgYW5v
+dGhlciB0aHJlYWQgd2FudHMgdG8gcnVuIG9uIGNwdTEsIGl0IGlzIGJsb2NrZWQ7DQo+IA0KPiBI
+b3cgaXQgaXMgYmxvY2tlZD8gVGhhdCAic3RydWN0IGNyeXB0b19hY29tcF9jdHgiIGlzDQo+ICJ0
+aGlzX2NwdV9wdHIoZW50cnktPnBvb2wtPmFjb21wX2N0eCkiIC0gd2hpY2ggaXMgcGVyLUNQVSBv
+ZiBhIHBvb2wgd2hpY2gNCj4geW91IGNhbiBoYXZlIG11bHRpcGxlIG9mLiBCdXQgYGRzdG1lbScg
+eW91IGhhdmUgb25seSBvbmUgcGVyLUNQVSBubyBtYXR0ZXINCj4gaGF2ZSBtYW55IHBvb2xzIHlv
+dSBoYXZlLg0KPiBTbyBwb29sMSBvbiBDUFUxIHVzZXMgdGhlIHNhbWUgYGRzdG1lbScgYXMgcG9v
+bDIgb24gQ1BVMS4gQnV0IHBvb2wxIGFuZA0KPiBwb29sMiBvbiBDUFUxIHVzZSBhIGRpZmZlcmVu
+dCBtdXRleCBmb3IgcHJvdGVjdGlvbiBvZiB0aGlzIGBkc3RtZW0nLg0KDQpHb29kIGNhdGNoLCBT
+ZWJhc3RpYW4sIHRoYW5rcyENCnRoaXMgaXMgYSBjb3JuZXIgY2FzZSB0ZXN0aW5nIGhhcyBub3Qg
+ZW5jb3VudGVyZWQgeWV0LiBUaGVyZSBpcyBhIHJhY2UgaWYgd2UgY2hhbmdlIHRoZSBwb29sIHR5
+cGUgYXQgcnVudGltZS4NClR5cGljYWxseSwgYSBncm91cCBvZiBpbml0aWFsIHBhcmFtZXRlcnMg
+d2VyZSBzZXQsIHRoZW4gc29mdHdhcmUgd3JvdGUvcmVhZCBsb3RzIG9mIGFub24gcGFnZXMgdG8g
+Z2VuZXJhdGUNCnN3YXBwaW5nIGFzIGJ1c3kgYXMgcG9zc2libGUuIEJ1dCBuZXZlciB0cmllZCB0
+byBjaGFuZ2UgdGhlIGNvbXByZXNzb3IvcG9vbCB0eXBlIGF0IHJ1bnRpbWUuDQoNCndpbGwgYWRk
+cmVzcyB0aGlzIHByb2JsZW0gaW4gdjUgd2l0aCB0aGUgY2xlYW51cCBvZiBhY29tcF9jdHggcG9p
+bnRlciBpbiB6c3dhcF9wb29sLiBJIG1lYW4gdG8NCmNyZWF0ZSBhY29tcCBpbnN0YW50cyBmb3Ig
+cGVyLWNwdSwgbm90IGZvciAocG9vbHMgKiBwZXItY3B1KS4NCg0KVGhhbmtzDQpCYXJyeQ0K
