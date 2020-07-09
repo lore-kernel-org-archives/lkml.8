@@ -2,104 +2,156 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BED9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2997C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169A62070E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB5920774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594338440;
+	bh=OT96AVW7dJpU8dtXiPhq8DRD9xyjEQQqqS2i/k1BEV4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=KDd2WaLSlldC9Oxl5bvDfwMGFgeJCM2Lr4OWyYBU5xvKNxCf6tZsaNV6oKvnEqlcF
+	 GumA5Wp4g4Gthk5o3w90YkDCOpkrMQf8HbySwiuvnPvGGN21qyJVRPf8xLT2KIcVQS
+	 SSYqmLm64u7MLmaNfmquRE32NgLIKzVF1CDnoC4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgGIXpq (ORCPT
+        id S1726816AbgGIXrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:45:46 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2569 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726433AbgGIXpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:45:46 -0400
-Received: from dggemi402-hub.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 40CF658EE18A1E123377;
-        Fri, 10 Jul 2020 07:45:43 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.177]) by
- dggemi402-hub.china.huawei.com ([10.3.17.135]) with mapi id 14.03.0487.000;
- Fri, 10 Jul 2020 07:45:34 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Roman Gushchin <guro@fb.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Jonathan Cameron" <jonathan.cameron@huawei.com>
-Subject: RE: [PATCH v3] mm/hugetlb: avoid hardcoding while checking if cma
- is enable
-Thread-Topic: [PATCH v3] mm/hugetlb: avoid hardcoding while checking if cma
- is enable
-Thread-Index: AQHWVBOoulIbQRW0JUWzWUpoYRXjrqj8AzOAgAFtnQCAABEKgIAAvWLggADYSICAANMYAA==
-Date:   Thu, 9 Jul 2020 23:45:33 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD256460F@DGGEMI525-MBS.china.huawei.com>
-References: <20200707040204.30132-1-song.bao.hua@hisilicon.com>
- <20200707125641.dbd2ccd63f525aa5870069d8@linux-foundation.org>
- <9066e009-5ed2-1992-d70d-fd27b4bf5871@oracle.com>
- <20200708184615.GA251665@carbon.dhcp.thefacebook.com>
- <B926444035E5E2439431908E3842AFD2560E41@DGGEMI525-MBS.china.huawei.com>
- <b2a98ab7-0a36-ad3d-f40d-1cc9216c7961@oracle.com>
-In-Reply-To: <b2a98ab7-0a36-ad3d-f40d-1cc9216c7961@oracle.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.200.68]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 9 Jul 2020 19:47:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726433AbgGIXrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 19:47:19 -0400
+Received: from embeddedor (unknown [201.162.245.14])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E7FB2070E;
+        Thu,  9 Jul 2020 23:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594338438;
+        bh=OT96AVW7dJpU8dtXiPhq8DRD9xyjEQQqqS2i/k1BEV4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OCtKc7u0PsBM4vy6AqblDDEdsjTNBLqx2j8dj+Owo+rjakAKcKVv0vhgD3xaDink8
+         I0n6/1U9mqtsjcRuJN7lfDx7iqz9sx5KlB4Rhbtexo7VPdUNJVdCROvaIUjrje4Myf
+         dqM5/eDuxFdc9FLK31uAu7GIqoRdIe0NkFhBQUHI=
+Date:   Thu, 9 Jul 2020 18:52:50 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH v2][next] IB/hfi1: Remove unnecessary fall-through markings
+Message-ID: <20200709235250.GA26678@embeddedor>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWlrZSBLcmF2ZXR6IFtt
-YWlsdG86bWlrZS5rcmF2ZXR6QG9yYWNsZS5jb21dDQo+IFNlbnQ6IEZyaWRheSwgSnVseSAxMCwg
-MjAyMCA2OjU4IEFNDQo+IFRvOiBTb25nIEJhbyBIdWEgKEJhcnJ5IFNvbmcpIDxzb25nLmJhby5o
-dWFAaGlzaWxpY29uLmNvbT47IFJvbWFuDQo+IEd1c2hjaGluIDxndXJvQGZiLmNvbT4NCj4gQ2M6
-IEFuZHJldyBNb3J0b24gPGFrcG1AbGludXgtZm91bmRhdGlvbi5vcmc+OyBsaW51eC1tbUBrdmFj
-ay5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IExpbnV4YXJtIDxsaW51eGFy
-bUBodWF3ZWkuY29tPjsgSm9uYXRoYW4NCj4gQ2FtZXJvbiA8am9uYXRoYW4uY2FtZXJvbkBodWF3
-ZWkuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzXSBtbS9odWdldGxiOiBhdm9pZCBoYXJk
-Y29kaW5nIHdoaWxlIGNoZWNraW5nIGlmIGNtYQ0KPiBpcyBlbmFibGUNCj4gDQo+IExvb2tzIGxp
-a2UgdGhpcyBwcm9kdWNlZCBhIHdhcm5pbmcgaW4gbGludXgtbmV4dC4gIEkgc3VzcGVjdCBpdCBp
-cyBkdWUgdG8gdGhlDQo+IGNvbWJpbmF0aW9uIENPTkZJR19IVUdFVExCX1BBR0UgJiYgIUNPTkZJ
-R19DTUEuDQo+IA0KPiBJbnN0ZWFkIG9mIGFkZGluZyB0aGUgcm91dGluZSBodWdldGxiX2NtYV9l
-bmFibGVkKCkgdG8gc2NhbiB0aGUgaHVnZXRsYl9jbWENCj4gYXJyYXksIGNvdWxkIHdlIGp1c3Qg
-dXNlIGEgYm9vbGVhbiBhcyBmb2xsb3dzPyAgSXQgY2FuIHNpbXBseSBiZSBzZXQgaW4NCj4gaHVn
-ZXRsYl9jbWFfcmVzZXJ2ZSB3aGVuIHdlIHJlc2VydmUgQ01BLg0KDQpNYXliZSBqdXN0IHVzZSBo
-dWdldGxiX2NtYV9zaXplPyBJZiBodWdldGxiX2NtYV9zaXplIGlzIG5vdCAwLCBzb21lb25lIGlz
-IHRyeWluZyB0byB1c2UNCmNtYSwgdGhlbiBib290bWVtIGZvciBnaWdhbnRpYyBwYWdlcyB3aWxs
-IGJlIHRvdGFsbHkgaWdub3JlZCBhY2NvcmRpbmcgdG8gZGlzY3Vzc2lvbiBoZXJlOg0KaHR0cHM6
-Ly9sa21sLm9yZy9sa21sLzIwMjAvNy84LzEyODgNCg0KaWYgc29tZWJvZHkgc2V0cyBhIHdyb25n
-IGh1Z2V0bGJfY21hX3NpemUgd2hpY2ggY2F1c2VzIHRoYXQgY21hIGlzIG5vdCByZXNlcnZlZC4g
-DQpJdCBpcyB0aGUgZmF1bHQgb2YgdXNlcnM/IFdlIGp1c3QgbmVlZCB0byBkb2N1bWVudCBodWdl
-dGxiX2NtYSB3aWxsIG92ZXJ3cml0ZSBib290bWVtDQpyZXNlcnZhdGlvbnM/DQoNCj4gLS0NCj4g
-TWlrZSBLcmF2ZXR6DQo+IA0KPiBkaWZmIC0tZ2l0IGEvbW0vaHVnZXRsYi5jIGIvbW0vaHVnZXRs
-Yi5jDQo+IGluZGV4IGZhYjQ0ODViOWU1Mi4uOTJjYjg4MmNmMjg3IDEwMDY0NA0KPiAtLS0gYS9t
-bS9odWdldGxiLmMNCj4gKysrIGIvbW0vaHVnZXRsYi5jDQo+IEBAIC00Niw2ICs0Niw3IEBAIHVu
-c2lnbmVkIGludCBkZWZhdWx0X2hzdGF0ZV9pZHg7DQo+ICBzdHJ1Y3QgaHN0YXRlIGhzdGF0ZXNb
-SFVHRV9NQVhfSFNUQVRFXTsNCj4gDQo+ICBzdGF0aWMgc3RydWN0IGNtYSAqaHVnZXRsYl9jbWFb
-TUFYX05VTU5PREVTXTsNCj4gK3N0YXRpYyBib29sIGh1Z2V0bGJfY21hX2VuYWJsZWQgPSBmYWxz
-ZTsNCj4gDQo+ICAvKg0KPiAgICogTWluaW11bSBwYWdlIG9yZGVyIGFtb25nIHBvc3NpYmxlIGh1
-Z2VwYWdlIHNpemVzLCBzZXQgdG8gYSBwcm9wZXIgdmFsdWUNCj4gQEAgLTI1NzEsNyArMjU3Miw3
-IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBodWdldGxiX2hzdGF0ZV9hbGxvY19wYWdlcyhzdHJ1Y3QN
-Cj4gaHN0YXRlICpoKQ0KPiANCj4gIAlmb3IgKGkgPSAwOyBpIDwgaC0+bWF4X2h1Z2VfcGFnZXM7
-ICsraSkgew0KPiAgCQlpZiAoaHN0YXRlX2lzX2dpZ2FudGljKGgpKSB7DQo+IC0JCQlpZiAoSVNf
-RU5BQkxFRChDT05GSUdfQ01BKSAmJiBodWdldGxiX2NtYVswXSkgew0KPiArCQkJaWYgKGh1Z2V0
-bGJfY21hX2VuYWJsZWQpIHsNCj4gIAkJCQlwcl93YXJuX29uY2UoIkh1Z2VUTEI6IGh1Z2V0bGJf
-Y21hIGlzIGVuYWJsZWQsIHNraXANCj4gYm9vdCB0aW1lIGFsbG9jYXRpb25cbiIpOw0KPiAgCQkJ
-CWJyZWFrOw0KPiAgCQkJfQ0KPiBAQCAtNTcwOCw2ICs1NzA5LDcgQEAgdm9pZCBfX2luaXQgaHVn
-ZXRsYl9jbWFfcmVzZXJ2ZShpbnQgb3JkZXIpDQo+ICAJCXJlc2VydmVkICs9IHNpemU7DQo+ICAJ
-CXByX2luZm8oImh1Z2V0bGJfY21hOiByZXNlcnZlZCAlbHUgTWlCIG9uIG5vZGUgJWRcbiIsDQo+
-ICAJCQlzaXplIC8gU1pfMU0sIG5pZCk7DQo+ICsJCWh1Z2V0bGJfY21hX2VuYWJsZWQgPSB0cnVl
-Ow0KPiANCj4gIAkJaWYgKHJlc2VydmVkID49IGh1Z2V0bGJfY21hX3NpemUpDQo+ICAJCQlicmVh
-azsNCg0KVGhhbmtzDQpCYXJyeQ0KDQo=
+Reorganize the code a bit in a more standard way[1] and remove
+unnecessary fall-through markings.
+
+[1] https://lore.kernel.org/lkml/20200708054703.GR207186@unreal/
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Remove additional overlooked fall-through markings.
+
+ drivers/infiniband/hw/hfi1/chip.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index 15f9c635f292..7eaf99538216 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -7317,11 +7317,11 @@ static u16 link_width_to_bits(struct hfi1_devdata *dd, u16 width)
+ 	case 1: return OPA_LINK_WIDTH_1X;
+ 	case 2: return OPA_LINK_WIDTH_2X;
+ 	case 3: return OPA_LINK_WIDTH_3X;
++	case 4: return OPA_LINK_WIDTH_4X;
+ 	default:
+ 		dd_dev_info(dd, "%s: invalid width %d, using 4\n",
+ 			    __func__, width);
+-		/* fall through */
+-	case 4: return OPA_LINK_WIDTH_4X;
++		return OPA_LINK_WIDTH_4X;
+ 	}
+ }
+ 
+@@ -7376,12 +7376,13 @@ static void get_link_widths(struct hfi1_devdata *dd, u16 *tx_width,
+ 		case 0:
+ 			dd->pport[0].link_speed_active = OPA_LINK_SPEED_12_5G;
+ 			break;
++		case 1:
++			dd->pport[0].link_speed_active = OPA_LINK_SPEED_25G;
++			break;
+ 		default:
+ 			dd_dev_err(dd,
+ 				   "%s: unexpected max rate %d, using 25Gb\n",
+ 				   __func__, (int)max_rate);
+-			/* fall through */
+-		case 1:
+ 			dd->pport[0].link_speed_active = OPA_LINK_SPEED_25G;
+ 			break;
+ 		}
+@@ -12878,11 +12879,6 @@ static int init_cntrs(struct hfi1_devdata *dd)
+ static u32 chip_to_opa_lstate(struct hfi1_devdata *dd, u32 chip_lstate)
+ {
+ 	switch (chip_lstate) {
+-	default:
+-		dd_dev_err(dd,
+-			   "Unknown logical state 0x%x, reporting IB_PORT_DOWN\n",
+-			   chip_lstate);
+-		/* fall through */
+ 	case LSTATE_DOWN:
+ 		return IB_PORT_DOWN;
+ 	case LSTATE_INIT:
+@@ -12891,6 +12887,11 @@ static u32 chip_to_opa_lstate(struct hfi1_devdata *dd, u32 chip_lstate)
+ 		return IB_PORT_ARMED;
+ 	case LSTATE_ACTIVE:
+ 		return IB_PORT_ACTIVE;
++	default:
++		dd_dev_err(dd,
++			   "Unknown logical state 0x%x, reporting IB_PORT_DOWN\n",
++			   chip_lstate);
++		return IB_PORT_DOWN;
+ 	}
+ }
+ 
+@@ -12898,10 +12899,6 @@ u32 chip_to_opa_pstate(struct hfi1_devdata *dd, u32 chip_pstate)
+ {
+ 	/* look at the HFI meta-states only */
+ 	switch (chip_pstate & 0xf0) {
+-	default:
+-		dd_dev_err(dd, "Unexpected chip physical state of 0x%x\n",
+-			   chip_pstate);
+-		/* fall through */
+ 	case PLS_DISABLED:
+ 		return IB_PORTPHYSSTATE_DISABLED;
+ 	case PLS_OFFLINE:
+@@ -12914,6 +12911,10 @@ u32 chip_to_opa_pstate(struct hfi1_devdata *dd, u32 chip_pstate)
+ 		return IB_PORTPHYSSTATE_LINKUP;
+ 	case PLS_PHYTEST:
+ 		return IB_PORTPHYSSTATE_PHY_TEST;
++	default:
++		dd_dev_err(dd, "Unexpected chip physical state of 0x%x\n",
++			   chip_pstate);
++		return IB_PORTPHYSSTATE_DISABLED;
+ 	}
+ }
+ 
+-- 
+2.27.0
+
