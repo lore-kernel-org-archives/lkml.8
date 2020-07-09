@@ -3,200 +3,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6247AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4E92065D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3802065D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="F6JtPPCb";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="cHPPMpNb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5sjXUDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgGIHCx (ORCPT
+        id S1726302AbgGIHDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:02:53 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:62826 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726119AbgGIHCw (ORCPT
+        Thu, 9 Jul 2020 03:03:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgGIHD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:02:52 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06972Eso029737;
-        Thu, 9 Jul 2020 00:02:39 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=zUcU0fuqWQW2Og99sVvpJAvhULvftKGP8+rdpbIApWQ=;
- b=F6JtPPCbWXoaEv2jTtFYEFQuuTwO2VWq7jepK4RG/wuIUFMAyxGAWrpFCgBGbliDQguk
- 62ao0bTbghr3ziSBex5V8seFxgKEX1BYXWUJOFDQTKYmhpZy60xi+Nm4LLxIgtktVWkk
- EpGC4sNshPFszAvUzm+XSQGMXLI6xneAyryK2oYb4yTJ4hsy8mdJ83r0xeE98VuIM5xJ
- ag6ltP5KESpADVmqOUuO+OAcAjgTvfdMxri63kAlAZh+V2R22VQmEzUQex82hNzAMnJq
- TfeIvuTNWe93cyllT6DbTq8ytYctLhJwMtqxN+6TneFRmQ+qvVEnjQDP/+YQBPH94Zmb zg== 
-Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2050.outbound.protection.outlook.com [104.47.44.50])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 325k13t7g5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 00:02:39 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mOgm5IuB0BztQ7TmiIvLZNjPFvdcjbQOTRYTQavJJ9lT6x2FLVmbja3bMl+yRh2OVADdjb2sHrOrm90mu9T3gzBvvyYTk3z9pQAju5XjZLmLBRYhsBREhZC6+svA0ul6bWW4Ap7dy6/sF3RjE/0Ovw4X9cGBM+LTCTfIZIWkHrZod2WJTVOtBGjyTCFumUdL+2QxbutKxck0MgPv0l/1xUb0O9hQBdIfO6oMO1ZJUXYXkWD06m/vQX9aC4JxRMoO4WIjyuBhvrUq15MXckqvlBUApcs3xkc9+cS2EcN4Nux2fTukTnpKIWFBK3qUvNlY+Kfm0lK+HvWqa50Trrdg3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zUcU0fuqWQW2Og99sVvpJAvhULvftKGP8+rdpbIApWQ=;
- b=Fzw/uRIV3VUx/Sf3sJHqOd7SsSCH/YQeUV2cYeMcYDyGDgOY5wKDSo29xoK1ejvhlSvoTj4k7qwUge7zuu3obuaEDKHIDHNc84GzHWscVCEK3TfzGBWonzAi/3HNDchuqLJvBZJW36xeKVbsIqdX/CwjlKJCvE74a8XdkMbXfeF1q3nuDDkaZX5df+WgjWO43VunbnKuetmLrdy4dw5ihSGykq3ZzGb2Ymvz2UCqD9R9znB/8VSvVXZ51+rXJuW+L9XI47xwhTApyOdzhLA3kYzYS7Til5ArGryo5C8mbmX9uVd/8oMV2TwA8kSAqjm2FAdNe7X9/QPdNc+v8wK3Lw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zUcU0fuqWQW2Og99sVvpJAvhULvftKGP8+rdpbIApWQ=;
- b=cHPPMpNbu+pG3Qw2UmDJ+VlUmUw5P9tJXrrgf4aYt4e9QeT7XwrTazOF7DFq6pS+H2IHqgGiBwi84LV1YwtHsrRYYJTuTRtqnYJB+0Gl8gfyy0UwV/firlx0YifTPc0oK8HQXMsWg/iKPTc/8x7EgQW71745A/3l7RNxXApUMtc=
-Received: from DM6PR07MB6154.namprd07.prod.outlook.com (2603:10b6:5:17e::20)
- by DM6PR07MB6252.namprd07.prod.outlook.com (2603:10b6:5:179::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Thu, 9 Jul
- 2020 07:02:37 +0000
-Received: from DM6PR07MB6154.namprd07.prod.outlook.com
- ([fe80::88e7:2025:120f:97f]) by DM6PR07MB6154.namprd07.prod.outlook.com
- ([fe80::88e7:2025:120f:97f%7]) with mapi id 15.20.3153.032; Thu, 9 Jul 2020
- 07:02:37 +0000
-From:   Swapnil Kashinath Jakhade <sjakhade@cadence.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "maxime@cerno.tech" <maxime@cerno.tech>,
-        Vinod Koul <vkoul@kernel.org>
-CC:     "nsekhar@ti.com" <nsekhar@ti.com>, "jsarha@ti.com" <jsarha@ti.com>,
-        "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>,
-        "praneeth@ti.com" <praneeth@ti.com>,
-        Milind Parab <mparab@cadence.com>,
-        Yuti Suresh Amonkar <yamonkar@cadence.com>
-Subject: RE: [PATCH v2 0/2] Add support to get/set PHY attributes using PHY
- framework
-Thread-Topic: [PATCH v2 0/2] Add support to get/set PHY attributes using PHY
- framework
-Thread-Index: AQHWM2rir14dmyS0cUqBu7jvGTV3zKj/FTIQ
-Date:   Thu, 9 Jul 2020 07:02:37 +0000
-Message-ID: <DM6PR07MB615442045742A117202DA5ABC5640@DM6PR07MB6154.namprd07.prod.outlook.com>
-References: <1590503704-15057-1-git-send-email-yamonkar@cadence.com>
-In-Reply-To: <1590503704-15057-1-git-send-email-yamonkar@cadence.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc2pha2hhZGVcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0yOTEwYmUyOS1jMWIyLTExZWEtODUyMy1jOGY3NTA0NDIyZDhcYW1lLXRlc3RcMjkxMGJlMmEtYzFiMi0xMWVhLTg1MjMtYzhmNzUwNDQyMmQ4Ym9keS50eHQiIHN6PSIyMzYyIiB0PSIxMzIzODc1MTc1MzY0MjEzNTUiIGg9Im9aRWZ0NEFPdmYrM0Z1TkNqVDlOUmF2UDNEbz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=cadence.com;
-x-originating-ip: [59.145.174.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6dab29f1-a552-4352-f379-08d823d6102a
-x-ms-traffictypediagnostic: DM6PR07MB6252:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR07MB625250D71346776954EC1B15C5640@DM6PR07MB6252.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eYQ5ElGtlY44teelfgkW0s0B0JMc+V+P9KyrB/a+ohMbEdtA/xVyFcUBJ6TqR9CRvOU6/DHMrL4G3SjkELnO/d+7XmDs9i9pkDSxxLmSUtUeErkrxtsqcnjVo/UDFtvRffs68LOMdNF+7IUivlonP9c7cIYXsd6aJqc5TeKksaYF6CBrTtwukb2K3CDlonwULaMX94+LpdR38lXANPTuipt2iqkQnfu95RwmFf8fXgw7HCBGje5OpK4B7aIRyeNmdmlpTrfKRFniObYoNNSESzetHcp5KBp7i1segwTJq2/amfKfv6vscaR8pa2rgWc/7u0HY4aGAVVES1uHQ0uRhR8c9bOy4BS9f+a5CHS0XRlPfLKkMliWb6Uwz/ccUISqqVWhLiLOUNmCmMJYEi/IgZHYITQo+mdcZ/Y8LtbeclTqQNngyNLaJraLbyK94FY5ubdsSoPOTyOJLfOjxHYrdg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR07MB6154.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(39860400002)(346002)(136003)(376002)(36092001)(54906003)(186003)(33656002)(9686003)(66556008)(66446008)(7696005)(64756008)(66476007)(66946007)(55016002)(4326008)(8676002)(76116006)(8936002)(52536014)(7416002)(5660300002)(2906002)(6506007)(316002)(53546011)(86362001)(71200400001)(110136005)(107886003)(478600001)(26005)(83380400001)(966005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: ef5rqBAYFR8J7/TtOi2Uh5NyUmigIpt5owqtwmGp9GE++PaNQ+UwbXiRopZ5VyYQlD0aiSONDRA/X/a/670/nPEIPao/p3GPjkZLwFqyrVZ49+sj6/WilJNFuCs4OEigsC6Sz/k4oFM/+w64+To36wrRX9x2/GyqcsJZ03iYN6Ux7UwNfrh2YqqsPrA4deJGv1zS1bQ3Si8CktRka8qNeV5ZcOkLq17xaMfDwGWHE9Jy47N7R4dwQVOi6vyu0gJRqiUfsBhq6gBbICeaHLjZBJkB/9ht+lWAZQIfB1NunzDTILofXmXZzzXywPTWD86NtyjmK99OhA53MJ1glZDt7K6zJ6SoqAnbH4aksMNUxDjZCUKWXJbgD41swOW3eMJzQdzN3SWj79urTZTmIwGiJB9yo5R6gP6pJwCKOZO1e05UGj4zGQOhEJwjEoGjMMtcSkEtUo1P91oEs4EqzNeI4zrSWVcU4CWU524U109NnvQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jul 2020 03:03:29 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CD44C061A0B
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 00:03:29 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id h18so524352qvl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 00:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YrXb+PwDrzRj61WwzuMsF1SQ3qopodp/CgTQXPhCgl8=;
+        b=V5sjXUDzQudR96ZAfOfACopDQJ9o/MmPoWTqGfULqp/vTddHWzEIZ1UIDkcu7IJ7VM
+         mQOuzlm1NdLOSM6JCtegh0GVdCdLHA3wFuAnz/y+lp2jbtjaSIQ6mwHH8fvYsMwsSWge
+         k2tJ6CRYjrGnffV9DUqfYnhPMUR3SXUfe1rqAI6WypoIX8AD5yCAdv0q5TLKMTHPs80n
+         WtrwJv5yJHopgEx99pbPbRAgK78oHNV4ki2vJCYgBah1CuUBV1EpghGYBGhaGOXYvFyv
+         R4h5DRlr67+Mc7BDiJKe88WWK80wx7sbEALbLjQ5u5dYt1eglbbC727RwjpdKAK+IkYW
+         ++3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YrXb+PwDrzRj61WwzuMsF1SQ3qopodp/CgTQXPhCgl8=;
+        b=YjrQDGc1j8RZdeUeWwe0UOA2JDy/PDYq6/yrErlUPMZyW2xDSJ54c36sKWOl3Yy43/
+         9kJGLWHw99mCYxSfeOX709W6A9CmKPpZ9oWG8HqhSRgme78Vcf10GDrihGrzaYCcgpqv
+         ENcXFFRBU/IW79hERdCCjaXONoNB0a7rprALxp/X4zb4Ke968tinJ1Dn0nMa1S8NLPfp
+         cHpx8UpXoZjllQ0T5oRrv0lfBc8Can25D0Ia8Txbf3CVSmVBdeBD97JEu8zOEmqYLCqj
+         z5ViekcjsjsxaeXmbg5Rumi1aPk4hOc2fce1lAxpHU7T3phT9oEWT2JfOLWK/1oPicPm
+         p2eg==
+X-Gm-Message-State: AOAM531O6GC9H4rfGJpdLqnFkWvFiTwAp0HMdQjzSBr2IkmMBOqoclMe
+        ba3FIACX9cDPHWT1ZSpC3ijo7gePZQg+9jBO8w4=
+X-Google-Smtp-Source: ABdhPJwnBP30L2pcgjXTXouFKiroyJmxdrQWyS+nPsnu928YAHeRkSL5ytc9qnPd6EF8LzPDkPxsKo3g9wyiowPIyXo=
+X-Received: by 2002:ad4:4732:: with SMTP id l18mr58589404qvz.208.1594278208659;
+ Thu, 09 Jul 2020 00:03:28 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR07MB6154.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6dab29f1-a552-4352-f379-08d823d6102a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 07:02:37.1680
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EaqQ7N24BvWvaxoPtg2FDxW/flzHs2NWxVybApWygAB5ybFscFtETqGB6qHYy1aW6Vw4bjfdFzCSCYbcDhberm4oA3TGxd0PM0GSF7siSEU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB6252
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_04:2020-07-08,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 adultscore=0
- mlxscore=0 spamscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- mlxlogscore=765 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007090055
+References: <1594107889-32228-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1594107889-32228-5-git-send-email-iamjoonsoo.kim@lge.com>
+ <c1cd6e11-08c3-5654-60e7-dec2eb80987a@suse.cz> <20200708071602.GB16543@js1304-desktop>
+ <20200708074103.GD7271@dhcp22.suse.cz> <20200709064340.GB19160@dhcp22.suse.cz>
+In-Reply-To: <20200709064340.GB19160@dhcp22.suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Thu, 9 Jul 2020 16:03:27 +0900
+Message-ID: <CAAmzW4OWNF_fST82YaJFUszQwy8dFEkXRFw8pDKNjHzsRZ5Lig@mail.gmail.com>
+Subject: Re: [PATCH v4 04/11] mm/hugetlb: make hugetlb migration callback CMA aware
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping requesting review comments.
-https://lkml.org/lkml/2020/5/26/507
-
-Thanks & regards,
-Swapnil
-
-> -----Original Message-----
-> From: Yuti Amonkar <yamonkar@cadence.com>
-> Sent: Tuesday, May 26, 2020 8:05 PM
-> To: linux-kernel@vger.kernel.org; kishon@ti.com; robh+dt@kernel.org;
-> mark.rutland@arm.com; maxime@cerno.tech
-> Cc: nsekhar@ti.com; jsarha@ti.com; tomi.valkeinen@ti.com;
-> praneeth@ti.com; Milind Parab <mparab@cadence.com>; Swapnil Kashinath
-> Jakhade <sjakhade@cadence.com>; Yuti Suresh Amonkar
-> <yamonkar@cadence.com>
-> Subject: [PATCH v2 0/2] Add support to get/set PHY attributes using PHY
-> framework
->=20
-> This patch series adds support to use kernel PHY subsystem APIs to get/se=
+2020=EB=85=84 7=EC=9B=94 9=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 3:43, Mi=
+chal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Wed 08-07-20 09:41:06, Michal Hocko wrote:
+> > On Wed 08-07-20 16:16:02, Joonsoo Kim wrote:
+> > > On Tue, Jul 07, 2020 at 01:22:31PM +0200, Vlastimil Babka wrote:
+> > > > On 7/7/20 9:44 AM, js1304@gmail.com wrote:
+> > > > > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > > > >
+> > > > > new_non_cma_page() in gup.c which try to allocate migration targe=
+t page
+> > > > > requires to allocate the new page that is not on the CMA area.
+> > > > > new_non_cma_page() implements it by removing __GFP_MOVABLE flag. =
+ This way
+> > > > > works well for THP page or normal page but not for hugetlb page.
+> > > > >
+> > > > > hugetlb page allocation process consists of two steps.  First is =
+dequeing
+> > > > > from the pool.  Second is, if there is no available page on the q=
+ueue,
+> > > > > allocating from the page allocator.
+> > > > >
+> > > > > new_non_cma_page() can control allocation from the page allocator=
+ by
+> > > > > specifying correct gfp flag.  However, dequeing cannot be control=
+led until
+> > > > > now, so, new_non_cma_page() skips dequeing completely.  It is a s=
+uboptimal
+> > > > > since new_non_cma_page() cannot utilize hugetlb pages on the queu=
+e so this
+> > > > > patch tries to fix this situation.
+> > > > >
+> > > > > This patch makes the deque function on hugetlb CMA aware and skip=
+ CMA
+> > > > > pages if newly added skip_cma argument is passed as true.
+> > > >
+> > > > Hmm, can't you instead change dequeue_huge_page_node_exact() to tes=
+t the PF_
+> > > > flag and avoid adding bool skip_cma everywhere?
+> > >
+> > > Okay! Please check following patch.
+> > > >
+> > > > I think that's what Michal suggested [1] except he said "the code a=
+lready does
+> > > > by memalloc_nocma_{save,restore} API". It needs extending a bit tho=
+ugh, AFAICS.
+> > > > __gup_longterm_locked() indeed does the save/restore, but restore c=
+omes before
+> > > > check_and_migrate_cma_pages() and thus new_non_cma_page() is called=
+, so an
+> > > > adjustment is needed there, but that's all?
+> > > >
+> > > > Hm the adjustment should be also done because save/restore is done =
+around
+> > > > __get_user_pages_locked(), but check_and_migrate_cma_pages() also c=
+alls
+> > > > __get_user_pages_locked(), and that call not being between nocma sa=
+ve and
+> > > > restore is thus also a correctness issue?
+> > >
+> > > Simply, I call memalloc_nocma_{save,restore} in new_non_cma_page(). I=
 t
-> PHY attributes like number of lanes and maximum link rate.
->=20
-> It includes following patches:
->=20
-> 1. v2-0001-phy-Add-max_link_rate-as-a-PHY-attribute-and-APIs.patch
-> This patch adds max_link_rate as a PHY attribute along with a pair of API=
-s
-> that allow the generic PHY subsystem to get/set PHY attributes supported =
-by
-> the PHY.
-> The PHY provider driver may use phy_set_attrs() API to set the values tha=
-t
-> PHY supports.
-> The controller driver may then use phy_get_attrs() API to fetch the PHY
-> attributes in order to properly configure the controller.
->=20
-> 2. v2-0002-phy-phy-cadence-torrent-Use-kernel-PHY-API-to-set.patch
-> This patch uses kernel PHY API phy_set_attrs to set corresponding PHY
-> properties in Cadence Torrent PHY driver. This will enable drivers using =
-this
-> PHY to read these properties using PHY framework.
->=20
-> The phy_get_attrs() API will be used in the DRM bridge driver [1] which i=
-s in
-> process of upstreaming.
->=20
-> [1]
->=20
-> https://lkml.org/lkml/2020/2/26/263
->=20
-> Version History:
->=20
-> v2:
->     - Implemented single pair of functions to get/set all PHY attributes
->=20
-> Swapnil Jakhade (1):
->   phy: phy-cadence-torrent: Use kernel PHY API to set PHY attributes
->=20
-> Yuti Amonkar (1):
->   phy: Add max_link_rate as a PHY attribute and APIs to get/set
->     phy_attrs
->=20
->  drivers/phy/cadence/phy-cadence-torrent.c |  7 +++++++
->  include/linux/phy/phy.h                   | 25 +++++++++++++++++++++++
->  2 files changed, 32 insertions(+)
->=20
-> --
-> 2.17.1
+> > > would not cause any problem.
+> >
+> > I believe a proper fix is the following. The scope is really defined fo=
+r
+> > FOLL_LONGTERM pins and pushing it inside check_and_migrate_cma_pages
+> > will solve the problem as well but it imho makes more sense to do it in
+> > the caller the same way we do for any others.
+> >
+> > Fixes: 9a4e9f3b2d73 ("mm: update get_user_pages_longterm to migrate pag=
+es allocated from CMA region")
+> >
+> > I am not sure this is worth backporting to stable yet.
+>
+> Should I post it as a separate patch do you plan to include this into you=
+r next version?
 
+It's better to include it on my next version since this patch would
+cause a conflict with
+the next tree that includes my v3 of this patchset.
+
+Thanks.
