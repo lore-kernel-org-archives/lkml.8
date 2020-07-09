@@ -2,103 +2,73 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7FFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1F220738
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:48:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U6G9E2dw"
+	by mail.kernel.org (Postfix) with ESMTP id 2E65A206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgGIDsH (ORCPT
+        id S1726213AbgGIDz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 23:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgGIDsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 23:48:06 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE246C061A0B;
-        Wed,  8 Jul 2020 20:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=flvZ17SdeYCgDzmst9WBe5pC+viP+SaP3isapAJ36bo=; b=U6G9E2dwPL6X9AOKHmbN8D1Ana
-        Xg4JPwui72nhP0L/iVdT9FV8yrai+np3QJiR1EefKNKeylnJ36zU8f8YMzFP0dysE/2CFgv+sPx+e
-        YFYA9vVhGsJ4AafRLTno/BB0Rt/TvDIIyYCxZ12e6lrNtYceBcDqvH9J1jDPNYPYJCgEIcsrlGmpm
-        uZkfN87QsShxX+JkdLS81p44LK5k5+dHI5qQTvr169inaiUHcNNL4EQmowt3my5j044gs0lMnkbmO
-        YTV/bEg8BdAFiS/t+QsC5k/PrAiYKfGejCFTccRcKWtn+Ve6uNKK6Ag3tgrBJ+OEI/y4pyr5Bf47+
-        jh9z+j5g==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtNXU-000463-7T; Thu, 09 Jul 2020 03:48:00 +0000
-Subject: Re: mmotm 2020-07-08-19-28 uploaded (mm/migrate.c)
-To:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-References: <20200709022901.FTEvQ122j%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <11c5e928-1227-286d-ef7d-6d6e554747db@infradead.org>
-Date:   Wed, 8 Jul 2020 20:47:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200709022901.FTEvQ122j%akpm@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Jul 2020 23:55:26 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:49276 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726119AbgGIDz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 23:55:26 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9CxqdQplQZfXJUAAA--.714S2;
+        Thu, 09 Jul 2020 11:55:22 +0800 (CST)
+From:   Zhi Li <lizhi01@loongson.cn>
+To:     chenhc@lemote.com, jiaxun.yang@flygoat.com,
+        tsbogend@alpha.franken.de, lixuefeng@loongson.cn
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] MIPS: Loongson: Fix some issues of cpu_hwmon.c
+Date:   Thu,  9 Jul 2020 11:55:18 +0800
+Message-Id: <1594266921-28971-1-git-send-email-lizhi01@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9CxqdQplQZfXJUAAA--.714S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY67AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z2
+        80aVCY1x0267AKxVWxJr0_GcWlnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28I
+        cVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx
+        0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwAC
+        jI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r48MxAIw28IcxkI7VAKI48JMxC20s
+        026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+        JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+        v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
+        j40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+        W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUTmh5UUUUU==
+X-CM-SenderInfo: xol2xxqqr6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 7:29 PM, Andrew Morton wrote:
-> The mm-of-the-moment snapshot 2020-07-08-19-28 has been uploaded to
-> 
->    http://www.ozlabs.org/~akpm/mmotm/
-> 
-> mmotm-readme.txt says
-> 
-> README for mm-of-the-moment:
-> 
-> http://www.ozlabs.org/~akpm/mmotm/
-> 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
-> 
+v2:
+  - Drop the patch "MIPS: Loongson: Add hwmon support for generic CPU"
+  - Reduce possible loop times in do_thermal_timer()
 
-on i386:
+v3:
+  - Fix boot warning about hwmon_device_register()
 
-CONFIG_MIGRATION=y
-# CONFIG_TRANSPARENT_HUGEPAGE is not set
+Tiezhu Yang (2):
+  MIPS: Loongson: Cleanup cpu_hwmon.c
+  MIPS: Loongson: Reduce possible loop times and add log in
+    do_thermal_timer()
 
-../mm/migrate.c: In function ‘migrate_pages’:
-../mm/migrate.c:1528:19: error: ‘THP_MIGRATION_SUCCESS’ undeclared (first use in this function); did you mean ‘PGMIGRATE_SUCCESS’?
-   count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
-                   ^~~~~~~~~~~~~~~~~~~~~
-                   PGMIGRATE_SUCCESS
-../mm/migrate.c:1528:19: note: each undeclared identifier is reported only once for each function it appears in
-../mm/migrate.c:1530:19: error: ‘THP_MIGRATION_FAILURE’ undeclared (first use in this function); did you mean ‘THP_MIGRATION_SUCCESS’?
-   count_vm_events(THP_MIGRATION_FAILURE, nr_thp_failed);
-                   ^~~~~~~~~~~~~~~~~~~~~
-                   THP_MIGRATION_SUCCESS
-../mm/migrate.c:1532:19: error: ‘THP_MIGRATION_SPLIT’ undeclared (first use in this function); did you mean ‘THP_MIGRATION_FAILURE’?
-   count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
-                   ^~~~~~~~~~~~~~~~~~~
-                   THP_MIGRATION_FAILURE
+Zhi Li (1):
+  MIPS: Loongson: Fix boot warning about hwmon_device_register()
 
-
-from: mm-vmstat-add-events-for-thp-migration-without-split.patch
-
+ drivers/platform/mips/cpu_hwmon.c | 66 +++++++++++++++------------------------
+ 1 file changed, 25 insertions(+), 41 deletions(-)
 
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.1.0
+
