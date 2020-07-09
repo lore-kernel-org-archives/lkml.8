@@ -2,128 +2,84 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE62C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13194C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9791F2076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30B22076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b8MC0vQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgGIMnz (ORCPT
+        id S1726746AbgGIMpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:43:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:56178 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbgGIMnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:43:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 232D61FB;
-        Thu,  9 Jul 2020 05:43:51 -0700 (PDT)
-Received: from localhost (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B892C3F71E;
-        Thu,  9 Jul 2020 05:43:50 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 13:43:49 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ben Segall <bsegall@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Puhov <peter.puhov@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [RFC 0/3] cpufreq: cppc: Add support for frequency invariance
-Message-ID: <20200709124349.GA15342@arm.com>
-References: <cover.1594289009.git.viresh.kumar@linaro.org>
+        Thu, 9 Jul 2020 08:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgGIMpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:45:22 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0EBCC061A0B
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 05:45:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BzPKqvPHXp8bpGZtUpf7YswCvt5U9wvhw4emJBW+h0E=; b=b8MC0vQWoJzdUJRcLhOwHEN8kt
+        LhWnmb2rMEAlRthStdTAxarJ2FBpCiC8ct60tNSo5jDPu7BryshmcXAMxXj5LBlxqwm4TKiWTjIF+
+        ITp91nULugJU/M4E+TCSpVPoRFucLTbmtw2EN/k5ER1693/YMSj7ylY9RAfhUBdrx9niEJ2N8e+im
+        1gmjcCyO9fQbLDZoV+P4iS80+1L0aCYSuSeczRGYMXKM/o/67+pAkgvZ3JqQaUI1wCTFtFW7yyBLh
+        CakYrF8J8QkEBrDpvD/PUOL8xkSq+42VPMD11aPufab4dwrGfkt/J1S+FOt5gqCeSjBYbhumtjTwl
+        Uh7TMi1g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtVvI-0007NT-JW; Thu, 09 Jul 2020 12:45:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0A4AA300739;
+        Thu,  9 Jul 2020 14:45:05 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 39147214ECE3F; Thu,  9 Jul 2020 14:45:05 +0200 (CEST)
+Date:   Thu, 9 Jul 2020 14:45:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [tip:sched/fifo 44/45] ERROR: modpost: "sched_setscheduler"
+ undefined!
+Message-ID: <20200709124505.GT597537@hirez.programming.kicks-ass.net>
+References: <202006192249.AYnVBGCH%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1594289009.git.viresh.kumar@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <202006192249.AYnVBGCH%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
-
-I'll put all my comments here for now, as they refer more to the design
-of the solution.
-
-I hope it won't be too repetitive compared to what we previously discussed
-offline. I understand you want to get additional points of view.
-
-On Thursday 09 Jul 2020 at 15:43:32 (+0530), Viresh Kumar wrote:
-> Hello,
+On Fri, Jun 19, 2020 at 10:15:51PM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/fifo
+> head:   8b700983de82f79e05b2c1136d6513ea4c9b22c4
+> commit: 616d91b68cd56bcb1954b6a5af7d542401fde772 [44/45] sched: Remove sched_setscheduler*() EXPORTs
+> config: x86_64-rhel (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+> reproduce (this is a W=1 build):
+>         git checkout 616d91b68cd56bcb1954b6a5af7d542401fde772
+>         # save the attached .config to linux build tree
+>         make W=1 ARCH=x86_64 
 > 
-> CPPC cpufreq driver is used for ARM servers and this patch series tries
-> to provide frequency invariance support for them. The same is also
-> provided using a specific hardware extension, known as AMU (Activity
-> Monitors Unit), but that is optional for platforms and at least few of
-> them don't have it.
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
 > 
-> This patchset allows multiple parts of the kernel to provide the same
-> functionality, by registering with the topology core.
+> All errors (new ones prefixed by >>, old ones prefixed by <<):
 > 
-> This is tested with some hacks, as I didn't have access to the right
-> hardware, on the ARM64 hikey board to check the overall functionality
-> and that works fine.
-> 
-> Ionela/Peter Puhov, it would be nice if you guys can give this a shot.
-> 
+> >> ERROR: modpost: "sched_setscheduler" [kernel/trace/ring_buffer_benchmark.ko] undefined!
 
-I believe the code is unnecessarily invasive for the functionality it
-tries to introduce and it does break existing functionality.
-
-
- - (1) From code readability and design point of view, this switching
-       between an architectural method and a driver method complicates
-       an already complicated situation. We already have code that
-       chooses between a cpufreq-based method and a counter based method
-       for frequency invariance. This would basically introduce a choice
-       between a cpufreq-based method through arch_set_freq_scale(), an
-       architectural counter-based method through arch_set_freq_tick(),
-       and another cpufreq-based method that piggy-backs on the
-       architectural arch_set_freq_tick().
-
-       As discussed offline, before I even try to begin accepting the
-       possibility of this complicated mix, I would like to know why
-       methods of obtaining the same thing by using the cpufreq
-       arch_set_freq_scale() or even the more invasive wrapping of the
-       counter read functions is not working. I believe those solutions
-       would brings only a fraction of the complexity added through this
-       set.
-
- - (2) For 1/3, the presence of AMU counters does not guarantee their
-       usability for frequency invariance. I know you wanted to avoid
-       the complications of AMUs being marked as supporting invariance
-       after the cpufreq driver init function, but this breaks the
-       scenario in which the maximum frequency is invalid.
-
- - (3) For 2/3, currently we support platforms that have partial support
-       for AMUs, while this would not be supported here. The suggestions
-       at (1) would give us this for free.
-
-
-While I'm keen on having invariance support for CPPC when lacking part
-or full support for AMUs, I think we should explore alternative designs.
-I can try to come up with some code suggestions, but it will take a few
-days as I have many other things in the air :).
-
-I'm happy to test this when the design is agreed on.
-
-Hope it helps,
-Ionela.
+Steve, do you have any preference on how to go about fixing this one?
