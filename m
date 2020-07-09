@@ -2,108 +2,148 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C80A207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:13:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594318433;
-	bh=/eIkOXQXm+AYixzqCrQtja5osHWK5ZsC1fLBCcQbdmc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=L82aUoSV69PjpyH+lfnvoRoZzGFdk/jIeM59VZiOL4hHzTB2dIK4dGmzStT79RYwf
-	 //P0lSnN85+/3HtguTp9mymyIbcYMMWfntjcrnjj+ayCkfYA6xTbdwZ0cI6W7gz5Pz
-	 5YXJmB2OEfiCztduw7OtCaWynM8Q0/HlZ6Ny+d2Q=
+	by mail.kernel.org (Postfix) with ESMTP id C258A207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgGISNw (ORCPT
+        id S1726927AbgGISOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 14:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726684AbgGISNv (ORCPT
+        Thu, 9 Jul 2020 14:14:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16130 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726684AbgGISOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 14:13:51 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72177C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 11:13:51 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f5so3450627ljj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 11:13:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QQ4MFwKX0KeW+zmPJf6dh6Z4HEUniPj2BzYhpEhaY5c=;
-        b=H4yZEP+ReHmnQ8pPy85R6Z5AGImyoEWgzVC2r2MdX2eTlEN06eDA4bs8kmZRPf8ir7
-         nONwubENi3D4CIY0RGHiJrUqJ5uDrjE78F1DvfhsN5lZUpuci6eD15V+qTw0bDmuQk3U
-         UFPBqV2teYZxvPtlwDGq03SOGObHpMBpQnzm0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QQ4MFwKX0KeW+zmPJf6dh6Z4HEUniPj2BzYhpEhaY5c=;
-        b=KGn91q1nOGObu8AQ5s2wyFtLaklcwNTPOKT0n/L9NOswh8SVR5QUrQYYovq5eG6JTf
-         glPFyP720jclfMbqUPXA3MFmLLEah8AoMDd8EoQbl8Tiu52k5eUnRCRh45ChNFFBXiNx
-         wZlQwKOamqxorv2z2YHDJsklCG3/e8SV0ydo6RijtVOKmkRbUj5K5TcVT1VrRy9u6bZh
-         TEWPLTo8Md4j0r/OylxtgO568eUPD56s3hc5wR34c2g2wQNVcRfI4bCc8FXYU7tapJqB
-         qqpo+yE2tM9b9VdwPxQgQmgQKjykenqyEhKRAu6t5gI++5lJ5LvrqC7v6bqgH0q0GJDD
-         nObA==
-X-Gm-Message-State: AOAM531DCxzrXFfBsUkfKkXp2YWSAffQwqoGGYv+aAFle4j3jwrWbuWK
-        hn8ngcixycwvM46dEtp6KGQiccvqrF0=
-X-Google-Smtp-Source: ABdhPJzfBBq3zOlHbJiK/OhtPWrTi/60jIrqO7imUBlMCt5YvX5X81647l30eTokJZDaznOSYoZBPA==
-X-Received: by 2002:a2e:80cc:: with SMTP id r12mr32459160ljg.344.1594318429631;
-        Thu, 09 Jul 2020 11:13:49 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id w4sm1048172ljw.16.2020.07.09.11.13.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 11:13:48 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id k17so1720851lfg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 11:13:47 -0700 (PDT)
-X-Received: by 2002:a05:6512:3f1:: with SMTP id n17mr40988629lfq.125.1594318427258;
- Thu, 09 Jul 2020 11:13:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200621054210.14804-1-rikard.falkeborn@gmail.com> <20200709123011.GA18734@gondor.apana.org.au>
-In-Reply-To: <20200709123011.GA18734@gondor.apana.org.au>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Jul 2020 11:13:31 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wibAAcH2+hk+X9mBp0h1B6oYv+Pjzq1XB+EXJhgshu-Xg@mail.gmail.com>
-Message-ID: <CAHk-=wibAAcH2+hk+X9mBp0h1B6oYv+Pjzq1XB+EXJhgshu-Xg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] linux/bits.h: fix unsigned less than zero warnings
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
+        Thu, 9 Jul 2020 14:14:18 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069I31LZ133946;
+        Thu, 9 Jul 2020 14:14:11 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 325ktt3j8e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 14:14:11 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 069I9Zv1010074;
+        Thu, 9 Jul 2020 18:14:10 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02dal.us.ibm.com with ESMTP id 325k1nt6f4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 18:14:10 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 069IE6AH29032934
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Jul 2020 18:14:06 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6121D78066;
+        Thu,  9 Jul 2020 18:14:09 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 404DE78063;
+        Thu,  9 Jul 2020 18:14:08 +0000 (GMT)
+Received: from [153.66.254.194] (unknown [9.80.239.156])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Jul 2020 18:14:07 +0000 (GMT)
+Message-ID: <1594318443.10411.14.camel@linux.ibm.com>
+Subject: Re: [PATCH 24/24] scsi: aic7xxx: aic79xx_osm: Remove set but unused
+ variabes 'saved_scsiid' and 'saved_modes'
+From:   James Bottomley <jejb@linux.ibm.com>
+Reply-To: jejb@linux.ibm.com
+To:     Lee Jones <lee.jones@linaro.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>
+Date:   Thu, 09 Jul 2020 11:14:03 -0700
+In-Reply-To: <20200709174556.7651-25-lee.jones@linaro.org>
+References: <20200709174556.7651-1-lee.jones@linaro.org>
+         <20200709174556.7651-25-lee.jones@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-09_09:2020-07-09,2020-07-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ clxscore=1011 bulkscore=0 mlxlogscore=929 phishscore=0 suspectscore=0
+ impostorscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007090122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 5:30 AM Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> I'm still getting the same warning even with the patch, for example:
+On Thu, 2020-07-09 at 18:45 +0100, Lee Jones wrote:
+> Haven't been used since 2006.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/scsi/aic7xxx/aic79xx_osm.c: In function
+> ‘ahd_linux_queue_abort_cmd’:
+>  drivers/scsi/aic7xxx/aic79xx_osm.c:2155:17: warning: variable
+> ‘saved_modes’ set but not used [-Wunused-but-set-variable]
+>  drivers/scsi/aic7xxx/aic79xx_osm.c:2148:9: warning: variable
+> ‘saved_scsiid’ set but not used [-Wunused-but-set-variable]
+> 
+> Cc: Hannes Reinecke <hare@suse.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/scsi/aic7xxx/aic79xx_osm.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/scsi/aic7xxx/aic79xx_osm.c
+> b/drivers/scsi/aic7xxx/aic79xx_osm.c
+> index 3782a20d58885..b0c6701f64a83 100644
+> --- a/drivers/scsi/aic7xxx/aic79xx_osm.c
+> +++ b/drivers/scsi/aic7xxx/aic79xx_osm.c
+> @@ -2141,14 +2141,12 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
+> *cmd)
+>  	u_int  saved_scbptr;
+>  	u_int  active_scbptr;
+>  	u_int  last_phase;
+> -	u_int  saved_scsiid;
+>  	u_int  cdb_byte;
+>  	int    retval;
+>  	int    was_paused;
+>  	int    paused;
+>  	int    wait;
+>  	int    disconnected;
+> -	ahd_mode_state saved_modes;
+>  	unsigned long flags;
+>  
+>  	pending_scb = NULL;
+> @@ -2239,7 +2237,7 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
+> *cmd)
+>  		goto done;
+>  	}
+>  
+> -	saved_modes = ahd_save_modes(ahd);
+> +	ahd_save_modes(ahd);
 
-Are you building with W=1?
+Well, this is clearly wrong, since ahd_save_modes has no side effects.
 
-There's a patch to move that broken -Wtype-limits thing to W=2.
+However, I think it also means there's a bug in this code:
 
-    https://lore.kernel.org/lkml/20200708190756.16810-1-rikard.falkeborn@gmail.com/
+>  	ahd_set_modes(ahd, AHD_MODE_SCSI, AHD_MODE_SCSI);
 
-does that work for you?
+You can't do this without later restoring the mode, so someone needs to
+figure out where the missing ahd_restore_modes() should go.
 
-              Linus
+>  	last_phase = ahd_inb(ahd, LASTPHASE);
+>  	saved_scbptr = ahd_get_scbptr(ahd);
+> @@ -2257,7 +2255,7 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
+> *cmd)
+>  	 * passed in command.  That command is currently active on
+> the
+>  	 * bus or is in the disconnected state.
+>  	 */
+> -	saved_scsiid = ahd_inb(ahd, SAVED_SCSIID);
+> +	ahd_inb(ahd, SAVED_SCSIID);
+
+I think this can just go.
+
+James
+
