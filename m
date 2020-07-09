@@ -2,133 +2,120 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF35C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9978520708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6BB2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PpbDyekO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LGaTTpT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgGIKCl (ORCPT
+        id S1726961AbgGIKCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:02:41 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:27726 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbgGIKCY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:02:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594288943; x=1625824943;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BPXYksHE/6skyxwfmW3layVz9HGsj0QnR14maadzSj4=;
-  b=PpbDyekOD/swQ7R6SPkgG5TSx5p0Tt/v66lxgKBBuz1gMszWvYDhnpc1
-   T3ANdCBu2Hgovpraf41uPs+irILDMD1ZhoKYw2Z+mOce5bvuJ9fQdXaRT
-   mu8kWgAcqZNW1SI/q+HliBGRdKHhf04gHrk1zbkMj1AH4jQhLTipv2AaB
-   D6F9mBZz5O2mV9Zuer095zDUK0P1ruCQtCzS0srCqUE4RFPiTPk6e795u
-   w+kQ82cCmr0ePG53FU8Wno/zvNDjUcQ/Kr8ankGi9Dg8OOGLwYzlIOU0k
-   cwMg5jrOKUvEanRDFE7aKXkSs9YWTePHe1tevXTC9rQkTs+kwqRU3Y0P4
-   w==;
-IronPort-SDR: H9lWyFo4thevO2UCMwl68KwSeEYr4X14VBHMfMdmUHMdNHIlgVS584rcGTSvgAy19R+TLDoqtU
- WJokifslnYK19GLvnY/7H5gVwg/ou/EarFQH5pqpzMeMgqMYeNNwBxJ2rDEYxeIXqYvemrAOZR
- HkvgWjffq+BeUjVDnyGXGPL0PmnnpZ9fRQAnIFLjyYeS1Roo5MTvlAqomslnAw7UIfLDWighh4
- eqWBE6GzLPMTmBx2BNvWBjYu1KH+qW3GitW3gv5i1CJimiYI845K+SuLOYo6tmB7dafzECC4mG
- TXg=
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="82397835"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:02:23 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 9 Jul 2020 03:02:19 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:02:15 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v2 12/12] net: bridge: Add port attribute IFLA_BRPORT_MRP_IN_OPEN
-Date:   Thu, 9 Jul 2020 12:00:40 +0200
-Message-ID: <20200709100040.554623-13-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200709100040.554623-1-horatiu.vultur@microchip.com>
-References: <20200709100040.554623-1-horatiu.vultur@microchip.com>
+        Thu, 9 Jul 2020 06:02:38 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22780 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbgGIKCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:02:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594288952; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=Vcf4pT1GA5PBOflu7PbMdZ+iJ9F8+ASAMkKs46dXbG8=; b=LGaTTpT2BUO8ciqlU0nvjwg5mtreNdE7gW8mdtpXXQOC8HY4PrpuItBxSYbrHvdwKfzHwDFq
+ c3fceC4Xy+4/rh8S7zuWOTett1NfcWTbOhxlztARc+j0udu9aVg5DGO0hvOesuSwVUtoBFt8
+ RgfRZL/ARQFp9oB3EAeKjiExI+8=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
+ 5f06eaf2c746eb6f00f30ef4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 10:01:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 511BFC433CB; Thu,  9 Jul 2020 10:01:21 +0000 (UTC)
+Received: from [192.168.0.129] (unknown [183.83.142.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 50F85C433C8;
+        Thu,  9 Jul 2020 10:01:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 50F85C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+Subject: Re: [PATCH v3 6/8] dt-bindings: sound: lpass-cpu: Add sc7180 lpass
+ cpu node
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
+ <1594184896-10629-7-git-send-email-rohitkr@codeaurora.org>
+ <6b6b0e38-9c04-e065-8a43-ccfec260d60c@linaro.org>
+From:   Rohit Kumar <rohitkr@codeaurora.org>
+Message-ID: <430e0d24-c5c2-84ec-fe7b-b6b27192666d@codeaurora.org>
+Date:   Thu, 9 Jul 2020 15:31:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <6b6b0e38-9c04-e065-8a43-ccfec260d60c@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new port attribute, IFLA_BRPORT_MRP_IN_OPEN, which
-allows to notify the userspace when the node lost the contiuity of
-MRP_InTest frames.
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- include/uapi/linux/if_link.h       | 1 +
- net/bridge/br_netlink.c            | 3 +++
- tools/include/uapi/linux/if_link.h | 1 +
- 3 files changed, 5 insertions(+)
+On 7/9/2020 2:57 PM, Srinivas Kandagatla wrote:
+>
+>
+> On 08/07/2020 06:08, Rohit kumar wrote:
+>> Add dt-bindings to support "qcom,lpass-cpu-sc7180" node.
+>>
+>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt 
+>> b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>> index 32c2cdb..04e34cc 100644
+>> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>> @@ -4,7 +4,8 @@ This node models the Qualcomm Technologies Low-Power 
+>> Audio SubSystem (LPASS).
+>>     Required properties:
+>>   -- compatible        : "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu"
+>> +- compatible        : "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
+>> +              "qcom,lpass-cpu-sc7180"
+>>   - clocks        : Must contain an entry for each entry in clock-names.
+>>   - clock-names        : A list which must include the following 
+>> entries:
+>>                   * "ahbix-clk"
+>
+> Can you also list the clocks that are mandatory for this SoC.
+>
+> --srini
+>
+Will it be fine if I update it in patch 8 only where we have moved to 
+yaml format?
 
-diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-index cc185a007ade8..26842ffd0501d 100644
---- a/include/uapi/linux/if_link.h
-+++ b/include/uapi/linux/if_link.h
-@@ -344,6 +344,7 @@ enum {
- 	IFLA_BRPORT_ISOLATED,
- 	IFLA_BRPORT_BACKUP_PORT,
- 	IFLA_BRPORT_MRP_RING_OPEN,
-+	IFLA_BRPORT_MRP_IN_OPEN,
- 	__IFLA_BRPORT_MAX
- };
- #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
-diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
-index c532fa65c9834..147d52596e174 100644
---- a/net/bridge/br_netlink.c
-+++ b/net/bridge/br_netlink.c
-@@ -152,6 +152,7 @@ static inline size_t br_port_info_size(void)
- #endif
- 		+ nla_total_size(sizeof(u16))	/* IFLA_BRPORT_GROUP_FWD_MASK */
- 		+ nla_total_size(sizeof(u8))	/* IFLA_BRPORT_MRP_RING_OPEN */
-+		+ nla_total_size(sizeof(u8))	/* IFLA_BRPORT_MRP_IN_OPEN */
- 		+ 0;
- }
- 
-@@ -216,6 +217,8 @@ static int br_port_fill_attrs(struct sk_buff *skb,
- 		       !!(p->flags & BR_NEIGH_SUPPRESS)) ||
- 	    nla_put_u8(skb, IFLA_BRPORT_MRP_RING_OPEN, !!(p->flags &
- 							  BR_MRP_LOST_CONT)) ||
-+	    nla_put_u8(skb, IFLA_BRPORT_MRP_IN_OPEN,
-+		       !!(p->flags & BR_MRP_LOST_IN_CONT)) ||
- 	    nla_put_u8(skb, IFLA_BRPORT_ISOLATED, !!(p->flags & BR_ISOLATED)))
- 		return -EMSGSIZE;
- 
-diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
-index cafedbbfefbe9..781e482dc499f 100644
---- a/tools/include/uapi/linux/if_link.h
-+++ b/tools/include/uapi/linux/if_link.h
-@@ -344,6 +344,7 @@ enum {
- 	IFLA_BRPORT_ISOLATED,
- 	IFLA_BRPORT_BACKUP_PORT,
- 	IFLA_BRPORT_MRP_RING_OPEN,
-+	IFLA_BRPORT_MRP_IN_OPEN,
- 	__IFLA_BRPORT_MAX
- };
- #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
+Thanks,
+
+Rohit
+
+>
+>>
 -- 
-2.27.0
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
 
