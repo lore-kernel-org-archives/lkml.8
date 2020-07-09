@@ -2,92 +2,122 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11C1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F926C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8543C20672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594335646;
-	bh=vC3IC1ErPjW/Jj7oSiwuaGCvO5QikWs4XcZWfnFC2oY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nno4rxZMLhXQFWKjSplVPuxewESdV+m7SxTbQqPOlxmuxXQ94IJOmuz4GJq/o8+SH
-	 Se0E7Qwt5wJii7ojU8uiLczPmg1q/E61V1c2Iog1scaV6bWicFOt7hKwg23kP4tJ8V
-	 e/v4yiIsYu2VmX1WAGYfUOvx0W5ldAywjTVj+MFo=
+	by mail.kernel.org (Postfix) with ESMTP id 0505D20672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgGIXAp (ORCPT
+        id S1726961AbgGIXBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:00:45 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34132 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgGIXAp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:00:45 -0400
-Received: by mail-il1-f195.google.com with SMTP id t4so3503886iln.1;
-        Thu, 09 Jul 2020 16:00:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=MtB7J5NbFVzODA5r23GZJOZvqWcvN6kX66b6U57wwzo=;
-        b=IkGXwKVIDC5DrCiyvfxWZXEExJ9T2wCqezlU4t/38ZtnPvHiYhYk3NIj4GJZ/GNthS
-         86ZMK7amewnYWp+W1jWdireQq4dCm1T1LzedzIkXtD6RVAVdhNN6RiA2Cs5PRMHpHEZ2
-         A+1aDs9AdWRTfaD58lo7z9u/yquQBeKhIHqmA8j1lUtzg8BJEVSPLuSiVNz6etTSkI4D
-         wlySS/yhJymaI0J8oF/YsUFsRxxjDOB6kQbM8j6YlDbOh2TrFCUM+v1cGjnvwjRY4tqv
-         amgvpwxc4PMkwQkh7xHeS6qF2iXpAZAysLrfLyEIHQqMQyfeLH0xJGDGTBemarlWTtYn
-         0sVQ==
-X-Gm-Message-State: AOAM533CbNzxNrdbGeAIOrtu7BI9aiNPvTzOlnuSAVlJ5BOnng0ML+yI
-        eoFQuAwvSrpXZo91iZn6qQ==
-X-Google-Smtp-Source: ABdhPJwL1TS1R3rxNHfGQnDWQ6ldcEtrnDDG2h1hsAeydYos4lD/JFRGwYuot0sfEw9DkNsOE90R9Q==
-X-Received: by 2002:a92:502:: with SMTP id q2mr46375703ile.61.1594335644048;
-        Thu, 09 Jul 2020 16:00:44 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id u15sm2825963iog.18.2020.07.09.16.00.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 16:00:43 -0700 (PDT)
-Received: (nullmailer pid 1052260 invoked by uid 1000);
-        Thu, 09 Jul 2020 23:00:42 -0000
-Date:   Thu, 9 Jul 2020 17:00:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     f.fainelli@gmail.com, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, tsbogend@alpha.franken.de,
-        hauke@hauke-m.de, zajec5@gmail.com, jonas.gorski@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] mips: bmips: add BCM6362 power domain definitions
-Message-ID: <20200709230042.GA1052174@bogus>
-References: <20200610171630.465579-1-noltari@gmail.com>
- <20200613082140.2009461-1-noltari@gmail.com>
- <20200613082140.2009461-4-noltari@gmail.com>
+        Thu, 9 Jul 2020 19:01:21 -0400
+Received: from mga11.intel.com ([192.55.52.93]:60393 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgGIXBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 19:01:21 -0400
+IronPort-SDR: dhFpA58UcUriWsYFzhAoibE/fwRCqfRB935CYxGwL4ZFCKY08ugnS+k2Wwu99zvb2BF6ms04zf
+ /blW/LjcggOg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="146196087"
+X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
+   d="scan'208";a="146196087"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 16:01:10 -0700
+IronPort-SDR: DG3QtNk9a5QLz1T9EUeee0oA9qnhYwzmQYBxQcSqbSxcw/cW6AGNEmPAP6A95Ag21WaBmUKiD0
+ Y+l6ter8sjvg==
+X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
+   d="scan'208";a="458083361"
+Received: from srinatha-mobl1.amr.corp.intel.com (HELO [10.255.5.187]) ([10.255.5.187])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 16:01:09 -0700
+Subject: Re: [tip: perf/core] x86/cpufeatures: Add Architectural LBRs feature
+ bit
+To:     linux-kernel@vger.kernel.org
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>
+References: <1593780569-62993-2-git-send-email-kan.liang@linux.intel.com>
+ <159420191583.4006.10876391642907607745.tip-bot2@tip-bot2>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <e231263a-76f8-326a-ae47-0ae785137c9a@intel.com>
+Date:   Thu, 9 Jul 2020 16:00:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <159420191583.4006.10876391642907607745.tip-bot2@tip-bot2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200613082140.2009461-4-noltari@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Jun 2020 10:21:34 +0200, Álvaro Fernández Rojas wrote:
-> BCM6362 SoCs have a power domain controller to enable/disable certain
-> components in order to save power.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> ---
->  v4: Remove "dts: " from commit title.
->  v3: Separate dt-bindings definitions from power domain .dtsi support.
-> 
->  include/dt-bindings/soc/bcm6362-pm.h | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 include/dt-bindings/soc/bcm6362-pm.h
-> 
+On 7/8/20 2:51 AM, tip-bot2 for Kan Liang wrote:
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 02dabc9..72ba4c5 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -366,6 +366,7 @@
+>  #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+>  #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+>  #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+> +#define X86_FEATURE_ARCH_LBR		(18*32+19) /* Intel ARCH LBR */
+>  #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+>  #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+>  #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Are architectural LBRs useful *without* XSAVE?  If not, should we add an
+entry in arch/x86/kernel/cpu/cpuid-deps.c::cpuid_deps[] for this?
+
+...
+        { X86_FEATURE_ARCH_LBR,            X86_FEATURE_XSAVES    },
+...
+
