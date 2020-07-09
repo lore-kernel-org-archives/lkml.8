@@ -6,58 +6,60 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C51C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC43C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 884A2206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F57720708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgGIAlm (ORCPT
+        id S1726151AbgGIAtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 20:41:42 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8726 "EHLO mga06.intel.com"
+        Wed, 8 Jul 2020 20:49:07 -0400
+Received: from mga07.intel.com ([134.134.136.100]:41630 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgGIAlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 20:41:42 -0400
-IronPort-SDR: NLXCV/FOSQCSeOon9APhKXhJ8ouBIaFREr5HQ5M1ImGPG13/9fe2GEK6fCvTH1dZOXUR8Dh+wc
- HFzuJCAau+Mw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="209449201"
+        id S1725903AbgGIAtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 20:49:07 -0400
+IronPort-SDR: C4m2LY0m9qEZaVnoKLPUg5PV6ZL8cHd3/JDCufNR6kdSPlJun7wc63geWi54C1b/glvQV1NWCf
+ oyybdq+dKiPw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="212838297"
 X-IronPort-AV: E=Sophos;i="5.75,329,1589266800"; 
-   d="scan'208";a="209449201"
+   d="scan'208";a="212838297"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 17:41:41 -0700
-IronPort-SDR: uFYAuuFAEeKqUbfSVzwhGtPX1KZ8Z0GGOB6JqZTlsOu0uIlRAMezTlwtEZlfmko2Zj5RIF0TLo
- tk/URUk9oIQg==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 17:49:06 -0700
+IronPort-SDR: MsuP/jCn6yqWaqU9WMjnXNhTSD5xPOd5WBWLnLNdLcb2O4yzysFZWViMMGBEHLuFidFNATE9Y+
+ TIXsXxB6u2XQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,329,1589266800"; 
-   d="scan'208";a="457700177"
+   d="scan'208";a="457701959"
 Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jul 2020 17:41:38 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] iommu: iommu_aux_at(de)tach_device() extension
-To:     Alex Williamson <alex.williamson@redhat.com>
-References: <20200707013957.23672-1-baolu.lu@linux.intel.com>
- <20200707013957.23672-2-baolu.lu@linux.intel.com>
- <20200707150408.474d81f1@x1.home>
- <dc98a109-7121-36b7-0854-f899b09692a4@linux.intel.com>
- <20200708130749.1b1e1421@x1.home>
+  by orsmga005.jf.intel.com with ESMTP; 08 Jul 2020 17:49:03 -0700
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v4 1/5] docs: IOMMU user API
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <1594165429-20075-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1594165429-20075-2-git-send-email-jacob.jun.pan@linux.intel.com>
+ <6d01dac0-aa9d-e22b-9baf-28c2f538871a@linux.intel.com>
+ <20200708082905.1b5da847@jacob-builder>
 From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <f1946060-d01c-70d2-7dd5-7730694a4d46@linux.intel.com>
-Date:   Thu, 9 Jul 2020 08:37:08 +0800
+Message-ID: <3777718a-9984-f9a5-5ab3-7f5e5782c148@linux.intel.com>
+Date:   Thu, 9 Jul 2020 08:44:33 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200708130749.1b1e1421@x1.home>
+In-Reply-To: <20200708082905.1b5da847@jacob-builder>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -66,119 +68,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Hi Jacob,
 
-On 7/9/20 3:07 AM, Alex Williamson wrote:
-> On Wed, 8 Jul 2020 10:53:12 +0800
+On 7/8/20 11:29 PM, Jacob Pan wrote:
+> On Wed, 8 Jul 2020 10:07:13 +0800
 > Lu Baolu <baolu.lu@linux.intel.com> wrote:
 > 
->> Hi Alex,
+>> Hi,
 >>
->> Thanks a lot for your comments. Please check my reply inline.
+>> On 7/8/20 7:43 AM, Jacob Pan wrote:
+>>> +For UAPIs that are shared with in-kernel users, a wrapper function
+>>> +is provided to distinguish the callers. For example,
+>>> +
+>>> +Userspace caller ::
+>>> +
+>>> +  int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct
+>>> device *dev,
+>>> +  void __user *udata)
+>>> +
+>>> +In-kernel caller ::
+>>> +
+>>> +  int __iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+>>> struct device *dev,
+>>> +  struct iommu_gpasid_bind_data *data)
 >>
->> On 7/8/20 5:04 AM, Alex Williamson wrote:
->>> On Tue,  7 Jul 2020 09:39:56 +0800
->>> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
->>>    
->>>> The hardware assistant vfio mediated device is a use case of iommu
->>>> aux-domain. The interactions between vfio/mdev and iommu during mdev
->>>> creation and passthr are:
->>>>
->>>> - Create a group for mdev with iommu_group_alloc();
->>>> - Add the device to the group with
->>>>           group = iommu_group_alloc();
->>>>           if (IS_ERR(group))
->>>>                   return PTR_ERR(group);
->>>>
->>>>           ret = iommu_group_add_device(group, &mdev->dev);
->>>>           if (!ret)
->>>>                   dev_info(&mdev->dev, "MDEV: group_id = %d\n",
->>>>                            iommu_group_id(group));
->>>> - Allocate an aux-domain
->>>>           iommu_domain_alloc()
->>>> - Attach the aux-domain to the physical device from which the mdev is
->>>>     created.
->>>>           iommu_aux_attach_device()
->>>>
->>>> In the whole process, an iommu group was allocated for the mdev and an
->>>> iommu domain was attached to the group, but the group->domain leaves
->>>> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
->>>>
->>>> The iommu_get_domain_for_dev() is a necessary interface for device
->>>> drivers that want to support aux-domain. For example,
->>>>
->>>>           struct iommu_domain *domain;
->>>>           struct device *dev = mdev_dev(mdev);
->>>>           unsigned long pasid;
->>>>
->>>>           domain = iommu_get_domain_for_dev(dev);
->>>>           if (!domain)
->>>>                   return -ENODEV;
->>>>
->>>>           pasid = iommu_aux_get_pasid(domain, dev->parent);
->>> How did we know this was an aux domain? ie. How did we know we could
->>> use it with iommu_aux_get_pasid()?
+>> iommu_page_response() may have the same needs. Can we reach an
+>> agreement on the naming rules?
 >>
->> Yes. It's a bit confusing if iommu_get_domain_for_dev() is reused here
->> for aux-domain.
->>
->>>
->>> Why did we assume the parent device is the iommu device for the aux
->>> domain?  Should that level of detail be already known by the aux domain?
->>>
->>> Nits - The iomu device of an mdev device is found via
->>> mdev_get_iommu_device(dev), it should not be assumed to be the parent.
->>> The parent of an mdev device is found via mdev_parent_dev(mdev).
->>
->> My bad. The driver should use mdev_get_iommu_device() instead.
->>
->>>
->>> The leaps in logic here make me wonder if we should instead be exposing
->>> more of an aux domain API rather than blurring the differences between
->>> these domains.  Thanks,
->>
->> How about add below API?
->>
->> /**
->>    * iommu_aux_get_domain_for_dev - get aux domain for a device
->>    * @dev: the accessory device
->>    *
->>    * The caller should pass a valid @dev to iommu_aux_attach_device() before
->>    * calling this api. Return an attached aux-domain, or NULL otherwise.
+> Yes iommu_page_response() also has to deal with in-kernel and UAPI
+> callers. I left it out because I thought the current VFIO and SVA common
+> code is not ready for PRQ yet, I might be reading old news :) argsz
+> need to be handled as well.
 > 
-> That's not necessarily the caller's responsibility, that might happen
-> elsewhere, this function simply returns an aux domain for the device if
-> it's attached to one.
+> Perhaps we can wait until this set is settled? Do you have a suggestion
+> on the naming rules?
 
-Yes. Fair enough. This piece of comments will be removed.
-
-> 
->>    */
->> struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
->> {
->>           struct iommu_domain *domain = NULL;
->>           struct iommu_group *group;
->>
->>           group = iommu_group_get(dev);
->>           if (!group)
->>                   return NULL;
->>
->>           if (group->aux_domain_attached)
->>                   domain = group->domain;
->>
->>           iommu_group_put(group);
->>
->>           return domain;
->> }
->> EXPORT_SYMBOL_GPL(iommu_aux_get_domain_for_dev);
-> 
-> For your example use case, this seems more clear to me.  Thanks,
-> 
-
-Okay, thank you!
-
-> Alex
+I have no suggestion on the naming rules, just wanted to check whether
+others have any preference. I agree that we can wait until this series
+is settled.
 
 Best regards,
 baolu
-
