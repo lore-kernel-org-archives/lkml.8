@@ -2,116 +2,175 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC9E12078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594313692;
-	bh=UznyOtaaICUoaaWynB3yxRxzQn6NRwVtjLug1/AzdeE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DOUqXeUG5F9Pbyn9fhOdrzWa3C+FqczONxxBrkJ5CjOLxc/IOuj0DpPdSikyFBngx
-	 m5bCCKtsTdfF3B8pXRrt0nq0mtLmr3k4cC13ix+MXdV4rJtSAStRZl2/e+Q8rkCnAW
-	 cKHAwNn8gxTXtQkhShR2eWT6Pzh3alwCfjQcj5ZY=
+	by mail.kernel.org (Postfix) with ESMTP id 3380A20836
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:56:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCCFpwhA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgGIQyv (ORCPT
+        id S1728211AbgGIQ4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:54:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37725 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGIQyu (ORCPT
+        Thu, 9 Jul 2020 12:56:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgGIQ4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:54:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id v6so3065896iob.4;
-        Thu, 09 Jul 2020 09:54:49 -0700 (PDT)
+        Thu, 9 Jul 2020 12:56:01 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DE2C08C5CE;
+        Thu,  9 Jul 2020 09:56:01 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id dp18so3025628ejc.8;
+        Thu, 09 Jul 2020 09:56:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tJhKCSfHKsoJq4+iPmQ+CTnGGZoUh1cxbcC3UfHyjno=;
+        b=YCCFpwhAdScWo2NWfpfFGy3rxPsKKaZjmZRlb18rP5v1cvYOij740tvclRToFsaIin
+         pcN7FFHj3v2IfHI87Q5VfSOk/WdXBTgN8IQpHHHP98CEN1EvkoTIG+zI16KpitiV3Ifu
+         5WUaE2ZiPYTl5RuaCQjpfagluu5ivdWJoApNz1z60fSrPrZ2BQ6qUxJhBTR9+YteqsbA
+         wT0ilhtiI1FJ5qnucRZ1qiDokSUCI5bV7EJPcOyWSCYQoCjTB5dAo0tr4/rtDA7rEdyv
+         t1WqEH9s5K28y2Y89NtCuRvcW/pYVnMoztDPTJuH1DeadrMyVYM0PDb5j83PE1B4qnG1
+         RGBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LGz/Zlxj80AaON4ZExXC6wPffqBZf12wYIQFvRvtTFU=;
-        b=mjhxfGcDLXIH8n2jNgt6RvjU2fPWiJOC3gZMPuiDMa22/KsJ7O5RxItOEfwjW5ojnz
-         a/loPK+quPsnxKPynDknLb9Cn9EUxlIryCr3NF+Sj+lcuQHQlyXFI6pEpFpp1/lsqT2p
-         D6WiAXaXBxC5I8hjrxjJKrtQxAjYV7JfNIo4jeaQEqCRXS49Vp8uuZ9idpJPNUHGb9dR
-         Jx3u1Fk/727u4zbNiuF+Jz1/1oqMsCLOkCC9BG74u68scjEESQtC2WMHcVdz6AqaT+K5
-         1/DR9sQvCKXkLq+8CAqhzz83UA2Jy2jWavEQ8F3+c6be4RHJzeLY6mwsq5/1UJwQu0jH
-         SX2A==
-X-Gm-Message-State: AOAM530yrTBGMg5b9VbXL+uQ4tAL4H3oCwFJZuOTHpp6UpyX0kBdQVLY
-        aZnxFCis3glcTa0M9LcEuw==
-X-Google-Smtp-Source: ABdhPJwVHnWKGBfcmnHMtMLi5T9+D6bkCcY8zGSjmNL+jbQ/Q/bEuXfltsJTV1Viqjq6/RURN8zfZg==
-X-Received: by 2002:a05:6638:252:: with SMTP id w18mr60811098jaq.42.1594313689499;
-        Thu, 09 Jul 2020 09:54:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id l17sm1999262ilm.70.2020.07.09.09.54.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 09:54:48 -0700 (PDT)
-Received: (nullmailer pid 510212 invoked by uid 1000);
-        Thu, 09 Jul 2020 16:54:37 -0000
-Date:   Thu, 9 Jul 2020 10:54:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     linux-gpio@vger.kernel.org, amit.kucheria@verdurent.com,
-        linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
-        linux-clk@vger.kernel.org, robh+dt@kernel.org,
-        huangshuosheng@allwinnertech.com, devicetree@vger.kernel.org,
-        daniel.lezcano@linaro.org, wens@csie.org, lee.jones@linaro.org,
-        clabbe@baylibre.com, p.zabel@pengutronix.de, icenowy@aosc.io,
-        tiny.windzz@gmail.com, linux-kernel@vger.kernel.org,
-        jason@lakedaemon.net, liyong@allwinnertech.com,
-        linux-i2c@vger.kernel.org, bage@linutronix.de, stefan@olimex.com,
-        linus.walleij@linaro.org, rui.zhang@intel.com, tglx@linutronix.de,
-        megous@megous.com, linux-pm@vger.kernel.org, mripard@kernel.org,
-        anarsoul@gmail.com, mturquette@baylibre.com,
-        srinivas.kandagatla@linaro.org, maz@kernel.org, sboyd@kernel.org
-Subject: Re: [PATCH v3 06/16] dt-bindings: nvmem: SID: add binding for A100's
- SID controller
-Message-ID: <20200709165437.GA509792@bogus>
-References: <20200708071942.22595-1-frank@allwinnertech.com>
- <20200708071942.22595-7-frank@allwinnertech.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tJhKCSfHKsoJq4+iPmQ+CTnGGZoUh1cxbcC3UfHyjno=;
+        b=DVBHySOlYgtUSi/eyQ+mtGG1j5iZdrVxHXdykknffYYnATjmEd/fSrC+4RufH8EILw
+         hlz31aaexiWjv3CCDy9ViJEIW1Irkym3OTe3tolJ3bvdpWBYioC+skPTlnE8LaUtjGg1
+         V7lxwll8wrO5j1C1lJOWiuROX3b4lXiyURyBQSmOYtcFZQxTaMzb6idNGm11g5UyFlaO
+         nSAzuvMihhiGML1wh1/b7HHk5rIs1xyXfM7UQ7YNlGqhB9R5H/g8Y8Fq+qYMab0C+brg
+         bYUVEraTAefv/06rP8clvJ1YBfwJxSzshAk3E93ivWn5q36vqCdiZCxMoBe/y9jKacMq
+         HLFQ==
+X-Gm-Message-State: AOAM533qNMCCk8U3jZOMFF5Va0R9rBsV3Urhz2pDU2wA/DztjnpnMSUA
+        JkmRHOZBKP6JBmKjzBAEn07i2P/Fc4i6lzhwz2g=
+X-Google-Smtp-Source: ABdhPJxL2gSk8Byau/BSY6kZmFScPsa7g6bppC6AWZ9vfbc8KmC0NMwTfuPXPyOCy48yyEb+BQYtGIYgo+5gQhtG7do=
+X-Received: by 2002:a17:906:494a:: with SMTP id f10mr60249442ejt.428.1594313759675;
+ Thu, 09 Jul 2020 09:55:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708071942.22595-7-frank@allwinnertech.com>
+References: <20200709050145.3520931-1-bjorn.andersson@linaro.org>
+ <20200709050145.3520931-3-bjorn.andersson@linaro.org> <CAF6AEGugJYmMpeH_9mWXcegq1awzraUzBTa0S1Rqcr3=Bmk0uQ@mail.gmail.com>
+ <20200709164833.GR11847@yoga>
+In-Reply-To: <20200709164833.GR11847@yoga>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 9 Jul 2020 09:56:31 -0700
+Message-ID: <CAF6AEGvmqSNeQSFhc4SDJ=09x_LMVz=DmzUEb6GGv=s=f8P2aA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] iommu/arm-smmu: Emulate bypass by using context banks
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Jul 2020 15:19:32 +0800, Frank Lee wrote:
-> Add a binding for A100's SID controller.
-> 
-> Signed-off-by: Frank Lee <frank@allwinnertech.com>
-> ---
->  Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+On Thu, Jul 9, 2020 at 9:48 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 09 Jul 09:17 PDT 2020, Rob Clark wrote:
+>
+> > On Wed, Jul 8, 2020 at 10:01 PM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> [..]
+> > > @@ -678,7 +680,11 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+> > >         if (smmu_domain->smmu)
+> > >                 goto out_unlock;
+> > >
+> > > -       if (domain->type == IOMMU_DOMAIN_IDENTITY) {
+> > > +       /*
+> > > +        * Nothing to do for IDENTITY domains,unless disabled context banks are
+> > > +        * used to emulate bypass mappings on Qualcomm platforms.
+> > > +        */
+> > > +       if (domain->type == IOMMU_DOMAIN_IDENTITY && !smmu->qcom_bypass_quirk) {
+> >
+> > maybe I'm overlooking something, but I think this would put us back to
+> > allocating pgtables (and making iommu->map/unmap() no longer no-ops),
+> > which I don't think we want
+> >
+>
+> You're right, we are allocating page tables for these contexts and
+> map/unmap would modify the page tables. But afaict traversal is never
+> performed, given that the banks are never enabled.
+>
+> But as drivers probe properly, or the direct mapped drivers sets up
+> their iommu domains explicitly with translation this would not be used.
+>
+> So afaict we're just wasting some memory - for the gain of not
+> overcomplicating this function.
+
+the problem is that it makes dma_map/unmap less of a no-op than it
+should be (for the case where the driver is explicitly managing it's
+own domain)..  I was hoping to get rid of the hacks to use dma_sync go
+back to dma_map/unmap for cache cleaning
+
+BR,
+-R
 
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: properties:compatible:enum:5: {'items': [{'const': 'allwinner,sun50i-a100-sid'}, {'const': 'allwinner,sun50i-a64-sid'}]} is not of type 'string'
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: ignoring, error in schema: properties: compatible: enum: 5
-warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: ignoring, error in schema: properties: compatible: enum: 5
-warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-
-See https://patchwork.ozlabs.org/patch/1325053
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+>
+> Regards,
+> Bjorn
+>
+> > BR,
+> > -R
+> >
+> > >                 smmu_domain->stage = ARM_SMMU_DOMAIN_BYPASS;
+> > >                 smmu_domain->smmu = smmu;
+> > >                 goto out_unlock;
+> > > @@ -826,6 +832,10 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+> > >         domain->geometry.aperture_end = (1UL << ias) - 1;
+> > >         domain->geometry.force_aperture = true;
+> > >
+> > > +       /* Enable translation for non-identity context banks */
+> > > +       if (domain->type != IOMMU_DOMAIN_IDENTITY)
+> > > +               cfg->m = true;
+> > > +
+> > >         /* Initialise the context bank with our page table cfg */
+> > >         arm_smmu_init_context_bank(smmu_domain, &pgtbl_cfg);
+> > >         arm_smmu_write_context_bank(smmu, cfg->cbndx);
+> > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> > > index d172c024be61..a71d193073e4 100644
+> > > --- a/drivers/iommu/arm-smmu.h
+> > > +++ b/drivers/iommu/arm-smmu.h
+> > > @@ -305,6 +305,8 @@ struct arm_smmu_device {
+> > >
+> > >         /* IOMMU core code handle */
+> > >         struct iommu_device             iommu;
+> > > +
+> > > +       bool                            qcom_bypass_quirk;
+> > >  };
+> > >
+> > >  enum arm_smmu_context_fmt {
+> > > @@ -323,6 +325,7 @@ struct arm_smmu_cfg {
+> > >         };
+> > >         enum arm_smmu_cbar_type         cbar;
+> > >         enum arm_smmu_context_fmt       fmt;
+> > > +       bool                            m;
+> > >  };
+> > >  #define ARM_SMMU_INVALID_IRPTNDX       0xff
+> > >
+> > > --
+> > > 2.26.2
+> > >
+> > > _______________________________________________
+> > > iommu mailing list
+> > > iommu@lists.linux-foundation.org
+> > > https://lists.linuxfoundation.org/mailman/listinfo/iommu
