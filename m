@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B63CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B7920663
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D30620663
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:20:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="O4RNW+Dr"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MRNA0U4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgGIGUK (ORCPT
+        id S1726615AbgGIGUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 02:20:10 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:37996 "EHLO
+        Thu, 9 Jul 2020 02:20:12 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:38036 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGIGUD (ORCPT
+        with ESMTP id S1725787AbgGIGUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 02:20:03 -0400
+        Thu, 9 Jul 2020 02:20:06 -0400
 Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 1AF3320B4909;
-        Wed,  8 Jul 2020 23:20:02 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1AF3320B4909
+        by linux.microsoft.com (Postfix) with ESMTPSA id DDD7520B4908;
+        Wed,  8 Jul 2020 23:20:04 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DDD7520B4908
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1594275602;
-        bh=yI0/g2aB0s9h4ACzf3IyT+lQGzmQDlqQ6wtp8tod5FU=;
+        s=default; t=1594275605;
+        bh=Sl81iM0J/lPABj/akhRyUQ0Bb6NMuzvB6SqKp+9RjQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4RNW+DrHFkTk1qvxZmSQHwG7aRBQp4vhDsW1yFMPo79ZpRJ8OOVgj4kYg6+mERq+
-         tuRJfg5xOoluwdQYo5LFqbRK/juKp98ioIe5aT2QKHwT3atagUB2EelWMZ2ELjos63
-         ph6+ujmrG9pZwEhRoL4DOgdpq6xRHWPTAGk3cbSc=
+        b=MRNA0U4/MUFYoNQh/1FfyKqfdTvCKZBn+66ULd8wq11Blxi25lvGPAtJDBWuwEPjl
+         tR1H8crl0m6VtMbijXGucsB/D6oEU6YQHadiiz3WwkgCz/kvLuScyEzEcrJJpGY5L8
+         Stag4eucxD6oH3cAHDitYgbsEUFxjUKeolU5KVp4=
 From:   Tyler Hicks <tyhicks@linux.microsoft.com>
 To:     Mimi Zohar <zohar@linux.ibm.com>,
         Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
@@ -43,9 +43,9 @@ Cc:     James Morris <jmorris@namei.org>,
         Prakhar Srivastava <prsriva02@gmail.com>,
         linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org
-Subject: [PATCH v3 04/12] ima: Fail rule parsing when buffer hook functions have an invalid action
-Date:   Thu,  9 Jul 2020 01:19:03 -0500
-Message-Id: <20200709061911.954326-5-tyhicks@linux.microsoft.com>
+Subject: [PATCH v3 06/12] ima: Fail rule parsing when the KEY_CHECK hook is combined with an invalid cond
+Date:   Thu,  9 Jul 2020 01:19:05 -0500
+Message-Id: <20200709061911.954326-7-tyhicks@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
 References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
@@ -56,106 +56,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Buffer based hook functions, such as KEXEC_CMDLINE and KEY_CHECK, can
-only measure. The process_buffer_measurement() function quietly ignores
-all actions except measure so make this behavior clear at the time of
-policy load.
+The KEY_CHECK function only supports the uid, pcr, and keyrings
+conditionals. Make this clear at policy load so that IMA policy authors
+don't assume that other conditionals are supported.
 
-The parsing of the keyrings conditional had a check to ensure that it
-was only specified with measure actions but the check should be on the
-hook function and not the keyrings conditional since
-"appraise func=KEY_CHECK" is not a valid rule.
-
-Fixes: b0935123a183 ("IMA: Define a new hook to measure the kexec boot command line arguments")
 Fixes: 5808611cccb2 ("IMA: Add KEY_CHECK func to measure keys")
 Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
 
 * v3
-  - Add comments to ima_validate_rule() to separate/explain the types of
-    validation checks (section for action checks, section for hook
-    function checks, soon to be a section for combination of options
-    checks, etc.)
-  - Removed the "if (entry->flags & IMA_FUNC)" conditional around the
-    switch statement in ima_validate_rule() which reduced the overall indention
-    by a tab. This could be removed because entry->func is NONE when the
-    IMA_FUNC flag is not set. We'll explicitly enforce and then leverage
-    that property in a later patch when we start validating all hook
-    functions in ima_validate_rule().
-  - Add comment explicitly stating that all hook functions except
-    KEXEC_CMDLINE and KEY_CHECK are still being validated in
-    ima_parse_rule().
+  - Added Lakshmi's Reviewed-by
+  - Adjust for the indentation change introduced in patch #4
 * v2
   - No change
 
- security/integrity/ima/ima_policy.c | 40 +++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
+ security/integrity/ima/ima_policy.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index e458cd47c099..40c28f1a6a5a 100644
+index 1c64bd6f1728..81da02071d41 100644
 --- a/security/integrity/ima/ima_policy.c
 +++ b/security/integrity/ima/ima_policy.c
-@@ -973,6 +973,43 @@ static void check_template_modsig(const struct ima_template_desc *template)
- #undef MSG
- }
+@@ -1023,6 +1023,13 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+ 		if (entry->action & ~(MEASURE | DONT_MEASURE))
+ 			return false;
  
-+static bool ima_validate_rule(struct ima_rule_entry *entry)
-+{
-+	/* Ensure that the action is set */
-+	if (entry->action == UNKNOWN)
-+		return false;
-+
-+	/*
-+	 * Ensure that the hook function is compatible with the other
-+	 * components of the rule
-+	 */
-+	switch (entry->func) {
-+	case NONE:
-+	case FILE_CHECK:
-+	case MMAP_CHECK:
-+	case BPRM_CHECK:
-+	case CREDS_CHECK:
-+	case POST_SETATTR:
-+	case MODULE_CHECK:
-+	case FIRMWARE_CHECK:
-+	case KEXEC_KERNEL_CHECK:
-+	case KEXEC_INITRAMFS_CHECK:
-+	case POLICY_CHECK:
-+		/* Validation of these hook functions is in ima_parse_rule() */
-+		break;
-+	case KEXEC_CMDLINE:
-+	case KEY_CHECK:
-+		if (entry->action & ~(MEASURE | DONT_MEASURE))
++		if (entry->flags & ~(IMA_FUNC | IMA_UID | IMA_PCR |
++				     IMA_KEYRINGS))
 +			return false;
 +
-+		break;
-+	default:
-+		return false;
-+	}
++		if (ima_rule_contains_lsm_cond(entry))
++			return false;
 +
-+	return true;
-+}
-+
- static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- {
- 	struct audit_buffer *ab;
-@@ -1150,7 +1187,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 			keyrings_len = strlen(args[0].from) + 1;
- 
- 			if ((entry->keyrings) ||
--			    (entry->action != MEASURE) ||
- 			    (entry->func != KEY_CHECK) ||
- 			    (keyrings_len < 2)) {
- 				result = -EINVAL;
-@@ -1356,7 +1392,7 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 			break;
- 		}
- 	}
--	if (!result && (entry->action == UNKNOWN))
-+	if (!result && !ima_validate_rule(entry))
- 		result = -EINVAL;
- 	else if (entry->action == APPRAISE)
- 		temp_ima_appraise |= ima_appraise_flag(entry->func);
+ 		break;
+ 	default:
+ 		return false;
 -- 
 2.25.1
 
