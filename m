@@ -2,99 +2,153 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63275C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56434C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D0E2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:31:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="dWKIyZJd"
+	by mail.kernel.org (Postfix) with ESMTP id 3355720708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:32:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594297971;
+	bh=g2/iypHtiVgabnHTQv4FWHWIFTHVKHcqQO3VYEXfe8Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=c6/t67ZvPFL76smdFBIytNBCAPkNEL9d+BcT/SnHG5ugmccgJs4/VYCW3GFj357lN
+	 JPul9NnsL4fAJ1Ipv53cuiRHbJiwijBu7hpi2hqW7pWb0+REn8sdW6Dr6irfRL5Ocy
+	 aUNqO9JDwooFMXtHLKISX1GSh3+w24WLT09VYYEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgGIMbS (ORCPT
+        id S1727094AbgGIMcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:31:18 -0400
-Received: from mail-dm6nam12on2082.outbound.protection.outlook.com ([40.107.243.82]:6194
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726327AbgGIMbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:31:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RVu/0Gu+Oew/B9wmW/+Wq1I/WBgJ1BPWMRjCwI3hur4QcQZg0VDt71L49qrgUUAMaNIXrJ6db6b1mP7oWxgWyAkFLU7yqtEvtmlImHeED+jyhNNPjid9Vqq0ISOQTf6YwE/9499fq3GVi2nnYNR9KegIfkaLalzuhleGaWKvDg5qwUNnpI4HZDULOlQO+8NPI1gmYrNMXBXhq0he18vDGUuCLP2SQKcpblWFExkssz70qPgJHMD4aLC4h8xf23ikCR4SHB++/hWXYJK/kTVyyhZ6efH/VW3tF9YDP0dTDMt36W34ObtgFnWB3FQKY3y5yAw9D1nrBUM52cDdoaCnJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b61P6t+y6VwKasAxG7gassuo5ahARk8mLcFRioDruxo=;
- b=FSHbX2DxLk34Zk5r+hYEEgXHVLlSVrCqpokjwFGmuBga88hi454muVWNnRAzOxBx1W+zBVPW5xtT9bhy17GpPjVgcfMxd7X6bgfU10KqgvHd9g7puOQdFhh2ycSNGhgbTrmpdzDSSswA44Ip+dW769s50bfMpZQoZlWZV4bzmzvw4UP7M1ZV8TLEaeWAkgip5mKFJHPHCuX+dW67TqVosqlpX5RqbLi1LDZksNC8FKYxmJd3+RsEfpvtkn4t8LEn9d8Mh6SNN4IVTZwlnZ+apt8aPPe4y/gH4gnxtXk3/MT90uR/g1k1Gs17aVR+KJSzfDoI9yAIWQsBOuJu72Ntaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=infinera.com; dmarc=pass action=none header.from=infinera.com;
- dkim=pass header.d=infinera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b61P6t+y6VwKasAxG7gassuo5ahARk8mLcFRioDruxo=;
- b=dWKIyZJdkv0wHjvZa4TcPMQICP+13+ggrlIdDEzX07M3yrvcp1ppKHfLdtshD29C0i3AUUIgaskWlVmyrTkDz+YBkaRIwO6CvQzfJ/rkNUxUiYQNe83lOndECzZeTcx1YOAN79pY3SGdOiDBUW40yQXWj5m6omCNwXb4WGov2lE=
-Received: from MWHPR1001MB2190.namprd10.prod.outlook.com
- (2603:10b6:301:2e::20) by MWHPR1001MB2272.namprd10.prod.outlook.com
- (2603:10b6:301:2c::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Thu, 9 Jul
- 2020 12:31:14 +0000
-Received: from MWHPR1001MB2190.namprd10.prod.outlook.com
- ([fe80::b439:ba0:98d6:c2d1]) by MWHPR1001MB2190.namprd10.prod.outlook.com
- ([fe80::b439:ba0:98d6:c2d1%5]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
- 12:31:14 +0000
-From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: printk of non NULL terminated strings ?
-Thread-Topic: printk of non NULL terminated strings ?
-Thread-Index: AQHWVezV9c8qp7AVfk6iUQJ/gxZBLQ==
-Date:   Thu, 9 Jul 2020 12:31:14 +0000
-Message-ID: <4436dd281299b46f431ad1707c5de42af45ea4f7.camel@infinera.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.37.3 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=infinera.com;
-x-originating-ip: [88.131.87.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c8b32485-b836-4cac-2853-08d82403f88a
-x-ms-traffictypediagnostic: MWHPR1001MB2272:
-x-microsoft-antispam-prvs: <MWHPR1001MB22726F4E16D5D8039362B055F4640@MWHPR1001MB2272.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: am3zanJHU4qPsYMWX05LcqEgjpAXbYIRzEJbQpjhdr8TraLHZvzyblqoEhdNWtpUgEvTuf+qiANBqG2eXsrjY9m7JUrF1NKLlw2XA1a7EghCUDlf1qrg7V7dVFFtrwWrJv6nOMmuNgyvBAy5UWZSANWYSr14hC8OUPugehjpBho4wf9dpHy17h4OtjL+9DN1nvJv5h3GUP8iSzXO5t+0RISoiQJLW2G0WrnWTu7/bPezsri+6JRdbO30O9CWKt2mgSvqNw2NNmfj010tL+yPd0+rrr86xE1BC+5XbdP28eH7rDDlkB9tGg/bYiYxav89KChzODr+tBAFUx5znOvppA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2190.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(136003)(366004)(396003)(5660300002)(36756003)(71200400001)(2616005)(8676002)(2906002)(186003)(8936002)(6916009)(86362001)(6486002)(316002)(558084003)(6512007)(66556008)(6506007)(66946007)(66476007)(76116006)(91956017)(64756008)(66446008)(478600001)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: JqIKjsjM7E+Fqf1RPI4XCU+WD1jjFtnO8RjWLjG0mlMqwDcalreOtNQxwAEv020C4dHoevSbJRNCzRoFe+coU9dcv4mujrIHHj2Ij4vYspBr9wBL85f0u2sNev12jdKJr07mYzwN4+kuJZ/Uut2fUl905g0O8c34PuABWqI+ARIwA0iAVgDcuuoUXy6/T4R9S/sA+Q4mLJNHKtscHGxcRTYAIEwUpDueZSKqfgVsy7EbrFKVobhGsXHAuP/qzjcDZoaOQCwsN5abKTfnAPXOsPaFacDUHe5D71BVDoyaPaiibPDQMLkitG3sY0XxjCtFGPV9ralkqfo6VawKSNyv2tnVh5Ti0ymfb0IcO+uMlWUVKSI9sgSyP30h4MkiFmGrZpuDO5S7O0LAK9xwQ2sCGDZwBW4yflmuZtTMSBzL5WQLcSin2/meP+UUI7hhhow7kt0T7UaJypGxySPHcovXoAV6j9MC/OlxoduGzUvMHFA=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <85190205696C89409ADCCE63AEA4D764@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 9 Jul 2020 08:32:50 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38995 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgGIMct (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:32:49 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 18so1562742otv.6;
+        Thu, 09 Jul 2020 05:32:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qf+FOomT9nO8ENiAbP5RjOUaSmYFh8SB5zg2jFw74po=;
+        b=To60Y9J++O/XYO2JggxGYa5qUS/udyVhvcsANV6Fg0Y0+q6AasU3Hls6cxaJOl3Hbe
+         JZwfsn1XGCN1OI84N7uzKn2d4If2CczmAy9e1fO2GdutmZYVoCb8jhbD0HH2k4aBWjWm
+         5AjHfQeeyJNw4ZZBOECcf6kd0iCSnHcgYckDKa3SczK0mTts6EZX4G7R8dyltD+hlDsS
+         x3QkdLhXunLEC2xcrKve7yBkIe1we3gGylFC/HScfvxb3ESxWzdf7SfnJYWkqo2Ipr3a
+         SXRFt/qd7SVBab3XEv7Meed6de7IZNd+A1940z8FGUG6ad+5dd/56Hn9Zwj7wKjtdLWj
+         2sKA==
+X-Gm-Message-State: AOAM5329dySwpk8/HxU1wk1KkDx4SihJTI355qn2bOZQ+wSQP1NNvoVi
+        xDn9BRH3+FHto6RFwzz9esNtU4HcODTNJOUN2/A=
+X-Google-Smtp-Source: ABdhPJyyO/sow6b5DME3pCx+Xbfc2850NqvXukJ17yz4LloufPDrn0p4QCkTarJTa7CeTRe/o0Bjk2RlTbvm61GGVUo=
+X-Received: by 2002:a05:6830:30ba:: with SMTP id g26mr31516692ots.118.1594297968822;
+ Thu, 09 Jul 2020 05:32:48 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: infinera.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2190.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8b32485-b836-4cac-2853-08d82403f88a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 12:31:14.5161
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VlJvBHZ0Jfz0U5sCt5OrXnOeMrdPiLsnZQNcf87hlMj/9HldNnDdIpJE7t9VVHagRJUusluf26tx7QsdqIPsDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1001MB2272
+References: <20200706095224.2285480-1-zhe.he@windriver.com>
+In-Reply-To: <20200706095224.2285480-1-zhe.he@windriver.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 9 Jul 2020 14:32:37 +0200
+Message-ID: <CAJZ5v0hVkW2kSsLu016AjX_jWCxzTBKorXp95ojfEYQ44heLxw@mail.gmail.com>
+Subject: Re: [PATCH] freezer: Add unsafe versions of freezable_schedule_timeout_interruptible
+ for NFS
+To:     zhe.he@windriver.com
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        linux-nfs@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SXMgdGhlcmUgYSBmb3JtYXQgKG9yIG90aGVyIGZ1bmN0aW9uKSB0aGF0IGxldHMgbWUNCnByaW50
-IHN0cmluZ3Mgd2l0aG91dCBhbiBcMCB0ZXJtaW5hdG9yIHVzaW5nIGFuIGV4cGxpY2l0IGxlbmd0
-aCBhcmcgaW5zdGVhZD8NCg0KU29tZXRoaW5nIGxpa2U6DQogIHByaW50aygiJXMuLi4iLCBzdHIs
-IHN0cl9sZW4pOyAvKiByZXBsYWNlIC4uLiAqLw0Kb3Igc29tZSBvdGhlciBmdW5rdGlvbiBwZXJo
-YXBzID8NCg0KIEpvY2tlDQo=
+On Mon, Jul 6, 2020 at 11:57 AM <zhe.he@windriver.com> wrote:
+>
+> From: He Zhe <zhe.he@windriver.com>
+>
+> commit 0688e64bc600 ("NFS: Allow signal interruption of NFS4ERR_DELAYed operations")
+> introduces nfs4_delay_interruptible which also needs an _unsafe version to
+> avoid the following call trace for the same reason explained in
+> commit 416ad3c9c006 ("freezer: add unsafe versions of freezable helpers for NFS")
+>
+> CPU: 4 PID: 3968 Comm: rm Tainted: G W 5.8.0-rc4 #1
+> Hardware name: Marvell OcteonTX CN96XX board (DT)
+> Call trace:
+> dump_backtrace+0x0/0x1dc
+> show_stack+0x20/0x30
+> dump_stack+0xdc/0x150
+> debug_check_no_locks_held+0x98/0xa0
+> nfs4_delay_interruptible+0xd8/0x120
+> nfs4_handle_exception+0x130/0x170
+> nfs4_proc_rmdir+0x8c/0x220
+> nfs_rmdir+0xa4/0x360
+> vfs_rmdir.part.0+0x6c/0x1b0
+> do_rmdir+0x18c/0x210
+> __arm64_sys_unlinkat+0x64/0x7c
+> el0_svc_common.constprop.0+0x7c/0x110
+> do_el0_svc+0x24/0xa0
+> el0_sync_handler+0x13c/0x1b8
+> el0_sync+0x158/0x180
+>
+> Signed-off-by: He Zhe <zhe.he@windriver.com>
+
+Applied as 5.9 material with some edits in the subject, thanks!
+
+> ---
+>  fs/nfs/nfs4proc.c       |  2 +-
+>  include/linux/freezer.h | 14 ++++++++++++++
+>  2 files changed, 15 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index e32717fd1169..15ecfa474e37 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -414,7 +414,7 @@ static int nfs4_delay_interruptible(long *timeout)
+>  {
+>         might_sleep();
+>
+> -       freezable_schedule_timeout_interruptible(nfs4_update_delay(timeout));
+> +       freezable_schedule_timeout_interruptible_unsafe(nfs4_update_delay(timeout));
+>         if (!signal_pending(current))
+>                 return 0;
+>         return __fatal_signal_pending(current) ? -EINTR :-ERESTARTSYS;
+> diff --git a/include/linux/freezer.h b/include/linux/freezer.h
+> index 21f5aa0b217f..27828145ca09 100644
+> --- a/include/linux/freezer.h
+> +++ b/include/linux/freezer.h
+> @@ -207,6 +207,17 @@ static inline long freezable_schedule_timeout_interruptible(long timeout)
+>         return __retval;
+>  }
+>
+> +/* DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION */
+> +static inline long freezable_schedule_timeout_interruptible_unsafe(long timeout)
+> +{
+> +       long __retval;
+> +
+> +       freezer_do_not_count();
+> +       __retval = schedule_timeout_interruptible(timeout);
+> +       freezer_count_unsafe();
+> +       return __retval;
+> +}
+> +
+>  /* Like schedule_timeout_killable(), but should not block the freezer. */
+>  static inline long freezable_schedule_timeout_killable(long timeout)
+>  {
+> @@ -285,6 +296,9 @@ static inline void set_freezable(void) {}
+>  #define freezable_schedule_timeout_interruptible(timeout)              \
+>         schedule_timeout_interruptible(timeout)
+>
+> +#define freezable_schedule_timeout_interruptible_unsafe(timeout)       \
+> +       schedule_timeout_interruptible(timeout)
+> +
+>  #define freezable_schedule_timeout_killable(timeout)                   \
+>         schedule_timeout_killable(timeout)
+>
+> --
+> 2.17.1
+>
