@@ -2,109 +2,139 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39F4C20657
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:10:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="0cdTmxTt"
+	by mail.kernel.org (Postfix) with ESMTP id EADAA20767
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594321961;
+	bh=vXacpBwKAP/ussDi2aRbt5Uw55Jy2aF7vJrJ47D3Ai8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uiUaHXao6kxE/4MdlFLS6X6aA+g75exHlfn0nmu31etmInpMNabTi2z/H2Vpmc4Po
+	 mHtQjsyowcnH8TXV09BOJlAhVnH7MN0MmoZVY/0HNIPYeHCLegkT4zhYS4cbGXpq1f
+	 wcc10uhxmVD0HixXH/MWbPEvCxsh1LQS3NKOzQw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgGITKQ (ORCPT
+        id S1726269AbgGITMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:10:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33978 "EHLO
+        Thu, 9 Jul 2020 15:12:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgGITKP (ORCPT
+        with ESMTP id S1726183AbgGITMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 15:10:15 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56683C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 12:10:15 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id ga4so3415527ejb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 12:10:15 -0700 (PDT)
+        Thu, 9 Jul 2020 15:12:39 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C03C5C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 12:12:38 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c11so1808559lfh.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 12:12:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=B2fOhJGPsa38CdJ0J83JYaoOhOOC+ex2vBW2wQq+k5E=;
-        b=0cdTmxTtN7+vfGyH8NbCnBkNvIefYWEOCIlOULHgTocPWhpUR6/lquU1AM7frwbSsP
-         m0CPz6J5rTWe7lN8aZ+vVp63vR/vsivRWKjx3LkEwJLq0r34vVWl/m9Q49WhadgZ1F3H
-         KU9NRQV59ND/Qi7KauBOq72P8MUjWsoMmusWgGHZGn523v5N35mWFyzdl/56JJuplODT
-         pfSdf5u9oVvW5ZQ52mCBlrILAgqlrxb67ULxNsl7TfzTCRiYOgrRahKlqzzros2Yy9J8
-         mayfwrw298Z+elPQbmB+JqgiIwz9WvnH+WLqB2wUQdGGppNqt5U5QQyml0TSb4NO+i4p
-         9YkA==
+        bh=MUXt+VaotMhfJOd6E9mEicpXY5WrC4/+FNcOPjlj6ss=;
+        b=S5oSqZW1A4t7CU5Ud+a9tiBkoj4BM6Sb6vMvdJv3Exg0n0rEmbYvLoimbCBwZjSiZf
+         ulX3gUvqC5I6VLONpTNqv63W33nX+dqOm728Rx2Ga/A0F2iuJeXZeKYi75E/67UrmbHZ
+         sGKbdD7B2JCya4oDSFY2vxM6TwJonF4IFsbKg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=B2fOhJGPsa38CdJ0J83JYaoOhOOC+ex2vBW2wQq+k5E=;
-        b=GEzRrp/Gshk/RtUk6LwDm4S6Uuis2IcIWezLuLFjaWtpkVFSJ2JG8A1alyz5ftNZsL
-         lRvG6drm8LPl8br3u20zqKQNtwXWRmDikBoqOcc3PCQRQfdBT8bq5bX9YQrhatfceFVH
-         euawiHa7i+wunzJj9L+jlRUEbH3DYzifocs0A3qfa1VqFdaGlTR2KoD8DaHasKK/KjXd
-         BtFXw9ps7jMdgUkuf7J4i3c8Hnx2ZVr64TOrUwAvuAc7WTcl+zHglft75uNeOYanqXpB
-         S+kAsbHnjI2IQvOEqVSLkg0S5lJhWWdiItaLZD1pg/94QTpLjO0/RF8PMVB0ej0WNkfM
-         qMuA==
-X-Gm-Message-State: AOAM533FREeKxLlzhUSK/JE+xREz1wBKgCc9Pp/yoFUZHs4yIKR5vwCR
-        v1mfS8DkR4z/Qan4GFAYduVKJUlwbkKR4cya0IJ71iBMIDE=
-X-Google-Smtp-Source: ABdhPJz6e/Qh9nzMGDVNBdMj6Ao1a+kIvsOmRkQ9MF9Gyw0rlCHOGDj0lqFFJNRYxO4ZjpWCIaaHIlImKb6TqKt4bqM=
-X-Received: by 2002:a17:906:f98e:: with SMTP id li14mr57482107ejb.174.1594321814142;
- Thu, 09 Jul 2020 12:10:14 -0700 (PDT)
+        bh=MUXt+VaotMhfJOd6E9mEicpXY5WrC4/+FNcOPjlj6ss=;
+        b=XVfmpAktqmf2HRzrCY1HzIou8Y8tkVxvrRV4u381Kh3ReMqhOTPqDJ1G+A6xY+VhOO
+         zsiwKtve417G9iBb3UPIQX0olGPYcW3BR4SgOoIcjAFmCqPxj2+obbdA5rSKNHvxyO3D
+         cUXABZdTz86aASpvVV8CcF7xjyLceJ88Jowt66d7BHfakq95+9undWlvyzI0vuUvvpWZ
+         63+SONoxtqYu5UOGMbhdXwRumvZ8w+rgKwtPy92jHy87uNvHydI9tgvDjUNjpZJls5uL
+         nSuPnzxOqiCml1nDM9hs5QEoU/EAxuIb7VmQlgG+o8hA2TeVb2EiWLXYMzPVoqb/kQla
+         UwNw==
+X-Gm-Message-State: AOAM531bVO0llC3Yh3fLF+PFTQwXDaYFqJ/JKfUhPP9WG/QiY5PNiEAO
+        YgjjJsU96lcb0jhrPzVBGYvHAd/dcJ0=
+X-Google-Smtp-Source: ABdhPJyxaCR9U0JeNgtnWKQi9WO3HwDNDAzUSm6FYGs2A0rxYntKtNl9OuwsEz4ROa1/F3AvRaytlw==
+X-Received: by 2002:ac2:5226:: with SMTP id i6mr40925128lfl.55.1594321957276;
+        Thu, 09 Jul 2020 12:12:37 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id r19sm1087409ljm.32.2020.07.09.12.12.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 12:12:37 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id q7so3699039ljm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 12:12:36 -0700 (PDT)
+X-Received: by 2002:a2e:991:: with SMTP id 139mr36799176ljj.314.1594321956136;
+ Thu, 09 Jul 2020 12:12:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <159423201991.2466245.8461410729774664077.stgit@dwillia2-desk3.amr.corp.intel.com>
- <5be5abc9-c2db-1f96-bc29-61cd90d985ab@suse.com>
-In-Reply-To: <5be5abc9-c2db-1f96-bc29-61cd90d985ab@suse.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 9 Jul 2020 12:10:03 -0700
-Message-ID: <CAPcyv4j_c2FQa=iCFYJtyLTVXjMUFynOJ+2bw=fS3C1YSUk1ZQ@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] [PATCH v3] CodingStyle: Inclusive Terminology
-To:     Matthias Brugger <mbrugger@suse.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+In-Reply-To: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 Jul 2020 12:12:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+Message-ID: <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Michel Lespinasse <walken@google.com>,
+        Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Brian Geffon <bgeffon@google.com>, anshuman.khandual@arm.com,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        Jerome Glisse <jglisse@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tech-board-discuss@lists.linuxfoundation.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000daa8dc05aa070182"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 2:45 AM Matthias Brugger <mbrugger@suse.com> wrote:
->
->
->
-> On 08/07/2020 20:14, Dan Williams wrote:
-> > Linux maintains a coding-style and its own idiomatic set of terminology.
-> > Update the style guidelines to recommend replacements for the terms
-> > master/slave and blacklist/whitelist.
-> >
-> > Link: http://lore.kernel.org/r/159389297140.2210796.13590142254668787525.stgit@dwillia2-desk3.amr.corp.intel.com
-> > Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> > Acked-by: Dave Airlie <airlied@redhat.com>
-> > Acked-by: SeongJae Park <sjpark@amazon.de>
-> > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > Acked-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-> > Reviewed-by: Mark Brown <broonie@kernel.org>
-> > Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-> > Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Olof Johansson <olof@lixom.net>
-> > Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> > Signed-off-by: Chris Mason <clm@fb.com>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+--000000000000daa8dc05aa070182
+Content-Type: text/plain; charset="UTF-8"
 
-Got it, thanks Matthias.
+On Wed, Jul 8, 2020 at 10:28 PM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> While running LTP mm test suite on i386 or qemu_i386 this kernel warning
+> has been noticed from stable 5.4 to stable 5.7 branches and mainline 5.8.0-rc4
+> and linux next.
+
+Hmm
+
+If this is repeatable, would you mind making the warning also print
+out the old range and new addresses and pmd value?
+
+Something like the attached (UNTESTED!) patch.
+
+         Linus
+
+--000000000000daa8dc05aa070182
+Content-Type: application/octet-stream; name=patch
+Content-Disposition: attachment; filename=patch
+Content-Transfer-Encoding: base64
+Content-ID: <f_kcf6480o0>
+X-Attachment-Id: f_kcf6480o0
+
+IG1tL21yZW1hcC5jIHwgNCArKystCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAx
+IGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvbW0vbXJlbWFwLmMgYi9tbS9tcmVtYXAuYwppbmRl
+eCA1ZGQ1NzJkNTdjYTkuLmIzZjA3M2NmMjgwNiAxMDA2NDQKLS0tIGEvbW0vbXJlbWFwLmMKKysr
+IGIvbW0vbXJlbWFwLmMKQEAgLTIwOCw4ICsyMDgsMTAgQEAgc3RhdGljIGJvb2wgbW92ZV9ub3Jt
+YWxfcG1kKHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hLCB1bnNpZ25lZCBsb25nIG9sZF9hZGRy
+LAogCSAqIFRoZSBkZXN0aW5hdGlvbiBwbWQgc2hvdWxkbid0IGJlIGVzdGFibGlzaGVkLCBmcmVl
+X3BndGFibGVzKCkKIAkgKiBzaG91bGQgaGF2ZSByZWxlYXNlIGl0LgogCSAqLwotCWlmIChXQVJO
+X09OKCFwbWRfbm9uZSgqbmV3X3BtZCkpKQorCWlmIChXQVJOX09OKCFwbWRfbm9uZSgqbmV3X3Bt
+ZCkpKSB7CisJCXByaW50aygiIG9sZDogJWx4LSVseCBuZXc6ICVseCAodmFsOiAlbHgpXG4iLCBv
+bGRfYWRkciwgb2xkX2VuZCwgbmV3X2FkZHIsIHBtZF92YWwoKm5ld19wbWQpKTsKIAkJcmV0dXJu
+IGZhbHNlOworCX0KIAogCS8qCiAJICogV2UgZG9uJ3QgaGF2ZSB0byB3b3JyeSBhYm91dCB0aGUg
+b3JkZXJpbmcgb2Ygc3JjIGFuZCBkc3QK
+--000000000000daa8dc05aa070182--
