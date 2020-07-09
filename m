@@ -2,160 +2,129 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF57C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42089C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3024820674
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B6C2070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sZRLTwD6"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="t0Hc5/hu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgGIHNz (ORCPT
+        id S1726287AbgGIHOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:13:55 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:56865 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGIHNy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:13:54 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200709071352euoutp017172d90f82f069c71c4b56c6aaea99b5~gBCavaqnj3063430634euoutp01k
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 07:13:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200709071352euoutp017172d90f82f069c71c4b56c6aaea99b5~gBCavaqnj3063430634euoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594278832;
-        bh=SYehp1Ieyfb/zjUHumRssxNYKvRphjEhs6jVF/Hb15Y=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=sZRLTwD6P7PmCwQxg5lvA7kTfIpUBqlFORBGD/KTAgvS9+/9gi6LDIjlgVytn5nqi
-         ehHTDgD0hf887a+FNMT0jvghcFTqDHEOCsGMrFoH+/lfh+JaQp8edqroS2jykN6q0s
-         DLqLAlhCopJrxKRPIiCbdZ/klzl/JBqVqTQK+y7k=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200709071352eucas1p18e916829b70dc0283917086c58734f10~gBCambvAO0641506415eucas1p1Q;
-        Thu,  9 Jul 2020 07:13:52 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id FE.7D.05997.0B3C60F5; Thu,  9
-        Jul 2020 08:13:52 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200709071351eucas1p28d1160e5e01645f9b453815c1e5f7b9e~gBCaWh2NO3268632686eucas1p2R;
-        Thu,  9 Jul 2020 07:13:51 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200709071351eusmtrp26ce7404010835a9cb51df6e0ddf0786b~gBCaV7URf1669816698eusmtrp2k;
-        Thu,  9 Jul 2020 07:13:51 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-61-5f06c3b0cdf4
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 06.B0.06314.FA3C60F5; Thu,  9
-        Jul 2020 08:13:51 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200709071351eusmtip20e53821d81c791cb0bb235d1760b24ed~gBCaHTS4Z2984929849eusmtip2X;
-        Thu,  9 Jul 2020 07:13:51 +0000 (GMT)
-Subject: Re: [PATCH 5/6] phy: exynos5-usbdrd: use correct format for
- structure description
-To:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <ca185eed-32e4-a92e-0d97-ec5ff54de948@samsung.com>
-Date:   Thu, 9 Jul 2020 09:13:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200708132809.265967-5-vkoul@kernel.org>
+        Thu, 9 Jul 2020 03:14:24 -0400
+Received: from mail-bn8nam11on2044.outbound.protection.outlook.com ([40.107.236.44]:6093
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726183AbgGIHOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 03:14:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bajAfyBEv39jU6HeINw2E5cN4t1Xan9TRk4evE5LhT/bAS/OK+zzZsnv8hL4bge1JI4M+8kZLxI/xadckH7aPaJDgV5n1rtIfaVDtHyfswifSOHv4Nq7D2mXeqSoQgiYZBfZlkBN/txFxVEwFr9+QQ0inLh5kLzvBv9q4r7OlvwJg+MHCL4HAtec/+jbHsFDTgJjjTiPmJW0NwV6VAhSZrSA3PnINfi5vShzzhMsNYotgxUkFE1JI03s2PsQUmcvAr25LFYTEuBeQbuw6dNuZsIAvEJkQR2BYVkCm9VvJFdKRHAcz8Wsm5m9ivfx8JtQCNhbPS7DhQq46ZmFvZGixQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IiBfUsRoPbicrFS00U00A9dfXz4h58ZLnfTvFVuOioc=;
+ b=L+G8JCWRBAHfBl89B6bJ2rhh6z2yXIg0/txrjwSyamsqOrou496nBMUwUlFu6JS4gin8oKNUeD7nZN/churo9xC4P3wVasCzwEVspsqp6Pg7Z9XQTvLinrKrbV/+5aUQ0SPq0K3bdPDH2cFn3S6LQUCOvXcveKQeL8TwCybPqJkw9MtE9WTYWYVguDfCQCjcJeWBsFOui3VQrcTXoxW+t9ey7yS8zbNxo4IduNIvVPUSeIKCEI1CVxfgbshFy41dl7EEkvfozFlpqi14LMfqU1XJjZjE0m2o7vqiJxmUkyTB5Y9gbIIGyWIH6/xp4cXr+UsADHTppt9gMQqfHPis8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IiBfUsRoPbicrFS00U00A9dfXz4h58ZLnfTvFVuOioc=;
+ b=t0Hc5/huO7JtwcnXLwGX2bL3KZBGS8XfPG1n4S6zJI1gk2HfZ9HFCX4ibpHY4m326oMkBpnMfW1Xc1X0emsx9jazR7CjSn6i6iPqlUJrW1ROKvEERZAOLl1NptzZKp2PoWqWm/QZNoWlgApBELOmx438E68cUOYjYMd/tYY69xo=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
+ by MN2PR12MB4375.namprd12.prod.outlook.com (2603:10b6:208:24f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Thu, 9 Jul
+ 2020 07:14:21 +0000
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::a16e:8812:b4c0:918d]) by MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::a16e:8812:b4c0:918d%6]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
+ 07:14:20 +0000
+Subject: Re: [Proposal] DRM: AMD: Convert logging to drm_* functions.
+To:     Suraj Upadhyay <usuraj35@gmail.com>, alexander.deucher@amd.com
+Cc:     amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200708161123.GA30962@blackclown>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <e5389684-424e-6a38-37d8-9910cdb8b2f3@amd.com>
+Date:   Thu, 9 Jul 2020 09:14:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <20200708161123.GA30962@blackclown>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplleLIzCtJLcpLzFFi42LZduzned0Nh9niDV7dZrO48LSHzeLyrjls
-        FjvvnGB2YPbYtKqTzeP4je1MHp83yQUwR3HZpKTmZJalFunbJXBl3Nk7mbFgvUBFy4d/LA2M
-        23i7GDk4JARMJB5NzO5i5OIQEljBKLHlaC87hPOFUeJ2408o5zOjxKqJM1i6GDnBOhY1rWCE
-        SCxnlGi//YoFwnnPKDHnxCV2kCphgRiJVRePsIHYIgKeErf232EFsZkFFCR+3dsEZrMJGEp0
-        ve0Cq+EVsJPYcvUYWJxFQEXi6aPVYLaoQJzE+pfbmSBqBCVOznwCdgWngLlEy41pLBAz5SW2
-        v53DDGGLS9x6Mp8J5CAJgf9sElMWNrFCnO0iMftxFxOELSzx6vgWdghbRuL/TpiGZkaJh+fW
-        skM4PYwSl5tmMEJUWUvcOfeLDRRkzAKaEut36UOEHSW23pzLCglJPokbbwUhjuCTmLRtOjNE
-        mFeio00IolpNYtbxdXBrD164xDyBUWkWktdmIXlnFpJ3ZiHsXcDIsopRPLW0ODc9tdgoL7Vc
-        rzgxt7g0L10vOT93EyMwkZz+d/zLDsZdf5IOMQpwMCrx8L7YxBovxJpYVlyZe4hRgoNZSYTX
-        6ezpOCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8xotexgoJpCeWpGanphakFsFkmTg4pRoYyyrT
-        VvF3bmZ+MEOV0drvaeriWfwzvfY8FXuX+GljPdOhL4+ORsxcMnNH1YENb0Nf/rmo3V24UOPw
-        iTSTXFmmYKMt6UczG0IbZeOmPFs7x7NyqqdQ4puIKrF9AdvCJhVe+pIuH7VhuuiEkJPLT8a7
-        lhvM0Cx86zZlw5SlWhJKq5z62as/LQo8pMRSnJFoqMVcVJwIABHF6EAgAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsVy+t/xe7rrD7PFG1zeYmxx4WkPm8XlXXPY
-        LHbeOcHswOyxaVUnm8fxG9uZPD5vkgtgjtKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0
-        No+1MjJV0rezSUnNySxLLdK3S9DLuLN3MmPBeoGKlg//WBoYt/F2MXJySAiYSCxqWsHYxcjF
-        ISSwlFFi/ZxbzBAJGYmT0xpYIWxhiT/Xutggit4ySuxauRisSFggRmL5o/MsILaIgKfErf13
-        wBqYBRQkft3bxArRsJ1RYsKRCWBFbAKGEl1vQSZxcvAK2ElsuXoMrIFFQEXi6aPVYLaoQJzE
-        8i3z2SFqBCVOznwC1sspYC7RcmMaC8QCM4l5mx8yQ9jyEtvfzoGyxSVuPZnPNIFRaBaS9llI
-        WmYhaZmFpGUBI8sqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwNjZduzn5h2MlzYGH2IU4GBU
-        4uF9sYk1Xog1say4MvcQowQHs5IIr9PZ03FCvCmJlVWpRfnxRaU5qcWHGE2BnpvILCWanA+M
-        67ySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYxJz9pSlA5ubNTm
-        +B9vnsjeGS76Yq3FooUTygr1nzkJXzW1OpV+WujqCyX1ax+vbeVydritt/HsuiAzfVPWdV0H
-        NhrkqpqZG7jkrV7TcibLdv7MjgBlx5f7Mh/9MTF5qhNQyVohcNGM9dd20QPhmbIH6hafr70Q
-        VtZy9rFcRO/P3LTWxKjX1UosxRmJhlrMRcWJAGU0U9uzAgAA
-X-CMS-MailID: 20200709071351eucas1p28d1160e5e01645f9b453815c1e5f7b9e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200708132837eucas1p192b7ac2bfd4dc1def0a18c9cdff01cac
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200708132837eucas1p192b7ac2bfd4dc1def0a18c9cdff01cac
-References: <20200708132809.265967-1-vkoul@kernel.org>
-        <CGME20200708132837eucas1p192b7ac2bfd4dc1def0a18c9cdff01cac@eucas1p1.samsung.com>
-        <20200708132809.265967-5-vkoul@kernel.org>
+X-ClientProxiedBy: AM0P190CA0015.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:208:190::25) To MN2PR12MB3775.namprd12.prod.outlook.com
+ (2603:10b6:208:159::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0P190CA0015.EURP190.PROD.OUTLOOK.COM (2603:10a6:208:190::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Thu, 9 Jul 2020 07:14:19 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0fc1c0dc-345f-4738-179f-08d823d7b347
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4375:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB437542EC31D537FE8300935A83640@MN2PR12MB4375.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rObzAwXJYvw/f8+kT+BbDns/5wnNamYJpJpix6YxsP95KrlrxH8J4HeoPbA9CPyL3i5I2tx3/Dj92rOCPM/+jscSIaOeEuj5Mz8bcBAOkZfKGTWCasykJnitRtvIvxn69y9Zp7LpZJb4/4VSpoJZGyYwuCYoG3lzlPO6QUws1qV5HbdpS9wSwi2BNTws0S+YnoZrHrQGYPdkyKhQPFkOcB7hisjNgKHiAbvgYxwtdHEZBAXfY4DKhl+K4y/qzvtvWYl8cCMO0bzAocJC5DvPfpLq+2I6L7vTxVGQfl/exI/Rz8SVTzZLXeJ51l+vl563Gn9FOAmOM6DWjFJhAoZ18x6yFSbkGbRvoDSjz8lTMxSeWTPnFoLQrpdZef5WPc+1LCJdTRiIg476An/tLxZ+MH4hEH68gywRgBHQ6cG4WdI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(39860400002)(136003)(366004)(376002)(5660300002)(4326008)(86362001)(52116002)(31686004)(2616005)(6486002)(6666004)(8676002)(478600001)(6636002)(66946007)(66476007)(66556008)(186003)(16526019)(966005)(8936002)(2906002)(31696002)(36756003)(316002)(83380400001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: hkE4Q73nKoYamwbV6zq6wWUTXGLjjjY5PeWWzpmqZk6bl78G43VYEo5z3CVUTbrhJ3Kug++D8YL0asNwQRm/E131b6dAUbUp7U3iemmwqUfjOoIWqify951XpuZy8kgycqSWvD7FZLXHJ7w4RVb9DoZmA7SE6MAQ1qokqADqt1XQw+AaUAbgD5YxQW4bCPTLXFT1O5MGtbilUOify1KxzQeUuzgk0xrlJGha+ETCPYk9g6U7i0fTflAIISj90NJfriXA2zsgDcYUxYomnoqjqe6cc/rGA1KBcDG3lU0PYtoL2KTSMuyIeZf70RiC6IPfMUH2Rss9gKUqY9hKZlgzS5l6vFDP7b0CrmDkIA/o6zWKbLdEzdSfjNehbww96eNfesgRCKbHa5UNi90vUZuH6f7pXJbn4b/mKI1cMapid+uPsnv+rYhrvvuhHQ8xMWE23uAJrOkDvbcrpfiQG1/WWkgb9ClYrcb8Y8bL/gO/SJh+SiQEuSFugPPygZMJg/zejrSfYZ+JJlAzBbdw8JnJAXASMcujhJyKILtovvhOE01sjgrloyrUplyO1r8uS7qN
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fc1c0dc-345f-4738-179f-08d823d7b347
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2020 07:14:20.7095
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Viuqak/Z/Nya7Lqsxu1Skw20pJ2+uooWlyop35BrsuH2U15TxorQ8zbCzAat///V
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4375
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am 08.07.20 um 18:11 schrieb Suraj Upadhyay:
+> Hii AMD Maintainers,
+> 	I plan to convert logging of information, error and warnings
+> inside the AMD driver(s) to drm_* functions and macros for loggin,
+> as described by the TODO list in the DRM documentation[1].
+>
+> I need your approval for the change before sending any patches, to make
+> sure that this is a good idea and that the patches will be merged.
+>
+> The patches will essentially convert all the dev_info(), dev_warn(),
+> dev_err() and dev_err_once() to drm_info(), drm_warn(), drm_err() and
+> drm_err_once() respectively.
 
-On 08.07.2020 15:28, Vinod Koul wrote:
-> We get warning with W=1 build:
-> drivers/phy/samsung/phy-exynos5-usbdrd.c:211: warning: Function
-> parameter or member 'phys' not described in 'exynos5_usbdrd_phy'
-> drivers/phy/samsung/phy-exynos5-usbdrd.c:211: warning: Function
-> parameter or member 'vbus' not described in 'exynos5_usbdrd_phy'
-> drivers/phy/samsung/phy-exynos5-usbdrd.c:211: warning: Function
-> parameter or member 'vbus_boost' not described in 'exynos5_usbdrd_phy'
->
-> These members are provided with description but format is not quite
-> right resulting in above warnings
->
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->   drivers/phy/samsung/phy-exynos5-usbdrd.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> index eb06ce9f748f..bfb0e8914103 100644
-> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> @@ -180,14 +180,14 @@ struct exynos5_usbdrd_phy_drvdata {
->    * @utmiclk: clock for utmi+ phy
->    * @itpclk: clock for ITP generation
->    * @drv_data: pointer to SoC level driver data structure
-> - * @phys[]: array for 'EXYNOS5_DRDPHYS_NUM' number of PHY
-> + * @phys: array for 'EXYNOS5_DRDPHYS_NUM' number of PHY
->    *	    instances each with its 'phy' and 'phy_cfg'.
->    * @extrefclk: frequency select settings when using 'separate
->    *	       reference clocks' for SS and HS operations
->    * @ref_clk: reference clock to PHY block from which PHY's
->    *	     operational clocks are derived
-> - * vbus: VBUS regulator for phy
-> - * vbus_boost: Boost regulator for VBUS present on few Exynos boards
-> + * @vbus: VBUS regulator for phy
-> + * @vbus_boost: Boost regulator for VBUS present on few Exynos boards
->    */
->   struct exynos5_usbdrd_phy {
->   	struct device *dev;
+Well to be honest I would rather like see the conversion done in the 
+other direction.
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+I think the drm_* functions are just an unnecessary extra layer on top 
+of the core kernel functions and should probably be removed sooner or 
+later because of midlayering.
+
+Regards,
+Christian.
+
+>
+> Thank You,
+>
+> Suraj Upadhyay.
+>
+> [1] https://dri.freedesktop.org/docs/drm/gpu/todo.html#convert-logging-to-drm-functions-with-drm-device-paramater
+>
 
