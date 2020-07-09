@@ -2,119 +2,145 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD36C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1289C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EEAB2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A9420708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:30:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgGIMaZ (ORCPT
+        id S1726789AbgGIMal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:30:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12306 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726327AbgGIMaZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:30:25 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069C14rr083295;
-        Thu, 9 Jul 2020 08:29:59 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 325ktsrtun-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 08:29:59 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 069CCJWI023681;
-        Thu, 9 Jul 2020 12:29:58 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03ams.nl.ibm.com with ESMTP id 325k1vgweu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 12:29:57 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 069CSXTE56426992
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jul 2020 12:28:33 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA8934203F;
-        Thu,  9 Jul 2020 12:29:54 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D943E42041;
-        Thu,  9 Jul 2020 12:29:52 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.49.147])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jul 2020 12:29:52 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au, mikey@neuling.org
-Cc:     ravi.bangoria@linux.ibm.com, paulus@samba.org,
-        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
-        pedromfc@br.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc/watchpoint/ptrace: Introduce PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31
-Date:   Thu,  9 Jul 2020 17:59:44 +0530
-Message-Id: <20200709122944.173744-1-ravi.bangoria@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 9 Jul 2020 08:30:41 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:36066 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbgGIMak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:30:40 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jtVgp-0003Uz-Kd; Thu, 09 Jul 2020 22:30:12 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 09 Jul 2020 22:30:11 +1000
+Date:   Thu, 9 Jul 2020 22:30:11 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     akpm@linux-foundation.org, andy.shevchenko@gmail.com,
+        arnd@arndb.de, emil.l.velikov@gmail.com, geert@linux-m68k.org,
+        keescook@chromium.org, linus.walleij@linaro.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkp@intel.com, rikard.falkeborn@gmail.com, syednwaris@gmail.com,
+        vilhelm.gray@gmail.com, yamada.masahiro@socionext.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v4 1/2] linux/bits.h: fix unsigned less than zero warnings
+Message-ID: <20200709123011.GA18734@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_06:2020-07-09,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- clxscore=1015 bulkscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- impostorscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007090093
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200621054210.14804-1-rikard.falkeborn@gmail.com>
+X-Newsgroups: apana.lists.os.linux.kernel
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31 can be used to determine
-whether we are running on an ISA 3.1 compliant machine. Which is
-needed to determine DAR behaviour, 512 byte boundary limit etc.
-This was requested by Pedro Miraglia Franco de Carvalho for
-extending watchpoint features in gdb. Note that availability of
-2nd DAWR is independent of this flag and should be checked using
-ppc_debug_info->num_data_bps.
+Rikard Falkeborn <rikard.falkeborn@gmail.com> wrote:
+> When calling the GENMASK and GENMASK_ULL macros with zero lower bit and
+> an unsigned unknown high bit, some gcc versions warn due to the
+> comparisons of the high and low bit in GENMASK_INPUT_CHECK.
+> 
+> To silence the warnings, only perform the check if both inputs are
+> known. This does not trigger any warnings, from the Wtype-limits help:
+> 
+>        Warn if a comparison is always true or always false due to the
+>        limited range of the data type, but do not warn for constant
+>        expressions.
+> 
+> As an example of the warning, kindly reported by the kbuild test robot:
+> 
+> from drivers/mfd/atmel-smc.c:11:
+> drivers/mfd/atmel-smc.c: In function 'atmel_smc_cs_encode_ncycles':
+> include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+> 26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+> |                            ^
+> include/linux/build_bug.h:16:62: note: in definition of macro 'BUILD_BUG_ON_ZERO'
+> 16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+> |                                                              ^
+> include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
+> 39 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+> |   ^~~~~~~~~~~~~~~~~~~
+>>> drivers/mfd/atmel-smc.c:49:25: note: in expansion of macro 'GENMASK'
+> 49 |  unsigned int lsbmask = GENMASK(msbpos - 1, 0);
+> |                         ^~~~~~~
+> 
+> Fixes: 295bcca84916 ("linux/bits.h: add compile time sanity check of GENMASK inputs")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Emil Velikov <emil.l.velikov@gmail.com>
+> Reported-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> ---
+> v3-v4
+> Added Emils Reviewed-by.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- arch/powerpc/include/uapi/asm/ptrace.h    | 1 +
- arch/powerpc/kernel/ptrace/ptrace-noadv.c | 5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+I'm still getting the same warning even with the patch, for example:
 
-diff --git a/arch/powerpc/include/uapi/asm/ptrace.h b/arch/powerpc/include/uapi/asm/ptrace.h
-index f5f1ccc740fc..0a87bcd4300a 100644
---- a/arch/powerpc/include/uapi/asm/ptrace.h
-+++ b/arch/powerpc/include/uapi/asm/ptrace.h
-@@ -222,6 +222,7 @@ struct ppc_debug_info {
- #define PPC_DEBUG_FEATURE_DATA_BP_RANGE		0x0000000000000004
- #define PPC_DEBUG_FEATURE_DATA_BP_MASK		0x0000000000000008
- #define PPC_DEBUG_FEATURE_DATA_BP_DAWR		0x0000000000000010
-+#define PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31	0x0000000000000020
- 
- #ifndef __ASSEMBLY__
- 
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-index 697c7e4b5877..b2de874d650b 100644
---- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-+++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-@@ -52,8 +52,11 @@ void ppc_gethwdinfo(struct ppc_debug_info *dbginfo)
- 	dbginfo->sizeof_condition = 0;
- 	if (IS_ENABLED(CONFIG_HAVE_HW_BREAKPOINT)) {
- 		dbginfo->features = PPC_DEBUG_FEATURE_DATA_BP_RANGE;
--		if (dawr_enabled())
-+		if (dawr_enabled()) {
- 			dbginfo->features |= PPC_DEBUG_FEATURE_DATA_BP_DAWR;
-+			if (cpu_has_feature(CPU_FTR_ARCH_31))
-+				dbginfo->features |= PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31;
-+		}
- 	} else {
- 		dbginfo->features = 0;
- 	}
+  CC [M]  drivers/crypto/inside-secure/safexcel.o
+  CHECK   ../drivers/crypto/inside-secure/safexcel_hash.c
+In file included from ../include/linux/bits.h:23,
+                 from ../include/linux/bitops.h:5,
+                 from ../include/linux/kernel.h:12,
+                 from ../include/linux/clk.h:13,
+                 from ../drivers/crypto/inside-secure/safexcel.c:8:
+../drivers/crypto/inside-secure/safexcel.c: In function \u2018safexcel_hw_init\u2019:
+../include/linux/bits.h:27:7: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+   (l) > (h), 0)))
+       ^
+../include/linux/build_bug.h:16:62: note: in definition of macro \u2018BUILD_BUG_ON_ZERO\u2019
+ #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+                                                              ^
+../include/linux/bits.h:40:3: note: in expansion of macro \u2018GENMASK_INPUT_CHECK\u2019
+  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+   ^~~~~~~~~~~~~~~~~~~
+../drivers/crypto/inside-secure/safexcel.c:649:11: note: in expansion of macro \u2018GENMASK\u2019
+           GENMASK(priv->config.rings - 1, 0),
+           ^~~~~~~
+../include/linux/bits.h:27:7: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+   (l) > (h), 0)))
+       ^
+../include/linux/build_bug.h:16:62: note: in definition of macro \u2018BUILD_BUG_ON_ZERO\u2019
+ #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+                                                              ^
+../include/linux/bits.h:40:3: note: in expansion of macro \u2018GENMASK_INPUT_CHECK\u2019
+  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+   ^~~~~~~~~~~~~~~~~~~
+../drivers/crypto/inside-secure/safexcel.c:757:35: note: in expansion of macro \u2018GENMASK\u2019
+   writel(EIP197_DxE_THR_CTRL_EN | GENMASK(priv->config.rings - 1, 0),
+                                   ^~~~~~~
+../include/linux/bits.h:27:7: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+   (l) > (h), 0)))
+       ^
+../include/linux/build_bug.h:16:62: note: in definition of macro \u2018BUILD_BUG_ON_ZERO\u2019
+ #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+                                                              ^
+../include/linux/bits.h:40:3: note: in expansion of macro \u2018GENMASK_INPUT_CHECK\u2019
+  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+   ^~~~~~~~~~~~~~~~~~~
+../drivers/crypto/inside-secure/safexcel.c:761:35: note: in expansion of macro \u2018GENMASK\u2019
+   writel(EIP197_DxE_THR_CTRL_EN | GENMASK(priv->config.rings - 1, 0),
+                                   ^~~~~~~
+
+This happens when only l is const but h isn't.
+
+Can we please just revert the original patch and work this out in
+the next release?
+
+Thanks,
 -- 
-2.26.2
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
