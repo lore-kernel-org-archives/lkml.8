@@ -2,232 +2,98 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A02B20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2AE52074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:07:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pUotuoYO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jYsPUD+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgGIKG6 (ORCPT
+        id S1726671AbgGIKHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgGIKG5 (ORCPT
+        Thu, 9 Jul 2020 06:07:02 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:47763 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726497AbgGIKHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:06:57 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0733C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 03:06:56 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l17so1206854wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 03:06:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=mgJE0XoR5d83uGU1jCZHB+PytvN1N1Tmw76/eTcxBew=;
-        b=pUotuoYOUIxjOoIzicmjbFiylS68wnrKTegL+jEsjCt0D85yzccOwtkSD3tc4tujEx
-         SdokhcM9zFdv3aB4EXOyUzjXE4sHo62CmbSGPMy2lyrRhYt5ChcEg6QA7imGGuq3q0wG
-         OOj2oyT6JWzBNNt3jrOrNzeZ8wZzYVGa2Ma8RZC2x08Q/oRKerEgI2HtVs51afftopy1
-         nsXscmRzQCLQ2pFrQJasVzsJ/68WaK83El5rhn3r9sDerpmg9c4NdNyfzaVcW4uO3/kS
-         2iCd+fH40EhNdYRxWi4BG+DMHuzKWpjWApOkrADA1bg5gSWfV4k2ghmNWQRE0EMDx6Qb
-         GROg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mgJE0XoR5d83uGU1jCZHB+PytvN1N1Tmw76/eTcxBew=;
-        b=Ek5xPKfjg0D4SHTTmui2t3+Q7AwGF4hG1znBpzAq/Q2gQ4OzmfJ+wAZJY462qNeDtf
-         ksaWiKkmG0lTIlv9dmA4ynt2CjCeZugXArElbkb5Hyfbz9qcNZKPQav09PYWfNmIsLcE
-         pYNCAqVmQeKCzWQNzItpdMbUOOnJ5801mMZNgf8PSgI+H28D/8+cX6j3rAiSCxU6XRG6
-         Xi0fH28wVkMyhLxPBnm+z1k4+OevhItPYJjrhR6cVAD2T5273cWtcmSRNu9l870635L2
-         3xv/m1iaC1Ut8+eUfrhuKsz1skGHxAXipkj7KKUgHv0sZvt0+mlb5DeZKyt8Qb7yJaf1
-         Nz1Q==
-X-Gm-Message-State: AOAM5305OtPibNVJYUpSv2I5WspJeRCLgLBf0b61J9yJVd3o9CZGftwF
-        jigiKW3kfny22fZ30bi0+A2PRX87ZH0=
-X-Google-Smtp-Source: ABdhPJzPmNy+2MBiwjS9kosjLSQW6esYGN0duAec40gVAKhLEMzHgAAEWYwQkfwWdJULE2AraSgX+w==
-X-Received: by 2002:a1c:2041:: with SMTP id g62mr13205469wmg.172.1594289214586;
-        Thu, 09 Jul 2020 03:06:54 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id c11sm3675543wmb.45.2020.07.09.03.06.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jul 2020 03:06:53 -0700 (PDT)
-Subject: Re: [PATCH v3 3/8] ASoC: qcom: lpass: Use regmap_field for i2sctl and
- dmactl registers
-To:     Rohit Kumar <rohitkr@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+        Thu, 9 Jul 2020 06:07:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594289219; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=SN9DQ+QBBeWj7EmgAR6uveFVP41a+vYgqlb4wBPMxK0=; b=jYsPUD+UN9s01KRbuoU9HcX9Zrst/6pkchKEUfInKw6SabeAssAGA14wmcr2zmoW0pRCyzED
+ BbTWT5GvQ/3k4jRCT38ccERCgcJIBw2TTOtPfDjR4GEGDy/1s3bvKhOUlwNfd0x4VDmy3Yuh
+ TNojwSxgGnRRZ1nWXExe9ix0uf8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f06ec2919b27ae9cea5e30c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 10:06:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65E8CC43391; Thu,  9 Jul 2020 10:06:32 +0000 (UTC)
+Received: from [192.168.0.129] (unknown [183.83.142.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4F15CC433C6;
+        Thu,  9 Jul 2020 10:06:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4F15CC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+Subject: Re: [PATCH v3 4/8] include: dt-bindings: sound: Add sc7180-lpass
+ bindings header
+To:     Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com,
+        robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
+        srinivas.kandagatla@linaro.org, Ajit Pandey <ajitp@codeaurora.org>,
+        linux-kernel@vger.kernel.org
 References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
- <1594184896-10629-4-git-send-email-rohitkr@codeaurora.org>
- <a59dc25f-cac2-5540-f1f4-78fd749c65c9@linaro.org>
- <3b849440-091e-bbd3-4944-8a196e181af7@codeaurora.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <ac634d4d-527a-7262-2744-203c04ee0982@linaro.org>
-Date:   Thu, 9 Jul 2020 11:06:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ <1594184896-10629-5-git-send-email-rohitkr@codeaurora.org>
+ <20200708144528.GT4655@sirena.org.uk>
+From:   Rohit Kumar <rohitkr@codeaurora.org>
+Message-ID: <29d000ad-cea9-8cee-85f4-5a99a49c00c1@codeaurora.org>
+Date:   Thu, 9 Jul 2020 15:36:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <3b849440-091e-bbd3-4944-8a196e181af7@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200708144528.GT4655@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 7/8/2020 8:15 PM, Mark Brown wrote:
+> On Wed, Jul 08, 2020 at 10:38:12AM +0530, Rohit kumar wrote:
+>> From: Ajit Pandey <ajitp@codeaurora.org>
+>>
+>> Add header defining dai-id and mclk id for SC7180 lpass soc.
+>>
+>> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+>> ---
+> This one is missing a signoff as well, and I can't seem to see any
+> reference to this header in the bindings document patches?
 
-On 09/07/2020 10:57, Rohit Kumar wrote:
-> Thanks Srini for reviewing.
-> 
-> On 7/9/2020 2:56 PM, Srinivas Kandagatla wrote:
->>
->>
->> On 08/07/2020 06:08, Rohit kumar wrote:
->>> I2SCTL and DMACTL registers has different bits alignment for newer
->>> LPASS variants of SC7180 soc. Use REG_FIELD_ID() to define the
->>> reg_fields in platform specific file and removed shifts and mask
->>> macros for such registers from header file.
->>>
->>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->>
->> Thanks Rohit for doing this, this looks much better now!
->> I have few minor comments..
->>
->>> ---
->>>   sound/soc/qcom/lpass-apq8016.c   |  24 ++++++
->>>   sound/soc/qcom/lpass-cpu.c       | 163 
->>> +++++++++++++++++++++++----------------
->>>   sound/soc/qcom/lpass-ipq806x.c   |  24 ++++++
->>>   sound/soc/qcom/lpass-lpaif-reg.h | 157 
->>> +++++++++++++++++++------------------
->>>   sound/soc/qcom/lpass-platform.c  | 151 
->>> +++++++++++++++++++++++++++---------
->>>   sound/soc/qcom/lpass.h           |  53 +++++++++++++
->>>   6 files changed, 398 insertions(+), 174 deletions(-)
->>>
->>
->> index f0c7e93..f358d12 100644
->>> --- a/sound/soc/qcom/lpass-cpu.c
->>> +++ b/sound/soc/qcom/lpass-cpu.c
->>> @@ -29,6 +29,32 @@
->>>   #define LPASS_CPU_I2S_SD0_1_2_MASK    GENMASK(2, 0)
->>>   #define LPASS_CPU_I2S_SD0_1_2_3_MASK    GENMASK(3, 0)
->>
->>
->>>   }
->>>   -static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream 
->>> *substream,
->>> -        struct snd_soc_dai *dai)
->>> -{
->>> -    struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
->>> -    int ret;
->>> -
->>> -    ret = regmap_write(drvdata->lpaif_map,
->>> -               LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
->>> -               0);
->>> -    if (ret)
->>> -        dev_err(dai->dev, "error writing to i2sctl reg: %d\n", ret);
->>> -
->>> -    return ret;
->>> -}
->>
->> Any particular reason why this function remove
-> 
-> This was causing issue in playback/capture concurrency. It sets I2SCTL 
-> register value to 0
-> 
-> when usecase ends. However, playback/capture specific bits are already 
-> cleared during trigger() stop
-> 
-> function. So, this is not needed.
+Thanks Mark for reviewing. I will add it documentation in next patchset.
 
-This should be sent as separate fix with fixes tag!
+Thanks,
 
-> 
->
->>
->>> diff --git a/sound/soc/qcom/lpass-lpaif-reg.h 
->>> b/sound/soc/qcom/lpass-lpaif-reg.h
->>> index 72a3e2f..5258e60 100644
->>> --- a/sound/soc/qcom/lpass-lpaif-reg.h
->>> +++ b/sound/soc/qcom/lpass-lpaif-reg.h
->>> @@ -12,15 +12,12 @@
->> ...
->>>   #endif /* __LPASS_LPAIF_REG_H__ */
->>> diff --git a/sound/soc/qcom/lpass-platform.c 
->>> b/sound/soc/qcom/lpass-platform.c
->>> index 34f7fd1..445ca193 100644
->>> --- a/sound/soc/qcom/lpass-platform.c
->>> +++ b/sound/soc/qcom/lpass-platform.c
->>> @@ -50,6 +50,53 @@ static const struct snd_pcm_hardware 
->>> lpass_platform_pcm_hardware = {
->>>       .fifo_size        =    0,
->>>   };
->> ...
->>>   static int lpass_platform_pcmops_open(struct snd_soc_component 
->>> *component,
->>>                         struct snd_pcm_substream *substream)
->>>   {
->>> @@ -59,9 +106,9 @@ static int lpass_platform_pcmops_open(struct 
->>> snd_soc_component *component,
->>>       struct lpass_data *drvdata = 
->>> snd_soc_component_get_drvdata(component);
->>>       struct lpass_variant *v = drvdata->variant;
->>>       int ret, dma_ch, dir = substream->stream;
->>> -    struct lpass_pcm_data *data;
->>> +    struct lpass_pcm_data *data = NULL;
->>>   -    data = devm_kzalloc(soc_runtime->dev, sizeof(*data), GFP_KERNEL);
->>> +    data = kzalloc(sizeof(*data), GFP_KERNEL);
->>
->> Does this change belong in this patch?
-> 
-> 
-> As part of this change, I fixed memory leak too by adding kfree() in 
-> close()
-> 
-> However, this was causing issue as memory was allocated using 
-> devm_kzalloc().
-> 
-> Should I move it to different patch?
+Rohit
 
-That would be the right thing to do, can also add fixes tag!
+-- 
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
 
-
-> 
->>
->>>       if (!data)
->>>           return -ENOMEM;
->>>   @@ -111,13 +158,13 @@ static int lpass_platform_pcmops_close(struct 
->>> snd_soc_component *component,
->>>       struct snd_pcm_runtime *runtime = substream->runtime;
->>>       struct lpass_data *drvdata = 
->>> snd_soc_component_get_drvdata(component);
->>>       struct lpass_variant *v = drvdata->variant;
-
->>
->> Above two along with rddma members can be removed, these become 
->> redundant after adding regmap field!
->>
-> wrdma_channels is used in alloc_dma_channel() to get the channel id.
-> 
-> Also, both are used for other DMA registers such as LPAIF_RDMABASE_REG,
-> 
-> LPAIF_RDMABUFF_REG, LPAIF_RDMACURR_REG, etc.
-> 
-Ah I see we are still using this in lpass_cpu_regmap_writeable!
-ignore my previous comments about removing them!
-
---srini
