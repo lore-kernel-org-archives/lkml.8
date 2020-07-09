@@ -2,155 +2,143 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD72C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F117C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACAF20672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594332869;
-	bh=dI+YKovRZcmleNvC8/pS+LSupDrqJpa9QNMy7S8kGm0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=exwiO4n4CYmzTuzBSLxzfX1Prp3r377clGZAWLmK9uUKetZQOALlADrdFYN9tk8PW
-	 DjAbyarPfJuVbMHw0BLZYEubCkmU8OEZfjO/l6A4McUwF1qQFH6CUBpuJ4an8JospR
-	 yobC/HccQrnzqft5p4NC0lDr43+n0yxcgiJcrE3w=
+	by mail.kernel.org (Postfix) with ESMTP id 64F0720672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:15:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="n+038Tjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgGIWO1 (ORCPT
+        id S1726819AbgGIWPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:14:27 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33217 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgGIWO1 (ORCPT
+        Thu, 9 Jul 2020 18:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgGIWPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:14:27 -0400
-Received: by mail-io1-f68.google.com with SMTP id d18so4034665ion.0;
-        Thu, 09 Jul 2020 15:14:26 -0700 (PDT)
+        Thu, 9 Jul 2020 18:15:42 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4160BC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 15:15:42 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o2so3539024wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 15:15:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YV5ok+j1ZT/dco3d+Nz0ZXx9+BHs9rHibjoQkrG+QM8=;
+        b=n+038Tjhb71ibRD55ko60vZKGBkLBpa+5u0uCzn4SkeTo4zPrf7hwntZ4bM0cj8EIB
+         2fGAZWjNqSc4p/WtfrXL7RG/k2uPkp3NG2Be0yhpP38voG6zUT/NLMz+JSx2EpDp8GEY
+         wKcHtFBDkEFEu5vrMCLf60wAYuDGXNcHesd9c0GwbNxbnKHRum2lVXi9JEqYO/uDXLWl
+         x8WSGDkwlrNcLbxXnkD9Xo3THr+Xq7sHTbtxOTXCAnHC1ap0pi90iNBa+JDGKxB8ofsx
+         xcrt6qzrKbnkRvIqolYaHMxCnlJUnfdh7hKs8ZbSHbAR6ME9yR43A18lRVp2tFUGB0Nu
+         tc/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0GI8wbwo9sGGwkY6G16fvlQaAYWT2insbPg48n1qsB0=;
-        b=KJOaIlDPC0fk2w5GzYvRRtXnmSUid6G065usnwKhWV0qWn8MRraHcaimXTvdIhCksR
-         RHIc8DWhjLY/xcyE2Ahb3xZCefT1ouuc3RDLS3ZymCO1JG2AQX+wsomRwPyYFpNMZgex
-         pr5YKa+iQzRUHn7KDSaSM6BXW/4n5ODv8QVOEbYWU9BO6+oPHppzEWMD3LBUDK5nnpnA
-         H3f+ohAQfueTlitpEFF+V4AsoPmUsH/y5XBM8/GA5Mm1tq6+ufAN9UBcatoZNVWetBxw
-         dXyfPzclEh0kDo9BNisXxHVGvUNdf3JQXHds2IlP1ZjqHxCSwuln1JVgr2azKDNOO5Ut
-         2nhg==
-X-Gm-Message-State: AOAM531pFtYcDrGkzt0iLpQbwDhn73AcF0cATXnSMANWWM5p503M1opL
-        axd84DfaBh4fl6rvBhHsUKZjFZf2kg==
-X-Google-Smtp-Source: ABdhPJz4z0YRhpJUp29LyqfDmxPtPiXxZxITILJyx22tU8BdeEEMcaWycX5iG4kXTnIURSnYmr7XnA==
-X-Received: by 2002:a05:6602:58a:: with SMTP id v10mr44439153iox.203.1594332866335;
-        Thu, 09 Jul 2020 15:14:26 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id b24sm2908370ioj.1.2020.07.09.15.14.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 15:14:25 -0700 (PDT)
-Received: (nullmailer pid 986760 invoked by uid 1000);
-        Thu, 09 Jul 2020 22:14:25 -0000
-Date:   Thu, 9 Jul 2020 16:14:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     alexandru.tachici@analog.com
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux@roeck-us.net
-Subject: Re: [PATCH v5 7/7] dt-bindings: hwmon: Add bindings for ADM1266
-Message-ID: <20200709221425.GA984242@bogus>
-References: <20200624151736.95785-1-alexandru.tachici@analog.com>
- <20200624151736.95785-8-alexandru.tachici@analog.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YV5ok+j1ZT/dco3d+Nz0ZXx9+BHs9rHibjoQkrG+QM8=;
+        b=SvqzCisoZ4IlslC0E920IorWlsWATU6TsLYDXY47HOvk4sFEsAFCcBL4grMlA9h+1v
+         xTuWTfRn6rioBWA5ZxOog10F8jGGvP1qnwdj6oWqnr8A2FqpNdYqhYWcqlyAdYE9UXbb
+         QVRD9vvcuIRH7K8vIJ+ICHlHYThta88LbUVZed/2EyE1XsO/MpgN5X6BjeG/aMLjervu
+         3fT9lRcKpVoPbgwMPsg/aQwoY7Rou7zIxwafnSFVYMQB1RA8pEHW3OnQ8t1EfuyJaOdX
+         ac6CTLhdCi8+7Asdoc9Ob2D46311gx7tvHLCOsCMppeUKMiHHtLEQeqOv2QVb3WzKvEG
+         7Uhg==
+X-Gm-Message-State: AOAM533qbRSQf8/6L9xhETOfKkFq/tU6C+z4ATWabLEvQ3nDVbrZPPbh
+        navtsZ5272B+AKSobi7/xeNLJZoy4Yd0IVr5JFr71g==
+X-Google-Smtp-Source: ABdhPJzBUPiaq/koBIaJnoNmCkU+vD75nXFOBaObB5XKrr17oXCtBX8QKANnTp1E5WZxyvfMV76bEU3icd2omVveNeM=
+X-Received: by 2002:a7b:cf2b:: with SMTP id m11mr2024013wmg.110.1594332940934;
+ Thu, 09 Jul 2020 15:15:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624151736.95785-8-alexandru.tachici@analog.com>
+References: <20200601094512.50509-1-sudeep.holla@arm.com> <20200601094512.50509-3-sudeep.holla@arm.com>
+In-Reply-To: <20200601094512.50509-3-sudeep.holla@arm.com>
+From:   =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>
+Date:   Thu, 9 Jul 2020 15:15:29 -0700
+Message-ID: <CAMP5XgdMqJSd6B+q+WpjEsnVXXMam12Ji7R2-szS2_miGzdNEg@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/3] firmware: Add support for PSA FF-A transport for
+ VM partitions
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 06:17:36PM +0300, alexandru.tachici@analog.com wrote:
-> From: Alexandru Tachici <alexandru.tachici@analog.com>
-> 
-> Add bindings for the Analog Devices ADM1266 sequencer.
-> 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-> ---
->  .../bindings/hwmon/adi,adm1266.yaml           | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+On Mon, Jun 1, 2020 at 2:45 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> Initial support for PSA FF-A interface providing APIs for non-secure VM
+> partitions.
+>
+...
+> diff --git a/drivers/firmware/arm_psa_ffa/Kconfig b/drivers/firmware/arm_=
+psa_ffa/Kconfig
 > new file mode 100644
-> index 000000000000..76b62be48d56
+> index 000000000000..ba699ec68ec4
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwmon/adi,adm1266.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADM1266 Cascadable Super Sequencer with Margin
-> +  Control and Fault Recording
-> +
-> +maintainers:
-> +  - Alexandru Tachici <alexandru.tachici@analog.com>
-> +
-> +description: |
-> +  Analog Devices ADM1266 Cascadable Super Sequencer with Margin
-> +  Control and Fault Recording.
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adm1266
-> +
-> +  reg:
-> +    description: |
-> +      I2C address of slave device.
-> +    items:
-> +      minimum: 0x40
-> +      maximum: 0x4F
-> +
-> +  avcc-supply:
-> +    description: |
-> +      Phandle to the Avcc power supply.
-> +
-> +  adi,master-adm1266:
-> +    description: |
-> +      Represents phandle of a master ADM1266 device cascaded through the IDB.
-> +    $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +required:
-> +  - compatible
-> +  - reg
+> +++ b/drivers/firmware/arm_psa_ffa/Kconfig
+> @@ -0,0 +1,15 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config ARM_PSA_FFA_TRANSPORT
+> +       tristate "Arm Platform Security Architecture Firmware Framework f=
+or Armv8-A"
+> +       depends on ARM64 && HAVE_ARM_SMCCC_DISCOVERY
 
-Add:
+Most of this driver should be usable on any platform, so it would be
+better to only depend on ARM64 in the component that has the arm64
+specific implementation of your low level conduit.
 
-additionalProperties: false
-
+...
+> diff --git a/drivers/firmware/arm_psa_ffa/driver.c b/drivers/firmware/arm=
+_psa_ffa/driver.c
+> new file mode 100644
+> index 000000000000..700bd5850746
+> --- /dev/null
+> +++ b/drivers/firmware/arm_psa_ffa/driver.c
+...
 > +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
+> +typedef struct arm_smccc_res
+> +(arm_psa_ffa_fn)(unsigned long, unsigned long, unsigned long, unsigned l=
+ong,
+> +                unsigned long, unsigned long, unsigned long, unsigned lo=
+ng);
+> +static arm_psa_ffa_fn *invoke_arm_psa_ffa_fn;
 > +
-> +        adm1266@40 {
-> +                compatible = "adi,adm1266";
-> +                reg = <0x40>;
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
+...
+> +struct arm_smccc_res
+> +__arm_psa_ffa_fn_smc(unsigned long function_id,unsigned long arg0,
+...
+> +struct arm_smccc_res
+> +__arm_psa_ffa_fn_hvc(unsigned long function_id,unsigned long arg0,
 
-These aren't documented. Do you expect child nodes?
+Can these two functions move out of this file so this driver only
+depends on a function matching the arm_psa_ffa_fn type?
 
-> +        };
-> +    };
-> +...
-> -- 
-> 2.20.1
-> 
+...
+> +static int psa_ffa_probe(struct platform_device *pdev)
+> +{
+> +       int ret;
+> +       enum arm_smccc_conduit conduit;
+> +
+> +       if (arm_smccc_get_version() < ARM_SMCCC_VERSION_1_2)
+> +               return 0;
+> +
+> +       conduit =3D arm_smccc_1_1_get_conduit();
+
+If you make this device a child device of the conduit, then you don't
+need this here. Other conduits can be added to for instance support
+other architectures without adding entries to this enum and modifying
+this driver.
+
+--
+Arve Hj=C3=B8nnev=C3=A5g
