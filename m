@@ -2,327 +2,194 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE28C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08610C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E32952076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37E320774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgGIKy3 (ORCPT
+        id S1726947AbgGIKyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:54:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:50478 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgGIKy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:54:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 732B51FB;
-        Thu,  9 Jul 2020 03:54:26 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA5ED3F887;
-        Thu,  9 Jul 2020 03:54:24 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 11:54:18 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     kishon@ti.com, robh@kernel.org, bhelgaas@google.com,
-        m-karicheri2@ti.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, shawn.guo@linaro.org,
-        songxiaowei@hisilicon.com, svarbanov@mm-sol.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: dwc: convert to
- devm_platform_ioremap_resource_byname()
-Message-ID: <20200709105418.GA19638@e121166-lin.cambridge.arm.com>
-References: <20200528161510.31935-1-zhengdejin5@gmail.com>
- <20200708164013.5076-1-zhengdejin5@gmail.com>
+        Thu, 9 Jul 2020 06:54:53 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:57854 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726302AbgGIKyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:54:53 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id C0A6FFDAD6A53095369C;
+        Thu,  9 Jul 2020 18:54:50 +0800 (CST)
+Received: from dggema766-chm.china.huawei.com (10.1.198.208) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Thu, 9 Jul 2020 18:54:50 +0800
+Received: from lhreml703-chm.china.huawei.com (10.201.108.52) by
+ dggema766-chm.china.huawei.com (10.1.198.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Thu, 9 Jul 2020 18:54:48 +0800
+Received: from lhreml703-chm.china.huawei.com ([10.201.68.198]) by
+ lhreml703-chm.china.huawei.com ([10.201.68.198]) with mapi id 15.01.1913.007;
+ Thu, 9 Jul 2020 11:54:45 +0100
+From:   Salil Mehta <salil.mehta@huawei.com>
+To:     yuzenghui <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
+        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>
+Subject: RE: [REPORT] possible circular locking dependency when booting a VM
+ on arm64 host
+Thread-Topic: [REPORT] possible circular locking dependency when booting a VM
+ on arm64 host
+Thread-Index: AQHWVd2KjX+gRVf/zUS8x8KvRiYF2qj/EP5Q
+Date:   Thu, 9 Jul 2020 10:54:45 +0000
+Message-ID: <134ee452eda74f0cbdc10354fe66c48e@huawei.com>
+References: <7225eba7-6e5e-ec7e-953b-d1fef0b1775b@huawei.com>
+In-Reply-To: <7225eba7-6e5e-ec7e-953b-d1fef0b1775b@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.68.122]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708164013.5076-1-zhengdejin5@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 12:40:13AM +0800, Dejin Zheng wrote:
-> Use devm_platform_ioremap_resource_byname() to simplify codes.
-> it contains platform_get_resource_byname() and devm_ioremap_resource().
-> 
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> v1 -> v2:
-> 	- rebase to pci/dwc branch
-> 	- add Gustavo and Rob's Reviewed tag
-> 
->  drivers/pci/controller/dwc/pci-dra7xx.c         | 11 ++++-------
->  drivers/pci/controller/dwc/pci-keystone.c       |  7 +++----
->  drivers/pci/controller/dwc/pcie-artpec6.c       | 12 ++++--------
->  .../pci/controller/dwc/pcie-designware-plat.c   |  3 +--
->  drivers/pci/controller/dwc/pcie-histb.c         |  7 ++-----
->  drivers/pci/controller/dwc/pcie-intel-gw.c      |  7 ++-----
->  drivers/pci/controller/dwc/pcie-kirin.c         | 17 ++++++-----------
->  drivers/pci/controller/dwc/pcie-qcom.c          |  6 ++----
->  drivers/pci/controller/dwc/pcie-uniphier.c      |  3 +--
->  9 files changed, 25 insertions(+), 48 deletions(-)
-
-Applied to pci/dwc, thanks.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index 6184ebc9392d..e5d0c7ac09b9 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -593,13 +593,12 @@ static int __init dra7xx_add_pcie_ep(struct dra7xx_pcie *dra7xx,
->  	ep = &pci->ep;
->  	ep->ops = &pcie_ep_ops;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ep_dbics");
-> -	pci->dbi_base = devm_ioremap_resource(dev, res);
-> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "ep_dbics");
->  	if (IS_ERR(pci->dbi_base))
->  		return PTR_ERR(pci->dbi_base);
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ep_dbics2");
-> -	pci->dbi_base2 = devm_ioremap_resource(dev, res);
-> +	pci->dbi_base2 =
-> +		devm_platform_ioremap_resource_byname(pdev, "ep_dbics2");
->  	if (IS_ERR(pci->dbi_base2))
->  		return PTR_ERR(pci->dbi_base2);
->  
-> @@ -626,7 +625,6 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
->  	struct dw_pcie *pci = dra7xx->pci;
->  	struct pcie_port *pp = &pci->pp;
->  	struct device *dev = pci->dev;
-> -	struct resource *res;
->  
->  	pp->irq = platform_get_irq(pdev, 1);
->  	if (pp->irq < 0) {
-> @@ -638,8 +636,7 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
->  	if (ret < 0)
->  		return ret;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbics");
-> -	pci->dbi_base = devm_ioremap_resource(dev, res);
-> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "rc_dbics");
->  	if (IS_ERR(pci->dbi_base))
->  		return PTR_ERR(pci->dbi_base);
->  
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 790679fdfa48..5ffc3b40c4f6 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -1228,8 +1228,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  	if (!pci)
->  		return -ENOMEM;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
-> -	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
-> +	ks_pcie->va_app_base =
-> +		devm_platform_ioremap_resource_byname(pdev, "app");
->  	if (IS_ERR(ks_pcie->va_app_base))
->  		return PTR_ERR(ks_pcie->va_app_base);
->  
-> @@ -1323,8 +1323,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  	}
->  
->  	if (pci->version >= 0x480A) {
-> -		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
-> -		atu_base = devm_ioremap_resource(dev, res);
-> +		atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
->  		if (IS_ERR(atu_base)) {
->  			ret = PTR_ERR(atu_base);
->  			goto err_get_sync;
-> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-> index 28d5a1095200..7d2cfa288b01 100644
-> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
-> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-> @@ -455,8 +455,7 @@ static int artpec6_add_pcie_ep(struct artpec6_pcie *artpec6_pcie,
->  	ep = &pci->ep;
->  	ep->ops = &pcie_ep_ops;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
-> -	pci->dbi_base2 = devm_ioremap_resource(dev, res);
-> +	pci->dbi_base2 = devm_platform_ioremap_resource_byname(pdev, "dbi2");
->  	if (IS_ERR(pci->dbi_base2))
->  		return PTR_ERR(pci->dbi_base2);
->  
-> @@ -481,8 +480,6 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct dw_pcie *pci;
->  	struct artpec6_pcie *artpec6_pcie;
-> -	struct resource *dbi_base;
-> -	struct resource *phy_base;
->  	int ret;
->  	const struct of_device_id *match;
->  	const struct artpec_pcie_of_data *data;
-> @@ -512,13 +509,12 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
->  	artpec6_pcie->variant = variant;
->  	artpec6_pcie->mode = mode;
->  
-> -	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> -	pci->dbi_base = devm_ioremap_resource(dev, dbi_base);
-> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
->  	if (IS_ERR(pci->dbi_base))
->  		return PTR_ERR(pci->dbi_base);
->  
-> -	phy_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
-> -	artpec6_pcie->phy_base = devm_ioremap_resource(dev, phy_base);
-> +	artpec6_pcie->phy_base =
-> +		devm_platform_ioremap_resource_byname(pdev, "phy");
->  	if (IS_ERR(artpec6_pcie->phy_base))
->  		return PTR_ERR(artpec6_pcie->phy_base);
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
-> index 73646b677aff..712456f6ce36 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-plat.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
-> @@ -153,8 +153,7 @@ static int dw_plat_add_pcie_ep(struct dw_plat_pcie *dw_plat_pcie,
->  	ep = &pci->ep;
->  	ep->ops = &pcie_ep_ops;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
-> -	pci->dbi_base2 = devm_ioremap_resource(dev, res);
-> +	pci->dbi_base2 = devm_platform_ioremap_resource_byname(pdev, "dbi2");
->  	if (IS_ERR(pci->dbi_base2))
->  		return PTR_ERR(pci->dbi_base2);
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
-> index 811b5c6d62ea..6d3524c39a9b 100644
-> --- a/drivers/pci/controller/dwc/pcie-histb.c
-> +++ b/drivers/pci/controller/dwc/pcie-histb.c
-> @@ -304,7 +304,6 @@ static int histb_pcie_probe(struct platform_device *pdev)
->  	struct histb_pcie *hipcie;
->  	struct dw_pcie *pci;
->  	struct pcie_port *pp;
-> -	struct resource *res;
->  	struct device_node *np = pdev->dev.of_node;
->  	struct device *dev = &pdev->dev;
->  	enum of_gpio_flags of_flags;
-> @@ -324,15 +323,13 @@ static int histb_pcie_probe(struct platform_device *pdev)
->  	pci->dev = dev;
->  	pci->ops = &dw_pcie_ops;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
-> -	hipcie->ctrl = devm_ioremap_resource(dev, res);
-> +	hipcie->ctrl = devm_platform_ioremap_resource_byname(pdev, "control");
->  	if (IS_ERR(hipcie->ctrl)) {
->  		dev_err(dev, "cannot get control reg base\n");
->  		return PTR_ERR(hipcie->ctrl);
->  	}
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc-dbi");
-> -	pci->dbi_base = devm_ioremap_resource(dev, res);
-> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "rc-dbi");
->  	if (IS_ERR(pci->dbi_base)) {
->  		dev_err(dev, "cannot get rc-dbi base\n");
->  		return PTR_ERR(pci->dbi_base);
-> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> index 2d8dbb318087..c3b3a1d162b5 100644
-> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> @@ -253,11 +253,9 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
->  	struct intel_pcie_port *lpp = platform_get_drvdata(pdev);
->  	struct dw_pcie *pci = &lpp->pci;
->  	struct device *dev = pci->dev;
-> -	struct resource *res;
->  	int ret;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> -	pci->dbi_base = devm_ioremap_resource(dev, res);
-> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
->  	if (IS_ERR(pci->dbi_base))
->  		return PTR_ERR(pci->dbi_base);
->  
-> @@ -291,8 +289,7 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
->  	ret = of_pci_get_max_link_speed(dev->of_node);
->  	lpp->link_gen = ret < 0 ? 0 : ret;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
-> -	lpp->app_base = devm_ioremap_resource(dev, res);
-> +	lpp->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
->  	if (IS_ERR(lpp->app_base))
->  		return PTR_ERR(lpp->app_base);
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index c19617a912bd..e5e765038686 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -147,23 +147,18 @@ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
->  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
->  				    struct platform_device *pdev)
->  {
-> -	struct device *dev = &pdev->dev;
-> -	struct resource *apb;
-> -	struct resource *phy;
-> -	struct resource *dbi;
-> -
-> -	apb = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb");
-> -	kirin_pcie->apb_base = devm_ioremap_resource(dev, apb);
-> +	kirin_pcie->apb_base =
-> +		devm_platform_ioremap_resource_byname(pdev, "apb");
->  	if (IS_ERR(kirin_pcie->apb_base))
->  		return PTR_ERR(kirin_pcie->apb_base);
->  
-> -	phy = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
-> -	kirin_pcie->phy_base = devm_ioremap_resource(dev, phy);
-> +	kirin_pcie->phy_base =
-> +		devm_platform_ioremap_resource_byname(pdev, "phy");
->  	if (IS_ERR(kirin_pcie->phy_base))
->  		return PTR_ERR(kirin_pcie->phy_base);
->  
-> -	dbi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> -	kirin_pcie->pci->dbi_base = devm_ioremap_resource(dev, dbi);
-> +	kirin_pcie->pci->dbi_base =
-> +		devm_platform_ioremap_resource_byname(pdev, "dbi");
->  	if (IS_ERR(kirin_pcie->pci->dbi_base))
->  		return PTR_ERR(kirin_pcie->pci->dbi_base);
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 73d4eed26f65..b79f7878c993 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1405,8 +1405,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	if (pcie->gen < 0)
->  		pcie->gen = 2;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
-> -	pcie->parf = devm_ioremap_resource(dev, res);
-> +	pcie->parf = devm_platform_ioremap_resource_byname(pdev, "parf");
->  	if (IS_ERR(pcie->parf)) {
->  		ret = PTR_ERR(pcie->parf);
->  		goto err_pm_runtime_put;
-> @@ -1419,8 +1418,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_pm_runtime_put;
->  	}
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
-> -	pcie->elbi = devm_ioremap_resource(dev, res);
-> +	pcie->elbi = devm_platform_ioremap_resource_byname(pdev, "elbi");
->  	if (IS_ERR(pcie->elbi)) {
->  		ret = PTR_ERR(pcie->elbi);
->  		goto err_pm_runtime_put;
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index a5401a0b1e58..3a7f403b57b8 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -416,8 +416,7 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv->pci.dbi_base))
->  		return PTR_ERR(priv->pci.dbi_base);
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
-> -	priv->base = devm_ioremap_resource(dev, res);
-> +	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
->  	if (IS_ERR(priv->base))
->  		return PTR_ERR(priv->base);
->  
-> -- 
-> 2.25.0
-> 
+SGkgWXV6ZW5naHVpLA0KSSB3aWxsIHRyeSB0byByZXByb2R1Y2UgaXQgdG9kYXkgYXQgb3VyIHBs
+YXRmb3JtLiBKdXN0IG9uZSBxdWVzdGlvbiBpcyBpdCBlYXNpbHkNCnJlcHJvZHVjaWJsZSBvciBp
+cyBhIHJhcmUgb2NjdXJyZW5jZT8NCg0KVGhhbmtzDQpTYWxpbA0KDQo+IEZyb206IHl1emVuZ2h1
+aQ0KPiBTZW50OiBUaHVyc2RheSwgSnVseSA5LCAyMDIwIDExOjQxIEFNDQo+IFRvOiBNYXJjIFp5
+bmdpZXIgPG1hekBrZXJuZWwub3JnPjsgVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXgu
+ZGU+OyBMaW51eA0KPiBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnPjsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IENjOiBa
+aHVhbmd5dXplbmcgKFlpc2VuKSA8eWlzZW4uemh1YW5nQGh1YXdlaS5jb20+OyBTYWxpbCBNZWh0
+YQ0KPiA8c2FsaWwubWVodGFAaHVhd2VpLmNvbT47IFdhbmdoYWliaW4gKEQpIDx3YW5naGFpYmlu
+LndhbmdAaHVhd2VpLmNvbT4NCj4gU3ViamVjdDogW1JFUE9SVF0gcG9zc2libGUgY2lyY3VsYXIg
+bG9ja2luZyBkZXBlbmRlbmN5IHdoZW4gYm9vdGluZyBhIFZNIG9uIGFybTY0DQo+IGhvc3QNCj4g
+DQo+IEhpIEFsbCwNCj4gDQo+IEkgaGFkIHNlZW4gdGhlIGZvbGxvd2luZyBsb2NrZGVwIHNwbGF0
+IHdoZW4gYm9vdGluZyBhIGd1ZXN0IG9uIG15DQo+IEt1bnBlbmcgOTIwIHdpdGggR0lDdjQgZW5h
+YmxlZC4gSSBjYW4gYWxzbyB0cmlnZ2VyIHRoZSBzYW1lIHNwbGF0DQo+IG9uIHY1LjUgc28gaXQg
+c2hvdWxkIGFscmVhZHkgZXhpc3QgaW4gdGhlIGtlcm5lbCBmb3IgYSB3aGlsZS4gSSdtDQo+IG5v
+dCBzdXJlIHdoYXQgdGhlIGV4YWN0IHByb2JsZW0gaXMgYW5kIGhvcGUgc29tZW9uZSBjYW4gaGF2
+ZSBhIGxvb2shDQo+IA0KPiANCj4gVGhhbmtzLA0KPiBaZW5naHVpDQo+IA0KPiBbICAxMDMuODU1
+NTExXSA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT0NCj4gWyAgMTAzLjg2MTY2NF0gV0FSTklORzogcG9zc2libGUgY2lyY3VsYXIgbG9ja2luZyBk
+ZXBlbmRlbmN5IGRldGVjdGVkDQo+IFsgIDEwMy44Njc4MTddIDUuOC4wLXJjNCsgIzM1IFRhaW50
+ZWQ6IEcgICAgICAgIFcNCj4gWyAgMTAzLjg3MjkzMl0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IFsgIDEwMy44NzkwODNdIENQVSAyL0tW
+TS8yMDUxNSBpcyB0cnlpbmcgdG8gYWNxdWlyZSBsb2NrOg0KPiBbICAxMDMuODg0MjAwXSBmZmZm
+MjAyZmNkNTg2NWIwICgmaXJxX2Rlc2NfbG9ja19jbGFzcyl7LS4tLn0tezI6Mn0sIGF0Og0KPiBf
+X2lycV9nZXRfZGVzY19sb2NrKzB4NjAvMHhhMA0KPiBbICAxMDMuODkzMTI3XQ0KPiAgICAgICAg
+ICAgICAgICAgYnV0IHRhc2sgaXMgYWxyZWFkeSBob2xkaW5nIGxvY2s6DQo+IFsgIDEwMy44OTg5
+MzNdIGZmZmYyMDJmY2ZkMDdmNTggKCZycS0+bG9jayl7LS4tLn0tezI6Mn0sIGF0Og0KPiBfX3Nj
+aGVkdWxlKzB4MTE0LzB4OGI4DQo+IFsgIDEwMy45MDYzMDFdDQo+ICAgICAgICAgICAgICAgICB3
+aGljaCBsb2NrIGFscmVhZHkgZGVwZW5kcyBvbiB0aGUgbmV3IGxvY2suDQo+IA0KPiBbICAxMDMu
+OTE0NDQxXQ0KPiAgICAgICAgICAgICAgICAgdGhlIGV4aXN0aW5nIGRlcGVuZGVuY3kgY2hhaW4g
+KGluIHJldmVyc2Ugb3JkZXIpIGlzOg0KPiBbICAxMDMuOTIxODg4XQ0KPiAgICAgICAgICAgICAg
+ICAgLT4gIzMgKCZycS0+bG9jayl7LS4tLn0tezI6Mn06DQo+IFsgIDEwMy45Mjc0MzhdICAgICAg
+ICBfcmF3X3NwaW5fbG9jaysweDU0LzB4NzANCj4gWyAgMTAzLjkzMTYwNV0gICAgICAgIHRhc2tf
+Zm9ya19mYWlyKzB4NDgvMHgxNTANCj4gWyAgMTAzLjkzNTg2MF0gICAgICAgIHNjaGVkX2Zvcmsr
+MHgxMDAvMHgyNjgNCj4gWyAgMTAzLjkzOTg1Nl0gICAgICAgIGNvcHlfcHJvY2VzcysweDYyOC8w
+eDE4NjgNCj4gWyAgMTAzLjk0NDEwNl0gICAgICAgIF9kb19mb3JrKzB4NzQvMHg3MTANCj4gWyAg
+MTAzLjk0Nzg0MF0gICAgICAgIGtlcm5lbF90aHJlYWQrMHg3OC8weGEwDQo+IFsgIDEwMy45NTE5
+MTddICAgICAgICByZXN0X2luaXQrMHgzMC8weDI3MA0KPiBbICAxMDMuOTU1NzQyXSAgICAgICAg
+YXJjaF9jYWxsX3Jlc3RfaW5pdCsweDE0LzB4MWMNCj4gWyAgMTAzLjk2MDMzOV0gICAgICAgIHN0
+YXJ0X2tlcm5lbCsweDUzNC8weDU2OA0KPiBbICAxMDMuOTY0NTAzXQ0KPiAgICAgICAgICAgICAg
+ICAgLT4gIzIgKCZwLT5waV9sb2NrKXstLi0ufS17MjoyfToNCj4gWyAgMTAzLjk3MDIyNF0gICAg
+ICAgIF9yYXdfc3Bpbl9sb2NrX2lycXNhdmUrMHg3MC8weDk4DQo+IFsgIDEwMy45NzUwODBdICAg
+ICAgICB0cnlfdG9fd2FrZV91cCsweDVjLzB4NWIwDQo+IFsgIDEwMy45NzkzMzBdICAgICAgICB3
+YWtlX3VwX3Byb2Nlc3MrMHgyOC8weDM4DQo+IFsgIDEwMy45ODM1ODFdICAgICAgICBjcmVhdGVf
+d29ya2VyKzB4MTI4LzB4MWI4DQo+IFsgIDEwMy45ODc4MzRdICAgICAgICB3b3JrcXVldWVfaW5p
+dCsweDMwOC8weDNiYw0KPiBbICAxMDMuOTkyMTcyXSAgICAgICAga2VybmVsX2luaXRfZnJlZWFi
+bGUrMHgxODAvMHgzM2MNCj4gWyAgMTAzLjk5NzAyN10gICAgICAgIGtlcm5lbF9pbml0KzB4MTgv
+MHgxMTgNCj4gWyAgMTA0LjAwMTAyMF0gICAgICAgIHJldF9mcm9tX2ZvcmsrMHgxMC8weDE4DQo+
+IFsgIDEwNC4wMDUwOTddDQo+ICAgICAgICAgICAgICAgICAtPiAjMSAoJnBvb2wtPmxvY2spey0u
+LS59LXsyOjJ9Og0KPiBbICAxMDQuMDEwODE3XSAgICAgICAgX3Jhd19zcGluX2xvY2srMHg1NC8w
+eDcwDQo+IFsgIDEwNC4wMTQ5ODNdICAgICAgICBfX3F1ZXVlX3dvcmsrMHgxMjAvMHg2ZTgNCj4g
+WyAgMTA0LjAxOTE0Nl0gICAgICAgIHF1ZXVlX3dvcmtfb24rMHhhMC8weGQ4DQo+IFsgIDEwNC4w
+MjMyMjVdICAgICAgICBpcnFfc2V0X2FmZmluaXR5X2xvY2tlZCsweGE4LzB4MTc4DQo+IFsgIDEw
+NC4wMjgyNTNdICAgICAgICBfX2lycV9zZXRfYWZmaW5pdHkrMHg1Yy8weDkwDQo+IFsgIDEwNC4w
+MzI3NjJdICAgICAgICBpcnFfc2V0X2FmZmluaXR5X2hpbnQrMHg3NC8weGIwDQo+IFsgIDEwNC4w
+Mzc1NDBdICAgICAgICBobnMzX25pY19pbml0X2lycSsweGUwLzB4MjEwIFtobnMzXQ0KPiBbICAx
+MDQuMDQyNjU1XSAgICAgICAgaG5zM19jbGllbnRfaW5pdCsweDJkOC8weDRlMCBbaG5zM10NCj4g
+WyAgMTA0LjA0Nzc3OV0gICAgICAgIGhjbGdlX2luaXRfY2xpZW50X2luc3RhbmNlKzB4ZjAvMHgz
+YTggW2hjbGdlXQ0KPiBbICAxMDQuMDUzNzYwXSAgICAgICAgaG5hZTNfaW5pdF9jbGllbnRfaW5z
+dGFuY2UucGFydC4zKzB4MzAvMHg2OCBbaG5hZTNdDQo+IFsgIDEwNC4wNjAyNTddICAgICAgICBo
+bmFlM19yZWdpc3Rlcl9hZV9kZXYrMHgxMDAvMHgxZjAgW2huYWUzXQ0KPiBbICAxMDQuMDY1ODky
+XSAgICAgICAgaG5zM19wcm9iZSsweDYwLzB4YTggW2huczNdDQo+IFsgIDEwNC4wNzAzMTldICAg
+ICAgICBsb2NhbF9wY2lfcHJvYmUrMHg0NC8weDk4DQo+IFsgIDEwNC4wNzQ1NzNdICAgICAgICB3
+b3JrX2Zvcl9jcHVfZm4rMHgyMC8weDMwDQo+IFsgIDEwNC4wNzg4MjNdICAgICAgICBwcm9jZXNz
+X29uZV93b3JrKzB4MjU4LzB4NjE4DQo+IFsgIDEwNC4wODMzMzNdICAgICAgICB3b3JrZXJfdGhy
+ZWFkKzB4MWMwLzB4NDM4DQo+IFsgIDEwNC4wODc1ODVdICAgICAgICBrdGhyZWFkKzB4MTIwLzB4
+MTI4DQo+IFsgIDEwNC4wOTEzMThdICAgICAgICByZXRfZnJvbV9mb3JrKzB4MTAvMHgxOA0KPiBb
+ICAxMDQuMDk1Mzk0XQ0KPiAgICAgICAgICAgICAgICAgLT4gIzAgKCZpcnFfZGVzY19sb2NrX2Ns
+YXNzKXstLi0ufS17MjoyfToNCj4gWyAgMTA0LjEwMTg5NV0gICAgICAgIF9fbG9ja19hY3F1aXJl
+KzB4MTFiYy8weDE1MzANCj4gWyAgMTA0LjEwNjQwNl0gICAgICAgIGxvY2tfYWNxdWlyZSsweDEw
+MC8weDNmOA0KPiBbICAxMDQuMTEwNTcwXSAgICAgICAgX3Jhd19zcGluX2xvY2tfaXJxc2F2ZSsw
+eDcwLzB4OTgNCj4gWyAgMTA0LjExNTQyNl0gICAgICAgIF9faXJxX2dldF9kZXNjX2xvY2srMHg2
+MC8weGEwDQo+IFsgIDEwNC4xMjAwMjFdICAgICAgICBpcnFfc2V0X3ZjcHVfYWZmaW5pdHkrMHg0
+OC8weGM4DQo+IFsgIDEwNC4xMjQ3OTNdICAgICAgICBpdHNfbWFrZV92cGVfbm9uX3Jlc2lkZW50
+KzB4NmMvMHhjMA0KPiBbICAxMDQuMTI5OTEwXSAgICAgICAgdmdpY192NF9wdXQrMHg2NC8weDcw
+DQo+IFsgIDEwNC4xMzM4MTVdICAgICAgICB2Z2ljX3YzX3B1dCsweDI4LzB4MTAwDQo+IFsgIDEw
+NC4xMzc4MDZdICAgICAgICBrdm1fdmdpY19wdXQrMHgzYy8weDYwDQo+IFsgIDEwNC4xNDE4MDFd
+ICAgICAgICBrdm1fYXJjaF92Y3B1X3B1dCsweDM4LzB4NTgNCj4gWyAgMTA0LjE0NjIyOF0gICAg
+ICAgIGt2bV9zY2hlZF9vdXQrMHgzOC8weDU4DQo+IFsgIDEwNC4xNTAzMDZdICAgICAgICBfX3Nj
+aGVkdWxlKzB4NTU0LzB4OGI4DQo+IFsgIDEwNC4xNTQyOThdICAgICAgICBzY2hlZHVsZSsweDUw
+LzB4ZTANCj4gWyAgMTA0LjE1Nzk0Nl0gICAgICAgIGt2bV9hcmNoX3ZjcHVfaW9jdGxfcnVuKzB4
+NjQ0LzB4OWU4DQo+IFsgIDEwNC4xNjMwNjNdICAgICAgICBrdm1fdmNwdV9pb2N0bCsweDRiNC8w
+eDkxOA0KPiBbICAxMDQuMTY3NDAzXSAgICAgICAga3N5c19pb2N0bCsweGI0LzB4ZDANCj4gWyAg
+MTA0LjE3MTIyMl0gICAgICAgIF9fYXJtNjRfc3lzX2lvY3RsKzB4MjgvMHhjOA0KPiBbICAxMDQu
+MTc1NjQ3XSAgICAgICAgZWwwX3N2Y19jb21tb24uY29uc3Rwcm9wLjIrMHg3NC8weDEzOA0KPiBb
+ICAxMDQuMTgwOTM1XSAgICAgICAgZG9fZWwwX3N2YysweDM0LzB4YTANCj4gWyAgMTA0LjE4NDc1
+NV0gICAgICAgIGVsMF9zeW5jX2hhbmRsZXIrMHhlYy8weDEyOA0KPiBbICAxMDQuMTg5MTc5XSAg
+ICAgICAgZWwwX3N5bmMrMHgxNDAvMHgxODANCj4gWyAgMTA0LjE5Mjk5N10NCj4gICAgICAgICAg
+ICAgICAgIG90aGVyIGluZm8gdGhhdCBtaWdodCBoZWxwIHVzIGRlYnVnIHRoaXM6DQo+IA0KPiBb
+ICAxMDQuMjAwOTYyXSBDaGFpbiBleGlzdHMgb2Y6DQo+ICAgICAgICAgICAgICAgICAgICZpcnFf
+ZGVzY19sb2NrX2NsYXNzIC0tPiAmcC0+cGlfbG9jayAtLT4gJnJxLT5sb2NrDQo+IA0KPiBbICAx
+MDQuMjExMjYxXSAgUG9zc2libGUgdW5zYWZlIGxvY2tpbmcgc2NlbmFyaW86DQo+IA0KPiBbICAx
+MDQuMjE3MTUyXSAgICAgICAgQ1BVMCAgICAgICAgICAgICAgICAgICAgQ1BVMQ0KPiBbICAxMDQu
+MjIxNjYwXSAgICAgICAgLS0tLSAgICAgICAgICAgICAgICAgICAgLS0tLQ0KPiBbICAxMDQuMjI2
+MTcwXSAgIGxvY2soJnJxLT5sb2NrKTsNCj4gWyAgMTA0LjIyOTIxMF0gICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGxvY2soJnAtPnBpX2xvY2spOw0KPiBbICAxMDQuMjM0OTMwXSAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgbG9jaygmcnEtPmxvY2spOw0KPiBbICAxMDQuMjQw
+NDc0XSAgIGxvY2soJmlycV9kZXNjX2xvY2tfY2xhc3MpOw0KPiBbICAxMDQuMjQ0NDY1XQ0KPiAg
+ICAgICAgICAgICAgICAgICoqKiBERUFETE9DSyAqKioNCj4gDQo+IFsgIDEwNC4yNTAzNTZdIDIg
+bG9ja3MgaGVsZCBieSBDUFUgMi9LVk0vMjA1MTU6DQo+IFsgIDEwNC4yNTQ2MDZdICAjMDogZmZm
+ZjIwMmZhOTU2ODBjOCAoJnZjcHUtPm11dGV4KXsrLisufS17MzozfSwgYXQ6DQo+IGt2bV92Y3B1
+X2lvY3RsKzB4ODAvMHg5MTgNCj4gWyAgMTA0LjI2MjkyMV0gICMxOiBmZmZmMjAyZmNmZDA3ZjU4
+ICgmcnEtPmxvY2spey0uLS59LXsyOjJ9LCBhdDoNCj4gX19zY2hlZHVsZSsweDExNC8weDhiOA0K
+PiBbICAxMDQuMjcwNzE3XQ0KPiAgICAgICAgICAgICAgICAgc3RhY2sgYmFja3RyYWNlOg0KPiBb
+ICAxMDQuMjc1MDU3XSBDUFU6IDczIFBJRDogMjA1MTUgQ29tbTogQ1BVIDIvS1ZNIEtkdW1wOiBs
+b2FkZWQgVGFpbnRlZDoNCj4gRyAgICAgICAgVyAgICAgICAgIDUuOC4wLXJjNCsgIzM1DQo+IFsg
+IDEwNC4yODQ0MDRdIEhhcmR3YXJlIG5hbWU6IEh1YXdlaSBUYWlTaGFuIDIyODAgVjIvQkM4MkFN
+RERBLCBCSU9TDQo+IDEuMDUgMDkvMTgvMjAxOQ0KPiBbICAxMDQuMjkxODUxXSBDYWxsIHRyYWNl
+Og0KPiBbICAxMDQuMjk0Mjg5XSAgZHVtcF9iYWNrdHJhY2UrMHgwLzB4MjE4DQo+IFsgIDEwNC4y
+OTc5MzVdICBzaG93X3N0YWNrKzB4MmMvMHgzOA0KPiBbICAxMDQuMzAxMjM1XSAgZHVtcF9zdGFj
+aysweGYwLzB4MTY4DQo+IFsgIDEwNC4zMDQ2MjJdICBwcmludF9jaXJjdWxhcl9idWcuaXNyYS4z
+OSsweDIyYy8weDI4MA0KPiBbICAxMDQuMzA5NDc2XSAgY2hlY2tfbm9uY2lyY3VsYXIrMHgxNTgv
+MHgxYzgNCj4gWyAgMTA0LjMxMzU1NV0gIF9fbG9ja19hY3F1aXJlKzB4MTFiYy8weDE1MzANCj4g
+WyAgMTA0LjMxNzU0NV0gIGxvY2tfYWNxdWlyZSsweDEwMC8weDNmOA0KPiBbICAxMDQuMzIxMTkw
+XSAgX3Jhd19zcGluX2xvY2tfaXJxc2F2ZSsweDcwLzB4OTgNCj4gWyAgMTA0LjMyNTUyOV0gIF9f
+aXJxX2dldF9kZXNjX2xvY2srMHg2MC8weGEwDQo+IFsgIDEwNC4zMjk2MDZdICBpcnFfc2V0X3Zj
+cHVfYWZmaW5pdHkrMHg0OC8weGM4DQo+IFsgIDEwNC4zMzM4NThdICBpdHNfbWFrZV92cGVfbm9u
+X3Jlc2lkZW50KzB4NmMvMHhjMA0KPiBbICAxMDQuMzM4NDU0XSAgdmdpY192NF9wdXQrMHg2NC8w
+eDcwDQo+IFsgIDEwNC4zNDE4NDBdICB2Z2ljX3YzX3B1dCsweDI4LzB4MTAwDQo+IFsgIDEwNC4z
+NDUzMTRdICBrdm1fdmdpY19wdXQrMHgzYy8weDYwDQo+IFsgIDEwNC4zNDg3ODldICBrdm1fYXJj
+aF92Y3B1X3B1dCsweDM4LzB4NTgNCj4gWyAgMTA0LjM1MjY5NF0gIGt2bV9zY2hlZF9vdXQrMHgz
+OC8weDU4DQo+IFsgIDEwNC4zNTYyNTZdICBfX3NjaGVkdWxlKzB4NTU0LzB4OGI4DQo+IFsgIDEw
+NC4zNTk3MzBdICBzY2hlZHVsZSsweDUwLzB4ZTANCj4gWyAgMTA0LjM2Mjg1OV0gIGt2bV9hcmNo
+X3ZjcHVfaW9jdGxfcnVuKzB4NjQ0LzB4OWU4DQo+IFsgIDEwNC4zNjc0NTddICBrdm1fdmNwdV9p
+b2N0bCsweDRiNC8weDkxOA0KPiBbICAxMDQuMzcxMjc3XSAga3N5c19pb2N0bCsweGI0LzB4ZDAN
+Cj4gWyAgMTA0LjM3NDU3N10gIF9fYXJtNjRfc3lzX2lvY3RsKzB4MjgvMHhjOA0KPiBbICAxMDQu
+Mzc4NDgyXSAgZWwwX3N2Y19jb21tb24uY29uc3Rwcm9wLjIrMHg3NC8weDEzOA0KPiBbICAxMDQu
+MzgzMjUwXSAgZG9fZWwwX3N2YysweDM0LzB4YTANCj4gWyAgMTA0LjM4NjU1Ml0gIGVsMF9zeW5j
+X2hhbmRsZXIrMHhlYy8weDEyOA0KPiBbICAxMDQuMzkwNDU4XSAgZWwwX3N5bmMrMHgxNDAvMHgx
+ODANCg==
