@@ -2,122 +2,163 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DF0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE657C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4479320663
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D463F20663
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgGIJas (ORCPT
+        id S1726748AbgGIJbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:30:48 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:40663 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgGIJar (ORCPT
+        Thu, 9 Jul 2020 05:31:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgGIJbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:30:47 -0400
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N1PLB-1kukYx37et-012nFH; Thu, 09 Jul 2020 11:30:44 +0200
-Received: by mail-qt1-f180.google.com with SMTP id o38so1141868qtf.6;
-        Thu, 09 Jul 2020 02:30:44 -0700 (PDT)
-X-Gm-Message-State: AOAM533iGCYVcsfLjfbLQ+hhH0hRC2iv0+NWTa+MtIg5LCFhi3og8f0O
-        GbZDZSTJ4PiBa3B11XgDyLneCer+nyn226KYyyY=
-X-Google-Smtp-Source: ABdhPJya8KYSjP4Vpazo2pyPOtp1xixDd/LrBpy7KWM87TVOcxWC9KZT2AhHFlbVXr6XdAAgrM3BYamH6NXqKGbmOGs=
-X-Received: by 2002:ac8:4507:: with SMTP id q7mr63620552qtn.142.1594287043518;
- Thu, 09 Jul 2020 02:30:43 -0700 (PDT)
+        Thu, 9 Jul 2020 05:31:12 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE6CC061A0B;
+        Thu,  9 Jul 2020 02:31:11 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 056222A61E8
+Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mario.Limonciello@dell.com
+Cc:     rjw@rjwysocki.net, rafael@kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, lenb@kernel.org, kernel@collabora.com,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org,
+        ayman.bagabas@gmail.com, benjamin.tissoires@redhat.com,
+        blaz@mxxn.io, dvhart@infradead.org, gregkh@linuxfoundation.org,
+        hdegoede@redhat.com, jeremy@system76.com, 2pi@mok.nu,
+        mchehab+samsung@kernel.org, rajatja@google.com,
+        srinivas.pandruvada@linux.intel.com,
+        platform-driver-x86@vger.kernel.org
+References: <20200413134611.478441-1-enric.balletbo@collabora.com>
+ <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
+ <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
+ <10490419.gsntqH5CaE@kreacher>
+ <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com>
+ <59771d3689da41a5bbc67541aa6f4777@AUSX13MPC105.AMER.DELL.COM>
+ <20200610214033.GB248110@dtor-ws>
+ <adf9daaf08f1464684e48ec203194fe9@AUSX13MPC105.AMER.DELL.COM>
+ <20200610224305.GC248110@dtor-ws>
+ <1e32b7db-5457-e0cf-5e5e-36f21d5a91eb@collabora.com>
+Message-ID: <b9e46ec7-c362-da76-a532-8d380b16d915@collabora.com>
+Date:   Thu, 9 Jul 2020 11:31:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200628182601.GA84577@gmail.com> <CAHk-=wgD+q+oDdtukYC74_cDX5i0Ynf0GLhuNe2Faaokejj6fQ@mail.gmail.com>
- <20200708162053.GU4800@hirez.programming.kicks-ass.net> <CAHk-=wggLLv8dY7ViOm7rdHxVNKJUkZMuR90vXO307WkBT8qrw@mail.gmail.com>
-In-Reply-To: <CAHk-=wggLLv8dY7ViOm7rdHxVNKJUkZMuR90vXO307WkBT8qrw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 9 Jul 2020 11:30:27 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1GFjM5-ENf7XL6jjUvRdJhgjzYpSGD5R7TmW6oWEhYRA@mail.gmail.com>
-Message-ID: <CAK8P3a1GFjM5-ENf7XL6jjUvRdJhgjzYpSGD5R7TmW6oWEhYRA@mail.gmail.com>
-Subject: Re: [GIT PULL] EFI fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:gf6Do5RSBjDjAUrRhYphUARohS0MGye5iw38Wi20Q7K2qIlDRP+
- nAtuzPHSIWVTJJh+Y9XzbrQ8HUsjk0g+0VrrWwtlYKkk/u6VDC8dDz/567uerK+/GrHsinM
- nL2hlzEktiiOeAgjU/1FQUXfA4yXOpEjtYeGNUQ8lmpcPjZz+ucjQAY2G9jO5jlMrtLdyW4
- pbyg1MF8u9pLnRktzZOIg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:30W8Tdkdp4U=:vv8aO2cKSp5Sm58Sw5kbJS
- epZWaWDnKpWamfcZ2cgP3VjylRAcvbfwdbiX5+12CbiA/ueKzMPMKdVTY43d6Mn5srjfqE1HQ
- x5sjcVN7uHeZ9+oMCeBW7eZlfiR66ZXJYZda2MvSCCy2RWTqRy35jDr93g4VvDYZmssAF3cbk
- uwW84mrcR+tDVIicZs8XDnM2HbLkbFNNBf5hq2qRTw2Msq78PLYeEAhkboEf6jIZGM3VLjyWc
- wxf1raheuYgMWzeKj/xZWPvMdsOGzlHKlQ0GMxW9z7wtmj2DdcGN2zPRMtRSt8fRe17MFeh0l
- ZzMRX6Bc5Q9VXPDwAtnRGTwSJH/dhEGdzuABy8NMdMVru7xjZzvESCkHWQaouov4PEe5Vt6pw
- pJxsCHIakhA36eaQOcecEUmPe7pq3kTzmo0e4k9dXKclPxcpGoNrMycZOMB4ttCXJFaKw19gS
- ADiy2dCwPcqgTyZGUTfMk0IeyBl+CkAuJoMcZbLo5H2Dg6zhQR24iStC7s4uIUHmrxX0/YsyL
- rQPFc2mqsh2G6OBLctad/PQBNLdS2KhC5ZoQf37k674BtpCouNLBH4B4nf2A7tkUyic0PqTXT
- 57KqPNUWujlJoftytHO5Mkx9s8n5DdwheSUszCioek5VlkLIcGPpgdlePpKSSmmParu0sKlZE
- pDezrveeuX266eXPTJyPjaLi8d08ipeZJA9p3FGoM/4br6xXASsocEdU6VCYhmk6pZU+lz3/t
- oHiJgzntNxDd0vbfxGUn9caV9bIaA6CZziWtvpUCeLPNnZYJfwHn/+RK71HICmIaVA8yynK0X
- KtoACepfSvNWIhehmMaSwkK3OfPF8ijgybLK1CPWfhVyThvGHPybAhxrA9hxAnZ97B4t4Kp
+In-Reply-To: <1e32b7db-5457-e0cf-5e5e-36f21d5a91eb@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 8:00 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, Jul 8, 2020 at 9:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > It's perhaps yet another reason to just skip gcc-4.8 too, since
-> > > apparently 4.9 works.
-> > >
-> > > gcc-4.9 really has a lot of advantages. It's where (I think) gcc
-> > > basically supports all C11 things, including _Generic() but also
-> > > __auto_type.
-> >
-> > +1
-> >
-> > Anybody for nay, or should we just do this?
->
-> I'll just do it. Let's see if anybody screams with a good reason. I
-> hate the whole "support old compilers", it ends up not only making for
-> complex code, it tends to cause these unnecessary kinds of "guys, we
-> tested this really well, but that crazy compiler had a very particular
-> odd issue, and it wasn't in any test box.
+Hi Rafael,
 
-Cool, thanks for changing it, this is clearly a better suited compiler
-version. Aside from the added C11 features, this is also where a lot of
-the optimizations changed, so code generation is more predictable
-if we don't need to worry about gcc-4.8.
+On 11/6/20 13:06, Enric Balletbo i Serra wrote:
+> Hi,
+> 
+> On 11/6/20 0:43, Dmitry Torokhov wrote:
+>> On Wed, Jun 10, 2020 at 09:52:12PM +0000, Mario.Limonciello@dell.com wrote:
+>>>> -----Original Message-----
+>>>> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>>>> Sent: Wednesday, June 10, 2020 4:41 PM
+>>>> To: Limonciello, Mario
+>>>> Cc: enric.balletbo@collabora.com; rjw@rjwysocki.net; rafael@kernel.org;
+>>>> linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; lenb@kernel.org;
+>>>> kernel@collabora.com; groeck@chromium.org; bleung@chromium.org;
+>>>> dtor@chromium.org; gwendal@chromium.org; vbendeb@chromium.org;
+>>>> andy@infradead.org; ayman.bagabas@gmail.com; benjamin.tissoires@redhat.com;
+>>>> blaz@mxxn.io; dvhart@infradead.org; gregkh@linuxfoundation.org;
+>>>> hdegoede@redhat.com; jeremy@system76.com; 2pi@mok.nu;
+>>>> mchehab+samsung@kernel.org; rajatja@google.com;
+>>>> srinivas.pandruvada@linux.intel.com; platform-driver-x86@vger.kernel.org
+>>>> Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+>>>>
+>>>>
+>>>> [EXTERNAL EMAIL]
+>>>>
+>>>> On Wed, Jun 10, 2020 at 09:28:36PM +0000, Mario.Limonciello@dell.com wrote:
+>>>>>>
+>>>>>> To give you some references, if I'm not wrong, this prefix is used in
+>>>> all
+>>>>>> or
+>>>>>> almost all Intel Chromebook devices (auron, cyan, eve, fizz, hatch,
+>>>>>> octopus,
+>>>>>> poppy, strago ...) The ACPI source for this device can be found here
+>>>> [1],
+>>>>>> and,
+>>>>>> if not all, almost all Intel based Chromebooks are shipped with the
+>>>>>> firmware
+>>>>>> that supports this.
+>>>>>
+>>>>> You can potentially carry a small patch in your downstream kernel for the
+>>>>> legacy stuff until it reaches EOL.  At least for the new stuff you could
+>>>>> enact a process that properly reserves unique numbers and changes the
+>>>> driver
+>>>>> when the interface provided by the ACPI device has changed.
+>>>>
+>>>> If we use this prefix for hatch EOL is ~7 years from now.
+>>>>
+>>>
+>>> Isn't the whole point of the ACPI registry and choosing an ID?  You know internally
+>>> if you need to change the interface that a new ID is needed and a new driver will
+>>> be needed that comprehends that ID change.  So if you can't guarantee that 0001 is
+>>> the same driver interface in every firmware implementation google used then that is
+>>> where this falls apart.
+>>>
+> 
+> As far as I know GGL0001 has the same driver interface in every firmware
+> implementation Google used. But I'll ask to make sure.
+> 
+>>> I know there is a long support lifecycle but you're talking about rebasing
+>>> to new LTS kernels a handful of times between now and then.  If the interface really
+>>> is stable the patch should be small and it shouldn't be a large amount of technical
+>>> debt to carry downstream until EOL.
+>>
+>> I think we are talking about different things actually. Let's forget
+>> about Chrome OS and downstream kernels. We have devices that have
+>> already been shipped and in hands of users. Some of them are old, some
+>> of them are new. We can't not enforce that firmware for these devices
+>> will be either released or updated. Therefore, if we want expose this
+>> device in mainline kernel, we need to have it handle "GGL0001" HID in
+>> addition to whatever proper HID we may select for it.
+>>
+> 
+> FWIW, after investigate a bit more, although GGL is not in the ACPI ID list it
+> is in the PNP ID list [1]. So as far as I understand GGL0001 is valid ID. I know
+> that PNP ID is the legacy identifier but since this was here for long time and
+> will be here also for long time, I am wondering if we can take that as an
+> argument to have GGL0001 as a valid device to be exposed in the kernel.
+> 
 
-On the flip side, gcc-4.8 was used by old enterprise distros that
-are still supported (SUSE 12, RHEL 7), whereas gcc-4.9 was only
-shipped in Debian Jessie and Android releases that are both
-EOL now (Android never moved beyond a buggy gcc-4.9 prerelease
-but now uses clang for everything).
+So, as the GGL prefix is a valid ID in the PNP ID list, is this a valid argument
+to take in consideration this patch and resolves your concern regarding the ID?
 
-I don't see any technical reasons to go even further, but if
-something does come up, the users of these Long-term supported
-distros would be most impacted by a change:
+Thanks,
+ Enric
 
-gcc-4.9: Used in Debian 8 (Jessie), EOL June 2020
-gcc-5: Used in Ubuntu 16.04 (Xenial, Mint 18, ...), EOL April 2021
-gcc-6: Used in Debian 9 (Stretch), EOL 2022
-gcc-7: Used in SLES 15, Ubuntu 18.04 (Bionic, Mint 19, ...)
-gcc-8: Used in RHEL-8 (centos, oracle, ...), OpenWRT
 
-The most interesting version to require in the future would be
-gcc-7, which IIRC is the point at which we can just use -std=gnu99
-or -std=gnu11 instead of -std=gnu89 without running into the
-problem with compound literals[1].
 
-       Arnd
-
-[1] https://patchwork.kernel.org/patch/11195831/
+> Thanks,
+>  Enric
+> 
+> [1] https://uefi.org/pnp_id_list
+> 
+> 
+>> We internally can fix it (HID) for next generation of devices.
+>>
+>> Thanks.
+>>
+> 
