@@ -2,160 +2,209 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF51C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23C20207BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A9E3207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:40:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2p03NtT"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jiQOt+ns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgGINjp (ORCPT
+        id S1727082AbgGINkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:39:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38892 "EHLO
+        Thu, 9 Jul 2020 09:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgGINjo (ORCPT
+        with ESMTP id S1726480AbgGINkt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:39:44 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 886FAC08C5CE;
-        Thu,  9 Jul 2020 06:39:44 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 17so1853328wmo.1;
-        Thu, 09 Jul 2020 06:39:44 -0700 (PDT)
+        Thu, 9 Jul 2020 09:40:49 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22980C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:40:49 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id j10so1619522qtq.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:40:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7m8lbz+pKqeYfeiDsb5nPYRTRUxn0M2Uz+PaOlj97fo=;
-        b=I2p03NtTI9CF/cKlDrKmXVeL6wFHCt+bRmiYY0ankiZ+DIHqe4UmcIWX9TLwqaD9xw
-         /lw5bLWeVGz5PNhgMMCK2jiHKmUyZrU8uTObZckjM7j1sYhv73W98jUgeiPvToBKxC71
-         TC0OGD7P+c7eC3QQfPYadJb4RfbZ7OlEYJSZn3KN7sdjnDrU3dnvvIJGrUP4+P61qpPM
-         AufEpk55/xSMf0zmjN6mB12bnb+LQsfzOzfVFAEKynY4sse3au0DhdFMnbSZvNvdykKU
-         QryADMK4u2CwEDbbLEHnsYOgC8Pvv7OGh+jCQuQwyi8L6BIqL74/u1hIuRFlcOd0fXk6
-         vi3w==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aArSsX+kcLK9H8PVf32S+hV/fWVcEOHS9Noqj2O8rKM=;
+        b=jiQOt+nsmfzilkitKNSPpd5yXuFYmVlVIOz576TJcEy1B7M62GpAPcTuXs8vkt6v9m
+         d+pMf2eTYAMo0al7k40A5COZd7ZfW8UXSXmP3UM6my5TfKBZKVWQdxdyb5NC+zD3O6/T
+         39ipTCctzxbDF2K9uPSH+1ul9J9q6gJwwwoGowCfgHAN9K087wYwZaOWBbbyaj9MuNw1
+         g/p8Q3PvrCdLST1PNbXi/aQQe1/CXwd51HXRVjCxc6Jo0nYdNQea1cbOy3Mn7lXw9/s9
+         KlaHC5WRu65feGrDHE0jrXH/z93TIxNo+JfylWMpRyzAenyqdV30rqwV2R6qvUg1/gtf
+         ZKRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=7m8lbz+pKqeYfeiDsb5nPYRTRUxn0M2Uz+PaOlj97fo=;
-        b=ZMGA1/ZOUALq7w17mLdidTtlsdyX7yhpmK+rU2PVIFlhNb0m3wDdSCTDVrk/xYgV1N
-         Pc+aULI8fKX9BwQDPoI2YjYaLqnHMWQ8VGMk2mIdYZqyWyPgJzTShS7ySvWtFoh1rpVX
-         tnqeVu8zi1uleP1Dg5xIyiH5aHycnuFC5X2a5+/AfIhgUJxAYTwtyeP22lnhjHdqV7os
-         Pf1gA+EIqACt7Q8QSePMDQvcMpTNqfsXs0OTM0SRPzh+D9ru7mqHri1WpPrPezy+/+IO
-         TS9e4kbudcm/MZ2SsvW67nt/eGVuTSLcdpQCmV1dmNGjbsOFHqmEjiUxJUhBQFe7rrj+
-         hxbw==
-X-Gm-Message-State: AOAM532hPsFLYGeePUxOPWBmFmFsS21vwxh/o1jdP/EI2wgGBsVFR5Ps
-        QScru2mDrfppeoGuxryloRk=
-X-Google-Smtp-Source: ABdhPJxt5PllSIHTtVbOw8yU8/cZBRrj7wspsU1OdueCoJywpr2YCRtyK5jBa1fbsB/4PcW7Oao1Uw==
-X-Received: by 2002:a1c:6354:: with SMTP id x81mr61693wmb.98.1594301983283;
-        Thu, 09 Jul 2020 06:39:43 -0700 (PDT)
-Received: from [192.168.43.42] ([5.100.193.69])
-        by smtp.gmail.com with ESMTPSA id g14sm5623087wrm.93.2020.07.09.06.39.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 06:39:42 -0700 (PDT)
-To:     Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <20200708222637.23046-1-willy@infradead.org>
- <20200709101705.GA2095@infradead.org>
- <20200709111036.GA12769@casper.infradead.org>
- <20200709132611.GA1382@infradead.org>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH 0/2] Remove kiocb ki_complete
-Message-ID: <ffbd272c-32f3-8c8c-6395-5eab47725929@gmail.com>
-Date:   Thu, 9 Jul 2020 16:37:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aArSsX+kcLK9H8PVf32S+hV/fWVcEOHS9Noqj2O8rKM=;
+        b=ScdAZyrMzUvF5dt99OFfjb2Ir3VQU+Ddm8aAJJFYWR0F3iPSNmwa+gou7dC6qAdoSl
+         JVwYfO8GCoyEz+vPPpzIXhlZAZOAyr7CvwgIsQ5KIGL9oji+RQGC6RKlpTPcaR4ybXer
+         O+FhTZ+hTnKwAwRqXhVI3NxhV1USxnOFdjCfTzGmQFceKzIFA9RrIjmORP6K7SdGute1
+         LIgv4kCvhw64KUhbtFN1ViRJTIrhRNeMps87aZpIsIl5Bw2vNc+uwjVZenLNfwBReNQo
+         NjFjhJGwfdoUCWK4PggAIh6hwEFb4Fx8cD0TqiXvF93YcO8EnOF2DTBaQZ/R3iNaZ90g
+         FUTQ==
+X-Gm-Message-State: AOAM531/mRIevHNYSt7D0YAGhWxb1/jI1hZQ0Oobf5z/jMCzAcIAj7HD
+        FwfYd9DhbIz3VZUid7j2PlCxLA==
+X-Google-Smtp-Source: ABdhPJzFdcRqPgQkgNX9l5WhqF5BXcfGauhlP1aK2Z2MDXMzJDiY1XduUAcnhyd5x2bE3xSAxyrYpQ==
+X-Received: by 2002:ac8:3985:: with SMTP id v5mr64771468qte.337.1594302048335;
+        Thu, 09 Jul 2020 06:40:48 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d14sm3741806qti.41.2020.07.09.06.40.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 06:40:47 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 09:40:40 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     "Huang, Ying" <ying.huang@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>, tim.c.chen@intel.com,
+        dave.hansen@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, lkp@lists.01.org
+Subject: Re: [mm] 4e2c82a409: ltp.overcommit_memory01.fail
+Message-ID: <20200709134040.GA1110@lca.pw>
+References: <20200705125854.GA66252@shbuild999.sh.intel.com>
+ <20200705155232.GA608@lca.pw>
+ <20200706014313.GB66252@shbuild999.sh.intel.com>
+ <20200706023614.GA1231@lca.pw>
+ <20200706132443.GA34488@shbuild999.sh.intel.com>
+ <20200706133434.GA3483883@tassilo.jf.intel.com>
+ <20200707023829.GA85993@shbuild999.sh.intel.com>
+ <87zh8c7z5i.fsf@yhuang-dev.intel.com>
+ <20200707054120.GC21741@shbuild999.sh.intel.com>
+ <20200709045554.GA56190@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200709132611.GA1382@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709045554.GA56190@shbuild999.sh.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/07/2020 16:26, Christoph Hellwig wrote:
-> On Thu, Jul 09, 2020 at 12:10:36PM +0100, Matthew Wilcox wrote:
->> On Thu, Jul 09, 2020 at 11:17:05AM +0100, Christoph Hellwig wrote:
->>> I really don't like this series at all.  If saves a single pointer
->>> but introduces a complicated machinery that just doesn't follow any
->>> natural flow.  And there doesn't seem to be any good reason for it to
->>> start with.
->>
->> Jens doesn't want the kiocb to grow beyond a single cacheline, and we
->> want the ability to set the loff_t in userspace for an appending write,
->> so the plan was to replace the ki_complete member in kiocb with an
->> loff_t __user *ki_posp.
->>
->> I don't think it's worth worrying about growing kiocb, personally,
->> but this seemed like the easiest way to make room for a new pointer.
+On Thu, Jul 09, 2020 at 12:55:54PM +0800, Feng Tang wrote:
+> On Tue, Jul 07, 2020 at 01:41:20PM +0800, Feng Tang wrote:
+> > On Tue, Jul 07, 2020 at 12:00:09PM +0800, Huang, Ying wrote:
+> > > Feng Tang <feng.tang@intel.com> writes:
+> > > 
+> > > > On Mon, Jul 06, 2020 at 06:34:34AM -0700, Andi Kleen wrote:
+> > > >> >  	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+> > > >> > -	if (ret == 0 && write)
+> > > >> > +	if (ret == 0 && write) {
+> > > >> > +		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
+> > > >> > +			schedule_on_each_cpu(sync_overcommit_as);
+> > > >> 
+> > > >> The schedule_on_each_cpu is not atomic, so the problem could still happen
+> > > >> in that window.
+> > > >> 
+> > > >> I think it may be ok if it eventually resolves, but certainly needs
+> > > >> a comment explaining it. Can you do some stress testing toggling the
+> > > >> policy all the time on different CPUs and running the test on
+> > > >> other CPUs and see if the test fails?
+> > > >
+> > > > For the raw test case reported by 0day, this patch passed in 200 times
+> > > > run. And I will read the ltp code and try stress testing it as you
+> > > > suggested.
+> > > >
+> > > >
+> > > >> The other alternative would be to define some intermediate state
+> > > >> for the sysctl variable and only switch to never once the schedule_on_each_cpu
+> > > >> returned. But that's more complexity.
+> > > >
+> > > > One thought I had is to put this schedule_on_each_cpu() before
+> > > > the proc_dointvec_minmax() to do the sync before sysctl_overcommit_memory
+> > > > is really changed. But the window still exists, as the batch is
+> > > > still the larger one. 
+> > > 
+> > > Can we change the batch firstly, then sync the global counter, finally
+> > > change the overcommit policy?
+> > 
+> > These reorderings are really head scratching :)
+> > 
+> > I've thought about this before when Qian Cai first reported the warning
+> > message, as kernel had a check: 
+> > 
+> > 	VM_WARN_ONCE(percpu_counter_read(&vm_committed_as) <
+> > 			-(s64)vm_committed_as_batch * num_online_cpus(),
+> > 			"memory commitment underflow");
+> > 
+> > If the batch is decreased first, the warning will be easier/earlier to be
+> > triggered, so I didn't brought this up when handling the warning message.
+> > 
+> > But it might work now, as the warning has been removed.
 > 
-> The user offset pointer has absolutely no business in the the kiocb
-> itself - it is a io_uring concept which needs to go into the io_kiocb,
-> which has 14 bytes left in the last cache line in my build.  It would
-> fit in very well there right next to the result and user pointer.
+> I tested the reorder way, and the test could pass in 100 times run. The
+> new order when changing policy to OVERCOMMIT_NEVER:
+>   1. re-compute the batch ( to the smaller one)
+>   2. do the on_each_cpu sync
+>   3. really change the policy to NEVER.
+> 
+> It solves one of previous concern, that after the sync is done on cpuX,
+> but before the whole sync on all cpus are done, there is a window that
+> the percpu-counter could be enlarged again.
+> 
+> IIRC Andi had concern about read side cost when doing the sync, my
+> understanding is most of the readers (malloc/free/map/unmap) are using
+> percpu_counter_read_positive, which is a fast path without involving lock.
+> 
+> As for the problem itself, I agree with Michal's point, that usually there
+> is no normal case that will change the overcommit_policy too frequently.
+> 
+> The code logic is mainly in overcommit_policy_handler(), based on the
+> previous sync fix. please help to review, thanks!
+> 
+> int overcommit_policy_handler(struct ctl_table *table, int write, void *buffer,
+> 		size_t *lenp, loff_t *ppos)
+> {
+> 	int ret;
+> 
+> 	if (write) {
+> 		int new_policy;
+> 		struct ctl_table t;
+> 
+> 		t = *table;
+> 		t.data = &new_policy;
+> 		ret = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
+> 		if (ret)
+> 			return ret;
+> 
+> 		mm_compute_batch(new_policy);
+> 		if (new_policy == OVERCOMMIT_NEVER)
+> 			schedule_on_each_cpu(sync_overcommit_as);
+> 		sysctl_overcommit_memory = new_policy;
+> 	} else {
+> 		ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+> 	}
+> 
+> 	return ret;
+> }
 
-After getting a valid offset, io_uring shouldn't do anything but
-complete the request. And as io_kiocb implicitly contains a CQE entry,
-not sure we need @append_offset in the first place.
+Rather than having to indent those many lines, how about this?
 
-Kanchan, could you take a look if you can hide it in req->cflags?
+t = *table;
+t.data = &new_policy;
+ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+if (ret || !write)
+	return ret;
 
--- 
-Pavel Begunkov
+mm_compute_batch(new_policy);
+if (new_policy == OVERCOMMIT_NEVER)
+	schedule_on_each_cpu(sync_overcommit_as);
+
+sysctl_overcommit_memory = new_policy;
+return ret;
