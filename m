@@ -2,278 +2,125 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6197C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5750C206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17C520720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:35:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XHBtSuMA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OWbz3/Cq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgGIPer (ORCPT
+        id S1727983AbgGIPfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56920 "EHLO
+        Thu, 9 Jul 2020 11:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgGIPeq (ORCPT
+        with ESMTP id S1726856AbgGIPf3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:34:46 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A89E4C08C5CE;
-        Thu,  9 Jul 2020 08:34:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=4zlqLm4tS/ERZkx3XX4ICS11S5bmJW9WVVb8Jh1aKAc=; b=XHBtSuMA9tehHhbuEWksA9dF5k
-        GYmb8g1Bg7p8FTqEcLjqLXMS3cgNEH063qu2tQWDHTASt2jpO/3yalGz0/q5a1FkRTShInGHkbPa0
-        scwjJU9HUxQKbZ+ZvKqBEfjFc1o3cj6DThQ5sASXVVXrxGHTlKLa1VVgB87INpAx4wIdZfzwQhvM2
-        B0YFpBNF5tz8mLnerdSpRddeD40ytxBOuAu2bsADTwIFQr/gJ829C4yPQXsRS8LpCf0XmiL/rjvT0
-        rtLhJfMppb4SSFLKiwFRsM5UXnjpLySjbVCNw+sKnjJ1PThOCSFbnSePlILnaPU895+mJqKV29GSd
-        zzHAnBoQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtYZP-0007uG-9l; Thu, 09 Jul 2020 15:34:43 +0000
-Subject: Re: [PATCH V4] mm/vmstat: Add events for THP migration without split
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1594287583-16568-1-git-send-email-anshuman.khandual@arm.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <cab90a5c-4c61-e9ad-659f-a9438d639fe5@infradead.org>
-Date:   Thu, 9 Jul 2020 08:34:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 9 Jul 2020 11:35:29 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9361C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 08:35:29 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id j20so1179437pfe.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 08:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0q/rCvNt3k405F9K/TajOpXPAtgojFFtnqWJkLPEMF4=;
+        b=OWbz3/CqrDpo/Wcvq2r+CzFCtoWft8EU3UQBsM0iXshdZeW30DCs/+vWW/pDAXePHh
+         2oLzG8kSev55DDnOpuoGAbRzEEmpYfdKukcFXVxGuDNbCFFMWbv25beCD/NtvTEk6R1c
+         g7W7jqGUm4nzWI01J6Ul1JxZcEbMXqtZSar7Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0q/rCvNt3k405F9K/TajOpXPAtgojFFtnqWJkLPEMF4=;
+        b=WavJCnHzEpomxzcdtxzx8ZnoEEBGmg3f0YRWVmxvhyztijHFQLrc3z1hyGmqpXdg9P
+         U0bTxmt8G5Ox/HJxMFpvbvLnmE5uV308PshG/j8xYxZToI9vvIlXq/847ajtVJWT+SFY
+         fS3VJP3z35gUl1gaQPu7pP3G4GWmqnTwP0qSAO9eQURzPgO5N/to1G1ytwG25ApUO+97
+         jydhr6pwaQ7F+uhhvC/3jhKYPHsXv7S3vL+PBlx5382/DG8d0gLOW/+4jNoTGZmz5S+R
+         LavR1XOvSfOShMCCzYE2KDawcvcIegSVntpv3x1XdnaUh0jJ3FR8bfvLtNhjdWhDGb9S
+         OOGg==
+X-Gm-Message-State: AOAM532NksSx6YDs4e4vXkTM31lxAmhHXg1o9aeMbu+WjJ5AQfajmZN3
+        vGHLDpP0N+KkZ7trMiCFCtc7Cg==
+X-Google-Smtp-Source: ABdhPJxezNzU/FHc9DH0NCqtmmgu7yFn9tCxihSQrSv2FyCRlXKSWOfUQMA/NNJhOf+7Z3KfioxOBA==
+X-Received: by 2002:a62:a217:: with SMTP id m23mr27037150pff.291.1594308929281;
+        Thu, 09 Jul 2020 08:35:29 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id b8sm3221741pjm.31.2020.07.09.08.35.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 08:35:28 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 08:35:27 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Mike Tipton <mdtipton@codeaurora.org>
+Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, agross@kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Add generic qcom bindings
+Message-ID: <20200709153527.GJ3191083@google.com>
+References: <20200623040515.23317-1-mdtipton@codeaurora.org>
+ <20200623040515.23317-2-mdtipton@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <1594287583-16568-1-git-send-email-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200623040515.23317-2-mdtipton@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-I have a few comments on this.
-
-a. I reported it very early and should have been Cc-ed.
-
-b. A patch that applies to mmotm or linux-next would have been better
-than a full replacement patch.
-
-c. I tried replacing what I believe is the correct/same patch file in mmotm
-and still have build errors.
-
-(more below)
-
-On 7/9/20 2:39 AM, Anshuman Khandual wrote:
-
+On Mon, Jun 22, 2020 at 09:05:14PM -0700, Mike Tipton wrote:
+> Add generic qcom interconnect bindings that are common across platforms. In
+> particular, these include QCOM_ICC_TAG_* macros that clients can use when
+> calling icc_set_tag().
+> 
+> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
 > ---
-> Applies on 5.8-rc4.
+>  include/dt-bindings/interconnect/qcom,icc.h | 26 +++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 include/dt-bindings/interconnect/qcom,icc.h
 > 
-> Changes in V4:
-> 
-> - Changed THP_MIGRATION_FAILURE as THP_MIGRATION_FAIL per John
-> - Dropped all conditional 'if' blocks in migrate_pages() per Andrew and John
-> - Updated migration events documentation per John
-> - Updated thp_nr_pages variable as nr_subpages for an expected merge conflict
-> - Moved all new THP vmstat events into CONFIG_MIGRATION
-> - Updated Cc list with Documentation/ and tracing related addresses
-> 
-> Changes in V3: (https://patchwork.kernel.org/patch/11647237/)
-> 
-> - Formatted new events documentation with 'fmt' tool per Matthew
-> - Made events universally available i.e dropped ARCH_ENABLE_THP_MIGRATION
-> - Added THP_MIGRATION_SPLIT
-> - Updated trace_mm_migrate_pages() with THP events
-> - Made THP events update normal page migration events as well
-> 
-> Changes in V2: (https://patchwork.kernel.org/patch/11586893/)
-> 
-> - Dropped PMD reference both from code and commit message per Matthew
-> - Added documentation and updated the commit message per Daniel
-> 
-> Changes in V1: (https://patchwork.kernel.org/patch/11564497/)
-> 
-> - Changed function name as thp_pmd_migration_success() per John
-> - Folded in a fix (https://patchwork.kernel.org/patch/11563009/) from Hugh
-> 
-> Changes in RFC V2: (https://patchwork.kernel.org/patch/11554861/)
-> 
-> - Decopupled and renamed VM events from their implementation per Zi and John
-> - Added THP_PMD_MIGRATION_FAILURE VM event upon allocation failure and split
-> 
-> Changes in RFC V1: (https://patchwork.kernel.org/patch/11542055/)
-> 
->  Documentation/vm/page_migration.rst | 27 +++++++++++++++
->  include/linux/vm_event_item.h       |  3 ++
->  include/trace/events/migrate.h      | 17 ++++++++--
->  mm/migrate.c                        | 52 ++++++++++++++++++++++++-----
->  mm/vmstat.c                         |  3 ++
->  5 files changed, 91 insertions(+), 11 deletions(-)
-> 
+> diff --git a/include/dt-bindings/interconnect/qcom,icc.h b/include/dt-bindings/interconnect/qcom,icc.h
+> new file mode 100644
+> index 000000000000..cd34f36daaaa
+> --- /dev/null
+> +++ b/include/dt-bindings/interconnect/qcom,icc.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
+> +#define __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
+> +
+> +/*
+> + * The AMC bucket denotes constraints that are applied to hardware when
+> + * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
+> + * when the execution environment transitions between active and low power mode.
+> + */
+> +#define QCOM_ICC_BUCKET_AMC		0
+> +#define QCOM_ICC_BUCKET_WAKE		1
+> +#define QCOM_ICC_BUCKET_SLEEP		2
+> +#define QCOM_ICC_NUM_BUCKETS		3
+> +
+> +#define QCOM_ICC_TAG_AMC		(1 << QCOM_ICC_BUCKET_AMC)
+> +#define QCOM_ICC_TAG_WAKE		(1 << QCOM_ICC_BUCKET_WAKE)
+> +#define QCOM_ICC_TAG_SLEEP		(1 << QCOM_ICC_BUCKET_SLEEP)
+> +#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
+> +#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
+> +					 QCOM_ICC_TAG_SLEEP)
+> +
+> +#endif
 
-> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-> index 24fc7c3ae7d6..2e6ca53b9bbd 100644
-> --- a/include/linux/vm_event_item.h
-> +++ b/include/linux/vm_event_item.h
-> @@ -56,6 +56,9 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
->  #endif
->  #ifdef CONFIG_MIGRATION
->  		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
-> +		THP_MIGRATION_SUCCESS,
-> +		THP_MIGRATION_FAIL,
-> +		THP_MIGRATION_SPLIT,
-
-These 3 new symbols are still only present if CONFIG_MIGRATION=y, but the build errors
-are using these symbols even when CONFIG_MIGRATION is not set.
-
->  #endif
->  #ifdef CONFIG_COMPACTION
->  		COMPACTMIGRATE_SCANNED, COMPACTFREE_SCANNED,
-
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index f37729673558..c706e3576cfc 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1429,22 +1429,35 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
->  		enum migrate_mode mode, int reason)
->  {
->  	int retry = 1;
-> +	int thp_retry = 1;
->  	int nr_failed = 0;
->  	int nr_succeeded = 0;
-> +	int nr_thp_succeeded = 0;
-> +	int nr_thp_failed = 0;
-> +	int nr_thp_split = 0;
->  	int pass = 0;
-> +	bool is_thp = false;
->  	struct page *page;
->  	struct page *page2;
->  	int swapwrite = current->flags & PF_SWAPWRITE;
-> -	int rc;
-> +	int rc, nr_subpages;
->  
->  	if (!swapwrite)
->  		current->flags |= PF_SWAPWRITE;
->  
-> -	for(pass = 0; pass < 10 && retry; pass++) {
-> +	for (pass = 0; pass < 10 && (retry || thp_retry); pass++) {
->  		retry = 0;
-> +		thp_retry = 0;
->  
->  		list_for_each_entry_safe(page, page2, from, lru) {
->  retry:
-> +			/*
-> +			 * THP statistics is based on the source huge page.
-> +			 * Capture required information that might get lost
-> +			 * during migration.
-> +			 */
-> +			is_thp = PageTransHuge(page);
-> +			nr_subpages = hpage_nr_pages(page);
->  			cond_resched();
->  
->  			if (PageHuge(page))
-> @@ -1475,15 +1488,30 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
->  					unlock_page(page);
->  					if (!rc) {
->  						list_safe_reset_next(page, page2, lru);
-> +						nr_thp_split++;
->  						goto retry;
->  					}
->  				}
-> +				if (is_thp) {
-> +					nr_thp_failed++;
-> +					nr_failed += nr_subpages;
-> +					goto out;
-> +				}
->  				nr_failed++;
->  				goto out;
->  			case -EAGAIN:
-> +				if (is_thp) {
-> +					thp_retry++;
-> +					break;
-> +				}
->  				retry++;
->  				break;
->  			case MIGRATEPAGE_SUCCESS:
-> +				if (is_thp) {
-> +					nr_thp_succeeded++;
-> +					nr_succeeded += nr_subpages;
-> +					break;
-> +				}
->  				nr_succeeded++;
->  				break;
->  			default:
-> @@ -1493,19 +1521,27 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
->  				 * removed from migration page list and not
->  				 * retried in the next outer loop.
->  				 */
-> +				if (is_thp) {
-> +					nr_thp_failed++;
-> +					nr_failed += nr_subpages;
-> +					break;
-> +				}
->  				nr_failed++;
->  				break;
->  			}
->  		}
->  	}
-> -	nr_failed += retry;
-> +	nr_failed += retry + thp_retry;
-> +	nr_thp_failed += thp_retry;
->  	rc = nr_failed;
->  out:
-> -	if (nr_succeeded)
-> -		count_vm_events(PGMIGRATE_SUCCESS, nr_succeeded);
-> -	if (nr_failed)
-> -		count_vm_events(PGMIGRATE_FAIL, nr_failed);
-> -	trace_mm_migrate_pages(nr_succeeded, nr_failed, mode, reason);
-> +	count_vm_events(PGMIGRATE_SUCCESS, nr_succeeded);
-> +	count_vm_events(PGMIGRATE_FAIL, nr_failed);
-> +	count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
-> +	count_vm_events(THP_MIGRATION_FAIL, nr_thp_failed);
-> +	count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
-
-These references still cause build errors.
-
-> +	trace_mm_migrate_pages(nr_succeeded, nr_failed, nr_thp_succeeded,
-> +			       nr_thp_failed, nr_thp_split, mode, reason);
->  
->  	if (!swapwrite)
->  		current->flags &= ~PF_SWAPWRITE;
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 3fb23a21f6dd..09914a4bfee4 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1234,6 +1234,9 @@ const char * const vmstat_text[] = {
->  #ifdef CONFIG_MIGRATION
->  	"pgmigrate_success",
->  	"pgmigrate_fail",
-> +	"thp_migration_success",
-> +	"thp_migration_fail",
-> +	"thp_migration_split",
->  #endif
->  #ifdef CONFIG_COMPACTION
->  	"compact_migrate_scanned",
-> 
-
-
--- 
-~Randy
-
+Would it make sense to squash the two patches of this series into a
+single patch? This would make it more evident that this was moved
+from drivers/interconnect/qcom/icc-rpmh.h and avoid duplicate
+definitions if only this patch was applied.
