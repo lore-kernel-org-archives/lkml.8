@@ -2,89 +2,100 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C282C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C802BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3661320720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F9E206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594326339;
+	bh=JlQ5UWa3wVHDOj4X8rqWllbVEYuOP0sv1i4VD8112vQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kSyvkVJMFOz/akOVEcmXaIY17gtjYKhS7yQ4anVeAV5Ubwn6LY52ILSbDPJpCiypn
+	 c4mBikhDPESZ79PbNfzea6I5UOmc/cZ158lC1Jfa/cxyNpHttnd4qdTY43nlKIYzCr
+	 KTcG5W9jjXrUPkqhFt7cGG1LhhbHrSUQThGTYruA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgGIUYY (ORCPT
+        id S1726599AbgGIUZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:24:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57756 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726222AbgGIUYW (ORCPT
+        Thu, 9 Jul 2020 16:25:38 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41307 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgGIUZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:24:22 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069JVc1F116185;
-        Thu, 9 Jul 2020 15:57:09 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 325r2pr0fv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 15:57:09 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 069Jo3og005672;
-        Thu, 9 Jul 2020 19:57:08 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma02wdc.us.ibm.com with ESMTP id 325k1vgpmx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 19:57:08 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 069Jv5TQ28508432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jul 2020 19:57:05 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1BB7178066;
-        Thu,  9 Jul 2020 19:57:07 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 896287805C;
-        Thu,  9 Jul 2020 19:57:06 +0000 (GMT)
-Received: from ghost4.ibm.com (unknown [9.163.54.227])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jul 2020 19:57:06 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-mmc@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au,
-        ulf.hansson@linaro.org, adrian.hunter@intel.com, sboyd@kernel.org,
-        mturquette@baylibre.com, eajames@linux.ibm.com
-Subject: [PATCH 0/2] clk: Aspeed: Fix eMMC clock speeds
-Date:   Thu,  9 Jul 2020 14:57:04 -0500
-Message-Id: <20200709195706.12741-1-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 9 Jul 2020 16:25:36 -0400
+Received: by mail-io1-f65.google.com with SMTP id o5so3688495iow.8;
+        Thu, 09 Jul 2020 13:25:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gB+TJBo4jwSPKnuZ4I54QRWbT+GZvVYToFIo0A59PEk=;
+        b=Iv0ZpZSsG4Ve90G0Iag+NdHzXqYb6N+OyT/xO639DtCvKIjtNdSTBUK4AE+WcRwUk7
+         l1h8Lm5TxmsWadkB8ZAaq4IMtlUKLiHOzxZuO+2PHfGAT0YaGZz5FH6REkG4OggJ7mh2
+         TZFGF+17jZdBBZWvbvdzOa5dz6MukCUfD/InhcFUHMFsjeqP5GDl8t+hlgWkVsmr+7Wu
+         F+BNjPOnGWtRe2GmlUtS3/2FABCfVpHqfmwoFnBUphZTfvJ0WPirhA+Mj2H2FYz7dXqP
+         ZR+KMIsgbsaB8pooCjvMYjh+fdIyh2PakhicFhTLwPrwR21qFgL3/9Tp6lmR2kwfllvd
+         8U/w==
+X-Gm-Message-State: AOAM5323N1bMjv9czSNhjTjCG10zyVVzAA6DO9HklrGyQU8gt+XUCge+
+        u7PPBG+GyciETyOwgq5+xg==
+X-Google-Smtp-Source: ABdhPJywySDNWQF8EEE70975VZPQ+l79RtOSVMqnNVbgPGiWjw8WBfjhfCfRyEEqFWiv7B1J1X2bVA==
+X-Received: by 2002:a05:6638:1511:: with SMTP id b17mr66676337jat.113.1594326335459;
+        Thu, 09 Jul 2020 13:25:35 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id k1sm2328118ilr.35.2020.07.09.13.25.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 13:25:34 -0700 (PDT)
+Received: (nullmailer pid 829870 invoked by uid 1000);
+        Thu, 09 Jul 2020 20:25:33 -0000
+Date:   Thu, 9 Jul 2020 14:25:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RESEND PATCH v7 2/2] devicetree: bindings: phy: Document
+ ipq806x dwc3 qcom phy
+Message-ID: <20200709202533.GA829809@bogus>
+References: <20200615205333.20747-1-ansuelsmth@gmail.com>
+ <20200615205333.20747-2-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_09:2020-07-09,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 clxscore=1011
- bulkscore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- malwarescore=0 mlxlogscore=605 impostorscore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007090131
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615205333.20747-2-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There were two problems affecting clock speeds to the eMMC chip. Firstly, the
-AST2600 clock was not muxed correctly to be derived from the MPLL. Secondly,
-the SDHCI clock control divider was not calculated correctly. This series
-addresses these problems.
+On Mon, 15 Jun 2020 22:53:27 +0200, Ansuel Smith wrote:
+> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+> inizialize and use usb on ipq806x SoC.
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+> v7:
+> * Drop useless AllOf
+> v6:
+> * Add maximum value
+> v5:
+> * Fix dt_binding_check error
+> v4:
+> * Add qcom to specific bindings
+> v3:
+> * Use explicit reg instead of regmap
+> 
+>  .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 55 ++++++++++++++
+>  .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 73 +++++++++++++++++++
+>  2 files changed, 128 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> 
 
-Eddie James (2):
-  clk: AST2600: Add mux for EMMC clock
-  mmc: sdhci-of-aspeed: Fix clock divider calculation
-
- drivers/clk/clk-ast2600.c          | 49 +++++++++++++++++++++++++-----
- drivers/mmc/host/sdhci-of-aspeed.c |  2 +-
- 2 files changed, 42 insertions(+), 9 deletions(-)
-
--- 
-2.24.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
