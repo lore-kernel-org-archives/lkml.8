@@ -2,102 +2,74 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A90C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 695D620775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A517207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:59:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgGIR6g (ORCPT
+        id S1728211AbgGIR7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:58:36 -0400
-Received: from mga03.intel.com ([134.134.136.65]:23876 "EHLO mga03.intel.com"
+        Thu, 9 Jul 2020 13:59:37 -0400
+Received: from mga03.intel.com ([134.134.136.65]:23953 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726615AbgGIR6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:58:35 -0400
-IronPort-SDR: aS+QJROa/Ug7rUY1ifeOg6srILqk04JhVAOwOIwPhOb1JA42rIeaU5wTADepgKSm45RfgNA/pZ
- fJJF8bGXGyaw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="148055029"
+        id S1726615AbgGIR7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 13:59:37 -0400
+IronPort-SDR: +tFsXOP94UBMuWy7psc7A0fx68aWM1M6JGWS8vJJLvAJGdcceZsggERalC/bl0VnwkrNRJrS/j
+ 6sVBZ94F6GFQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="148055093"
 X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="148055029"
+   d="scan'208";a="148055093"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 10:58:34 -0700
-IronPort-SDR: Vb+OfmhMj2iAtUuI5rG8sMS5Hw7OJUYKMj5Ms5QowwyyY9kueZtN3L7Pqgob/yZounxzyaJcHu
- zwZP6SaQ5daw==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 10:59:37 -0700
+IronPort-SDR: pugdhxVyIR+ZTz7+RikkSRiRG5MaDlYQ5m4X1hd8XQo9cpWZBV/Nn7Xn5VjU2hTU7P4ldF1lmN
+ dQB7WH5mWCLA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="457995504"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 09 Jul 2020 10:58:34 -0700
-Date:   Thu, 9 Jul 2020 11:05:13 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
- (alloc/free)
-Message-ID: <20200709110513.3ff50f99@jacob-builder>
-In-Reply-To: <20200709082751.320742ab@x1.home>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-        <1592988927-48009-7-git-send-email-yi.l.liu@intel.com>
-        <20200702151832.048b44d1@x1.home>
-        <CY4PR11MB1432DD97F44EB8AA5CCC87D8C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
-        <DM5PR11MB1435B159DA10C8301B89A6F0C3670@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <20200708135444.4eac48a4@x1.home>
-        <DM5PR11MB14358A8797E3C02E50B37FFEC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <MWHPR11MB16456D12135AA36BA16CE4208C640@MWHPR11MB1645.namprd11.prod.outlook.com>
-        <DM5PR11MB14357DC99EFCDE7E02944E2EC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <MWHPR11MB1645F822D9267005AE5BCE528C640@MWHPR11MB1645.namprd11.prod.outlook.com>
-        <DM5PR11MB143577F0C21EDB82B82EEB35C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <DM5PR11MB143584D5A0AAE13E0D2D04B7C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-        <20200709082751.320742ab@x1.home>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+   d="scan'208";a="284237438"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga006.jf.intel.com with ESMTP; 09 Jul 2020 10:59:37 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 0F2F1301B2A; Thu,  9 Jul 2020 10:59:37 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 10:59:37 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/11] perf intel-pt: Add support for decoding PSB+ only
+Message-ID: <20200709175937.GE1126680@tassilo.jf.intel.com>
+References: <20200709173628.5613-1-adrian.hunter@intel.com>
+ <20200709173628.5613-12-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709173628.5613-12-adrian.hunter@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 08:27:51 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+> diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+> index 758295a7e3d6..849474629fe7 100644
+> --- a/tools/perf/Documentation/perf-intel-pt.txt
+> +++ b/tools/perf/Documentation/perf-intel-pt.txt
+> @@ -973,6 +973,9 @@ useful only if the control flow of interest is represented or indicated by FUP,
+>  TIP, TIP.PGE, or TIP.PGD packets.  However the q option could be used to find
+>  time ranges that could then be decoded fully using the --time option.
+>  
+> +Repeating the q option (i.e. qq) decodes only PSB+, getting ip if there is a
+> +FUP packet within PSB+ (i.e. between PSB and PSBEND).
 
-> > So I'm wondering can we fall back to prior proposal which only free
-> > one PASID for a free request. how about your opinion?  
+Also need high level description without PT jargon
+(and perhaps also reference how to configure PSB frequency)
+
+Other than that great feature. I'll be an enthuisastic user :-)
+
+-Andi
 > 
-> Doesn't it still seem like it would be a useful user interface to have
-> a mechanism to free all pasids, by calling with exactly [0, MAX_UINT]?
-> I'm not sure if there's another use case for this given than the user
-> doesn't have strict control of the pasid values they get.  Thanks,
-
-Yes, I agree free all pasids of a guest is a useful interface. Since all
-PASIDs under one VM is already tracked by an IOASID set with its XArray,
-I don't see a need to track again in VFIO.
-
-Shall we only free one & free all? IMHO, free range isn't that useful
-and not really symmetric to PASID allocation in that allocation is one
-at a time.
-
-Can we just add a new flag, e.g.  VFIO_IOMMU_FREE_ALL_PASID, and
-ignored th range in free?
