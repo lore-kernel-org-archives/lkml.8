@@ -2,142 +2,228 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEADC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47208C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6129207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1002078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IxDs99KS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BJrbKWjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgGIRrP (ORCPT
+        id S1728802AbgGIRrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:47:15 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39048 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728679AbgGIRrN (ORCPT
+        Thu, 9 Jul 2020 13:47:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728523AbgGIRqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:47:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594316831;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tQEZ/X60w4Dr4Yx057tjgU0MuPGoc8zws3NdcP5xzU0=;
-        b=IxDs99KS/vPtVEJ9ywdxFYS61v+fbsUXCrn9xgWGljWEFe9Uvt4U1EAncIJZraHuL/Tygi
-        fr7wQkyAjmtBDhYzZcq/vgET8doxz9GuREd3nGU+iCz1yJEZ2Sz0bCHaMdDpsfuVvDdFDg
-        pqleWg7PsfxdWXR7gohIWT4gszNgors=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98--Re0OQwkNeqCA8xihz34sQ-1; Thu, 09 Jul 2020 13:47:10 -0400
-X-MC-Unique: -Re0OQwkNeqCA8xihz34sQ-1
-Received: by mail-wr1-f72.google.com with SMTP id b14so2649312wrp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:47:09 -0700 (PDT)
+        Thu, 9 Jul 2020 13:46:11 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2313CC08E763
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:11 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 17so2756825wmo.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9wNqiWDnOoV7Tq3fUIjX7bWnfvj892xNMMafz42JpFQ=;
+        b=BJrbKWjhzBBh3RMZVhYHcaOZZkUTOhhAMuZGWd99TPgvncnZcAR2gQzAJUhbxHvzaT
+         vcDPLIjTG4BsY5JKOHabnqPAt2Tlq7bfhTLjnzZMe90hTRY6Of+nYm4bZ2xnOnfoL9zq
+         P80f+Yfz3QD4K4PmO+myZ3I+siGXxnKFoN6Bm5c0nchOvxQeRyFdvYcPto1Mjzzifhbe
+         Jp7vU+Hse0BH2ZUv+/K3SkD/RH/mg77jH4Yg5PC38+OcX1D6RwEk3AFudbPG/k/mCR6j
+         hP6wGblrlsnEUpLTL/b7jMih86Q03Fbd4TgLEXrDtJ/WOdRqhArvb8EkisYH1ubMMjF4
+         NAbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tQEZ/X60w4Dr4Yx057tjgU0MuPGoc8zws3NdcP5xzU0=;
-        b=ipSVj2FGpGiOQw9UAwTbXu71XN6SjiTpLTh9b4pWtbjyRIUf1lTF3THm6uoqz9Qt29
-         kMOoaAVZT+qw4tjihzFe2KJ1jUf7+l9J01i3DWWenS06LxxtvetOSZHDip5j60CHgOPN
-         RxEAyf+EqlN/7tCqws9qBPVfTgB+CR5qUvn7s4Ve7PAjY9pRkeKGyWFY4AcW0gkPShAO
-         v7+TBiETmTw2OxODXSvn1W1Gj2/DkrGRBxwpf01ZDf6iUcV0HUwOfjliuG8NKfXNvQYn
-         hSRXW5bAgpFB33chDqEwyetUbPGam3/+syBykXNtH44KYrEhYhYXndYcgjS/26M2P7N1
-         1tdg==
-X-Gm-Message-State: AOAM531J7sYpQzyslYf1fDznBvNQsD0u/qSPCdLKWStI2gTeQRMDpTVW
-        XCM3cGxhv3KgpGcwYE8mTVHtCSTr3EwA6rLQRESSDOAxHe0TsexoVMBbpVUIJIQrvXgdIo9q9fq
-        woX7jFkXdqGOeDHzU3doWO+Rm
-X-Received: by 2002:adf:ec42:: with SMTP id w2mr65079442wrn.269.1594316828757;
-        Thu, 09 Jul 2020 10:47:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzzKy2sg6Y5Mw1xuBaOwDSwnR6MCjcqFzdAlEFQ64OSxQdEBmpqMG1KLCfhQXYJsbmlYAJtCw==
-X-Received: by 2002:adf:ec42:: with SMTP id w2mr65079426wrn.269.1594316828506;
-        Thu, 09 Jul 2020 10:47:08 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id f15sm6067638wrx.91.2020.07.09.10.47.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 10:47:08 -0700 (PDT)
-Subject: Re: [PATCH v3 2/9] KVM: nSVM: stop dereferencing vcpu->arch.mmu to
- get the context in kvm_init_shadow{,_npt}_mmu()
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        linux-kernel@vger.kernel.org
-References: <20200709145358.1560330-1-vkuznets@redhat.com>
- <20200709145358.1560330-3-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <1c6999b7-1eae-4b26-7220-6e3e68457511@redhat.com>
-Date:   Thu, 9 Jul 2020 19:47:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9wNqiWDnOoV7Tq3fUIjX7bWnfvj892xNMMafz42JpFQ=;
+        b=qXYXRJ4xin1h0a53MhQNjhULSxyq5BrJn1/6wlHzUS4w/I2zFuBxSMKb9BQ10tdK5v
+         sICgzkG2iVr99mAdMOkNYxQUx6qq01Fv3Beoqdtfvz45sfFGRrC7ZfntstyyJ0nYqRb2
+         aq0FAhHU3HxNMC43LrjCDTmAxHT2Ek/dhJUJleevK8Z7jTvTuwgojaxlL0bKrSdnYoPX
+         9dwzJXWHKRSJcx9xbAWF3NX4PEzpzeOFhSygKPOa0zhNyEDuW95PQ7Fo/dU2Ppmu0k7I
+         0txomSv2AXmKYHbL0XJPPYSG4Na2hZCn3rggzzH7xSaKKxSAjvIoJ/y7TyGiCwQ/dm/k
+         sS1w==
+X-Gm-Message-State: AOAM533loJJXXPUMCPCrilYnk1esr8E0B+/aKkhe31oa/w9wEfzUny8o
+        N1uRlbGTl4O6h5gx1JqjO1WHgg==
+X-Google-Smtp-Source: ABdhPJxFseAbX3st95FnBDylPbgmEJ0aAnhpaK4jDdiDZ+mDaVs7FVhKs/xQXYj6E8zHeXcxQP4S3Q==
+X-Received: by 2002:a7b:ce87:: with SMTP id q7mr1169747wmj.39.1594316769822;
+        Thu, 09 Jul 2020 10:46:09 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.46.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 10:46:09 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Subject: [PATCH 10/24] scsi: pm8001: pm8001_ctl: Provide descriptions for the many undocumented 'attr's
+Date:   Thu,  9 Jul 2020 18:45:42 +0100
+Message-Id: <20200709174556.7651-11-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200709174556.7651-1-lee.jones@linaro.org>
+References: <20200709174556.7651-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200709145358.1560330-3-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/07/20 16:53, Vitaly Kuznetsov wrote:
-> Now as kvm_init_shadow_npt_mmu() is separated from kvm_init_shadow_mmu()
-> we always know the MMU context we need to use so there is no need to
-> dereference vcpu->arch.mmu pointer.
-> 
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
-> 
+... even if they are completely unused.
 
-This is actually true of all init functions, so we can squash this in too
-(my fault for being too concise):
+Fixes the following W=1 kernel build warning(s):
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 2c4fb5684782..78c88e8aecfa 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4850,7 +4850,7 @@ kvm_calc_tdp_mmu_root_page_role(struct kvm_vcpu *vcpu, bool base_only)
- 
- static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
- {
--	struct kvm_mmu *context = vcpu->arch.mmu;
-+	struct kvm_mmu *context = &vcpu->arch.root_mmu;
- 	union kvm_mmu_role new_role =
- 		kvm_calc_tdp_mmu_root_page_role(vcpu, false);
- 
-@@ -4989,7 +4989,7 @@ kvm_calc_shadow_ept_root_page_role(struct kvm_vcpu *vcpu, bool accessed_dirty,
- void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
- 			     bool accessed_dirty, gpa_t new_eptp)
- {
--	struct kvm_mmu *context = vcpu->arch.mmu;
-+	struct kvm_mmu *context = &vcpu->arch.guest_mmu;
- 	u8 level = vmx_eptp_page_walk_level(new_eptp);
- 	union kvm_mmu_role new_role =
- 		kvm_calc_shadow_ept_root_page_role(vcpu, accessed_dirty,
-@@ -5023,7 +5023,7 @@ EXPORT_SYMBOL_GPL(kvm_init_shadow_ept_mmu);
- 
- static void init_kvm_softmmu(struct kvm_vcpu *vcpu)
- {
--	struct kvm_mmu *context = vcpu->arch.mmu;
-+	struct kvm_mmu *context = &vcpu->arch.root_mmu;
- 
- 	kvm_init_shadow_mmu(vcpu,
- 			    kvm_read_cr0_bits(vcpu, X86_CR0_PG),
+ drivers/scsi/pm8001/pm8001_ctl.c:56: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_mpi_interface_rev_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:81: warning: Function parameter or member 'attr' not described in 'controller_fatal_error_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:100: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_fw_version_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:130: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ila_version_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:155: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_inactive_fw_version_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:181: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_out_io_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:204: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_devices_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:230: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_max_sg_list_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:274: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_sas_spec_support_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:303: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_host_sas_address_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:322: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_logging_level_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:355: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_aap_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:390: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ib_queue_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:423: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_ob_queue_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:454: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_bios_version_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:492: warning: Function parameter or member 'attr' not described in 'event_log_size_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:510: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_iop_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:548: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_fatal_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:566: warning: Function parameter or member 'attr' not described in 'non_fatal_log_show'
+ drivers/scsi/pm8001/pm8001_ctl.c:609: warning: Function parameter or member 'attr' not described in 'pm8001_ctl_gsm_log_show'
 
+Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/scsi/pm8001/pm8001_ctl.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-(BTW, a patch to rename nested_mmu to nested_walk_mmu and guest_mmu to
-nested_tdp_mmu would be welcome).
-
-Paolo
+diff --git a/drivers/scsi/pm8001/pm8001_ctl.c b/drivers/scsi/pm8001/pm8001_ctl.c
+index 3c9f42779dd02..a5f3c702ada9f 100644
+--- a/drivers/scsi/pm8001/pm8001_ctl.c
++++ b/drivers/scsi/pm8001/pm8001_ctl.c
+@@ -47,6 +47,7 @@
+ /**
+  * pm8001_ctl_mpi_interface_rev_show - MPI interface revision number
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -72,6 +73,7 @@ DEVICE_ATTR(interface_rev, S_IRUGO, pm8001_ctl_mpi_interface_rev_show, NULL);
+ /**
+  * controller_fatal_error_show - check controller is under fatal err
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read only' shost attribute.
+@@ -121,6 +123,7 @@ static DEVICE_ATTR(fw_version, S_IRUGO, pm8001_ctl_fw_version_show, NULL);
+ /**
+  * pm8001_ctl_ila_version_show - ila version
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -146,6 +149,7 @@ static DEVICE_ATTR(ila_version, 0444, pm8001_ctl_ila_version_show, NULL);
+ /**
+  * pm8001_ctl_inactive_fw_version_show - Inacative firmware version number
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -172,6 +176,7 @@ DEVICE_ATTR(inc_fw_ver, 0444, pm8001_ctl_inactive_fw_version_show, NULL);
+ /**
+  * pm8001_ctl_max_out_io_show - max outstanding io supported
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -195,6 +200,7 @@ static DEVICE_ATTR(max_out_io, S_IRUGO, pm8001_ctl_max_out_io_show, NULL);
+ /**
+  * pm8001_ctl_max_devices_show - max devices support
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -221,6 +227,7 @@ static DEVICE_ATTR(max_devices, S_IRUGO, pm8001_ctl_max_devices_show, NULL);
+  * pm8001_ctl_max_sg_list_show - max sg list supported iff not 0.0 for no
+  * hardware limitation
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -265,6 +272,7 @@ show_sas_spec_support_status(unsigned int mode, char *buf)
+ /**
+  * pm8001_ctl_sas_spec_support_show - sas spec supported
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -292,6 +300,7 @@ static DEVICE_ATTR(sas_spec_support, S_IRUGO,
+ /**
+  * pm8001_ctl_sas_address_show - sas address
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * This is the controller sas address
+@@ -346,6 +355,7 @@ static DEVICE_ATTR(logging_level, S_IRUGO | S_IWUSR,
+ /**
+  * pm8001_ctl_aap_log_show - aap1 event log
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -483,6 +493,7 @@ static DEVICE_ATTR(bios_version, S_IRUGO, pm8001_ctl_bios_version_show, NULL);
+ /**
+  * event_log_size_show - event log size
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs read  shost attribute.
+@@ -501,6 +512,7 @@ static DEVICE_ATTR_RO(event_log_size);
+ /**
+  * pm8001_ctl_aap_log_show - IOP event log
+  * @cdev: pointer to embedded class device
++ * @attr: device attribute (unused)
+  * @buf: the buffer returned
+  *
+  * A sysfs 'read-only' shost attribute.
+@@ -538,6 +550,7 @@ static DEVICE_ATTR(iop_log, S_IRUGO, pm8001_ctl_iop_log_show, NULL);
+ /**
+  ** pm8001_ctl_fatal_log_show - fatal error logging
+  ** @cdev:pointer to embedded class device
++ ** @attr: device attribute
+  ** @buf: the buffer returned
+  **
+  ** A sysfs 'read-only' shost attribute.
+@@ -557,6 +570,7 @@ static DEVICE_ATTR(fatal_log, S_IRUGO, pm8001_ctl_fatal_log_show, NULL);
+ /**
+  ** non_fatal_log_show - non fatal error logging
+  ** @cdev:pointer to embedded class device
++ ** @attr: device attribute
+  ** @buf: the buffer returned
+  **
+  ** A sysfs 'read-only' shost attribute.
+-- 
+2.25.1
 
