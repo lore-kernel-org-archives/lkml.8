@@ -2,84 +2,105 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AE4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 563DA207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594322752;
-	bh=sB28+F241VrxoiJWLLzFcJrCRuIM6HG89y9NV/L7A90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MD2HeYXVHIEjC+0qYomBX7zaqTtC1ijhCi82V+4n6YfeFHjWtoR01tg2Z08bqkhnx
-	 ZdMFFMYz7TKmYR04g1hBtTAkSKbMUPhfxYHj8RBmnArO7qP6X9NaAb52ZjtrIbhyOx
-	 7qap0wIJrZ+OE6FRV335germ7Np44uCt+5lBAKmA=
+	by mail.kernel.org (Postfix) with ESMTP id B98D9207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGITZv (ORCPT
+        id S1726286AbgGIT2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:25:51 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34211 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGITZu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 15:25:50 -0400
-Received: by mail-io1-f65.google.com with SMTP id q74so3571543iod.1;
-        Thu, 09 Jul 2020 12:25:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ldbyMoONpSx2IQ0MK7b8AaxaUexGSZIC17odQWV2ah8=;
-        b=CKvGz8FN+VHWV8Fbpc9mbDVRjj6zKN7B8DS9XgkMUdB3+h0yYujbplQLd9pV8zEUXx
-         ATAZTIlEtb7x7nPx3IElcxnxpSwXvkHEvX1+9ujhDC67SwDM7i/qU1IlubUgJJQq3db1
-         s74rq7OHeu+lycDr0IvgVMEr4k3pbkT/CJBV9Ao1R2X57A2ys5ERn8k9aLWwq9g8tGq9
-         gBJoAf2pfoOxGy4dIvyiufkJZBlZoHc+BMnephMK11gsdUbviGZinpcGXN2VY+G48EJ3
-         dLPaWrGexUJFLGVOF45/ybvvk8u2uwNiXSd4gpMGvt0PEEJaTQfJIg6qM/dErj84/7Yj
-         z2WA==
-X-Gm-Message-State: AOAM530Pf2ExNy8mDXJLlSp+Ue6VHTCmh91jMy+FAvTSgSgntTLYlDKh
-        IMyGf5/Cmt5t9f2kXtmZKg==
-X-Google-Smtp-Source: ABdhPJyz+LyZnxFarkQsF+lvGnmqwnHFbV4CiVB12eCSaqM9gbZVkfa3wxvJHK01OTa+3tRWVBApCg==
-X-Received: by 2002:a05:6638:168e:: with SMTP id f14mr69708356jat.64.1594322749623;
-        Thu, 09 Jul 2020 12:25:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id k126sm2587024iof.50.2020.07.09.12.25.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 12:25:49 -0700 (PDT)
-Received: (nullmailer pid 750338 invoked by uid 1000);
-        Thu, 09 Jul 2020 19:25:48 -0000
-Date:   Thu, 9 Jul 2020 13:25:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pavel@ucw.cz, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, jacek.anaszewski@gmail.com
-Subject: Re: [PATCH v29 06/16] dt-bindings: leds: Convert leds-lp55xx to yaml
-Message-ID: <20200709192548.GA750288@bogus>
-References: <20200622185919.2131-1-dmurphy@ti.com>
- <20200622185919.2131-7-dmurphy@ti.com>
+        Thu, 9 Jul 2020 15:28:22 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:57656 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbgGIT2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 15:28:21 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 72870BC0FF;
+        Thu,  9 Jul 2020 19:28:19 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     davem@davemloft.net, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] IDE SUBSYSTEM: Replace HTTP links with HTTPS ones
+Date:   Thu,  9 Jul 2020 21:28:13 +0200
+Message-Id: <20200709192813.26413-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622185919.2131-7-dmurphy@ti.com>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 13:59:09 -0500, Dan Murphy wrote:
-> Convert the leds-lp55xx.txt to yaml binding.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/leds/leds-lp55xx.txt  | 228 ------------------
->  .../devicetree/bindings/leds/leds-lp55xx.yaml | 220 +++++++++++++++++
->  2 files changed, 220 insertions(+), 228 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
-> 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+
+ drivers/ide/Kconfig  | 2 +-
+ drivers/ide/hpt366.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/ide/Kconfig b/drivers/ide/Kconfig
+index 973ed4b684ce..410d717d5ab2 100644
+--- a/drivers/ide/Kconfig
++++ b/drivers/ide/Kconfig
+@@ -98,7 +98,7 @@ config IDE_GD_ATAPI
+ 
+ 	  For information about jumper settings and the question
+ 	  of when a ZIP drive uses a partition table, see
+-	  <http://www.win.tue.nl/~aeb/linux/zip/zip-1.html>.
++	  <https://www.win.tue.nl/~aeb/linux/zip/zip-1.html>.
+ 
+ 	  If unsure, say N.
+ 
+diff --git a/drivers/ide/hpt366.c b/drivers/ide/hpt366.c
+index fd3b5da44619..209e5b01cac0 100644
+--- a/drivers/ide/hpt366.c
++++ b/drivers/ide/hpt366.c
+@@ -13,7 +13,7 @@
+  *
+  *
+  * HighPoint has its own drivers (open source except for the RAID part)
+- * available from http://www.highpoint-tech.com/USA_new/service_support.htm 
++ * available from https://www.highpoint-tech.com/USA_new/service_support.htm 
+  * This may be useful to anyone wanting to work on this driver, however  do not
+  * trust  them too much since the code tends to become less and less meaningful
+  * as the time passes... :-/
+-- 
+2.27.0
+
