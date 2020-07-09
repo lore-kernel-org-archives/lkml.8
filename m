@@ -2,213 +2,158 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6261DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3674C2076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:54:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="RmcOQKDr"
+	by mail.kernel.org (Postfix) with ESMTP id 2E38620672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgGIUyf (ORCPT
+        id S1726766AbgGIUzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgGIUye (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:54:34 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CABC08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 13:54:34 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id w17so1300543ply.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 13:54:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TVsRdosVdOrgb86VUqLK7jhphF0DWrgDdhx+LVQ5W9o=;
-        b=RmcOQKDrKS4TjND+INPK5tStmtBHyi5qtg3Y2/m9cYCZFW0uO+IsLknrvepsIgymvM
-         1rl8Qh9/awqelifoBxaCYJMhnqffwoXjTs28EWlKt/CYudymkz1bs5PReyMJxMNTy+kP
-         VLBVpcaqzusSMmJ0G2K7yF/PXcUGPYm2ytCjhz+pZTEsf1xaskMKyxLQ7VN4tyQWYhT5
-         uCR73NTeWBkQNZGAK+oBDrbqr+Wdo37GJKjNCSc9EjpVYVpEnN4c+t+NA2rCRpG4xao1
-         S/e+ZozWba84kJcqWLJpfkRM3NcJ/IAYnDfAqxHH7dreMJytVTh97TQQMiu68P1KnCos
-         35yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=TVsRdosVdOrgb86VUqLK7jhphF0DWrgDdhx+LVQ5W9o=;
-        b=nl2gFIW3CCGcE7nGC1TJ0sdkqlUMDBQjaffZjjEBrr33bMJraZADy3LfnxJvY+MjoR
-         BVx0ZJtG4yP93AfqCJWPxn1D5iDBT/v5/BicP5x/s59L5ClFfKvrSkPxDLwxgHzEYKFF
-         wgA2WZgLKohwInOoo42NMqsJMtOVJ6Xl6F4L68YBtgqXcvIEY+ofdHSmAWZS1R5SSZE8
-         8gU3LFOd52V+VxSWUH86rFlVQwKiWnzShx0WArDKBhWoHZdEMLT1haBwA+PN9Bu3IPSX
-         tL4enLz8a5h2wK06BpI5W8ufj46LJ2p3URlawS5FUZsN7i35BNRNuH5svspHGQu+F95Y
-         gwAw==
-X-Gm-Message-State: AOAM530BRkKZ2+h0inUy3fBeVFayPd+sOs4JL6ulC6y0We/LxtHwvtmI
-        W3Q/Th614zSbzDLSKnrWBxecUg==
-X-Google-Smtp-Source: ABdhPJziIZaC2dw+9NZRbd8F8njrpqBsYNP/YdbUiTKDLO5hKbULu6MH/NnhmS/fwOD8OTxyeRAVaQ==
-X-Received: by 2002:a17:90b:4c0f:: with SMTP id na15mr1998077pjb.33.1594328073688;
-        Thu, 09 Jul 2020 13:54:33 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id f131sm3700561pgc.14.2020.07.09.13.54.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 13:54:33 -0700 (PDT)
-Date:   Thu, 09 Jul 2020 13:54:33 -0700 (PDT)
-X-Google-Original-Date: Thu, 09 Jul 2020 13:54:30 PDT (-0700)
-Subject:     Re: [PATCH 1/5] lib: Add a generic version of devmem_is_allowed()
-In-Reply-To: <20200709204921.GJ781326@linux.ibm.com>
-CC:     linux-riscv@lists.infradead.org, zong.li@sifive.com,
-        linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, gxt@pku.edu.cn,
-        Arnd Bergmann <arnd@arndb.de>, akpm@linux-foundation.org,
-        linus.walleij@linaro.org, mchehab+samsung@kernel.org,
-        gregory.0xf0@gmail.com, masahiroy@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        bgolaszewski@baylibre.com, tglx@linutronix.de, steve@sk2.org,
-        keescook@chromium.org, mcgrof@kernel.org, alex@ghiti.fr,
-        mark.rutland@arm.com, james.morse@arm.com,
-        andriy.shevchenko@linux.intel.com, alex.shi@linux.alibaba.com,
-        davem@davemloft.net, rdunlap@infradead.org, broonie@kernel.org,
-        uwe@kleine-koenig.org, rostedt@goodmis.org,
-        dan.j.williams@intel.com, mhiramat@kernel.org,
-        matti.vaittinen@fi.rohmeurope.com, zaslonko@linux.ibm.com,
-        krzk@kernel.org, willy@infradead.org, paulmck@kernel.org,
-        pmladek@suse.com, glider@google.com, elver@google.com,
-        davidgow@google.com, ardb@kernel.org, takahiro.akashi@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kernel-team@android.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     rppt@linux.ibm.com
-Message-ID: <mhng-809d2d2d-add0-4f43-9225-610485ee46d5@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
+        Thu, 9 Jul 2020 16:55:09 -0400
+Received: from mga06.intel.com ([134.134.136.31]:2172 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726213AbgGIUzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 16:55:09 -0400
+IronPort-SDR: LWOGeAzAlAhrmuL5nF7mn9GzDWA4tEkq3EgW38pgefhtj5UPsOEvVoXBra9RSbdrzTVW6iwZyH
+ 0sai1ZcLHmtA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="209632913"
+X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
+   d="scan'208";a="209632913"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 13:55:08 -0700
+IronPort-SDR: 31zyjENiltHuZKjrhXOmWxeNIKVfuhcaMufjTfk/WyBFCmSSzFpSpv4+pS2Z/pkelSdoipuS52
+ ky4bJLPLY9aQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
+   d="scan'208";a="280422688"
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by orsmga003.jf.intel.com with ESMTP; 09 Jul 2020 13:55:07 -0700
+Subject: Re: [PATCH] fpga: stratix10-soc: make FPGA task un-interruptible
+To:     Tom Rix <trix@redhat.com>, mdf@kernel.org
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dinguyen@kernel.org, richard.gong@intel.com
+References: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
+ <926c1117-1f31-5b3d-55af-4216db4f1745@redhat.com>
+From:   Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <283c922f-12a7-ccfc-2165-219fb5fe6999@linux.intel.com>
+Date:   Thu, 9 Jul 2020 16:10:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <926c1117-1f31-5b3d-55af-4216db4f1745@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 09 Jul 2020 13:49:21 PDT (-0700), rppt@linux.ibm.com wrote:
-> Hi Palmer,
->
-> On Thu, Jul 09, 2020 at 01:05:48PM -0700, Palmer Dabbelt wrote:
->> From: Palmer Dabbelt <palmerdabbelt@google.com>
+Hi Tom,
+
+On 7/9/20 3:01 PM, Tom Rix wrote:
+> Mostly fine, see inline question.
+> 
+> On 7/7/20 9:14 AM, richard.gong@linux.intel.com wrote:
+>> From: Richard Gong <richard.gong@intel.com>
 >>
->> As part of adding support for STRICT_DEVMEM to the RISC-V port, Zong
->> provided a devmem_is_allowed() implementation that's exactly the same as
->> all the others I checked.  Instead I'm adding a generic version, which
->> will soon be used.
+>> When CTRL+C occurs during the process of FPGA reconfiguration, the FPGA
+>> reconfiguration process stops and the user can't perform a new FPGA
+>> reconfiguration properly.
 >>
->> Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+>> Set FPGA complete task to be not interruptible so that the user can
+>> properly perform FPGA reconfiguration after CTRL+C event.
+>>
+>> Signed-off-by: Richard Gong <richard.gong@intel.com>
 >> ---
->>  include/asm-generic/io.h |  4 ++++
->>  lib/Kconfig              |  4 ++++
->>  lib/Makefile             |  2 ++
->>  lib/devmem_is_allowed.c  | 27 +++++++++++++++++++++++++++
->>  4 files changed, 37 insertions(+)
->>  create mode 100644 lib/devmem_is_allowed.c
+>>   drivers/fpga/stratix10-soc.c | 23 +++--------------------
+>>   1 file changed, 3 insertions(+), 20 deletions(-)
 >>
->> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
->> index 8b1e020e9a03..69e3db65fba0 100644
->> --- a/include/asm-generic/io.h
->> +++ b/include/asm-generic/io.h
->> @@ -1122,6 +1122,10 @@ static inline void memcpy_toio(volatile void __iomem *addr, const void *buffer,
->>  }
->>  #endif
->>
->> +#ifndef CONFIG_GENERIC_DEVMEM_IS_ALLOWED
->> +extern int devmem_is_allowed(unsigned long pfn);
->> +#endif
->> +
->>  #endif /* __KERNEL__ */
->>
->>  #endif /* __ASM_GENERIC_IO_H */
->> diff --git a/lib/Kconfig b/lib/Kconfig
->> index df3f3da95990..3b1b6481e073 100644
->> --- a/lib/Kconfig
->> +++ b/lib/Kconfig
->> @@ -676,3 +676,7 @@ config GENERIC_LIB_CMPDI2
->>
->>  config GENERIC_LIB_UCMPDI2
->>  	bool
->> +
->> +config GENERIC_LIB_DEVMEM_IS_ALLOWED
->> +	bool
->> +	select ARCH_HAS_DEVMEM_IS_ALLOWED
->
-> This seems to work the other way around from the usual Kconfig chains.
-> In the most cases ARCH_HAS_SOMETHING selects GENERIC_SOMETHING.
+>> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
+>> index 44b7c56..657a70c 100644
+>> --- a/drivers/fpga/stratix10-soc.c
+>> +++ b/drivers/fpga/stratix10-soc.c
+>> @@ -196,17 +196,13 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
+>>   	if (ret < 0)
+>>   		goto init_done;
+>>   
+>> -	ret = wait_for_completion_interruptible_timeout(
+>> +	ret = wait_for_completion_timeout(
+>>   		&priv->status_return_completion, S10_RECONFIG_TIMEOUT);
+>>   	if (!ret) {
+>>   		dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
+>>   		ret = -ETIMEDOUT;
+>>   		goto init_done;
+>>   	}
+>> -	if (ret < 0) {
+>> -		dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
+>> -		goto init_done;
+>> -	}
+>>   
+>>   	ret = 0;
+>>   	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
+>> @@ -318,7 +314,7 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
+>>   		 */
+>>   		wait_status = 1; /* not timed out */
+>>   		if (!priv->status)
+>> -			wait_status = wait_for_completion_interruptible_timeout(
+>> +			wait_status = wait_for_completion_timeout(
+>>   				&priv->status_return_completion,
+>>   				S10_BUFFER_TIMEOUT);
+>>   
+>> @@ -340,13 +336,6 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
+>>   			ret = -ETIMEDOUT;
+>>   			break;
+>>   		}
+>> -		if (wait_status < 0) {
+>> -			ret = wait_status;
+>> -			dev_err(dev,
+>> -				"error (%d) waiting for svc layer buffers\n",
+>> -				ret);
+>> -			break;
+>> -		}
+>>   	}
+>>   
+>>   	if (!s10_free_buffers(mgr))
+>> @@ -372,7 +361,7 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+> 
+> This part is done in an infinite loop, is the loop still needed 
+The loop is still need. FPGA manager driver need polling the completed 
+status from the lower level firmware. The lower level firmware can 
+return FPGA manager driver with busy, completed or error status.
+> 
+> Reviewed-by: Tom Rix <trix@redhat.com>
+Thanks for your review!
 
-Ya, it seemed kind of odd.
-
->
-> I believe nicer way would be to make
->
-> config STRICT_DEVMEM
-> 	bool "Filter access to /dev/mem"
-> 	depends on MMU && DEVMEM
-> 	depends on ARCH_HAS_DEVMEM_IS_ALLOWED || GENERIC_LIB_DEVMEM_IS_ALLOWED
->
-> config GENERIC_LIB_DEVMEM_IS_ALLOWED
-> 	bool
->
-> and then s/select ARCH_HAS_DEVMEM_IS_ALLOWED/select GENERIC_LIB_DEVMEM_IS_ALLOWED/
-> in the arch Kconfigs and drop ARCH_HAS_DEVMEM_IS_ALLOWED in the end.
-
-There's some arches that can't be converted to the generic version, at least
-not trivially, so we wouldn't drop it.  I think it's still cleaner, though.
-I'll send a v2.
-
->
->> diff --git a/lib/Makefile b/lib/Makefile
->> index b1c42c10073b..554ef14f9be5 100644
->> --- a/lib/Makefile
->> +++ b/lib/Makefile
->> @@ -318,3 +318,5 @@ obj-$(CONFIG_OBJAGG) += objagg.o
->>  # KUnit tests
->>  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
->>  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
->> +
->> +obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
->> diff --git a/lib/devmem_is_allowed.c b/lib/devmem_is_allowed.c
->> new file mode 100644
->> index 000000000000..c0d67c541849
->> --- /dev/null
->> +++ b/lib/devmem_is_allowed.c
->> @@ -0,0 +1,27 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * A generic version of devmem_is_allowed.
->> + *
->> + * Based on arch/arm64/mm/mmap.c
->> + *
->> + * Copyright (C) 2020 Google, Inc.
->> + * Copyright (C) 2012 ARM Ltd.
->> + */
->> +
->> +#include <linux/mm.h>
->> +#include <linux/ioport.h>
->> +
->> +/*
->> + * devmem_is_allowed() checks to see if /dev/mem access to a certain address
->> + * is valid. The argument is a physical page number.  We mimic x86 here by
->> + * disallowing access to system RAM as well as device-exclusive MMIO regions.
->> + * This effectively disable read()/write() on /dev/mem.
->> + */
->> +int devmem_is_allowed(unsigned long pfn)
->> +{
->> +	if (iomem_is_exclusive(pfn << PAGE_SHIFT))
->> +		return 0;
->> +	if (!page_is_ram(pfn))
->> +		return 1;
->> +	return 0;
->> +}
->> --
->> 2.27.0.383.g050319c2ae-goog
->>
+Regards,
+Richard
+> 
+>>   		if (ret < 0)
+>>   			break;
+>>   
+>> -		ret = wait_for_completion_interruptible_timeout(
+>> +		ret = wait_for_completion_timeout(
+>>   			&priv->status_return_completion, timeout);
+>>   		if (!ret) {
+>>   			dev_err(dev,
+>> @@ -380,12 +369,6 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+>>   			ret = -ETIMEDOUT;
+>>   			break;
+>>   		}
+>> -		if (ret < 0) {
+>> -			dev_err(dev,
+>> -				"error (%d) waiting for RECONFIG_COMPLETED\n",
+>> -				ret);
+>> -			break;
+>> -		}
+>>   		/* Not error or timeout, so ret is # of jiffies until timeout */
+>>   		timeout = ret;
+>>   		ret = 0;
+> 
