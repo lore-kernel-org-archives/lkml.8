@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC7AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32850C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECDA2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6522077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:12:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dL5T5yzX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+cr2shD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgGIRMm (ORCPT
+        id S1728404AbgGIRMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43700 "EHLO
+        Thu, 9 Jul 2020 13:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgGIRMj (ORCPT
+        with ESMTP id S1726758AbgGIRMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:12:39 -0400
+        Thu, 9 Jul 2020 13:12:42 -0400
 Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1838C08C5CE;
-        Thu,  9 Jul 2020 10:12:38 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z24so3245173ljn.8;
-        Thu, 09 Jul 2020 10:12:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B7F6C08C5CE;
+        Thu,  9 Jul 2020 10:12:42 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h19so3221557ljg.13;
+        Thu, 09 Jul 2020 10:12:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=281uz9iaiGVo7VI6qKT+7ajuEHZDORjgoupNNobQtjM=;
-        b=dL5T5yzX5EMhvYQoovcVbN5GsAkbwY6Tv6UtajhB8R1LolxI1i5zzLcXKe/aHi10xY
-         DGPT/H8Mnrs8FN248T88ucJUk2R+3JIKpehl8AYJEmGCDMXbUYHjnbJXRgjq/QUyDhsi
-         yPKv1Svd7uNhFqmHDT2JjP7V2cd3sPJMEUWzUdkSKycXsxoUcU1j+cb1E+U5bLQVNZG8
-         fqFP99LMqdh8lcrBTtjJTRxSXt3JISJJK7EHRMJCEaRnJg2XknfFaCwCJf4EUCjuPwR4
-         FbBYOCjZyeJV0d3GsKZ8qt45hdiQCMUa/qj+4dTa/WnRkNIZ+KclVDsvBoIfH49x/I2z
-         tk9w==
+        bh=MwH9OzQNprBVTkDGom8Hyzf45RK5XVVd8yNAMaPqHFg=;
+        b=S+cr2shDb1TfOejsw++p+vI3r8B+FssUPlW8yGlPlSu1mydqtkkk+YJ0M3NPW+weLz
+         nhCAXHnnLE6H9A6Go6Hyg+EnUUG+pk6tEqiVLEeUWCc4X77Iavm8zr8Q17qKrhSOICLq
+         3qQNdHwdfSlU5OAyecyitBri24mT5yjqJ61ChvTpHkFEHoUP7nR6RcfsulnaOvni0NMt
+         ILm+txfGzhuKTfUNmLxH9ygrdd6H5we/njqYNnYqx73Tm4KcMFXd6lBwbx29sLJpdl4P
+         XwN0C5dFo2YnbUqD1aXiTlGZ/RgXMSOviji3gTS0YNEksFQ1Y7wWsRu8tuLnEFKKja+v
+         1O2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=281uz9iaiGVo7VI6qKT+7ajuEHZDORjgoupNNobQtjM=;
-        b=WfxPnvwnnBLyRss2VXpvPooZ9NM7B8iwgjnhaqbII0hCOmbwIM7UEFYIBRyp5pWD1d
-         U6cs5WA2g05TIpf/Gnod9dyabQzwVUtuVf4Mj2BUVhPnV79llIRZLmalKLhoisLrXlfT
-         RAtxWcJOCxtPjCooAfGez/a00S9pe0r1B74xeFfE6KW5hgMdbWhjhjijrFWMJL7kVXCU
-         8YulvEQhaxSBsb/REZJjwx6dGAtuCkJtXl/ZtsMP43w80nKNDPwyMPN/t+s10WrGuTgF
-         ZhkOLo7/6cQG/9dOyTezbgG9jRI5Ctf/BnKhMB01+lcfVbEHZytMghNuh8/ZRXQxWVYs
-         +RwA==
-X-Gm-Message-State: AOAM5316/0EpF28OIDk5TQqVNLqCXOBN/Bjk7iRipLD1x5reZRvVk370
-        ypc1rbGyuQ9De29VRp/Pa7E=
-X-Google-Smtp-Source: ABdhPJxCoBAy+wgmz50uuC6+ftWgSFaVULLgqwWmOzjh7/32t2kf4vRVU30fWvSsyWs0sebITNZNwg==
-X-Received: by 2002:a2e:8046:: with SMTP id p6mr23586723ljg.100.1594314757485;
-        Thu, 09 Jul 2020 10:12:37 -0700 (PDT)
+        bh=MwH9OzQNprBVTkDGom8Hyzf45RK5XVVd8yNAMaPqHFg=;
+        b=XxsiSkrwPfiaa0k4mXW4b3yzq+1hhg6Uhhebqpp2PASvE0bsEdF9ZoI4ugT9bwRNSh
+         fYquISOA5fO6uBFQ+UB64YWSP7eLFaq85CqCX6WtPVe98TWIvwnnBiH+caeGSGNGMsx9
+         l7Ok5lDmtIqxH69nxfiodwXHZZmgO3nXyGJQ2ivvG+BYYafiYDyVb0Y7WiuO2YRUtzsj
+         3UkZXO6F1qzXKpoEwddmpjJtTAxBp0VGmGO43jnDE9KooblUgiScQ1JJUoePZKdvRwgb
+         caWE5ou2qt9NImvFvtadu/9+8Q+1yRL1YXzk5OdnKDdTq3eoy02yyLPpwjO3De9rHXyg
+         0Qww==
+X-Gm-Message-State: AOAM531DDZni8D95PzremhTqzQzFnUh5rF3xyx80MtaiDPKEKRpN9rnr
+        JQDi/x03x3DCNAB39JUJv+Y=
+X-Google-Smtp-Source: ABdhPJzYy6iDn63+WHVf7HB6iLM2INjD8TS6EzVQrtmpEO1Axca5+JaiB1Sqb/CzRODX661LJuwItg==
+X-Received: by 2002:a2e:9b87:: with SMTP id z7mr35203698lji.80.1594314760687;
+        Thu, 09 Jul 2020 10:12:40 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.gmail.com with ESMTPSA id y22sm998314ljn.2.2020.07.09.10.12.36
+        by smtp.gmail.com with ESMTPSA id y22sm998314ljn.2.2020.07.09.10.12.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:12:36 -0700 (PDT)
+        Thu, 09 Jul 2020 10:12:40 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,9 +69,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/6] gpio: max77620: Replace 8 with MAX77620_GPIO_NR
-Date:   Thu,  9 Jul 2020 20:11:58 +0300
-Message-Id: <20200709171203.12950-2-digetx@gmail.com>
+Subject: [PATCH v4 4/6] gpio: max77620: Don't shadow error code of platform_get_irq()
+Date:   Thu,  9 Jul 2020 20:12:01 +0300
+Message-Id: <20200709171203.12950-5-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200709171203.12950-1-digetx@gmail.com>
 References: <20200709171203.12950-1-digetx@gmail.com>
@@ -82,41 +82,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MAX77620_GPIO_NR enum value represents the total number of GPIOs,
-let's use it instead of a raw value in order to improve the code's
-readability a tad.
+The platform_get_irq() returns a positive interrupt number on success and
+negative error code on failure (zero shouldn't ever happen in practice, it
+would produce a noisy warning). Hence let's return the error code directly
+instead of overriding it with -ENODEV.
 
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpio/gpio-max77620.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-max77620.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index 313bd02dd893..4c0c9ec2587d 100644
+index 39d431da2dbc..9121d2507f60 100644
 --- a/drivers/gpio/gpio-max77620.c
 +++ b/drivers/gpio/gpio-max77620.c
-@@ -19,8 +19,8 @@ struct max77620_gpio {
- 	struct regmap		*rmap;
- 	struct device		*dev;
- 	struct mutex		buslock; /* irq_bus_lock */
--	unsigned int		irq_type[8];
--	bool			irq_enabled[8];
-+	unsigned int		irq_type[MAX77620_GPIO_NR];
-+	bool			irq_enabled[MAX77620_GPIO_NR];
- };
+@@ -264,12 +264,14 @@ static int max77620_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct max77620_chip *chip =  dev_get_drvdata(pdev->dev.parent);
+ 	struct max77620_gpio *mgpio;
+-	int gpio_irq;
++	unsigned int gpio_irq;
+ 	int ret;
  
- static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
-@@ -38,7 +38,7 @@ static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
+-	gpio_irq = platform_get_irq(pdev, 0);
+-	if (gpio_irq <= 0)
+-		return -ENODEV;
++	ret = platform_get_irq(pdev, 0);
++	if (ret < 0)
++		return ret;
++
++	gpio_irq = ret;
  
- 	pending = value;
- 
--	for_each_set_bit(offset, &pending, 8) {
-+	for_each_set_bit(offset, &pending, MAX77620_GPIO_NR) {
- 		unsigned int virq;
- 
- 		virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
+ 	mgpio = devm_kzalloc(&pdev->dev, sizeof(*mgpio), GFP_KERNEL);
+ 	if (!mgpio)
 -- 
 2.26.0
 
