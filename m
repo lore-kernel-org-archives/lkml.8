@@ -2,275 +2,380 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7466AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44728C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46ABB2064C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A322064C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:19:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZLds2df"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qX0PjgBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgGIPTT (ORCPT
+        id S1728385AbgGIPTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:19:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54402 "EHLO
+        Thu, 9 Jul 2020 11:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbgGIPSa (ORCPT
+        with ESMTP id S1728059AbgGIPS2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:18:30 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227A9C08C5DD;
-        Thu,  9 Jul 2020 08:18:30 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k71so1264357pje.0;
-        Thu, 09 Jul 2020 08:18:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5xl0XyGLiz621Hz7NTFNPX+jPGcTEmSc0n3IjULBj8o=;
-        b=UZLds2df4+X4jjeJPcbXn87fx7lQomos6EyS0RzhIhBqJ0WGNjcWX3/OFgSg4QI42a
-         JElxWtMJjnladNZIZsH9KyefLGsDvKP4Bb7hFtagJsGawKmJKnPhjVG2YvH5t4rDf+J2
-         x0zgNFxCJmvLE1/2qmEYZh5cIm6g++4YeltyMuwmi4R3eDX1q1F0FyO5YDB7eUPNjAr9
-         auFEISZQI7ShmR/O4vf56n4gjqHu+ZBf78QUhdapm8qgE1hZWfbMvF/STp1RnC1fM3WX
-         eY4mJUmTczLAm5zJKx0S4Ed9npFRo0bQYOGJ0t6kQ3DBH6/WbM3khrRFw0VNmXPhW4mD
-         QNDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5xl0XyGLiz621Hz7NTFNPX+jPGcTEmSc0n3IjULBj8o=;
-        b=URpwf4dFsZDK4H1mdfjyi8Qa3da6YYujTnmKlxUDz9zGhhW/g0/qAU/W2nAtvyo9O4
-         qvVI4yQ3pUbZIdV2IxxfDGcjKovABgFd5fByXQgHSYsjmU8BZ5TOMm9gg4eniMnsZaju
-         st4gqtii9wwBmMP5UVOYeMO4B5XnECfdAO9kHuYOceZ4SsX76RAU4dpuPA1R2Ljz8lgt
-         iLkRhLQe0RY1KjXCoBH+HgzONKxIRPMe+lDhZ13bSAs/HM7LA45OQyFtp6GVtTuOnxV9
-         /NMP4QGKXR1w/mIs96TQGWN88v/01LTIIxo4YH4Rs34UKWtGAIUe7KJbGzzBmmmjCV5J
-         N9Ow==
-X-Gm-Message-State: AOAM532EhTwLc8YyYztTppqVFTP32yXy61XLXcCoIk2nBvXcNR7/D02A
-        slaof2LSL1oR0Hwcx121p4yH5AwPf98=
-X-Google-Smtp-Source: ABdhPJw9Xl+8cevWRbwvodD7EwmFDvHxHyD3cFLKJC0/OnFN9mFcWxDnqyzz0z7Nb9WHcdx2bgvFLg==
-X-Received: by 2002:a17:90a:a608:: with SMTP id c8mr527657pjq.114.1594307909539;
-        Thu, 09 Jul 2020 08:18:29 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o12sm3241489pfu.188.2020.07.09.08.18.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jul 2020 08:18:28 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 08:18:27 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Marius Zachmann <mail@mariuszachmann.de>
-Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] hwmon: corsair-cpro: add fan_target
-Message-ID: <20200709151827.GA77769@roeck-us.net>
-References: <20200709141413.30790-1-mail@mariuszachmann.de>
+        Thu, 9 Jul 2020 11:18:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1EE2C08C5CE;
+        Thu,  9 Jul 2020 08:18:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=mmQoihRRGrsmWONcJEqbEK2+186BjZeGKKMpJSHUBs0=; b=qX0PjgBN5RFR/ofj4R5gUBDiG2
+        Uqu0NIWJc+oxnEKx1PbujfPW5Vdmz0ytWB3G3acgBUeUtfpXGaPPKYX4Z0DdhoBU6jaCgF4Mtae7L
+        4LeD9XdaLuLP2wdF+xB35y2A1tjJzenlco1LVuwCnwx+mNLlfLt69vhH8RPfuaLinig7RfXuyjkjs
+        lFk9NXmgcFbrm98NnLfOsWsWayW4Ob8pxFw3U7vGtO8NBy2JRFg4E6iANgNvhtYKnICgGDAhErYAk
+        SprFwjBzoCJ9ehyC5eupeJ1daaj2ubrJAcztkhf65AjiTxD1LP2PkoOoyouib98bLzcyyv0soFCRv
+        RUF2rEMw==;
+Received: from [2001:4bb8:188:5f50:7053:304b:bf82:82cf] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtYJe-0005L5-3v; Thu, 09 Jul 2020 15:18:26 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 07/17] md: rewrite md_setup_drive to avoid ioctls
+Date:   Thu,  9 Jul 2020 17:18:04 +0200
+Message-Id: <20200709151814.110422-8-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200709151814.110422-1-hch@lst.de>
+References: <20200709151814.110422-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709141413.30790-1-mail@mariuszachmann.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 04:14:13PM +0200, Marius Zachmann wrote:
-> This adds fan_target entries to the corsair-cpro driver.
-> Reading the attribute from the device does not seem possible, so
-> it returns the last set value. (same as pwm)
-> 
-> send_usb_cmd now has one more argument, which is needed for the
->   fan_target command.
-> 
-> Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
+md_setup_drive knows it works with md devices, so it is rather pointless
+to open a file descriptor and issue ioctls.  Just call directly into the
+relevant low-level md routines after getting a handle to the device using
+blkdev_get_by_dev instead.
 
-Applied.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/md/md-autodetect.c | 127 ++++++++++++++++---------------------
+ drivers/md/md.c            |  20 +++---
+ drivers/md/md.h            |   6 ++
+ 3 files changed, 71 insertions(+), 82 deletions(-)
 
-Thanks,
-Guenter
+diff --git a/drivers/md/md-autodetect.c b/drivers/md/md-autodetect.c
+index a43a8f1580584c..5b24b5616d3acc 100644
+--- a/drivers/md/md-autodetect.c
++++ b/drivers/md/md-autodetect.c
+@@ -2,7 +2,6 @@
+ #include <linux/kernel.h>
+ #include <linux/blkdev.h>
+ #include <linux/init.h>
+-#include <linux/syscalls.h>
+ #include <linux/mount.h>
+ #include <linux/major.h>
+ #include <linux/delay.h>
+@@ -120,37 +119,29 @@ static int __init md_setup(char *str)
+ 	return 1;
+ }
+ 
+-static inline int create_dev(char *name, dev_t dev)
+-{
+-	ksys_unlink(name);
+-	return ksys_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
+-}
+-
+ static void __init md_setup_drive(struct md_setup_args *args)
+ {
+-	int minor, i, partitioned;
+-	dev_t dev;
+-	dev_t devices[MD_SB_DISKS+1];
+-	int fd;
+-	int err = 0;
+-	char *devname;
+-	mdu_disk_info_t dinfo;
++	char *devname = args->device_names;
++	dev_t devices[MD_SB_DISKS + 1], mdev;
++	struct mdu_array_info_s ainfo = { };
++	struct block_device *bdev;
++	struct mddev *mddev;
++	int err = 0, i;
+ 	char name[16];
+ 
+-	minor = args->minor;
+-	partitioned = args->partitioned;
+-	devname = args->device_names;
++	if (args->partitioned) {
++		mdev = MKDEV(mdp_major, args->minor << MdpMinorShift);
++		sprintf(name, "md_d%d", args->minor);
++	} else {
++		mdev = MKDEV(MD_MAJOR, args->minor);
++		sprintf(name, "md%d", args->minor);
++	}
+ 
+-	sprintf(name, "/dev/md%s%d", partitioned?"_d":"", minor);
+-	if (partitioned)
+-		dev = MKDEV(mdp_major, minor << MdpMinorShift);
+-	else
+-		dev = MKDEV(MD_MAJOR, minor);
+-	create_dev(name, dev);
+ 	for (i = 0; i < MD_SB_DISKS && devname != NULL; i++) {
+ 		struct kstat stat;
+ 		char *p;
+ 		char comp_name[64];
++		dev_t dev;
+ 
+ 		p = strchr(devname, ',');
+ 		if (p)
+@@ -163,7 +154,7 @@ static void __init md_setup_drive(struct md_setup_args *args)
+ 		if (vfs_stat(comp_name, &stat) == 0 && S_ISBLK(stat.mode))
+ 			dev = new_decode_dev(stat.rdev);
+ 		if (!dev) {
+-			printk(KERN_WARNING "md: Unknown device name: %s\n", devname);
++			pr_warn("md: Unknown device name: %s\n", devname);
+ 			break;
+ 		}
+ 
+@@ -175,68 +166,64 @@ static void __init md_setup_drive(struct md_setup_args *args)
+ 	if (!i)
+ 		return;
+ 
+-	printk(KERN_INFO "md: Loading md%s%d: %s\n",
+-		partitioned ? "_d" : "", minor,
+-		args->device_names);
++	pr_info("md: Loading %s: %s\n", name, args->device_names);
+ 
+-	fd = ksys_open(name, 0, 0);
+-	if (fd < 0) {
+-		printk(KERN_ERR "md: open failed - cannot start "
+-				"array %s\n", name);
++	bdev = blkdev_get_by_dev(mdev, FMODE_READ, NULL);
++	if (IS_ERR(bdev)) {
++		pr_err("md: open failed - cannot start array %s\n", name);
+ 		return;
+ 	}
+-	if (ksys_ioctl(fd, SET_ARRAY_INFO, 0) == -EBUSY) {
+-		printk(KERN_WARNING
+-		       "md: Ignoring md=%d, already autodetected. (Use raid=noautodetect)\n",
+-		       minor);
+-		ksys_close(fd);
+-		return;
++	mddev = bdev->bd_disk->private_data;
++
++	err = mddev_lock(mddev);
++	if (err) {
++		pr_err("md: failed to lock array %s\n", name);
++		goto out_blkdev_put;
++	}
++
++	if (!list_empty(&mddev->disks) || mddev->raid_disks) {
++		pr_warn("md: Ignoring %s, already autodetected. (Use raid=noautodetect)\n",
++		       name);
++		goto out_unlock;
+ 	}
+ 
+ 	if (args->level != LEVEL_NONE) {
+ 		/* non-persistent */
+-		mdu_array_info_t ainfo;
+ 		ainfo.level = args->level;
+-		ainfo.size = 0;
+-		ainfo.nr_disks =0;
+-		ainfo.raid_disks =0;
+-		while (devices[ainfo.raid_disks])
+-			ainfo.raid_disks++;
+-		ainfo.md_minor =minor;
++		ainfo.md_minor = args->minor;
+ 		ainfo.not_persistent = 1;
+-
+ 		ainfo.state = (1 << MD_SB_CLEAN);
+-		ainfo.layout = 0;
+ 		ainfo.chunk_size = args->chunk;
+-		err = ksys_ioctl(fd, SET_ARRAY_INFO, (long)&ainfo);
+-		for (i = 0; !err && i <= MD_SB_DISKS; i++) {
+-			dev = devices[i];
+-			if (!dev)
+-				break;
++		while (devices[ainfo.raid_disks])
++			ainfo.raid_disks++;
++	}
++
++	err = md_set_array_info(mddev, &ainfo);
++
++	for (i = 0; i <= MD_SB_DISKS && devices[i]; i++) {
++		struct mdu_disk_info_s dinfo = {
++			.major	= MAJOR(devices[i]),
++			.minor	= MINOR(devices[i]),
++		};
++
++		if (args->level != LEVEL_NONE) {
+ 			dinfo.number = i;
+ 			dinfo.raid_disk = i;
+-			dinfo.state = (1<<MD_DISK_ACTIVE)|(1<<MD_DISK_SYNC);
+-			dinfo.major = MAJOR(dev);
+-			dinfo.minor = MINOR(dev);
+-			err = ksys_ioctl(fd, ADD_NEW_DISK,
+-					 (long)&dinfo);
+-		}
+-	} else {
+-		/* persistent */
+-		for (i = 0; i <= MD_SB_DISKS; i++) {
+-			dev = devices[i];
+-			if (!dev)
+-				break;
+-			dinfo.major = MAJOR(dev);
+-			dinfo.minor = MINOR(dev);
+-			ksys_ioctl(fd, ADD_NEW_DISK, (long)&dinfo);
++			dinfo.state =
++				(1 << MD_DISK_ACTIVE) | (1 << MD_DISK_SYNC);
+ 		}
++
++		md_add_new_disk(mddev, &dinfo);
+ 	}
++
+ 	if (!err)
+-		err = ksys_ioctl(fd, RUN_ARRAY, 0);
++		err = do_md_run(mddev);
+ 	if (err)
+-		printk(KERN_WARNING "md: starting md%d failed\n", minor);
+-	ksys_close(fd);
++		pr_warn("md: starting %s failed\n", name);
++out_unlock:
++	mddev_unlock(mddev);
++out_blkdev_put:
++	blkdev_put(bdev, FMODE_READ);
+ }
+ 
+ static int __init raid_setup(char *str)
+@@ -286,8 +273,6 @@ void __init md_run_setup(void)
+ {
+ 	int ent;
+ 
+-	create_dev("/dev/md0", MKDEV(MD_MAJOR, 0));
+-
+ 	if (raid_noautodetect)
+ 		printk(KERN_INFO "md: Skipping autodetection of RAID arrays. (raid=autodetect will force)\n");
+ 	else
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 6e9a48da474848..9960cfeb59a50c 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -4368,7 +4368,6 @@ array_state_show(struct mddev *mddev, char *page)
+ 
+ static int do_md_stop(struct mddev *mddev, int ro, struct block_device *bdev);
+ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev);
+-static int do_md_run(struct mddev *mddev);
+ static int restart_array(struct mddev *mddev);
+ 
+ static ssize_t
+@@ -6015,7 +6014,7 @@ int md_run(struct mddev *mddev)
+ }
+ EXPORT_SYMBOL_GPL(md_run);
+ 
+-static int do_md_run(struct mddev *mddev)
++int do_md_run(struct mddev *mddev)
+ {
+ 	int err;
+ 
+@@ -6651,7 +6650,7 @@ static int get_disk_info(struct mddev *mddev, void __user * arg)
+ 	return 0;
+ }
+ 
+-static int add_new_disk(struct mddev *mddev, mdu_disk_info_t *info)
++int md_add_new_disk(struct mddev *mddev, struct mdu_disk_info_s *info)
+ {
+ 	char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+ 	struct md_rdev *rdev;
+@@ -6697,7 +6696,7 @@ static int add_new_disk(struct mddev *mddev, mdu_disk_info_t *info)
+ 	}
+ 
+ 	/*
+-	 * add_new_disk can be used once the array is assembled
++	 * md_add_new_disk can be used once the array is assembled
+ 	 * to add "hot spares".  They must already have a superblock
+ 	 * written
+ 	 */
+@@ -6810,7 +6809,7 @@ static int add_new_disk(struct mddev *mddev, mdu_disk_info_t *info)
+ 		return err;
+ 	}
+ 
+-	/* otherwise, add_new_disk is only allowed
++	/* otherwise, md_add_new_disk is only allowed
+ 	 * for major_version==0 superblocks
+ 	 */
+ 	if (mddev->major_version != 0) {
+@@ -7055,7 +7054,7 @@ static int set_bitmap_file(struct mddev *mddev, int fd)
+ }
+ 
+ /*
+- * set_array_info is used two different ways
++ * md_set_array_info is used two different ways
+  * The original usage is when creating a new array.
+  * In this usage, raid_disks is > 0 and it together with
+  *  level, size, not_persistent,layout,chunksize determine the
+@@ -7067,9 +7066,8 @@ static int set_bitmap_file(struct mddev *mddev, int fd)
+  *  The minor and patch _version numbers are also kept incase the
+  *  super_block handler wishes to interpret them.
+  */
+-static int set_array_info(struct mddev *mddev, mdu_array_info_t *info)
++int md_set_array_info(struct mddev *mddev, struct mdu_array_info_s *info)
+ {
+-
+ 	if (info->raid_disks == 0) {
+ 		/* just setting version number for superblock loading */
+ 		if (info->major_version < 0 ||
+@@ -7560,7 +7558,7 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 			err = -EBUSY;
+ 			goto unlock;
+ 		}
+-		err = set_array_info(mddev, &info);
++		err = md_set_array_info(mddev, &info);
+ 		if (err) {
+ 			pr_warn("md: couldn't set array info. %d\n", err);
+ 			goto unlock;
+@@ -7614,7 +7612,7 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 				/* Need to clear read-only for this */
+ 				break;
+ 			else
+-				err = add_new_disk(mddev, &info);
++				err = md_add_new_disk(mddev, &info);
+ 			goto unlock;
+ 		}
+ 		break;
+@@ -7682,7 +7680,7 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 		if (copy_from_user(&info, argp, sizeof(info)))
+ 			err = -EFAULT;
+ 		else
+-			err = add_new_disk(mddev, &info);
++			err = md_add_new_disk(mddev, &info);
+ 		goto unlock;
+ 	}
+ 
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 6f8fff77ce10a5..7ee81aa2eac862 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -801,7 +801,13 @@ static inline void mddev_check_write_zeroes(struct mddev *mddev, struct bio *bio
+ 		mddev->queue->limits.max_write_zeroes_sectors = 0;
+ }
+ 
++struct mdu_array_info_s;
++struct mdu_disk_info_s;
++
+ extern int mdp_major;
+ void md_autostart_arrays(int part);
++int md_set_array_info(struct mddev *mddev, struct mdu_array_info_s *info);
++int md_add_new_disk(struct mddev *mddev, struct mdu_disk_info_s *info);
++int do_md_run(struct mddev *mddev);
+ 
+ #endif /* _MD_MD_H */
+-- 
+2.26.2
 
-> ---
-> Change from v1:
-> - use clamp_val instead of bounds checking
-> 
-> ---
->  Documentation/hwmon/corsair-cpro.rst |  3 ++
->  drivers/hwmon/corsair-cpro.c         | 61 ++++++++++++++++++++++------
->  2 files changed, 52 insertions(+), 12 deletions(-)
-> 
-> --
-> 2.27.0
-> 
-> diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
-> index 5913e23d764c..78820156f07d 100644
-> --- a/Documentation/hwmon/corsair-cpro.rst
-> +++ b/Documentation/hwmon/corsair-cpro.rst
-> @@ -33,6 +33,9 @@ in2_input		Voltage on SATA 3.3v
->  temp[1-4]_input		Temperature on connected temperature sensors
->  fan[1-6]_input		Connected fan rpm.
->  fan[1-6]_label		Shows fan type as detected by the device.
-> +fan[1-6]_target		Sets fan speed target rpm.
-> +			When reading, it reports the last value if it was set by the driver.
-> +			Otherwise returns 0.
->  pwm[1-6]		Sets the fan speed. Values from 0-255.
->  			When reading, it reports the last value if it was set by the driver.
->  			Otherwise returns 0.
-> diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
-> index a22583acc229..fe625190e3a1 100644
-> --- a/drivers/hwmon/corsair-cpro.c
-> +++ b/drivers/hwmon/corsair-cpro.c
-> @@ -5,8 +5,8 @@
->   */
-> 
->  #include <linux/bitops.h>
-> -#include <linux/kernel.h>
->  #include <linux/hwmon.h>
-> +#include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/slab.h>
-> @@ -51,6 +51,12 @@
->  					 * send: byte 1 is fan number
->  					 * send: byte 2 is percentage from 0 - 100
->  					 */
-> +#define CTL_SET_FAN_TARGET	0x24	/*
-> +					 * set target rpm
-> +					 * send: byte 1 is fan number
-> +					 * send: byte 2-3 is target
-> +					 * device accepts all values from 0x00 - 0xFFFF
-> +					 */
-> 
->  #define NUM_FANS		6
->  #define NUM_TEMP_SENSORS	4
-> @@ -60,13 +66,14 @@ struct ccp_device {
->  	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
->  	u8 *buffer;
->  	int pwm[6];
-> +	int target[6];
->  	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
->  	DECLARE_BITMAP(fan_cnct, NUM_FANS);
->  	char fan_label[6][LABEL_LENGTH];
->  };
-> 
->  /* send command, check for error in response, response in ccp->buffer */
-> -static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2)
-> +static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2, u8 byte3)
->  {
->  	int actual_length;
->  	int ret;
-> @@ -75,6 +82,7 @@ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2)
->  	ccp->buffer[0] = command;
->  	ccp->buffer[1] = byte1;
->  	ccp->buffer[2] = byte2;
-> +	ccp->buffer[3] = byte3;
-> 
->  	ret = usb_bulk_msg(ccp->udev, usb_sndintpipe(ccp->udev, 2), ccp->buffer, OUT_BUFFER_SIZE,
->  			   &actual_length, 1000);
-> @@ -103,7 +111,7 @@ static int get_data(struct ccp_device *ccp, int command, int channel)
-> 
->  	mutex_lock(&ccp->mutex);
-> 
-> -	ret = send_usb_cmd(ccp, command, channel, 0);
-> +	ret = send_usb_cmd(ccp, command, channel, 0, 0);
->  	if (ret)
->  		goto out_unlock;
-> 
-> @@ -128,7 +136,22 @@ static int set_pwm(struct ccp_device *ccp, int channel, long val)
-> 
->  	mutex_lock(&ccp->mutex);
-> 
-> -	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val);
-> +	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val, 0);
-> +
-> +	mutex_unlock(&ccp->mutex);
-> +	return ret;
-> +}
-> +
-> +static int set_target(struct ccp_device *ccp, int channel, long val)
-> +{
-> +	int ret;
-> +
-> +	val = clamp_val(val, 0, 0xFFFF);
-> +	ccp->target[channel] = val;
-> +
-> +	mutex_lock(&ccp->mutex);
-> +
-> +	ret = send_usb_cmd(ccp, CTL_SET_FAN_TARGET, channel, val >> 8, val);
-> 
->  	mutex_unlock(&ccp->mutex);
->  	return ret;
-> @@ -183,6 +206,11 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
->  				return ret;
->  			*val = ret;
->  			return 0;
-> +		case hwmon_fan_target:
-> +			/* how to read target values from the device is unknown */
-> +			/* driver returns last set value or 0			*/
-> +			*val = ccp->target[channel];
-> +			return 0;
->  		default:
->  			break;
->  		}
-> @@ -231,6 +259,13 @@ static int ccp_write(struct device *dev, enum hwmon_sensor_types type,
->  			break;
->  		}
->  		break;
-> +	case hwmon_fan:
-> +		switch (attr) {
-> +		case hwmon_fan_target:
-> +			return set_target(ccp, channel, val);
-> +		default:
-> +			break;
-> +		}
->  	default:
->  		break;
->  	}
-> @@ -266,6 +301,8 @@ static umode_t ccp_is_visible(const void *data, enum hwmon_sensor_types type,
->  			return 0444;
->  		case hwmon_fan_label:
->  			return 0444;
-> +		case hwmon_fan_target:
-> +			return 0644;
->  		default:
->  			break;
->  		}
-> @@ -313,12 +350,12 @@ static const struct hwmon_channel_info *ccp_info[] = {
->  			   HWMON_T_INPUT
->  			   ),
->  	HWMON_CHANNEL_INFO(fan,
-> -			   HWMON_F_INPUT | HWMON_F_LABEL,
-> -			   HWMON_F_INPUT | HWMON_F_LABEL,
-> -			   HWMON_F_INPUT | HWMON_F_LABEL,
-> -			   HWMON_F_INPUT | HWMON_F_LABEL,
-> -			   HWMON_F_INPUT | HWMON_F_LABEL,
-> -			   HWMON_F_INPUT | HWMON_F_LABEL
-> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET
->  			   ),
->  	HWMON_CHANNEL_INFO(pwm,
->  			   HWMON_PWM_INPUT,
-> @@ -348,7 +385,7 @@ static int get_fan_cnct(struct ccp_device *ccp)
->  	int mode;
->  	int ret;
-> 
-> -	ret = send_usb_cmd(ccp, CTL_GET_FAN_CNCT, 0, 0);
-> +	ret = send_usb_cmd(ccp, CTL_GET_FAN_CNCT, 0, 0, 0);
->  	if (ret)
->  		return ret;
-> 
-> @@ -385,7 +422,7 @@ static int get_temp_cnct(struct ccp_device *ccp)
->  	int mode;
->  	int ret;
-> 
-> -	ret = send_usb_cmd(ccp, CTL_GET_TMP_CNCT, 0, 0);
-> +	ret = send_usb_cmd(ccp, CTL_GET_TMP_CNCT, 0, 0, 0);
->  	if (ret)
->  		return ret;
