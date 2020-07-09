@@ -2,236 +2,143 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60449C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58660C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35932206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230D52065D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:50:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kYCGWHCZ"
+	dkim=pass (1024-bit key) header.d=oppoglobal.onmicrosoft.com header.i=@oppoglobal.onmicrosoft.com header.b="y+7ZCw7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgGIGuT (ORCPT
+        id S1726347AbgGIGuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 02:50:19 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:48652 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGIGuT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 02:50:19 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200709065017euoutp01d37ffe3c7425d61c743b0c012fcfd78f~gAt0t8ki21121111211euoutp01l
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:50:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200709065017euoutp01d37ffe3c7425d61c743b0c012fcfd78f~gAt0t8ki21121111211euoutp01l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594277417;
-        bh=FfyyPKBkmMO5/npKc8oL3jScajCmCp+2dXiPw3GaLjs=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=kYCGWHCZlkOj692RlEcvQmYAJB3R7w/Z24KTnlDVIsrwjITrbwGlwO0nYWtbuS/4s
-         /RqgsXrzhgoY/jA0nqny9+17+y06fNGR/vmMutHHq2rYFpptKEXxmgViPy2EYJtI86
-         9LdJoxjONUMc2Mkwgls3VfWwZl4OH5tBtz84mTnI=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200709065016eucas1p2cf71c2aca083e003de4e16b4bfd72dd8~gAt0fE9Fn0975609756eucas1p2X;
-        Thu,  9 Jul 2020 06:50:16 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 99.02.06456.82EB60F5; Thu,  9
-        Jul 2020 07:50:16 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200709065016eucas1p22ef816e6a2a6e47c008cabc5e06d6716~gAtz-DqYS0776507765eucas1p2g;
-        Thu,  9 Jul 2020 06:50:16 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200709065016eusmtrp16d068fd54a316c46acc9740777cb3b60~gAtz_aIkK2835428354eusmtrp1Z;
-        Thu,  9 Jul 2020 06:50:16 +0000 (GMT)
-X-AuditID: cbfec7f2-809ff70000001938-e4-5f06be288657
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id F4.7D.06314.82EB60F5; Thu,  9
-        Jul 2020 07:50:16 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200709065015eusmtip21fd653859f7d4503f867a58f63623cc5~gAtzhxwml1681816818eusmtip2m;
-        Thu,  9 Jul 2020 06:50:15 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-samsung-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Zhang Qiang <qiang.zhang@windriver.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH v3] spi: use kthread_create_worker() helper
-Date:   Thu,  9 Jul 2020 08:50:07 +0200
-Message-Id: <20200709065007.26896-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRmVeSWpSXmKPExsWy7djP87oa+9jiDWbd0rHYOGM9q8XUh0/Y
-        LC7vmsNmMeP8PiaLxo832S3WHrnLbvH/8VdWi1sr/rI7cHhsWtXJ5tG3ZRWjx/otV1k8Pm+S
-        AzK2MgWwRnHZpKTmZJalFunbJXBlTF67lqVgklrFt3sVDYxNCl2MHBwSAiYSO5s1uxi5OIQE
-        VjBKfD29kgXC+cIoseJZBxOE85lR4veO3+wwHR87NSDiyxklNj38xQrXce/tdaAOTg42AUOJ
-        rrddbCC2iIC1xLcZ05hBbGaBH4wSj+/IggwSBoq/f+YCEmYRUJW4cmciWCuvgK3ErK8vWUBs
-        CQF5idUbDjBD2PfZJPovpkPYLhJHrzSzQ9jCEq+Ob4GyZSROT+4B+0BCoJlR4uG5tewQTg+j
-        xOWmGYwQVdYSd879YgM5gllAU2L9Ln2Ixxwl7swLgzD5JG68FYS4mE9i0rbpzBBhXomONiGI
-        GWoSs46vg9t68MIlqCs9JJZcXAD2uJBArERLdyfTBEa5WQirFjAyrmIUTy0tzk1PLTbMSy3X
-        K07MLS7NS9dLzs/dxAhMBqf/Hf+0g/HrpaRDjAIcjEo8vBM2sMYLsSaWFVfmHmKU4GBWEuF1
-        Ons6Tog3JbGyKrUoP76oNCe1+BCjNAeLkjiv8aKXsUIC6YklqdmpqQWpRTBZJg5OqQZGu9tC
-        Vy9ten5+qlCPVmTigjMbAvwlePT6lJefsi5gNF9xppy3cl7x7O/Fa+dU8X7dcWhB35VaDdHo
-        XdMWLv6eU7SCV15Y2bghZ+27aLlHE+vvSS5fV8N4ecrFY+dnxJ9c2HeiJeBxmmjL+hYNEeba
-        iZWv+je9PZJ1OuFOyTqxrY7OPyc8fMg6QYmlOCPRUIu5qDgRAKJrNlcCAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsVy+t/xe7oa+9jiDb5v47XYOGM9q8XUh0/Y
-        LC7vmsNmMeP8PiaLxo832S3WHrnLbvH/8VdWi1sr/rI7cHhsWtXJ5tG3ZRWjx/otV1k8Pm+S
-        AzK2MgWwRunZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunb
-        JehlTF67lqVgklrFt3sVDYxNCl2MHBwSAiYSHzs1uhi5OIQEljJK7FzwhbWLkRMoLiNxcloD
-        lC0s8edaFxtE0SdGiQ2XPjOBJNgEDCW63oIkODlEBGwl5r9/wQpSxCzwh1Hi0aSnrCAbhAWs
-        Jd4/cwGpYRFQlbhyZyJYLy9Q/ayvL1kgFshLrN5wgHkCI88CRoZVjCKppcW56bnFhnrFibnF
-        pXnpesn5uZsYgaG47djPzTsYL20MPsQowMGoxMP7YhNrvBBrYllxZe4hRgkOZiURXqezp+OE
-        eFMSK6tSi/Lji0pzUosPMZoCLZ/ILCWanA+Mk7ySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLp
-        iSWp2ampBalFMH1MHJxSDYwulxO2rE5znLxWos894uW6z2/l1zHt3Wi66WB8cd43uZNTFavL
-        vx2ccX+28vl98Zfbudgl5eK1P5SXz+a4e+v/fccqowZ78113t9+fODX4k+ne+bqb4gWKMlTf
-        pH66d/Nv2IEzQm1aJaydLFwVlrP0zonWM0lFfuQN0+A+Np/3854LHPkhryqVWIozEg21mIuK
-        EwGWfJg5WwIAAA==
-X-CMS-MailID: 20200709065016eucas1p22ef816e6a2a6e47c008cabc5e06d6716
-X-Msg-Generator: CA
+        Thu, 9 Jul 2020 02:50:25 -0400
+Received: from mail-eopbgr1310059.outbound.protection.outlook.com ([40.107.131.59]:31244
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726193AbgGIGuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 02:50:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WGom73Apgfp5kL7x+VhF3aCbUCcrjbL1XTROY5Vw8bl4XcMYNgbjhEiMdIigHv2jo6/xnNxYJcQ5763GvAYBHhiMJyVh2OVyo2PoZo3wKlOWIDTZtM94imUBcoJp2C6LfcOGSqtgr8zgB0jkyTqDti6Ef85YuVoOCIZ4QFd62neToG6WBJwQeuMOS/tn6iR0jHCDWTZ1mXTdr3f+RKlKe4PNk/g7j1GsjrHXt557c18gaLTcWzbfyEfChkGZB6vbKQgUat3oQutvvpjSrBKHZhzguVx/mVTZXPo2jSIv3Gf0+0qD7cTD3FnYXqnaXa33Be4lOdcQofCrWyPCbGORMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6Ptm4385sTAGSEghmi92tIifSw4Czl6yO3w72PMMVdk=;
+ b=B0j6QsfchzrjR/lBG26NUpFH0Ah+6X1iU8K8Q4eb2Qa+E+h7doSF4n/zFHRcc4vp8uheUpKgc0VTGj6y+H+/ctxjzmOUUpvwHOSHWAjDeBrrY/uu/wkf/wvAQV0lTNvC5xzVR8M0lPmZfOq0pPkSnhxuLpC9rXAVUzb7/hS+oAHf9oIQrlposY6mJkeTxIAvJt3X8NF/i15z1acr8kYKlSVhP9J+GvVSEkLfhmy646xzhlCl+g9UijnYjd3EfK8uOqyI4M3fXfb+fOg9DsrB56CMgGo1j2s4w2a9u/j+ZhrueunulWA+SfnlyQNYfzLiRvN6N4UU5us+9RHAYTCjjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
+ dkim=pass header.d=oppo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oppoglobal.onmicrosoft.com; s=selector1-oppoglobal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6Ptm4385sTAGSEghmi92tIifSw4Czl6yO3w72PMMVdk=;
+ b=y+7ZCw7s3xz19G40MhJy+z0BwcXullpkhDUSUd17W+uZA9cvnlo9SWm669eUnELoYGiQks2uf0HJPbzAF5LMykqi7NLsnpxlD7nPhE2DKmeU2Pd/wZbF3CR3ZVpuszf5zX2xdHEJ7e/EVtZzHTSL4hmP39bR3Lxi8UhURZ0EHmA=
+Received: from HKAPR02MB4291.apcprd02.prod.outlook.com (2603:1096:203:d3::12)
+ by HKAPR02MB4385.apcprd02.prod.outlook.com (2603:1096:203:dc::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Thu, 9 Jul
+ 2020 06:50:19 +0000
+Received: from HKAPR02MB4291.apcprd02.prod.outlook.com
+ ([fe80::d4d8:820c:6e00:69d2]) by HKAPR02MB4291.apcprd02.prod.outlook.com
+ ([fe80::d4d8:820c:6e00:69d2%8]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
+ 06:50:19 +0000
+From:   =?utf-8?B?5b2t5rWpKFJpY2hhcmQp?= <richard.peng@oppo.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+CC:     Will Deacon <will@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re:[PATCH] arm64/module-plts: Consider the special case where
+ plt_max_entries is 0
+Thread-Topic: [PATCH] arm64/module-plts: Consider the special case where
+ plt_max_entries is 0
+Thread-Index: AdZVux2xeZHZhkZuS3KXfzL8ZpsgRA==
+Date:   Thu, 9 Jul 2020 06:50:18 +0000
+Message-ID: <HKAPR02MB42915BECBD71F5ABA0890533E0640@HKAPR02MB4291.apcprd02.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oppo.com;
+x-originating-ip: [58.255.79.102]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c28d740d-7a4f-4ca8-da1b-08d823d45812
+x-ms-traffictypediagnostic: HKAPR02MB4385:
+x-microsoft-antispam-prvs: <HKAPR02MB4385C26B2587556B5DE61CF8E0640@HKAPR02MB4385.apcprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: n6tGp/5/6D3K0bTl6ApuuK8Z10YSALTZyvPKqN2jA+7tehhNPNmvkGNuBGeEPGGVUnyywrgMnNSOsV5VFXDx1k1Qi5Tq60GH10gpFTIuMkgnXS4UAeF4DF5f2BnTAckHru8JLkw8985Q+4X6axfWS7/yayd3XUDuCfcH25pkUZr0yPansodHfTdVzAT4R/S+eHmsR8xx42/mcyuWIcu6y8SPBcQJb14xwA/MIvPp/AU9ibo9uD2qN/DpDIlg3koCA0oQtL3WDkiqmFdGF1rwvPV3xufyryN0mE9V0OoxT6ZUDKrRDOnca/2BZXxJFFk7LiLqfATRZ3chYGjPfp6btl6vYVbgdg8mtNNqs1Ervz+0AFZrSMD+B3fnrwgWidMB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HKAPR02MB4291.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(346002)(136003)(366004)(39860400002)(478600001)(8676002)(2906002)(66946007)(66476007)(66556008)(64756008)(66446008)(5660300002)(52536014)(6916009)(316002)(26005)(8936002)(6506007)(4326008)(7696005)(55016002)(54906003)(9686003)(186003)(85182001)(86362001)(71200400001)(83380400001)(76116006)(33656002)(11606004);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: hSZ8KIGtj6k2VMhXwc8AB5JDbpdNX7QtKmDQWjdlqhnEadt2c2b1bmuJhgZGj6+PN7fUAi5/1BnxaePGKEUYn2G47fnyispNFBog6a8fabcQjc7e/1Ou17ReR/pg4ftg0Y4Voi+GgenH/nxPM6cXde4AWRmfGOioC+SIBN+fuyau6RmdESSXS6Wh9B196U1YLW7+8NxfMzVuY8iKuZxkalWFoJmoOtOQssuEugzG/Q0JTZ5lvzXon3SQnOe3Jcyrq5TjzOnPJ0XA9W7tPVheEV8BSoX2xbn3HLGxQO83PIq/QF0+RUK/i9OeZiqaCdFeJo52rvUO4j/hmNpKeKwHjEgsZAb4cdBWDWfQHCbuYsiqLzU3ZGiqjzHWyBhBl0Uh984iLIU9BiynOexHdhkX5pndB4VRbw7HTw579poMDpK7lZyNv0KF0WeQlnln9416bYymjJJCecuB+sipCywmTeWYApUVDSn6xkx3748pkas=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200709065016eucas1p22ef816e6a2a6e47c008cabc5e06d6716
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200709065016eucas1p22ef816e6a2a6e47c008cabc5e06d6716
-References: <CGME20200709065016eucas1p22ef816e6a2a6e47c008cabc5e06d6716@eucas1p2.samsung.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HKAPR02MB4291.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c28d740d-7a4f-4ca8-da1b-08d823d45812
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 06:50:18.8473
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: G9LsaCuM30meNYxaupKmTOlXxHDu1SewmkwQc9HcjOF9ixgrYiPOxfVAiw3VnFTGNRuLeukBRIXemPeMRDIqGA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HKAPR02MB4385
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kthread_create_worker() helper to simplify the code. It uses
-the kthread worker API the right way. It will eventually allow
-to remove the FIXME in kthread_worker_fn() and add more consistency
-checks in the future.
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-v3:
-- rebased onto latest spi-next branch
----
- drivers/spi/spi.c       | 26 ++++++++++++--------------
- include/linux/spi/spi.h |  6 ++----
- 2 files changed, 14 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index d4ba723a30da..1d7bba434225 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1368,7 +1368,7 @@ static void __spi_pump_messages(struct spi_controller *ctlr, bool in_kthread)
- 
- 	/* If another context is idling the device then defer */
- 	if (ctlr->idling) {
--		kthread_queue_work(&ctlr->kworker, &ctlr->pump_messages);
-+		kthread_queue_work(ctlr->kworker, &ctlr->pump_messages);
- 		spin_unlock_irqrestore(&ctlr->queue_lock, flags);
- 		return;
- 	}
-@@ -1382,7 +1382,7 @@ static void __spi_pump_messages(struct spi_controller *ctlr, bool in_kthread)
- 
- 		/* Only do teardown in the thread */
- 		if (!in_kthread) {
--			kthread_queue_work(&ctlr->kworker,
-+			kthread_queue_work(ctlr->kworker,
- 					   &ctlr->pump_messages);
- 			spin_unlock_irqrestore(&ctlr->queue_lock, flags);
- 			return;
-@@ -1618,7 +1618,7 @@ static void spi_set_thread_rt(struct spi_controller *ctlr)
- 
- 	dev_info(&ctlr->dev,
- 		"will run message pump with realtime priority\n");
--	sched_setscheduler(ctlr->kworker_task, SCHED_FIFO, &param);
-+	sched_setscheduler(ctlr->kworker->task, SCHED_FIFO, &param);
- }
- 
- static int spi_init_queue(struct spi_controller *ctlr)
-@@ -1626,13 +1626,12 @@ static int spi_init_queue(struct spi_controller *ctlr)
- 	ctlr->running = false;
- 	ctlr->busy = false;
- 
--	kthread_init_worker(&ctlr->kworker);
--	ctlr->kworker_task = kthread_run(kthread_worker_fn, &ctlr->kworker,
--					 "%s", dev_name(&ctlr->dev));
--	if (IS_ERR(ctlr->kworker_task)) {
--		dev_err(&ctlr->dev, "failed to create message pump task\n");
--		return PTR_ERR(ctlr->kworker_task);
-+	ctlr->kworker = kthread_create_worker(0, dev_name(&ctlr->dev));
-+	if (IS_ERR(ctlr->kworker)) {
-+		dev_err(&ctlr->dev, "failed to create message pump kworker\n");
-+		return PTR_ERR(ctlr->kworker);
- 	}
-+
- 	kthread_init_work(&ctlr->pump_messages, spi_pump_messages);
- 
- 	/*
-@@ -1716,7 +1715,7 @@ void spi_finalize_current_message(struct spi_controller *ctlr)
- 	ctlr->cur_msg = NULL;
- 	ctlr->cur_msg_prepared = false;
- 	ctlr->fallback = false;
--	kthread_queue_work(&ctlr->kworker, &ctlr->pump_messages);
-+	kthread_queue_work(ctlr->kworker, &ctlr->pump_messages);
- 	spin_unlock_irqrestore(&ctlr->queue_lock, flags);
- 
- 	trace_spi_message_done(mesg);
-@@ -1742,7 +1741,7 @@ static int spi_start_queue(struct spi_controller *ctlr)
- 	ctlr->cur_msg = NULL;
- 	spin_unlock_irqrestore(&ctlr->queue_lock, flags);
- 
--	kthread_queue_work(&ctlr->kworker, &ctlr->pump_messages);
-+	kthread_queue_work(ctlr->kworker, &ctlr->pump_messages);
- 
- 	return 0;
- }
-@@ -1798,8 +1797,7 @@ static int spi_destroy_queue(struct spi_controller *ctlr)
- 		return ret;
- 	}
- 
--	kthread_flush_worker(&ctlr->kworker);
--	kthread_stop(ctlr->kworker_task);
-+	kthread_destroy_worker(ctlr->kworker);
- 
- 	return 0;
- }
-@@ -1822,7 +1820,7 @@ static int __spi_queued_transfer(struct spi_device *spi,
- 
- 	list_add_tail(&msg->queue, &ctlr->queue);
- 	if (!ctlr->busy && need_pump)
--		kthread_queue_work(&ctlr->kworker, &ctlr->pump_messages);
-+		kthread_queue_work(ctlr->kworker, &ctlr->pump_messages);
- 
- 	spin_unlock_irqrestore(&ctlr->queue_lock, flags);
- 	return 0;
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 0e67a9a3a1d3..5fcf5da13fdb 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -358,8 +358,7 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
-  * @cleanup: frees controller-specific state
-  * @can_dma: determine whether this controller supports DMA
-  * @queued: whether this controller is providing an internal message queue
-- * @kworker: thread struct for message pump
-- * @kworker_task: pointer to task for message pump kworker thread
-+ * @kworker: pointer to thread struct for message pump
-  * @pump_messages: work struct for scheduling work to the message pump
-  * @queue_lock: spinlock to syncronise access to message queue
-  * @queue: message queue
-@@ -593,8 +592,7 @@ struct spi_controller {
- 	 * Over time we expect SPI drivers to be phased over to this API.
- 	 */
- 	bool				queued;
--	struct kthread_worker		kworker;
--	struct task_struct		*kworker_task;
-+	struct kthread_worker		*kworker;
- 	struct kthread_work		pump_messages;
- 	spinlock_t			queue_lock;
- 	struct list_head		queue;
--- 
-2.17.1
-
+T24gV2VkLCA4IEp1bCAyMDIwIGF0IDEzOjAzLCDlva3mtakoUmljaGFyZCkgPHJpY2hhcmQucGVu
+Z0BvcHBvLmNvbT4gd3JvdGU6DQo+Pg0KPj4NCj4+IE9uIFR1ZSwgSnVsIDA3LCAyMDIwIGF0IDA3
+OjQ2OjA4QU0gLTA0MDAsIFBlbmcgSGFvIHdyb3RlOg0KPj4gPj4gSWYgcGx0X21heF9lbnRyaWVz
+IGlzIDAsIGEgd2FybmluZyBpcyB0cmlnZ2VyZWQuDQo+PiA+PiBXQVJOSU5HOiBDUFU6IDIwMCBQ
+SUQ6IDMwMDAgYXQgYXJjaC9hcm02NC9rZXJuZWwvbW9kdWxlLXBsdHMuYzo5NyBtb2R1bGVfZW1p
+dF9wbHRfZW50cnkrMHhhNC8weDE1MA0KPj4gPg0KPj4gPiBXaGljaCBrZXJuZWwgYXJlIHlvdSBz
+ZWVpbmcgdGhpcyB3aXRoPyBUaGVyZSBpcyBhIFBMVC1yZWxhdGVkIGNoYW5nZSBpbg0KPj4gPiBm
+b3ItbmV4dC9jb3JlLCBhbmQgSSdkIGxpa2UgdG8gcnVsZSBpZiBvdXQgaWYgcG9zc2libGUuDQo+
+PiA+DQo+PiA1LjYuMC1yYzMrDQo+PiA+PiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEhhbyA8cmljaGFy
+ZC5wZW5nQG9wcG8uY29tPg0KPj4gPj4gLS0tDQo+PiA+PiAgYXJjaC9hcm02NC9rZXJuZWwvbW9k
+dWxlLXBsdHMuYyB8IDMgKystDQo+PiA+PiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygr
+KSwgMSBkZWxldGlvbigtKQ0KPj4gPj4NCj4+ID4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2tl
+cm5lbC9tb2R1bGUtcGx0cy5jIGIvYXJjaC9hcm02NC9rZXJuZWwvbW9kdWxlLXBsdHMuYw0KPj4g
+Pj4gaW5kZXggNjViMDhhNzRhZWM2Li4xODY4YzlhYzEzZjIgMTAwNjQ0DQo+PiA+PiAtLS0gYS9h
+cmNoL2FybTY0L2tlcm5lbC9tb2R1bGUtcGx0cy5jDQo+PiA+PiArKysgYi9hcmNoL2FybTY0L2tl
+cm5lbC9tb2R1bGUtcGx0cy5jDQo+PiA+PiBAQCAtNzksNyArNzksOCBAQCB1NjQgbW9kdWxlX2Vt
+aXRfcGx0X2VudHJ5KHN0cnVjdCBtb2R1bGUgKm1vZCwgRWxmNjRfU2hkciAqc2VjaGRycywNCj4+
+ID4+ICAgICAgaW50IGkgPSBwbHRzZWMtPnBsdF9udW1fZW50cmllczsNCj4+ID4+ICAgICAgaW50
+IGogPSBpIC0gMTsNCj4+ID4+ICAgICAgdTY0IHZhbCA9IHN5bS0+c3RfdmFsdWUgKyByZWxhLT5y
+X2FkZGVuZDsNCj4+ID4+IC0NCj4+ID4+ICsgICAgaWYgKHBsdHNlYy0+cGx0X21heF9lbnRyaWVz
+ID09IDApDQo+PiA+PiArICAgICAgICAgICAgcmV0dXJuIDA7DQo+PiA+DQo+PiA+SG1tLCBidXQg
+aWYgdGhlcmUgYXJlbid0IGFueSBQTFRzIHRoZW4gaG93IGRvIHdlIGVuZCB1cCBoZXJlPw0KPj4g
+Pg0KPj4gV2UgYWxzbyByZXR1cm5lZCAwIHdoZW4gd2FybmluZyB3YXMgdHJpZ2dlcmVkLg0KPg0K
+PlRoYXQgZG9lc24ndCByZWFsbHkgYW5zd2VyIHRoZSBxdWVzdGlvbi4NCj4NCj5BcHBhcmVudGx5
+LCB5b3UgYXJlIGhpdHRpbmcgYSBSX0FBUkNINjRfSlVNUDI2IG9yIFJfQUFSQ0g2NF9DQUxMMjYN
+Cj5yZWxvY2F0aW9uIHRoYXQgb3BlcmF0ZXMgb24gYSBiIG9yIGJsIGluc3RydWN0aW9uIHRoYXQg
+aXMgbW9yZSB0aGFuDQo+MTI4IG1lZ2FieXRlcyBhd2F5IGZyb20gaXRzIHRhcmdldC4NCj4NCk15
+IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCBhIG1vZHVsZSB0aGF0IGNhbGxzIGZ1bmN0aW9ucyB0aGF0
+IGFyZSBub3QgcGFydCBvZiB0aGUgbW9kdWxlIHdpbGwgdXNlIFBMVC4NClBsdF9tYXhfZW50cmll
+cyA9MCBNYXkgb2NjdXIgaWYgYSBtb2R1bGUgZG9lcyBub3QgZGVwZW5kIG9uIG90aGVyIG1vZHVs
+ZSBmdW5jdGlvbnMuDQoNCj5JbiBtb2R1bGVfZnJvYl9hcmNoX3NlY3Rpb25zKCksIHdlIGNvdW50
+IGFsbCBzdWNoIHJlbG9jYXRpb25zIHRoYXQNCj5wb2ludCB0byBvdGhlciBzZWN0aW9ucywgYW5k
+IGFsbG9jYXRlIGEgUExUIHNsb3QgZm9yIGVhY2ggKGFuZCB1cGRhdGUNCj5wbHRfbWF4X2VudHJp
+ZXMpIGFjY29yZGluZ2x5LiBTbyB0aGlzIG1lYW5zIHRoYXQgdGhlIHJlbG9jYXRpb24gaW4NCj5x
+dWVzdGlvbiB3YXMgZGlzcmVnYXJkZWQsIGFuZCB0aGlzIGNvdWxkIGhhcHBlbiBmb3Igb25seSB0
+d28gcmVhc29uczoNCj4tIHRoZSBicmFuY2ggaW5zdHJ1Y3Rpb24gYW5kIGl0cyB0YXJnZXQgYXJl
+IGJvdGggaW4gdGhlIHNhbWUgc2VjdGlvbiwNCj5pbiB3aGljaCBjYXNlIHRoaXMgc2VjdGlvbiBp
+cyAqcmVhbGx5KiBsYXJnZSwNCj4tIENPTkZJR19SQU5ET01JWkVfQkFTRSBpcyBkaXNhYmxlZCwg
+YnV0IHlvdSBhcmUgc3RpbGwgZW5kaW5nIHVwIGluIGENCj5zaXR1YXRpb24gd2hlcmUgdGhlIG1v
+ZHVsZXMgYXJlIHJlYWxseSBmYXIgYXdheSBmcm9tIHRoZSBjb3JlIGtlcm5lbA0KPm9yIGZyb20g
+b3RoZXIgbW9kdWxlcy4NCj4NCj5EbyB5b3UgaGF2ZSBhIGxvdCBvZiBbbGFyZ2VdIG1vZHVsZXMg
+bG9hZGVkIHdoZW4gdGhpcyBoYXBwZW5zPw0KSSBkb27igJl0IHRoaW5rIEkgaGF2ZSBbbGFyZ2Vd
+IG1vZHVsZXMuICBJJ2xsIHRyYWNlIHdoaWNoIG1vZHVsZSBjYXVzZWQgdGhpcyB3YXJuaW5nLg0K
+VGhhbmtzLg0K
