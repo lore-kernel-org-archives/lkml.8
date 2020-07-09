@@ -2,573 +2,318 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D976C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F12572078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594256315;
-	bh=9pGEHC+W0kWUgpDr7BUZxA1GQr5JE0rIcb2rPYwk808=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=L+SCCjqTDEhy2nKtBCuJSoFGI/Ij8zhdjOSQs+wLJwhoHCOnB/6/ANm1AWblep/fJ
-	 HUotBniEIdi2f8u3Xc6kPXMSbCG/Ca8OyQlgdCpDlbhlyEXHqyhC3gqQ4vKrw0UBBz
-	 uoj1fVpPO10DskYYtCqAkABfAd/UDPlOd3WghP+0=
+	by mail.kernel.org (Postfix) with ESMTP id DE81C20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 00:59:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="ET/M19TQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgGIA6d (ORCPT
+        id S1726281AbgGIA7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 20:58:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgGIA6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 20:58:33 -0400
-Received: from embeddedor (unknown [201.162.240.161])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C884020772;
-        Thu,  9 Jul 2020 00:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594256311;
-        bh=9pGEHC+W0kWUgpDr7BUZxA1GQr5JE0rIcb2rPYwk808=;
-        h=Date:From:To:Cc:Subject:From;
-        b=vzTvCcT0vxtv/bbknj5kvfiDSx9YpT1ct10A5E/DZXjkNOP52KNHvorxn0fO46O6Z
-         yGY50sWr2gHwKoXe4n05UUdvb8xOfaBKABMhkTd90dlk8H/RokGiRX2QWb9ZwgRvAg
-         Mmru6mxaT1Je2trBssr4tj1Ab9C3NaYFybhy24fQ=
-Date:   Wed, 8 Jul 2020 20:03:59 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        Peter Rosin <peda@axentia.se>,
-        Oder Chiou <oder_chiou@realtek.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] ASoC: codecs: Use fallthrough pseudo-keyword
-Message-ID: <20200709010359.GA18971@embeddedor>
+        Wed, 8 Jul 2020 20:59:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgGIA7h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 20:59:37 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82772C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 17:59:37 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id u8so224117qvj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 17:59:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=Lwy/TUmMO5Z/1GlX8cJ31apZHSAxwS7d7SzRutu1MJ0=;
+        b=ET/M19TQjjEkmefFj2CMQwprybD/BLQRr97CSRxnIaNeqxpWggWTX79xfT98AbQksA
+         Itn1U3XblGbyN5j01FOIE4COxzij3/ecEXBQ28/B3+CkSLP6156pYvXrcd9CPuCCrBf8
+         n0mDyma6G/7AKmGDpNpG26QB2tYJpdGGDyjw5QnUSGIHsgk0KzHNRGSYODCLhHp9Botr
+         CYYMkVsktfwHvdQP20FXID0+qLH/uu6vuahRLeJp0cwqJ9cUy/pOJwRPdRx1rm0mrVcs
+         Q3bAcXL4kZRewbwjGVA2WDWRgVSfv/FkqzbwSk7U4je+rx/wZK5QqNKnHREnvbRWQbyC
+         SCSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=Lwy/TUmMO5Z/1GlX8cJ31apZHSAxwS7d7SzRutu1MJ0=;
+        b=PSEhW0Sj7IxCwcXO/hIWM5X3wyKpIB8C1Q1TZw5mtnuI7giQQoS2dIywDUEYNlFTep
+         ePTMbqGYwbWY4zfBdM/zSU4DNzckFpTNMReeoFVAOwzr6a6rzG5bnACqokq3kIG41HgL
+         JkyS9rOP2sry/bv0CkSFuqPMUDb73YY9QJPn1hzgOah0ZGvIoZUXM6VcWcE28kxMuYTg
+         YdqMoOcs81lAcqFqWh6WxjJFhyS7HNkehnk1W1wlxCIO9er2qP7bG0NXzUT44zrHzznQ
+         L9RavBCHUbsC1cl6Uv5S5B/eUFBmJVBHmUhhFTK7KbJ9svRcVw+OiE+1QDMr+dE0P7E7
+         zxUw==
+X-Gm-Message-State: AOAM5319K1hFtKILwDQLepaSRDh35hPSH4dmnzd0jHoieLpVXhZCdhiK
+        YZEKqPPJGW6U/rlTLm/AXsO5jw==
+X-Google-Smtp-Source: ABdhPJy0dhosaYd4+tncZ23pF3TfazXsuH+2tE7yu4vVoTb7EieibAGJOCdi09ESkIvxyCpS/aQFVA==
+X-Received: by 2002:ad4:57c7:: with SMTP id y7mr61409102qvx.124.1594256376656;
+        Wed, 08 Jul 2020 17:59:36 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id g17sm1593649qto.73.2020.07.08.17.59.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 17:59:35 -0700 (PDT)
+Message-ID: <f485930bb8d8a5506e9ffd6804d08945920fce61.camel@ndufresne.ca>
+Subject: Re: [PATCH 1/3] media: uapi: h264: update reference lists
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devel@driverdev.osuosl.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 08 Jul 2020 20:59:34 -0400
+In-Reply-To: <3602665.eG79kSnugm@jernej-laptop>
+References: <20200604185745.23568-1-jernej.skrabec@siol.net>
+         <20200604185745.23568-2-jernej.skrabec@siol.net>
+         <CAAEAJfAx4=RGJBVPccVFNYxNUqom7tkQD=J9oMfqajGxn6k+Zg@mail.gmail.com>
+         <3602665.eG79kSnugm@jernej-laptop>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1].
+Le mercredi 08 juillet 2020 à 17:57 +0200, Jernej Škrabec a écrit :
+> Hi!
+> 
+> Dne sreda, 08. julij 2020 ob 15:28:52 CEST je Ezequiel Garcia napisal(a):
+> > Hello Jernej,
+> > 
+> > I'd like to post a new H264 uAPI cleanup series soon,
+> > would you mind resending this, or otherwise do you
+> > mind if I include this patch in the series?
+> 
+> I don't mind at all. Currently my focus was elsewhere...
+> 
+> > See below for a tiny comment.
+> > 
+> > On Thu, 4 Jun 2020 at 15:55, Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+> > > When dealing with with interlaced frames, reference lists must tell if
+> > > each particular reference is meant for top or bottom field. This info
+> > > is currently not provided at all in the H264 related controls.
+> > > 
+> > > Make reference lists hold a structure which will also hold flags along
+> > > index into DPB array. Flags will tell if reference is meant for top or
+> > > bottom field.
+> > > 
+> > > Currently the only user of these lists is Cedrus which is just compile
+> > > fixed here. Actual usage of newly introduced flags will come in
+> > > following commit.
+> > > 
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > > 
+> > >  .../media/v4l/ext-ctrls-codec.rst             | 40 ++++++++++++++++++-
+> > >  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 +--
+> > >  include/media/h264-ctrls.h                    | 12 +++++-
+> > >  3 files changed, 51 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst index
+> > > d0d506a444b1..6c36d298db20 100644
+> > > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > @@ -1843,10 +1843,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type
+> > > -> 
+> > >      * - __u32
+> > >      
+> > >        - ``slice_group_change_cycle``
+> > >        -
+> > > 
+> > > -    * - __u8
+> > > +    * - struct :c:type:`v4l2_h264_reference`
+> > > 
+> > >        - ``ref_pic_list0[32]``
+> > >        - Reference picture list after applying the per-slice modifications
+> > > 
+> > > -    * - __u8
+> > > +    * - struct :c:type:`v4l2_h264_reference`
+> > > 
+> > >        - ``ref_pic_list1[32]``
+> > >        - Reference picture list after applying the per-slice modifications
+> > >      
+> > >      * - __u32
+> > > 
+> > > @@ -1926,6 +1926,42 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type
+> > > -
+> > > 
+> > >        - ``chroma_offset[32][2]``
+> > >        -
+> > > 
+> > > +``Picture Reference``
+> > > +
+> > > +.. c:type:: v4l2_h264_reference
+> > > +
+> > > +.. cssclass:: longtable
+> > > +
+> > > +.. flat-table:: struct v4l2_h264_reference
+> > > +    :header-rows:  0
+> > > +    :stub-columns: 0
+> > > +    :widths:       1 1 2
+> > > +
+> > > +    * - __u16
+> > > +      - ``flags``
+> > > +      - See :ref:`Picture Reference Flags <h264_reference_flags>`
+> > > +    * - __u8
+> > > +      - ``index``
+> > > +      -
+> > > +
+> > > +.. _h264_reference_flags:
+> > > +
+> > > +``Picture Reference Flags``
+> > > +
+> > > +.. cssclass:: longtable
+> > > +
+> > > +.. flat-table::
+> > > +    :header-rows:  0
+> > > +    :stub-columns: 0
+> > > +    :widths:       1 1 2
+> > > +
+> > > +    * - ``V4L2_H264_REFERENCE_FLAG_TOP_FIELD``
+> > > +      - 0x00000001
+> > > +      -
+> > > +    * - ``V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD``
+> > > +      - 0x00000002
+> > > +      -
+> > > +
+> > > 
+> > >  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS (struct)``
+> > >  
+> > >      Specifies the decode parameters (as extracted from the bitstream)
+> > >      for the associated H264 slice data. This includes the necessary
+> > > 
+> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
+> > > 54ee2aa423e2..cce527bbdf86 100644
+> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > @@ -166,8 +166,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx
+> > > *ctx,> 
+> > >  static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+> > >  
+> > >                                    struct cedrus_run *run,
+> > > 
+> > > -                                  const u8 *ref_list, u8 num_ref,
+> > > -                                  enum cedrus_h264_sram_off sram)
+> > > +                                  const struct v4l2_h264_reference
+> > > *ref_list, +                                  u8 num_ref, enum
+> > > cedrus_h264_sram_off sram)> 
+> > >  {
+> > >  
+> > >         const struct v4l2_ctrl_h264_decode_params *decode =
+> > >         run->h264.decode_params; struct vb2_queue *cap_q;
+> > > 
+> > > @@ -188,7 +188,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx
+> > > *ctx,> 
+> > >                 int buf_idx;
+> > >                 u8 dpb_idx;
+> > > 
+> > > -               dpb_idx = ref_list[i];
+> > > +               dpb_idx = ref_list[i].index;
+> > > 
+> > >                 dpb = &decode->dpb[dpb_idx];
+> > >                 
+> > >                 if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> > > 
+> > > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> > > index 080fd1293c42..9b1cbc9bc38e 100644
+> > > --- a/include/media/h264-ctrls.h
+> > > +++ b/include/media/h264-ctrls.h
+> > > @@ -140,6 +140,14 @@ struct v4l2_h264_pred_weight_table {
+> > > 
+> > >  #define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED    0x04
+> > >  #define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH             0x08
+> > > 
+> > > +#define V4L2_H264_REFERENCE_FLAG_TOP_FIELD             0x01
+> > > +#define V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD          0x02
+> > > +
+> > > +struct v4l2_h264_reference {
+> > > +       __u8 flags;
+> > > +       __u8 index;
+> > > +};
+> > > +
+> > > 
+> > >  struct v4l2_ctrl_h264_slice_params {
+> > >  
+> > >         /* Size in bytes, including header */
+> > >         __u32 size;
+> > > 
+> > > @@ -182,8 +190,8 @@ struct v4l2_ctrl_h264_slice_params {
+> > > 
+> > >          * Entries on each list are indices into
+> > >          * v4l2_ctrl_h264_decode_params.dpb[].
+> > >          */
+> > > 
+> > > -       __u8 ref_pic_list0[32];
+> > > -       __u8 ref_pic_list1[32];
+> > > +       struct v4l2_h264_reference ref_pic_list0[32];
+> > > +       struct v4l2_h264_reference ref_pic_list1[32];
+> > 
+> > Could we use a macro for "32" here? Something like:
+> > 
+> > #define V4L2_H264_REF_PIC_LIST_LEN (V4L2_H264_NUM_DPB_ENTRIES * 2).
+> > 
+> > Does it make sense to add a comment as well?
+> > 
+> > I was thinking something along these lines:
+> > 
+> > """
+> > Pictures in the DPB can be a frame, a complementary field pair or a
+> > single field.
+> 
+> To be honest, I don't know if user has a free choice to select same or 
+> different destination (capture) buffer for another field. I never tested it and 
+> I'm not sure how to test it with ffmpeg. HW deinterlacing cores on Allwinner 
+> SoCs support only interleaved fields as a input, that's why I never though 
+> about separate fields.
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+When setting the format, one will choose V4L2_FIELD_INTERLACED_TB/BT.
+Most driver will support that, but if not, they can update field in the
+structure. Interlaced being very common, I think it's fine to only
+support that, but the drive must enforce this field value.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- sound/soc/codecs/ab8500-codec.c       | 2 +-
- sound/soc/codecs/adau1761.c           | 4 ++--
- sound/soc/codecs/adau17x1.c           | 4 ++--
- sound/soc/codecs/adav80x.c            | 2 +-
- sound/soc/codecs/ak4613.c             | 6 +++---
- sound/soc/codecs/es8328.c             | 4 ++--
- sound/soc/codecs/max9860.c            | 2 +-
- sound/soc/codecs/msm8916-wcd-analog.c | 2 +-
- sound/soc/codecs/rt274.c              | 4 ++--
- sound/soc/codecs/rt5640.c             | 4 ++--
- sound/soc/codecs/rt5677.c             | 2 +-
- sound/soc/codecs/sta32x.c             | 2 +-
- sound/soc/codecs/sta350.c             | 2 +-
- sound/soc/codecs/tas2552.c            | 2 +-
- sound/soc/codecs/tlv320aic23.c        | 2 +-
- sound/soc/codecs/tlv320aic31xx.c      | 3 ++-
- sound/soc/codecs/tpa6130a2.c          | 2 +-
- sound/soc/codecs/wm8753.c             | 6 ++++--
- sound/soc/codecs/wm8903.c             | 2 +-
- sound/soc/codecs/wm8904.c             | 4 ++--
- sound/soc/codecs/wm8955.c             | 2 +-
- sound/soc/codecs/wm8960.c             | 2 +-
- sound/soc/codecs/wm8961.c             | 2 +-
- sound/soc/codecs/wm8962.c             | 2 +-
- sound/soc/codecs/wm8993.c             | 4 ++--
- sound/soc/codecs/wm8994.c             | 4 ++--
- sound/soc/codecs/wm8995.c             | 2 +-
- sound/soc/codecs/wm8996.c             | 2 +-
- sound/soc/codecs/wm9081.c             | 2 +-
- 29 files changed, 43 insertions(+), 40 deletions(-)
+But I know the Xilinx ZynqMP will do ALTERNATE instead, which would be
+each field get decoded in it's own buffer. That, to be honest, I
+haven't though about. The tricky part is for H264, since it means 1
+slice may populate two capture buffers and I don't know if we can
+support this right now.
 
-diff --git a/sound/soc/codecs/ab8500-codec.c b/sound/soc/codecs/ab8500-codec.c
-index ea92007d1ef5..31a8c4162d20 100644
---- a/sound/soc/codecs/ab8500-codec.c
-+++ b/sound/soc/codecs/ab8500-codec.c
-@@ -2126,7 +2126,7 @@ static int ab8500_codec_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 		dev_err(dai->component->dev,
- 			"%s: ERROR: The device is either a master or a slave.\n",
- 			__func__);
--		/* fall through */
-+		fallthrough;
- 	default:
- 		dev_err(dai->component->dev,
- 			"%s: ERROR: Unsupporter master mask 0x%x\n",
-diff --git a/sound/soc/codecs/adau1761.c b/sound/soc/codecs/adau1761.c
-index 5ca9b744b7d8..fb006fc81653 100644
---- a/sound/soc/codecs/adau1761.c
-+++ b/sound/soc/codecs/adau1761.c
-@@ -642,7 +642,7 @@ static int adau1761_setup_digmic_jackdetect(struct snd_soc_component *component)
- 			ARRAY_SIZE(adau1761_jack_detect_controls));
- 		if (ret)
- 			return ret;
--		/* fall through */
-+		fallthrough;
- 	case ADAU1761_DIGMIC_JACKDET_PIN_MODE_NONE:
- 		ret = snd_soc_dapm_add_routes(dapm, adau1761_no_dmic_routes,
- 			ARRAY_SIZE(adau1761_no_dmic_routes));
-@@ -693,7 +693,7 @@ static int adau1761_setup_headphone_mode(struct snd_soc_component *component)
- 			ADAU1761_PLAY_MONO_OUTPUT_VOL_UNMUTE,
- 			ADAU1761_PLAY_MONO_OUTPUT_VOL_MODE_HP |
- 			ADAU1761_PLAY_MONO_OUTPUT_VOL_UNMUTE);
--		/* fallthrough */
-+		fallthrough;
- 	case ADAU1761_OUTPUT_MODE_HEADPHONE:
- 		regmap_update_bits(adau->regmap, ADAU1761_PLAY_HP_RIGHT_VOL,
- 			ADAU1761_PLAY_HP_RIGHT_VOL_MODE_HP,
-diff --git a/sound/soc/codecs/adau17x1.c b/sound/soc/codecs/adau17x1.c
-index b6352de077b5..30e072c80ac1 100644
---- a/sound/soc/codecs/adau17x1.c
-+++ b/sound/soc/codecs/adau17x1.c
-@@ -385,7 +385,7 @@ static int adau17x1_set_dai_sysclk(struct snd_soc_dai *dai,
- 	case ADAU17X1_CLK_SRC_PLL_AUTO:
- 		if (!adau->mclk)
- 			return -EINVAL;
--		/* Fall-through */
-+		fallthrough;
- 	case ADAU17X1_CLK_SRC_PLL:
- 		is_pll = true;
- 		break;
-@@ -469,7 +469,7 @@ static int adau17x1_hw_params(struct snd_pcm_substream *substream,
- 		ret = adau17x1_auto_pll(dai, params);
- 		if (ret)
- 			return ret;
--		/* Fall-through */
-+		fallthrough;
- 	case ADAU17X1_CLK_SRC_PLL:
- 		freq = adau->pll_freq;
- 		break;
-diff --git a/sound/soc/codecs/adav80x.c b/sound/soc/codecs/adav80x.c
-index c4b9722c3d8f..4fd99280d7db 100644
---- a/sound/soc/codecs/adav80x.c
-+++ b/sound/soc/codecs/adav80x.c
-@@ -647,7 +647,7 @@ static int adav80x_set_pll(struct snd_soc_component *component, int pll_id,
- 			pll_ctrl1 |= ADAV80X_PLL_CTRL1_PLLDIV;
- 			break;
- 		}
--		/* fall through */
-+		fallthrough;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/sound/soc/codecs/ak4613.c b/sound/soc/codecs/ak4613.c
-index d4d2f0d9231a..8d663e8d64c4 100644
---- a/sound/soc/codecs/ak4613.c
-+++ b/sound/soc/codecs/ak4613.c
-@@ -451,13 +451,13 @@ static int ak4613_set_bias_level(struct snd_soc_component *component,
- 	switch (level) {
- 	case SND_SOC_BIAS_ON:
- 		mgmt1 |= RSTN;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_BIAS_PREPARE:
- 		mgmt1 |= PMADC | PMDAC;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_BIAS_STANDBY:
- 		mgmt1 |= PMVR;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_BIAS_OFF:
- 	default:
- 		break;
-diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
-index fdf64c29f563..757e740459fb 100644
---- a/sound/soc/codecs/es8328.c
-+++ b/sound/soc/codecs/es8328.c
-@@ -562,14 +562,14 @@ static int es8328_set_sysclk(struct snd_soc_dai *codec_dai,
- 		break;
- 	case 22579200:
- 		mclkdiv2 = 1;
--		/* fall through */
-+		fallthrough;
- 	case 11289600:
- 		es8328->sysclk_constraints = &constraints_11289;
- 		es8328->mclk_ratios = ratios_11289;
- 		break;
- 	case 24576000:
- 		mclkdiv2 = 1;
--		/* fall through */
-+		fallthrough;
- 	case 12288000:
- 		es8328->sysclk_constraints = &constraints_12288;
- 		es8328->mclk_ratios = ratios_12288;
-diff --git a/sound/soc/codecs/max9860.c b/sound/soc/codecs/max9860.c
-index 8be636fe6552..d5925c42b4b5 100644
---- a/sound/soc/codecs/max9860.c
-+++ b/sound/soc/codecs/max9860.c
-@@ -334,7 +334,7 @@ static int max9860_hw_params(struct snd_pcm_substream *substream,
- 			return -EINVAL;
- 		}
- 		ifc1a ^= MAX9860_WCI;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_DAIFMT_IB_NF:
- 		ifc1a ^= MAX9860_DBCI;
- 		ifc1b ^= MAX9860_ABCI;
-diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
-index 30da00a3e789..4428c62e25cf 100644
---- a/sound/soc/codecs/msm8916-wcd-analog.c
-+++ b/sound/soc/codecs/msm8916-wcd-analog.c
-@@ -608,7 +608,7 @@ static int pm8916_wcd_analog_enable_adc(struct snd_soc_dapm_widget *w,
- 		case CDC_A_TX_2_EN:
- 			snd_soc_component_update_bits(component, CDC_A_MICB_1_CTL,
- 					    MICB_1_CTL_CFILT_REF_SEL_MASK, 0);
--			/* fall through */
-+			fallthrough;
- 		case CDC_A_TX_3_EN:
- 			snd_soc_component_update_bits(component, CDC_D_CDC_CONN_TX2_CTL,
- 					    CONN_TX2_SERIAL_TX2_MUX,
-diff --git a/sound/soc/codecs/rt274.c b/sound/soc/codecs/rt274.c
-index cbb5e176d11a..923b8f919189 100644
---- a/sound/soc/codecs/rt274.c
-+++ b/sound/soc/codecs/rt274.c
-@@ -760,7 +760,7 @@ static int rt274_set_dai_pll(struct snd_soc_dai *dai, int pll_id, int source,
- 		break;
- 	default:
- 		dev_warn(component->dev, "invalid pll source, use BCLK\n");
--		/* fall through */
-+		fallthrough;
- 	case RT274_PLL2_S_BCLK:
- 		snd_soc_component_update_bits(component, RT274_PLL2_CTRL,
- 				RT274_PLL2_SRC_MASK, RT274_PLL2_SRC_BCLK);
-@@ -788,7 +788,7 @@ static int rt274_set_dai_pll(struct snd_soc_dai *dai, int pll_id, int source,
- 			break;
- 		default:
- 			dev_warn(component->dev, "invalid freq_in, assume 4.8M\n");
--			/* fall through */
-+			fallthrough;
- 		case 100:
- 			snd_soc_component_write(component, 0x7a, 0xaab6);
- 			snd_soc_component_write(component, 0x7b, 0x0301);
-diff --git a/sound/soc/codecs/rt5640.c b/sound/soc/codecs/rt5640.c
-index 3b2bb62a2136..1414ad15d01c 100644
---- a/sound/soc/codecs/rt5640.c
-+++ b/sound/soc/codecs/rt5640.c
-@@ -1662,7 +1662,7 @@ static int get_sdp_info(struct snd_soc_component *component, int dai_id)
- 			break;
- 		case RT5640_IF_113:
- 			ret |= RT5640_U_IF1;
--			/* fall through */
-+			fallthrough;
- 		case RT5640_IF_312:
- 		case RT5640_IF_213:
- 			ret |= RT5640_U_IF2;
-@@ -1678,7 +1678,7 @@ static int get_sdp_info(struct snd_soc_component *component, int dai_id)
- 			break;
- 		case RT5640_IF_223:
- 			ret |= RT5640_U_IF1;
--			/* fall through */
-+			fallthrough;
- 		case RT5640_IF_123:
- 		case RT5640_IF_321:
- 			ret |= RT5640_U_IF2;
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index e9a051a50ab2..9e449d35fc28 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -4609,7 +4609,7 @@ static int rt5677_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
- 		break;
- 	case 25:
- 		slot_width_25 = 0x8080;
--		/* fall through */
-+		fallthrough;
- 	case 24:
- 		val |= (2 << 8);
- 		break;
-diff --git a/sound/soc/codecs/sta32x.c b/sound/soc/codecs/sta32x.c
-index e8d2ca4b4603..86528b930de8 100644
---- a/sound/soc/codecs/sta32x.c
-+++ b/sound/soc/codecs/sta32x.c
-@@ -697,7 +697,7 @@ static int sta32x_hw_params(struct snd_pcm_substream *substream,
- 	switch (params_width(params)) {
- 	case 24:
- 		dev_dbg(component->dev, "24bit\n");
--		/* fall through */
-+		fallthrough;
- 	case 32:
- 		dev_dbg(component->dev, "24bit or 32bit\n");
- 		switch (sta32x->format) {
-diff --git a/sound/soc/codecs/sta350.c b/sound/soc/codecs/sta350.c
-index ccb7100b6644..75d3b0618ab5 100644
---- a/sound/soc/codecs/sta350.c
-+++ b/sound/soc/codecs/sta350.c
-@@ -726,7 +726,7 @@ static int sta350_hw_params(struct snd_pcm_substream *substream,
- 	switch (params_width(params)) {
- 	case 24:
- 		dev_dbg(component->dev, "24bit\n");
--		/* fall through */
-+		fallthrough;
- 	case 32:
- 		dev_dbg(component->dev, "24bit or 32bit\n");
- 		switch (sta350->format) {
-diff --git a/sound/soc/codecs/tas2552.c b/sound/soc/codecs/tas2552.c
-index 529c0fb93f9b..d9d239d4256e 100644
---- a/sound/soc/codecs/tas2552.c
-+++ b/sound/soc/codecs/tas2552.c
-@@ -407,7 +407,7 @@ static int tas2552_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
- 			clk_id = TAS2552_PLL_CLKIN_BCLK;
- 			freq = 0;
- 		}
--		/* fall through */
-+		fallthrough;
- 	case TAS2552_PLL_CLKIN_BCLK:
- 	case TAS2552_PLL_CLKIN_1_8_FIXED:
- 		mask = TAS2552_PLL_SRC_MASK;
-diff --git a/sound/soc/codecs/tlv320aic23.c b/sound/soc/codecs/tlv320aic23.c
-index d22f75e8fb6a..7d5b6dbf6273 100644
---- a/sound/soc/codecs/tlv320aic23.c
-+++ b/sound/soc/codecs/tlv320aic23.c
-@@ -449,7 +449,7 @@ static int tlv320aic23_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 		break;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		iface_reg |= TLV320AIC23_LRP_ON;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_DAIFMT_DSP_B:
- 		iface_reg |= TLV320AIC23_FOR_DSP;
- 		break;
-diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index 31daa60695bd..6694e56cfe1f 100644
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -1080,7 +1080,8 @@ static int aic31xx_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	case SND_SOC_DAIFMT_I2S:
- 		break;
- 	case SND_SOC_DAIFMT_DSP_A:
--		dsp_a_val = 0x1; /* fall through */
-+		dsp_a_val = 0x1;
-+		fallthrough;
- 	case SND_SOC_DAIFMT_DSP_B:
- 		/*
- 		 * NOTE: This CODEC samples on the falling edge of BCLK in
-diff --git a/sound/soc/codecs/tpa6130a2.c b/sound/soc/codecs/tpa6130a2.c
-index 0b1f1a5e2a2d..e2d7ae615c52 100644
---- a/sound/soc/codecs/tpa6130a2.c
-+++ b/sound/soc/codecs/tpa6130a2.c
-@@ -261,7 +261,7 @@ static int tpa6130a2_probe(struct i2c_client *client,
- 	default:
- 		dev_warn(dev, "Unknown TPA model (%d). Assuming 6130A2\n",
- 			 data->id);
--		/* fall through */
-+		fallthrough;
- 	case TPA6130A2:
- 		regulator = "Vdd";
- 		break;
-diff --git a/sound/soc/codecs/wm8753.c b/sound/soc/codecs/wm8753.c
-index a1b6765c8f23..f3c31121d100 100644
---- a/sound/soc/codecs/wm8753.c
-+++ b/sound/soc/codecs/wm8753.c
-@@ -966,7 +966,8 @@ static int wm8753_pcm_set_dai_fmt(struct snd_soc_component *component,
- 	case SND_SOC_DAIFMT_CBS_CFS:
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFM:
--		ioctl |= 0x2; /* fall through */
-+		ioctl |= 0x2;
-+		fallthrough;
- 	case SND_SOC_DAIFMT_CBM_CFS:
- 		voice |= 0x0040;
- 		break;
-@@ -1091,7 +1092,8 @@ static int wm8753_i2s_set_dai_fmt(struct snd_soc_component *component,
- 	case SND_SOC_DAIFMT_CBS_CFS:
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFM:
--		ioctl |= 0x1; /* fall through */
-+		ioctl |= 0x1;
-+		fallthrough;
- 	case SND_SOC_DAIFMT_CBM_CFS:
- 		hifi |= 0x0040;
- 		break;
-diff --git a/sound/soc/codecs/wm8903.c b/sound/soc/codecs/wm8903.c
-index 5de663d61ba6..a52cb8fee82f 100644
---- a/sound/soc/codecs/wm8903.c
-+++ b/sound/soc/codecs/wm8903.c
-@@ -1927,7 +1927,7 @@ static int wm8903_set_pdata_irq_trigger(struct i2c_client *i2c,
- 		* We assume the controller imposes no restrictions,
- 		* so we are able to select active-high
- 		*/
--		/* Fall-through */
-+		fallthrough;
- 	case IRQ_TYPE_LEVEL_HIGH:
- 		pdata->irq_active_low = false;
- 		break;
-diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
-index 3f0e49c51fd5..d54257097d56 100644
---- a/sound/soc/codecs/wm8904.c
-+++ b/sound/soc/codecs/wm8904.c
-@@ -1436,7 +1436,7 @@ static int wm8904_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_DSP_B:
- 		aif1 |= 0x3 | WM8904_AIF_LRCLK_INV;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		aif1 |= 0x3;
- 		break;
-@@ -1824,7 +1824,7 @@ static int wm8904_set_sysclk(struct snd_soc_dai *dai, int clk_id,
- 			break;
- 		}
- 		clk_id = WM8904_CLK_MCLK;
--		/* fallthrough */
-+		fallthrough;
- 
- 	case WM8904_CLK_MCLK:
- 		priv->sysclk_src = clk_id;
-diff --git a/sound/soc/codecs/wm8955.c b/sound/soc/codecs/wm8955.c
-index 73c192f58382..0630dcb66c6f 100644
---- a/sound/soc/codecs/wm8955.c
-+++ b/sound/soc/codecs/wm8955.c
-@@ -683,7 +683,7 @@ static int wm8955_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_DSP_B:
- 		aif |= WM8955_LRP;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		aif |= 0x3;
- 		break;
-diff --git a/sound/soc/codecs/wm8960.c b/sound/soc/codecs/wm8960.c
-index 9dca6e28032a..e1ab2be51ee7 100644
---- a/sound/soc/codecs/wm8960.c
-+++ b/sound/soc/codecs/wm8960.c
-@@ -836,7 +836,7 @@ static int wm8960_hw_params(struct snd_pcm_substream *substream,
- 			iface |= 0x000c;
- 			break;
- 		}
--		/* fall through */
-+		fallthrough;
- 	default:
- 		dev_err(component->dev, "unsupported width %d\n",
- 			params_width(params));
-diff --git a/sound/soc/codecs/wm8961.c b/sound/soc/codecs/wm8961.c
-index d11a38a0b283..e62a0a8ac297 100644
---- a/sound/soc/codecs/wm8961.c
-+++ b/sound/soc/codecs/wm8961.c
-@@ -650,7 +650,7 @@ static int wm8961_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 
- 	case SND_SOC_DAIFMT_DSP_B:
- 		aif |= WM8961_LRP;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		aif |= 3;
- 		switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index 6ef022295f55..df8cdc71357d 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2645,7 +2645,7 @@ static int wm8962_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_DSP_B:
- 		aif0 |= WM8962_LRCLK_INV | 3;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		aif0 |= 3;
- 
-diff --git a/sound/soc/codecs/wm8993.c b/sound/soc/codecs/wm8993.c
-index 207c0211caa9..8c9f82efcceb 100644
---- a/sound/soc/codecs/wm8993.c
-+++ b/sound/soc/codecs/wm8993.c
-@@ -1073,7 +1073,7 @@ static int wm8993_set_sysclk(struct snd_soc_dai *codec_dai,
- 	switch (clk_id) {
- 	case WM8993_SYSCLK_MCLK:
- 		wm8993->mclk_rate = freq;
--		/* fall through */
-+		fallthrough;
- 	case WM8993_SYSCLK_FLL:
- 		wm8993->sysclk_source = clk_id;
- 		break;
-@@ -1121,7 +1121,7 @@ static int wm8993_set_dai_fmt(struct snd_soc_dai *dai,
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_DSP_B:
- 		aif1 |= WM8993_AIF_LRCLK_INV;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		aif1 |= 0x18;
- 		break;
-diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
-index 75242ec47406..903f8e81cd89 100644
---- a/sound/soc/codecs/wm8994.c
-+++ b/sound/soc/codecs/wm8994.c
-@@ -853,7 +853,7 @@ static void vmid_reference(struct snd_soc_component *component)
- 		switch (wm8994->vmid_mode) {
- 		default:
- 			WARN_ON(NULL == "Invalid VMID mode");
--			/* fall through */
-+			fallthrough;
- 		case WM8994_VMID_NORMAL:
- 			/* Startup bias, VMID ramp & buffer */
- 			snd_soc_component_update_bits(component, WM8994_ANTIPOP_2,
-@@ -2776,7 +2776,7 @@ static int wm8994_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	case SND_SOC_DAIFMT_DSP_B:
- 		aif1 |= WM8994_AIF1_LRCLK_INV;
- 		lrclk |= WM8958_AIF1_LRCLK_INV;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		aif1 |= 0x18;
- 		break;
-diff --git a/sound/soc/codecs/wm8995.c b/sound/soc/codecs/wm8995.c
-index 276ffa84cc31..ec752819cb2c 100644
---- a/sound/soc/codecs/wm8995.c
-+++ b/sound/soc/codecs/wm8995.c
-@@ -1462,7 +1462,7 @@ static int wm8995_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_DSP_B:
- 		aif |= WM8995_AIF1_LRCLK_INV;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		aif |= (0x3 << WM8995_AIF1_FMT_SHIFT);
- 		break;
-diff --git a/sound/soc/codecs/wm8996.c b/sound/soc/codecs/wm8996.c
-index 1d3b3f4e66b3..d303ef7571e9 100644
---- a/sound/soc/codecs/wm8996.c
-+++ b/sound/soc/codecs/wm8996.c
-@@ -1854,7 +1854,7 @@ static int wm8996_set_sysclk(struct snd_soc_dai *dai,
- 	case 24576000:
- 		ratediv = WM8996_SYSCLK_DIV;
- 		wm8996->sysclk /= 2;
--		/* fall through */
-+		fallthrough;
- 	case 11289600:
- 	case 12288000:
- 		snd_soc_component_update_bits(component, WM8996_AIF_RATE,
-diff --git a/sound/soc/codecs/wm9081.c b/sound/soc/codecs/wm9081.c
-index be5c9c2b0162..b5465e486fb5 100644
---- a/sound/soc/codecs/wm9081.c
-+++ b/sound/soc/codecs/wm9081.c
-@@ -929,7 +929,7 @@ static int wm9081_set_dai_fmt(struct snd_soc_dai *dai,
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_DSP_B:
- 		aif2 |= WM9081_AIF_LRCLK_INV;
--		/* fall through */
-+		fallthrough;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		aif2 |= 0x3;
- 		break;
--- 
-2.27.0
+For now I'd say we should just ensure that whatever userspace ask, we
+enforce V4L2_FIELD_INTERLACED_TB/BT appropriately. That is likely not
+complete, just look at how interlacing is signal in the bitstream.
+
+> 
+> Best regards,
+> Jernej
+> 
+> > Therefore, reference pictures lists need twice as much entries, so it
+> > can reference
+> > either field of a field pair.
+> > """
+> > 
+> > While it doesn't replace proper H264 specification reading,
+> > it would add some clarity.
+> > 
+> > Thanks,
+> > Ezequiel
+> 
+> 
+> 
 
