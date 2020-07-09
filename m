@@ -2,205 +2,245 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67173C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF8772076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3918720672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:01:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="jDoXx873";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="IintuHGS"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="C4zOU/O3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgGIU7j (ORCPT
+        id S1726324AbgGIVBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:59:39 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:17520 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726193AbgGIU7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:59:39 -0400
-Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069Kqfm4003628;
-        Thu, 9 Jul 2020 16:58:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=cYIa1YP9vY7FM8/3P7OYKUaihRU3mUcPGWF0yR/Ul3o=;
- b=jDoXx873AOh3FIZ/8cNHCp6+MgyMLU5t45NNNHVB8P95aBb8K6+ZbG6NGWrJ6nOLDjZ8
- WqaoH+DNjRgl1Z0+uZRjQRaklrI3/oeANkrNTw+8I7TbyTjX8kcc/wNsdRyX15MzTjHt
- xrIFWrLUcmXWSuEjdqhz1wF92R09sP9Y9zPMs61TaN1migD2yOP0bXjmz2628xkAA7DK
- XpzIfgyvMUPiumjeSel5JJ+LNPG8RTpbOk9f0r0rahqPIDbgeb/W6WiBCnxSm7oJl+vt
- 0aKzY931WyuL08cdDDw0Irl7hYbgFYv9kPeizs6tRyWdPMI6M2HJSY0wF9WcpMDZe86b 4A== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 325k13mhqs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 16:58:22 -0400
-Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069KrP5J043427;
-        Thu, 9 Jul 2020 16:58:22 -0400
-Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2053.outbound.protection.outlook.com [104.47.38.53])
-        by mx0a-00154901.pphosted.com with ESMTP id 326anr01s0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Jul 2020 16:58:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LqIFmBshMO1SadOwtgWMx01fnTISILmd0m9q0hTLS0JKQRTeH4lhCeQPjUybkmoy+Hw7EcD8Bl3vbb0WlzwSJY545cnZYxDWKMGshG1uHBO3s12LOJEUdSVdPiGY9dJmvzTKAG41zvV+orqvH3IULaN0vNcl2vC0JRBTi2xkH3CTDCQ7YpuTQdSk6sE+FTZyqxdfISsEhgoeUXSGYcxyeYY2jU4uHe2ECMh+lHniPs2+3iLJZ+jB4pIy6JgRkeFJtMkkYhk2lVLk4RBziOgwVI7CbYw/7/0WIAowXLWtWYpaKvrqSgq2J6tNdlD7d2LqHQnIs/CSNczbyocZjaT2jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cYIa1YP9vY7FM8/3P7OYKUaihRU3mUcPGWF0yR/Ul3o=;
- b=ZVhc27qWjHSk1FfY0fkFu0hM9Xu/O+eJ5l10ukuv8XaMg6C2Hof0O71jjYrN0WYb+r5SNgn8BUPMgMihZ8V9EEHovRgX5WL0xOf9xTEWTtJjEtyfrQiuVdT6ii+GUTB5COtntARRhhVNS53BAbktSykF1UPyClRlzgQtUXYmAXTZTJ+UPug8bKjixVnI9x/t7mqx4y0BS57QPd0gHF4XNPb52bkbiPmLKKUEbAGZJH3oL9MmVn3A8Alxb9Tf+Fw76x+ApyutMGsA0xbKeXrruuPsWEqK3+S49P1Il8pD7ni3EN/KoQ0fV8hCk6FNtV+45uyr33pAeCt75fekV8U7lA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
- s=selector1-Dell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cYIa1YP9vY7FM8/3P7OYKUaihRU3mUcPGWF0yR/Ul3o=;
- b=IintuHGSJ2ZMqcyBrmu7mX0n8LyVQOfMdEK9FGfrR/V11w6mpOnc+I4+HuQrOFsDgU1sTRBKlSKz4GBdBha06uRA7FIn0wIIOXcdrD6sOyB/TSc+N5npHhHZyIk2umkaOdiK8wy7poV9CQOlnilRE6wSiI7ZnOf2H/G+ApIff7Y=
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
- by DM6PR19MB2570.namprd19.prod.outlook.com (2603:10b6:5:186::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Thu, 9 Jul
- 2020 20:58:19 +0000
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::f1c7:5bf4:a3b:ff40]) by DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::f1c7:5bf4:a3b:ff40%6]) with mapi id 15.20.3153.029; Thu, 9 Jul 2020
- 20:58:19 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
-To:     Koba Ko <koba.ko@canonical.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Kellner <ckellner@redhat.com>
-Subject: RE: [Issue]platform/x86: iommu: System can't shutdown because iommu
- driver keeps checking the status of DMA_GSTS_TES
-Thread-Topic: [Issue]platform/x86: iommu: System can't shutdown because iommu
- driver keeps checking the status of DMA_GSTS_TES
-Thread-Index: AQE6LD2bQSo7R/55QN/bxAqAAD8XOKo4DH2w
-Date:   Thu, 9 Jul 2020 20:58:19 +0000
-Message-ID: <DM6PR19MB2636E5A28FB655C2F657FDF8FA640@DM6PR19MB2636.namprd19.prod.outlook.com>
-References: <CAJB-X+VcHvYWngtMVHw5f_XaqA4i4T61yt=h7YvuD=eo3y7Rog@mail.gmail.com>
-In-Reply-To: <CAJB-X+VcHvYWngtMVHw5f_XaqA4i4T61yt=h7YvuD=eo3y7Rog@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-07-09T20:57:29.6395961Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=e4a9b2ff-26ab-4323-87ae-923884b2b7be;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: canonical.com; dkim=none (message not signed)
- header.d=none;canonical.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [76.251.167.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0472b241-1689-410f-ef0c-08d8244acf3f
-x-ms-traffictypediagnostic: DM6PR19MB2570:
-x-microsoft-antispam-prvs: <DM6PR19MB2570AD4B640074C9B0C6CF6BFA640@DM6PR19MB2570.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mLUJgU505p6dnGaiul5cGI3Z/mlPcdlTBVPDMvNudheAVjDXqgLbHmTcZpAr070rtT9ooe6MymOfKOaonWnapBpkVdNGheUTxxRtcEHPNj/HMD9nyldhEbAqXKH6PmYx7Zqzs5wxthfHInxkaY+5fJ5aRAOGLagHVo0MnwJxlDnsxxJDdTxdPPauUneuZXpu4Cqoma8oORSnbhjArp7sY1c4sA6v2445l9/pk5rwkJfY9ifSAycyrEpLQhFTFhNiYL+bxIrfKsWixbM6+a8Kr5/PUE5EQPX5QmKOwNawIrYV6kQnZXKyLyqZB1ukvCKIXEH2t2zBQAcGJrqgMt8WbJSuFQmjAV9fVA7hKdeMeB2zfYW45urWK97NJ/Gh/1fMdtQG6P0HtjG0R7HUCuNm5Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(346002)(136003)(366004)(396003)(110136005)(66946007)(4326008)(9686003)(66476007)(55016002)(66446008)(76116006)(64756008)(66556008)(966005)(86362001)(83380400001)(478600001)(7696005)(33656002)(8676002)(53546011)(5660300002)(6506007)(8936002)(26005)(186003)(54906003)(786003)(316002)(71200400001)(2906002)(52536014);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: knrXPM7xG4YWvfHK986PBmzmPfNjKGHpXbHbqEH2Mcwae2gn2wnx8WjGs+HfklR/lhHOZq9B3De0BTPnC7Du7zztXb4qZACU5QLSNt/dBQlpL69ZsALRG5eMGKc5a2rgtzbfD+53F/SvQCMhHQcozzTBaw6dxk8dex8kKi31VCuZ7xJUyAFFQt0ehLkZUp06/XBqdh2C11CnkjhIYKb8scsRCx5TaPKXf2VyURyy34Upa0ADU6cokNUHpJIbJdb82UyqBRaA5Ud9Dek8fomyvezEZj9Rw2TrthBoUNTuIMuT2/SBayOW89SuFQJGk9fopczXA6yHyhyE3Va2QyJkx5c9i+WbueV84dCB0EDqksxyRpbGKrtoHkVi3MXLzV/T07zxYBmVY/dRB1c08kjkNnEYUrI3eGv3EtUT0op0sHBqbzQuwGCliIuOH3S45Hb2uy5zmxtwtC/drEUiuR5DCllNeSBZvTmh1ibtOQFJJgcWpsleP+brz7TzBvYv7EfM
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jul 2020 17:01:19 -0400
+Received: from cmta17.telus.net ([209.171.16.90]:53813 "EHLO cmta17.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgGIVBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 17:01:18 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id tdfMjniArYgvrtdfNjUXWn; Thu, 09 Jul 2020 15:01:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1594328475; bh=DO1Bu4NVVoKXFJHl4WRTu15YNf8zO2Urudde2JxqiC8=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=C4zOU/O3yx44XMRv35z8PHjCaLmnD5r7pb88Sto4Ohe6KkEz+xdWC0tEfu59EuTZ4
+         +diYDwHvSuLSOZCytzGQxWM0mF9jSqYtcoks+x+nmXiwEEAQ2cEYrNlMknVAp//RGw
+         O0ovoppc+NTt5gxX33LQvy8TD/HqBdSFsfpc6pr8bZpZjZd6sKyqIwi5YfG5x2ta/u
+         mMG9in4vpqPNdtc2fj4w6l4KXR0G2t7AeI6wQs5ZGCGi4ojlHK6MLN0fXIADAB3wIs
+         /HZE1e7nXJswRBAiFfn8/a6zj7L1BrACM5Ilawc27Gvbw+F8rKm2qAtz93n8eK5CjA
+         gx/hcxJyquWJg==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=MIQeZ/Rl c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=QyXUC8HyAAAA:8
+ a=zMdRSeC2V0WUCyk-5DIA:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19 a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+References: <2016232.ihCVsphvri@kreacher> <2988949.NgUrjYMkJj@kreacher>
+In-Reply-To: <2988949.NgUrjYMkJj@kreacher>
+Subject: RE: [PATCH 2/2] cpufreq: intel_pstate: Use passive mode by default without HWP
+Date:   Thu, 9 Jul 2020 14:01:11 -0700
+Message-ID: <000801d65634$14f0ecb0$3ed2c610$@net>
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0472b241-1689-410f-ef0c-08d8244acf3f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 20:58:19.5029
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IrBj2azgjtT76QmuX06vbOllZaN9M1GFPv4x+L9gyY4dusLp0hsA8bugTbsrPuh+no+UxLgQ7szy99jHY1kQICLEkVSlJCIrPVXO2A03soM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR19MB2570
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_11:2020-07-09,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 bulkscore=0 suspectscore=0 adultscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1011 mlxlogscore=999
- phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007090142
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- malwarescore=0 mlxlogscore=999 spamscore=0 suspectscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007090142
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdYFAJargBggJ0TwR7qfhutpuszfMhRKzmYA
+X-CMAE-Envelope: MS4wfFH9BkYFuVxjO56y8+N3Ib/kkgigvoFuwtSboGqrttZaQE488zlSPJzRQlPGcCGGuMCEUEQKYGj6fkyXedT/ukZxD254yCs1DavUvyWAy2689+fu9Lgj
+ m3xHlM7CKmH1BAylD5dLGXco8HrI9ri/eQd1b1zPmAjeIOqOUAJU7hO+iORuwlvSjdcPLFCtRjklPfgXSlzm94m+FdJatqbEcKqXD3WsKrBpI/DjJoDGZY+M
+ bD8FK+YAn8mU4dat+RRr0zNVN6hgJco1iyMN5G2SZT1n24wpJe1+0kMDowY0EzTPPHUAbCrb5DCzsr+QM889C5yOuQMMYcQKgtPPv1MKgaLmY6EIYDHwuL6C
+ ubMbIIqg5MmPsCX05i0anDYokXSPiA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: iommu <iommu-bounces@lists.linux-foundation.org> On Behalf Of Koba =
-Ko
-> Sent: Sunday, June 14, 2020 10:47 PM
-> To: David Woodhouse; Lu Baolu; Joerg Roedel
-> Cc: iommu@lists.linux-foundation.org; Kai Heng Feng; Linux Kernel Mailing
-> List
-> Subject: [Issue]platform/x86: iommu: System can't shutdown because iommu
-> driver keeps checking the status of DMA_GSTS_TES
->=20
-> hi All,
-> I have a machine and there's only intel gpu.
-> the secureboot and vt-d is enabled in BIOS.
-> On the Ubuntu desktop, I do s2idle first and restart the machine.
-> The machine can't restart successfully, so I need to press the power
-> button to shutdown.
-> I tried  each of the following and the issue can't be triggered.
-> 1. disable secure boot in BIOS.
+Hi Rafael,
 
-Just to explain why this happens, on many of Dell's systems VT-d is only en=
-abled
-when secure boot is enabled.
+As you may or may not recall, I am attempting to untangle
+and separate multiple compounding issues around the
+intel_pstate driver and HWP (or not).
 
-> 2. intel_iommu=3Doff.
-> 3. intel_iomm=3Digfx_off.
-> 4. nomodeset
-> 5. i915.modeset=3D0.
->=20
-> After I investigate further, find inte_iommu keeps checking the status
-> of DMA_GSTS_TES.
-> During the procedure of restart, the driver would disable iommu translati=
-on
-> and
-> check the status of DMA_GSTS_TES until status of DMA_GSTS_TES is 0.
->=20
-> If you need more information, I can provide it.
->=20
-> Thanks
-> Koba Ko
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+Until everything is figured out, I am using the following rules:
 
-This is reported on TGL pre-production system, but actually same symptom is=
- also
-happening in ICL production systems such as XPS 7390 2-in-1 and XPS 9300.
+. never use x86_energy_perf_policy.
+. For HWP disabled: never change from active to passive or via versa, but rather do it via boot.
+. after boot always check and reset the various power limit log bits that are set.
+. never compile the kernel (well, until after any tests), which will set those bits again.
+. never run prime95 high heat torture test, which will set those bits again.
+. try to never do anything else that will set those bits again.
 
-Details for the ICL issue are available here:
-https://bugzilla.kernel.org/show_bug.cgi?id=3D206571
+On 2020.03.28 05:58 Rafael J. Wysocki wrote:
+> 
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> 
+> After recent changes allowing scale-invariant utilization to be
+> used on x86, the schedutil governor on top of intel_pstate in the
+> passive mode should be on par with (or better than) the active mode
+> "powersave" algorithm of intel_pstate on systems in which
+> hardware-managed P-states (HWP) are not used, so it should not be
+> necessary to use the internal scaling algorithm in those cases.
+> 
+> Accordingly, modify intel_pstate to start in the passive mode by
+> default if the processor at hand does not support HWP of if the driver
+> is requested to avoid using HWP through the kernel command line.
+> 
+> Among other things, that will allow utilization clamps and the
+> support for RT/DL tasks in the schedutil governor to be utilized on
+> systems in which intel_pstate is used.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  Documentation/admin-guide/pm/intel_pstate.rst | 32 ++++++++++++++++-----------
+>  drivers/cpufreq/intel_pstate.c                |  3 ++-
+>  2 files changed, 21 insertions(+), 14 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-
+> guide/pm/intel_pstate.rst
+> index ad392f3aee06..39d80bc29ccd 100644
+> --- a/Documentation/admin-guide/pm/intel_pstate.rst
+> +++ b/Documentation/admin-guide/pm/intel_pstate.rst
+> @@ -62,9 +62,10 @@ on the capabilities of the processor.
+>  Active Mode
+>  -----------
+> 
+> -This is the default operation mode of ``intel_pstate``.  If it works in this
+> -mode, the ``scaling_driver`` policy attribute in ``sysfs`` for all ``CPUFreq``
+> -policies contains the string "intel_pstate".
+> +This is the default operation mode of ``intel_pstate`` for processors with
+> +hardware-managed P-states (HWP) support.  If it works in this mode, the
+> +``scaling_driver`` policy attribute in ``sysfs`` for all ``CPUFreq`` policies
+> +contains the string "intel_pstate".
+> 
+>  In this mode the driver bypasses the scaling governors layer of ``CPUFreq`` and
+>  provides its own scaling algorithms for P-state selection.  Those algorithms
+> @@ -138,12 +139,13 @@ internal P-state selection logic to be less performance-focused.
+>  Active Mode Without HWP
+>  ~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> -This is the default operation mode for processors that do not support the HWP
+> -feature.  It also is used by default with the ``intel_pstate=no_hwp`` argument
+> -in the kernel command line.  However, in this mode ``intel_pstate`` may refuse
+> -to work with the given processor if it does not recognize it.  [Note that
+> -``intel_pstate`` will never refuse to work with any processor with the HWP
+> -feature enabled.]
+> +This operation mode is optional for processors that do not support the HWP
+> +feature or when the ``intel_pstate=no_hwp`` argument is passed to the kernel in
+> +the command line.  The active mode is used in those cases if the
+> +``intel_pstate=active`` argument is passed to the kernel in the command line.
 
-A user did bisect it back to commit 6c3a44ed3c553c324845744f30bcd1d3b07d61f=
-d in
-5.5.  Glancing through the code and comparing the suspend case, I would ask=
- is it
-just a case of missing a flush at shutdown (IE iommu_flush_all)?
+???
+I can not see anywhere in the code where the kernel command line argument
+"intel_pstate=active" is dealt with.
+
+> +In this mode ``intel_pstate`` may refuse to work with processors that are not
+> +recognized by it.  [Note that ``intel_pstate`` will never refuse to work with
+> +any processor with the HWP feature enabled.]
+> 
+>  In this mode ``intel_pstate`` registers utilization update callbacks with the
+>  CPU scheduler in order to run a P-state selection algorithm, either
+> @@ -188,10 +190,14 @@ is not set.
+>  Passive Mode
+>  ------------
+> 
+> -This mode is used if the ``intel_pstate=passive`` argument is passed to the
+> -kernel in the command line (it implies the ``intel_pstate=no_hwp`` setting too).
+> -Like in the active mode without HWP support, in this mode ``intel_pstate`` may
+> -refuse to work with the given processor if it does not recognize it.
+> +This is the default operation mode of ``intel_pstate`` for processors without
+> +hardware-managed P-states (HWP) support.  It is always used if the
+> +``intel_pstate=passive`` argument is passed to the kernel in the command line
+> +regardless of whether or not the given processor supports HWP.  [Note that the
+> +``intel_pstate=no_hwp`` setting implies ``intel_pstate=passive`` if it is used
+> +without ``intel_pstate=active``.]
+
+??? as above. I can not see where intel_pstate=active is dealt with in 
+the code.
+
+> Like in the active mode without HWP support,
+> +in this mode ``intel_pstate`` may refuse to work with processors that are not
+> +recognized by it.
+> 
+>  If the driver works in this mode, the ``scaling_driver`` policy attribute in
+>  ``sysfs`` for all ``CPUFreq`` policies contains the string "intel_cpufreq".
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> index d2297839374d..b24a5c5ec4f9 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -2769,6 +2769,8 @@ static int __init intel_pstate_init(void)
+>  		pr_info("Invalid MSRs\n");
+>  		return -ENODEV;
+>  	}
+> +	/* Without HWP start in the passive mode. */
+> +	default_driver = &intel_cpufreq;
+> 
+>  hwp_cpu_matched:
+>  	/*
+> @@ -2814,7 +2816,6 @@ static int __init intel_pstate_setup(char *str)
+>  	if (!strcmp(str, "disable")) {
+>  		no_load = 1;
+>  	} else if (!strcmp(str, "passive")) {
+> -		pr_info("Passive mode enabled\n");
+>  		default_driver = &intel_cpufreq;
+>  		no_hwp = 1;
+>  	}
+> --
+> 2.16.4
+
+Example 1: i5-9600k (hwp capable) (kernel 5.8-rc4):
+
+Grub:
+GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 consoleblank=450 intel_pstate=active intel_pstate=no_hwp cpuidle_sysfs_switch
+cpuidle.governor=teo"
+
+/proc/cmdline:
+BOOT_IMAGE=/boot/vmlinuz-5.8.0-rc4-stock root=UUID=0ac356c1-caa9-4c2e-8229-4408bd998dbd ro ipv6.disable=1 consoleblank=450
+intel_pstate=active intel_pstate=no_hwp cpuidle_sysfs_switch cpuidle.governor=teo
+
+Result:
+
+doug@s18:~$ grep . /sys/devices/system/cpu/cpu*/cpufreq/scaling_driver
+/sys/devices/system/cpu/cpu0/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu1/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu2/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu3/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu4/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu5/cpufreq/scaling_driver:intel_cpufreq
+
+Example 2: i7-2600k (does not have hwp) (kernel 5.8-rc1)
+
+Grub:
+GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 consoleblank=300 intel_pstate=active cpuidle_sysfs_switch cpuidle.governor=teo"
+
+/proc/cmdline:
+BOOT_IMAGE=/boot/vmlinuz-5.8.0-rc1-stock root=UUID=bcbc624b-892b-46ca-9e9e-102daf644170 ro ipv6.disable=1 consoleblank=300
+intel_pstate=active cpuidle_sysfs_switch cpuidle.governor=teo
+
+Result:
+
+doug@s15:~$ grep . /sys/devices/system/cpu/cpu*/cpufreq/scaling_driver
+/sys/devices/system/cpu/cpu0/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu1/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu2/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu3/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu4/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu5/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu6/cpufreq/scaling_driver:intel_cpufreq
+/sys/devices/system/cpu/cpu7/cpufreq/scaling_driver:intel_cpufreq
+
+... Doug
+
 
