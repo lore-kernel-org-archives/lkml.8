@@ -2,117 +2,83 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D97C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 067A6206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Mh/D2sGV"
+	by mail.kernel.org (Postfix) with ESMTP id 107B4206A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594282938;
+	bh=sWUPCkqH0F+VWeWXkIpSdFyGoORAipbqnBL7/L00KRI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=peafXEAJ8lUHakQBgrY1KEZvfnifF7IXysxYL6JKxAjovXgxylA7N1T9uRa2ZZC/w
+	 NkHGYZMbjFF8/r2K0iJaqcxqI/DRjMCGXqzxHPhVDipWkxZB1J5jSkZ63+t5Ro7/xB
+	 WCNTEmMycya0dpihy5QIxJY5nxQSBtiNyHHOVPAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgGIIVz (ORCPT
+        id S1726387AbgGIIWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:21:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbgGIIVx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:21:53 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E653AC061A0B;
-        Thu,  9 Jul 2020 01:21:52 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 9 Jul 2020 04:22:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbgGIIWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 04:22:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2Tfk6mp2z9sQt;
-        Thu,  9 Jul 2020 18:21:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594282911;
-        bh=6sOJKfDwmE7Jn5G6OLei4DX+ptf+cUQ41BI/efYMaIA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Mh/D2sGVXeCV5N+8AITVBW0Uz0iNns7KjhlqqW9qaruLbnYw0GxHsCBPbtT6V5wDP
-         zEgB3pLtbay3nnSVxbtaCdOn4SSRinnyfkFQUkFuttLSkZWea73XFOWduvfy5QbsiJ
-         4olU1u4W2+xaokbO3dyK6vNI8rC04O62/YEy3XKJvsrtpNSpRLlD5JUhpo+w6xOzVJ
-         yo0cdX8J0hdc9pI5bpXce/8lY9ghXtDKix9/0r90PBHyxJDwqlzWWqr1q63yPsHiL1
-         THlz1HpXrOy024ALO4KvqlGhGQ/Rbx8PDrTWFzwybk1N8287aNLpF/RjBKgRHmBIRd
-         b/WDVwYDzQ/eQ==
-Date:   Thu, 9 Jul 2020 18:21:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Zi Yan <ziy@nvidia.com>
-Subject: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20200709182150.7b49e5e8@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA962073A;
+        Thu,  9 Jul 2020 08:22:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594282936;
+        bh=sWUPCkqH0F+VWeWXkIpSdFyGoORAipbqnBL7/L00KRI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lYcTEJoMoMqtKh5vR+jIJ5hb8KNVidfBziGOvLOHAIDbTZForqDLuDalCGCGaoBT/
+         OEVZJIkaySQC8gihrEgIxq0hfCrpbD+GgCklkQX31yNUCyfia6JsB3XFrV+C3ma92i
+         wpJM6qpxtugoTybI2It+NsuPnkfM36QdumpcWCXs=
+Date:   Thu, 9 Jul 2020 10:22:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Len Brown <len.brown@intel.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] genpd: Fix up terminology with parent/child
+Message-ID: <20200709082222.GE13487@kroah.com>
+References: <202007081629.0840B4CB78@keescook>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/oPePH06xgxjaR/xhTtaHRel";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202007081629.0840B4CB78@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/oPePH06xgxjaR/xhTtaHRel
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 08, 2020 at 04:32:13PM -0700, Kees Cook wrote:
+> The genpd infrastructure uses the terms master/slave, but such uses have
+> no external exposures (not even in Documentation/driver-api/pm/*) and are
+> not mandated by nor associated with any external specifications. Change
+> the language used through-out to parent/child.
+> 
+> There was one possible exception in the debugfs node
+> "pm_genpd/pm_genpd_summary" but its path has no hits outside of the
+> kernel itself when performing a code search[1], and it seems even this
+> single usage has been non-functional since it was introduced due to a
+> typo in the Python ("apend" instead of correct "append"). Fix the typo
+> while we're at it.
+> 
+> [1] https://codesearch.debian.net/
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Hi all,
-
-[Also reported by Randy Dunlap.]
-
-After merging the akpm-current tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
-
-mm/migrate.c: In function 'migrate_pages':
-mm/migrate.c:1528:19: error: 'THP_MIGRATION_SUCCESS' undeclared (first use =
-in this function); did you mean 'PGMIGRATE_SUCCESS'?
- 1528 |   count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
-      |                   ^~~~~~~~~~~~~~~~~~~~~
-      |                   PGMIGRATE_SUCCESS
-mm/migrate.c:1528:19: note: each undeclared identifier is reported only onc=
-e for each function it appears in
-mm/migrate.c:1530:19: error: 'THP_MIGRATION_FAILURE' undeclared (first use =
-in this function); did you mean 'SWP_MIGRATION_WRITE'?
- 1530 |   count_vm_events(THP_MIGRATION_FAILURE, nr_thp_failed);
-      |                   ^~~~~~~~~~~~~~~~~~~~~
-      |                   SWP_MIGRATION_WRITE
-mm/migrate.c:1532:19: error: 'THP_MIGRATION_SPLIT' undeclared (first use in=
- this function); did you mean 'SWP_MIGRATION_WRITE'?
- 1532 |   count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
-      |                   ^~~~~~~~~~~~~~~~~~~
-      |                   SWP_MIGRATION_WRITE
-
-Caused by commit
-
-  f85bb1e35327 ("mm/vmstat: add events for THP migration without split")
-
-I have reverted that commit (and its followup fix) for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/oPePH06xgxjaR/xhTtaHRel
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8G054ACgkQAVBC80lX
-0GwVLQf/cGAtV7AheHUa9iOA7qFUbRuujsdMvbSeVRMTjILn3FASLq6lsUIN6597
-HyfaK/0Xmyx1FG+9PrcVzA++mDmz5ZKfzvP5ym+TVO1FENvkuSw1s/9i/I1Z3gDX
-DIuPsSCe2dlHAna8EqFKvhyR4wTwphGUg/tNbqPjz54FkLr2MwOqNb/AxsSbqq6+
-+94/FFVNl/hsSQuaAui7zDl7dbdCzLbGt1N3le8mY+tlGv8RQfjBNrvL1sGk5S3U
-Ht/9vgLGfkJ7gtzN/vl3kHXMuyaiYVV4QBKeCzAKuJ3mfWAAilrQBW63u0dkZS35
-OuzS61+SiaAjiFnVAIO1AoqIx2gA7Q==
-=dEXq
------END PGP SIGNATURE-----
-
---Sig_/oPePH06xgxjaR/xhTtaHRel--
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
