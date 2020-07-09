@@ -2,133 +2,96 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ADDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6652C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 869F9206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:38:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AyxM2Hq4"
+	by mail.kernel.org (Postfix) with ESMTP id 9D25A20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594291172;
+	bh=doH4/ienxKWo60sc7CSLY3f/jEyMqok61EP5wH9E/6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jm/7QUXQy+QTMwizM5CecH/wX7Ey5mJGXDKjAD1trNOCxr/l1HF/oyAqTo/r0a5Jf
+	 fnW5VXGIvxxteBiK8Zk2oM5RPpdB8yUyeacerCuEbpxCqemBaR8KtnOLV3XyxZ+uPJ
+	 GOHO8IQaHdzsvkqsVMpOd7lDMpTWldNyUv1fqOp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgGIKia (ORCPT
+        id S1726744AbgGIKjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgGIKia (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:38:30 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB83C061A0B;
-        Thu,  9 Jul 2020 03:38:29 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id y13so854228lfe.9;
-        Thu, 09 Jul 2020 03:38:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b3nvtrFoAaXSkUPmIflmEsQDIojlyJCetyOU5B6Jdkg=;
-        b=AyxM2Hq4isSQgbRSa96E0ZX8J8YHfxYDufGkRFsRULapTaNBLKd7Y4LAd+Bp1rwap5
-         KAYWi72BHe47/GdliDuMBlZNXQu4cHrACIbjX1xBefZ4PQp52W5TR+m+yKbKXZ6XpFlc
-         PGO4yx7gkZITrIudBkMnTGalsgr34guYn2h/z8rMeUBbOFJHHj6y0YF9D7NLHyjhJeVO
-         t1a8cH09ectOXb9XMy24snbB98PRwqnOSCQMbqlVJY8/1R51ULQG/dL4Nub0Sh/Hbonm
-         noYG+JZvCVv5U7lHhd5H5KQGefXecrJX0YkGWWeHqloJK8LqFlEEA2wFO+tbpu9McP1h
-         +ekA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b3nvtrFoAaXSkUPmIflmEsQDIojlyJCetyOU5B6Jdkg=;
-        b=EBiWuuDJ8GtZpk4BD0BYpXY9nCpwWNJtDClUhGvpQ/eRi+7GOVsQwRpQCEdCMwQtn0
-         Lu1a8e/dYd41/RcLx2AJm2fk8C91TDBUPwBnAR172ZlXXepeAm130Innwn6Ek58092AK
-         tsELTtwZpsKDNDOgmd8C1zmi7Vsw71zuB2dXGdezg/1IThk/nLvei2ubF7l63qnEOSWq
-         23TrjMxVs0asYUWMm9nTnrOD2+h+rozfK30R2N3ODv8f7qxb/rMGEpxowfOr+/zBvJfb
-         m7lZ8U4slhcIWOQi/pOgxcrJyrEztwko0keLiHct6MDoRNVLLGac5VmUDjJeRivdFeR+
-         ybOg==
-X-Gm-Message-State: AOAM5337o0iMf0AH7rmIBWf03OId+rJyP3EFRmiEuL8nKA4h13YFkE4z
-        9r2iVoc+8thuaarUQL2CseaZGYif
-X-Google-Smtp-Source: ABdhPJxST9mVM+8Ql63IDWlaUT39N2nUOtf0lOm6EvnbbfgEPInr6qwSWYX1MW0vNetzORgAXD0ycw==
-X-Received: by 2002:a05:6512:52a:: with SMTP id o10mr39253739lfc.137.1594291108065;
-        Thu, 09 Jul 2020 03:38:28 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id s12sm659627ljd.116.2020.07.09.03.38.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 03:38:27 -0700 (PDT)
-Subject: Re: [PATCH v3 3/6] gpio: max77620: Don't set of_node
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200708202355.28507-1-digetx@gmail.com>
- <20200708202355.28507-4-digetx@gmail.com>
- <CAHp75VejftNuSqdYvd1YE1SdRON6=mQ_iD2dEr4K9D8YGgeRBQ@mail.gmail.com>
- <675c4691-d372-4fe1-d515-c86fdba2f588@gmail.com>
- <CAHp75Vd89QpwaGvkpzG+pxnLd8S2guPCARLW5xPwhxXL8ZRfFw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ff7985a4-58be-b466-62c2-abce9ae1c0f0@gmail.com>
-Date:   Thu, 9 Jul 2020 13:38:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 9 Jul 2020 06:39:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726323AbgGIKjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:39:31 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B89C206DF;
+        Thu,  9 Jul 2020 10:39:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594291170;
+        bh=doH4/ienxKWo60sc7CSLY3f/jEyMqok61EP5wH9E/6g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bYSy0rVzEnjYRPhhtZL3iWjYIjNe909qVX5/Kx3qxoG3tY0rGf0qm/Cn1GRrBwWiP
+         a0t0uLd7xf5rRq7mkCkM40/yJyFGU1cgYluOFIzM25uXDXRznaNQmdgzBPpx7Lr8bv
+         eTVMn+yKwJQ6O9h4+e0aCc0rQLGZT0+w7DVfotzg=
+Date:   Thu, 9 Jul 2020 11:39:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Peng Fan <fanpeng@loongson.cn>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Re: linux-next: build warning after merge of the spi tree
+Message-ID: <20200709103925.GB4960@sirena.org.uk>
+References: <20200709141054.1b65be9d@canb.auug.org.au>
+ <31ee871f.3cd.173320cfdfe.Coremail.fanpeng@loongson.cn>
+ <7376c15b.48e.173328e36ab.Coremail.fanpeng@loongson.cn>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vd89QpwaGvkpzG+pxnLd8S2guPCARLW5xPwhxXL8ZRfFw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="R3G7APHDIzY6R/pk"
+Content-Disposition: inline
+In-Reply-To: <7376c15b.48e.173328e36ab.Coremail.fanpeng@loongson.cn>
+X-Cookie: You will be married within a year.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.07.2020 12:07, Andy Shevchenko пишет:
-> On Thu, Jul 9, 2020 at 12:44 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->> 08.07.2020 23:57, Andy Shevchenko пишет:
->>> On Wednesday, July 8, 2020, Dmitry Osipenko <digetx@gmail.com
->>> <mailto:digetx@gmail.com>> wrote:
-> 
-> ...
-> 
->>> I gave a second look and I think my suggestion is wrong. Here is an
->>> interesting propagation of the parent device node to its grand son,
->>> leaving son’s one untouched. Original code has intentions to do that way.
->>
->> The [1] says that gpio_chip.parent should point at the "device providing
->> the GPIOs".
-> 
-> Yes, physical device I believe.
-> 
->> That's the pdev->dev.parent in the case of this driver.
->> MAX77620 is an MFD PMIC device that has virtual sub-devices like GPIO
->> controller, PINCTRL and RTC. The MFD is the parent device that provides
->> the GPIOs [2].
->>
->> [1]
->> https://elixir.bootlin.com/linux/v5.8-rc3/source/include/linux/gpio/driver.h#L276
->>
->> [2]
->> https://elixir.bootlin.com/linux/v5.8-rc3/source/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi#L48
->>
->> I think the old code was wrong and this patch is correct, please correct
->> me if I'm missing something.
-> 
-> Hmm... I have checked through GPIO drivers I have knowledge of / care
-> about and PMIC ones do like you suggested in this patch, the rest
-> (which are instantiated from MFD) take a virtual platform device.
-> 
-> Looking at DT excerpt I think you're rather right than wrong, so I
-> leave it to you and maintainers.
-> Thanks!
 
-Okay, waiting for the maintainers then :)
+--R3G7APHDIzY6R/pk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you very much for the review!
+On Thu, Jul 09, 2020 at 03:50:47PM +0800, Peng Fan wrote:
+> Hi, Browm, Stephen
+>     Firstly, feel sorry for the problem introduced by me. I think I must =
+modify my bad,but should I send another patch to delete the label "out_free=
+" or=20
+> re-send patch of v2(which maybe need to go back)?
+>     Could you give me some advices? Sorry again.
+
+You should send a patch on top of what's already applied but actually
+Colin Ian King sent a patch for this already which I can use so no need
+to do anything, thanks for staying on top of of this though.
+
+--R3G7APHDIzY6R/pk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8G89wACgkQJNaLcl1U
+h9ABjAf/cTOGCHIMImtXtt+qBaohJmn6wW2EKyp7x7HMhxQk7/1sHRCs0hh/p2xn
+NCCHOU0K+aRainT/SbFh9/fSvAtiymoOgSB7eeCbwwSFiyuuxB0M/UCSzcmjUDc3
+Rf8Gu7ma8AY+KKcmJZfeX9VbQklvTIOMGXBYI20hHGtLsLGYKO2vRSwG++DpPLdd
+7KLcaLxkJpky1RxCQgzFY3DeVPmGDhi0aOzOTyBBr5FybBw1nMoe3tv66RnNFpXw
+bKkU/xEyEboD+PuHbCSN6A8smzFvZrsmgTbJxeWgQTGUZACOIDirwgOv8C7F73cq
+Wnjwx+QEA9cqLDTi60OeDEDeF2AnCA==
+=qt78
+-----END PGP SIGNATURE-----
+
+--R3G7APHDIzY6R/pk--
