@@ -2,209 +2,308 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E98C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 349DA20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6B5206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:48:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="REBeJhad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgGINrs (ORCPT
+        id S1727876AbgGINsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:47:48 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7829 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726340AbgGINrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:47:48 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D60BB8AE3C51F749F6A6;
-        Thu,  9 Jul 2020 21:47:43 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.174.186.75) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 9 Jul 2020 21:47:35 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <maz@kernel.org>, <james.morse@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <steven.price@arm.com>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>
-Subject: [RFC PATCH v1] arm64: kvm: flush tlbs by range in unmap_stage2_range function
-Date:   Thu, 9 Jul 2020 21:47:31 +0800
-Message-ID: <20200709134731.2384-1-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
+        Thu, 9 Jul 2020 09:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbgGINsv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 09:48:51 -0400
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED92C08C5CE;
+        Thu,  9 Jul 2020 06:48:51 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4B2cw04Hv7zQlHh;
+        Thu,  9 Jul 2020 15:48:48 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1594302526;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=NmKH1mr1/+5vjWCBZ5zoNbhOnBFi2+hEUX0Wng8Or8c=;
+        b=REBeJhadmN1n3gZC2Y4moPcMPjsaoJBOMdaOypzFHSa+g24aM6/fYAsVUSfJP6IP0SweNO
+        pIaE2GnUCiVGr+y7CFqBBv5M/pkOaUq/D277whviPI6A67z4EMuomzOtlroMJdXTc6VQwv
+        S4kcyUMNGq54dLw02VSbM7t5SgKDQkZaLWezD3BdNzQDQawjqECiDfA3E7XGRpKVHRBZ5l
+        vWADJGU01d38qXfG0ydOOaUEfts2ankaL8RJ5G6WhEHo28n9pgxW9JXgFoq2HHBOJQn6IN
+        vSnPBp0/58HVCyZG2BHvvLdZ16POJNjr0M+oBCw1AwogYLA9Aken7Hatn4JxDg==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id 73Z1CDn_Hmeu; Thu,  9 Jul 2020 15:48:42 +0200 (CEST)
+From:   Sungbo Eo <mans0n@gorani.run>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Cc:     Sungbo Eo <mans0n@gorani.run>
+Subject: [PATCH v6 1/2] gpio: add GPO driver for PCA9570
+Date:   Thu,  9 Jul 2020 22:48:29 +0900
+Message-Id: <20200709134829.216393-1-mans0n@gorani.run>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.186.75]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: 21
+X-Rspamd-Score: 3.29 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 6DF681830
+X-Rspamd-UID: defdcb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now in unmap_stage2_range(), we unmap a page by the following
-steps:
-	p*d_clear();
-	kvm_tlb_flush_vmid_ipa();  # take 2us;
-	kvm_flush_dcache_p*d();    # take 0.5us;
-	put_page();
+NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
+Its ports are controlled only by a data byte without register address.
 
-When the range is very large, such as 1G, then unmap_stage2_range()
-may take more than 500ms at one time. This may cause some performance
-problems in the following case:
-
-The VM that uses 1G hugepage memory, with high memory pressure (the
-dirty page rate reaches 500MB/s), does migration with --live.  When
-the bandwidth is less than dirty rate, the migration will failed and
-VM will rollback to the source host.  unmap_stage2_range() will be
-called to combine the scattered 4K pages -- then cause the vm's
-downtime too long.
-
-In my test, unmap_stage2_range() can take a maximum of 1.2s, and
-the VM downtime reaches 7s. VM configuration is as follows:
-
-  <memory unit='KiB'>201326592</memory>
-  <vcpu placement='static'>48</vcpu>
-  <memoryBacking>
-    <hugepages>
-      <page size='1' unit='GiB' nodeset='0'/>
-    </hugepages>
-  </memoryBacking>
-
-The dirty rate is 500MB/s ~ 1000MB/s, and bandwidth is 500MB.
-
---
-So, this patch move the kvm_tlb_flush_vmid_ipa() out of loop, and
-flush tlbs by range after other operations are complete.  Because
-we do not make new mapping for the pages, so this don't violate
-the BBM rules.
-
-After this change, the cost of unmap_stage2_range() can reduce to
-16ms, and VM downtime can be less than 1s.
-
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
 ---
- arch/arm64/include/asm/kvm_asm.h |  2 ++
- arch/arm64/kvm/hyp/tlb.c         | 36 ++++++++++++++++++++++++++++++++
- arch/arm64/kvm/mmu.c             | 11 +++++++---
- 3 files changed, 46 insertions(+), 3 deletions(-)
+v6:
+* removed client
+* re-added mutex
+* removed template_chip
 
-diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
-index 352aaebf4198..ef8203d3ca45 100644
---- a/arch/arm64/include/asm/kvm_asm.h
-+++ b/arch/arm64/include/asm/kvm_asm.h
-@@ -61,6 +61,8 @@ extern char __kvm_hyp_vector[];
+v5:
+* amended the commit message
+* removed unnecessary castings
+* added data to of_match_table
+
+v4:
+* removed ->direction_input() and ->direction_output()
+  (Seems unnecessary to me)
+* removed ->set_multiple()
+  (I'm not sure this implementation is really correct)
+* added ->get()
+  (DS says we can read the status from the device)
+* read current status during probe
+
+v3:
+* remove mutex
+* rename buffer to out
+* simplify return statements
+* replace ->probe() to ->probe_new()
+* move ngpio to driver_data
+  (PCA9571 is 8-bit so I thought making ngpio configurable is a good idea)
+
+v2:
+* move the direction functions below the set functions
+* use devm_gpiochip_add_data() and remove the remove callback
+
+v1:
+Tested in kernel 5.4 on an ipq40xx platform.
+
+This is my first time submitting a whole driver patch, and I'm not really
+familiar with this PCA expander series.
+Please let me know how I can improve this patch further.
+
+FYI there's an unmerged patch for this chip.
+http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
+I don't have PCA9571 either so I didn't add support for it.
+---
+ drivers/gpio/Kconfig        |   8 ++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-pca9570.c | 146 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 155 insertions(+)
+ create mode 100644 drivers/gpio/gpio-pca9570.c
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index c6b5c65c8405..d10dcb81b841 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
+ 	  Say yes here to enable the pca953x to be used as an interrupt
+ 	  controller. It requires the driver to be built in the kernel.
  
- extern void __kvm_flush_vm_context(void);
- extern void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa);
-+extern void __kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t start,
-+				       phys_addr_t end);
- extern void __kvm_tlb_flush_vmid(struct kvm *kvm);
- extern void __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu);
- 
-diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/tlb.c
-index d063a576d511..4f4737a7e588 100644
---- a/arch/arm64/kvm/hyp/tlb.c
-+++ b/arch/arm64/kvm/hyp/tlb.c
-@@ -189,6 +189,42 @@ void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
- 	__tlb_switch_to_host(kvm, &cxt);
- }
- 
-+void __hyp_text __kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t start,
-+					   phys_addr_t end)
++config GPIO_PCA9570
++	tristate "PCA9570 4-Bit I2C GPO expander"
++	help
++	  Say yes here to enable the GPO driver for the NXP PCA9570 chip.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called gpio-pca9570.
++
+ config GPIO_PCF857X
+ 	tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
+ 	select GPIOLIB_IRQCHIP
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 1e4894e0bf0f..33cb40c28a61 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)		+= gpio-octeon.o
+ obj-$(CONFIG_GPIO_OMAP)			+= gpio-omap.o
+ obj-$(CONFIG_GPIO_PALMAS)		+= gpio-palmas.o
+ obj-$(CONFIG_GPIO_PCA953X)		+= gpio-pca953x.o
++obj-$(CONFIG_GPIO_PCA9570)		+= gpio-pca9570.o
+ obj-$(CONFIG_GPIO_PCF857X)		+= gpio-pcf857x.o
+ obj-$(CONFIG_GPIO_PCH)			+= gpio-pch.o
+ obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+= gpio-pcie-idio-24.o
+diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
+new file mode 100644
+index 000000000000..cb2b2f735c15
+--- /dev/null
++++ b/drivers/gpio/gpio-pca9570.c
+@@ -0,0 +1,146 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Driver for PCA9570 I2C GPO expander
++ *
++ * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
++ *
++ * Based on gpio-tpic2810.c
++ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ *	Andrew F. Davis <afd@ti.com>
++ */
++
++#include <linux/gpio/driver.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/property.h>
++
++/**
++ * struct pca9570 - GPIO driver data
++ * @chip: GPIO controller chip
++ * @lock: Protects write sequences
++ * @out: Buffer for device register
++ */
++struct pca9570 {
++	struct gpio_chip chip;
++	struct mutex lock;
++	u8 out;
++};
++
++static int pca9570_read(struct pca9570 *gpio, u8 *value)
 +{
-+	struct tlb_inv_context cxt;
-+	unsigned long addr;
++	struct i2c_client *client = to_i2c_client(gpio->chip.parent);
++	int ret;
 +
-+	start = __TLBI_VADDR(start, 0);
-+	end = __TLBI_VADDR(end, 0);
++	ret = i2c_smbus_read_byte(client);
++	if (ret < 0)
++		return ret;
 +
-+	dsb(ishst);
-+
-+	/* Switch to requested VMID */
-+	kvm = kern_hyp_va(kvm);
-+	__tlb_switch_to_guest(kvm, &cxt);
-+
-+	if ((end - start) >= 512 << (PAGE_SHIFT - 12)) {
-+		__tlbi(vmalls12e1is);
-+		goto end;
-+	}
-+
-+	for (addr = start; addr < end; addr += 1 << (PAGE_SHIFT - 12))
-+		__tlbi(ipas2e1is, addr);
-+
-+	dsb(ish);
-+	__tlbi(vmalle1is);
-+
-+end:
-+	dsb(ish);
-+	isb();
-+
-+	if (!has_vhe() && icache_is_vpipt())
-+		__flush_icache_all();
-+
-+	__tlb_switch_to_host(kvm, &cxt);
++	*value = ret;
++	return 0;
 +}
 +
- void __hyp_text __kvm_tlb_flush_vmid(struct kvm *kvm)
- {
- 	struct tlb_inv_context cxt;
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 8c0035cab6b6..bcc719c32921 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -63,6 +63,12 @@ static void kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
- 	kvm_call_hyp(__kvm_tlb_flush_vmid_ipa, kvm, ipa);
- }
- 
-+static void kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t start,
-+				     phys_addr_t end)
++static int pca9570_write(struct pca9570 *gpio, u8 value)
 +{
-+	kvm_call_hyp(__kvm_tlb_flush_vmid_range, kvm, start, end);
++	struct i2c_client *client = to_i2c_client(gpio->chip.parent);
++
++	return i2c_smbus_write_byte(client, value);
 +}
 +
- /*
-  * D-Cache management functions. They take the page table entries by
-  * value, as they are flushing the cache using the kernel mapping (or
-@@ -267,7 +273,6 @@ static void unmap_stage2_ptes(struct kvm *kvm, pmd_t *pmd,
- 			pte_t old_pte = *pte;
- 
- 			kvm_set_pte(pte, __pte(0));
--			kvm_tlb_flush_vmid_ipa(kvm, addr);
- 
- 			/* No need to invalidate the cache for device mappings */
- 			if (!kvm_is_device_pfn(pte_pfn(old_pte)))
-@@ -295,7 +300,6 @@ static void unmap_stage2_pmds(struct kvm *kvm, pud_t *pud,
- 				pmd_t old_pmd = *pmd;
- 
- 				pmd_clear(pmd);
--				kvm_tlb_flush_vmid_ipa(kvm, addr);
- 
- 				kvm_flush_dcache_pmd(old_pmd);
- 
-@@ -324,7 +328,6 @@ static void unmap_stage2_puds(struct kvm *kvm, p4d_t *p4d,
- 				pud_t old_pud = *pud;
- 
- 				stage2_pud_clear(kvm, pud);
--				kvm_tlb_flush_vmid_ipa(kvm, addr);
- 				kvm_flush_dcache_pud(old_pud);
- 				put_page(virt_to_page(pud));
- 			} else {
-@@ -352,6 +355,8 @@ static void unmap_stage2_p4ds(struct kvm *kvm, pgd_t *pgd,
- 
- 	if (stage2_p4d_table_empty(kvm, start_p4d))
- 		clear_stage2_pgd_entry(kvm, pgd, start_addr);
++static int pca9570_get_direction(struct gpio_chip *chip,
++				 unsigned offset)
++{
++	/* This device always output */
++	return GPIO_LINE_DIRECTION_OUT;
++}
 +
-+	kvm_tlb_flush_vmid_range(kvm, start_addr, end);
- }
- 
- /**
++static int pca9570_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct pca9570 *gpio = gpiochip_get_data(chip);
++	u8 buffer;
++	int ret;
++
++	ret = pca9570_read(gpio, &buffer);
++	if (ret)
++		return ret;
++
++	return !!(buffer & BIT(offset));
++}
++
++static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct pca9570 *gpio = gpiochip_get_data(chip);
++	u8 buffer;
++	int ret;
++
++	mutex_lock(&gpio->lock);
++
++	buffer = gpio->out;
++	if (value)
++		buffer |= BIT(offset);
++	else
++		buffer &= ~BIT(offset);
++
++	ret = pca9570_write(gpio, buffer);
++	if (ret)
++		goto out;
++
++	gpio->out = buffer;
++
++out:
++	mutex_unlock(&gpio->lock);
++}
++
++static int pca9570_probe(struct i2c_client *client)
++{
++	struct pca9570 *gpio;
++
++	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
++		return -ENOMEM;
++
++	gpio->chip.label = client->name;
++	gpio->chip.parent = &client->dev;
++	gpio->chip.owner = THIS_MODULE;
++	gpio->chip.get_direction = pca9570_get_direction;
++	gpio->chip.get = pca9570_get;
++	gpio->chip.set = pca9570_set;
++	gpio->chip.base = -1;
++	gpio->chip.ngpio = (uintptr_t)device_get_match_data(&client->dev);
++	gpio->chip.can_sleep = true;
++
++	mutex_init(&gpio->lock);
++
++	/* Read the current output level */
++	pca9570_read(gpio, &gpio->out);
++
++	i2c_set_clientdata(client, gpio);
++
++	return devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
++}
++
++static const struct i2c_device_id pca9570_id_table[] = {
++	{ "pca9570", 4 },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
++
++static const struct of_device_id pca9570_of_match_table[] = {
++	{ .compatible = "nxp,pca9570", .data = (void *)4 },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
++
++static struct i2c_driver pca9570_driver = {
++	.driver = {
++		.name = "pca9570",
++		.of_match_table = pca9570_of_match_table,
++	},
++	.probe_new = pca9570_probe,
++	.id_table = pca9570_id_table,
++};
++module_i2c_driver(pca9570_driver);
++
++MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
++MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
++MODULE_LICENSE("GPL v2");
 -- 
-2.19.1
-
+2.27.0
 
