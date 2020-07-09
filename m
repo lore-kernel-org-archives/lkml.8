@@ -2,124 +2,118 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C81C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C963BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBD402074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40BB20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:59:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="cEsrczv/"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="coM9AtJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgGIN6I (ORCPT
+        id S1728022AbgGIN7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41860 "EHLO
+        Thu, 9 Jul 2020 09:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgGIN6H (ORCPT
+        with ESMTP id S1727950AbgGIN7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:58:07 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF21EC08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:58:07 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id e64so2359529iof.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:58:07 -0700 (PDT)
+        Thu, 9 Jul 2020 09:59:01 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21E8C08E806
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:59:00 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id k23so2364609iom.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K1J6vHRKQNut7E/ykKpZDEQEYTSIWHWf2BiyemlGh+0=;
-        b=cEsrczv/wMmZdKUu1QVtCZtuKtgrPWO86Etf19dvSEzgyJujKDalDgMnt7XnCfwAfH
-         TKLF9QfYqstM1U3BQHxjKHyavzHGdQvsnFaYDfLmcGd0rmWmWscTtrhHJxwBLksLtHq8
-         E4n6fZdF7VqGKy3Vz+UncPL0dmZtLUTCmlXxyuzLEcxVkrnKLZ8Izg+wadh4WPvHWaDT
-         m5nxfUhqrAnAh+MAxEfiLO6M+vfH4IgENELQ+DPQUw8g2JsPdNv6/wJOMsctqFnnsTX9
-         K4uqUzht1jivlSFEhs2Msd92F5vJBburQCgTq2XiWsQferxTvKLbzZzEAKbNbjhV7S1G
-         eHhw==
+        bh=ttUciq1R4DLXwSrCKOG8sMg2/ZhVL4qipuIgKqQy2hE=;
+        b=coM9AtJu0ST+XR8OMgywQuHtTrKC9/b3RSDkB5xLiy4QzbX3T0Aw61rbH1CahgBBuR
+         uHGxD5IVaENFxujEI50kNZMa4M546fERlVcPXVLx0073TNTIByYun/g+RHhX1WEDPk90
+         nLVTJFCuIlptJdGLVxMiS/3WV+WEeYk/uPnJy7GYNSE5TcqY5Sk+XRfP9o7wxQhjTuBd
+         OfxdrSK1xj7iSzi0tqotyg0P0tyJIhgxoopV77fateMyHS2NoNRk3u2YMgfEUz9jt+Mx
+         I7oNOyQ+dlAawprLARe5BTTjR91BKrEJGHW7LfKtefXB0VFKSsrdcDKI81gtPbkU0jfv
+         Jz9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=K1J6vHRKQNut7E/ykKpZDEQEYTSIWHWf2BiyemlGh+0=;
-        b=TYutmsCjx1Zoumakk1fRB5i5ul67HAsVedj2qpdkmFQ6UypqwVWHiobNW1WFNUVIZ1
-         1HoBFL3IXwN9cRm1LDFZjWWu7fPbBhiByq3xsLHbfCE5M0WrTeUF5JF7qYSB0RWDtKnX
-         qpWywKcb+dXfNsi93i19obUmqB/DziTQrbeQ0Q/ZhJ7zpKZSe9u9QMR1t2phGYx8duGN
-         xkPcPx1dL/XyLqL0K77Qv7ZIODk9/kv9+rF6OsIB3LHX8pztABsdwO1WpH8FsjliXbs+
-         wP0h1ezExUMHDiDTHOwiRrtvMZmaH1wZ4vyixDh5ww7LjIPxALfGCOz5TZSs74Yd22Kk
-         QYKA==
-X-Gm-Message-State: AOAM5325qbBNnkoUu1kwAWUe8b+SUKKQqxN5motf9jp3e+nB4oUlbhDv
-        LX7OgkzA/+S4kVbUB+9JlhlaOw==
-X-Google-Smtp-Source: ABdhPJzxSF/xDWCEbyyN69qZnnq2x64VZr67MJX+V63IE3WqiyXyP3TjTXLwVC6fKu9skJUx9zE/qQ==
-X-Received: by 2002:a05:6638:118:: with SMTP id x24mr74022628jao.48.1594303086919;
-        Thu, 09 Jul 2020 06:58:06 -0700 (PDT)
+        bh=ttUciq1R4DLXwSrCKOG8sMg2/ZhVL4qipuIgKqQy2hE=;
+        b=imn0KI5TKIqUZujrVG0Ex/aKwqShuf23cCQUVCizplDhmc6o2tXYrNVZWBc/Y5qT28
+         hq1nHjzLqphmgntCKjKfxFMsFnWUD86t9y8+43kg106Iywy5GJzNcWG9Fafx01kgp4QM
+         tNG9xCCZo7yrMpkyk+nU1FDESBNo+Wl7LJuiUWv6uAVzbqnVIj9zR6/mxu+4VV1H3i72
+         oIfE2XhxyAh59kxjivjN6+bRO15osfJ4JL4LVR/5BwR6dyD68YZO+aY6Efnh05TqlJV/
+         Iy+2ztHKm70m1PBMLg9qBMwZkBcL58kPzXozgOQcvoQzABmIJi940ixNZGvud/FMD6fW
+         Yn9Q==
+X-Gm-Message-State: AOAM530SJA9wUMA3ayETdFWh1MX/hqs9P3ijwYUpMFqDRinj67tKYBoj
+        2jLQ7XB90cTbO2tzsQ1mdJoIMMvgdM3n7Q==
+X-Google-Smtp-Source: ABdhPJwILxLSUCxDdCac/fZUN7tHM3l14dJ0zrZ6D/Tc1v+OsXoh2HYNZYg6WBqjtOr30hdwGoEJQw==
+X-Received: by 2002:a05:6638:168e:: with SMTP id f14mr67991477jat.64.1594303139999;
+        Thu, 09 Jul 2020 06:58:59 -0700 (PDT)
 Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id z78sm2045041ilk.72.2020.07.09.06.58.05
+        by smtp.gmail.com with ESMTPSA id a1sm1884363ilq.50.2020.07.09.06.58.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 06:58:06 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, Damien.LeMoal@wdc.com, asml.silence@gmail.com,
-        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
- <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
- <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
- <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
- <20200709085501.GA64935@infradead.org>
+        Thu, 09 Jul 2020 06:58:59 -0700 (PDT)
+Subject: Re: remove dead bdi congestion leftovers
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Tejun Heo <tj@kernel.org>, dm-devel@redhat.com,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200701090622.3354860-1-hch@lst.de>
+ <b5d6df17-68af-d535-79e4-f95e16dd5632@kernel.dk>
+ <20200709053233.GA3243@lst.de>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <adc14700-8e95-10b2-d914-afa5029ae80c@kernel.dk>
-Date:   Thu, 9 Jul 2020 07:58:04 -0600
+Message-ID: <82e2785d-2091-1986-0014-3b7cea7cd0d8@kernel.dk>
+Date:   Thu, 9 Jul 2020 07:58:58 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200709085501.GA64935@infradead.org>
+In-Reply-To: <20200709053233.GA3243@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/20 4:15 AM, Christoph Hellwig wrote:
-> On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
->>> diff --git a/fs/io_uring.c b/fs/io_uring.c
->>> index 155f3d8..cbde4df 100644
->>> --- a/fs/io_uring.c
->>> +++ b/fs/io_uring.c
->>> @@ -402,6 +402,8 @@ struct io_rw {
->>>  	struct kiocb			kiocb;
->>>  	u64				addr;
->>>  	u64				len;
->>> +	/* zone-relative offset for append, in sectors */
->>> +	u32			append_offset;
->>>  };
+On 7/8/20 11:32 PM, Christoph Hellwig wrote:
+> On Wed, Jul 08, 2020 at 05:14:29PM -0600, Jens Axboe wrote:
+>> On 7/1/20 3:06 AM, Christoph Hellwig wrote:
+>>> Hi Jens,
+>>>
+>>> we have a lot of bdi congestion related code that is left around without
+>>> any use.  This series removes it in preparation of sorting out the bdi
+>>> lifetime rules properly.
 >>
->> I don't like this very much at all. As it stands, the first cacheline
->> of io_kiocb is set aside for request-private data. io_rw is already
->> exactly 64 bytes, which means that you're now growing io_rw beyond
->> a cacheline and increasing the size of io_kiocb as a whole.
+>> Please run series like this through a full compilation, for both this one
+>> and the previous series I had to fix up issues like this:
 >>
->> Maybe you can reuse io_rw->len for this, as that is only used on the
->> submission side of things.
+>> drivers/md/bcache/request.c: In function ‘bch_cached_dev_request_init’:
+>> drivers/md/bcache/request.c:1233:18: warning: unused variable ‘g’ [-Wunused-variable]
+>>  1233 |  struct gendisk *g = dc->disk.disk;
+>>       |                  ^
+>> drivers/md/bcache/request.c: In function ‘bch_flash_dev_request_init’:
+>> drivers/md/bcache/request.c:1320:18: warning: unused variable ‘g’ [-Wunused-variable]
+>>  1320 |  struct gendisk *g = d->disk;
+>>       |                  ^
+>>
+>> Did the same here, applied it.
 > 
-> We don't actually need any new field at all.  By the time the write
-> returned ki_pos contains the offset after the write, and the res
-> argument to ->ki_complete contains the amount of bytes written, which
-> allow us to trivially derive the starting position.
+> And just like the previous one I did, and the compiler did not complain.
+> There must be something about certain gcc versions not warning about
+> variables that are initialized but not otherwise used.
 
-Then let's just do that instead of jumping through hoops either
-justifying growing io_rw/io_kiocb or turning kiocb into a global
-completion thing.
+Are you using gcc-10? It sucks for that. gcc-9 seems to reliably hit
+these cases for me, not sure why gcc-10 doesn't. And the ones quoted
+above are about as trivial as they can get.
 
 -- 
 Jens Axboe
