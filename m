@@ -2,100 +2,70 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F626C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C68FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E28B206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:48:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uG114BTf"
+	by mail.kernel.org (Postfix) with ESMTP id 18B482073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgGIHsG (ORCPT
+        id S1726352AbgGIHux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:48:06 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:58148 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgGIHsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:48:06 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200709074803epoutp0331b70ec12883ad1b08d19abd66662f37~gBgQxtd6U2350923509epoutp03J
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 07:48:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200709074803epoutp0331b70ec12883ad1b08d19abd66662f37~gBgQxtd6U2350923509epoutp03J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594280883;
-        bh=H+gBelzmZGb0OTapRZFbisJqPHe8bRUlzSVUDx0UcSg=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=uG114BTfWGTAp7/dVVIKrOGYogfSNuARBO3zIFkFmJoluDXfD5Ub54mHmvf/piegG
-         5I2oZ3TSsUw2yhbnC38Na1MRwBxGXMnbJAvBaUpqZSsM/EEG/lTVargKrzGh9vV7gi
-         iTrIbsXnuQq7yRrjZWs1NyDlkXkn1knwdtAAgLDY=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p2.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200709074802epcas1p2e807de6d011ab9e2aa4398121442e08a~gBgQXL89G3205832058epcas1p2Z;
-        Thu,  9 Jul 2020 07:48:02 +0000 (GMT)
-Mime-Version: 1.0
-Subject: RE: [PATCH v5 0/5] scsi: ufs: Add Host Performance Booster Support
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Avri Altman <Avri.Altman@wdc.com>,
-        Daejun Park <daejun7.park@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
+        Thu, 9 Jul 2020 03:50:53 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:34582 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726187AbgGIHux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 03:50:53 -0400
+Received: by ajax-webmail-mail.loongson.cn (Coremail) ; Thu, 9 Jul 2020
+ 15:50:47 +0800 (GMT+08:00)
+X-Originating-IP: [113.200.148.30]
+Date:   Thu, 9 Jul 2020 15:50:47 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   "Peng Fan" <fanpeng@loongson.cn>
+To:     "Stephen Rothwell" <sfr@canb.auug.org.au>
+Cc:     "Mark Brown" <broonie@kernel.org>,
+        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: Re: linux-next: build warning after merge of the spi tree
 X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <SN6PR04MB464097E646395C000C2DCAC3FC640@SN6PR04MB4640.namprd04.prod.outlook.com>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <336371513.41594280882718.JavaMail.epsvc@epcpadp2>
-Date:   Thu, 09 Jul 2020 16:29:01 +0900
-X-CMS-MailID: 20200709072901epcms2p4da87414f3f3af8045a19c032544383fd
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4
-References: <SN6PR04MB464097E646395C000C2DCAC3FC640@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <963815509.21593732182531.JavaMail.epsvc@epcpadp2>
-        <231786897.01594251001808.JavaMail.epsvc@epcpadp1>
-        <CGME20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4@epcms2p4>
+X-Mailer: Coremail Webmail Server Version XT5.0.10a build 20191018(4c4f6d15)
+ Copyright (c) 2002-2020 www.mailtech.cn .loongson.cn
+In-Reply-To: <31ee871f.3cd.173320cfdfe.Coremail.fanpeng@loongson.cn>
+References: <20200709141054.1b65be9d@canb.auug.org.au>
+ <31ee871f.3cd.173320cfdfe.Coremail.fanpeng@loongson.cn>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Message-ID: <7376c15b.48e.173328e36ab.Coremail.fanpeng@loongson.cn>
+X-Coremail-Locale: en_US
+X-CM-TRANSID: AQAAf9DxTx9YzAZf5asAAA--.158W
+X-CM-SenderInfo: xidq1vtqj6z05rqj20fqof0/1tbiAQAMEl3QvL5MuwABsm
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+        CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+        daVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hello,
-> > 
-> > Just a gentle reminder that I'd like some feedback.
-> > Any suggestions here?
-> If no-one objects, I think you can submit your patches for review as non-RFC.
-> 
-[PATCH v5 0/5] scsi: ufs: Add Host Performance Booster Support
-~~~~~~
-It is non-RFC version.
-
-Thanks,
-Daejun.
+SGksIEJyb3dtLCBTdGVwaGVuCiAgICBGaXJzdGx5LCBmZWVsIHNvcnJ5IGZvciB0aGUgcHJvYmxl
+bSBpbnRyb2R1Y2VkIGJ5IG1lLiBJIHRoaW5rIEkgbXVzdCBtb2RpZnkgbXkgYmFkLGJ1dCBzaG91
+bGQgSSBzZW5kIGFub3RoZXIgcGF0Y2ggdG8gZGVsZXRlIHRoZSBsYWJlbCAib3V0X2ZyZWUiIG9y
+IApyZS1zZW5kIHBhdGNoIG9mIHYyKHdoaWNoIG1heWJlIG5lZWQgdG8gZ28gYmFjayk/CiAgICBD
+b3VsZCB5b3UgZ2l2ZSBtZSBzb21lIGFkdmljZXM/IFNvcnJ5IGFnYWluLgoKVGhhbmtzCgomcXVv
+dDtQZW5nIEZhbiZxdW90OyAmbHQ7ZmFucGVuZ0Bsb29uZ3Nvbi5jbiZndDt3cm90ZToKPiBWZXJ5
+IHNvcnJ5IGZvciB0aGF0LCBJIHdpbGwgcmUtc2VuZCB2MiBsYXRlci4NCj4gDQo+ICZxdW90O1N0
+ZXBoZW4gUm90aHdlbGwmcXVvdDsgJmx0O3NmckBjYW5iLmF1dWcub3JnLmF1Jmd0O3dyb3RlOg0K
+PiA+IEhpIGFsbCwNCj4gPiANCj4gPiBBZnRlciBtZXJnaW5nIHRoZSBzcGkgdHJlZSwgdG9kYXkn
+cyBsaW51eC1uZXh0IGJ1aWxkIChhcm0NCj4gPiBtdWx0aV92N19kZWZjb25maWcpIHByb2R1Y2Vk
+IHRoaXMgd2FybmluZzoNCj4gPiANCj4gPiBkcml2ZXJzL3NwaS9zcGktYXRtZWwuYzogSW4gZnVu
+Y3Rpb24gJ2F0bWVsX3NwaV9wcm9iZSc6DQo+ID4gZHJpdmVycy9zcGkvc3BpLWF0bWVsLmM6MTY4
+MDoxOiB3YXJuaW5nOiBsYWJlbCAnb3V0X2ZyZWUnIGRlZmluZWQgYnV0IG5vdCB1c2VkIFstV3Vu
+dXNlZC1sYWJlbF0NCj4gPiAgMTY4MCB8IG91dF9mcmVlOg0KPiA+ICAgICAgIHwgXn5+fn5+fn4N
+Cj4gPiANCj4gPiBJbnRyb2R1Y2VkIGJ5IGNvbW1pdA0KPiA+IA0KPiA+ICAgMmQ5YTc0NDY4NWJj
+ICgic3BpOiBhdG1lbDogTm8gbmVlZCB0byBjYWxsIHNwaV9tYXN0ZXJfcHV0KCkgaWYgc3BpX2Fs
+bG9jX21hc3RlcigpIGZhaWxlZCIpDQo+ID4gDQo+ID4gLS0gDQo+ID4gQ2hlZXJzLA0KPiA+IFN0
+ZXBoZW4gUm90aHdlbGwNCg==
