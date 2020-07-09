@@ -2,156 +2,100 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2997C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0918DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB5920774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:47:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594338440;
-	bh=OT96AVW7dJpU8dtXiPhq8DRD9xyjEQQqqS2i/k1BEV4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=KDd2WaLSlldC9Oxl5bvDfwMGFgeJCM2Lr4OWyYBU5xvKNxCf6tZsaNV6oKvnEqlcF
-	 GumA5Wp4g4Gthk5o3w90YkDCOpkrMQf8HbySwiuvnPvGGN21qyJVRPf8xLT2KIcVQS
-	 SSYqmLm64u7MLmaNfmquRE32NgLIKzVF1CDnoC4g=
+	by mail.kernel.org (Postfix) with ESMTP id D954620720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:48:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZUhq/Z4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgGIXrT (ORCPT
+        id S1726773AbgGIXsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726433AbgGIXrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:47:19 -0400
-Received: from embeddedor (unknown [201.162.245.14])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E7FB2070E;
-        Thu,  9 Jul 2020 23:47:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594338438;
-        bh=OT96AVW7dJpU8dtXiPhq8DRD9xyjEQQqqS2i/k1BEV4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OCtKc7u0PsBM4vy6AqblDDEdsjTNBLqx2j8dj+Owo+rjakAKcKVv0vhgD3xaDink8
-         I0n6/1U9mqtsjcRuJN7lfDx7iqz9sx5KlB4Rhbtexo7VPdUNJVdCROvaIUjrje4Myf
-         dqM5/eDuxFdc9FLK31uAu7GIqoRdIe0NkFhBQUHI=
-Date:   Thu, 9 Jul 2020 18:52:50 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH v2][next] IB/hfi1: Remove unnecessary fall-through markings
-Message-ID: <20200709235250.GA26678@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 9 Jul 2020 19:48:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbgGIXsK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 19:48:10 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53426C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 16:48:10 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id dp18so4060915ejc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 16:48:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4xu/k9KIUZy/F6SCVHcHGIjUpI7dLkyDH+p59q0O9WM=;
+        b=vZUhq/Z4uZvslDYIAquT+iNsmF1DpdZK2XMlkWehxx6gmbNDOUQDUSeY5jzYOpYfE6
+         1KvvnHRk8Hf6Sydug+levQZeaA7x1dqrxjKwiAnkV4po3alJoSmR+1TqXuq5R0uJ5nfn
+         4WzfNNxOP2aFN8/hWuecfvF6PhDEjXXFtgy9W98YqzT4rxAaTKib642tOvvj2ovvOdjF
+         f/OWxp9GU8GmK2daZ4z/+hGTopbImIbsV3mWGm3h9AefDufwgZ4kj5cCziyc3O59j2R1
+         XLuIjqKiAs2LBoyTqWEd9ZEOOuxasDwcn8W8Ksi+8rpM0r/gHkEPanpbOa0XaAYyH4OJ
+         suEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4xu/k9KIUZy/F6SCVHcHGIjUpI7dLkyDH+p59q0O9WM=;
+        b=bRQR2bLQCWMV2xtwK48/x8IkWlu2zATuxEBQRM2/4o/gShX4JwvfGGZUph2lQSOJR0
+         2agqMYbDTKEMQeaHuo8Li8NGCKya9Ju4SO1PkCd9e7ghdIu9AFI6i4uNLRnG5SwWE0HG
+         alH6Dy87MZLBc1r+459dtVH1UClzJjyZILOJb5ZzBEJ7EoYGw87D1L/WP3Qlxg5bjjom
+         U9JlXlnuE422goOZL0iQolM93TjJ27hSLTYRtT93gLgWhp6vAojf4TFW9+ElrYCIqpWo
+         dbtrUvgyX1rZS6XlHVbH4lhG6xv8XPcaJafTl6tCOsiebEjnA+eBwpt2gcR2OfuRrBJw
+         lgfg==
+X-Gm-Message-State: AOAM532K4S0C/aPLJtEn+qcxq9x9E0jwIr3DtGBZHfTMh5hUbqKBJDB0
+        fcF/2rDRUprEo+pMmTpmvOE=
+X-Google-Smtp-Source: ABdhPJzZKQVNqdGfySAXmjjI14KqFO2pZ+lN9NOmBQY5T6A42NwmOA6yf/BXIyuPxngBexv1BMVPfA==
+X-Received: by 2002:a17:906:2e83:: with SMTP id o3mr55641867eji.261.1594338489042;
+        Thu, 09 Jul 2020 16:48:09 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id x19sm2874426eds.43.2020.07.09.16.48.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 16:48:08 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ARM: bcm: Enable BCM7038_L1_IRQ for ARCH_BRCMSTB
+Date:   Thu,  9 Jul 2020 16:45:56 -0700
+Message-Id: <20200709234557.5380-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reorganize the code a bit in a more standard way[1] and remove
-unnecessary fall-through markings.
+ARCH_BRCMSTB makes use of the irq-bcm7038-l1.c irqchip driver, enable
+it.
 
-[1] https://lore.kernel.org/lkml/20200708054703.GR207186@unreal/
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
-Changes in v2:
- - Remove additional overlooked fall-through markings.
+ arch/arm/mach-bcm/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/infiniband/hw/hfi1/chip.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-index 15f9c635f292..7eaf99538216 100644
---- a/drivers/infiniband/hw/hfi1/chip.c
-+++ b/drivers/infiniband/hw/hfi1/chip.c
-@@ -7317,11 +7317,11 @@ static u16 link_width_to_bits(struct hfi1_devdata *dd, u16 width)
- 	case 1: return OPA_LINK_WIDTH_1X;
- 	case 2: return OPA_LINK_WIDTH_2X;
- 	case 3: return OPA_LINK_WIDTH_3X;
-+	case 4: return OPA_LINK_WIDTH_4X;
- 	default:
- 		dd_dev_info(dd, "%s: invalid width %d, using 4\n",
- 			    __func__, width);
--		/* fall through */
--	case 4: return OPA_LINK_WIDTH_4X;
-+		return OPA_LINK_WIDTH_4X;
- 	}
- }
- 
-@@ -7376,12 +7376,13 @@ static void get_link_widths(struct hfi1_devdata *dd, u16 *tx_width,
- 		case 0:
- 			dd->pport[0].link_speed_active = OPA_LINK_SPEED_12_5G;
- 			break;
-+		case 1:
-+			dd->pport[0].link_speed_active = OPA_LINK_SPEED_25G;
-+			break;
- 		default:
- 			dd_dev_err(dd,
- 				   "%s: unexpected max rate %d, using 25Gb\n",
- 				   __func__, (int)max_rate);
--			/* fall through */
--		case 1:
- 			dd->pport[0].link_speed_active = OPA_LINK_SPEED_25G;
- 			break;
- 		}
-@@ -12878,11 +12879,6 @@ static int init_cntrs(struct hfi1_devdata *dd)
- static u32 chip_to_opa_lstate(struct hfi1_devdata *dd, u32 chip_lstate)
- {
- 	switch (chip_lstate) {
--	default:
--		dd_dev_err(dd,
--			   "Unknown logical state 0x%x, reporting IB_PORT_DOWN\n",
--			   chip_lstate);
--		/* fall through */
- 	case LSTATE_DOWN:
- 		return IB_PORT_DOWN;
- 	case LSTATE_INIT:
-@@ -12891,6 +12887,11 @@ static u32 chip_to_opa_lstate(struct hfi1_devdata *dd, u32 chip_lstate)
- 		return IB_PORT_ARMED;
- 	case LSTATE_ACTIVE:
- 		return IB_PORT_ACTIVE;
-+	default:
-+		dd_dev_err(dd,
-+			   "Unknown logical state 0x%x, reporting IB_PORT_DOWN\n",
-+			   chip_lstate);
-+		return IB_PORT_DOWN;
- 	}
- }
- 
-@@ -12898,10 +12899,6 @@ u32 chip_to_opa_pstate(struct hfi1_devdata *dd, u32 chip_pstate)
- {
- 	/* look at the HFI meta-states only */
- 	switch (chip_pstate & 0xf0) {
--	default:
--		dd_dev_err(dd, "Unexpected chip physical state of 0x%x\n",
--			   chip_pstate);
--		/* fall through */
- 	case PLS_DISABLED:
- 		return IB_PORTPHYSSTATE_DISABLED;
- 	case PLS_OFFLINE:
-@@ -12914,6 +12911,10 @@ u32 chip_to_opa_pstate(struct hfi1_devdata *dd, u32 chip_pstate)
- 		return IB_PORTPHYSSTATE_LINKUP;
- 	case PLS_PHYTEST:
- 		return IB_PORTPHYSSTATE_PHY_TEST;
-+	default:
-+		dd_dev_err(dd, "Unexpected chip physical state of 0x%x\n",
-+			   chip_pstate);
-+		return IB_PORTPHYSSTATE_DISABLED;
- 	}
- }
- 
+diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+index 6aa938b949db..52ce6febf6ea 100644
+--- a/arch/arm/mach-bcm/Kconfig
++++ b/arch/arm/mach-bcm/Kconfig
+@@ -207,6 +207,7 @@ config ARCH_BRCMSTB
+ 	select ARM_GIC
+ 	select ARM_ERRATA_798181 if SMP
+ 	select HAVE_ARM_ARCH_TIMER
++	select BCM7038_L1_IRQ
+ 	select BRCMSTB_L2_IRQ
+ 	select BCM7120_L2_IRQ
+ 	select ARCH_HAS_HOLES_MEMORYMODEL
 -- 
-2.27.0
+2.17.1
 
