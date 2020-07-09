@@ -2,149 +2,102 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E02C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6C9320663
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C318220663
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tvlbnc6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgGIFlv (ORCPT
+        id S1726482AbgGIFnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 01:41:51 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:51227 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726091AbgGIFlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 01:41:50 -0400
-Received: from [192.168.0.6] (ip5f5af27e.dynamic.kabel-deutschland.de [95.90.242.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 5D15920646095;
-        Thu,  9 Jul 2020 07:41:47 +0200 (CEST)
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: drm: BUG: unable to handle page fault for address: 17ec6000
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        Nathan Chancellor <natechancellor@gmail.com>
-Message-ID: <10b8419e-9e98-56c4-f4ab-9463cccd8f60@molgen.mpg.de>
-Date:   Thu, 9 Jul 2020 07:41:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 01:43:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgGIFnV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 01:43:21 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47BAAC08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 22:43:21 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x11so374446plo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 22:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Njmc1vyPe75JslBINheBTnA8lemCls4rpnddifbo0bM=;
+        b=Tvlbnc6MDGfSfqeM/smYqpc0feAlERrwBiblUCBtKfK+it2lz045dBNfFnJEu0fzPE
+         Zs72nVW0drH2HES6CA6ikXmAaLcxcpgGm66YqbDh53Aq6l2mjMgqSjki6gsO/mhmobGV
+         WMxSlbeRt/Jip07ibeC/Q3b17ZuehPlBLDyFI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Njmc1vyPe75JslBINheBTnA8lemCls4rpnddifbo0bM=;
+        b=b/J/2kD62Jr3GvHkKfaOsPVDcmWdzETk/Rw3Q8QKRHw37y/xHRrmSuIhNGbXX5SQgw
+         asApruLW3ZuetDjyUSFFjlIL1URAHz7KHDdmV9ursxxtWPj+I0IDLSnbZIPhrE2xnji5
+         yEs0IYqJ/4tP0Tl8KeU4Z/3etbCuJGYugjrnrJqHyqL3fGc8b/OLnZtQTSuK6dvcgsZq
+         /2Ky/T3uxVre90wWDcRX8zhwCwVKIBWLe5J3O8ypHk0zArlcBYc6FYssCRhiA+RDTMsA
+         7mCRT4KYLjZKi0hglpb4/3fj6G7npZiQkxpkO1tiW2TDWQPGooQnjL6Hx3HQBLwGs7/w
+         BG+g==
+X-Gm-Message-State: AOAM533C7cj7lxVm0bccPMHbHSzsocW/GBIUg+wOLs7+a+KXuFpB8OQn
+        sTqwaJ4UgPnrCQIwgNSUtmW48A==
+X-Google-Smtp-Source: ABdhPJwFCs3gNneJ3e5IhDAi3UVeMslNSOmLd6gGIwVLwQJArIjnjDf2nsIP2hKka3h5Q4fhILGSDw==
+X-Received: by 2002:a17:90a:e618:: with SMTP id j24mr12895872pjy.41.1594273400806;
+        Wed, 08 Jul 2020 22:43:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t5sm1431481pgl.38.2020.07.08.22.43.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 22:43:19 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 22:43:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
+        Jian Cai <jiancai@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v2] vmlinux.lds: add PGO and AutoFDO input sections
+Message-ID: <202007082240.815932C2@keescook>
+References: <20200622231536.7jcshis5mdn3vr54@google.com>
+ <20200625184752.73095-1-ndesaulniers@google.com>
+ <CAKwvOd=cum+BNHOk2djXx5JtAcCBwq2Bxy=j5ucRd2RcLWwDZQ@mail.gmail.com>
+ <CAK8P3a1mBCC=hBMzxZVukHhrWhv=LiPOfV6Mgnw1QpNg=MpONg@mail.gmail.com>
+ <202007020856.78DDE23F4A@keescook>
+ <CAKwvOd=NeOodb=ebbodd278=ErRSmPxFNVABQS3ZO=D00yFWGw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=NeOodb=ebbodd278=ErRSmPxFNVABQS3ZO=D00yFWGw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Linux folks,
-
-
-Building Linux v5.8-rc4-25-gbfe91da29bfad with Clang/LLD 
-1:11~++20200701093119+ffee8040534-1~exp1 from Debian experimental for 
-32-bit (`ARCH=i386`), starting Weston (Wayland) or X.Org Server results 
-in non-working screen, and Linux shows the trace below [1].
-
-> [  502.044997] BUG: unable to handle page fault for address: 17ec6000
-> [  502.045650] #PF: supervisor write access in kernel mode
-> [  502.046301] #PF: error_code(0x0002) - not-present page
-> [  502.046956] *pde = 00000000 
-> [  502.047612] Oops: 0002 [#1] SMP
-> [  502.048269] CPU: 0 PID: 2125 Comm: Xorg.wrap Not tainted 5.8.0-rc4-00105-g4da71f1ee6263 #141
-> [  502.048967] Hardware name: System manufacturer System Product Name/F2A85-M PRO, BIOS 6601 11/25/2014
-> [  502.049686] EIP: __srcu_read_lock+0x11/0x20
-> [  502.050413] Code: 83 e0 03 50 56 68 72 c6 99 dd 68 46 c6 99 dd e8 3a c8 fe ff 83 c4 10 eb ce 0f 1f 44 00 00 55 89 e5 8b 48 68 8b 40 7c 83 e1 01 <64> ff 04 88 f0 83 44 24 fc 00 89 c8 5d c3 90 0f 1f 44 00 00 55 89
-> [  502.052027] EAX: 00000000 EBX: f36671b8 ECX: 00000000 EDX: 00000286
-> [  502.052856] ESI: f3f94eb8 EDI: f3e51c00 EBP: f303dd9c ESP: f303dd9c
-> [  502.053695] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010246
-> [  502.054543] CR0: 80050033 CR2: 17ec6000 CR3: 2eea2000 CR4: 000406d0
-> [  502.055402] Call Trace:
-> [  502.056275]  drm_minor_acquire+0x6f/0x140 [drm]
-> [  502.057162]  drm_stub_open+0x2e/0x110 [drm]
-> [  502.058049]  chrdev_open+0xdd/0x1e0
-> [  502.058937]  do_dentry_open+0x21d/0x330
-> [  502.059828]  vfs_open+0x23/0x30
-> [  502.060718]  path_openat+0x947/0xd60
-> [  502.061610]  ? unlink_anon_vmas+0x53/0x120
-> [  502.062504]  do_filp_open+0x6d/0x100
-> [  502.063404]  ? __alloc_fd+0x73/0x140
-> [  502.064305]  do_sys_openat2+0x1b3/0x2a0
-> [  502.065217]  __ia32_sys_openat+0x90/0xb0
-> [  502.066128]  ? prepare_exit_to_usermode+0xa/0x20
-> [  502.067046]  do_fast_syscall_32+0x68/0xd0
-> [  502.067970]  do_SYSENTER_32+0x12/0x20
-> [  502.068902]  entry_SYSENTER_32+0x9f/0xf2
-> [  502.069839] EIP: 0xb7ef14f9
-> [  502.070764] Code: Bad RIP value.
-> [  502.071689] EAX: ffffffda EBX: ffffff9c ECX: bfa6a2ac EDX: 00008002
-> [  502.072654] ESI: 00000000 EDI: b7ed1000 EBP: bfa6b2c8 ESP: bfa6a1c0
-> [  502.073630] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-> [  502.074615] Modules linked in: af_packet k10temp r8169 realtek i2c_piix4 snd_hda_codec_realtek snd_hda_codec_generic ohci_pci ohci_hcd ehci_pci snd_hda_codec_hdmi ehci_hcd radeon i2c_algo_bit snd_hda_intel ttm snd_intel_dspcfg snd_hda_codec drm_kms_helper snd_hda_core snd_pcm cfbimgblt cfbcopyarea cfbfillrect snd_timer sysimgblt syscopyarea sysfillrect snd fb_sys_fops xhci_pci xhci_hcd soundcore acpi_cpufreq drm drm_panel_orientation_quirks agpgart ipv6 nf_defrag_ipv6
-> [  502.077895] CR2: 0000000017ec6000
-> [  502.079050] ---[ end trace ced4517b63a6db26 ]---
-> [  502.080214] EIP: __srcu_read_lock+0x11/0x20
-> [  502.081392] Code: 83 e0 03 50 56 68 72 c6 99 dd 68 46 c6 99 dd e8 3a c8 fe ff 83 c4 10 eb ce 0f 1f 44 00 00 55 89 e5 8b 48 68 8b 40 7c 83 e1 01 <64> ff 04 88 f0 83 44 24 fc 00 89 c8 5d c3 90 0f 1f 44 00 00 55 89
-> [  502.083891] EAX: 00000000 EBX: f36671b8 ECX: 00000000 EDX: 00000286
-> [  502.085148] ESI: f3f94eb8 EDI: f3e51c00 EBP: f303dd9c ESP: f303dd9c
-> [  502.086406] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010246
-> [  502.087675] CR0: 80050033 CR2: 17ec6000 CR3: 2eea2000 CR4: 000406d0
-
-> $ dmesg | ./scripts/decodecode
-> [ 55.784870] Code: 83 e0 03 50 56 68 ca c6 99 cf 68 9e c6 99 cf e8 3a c8 fe ff 83 c4 10 eb ce 0f 1f 44 00 00 55 89 e5 8b 48 68 8b 40 7c 83 e1 01 <64> ff 04 88 f0 83 44 24 fc 00 89 c8 5d c3 90 0f 1f 44 00 00 55 89
-> All code
-> ========
->    0:	83 e0 03             	and    $0x3,%eax
->    3:	50                   	push   %eax
->    4:	56                   	push   %esi
->    5:	68 ca c6 99 cf       	push   $0xcf99c6ca
->    a:	68 9e c6 99 cf       	push   $0xcf99c69e
->    f:	e8 3a c8 fe ff       	call   0xfffec84e
->   14:	83 c4 10             	add    $0x10,%esp
->   17:	eb ce                	jmp    0xffffffe7
->   19:	0f 1f 44 00 00       	nopl   0x0(%eax,%eax,1)
->   1e:	55                   	push   %ebp
->   1f:	89 e5                	mov    %esp,%ebp
->   21:	8b 48 68             	mov    0x68(%eax),%ecx
->   24:	8b 40 7c             	mov    0x7c(%eax),%eax
->   27:	83 e1 01             	and    $0x1,%ecx
->   2a:*	64 ff 04 88          	incl   %fs:(%eax,%ecx,4)		<-- trapping instruction
->   2e:	f0 83 44 24 fc 00    	lock addl $0x0,-0x4(%esp)
->   34:	89 c8                	mov    %ecx,%eax
->   36:	5d                   	pop    %ebp
->   37:	c3                   	ret    
->   38:	90                   	nop
->   39:	0f 1f 44 00 00       	nopl   0x0(%eax,%eax,1)
->   3e:	55                   	push   %ebp
->   3f:	89                   	.byte 0x89
+On Wed, Jul 08, 2020 at 04:13:54PM -0700, Nick Desaulniers wrote:
+> On Thu, Jul 2, 2020 at 8:57 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > This looks good to me. Do you want me to carry it as part of the orphan
+> > series? (It doesn't look like it'll collide, so that's not needed, but I
+> > can if that makes things easier.)
+> >
+> > Acked-by: Kees Cook <keescook@chromium.org>
 > 
-> Code starting with the faulting instruction
-> ===========================================
->    0:	64 ff 04 88          	incl   %fs:(%eax,%ecx,4)
->    4:	f0 83 44 24 fc 00    	lock addl $0x0,-0x4(%esp)
->    a:	89 c8                	mov    %ecx,%eax
->    c:	5d                   	pop    %ebp
->    d:	c3                   	ret    
->    e:	90                   	nop
->    f:	0f 1f 44 00 00       	nopl   0x0(%eax,%eax,1)
->   14:	55                   	push   %ebp
->   15:	89                   	.byte 0x89
+> If you would be so kind, I'd owe you yet another beer!
 
+Yup! It's on my list; I've been clearing other stuff so I can do another
+revision. (I want to move some things out of discard and into 0-size
+asserts, and possibly collect Arvind's runtime relocations series too
+(since it seems basically done but no x86 maintainers have snagged it).
 
-Kind regards,
-
-Paul
-
-
-[1]: https://github.com/ClangBuiltLinux/linux/issues/1081
+-- 
+Kees Cook
