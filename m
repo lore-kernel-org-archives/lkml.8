@@ -7,94 +7,102 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E032C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F45320672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC73C2076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:52:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLAM8adN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHVkVLq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgGIUvS (ORCPT
+        id S1726664AbgGIUw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:51:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
+        Thu, 9 Jul 2020 16:52:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgGIUvQ (ORCPT
+        with ESMTP id S1726196AbgGIUw4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:51:16 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7DAC08C5CE;
-        Thu,  9 Jul 2020 13:51:16 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id m16so108191pls.5;
-        Thu, 09 Jul 2020 13:51:16 -0700 (PDT)
+        Thu, 9 Jul 2020 16:52:56 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A0FC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 13:52:55 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 9so3954008ljv.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 13:52:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6aAUMrDgu/dRMO1PKFcJzl15krQUj9/NrmpmX2igbSU=;
-        b=QLAM8adNoWwlxAY3sKExkNjz7ranKdOekEgyi9t/Sjm1NULpynsg98SCvqGKj++2my
-         IK6ockcKb2udy/ZF5A5MSGWuMXga8YnRQfwMlegNJLeMokYho+ff0W/PU+kagdruvlXN
-         9gkP+eAM5WjaKP96HoniGYjaNKLpDPvFyQT2H1OFmpiP/4SzVsYo3F9vJoOESX7nhgHg
-         z1uJVBFWOPaPNtXVby+4aZ67Ytn5WneI4d5WL6X2FVAZoECT+cfFbRB0DPMAY+V7JMGo
-         ohQCrGq+5zpYfdb5EivFa/KEV6oa4C/xLRl7xx7z5q04HZE18PRyhet427kCuxzbd+PE
-         IBKg==
+        bh=Fh2AsvdiqBtPIs80v+1OuPIjNrn7s9RuQyFPfypzlb4=;
+        b=sHVkVLq8P8Z26hbzD6scTmBB4gmkJS+ZtdGWvu3grwTurjn5/3E2HB3GJ01CWS37bo
+         tWBJs24H7vQVvI2+gpzhZnKHeC4kzlIOjliClGT1t9DqwJ6WCxXe/eNwFWLXdpHoS8PP
+         wBcGd1ZCIJhO1o1N3iCRHZriNoKbH6XKkPjMFcv1UAjFo4bj5u/DiSvaKiJEJuusRjjS
+         9zkWG7tMhe0uQd+coolYdbLQXdEe2z/DLVar22iPEfG7BnBU4vcJ2x75jfrDdXf6XVqv
+         7+7afd82HPA/yLLEe6tiSnv27noyQ53CvMN47pmoMRkAjTfKA/Zda1eXMkK2FFtFH6AZ
+         OoKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6aAUMrDgu/dRMO1PKFcJzl15krQUj9/NrmpmX2igbSU=;
-        b=ZWHl+OHnnrviZisTXNCcx1BccUg1ffmY1YZn4XV3+zxDoBiLm/fAsmexMITtX9j09+
-         e5Xr2IE+07KArNUGlee6XKDVOC/rQw6jocho1zo5SiEhmBkZ/qicrpox/T6Uaa/2q2vd
-         pf/aTaLRUvxoT9yCufCjVpDcdTecaoieP+EMf9I/gyXXZ/m+culCsHrACAMweTv71QLS
-         PkkqYa05RREOCNXdrdvAO8WSlI2A6JoPvViU5EpP1+SMMTRqXNRvx4TdA3fFn2EeT56c
-         p4vP5p4SKEc37YvuP0TLDcYRiL90ktO+VRnv2ueP59IP/5CHhdSZRk0GGMbrQkTIHpp9
-         bBOQ==
-X-Gm-Message-State: AOAM530UOZHZrlWBV+DG7rCMbvBRB73HsUvRRXf/ZXwa8wqAwnXWyP4E
-        4sJPtgNzWDhnP7Yxh+Hiqwm0ZCTbHuyUZH4Gpxe5gidE
-X-Google-Smtp-Source: ABdhPJxsjKxantzTRftMX6bNh0Ka3ytqBm/pi7VsMJfjHY2qg0YOKAp3gqWXkrp8PGXSVI7piz191sxizMiURXgpxig=
-X-Received: by 2002:a17:902:8491:: with SMTP id c17mr47735913plo.262.1594327876126;
- Thu, 09 Jul 2020 13:51:16 -0700 (PDT)
+        bh=Fh2AsvdiqBtPIs80v+1OuPIjNrn7s9RuQyFPfypzlb4=;
+        b=srHbBYUfzY5lpyqxeatgfcpgunhdCJbLa4mq7JdXBNNrRpOOUr4nws7cxCGLgTAhmM
+         CgoNHFk2v7uHWCJYKUtCm/H6DzmHVH6WkfAqXK5P2fJPjUUoJ5NiryPVVTWhK3nvXzyZ
+         yrCY4Yj7JhOGH7aJaKDOdOsFDzqNnwzKemPU+dReN4OViSxFOV0ZPtR4gOfNak/UmA0F
+         /khxnwrVGmylCtl0THmwu6B8Ke56KO9v/xM1IELblk9PL+3wSzgc3sFMRvuuRTOyEAcP
+         2YzaNiT2gNN20mO2ar9Gx+mklJHpbcHPyeeiXi6cZRrLO9XXDei3/yke05UHo/vJ0qZc
+         gxPQ==
+X-Gm-Message-State: AOAM530EJP6+s6cjYDNvqCCfslOjg5GFvDwbE0EjkOkNy7uMQl9H6vYl
+        Gm87SRXhFacNx7UX+F5dv2mLCd5Dl0zeoOgyhcKNwoVR
+X-Google-Smtp-Source: ABdhPJyE3glsyD9QhjYteDniiXEqf7D+KyLAcFcfcclVTVhuIO0c5wDCL8ZJSok3d5oh82avYDkQfU3s3LdoxqE21dU=
+X-Received: by 2002:a2e:850f:: with SMTP id j15mr14987332lji.44.1594327974153;
+ Thu, 09 Jul 2020 13:52:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200709201220.13736-1-eajames@linux.ibm.com> <20200709201220.13736-3-eajames@linux.ibm.com>
-In-Reply-To: <20200709201220.13736-3-eajames@linux.ibm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jul 2020 23:50:59 +0300
-Message-ID: <CAHp75VcE9skpqa32bZ4AAcOa08WYSqqZodnveLSF+sZej5KnWw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] leds: pca955x: Add an IBM software implementation of
- the PCA9552 chip
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        vishwa@linux.ibm.com
+References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
+In-Reply-To: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 9 Jul 2020 22:52:42 +0200
+Message-ID: <CANiq72n51z9QtFdj1cF72hhQikq7jxCA+TmKKSQcYo34WAPGsw@mail.gmail.com>
+Subject: Re: Linux kernel in-tree Rust support
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     alex.gaynor@gmail.com, geofft@ldpreload.com, jbaublitz@redhat.com,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 11:16 PM Eddie James <eajames@linux.ibm.com> wrote:
+Hi Nick,
+
+On Thu, Jul 9, 2020 at 8:42 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
 >
-> IBM created an implementation of the PCA9552 on a PIC16F
-> microcontroller. The I2C device addresses are different from the
-> hardware PCA9552, so add a new compatible string and associated
-> platform data to be able to probe this device.
+> Hello folks,
+> I'm working on putting together an LLVM "Micro Conference" for the
+> upcoming Linux Plumbers Conf
+> (https://www.linuxplumbersconf.org/event/7/page/47-attend).  It's not
+> solidified yet, but I would really like to run a session on support
+> for Rust "in tree."  I suspect we could cover technical aspects of
+> what that might look like (I have a prototype of that, was trivial to
 
-This is weird. I would rather expect ibm prefix with corresponding part number.
+Agreed, I wrote one ~half a year ago that compiled TUs through rustc
+mimicking what we do with cc to some degree (i.e. no cargo etc.), and
+it was quite pleasant.
 
-> +       pca9552_ibm,
+> wire up KBuild support), but also a larger question of "should we do
+> this?" or "how might we place limits on where this can be used?"
 
-> +       [pca9552_ibm] = {
+Indeed, I would say that is going to be the major topic, not so much
+the technical bits.
 
-> +       { "pca9552-ibm", pca9552_ibm },
+> Question to folks explicitly in To:, are you planning on attending plumbers?
 
-> +       { .compatible = "nxp,pca9552-ibm", .data = (void *)pca9552_ibm },
+I wasn't, but it definitely is an interesting topic that I wouldn't
+want to miss!
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Cheers,
+Miguel
