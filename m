@@ -2,113 +2,115 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB0AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5DFE20767
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8E120767
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CxohFVEg"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="UjOsw/EY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgGIQJY (ORCPT
+        id S1728158AbgGIQKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:09:24 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:44644 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726357AbgGIQJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:09:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594310963; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=eN0Ptdq7+QlqubS6nSPF3ikVU7xlsp4fhiaPh3+zthY=;
- b=CxohFVEgBWNof627rdwwgutFjUZWpDkGa2qjpK/nesCup8rbc0JSAzwrT8MGRfWyEl3vCLHD
- t1mwZ9rSbCuwm76VRDqwhMx6kSimbk+yXc5VaSvpkPwI6GUNi5Mw/6A+V5JUcmlrgL3FyPDr
- y1pf3OMkyRLt/vJ1o9dnrjNbV2s=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5f07411fa19992ac650bacf9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 16:09:03
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E1D23C433CA; Thu,  9 Jul 2020 16:09:02 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 55EB4C433C6;
-        Thu,  9 Jul 2020 16:09:02 +0000 (UTC)
+        Thu, 9 Jul 2020 12:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727095AbgGIQKT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:10:19 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A58E0C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 09:10:18 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id by13so2255601edb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 09:10:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OXGyI1jQM4MyDlznYgbObqnrQ6fGYg1DRfNByglLv1o=;
+        b=UjOsw/EYQjZBeUPhxTDnLwz5hcjG7XJKZAgCs2jnN8hFjADCB++r0ATOAqmENgW/VP
+         hikL0VJL7vWu6z3P4UkTBqdu2KGKyfsHsPW/Bi3c+q1lNKQwFaQ3jtXQyW/uMEGDpkA/
+         TqqxyTc44LHLjuIv9MUJBAD9nKjyvaMtoS5ILB0gpHpaESvb3166bLYfXcKF04TJDOs0
+         pa1AMO6kHH27YF7o2AKynrWSx+i1ba/Z1ZCBZyA3sL/VFV7J9RZ/YtnFWWUqfQN8T7G1
+         xdoFwAAA2eCajSA9FJRXSZ84ILtv1QbBjC3Pfdo/yF5RcJ+LZqB+kCzPE+zAD4yYJPWE
+         AlkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OXGyI1jQM4MyDlznYgbObqnrQ6fGYg1DRfNByglLv1o=;
+        b=lgCrFxckwKHnx2Yp1IMXYzRVQCPr5xggZbCilcs3BKUcWik4TNvenCI4RHs6qI1oHB
+         j6CsyHHeQcF1XNskg/CS+wErIQhq52uBsvmvdL6R9Q85WRmQ9OYlDwYn6OmtPkq13VZG
+         VgFxiLbM+ND/HVZffbYad8i9VJ6d8rVQYeGwMpUiVQN0yRSi/sb4GsefKxWnuweSJOnD
+         rkX84Ljheg9qYwa4ql34XwOcN9B/+gM6sYbSHaGoYcowIEmFJPin85CCxsHaBkBeP7lu
+         kHmpLqR8+9sXaNezlvkTYf6aw0/BhHzDR5cdsSarl2qfUmdhQjzCHw5Yok9/prl3qSRP
+         Gpxw==
+X-Gm-Message-State: AOAM532VaYe/iHrvr5rr+RVN7k2Vz5O75gULY6Ta9lFHG1AJYy5UBW9g
+        s9744nJeympy8YJTAlt1vYSqTVmDIu4Qfe0g2IY+Uw==
+X-Google-Smtp-Source: ABdhPJys2PRuEgVWwVNfqL6iwk8phAva/9+kvQrbBEC8AGznqa+13FP1lQM5gT85aLrNX8emw/o4sdAG8MvO8CX0Aoc=
+X-Received: by 2002:aa7:d043:: with SMTP id n3mr75626053edo.102.1594311017269;
+ Thu, 09 Jul 2020 09:10:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 09 Jul 2020 09:09:02 -0700
-From:   rishabhb@codeaurora.org
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tsoni@codeaurora.org, sidgup@codeaurora.org, stable@vger.kernel.org
-Subject: Re: [RESEND v1] soc: qcom: pdr: Reorder the PD state indication ack
-In-Reply-To: <20200701195954.9007-1-sibis@codeaurora.org>
-References: <20200701195954.9007-1-sibis@codeaurora.org>
-Message-ID: <777353d20205e8a2a997d9807a5cf7b6@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <159408711335.2385045.2567600405906448375.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200709150051.GA17342@infradead.org> <20200709153854.GY23821@mellanox.com>
+In-Reply-To: <20200709153854.GY23821@mellanox.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 9 Jul 2020 09:10:06 -0700
+Message-ID: <CAPcyv4hSPWEUih=we5QM_rdk7fLemi8phyk8_0tOd8ieL_=vPg@mail.gmail.com>
+Subject: Re: [PATCH v2 11/12] PM, libnvdimm: Add 'mem-quiet' state and
+ callback for firmware activation
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-01 12:59, Sibi Sankar wrote:
-> The Protection Domains (PD) have a mechanism to keep its resources
-> enabled until the PD down indication is acked. Reorder the PD state
-> indication ack so that clients get to release the relevant resources
-> before the PD goes down.
-> 
-> Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart 
-> helpers")
-> Reported-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
-> 
-> I couldn't find the previous patch on patchworks. Resending the patch
-> since it would need to land on stable trees as well
-> 
->  drivers/soc/qcom/pdr_interface.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/qcom/pdr_interface.c 
-> b/drivers/soc/qcom/pdr_interface.c
-> index a90d707da6894..088dc99f77f3f 100644
-> --- a/drivers/soc/qcom/pdr_interface.c
-> +++ b/drivers/soc/qcom/pdr_interface.c
-> @@ -279,13 +279,15 @@ static void pdr_indack_work(struct work_struct 
-> *work)
-> 
->  	list_for_each_entry_safe(ind, tmp, &pdr->indack_list, node) {
->  		pds = ind->pds;
-> -		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
-> 
->  		mutex_lock(&pdr->status_lock);
->  		pds->state = ind->curr_state;
->  		pdr->status(pds->state, pds->service_path, pdr->priv);
->  		mutex_unlock(&pdr->status_lock);
-> 
-> +		/* Ack the indication after clients release the PD resources */
-> +		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
-> +
->  		mutex_lock(&pdr->list_lock);
->  		list_del(&ind->node);
->  		mutex_unlock(&pdr->list_lock);
+On Thu, Jul 9, 2020 at 8:39 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> On Thu, Jul 09, 2020 at 04:00:51PM +0100, Christoph Hellwig wrote:
+> > On Mon, Jul 06, 2020 at 06:59:32PM -0700, Dan Williams wrote:
+> > > The runtime firmware activation capability of Intel NVDIMM devices
+> > > requires memory transactions to be disabled for 100s of microseconds.
+> > > This timeout is large enough to cause in-flight DMA to fail and other
+> > > application detectable timeouts. Arrange for firmware activation to be
+> > > executed while the system is "quiesced", all processes and device-DMA
+> > > frozen.
+> > >
+> > > It is already required that invoking device ->freeze() callbacks is
+> > > sufficient to cease DMA. A device that continues memory writes outside
+> > > of user-direction violates expectations of the PM core to be to
+> > > establish a coherent hibernation image.
+> > >
+> > > That said, RDMA devices are an example of a device that access memory
+> > > outside of user process direction.
+>
+> Are you saying freeze doesn't work for some RDMA drivers? That would
+> be a driver bug, I think.
 
-Reviewed-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Right, it's more my hunch than a known bug at this point, but in my
+experience with testing server class hardware when I've reported a
+power management bugs I've sometimes got the incredulous response "who
+suspends / hibernates servers!?". I can drop that comment.
 
-Thanks,
-Rishabh
+Are there protocol timeouts that might need to be adjusted for a 100s
+of microseconds blip in memory controller response?
+
+> The consequences of doing freeze are pretty serious, but it should
+> still stop DMA.
+
+Ok, and there is still the option to race the quiesce if the effects
+of the freeze are worse than a potential timeout from the quiesce.
