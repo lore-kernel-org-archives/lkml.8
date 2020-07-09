@@ -2,77 +2,152 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97915C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF682C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C27F20672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:45:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="qxKpfZaR"
+	by mail.kernel.org (Postfix) with ESMTP id DA6882074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgGIOp1 (ORCPT
+        id S1726932AbgGIOrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:45:27 -0400
-Received: from one.firstfloor.org ([193.170.194.197]:36222 "EHLO
-        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgGIOp1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:45:27 -0400
-Received: by one.firstfloor.org (Postfix, from userid 503)
-        id C9F5F86731; Thu,  9 Jul 2020 16:36:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
-        s=mail; t=1594305414;
-        bh=NFHVOQuc740DsnU3hI4JnpmsluKHMe7JTI/h4WcX4yw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qxKpfZaR0f/XvTQvLBiUw9glLNQyIZoHiwSIQMsKSbL7iQYwANOkTAC1AJ/Xd+yf9
-         tbSaJDdmto+SmTfAQE1xS8nHgMyp+AKZ3sHuC0JE9QIJCjtcK0soNeleJWv9WoXwFd
-         gGQbA3CPGu3owN5v8RcgGEqAWD415NIJDNaVvWT8=
-Date:   Thu, 9 Jul 2020 07:36:54 -0700
-From:   Andi Kleen <andi@firstfloor.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, Andi Kleen <andi@firstfloor.org>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 4/4] perf-probe: Warn if the target function is GNU
- Indirect function
-Message-ID: <20200709143654.pw2maoxivsjho6op@two.firstfloor.org>
-References: <159428201109.56570.3802208017109058146.stgit@devnote2>
- <159428205174.56570.17588311835868886287.stgit@devnote2>
+        Thu, 9 Jul 2020 10:47:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:34320 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726475AbgGIOrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 10:47:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DEC631B;
+        Thu,  9 Jul 2020 07:47:09 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 233F73F792;
+        Thu,  9 Jul 2020 07:47:08 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 15:47:01 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
+References: <20200528143141.29956-1-pali@kernel.org>
+ <20200702083036.12230-1-pali@kernel.org>
+ <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+ <20200709122208.rmfeuu6zgbwh3fr5@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <159428205174.56570.17588311835868886287.stgit@devnote2>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709122208.rmfeuu6zgbwh3fr5@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index 1e95a336862c..671176d39569 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -379,6 +379,11 @@ static int find_alternative_probe_point(struct debuginfo *dinfo,
->  			address = sym->start;
->  		else
->  			address = map->unmap_ip(map, sym->start) - map->reloc;
-> +		if (sym->type == STT_GNU_IFUNC) {
-> +			pr_warning("Warning: The probe address (0x%lx) is in a GNU indirect function.\n"
-> +				"This may not work as you expected unless you intend to probe the indirect function.\n",
+On Thu, Jul 09, 2020 at 02:22:08PM +0200, Pali Rohár wrote:
+> On Thursday 09 July 2020 12:35:09 Lorenzo Pieralisi wrote:
+> > On Thu, Jul 02, 2020 at 10:30:36AM +0200, Pali Rohár wrote:
+> > > When there is no PCIe card connected and advk_pcie_rd_conf() or
+> > > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+> > > root bridge, the aardvark driver throws the following error message:
+> > > 
+> > >   advk-pcie d0070000.pcie: config read/write timed out
+> > > 
+> > > Obviously accessing PCIe registers of disconnected card is not possible.
+> > > 
+> > > Extend check in advk_pcie_valid_device() function for validating
+> > > availability of PCIe bus. If PCIe link is down, then the device is marked
+> > > as Not Found and the driver does not try to access these registers.
+> > > 
+> > > This is just an optimization to prevent accessing PCIe registers when card
+> > > is disconnected. Trying to access PCIe registers of disconnected card does
+> > > not cause any crash, kernel just needs to wait for a timeout. So if card
+> > > disappear immediately after checking for PCIe link (before accessing PCIe
+> > > registers), it does not cause any problems.
+> > > 
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > 
+> > > ---
+> > > Changes in V3:
+> > > * Add comment to the code
+> > > Changes in V2:
+> > > * Update commit message, mention that this is optimization
+> > > ---
+> > >  drivers/pci/controller/pci-aardvark.c | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > index 90ff291c24f0..d18f389b36a1 100644
+> > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > @@ -644,6 +644,13 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+> > >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+> > >  		return false;
+> > >  
+> > > +	/*
+> > > +	 * If the link goes down after we check for link-up, nothing bad
+> > > +	 * happens but the config access times out.
+> > > +	 */
+> > > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+> > > +		return false;
+> > > +
+> > >  	return true;
+> > >  }
+> > 
+> > Question: this basically means that you can only effectively enumerate
+> > bus number == root_bus_nr and AFAICS if at probe the link did not
+> > come up it will never do, will it ?
+> > 
+> > Isn't this equivalent to limiting the bus numbers the bridge is capable
+> > of handling ?
+> > 
+> > Reworded: if in advk_pcie_setup_hw() the link does not come up, what's
+> > the point of trying to enumerate the bus hierarchy below the root bus ?
+> 
+> Hello Lorenzo!
+> 
+> PCIe link can theoretically come up even after boot, but aardvark driver
+> currently does not support link detection at runtime. So it checks and
+> enumerate device only at probe time.
 
-I would say something like this.
+If the link is not up at probe enumerating devices below the root
+bus is basically useless and that's actually what is causing the
+delays you are fixing. Is this correct ?
 
-Consider identifying the final function used at run time and set the
-probe directly on that.
+> I do not know if hardware has some mechanism to inform kernel that PCIe
+> link come up (or down) and re-enumeration is required. Or the only
+> option is polling via advk_pcie_link_up().
+> 
+> So if device is not visible at the probe time then it would not appear
+> in system and cannot be used. This is current state.
+> 
+> Just to note that our hardware does not support physical hotplug of
+> mPCIe cards. You need to connect card when board is powered off.
+> 
+> So if at the aardvark probe time PCIe link is not up then trying to
+> enumerate devices under (software) root bridge is not needed. But it is
+> needed to register/enumerate software root bridge device and currently
+> both is done by one (recursive) call pci_host_probe().
 
-I think that's more useful to the user.
+I understand that but the bridge bus resource can be trimmed to just
+contain the root bus because that's the only one where there is a
+chance you can enumerate a device.
 
--Andi
+I would like to get Bjorn's opinion on this, I don't like these "link is
+up" checks in config accessors (they are racy and honestly it is a
+run-time check that does not make much sense, either it is always
+true/false or it is inevitably racy) I was wondering if we can find an
+alternative solution but I am not sure the one I suggested above is
+better than this patch.
+
+Lorenzo
