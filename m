@@ -2,333 +2,393 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81711C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF9FB20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:26:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="bByA7ZYI"
+	by mail.kernel.org (Postfix) with ESMTP id 52CF420786
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:29:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594261745;
+	bh=iSg9FrSe3XGsbZMDkjpx8ly7pQhRwUtFAzr6Vlw+kf0=;
+	h=Date:From:To:Subject:In-Reply-To:List-ID:From;
+	b=PzpoSarmRXt/fxuD9ELdioMIivPeOcd91nqrV7uYfcBJq+ir6pR6594PScj2aS8Qc
+	 U76zsd+8HRkKFq/DKIjoMAb2nRuAy0Oq57PWgKOstOREo3Ub3teJ+eHmIOGq94PleK
+	 nF+1EQ7nRhdQO6tZX0pvDZmBDh8W6DMuyfsxP3tY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgGIC0o (ORCPT
+        id S1726270AbgGIC3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 22:26:44 -0400
-Received: from mga12.intel.com ([192.55.52.136]:41429 "EHLO mga12.intel.com"
+        Wed, 8 Jul 2020 22:29:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgGIC0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 22:26:43 -0400
-IronPort-SDR: w3pgnTQuUb2vQg0YWdYtjBWwhJfK19cs5OW+ftLwQr7csngVrBvVhoZKahPT2m4ek6zyFHSt7q
- 69rxw/9PcHag==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="127514365"
-X-IronPort-AV: E=Sophos;i="5.75,330,1589266800"; 
-   d="scan'208";a="127514365"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 19:26:30 -0700
-IronPort-SDR: gwuSn3Pwpce2WIOHzygJlWmUvO2/0+xcqFtQT9jpyen83ODtbIg5VNePPXeJW3AgEihJzI7cLR
- 5tuYptC5D54A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,330,1589266800"; 
-   d="scan'208";a="280136501"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jul 2020 19:26:29 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 8 Jul 2020 19:26:29 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.55) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Wed, 8 Jul 2020 19:26:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dG0vpOs/+iOBev509u/BKO1TcM6QJ1VIv2sLFQYz7DHmyByZwzEmVaxQlu90kbVPn89Ny10LXcV3WIDybeXlRo13W+pqV5ievzt4uas8LjUP1r/nCpL/B30elV9ZM7ASGAXOpghx1pvaCBvX3GDz2qzovirR90rnVoqWajw0euzppkzoKMYuFufyC3jdrqLh6OJUVIIViYS9NVQ1iYUyDbNChkI4hLO5WUciYiaDoEEKgAUgrSM0nOdO9WkXH5jQyk+e5sdSSGlJmeoDgv1AjUudY9097D4knt90p6lgj96ROvZDYqDJuEBZ67ib6OrUUx6B3FlFtyYwEQZ6ZORaww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y66Vvd4b91mstNByeV2FEknLewHNVUkeNcCHHOszvHs=;
- b=bET5C0qs04TsCkjI8zuz4DYMUmTKL9ZwvGTvWY/ESB4yQgcVCvI0Ljk+rRMqR3SOGtPp7euvAHZAftnn7D9NVAy35w/qL4pa2uiq3+8PzZOlbQcWPanv20nHH4+mkeRhMnB+sF9DsO4GyOcR/NclNQUtcnFwrX4Ob1LhZoiOS6Rf4ANNsB5qnAAu8/ERYiz6PP6DUTCRM4mlqKamE2nvjFWXuOg2IfqJPKdMMI8IoWcPUnd4cKkiKrT8oe19dchdDeCGiWsKlnrnEYInzXqLRaUQeK0TNomzOTuf7cakpj3RPiVuBLwNkvhJF06XoTuH35z6GMNLqFEbWEdlS/7VzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y66Vvd4b91mstNByeV2FEknLewHNVUkeNcCHHOszvHs=;
- b=bByA7ZYIUA91xUJe/OFwwTt+SaMvxUULiO7MH/CQHd6CoC+mTqv2AtJbQ+LqihbosNYuCLAdVXmHSpHlMB59xYnK1MXkYGBkRmDFy6wgaMYhlzWYVZYmTCNRm0ap5EtAQU3ptbj/pKfRMLPhJBcTNQ8DhlULEn9lAbKTQuvzG/U=
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
- DM6PR11MB3994.namprd11.prod.outlook.com (2603:10b6:5:193::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3153.20; Thu, 9 Jul 2020 02:26:27 +0000
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::9002:97a2:d8c0:8364]) by DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::9002:97a2:d8c0:8364%10]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
- 02:26:27 +0000
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
- (alloc/free)
-Thread-Topic: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
- (alloc/free)
-Thread-Index: AQHWSgRRzB2G/Oy5QEmxCHQWFS0FB6j02KQAgACUCyCAB/5SUIAAxDYAgABLnwCAABmKAIAAAO4wgAAFFYCAAAD78A==
-Date:   Thu, 9 Jul 2020 02:26:27 +0000
-Message-ID: <DM5PR11MB143577F0C21EDB82B82EEB35C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-        <1592988927-48009-7-git-send-email-yi.l.liu@intel.com>
-        <20200702151832.048b44d1@x1.home>
-        <CY4PR11MB1432DD97F44EB8AA5CCC87D8C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
-        <DM5PR11MB1435B159DA10C8301B89A6F0C3670@DM5PR11MB1435.namprd11.prod.outlook.com>
- <20200708135444.4eac48a4@x1.home>
- <DM5PR11MB14358A8797E3C02E50B37FFEC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
- <MWHPR11MB16456D12135AA36BA16CE4208C640@MWHPR11MB1645.namprd11.prod.outlook.com>
- <DM5PR11MB14357DC99EFCDE7E02944E2EC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
- <MWHPR11MB1645F822D9267005AE5BCE528C640@MWHPR11MB1645.namprd11.prod.outlook.com>
-In-Reply-To: <MWHPR11MB1645F822D9267005AE5BCE528C640@MWHPR11MB1645.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [117.169.230.114]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a815442c-2bb1-429a-c856-08d823af7b98
-x-ms-traffictypediagnostic: DM6PR11MB3994:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB399494EEEAA835DDA3C621B6C3640@DM6PR11MB3994.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 04599F3534
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0jbnRle7eYJNc6jl2UuENzvCmEHtSa+tbaroimVUz0nEGO1eQ9s43OXPQW00my/FftwqbTb6KYPno37XtzeEGB+C1u5aDaps2VPBXQTj73OFSp+pkBCQloVT2yd1XOGnGb0GkKckmim/z/WpS5P6TFrnkkDp11WCIvg9FHBToCVagTEoGxjpnaFlO3mi0aKpuMCIWZHmA7XiOXkBm3DLavHU56qeTiNdyPKs8O6blLbaiAkPAklwUMfFynZ2kufB9eJHUvNSwRbI4k1k5p/7DDMeI+21Uf6/6SP5RVT9eyeobRg/WFsZQNJqGpjn7X6zTidDLv04ViCPY/IqF3tf3w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(39860400002)(346002)(376002)(4326008)(186003)(54906003)(86362001)(110136005)(2906002)(8936002)(8676002)(9686003)(55016002)(316002)(7416002)(76116006)(33656002)(6506007)(26005)(478600001)(83380400001)(66556008)(64756008)(7696005)(66476007)(71200400001)(52536014)(66946007)(5660300002)(66446008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: rUU6cAC1nCz6+2K/cNWtzZ+DOCYL7zTgVMgyE+cuNWYDUT/yMSz7NRGgywbX0Iq/0IGPRWdDCDoN8u+p0YzQRg8jsq/3KT8gDiGt4DCs26SmuPr6yLG/UoCut72qHHpGrNPMxeQPOVojz07Od511QIDh2e7naBxAt3Wr/OqQPgUEL6rZ/cYcU6AmlWM9armi5b0dFAfh58mdH+h062ycKfhfL2Q5/rEfStD/0/VPkio0Khl4S4eVDSbSwjUHiski+m31pr3X5RzLJTxhfQQkTyQ6KGQwlI0X51OadRhsQdfAFhmk974lc6iBAxXLHF8VWU9hczYU4fcq0SB0+LmF0OJuT/Xj7bdDstvEDEJhnuf1PqsRnsADQPwhVH1MqeGOKBsvBbwiyYLRcycCLR1X7z1jve5H3f1yhd3wkwrb7GPlked5kbWRKpW8D03mzL8jh3b+gFRmMpMH/YmQDm6A+7/iwn7BUjW3+n1yXUtYWoF3ss1Nj7LhG+4Hshpg2rIl
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a815442c-2bb1-429a-c856-08d823af7b98
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 02:26:27.1385
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HiZrSvREyEPajJdFQTWEpvlxpZF4V2Z30oshBkGOiDcEIB5r9FUSjcpbqwNYG/2rLi216inLB/bMwik5+jagcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3994
-X-OriginatorOrg: intel.com
+        id S1726082AbgGIC3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 22:29:03 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDC49206F6;
+        Thu,  9 Jul 2020 02:29:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594261742;
+        bh=iSg9FrSe3XGsbZMDkjpx8ly7pQhRwUtFAzr6Vlw+kf0=;
+        h=Date:From:To:Subject:In-Reply-To:From;
+        b=YB8sY9XuaMo4vXwFirJCI8Fcm+AjQP5RcY3mJ1OtaKnl93rWpERMZHRREOs7suhSA
+         fOcCCxpXgqjowaJjjsbGQQnZA2VRrYCTh/3CSQErx7JD/ohmc++wNwURqYNTeVLTGe
+         RHooaQJ5rC7dBnY2XNvo/w32+Zzpo4uuItZq2duQ=
+Date:   Wed, 08 Jul 2020 19:29:01 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject:  mmotm 2020-07-08-19-28 uploaded
+Message-ID: <20200709022901.FTEvQ122j%akpm@linux-foundation.org>
+In-Reply-To: <20200703151445.b6a0cfee402c7c5c4651f1b1@linux-foundation.org>
+User-Agent: s-nail v14.8.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+The mm-of-the-moment snapshot 2020-07-08-19-28 has been uploaded to
 
-> From: Tian, Kevin <kevin.tian@intel.com>
-> Sent: Thursday, July 9, 2020 10:18 AM
->=20
-> > From: Liu, Yi L <yi.l.liu@intel.com>
-> > Sent: Thursday, July 9, 2020 10:08 AM
-> >
-> > Hi Kevin,
-> >
-> > > From: Tian, Kevin <kevin.tian@intel.com>
-> > > Sent: Thursday, July 9, 2020 9:57 AM
-> > >
-> > > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > > Sent: Thursday, July 9, 2020 8:32 AM
-> > > >
-> > > > Hi Alex,
-> > > >
-> > > > > Alex Williamson <alex.williamson@redhat.com>
-> > > > > Sent: Thursday, July 9, 2020 3:55 AM
-> > > > >
-> > > > > On Wed, 8 Jul 2020 08:16:16 +0000
-> > > > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > > > >
-> > > > > > Hi Alex,
-> > > > > >
-> > > > > > > From: Liu, Yi L < yi.l.liu@intel.com>
-> > > > > > > Sent: Friday, July 3, 2020 2:28 PM
-> > > > > > >
-> > > > > > > Hi Alex,
-> > > > > > >
-> > > > > > > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > > > > > > Sent: Friday, July 3, 2020 5:19 AM
-> > > > > > > >
-> > > > > > > > On Wed, 24 Jun 2020 01:55:19 -0700 Liu Yi L
-> > > > > > > > <yi.l.liu@intel.com> wrote:
-> > > > > > > >
-> > > > > > > > > This patch allows user space to request PASID allocation/=
-free,
-> > e.g.
-> > > > > > > > > when serving the request from the guest.
-> > > > > > > > >
-> > > > > > > > > PASIDs that are not freed by userspace are automatically
-> > > > > > > > > freed
-> > > > when
-> > > > > > > > > the IOASID set is destroyed when process exits.
-> > > > > > [...]
-> > > > > > > > > +static int vfio_iommu_type1_pasid_request(struct vfio_io=
-mmu
-> > > > *iommu,
-> > > > > > > > > +					  unsigned long arg)
-> > > > > > > > > +{
-> > > > > > > > > +	struct vfio_iommu_type1_pasid_request req;
-> > > > > > > > > +	unsigned long minsz;
-> > > > > > > > > +
-> > > > > > > > > +	minsz =3D offsetofend(struct
-> vfio_iommu_type1_pasid_request,
-> > > > > range);
-> > > > > > > > > +
-> > > > > > > > > +	if (copy_from_user(&req, (void __user *)arg, minsz))
-> > > > > > > > > +		return -EFAULT;
-> > > > > > > > > +
-> > > > > > > > > +	if (req.argsz < minsz || (req.flags &
-> > > > > ~VFIO_PASID_REQUEST_MASK))
-> > > > > > > > > +		return -EINVAL;
-> > > > > > > > > +
-> > > > > > > > > +	if (req.range.min > req.range.max)
-> > > > > > > >
-> > > > > > > > Is it exploitable that a user can spin the kernel for a lon=
-g
-> > > > > > > > time in the case of a free by calling this with [0, MAX_UIN=
-T]
-> > > > > > > > regardless of their
-> > > > > actual
-> > > > > > > allocations?
-> > > > > > >
-> > > > > > > IOASID can ensure that user can only free the PASIDs allocate=
-d
-> > > > > > > to the
-> > > > user.
-> > > > > but
-> > > > > > > it's true, kernel needs to loop all the PASIDs within the ran=
-ge
-> > > > > > > provided by user.
-> > > > > it
-> > > > > > > may take a long time. is there anything we can do? one thing =
-may
-> > > > > > > limit
-> > > > the
-> > > > > range
-> > > > > > > provided by user?
-> > > > > >
-> > > > > > thought about it more, we have per-VM pasid quota (say 1000), s=
-o
-> > > > > > even if user passed down [0, MAX_UNIT], kernel will only loop t=
-he
-> > > > > > 1000 pasids at most. do you think we still need to do something=
- on it?
-> > > > >
-> > > > > How do you figure that?  vfio_iommu_type1_pasid_request() accepts
-> > > > > the user's min/max so long as (max > min) and passes that to
-> > > > > vfio_iommu_type1_pasid_free(), then to vfio_pasid_free_range()
-> > > > > which loops as:
-> > > > >
-> > > > > 	ioasid_t pasid =3D min;
-> > > > > 	for (; pasid <=3D max; pasid++)
-> > > > > 		ioasid_free(pasid);
-> > > > >
-> > > > > A user might only be able to allocate 1000 pasids, but apparently
-> > > > > they can ask to free all they want.
-> > > > >
-> > > > > It's also not obvious to me that calling ioasid_free() is only
-> > > > > allowing the user to free their own passid.  Does it?  It would b=
-e a
-> > > > > pretty
-> > >
-> > > Agree. I thought ioasid_free should at least carry a token since the =
-user
-> > space is
-> > > only allowed to manage PASIDs in its own set...
-> > >
-> > > > > gaping hole if a user could free arbitrary pasids.  A r-b tree of
-> > > > > passids might help both for security and to bound spinning in a l=
-oop.
-> > > >
-> > > > oh, yes. BTW. instead of r-b tree in VFIO, maybe we can add an
-> > > > ioasid_set parameter for ioasid_free(), thus to prevent the user fr=
-om
-> > > > freeing PASIDs that doesn't belong to it. I remember Jacob mentione=
-d it
-> > before.
-> > > >
-> > >
-> > > check current ioasid_free:
-> > >
-> > >         spin_lock(&ioasid_allocator_lock);
-> > >         ioasid_data =3D xa_load(&active_allocator->xa, ioasid);
-> > >         if (!ioasid_data) {
-> > >                 pr_err("Trying to free unknown IOASID %u\n", ioasid);
-> > >                 goto exit_unlock;
-> > >         }
-> > >
-> > > Allow an user to trigger above lock paths with MAX_UINT times might s=
-till
-> > be bad.
-> >
-> > yeah, how about the below two options:
-> >
-> > - comparing the max - min with the quota before calling ioasid_free().
-> >   If max - min > current quota of the user, then should fail it. If
-> >   max - min < quota, then call ioasid_free() one by one. still trigger
-> >   the above lock path with quota times.
->=20
-> This is definitely wrong. [min, max] is about the range of the PASID valu=
-e,
-> while quota is about the number of allocated PASIDs. It's a bit weird to
-> mix two together.
+   http://www.ozlabs.org/~akpm/mmotm/
 
-got it.
+mmotm-readme.txt says
 
-> btw what is the main purpose of allowing batch PASID
-> free requests? Can we just simplify to allow one PASID in each free just
-> like how is it done in allocation path?
+README for mm-of-the-moment:
 
-it's an intention to reuse the [min, max] range as allocation path. current=
-ly,
-we don't have such request as far as I can see.
+http://www.ozlabs.org/~akpm/mmotm/
 
-> >
-> > - pass the max and min to ioasid_free(), let ioasid_free() decide. shou=
-ld
-> >   be able to avoid trigger the lock multiple times, and ioasid has have=
- a
-> >   track on how may PASIDs have been allocated, if max - min is larger t=
-han
-> >   the allocated number, should fail anyway.
->=20
-> What about Alex's r-b tree suggestion? Is there any downside in you mind?
+This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+more than once a week.
 
-no downside, I was just wanting to reuse the tracks in ioasid_set. I can ad=
-d
-a r-b for allocated PASIDs and find the PASIDs in the r-b tree only do free
-for the PASIDs found in r-b tree, others in the range would be ignored.
-does it look good?
+You will need quilt to apply these patches to the latest Linus release (5.x
+or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+http://ozlabs.org/~akpm/mmotm/series
 
-Regards,
-Yi Liu
+The file broken-out.tar.gz contains two datestamp files: .DATE and
+.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+followed by the base kernel version against which this patch series is to
+be applied.
 
-> Thanks,
-> Kevin
+This tree is partially included in linux-next.  To see which patches are
+included in linux-next, consult the `series' file.  Only the patches
+within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+linux-next.
+
+
+A full copy of the full kernel tree with the linux-next and mmotm patches
+already applied is available through git within an hour of the mmotm
+release.  Individual mmotm releases are tagged.  The master branch always
+points to the latest release, so it's constantly rebasing.
+
+	https://github.com/hnaz/linux-mm
+
+The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+contains daily snapshots of the -mm tree.  It is updated more frequently
+than mmotm, and is untested.
+
+A git copy of this tree is also available at
+
+	https://github.com/hnaz/linux-mm
+
+
+
+This mmotm tree contains the following patches against 5.8-rc4:
+(patches marked "*" will be included in linux-next)
+
+  origin.patch
+* mm-shuffle-dont-move-pages-between-zones-and-dont-read-garbage-memmaps.patch
+* mm-avoid-access-flag-update-tlb-flush-for-retried-page-fault.patch
+* vfs-xattr-mm-shmem-kernfs-release-simple-xattr-entry-in-a-right-way.patch
+* mm-initialize-return-of-vm_insert_pages.patch
+* mm-memcontrol-fix-oops-inside-mem_cgroup_get_nr_swap_pages.patch
+* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
+* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
+* mm-memcg-fix-refcount-error-while-moving-and-swapping.patch
+* mm-hugetlb-avoid-hardcoding-while-checking-if-cma-is-enable.patch
+* mailmap-add-entry-for-mike-rapoport.patch
+* checkpatch-test-git_dir-changes.patch
+* kthread-remove-incorrect-comment-in-kthread_create_on_cpu.patch
+* kbuild-move-wtype-limits-to-w=2.patch
+* scripts-tagssh-collect-compiled-source-precisely.patch
+* scripts-tagssh-collect-compiled-source-precisely-v2.patch
+* bloat-o-meter-support-comparing-library-archives.patch
+* scripts-decode_stacktrace-skip-missing-symbols.patch
+* scripts-decode_stacktrace-guess-basepath-if-not-specified.patch
+* scripts-decode_stacktrace-guess-path-to-modules.patch
+* scripts-decode_stacktrace-guess-path-to-vmlinux-by-release-name.patch
+* ocfs2-clear-links-count-in-ocfs2_mknod-if-an-error-occurs.patch
+* ocfs2-fix-ocfs2-corrupt-when-iputting-an-inode.patch
+* ocfs2-change-slot-number-type-s16-to-u16.patch
+* ramfs-support-o_tmpfile.patch
+* kernel-watchdog-flush-all-printk-nmi-buffers-when-hardlockup-detected.patch
+  mm.patch
+* mm-treewide-rename-kzfree-to-kfree_sensitive.patch
+* mm-ksize-should-silently-accept-a-null-pointer.patch
+* mm-expand-config_slab_freelist_hardened-to-include-slab.patch
+* slab-add-naive-detection-of-double-free.patch
+* slab-add-naive-detection-of-double-free-fix.patch
+* mm-slab-check-gfp_slab_bug_mask-before-alloc_pages-in-kmalloc_order.patch
+* mm-slub-extend-slub_debug-syntax-for-multiple-blocks.patch
+* mm-slub-extend-slub_debug-syntax-for-multiple-blocks-fix.patch
+* mm-slub-make-some-slub_debug-related-attributes-read-only.patch
+* mm-slub-remove-runtime-allocation-order-changes.patch
+* mm-slub-make-remaining-slub_debug-related-attributes-read-only.patch
+* mm-slub-make-reclaim_account-attribute-read-only.patch
+* mm-slub-introduce-static-key-for-slub_debug.patch
+* mm-slub-introduce-kmem_cache_debug_flags.patch
+* mm-slub-introduce-kmem_cache_debug_flags-fix.patch
+* mm-slub-extend-checks-guarded-by-slub_debug-static-key.patch
+* mm-slab-slub-move-and-improve-cache_from_obj.patch
+* mm-slab-slub-improve-error-reporting-and-overhead-of-cache_from_obj.patch
+* mm-slab-slub-improve-error-reporting-and-overhead-of-cache_from_obj-fix.patch
+* slub-drop-lockdep_assert_held-from-put_map.patch
+* mm-kcsan-instrument-slab-slub-free-with-assert_exclusive_access.patch
+* mm-debug_vm_pgtable-add-tests-validating-arch-helpers-for-core-mm-features.patch
+* mm-debug_vm_pgtable-add-tests-validating-advanced-arch-page-table-helpers.patch
+* mm-debug_vm_pgtable-add-debug-prints-for-individual-tests.patch
+* documentation-mm-add-descriptions-for-arch-page-table-helpers.patch
+* mm-filemap-clear-idle-flag-for-writes.patch
+* mm-filemap-add-missing-fgp_-flags-in-kerneldoc-comment-for-pagecache_get_page.patch
+* mm-swap-simplify-alloc_swap_slot_cache.patch
+* mm-swap-simplify-enable_swap_slots_cache.patch
+* mm-swap-remove-redundant-check-for-swap_slot_cache_initialized.patch
+* mm-kmem-make-memcg_kmem_enabled-irreversible.patch
+* mm-memcg-factor-out-memcg-and-lruvec-level-changes-out-of-__mod_lruvec_state.patch
+* mm-memcg-prepare-for-byte-sized-vmstat-items.patch
+* mm-memcg-convert-vmstat-slab-counters-to-bytes.patch
+* mm-slub-implement-slub-version-of-obj_to_index.patch
+* mm-memcontrol-decouple-reference-counting-from-page-accounting.patch
+* mm-memcg-slab-obj_cgroup-api.patch
+* mm-memcg-slab-allocate-obj_cgroups-for-non-root-slab-pages.patch
+* mm-memcg-slab-save-obj_cgroup-for-non-root-slab-objects.patch
+* mm-memcg-slab-charge-individual-slab-objects-instead-of-pages.patch
+* mm-memcg-slab-deprecate-memorykmemslabinfo.patch
+* mm-memcg-slab-move-memcg_kmem_bypass-to-memcontrolh.patch
+* mm-memcg-slab-use-a-single-set-of-kmem_caches-for-all-accounted-allocations.patch
+* mm-memcg-slab-simplify-memcg-cache-creation.patch
+* mm-memcg-slab-remove-memcg_kmem_get_cache.patch
+* mm-memcg-slab-deprecate-slab_root_caches.patch
+* mm-memcg-slab-remove-redundant-check-in-memcg_accumulate_slabinfo.patch
+* mm-memcg-slab-use-a-single-set-of-kmem_caches-for-all-allocations.patch
+* kselftests-cgroup-add-kernel-memory-accounting-tests.patch
+* tools-cgroup-add-memcg_slabinfopy-tool.patch
+* percpu-return-number-of-released-bytes-from-pcpu_free_area.patch
+* mm-memcg-percpu-account-percpu-memory-to-memory-cgroups.patch
+* mm-memcg-percpu-account-percpu-memory-to-memory-cgroups-fix.patch
+* mm-memcg-percpu-account-percpu-memory-to-memory-cgroups-fix-fix.patch
+* mm-memcg-percpu-per-memcg-percpu-memory-statistics.patch
+* mm-memcg-percpu-per-memcg-percpu-memory-statistics-v3.patch
+* mm-memcg-charge-memcg-percpu-memory-to-the-parent-cgroup.patch
+* kselftests-cgroup-add-perpcu-memory-accounting-test.patch
+* mm-memcontrol-account-kernel-stack-per-node.patch
+* mm-memcg-slab-remove-unused-argument-by-charge_slab_page.patch
+* mm-slab-rename-uncharge_slab_page-to-unaccount_slab_page.patch
+* mm-kmem-switch-to-static_branch_likely-in-memcg_kmem_enabled.patch
+* mm-remove-redundant-check-non_swap_entry.patch
+* mm-memoryc-make-remap_pfn_range-reject-unaligned-addr.patch
+* mm-remove-unneeded-includes-of-asm-pgalloch.patch
+* mm-remove-unneeded-includes-of-asm-pgalloch-fix.patch
+* opeinrisc-switch-to-generic-version-of-pte-allocation.patch
+* xtensa-switch-to-generic-version-of-pte-allocation.patch
+* asm-generic-pgalloc-provide-generic-pmd_alloc_one-and-pmd_free_one.patch
+* asm-generic-pgalloc-provide-generic-pud_alloc_one-and-pud_free_one.patch
+* asm-generic-pgalloc-provide-generic-pgd_free.patch
+* mm-move-lib-ioremapc-to-mm.patch
+* mm-move-pd_alloc_track-to-separate-header-file.patch
+* mm-mmap-fix-the-adjusted-length-error.patch
+* proc-meminfo-avoid-open-coded-reading-of-vm_committed_as.patch
+* mm-utilc-make-vm_memory_committed-more-accurate.patch
+* mm-adjust-vm_committed_as_batch-according-to-vm-overcommit-policy.patch
+* mm-mmap-optimize-a-branch-judgment-in-ksys_mmap_pgoff.patch
+* mm-do-page-fault-accounting-in-handle_mm_fault.patch
+* mm-alpha-use-general-page-fault-accounting.patch
+* mm-arc-use-general-page-fault-accounting.patch
+* mm-arm-use-general-page-fault-accounting.patch
+* mm-arm64-use-general-page-fault-accounting.patch
+* mm-csky-use-general-page-fault-accounting.patch
+* mm-hexagon-use-general-page-fault-accounting.patch
+* mm-ia64-use-general-page-fault-accounting.patch
+* mm-m68k-use-general-page-fault-accounting.patch
+* mm-microblaze-use-general-page-fault-accounting.patch
+* mm-mips-use-general-page-fault-accounting.patch
+* mm-nds32-use-general-page-fault-accounting.patch
+* mm-nios2-use-general-page-fault-accounting.patch
+* mm-openrisc-use-general-page-fault-accounting.patch
+* mm-parisc-use-general-page-fault-accounting.patch
+* mm-powerpc-use-general-page-fault-accounting.patch
+* mm-riscv-use-general-page-fault-accounting.patch
+* mm-s390-use-general-page-fault-accounting.patch
+* mm-sh-use-general-page-fault-accounting.patch
+* mm-sparc32-use-general-page-fault-accounting.patch
+* mm-sparc64-use-general-page-fault-accounting.patch
+* mm-x86-use-general-page-fault-accounting.patch
+* mm-xtensa-use-general-page-fault-accounting.patch
+* mm-clean-up-the-last-pieces-of-page-fault-accountings.patch
+* mm-gup-remove-task_struct-pointer-for-all-gup-code.patch
+* mm-mremap-it-is-sure-to-have-enough-space-when-extent-meets-requirement.patch
+* mm-mremap-calculate-extent-in-one-place.patch
+* mm-mremap-start-addresses-are-properly-aligned.patch
+* mm-mremap-use-pmd_addr_end-to-simplify-the-calculate-of-extent.patch
+* mm-sparse-never-partially-remove-memmap-for-early-section.patch
+* mm-sparse-only-sub-section-aligned-range-would-be-populated.patch
+* vmalloc-convert-to-xarray.patch
+* mm-vmalloc-simplify-merge_or_add_vmap_area-func.patch
+* mm-vmalloc-simplify-augment_tree_propagate_check-func.patch
+* mm-vmalloc-switch-to-propagate-callback.patch
+* mm-vmalloc-update-the-header-about-kva-rework.patch
+* mm-vmalloc-remove-redundant-asignmnet-in-unmap_kernel_range_noflush.patch
+* kasan-improve-and-simplify-kconfigkasan.patch
+* kasan-update-required-compiler-versions-in-documentation.patch
+* rcu-kasan-record-and-print-call_rcu-call-stack.patch
+* kasan-record-and-print-the-free-track.patch
+* kasan-add-tests-for-call_rcu-stack-recording.patch
+* kasan-update-documentation-for-generic-kasan.patch
+* kasan-remove-kasan_unpoison_stack_above_sp_to.patch
+* kasan-fix-kasan-unit-tests-for-tag-based-kasan.patch
+* kasan-fix-kasan-unit-tests-for-tag-based-kasan-v4.patch
+* mm-page_alloc-use-unlikely-in-task_capc.patch
+* page_alloc-consider-highatomic-reserve-in-watermark-fast.patch
+* page_alloc-consider-highatomic-reserve-in-watermark-fast-v5.patch
+* mm-page_alloc-skip-waternark_boost-for-atomic-order-0-allocations.patch
+* mm-page_alloc-skip-watermark_boost-for-atomic-order-0-allocations-fix.patch
+* mm-drop-vm_total_pages.patch
+* mm-page_alloc-drop-nr_free_pagecache_pages.patch
+* mm-memory_hotplug-document-why-shuffle_zone-is-relevant.patch
+* mm-shuffle-remove-dynamic-reconfiguration.patch
+* powerpc-numa-set-numa_node-for-all-possible-cpus.patch
+* powerpc-numa-prefer-node-id-queried-from-vphn.patch
+* mm-page_alloc-keep-memoryless-cpuless-node-0-offline.patch
+* mm-page_allocc-replace-the-definition-of-nr_migratetype_bits-with-pb_migratetype_bits.patch
+* mm-page_allocc-extract-the-common-part-in-pfn_to_bitidx.patch
+* mm-page_allocc-simplify-pageblock-bitmap-access.patch
+* mm-page_allocc-remove-unnecessary-end_bitidx-for-_pfnblock_flags_mask.patch
+* mm-page_alloc-silence-a-kasan-false-positive.patch
+* mm-page_alloc-fallbacks-at-most-has-3-elements.patch
+* mm-page_alloc-skip-setting-nodemask-when-we-are-in-interrupt.patch
+* mm-huge_memoryc-update-tlb-entry-if-pmd-is-changed.patch
+* mips-do-not-call-flush_tlb_all-when-setting-pmd-entry.patch
+* mm-vmscanc-fixed-typo.patch
+* mm-proactive-compaction.patch
+* mm-proactive-compaction-fix.patch
+* mm-use-unsigned-types-for-fragmentation-score.patch
+* hugetlbfs-prevent-filesystem-stacking-of-hugetlbfs.patch
+* mm-thp-remove-debug_cow-switch.patch
+* mm-store-compound_nr-as-well-as-compound_order.patch
+* mm-move-page-flags-include-to-top-of-file.patch
+* mm-add-thp_order.patch
+* mm-add-thp_size.patch
+* mm-replace-hpage_nr_pages-with-thp_nr_pages.patch
+* mm-add-thp_head.patch
+* mm-introduce-offset_in_thp.patch
+* mm-vmstat-add-events-for-thp-migration-without-split.patch
+* mm-vmstat-add-events-for-thp-migration-without-split-fix.patch
+* mm-cma-fix-null-pointer-dereference-when-cma-could-not-be-activated.patch
+* mm-cma-fix-the-name-of-cma-areas.patch
+* mm-cma-fix-the-name-of-cma-areas-fix.patch
+* mm-hugetlb-fix-the-name-of-hugetlb-cma.patch
+* mmhwpoison-cleanup-unused-pagehuge-check.patch
+* mm-hwpoison-remove-recalculating-hpage.patch
+* mmmadvise-call-soft_offline_page-without-mf_count_increased.patch
+* mmmadvise-refactor-madvise_inject_error.patch
+* mmhwpoison-inject-dont-pin-for-hwpoison_filter.patch
+* mmhwpoison-un-export-get_hwpoison_page-and-make-it-static.patch
+* mmhwpoison-kill-put_hwpoison_page.patch
+* mmhwpoison-remove-mf_count_increased.patch
+* mmhwpoison-remove-flag-argument-from-soft-offline-functions.patch
+* mmhwpoison-unify-thp-handling-for-hard-and-soft-offline.patch
+* mmhwpoison-rework-soft-offline-for-free-pages.patch
+* mmhwpoison-rework-soft-offline-for-free-pages-fix.patch
+* mmhwpoison-rework-soft-offline-for-in-use-pages.patch
+* mmhwpoison-refactor-soft_offline_huge_page-and-__soft_offline_page.patch
+* mmhwpoison-refactor-soft_offline_huge_page-and-__soft_offline_page-fix.patch
+* mmhwpoison-refactor-soft_offline_huge_page-and-__soft_offline_page-fix-fix.patch
+* mmhwpoison-return-0-if-the-page-is-already-poisoned-in-soft-offline.patch
+* mmhwpoison-introduce-mf_msg_unsplit_thp.patch
+* sched-mm-optimize-current_gfp_context.patch
+* x86-mm-use-max-memory-block-size-on-bare-metal.patch
+* info-task-hung-in-generic_file_write_iter.patch
+* info-task-hung-in-generic_file_write-fix.patch
+* kernel-hung_taskc-monitor-killed-tasks.patch
+* fix-annotation-of-ioreadwrite1632be.patch
+* sparse-group-the-defines-by-functionality.patch
+* bitmap-fix-bitmap_cut-for-partial-overlapping-case.patch
+* bitmap-add-test-for-bitmap_cut.patch
+* lib-generic-radix-treec-remove-unneeded-__rcu.patch
+* lib-test_bitops-do-the-full-test-during-module-init.patch
+* lib-optimize-cpumask_local_spread.patch
+* lib-test_lockupc-make-symbol-test_works-static.patch
+* bits-add-tests-of-genmask.patch
+* bits-add-tests-of-genmask-fix.patch
+* bits-add-tests-of-genmask-fix-2.patch
+* checkpatch-add-test-for-possible-misuse-of-is_enabled-without-config_.patch
+* checkpatch-support-deprecated-terms-checking.patch
+* scripts-deprecated_terms-recommend-denylist-allowlist-instead-of-blacklist-whitelist.patch
+* checkpatch-add-fix-option-for-assign_in_if.patch
+* checkpatch-fix-const_struct-when-const_structscheckpatch-is-missing.patch
+* fs-minix-check-return-value-of-sb_getblk.patch
+* fs-minix-dont-allow-getting-deleted-inodes.patch
+* fs-minix-reject-too-large-maximum-file-size.patch
+* fs-minix-set-s_maxbytes-correctly.patch
+* fs-minix-fix-block-limit-check-for-v1-filesystems.patch
+* fs-minix-remove-expected-error-message-in-block_to_path.patch
+* fatfs-switch-write_lock-to-read_lock-in-fat_ioctl_get_attributes.patch
+* vfat-fat-msdos-filesystem-replace-http-links-with-https-ones.patch
+* fs-signalfdc-fix-inconsistent-return-codes-for-signalfd4.patch
+* selftests-kmod-use-variable-name-in-kmod_test_0001.patch
+* kmod-remove-redundant-be-an-in-the-comment.patch
+* test_kmod-avoid-potential-double-free-in-trigger_config_run_type.patch
+* coredump-add-%f-for-executable-filename.patch
+* exec-change-uselib2-is_sreg-failure-to-eacces.patch
+* exec-move-s_isreg-check-earlier.patch
+* exec-move-path_noexec-check-earlier.patch
+* umh-fix-refcount-underflow-in-fork_usermode_blob.patch
+* kdump-append-kernel-build-id-string-to-vmcoreinfo.patch
+* rapidio-rio_mport_cdev-use-struct_size-helper.patch
+* rapidio-use-struct_size-helper.patch
+* kernel-panicc-make-oops_may_print-return-bool.patch
+* lib-kconfigdebug-fix-typo-in-the-help-text-of-config_panic_timeout.patch
+* aio-simplify-read_events.patch
+* kcov-unconditionally-add-fno-stack-protector-to-compiler-options.patch
+* kcov-make-some-symbols-static.patch
+  linux-next.patch
+  linux-next-rejects.patch
+* mm-madvise-pass-task-and-mm-to-do_madvise.patch
+* pid-move-pidfd_get_pid-to-pidc.patch
+* mm-madvise-introduce-process_madvise-syscall-an-external-memory-hinting-api.patch
+* mm-madvise-introduce-process_madvise-syscall-an-external-memory-hinting-api-fix.patch
+* mm-madvise-introduce-process_madvise-syscall-an-external-memory-hinting-api-fix-2.patch
+* mm-madvise-check-fatal-signal-pending-of-target-process.patch
+* all-arch-remove-system-call-sys_sysctl.patch
+* all-arch-remove-system-call-sys_sysctl-fix.patch
+* mm-kmemleak-silence-kcsan-splats-in-checksum.patch
+* mm-frontswap-mark-various-intentional-data-races.patch
+* mm-page_io-mark-various-intentional-data-races.patch
+* mm-page_io-mark-various-intentional-data-races-v2.patch
+* mm-swap_state-mark-various-intentional-data-races.patch
+* mm-filemap-fix-a-data-race-in-filemap_fault.patch
+* mm-swapfile-fix-and-annotate-various-data-races.patch
+* mm-swapfile-fix-and-annotate-various-data-races-v2.patch
+* mm-page_counter-fix-various-data-races-at-memsw.patch
+* mm-memcontrol-fix-a-data-race-in-scan-count.patch
+* mm-list_lru-fix-a-data-race-in-list_lru_count_one.patch
+* mm-mempool-fix-a-data-race-in-mempool_free.patch
+* mm-rmap-annotate-a-data-race-at-tlb_flush_batched.patch
+* mm-swap-annotate-data-races-for-lru_rotate_pvecs.patch
+* mm-annotate-a-data-race-in-page_zonenum.patch
+* include-asm-generic-vmlinuxldsh-align-ro_after_init.patch
+* sh-clkfwk-remove-r8-r16-r32.patch
+* sh-remove-call-to-memset-after-dma_alloc_coherent.patch
+* sh-use-generic-strncpy.patch
+* sh-add-missing-export_symbol-for-__delay.patch
+  make-sure-nobodys-leaking-resources.patch
+  releasing-resources-with-children.patch
+  mutex-subsystem-synchro-test-module.patch
+  kernel-forkc-export-kernel_thread-to-modules.patch
+  workaround-for-a-pci-restoring-bug.patch
