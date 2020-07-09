@@ -2,62 +2,63 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EC6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF01C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDFE820739
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FE02074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:01:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BXPSxo5V"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YQWuQBQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgGIFBp (ORCPT
+        id S1726332AbgGIFBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 01:01:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43728 "EHLO
+        Thu, 9 Jul 2020 01:01:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgGIFBl (ORCPT
+        with ESMTP id S1726185AbgGIFBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 01:01:41 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4F0BC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 22:01:40 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id z5so446360pgb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 22:01:40 -0700 (PDT)
+        Thu, 9 Jul 2020 01:01:44 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A48FDC061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 22:01:43 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u5so487675pfn.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 22:01:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uN2T4CF/tRygg+rOfQBDGtucvrJg7l2si9rKgMZR/j0=;
-        b=BXPSxo5VbjQ5clTT5R39r8mnuahuMmSnFAX8dVZrldk0UdIVgqWclLWUaFgB9EEvGs
-         5iz3KpwAkAgn90jBHAhrbXixnEOIEYtjcRThFOHPaMP1iW7G5A9VtiBNmc4MAkl+PePn
-         X8Qxrz9Owin3O+N62O6MOn8S4A+iGJ6Wxb9sX2WIiLAY51C87Q29o3eXidoSP6ooqh+D
-         qS6uu3fHwmtVABvqz/lvBdCP/QxOAANNR/YrgTRHreSoizLsqM/gfFPjeLgGJoCsorW3
-         bcPBMKwdryQ+Fp3uaE4IZn7ZWggNMNBSXgKfxkkYCqUvqDoX7YBNX084BbbLThuTS7Ou
-         LIZg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=fL1oj/82czdR0WXUznCgbOV1KIBa6gJW0wdl0Fe8bqk=;
+        b=YQWuQBQH2GSEZE8K4EI/Gew9fg1AI6MpHL0uRHUylnIff9sxijznzxDBhh0+EguiC3
+         nPQaHnHAyeNKdx99gIzgFq3df+1a/ehZVV2I6ySRKyX3IfkQUfRsGNWC0w/WeiKfU6oi
+         yzyYjpbROlG19Zuw4csOp62AY8ifnBblwcGo4ZHdYoUriQ3cGGw8mBKSAk+zOXqPJdFV
+         MLjR1dq/Yv3w3bS11+j4uGeq0PZfwU88ItxE5IY5qbW/nMGO90Mk4xQjbm7W6Y8QozWe
+         E+KYwEDC4Af+CwQl+dbh/ewI/SNpahBBYVME/IKZnlzjYbjUMqBTFdzzERsOBo1iCZuJ
+         p7sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uN2T4CF/tRygg+rOfQBDGtucvrJg7l2si9rKgMZR/j0=;
-        b=etM0z3+yUcvME8/GGjISymArIv0VRhyPyeB+MzRRGKg8k4XV52BA9hhoIRqoxW8ShV
-         S+bIYiZfSO+c3ZCVS9APGoYIszUM176S/ikZmEAC2rrfS82yMURyEEbEBUW2Xg3Xs9EA
-         yKBDa6k9N0HwSEizPcGuUyHh2wCK6Rq7i70I+XJjbAO/6e+Inu1eWoGSnuOefVJonilh
-         I6Do3sQm1cXm4oZWXq5FkgVt24TubNMfoKISLE6GhtK3kDTRgf662xfJfht/io2R77kb
-         5SUwndeKjTMCkFU+Iranrvkt1+aWkuHDCY9HROQ9KQYNoEBqEyZwasdsW3PW0S3vGMH3
-         VeVQ==
-X-Gm-Message-State: AOAM533MvQOaAAU557+Wy0ClUWQP6x8zMaLnhukO9kOGA58WrO7eT40b
-        lxtPfPlp65CrZX8QKVl95HTPxQ==
-X-Google-Smtp-Source: ABdhPJyYxb2sGMCNEAHm5ala37cPOSV+iadH/fkL3XmUf96HbWpfFw5r1l8q9UAC1q8UkeO/UH2wlA==
-X-Received: by 2002:a62:346:: with SMTP id 67mr14522608pfd.111.1594270900163;
-        Wed, 08 Jul 2020 22:01:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fL1oj/82czdR0WXUznCgbOV1KIBa6gJW0wdl0Fe8bqk=;
+        b=CeJdpbnGQpY3o7OxLRMrWE0MmXCwIMtsSWblyzm8OxKpy6/0qG/ErnwEuPFwQhzuvJ
+         W3StHkGkkBfikXLDgvVd3u5y7bRLJHS/3hvemiEeZ3EEeklyzoN0Chsiqg2fG/pBcVxa
+         UXmj29ZQDs2QpHOPBbt7d1QleYlZyunLoze69SY9DmdwPwEld3gc5VaAME7Muwa4uSbV
+         sx7YsIAQmZ30nZkCfwrJQ7WeZh7EtiBZD8z0tOcopa5rcQF2H7r05/ez29V+99EfW0Vl
+         A9FpO4hxfIWzZIh+30l6AbTrXg41JTfshM4FVETzZKPFwPhdB3AgGol83RfZpwohRIWH
+         KJ6Q==
+X-Gm-Message-State: AOAM5338FoKY6P7f9co3FS7Y8XIrB/wh0E4LdY2GiwY7HADZlgfnBjLA
+        clXw8lXC02KzivfiOzho6P0oRw==
+X-Google-Smtp-Source: ABdhPJyCvUhg3Z54pWl5PZR4ipfWmNp9zxcFYtuOj/BIJz3aWWsj8AWlwbK8reSTeGRPCPOiYOhZpQ==
+X-Received: by 2002:a05:6a00:807:: with SMTP id m7mr58259929pfk.246.1594270903096;
+        Wed, 08 Jul 2020 22:01:43 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h15sm999974pjc.14.2020.07.08.22.01.38
+        by smtp.gmail.com with ESMTPSA id h15sm999974pjc.14.2020.07.08.22.01.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 22:01:39 -0700 (PDT)
+        Wed, 08 Jul 2020 22:01:42 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -67,10 +68,12 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Jonathan Marek <jonathan@marek.ca>,
         linux-arm-msm@vger.kernel.org
-Subject: [PATCH 0/5] iommu/arm-smmu: Support maintaining bootloader mappings
-Date:   Wed,  8 Jul 2020 22:01:40 -0700
-Message-Id: <20200709050145.3520931-1-bjorn.andersson@linaro.org>
+Subject: [PATCH 2/5] iommu/arm-smmu: Emulate bypass by using context banks
+Date:   Wed,  8 Jul 2020 22:01:42 -0700
+Message-Id: <20200709050145.3520931-3-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200709050145.3520931-1-bjorn.andersson@linaro.org>
+References: <20200709050145.3520931-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,41 +81,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on previous attempts and discussions this is the latest attempt at
-inheriting stream mappings set up by the bootloader, for e.g. boot splash or
-efifb.
+Some firmware found on various Qualcomm platforms traps writes to S2CR
+of type BYPASS and writes FAULT into the register. This prevents us from
+marking the streams for the display controller as BYPASS to allow
+continued scanout of the screen through the initialization of the ARM
+SMMU.
 
-The first patch is an implementation of Robin's suggestion that we should just
-mark the relevant stream mappings as BYPASS. Relying on something else to set
-up the stream mappings wanted - e.g. by reading it back in platform specific
-implementation code.
+This adds a Qualcomm specific cfg_probe function, which probes the
+behavior of the S2CR registers and if found faulty enables the related
+quirk. Based on this quirk context banks are allocated for IDENTITY
+domains as well, but with ARM_SMMU_SCTLR_M omitted.
 
-The series then tackles the problem seen in most versions of Qualcomm firmware,
-that the hypervisor intercepts BYPASS writes and turn them into FAULTs. It does
-this by allocating context banks for identity domains as well, with translation
-disabled.
+The result is valid stream mappings, without translation.
 
-Lastly it amends the stream mapping initialization code to allocate a specific
-identity domain that is used for any mappings inherited from the bootloader, if
-above Qualcomm quirk is required.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/iommu/arm-smmu-qcom.c | 21 +++++++++++++++++++++
+ drivers/iommu/arm-smmu.c      | 14 ++++++++++++--
+ drivers/iommu/arm-smmu.h      |  3 +++
+ 3 files changed, 36 insertions(+), 2 deletions(-)
 
-
-The series has been tested and shown to allow booting SDM845, SDM850, SM8150,
-SM8250 with boot splash screen setup by the bootloader. Specifically it also
-allows the Lenovo Yoga C630 to boot with SMMU and efifb enabled.
-
-Bjorn Andersson (5):
-  iommu/arm-smmu: Make all valid stream mappings BYPASS
-  iommu/arm-smmu: Emulate bypass by using context banks
-  iommu/arm-smmu: Move SMR and S2CR definitions to header file
-  iommu/arm-smmu-qcom: Consstently initialize stream mappings
-  iommu/arm-smmu: Setup identity domain for boot mappings
-
- drivers/iommu/arm-smmu-qcom.c |  48 +++++++++++++
- drivers/iommu/arm-smmu.c      | 124 +++++++++++++++++++++++++++++-----
- drivers/iommu/arm-smmu.h      |  21 ++++++
- 3 files changed, 175 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+index cf01d0215a39..e8a36054e912 100644
+--- a/drivers/iommu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm-smmu-qcom.c
+@@ -23,6 +23,26 @@ static const struct of_device_id qcom_smmu_client_of_match[] = {
+ 	{ }
+ };
+ 
++static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
++{
++	unsigned int last_s2cr = ARM_SMMU_GR0_S2CR(smmu->num_mapping_groups - 1);
++	u32 reg;
++
++	/*
++	 * With some firmware writes to S2CR of type FAULT are ignored, and
++	 * writing BYPASS will end up as FAULT in the register. Perform a write
++	 * to S2CR to detect if this is the case with the current firmware.
++	 */
++	arm_smmu_gr0_write(smmu, last_s2cr, FIELD_PREP(ARM_SMMU_S2CR_TYPE, S2CR_TYPE_BYPASS) |
++					    FIELD_PREP(ARM_SMMU_S2CR_CBNDX, 0xff) |
++					    FIELD_PREP(ARM_SMMU_S2CR_PRIVCFG, S2CR_PRIVCFG_DEFAULT));
++	reg = arm_smmu_gr0_read(smmu, last_s2cr);
++	if (FIELD_GET(ARM_SMMU_S2CR_TYPE, reg) != S2CR_TYPE_BYPASS)
++		smmu->qcom_bypass_quirk = true;
++
++	return 0;
++}
++
+ static int qcom_smmu_def_domain_type(struct device *dev)
+ {
+ 	const struct of_device_id *match =
+@@ -61,6 +81,7 @@ static int qcom_smmu500_reset(struct arm_smmu_device *smmu)
+ }
+ 
+ static const struct arm_smmu_impl qcom_smmu_impl = {
++	.cfg_probe = qcom_smmu_cfg_probe,
+ 	.def_domain_type = qcom_smmu_def_domain_type,
+ 	.reset = qcom_smmu500_reset,
+ };
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 2e27cf9815ab..f33eda3117fa 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -654,7 +654,9 @@ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+ 
+ 	/* SCTLR */
+ 	reg = ARM_SMMU_SCTLR_CFIE | ARM_SMMU_SCTLR_CFRE | ARM_SMMU_SCTLR_AFE |
+-	      ARM_SMMU_SCTLR_TRE | ARM_SMMU_SCTLR_M;
++	      ARM_SMMU_SCTLR_TRE;
++	if (cfg->m)
++		reg |= ARM_SMMU_SCTLR_M;
+ 	if (stage1)
+ 		reg |= ARM_SMMU_SCTLR_S1_ASIDPNE;
+ 	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+@@ -678,7 +680,11 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 	if (smmu_domain->smmu)
+ 		goto out_unlock;
+ 
+-	if (domain->type == IOMMU_DOMAIN_IDENTITY) {
++	/*
++	 * Nothing to do for IDENTITY domains,unless disabled context banks are
++	 * used to emulate bypass mappings on Qualcomm platforms.
++	 */
++	if (domain->type == IOMMU_DOMAIN_IDENTITY && !smmu->qcom_bypass_quirk) {
+ 		smmu_domain->stage = ARM_SMMU_DOMAIN_BYPASS;
+ 		smmu_domain->smmu = smmu;
+ 		goto out_unlock;
+@@ -826,6 +832,10 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 	domain->geometry.aperture_end = (1UL << ias) - 1;
+ 	domain->geometry.force_aperture = true;
+ 
++	/* Enable translation for non-identity context banks */
++	if (domain->type != IOMMU_DOMAIN_IDENTITY)
++		cfg->m = true;
++
+ 	/* Initialise the context bank with our page table cfg */
+ 	arm_smmu_init_context_bank(smmu_domain, &pgtbl_cfg);
+ 	arm_smmu_write_context_bank(smmu, cfg->cbndx);
+diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+index d172c024be61..a71d193073e4 100644
+--- a/drivers/iommu/arm-smmu.h
++++ b/drivers/iommu/arm-smmu.h
+@@ -305,6 +305,8 @@ struct arm_smmu_device {
+ 
+ 	/* IOMMU core code handle */
+ 	struct iommu_device		iommu;
++
++	bool				qcom_bypass_quirk;
+ };
+ 
+ enum arm_smmu_context_fmt {
+@@ -323,6 +325,7 @@ struct arm_smmu_cfg {
+ 	};
+ 	enum arm_smmu_cbar_type		cbar;
+ 	enum arm_smmu_context_fmt	fmt;
++	bool				m;
+ };
+ #define ARM_SMMU_INVALID_IRPTNDX	0xff
+ 
 -- 
 2.26.2
 
