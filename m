@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB3FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 721CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B250C206E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B471206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgGIWqn (ORCPT
+        id S1727907AbgGIWqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:46:43 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48198 "EHLO
+        Thu, 9 Jul 2020 18:46:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48236 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgGIWqU (ORCPT
+        with ESMTP id S1727067AbgGIWqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:46:20 -0400
+        Thu, 9 Jul 2020 18:46:19 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0413180045E5;
-        Thu,  9 Jul 2020 22:46:17 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3C5FA8040A6C;
+        Thu,  9 Jul 2020 22:46:14 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MRoD_kFL0_oL; Fri, 10 Jul 2020 01:46:16 +0300 (MSK)
+        with ESMTP id NrafgdSSK6TI; Fri, 10 Jul 2020 01:46:13 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -39,9 +39,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 11/11] dmaengine: dw: Initialize max_sg_nents capability
-Date:   Fri, 10 Jul 2020 01:45:50 +0300
-Message-ID: <20200709224550.15539-12-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v7 07/11] dmaengine: dw: Set DMA device max segment size parameter
+Date:   Fri, 10 Jul 2020 01:45:46 +0300
+Message-ID: <20200709224550.15539-8-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,19 +53,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Multi-block support provides a way to map the kernel-specific SG-table so
-the DW DMA device would handle it as a whole instead of handling the
-SG-list items or so called LLP block items one by one. So if true LLP
-list isn't supported by the DW DMA engine, then soft-LLP mode will be
-utilized to load and execute each LLP-block one by one. The soft-LLP mode
-of the DMA transactions execution might not work well for some DMA
-consumers like SPI due to its Tx and Rx buffers inter-dependency. Let's
-initialize the max_sg_nents DMA channels capability based on the nollp
-flag state. If it's true, no hardware accelerated LLP is available and
-max_sg_nents should be set with 1, which means that the DMA engine
-can handle only a single SG list entry at a time. If noLLP is set to
-false, then hardware accelerated LLP is supported and the DMA engine
-can handle infinite number of SG entries in a single DMA transaction.
+Maximum block size DW DMAC configuration corresponds to the max segment
+size DMA parameter in the DMA core subsystem notation. Lets set it with a
+value specific to the probed DW DMA controller. It shall help the DMA
+clients to create size-optimized SG-list items for the controller. This in
+turn will cause less dw_desc allocations, less LLP reinitializations,
+better DMA device performance.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
@@ -78,39 +71,37 @@ Cc: devicetree@vger.kernel.org
 
 ---
 
-Changelog v3:
-- This is a new patch created as a result of the discussion with Vinud and
-  Andy in the framework of DW DMA burst and LLP capabilities.
+Changelog v2:
+- This is a new patch created in place of the dropped one:
+  "dmaengine: dw: Add LLP and block size config accessors".
 
-Changelog v4:
-- Use explicit if-else statement when assigning the max_sg_nents field.
+Changelog v3:
+- Use the block_size found for the very first channel instead of looking for
+  the maximum of maximum block sizes.
+- Don't define device-specific device_dma_parameters object, since it has
+  already been defined by the platform device core.
 ---
- drivers/dma/dw/core.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/dma/dw/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 588b9bae827c..9dee5fa65153 100644
+index 33e99d95b3d3..fb95920c429e 100644
 --- a/drivers/dma/dw/core.c
 +++ b/drivers/dma/dw/core.c
-@@ -1059,6 +1059,18 @@ static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
- 	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
+@@ -1229,6 +1229,13 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 			     BIT(DMA_MEM_TO_MEM);
+ 	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
  
- 	caps->max_burst = dwc->max_burst;
-+
 +	/*
-+	 * It might be crucial for some devices to have the hardware
-+	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
-+	 * notation. So if LLPs are supported then max_sg_nents is set to
-+	 * zero which means unlimited number of SG entries can be handled in a
-+	 * single DMA transaction, otherwise it's just one SG entry.
++	 * For now there is no hardware with non uniform maximum block size
++	 * across all of the device channels, so we set the maximum segment
++	 * size as the block size found for the very first channel.
 +	 */
-+	if (dwc->nollp)
-+		caps->max_sg_nents = 1;
-+	else
-+		caps->max_sg_nents = 0;
- }
- 
- int do_dma_probe(struct dw_dma_chip *chip)
++	dma_set_max_seg_size(dw->dma.dev, dw->chan[0].block_size);
++
+ 	err = dma_async_device_register(&dw->dma);
+ 	if (err)
+ 		goto err_dma_register;
 -- 
 2.26.2
 
