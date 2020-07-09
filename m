@@ -2,170 +2,85 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B7DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11709C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44C920674
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:20:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="Uw061yOt"
+	by mail.kernel.org (Postfix) with ESMTP id E13E920674
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGIVUm (ORCPT
+        id S1726275AbgGIVXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:20:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgGIVUf (ORCPT
+        Thu, 9 Jul 2020 17:23:10 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:26675 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726196AbgGIVXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:20:35 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C93C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 14:20:34 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id md7so1660294pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 14:20:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding:cc:from:to;
-        bh=mwiqaheWU8Sd0guj2IwnvydGK+iHxoHpd+MuCk0aqII=;
-        b=Uw061yOt7OeddQFKqaypRf5R2yIYdjOMOco3/+7Alxe2a1baKGudlPSVh2eRLk7Agm
-         8GH7xetKjHjyKvOR1maVuUSTL0g9axXGDOKBsrj6j4djlKTpJrtJOkuLosO1YBecrWNf
-         mKLBekf+OdiRN2/d4pLs5meFRu2mTzSdTIh2kYwSOvbK5XV6Qdk9hzMsOvWyOEwph0lY
-         nZXbVUMuQnzuoK6DHvluQhnGwVAysRvICuO3JkkOnD44v6VSohj7e0RNS5pkqkHtbs4h
-         VoMPZBsazXY/0R9hYqmSNyVteIruHr5UH6yb0Dbke9x+lreLXrYB9DXqqVEfOe+lUtGc
-         GUGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding:cc:from:to;
-        bh=mwiqaheWU8Sd0guj2IwnvydGK+iHxoHpd+MuCk0aqII=;
-        b=WlOE4aeAL1TaijM+aUKyqSZ5QGcaZua1G7VdVnAYZ8sGb5QRntzRCKLuYCDKt+Mjhz
-         Yp8wHNb2alocUMd7HL08b4ILCxUOfQHGdCXuU4VFvChatuG736w/amBMs5ITNNQ+PZvk
-         HIl8l9UIKI6S/YhY+QtvsHLDu8KqQ6vlQdpOMN4gGE5NZk3a9HKetmyc8kPy6VUKERg2
-         3E62Dbdt6iOXG6Brmcqgv8ZbZU8KSoRtj9g28vTyEIXu9p5YK1APPj13H5X8ZVzQ/JkV
-         kFtveCBAN9if/RmWY2p8rpeV7cdxCGAJ7k7mF4vK4ftJazynOzsydtlW1L4HiR9C5eXQ
-         8KIA==
-X-Gm-Message-State: AOAM532O8fbOxBzY1VePpsZhxKRuquMvxFhdzVC8eMLvqMIVzVKGPKNj
-        37+QdY0LgB0AoWpfCQpdtdQbpA==
-X-Google-Smtp-Source: ABdhPJzLsRo3etfu0HhpC+DBT4gHVQ7ocsi70IQCb8hFwx9+nia8o+Hy+mBoiPb4zdhaZgAHcr7OEg==
-X-Received: by 2002:a17:90a:eac7:: with SMTP id ev7mr1955691pjb.21.1594329634168;
-        Thu, 09 Jul 2020 14:20:34 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id x7sm3694230pfp.96.2020.07.09.14.20.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 14:20:32 -0700 (PDT)
-Subject: [PATCH v2 5/5] unicore32: Use the generic devmem_is_allowed()
-Date:   Thu,  9 Jul 2020 14:19:25 -0700
-Message-Id: <20200709211925.1926557-6-palmer@dabbelt.com>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-In-Reply-To: <20200709211925.1926557-1-palmer@dabbelt.com>
-References: <20200709211925.1926557-1-palmer@dabbelt.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc:     linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, aou@eecs.berkeley.edu,
-        gxt@pku.edu.cn, Arnd Bergmann <arnd@arndb.de>,
-        linus.walleij@linaro.org, akpm@linux-foundation.org,
-        mchehab+samsung@kernel.org, gregory.0xf0@gmail.com,
-        masahiroy@kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        bgolaszewski@baylibre.com, steve@sk2.org, tglx@linutronix.de,
-        keescook@chromium.org, alex@ghiti.fr, mcgrof@kernel.org,
-        mark.rutland@arm.com, james.morse@arm.com,
-        alex.shi@linux.alibaba.com, andriy.shevchenko@linux.intel.com,
-        broonie@kernel.org, rdunlap@infradead.org, davem@davemloft.net,
-        rostedt@goodmis.org, dan.j.williams@intel.com, mhiramat@kernel.org,
-        krzk@kernel.org, zaslonko@linux.ibm.com,
-        matti.vaittinen@fi.rohmeurope.com, uwe@kleine-koenig.org,
-        clabbe@baylibre.com, changbin.du@intel.com,
-        Greg KH <gregkh@linuxfoundation.org>, paulmck@kernel.org,
-        pmladek@suse.com, brendanhiggins@google.com, glider@google.com,
-        elver@google.com, davidgow@google.com, ardb@kernel.org,
-        takahiro.akashi@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arch@vger.kernel.org, kernel-team@android.com,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     zong.li@sifive.com, linux-riscv@lists.infradead.org,
-        rppt@linux.ibm.com
+        Thu, 9 Jul 2020 17:23:10 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Jul 2020 14:23:09 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 09 Jul 2020 14:23:09 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 9A89F181; Thu,  9 Jul 2020 14:23:09 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Veera Vegivada <vvegivad@codeaurora.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH v1 2/2] thermal: qcom-spmi-temp-alarm: Don't suppress negative temp
+Date:   Thu,  9 Jul 2020 14:23:08 -0700
+Message-Id: <db8ac636dc4a2f8cff45f8131bf196998134cd07.1594329558.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <d8b145ca2147e366c1d0fd2fd718dc355cc73483.1594329558.git.gurus@codeaurora.org>
+References: <d8b145ca2147e366c1d0fd2fd718dc355cc73483.1594329558.git.gurus@codeaurora.org>
+In-Reply-To: <d8b145ca2147e366c1d0fd2fd718dc355cc73483.1594329558.git.gurus@codeaurora.org>
+References: <d8b145ca2147e366c1d0fd2fd718dc355cc73483.1594329558.git.gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Palmer Dabbelt <palmerdabbelt@google.com>
+From: Veera Vegivada <vvegivad@codeaurora.org>
 
-Aside from being inlineable, this is exactly the same as the arm64
-version, which I recently copied into lib/ for use by the RISC-V port.
+Currently driver is suppressing the negative temperature
+readings from the vadc. Consumers of the thermal zones need
+to read the negative temperature too. Don't suppress the
+readings.
 
-[I haven't even build tested this.  The lib/ patch is on riscv/for-next,
-which I'm targeting for 5.9, so this won't work alone.  See the cover
-letter for more details.]
-
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Veera Vegivada <vvegivad@codeaurora.org>
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- arch/unicore32/Kconfig          |  2 +-
- arch/unicore32/include/asm/io.h | 23 -----------------------
- 2 files changed, 1 insertion(+), 24 deletions(-)
+ drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/unicore32/Kconfig b/arch/unicore32/Kconfig
-index 11ba1839d198..7610571044f4 100644
---- a/arch/unicore32/Kconfig
-+++ b/arch/unicore32/Kconfig
-@@ -2,7 +2,6 @@
- config UNICORE32
- 	def_bool y
- 	select ARCH_32BIT_OFF_T
--	select ARCH_HAS_DEVMEM_IS_ALLOWED
- 	select ARCH_HAS_KEEPINITRD
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
- 	select ARCH_MIGHT_HAVE_PC_SERIO
-@@ -12,6 +11,7 @@ config UNICORE32
- 	select HAVE_KERNEL_LZO
- 	select HAVE_KERNEL_LZMA
- 	select HAVE_PCI
-+	select GENERIC_LIB_DEVMEM_IS_ALLOWED
- 	select VIRT_TO_BUS
- 	select ARCH_HAVE_CUSTOM_GPIO_H
- 	select GENERIC_FIND_FIRST_BIT
-diff --git a/arch/unicore32/include/asm/io.h b/arch/unicore32/include/asm/io.h
-index bd4e7c332f85..4560d2531655 100644
---- a/arch/unicore32/include/asm/io.h
-+++ b/arch/unicore32/include/asm/io.h
-@@ -42,28 +42,5 @@ extern void __uc32_iounmap(volatile void __iomem *addr);
- #define PIO_MASK		(unsigned int)(IO_SPACE_LIMIT)
- #define PIO_RESERVED		(PIO_OFFSET + PIO_MASK + 1)
+diff --git a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+index 05a9601..6d8f090 100644
+--- a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
++++ b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (c) 2011-2015, 2017, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2011-2015, 2017, 2020, The Linux Foundation. All rights reserved.
+  */
  
--#ifdef CONFIG_STRICT_DEVMEM
--
--#include <linux/ioport.h>
--#include <linux/mm.h>
--
--/*
-- * devmem_is_allowed() checks to see if /dev/mem access to a certain
-- * address is valid. The argument is a physical page number.
-- * We mimic x86 here by disallowing access to system RAM as well as
-- * device-exclusive MMIO regions. This effectively disable read()/write()
-- * on /dev/mem.
-- */
--static inline int devmem_is_allowed(unsigned long pfn)
--{
--	if (iomem_is_exclusive(pfn << PAGE_SHIFT))
--		return 0;
--	if (!page_is_ram(pfn))
--		return 1;
--	return 0;
--}
--
--#endif /* CONFIG_STRICT_DEVMEM */
--
- #endif	/* __KERNEL__ */
- #endif	/* __UNICORE_IO_H__ */
+ #include <linux/bitops.h>
+@@ -212,7 +212,7 @@ static int qpnp_tm_get_temp(void *data, int *temp)
+ 		chip->temp = mili_celsius;
+ 	}
+ 
+-	*temp = chip->temp < 0 ? 0 : chip->temp;
++	*temp = chip->temp;
+ 
+ 	return 0;
+ }
 -- 
-2.27.0.383.g050319c2ae-goog
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
