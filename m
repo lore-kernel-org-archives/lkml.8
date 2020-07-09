@@ -2,289 +2,113 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FED6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B074C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2B2720774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:31:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JiGJzxiL"
+	by mail.kernel.org (Postfix) with ESMTP id 2603A2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgGILbb (ORCPT
+        id S1726965AbgGILfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:31:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgGILba (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:31:30 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F15DC061A0B;
-        Thu,  9 Jul 2020 04:31:30 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a14so910418pfi.2;
-        Thu, 09 Jul 2020 04:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sXEmKxMUQPh+anjWf/TN85kjSCFF6dnVSzbWyKgc7V8=;
-        b=JiGJzxiL6Of4/SizVoILjcNlJp9Wzoh1P+aJZskAC5LRDAjD/Lv4QBsgDH3XMjSqVP
-         SEpNt2YQDTSmXX9MEKd2Z+e2aGpZMn4/5bHkKo3tOPw3m3g8ofiIEpZW+eT6o3YCz3/B
-         j+qa3N4UeVuxrnuiGbSw7LpcnaeuvwvpxxoU5rTl9gu+rUmzHD00pToInuZ2dV0hEYXn
-         gDNCiunYDscpN70u3dPO6sl7ddpR78BobQdepS+WbRVLC3KhzXNVL9AgFwG8yJW1DMgt
-         yp+h/4sQL/sFbPFvphompDeg+XySw4idQrQBGQ7XaL7KOXY3ZmF/jYfbebeE41BeOIc2
-         nymg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sXEmKxMUQPh+anjWf/TN85kjSCFF6dnVSzbWyKgc7V8=;
-        b=gApH9djCxN3TOk5GAOc3OUcm1Q24PsiQ2lBWcDM80OMD3X9w8WcnrylHh4n91nLy35
-         s01r33rHlw/RH8FQNeZvC9DVqfdV/x9kcmbEThKWdrRxzx2b1sl+Jka3gd+yV7TZyB5n
-         J1WcnEydf2sBGQ/arMQj0C5Vn7XTVf9JustqeadbQAkD4X05oU8GNMxdrC994BEshCCz
-         BdGE8u5xkJtYrKj4q7/lKOMVomL1JOb31REagaANmsfaNCueyeqNxHYA4jRxbGuNnDyM
-         Ug6417pTc//cvVC/bKH98iCY1eLBHoPWhkla3EPuFblyKV5tKSNHuxgDW0/VFsCD67wY
-         m7ow==
-X-Gm-Message-State: AOAM531mc1+i0uer7hKOTgL3yhxKc1x1O74C/kknqYtPSJ97FkU3sddA
-        IpT6R7FZ9hI3oH8ShKB2l80=
-X-Google-Smtp-Source: ABdhPJxU4JlBuhXofkSOx2RQJ3pZUvyTfO/HTtm9Kxbvz8m7rRAF9ouXaGbcl7QNg0MmjhvADxzNzw==
-X-Received: by 2002:a63:e045:: with SMTP id n5mr56526701pgj.274.1594294289690;
-        Thu, 09 Jul 2020 04:31:29 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id z26sm2601293pfr.187.2020.07.09.04.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 04:31:28 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 04:31:26 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>
-Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>
-Subject: Re: [PATCH v4 08/10] net: eth: altera: add support for ptp and
- timestamping
-Message-ID: <20200709113126.GA776@hoboy>
-References: <20200708072401.169150-1-joyce.ooi@intel.com>
- <20200708072401.169150-9-joyce.ooi@intel.com>
+        Thu, 9 Jul 2020 07:35:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:52594 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbgGILfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 07:35:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C18D21FB;
+        Thu,  9 Jul 2020 04:35:12 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53A4F3F7D7;
+        Thu,  9 Jul 2020 04:35:11 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 12:35:09 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+References: <20200528143141.29956-1-pali@kernel.org>
+ <20200702083036.12230-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200708072401.169150-9-joyce.ooi@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200702083036.12230-1-pali@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 03:23:59PM +0800, Ooi, Joyce wrote:
-
-> @@ -222,6 +223,32 @@ static void tse_get_regs(struct net_device *dev, struct ethtool_regs *regs,
->  		buf[i] = csrrd32(priv->mac_dev, i * 4);
+On Thu, Jul 02, 2020 at 10:30:36AM +0200, Pali Rohár wrote:
+> When there is no PCIe card connected and advk_pcie_rd_conf() or
+> advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+> root bridge, the aardvark driver throws the following error message:
+> 
+>   advk-pcie d0070000.pcie: config read/write timed out
+> 
+> Obviously accessing PCIe registers of disconnected card is not possible.
+> 
+> Extend check in advk_pcie_valid_device() function for validating
+> availability of PCIe bus. If PCIe link is down, then the device is marked
+> as Not Found and the driver does not try to access these registers.
+> 
+> This is just an optimization to prevent accessing PCIe registers when card
+> is disconnected. Trying to access PCIe registers of disconnected card does
+> not cause any crash, kernel just needs to wait for a timeout. So if card
+> disappear immediately after checking for PCIe link (before accessing PCIe
+> registers), it does not cause any problems.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> 
+> ---
+> Changes in V3:
+> * Add comment to the code
+> Changes in V2:
+> * Update commit message, mention that this is optimization
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 90ff291c24f0..d18f389b36a1 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -644,6 +644,13 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+>  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+>  		return false;
+>  
+> +	/*
+> +	 * If the link goes down after we check for link-up, nothing bad
+> +	 * happens but the config access times out.
+> +	 */
+> +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+> +		return false;
+> +
+>  	return true;
 >  }
->  
-> +static int tse_get_ts_info(struct net_device *dev,
-> +			   struct ethtool_ts_info *info)
-> +{
-> +	struct altera_tse_private *priv = netdev_priv(dev);
-> +
-> +	if (priv->ptp_enable) {
-> +		if (priv->ptp_priv.ptp_clock)
-> +			info->phc_index =
-> +				ptp_clock_index(priv->ptp_priv.ptp_clock);
 
-Need to handle case where priv->ptp_priv.ptp_clock == NULL.
+Question: this basically means that you can only effectively enumerate
+bus number == root_bus_nr and AFAICS if at probe the link did not
+come up it will never do, will it ?
 
-> +		info->so_timestamping = SOF_TIMESTAMPING_TX_HARDWARE |
-> +					SOF_TIMESTAMPING_RX_HARDWARE |
-> +					SOF_TIMESTAMPING_RAW_HARDWARE;
-> +
-> +		info->tx_types = (1 << HWTSTAMP_TX_OFF) |
-> +						 (1 << HWTSTAMP_TX_ON);
+Isn't this equivalent to limiting the bus numbers the bridge is capable
+of handling ?
 
-No need to break statement.  This fits nicely on one line.
-
-> +
-> +		info->rx_filters = (1 << HWTSTAMP_FILTER_NONE) |
-> +						   (1 << HWTSTAMP_FILTER_ALL);
-> +
-> +		return 0;
-> +	} else {
-
-No need for else block.
-
-> +		return ethtool_op_get_ts_info(dev, info);
-> +	}
-> +}
-> +
->  static const struct ethtool_ops tse_ethtool_ops = {
->  	.get_drvinfo = tse_get_drvinfo,
->  	.get_regs_len = tse_reglen,
-
-
-> @@ -1309,6 +1324,83 @@ static int tse_shutdown(struct net_device *dev)
->  	return 0;
->  }
->  
-> +/* ioctl to configure timestamping */
-> +static int tse_do_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
-> +{
-> +	struct altera_tse_private *priv = netdev_priv(dev);
-> +	struct hwtstamp_config config;
-
-Need to check here for phy_has_hwtstamp() and pass through to PHY
-layer if true.
-
-> +
-> +	if (!netif_running(dev))
-> +		return -EINVAL;
-> +
-> +	if (!priv->ptp_enable)	{
-> +		netdev_alert(priv->dev, "Timestamping not supported");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	if (cmd == SIOCSHWTSTAMP) {
-> +		if (copy_from_user(&config, ifr->ifr_data,
-> +				   sizeof(struct hwtstamp_config)))
-> +			return -EFAULT;
-> +
-> +		if (config.flags)
-> +			return -EINVAL;
-> +
-> +		switch (config.tx_type) {
-> +		case HWTSTAMP_TX_OFF:
-> +			priv->hwts_tx_en = 0;
-> +			break;
-> +		case HWTSTAMP_TX_ON:
-> +			priv->hwts_tx_en = 1;
-> +			break;
-> +		default:
-> +			return -ERANGE;
-> +		}
-> +
-> +		switch (config.rx_filter) {
-> +		case HWTSTAMP_FILTER_NONE:
-> +			priv->hwts_rx_en = 0;
-> +			config.rx_filter = HWTSTAMP_FILTER_NONE;
-> +			break;
-> +		default:
-> +			priv->hwts_rx_en = 1;
-> +			config.rx_filter = HWTSTAMP_FILTER_ALL;
-> +			break;
-> +		}
-> +
-> +		if (copy_to_user(ifr->ifr_data, &config,
-> +				 sizeof(struct hwtstamp_config)))
-> +			return -EFAULT;
-> +		else
-> +			return 0;
-> +	}
-> +
-> +	if (cmd == SIOCGHWTSTAMP) {
-> +		config.flags = 0;
-> +
-> +		if (priv->hwts_tx_en)
-> +			config.tx_type = HWTSTAMP_TX_ON;
-> +		else
-> +			config.tx_type = HWTSTAMP_TX_OFF;
-> +
-> +		if (priv->hwts_rx_en)
-> +			config.rx_filter = HWTSTAMP_FILTER_ALL;
-> +		else
-> +			config.rx_filter = HWTSTAMP_FILTER_NONE;
-> +
-> +		if (copy_to_user(ifr->ifr_data, &config,
-> +				 sizeof(struct hwtstamp_config)))
-> +			return -EFAULT;
-> +		else
-> +			return 0;
-> +	}
-> +
-> +	if (!dev->phydev)
-> +		return -EINVAL;
-> +
-> +	return phy_mii_ioctl(dev->phydev, ifr, cmd);
-> +}
-> +
->  static struct net_device_ops altera_tse_netdev_ops = {
->  	.ndo_open		= tse_open,
->  	.ndo_stop		= tse_shutdown,
-
-
-> @@ -1568,6 +1661,27 @@ static int altera_tse_probe(struct platform_device *pdev)
->  		netdev_err(ndev, "Cannot attach to PHY (error: %d)\n", ret);
->  		goto err_init_phy;
->  	}
-> +
-> +	priv->ptp_enable = of_property_read_bool(pdev->dev.of_node,
-> +						 "altr,has-ptp");
-
-The name "ptp_enable" is a poor choice.  It sounds like something that
-can be enabled at run time.  Suggest "has_ptp" instead.
-
-> +	dev_info(&pdev->dev, "PTP Enable: %d\n", priv->ptp_enable);
-> +
-> +	if (priv->ptp_enable) {
-> +		/* MAP PTP */
-> +		ret = intel_fpga_tod_probe(pdev, &priv->ptp_priv);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "cannot map PTP\n");
-> +			goto err_init_phy;
-> +		}
-> +		ret = intel_fpga_tod_register(&priv->ptp_priv,
-> +					      priv->device);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Failed to register PTP clock\n");
-> +			ret = -ENXIO;
-> +			goto err_init_phy;
-> +		}
-> +	}
-> +
->  	return 0;
->  
->  err_init_phy:
-
-
-> +/* Initialize PTP control block registers */
-> +int intel_fpga_tod_init(struct intel_fpga_tod_private *priv)
-> +{
-> +	struct timespec64 now;
-> +	int ret = 0;
-> +
-> +	ret = intel_fpga_tod_adjust_fine(&priv->ptp_clock_ops, 0l);
-
-Why clobber a learned frequency offset here?  If user space closes
-then re-opens, then it expects the old frequency to be preserved.
-
-It is fine to set this to zero when the driver loads, but not after.
-
-> +	if (ret != 0)
-> +		goto out;
-> +
-> +	/* Initialize the hardware clock to the system time */
-> +	ktime_get_real_ts64(&now);
-
-Please initialize to zero instead, as some people prefer it that way.
-
-(But only the first time when the driver loads!)
-
-> +	intel_fpga_tod_set_time(&priv->ptp_clock_ops, &now);
-> +
-> +	spin_lock_init(&priv->tod_lock);
-> +
-> +out:
-> +	return ret;
-> +}
+Reworded: if in advk_pcie_setup_hw() the link does not come up, what's
+the point of trying to enumerate the bus hierarchy below the root bus ?
 
 Thanks,
-Richard
+Lorenzo
