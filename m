@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB81C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1999320663
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2FA2077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:59:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qQqVLN9w"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bZJLHdKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgGIO5k (ORCPT
+        id S1727092AbgGIO7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:57:40 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16147 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbgGIO5k (ORCPT
+        Thu, 9 Jul 2020 10:59:30 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7111 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgGIO7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:57:40 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f07302d0000>; Thu, 09 Jul 2020 07:56:45 -0700
+        Thu, 9 Jul 2020 10:59:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0730660000>; Thu, 09 Jul 2020 07:57:42 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 09 Jul 2020 07:57:39 -0700
+  Thu, 09 Jul 2020 07:59:30 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 09 Jul 2020 07:57:39 -0700
+        by hqpgpgate101.nvidia.com on Thu, 09 Jul 2020 07:59:30 -0700
 Received: from [10.19.64.157] (10.124.1.5) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jul
- 2020 14:57:36 +0000
-Subject: Re: [PATCH v3 2/6] gpio: max77620: Fix missing release of interrupt
+ 2020 14:59:25 +0000
+Subject: Re: [PATCH v3 3/6] gpio: max77620: Don't set of_node
 To:     Dmitry Osipenko <digetx@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -41,32 +41,32 @@ To:     Dmitry Osipenko <digetx@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 References: <20200708202355.28507-1-digetx@gmail.com>
- <20200708202355.28507-3-digetx@gmail.com>
+ <20200708202355.28507-4-digetx@gmail.com>
 CC:     <linux-tegra@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 From:   Laxman Dewangan <ldewangan@nvidia.com>
-Message-ID: <80f4d1ff-8096-9060-3cf0-a59448866c40@nvidia.com>
-Date:   Thu, 9 Jul 2020 20:27:04 +0530
+Message-ID: <19c30bda-e1bd-7f24-dcd0-337d76abd6fc@nvidia.com>
+Date:   Thu, 9 Jul 2020 20:28:53 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
  Thunderbird/45.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200708202355.28507-3-digetx@gmail.com>
+In-Reply-To: <20200708202355.28507-4-digetx@gmail.com>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
  HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594306605; bh=fpFkTV2lUtk91L2bYAU77/7Lg3zTXgUb3k+Hg51MCfQ=;
+        t=1594306662; bh=hKixGSb3cb49P/FLh50x6vu2LbncCdYZA1numUuCA+M=;
         h=X-PGP-Universal:Subject:To:References:CC:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding;
-        b=qQqVLN9wngC//dx2qrXZv//b39BIvaw9zxCJ7yy6+tzGbz/dROUqIQwqz4hjO4JcJ
-         5dBOvT9bW3xx7MbdMprwQfCBQZDEQOcbtq/376FU7W1LP3plg910I5lVBZlKp7FQB1
-         QxQgPxgNvLmbOeOi6nmdxhcr6HtCZn5QjAzPbDqhwd+PHTTewWJJBx0RvAG635GizN
-         xdKZdl5681cPtjx+HEWyygzxWkFOQlaw9y1Fxi24Sq/NNRt9CPesIHzsXepcbRGTfh
-         bMj8fkrXTu0fX81F1K9ac5/dOjzJByHcd7M8+s2KxA1WoyVadTKeNh3SlXRjL721ZQ
-         IME8S/dTBnpBg==
+        b=bZJLHdKcmPygPxKev8etJRbK/J3vdh3ZNNAJrdKtjsZws4HBNzW2SeQY/hhGVqp4O
+         gDQfOUl8FEigOW3YM/skB+HaXoNxfsQdWllnIk3x44eppSHPUkV8rQnyHx7VRbyRqo
+         tCn055RGrKj/S3+3taVyFTtNzU9GqCUF6mAksjHcjYpJkx7SdhglzV/87HKfir/dbg
+         WT+I/kdOtHGlVM9t3RdXJwZ+pXKi24mv2Vq0askC4USzhNuu0YzrtgLCp1aglMRgnr
+         T/GG8dL7BgudFCLSEhOAJFj5Iwqr0kNNRZoEDzY9mJdginK7zMm0J+mt0UWANYD5mC
+         yPyX7yjngI4bg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -78,14 +78,16 @@ On Thursday 09 July 2020 01:53 AM, Dmitry Osipenko wrote:
 > External email: Use caution opening links or attachments
 >
 >
-> The requested interrupt is never released by the driver. Fix this by
-> using the resource-managed variant of request_threaded_irq().
+> The gpiochip_add_data() takes care of setting the of_node to the parent's
+> device of_node, hence there is no need to do it manually in the driver's
+> code. This patch corrects the parent's device pointer and removes the
+> unnecessary setting of the of_node.
 >
-> Fixes: ab3dd9cc24d4 ("gpio: max77620: Fix interrupt handling")
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>
 
 
 Looks good to me.
 Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
-
 
