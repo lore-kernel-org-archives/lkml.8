@@ -2,121 +2,111 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFA2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA100C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0A32053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B799120658
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:22:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rR8wMB0W"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jX1f32F+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgGIFUB (ORCPT
+        id S1726260AbgGIFWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 01:20:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgGIFUA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 01:20:00 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25B8AC08C5CE;
-        Wed,  8 Jul 2020 22:20:00 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id t7so432913qvl.8;
-        Wed, 08 Jul 2020 22:20:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h2ey5u0rQyusT9d/zc6U5JsDDVWxF+R85sT24kpAB5c=;
-        b=rR8wMB0WbQzJVmK1fG6vrA9QgvikGKfYsQl+iy+CoUKQ+prDnqBeSkuG178FVewnNR
-         n7PpgaXv02dMHyYy29chR5Ui46SVLx5QcQvAiSauy9uNwq9Tzt47WxTO3BVMOODMgwaL
-         6MHRhl0+ZwymBPoWbQqUVhWwbqvIjmy86Et/RPKmPJ/ZSKZBZTT/KXXhnS+A6U4IDEfw
-         INW6hYTuqzC+srHq80xDOjEV1TEzQbZ1QSWcY9DZzOLwcZzmJDfvKjHy5KbAP3Ll8FgO
-         2aWwhwUq9duT2DQ7p5SbWR3qalA0C9DtOShUzl2J76jUBmG+sDac0gyA0cTw6Y45/Pm4
-         yLhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h2ey5u0rQyusT9d/zc6U5JsDDVWxF+R85sT24kpAB5c=;
-        b=EUwJWHeyHjK5GBDGz1PD8PVHXIeURKxZNpFXGc5Qp61ai9T2WmBNanoVlSHSUITcL+
-         YkIbIvGVP/ioIpKIoHets4qtwP6fCN6TWpIfDlZyjWWPcPiL14MD1qOrj+x8EpMSxEYZ
-         o9Zkxhi4ljF+yRROi26yxeby35USOwmXPluPsjJQPWNpC863yRtjqBNJRR7qNucL2sJz
-         zd1VwxOFJn1pGOO1PaFJpN7oue+4nTV1On09ZvbZfICtl4oKVxPQX29OP7b83myeX+OM
-         UtQcmw1OmDsps5anJzff6ofFeznwyPUWaq9novPan81Xhzwu0wuqEVv0x/inH/oC1yg+
-         uP5A==
-X-Gm-Message-State: AOAM533dZ5XMFb6b6Q9Omgoc+I5cowRughxYQMbLcbvT4dOt1P+tSJXz
-        wZTMx/CM+2a6n/Cvo2O8bk9MrwWDHInM
-X-Google-Smtp-Source: ABdhPJysCYkfIBcts8kENFrUYmdr3eXiSmrlK8fWILE44f0rLD8RRzITYv0N2MTnGAM7xAIdtT++8g==
-X-Received: by 2002:a05:6214:4c4:: with SMTP id ck4mr59679790qvb.202.1594271999346;
-        Wed, 08 Jul 2020 22:19:59 -0700 (PDT)
-Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id p7sm2502952qki.61.2020.07.08.22.19.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 22:19:58 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH] net/bluetooth: Fix slab-out-of-bounds read in hci_extended_inquiry_result_evt()
-Date:   Thu,  9 Jul 2020 01:18:02 -0400
-Message-Id: <20200709051802.185168-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 9 Jul 2020 01:22:11 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:39619 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbgGIFWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 01:22:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594272130; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=0yQ0v6FztJJmC7OWCTASn/q9sJkJzVa6D1EfGhFboOQ=;
+ b=jX1f32F+HP8oDAO0SJ4OIh/0IqG+4och61UJtdxtzPxqeoWrhUW3DGXZuEWbF51nuKC6kD2e
+ Qd4pBI8FOjNvQuQl2yxDyHMI40GHQEbpLTEmcX5XrzZ+oO5+rVzrBQ7WWb4K7jIdNYFCcQlI
+ LCblg2uz0LG1JUv00IXwJpHeYfg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n19.prod.us-east-1.postgun.com with SMTP id
+ 5f06a971c746eb6f00a0d8e0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 05:21:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3F492C433CB; Thu,  9 Jul 2020 05:21:52 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97895C433CA;
+        Thu,  9 Jul 2020 05:21:50 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 09 Jul 2020 10:51:50 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Steven Price <steven.price@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Scull <ascull@google.com>
+Subject: Re: [PATCH] arm64: Add missing sentinel to erratum_1463225
+In-Reply-To: <20200709051345.14544-1-f.fainelli@gmail.com>
+References: <20200709051345.14544-1-f.fainelli@gmail.com>
+Message-ID: <c922696adf78e8243f6aab8619278170@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check upon `num_rsp` is insufficient. A malformed event packet with a
-large `num_rsp` number makes hci_extended_inquiry_result_evt() go out
-of bounds. Fix it. Also, make `num_rsp` unsigned.
+Hi Florian,
 
-This patch fixes the following syzbot bug:
+On 2020-07-09 10:43, Florian Fainelli wrote:
+> When the erratum_1463225 array was introduced a sentinel at the end was
+> missing thus causing a KASAN: global-out-of-bounds in
+> is_affected_midr_range_list on arm64 error.
+> 
+> Link:
+> https://lore.kernel.org/linux-arm-kernel/CA+G9fYs3EavpU89-rTQfqQ9GgxAMgMAk7jiiVrfP0yxj5s+Q6g@mail.gmail.com/
+> Fixes: a9e821b89daa ("arm64: Add KRYO4XX gold CPU cores to erratum
+> list 1463225 and 1418040")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  arch/arm64/kernel/cpu_errata.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/kernel/cpu_errata.c 
+> b/arch/arm64/kernel/cpu_errata.c
+> index 8e302dc093d0..79728bfb5351 100644
+> --- a/arch/arm64/kernel/cpu_errata.c
+> +++ b/arch/arm64/kernel/cpu_errata.c
+> @@ -782,6 +782,7 @@ static const struct midr_range erratum_1463225[] = 
+> {
+>  	MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 1),
+>  	/* Kryo4xx Gold (rcpe to rfpf) => (r0p0 to r3p1) */
+>  	MIDR_RANGE(MIDR_QCOM_KRYO_4XX_GOLD, 0xc, 0xe, 0xf, 0xf),
+> +	{},
+>  };
+>  #endif
 
-    https://syzkaller.appspot.com/bug?id=4bf11aa05c4ca51ce0df86e500fce486552dc8d2
+My bad missing this, thanks for the fix.
 
-Reported-by: syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
- net/bluetooth/hci_event.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 03a0759f2fc2..29aff5e7dec2 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -4369,13 +4369,13 @@ static void hci_extended_inquiry_result_evt(struct hci_dev *hdev,
- 					    struct sk_buff *skb)
- {
- 	struct inquiry_data data;
--	struct extended_inquiry_info *info = (void *) (skb->data + 1);
--	int num_rsp = *((__u8 *) skb->data);
-+	struct extended_inquiry_info *info = (void *)(skb->data + 1);
-+	__u8 num_rsp = *((__u8 *)skb->data);
- 	size_t eir_len;
- 
- 	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
- 
--	if (!num_rsp)
-+	if (!num_rsp || num_rsp * sizeof(*info) > skb->truesize)
- 		return;
- 
- 	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
 -- 
-2.25.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
