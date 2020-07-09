@@ -2,221 +2,253 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73837C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC092078D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594279765;
-	bh=sYXGN+ISBs9KPOjbyjpY1q+N4IQd2AK8zDLRacqq5qI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mxVEjD3wfoLTq6ISd39zTYGtHBdzL53IDCzS9bHAUxj60t+h9Nk82d9LZEc/+kOAu
-	 8aQ8fpIfVNQ7k22IaE/l1SwUwr7EvX8k/851YNIeuvp6DgAGNmUQwxDv43b6Atf0v/
-	 kuaDH+va8LfAMh2VHC4gF0Icxpm8bmgQXgJrCgp0=
+	by mail.kernel.org (Postfix) with ESMTP id AACB520767
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:29:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="mWsbJ7c1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgGIH3Y (ORCPT
+        id S1726445AbgGIH3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726624AbgGIH3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:29:18 -0400
-Received: from localhost.localdomain (unknown [42.120.72.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 024492076A;
-        Thu,  9 Jul 2020 07:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594279757;
-        bh=sYXGN+ISBs9KPOjbyjpY1q+N4IQd2AK8zDLRacqq5qI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eSI/Rgh1kXZ1HlARWCrzTjim05pipMNwMfy1Uo8UBaJtpTBEOuNgOgMv0T/c2e8PC
-         nCT+cTy8jHaW6SoOUhOnfVQANfKhtZSe0FcLV0aCl4oq4PoZ/Dp5jFoUHM2k9QqkUV
-         0/9Xapw2ikat2PVTqylpEqAUOnFvvj71N5xMTJ5I=
-From:   guoren@kernel.org
-To:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
-        anup@brainfault.org, greentime.hu@sifive.com, zong.li@sifive.com,
-        me@packi.ch, bjorn.topel@gmail.com, atish.patra@wdc.com
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, guoren@kernel.org,
-        Guo Ren <guoren@linux.alibaba.com>,
-        cooper <cooper.qu@linux.alibaba.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v2 2/2] riscv: Enable per-task stack canaries
-Date:   Thu,  9 Jul 2020 07:28:17 +0000
-Message-Id: <1594279697-72511-2-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594279697-72511-1-git-send-email-guoren@kernel.org>
-References: <1594279697-72511-1-git-send-email-guoren@kernel.org>
+        Thu, 9 Jul 2020 03:29:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbgGIH3f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 03:29:35 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C9C6C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 00:29:34 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z13so1211888wrw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 00:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QLf3JWPj0alwMi3/QRK8jDSx0ygp/lxS9WUKSf5Y9tw=;
+        b=mWsbJ7c1Re2d9RBWekoBuMXpKqp4ZN8n8E5QnYOQ7I8pw4whUhM43DgUPhtiKn/f6z
+         155YPwfhIjA7johhSPICPnskx/exhclt3ZpMgwyJyDBrwu8YpMxeDC8DUsjUCB1V+vpR
+         KVKDTIiLovHqY8AQ7BhTLDBLYAnsXJzhBJw/5G4tWNKBTrIvmd9GNRgczysicPPyOwPf
+         Q0mRSSrrSm+MC6laNfVmjJoQEbVGHte2dV2HYa1DBfvP8MWGysE/+jj+RoShwSTP99BG
+         NfNEIlpR59Yf7DEyJIyhO/QpvszamWuFoiEgSOhk9JP/ag7Vk1NUbg6eFJfVh1OKr2UG
+         EnNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QLf3JWPj0alwMi3/QRK8jDSx0ygp/lxS9WUKSf5Y9tw=;
+        b=kUqgaaL+dLR6/dEMPwP62IC2SCxWHeKtxaUB6XggXwvjOmw7RjI+ajlBE5tjvHvpho
+         0v+X2Vg5TZsXscld91aGXqbfYZBebGhxgeJpreGPSnv+y++lnVWXrTMBOY8f7XaHHFlJ
+         PeMfnKSxPSQydB8e9EtARA+dsJmQfw5oBsdAIWvbjXRWTAO+OnWeS3tNK6QHlUdZ3LdP
+         0sNfI/ud6rzjk+h3jouMrALCIRkS1ATaZG84kVqhzmJ5Lmc0bnd6LGNVb+R9xv0t2NnK
+         UT3lhN4aJgK2kdr+oQ/Y/ACJ8ZzmwTOgzQ6uf9whXRid857rL3JevrsEhGvtnECHAko1
+         fSWQ==
+X-Gm-Message-State: AOAM531ca5s7p+dcsg9UkoanNhqfSFSbmf2/Kjs6VbKk5uGNjq0aXfFL
+        5BSUscVwNF1/uDq+N3s+dxp+Qh6uqieN7z9zvWNpbw==
+X-Google-Smtp-Source: ABdhPJyvjHsNIlAxHFL2C3MHVJKQZNLaDmrtK3luRNyuNIM3xw0dKhfnraR2CdqxwXkaHTztP0s2DSUpfaQvwqc35Hg=
+X-Received: by 2002:a5d:664e:: with SMTP id f14mr62231186wrw.6.1594279773059;
+ Thu, 09 Jul 2020 00:29:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-4-daniel.vetter@ffwll.ch> <159186243606.1506.4437341616828968890@build.alporthouse.com>
+ <CAPM=9ty6r1LuXAH_rf98GH0R9yN3x8xzKPjZG3QyvokpQBR-Hg@mail.gmail.com>
+ <CAPj87rM0S2OPssf+WA+pjanT-0Om3yuUM1zUJCv4qTx5VYE=Fw@mail.gmail.com>
+ <159255511144.7737.12635440776531222029@build.alporthouse.com>
+ <CAKMK7uHEwj6jiZkRZ5PaCUNWcuU9oE4KYm4XHZwHnFzEuChZ7w@mail.gmail.com>
+ <159255801588.7737.4425728073225310839@build.alporthouse.com> <20200619094309.GT20149@phenom.ffwll.local>
+In-Reply-To: <20200619094309.GT20149@phenom.ffwll.local>
+From:   Daniel Stone <daniel@fooishbar.org>
+Date:   Thu, 9 Jul 2020 08:29:21 +0100
+Message-ID: <CAPj87rOMzBUBWv7kJRvbX3tor-v=3=ZuGeRu0Ws8BOJ=OxX3XA@mail.gmail.com>
+Subject: Re: [Intel-gfx] [PATCH 03/18] dma-fence: basic lockdep annotations
+To:     Chris Wilson <chris@chris-wilson.co.uk>,
+        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+Hi,
+Jumping in after a couple of weeks where I've paged most everything
+out of my brain ...
 
-This enables the use of per-task stack canary values if GCC has
-support for emitting the stack canary reference relative to the
-value of tp, which holds the task struct pointer in the riscv
-kernel.
+On Fri, 19 Jun 2020 at 10:43, Daniel Vetter <daniel@ffwll.ch> wrote:
+> On Fri, Jun 19, 2020 at 10:13:35AM +0100, Chris Wilson wrote:
+> > > The proposed patches might very well encode the wrong contract, that's
+> > > all up for discussion. But fundamentally questioning that we need one
+> > > is missing what upstream is all about.
+> >
+> > Then I have not clearly communicated, as my opinion is not that
+> > validation is worthless, but that the implementation is enshrining a
+> > global property on a low level primitive that prevents it from being
+> > used elsewhere. And I want to replace completion [chains] with fences, and
+> > bio with fences, and closures with fences, and what other equivalencies
+> > there are in the kernel. The fence is as central a locking construct as
+> > struct completion and deserves to be a foundational primitive provided
+> > by kernel/ used throughout all drivers for discrete problem domains.
+> >
+> > This is narrowing dma_fence whereby adding
+> >       struct lockdep_map *dma_fence::wait_map
+> > and annotating linkage, allows you to continue to specify that all
+> > dma_fence used for a particular purpose must follow common rules,
+> > without restricting the primitive for uses outside of this scope.
+>
+> Somewhere else in this thread I had discussions with Jason Gunthorpe about
+> this topic. It might maybe change somewhat depending upon exact rules, but
+> his take is very much "I don't want dma_fence in rdma". Or pretty close to
+> that at least.
+>
+> Similar discussions with habanalabs, they're using dma_fence internally
+> without any of the uapi. Discussion there has also now concluded that it's
+> best if they remove them, and simply switch over to a wait_queue or
+> completion like every other driver does.
+>
+> The next round of the patches already have a paragraph to at least
+> somewhat limit how non-gpu drivers use dma_fence. And I guess actual
+> consensus might be pointing even more strongly at dma_fence being solely
+> something for gpus and closely related subsystem (maybe media) for syncing
+> dma-buf access.
+>
+> So dma_fence as general replacement for completion chains I think just
+> wont happen.
+>
+> What might make sense is if e.g. the lockdep annotations could be reused,
+> at least in design, for wait_queue or completion or anything else
+> really. I do think that has a fair chance compared to the automagic
+> cross-release annotations approach, which relied way too heavily on
+> guessing where barriers are. My experience from just a bit of playing
+> around with these patches here and discussing them with other driver
+> maintainers is that accurately deciding where critical sections start and
+> end is a job for humans only. And if you get it wrong, you will have a
+> false positive.
+>
+> And you're indeed correct that if we'd do annotations for completions and
+> wait queues, then that would need to have a class per semantically
+> equivalent user, like we have lockdep classes for mutexes, not just one
+> overall.
+>
+> But dma_fence otoh is something very specific, which comes with very
+> specific rules attached - it's not a generic wait_queue at all. Originally
+> it did start out as one even, but it is a very specialized wait_queue.
+>
+> So there's imo two cases:
+>
+> - Your completion is entirely orthogonal of dma_fences, and can never ever
+>   block a dma_fence. Don't use dma_fence for this, and no problem. It's
+>   just another wait_queue somewhere.
+>
+> - Your completion can eventually, maybe through lots of convolutions and
+>   depdencies, block a dma_fence. In that case full dma_fence rules apply,
+>   and the only thing you can do with a custom annotation is make the rules
+>   even stricter. E.g. if a sub-timeline in the scheduler isn't allowed to
+>   take certain scheduler locks. But the userspace visible/published fence
+>   do take them, maybe as part of command submission or retirement.
+>   Entirely hypotethical, no idea any driver actually needs this.
 
-After compare arm64 and x86 implementations, seems arm64's is more
-flexible and readable. The key point is how gcc get the offset of
-stack_canary from gs/el0_sp.
+I don't claim to understand the implementation of i915's scheduler and
+GEM handling, and it seems like there's some public context missing
+here. But to me, the above is a good statement of what I (and a lot of
+other userspace) have been relying on - that dma-fence is a very
+tightly scoped thing which is very predictable but in extremis.
 
-x86: Use a fix offset from gs, not flexible.
+It would be great to have something like this enshrined in dma-fence
+documentation, visible to both kernel and external users. The
+properties we've so far been assuming for the graphics pipeline -
+covering production & execution of vertex/fragment workloads on the
+GPU, framebuffer display, and to the extent this is necessary
+involving compute - are something like this:
 
-struct fixed_percpu_data {
-	/*
-	 * GCC hardcodes the stack canary as %gs:40.  Since the
-	 * irq_stack is the object at %gs:0, we reserve the bottom
-	 * 48 bytes of the irq stack for the canary.
-	 */
-	char            gs_base[40]; // :(
-	unsigned long   stack_canary;
-};
+A single dma-fence with no dependencies represents (the tail of) a
+unit of work, which has been all but committed to the hardware. Once
+committed to the hardware, this work will complete (successfully or in
+error) in bounded time. The unit of work referred to by a dma-fence
+may carry dependencies on other dma-fences, which must of course be
+subject to the same restrictions as above. No action from any
+userspace component is required to ensure that the completion occurs.
 
-arm64: Use -mstack-protector-guard-offset & guard-reg
-	gcc options:
-	-mstack-protector-guard=sysreg
-	-mstack-protector-guard-reg=sp_el0
-	-mstack-protector-guard-offset=xxx
+The cases I know of which legitimately blow holes in this are:
+  - the work is scheduled but GPU execution resource contention
+prevents it from completion, e.g. something on a higher-priority
+context repeatedly gets scheduled in front of it - this is OK because
+by definition it's what should happen
+  - the work is scheduled but CPU execution resource contention
+prevents it from completion, e.g. the DRM scheduler does not get to
+trigger the hardware to execute the work - this is OK because at this
+point we have a big system-wide problem
+  - the work is scheduled but non-execution resource contention
+prevents it from making progress, e.g. VRAM contention and/or a paging
+storm - this is OK because again we have a larger problem here and we
+can't reasonably expect the driver to solve this
+  - the work is executed but execution does not complete due to the
+nature of the work, e.g. a chain of work contains a hostile compute
+shader which does not complete in any reasonable time - this is OK
+because we require TDR; even without a smart compositor detecting
+based on fence waits that the work is unsuitable and should not hold
+up other work, the driver will probably ban the context and lock it
+out anyway
 
-riscv: Use -mstack-protector-guard-offset & guard-reg
-	gcc options:
-	-mstack-protector-guard=tls
-	-mstack-protector-guard-reg=tp
-	-mstack-protector-guard-offset=xxx
+The first three are general system resource-overload cases, no
+different from the CPU-side equivalent where it's up to the admin to
+impose ulimits to prevent forkbombs or runaway memory usage, or up to
+the user to run fewer Electron apps. The last one is more difficult,
+because we can't solve the halting problem to know ahead of time that
+the user has submitted an infinite workload, so we have to live with
+that as a real hazard and mitigate it where we can (by returning -EIO
+and killing the app from inside Mesa).
 
-Here is riscv gcc's work [1].
+If repurposing dma-fence for non-graphics uses (like general-purpose
+compute or driver-internal tracking for things other than GPU
+workloads) makes it more difficult to guarantee the above properties,
+then I don't want to do it. Maybe the answer is that dma-fence gets
+split into its core infrastructure which can be used for completion
+chains, with actual dma-fence being layered above generic completion
+APIs: other-completion-API can consume fences, but fences _cannot_
+consume non-fence things.
 
-[1] https://gcc.gnu.org/pipermail/gcc-patches/2020-July/549583.html
+This does force a split between graphics (GL/Vulkan/display) workloads
+and compute (CL/oneAPI/HSA/CUDA), which I get is really difficult to
+resolve in the driver. But the two are hard split anyway: graphics
+requires upfront and explicit buffer management, in return dangling
+the carrot that you can pipeline your workloads and expect completion
+in reasonable time. General-purpose compute lets you go far more YOLO
+on resource access, including full userptr SVM, but the flipside is
+that your execution time might be measured in weeks; as a result you
+don't get to do execution pipelining because even if you could, it's
+not a big enough win relative to your execution time to be worth the
+extra driver and system complexity. I don't think there's a reasonable
+lowest common denominator between the two that we can try to reuse a
+generic model for both, because you make too many compromises to try
+to fit conflicting interests.
 
-In the end, these codes are inserted by gcc before return:
+In the pre-syncobj days, we did look at what we called 'empty fences'
+or 'future fences' with the ChromeOS team: a synchronisation object
+which wasn't backed by a promise of completion as dma-fence is, but
+instead by the meta-promise (from userspace) of a promise of
+completion. Ultimately it never became a real thing for the same
+reason that swsync isn't either; it needed so much special-case
+handling and so many disclaimers and opt-ins everywhere that by the
+end, we weren't sure why we were trying to shoehorn it into dma-fence
+apart from dma-fence already existing - but by removing all its
+guarantees, we also removed all its usefulness as a primitive.
 
-*  0xffffffe00020b396 <+120>:   ld      a5,1008(tp) # 0x3f0
-*  0xffffffe00020b39a <+124>:   xor     a5,a5,a4
-*  0xffffffe00020b39c <+126>:   mv      a0,s5
-*  0xffffffe00020b39e <+128>:   bnez    a5,0xffffffe00020b61c <_do_fork+766>
-   0xffffffe00020b3a2 <+132>:   ld      ra,136(sp)
-   0xffffffe00020b3a4 <+134>:   ld      s0,128(sp)
-   0xffffffe00020b3a6 <+136>:   ld      s1,120(sp)
-   0xffffffe00020b3a8 <+138>:   ld      s2,112(sp)
-   0xffffffe00020b3aa <+140>:   ld      s3,104(sp)
-   0xffffffe00020b3ac <+142>:   ld      s4,96(sp)
-   0xffffffe00020b3ae <+144>:   ld      s5,88(sp)
-   0xffffffe00020b3b0 <+146>:   ld      s6,80(sp)
-   0xffffffe00020b3b2 <+148>:   ld      s7,72(sp)
-   0xffffffe00020b3b4 <+150>:   addi    sp,sp,144
-   0xffffffe00020b3b6 <+152>:   ret
-   ...
-*  0xffffffe00020b61c <+766>:   auipc   ra,0x7f8
-*  0xffffffe00020b620 <+770>:   jalr    -1764(ra) # 0xffffffe000a02f38 <__stack_chk_fail>
-
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Signed-off-by: cooper <cooper.qu@linux.alibaba.com>
-Cc: cooper <cooper.qu@linux.alibaba.com>
-Cc: Kees Cook <keescook@chromium.org>
----
-Change v2:
- - Change to -mstack-protector-guard=tls for gcc final define
- - Solve compile error by changing position of KBUILD_CFLAGS in
-   Makefile
-
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
----
- arch/riscv/Kconfig                      |  7 +++++++
- arch/riscv/Makefile                     | 10 ++++++++++
- arch/riscv/include/asm/stackprotector.h |  3 ++-
- arch/riscv/kernel/asm-offsets.c         |  3 +++
- arch/riscv/kernel/process.c             |  2 +-
- 5 files changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 4b0e308..d98ce29 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -394,6 +394,13 @@ config CMDLINE_FORCE
- 
- endchoice
- 
-+config CC_HAVE_STACKPROTECTOR_TLS
-+	def_bool $(cc-option,-mstack-protector-guard=tls -mstack-protector-guard-reg=tp -mstack-protector-guard-offset=0)
-+
-+config STACKPROTECTOR_PER_TASK
-+	def_bool y
-+	depends on STACKPROTECTOR && CC_HAVE_STACKPROTECTOR_TLS
-+
- endmenu
- 
- config BUILTIN_DTB
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index fb6e37d..f5f8ee9 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -68,6 +68,16 @@ KBUILD_CFLAGS_MODULE += $(call cc-option,-mno-relax)
- # architectures.  It's faster to have GCC emit only aligned accesses.
- KBUILD_CFLAGS += $(call cc-option,-mstrict-align)
- 
-+ifeq ($(CONFIG_STACKPROTECTOR_PER_TASK),y)
-+prepare: stack_protector_prepare
-+stack_protector_prepare: prepare0
-+	$(eval KBUILD_CFLAGS += -mstack-protector-guard=tls		  \
-+				-mstack-protector-guard-reg=tp		  \
-+				-mstack-protector-guard-offset=$(shell	  \
-+			awk '{if ($$2 == "TSK_STACK_CANARY") print $$3;}' \
-+					include/generated/asm-offsets.h))
-+endif
-+
- # arch specific predefines for sparse
- CHECKFLAGS += -D__riscv -D__riscv_xlen=$(BITS)
- 
-diff --git a/arch/riscv/include/asm/stackprotector.h b/arch/riscv/include/asm/stackprotector.h
-index 8e1ef2c..bda4d83 100644
---- a/arch/riscv/include/asm/stackprotector.h
-+++ b/arch/riscv/include/asm/stackprotector.h
-@@ -28,6 +28,7 @@ static __always_inline void boot_init_stack_canary(void)
- 	canary &= CANARY_MASK;
- 
- 	current->stack_canary = canary;
--	__stack_chk_guard = current->stack_canary;
-+	if (!IS_ENABLED(CONFIG_STACKPROTECTOR_PER_TASK))
-+		__stack_chk_guard = current->stack_canary;
- }
- #endif /* _ASM_RISCV_STACKPROTECTOR_H */
-diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
-index 07cb9c1..999b465 100644
---- a/arch/riscv/kernel/asm-offsets.c
-+++ b/arch/riscv/kernel/asm-offsets.c
-@@ -29,6 +29,9 @@ void asm_offsets(void)
- 	OFFSET(TASK_THREAD_S11, task_struct, thread.s[11]);
- 	OFFSET(TASK_THREAD_SP, task_struct, thread.sp);
- 	OFFSET(TASK_STACK, task_struct, stack);
-+#ifdef CONFIG_STACKPROTECTOR
-+	OFFSET(TSK_STACK_CANARY, task_struct, stack_canary);
-+#endif
- 	OFFSET(TASK_TI, task_struct, thread_info);
- 	OFFSET(TASK_TI_FLAGS, task_struct, thread_info.flags);
- 	OFFSET(TASK_TI_PREEMPT_COUNT, task_struct, thread_info.preempt_count);
-diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-index 6548929..cb4ac65 100644
---- a/arch/riscv/kernel/process.c
-+++ b/arch/riscv/kernel/process.c
-@@ -24,7 +24,7 @@
- 
- register unsigned long gp_in_global __asm__("gp");
- 
--#ifdef CONFIG_STACKPROTECTOR
-+#if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
- #include <linux/stackprotector.h>
- unsigned long __stack_chk_guard __read_mostly;
- EXPORT_SYMBOL(__stack_chk_guard);
--- 
-2.7.4
-
+Cheers,
+Daniel
