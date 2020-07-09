@@ -2,162 +2,272 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7422C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01731207FC
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF30E2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WPwZ5D6a"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oGfdVkPa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgGIOBU (ORCPT
+        id S1726734AbgGIOBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:01:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42376 "EHLO
+        Thu, 9 Jul 2020 10:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgGIOBT (ORCPT
+        with ESMTP id S1726353AbgGIOBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:01:19 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95220C08C5CE;
-        Thu,  9 Jul 2020 07:01:19 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z13so2499461wrw.5;
-        Thu, 09 Jul 2020 07:01:19 -0700 (PDT)
+        Thu, 9 Jul 2020 10:01:37 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FEBBC08C5CE;
+        Thu,  9 Jul 2020 07:01:37 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id l63so1004493pge.12;
+        Thu, 09 Jul 2020 07:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vLfgckua8gVA+JX9mVa8ZXdpgnVIx5DJpSfn3SiBwwQ=;
-        b=WPwZ5D6a2gXXOMcaTAm7qOwohuJufMR1IogOoV4WsW6Mxr9B2Jap04BjwHFY59FkJw
-         ilVhMz7r4v+zAM+mOU9qzZ1Rb7LeZEv6Xz1+eqei7NNDOdCaFOUah7wtpItROKlGTDye
-         cr4UM5Q4hSrk96a3RMcX9rueC0vGqXYAYx9iPsOmxvSKmRgRO8FDABuLZb8VPoyKQRET
-         J55kFMfuG7ziKgvtCwVGVAnPv4ECvBO8qek1EH/grbkRVKKJ431iH37nL6gn5r8NNaws
-         zWIeElDjsXg8SEVeK0NOjh6rGJ/NmU9oEcrc6whCxm656mIcERkIRLs62qjwLiTp/S0D
-         zaqw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NEOz/+dYEKltf/Afv4NXx7vYr8cUcobGnfdo+jwjuq4=;
+        b=oGfdVkPaw/KVerbh/jwrh5Eme6+UE1Ov0hPrcL19asfiB/KB0mojMzOfIi0KOJTrok
+         YgJfE0PKCiIy/lRsqNK5UA5pS5ShxYq6kVriDbfqQQq+Q0X3zy/nd5ScZZQdP81aEMrY
+         rM1Qip557Zlw2/VV2Eb1lmmsHW54OiBUYRW6ejHs/25FpRCPFU4Qy24Bp75CpAiHfWhh
+         VtNNDEH88yfWktYRTNBDbaoSdbXRr1lACNDPE5LOq3Fq22P+kphzTyycybGcaYeeo7KQ
+         oCXhr1oeth8VmEg+hbS7xR9Ay1j1v6By0xdOmyyJgzCrknE4xc1qKReGa5/xRJ/0vt7c
+         KRBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=vLfgckua8gVA+JX9mVa8ZXdpgnVIx5DJpSfn3SiBwwQ=;
-        b=F4TMB+SkkNsqWe3BwUw0Joywk/cE3HX1TBefoFdB+ROzQ5U5v0a2RTPo8NBwwBevh5
-         eSOMd7OLc5T0dNZ6u8MgKMDpbM3F2kF5auq1qEXboOZNemvI3XPcHjaMKZBjgbXf+veB
-         Z72U4CC94Of7UxzQcPNR2vm5DU53qbxxrPljpJWy9gBNoJx1456WuMZ/gs2LjczNXJ04
-         rUsOWYHKLEMgjbchQHlWM7yQdAcE7uHG74flJKKQLkxgVq7bf/gptHNicf9njkx+1VMb
-         elqS4l+Q6TIo7VUyegOqJRCbtDk+R7fudeRLBzoXsRBRgxCjlTRahOvbXJxImXJlTt0V
-         s8Cw==
-X-Gm-Message-State: AOAM531WvlUf1B3yGPhqig/5PlOSYjyYwRj2YuiUm7tcHChZWa46d4NS
-        ZEhDS7nd3BFurvLkeb+Gw+A=
-X-Google-Smtp-Source: ABdhPJyw4OGhNAhWoGDQJBcmAyiC1HEldh2ogJIHrokZCA1Pwn2C7/DEwMLiPEx7PYwtUJAuf/XwMQ==
-X-Received: by 2002:adf:f889:: with SMTP id u9mr69738395wrp.149.1594303278329;
-        Thu, 09 Jul 2020 07:01:18 -0700 (PDT)
-Received: from [192.168.43.42] ([5.100.193.69])
-        by smtp.gmail.com with ESMTPSA id j14sm5681497wrs.75.2020.07.09.07.01.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 07:01:17 -0700 (PDT)
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <20200708222637.23046-1-willy@infradead.org>
- <20200709101705.GA2095@infradead.org>
- <20200709111036.GA12769@casper.infradead.org>
- <20200709132611.GA1382@infradead.org>
- <ffbd272c-32f3-8c8c-6395-5eab47725929@gmail.com>
- <20200709134319.GD12769@casper.infradead.org>
- <ce7d999e-1629-c70d-8bb9-59d7db41a11e@gmail.com>
- <20200709135311.GE12769@casper.infradead.org>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFmKBOQBEAC76ZFxLAKpDw0bKQ8CEiYJRGn8MHTUhURL02/7n1t0HkKQx2K1fCXClbps
- bdwSHrhOWdW61pmfMbDYbTj6ZvGRvhoLWfGkzujB2wjNcbNTXIoOzJEGISHaPf6E2IQx1ik9
- 6uqVkK1OMb7qRvKH0i7HYP4WJzYbEWVyLiAxUj611mC9tgd73oqZ2pLYzGTqF2j6a/obaqha
- +hXuWTvpDQXqcOZJXIW43atprH03G1tQs7VwR21Q1eq6Yvy2ESLdc38EqCszBfQRMmKy+cfp
- W3U9Mb1w0L680pXrONcnlDBCN7/sghGeMHjGKfNANjPc+0hzz3rApPxpoE7HC1uRiwC4et83
- CKnncH1l7zgeBT9Oa3qEiBlaa1ZCBqrA4dY+z5fWJYjMpwI1SNp37RtF8fKXbKQg+JuUjAa9
- Y6oXeyEvDHMyJYMcinl6xCqCBAXPHnHmawkMMgjr3BBRzODmMr+CPVvnYe7BFYfoajzqzq+h
- EyXSl3aBf0IDPTqSUrhbmjj5OEOYgRW5p+mdYtY1cXeK8copmd+fd/eTkghok5li58AojCba
- jRjp7zVOLOjDlpxxiKhuFmpV4yWNh5JJaTbwCRSd04sCcDNlJj+TehTr+o1QiORzc2t+N5iJ
- NbILft19Izdn8U39T5oWiynqa1qCLgbuFtnYx1HlUq/HvAm+kwARAQABtDFQYXZlbCBCZWd1
- bmtvdiAoc2lsZW5jZSkgPGFzbWwuc2lsZW5jZUBnbWFpbC5jb20+iQJOBBMBCAA4FiEE+6Ju
- PTjTbx479o3OWt5b1Glr+6UFAlmKBOQCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQ
- Wt5b1Glr+6WxZA//QueaKHzgdnOikJ7NA/Vq8FmhRlwgtP0+E+w93kL+ZGLzS/cUCIjn2f4Q
- Mcutj2Neg0CcYPX3b2nJiKr5Vn0rjJ/suiaOa1h1KzyNTOmxnsqE5fmxOf6C6x+NKE18I5Jy
- xzLQoktbdDVA7JfB1itt6iWSNoOTVcvFyvfe5ggy6FSCcP+m1RlR58XxVLH+qlAvxxOeEr/e
- aQfUzrs7gqdSd9zQGEZo0jtuBiB7k98t9y0oC9Jz0PJdvaj1NZUgtXG9pEtww3LdeXP/TkFl
- HBSxVflzeoFaj4UAuy8+uve7ya/ECNCc8kk0VYaEjoVrzJcYdKP583iRhOLlZA6HEmn/+Gh9
- 4orG67HNiJlbFiW3whxGizWsrtFNLsSP1YrEReYk9j1SoUHHzsu+ZtNfKuHIhK0sU07G1OPN
- 2rDLlzUWR9Jc22INAkhVHOogOcc5ajMGhgWcBJMLCoi219HlX69LIDu3Y34uIg9QPZIC2jwr
- 24W0kxmK6avJr7+n4o8m6sOJvhlumSp5TSNhRiKvAHB1I2JB8Q1yZCIPzx+w1ALxuoWiCdwV
- M/azguU42R17IuBzK0S3hPjXpEi2sK/k4pEPnHVUv9Cu09HCNnd6BRfFGjo8M9kZvw360gC1
- reeMdqGjwQ68o9x0R7NBRrtUOh48TDLXCANAg97wjPoy37dQE7e5Ag0EWYoE5AEQAMWS+aBV
- IJtCjwtfCOV98NamFpDEjBMrCAfLm7wZlmXy5I6o7nzzCxEw06P2rhzp1hIqkaab1kHySU7g
- dkpjmQ7Jjlrf6KdMP87mC/Hx4+zgVCkTQCKkIxNE76Ff3O9uTvkWCspSh9J0qPYyCaVta2D1
- Sq5HZ8WFcap71iVO1f2/FEHKJNz/YTSOS/W7dxJdXl2eoj3gYX2UZNfoaVv8OXKaWslZlgqN
- jSg9wsTv1K73AnQKt4fFhscN9YFxhtgD/SQuOldE5Ws4UlJoaFX/yCoJL3ky2kC0WFngzwRF
- Yo6u/KON/o28yyP+alYRMBrN0Dm60FuVSIFafSqXoJTIjSZ6olbEoT0u17Rag8BxnxryMrgR
- dkccq272MaSS0eOC9K2rtvxzddohRFPcy/8bkX+t2iukTDz75KSTKO+chce62Xxdg62dpkZX
- xK+HeDCZ7gRNZvAbDETr6XI63hPKi891GeZqvqQVYR8e+V2725w+H1iv3THiB1tx4L2bXZDI
- DtMKQ5D2RvCHNdPNcZeldEoJwKoA60yg6tuUquvsLvfCwtrmVI2rL2djYxRfGNmFMrUDN1Xq
- F3xozA91q3iZd9OYi9G+M/OA01husBdcIzj1hu0aL+MGg4Gqk6XwjoSxVd4YT41kTU7Kk+/I
- 5/Nf+i88ULt6HanBYcY/+Daeo/XFABEBAAGJAjYEGAEIACAWIQT7om49ONNvHjv2jc5a3lvU
- aWv7pQUCWYoE5AIbDAAKCRBa3lvUaWv7pfmcEACKTRQ28b1y5ztKuLdLr79+T+LwZKHjX++P
- 4wKjEOECCcB6KCv3hP+J2GCXDOPZvdg/ZYZafqP68Yy8AZqkfa4qPYHmIdpODtRzZSL48kM8
- LRzV8Rl7J3ItvzdBRxf4T/Zseu5U6ELiQdCUkPGsJcPIJkgPjO2ROG/ZtYa9DvnShNWPlp+R
- uPwPccEQPWO/NP4fJl2zwC6byjljZhW5kxYswGMLBwb5cDUZAisIukyAa8Xshdan6C2RZcNs
- rB3L7vsg/R8UCehxOH0C+NypG2GqjVejNZsc7bgV49EOVltS+GmGyY+moIzxsuLmT93rqyII
- 5rSbbcTLe6KBYcs24XEoo49Zm9oDA3jYvNpeYD8rDcnNbuZh9kTgBwFN41JHOPv0W2FEEWqe
- JsCwQdcOQ56rtezdCJUYmRAt3BsfjN3Jn3N6rpodi4Dkdli8HylM5iq4ooeb5VkQ7UZxbCWt
- UVMKkOCdFhutRmYp0mbv2e87IK4erwNHQRkHUkzbsuym8RVpAZbLzLPIYK/J3RTErL6Z99N2
- m3J6pjwSJY/zNwuFPs9zGEnRO4g0BUbwGdbuvDzaq6/3OJLKohr5eLXNU3JkT+3HezydWm3W
- OPhauth7W0db74Qd49HXK0xe/aPrK+Cp+kU1HRactyNtF8jZQbhMCC8vMGukZtWaAwpjWiiH bA==
-Subject: Re: [PATCH 0/2] Remove kiocb ki_complete
-Message-ID: <418c57cb-04a2-d324-4b9a-59106427dfe5@gmail.com>
-Date:   Thu, 9 Jul 2020 16:59:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NEOz/+dYEKltf/Afv4NXx7vYr8cUcobGnfdo+jwjuq4=;
+        b=FfSJ0UMg0/4ptf5yk0CgsY2nPHWPtBXXLZdQLGo0totJcWY499RR4fAqZVNt5JBZag
+         5e7CEnjiEYEMWUdeawkVxsFzDmMdk5l7n0D3qy3TSYyfgVY1N9KhwXkT/QkRn6WsUdjo
+         z7WAG/3/+R4A5Yp3kZH+aTD1qHjO5VjXWkg/C1pUZxO0/pweqhpeLY0E2deVVTXLri2B
+         77Yi4JUkydi/IVaiPmn3ZBjfnEzd0wlooVWiwrlGCueZgp+nkswd2761r7icV12LrZvu
+         wtzfmECndPwer80VowOD5SMczkF+Y9MvHBj3iooyh0ZkqxSz/JCwofUIRGrL5bohm0wP
+         MgJA==
+X-Gm-Message-State: AOAM533W4oEtqdWg0ceZdbeOPXQF1ocorvkbasiMsf+vWtC99iIeMsBo
+        TqBNVrP3M+Q5EC0hDtR2YLykEU1op7s=
+X-Google-Smtp-Source: ABdhPJwhBJ/xOmahcpLOzDy/gF/KFTidiBfk1GEmueonBgle1sab7N4bvPQKS6F4yjkeMR2AKEjvTw==
+X-Received: by 2002:a63:417:: with SMTP id 23mr51185366pge.44.1594303296787;
+        Thu, 09 Jul 2020 07:01:36 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f14sm2926191pgj.62.2020.07.09.07.01.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 Jul 2020 07:01:35 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 07:01:34 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Marius Zachmann <mail@mariuszachmann.de>
+Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: corsair-cpro: add fan_target
+Message-ID: <20200709140134.GA61434@roeck-us.net>
+References: <20200709112439.6069-1-mail@mariuszachmann.de>
 MIME-Version: 1.0
-In-Reply-To: <20200709135311.GE12769@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709112439.6069-1-mail@mariuszachmann.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/07/2020 16:53, Matthew Wilcox wrote:
-> On Thu, Jul 09, 2020 at 04:49:51PM +0300, Pavel Begunkov wrote:
->> On 09/07/2020 16:43, Matthew Wilcox wrote:
->>> On Thu, Jul 09, 2020 at 04:37:59PM +0300, Pavel Begunkov wrote:
->>>> Kanchan, could you take a look if you can hide it in req->cflags?
->>>
->>> No, that's not what cflags are for.  And besides, there's only 32 bits
->>> there.
->>
->> It's there to temporarily store cqe->cflags, if a request can't completed
->> right away. And req->{result,user_data,cflags} are basically an CQE inside
->> io_kiocb.
->>
->> So, it is there exactly for that reason, and whatever way it's going to be
->> encoded in an CQE, io_kiocb can fit it. That was my point.
+On Thu, Jul 09, 2020 at 01:24:39PM +0200, Marius Zachmann wrote:
+> This adds fan_target entries to the corsair-cpro driver.
+> Reading the attribute from the device does not seem possible, so
+> it returns the last set value. (same as pwm)
 > 
-> But it's not going to be encoded in the CQE.  Perhaps you should go back to
-> the older thread and read the arguments there.
+> Furthermore:
+> - removes unnecessary kernel.h include.
+> - send_usb_cmd now has one more argument which is needed for the
+>   fan_target command.
+> 
+> Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
+> ---
+>  Documentation/hwmon/corsair-cpro.rst |  3 ++
+>  drivers/hwmon/corsair-cpro.c         | 62 ++++++++++++++++++++++------
+>  2 files changed, 53 insertions(+), 12 deletions(-)
+> 
+> --
+> 2.27.0
+> 
+> diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
+> index 5913e23d764c..080f063d74b6 100644
+> --- a/Documentation/hwmon/corsair-cpro.rst
+> +++ b/Documentation/hwmon/corsair-cpro.rst
+> @@ -33,6 +33,9 @@ in2_input		Voltage on SATA 3.3v
+>  temp[1-4]_input		Temperature on connected temperature sensors
+>  fan[1-6]_input		Connected fan rpm.
+>  fan[1-6]_label		Shows fan type as detected by the device.
+> +fan[1-6]_set_target	Sets fan speed target rpm. Values from 0-65535.
+> +			When reading, it reports the last value if it was set by the driver.
+> +			Otherwise returns 0.
+>  pwm[1-6]		Sets the fan speed. Values from 0-255.
+>  			When reading, it reports the last value if it was set by the driver.
+>  			Otherwise returns 0.
+> diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
+> index a22583acc229..a2cb2b474f08 100644
+> --- a/drivers/hwmon/corsair-cpro.c
+> +++ b/drivers/hwmon/corsair-cpro.c
+> @@ -5,7 +5,6 @@
+>   */
+> 
+>  #include <linux/bitops.h>
+> -#include <linux/kernel.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> @@ -51,6 +50,12 @@
+>  					 * send: byte 1 is fan number
+>  					 * send: byte 2 is percentage from 0 - 100
+>  					 */
+> +#define CTL_SET_FAN_TARGET	0x24	/*
+> +					 * set target rpm
+> +					 * send: byte 1 is fan number
+> +					 * send: byte 2-3 is target
+> +					 * device accepts all values from 0x00 - 0xFFFF
+> +					 */
+> 
+>  #define NUM_FANS		6
+>  #define NUM_TEMP_SENSORS	4
+> @@ -60,13 +65,14 @@ struct ccp_device {
+>  	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
+>  	u8 *buffer;
+>  	int pwm[6];
+> +	int target[6];
+>  	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
+>  	DECLARE_BITMAP(fan_cnct, NUM_FANS);
+>  	char fan_label[6][LABEL_LENGTH];
+>  };
+> 
+>  /* send command, check for error in response, response in ccp->buffer */
+> -static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2)
+> +static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2, u8 byte3)
+>  {
+>  	int actual_length;
+>  	int ret;
+> @@ -75,6 +81,7 @@ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2)
+>  	ccp->buffer[0] = command;
+>  	ccp->buffer[1] = byte1;
+>  	ccp->buffer[2] = byte2;
+> +	ccp->buffer[3] = byte3;
+> 
+>  	ret = usb_bulk_msg(ccp->udev, usb_sndintpipe(ccp->udev, 2), ccp->buffer, OUT_BUFFER_SIZE,
+>  			   &actual_length, 1000);
+> @@ -103,7 +110,7 @@ static int get_data(struct ccp_device *ccp, int command, int channel)
+> 
+>  	mutex_lock(&ccp->mutex);
+> 
+> -	ret = send_usb_cmd(ccp, command, channel, 0);
+> +	ret = send_usb_cmd(ccp, command, channel, 0, 0);
+>  	if (ret)
+>  		goto out_unlock;
+> 
+> @@ -128,7 +135,24 @@ static int set_pwm(struct ccp_device *ccp, int channel, long val)
+> 
+>  	mutex_lock(&ccp->mutex);
+> 
+> -	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val);
+> +	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val, 0);
+> +
+> +	mutex_unlock(&ccp->mutex);
+> +	return ret;
+> +}
+> +
+> +static int set_target(struct ccp_device *ccp, int channel, long val)
+> +{
+> +	int ret;
+> +
+> +	if (val < 0 || val > 0xFFFF)
+> +		return -EINVAL;
 
-Ok, if the thread is stopped on the version with indirection. I just looked the
-last sent patch.
+Please use clamp_val() here. We don't expect users to know the limits.
+That is different to pwm, which has a well known range of 0..255.
+Of course, that means you still need the kernel.h include.
 
-If so, we can also store offset before adding an CQE and getting by with local
-vars only. Just a thought.
-
--- 
-Pavel Begunkov
+> +
+> +	ccp->target[channel] = val;
+> +
+> +	mutex_lock(&ccp->mutex);
+> +
+> +	ret = send_usb_cmd(ccp, CTL_SET_FAN_TARGET, channel, val >> 8, val);
+> 
+>  	mutex_unlock(&ccp->mutex);
+>  	return ret;
+> @@ -183,6 +207,11 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
+>  				return ret;
+>  			*val = ret;
+>  			return 0;
+> +		case hwmon_fan_target:
+> +			/* how to read target values from the device is unknown */
+> +			/* driver returns last set value or 0			*/
+> +			*val = ccp->target[channel];
+> +			return 0;
+>  		default:
+>  			break;
+>  		}
+> @@ -231,6 +260,13 @@ static int ccp_write(struct device *dev, enum hwmon_sensor_types type,
+>  			break;
+>  		}
+>  		break;
+> +	case hwmon_fan:
+> +		switch (attr) {
+> +		case hwmon_fan_target:
+> +			return set_target(ccp, channel, val);
+> +		default:
+> +			break;
+> +		}
+>  	default:
+>  		break;
+>  	}
+> @@ -266,6 +302,8 @@ static umode_t ccp_is_visible(const void *data, enum hwmon_sensor_types type,
+>  			return 0444;
+>  		case hwmon_fan_label:
+>  			return 0444;
+> +		case hwmon_fan_target:
+> +			return 0644;
+>  		default:
+>  			break;
+>  		}
+> @@ -313,12 +351,12 @@ static const struct hwmon_channel_info *ccp_info[] = {
+>  			   HWMON_T_INPUT
+>  			   ),
+>  	HWMON_CHANNEL_INFO(fan,
+> -			   HWMON_F_INPUT | HWMON_F_LABEL,
+> -			   HWMON_F_INPUT | HWMON_F_LABEL,
+> -			   HWMON_F_INPUT | HWMON_F_LABEL,
+> -			   HWMON_F_INPUT | HWMON_F_LABEL,
+> -			   HWMON_F_INPUT | HWMON_F_LABEL,
+> -			   HWMON_F_INPUT | HWMON_F_LABEL
+> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
+> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
+> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
+> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
+> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET,
+> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_TARGET
+>  			   ),
+>  	HWMON_CHANNEL_INFO(pwm,
+>  			   HWMON_PWM_INPUT,
+> @@ -348,7 +386,7 @@ static int get_fan_cnct(struct ccp_device *ccp)
+>  	int mode;
+>  	int ret;
+> 
+> -	ret = send_usb_cmd(ccp, CTL_GET_FAN_CNCT, 0, 0);
+> +	ret = send_usb_cmd(ccp, CTL_GET_FAN_CNCT, 0, 0, 0);
+>  	if (ret)
+>  		return ret;
+> 
+> @@ -385,7 +423,7 @@ static int get_temp_cnct(struct ccp_device *ccp)
+>  	int mode;
+>  	int ret;
+> 
+> -	ret = send_usb_cmd(ccp, CTL_GET_TMP_CNCT, 0, 0);
+> +	ret = send_usb_cmd(ccp, CTL_GET_TMP_CNCT, 0, 0, 0);
+>  	if (ret)
+>  		return ret;
