@@ -2,129 +2,189 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1653AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF684C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0B02074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D442074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:14:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T+nG7tey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgGIMOZ (ORCPT
+        id S1727854AbgGIMOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:14:25 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2635 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726767AbgGIMOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:14:25 -0400
-Received: from dggemi405-hub.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id E4763ECEA0ED564B8AD5;
-        Thu,  9 Jul 2020 20:14:19 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.177]) by
- dggemi405-hub.china.huawei.com ([10.3.17.143]) with mapi id 14.03.0487.000;
- Thu, 9 Jul 2020 20:14:09 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
-        Mahipal Challa <mahipalreddy2006@gmail.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
-        "Colin Ian King" <colin.king@canonical.com>
-Subject: RE: [PATCH v4] mm/zswap: move to use crypto_acomp API for hardware
- acceleration
-Thread-Topic: [PATCH v4] mm/zswap: move to use crypto_acomp API for hardware
- acceleration
-Thread-Index: AQHWVF24fP2q5El5/U63jMMAkQc326j9QfAAgADy42CAAB5FAIAAvkpA
-Date:   Thu, 9 Jul 2020 12:14:08 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD25623E4@DGGEMI525-MBS.china.huawei.com>
-References: <20200707125210.33256-1-song.bao.hua@hisilicon.com>
- <20200708145934.4w3qk53mgavyyln7@linutronix.de>
- <B926444035E5E2439431908E3842AFD2560DE6@DGGEMI525-MBS.china.huawei.com>
- <20200709071714.32m7hatmkr4pk2f4@linutronix.de>
-In-Reply-To: <20200709071714.32m7hatmkr4pk2f4@linutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.202.83]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 9 Jul 2020 08:14:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59536 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727813AbgGIMOg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:14:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594296874;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kwRIPXQdD58+F7cV0LER43YEzOAqv3hHNiA5thj41Io=;
+        b=T+nG7teysCQg9Wgr5b8XmzUEiYcCai/DdYNiuEWUrAuset/I638gBJLBFxoLDnOWtgDTf7
+        +DnxG87twGbH6fsfLMIa9TnTkWoJdVATePkGGYliHaTqrFDzvyi0JN0bGv+v0HvDQ6XK6S
+        2mDyQfmsrCJ8zVtmqiOR6iyfm6S0/to=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-nUE7h5fCO9-ifTY0lOeipg-1; Thu, 09 Jul 2020 08:14:32 -0400
+X-MC-Unique: nUE7h5fCO9-ifTY0lOeipg-1
+Received: by mail-wr1-f69.google.com with SMTP id b8so1732222wro.19
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 05:14:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kwRIPXQdD58+F7cV0LER43YEzOAqv3hHNiA5thj41Io=;
+        b=iy7+83xpaWy3CBThigxW/OOEJK+/TosXu8mOfNUuUJBgtKyvduhZajAvD4yd4gmqRS
+         TXkvAD85HiANa3DX5Qg1d72loybQrI5j0Xs1sypzGVbWEBLSbgr31mGpMBnF28q0h3l3
+         4NDk0ll/Ksx+AoRRtYhunOuWRV0hKHEMQKQ1SW8UF459bFyZXu9H/58ekLpRq436XlIO
+         Ipc+t5fL0KJHI0vwvp0M2/CFUnH+szXebbVtbN0HXEda96S51SajIzXgYPs32CNZvSqW
+         /yCifAh4E0XB+X47HrR9O4DVh+AvtvvUOW5hPykxA62SRlgLWdLBg+pFatQGB8hP5bvK
+         ATWw==
+X-Gm-Message-State: AOAM531PKnzIM0nrCB06RZ0ks7mbMSC9uO4jA1jrbRpYbO2pEOP66eEj
+        1aytnPsSvkd8VLiGghSWgjZpWCdQoechXOZr6/RYqtg0qGpDUgb0oFk+c9c7v6mHyPUS1d5iFcr
+        eHVxyYnb0rd/EUC1OeCtDSs1f
+X-Received: by 2002:a7b:c92e:: with SMTP id h14mr13361792wml.36.1594296871530;
+        Thu, 09 Jul 2020 05:14:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwRhPo7g5kUipBnsOFe+3r9VY5ESGX0vtcsJ/9+mosHc1rT3gI7GlSh2CG+AM/UAt8pI6ZlHQ==
+X-Received: by 2002:a7b:c92e:: with SMTP id h14mr13361761wml.36.1594296871306;
+        Thu, 09 Jul 2020 05:14:31 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.gmail.com with ESMTPSA id c206sm4897543wmf.36.2020.07.09.05.14.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 05:14:30 -0700 (PDT)
+Subject: Re: [PATCH v3 00/21] KVM: Cleanup and unify kvm_mmu_memory_cache
+ usage
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ben Gardon <bgardon@google.com>,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+References: <20200703023545.8771-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <9cce79d8-bc8a-8a3a-060a-c9a882dd7e07@redhat.com>
+Date:   Thu, 9 Jul 2020 14:14:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200703023545.8771-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtY3J5cHRvLW93
-bmVyQHZnZXIua2VybmVsLm9yZw0KPiBbbWFpbHRvOmxpbnV4LWNyeXB0by1vd25lckB2Z2VyLmtl
-cm5lbC5vcmddIE9uIEJlaGFsZiBPZiBTZWJhc3RpYW4gQW5kcnplag0KPiBTaWV3aW9yDQo+IFNl
-bnQ6IFRodXJzZGF5LCBKdWx5IDksIDIwMjAgNzoxNyBQTQ0KPiBUbzogU29uZyBCYW8gSHVhIChC
-YXJyeSBTb25nKSA8c29uZy5iYW8uaHVhQGhpc2lsaWNvbi5jb20+DQo+IENjOiBha3BtQGxpbnV4
-LWZvdW5kYXRpb24ub3JnOyBoZXJiZXJ0QGdvbmRvci5hcGFuYS5vcmcuYXU7DQo+IGRhdmVtQGRh
-dmVtbG9mdC5uZXQ7IGxpbnV4LWNyeXB0b0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LW1tQGt2YWNr
-Lm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgTGludXhhcm0gPGxpbnV4YXJt
-QGh1YXdlaS5jb20+OyBMdWlzIENsYXVkaW8NCj4gUiAuIEdvbmNhbHZlcyA8bGdvbmNhbHZAcmVk
-aGF0LmNvbT47IE1haGlwYWwgQ2hhbGxhDQo+IDxtYWhpcGFscmVkZHkyMDA2QGdtYWlsLmNvbT47
-IFNldGggSmVubmluZ3MgPHNqZW5uaW5nQHJlZGhhdC5jb20+Ow0KPiBEYW4gU3RyZWV0bWFuIDxk
-ZHN0cmVldEBpZWVlLm9yZz47IFZpdGFseSBXb29sDQo+IDx2aXRhbHkud29vbEBrb25zdWxrby5j
-b20+OyBXYW5nemhvdSAoQikgPHdhbmd6aG91MUBoaXNpbGljb24uY29tPjsNCj4gQ29saW4gSWFu
-IEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
-NF0gbW0venN3YXA6IG1vdmUgdG8gdXNlIGNyeXB0b19hY29tcCBBUEkgZm9yDQo+IGhhcmR3YXJl
-IGFjY2VsZXJhdGlvbg0KPiANCj4gT24gMjAyMC0wNy0wOCAyMTo0NTo0NyBbKzAwMDBdLCBTb25n
-IEJhbyBIdWEgKEJhcnJ5IFNvbmcpIHdyb3RlOg0KPiA+ID4gT24gMjAyMC0wNy0wOCAwMDo1Mjox
-MCBbKzEyMDBdLCBCYXJyeSBTb25nIHdyb3RlOg0KPiA+ID4gPiBAQCAtMTI3LDkgKzEyOSwxNyBA
-QA0KPiA+ID4gPiArc3RydWN0IGNyeXB0b19hY29tcF9jdHggew0KPiA+ID4gPiArCXN0cnVjdCBj
-cnlwdG9fYWNvbXAgKmFjb21wOw0KPiA+ID4gPiArCXN0cnVjdCBhY29tcF9yZXEgKnJlcTsNCj4g
-PiA+ID4gKwlzdHJ1Y3QgY3J5cHRvX3dhaXQgd2FpdDsNCj4gPiA+ID4gKwl1OCAqZHN0bWVtOw0K
-PiA+ID4gPiArCXN0cnVjdCBtdXRleCBtdXRleDsNCj4gPiA+ID4gK307DQo+ID4gPiDigKYNCj4g
-PiA+ID4gQEAgLTEwNzQsMTIgKzExMzgsMzIgQEAgc3RhdGljIGludCB6c3dhcF9mcm9udHN3YXBf
-c3RvcmUodW5zaWduZWQNCj4gPiA+IHR5cGUsIHBnb2ZmX3Qgb2Zmc2V0LA0KPiA+ID4gPiAgCX0N
-Cj4gPiA+ID4NCj4gPiA+ID4gIAkvKiBjb21wcmVzcyAqLw0KPiA+ID4gPiAtCWRzdCA9IGdldF9j
-cHVfdmFyKHpzd2FwX2RzdG1lbSk7DQo+ID4gPiA+IC0JdGZtID0gKmdldF9jcHVfcHRyKGVudHJ5
-LT5wb29sLT50Zm0pOw0KPiA+ID4gPiAtCXNyYyA9IGttYXBfYXRvbWljKHBhZ2UpOw0KPiA+ID4g
-PiAtCXJldCA9IGNyeXB0b19jb21wX2NvbXByZXNzKHRmbSwgc3JjLCBQQUdFX1NJWkUsIGRzdCwg
-JmRsZW4pOw0KPiA+ID4gPiAtCWt1bm1hcF9hdG9taWMoc3JjKTsNCj4gPiA+ID4gLQlwdXRfY3B1
-X3B0cihlbnRyeS0+cG9vbC0+dGZtKTsNCj4gPiA+ID4gKwlhY29tcF9jdHggPSAqdGhpc19jcHVf
-cHRyKGVudHJ5LT5wb29sLT5hY29tcF9jdHgpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJbXV0ZXhf
-bG9jaygmYWNvbXBfY3R4LT5tdXRleCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlzcmMgPSBrbWFw
-KHBhZ2UpOw0KPiA+ID4gPiArCWRzdCA9IGFjb21wX2N0eC0+ZHN0bWVtOw0KPiA+ID4NCj4gPiA+
-IHRoYXQgbXV0ZXggaXMgcGVyLUNQVSwgcGVyLWNvbnRleHQuIFRoZSBkc3RtZW0gcG9pbnRlciBp
-cyBwZXItQ1BVLg0KPiA+ID4gU28gaWYgSSByZWFkIHRoaXMgcmlnaHQsIHlvdSBjYW4gZ2V0IHBy
-ZWVtcHRlZCBhZnRlcg0KPiA+ID4gY3J5cHRvX3dhaXRfcmVxKCkgYW5kIGFub3RoZXIgY29udGV4
-dCBpbiB0aGlzIENQVSB3cml0ZXMgaXRzIGRhdGEgdG8NCj4gPiA+IHRoZSBzYW1lIGRzdG1lbSBh
-bmQgdGhlbuKApg0KPiA+ID4NCj4gPg0KPiA+IFRoaXMgaXNuJ3QgdHJ1ZS4gQW5vdGhlciB0aHJl
-YWQgaW4gdGhpcyBjcHUgd2lsbCBiZSBibG9ja2VkIGJ5IHRoZSBtdXRleC4NCj4gPiBJdCBpcyBp
-bXBvc3NpYmxlIGZvciB0d28gdGhyZWFkcyB0byB3cml0ZSB0aGUgc2FtZSBkc3RtZW0uDQo+ID4g
-SWYgdGhyZWFkMSByYW4gb24gY3B1MSwgaXQgaGVsZCBjcHUxJ3MgbXV0ZXg7IGlmIGFub3RoZXIg
-dGhyZWFkIHdhbnRzIHRvIHJ1bg0KPiBvbiBjcHUxLCBpdCBpcyBibG9ja2VkLg0KPiA+IElmIHRo
-cmVhZDEgcmFuIG9uIGNwdTEgZmlyc3QsIGl0IGhlbGQgY3B1MSdzIG11dGV4LCB0aGVuIGl0IG1p
-Z3JhdGVkIHRvIGNwdTINCj4gKHdpdGggdmVyeSByYXJlIGNoYW5jZSkNCj4gPiAJYS4gaWYgYW5v
-dGhlciB0aHJlYWQgd2FudHMgdG8gcnVuIG9uIGNwdTEsIGl0IGlzIGJsb2NrZWQ7DQo+IA0KPiBI
-b3cgaXQgaXMgYmxvY2tlZD8gVGhhdCAic3RydWN0IGNyeXB0b19hY29tcF9jdHgiIGlzDQo+ICJ0
-aGlzX2NwdV9wdHIoZW50cnktPnBvb2wtPmFjb21wX2N0eCkiIC0gd2hpY2ggaXMgcGVyLUNQVSBv
-ZiBhIHBvb2wgd2hpY2gNCj4geW91IGNhbiBoYXZlIG11bHRpcGxlIG9mLiBCdXQgYGRzdG1lbScg
-eW91IGhhdmUgb25seSBvbmUgcGVyLUNQVSBubyBtYXR0ZXINCj4gaGF2ZSBtYW55IHBvb2xzIHlv
-dSBoYXZlLg0KPiBTbyBwb29sMSBvbiBDUFUxIHVzZXMgdGhlIHNhbWUgYGRzdG1lbScgYXMgcG9v
-bDIgb24gQ1BVMS4gQnV0IHBvb2wxIGFuZA0KPiBwb29sMiBvbiBDUFUxIHVzZSBhIGRpZmZlcmVu
-dCBtdXRleCBmb3IgcHJvdGVjdGlvbiBvZiB0aGlzIGBkc3RtZW0nLg0KDQpHb29kIGNhdGNoLCBT
-ZWJhc3RpYW4sIHRoYW5rcyENCnRoaXMgaXMgYSBjb3JuZXIgY2FzZSB0ZXN0aW5nIGhhcyBub3Qg
-ZW5jb3VudGVyZWQgeWV0LiBUaGVyZSBpcyBhIHJhY2UgaWYgd2UgY2hhbmdlIHRoZSBwb29sIHR5
-cGUgYXQgcnVudGltZS4NClR5cGljYWxseSwgYSBncm91cCBvZiBpbml0aWFsIHBhcmFtZXRlcnMg
-d2VyZSBzZXQsIHRoZW4gc29mdHdhcmUgd3JvdGUvcmVhZCBsb3RzIG9mIGFub24gcGFnZXMgdG8g
-Z2VuZXJhdGUNCnN3YXBwaW5nIGFzIGJ1c3kgYXMgcG9zc2libGUuIEJ1dCBuZXZlciB0cmllZCB0
-byBjaGFuZ2UgdGhlIGNvbXByZXNzb3IvcG9vbCB0eXBlIGF0IHJ1bnRpbWUuDQoNCndpbGwgYWRk
-cmVzcyB0aGlzIHByb2JsZW0gaW4gdjUgd2l0aCB0aGUgY2xlYW51cCBvZiBhY29tcF9jdHggcG9p
-bnRlciBpbiB6c3dhcF9wb29sLiBJIG1lYW4gdG8NCmNyZWF0ZSBhY29tcCBpbnN0YW50cyBmb3Ig
-cGVyLWNwdSwgbm90IGZvciAocG9vbHMgKiBwZXItY3B1KS4NCg0KVGhhbmtzDQpCYXJyeQ0K
+On 03/07/20 04:35, Sean Christopherson wrote:
+> The only interesting delta from v2 is that patch 18 is updated to handle
+> a conflict with arm64's p4d rework.  Resolution was straightforward
+> (famous last words).
+> 
+> 
+> This series resurrects Christoffer Dall's series[1] to provide a common
+> MMU memory cache implementation that can be shared by x86, arm64 and MIPS.
+> 
+> It also picks up a suggested change from Ben Gardon[2] to clear shadow
+> page tables during initial allocation so as to avoid clearing entire
+> pages while holding mmu_lock.
+> 
+> The front half of the patches do house cleaning on x86's memory cache
+> implementation in preparation for moving it to common code, along with a
+> fair bit of cleanup on the usage.  The middle chunk moves the patches to
+> common KVM, and the last two chunks convert arm64 and MIPS to the common
+> implementation.
+> 
+> Fully tested on x86 only.  Compile tested patches 14-21 on arm64, MIPS,
+> s390 and PowerPC.
+
+Queued, thanks.
+
+Paolo
+
+> v3:
+>   - Rebased to kvm/queue, commit a037ff353ba6 ("Merge ... into HEAD")
+>   - Collect more review tags. [Ben]
+> 
+> v2:
+>   - Rebase to kvm-5.8-2, commit 49b3deaad345 ("Merge tag ...").
+>   - Use an asm-generic kvm_types.h for s390 and PowerPC instead of an
+>     empty arch-specific file. [Marc]
+>   - Explicit document "GFP_PGTABLE_USER == GFP_KERNEL_ACCOUNT | GFP_ZERO"
+>     in the arm64 conversion patch. [Marc]
+>   - Collect review tags. [Ben]
+> 
+> Sean Christopherson (21):
+>   KVM: x86/mmu: Track the associated kmem_cache in the MMU caches
+>   KVM: x86/mmu: Consolidate "page" variant of memory cache helpers
+>   KVM: x86/mmu: Use consistent "mc" name for kvm_mmu_memory_cache locals
+>   KVM: x86/mmu: Remove superfluous gotos from mmu_topup_memory_caches()
+>   KVM: x86/mmu: Try to avoid crashing KVM if a MMU memory cache is empty
+>   KVM: x86/mmu: Move fast_page_fault() call above
+>     mmu_topup_memory_caches()
+>   KVM: x86/mmu: Topup memory caches after walking GVA->GPA
+>   KVM: x86/mmu: Clean up the gorilla math in mmu_topup_memory_caches()
+>   KVM: x86/mmu: Separate the memory caches for shadow pages and gfn
+>     arrays
+>   KVM: x86/mmu: Make __GFP_ZERO a property of the memory cache
+>   KVM: x86/mmu: Zero allocate shadow pages (outside of mmu_lock)
+>   KVM: x86/mmu: Skip filling the gfn cache for guaranteed direct MMU
+>     topups
+>   KVM: x86/mmu: Prepend "kvm_" to memory cache helpers that will be
+>     global
+>   KVM: Move x86's version of struct kvm_mmu_memory_cache to common code
+>   KVM: Move x86's MMU memory cache helpers to common KVM code
+>   KVM: arm64: Drop @max param from mmu_topup_memory_cache()
+>   KVM: arm64: Use common code's approach for __GFP_ZERO with memory
+>     caches
+>   KVM: arm64: Use common KVM implementation of MMU memory caches
+>   KVM: MIPS: Drop @max param from mmu_topup_memory_cache()
+>   KVM: MIPS: Account pages used for GPA page tables
+>   KVM: MIPS: Use common KVM implementation of MMU memory caches
+> 
+>  arch/arm64/include/asm/kvm_host.h  |  11 ---
+>  arch/arm64/include/asm/kvm_types.h |   8 ++
+>  arch/arm64/kvm/arm.c               |   2 +
+>  arch/arm64/kvm/mmu.c               |  56 +++----------
+>  arch/mips/include/asm/kvm_host.h   |  11 ---
+>  arch/mips/include/asm/kvm_types.h  |   7 ++
+>  arch/mips/kvm/mmu.c                |  44 ++--------
+>  arch/powerpc/include/asm/Kbuild    |   1 +
+>  arch/s390/include/asm/Kbuild       |   1 +
+>  arch/x86/include/asm/kvm_host.h    |  14 +---
+>  arch/x86/include/asm/kvm_types.h   |   7 ++
+>  arch/x86/kvm/mmu/mmu.c             | 129 +++++++++--------------------
+>  arch/x86/kvm/mmu/paging_tmpl.h     |  10 +--
+>  include/asm-generic/kvm_types.h    |   5 ++
+>  include/linux/kvm_host.h           |   7 ++
+>  include/linux/kvm_types.h          |  19 +++++
+>  virt/kvm/kvm_main.c                |  55 ++++++++++++
+>  17 files changed, 176 insertions(+), 211 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/kvm_types.h
+>  create mode 100644 arch/mips/include/asm/kvm_types.h
+>  create mode 100644 arch/x86/include/asm/kvm_types.h
+>  create mode 100644 include/asm-generic/kvm_types.h
+> 
+
