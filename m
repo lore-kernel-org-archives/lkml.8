@@ -2,74 +2,179 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A90C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD40C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A517207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD5520775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:59:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="smFS6YGV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgGIR7h (ORCPT
+        id S1728617AbgGIR76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:59:37 -0400
-Received: from mga03.intel.com ([134.134.136.65]:23953 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726615AbgGIR7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:59:37 -0400
-IronPort-SDR: +tFsXOP94UBMuWy7psc7A0fx68aWM1M6JGWS8vJJLvAJGdcceZsggERalC/bl0VnwkrNRJrS/j
- 6sVBZ94F6GFQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="148055093"
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="148055093"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 10:59:37 -0700
-IronPort-SDR: pugdhxVyIR+ZTz7+RikkSRiRG5MaDlYQ5m4X1hd8XQo9cpWZBV/Nn7Xn5VjU2hTU7P4ldF1lmN
- dQB7WH5mWCLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="284237438"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga006.jf.intel.com with ESMTP; 09 Jul 2020 10:59:37 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 0F2F1301B2A; Thu,  9 Jul 2020 10:59:37 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 10:59:37 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/11] perf intel-pt: Add support for decoding PSB+ only
-Message-ID: <20200709175937.GE1126680@tassilo.jf.intel.com>
-References: <20200709173628.5613-1-adrian.hunter@intel.com>
- <20200709173628.5613-12-adrian.hunter@intel.com>
+        Thu, 9 Jul 2020 13:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726615AbgGIR76 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 13:59:58 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E6EC08C5CE;
+        Thu,  9 Jul 2020 10:59:57 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z2so3342842wrp.2;
+        Thu, 09 Jul 2020 10:59:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:references:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=G5/LZYok9Ot596aBDzl+DsLC/89WtoHYBw1Y5X78RcY=;
+        b=smFS6YGVBVHn0kQlkrNb89yRG+cidQayeMC4Kyk+4fTMgUNdy/5dC4CMFv929NaO1v
+         XjeZgwP+JdEv8iKHlKhkU964iFFrBUosK7rS8HujfqowefVkipwsQwQxmHoS4swLqiWR
+         1jyFF2+m8hLg8WBp+MRtwCTBQJjWxVtOg7G9DLyG+GLC4DboP9Q5CI1bmAQgMNnMSKL+
+         vBDDa9J1ZHE4YdS8zuS8y/rUV/o65p0hNRNNd+WPERuQ6kzpO5a5r7orwPx+kM+qwRtF
+         T6tbocQwGAxq6o9TkdeRBgAu11vOiiKYzejnf6v53+Sa2dl+SxYGyl0yU81IZf1ty0LF
+         rMAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:references:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=G5/LZYok9Ot596aBDzl+DsLC/89WtoHYBw1Y5X78RcY=;
+        b=D+kv6OU71rXgJ4XcxDvvg5+YyANRkSerZ9wN7mgHsGC97Ru2E7XCXnuFSoy9DWUhHA
+         XqTKZXwLJqhTsga6ZoH4u28bwCNSW8TYDyEKsY/Vg4TtjQBlG8DUztJvchwxTC0fpbQr
+         K/DbbHFi+tGtt7aQWLB2+81g93xxVEruTnik6fZZEJ2txyM130tX+njpqWP1TRcrKLyv
+         lH8dkCZWwJVPJ78+jj0PVFnDYaHfx4dzRrtQLMdDjpDSvPcSl37fVfQqGtVAoxL68Io2
+         mOjjAUCUZA5l/Ux6hdvyTxN0NdhwYNXufblq1iykuMeRHOsCkt9goHUHO+K/pXk/6/RD
+         oXRA==
+X-Gm-Message-State: AOAM533BNq/eoZZyAFjVszud/eyg8/B9ifEho/ywqulJjNxYAvLLTT+t
+        cK6y/xEyk1S+GMM6um4uHg+Ezmh8mR0=
+X-Google-Smtp-Source: ABdhPJzg1nWUE/Rrqi23SFhuve76Wead79b35yPIm+H96NJF+9BfHkR/C42hLJGW/FxvCuDz3BKt/g==
+X-Received: by 2002:adf:f04c:: with SMTP id t12mr61240472wro.382.1594317596226;
+        Thu, 09 Jul 2020 10:59:56 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.googlemail.com with ESMTPSA id y6sm854214wrr.74.2020.07.09.10.59.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 10:59:55 -0700 (PDT)
+Subject: Re: [PATCH v3 7/9] KVM: nSVM: implement nested_svm_load_cr3() and use
+ it for host->guest switch
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        linux-kernel@vger.kernel.org
+References: <20200709145358.1560330-1-vkuznets@redhat.com>
+ <20200709145358.1560330-8-vkuznets@redhat.com>
+ <4d3f5b01-72d9-c2c5-08e8-c2b1e0046e5e@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <c7c65e0e-0c8f-106b-6249-ac706e702259@redhat.com>
+Date:   Thu, 9 Jul 2020 19:59:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709173628.5613-12-adrian.hunter@intel.com>
+In-Reply-To: <4d3f5b01-72d9-c2c5-08e8-c2b1e0046e5e@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-> index 758295a7e3d6..849474629fe7 100644
-> --- a/tools/perf/Documentation/perf-intel-pt.txt
-> +++ b/tools/perf/Documentation/perf-intel-pt.txt
-> @@ -973,6 +973,9 @@ useful only if the control flow of interest is represented or indicated by FUP,
->  TIP, TIP.PGE, or TIP.PGD packets.  However the q option could be used to find
->  time ranges that could then be decoded fully using the --time option.
->  
-> +Repeating the q option (i.e. qq) decodes only PSB+, getting ip if there is a
-> +FUP packet within PSB+ (i.e. between PSB and PSBEND).
-
-Also need high level description without PT jargon
-(and perhaps also reference how to configure PSB frequency)
-
-Other than that great feature. I'll be an enthuisastic user :-)
-
--Andi
+On 09/07/20 19:57, Paolo Bonzini wrote:
+> On 09/07/20 16:53, Vitaly Kuznetsov wrote:
+>> +	if (nested_npt_enabled(svm))
+>> +		nested_svm_init_mmu_context(&svm->vcpu);
+>> +
+>>  	ret = nested_svm_load_cr3(&svm->vcpu, nested_vmcb->save.cr3,
+>>  				  nested_npt_enabled(svm));
 > 
+> This needs to be done in svm_set_nested_state, so my suggestion is that
+> the previous patch includes a call to nested_svm_load_cr3 in
+> svm_set_nested_state, and this one adds the "if" inside
+> nested_svm_load_cr3 itself.
+
+Actually no, that doesn't work after the next patch.  So the best option
+is probably to extract nested_svm_init_mmu as a separate step in
+enter_svm_guest_mode.  This also leaves nested_prepare_vmcb_save as a
+void function.
+
+Paolo
+
+> 
+> Paolo
+> 
+>> @@ -364,13 +388,6 @@ static int nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_vm
+>>  static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
+>>  {
+>>  	const u32 mask = V_INTR_MASKING_MASK | V_GIF_ENABLE_MASK | V_GIF_MASK;
+>> -	if (nested_npt_enabled(svm))
+>> -		nested_svm_init_mmu_context(&svm->vcpu);
+>> -
+>> -	/* Guest paging mode is active - reset mmu */
+>> -	kvm_mmu_reset_context(&svm->vcpu);
+>> -
+>> -	svm_flush_tlb(&svm->vcpu);
+>>  
+> 
+
