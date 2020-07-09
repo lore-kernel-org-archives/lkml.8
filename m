@@ -2,224 +2,106 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F44C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A80772077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:32:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Gm1lfHo8"
+	by mail.kernel.org (Postfix) with ESMTP id 363F120774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594327042;
+	bh=xjEEXLbt8pEcvVWCv8pAsUIeYY91n2f0n/mTuo0fCf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kme8lB4P7tr/b5r0llQrGfCuQ3PeKUFq/BQ+hxOZ06CcbRgpcTzQnb7uWxK0tHa8j
+	 2wuGNfH80llBFtqIb4mTOIhkopyjo5UoiCPbD86vkuuSpmYUpb0ZHuD4wCJfEhgS3c
+	 Y7OU3Lu6kTrkz1OA0KbPs8yuinEIY0kRskeomLMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgGIUcq (ORCPT
+        id S1726449AbgGIUhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:32:46 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:59082 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726449AbgGIUcp (ORCPT
+        Thu, 9 Jul 2020 16:37:21 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42325 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgGIUhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:32:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594326764; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=/YQzaclXXVll+oHhpmXvlwvvQSukbA3wfGfVXn7TwMM=; b=Gm1lfHo8x7qzqmvgioGm8to0ZqJfVbtNY/9NiTD8eeXuRNpoFlVUH6QsnUlyIGyGT8RMGVgB
- mjlgqwSu13T69YWelz3V74rUIdWiDahv94XLd9IYIhOhgX1pA6SsHphRmX7nUMC/Nlb5bxDj
- YGuW81wM+LLgTF+0rYd7kvd9Z7Q=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f077ec5cd1b803e1775ec69 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 20:32:05
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2276AC43387; Thu,  9 Jul 2020 20:32:05 +0000 (UTC)
-Received: from akhilpo-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8DE6DC433C6;
-        Thu,  9 Jul 2020 20:32:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8DE6DC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
-        devicetree@vger.kernel.org, mka@chromium.org, robdclark@gmail.com
-Subject: [PATCH v1] drm/msm: Fix a null pointer access in msm_gem_shrinker_count()
-Date:   Fri, 10 Jul 2020 02:01:55 +0530
-Message-Id: <1594326715-21565-1-git-send-email-akhilpo@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 9 Jul 2020 16:37:20 -0400
+Received: by mail-io1-f66.google.com with SMTP id c16so3736559ioi.9;
+        Thu, 09 Jul 2020 13:37:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zYVtac9Zi8Ea45Dv/JsLDGweT3Jj92BXMb3jivMTATc=;
+        b=kVPjSnwCAg311sBi3lHCyqmE4UhJN1LrBKJOZdTCC/5VyextoYgu+J9wM+uID5YYHw
+         R+QuvU+FFgGoGKlUePa1U+YgDibaYXptK327Z2Y1f6HCmteLBwQjW6tkqZlzNGurszjJ
+         xua3HReQTME1vVnj4u0lK3i4ichUa4uxlCTAL+GVfBNOodnehEoihcSgTWgY4sPFLnEU
+         FaL8aVeBYEIcv+Ff0S/iiZ4pRK4BN51Y/0OuOwdj5dI/FnO70a0VZU2q9487EKXTRuVO
+         lgY2fkicjtVnNqharm+Pp75IHwxuIGN1XVoSFgyxJ4eidN27cHBLDnO4nsj47PvoDqYP
+         gnjg==
+X-Gm-Message-State: AOAM5323GwomK/MIuIxQPg41+orQ78JJ0YzgZyS5V0XlQ9VUHplwLE54
+        anIvWLSLQT7H94tEvn51vA==
+X-Google-Smtp-Source: ABdhPJzQBLgQu0/F5feMhyP/ZARue5TvyvtGE6/nGRA3cx1winlPMxKdNtL0DNf3bejnqdNjMXZpcg==
+X-Received: by 2002:a05:6638:e93:: with SMTP id p19mr56572629jas.67.1594327039832;
+        Thu, 09 Jul 2020 13:37:19 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id i188sm2677380ioa.33.2020.07.09.13.37.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 13:37:19 -0700 (PDT)
+Received: (nullmailer pid 846237 invoked by uid 1000);
+        Thu, 09 Jul 2020 20:37:18 -0000
+Date:   Thu, 9 Jul 2020 14:37:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     hugues.fruchet@st.com, mchehab@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        vincent.guittot@linaro.org, valentin.schneider@arm.com,
+        rjw@rjwysocki.net, devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] dt-bindings: media: stm32-dcmi: Add DCMI min
+ frequency property
+Message-ID: <20200709203718.GA837160@bogus>
+References: <20200701130129.30961-1-benjamin.gaignard@st.com>
+ <20200701130129.30961-2-benjamin.gaignard@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701130129.30961-2-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding an msm_gem_object object to the inactive_list before completing
-its initialization is a bad idea because shrinker may pick it up from the
-inactive_list. Fix this by making sure that the initialization is complete
-before moving the msm_obj object to the inactive list.
+On Wed, Jul 01, 2020 at 03:01:27PM +0200, Benjamin Gaignard wrote:
+> Document st,stm32-dcmi-min-frequency property which is used to
+> request CPUs minimum frequency when streaming frames.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> index 3fe778cb5cc3..05ca85a2411a 100644
+> --- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> +++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> @@ -44,6 +44,13 @@ properties:
+>        bindings defined in
+>        Documentation/devicetree/bindings/media/video-interfaces.txt.
+>  
+> +  st,stm32-dcmi-min-frequency:
+> +    description: DCMI minimum CPUs frequency requirement (in KHz).
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +      - default: 0
 
-This patch fixes the below error:
-[10027.553044] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000068
-[10027.573305] Mem abort info:
-[10027.590160]   ESR = 0x96000006
-[10027.597905]   EC = 0x25: DABT (current EL), IL = 32 bits
-[10027.614430]   SET = 0, FnV = 0
-[10027.624427]   EA = 0, S1PTW = 0
-[10027.632722] Data abort info:
-[10027.638039]   ISV = 0, ISS = 0x00000006
-[10027.647459]   CM = 0, WnR = 0
-[10027.654345] user pgtable: 4k pages, 39-bit VAs, pgdp=00000001e3a6a000
-[10027.672681] [0000000000000068] pgd=0000000198c31003, pud=0000000198c31003, pmd=0000000000000000
-[10027.693900] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-[10027.738261] CPU: 3 PID: 214 Comm: kswapd0 Tainted: G S                5.4.40 #1
-[10027.745766] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
-[10027.752472] pstate: 80c00009 (Nzcv daif +PAN +UAO)
-[10027.757409] pc : mutex_is_locked+0x14/0x2c
-[10027.761626] lr : msm_gem_shrinker_count+0x70/0xec
-[10027.766454] sp : ffffffc011323ad0
-[10027.769867] x29: ffffffc011323ad0 x28: ffffffe677e4b878
-[10027.775324] x27: 0000000000000cc0 x26: 0000000000000000
-[10027.780783] x25: ffffff817114a708 x24: 0000000000000008
-[10027.786242] x23: ffffff8023ab7170 x22: 0000000000000001
-[10027.791701] x21: ffffff817114a080 x20: 0000000000000119
-[10027.797160] x19: 0000000000000068 x18: 00000000000003bc
-[10027.802621] x17: 0000000004a34210 x16: 00000000000000c0
-[10027.808083] x15: 0000000000000000 x14: 0000000000000000
-[10027.813542] x13: ffffffe677e0a3c0 x12: 0000000000000000
-[10027.819000] x11: 0000000000000000 x10: ffffff8174b94340
-[10027.824461] x9 : 0000000000000000 x8 : 0000000000000000
-[10027.829919] x7 : 00000000000001fc x6 : ffffffc011323c88
-[10027.835373] x5 : 0000000000000001 x4 : ffffffc011323d80
-[10027.840832] x3 : ffffffff0477b348 x2 : 0000000000000000
-[10027.846290] x1 : ffffffc011323b68 x0 : 0000000000000068
-[10027.851748] Call trace:
-[10027.854264]  mutex_is_locked+0x14/0x2c
-[10027.858121]  msm_gem_shrinker_count+0x70/0xec
-[10027.862603]  shrink_slab+0xc0/0x4b4
-[10027.866187]  shrink_node+0x4a8/0x818
-[10027.869860]  kswapd+0x624/0x890
-[10027.873097]  kthread+0x11c/0x12c
-[10027.876424]  ret_from_fork+0x10/0x18
-[10027.880102] Code: f9000bf3 910003fd aa0003f3 d503201f (f9400268)
-[10027.886362] ---[ end trace df5849a1a3543251 ]---
-[10027.891518] Kernel panic - not syncing: Fatal exception
+I think this is questionable to be in DT and if it is, it's something 
+that's hardly specific to ST or this block. IIRC, we already have a way 
+to specify minimum OPPs.
 
-Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
----
- drivers/gpu/drm/msm/msm_gem.c | 36 +++++++++++++++++++++---------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index 6277fde..f63bb7e 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -994,10 +994,8 @@ int msm_gem_new_handle(struct drm_device *dev, struct drm_file *file,
- 
- static int msm_gem_new_impl(struct drm_device *dev,
- 		uint32_t size, uint32_t flags,
--		struct drm_gem_object **obj,
--		bool struct_mutex_locked)
-+		struct drm_gem_object **obj)
- {
--	struct msm_drm_private *priv = dev->dev_private;
- 	struct msm_gem_object *msm_obj;
- 
- 	switch (flags & MSM_BO_CACHE_MASK) {
-@@ -1023,15 +1021,6 @@ static int msm_gem_new_impl(struct drm_device *dev,
- 	INIT_LIST_HEAD(&msm_obj->submit_entry);
- 	INIT_LIST_HEAD(&msm_obj->vmas);
- 
--	if (struct_mutex_locked) {
--		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
--		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
--	} else {
--		mutex_lock(&dev->struct_mutex);
--		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
--		mutex_unlock(&dev->struct_mutex);
--	}
--
- 	*obj = &msm_obj->base;
- 
- 	return 0;
-@@ -1041,6 +1030,7 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 		uint32_t size, uint32_t flags, bool struct_mutex_locked)
- {
- 	struct msm_drm_private *priv = dev->dev_private;
-+	struct msm_gem_object *msm_obj;
- 	struct drm_gem_object *obj = NULL;
- 	bool use_vram = false;
- 	int ret;
-@@ -1061,14 +1051,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 	if (size == 0)
- 		return ERR_PTR(-EINVAL);
- 
--	ret = msm_gem_new_impl(dev, size, flags, &obj, struct_mutex_locked);
-+	ret = msm_gem_new_impl(dev, size, flags, &obj);
- 	if (ret)
- 		goto fail;
- 
-+	msm_obj = to_msm_bo(obj);
-+
- 	if (use_vram) {
- 		struct msm_gem_vma *vma;
- 		struct page **pages;
--		struct msm_gem_object *msm_obj = to_msm_bo(obj);
- 
- 		mutex_lock(&msm_obj->lock);
- 
-@@ -1103,6 +1094,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 		mapping_set_gfp_mask(obj->filp->f_mapping, GFP_HIGHUSER);
- 	}
- 
-+	if (struct_mutex_locked) {
-+		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
-+		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+	} else {
-+		mutex_lock(&dev->struct_mutex);
-+		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+		mutex_unlock(&dev->struct_mutex);
-+	}
-+
- 	return obj;
- 
- fail:
-@@ -1125,6 +1125,7 @@ struct drm_gem_object *msm_gem_new(struct drm_device *dev,
- struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 		struct dma_buf *dmabuf, struct sg_table *sgt)
- {
-+	struct msm_drm_private *priv = dev->dev_private;
- 	struct msm_gem_object *msm_obj;
- 	struct drm_gem_object *obj;
- 	uint32_t size;
-@@ -1138,7 +1139,7 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 
- 	size = PAGE_ALIGN(dmabuf->size);
- 
--	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj, false);
-+	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj);
- 	if (ret)
- 		goto fail;
- 
-@@ -1163,6 +1164,11 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 	}
- 
- 	mutex_unlock(&msm_obj->lock);
-+
-+	mutex_lock(&dev->struct_mutex);
-+	list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+	mutex_unlock(&dev->struct_mutex);
-+
- 	return obj;
- 
- fail:
--- 
-2.7.4
-
+Rob
