@@ -2,92 +2,85 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D38C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2FA2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA86720720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:01:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bZJLHdKc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sXjsW/W8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgGIO7a (ORCPT
+        id S1727107AbgGIPBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:59:30 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7111 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgGIO7a (ORCPT
+        Thu, 9 Jul 2020 11:01:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgGIPBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:59:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0730660000>; Thu, 09 Jul 2020 07:57:42 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 09 Jul 2020 07:59:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 09 Jul 2020 07:59:30 -0700
-Received: from [10.19.64.157] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jul
- 2020 14:59:25 +0000
-Subject: Re: [PATCH v3 3/6] gpio: max77620: Don't set of_node
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20200708202355.28507-1-digetx@gmail.com>
- <20200708202355.28507-4-digetx@gmail.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-From:   Laxman Dewangan <ldewangan@nvidia.com>
-Message-ID: <19c30bda-e1bd-7f24-dcd0-337d76abd6fc@nvidia.com>
-Date:   Thu, 9 Jul 2020 20:28:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Thu, 9 Jul 2020 11:01:07 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C4DC08C5CE;
+        Thu,  9 Jul 2020 08:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=d6Fy1Ff8XKWJW7cdhpnfoPEQT8m7nn2QugrKA2y4BTE=; b=sXjsW/W8stofL0fSqv1devL9iA
+        NF8pTtSu1pmMI2cx2Ezm5BoeofYSnPN6/rZYmpD+i2SwKMs8rbtY2EPcBcEn7LmzBMlRLH+HYv4ou
+        IIiSGFJU8JQLbSCfDquQtv8nlD8xpYOQ1F33SWeREt+m+MKW2AS9lsim693P8pOA6Vn81rDU4U0pQ
+        5CL7N1SiSxz2S6PRS4eEqvntN+bK6HeL9i5oI+CCBxoYMsT/JAjCwF5JHINgYNRZxp7hyfyhsJm5A
+        TrgN6ANkFqMOJfU2KX4+HzhiTpzqnYh8wY/zml3sRidyoIzqKYX3E/qQYPkqN/E1WGtoJpXZ0IVyl
+        KCO5FDkg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtY2d-0004br-7k; Thu, 09 Jul 2020 15:00:51 +0000
+Date:   Thu, 9 Jul 2020 16:00:51 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 11/12] PM, libnvdimm: Add 'mem-quiet' state and
+ callback for firmware activation
+Message-ID: <20200709150051.GA17342@infradead.org>
+References: <159408711335.2385045.2567600405906448375.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200708202355.28507-4-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594306662; bh=hKixGSb3cb49P/FLh50x6vu2LbncCdYZA1numUuCA+M=;
-        h=X-PGP-Universal:Subject:To:References:CC:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding;
-        b=bZJLHdKcmPygPxKev8etJRbK/J3vdh3ZNNAJrdKtjsZws4HBNzW2SeQY/hhGVqp4O
-         gDQfOUl8FEigOW3YM/skB+HaXoNxfsQdWllnIk3x44eppSHPUkV8rQnyHx7VRbyRqo
-         tCn055RGrKj/S3+3taVyFTtNzU9GqCUF6mAksjHcjYpJkx7SdhglzV/87HKfir/dbg
-         WT+I/kdOtHGlVM9t3RdXJwZ+pXKi24mv2Vq0askC4USzhNuu0YzrtgLCp1aglMRgnr
-         T/GG8dL7BgudFCLSEhOAJFj5Iwqr0kNNRZoEDzY9mJdginK7zMm0J+mt0UWANYD5mC
-         yPyX7yjngI4bg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 06, 2020 at 06:59:32PM -0700, Dan Williams wrote:
+> The runtime firmware activation capability of Intel NVDIMM devices
+> requires memory transactions to be disabled for 100s of microseconds.
+> This timeout is large enough to cause in-flight DMA to fail and other
+> application detectable timeouts. Arrange for firmware activation to be
+> executed while the system is "quiesced", all processes and device-DMA
+> frozen.
+> 
+> It is already required that invoking device ->freeze() callbacks is
+> sufficient to cease DMA. A device that continues memory writes outside
+> of user-direction violates expectations of the PM core to be to
+> establish a coherent hibernation image.
+> 
+> That said, RDMA devices are an example of a device that access memory
+> outside of user process direction. RDMA drivers also typically assume
+> the system they are operating in will never be hibernated. A solution
+> for RDMA collisions with firmware activation is outside the scope of
+> this change and may need to rely on being able to survive the platform
+> imposed memory controller quiesce period.
 
-
-On Thursday 09 July 2020 01:53 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> The gpiochip_add_data() takes care of setting the of_node to the parent's
-> device of_node, hence there is no need to do it manually in the driver's
-> code. This patch corrects the parent's device pointer and removes the
-> unnecessary setting of the of_node.
->
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->
-
-
-Looks good to me.
-Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
-
+Yikes.  I don't think we should support such a broken runtime firmware
+activation.
