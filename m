@@ -2,98 +2,95 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EB0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D071C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECC32076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7868C20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZF5yd+Ot"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="FGveEg8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgGIKDD (ORCPT
+        id S1727069AbgGIKDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:03:03 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:27253 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbgGIKBp (ORCPT
+        Thu, 9 Jul 2020 06:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727052AbgGIKDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:01:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594288905; x=1625824905;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rT+zkN+mJUyB0ZWqxtGVHHzSd7amrOhD/J3nYFKzHLU=;
-  b=ZF5yd+OtJ0TVIoEb5WMjiddXtdRoiv+M75YDKEelkGGB26cCkQZm5vUu
-   pa0b5PiiTtGkM5WT+W8XtLbULW752MYb857cLyG/XhkLNxTq7O1gTGUcP
-   KFLzTUH/IpUxckWNFZ9rbccJzzSpX7DRZDcx+ta7BbMhLZZtL2rG3NZ6S
-   1zAz4L61VcRRxFybFsJnSQViV5MRUoVsW9QR+l3NUuIBUxvmEy+5AxqdE
-   DxL9VUBCJ7TmdijXkQQWVqx8fu3kzY8tV1DeWqRjIU83am5P1Z2aj1GtA
-   nz5hCU4JU7gv/XjNEY4OzDC2soG64p20rjazbp1nFs6C+HKa6obQP3XUG
-   g==;
-IronPort-SDR: 59q0g0kyqQ/hk+jzxnIWkufbUygyYSwwPnE6naXzKDijfLx+FKnbxtqtvfTbLw7hyaNTieG3zW
- 4DWsnMajDZfDhzkrirZ0PwfHDzwz2gORE2oTrGOtmDU7APj4TFpib3x+qGQCT/rchRHy7SMK87
- Ler8Nm4AFj8MVFjSiHYJJ08bg2MNwIDuwEeNJSwhkl4g7BavFofZoFGwNtklyZDDwYKxNkCezO
- HZn5ImBNBnL5rOVGGlQ6qpO2bZiWyIcEzgGWcioaSEy9m3vwvFwpT97MZwgn0FUbX5h4gZCCXZ
- ty0=
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="86823019"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:01:42 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 9 Jul 2020 03:01:41 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:01:38 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v2 03/12] bridge: mrp: Extend bridge interface
-Date:   Thu, 9 Jul 2020 12:00:31 +0200
-Message-ID: <20200709100040.554623-4-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200709100040.554623-1-horatiu.vultur@microchip.com>
-References: <20200709100040.554623-1-horatiu.vultur@microchip.com>
+        Thu, 9 Jul 2020 06:03:11 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B816AC061A0B;
+        Thu,  9 Jul 2020 03:03:08 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2WvZ3zGxz9sTH;
+        Thu,  9 Jul 2020 20:03:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1594288986;
+        bh=gzevlDZNhGR3zBt4oGJSiaOWmNIXxDnq4AJkVnA7ct8=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=FGveEg8q/y3tCFCeSW1FsRbhFSvX8FhcucbFCIXftYTCKPONKTv/40QFtquvhS7Yo
+         PzXwGYKN7bovdbCuMD9lgGZakoYc2SOVrOpgitHHV+kYC3njs0+MPZ+BhyTGB9o+6t
+         jNfCMr6brEGBnannqnY2pUkSB5UZp/XUOHF3PqH++pCffJ9+JixW+/tHMqnaHPCA2p
+         x9T56tPe0+HFuPp06W4+IOZ9S0ZRYFuezORe9sSIH+715fqj7tkhTxHACSUtShzB/r
+         +zGySTRD9bXU5UDoL0fTvXIBwPFr8LToCxfYHvUOi/Uuzt7xvwIge32QyPjtpPZpyI
+         pdmw83qWCiusQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] powerpc/powernv: must include hvcall.h to get PAPR defines
+In-Reply-To: <20200706043540.1563616-2-npiggin@gmail.com>
+References: <20200706043540.1563616-1-npiggin@gmail.com> <20200706043540.1563616-2-npiggin@gmail.com>
+Date:   Thu, 09 Jul 2020 20:05:18 +1000
+Message-ID: <87fta1vw9t.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new flag(BR_MRP_LOST_IN_CONT) to the net bridge
-ports. This bit will be set when the port lost the continuity of
-MRP_InTest frames.
+Nicholas Piggin <npiggin@gmail.com> writes:
+> An include goes away in future patches which breaks compilation
+> without this.
+>
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> ---
+>  arch/powerpc/platforms/powernv/pci-ioda-tce.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda-tce.c b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
+> index f923359d8afc..8eba6ece7808 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda-tce.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
+> @@ -15,6 +15,7 @@
+>  
+>  #include <asm/iommu.h>
+>  #include <asm/tce.h>
+> +#include <asm/hvcall.h> /* share error returns with PAPR */
+>  #include "pci.h"
+>  
+>  unsigned long pnv_ioda_parse_tce_sizes(struct pnv_phb *phb)
+> -- 
+> 2.23.0
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- include/linux/if_bridge.h | 1 +
- 1 file changed, 1 insertion(+)
+This isn't needed anymore AFAICS, since:
 
-diff --git a/include/linux/if_bridge.h b/include/linux/if_bridge.h
-index b3a8d3054af0f..6479a38e52fa9 100644
---- a/include/linux/if_bridge.h
-+++ b/include/linux/if_bridge.h
-@@ -49,6 +49,7 @@ struct br_ip_list {
- #define BR_ISOLATED		BIT(16)
- #define BR_MRP_AWARE		BIT(17)
- #define BR_MRP_LOST_CONT	BIT(18)
-+#define BR_MRP_LOST_IN_CONT	BIT(19)
- 
- #define BR_DEFAULT_AGEING_TIME	(300 * HZ)
- 
--- 
-2.27.0
+5f202c1a1d42 ("powerpc/powernv/ioda: Return correct error if TCE level allocation failed")
 
+cheers
