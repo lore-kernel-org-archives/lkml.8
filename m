@@ -2,104 +2,102 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39079C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 080C32074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154F5205CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:55:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QxZTO0MH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgGIKzP (ORCPT
+        id S1726768AbgGIKzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:55:15 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57224 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgGIKzM (ORCPT
+        Thu, 9 Jul 2020 06:55:46 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37296 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726440AbgGIKzp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:55:12 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 49A152A638E
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>
-Cc:     narmstrong@baylibre.com, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org, a.hajda@samsung.com,
-        boris.brezillon@collabora.com, laurent.pinchart@ideasonboard.com,
-        sam@ravnborg.org, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 1/2] drm/mediatek: mtk_dpi: Rename bridge to next_bridge
-Date:   Thu,  9 Jul 2020 12:55:00 +0200
-Message-Id: <20200709105501.1465636-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200709105501.1465636-1-enric.balletbo@collabora.com>
-References: <20200709105501.1465636-1-enric.balletbo@collabora.com>
+        Thu, 9 Jul 2020 06:55:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594292143;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PTDQffC1tMzQ3lRtufW6bbJO7+lFsHLO2yhqYkX2OD4=;
+        b=QxZTO0MHOjoMsLponAWRcaUZKRRU8DejNe2c02wnHxT49Dr6xUpVPgDyo8CNhcKVNYwFD2
+        valg6tSajevEvp3HV30ACDh/irSOyvW35JqW/+uxHjU2VAaCmwzoq8bTsLyx0H/SIAFezH
+        ZQp1lEe/+YgxEk+jnC/axhzM8igWtpA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-GI69mxv9McWVzaADABOP6Q-1; Thu, 09 Jul 2020 06:55:41 -0400
+X-MC-Unique: GI69mxv9McWVzaADABOP6Q-1
+Received: by mail-wr1-f70.google.com with SMTP id o25so1603944wro.16
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 03:55:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PTDQffC1tMzQ3lRtufW6bbJO7+lFsHLO2yhqYkX2OD4=;
+        b=aB0Zi8+xdlI1P+dowhTzmnYyBz9fqR/idukoKdmA0KVy4h1QLWbgKYdGFuh8VgHLxG
+         Ryj/9RTpYNwuAf0yk70WgnWng7R4JonN3UEChz1as+a+ck3CaK6OgFhuMkY8PN2O1UwX
+         SSk7B2U3YnUwjeqkhqrhmunsM3UKgYnRBV2HV/LzHOEI8lt1JiE9r2QOZld6lybufS/9
+         RUKeCPFaCMaaX8M053NUfpySZ43cfB6HCZa1HeqektWbbbRkoby6uMuvHdfZp1is5Txs
+         YhNWiFdqMiqbUcXrlGatU5uRvfTUJx30pN7RzBBoSMIfZZlMbYhAtnTKTidzDj/a+yxv
+         NBHA==
+X-Gm-Message-State: AOAM530WufdD069StLBtQcWp0bEnMHi6zuQ4m8pJAMixKecKev9MWbh4
+        3wfi9ndruYPRiLbKs+AfqqhrUqRITiN6y5rmuoJPsZ6NMI97XBMyr85nDFdsrxmugNu2yCrARw3
+        /w/VAIKwWHr6TGlwBtpa3nTsy
+X-Received: by 2002:adf:ea0f:: with SMTP id q15mr32647617wrm.113.1594292140037;
+        Thu, 09 Jul 2020 03:55:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw4j0HtIxJr87LdzFPez74tjNG36xLEG2m4Lx3KIWQk4DnBnjXipmFHn/FMzkdbo05bFcQn0w==
+X-Received: by 2002:adf:ea0f:: with SMTP id q15mr32647598wrm.113.1594292139839;
+        Thu, 09 Jul 2020 03:55:39 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.gmail.com with ESMTPSA id u74sm4334245wmu.31.2020.07.09.03.55.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 03:55:39 -0700 (PDT)
+Subject: Re: [PATCH v4 2/5] KVM: x86: Extract kvm_update_cpuid_runtime() from
+ kvm_update_cpuid()
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200709043426.92712-1-xiaoyao.li@intel.com>
+ <20200709043426.92712-3-xiaoyao.li@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <27a4c18f-ba14-90f6-7918-f4520e7f3a69@redhat.com>
+Date:   Thu, 9 Jul 2020 12:55:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709043426.92712-3-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is really a cosmetic change just to make a bit more readable the
-code after convert the driver to drm_bridge. The bridge variable name
-will be used by the encoder drm_bridge, and the chained bridge will be
-named next_bridge.
+On 09/07/20 06:34, Xiaoyao Li wrote:
+> Beside called in kvm_vcpu_ioctl_set_cpuid*(), kvm_update_cpuid() is also
+> called 5 places else in x86.c and 1 place else in lapic.c. All those 6
+> places only need the part of updating guest CPUIDs (OSXSAVE, OSPKE, APIC,
+> KVM_FEATURE_PV_UNHALT, ...) based on the runtime vcpu state, so extract
+> them as a separate kvm_update_cpuid_runtime().
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
----
+I'm not sure KVM_FEATURE_PV_UNHALT counts as one of these, but I guess
+it's not a big deal.
 
-Changes in v2: None
-
- drivers/gpu/drm/mediatek/mtk_dpi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index d4f0fb7ad312..f7372dbdac0e 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -64,7 +64,7 @@ enum mtk_dpi_out_color_format {
- struct mtk_dpi {
- 	struct mtk_ddp_comp ddp_comp;
- 	struct drm_encoder encoder;
--	struct drm_bridge *bridge;
-+	struct drm_bridge *next_bridge;
- 	void __iomem *regs;
- 	struct device *dev;
- 	struct clk *engine_clk;
-@@ -610,7 +610,7 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
- 	/* Currently DPI0 is fixed to be driven by OVL1 */
- 	dpi->encoder.possible_crtcs = BIT(1);
- 
--	ret = drm_bridge_attach(&dpi->encoder, dpi->bridge, NULL, 0);
-+	ret = drm_bridge_attach(&dpi->encoder, dpi->next_bridge, NULL, 0);
- 	if (ret) {
- 		dev_err(dev, "Failed to attach bridge: %d\n", ret);
- 		goto err_cleanup;
-@@ -770,11 +770,11 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
--					  NULL, &dpi->bridge);
-+					  NULL, &dpi->next_bridge);
- 	if (ret)
- 		return ret;
- 
--	dev_info(dev, "Found bridge node: %pOF\n", dpi->bridge->of_node);
-+	dev_info(dev, "Found bridge node: %pOF\n", dpi->next_bridge->of_node);
- 
- 	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DPI);
- 	if (comp_id < 0) {
--- 
-2.27.0
+Paolo
 
