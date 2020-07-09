@@ -2,105 +2,69 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A49AD20674
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801D420674
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgGIHJG (ORCPT
+        id S1726290AbgGIHJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:09:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58664 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726185AbgGIHJD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:09:03 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06971lSw152666;
-        Thu, 9 Jul 2020 03:08:56 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 325s3jfh0n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 03:08:55 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06977DhS012064;
-        Thu, 9 Jul 2020 07:08:54 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 325k2c09e4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 07:08:53 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06978pJE10289426
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jul 2020 07:08:51 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B88D8A4054;
-        Thu,  9 Jul 2020 07:08:51 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 618B1A4060;
-        Thu,  9 Jul 2020 07:08:51 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jul 2020 07:08:51 +0000 (GMT)
-Received: from [9.206.191.171] (unknown [9.206.191.171])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0EDB1A00F2;
-        Thu,  9 Jul 2020 17:08:50 +1000 (AEST)
-Subject: Re: [PATCH v2 3/3] misc: cxl: flash: Remove unused variable
- 'drc_index'
-To:     Lee Jones <lee.jones@linaro.org>, arnd@arndb.de,
-        gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20200708125711.3443569-1-lee.jones@linaro.org>
- <20200708125711.3443569-4-lee.jones@linaro.org> <20200709065651.GY3500@dell>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Message-ID: <88cb0955-c7ab-e100-4048-374364610333@linux.ibm.com>
-Date:   Thu, 9 Jul 2020 17:08:49 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 03:09:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:38520 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbgGIHJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 03:09:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D55551FB;
+        Thu,  9 Jul 2020 00:09:33 -0700 (PDT)
+Received: from bogus (unknown [10.37.8.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 72E753F71E;
+        Thu,  9 Jul 2020 00:09:32 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 08:09:29 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: linux-next: build warning after merge of the scmi tree
+Message-ID: <20200709070929.GE31671@bogus>
+References: <20200709095412.051d96ef@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200709065651.GY3500@dell>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_01:2020-07-08,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=821
- suspectscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
- impostorscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0
- bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007090051
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709095412.051d96ef@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/7/20 4:56 pm, Lee Jones wrote:
-> Keeping the pointer increment though.
+On Thu, Jul 09, 2020 at 09:54:12AM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Fixes the following W=1 kernel build warning:
+> After merging the scmi tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
 > 
->   drivers/misc/cxl/flash.c: In function ‘update_devicetree’:
->   drivers/misc/cxl/flash.c:178:16: warning: variable ‘drc_index’ set but not used [-Wunused-but-set-variable]
->   178 | __be32 *data, drc_index, phandle;
->   | ^~~~~~~~~
+> drivers/firmware/arm_scmi/clock.c: In function 'rate_cmp_func':
+> drivers/firmware/arm_scmi/clock.c:128:12: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+>   128 |  u64 *r1 = _r1, *r2 = _r2;
+>       |            ^~~
+> drivers/firmware/arm_scmi/clock.c:128:23: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+>   128 |  u64 *r1 = _r1, *r2 = _r2;
+>       |                       ^~~
 > 
-> Cc: Frederic Barrat <fbarrat@linux.ibm.com>
-> Cc: Andrew Donnellan <ajd@linux.ibm.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Introduced by commit
+> 
+>   f0a2500a2a05 ("firmware: arm_scmi: Keep the discrete clock rates sorted")
+> 
 
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Sorry for both the issues, I will update the tree with proper patch.
 
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+Regards,
+Sudeep
