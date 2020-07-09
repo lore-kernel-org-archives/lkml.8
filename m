@@ -2,101 +2,106 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA65C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5385BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95278206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1B520708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S0FIwz36"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dPGhUOjD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6llPMvYH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgGIJVK (ORCPT
+        id S1726418AbgGIJWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:21:10 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31040 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726211AbgGIJVI (ORCPT
+        Thu, 9 Jul 2020 05:22:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgGIJWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:21:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594286467;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Thu, 9 Jul 2020 05:22:53 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE0D0C061A0B;
+        Thu,  9 Jul 2020 02:22:52 -0700 (PDT)
+Date:   Thu, 09 Jul 2020 09:22:49 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594286570;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fpT1tlU+FAIRvHikZIQn2nvVl9NUNq40o1v5G/MxGTw=;
-        b=S0FIwz36oVS/P+UUik7Zoi+d3nBSYGS311tvJ3B49x4WS4NuQeF2Ka9xmBXfA027YEIrTE
-        2mZp7RGUyzwZgOIiY+qSbXpv5zvF2X6873SfFZYLmthbECJeu6Gp55cMm9z5hiHGvvM0rV
-        yd3IcWGaMPYAk7aQmlKo36C76+AgNT4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459-S4HiYPomPzuTzsOAv4VZxQ-1; Thu, 09 Jul 2020 05:21:03 -0400
-X-MC-Unique: S4HiYPomPzuTzsOAv4VZxQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA0AD107ACF7;
-        Thu,  9 Jul 2020 09:21:01 +0000 (UTC)
-Received: from ovpn-113-239.ams2.redhat.com (ovpn-113-239.ams2.redhat.com [10.36.113.239])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CA7F6106A;
-        Thu,  9 Jul 2020 09:20:59 +0000 (UTC)
-Message-ID: <9dbb08f05890cc4130b54c80e4f4072b49d9f0ed.camel@redhat.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     Josh Hunt <johunt@akamai.com>,
-        Jonas Bonn <jonas.bonn@netrounds.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>
-Date:   Thu, 09 Jul 2020 11:20:58 +0200
-In-Reply-To: <CAM_iQpVZ4_AEV6JR__u-ooF7-=ozABVr_XPXGqwj2AK-VM1U5w@mail.gmail.com>
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
-         <20200623134259.8197-1-mzhivich@akamai.com>
-         <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
-         <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
-         <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
-         <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com>
-         <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
-         <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
-         <e54b0fe2ab12f6d078cdc6540f03478c32fe5735.camel@redhat.com>
-         <CAM_iQpVZ4_AEV6JR__u-ooF7-=ozABVr_XPXGqwj2AK-VM1U5w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        bh=GX6BaDx6+2BIX5QeJzW8OP92f+lCoUYp89bEta19kcE=;
+        b=dPGhUOjDGQeYwS+3zogxhBhOicCserPME254ni/yrT3y87yb0DUhI+KMJudK/DZJR5XdI4
+        CWKyTWK5ymcru+Lz+0ECT4wqDndzLKS8GcIDuqgYPsNOlYgi5HOBTY9Uhs/uTyTBIC1vrL
+        zPy2Dsk8u6phu6XfZf5BTVMoXbfqBu+lkGTunvmRtKVQnmiOGK/VU+jV6We5G2g38VoorB
+        n8tnznceYVMQZuMG/ToRNkQ6eZzfLk/9FFAG6KIzDJgOj9b91w3IX3DxMSJayNZ57l97k6
+        kfFUQSSpciNrWrcISVbeLOCTGC4f2Wq+xl7vtpUm0iVifzsgodBttkjrSnvFbw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594286570;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GX6BaDx6+2BIX5QeJzW8OP92f+lCoUYp89bEta19kcE=;
+        b=6llPMvYHa/RzNQl1ijr/RJx5yxhmP3LjYWez1105wSu2bbLuVNIq0nj4elJX4ilvW7S70I
+        qSj5MBBai0p+03DA==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/entry/common: Make prepare_exit_to_usermode() static
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200708192934.301116609@linutronix.de>
+References: <20200708192934.301116609@linutronix.de>
 MIME-Version: 1.0
+Message-ID: <159428656978.4006.16608746546724198157.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-08 at 13:16 -0700, Cong Wang wrote:
-> On Tue, Jul 7, 2020 at 7:18 AM Paolo Abeni <pabeni@redhat.com> wrote:
-> > So the regression with 2 pktgen threads is still relevant. 'perf' shows
-> > relevant time spent into net_tx_action() and __netif_schedule().
-> 
-> So, touching the __QDISC_STATE_SCHED bit in __dev_xmit_skb() is
-> not a good idea.
-> 
-> Let me see if there is any other way to fix this.
+The following commit has been merged into the x86/urgent branch of tip:
 
-Thank you very much for the effort! I'm personally out of ideas for a
-real fix that would avoid regressions. 
+Commit-ID:     bd87e6f6610aa96fde01ee6653e162213f7ec836
+Gitweb:        https://git.kernel.org/tip/bd87e6f6610aa96fde01ee6653e162213f7ec836
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Wed, 08 Jul 2020 21:28:07 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 09 Jul 2020 11:18:30 +02:00
 
-To be more exaustive this are the sources of overhead, as far as I can
-observe them with perf:
+x86/entry/common: Make prepare_exit_to_usermode() static
 
-- contention on q->state, in __netif_schedule()
-- execution of net_tx_action() when there are no packet to be served
+No users outside this file anymore.
 
-Cheers,
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20200708192934.301116609@linutronix.de
 
-Paolo
+---
+ arch/x86/entry/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+index ea7b515..f092884 100644
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -294,7 +294,7 @@ static void __prepare_exit_to_usermode(struct pt_regs *regs)
+ #endif
+ }
+ 
+-__visible noinstr void prepare_exit_to_usermode(struct pt_regs *regs)
++static noinstr void prepare_exit_to_usermode(struct pt_regs *regs)
+ {
+ 	instrumentation_begin();
+ 	__prepare_exit_to_usermode(regs);
