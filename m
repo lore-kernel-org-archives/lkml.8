@@ -2,133 +2,168 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DEBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13422C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2FD20774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E061020739
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qZMRcaF5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgGIDzq (ORCPT
+        id S1726345AbgGID4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 23:55:46 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:49392 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726263AbgGIDzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 23:55:39 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9CxqdQplQZfXJUAAA--.714S5;
-        Thu, 09 Jul 2020 11:55:34 +0800 (CST)
-From:   Zhi Li <lizhi01@loongson.cn>
-To:     chenhc@lemote.com, jiaxun.yang@flygoat.com,
-        tsbogend@alpha.franken.de, lixuefeng@loongson.cn
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] MIPS: Loongson: Fix boot warning about hwmon_device_register()
-Date:   Thu,  9 Jul 2020 11:55:21 +0800
-Message-Id: <1594266921-28971-4-git-send-email-lizhi01@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1594266921-28971-1-git-send-email-lizhi01@loongson.cn>
-References: <1594266921-28971-1-git-send-email-lizhi01@loongson.cn>
-X-CM-TRANSID: AQAAf9CxqdQplQZfXJUAAA--.714S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxXw1DGr4DGFyxKw13ur4Durg_yoW5Wr43pF
-        WxGayYgry8Wr4DXa1kZa1qqa45Grn5K34xZFn7Cw1vkFnrW345Xa4rJFy5Ary7ArW8Ga15
-        XrykJ34UCF43Wr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUmC14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-        x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-        8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxd
-        M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64
-        kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm
-        72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYx
-        C7MxkF7I0En4kS14v26r126r1DMxkIecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2Iq
-        xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-        106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-        xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
-        xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
-        Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRyGQkUUUUU=
-X-CM-SenderInfo: xol2xxqqr6z05rqj20fqof0/
+        Wed, 8 Jul 2020 23:56:52 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:19307 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgGID4v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 23:56:51 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200709035647epoutp04f6d08b0f0cd9ea7b22b43894319faacc~f_WWdfBXL2133321333epoutp04O
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 03:56:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200709035647epoutp04f6d08b0f0cd9ea7b22b43894319faacc~f_WWdfBXL2133321333epoutp04O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594267007;
+        bh=p/SFYzbsPHltH/8FwWWSzx9XA/itHl9p3f2bkVFrBuw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=qZMRcaF5ClIEb8THOQLa9Odiau3YHDAWg33tVYcwURUJO7ceExXsBVFPKDzdv0pI+
+         KyG7JVlJE7DryzQt5r3bsSesT1Zoo1pvfM7Jesr+1jmmlYultyp8bV7goI6AW9fkxt
+         ZNWPoGuO3GPEMrtahIgkTUZiIaDAzzYV6jPQb3HQ=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200709035647epcas1p226f752719a90eaf749561c4c9cd79579~f_WWC7wnd1895318953epcas1p2P;
+        Thu,  9 Jul 2020 03:56:47 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4B2Mms1LQKzMqYly; Thu,  9 Jul
+        2020 03:56:45 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        95.F1.18978.D75960F5; Thu,  9 Jul 2020 12:56:45 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200709035644epcas1p33f1cb4e5797fcdca3f038c76b08b910f~f_WTYAtvs0146701467epcas1p3z;
+        Thu,  9 Jul 2020 03:56:44 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200709035644epsmtrp1ad6314501fb2ea7f17d1de275a534ad8~f_WTXOxFf0699306993epsmtrp1s;
+        Thu,  9 Jul 2020 03:56:44 +0000 (GMT)
+X-AuditID: b6c32a35-5edff70000004a22-7a-5f06957d6074
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        64.26.08382.C75960F5; Thu,  9 Jul 2020 12:56:44 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200709035644epsmtip295da1225b8f6210d69568765d9b1c019~f_WTC22E-1353413534epsmtip2j;
+        Thu,  9 Jul 2020 03:56:44 +0000 (GMT)
+Subject: Re: [PATCH 1/2] memory: samsung: exynos5422-dmc: Adjust polling
+ interval and uptreshold
+To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     willy.mh.wolff.ml@gmail.com, k.konieczny@samsung.com,
+        b.zolnierkie@samsung.com, krzk@kernel.org, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        s.nawrocki@samsung.com, kgene@kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <fa3f651a-3c2b-188b-e2dc-4fd05ce4a1b7@samsung.com>
+Date:   Thu, 9 Jul 2020 13:08:09 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
+MIME-Version: 1.0
+In-Reply-To: <20200708153420.29484-2-lukasz.luba@arm.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIJsWRmVeSWpSXmKPExsWy7bCmnm7tVLZ4g4Mr2Sw2zljPajHxxhUW
+        iwWfZrBa9D9+zWxx/vwGdouzTW/YLTY9vsZqcXnXHDaLz71HGC1mnN/HZLGwqYXd4nbjCjaL
+        w2/aWS2+nXjE6MDnsWbeGkaPnbPusntsWtXJ5rF5Sb1H35ZVjB6fN8kFsEVl22SkJqakFimk
+        5iXnp2TmpdsqeQfHO8ebmhkY6hpaWpgrKeQl5qbaKrn4BOi6ZeYAXaukUJaYUwoUCkgsLlbS
+        t7Mpyi8tSVXIyC8usVVKLUjJKbAs0CtOzC0uzUvXS87PtTI0MDAyBSpMyM5offGFuaCPq2JP
+        90KmBsZVHF2MnBwSAiYS587PY+5i5OIQEtjBKLHj5lEmCOcTo8Tl2ydYIJxvjBJf/zYClXGA
+        tcx/JQ4R38so0bnjFCOE855RYtWl96wgc4UFkiSWvZ4MNkpEYBWjxPf3R1hBHGaBO0CjGucy
+        glSxCWhJ7H9xgw3E5hdQlLj64zFYnFfATmL+931gNouAisSM7fvZQWxRgTCJk9taoGoEJU7O
+        fMICYnMKWEr8nD4TbA6zgLjErSfzmSBseYntb+eAfSchcIFD4uOdi2wQb7tITHr5lBHCFpZ4
+        dXwLO4QtJfGyvw3KrpZYefIIG0RzB6PElv0XWCESxhL7l4L8xgG0QVNi/S59iLCixM7fEI8x
+        C/BJvPvawwoJL16JjjYhiBJlicsP7jJB2JISi9s72SYwKs1C8s4sJC/MQvLCLIRlCxhZVjGK
+        pRYU56anFhsWGCLH9yZGcFrWMt3BOPHtB71DjEwcjIcYJTiYlUR4DRRZ44V4UxIrq1KL8uOL
+        SnNSiw8xmgIDeCKzlGhyPjAz5JXEG5oaGRsbW5gYmpkaGiqJ8+aoAzUJpCeWpGanphakFsH0
+        MXFwSjUwiW/lly91uyA5W95he37kxchlWRb+ApdsDstudOC9YWzfLGv8oXHalzzRpkijq45X
+        PgrFzrFfzpaf/c52xsGTNXfvLr/cb1i0Kn5fhnn4VUnpnYYN237/1jx6Lc/IUfjuh8Bl0keP
+        qQR65azsmZ2z5eyRmg91j5VEzzeLWRTMKVNvDWwNC/C8k9b48Yeg79fa7rONzIGVM5/OvL3A
+        8ic7L3ta4Kp/NcH2DFc2rZ127GvqygQt2yvc4spJtT7r79UWZfvs5dh3frqcoejn2vUvVZz2
+        hHgduKdfs+7/pObt+xuO35qs+7bNQDLp1I3JDhNDhP7kn96v5isXsEL3i5bKB8XcLgbnlMmx
+        x44rnfqgxFKckWioxVxUnAgAK7LIe1QEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFIsWRmVeSWpSXmKPExsWy7bCSvG7NVLZ4g6P/pC02zljPajHxxhUW
+        iwWfZrBa9D9+zWxx/vwGdouzTW/YLTY9vsZqcXnXHDaLz71HGC1mnN/HZLGwqYXd4nbjCjaL
+        w2/aWS2+nXjE6MDnsWbeGkaPnbPusntsWtXJ5rF5Sb1H35ZVjB6fN8kFsEVx2aSk5mSWpRbp
+        2yVwZbS++MJc0MdVsad7IVMD4yqOLkYODgkBE4n5r8S7GLk4hAR2M0rsm3+JvYuREyguKTHt
+        4lFmiBphicOHiyFq3jJKzHm8lRWkRlggSWLZ68lMIAkRgVWMEvfu3wBrZha4wyhxsCUSburq
+        a6sZQRJsAloS+1/cYAOx+QUUJa7+eAwW5xWwk5j/fR+YzSKgIjFj+36wQaICYRI7lzxmgqgR
+        lDg58wkLiM0pYCnxc/pMNohl6hJ/5l1ihrDFJW49mc8EYctLbH87h3kCo/AsJO2zkLTMQtIy
+        C0nLAkaWVYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5uZsYwdGppbmDcfuqD3qHGJk4GA8x
+        SnAwK4nwGiiyxgvxpiRWVqUW5ccXleakFh9ilOZgURLnvVG4ME5IID2xJDU7NbUgtQgmy8TB
+        KdXA1PbI7fHknPbGp45HlvCvVf6m3y57/q/ZKf8Z+Xsf2iYePV09/dCGaJ+AY2K2zy7uvnTO
+        7Cd7RXXsWf2ZdysOVolfmlXI+XjpFM/c3N1PfNmmRG+yCIzLn509tXJ234UuvflX5pcynC+N
+        C/83XfDhvAmic7bVLm47VXBSwz/9eaXYi4MSIpee1rJo/faXPteQsPH1/UMGYbvvvC8+vu2+
+        xefKovD3B3i6GhoEyrmdC+0LfsXYXPKL1NLTWrR1rc0PfdVzNWLR/4M1bZOOhlwLu+8363iL
+        SdqTr5zTPAoqezduP1lZ67qjV3GzWy+jOXvTswlnp8VZWEsl1m2ecqd5gcDyUuXqZ5xGS6f5
+        uPalK7EUZyQaajEXFScCAPZMCWM9AwAA
+X-CMS-MailID: 20200709035644epcas1p33f1cb4e5797fcdca3f038c76b08b910f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501
+References: <20200708153420.29484-1-lukasz.luba@arm.com>
+        <CGME20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501@epcas1p4.samsung.com>
+        <20200708153420.29484-2-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace hwmon_device_register() with hwmon_device_register_with_info()
-to fix the following boot warning :
+Hi Lukasz,
 
-[    9.029924] Loongson Hwmon Enter...
-[    9.106850] (NULL device *): hwmon_device_register() is deprecated. Please convert the driver to use hwmon_device_register_with_info().
+On 7/9/20 12:34 AM, Lukasz Luba wrote:
+> In order to react faster and make better decisions under some workloads,
+> benchmarking the memory subsystem behavior, adjust the polling interval
+> and upthreshold value used by the simple_ondemand governor.
+> 
+> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+>  drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+> index 93e9c2429c0d..e03ee35f0ab5 100644
+> --- a/drivers/memory/samsung/exynos5422-dmc.c
+> +++ b/drivers/memory/samsung/exynos5422-dmc.c
+> @@ -1466,10 +1466,10 @@ static int exynos5_dmc_probe(struct platform_device *pdev)
+>  		 * Setup default thresholds for the devfreq governor.
+>  		 * The values are chosen based on experiments.
+>  		 */
+> -		dmc->gov_data.upthreshold = 30;
+> +		dmc->gov_data.upthreshold = 10;
+>  		dmc->gov_data.downdifferential = 5;
+>  
+> -		exynos5_dmc_df_profile.polling_ms = 500;
+> +		exynos5_dmc_df_profile.polling_ms = 100;
+>  	}
+>  
+>  
+> 
 
-Signed-off-by: Zhi Li <lizhi01@loongson.cn>
----
- drivers/platform/mips/cpu_hwmon.c | 22 ++--------------------
- 1 file changed, 2 insertions(+), 20 deletions(-)
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
-index c9f35e5..386389f 100644
---- a/drivers/platform/mips/cpu_hwmon.c
-+++ b/drivers/platform/mips/cpu_hwmon.c
-@@ -55,9 +55,7 @@ int loongson3_cpu_temp(int cpu)
- static int nr_packages;
- static struct device *cpu_hwmon_dev;
- 
--static ssize_t get_hwmon_name(struct device *dev,
--			struct device_attribute *attr, char *buf);
--static SENSOR_DEVICE_ATTR(name, 0444, get_hwmon_name, NULL, 0);
-+static SENSOR_DEVICE_ATTR(name, 0444, NULL, NULL, 0);
- 
- static struct attribute *cpu_hwmon_attributes[] = {
- 	&sensor_dev_attr_name.dev_attr.attr,
-@@ -69,13 +67,6 @@ static struct attribute_group cpu_hwmon_attribute_group = {
- 	.attrs = cpu_hwmon_attributes,
- };
- 
--/* Hwmon device get name */
--static ssize_t get_hwmon_name(struct device *dev,
--			struct device_attribute *attr, char *buf)
--{
--	return sprintf(buf, "cpu-hwmon\n");
--}
--
- static ssize_t get_cpu_temp(struct device *dev,
- 			struct device_attribute *attr, char *buf);
- static ssize_t cpu_temp_label(struct device *dev,
-@@ -176,7 +167,7 @@ static int __init loongson_hwmon_init(void)
- 		csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) &
- 				  LOONGSON_CSRF_TEMP;
- 
--	cpu_hwmon_dev = hwmon_device_register(NULL);
-+	cpu_hwmon_dev = hwmon_device_register_with_info(NULL, "cpu_hwmon", NULL, NULL, NULL);
- 	if (IS_ERR(cpu_hwmon_dev)) {
- 		ret = PTR_ERR(cpu_hwmon_dev);
- 		pr_err("hwmon_device_register fail!\n");
-@@ -186,13 +177,6 @@ static int __init loongson_hwmon_init(void)
- 	nr_packages = loongson_sysconf.nr_cpus /
- 		loongson_sysconf.cores_per_package;
- 
--	ret = sysfs_create_group(&cpu_hwmon_dev->kobj,
--				&cpu_hwmon_attribute_group);
--	if (ret) {
--		pr_err("fail to create loongson hwmon!\n");
--		goto fail_sysfs_create_group_hwmon;
--	}
--
- 	ret = create_sysfs_cputemp_files(&cpu_hwmon_dev->kobj);
- 	if (ret) {
- 		pr_err("fail to create cpu temperature interface!\n");
-@@ -207,8 +191,6 @@ static int __init loongson_hwmon_init(void)
- fail_create_sysfs_cputemp_files:
- 	sysfs_remove_group(&cpu_hwmon_dev->kobj,
- 				&cpu_hwmon_attribute_group);
--
--fail_sysfs_create_group_hwmon:
- 	hwmon_device_unregister(cpu_hwmon_dev);
- 
- fail_hwmon_device_register:
 -- 
-2.1.0
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
