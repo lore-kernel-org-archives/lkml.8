@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50846C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6940DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3838E2065F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480662065F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgGIOzi (ORCPT
+        id S1728126AbgGIOzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:55:38 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:8562 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726762AbgGIOzi (ORCPT
+        Thu, 9 Jul 2020 10:55:41 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:21856 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726806AbgGIOzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:55:38 -0400
-Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069EpWjo029894;
-        Thu, 9 Jul 2020 14:54:52 GMT
-Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
-        by mx0b-002e3701.pphosted.com with ESMTP id 325k3syau9-1
+        Thu, 9 Jul 2020 10:55:39 -0400
+Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069Es8Rn025036;
+        Thu, 9 Jul 2020 14:54:53 GMT
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0b-002e3701.pphosted.com with ESMTP id 325k3hfgfk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 09 Jul 2020 14:54:52 +0000
 Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 1467785;
-        Thu,  9 Jul 2020 14:54:51 +0000 (UTC)
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 3E49B9D;
+        Thu,  9 Jul 2020 14:54:50 +0000 (UTC)
 Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-        id 80D5020203301; Thu,  9 Jul 2020 09:54:48 -0500 (CDT)
-Message-ID: <20200709145448.420950989@hpe.com>
+        id F18B520203305; Thu,  9 Jul 2020 09:54:48 -0500 (CDT)
+Message-ID: <20200709145448.883565568@hpe.com>
 User-Agent: quilt/0.66
-Date:   Thu, 09 Jul 2020 09:54:54 -0500
+Date:   Thu, 09 Jul 2020 09:54:58 -0500
 From:   steve.wahl@hpe.com
 To:     Steve Wahl <steve.wahl@hpe.com>, Jonathan Corbet <corbet@lwn.net>,
         Ard Biesheuvel <ardb@kernel.org>,
@@ -69,39 +69,206 @@ To:     Steve Wahl <steve.wahl@hpe.com>, Jonathan Corbet <corbet@lwn.net>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-efi@vger.kernel.org
 Cc:     Russ Anderson <rja@hpe.com>
-Subject: [patch v2 07/13] x86: Remove support for UV1 platform from uv.h
+Subject: [patch v2 11/13] x86: Remove references to no-longer-used efi_have_uv1_memmap()
 References: <20200709145447.549145421@hpe.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-09_08:2020-07-09,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- spamscore=0 impostorscore=0 mlxscore=0 mlxlogscore=710 lowpriorityscore=0
- adultscore=0 malwarescore=0 clxscore=1015 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007090111
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 clxscore=1015
+ malwarescore=0 priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 impostorscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007090111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arch/x86/include/asm/uv/uv.h: remove UV1 support
+In removing UV1 support, efi_have_uv1_memmap is no longer used.
 
 Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/include/asm/uv/uv.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/kexec-bzimage64.c |    9 ---------
+ arch/x86/platform/efi/efi.c       |   14 +++-----------
+ arch/x86/platform/efi/efi_64.c    |   38 +++-----------------------------------
+ arch/x86/platform/efi/quirks.c    |    8 --------
+ 4 files changed, 6 insertions(+), 63 deletions(-)
 
---- linux.orig/arch/x86/include/asm/uv/uv.h	2020-07-07 10:49:50.189510470 -0500
-+++ linux/arch/x86/include/asm/uv/uv.h	2020-07-07 10:56:14.657046402 -0500
-@@ -4,7 +4,7 @@
+--- linux.orig/arch/x86/kernel/kexec-bzimage64.c	2020-07-07 10:49:49.933510781 -0500
++++ linux/arch/x86/kernel/kexec-bzimage64.c	2020-07-07 10:56:15.393045519 -0500
+@@ -170,15 +170,6 @@ setup_efi_state(struct boot_params *para
+ 	if (!current_ei->efi_memmap_size)
+ 		return 0;
  
- #include <asm/tlbflush.h>
+-	/*
+-	 * If 1:1 mapping is not enabled, second kernel can not setup EFI
+-	 * and use EFI run time services. User space will have to pass
+-	 * acpi_rsdp=<addr> on kernel command line to make second kernel boot
+-	 * without efi.
+-	 */
+-	if (efi_have_uv1_memmap())
+-		return 0;
+-
+ 	params->secure_boot = boot_params.secure_boot;
+ 	ei->efi_loader_signature = current_ei->efi_loader_signature;
+ 	ei->efi_systab = current_ei->efi_systab;
+--- linux.orig/arch/x86/platform/efi/efi.c	2020-07-07 10:49:49.933510781 -0500
++++ linux/arch/x86/platform/efi/efi.c	2020-07-07 10:56:15.401045510 -0500
+@@ -648,7 +648,7 @@ static inline void *efi_map_next_entry_r
+  */
+ static void *efi_map_next_entry(void *entry)
+ {
+-	if (!efi_have_uv1_memmap() && efi_enabled(EFI_64BIT)) {
++	if (efi_enabled(EFI_64BIT)) {
+ 		/*
+ 		 * Starting in UEFI v2.5 the EFI_PROPERTIES_TABLE
+ 		 * config table feature requires us to map all entries
+@@ -777,11 +777,9 @@ static void __init kexec_enter_virtual_m
  
--enum uv_system_type {UV_NONE, UV_LEGACY_APIC, UV_X2APIC, UV_NON_UNIQUE_APIC};
-+enum uv_system_type {UV_NONE, UV_LEGACY_APIC, UV_X2APIC};
+ 	/*
+ 	 * We don't do virtual mode, since we don't do runtime services, on
+-	 * non-native EFI. With the UV1 memmap, we don't do runtime services in
+-	 * kexec kernel because in the initial boot something else might
+-	 * have been mapped at these virtual addresses.
++	 * non-native EFI.
+ 	 */
+-	if (efi_is_mixed() || efi_have_uv1_memmap()) {
++	if (efi_is_mixed()) {
+ 		efi_memmap_unmap();
+ 		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+ 		return;
+@@ -832,12 +830,6 @@ static void __init kexec_enter_virtual_m
+  * has the runtime attribute bit set in its memory descriptor into the
+  * efi_pgd page table.
+  *
+- * The old method which used to update that memory descriptor with the
+- * virtual address obtained from ioremap() is still supported when the
+- * kernel is booted on SG1 UV1 hardware. Same old method enabled the
+- * runtime services to be called without having to thunk back into
+- * physical mode for every invocation.
+- *
+  * The new method does a pagetable switch in a preemption-safe manner
+  * so that we're in a different address space when calling a runtime
+  * function. For function arguments passing we do copy the PUDs of the
+--- linux.orig/arch/x86/platform/efi/efi_64.c	2020-07-07 10:49:49.933510781 -0500
++++ linux/arch/x86/platform/efi/efi_64.c	2020-07-07 10:56:15.405045505 -0500
+@@ -74,9 +74,6 @@ int __init efi_alloc_page_tables(void)
+ 	pud_t *pud;
+ 	gfp_t gfp_mask;
  
- struct cpumask;
- struct mm_struct;
+-	if (efi_have_uv1_memmap())
+-		return 0;
+-
+ 	gfp_mask = GFP_KERNEL | __GFP_ZERO;
+ 	efi_pgd = (pgd_t *)__get_free_pages(gfp_mask, PGD_ALLOCATION_ORDER);
+ 	if (!efi_pgd)
+@@ -115,9 +112,6 @@ void efi_sync_low_kernel_mappings(void)
+ 	pud_t *pud_k, *pud_efi;
+ 	pgd_t *efi_pgd = efi_mm.pgd;
+ 
+-	if (efi_have_uv1_memmap())
+-		return;
+-
+ 	/*
+ 	 * We can share all PGD entries apart from the one entry that
+ 	 * covers the EFI runtime mapping space.
+@@ -206,9 +200,6 @@ int __init efi_setup_page_tables(unsigne
+ 	unsigned npages;
+ 	pgd_t *pgd = efi_mm.pgd;
+ 
+-	if (efi_have_uv1_memmap())
+-		return 0;
+-
+ 	/*
+ 	 * It can happen that the physical address of new_memmap lands in memory
+ 	 * which is not mapped in the EFI page table. Therefore we need to go
+@@ -315,9 +306,6 @@ void __init efi_map_region(efi_memory_de
+ 	unsigned long size = md->num_pages << PAGE_SHIFT;
+ 	u64 pa = md->phys_addr;
+ 
+-	if (efi_have_uv1_memmap())
+-		return old_map_region(md);
+-
+ 	/*
+ 	 * Make sure the 1:1 mappings are present as a catch-all for b0rked
+ 	 * firmware which doesn't update all internal pointers after switching
+@@ -420,12 +408,6 @@ void __init efi_runtime_update_mappings(
+ {
+ 	efi_memory_desc_t *md;
+ 
+-	if (efi_have_uv1_memmap()) {
+-		if (__supported_pte_mask & _PAGE_NX)
+-			runtime_code_page_mkexec();
+-		return;
+-	}
+-
+ 	/*
+ 	 * Use the EFI Memory Attribute Table for mapping permissions if it
+ 	 * exists, since it is intended to supersede EFI_PROPERTIES_TABLE.
+@@ -474,10 +456,7 @@ void __init efi_runtime_update_mappings(
+ void __init efi_dump_pagetable(void)
+ {
+ #ifdef CONFIG_EFI_PGT_DUMP
+-	if (efi_have_uv1_memmap())
+-		ptdump_walk_pgd_level(NULL, &init_mm);
+-	else
+-		ptdump_walk_pgd_level(NULL, &efi_mm);
++	ptdump_walk_pgd_level(NULL, &efi_mm);
+ #endif
+ }
+ 
+@@ -849,21 +828,13 @@ efi_set_virtual_address_map(unsigned lon
+ 	const efi_system_table_t *systab = (efi_system_table_t *)systab_phys;
+ 	efi_status_t status;
+ 	unsigned long flags;
+-	pgd_t *save_pgd = NULL;
+ 
+ 	if (efi_is_mixed())
+ 		return efi_thunk_set_virtual_address_map(memory_map_size,
+ 							 descriptor_size,
+ 							 descriptor_version,
+ 							 virtual_map);
+-
+-	if (efi_have_uv1_memmap()) {
+-		save_pgd = efi_uv1_memmap_phys_prolog();
+-		if (!save_pgd)
+-			return EFI_ABORTED;
+-	} else {
+-		efi_switch_mm(&efi_mm);
+-	}
++	efi_switch_mm(&efi_mm);
+ 
+ 	kernel_fpu_begin();
+ 
+@@ -879,10 +850,7 @@ efi_set_virtual_address_map(unsigned lon
+ 	/* grab the virtually remapped EFI runtime services table pointer */
+ 	efi.runtime = READ_ONCE(systab->runtime);
+ 
+-	if (save_pgd)
+-		efi_uv1_memmap_phys_epilog(save_pgd);
+-	else
+-		efi_switch_mm(efi_scratch.prev_mm);
++	efi_switch_mm(efi_scratch.prev_mm);
+ 
+ 	return status;
+ }
+--- linux.orig/arch/x86/platform/efi/quirks.c	2020-07-07 10:56:15.209045740 -0500
++++ linux/arch/x86/platform/efi/quirks.c	2020-07-07 10:56:15.409045500 -0500
+@@ -381,14 +381,6 @@ static void __init efi_unmap_pages(efi_m
+ 	u64 va = md->virt_addr;
+ 
+ 	/*
+-	 * To Do: Remove this check after adding functionality to unmap EFI boot
+-	 * services code/data regions from direct mapping area because the UV1
+-	 * memory map maps EFI regions in swapper_pg_dir.
+-	 */
+-	if (efi_have_uv1_memmap())
+-		return;
+-
+-	/*
+ 	 * EFI mixed mode has all RAM mapped to access arguments while making
+ 	 * EFI runtime calls, hence don't unmap EFI boot services code/data
+ 	 * regions.
 
