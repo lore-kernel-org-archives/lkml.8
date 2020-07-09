@@ -2,158 +2,158 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D925EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D338C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C14CC20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446782076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 11:05:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CRjI59fA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgGILFS (ORCPT
+        id S1727071AbgGILFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:05:18 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57316 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgGILFP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:05:15 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id E33BC2A63B1
-Subject: Re: chrome-platform/for-kernelci bisection:
- baseline.bootrr.rockchip-dp-probed on rk3399-gru-kevin
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <linux@roeck-us.net>, kernelci-results@groups.io
-Cc:     linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <5f06177f.1c69fb81.ed8e4.1a92@mx.google.com>
- <a79f116f-2c6d-570d-8e06-95082d26d42d@roeck-us.net>
- <55cb5ce6-4ecb-1203-807f-c24648c0e989@collabora.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <6ee59022-ca64-92ab-6ed6-e04115698780@collabora.com>
-Date:   Thu, 9 Jul 2020 12:05:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <55cb5ce6-4ecb-1203-807f-c24648c0e989@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 9 Jul 2020 07:05:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:62194 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726923AbgGILFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 07:05:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594292722; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=HJWdyO0UDBgRKgOYKL4fiuT5Fdu/5iVjgEtgN+UMip4=; b=CRjI59fA+oW58ApnHX9513rC9Rlqnq4Hp4WUlAgqd71NEc2O9ueyUjKdFpIh+tutCbXELY/n
+ 7Em21VYZv4mkKTTD7qufSoZsfkDJDlBiXq8NOz0tsp9w7XqMkoDnp/7B9joixGELS8rpc892
+ ienAe0cDLbQTRkFX48SaiuQHOYI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f06f9e1a19992ac650ec5e9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 11:05:05
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AF9BAC43391; Thu,  9 Jul 2020 11:05:05 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 314D0C433CA;
+        Thu,  9 Jul 2020 11:05:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 314D0C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v3 2/4] drm/msm: dsi: Use OPP API to set clk/perf state
+Date:   Thu,  9 Jul 2020 16:34:32 +0530
+Message-Id: <1594292674-15632-3-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594292674-15632-1-git-send-email-rnayak@codeaurora.org>
+References: <1594292674-15632-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/07/2020 10:17, Enric Balletbo i Serra wrote:
-> Hi,
-> 
-> On 8/7/20 22:32, Guenter Roeck wrote:
->> On 7/8/20 11:59 AM, kernelci.org bot wrote:
->>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>> * This automated bisection report was sent to you on the basis  *
->>> * that you may be involved with the breaking commit it has      *
->>> * found.  No manual investigation has been done to verify it,   *
->>> * and the root cause of the problem may be somewhere else.      *
->>> *                                                               *
->>> * If you do send a fix, please include this trailer:            *
->>> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
->>> *                                                               *
->>> * Hope this helps!                                              *
->>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>>
->>> chrome-platform/for-kernelci bisection: baseline.bootrr.rockchip-dp-probed on rk3399-gru-kevin
->>>
->>> Summary:
->>>   Start:      154353417996 KERNELCI: x86_64_defconfig: Enable support for Chromebooks devices
->>>   Plain log:  https://storage.kernelci.org/chrome-platform/for-kernelci/v5.8-rc1-20-g154353417996/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.txt
->>>   HTML log:   https://storage.kernelci.org/chrome-platform/for-kernelci/v5.8-rc1-20-g154353417996/arm64/defconfig/gcc-8/lab-collabora/baseline-rk3399-gru-kevin.html
->>>   Result:     8c9a6ef40bf4 platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
->>>
->>> Checks:
->>>   revert:     PASS
->>>   verify:     PASS
->>>
->>> Parameters:
->>>   Tree:       chrome-platform
->>>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
->>>   Branch:     for-kernelci
->>>   Target:     rk3399-gru-kevin
->>>   CPU arch:   arm64
->>>   Lab:        lab-collabora
->>>   Compiler:   gcc-8
->>>   Config:     defconfig
->>>   Test case:  baseline.bootrr.rockchip-dp-probed
->>>
->>> Breaking commit found:
->>>
->>> -------------------------------------------------------------------------------
->>> commit 8c9a6ef40bf400c64c9907031bd32b59f9d4aea2
->>> Author: Guenter Roeck <linux@roeck-us.net>
->>> Date:   Sat Jul 4 07:26:07 2020 -0700
->>>
->>>     platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
->>>     
->>>     The EC reports a variety of error codes. Most of those, with the exception
->>>     of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
->>>     error code gets lost. Convert all EC errors to Linux error codes to report
->>>     a more meaningful error to the caller to aid debugging.
->>>     
->>>     Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
->>>     Cc: Prashant Malani <pmalani@chromium.org>
->>>     Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->>>     Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>>
-> 
-> So, as Guenter pointed I dropped this patch now.
-> 
->>
->> So, just FTR, turns out that there are callers which specifically check for
->> -EPROTO and examine the EC error code if it is returned, or just accept
->> -EPROTO as generic failure (but nothing else). Example is drivers/pwm/pwm-cros-ec.c:
->> cros_ec_num_pwms(). Such commands now fail, in this case because
->> EC_RES_INVALID_PARAM is now returned as -EINVAL and cros_ec_num_pwms()
->> doesn't expect that.
->>
-> 
-> Right, that's interesting, and I'll take in consideration for future reworks of
-> the above patch and also take a deeper look at those specific cases reported.
+On SDM845 and SC7180 DSI needs to express a performance state
+requirement on a power domain depending on the clock rates.
+Use OPP table from DT to register with OPP framework and use
+dev_pm_opp_set_rate() to set the clk/perf state.
 
-This bisection is probably one of the most interesting ones
-indeed.  I should mention it when I finally get round to making
-a "KernelCI bisections hall of fame" blog post.
+dev_pm_opp_set_rate() is designed to be equivalent to clk_set_rate()
+for devices without an OPP table, hence the change works fine
+on devices/platforms which only need to set a clock rate.
 
-> BTW, Guillaume, I queued that patch to give a try and test 3 days ago. Is the
-> bisection job expected to take that time to run? In this case I think it also
-> took some time to receive the build test, so probably is just a matter of having
-> lot of jobs in the queue?
-> 
-> I am not complaining at all, just curious, and just want to know to improve my
-> maintainer workflow.
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ drivers/gpu/drm/msm/dsi/dsi_host.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-I think what you're doing is perfectly fine, there were some
-issues with Jenkins and one build server that caused some
-KernelCI builds to not be run this week.  Also there is an
-intermittent bug in LAVA that causes tests to not run, so I think
-the delay was due to an unfortunate combination of infrastructure
-issues.
-
-We now have a rather fast build server dedicated to bisections,
-so for a maintainer branch like yours where it just takes a
-handful of iterations I would expect this kind of report to be
-sent at most 6h after a git push.  Bisecting linux-next can take
-a few extra hours with typically 10~15 iterations.
-
-Best wishes,
-Guillaume
-
->> drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c has a similar problem;
->> it only accepts -EPROTO as "valid" error, but nothing else. I didn't check
->> for others.
->>
->> Guenter
->>
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+index 11ae5b8..0a14c4a 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -14,6 +14,7 @@
+ #include <linux/of_graph.h>
+ #include <linux/of_irq.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/pm_opp.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/spinlock.h>
+@@ -111,6 +112,9 @@ struct msm_dsi_host {
+ 	struct clk *pixel_clk_src;
+ 	struct clk *byte_intf_clk;
+ 
++	struct opp_table *opp_table;
++	bool has_opp_table;
++
+ 	u32 byte_clk_rate;
+ 	u32 pixel_clk_rate;
+ 	u32 esc_clk_rate;
+@@ -512,9 +516,10 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
+ 	DBG("Set clk rates: pclk=%d, byteclk=%d",
+ 		msm_host->mode->clock, msm_host->byte_clk_rate);
+ 
+-	ret = clk_set_rate(msm_host->byte_clk, msm_host->byte_clk_rate);
++	ret = dev_pm_opp_set_rate(&msm_host->pdev->dev,
++				  msm_host->byte_clk_rate);
+ 	if (ret) {
+-		pr_err("%s: Failed to set rate byte clk, %d\n", __func__, ret);
++		pr_err("%s: dev_pm_opp_set_rate failed %d\n", __func__, ret);
+ 		return ret;
+ 	}
+ 
+@@ -658,6 +663,8 @@ int dsi_link_clk_enable_v2(struct msm_dsi_host *msm_host)
+ 
+ void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host)
+ {
++	/* Drop the performance state vote */
++	dev_pm_opp_set_rate(&msm_host->pdev->dev, 0);
+ 	clk_disable_unprepare(msm_host->esc_clk);
+ 	clk_disable_unprepare(msm_host->pixel_clk);
+ 	if (msm_host->byte_intf_clk)
+@@ -1879,6 +1886,19 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
+ 		goto fail;
+ 	}
+ 
++	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "byte");
++	if (IS_ERR(msm_host->opp_table))
++		return PTR_ERR(msm_host->opp_table);
++	/* OPP table is optional */
++	ret = dev_pm_opp_of_add_table(&pdev->dev);
++	if (!ret) {
++		msm_host->has_opp_table = true;
++	} else if (ret != -ENODEV) {
++		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
++		dev_pm_opp_put_clkname(msm_host->opp_table);
++		return ret;
++	}
++
+ 	init_completion(&msm_host->dma_comp);
+ 	init_completion(&msm_host->video_comp);
+ 	mutex_init(&msm_host->dev_mutex);
+@@ -1914,6 +1934,9 @@ void msm_dsi_host_destroy(struct mipi_dsi_host *host)
+ 	mutex_destroy(&msm_host->cmd_mutex);
+ 	mutex_destroy(&msm_host->dev_mutex);
+ 
++	if (msm_host->has_opp_table)
++		dev_pm_opp_of_remove_table(&msm_host->pdev->dev);
++	dev_pm_opp_put_clkname(msm_host->opp_table);
+ 	pm_runtime_disable(&msm_host->pdev->dev);
+ }
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
