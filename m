@@ -2,203 +2,188 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF564206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C91207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wjcjVJys"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NlA/VgQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgGIQFb (ORCPT
+        id S1728110AbgGIQGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:05:31 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49454 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbgGIQFa (ORCPT
+        Thu, 9 Jul 2020 12:06:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49884 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726357AbgGIQGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:05:30 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 069FpnaO160519;
-        Thu, 9 Jul 2020 16:04:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=Iaxp8WVU9LYuQViXmfxKLlsL1ZcMCICKq4clfeVvLdI=;
- b=wjcjVJysydjM0e+dD3PbW+CL84+4mYqCPzUGYmwDhtcm8Y+4h5kP7QksnI8PsblfZGj6
- b161l4lUWtJGLDD8CfZKSMgUQYwtPoB7B9YrnZRIYFTosL7/cO/S/oYDHaI24EVgBLbV
- uEVmLqZ6yK+4vIWxUN/qyFp6Ie6/mCQMcetWRIqL+iPCuJfcJ+0KjKufHkYFfbZJJRWV
- qTYxbV/utsJu958isB2UEGE8hLiIdRfofK+DaWLrIcCkN6sUyCj4sWlyfqwMeWQScuEF
- LqjFwPEB6tlclKknEO5VkwxAi3BJK3PYXXm0iH8enKjclAxZ8dINektHtkYlBH+RxpZw YQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 325y0ajqxv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 09 Jul 2020 16:04:23 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 069FnGUO132786;
-        Thu, 9 Jul 2020 16:04:22 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 325k3h9c1c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Jul 2020 16:04:22 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 069G4Lg7001625;
-        Thu, 9 Jul 2020 16:04:21 GMT
-Received: from dhcp-10-175-207-152.vpn.oracle.com (/10.175.207.152)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Jul 2020 09:04:21 -0700
-Date:   Thu, 9 Jul 2020 17:04:13 +0100 (IST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Thu, 9 Jul 2020 12:06:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594310779;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5OfLVV9ee+e3aH9dIq9Uyj1RNa4dEfM45FxDPLW9s5s=;
+        b=NlA/VgQJqA0Q24ZO3iOfXFf/3fA9Mma4nXewT+RKFTNODn/sNrOctwkhaxSDp8J4mUd/65
+        jyne8uQIbz3Y4f5g1Yk8UCiRie+psAcIq677Vhs3mbEl9ObV1EGivWcwe89mvII9lFyHF8
+        724AV0cBSegsZorUHgSPju1Ag3kqlF4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-3cdqq7fgOK-wggAAqi1Q3w-1; Thu, 09 Jul 2020 12:06:17 -0400
+X-MC-Unique: 3cdqq7fgOK-wggAAqi1Q3w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83A94100AA21;
+        Thu,  9 Jul 2020 16:06:15 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-122.rdu2.redhat.com [10.10.120.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CB60179CE7;
+        Thu,  9 Jul 2020 16:06:13 +0000 (UTC)
+Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks for
+ SPLPAR
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH bpf-next 1/2] bpf: use dedicated bpf_trace_printk event
- instead of trace_printk()
-In-Reply-To: <CAEf4BzaGWZGYQf6C0GT3mwhjh8PSVLwgoFiHtpx6zaTny3B_gw@mail.gmail.com>
-Message-ID: <alpine.LRH.2.21.2007091656240.16404@localhost>
-References: <1593787468-29931-1-git-send-email-alan.maguire@oracle.com> <1593787468-29931-2-git-send-email-alan.maguire@oracle.com> <CAEf4BzaGWZGYQf6C0GT3mwhjh8PSVLwgoFiHtpx6zaTny3B_gw@mail.gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Anton Blanchard <anton@ozlabs.org>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+ <20200706043540.1563616-6-npiggin@gmail.com>
+ <874kqhvu1v.fsf@mpe.ellerman.id.au>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <8265d782-4e50-a9b2-a908-0cb588ffa09c@redhat.com>
+Date:   Thu, 9 Jul 2020 12:06:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9677 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 mlxlogscore=999
- phishscore=0 adultscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007090115
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9677 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 impostorscore=0 malwarescore=0 bulkscore=0 phishscore=0
- adultscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007090115
+In-Reply-To: <874kqhvu1v.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Tue, 7 Jul 2020, Andrii Nakryiko wrote:
-
-> On Fri, Jul 3, 2020 at 7:47 AM Alan Maguire <alan.maguire@oracle.com> wrote:
-> >
-> > The bpf helper bpf_trace_printk() uses trace_printk() under the hood.
-> > This leads to an alarming warning message originating from trace
-> > buffer allocation which occurs the first time a program using
-> > bpf_trace_printk() is loaded.
-> >
-> > We can instead create a trace event for bpf_trace_printk() and enable
-> > it in-kernel when/if we encounter a program using the
-> > bpf_trace_printk() helper.  With this approach, trace_printk()
-> > is not used directly and no warning message appears.
-> >
-> > This work was started by Steven (see Link) and finished by Alan; added
-> > Steven's Signed-off-by with his permission.
-> >
-> > Link: https://lore.kernel.org/r/20200628194334.6238b933@oasis.local.home
-> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > ---
-> >  kernel/trace/Makefile    |  2 ++
-> >  kernel/trace/bpf_trace.c | 41 +++++++++++++++++++++++++++++++++++++----
-> >  kernel/trace/bpf_trace.h | 34 ++++++++++++++++++++++++++++++++++
-> >  3 files changed, 73 insertions(+), 4 deletions(-)
-> >  create mode 100644 kernel/trace/bpf_trace.h
-> >
-> 
-> [...]
-> 
-> > +static DEFINE_SPINLOCK(trace_printk_lock);
-> > +
-> > +#define BPF_TRACE_PRINTK_SIZE   1024
-> > +
-> > +static inline int bpf_do_trace_printk(const char *fmt, ...)
-> > +{
-> > +       static char buf[BPF_TRACE_PRINTK_SIZE];
-> > +       unsigned long flags;
-> > +       va_list ap;
-> > +       int ret;
-> > +
-> > +       spin_lock_irqsave(&trace_printk_lock, flags);
-> > +       va_start(ap, fmt);
-> > +       ret = vsnprintf(buf, BPF_TRACE_PRINTK_SIZE, fmt, ap);
-> > +       va_end(ap);
-> > +       if (ret > 0)
-> > +               trace_bpf_trace_printk(buf);
-> 
-> Is there any reason to artificially limit the case of printing empty
-> string? It's kind of an awkward use case, for sure, but having
-> guarantee that every bpf_trace_printk() invocation triggers tracepoint
-> is a nice property, no?
+On 7/9/20 6:53 AM, Michael Ellerman wrote:
+> Nicholas Piggin <npiggin@gmail.com> writes:
 >
-
-True enough; I'll modify the above to support empty string display also.
- 
-> > +       spin_unlock_irqrestore(&trace_printk_lock, flags);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> >  /*
-> >   * Only limited trace_printk() conversion specifiers allowed:
-> >   * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pB %pks %pus %s
-> > @@ -483,8 +510,7 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
-> >   */
-> >  #define __BPF_TP_EMIT()        __BPF_ARG3_TP()
-> >  #define __BPF_TP(...)                                                  \
-> > -       __trace_printk(0 /* Fake ip */,                                 \
-> > -                      fmt, ##__VA_ARGS__)
-> > +       bpf_do_trace_printk(fmt, ##__VA_ARGS__)
-> >
-> >  #define __BPF_ARG1_TP(...)                                             \
-> >         ((mod[0] == 2 || (mod[0] == 1 && __BITS_PER_LONG == 64))        \
-> > @@ -518,13 +544,20 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
-> >         .arg2_type      = ARG_CONST_SIZE,
-> >  };
-> >
-> > +int bpf_trace_printk_enabled;
-> 
-> static?
-> 
-
-oops, will fix.
-
-> > +
-> >  const struct bpf_func_proto *bpf_get_trace_printk_proto(void)
-> >  {
-> >         /*
-> >          * this program might be calling bpf_trace_printk,
-> > -        * so allocate per-cpu printk buffers
-> > +        * so enable the associated bpf_trace/bpf_trace_printk event.
-> >          */
-> > -       trace_printk_init_buffers();
-> > +       if (!bpf_trace_printk_enabled) {
-> > +               if (trace_set_clr_event("bpf_trace", "bpf_trace_printk", 1))
-> 
-> just to double check, it's ok to simultaneously enable same event in
-> parallel, right?
+>> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+>> ---
+>>   arch/powerpc/include/asm/paravirt.h           | 28 ++++++++
+>>   arch/powerpc/include/asm/qspinlock.h          | 66 +++++++++++++++++++
+>>   arch/powerpc/include/asm/qspinlock_paravirt.h |  7 ++
+>>   arch/powerpc/platforms/pseries/Kconfig        |  5 ++
+>>   arch/powerpc/platforms/pseries/setup.c        |  6 +-
+>>   include/asm-generic/qspinlock.h               |  2 +
+> Another ack?
 >
+I am OK with adding the #ifdef around queued_spin_lock().
 
-From an ftrace perspective, it looks fine since the actual enable is 
-mutex-protected. We could grab the trace_printk_lock here too I guess,
-but I don't _think_ there's a need. 
- 
-Thanks for reviewing! I'll spin up a v2 with the above fixes shortly
-plus I'll change to using tp/raw_syscalls/sys_enter in the test as you 
-suggested.
+Acked-by: Waiman Long <longman@redhat.com>
 
-Alan
+>> diff --git a/arch/powerpc/include/asm/paravirt.h b/arch/powerpc/include/asm/paravirt.h
+>> index 7a8546660a63..f2d51f929cf5 100644
+>> --- a/arch/powerpc/include/asm/paravirt.h
+>> +++ b/arch/powerpc/include/asm/paravirt.h
+>> @@ -45,6 +55,19 @@ static inline void yield_to_preempted(int cpu, u32 yield_count)
+>>   {
+>>   	___bad_yield_to_preempted(); /* This would be a bug */
+>>   }
+>> +
+>> +extern void ___bad_yield_to_any(void);
+>> +static inline void yield_to_any(void)
+>> +{
+>> +	___bad_yield_to_any(); /* This would be a bug */
+>> +}
+> Why do we do that rather than just not defining yield_to_any() at all
+> and letting the build fail on that?
+>
+> There's a condition somewhere that we know will false at compile time
+> and drop the call before linking?
+>
+>> diff --git a/arch/powerpc/include/asm/qspinlock_paravirt.h b/arch/powerpc/include/asm/qspinlock_paravirt.h
+>> new file mode 100644
+>> index 000000000000..750d1b5e0202
+>> --- /dev/null
+>> +++ b/arch/powerpc/include/asm/qspinlock_paravirt.h
+>> @@ -0,0 +1,7 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>> +#ifndef __ASM_QSPINLOCK_PARAVIRT_H
+>> +#define __ASM_QSPINLOCK_PARAVIRT_H
+> _ASM_POWERPC_QSPINLOCK_PARAVIRT_H please.
+>
+>> +
+>> +EXPORT_SYMBOL(__pv_queued_spin_unlock);
+> Why's that in a header? Should that (eventually) go with the generic implementation?
+The PV qspinlock implementation is not that generic at the moment. Even 
+though native qspinlock is used by a number of archs, PV qspinlock is 
+only currently used in x86. This is certainly an area that needs 
+improvement.
+>> diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
+>> index 24c18362e5ea..756e727b383f 100644
+>> --- a/arch/powerpc/platforms/pseries/Kconfig
+>> +++ b/arch/powerpc/platforms/pseries/Kconfig
+>> @@ -25,9 +25,14 @@ config PPC_PSERIES
+>>   	select SWIOTLB
+>>   	default y
+>>   
+>> +config PARAVIRT_SPINLOCKS
+>> +	bool
+>> +	default n
+> default n is the default.
+>
+>> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+>> index 2db8469e475f..747a203d9453 100644
+>> --- a/arch/powerpc/platforms/pseries/setup.c
+>> +++ b/arch/powerpc/platforms/pseries/setup.c
+>> @@ -771,8 +771,12 @@ static void __init pSeries_setup_arch(void)
+>>   	if (firmware_has_feature(FW_FEATURE_LPAR)) {
+>>   		vpa_init(boot_cpuid);
+>>   
+>> -		if (lppaca_shared_proc(get_lppaca()))
+>> +		if (lppaca_shared_proc(get_lppaca())) {
+>>   			static_branch_enable(&shared_processor);
+>> +#ifdef CONFIG_PARAVIRT_SPINLOCKS
+>> +			pv_spinlocks_init();
+>> +#endif
+>> +		}
+> We could avoid the ifdef with this I think?
+>
+> diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
+> index 434615f1d761..6ec72282888d 100644
+> --- a/arch/powerpc/include/asm/spinlock.h
+> +++ b/arch/powerpc/include/asm/spinlock.h
+> @@ -10,5 +10,9 @@
+>   #include <asm/simple_spinlock.h>
+>   #endif
+>
+> +#ifndef CONFIG_PARAVIRT_SPINLOCKS
+> +static inline void pv_spinlocks_init(void) { }
+> +#endif
+> +
+>   #endif /* __KERNEL__ */
+>   #endif /* __ASM_SPINLOCK_H */
+>
+>
+> cheers
+>
+We don't really need to do a pv_spinlocks_init() if pv_kick() isn't 
+supported.
+
+Cheers,
+Longman
+
