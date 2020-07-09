@@ -2,106 +2,328 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F9CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD872C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC60E2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594309009;
-	bh=ueL6sQO9ro3ww5u2ZGZQH4gfy/GTjuo0cXBScpidbA0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=itK4zanWYEcHGdDKeLJZNO/wV5WP0JuMxxt+8yFKqnDgDRfbBsBB1vdabs0AXXX6m
-	 V1h0GAB/r2Gn/RKLbbP5LRMyvfjRVxmYYaHxrmXrcVIZvt+w1fv89NevjYlzdibQv5
-	 18plNrwjV3bYFE3/P+GtPvl0HvwEe2sdmgZUSOeQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9633020720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:37:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mnLqwOIU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgGIPgr (ORCPT
+        id S1728041AbgGIPhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57242 "EHLO
+        Thu, 9 Jul 2020 11:37:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgGIPgr (ORCPT
+        with ESMTP id S1726460AbgGIPhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:36:47 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6330DC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 08:36:47 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id t198so2208696oie.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 08:36:47 -0700 (PDT)
+        Thu, 9 Jul 2020 11:37:25 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315A2C08C5CE;
+        Thu,  9 Jul 2020 08:37:25 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ls15so1289384pjb.1;
+        Thu, 09 Jul 2020 08:37:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SVjAMTDUKFALK0qpTqn84ZrDkdKOkYoKEkZi0Af6a4g=;
-        b=clTbhabYBx3gc82LSf9yDfTlYyYtoC6tVmbvqY9wjcSKN/Vg2T+OSVQMO9TaEgtJgo
-         LckxP8J/RxjcVLx08XjHurp5Ryxx9jC7r2vVOQckau6TZYrCdYPJ8laaTDPUuqBhqr5S
-         L8sr+x/whquSBt6V9c8Gwa44yfrlDNoCcf32U=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w7Ubvg8e4zQNRdPMZFAOJHoQs4EP5RxpwlppI/L4fWY=;
+        b=mnLqwOIUc0256uzhoNrPwY9e5iUO3z3xTNu0NVvh88SixdQHzfZwqYpXZ+0AslLx/K
+         RRLA4WyPd4US0zEc84eEvCSHr+TSf3H+bufyh0QESS8vn92CbutSZjZvVTGNA6PaOo0v
+         QvVjiBO1QbG0vje32ngNnAqlocP+Uz/uXYu90v+evzVt9F4WM5SQ3GZ0DhSVqp/cq2bs
+         45NrKmNK2HMOxc0NueSKcjX+k4fIeKbE+hDvx7LItGckhwHoJ9sp0gQG9vUIeDy6xkX0
+         9v7EvirdaJAb6SBzmtS9R8LZRifsXalQ0entH4WvcABFIyR+AcZTFX1fQNemepQ3ES89
+         kUqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SVjAMTDUKFALK0qpTqn84ZrDkdKOkYoKEkZi0Af6a4g=;
-        b=mI41CQ5IYQIeEVWPmhHgSNeYnp3j0nJ7pBjDA8cn9zLZoot8Mbiw3NYeB/6WJcK7Hb
-         Zi2rLudxjJZtwb5h6Go+N0E7nyru5bIiYUE9E9x+JerPV0KUnYYG8PEorqhS6pxhG27x
-         vRQdCdAMFlS31UbT7t8NvHg6u7uL76cFkU1YfHFm5Y/PgU1n9d/hUDf8APy/YLTX/OjY
-         TF5h1HOw1Q/FAIf+3Tu6UOAYG3G+/W/nIMHrp8W1LopqlxCxYIhQ21aX4dWIAjYca5+P
-         nOTO/o1snpGnDbBRr7u31OTDPcY44RsPEWWLvMdWW+/8u8eEldGHwgc+0ZeKpWl6YPE6
-         QKmA==
-X-Gm-Message-State: AOAM531j35lQFIjEhrott87xVle6eGUcPe7fVEmNJEvasblkrTZnkPiN
-        sj8MFmMoO0d2GRyjCjqziriATA==
-X-Google-Smtp-Source: ABdhPJz+ltVpAZ8QFMjs5UJ/cBz4tssapZ8j9FfPZ66zH14x9Gv0y0kopZuy/2J2c+EXe6QMXkMBjQ==
-X-Received: by 2002:aca:cd50:: with SMTP id d77mr532501oig.29.1594309006834;
-        Thu, 09 Jul 2020 08:36:46 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id l23sm643270oot.41.2020.07.09.08.36.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 08:36:46 -0700 (PDT)
-Subject: Re: [selftests] 7cb32086e5:
- kernel-selftests.x86.check_initial_reg_state_32.fail
-To:     kernel test robot <rong.a.chen@intel.com>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200709064946.GQ3874@shao2-debian>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <9cfe8123-9cd7-a6ec-f73b-3252d695a387@linuxfoundation.org>
-Date:   Thu, 9 Jul 2020 09:36:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w7Ubvg8e4zQNRdPMZFAOJHoQs4EP5RxpwlppI/L4fWY=;
+        b=CjlvM4C3g8ZtS+1DuFSZugN8ixdeSj7ZS4pBtE81uugrQeZR/0hJASdJENjqQiMR6A
+         b8pmi3s7ZEMARvrwKzQiypUgkjJ24EPIGijHaHb+o6mQo94IA6KIRUNnXkN3xrGq1yka
+         DJI8VzTo/dLIT/tC4Oe/OzZhByWTt6QzsMvITR9XOMp2VQT9BeBTADiG+jkgPK9MEAjX
+         WguZMp8qOlNTYhgVNXN7Xw9tifO4sY8/w7XTki0JfBevErxI6N6Rl26aZ0AlmogNi+PY
+         LKoFnjzHU644trQRJdxyQM89LK0j52EZmyPRVQlCMFND80NxSu7KpEs3+q0swiMlp3SR
+         euIQ==
+X-Gm-Message-State: AOAM531P7+Q5Acln2hgHSKy7ideqqtns9D6hBuLm4D+NGzgZTaPrMEIk
+        5CgWxvvK36S4M+9N0um+Y+VUXMPn6iQ5DB5+T+M=
+X-Google-Smtp-Source: ABdhPJwSIb2mCf7y9jWBwxvwEVXI/jcfu33HDPP/ejPHESI+6eNys6v3UUWEzXY8sccdw1wmI6vSa0FD5uExN+uLaoA=
+X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr642166pjb.129.1594309044632;
+ Thu, 09 Jul 2020 08:37:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200709064946.GQ3874@shao2-debian>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200709134829.216393-1-mans0n@gorani.run>
+In-Reply-To: <20200709134829.216393-1-mans0n@gorani.run>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Jul 2020 18:37:08 +0300
+Message-ID: <CAHp75VenQVhgkH7FORFAb5WJaBB-s2ktoKR+3xCeA=y7b90oFw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] gpio: add GPO driver for PCA9570
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michael Walle <michael@walle.cc>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/20 12:49 AM, kernel test robot wrote:
-> Greeting,
-> 
-> FYI, we noticed the following commit (built with gcc-9):
-> 
-> commit: 7cb32086e59b514a832a3e11f5370d37e7cfe022 ("selftests: simplify run_tests")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> 
-> 
+On Thu, Jul 9, 2020 at 4:48 PM Sungbo Eo <mans0n@gorani.run> wrote:
+>
+> NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
+> Its ports are controlled only by a data byte without register address.
+>
 
-Thanks for the report. I will drop this patch for now from next.
+LGTM, thanks!
 
-Yauheni,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-This patch broke x86 32-bit test run
-make run_tests -C x86
+> Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> ---
+> v6:
+> * removed client
+> * re-added mutex
+> * removed template_chip
+>
+> v5:
+> * amended the commit message
+> * removed unnecessary castings
+> * added data to of_match_table
+>
+> v4:
+> * removed ->direction_input() and ->direction_output()
+>   (Seems unnecessary to me)
+> * removed ->set_multiple()
+>   (I'm not sure this implementation is really correct)
+> * added ->get()
+>   (DS says we can read the status from the device)
+> * read current status during probe
+>
+> v3:
+> * remove mutex
+> * rename buffer to out
+> * simplify return statements
+> * replace ->probe() to ->probe_new()
+> * move ngpio to driver_data
+>   (PCA9571 is 8-bit so I thought making ngpio configurable is a good idea)
+>
+> v2:
+> * move the direction functions below the set functions
+> * use devm_gpiochip_add_data() and remove the remove callback
+>
+> v1:
+> Tested in kernel 5.4 on an ipq40xx platform.
+>
+> This is my first time submitting a whole driver patch, and I'm not really
+> familiar with this PCA expander series.
+> Please let me know how I can improve this patch further.
+>
+> FYI there's an unmerged patch for this chip.
+> http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
+> I don't have PCA9571 either so I didn't add support for it.
+> ---
+>  drivers/gpio/Kconfig        |   8 ++
+>  drivers/gpio/Makefile       |   1 +
+>  drivers/gpio/gpio-pca9570.c | 146 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 155 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-pca9570.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index c6b5c65c8405..d10dcb81b841 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
+>           Say yes here to enable the pca953x to be used as an interrupt
+>           controller. It requires the driver to be built in the kernel.
+>
+> +config GPIO_PCA9570
+> +       tristate "PCA9570 4-Bit I2C GPO expander"
+> +       help
+> +         Say yes here to enable the GPO driver for the NXP PCA9570 chip.
+> +
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called gpio-pca9570.
+> +
+>  config GPIO_PCF857X
+>         tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
+>         select GPIOLIB_IRQCHIP
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 1e4894e0bf0f..33cb40c28a61 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)           += gpio-octeon.o
+>  obj-$(CONFIG_GPIO_OMAP)                        += gpio-omap.o
+>  obj-$(CONFIG_GPIO_PALMAS)              += gpio-palmas.o
+>  obj-$(CONFIG_GPIO_PCA953X)             += gpio-pca953x.o
+> +obj-$(CONFIG_GPIO_PCA9570)             += gpio-pca9570.o
+>  obj-$(CONFIG_GPIO_PCF857X)             += gpio-pcf857x.o
+>  obj-$(CONFIG_GPIO_PCH)                 += gpio-pch.o
+>  obj-$(CONFIG_GPIO_PCIE_IDIO_24)                += gpio-pcie-idio-24.o
+> diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
+> new file mode 100644
+> index 000000000000..cb2b2f735c15
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-pca9570.c
+> @@ -0,0 +1,146 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Driver for PCA9570 I2C GPO expander
+> + *
+> + * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
+> + *
+> + * Based on gpio-tpic2810.c
+> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
+> + *     Andrew F. Davis <afd@ti.com>
+> + */
+> +
+> +#include <linux/gpio/driver.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/property.h>
+> +
+> +/**
+> + * struct pca9570 - GPIO driver data
+> + * @chip: GPIO controller chip
+> + * @lock: Protects write sequences
+> + * @out: Buffer for device register
+> + */
+> +struct pca9570 {
+> +       struct gpio_chip chip;
+> +       struct mutex lock;
+> +       u8 out;
+> +};
+> +
+> +static int pca9570_read(struct pca9570 *gpio, u8 *value)
+> +{
+> +       struct i2c_client *client = to_i2c_client(gpio->chip.parent);
+> +       int ret;
+> +
+> +       ret = i2c_smbus_read_byte(client);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       *value = ret;
+> +       return 0;
+> +}
+> +
+> +static int pca9570_write(struct pca9570 *gpio, u8 value)
+> +{
+> +       struct i2c_client *client = to_i2c_client(gpio->chip.parent);
+> +
+> +       return i2c_smbus_write_byte(client, value);
+> +}
+> +
+> +static int pca9570_get_direction(struct gpio_chip *chip,
+> +                                unsigned offset)
+> +{
+> +       /* This device always output */
+> +       return GPIO_LINE_DIRECTION_OUT;
+> +}
+> +
+> +static int pca9570_get(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       struct pca9570 *gpio = gpiochip_get_data(chip);
+> +       u8 buffer;
+> +       int ret;
+> +
+> +       ret = pca9570_read(gpio, &buffer);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return !!(buffer & BIT(offset));
+> +}
+> +
+> +static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
+> +{
+> +       struct pca9570 *gpio = gpiochip_get_data(chip);
+> +       u8 buffer;
+> +       int ret;
+> +
+> +       mutex_lock(&gpio->lock);
+> +
+> +       buffer = gpio->out;
+> +       if (value)
+> +               buffer |= BIT(offset);
+> +       else
+> +               buffer &= ~BIT(offset);
+> +
+> +       ret = pca9570_write(gpio, buffer);
+> +       if (ret)
+> +               goto out;
+> +
+> +       gpio->out = buffer;
+> +
+> +out:
+> +       mutex_unlock(&gpio->lock);
+> +}
+> +
+> +static int pca9570_probe(struct i2c_client *client)
+> +{
+> +       struct pca9570 *gpio;
+> +
+> +       gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
+> +       if (!gpio)
+> +               return -ENOMEM;
+> +
+> +       gpio->chip.label = client->name;
+> +       gpio->chip.parent = &client->dev;
+> +       gpio->chip.owner = THIS_MODULE;
+> +       gpio->chip.get_direction = pca9570_get_direction;
+> +       gpio->chip.get = pca9570_get;
+> +       gpio->chip.set = pca9570_set;
+> +       gpio->chip.base = -1;
+> +       gpio->chip.ngpio = (uintptr_t)device_get_match_data(&client->dev);
+> +       gpio->chip.can_sleep = true;
+> +
+> +       mutex_init(&gpio->lock);
+> +
+> +       /* Read the current output level */
+> +       pca9570_read(gpio, &gpio->out);
+> +
+> +       i2c_set_clientdata(client, gpio);
+> +
+> +       return devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
+> +}
+> +
+> +static const struct i2c_device_id pca9570_id_table[] = {
+> +       { "pca9570", 4 },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
+> +
+> +static const struct of_device_id pca9570_of_match_table[] = {
+> +       { .compatible = "nxp,pca9570", .data = (void *)4 },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
+> +
+> +static struct i2c_driver pca9570_driver = {
+> +       .driver = {
+> +               .name = "pca9570",
+> +               .of_match_table = pca9570_of_match_table,
+> +       },
+> +       .probe_new = pca9570_probe,
+> +       .id_table = pca9570_id_table,
+> +};
+> +module_i2c_driver(pca9570_driver);
+> +
+> +MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
+> +MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.27.0
+>
 
-Please resubmit the patch with the fix.
 
-thanks,
--- Shuah
+-- 
+With Best Regards,
+Andy Shevchenko
