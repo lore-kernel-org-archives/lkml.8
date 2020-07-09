@@ -2,172 +2,102 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB28C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04E4520663
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5549220663
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="CLcNAi0l"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JcHZUwlb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lgcsJg/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgGIKOc (ORCPT
+        id S1727044AbgGIKOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:14:32 -0400
-Received: from mga02.intel.com ([134.134.136.20]:21900 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbgGIKOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:14:24 -0400
-IronPort-SDR: jKjKQKijU88SU4nWFA2ZN4xxp8G4rNxUbGxFuSGmZhTqJtoK7Wr6pBNN3cwarCobs860IMazLQ
- O8WWlfu0Pz1w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="136195882"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="136195882"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 03:14:21 -0700
-IronPort-SDR: 2e1UV1lYBoHM0FE94X48mHA7nqMvdq5n6m0VjfoURsaQrk0w8bWy83iEV6Mr7N9qPevMtWVJtH
- X4gsSfRpBzjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="457854466"
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by orsmga005.jf.intel.com with ESMTP; 09 Jul 2020 03:14:21 -0700
-Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jul 2020 03:14:20 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX111.amr.corp.intel.com (10.22.240.12) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jul 2020 03:14:20 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jul 2020 03:14:20 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cJa8sE6d/64mfcJPbbLX1l31X/Ns1VJ2sTyUL7c2MFtcl0xybI+auIvjR5SdltiZydhSB3owJAbm/oBY8dedPmqv9LfNuum0r7fGSfItKFDvU9YiRFHki9nhTKIiKyO2cs5P/08PvtHtU7YeKDFJsMTrMZvshM3lpV4k150/J3zS3VHXDdL6yp/yx+RaucMeQ4dMIYDOtrHTjquXNLR32KAUsumeTePms1EfuB+UPmwCrVDS3PQvrnF+GVLT1oXZYcGfqdE3Tr9u7FBz1tQPe4WBrSm4v62Wc0BLKPZel8umVNE0vyI5mY8Pnrt4I3tLRKFyMJsph5TY7VBOWziJRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HTklAgqCGmi/DoH1uFoBiE3CNy6qOx4AD3JLj/CN/Ew=;
- b=Zc9U91T4fW0VYj3yjdcaaVuIxOby8TolZngmiWPFp7cdl4k5PTUlGSA1TYfmfWlezCRc5/EDwGOc7O1aoNUxLavIZuFPCXXTwD6YLP/pRz7xu2CyehtHHAu16zvclEZ59h4d4/0zxIlCMdjCeig5e7NFk97/+SimpJDU3TBUteeNeZiFuMHpZPmb/4Z09aBt5hi5eYpbF4mFA5Ip3z7WNQyBOZyP65QdSRpTg4A76UMVC+cU9On1P2Q1ffsaSvCJ6LNjg5C8iPK7zkSKIbtdWTS3U58hdXTdBHUqKp79AztDO8yULvFuPBwKSA67hxpqV0yq0pcptg/QOwVbkqldpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HTklAgqCGmi/DoH1uFoBiE3CNy6qOx4AD3JLj/CN/Ew=;
- b=CLcNAi0lihaB+I+exyepCVaLIdjtyS1FhxmGP0DWSmqZuVraXHrns5izbOxfnMrscwVdz2KzslFzaHxwBvcmGYUQj3fyyQvevK9sXbfUuLv6xAkJloGReqD/M1O+fjM1EUEJXV5dyWbPhhu0dJhh3a9J5R4FojrGva6m0TNR2I8=
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
- by DM5PR11MB1770.namprd11.prod.outlook.com (2603:10b6:3:10d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Thu, 9 Jul
- 2020 10:14:17 +0000
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::c1c1:6930:f17d:a80a]) by DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::c1c1:6930:f17d:a80a%4]) with mapi id 15.20.3153.031; Thu, 9 Jul 2020
- 10:14:17 +0000
-From:   "Wu, Hao" <hao.wu@intel.com>
-To:     "Xu, Yilun" <yilun.xu@intel.com>
-CC:     "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "trix@redhat.com" <trix@redhat.com>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        "Weight, Russell H" <russell.h.weight@intel.com>
-Subject: RE: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
-Thread-Topic: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
-Thread-Index: AQHWVcomDnRuf5Ios0uozSMTJLBb7aj+8y7ggAAJzICAAAjeAA==
-Date:   Thu, 9 Jul 2020 10:14:16 +0000
-Message-ID: <DM6PR11MB3819D07348C347B5BB8F86C085640@DM6PR11MB3819.namprd11.prod.outlook.com>
-References: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
- <DM6PR11MB3819117029F124067F7EA8B985640@DM6PR11MB3819.namprd11.prod.outlook.com>
- <20200709093527.GA32541@yilunxu-OptiPlex-7050>
-In-Reply-To: <20200709093527.GA32541@yilunxu-OptiPlex-7050>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.192]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cb6b1101-420b-4b8a-f134-08d823f0d67d
-x-ms-traffictypediagnostic: DM5PR11MB1770:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB1770F1A275D8EC8FC4ED2E5D85640@DM5PR11MB1770.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5pk8EBfNpkUr06ALKIJhpNuiH37JZFeSYIpms2TBG3bT0FVU+A40EyTvjC9+8V9SMvOcW2pguyrulJOBnXB4A53vPm9UXPFx3iVex9D0mptxf0koyq3JWaCrv8JiSzkyWsAorGxPB8H4OJNDHCWLOruaBuG51Y+4IPlPnEoxy1/anAbt/ikJyusBypfYK0nlGCNyV2ROxdvuastnmSGyv0YPEaSRxtuDb+rkLT8ecxcN5niuQ3hNB3b07j13+PjEYRciBkyZ+pRtbAz8eY+3wUQD2hLXw1zxtaKdaxq8fT3jd9mPbpPYxgJy/v2QrakqbjAiJLOK87xoaJzLeqmK0g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(396003)(366004)(136003)(54906003)(9686003)(7696005)(86362001)(186003)(55016002)(6636002)(71200400001)(6862004)(33656002)(66476007)(5660300002)(4326008)(66446008)(66556008)(76116006)(64756008)(6506007)(66946007)(2906002)(478600001)(52536014)(26005)(316002)(8676002)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: jT8oKyXOYl77DH/0ZgVGidV5cpGTAPkcwjH3qRMtKDrzKIG7UXpDJw7BrA5PHhDnbEsWwsv7vbVx0ssT5yF0QeZ+hEMahgKFt7MLgFBfJLFSjEe0He7o6k6KkzpKWSCfBm17CaVyrC7xfv77ktvyzpL88oDh0gm+mei9oUFOtWxGTGSulu6toK7/DjoPgAalRvH52KStAq5F6ynVGZg7eTbB0GU/PRMU/UsjQtM7CBTzrsdPBmvGHVr/4aA44/V/WVmnFuLy6WC+B606gLV/EldgTLsgLXvbwNLw51MZBqSOaAim12EhI+YrcJFdf3nb0BS4jvbEf5YA9EnmyW6VHVWwKcz2Vzjszz7deaVQ7JpQelvW/r3h97AM56cOER3hEgF2ihE79Y7UoISE7VPiLPLREp/AcKXdROjvpxK9x32w+cmX2QPjt3ymFvINTeVoOSfvdoS52byuzzaXmT+HVXFU8VUXyuDqlV0vpZWtB5ICX0641DPsmsBVtmSvGsu1
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jul 2020 06:14:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgGIKOh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:14:37 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E61C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 03:14:37 -0700 (PDT)
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594289676;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4/mCOxVYJ4n0oB0ZB0WRxwRIYUtbkPESeBsNlGw32VU=;
+        b=JcHZUwlbAzZn59n3+yN2qodxJ3lXo0GrI5oMRjmNttGtwuZZTL+pWwyNo82Hv5YFTQcRnZ
+        74wSZcrW37ELIkyKWhGUD9OUtH4KziXkYs2IUwMr9PrSxhKBvxNR57vkkSsMsupSJrvVd6
+        FMz5MRSWEiEOQLIIRHcowfo8deS5AXkIPjJG10eCD3MYrMXwFSOxaCAMp+9zfFX0+omqE5
+        DoSdkyZdU5EPCrZJ1eAV4dflFvt9q/4yToCBsXFm7+qTqpHnCO3HroxNuEVcxPigqrM7An
+        QvS7HWWyc7ouOOxcagh3VWkY3ruryucuvLNTuOjIXFwuMyxOWX4tsrrJs7DEfQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594289676;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4/mCOxVYJ4n0oB0ZB0WRxwRIYUtbkPESeBsNlGw32VU=;
+        b=lgcsJg/Ol5HElM9gN1u7Y8VbHxigLDV3SpMTnjoW5I8C0OPC0U+CYniJVGBYfTWQ3juqq+
+        x72gL/3ErLI711AA==
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        kernel test robot <rong.a.chen@intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, lkp@lists.01.org
+Subject: Re: [printk] 18a2dc6982: ltp.kmsg01.fail
+In-Reply-To: <20200709083323.GA572@jagdpanzerIV.localdomain>
+References: <20200707145932.8752-5-john.ogness@linutronix.de> <20200709071411.GR3874@shao2-debian> <20200709083323.GA572@jagdpanzerIV.localdomain>
+Date:   Thu, 09 Jul 2020 12:20:35 +0206
+Message-ID: <874kqhm1v8.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3819.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb6b1101-420b-4b8a-f134-08d823f0d67d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 10:14:16.9447
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qtlgWAAuIhJ6sLzAm9J+vscVDsqLaL14isVzmXw8YuUaenRl+H7VwplFht66Q2rGYVRFQ1lCD4nTRa1BiV75OQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1770
-X-OriginatorOrg: intel.com
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thu, Jul 09, 2020 at 05:10:49PM +0800, Wu, Hao wrote:
-> > > Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N30=
-00
-> > >
-> > > Add PCIe Device ID for Intel FPGA PAC N3000.
-> > >
-> > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> > > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> > > ---
-> > >  drivers/fpga/dfl-pci.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> > > index 73b5153..824aecf 100644
-> > > --- a/drivers/fpga/dfl-pci.c
-> > > +++ b/drivers/fpga/dfl-pci.c
-> > > @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev=
-)
-> > >  #define PCIE_DEVICE_ID_PF_INT_5_X0xBCBD
-> > >  #define PCIE_DEVICE_ID_PF_INT_6_X0xBCC0
-> > >  #define PCIE_DEVICE_ID_PF_DSC_1_X0x09C4
-> > > +#define PCIE_DEVICE_ID_PF_PAC_N3000 0x0B30
-> >
-> > Should we drop _PF_ here? and also do you want _INTEL_ here?
->=20
-> I think we could keep _PF_, also there is no need to support VF of pac
-> n3000 in product now, but it does exist (ID: 0x0b31).
->=20
-> And add _INTEL_ is good to me.
->=20
-> Then how about this one:
->   #define PCIE_DEVICE_ID_PF_INTEL_PAC_N3000	0x0B30
+On 2020-07-09, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
+> On (20/07/09 15:14), kernel test robot wrote:
+> [..]
+>
+> Took me a while to find the FAIL-ed test:
+>
+>> kmsg01.c:393: INFO: TEST: read returns EPIPE when messages get overwritten
+>> kmsg01.c:398: INFO: first seqno: 0
+>> kmsg01.c:411: INFO: first seqno now: 881
+>> kmsg01.c:425: FAIL: read returned: 77: SUCCESS (0)
+>
+> So this is seq number related
+> https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/logging/kmsg/kmsg01.c#L383
 
-I am just considering the alignment with ids defined in include/linux/pci_i=
-ds.h
-So drop _PF_ before _INTEL_ would be better? : )
+Excellent test.
 
-Thanks
-Hao
+Since the messages are above the expected average size, the dataring is
+wrapping before the descriptor ring. This means that the initial
+descriptors are still there, but their data is gone. Initially I would
+generate an EPIPE for this, but it was changed. Here is the thread [0]
+we had about this.
+
+I have some ideas how to correctly handle this. Let me try some
+alternatives and post a proposed solution.
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/20200213090757.GA36551@google.com
