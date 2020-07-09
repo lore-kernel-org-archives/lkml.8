@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02442C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A13C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB6C32080D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F24F20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgGICHh (ORCPT
+        id S1726106AbgGICHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 22:07:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:52636 "EHLO foss.arm.com"
+        Wed, 8 Jul 2020 22:07:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:52698 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbgGICHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 22:07:37 -0400
+        id S1726072AbgGICHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 22:07:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3574311FB;
-        Wed,  8 Jul 2020 19:07:36 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 501621396;
+        Wed,  8 Jul 2020 19:07:46 -0700 (PDT)
 Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.212.213])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 67D5A3F887;
-        Wed,  8 Jul 2020 19:07:26 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B5F703F887;
+        Wed,  8 Jul 2020 19:07:36 -0700 (PDT)
 From:   Jia He <justin.he@arm.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
@@ -53,10 +53,11 @@ Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Jia He <justin.he@arm.com>
-Subject: [PATCH v3 5/6] device-dax: use fallback nid when numa_node is invalid
-Date:   Thu,  9 Jul 2020 10:06:28 +0800
-Message-Id: <20200709020629.91671-6-justin.he@arm.com>
+        Kaly Xin <Kaly.Xin@arm.com>, Jia He <justin.he@arm.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v3 6/6] mm/memory_hotplug: fix unpaired mem_hotplug_begin/done
+Date:   Thu,  9 Jul 2020 10:06:29 +0800
+Message-Id: <20200709020629.91671-7-justin.he@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200709020629.91671-1-justin.he@arm.com>
 References: <20200709020629.91671-1-justin.he@arm.com>
@@ -65,81 +66,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-numa_off is set unconditionally at the end of dummy_numa_init(),
-even with a fake numa node. ACPI detects node id as NUMA_NO_NODE(-1) in
-acpi_map_pxm_to_node() because it regards numa_off as turning off the numa
-node. Hence dev_dax->target_node is NUMA_NO_NODE on arm64 with fake numa.
+When check_memblock_offlined_cb() returns failed rc(e.g. the memblock is
+online at that time), mem_hotplug_begin/done is unpaired in such case.
 
-Without this patch, pmem can't be probed as a RAM device on arm64 if SRAT table
-isn't present:
-$ndctl create-namespace -fe namespace0.0 --mode=devdax --map=dev -s 1g -a 64K
-kmem dax0.0: rejecting DAX region [mem 0x240400000-0x2bfffffff] with invalid node: -1
-kmem: probe of dax0.0 failed with error -22
+Therefore a warning:
+ Call Trace:
+  percpu_up_write+0x33/0x40
+  try_remove_memory+0x66/0x120
+  ? _cond_resched+0x19/0x30
+  remove_memory+0x2b/0x40
+  dev_dax_kmem_remove+0x36/0x72 [kmem]
+  device_release_driver_internal+0xf0/0x1c0
+  device_release_driver+0x12/0x20
+  bus_remove_device+0xe1/0x150
+  device_del+0x17b/0x3e0
+  unregister_dev_dax+0x29/0x60
+  devm_action_release+0x15/0x20
+  release_nodes+0x19a/0x1e0
+  devres_release_all+0x3f/0x50
+  device_release_driver_internal+0x100/0x1c0
+  driver_detach+0x4c/0x8f
+  bus_remove_driver+0x5c/0xd0
+  driver_unregister+0x31/0x50
+  dax_pmem_exit+0x10/0xfe0 [dax_pmem]
 
-This fixes it by using fallback memory_add_physaddr_to_nid() as nid.
-
-Suggested-by: David Hildenbrand <david@redhat.com>
+Fixes: f1037ec0cc8a ("mm/memory_hotplug: fix remove_memory() lockdep splat")
+Cc: stable@vger.kernel.org # v5.6+
 Signed-off-by: Jia He <justin.he@arm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/dax/kmem.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ mm/memory_hotplug.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 275aa5f87399..218f66057994 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -31,22 +31,23 @@ int dev_dax_kmem_probe(struct device *dev)
- 	int numa_node;
- 	int rc;
- 
-+	/* Hotplug starting at the beginning of the next block: */
-+	kmem_start = ALIGN(res->start, memory_block_size_bytes());
-+
- 	/*
- 	 * Ensure good NUMA information for the persistent memory.
- 	 * Without this check, there is a risk that slow memory
- 	 * could be mixed in a node with faster memory, causing
--	 * unavoidable performance issues.
-+	 * unavoidable performance issues. Furthermore, fallback node
-+	 * id can be used when numa_node is invalid.
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index b49ab743d914..3e0645387daf 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1752,7 +1752,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
  	 */
- 	numa_node = dev_dax->target_node;
- 	if (numa_node < 0) {
--		dev_warn(dev, "rejecting DAX region %pR with invalid node: %d\n",
--			 res, numa_node);
--		return -EINVAL;
-+		numa_node = memory_add_physaddr_to_nid(kmem_start);
-+		dev_info(dev, "using nid %d for DAX region with undefined nid %pR\n",
-+			numa_node, res);
- 	}
+ 	rc = walk_memory_blocks(start, size, NULL, check_memblock_offlined_cb);
+ 	if (rc)
+-		goto done;
++		return rc;
  
--	/* Hotplug starting at the beginning of the next block: */
--	kmem_start = ALIGN(res->start, memory_block_size_bytes());
--
- 	kmem_size = resource_size(res);
- 	/* Adjust the size down to compensate for moving up kmem_start: */
- 	kmem_size -= kmem_start - res->start;
-@@ -100,15 +101,19 @@ static int dev_dax_kmem_remove(struct device *dev)
- 	resource_size_t kmem_start = res->start;
- 	resource_size_t kmem_size = resource_size(res);
- 	const char *res_name = res->name;
-+	int numa_node = dev_dax->target_node;
- 	int rc;
+ 	/* remove memmap entry */
+ 	firmware_map_remove(start, start + size, "System RAM");
+@@ -1776,9 +1776,8 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
  
-+	if (numa_node < 0)
-+		numa_node = memory_add_physaddr_to_nid(kmem_start);
-+
- 	/*
- 	 * We have one shot for removing memory, if some memory blocks were not
- 	 * offline prior to calling this function remove_memory() will fail, and
- 	 * there is no way to hotremove this memory until reboot because device
- 	 * unbind will succeed even if we return failure.
- 	 */
--	rc = remove_memory(dev_dax->target_node, kmem_start, kmem_size);
-+	rc = remove_memory(numa_node, kmem_start, kmem_size);
- 	if (rc) {
- 		any_hotremove_failed = true;
- 		dev_err(dev,
+ 	try_offline_node(nid);
+ 
+-done:
+ 	mem_hotplug_done();
+-	return rc;
++	return 0;
+ }
+ 
+ /**
 -- 
 2.17.1
 
