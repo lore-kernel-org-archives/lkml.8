@@ -2,99 +2,62 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E86C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC45AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 224A8206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:11:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rvh2OYGd"
+	by mail.kernel.org (Postfix) with ESMTP id C39FE20739
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgGIEK7 (ORCPT
+        id S1726290AbgGIENn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 00:10:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgGIEK6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 00:10:58 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51900C061A0B;
-        Wed,  8 Jul 2020 21:10:58 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2N5C0pPZz9sSt;
-        Thu,  9 Jul 2020 14:10:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594267855;
-        bh=uv4JilNsxh9y2T6w87lzTYRRg5eVqB9fLa64u7SGRu8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rvh2OYGdB6InOgKUkhn0LDHWYXDj5JRynEz77BCpp0EtkUJJmVlVk03bJyc5wifaL
-         VzNz8UOOVLXOBqydCxFOKbz2mm0Zczz3XIKutJAsOZd3aacKjXVOmAN1mDLCTkaPHF
-         UnPIj1vosCknBZ0rQkhzGLQA7MkgpI4vDNsyoboquhYVjgHKlvLJhtgrHzBNldz5a2
-         uWCmV/30dtnlMqcRj77PhqUZ10fOwD4wV5q6zuuCgqND3P++J1UQRKh0VyPkDVHEQo
-         +flElEA6Z9R9sdbfIMqVoP5qRIlMIrj7uHQGMlaKd+CFVWVSqNxMQOm1cmKEuGwDeE
-         m0qnRM3ahascg==
-Date:   Thu, 9 Jul 2020 14:10:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peng Fan <fanpeng@loongson.cn>
-Subject: linux-next: build warning after merge of the spi tree
-Message-ID: <20200709141054.1b65be9d@canb.auug.org.au>
+        Thu, 9 Jul 2020 00:13:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60228 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbgGIENn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 00:13:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 08AB6AF1A;
+        Thu,  9 Jul 2020 04:13:42 +0000 (UTC)
+Subject: Re: [patch V2 7/7] x86/kvm/vmx: Use native read/write_cr2()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        kvm@vger.kernel.org,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20200708195153.746357686@linutronix.de>
+ <20200708195322.344731916@linutronix.de>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <6a465bb4-1e2e-7ad5-4842-00b07edd10cd@suse.com>
+Date:   Thu, 9 Jul 2020 06:13:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CeOHfdGiTZk65KNzzWIkKPP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200708195322.344731916@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/CeOHfdGiTZk65KNzzWIkKPP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 08.07.20 21:52, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> read/write_cr2() go throuh the paravirt XXL indirection, but nested VMX in
+> a XEN_PV guest is not supported.
+> 
+> Use the native variants.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Hi all,
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
-After merging the spi tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
 
-drivers/spi/spi-atmel.c: In function 'atmel_spi_probe':
-drivers/spi/spi-atmel.c:1680:1: warning: label 'out_free' defined but not u=
-sed [-Wunused-label]
- 1680 | out_free:
-      | ^~~~~~~~
-
-Introduced by commit
-
-  2d9a744685bc ("spi: atmel: No need to call spi_master_put() if spi_alloc_=
-master() failed")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CeOHfdGiTZk65KNzzWIkKPP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8GmM4ACgkQAVBC80lX
-0GzpEggAmj6NQaO/eilPzVXPR9QsXytLeHQjIWIkoNhnPwX6duq/VK3XSliH6KKH
-ZGT9w8reN+vBa6SojbOxM4UEcqgylNLAsBP0G5GaP3/ieYvDs1lMRoZZ7NaJz3kj
-mUCwJmlQTktExN0UkNSgpI/4DZ1jSq+6k1WaMebxBRbqXINLNldcTrNGSPcFCI2M
-8sFKm/r+cRvyNEQOCEH4b5PrgpwG9NQUCp8A4DvAv0JTFPo+pneBa4Te5JZXyIy1
-6/Wo3cY2hhTeM/Wax7HXlH83/WPkwHUqQD0vHoOJuhKYPffiA4ZUqlyfDKT0/0u8
-8i6VGk6k96GwM0xxo1KVBTbNJz4y1g==
-=I033
------END PGP SIGNATURE-----
-
---Sig_/CeOHfdGiTZk65KNzzWIkKPP--
+Juergen
