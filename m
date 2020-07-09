@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C390EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD89C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93AC320708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6DE20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qUw4vwuS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+v8x9+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgGIODd (ORCPT
+        id S1727978AbgGIODf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:03:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42720 "EHLO
+        Thu, 9 Jul 2020 10:03:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727834AbgGIODa (ORCPT
+        with ESMTP id S1727905AbgGIODb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:03:30 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F52C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 07:03:29 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id q15so1945358wmj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 07:03:29 -0700 (PDT)
+        Thu, 9 Jul 2020 10:03:31 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32651C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 07:03:31 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so1939486wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 07:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ciy3HDqvKk5PARaiKZGCtCw2SjWa+ryFuI+p7pTDJCM=;
-        b=qUw4vwuSn+ptn4MbZwbW/4JcHgMoD6jfSrQjR2v5avUDM1fN1z5f4uplCFgKWNQsqS
-         9aSMrqGg6d4qt8j0eitxmLT/3ywxOWQM76Vt5A3z+Ag+D2q4SDr3vNE+S46BDS2b9Be2
-         p5D8baGzBdcaQyO8TRciSqYeuYLqn94NSm4twhD9ziglGI7ZcFB58mQwu2qAIo+EEdu+
-         lms38xcgyOUDkJ9xnZ4/nLvXWMfCkA7dA9OkWy73/l3JO/RoNhesHEXRB6dITXHboR9Q
-         m8+6N6pmfpBYorORnGQKIASx4qS+ecxsFpajjw/YQ0146QyzAuO5ExH1bD5iu9oHF3v2
-         l1aw==
+        bh=UkW9l8coJNpZK7uX8c6xzFbB2l+pGmfP62kLElQGlUY=;
+        b=W+v8x9+FNPWAzpyi5MQPB137c+NQkkyrDsBman9ISVngwRPnGJzp0t8AEW0o+7nM+F
+         Y00ECIFPX8z+r8390mu7JtnC+/G2lNt/VpETuByq9w66musgFxqBf0G3AFYSx7WAuYpc
+         pol244/MK4olowGHH2GjWw3dMA9gbFkkswKYKkCGNtgNNKS6eyCA06El6ujw7BDlWi6Z
+         jiuplLH27xfXHm5o0Vn/B19yq7/+Y8gdWpWQos668zhdX9d2PevOtHIxvyybq5fRGFRF
+         dZ3YsugPsbm1W7okkJXJ0EADWXPZ4XkRxZ5rAhjCOl/MtP/sGn1sALP/KGND+8h9BxT6
+         F6gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ciy3HDqvKk5PARaiKZGCtCw2SjWa+ryFuI+p7pTDJCM=;
-        b=R9GRn45wbz5qEbLUMkZ+oIuLf/BaJWQrhYfNLrUN3+sScEpGZtIz8iiZC03nTFxmU3
-         9kBbqA8gKeWGnPzaE+mkulKvL9AYuwpeOaAwHwDqZ39Svq71mj/z13gzzmj0s/AyefJR
-         pontn150/6rcqdNrIzp1m8DUGuCi3N5XDN27eRqt7/l63LITumTelVSHlBiyb5kQ25GY
-         z70NgqrJTZu1p7+AII12HJBTXi5XvrM0BZw6R55Kx0XPyWaq5KHrkgoM34Q6EUneVk5c
-         7lwhfpovohiBy0pbmlFfh7s2LwA3G51AagcrFBy5NPvoPb+bGH4OAIC8tql36o9raqEw
-         P8EQ==
-X-Gm-Message-State: AOAM531lgBvd15dEz1duBXmy7OvJYrRzpY9x+86OnscX3z7H+eVwq/F/
-        vEOm3fogwhgou718ubzwrCM=
-X-Google-Smtp-Source: ABdhPJxXQ2zcpVry+tBbqOjdH8BhqmMtk4qHHwoxi4Ph0toh3/O+Dx0OhluRkSrLaCze2KElp1CKFg==
-X-Received: by 2002:a1c:4183:: with SMTP id o125mr134976wma.101.1594303408531;
-        Thu, 09 Jul 2020 07:03:28 -0700 (PDT)
+        bh=UkW9l8coJNpZK7uX8c6xzFbB2l+pGmfP62kLElQGlUY=;
+        b=nuEQVkhDaRDb+1e08oKOjGcnbqlePk3zu7DEDgD7Ec6WVF2TFxmzh1yNQD25e+2Few
+         7kKYfkcN3nx2WVGiNNVaZR6G4mkDaQmtXg+uAvjU22IWhjLBV3/OyDZfo8djIl+1k8Yc
+         DJHHHRQBnJXpwb1S/EjIxoLSXxqDexMeXUL6cqwB6n/LlXomIWBCB59/pqF3JUsiWryN
+         YzGZJ+wstcnMDwYlAX0xzINDu7Wzvpnw2KLleWZxy8E714Eger5JajBMgFX/2Z6aUhbT
+         jjbnfycziGNSxkHMClpT0qgbQH6rBsSG99ojkJEevyD3y/DLLnsv4iKct3BaOaiH4Or9
+         wevw==
+X-Gm-Message-State: AOAM533J7WLNNCP3ud7ua0fuyMMkL6ZfdHI0r2uqPwAYshUW1HfYqZgI
+        KSZlnG5pjzaiHgJXxE/IPmo=
+X-Google-Smtp-Source: ABdhPJwbsZeBCrJpIlgXGSJrKOqiQ7CzbHa36MSGND6Bj1J3HOXltsXkbGpTDH2sVn5b4QQN7SbBjQ==
+X-Received: by 2002:a1c:7413:: with SMTP id p19mr189941wmc.60.1594303409857;
+        Thu, 09 Jul 2020 07:03:29 -0700 (PDT)
 Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id s8sm5545256wru.38.2020.07.09.07.03.27
+        by smtp.gmail.com with ESMTPSA id s8sm5545256wru.38.2020.07.09.07.03.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 07:03:27 -0700 (PDT)
+        Thu, 09 Jul 2020 07:03:29 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
@@ -71,9 +71,9 @@ To:     Rob Herring <robh@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 02/14] drm/panfrost: clean headers in devfreq
-Date:   Thu,  9 Jul 2020 16:03:10 +0200
-Message-Id: <20200709140322.131320-3-peron.clem@gmail.com>
+Subject: [PATCH v3 03/14] drm/panfrost: don't use pfdevfreq.busy_count to know if hw is idle
+Date:   Thu,  9 Jul 2020 16:03:11 +0200
+Message-Id: <20200709140322.131320-4-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200709140322.131320-1-peron.clem@gmail.com>
 References: <20200709140322.131320-1-peron.clem@gmail.com>
@@ -85,40 +85,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't include not required headers and sort them.
+This use devfreq variable that will be lock with spinlock in future
+patches. We should either introduce a function to access this one
+but as devfreq is optional let's just remove it.
 
 Reviewed-by: Steven Price <steven.price@arm.com>
 Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/gpu/drm/panfrost/panfrost_devfreq.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_job.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-index 1b560b903ea6..df7b71da9a84 100644
---- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-@@ -1,18 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright 2019 Collabora ltd. */
-+
-+#include <linux/clk.h>
- #include <linux/devfreq.h>
- #include <linux/devfreq_cooling.h>
- #include <linux/platform_device.h>
- #include <linux/pm_opp.h>
--#include <linux/clk.h>
--#include <linux/regulator/consumer.h>
+diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
+index 7914b1570841..63e32a9f2749 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_job.c
++++ b/drivers/gpu/drm/panfrost/panfrost_job.c
+@@ -581,10 +581,6 @@ int panfrost_job_is_idle(struct panfrost_device *pfdev)
+ 	struct panfrost_job_slot *js = pfdev->js;
+ 	int i;
  
- #include "panfrost_device.h"
- #include "panfrost_devfreq.h"
--#include "panfrost_features.h"
--#include "panfrost_issues.h"
--#include "panfrost_gpu.h"
--#include "panfrost_regs.h"
- 
- static void panfrost_devfreq_update_utilization(struct panfrost_device *pfdev)
- {
+-	/* Check whether the hardware is idle */
+-	if (atomic_read(&pfdev->devfreq.busy_count))
+-		return false;
+-
+ 	for (i = 0; i < NUM_JOB_SLOTS; i++) {
+ 		/* If there are any jobs in the HW queue, we're not idle */
+ 		if (atomic_read(&js->queue[i].sched.hw_rq_count))
 -- 
 2.25.1
 
