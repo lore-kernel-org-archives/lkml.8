@@ -2,123 +2,87 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56A22070E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2061B2070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594336423;
+	bh=1sOuvMmgTIqgfyJhP5qnTqBJYKZkMIqsO/8V4NDTW68=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KhVSHtqfyRWCKy46IZwRQ5bZrMxLvxpUa6G62kJZRghamwSLdzTHBbyELY7tVOUcD
+	 eD1ZVjAtu82ND5TO+gLUhdQhGFHLsrfVERbHXIxQ60ezrj7Rsb/VgrBf2U516D3/sG
+	 /KAGtJRASJjuEWyVYQ6UvHXipKBGV6p0JWh2egBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgGIXNL (ORCPT
+        id S1726725AbgGIXNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:13:11 -0400
-Received: from v6.sk ([167.172.42.174]:36650 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgGIXNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:13:11 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id D9E4B60D1A;
-        Thu,  9 Jul 2020 23:12:39 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v6 1/2] dt-bindings: mfd: Add ENE KB3930 Embedded Controller binding
-Date:   Fri, 10 Jul 2020 01:12:27 +0200
-Message-Id: <20200709231228.11564-2-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200709231228.11564-1-lkundrak@v3.sk>
-References: <20200709231228.11564-1-lkundrak@v3.sk>
+        Thu, 9 Jul 2020 19:13:41 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35461 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgGIXNl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 19:13:41 -0400
+Received: by mail-il1-f194.google.com with SMTP id t18so3516962ilh.2;
+        Thu, 09 Jul 2020 16:13:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qVYJSmIH5pGs/4dhKNiiY1TOXTho3Eq5GDRG0ULpRKU=;
+        b=V7XIFnZuJH+UNp/ReoPeWYAQHb6LdWLXvZeDMdtKNiMUlRge1jaW1bXoM0ITCWcxG2
+         +jpR95Lhc7erG2uOnJlt84dYIwdKWoonrILoBSn4BAx03uVlfUJJfQKoO94Xeerd6tHL
+         5pppKFazt0qP6wWwBi+bIQeYWf9zsfQ+dIyYpfgtUN8FrB0FWxQhVE/AOvkRK1SupYw9
+         CiL+kVYBuauActX8WucXRjzff/qFcWZFAt3759VJF97B6dRG0Zbt8GGeRfXPMv7TrXNm
+         GnRQzsycGh0v4/2YHIN+vdlmDlJZLZp9dNxUsEcqGfKsRT/mSa6qarvJCetkmAkTHyKn
+         8qiQ==
+X-Gm-Message-State: AOAM5330fP7NFfbSlo72vGjKPh4DW/Gu24PIlxCM8NNbMTTPHrzdqPMc
+        /msfaRxlWJWkAflGOB3rUg==
+X-Google-Smtp-Source: ABdhPJwSaf8vHd4K9Dyi8pY6+VkhDEivCPd1Hgh2whPHR6+/lCW9ltyoN1fWo70Xj5XWqmqCNSCjJQ==
+X-Received: by 2002:a92:cece:: with SMTP id z14mr19176614ilq.120.1594336420385;
+        Thu, 09 Jul 2020 16:13:40 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id p84sm2739075ill.64.2020.07.09.16.13.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 16:13:39 -0700 (PDT)
+Received: (nullmailer pid 1073745 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:13:38 -0000
+Date:   Thu, 9 Jul 2020 17:13:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: hwmon: Add Sparx5 temperature sensor
+Message-ID: <20200709231338.GA1073694@bogus>
+References: <20200618135951.25441-1-lars.povlsen@microchip.com>
+ <20200618135951.25441-2-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618135951.25441-2-lars.povlsen@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding document for the ENE KB3930 Embedded Controller.
+On Thu, 18 Jun 2020 15:59:49 +0200, Lars Povlsen wrote:
+> This add the DT binding specification for the Sparx5 temperature
+> sensor.
+> 
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> ---
+>  .../bindings/hwmon/microchip,sparx5-temp.yaml | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/microchip,sparx5-temp.yaml
+> 
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 Reviewed-by: Rob Herring <robh@kernel.org>
-
----
-Changes since v5:
-- s/a I2C bus/an I2C bus/
-
-Changes since v4:
-- Collected Rob's Reviewed-by
-
-Changes since v1:
-- Addressed binding validation failure
----
- .../devicetree/bindings/mfd/ene-kb3930.yaml   | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-
-diff --git a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-new file mode 100644
-index 0000000000000..074243c408910
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/ene-kb3930.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ENE KB3930 Embedded Controller bindings
-+
-+description: |
-+  This binding describes the ENE KB3930 Embedded Controller attached to an
-+  I2C bus.
-+
-+maintainers:
-+  - Lubomir Rintel <lkundrak@v3.sk>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - dell,wyse-ariel-ec  # Dell Wyse Ariel board (3020)
-+      - const: ene,kb3930
-+  reg:
-+    maxItems: 1
-+
-+  off-gpios:
-+    description: GPIO used with the shutdown protocol on Ariel
-+    maxItems: 2
-+
-+  system-power-controller: true
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      embedded-controller@58 {
-+        compatible = "dell,wyse-ariel-ec", "ene,kb3930";
-+        reg = <0x58>;
-+        system-power-controller;
-+
-+        off-gpios = <&gpio 126 GPIO_ACTIVE_HIGH>,
-+                    <&gpio 127 GPIO_ACTIVE_HIGH>;
-+      };
-+    };
-+
-+...
--- 
-2.26.2
-
