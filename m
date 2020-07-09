@@ -2,117 +2,123 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C337EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C614C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C5720672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF7820672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgGINeV (ORCPT
+        id S1727796AbgGINe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:34:21 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:35365 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgGINeU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:34:20 -0400
-Received: by mail-io1-f72.google.com with SMTP id i204so1297039ioa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:34:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=p05GjuBuUuhVaK6rQiY2NHA1lI9V1R73+yWzzZyD7e8=;
-        b=AB+mL9lzwJeWNRtFb36HqJmhBMnbR2rEJRxfN7ckPRmMT2gAfSc507tlk9loFhD4K5
-         EqpmVqvIRsk20j0biHqtNBR1WfVr75a73TH4Pi1F5gz56freEtxwH7Oeckcqx32BACft
-         bcOTbFaxtVK7DvajRt0YcuNyjEY7ACE3BKdaT8ZkUTo9h23uenXSXAEcgWJLPRiECbg3
-         upQ3CtR16d1AwEqTCaa7kHZBUT8khxkDMJyWCbVqkhdyIjK36Q6P13i+bGDBuBSfQ7NI
-         wLHkigzrSQgzX4SdOuSNuzcWyKio4a4dOim4iFZ1rH8D7k4zludwK1VO+9qe2T6CoJ+6
-         zlJQ==
-X-Gm-Message-State: AOAM532k9i66nDuVIzpcp/sJHpVtpnmHKUkab6aoIfjvg8f4+x8K8928
-        sEq+f2cQoLJXMoymtHQ3jUMYmbNGKUKgIkRsGzXz0O6ww19w
-X-Google-Smtp-Source: ABdhPJweJIxvnHtoIc/ZCFh/Lw4RDfki+fZiQDsNEp5e5lueOLWEtrpVn67URn1X0fYs9mny7kZEzev+f/mPU225bQrAvhc/JOVX
+        Thu, 9 Jul 2020 09:34:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:58802 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726497AbgGINe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 09:34:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06B291FB;
+        Thu,  9 Jul 2020 06:34:58 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15A453FA00;
+        Thu,  9 Jul 2020 06:34:51 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: handle case of task_h_load() returning 0
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+References: <20200702144258.19326-1-vincent.guittot@linaro.org>
+ <4198cf3d-308e-feee-91c3-2edfd1748b4c@arm.com>
+ <CAKfTPtBeRXCEWB3dTC8uOqbQ5xaZqQTAeG1EVGEk+pJcYz00sw@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <9a282390-1c81-0e77-9567-116c8777f7b5@arm.com>
+Date:   Thu, 9 Jul 2020 15:34:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1483:: with SMTP id j3mr73454055jak.65.1594301659925;
- Thu, 09 Jul 2020 06:34:19 -0700 (PDT)
-Date:   Thu, 09 Jul 2020 06:34:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001ad77805aa024889@google.com>
-Subject: WARNING in submit_audio_out_urb/usb_submit_urb
-From:   syzbot <syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKfTPtBeRXCEWB3dTC8uOqbQ5xaZqQTAeG1EVGEk+pJcYz00sw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 08/07/2020 11:47, Vincent Guittot wrote:
+> On Wed, 8 Jul 2020 at 11:45, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 02/07/2020 16:42, Vincent Guittot wrote:
+>>> task_h_load() can return 0 in some situations like running stress-ng
+>>> mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+>>> system. The load balance doesn't handle this correctly because
+>>
+>> I guess the issue here is that 'cfs_rq->h_load' in
+>>
+>> task_h_load() {
+>>     struct cfs_rq *cfs_rq = task_cfs_rq(p);
+>>     ...
+>>     return div64_ul(p->se.avg.load_avg * cfs_rq->h_load,
+>>                     cfs_rq_load_avg(cfs_rq) + 1);
+>> }
+>>
+>> is still ~0 (or at least pretty small) compared to se.avg.load_avg being
+>> 1024 and cfs_rq_load_avg(cfs_rq) n*1024 in these lb occurrences.
+>>
+>>> env->imbalance never decreases and it will stop pulling tasks only after
+>>> reaching loop_max, which can be equal to the number of running tasks of
+>>> the cfs. Make sure that imbalance will be decreased by at least 1.
 
-syzbot found the following crash on:
+Looks like it's bounded by sched_nr_migrate (32 on my E5-2690 v2).
 
-HEAD commit:    768a0741 usb: dwc2: gadget: Remove assigned but never used..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=1568d11f100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=999be4eb2478ffa5
-dashboard link: https://syzkaller.appspot.com/bug?extid=c190f6858a04ea7fbc52
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123aa2fb100000
+env.loop_max  = min(sysctl_sched_nr_migrate, busiest->nr_running);
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c190f6858a04ea7fbc52@syzkaller.appspotmail.com
+[...]
 
-usb 1-1: send failed (error -32)
-snd_usb_toneport 1-1:0.0: Line 6 TonePort GX now attached
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 0 != type 3
-WARNING: CPU: 0 PID: 12 at drivers/usb/core/urb.c:478 usb_submit_urb+0xa17/0x13e0 drivers/usb/core/urb.c:478
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events line6_startup_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- panic+0x2aa/0x6e1 kernel/panic.c:231
- __warn.cold+0x20/0x50 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x41/0x80 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x13/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
-RIP: 0010:usb_submit_urb+0xa17/0x13e0 drivers/usb/core/urb.c:478
-Code: 84 e7 04 00 00 e8 a9 10 ca fd 4c 89 ef e8 41 79 12 ff 41 89 d8 44 89 e1 4c 89 f2 48 89 c6 48 c7 c7 80 a0 5d 86 e8 db 77 9e fd <0f> 0b e8 82 10 ca fd 0f b6 6c 24 08 48 c7 c6 e0 a1 5d 86 48 89 ef
-RSP: 0018:ffff8881da227b10 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: ffff8881da211900 RSI: ffffffff8129b4e3 RDI: ffffed103b444f54
-RBP: 0000000000000030 R08: 0000000000000001 R09: ffff8881db21fe8b
-R10: 0000000000000000 R11: 0000000000000004 R12: 0000000000000000
-R13: ffff8881d6ecd0a0 R14: ffff8881d3d8c690 R15: ffff8881d54c4000
- submit_audio_out_urb+0x6d6/0x1a00 sound/usb/line6/playback.c:271
- line6_submit_audio_out_all_urbs+0xc9/0x120 sound/usb/line6/playback.c:291
- line6_stream_start+0x187/0x230 sound/usb/line6/pcm.c:195
- line6_pcm_acquire+0x137/0x210 sound/usb/line6/pcm.c:318
- line6_startup_work+0x42/0x50 sound/usb/line6/driver.c:734
- process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x392/0x470 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+>> I assume that this is related to the LKP mail
+> 
+> I have found this problem while studying the regression raised in the
+> email below but it doesn't fix it. At least, it's not enough
+> 
+>>
+>> https://lkml.kernel.org/r/20200421004749.GC26573@shao2-debian ?
+
+I see. It also happens with other workloads but it's most visible
+at the beginning of a workload (fork).
+
+Still on E5-2690 v2 (2*2*10, 40 CPUs):
+
+In the taskgroup cfs_rq->h_load is ~ 1024/40 = 25 so this leads to
+task_h_load = 0 with cfs_rq->avg.load_avg 40 times higher than the
+individual task load (1024).
+
+One incarnation of 20 loops w/o any progress (that's w/o your patch).
+
+With loop='loop/loop_break/loop_max'
+and load='p->se.avg.load_avg/cfs_rq->h_load/cfs_rq->avg.load_avg'
+
+Jul  9 10:41:18 e105613-lin kernel: [73.068844] [stress-ng-mmapf 2907] SMT CPU37->CPU17 imb=8 loop=1/32/32 load=1023/23/43006
+Jul  9 10:41:18 e105613-lin kernel: [73.068873] [stress-ng-mmapf 3501] SMT CPU37->CPU17 imb=8 loop=2/32/32 load=1022/23/41983
+Jul  9 10:41:18 e105613-lin kernel: [73.068890] [stress-ng-mmapf 2602] SMT CPU37->CPU17 imb=8 loop=3/32/32 load=1023/23/40960
+...
+Jul  9 10:41:18 e105613-lin kernel: [73.069136] [stress-ng-mmapf 2520] SMT CPU37->CPU17 imb=8 loop=18/32/32 load=1023/23/25613
+Jul  9 10:41:18 e105613-lin kernel: [73.069144] [stress-ng-mmapf 3107] SMT CPU37->CPU17 imb=8 loop=19/32/32 load=1021/23/24589
+Jul  9 10:41:18 e105613-lin kernel: [73.069149] [stress-ng-mmapf 2672] SMT CPU37->CPU17 imb=8 loop=20/32/32 load=1024/23/23566
+...
+
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+
+
+
+
