@@ -2,91 +2,103 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6430C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A13C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5748120672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9C720672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KmKQ4RFj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHBdHivV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgGIVvQ (ORCPT
+        id S1726840AbgGIVvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:51:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59548 "EHLO
+        Thu, 9 Jul 2020 17:51:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbgGIVvP (ORCPT
+        with ESMTP id S1726213AbgGIVvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:51:15 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AF20C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 14:51:15 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k5so1684538pjg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 14:51:15 -0700 (PDT)
+        Thu, 9 Jul 2020 17:51:44 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A700C08C5CE;
+        Thu,  9 Jul 2020 14:51:44 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d18so3013618edv.6;
+        Thu, 09 Jul 2020 14:51:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=yZE59xCL3eBQXoSAxSBT7tm0J2D29/mHRf5l4hrUISI=;
-        b=KmKQ4RFjJZN8heHwcunUI+xmSk3O4O7DS/tcqI/shA4R/8tNWpEFDLOaySPCFZvWp0
-         pnmJL8xRUDDhptx9Z3jpLMortBNwszOKdCEwWLmCDClzKmP0PfHJTQouFtl9Gwb3UG2t
-         Hj5B/OJ3WQZwUBMCrYVBOZrTSHyNr1a9bsFItVX+rEVahrUtcYOaoRxIsg4zx5WoJrtG
-         1FaWdcSiC/eqUjRVwPigfrWqMO0M/6VyqMmMndTJ7g49Rr/O6JGgWtJaO1V+gcLr9x+l
-         IeEfHITYzSZFf7BWirupcVcL8NQJwun0thCSKLQ2xnWNLiyyqBjTL8foD9POx5zI7Uqp
-         VSoA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sZgQ/rgXy0f1txD21I1WuNSsdShPGwMiyPEgQmV+/ng=;
+        b=UHBdHivVFTxqrWLNtuH5PWVTxCNw8Jb1ou33pWpC5DrQOgMMeEokn33wlzUDwHL8dm
+         kBRzkfgS7VTxZihteeaPs9vGGEY25tPYkWZO4O3IRerLWcJeebM85HNi0U6BXZsALVDF
+         qdYQ5nt34k68KaXEEc/VUYQkKT6da79x+OJtKQcPTdnBrHJbzH8hGWZs2is9rHf3PSsy
+         I8/g/Fv8GvG01ozf6SohmC/g/1NtvyOeWgRyMWIUuDh1MWVI+Kkd6PyoixFAGSV2Hanv
+         ZpsSLqhlS3noQeaoAmvkKrhxFGZDElpu6CYzCBkp4mrYkEbpOiv1kEpZu3EL/TCZumEH
+         cNYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=yZE59xCL3eBQXoSAxSBT7tm0J2D29/mHRf5l4hrUISI=;
-        b=Axrg77z1gs8AQemOt0xK4s2QBJdNAvswvZlhE2bcEmhwCBhphdDr5V1kbPX3LNbqm4
-         q4iqMLq8U6UCpwfCKA8+gTJtNRCW5O3pm84EpSyFmNMIG5CLygpKX+aEvY34iTzuEINH
-         ogppCrCv9Dc30m2aUj/2/KOUqHom/ZiNXLnqbrCFaZ4yXPSy98swu+pOtcxFhQ3FGosn
-         3oolpfWi9b0jLuorcGQn3jncgDX0FIUBIm/C7AdDN9LOLSw43RGDJRVrBRku0l0dLrN2
-         6bWxkdmdVVVZbJLHObTNyvvlfaOPvSwlavZFYYvzZR7xeLjHZby66GvOSJ8kh7H9oKpG
-         5dRA==
-X-Gm-Message-State: AOAM531zuczDHJhjx6DOxAIaL526QWNJ79MFxVAwVKyn9wt6vyLslrWQ
-        0K8f1pfwGhwMnZnxwsO2DYWsLg==
-X-Google-Smtp-Source: ABdhPJw4jj1Ar0xu4SkVS219xhic6hKPDR7al9eAtmxNdCW/w3Vk/zjOX56TAskC31yPRk75GOCl9w==
-X-Received: by 2002:a17:90b:283:: with SMTP id az3mr2264678pjb.38.1594331474724;
-        Thu, 09 Jul 2020 14:51:14 -0700 (PDT)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id t126sm3841690pfd.214.2020.07.09.14.51.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sZgQ/rgXy0f1txD21I1WuNSsdShPGwMiyPEgQmV+/ng=;
+        b=qmTrJeCBkMT1KTe2Ec3VvAwGIedhrKnCyjPfy9zrBkPXUNiWlONQO4xq+/KG82sHh1
+         FsEQBZByY8Phnm15h6SjC3VRlvdJ/UHbtNAbIrqe0VLyK1wD+v1ONyLgTEdt386P05kM
+         UoYMMbpsezoFpRBEKl+Swrl9t92KhxtD1Np30huoDybknUfBNlq7I0XL6cAnJx5v9DvE
+         lxppOSxgMtW9BZCWRuSdGkrCRLLBbMOQNLk1wbkc/zmstZ2DxnxmOXy4TKj4x6RNtm/a
+         xASvvdEn9P0mnPtrlP4My3Gw1lzPriNGzK9wC3UkrXIbiyez25pa0GXBKRsnw82289fe
+         79Aw==
+X-Gm-Message-State: AOAM533fBBbVsUCMAcHxcNsKjDJESqvTNMZdlHaTPJp4Gr/BqF1kv+tb
+        WhyDpeuZHTaW2s3+6ypRya4=
+X-Google-Smtp-Source: ABdhPJzw5f9c5v4M+O9fs6KhEgVVMRq60AaVUtOw7FiwE0aMNnXhOAKEjnViVMxPCjDxi3fsU2kQIA==
+X-Received: by 2002:a50:cd53:: with SMTP id d19mr75655835edj.300.1594331502912;
+        Thu, 09 Jul 2020 14:51:42 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-87-16-250-164.retail.telecomitalia.it. [87.16.250.164])
+        by smtp.googlemail.com with ESMTPSA id e16sm2498260ejt.14.2020.07.09.14.51.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 14:51:14 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 14:51:13 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-cc:     hch@lst.de, Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] dma-pool: Get rid of dma_in_atomic_pool()
-In-Reply-To: <20200709161903.26229-3-nsaenzjulienne@suse.de>
-Message-ID: <alpine.DEB.2.23.453.2007091449540.972523@chino.kir.corp.google.com>
-References: <20200709161903.26229-1-nsaenzjulienne@suse.de> <20200709161903.26229-3-nsaenzjulienne@suse.de>
-User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
+        Thu, 09 Jul 2020 14:51:42 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] Add support for ipq8064 tsens
+Date:   Thu,  9 Jul 2020 23:51:30 +0200
+Message-Id: <20200709215136.28044-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020, Nicolas Saenz Julienne wrote:
+Ipq8064 SoCs tsens driver is based on 8960 tsens driver. This patchset expand
+the 8960 unused driver with interrupt support and set_trip point.
+Ipq8064 needs to registed with a syscon phandle as the tsens regs on
+this platform are shared with the gcc controller.
 
-> The function is only used once and can be simplified to a one-liner.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Ansuel Smith (6):
+  drivers: thermal: tsens: load regmap from phandle for 8960
+  drivers: thermal: tsens: add ipq8064 support
+  dt-bindings: thermal: tsens: document ipq8064 bindings
+  drivers: thermal: tsens: add interrupt support for 9860 driver
+  drivers: thermal: tsens: add support for custom set_trip function
+  drivers: thermal: tsens: add set_trip support for 8960
 
-I'll leave this one to Christoph to decide on.  One thing I really liked 
-about hacking around in kernel/dma is the coding style, it really follows 
-"one function does one thing and does it well" even if there is only one 
-caller.  dma_in_atomic_pool() was an attempt to follow in those footsteps.
+ .../bindings/thermal/qcom-tsens.yaml          |  51 +++-
+ drivers/thermal/qcom/tsens-8960.c             | 283 +++++++++++++++++-
+ drivers/thermal/qcom/tsens.c                  |   7 +
+ drivers/thermal/qcom/tsens.h                  |   3 +
+ 4 files changed, 321 insertions(+), 23 deletions(-)
+
+-- 
+2.27.0
+
