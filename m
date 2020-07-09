@@ -2,119 +2,167 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68891C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD9D2076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:08:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fznGwjSi"
+	by mail.kernel.org (Postfix) with ESMTP id 519262076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgGINIE (ORCPT
+        id S1726896AbgGINIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:08:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgGINID (ORCPT
+        Thu, 9 Jul 2020 09:08:18 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35601 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgGINIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:08:03 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B0DC061A0B
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:08:02 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mn17so1092824pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:08:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7Arpvxm12PLtqyJPJz+S0I97EB/5x2ZsWFDQoUmCkco=;
-        b=fznGwjSiO3RaAqXL/JXdh3ChOLhq2OdVXhPfn64QRiA60KjRuareCLb2cQoytqMcEa
-         K9FobADVyXSHHVtQrGjKnEyF54vGaVnQclxT+GC94JjuxOkOv8clflw7elk67iWCkl3I
-         xNzRnbd9gVj0hlkJjZ8OPFFKz3QKZ+jw9bNLARoOmRwmqDLud4O2Szpwve+F+IH49+jj
-         B+bhJdHgplYVe4cKIz8jreKyT/R/otMuJZYANPs2w2YOy+OfUA/SmvpNaG0HbkLrDy93
-         DH8BrW1H7OD1Eg+rdJkh3HxPYDlYrC/UsA2hf8NJrUeroUnstJBiOdgL9U9jn1W6REX0
-         12vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7Arpvxm12PLtqyJPJz+S0I97EB/5x2ZsWFDQoUmCkco=;
-        b=f0ISTgo6ZzQD+B5n1kUPRLhgXDS+HTvR9UGD4vfjUWMH9IeGVTsfovTUJGgKMnXMKO
-         tO+Zkp8A6mixIdHiG+IluJ86sMB0H+UoeKHY1xHg+G/bZgk0ZHdpCx1nYH7NccQO1JGm
-         icnspnVpLxpfAU2kE6fcoolRDoID/5jDrh68ZyRm8IQa8vkDiSwVh6xZUq41pHl6TvXk
-         Rq9/TL4RNNlQgReHygfGVrdolMKlVZjfZjgHfMmfaz6+0w4gNyu5BH6CxOGntz7q0Ake
-         ofNVpywaZsnXr+ibFU9mJbJdKgifZ/rFAsxNlDeiqYhuLR4+TFKMZOrsj8NZWH5NJadw
-         eZqg==
-X-Gm-Message-State: AOAM533oQFJpkMVp9sY0jCK7jkNrL3m+0moX46WVRADk71ACPY3C/bWJ
-        M1GZQo9jGbStNKC/cGL0GE0=
-X-Google-Smtp-Source: ABdhPJxg8dSvn+lh7WeNszbLKluvKCSn2H8HnmFZerTp+0tmvgQOf/pEWtRsUkDaMkbJcoIjLvChHA==
-X-Received: by 2002:a17:90a:1089:: with SMTP id c9mr15056098pja.180.1594300082504;
-        Thu, 09 Jul 2020 06:08:02 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id 191sm2813150pfw.150.2020.07.09.06.08.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 06:08:01 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Thu, 9 Jul 2020 22:07:58 +0900
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thu, 9 Jul 2020 09:08:17 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jtWHd-0001Iq-Q4; Thu, 09 Jul 2020 13:08:13 +0000
+Date:   Thu, 9 Jul 2020 15:08:11 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Matt Denton <mpdenton@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, lkp@lists.01.org
-Subject: Re: [printk] 18a2dc6982: ltp.kmsg01.fail
-Message-ID: <20200709130758.GB4380@jagdpanzerIV.localdomain>
-References: <20200707145932.8752-5-john.ogness@linutronix.de>
- <20200709071411.GR3874@shao2-debian>
- <20200709083323.GA572@jagdpanzerIV.localdomain>
- <874kqhm1v8.fsf@jogness.linutronix.de>
- <20200709105906.GC11164@alley>
- <20200709111310.GD11164@alley>
- <87zh89kkek.fsf@jogness.linutronix.de>
- <20200709122448.GJ4751@alley>
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 6/7] seccomp: Introduce addfd ioctl to seccomp user
+ notifier
+Message-ID: <20200709130811.zjyn6ptsd3rss3j4@wittgenstein>
+References: <20200706201720.3482959-1-keescook@chromium.org>
+ <20200706201720.3482959-7-keescook@chromium.org>
+ <20200707133049.nfxc6vz6vcs26m3b@wittgenstein>
+ <202007082307.EB5BAD3A0@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200709122448.GJ4751@alley>
+In-Reply-To: <202007082307.EB5BAD3A0@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/07/09 14:25), Petr Mladek wrote:
-> On Thu 2020-07-09 13:23:07, John Ogness wrote:
-> > On 2020-07-09, Petr Mladek <pmladek@suse.com> wrote:
-> > > I though more about it. IMHO, it will be better to modify
-> > > prb_first_seq() to do the same cycle as prb_next_seq()
-> > > and return seq number of the first valid entry.
+On Wed, Jul 08, 2020 at 11:12:02PM -0700, Kees Cook wrote:
+> On Tue, Jul 07, 2020 at 03:30:49PM +0200, Christian Brauner wrote:
+> > Hm, maybe change that description to sm like:
 > > 
-> > Exactly!
-> > 
-> > Here is a patch that does just that. I added a prb_first_valid_seq()
-> > function and made prb_first_seq() static. (The ringbuffer still needs
-> > prb_first_seq() for itself.)
+> > [...]
 > 
-> The fix looks fine to me:
+> Cool, yeah. Thanks! I've tweaked it a little more
+> 
+> > > +	/* 24 is original sizeof(struct seccomp_notif_addfd) */
+> > > +	if (size < 24 || size >= PAGE_SIZE)
+> > > +		return -EINVAL;
+> > 
+> > Hm, so maybe add the following:
+> > 
+> > #define SECCOMP_NOTIFY_ADDFD_VER0 24
+> > #define SECCOMP_NOTIFY_ADDFD_LATEST SECCOMP_NOTIFY_ADDFD_VER0
+> > 
+> > and then place:
+> > 
+> > BUILD_BUG_ON(sizeof(struct seccomp_notify_addfd) < SECCOMP_NOTIFY_ADDFD_VER0);
+> > BUILD_BUG_ON(sizeof(struct open_how) != SECCOMP_NOTIFY_ADDFD_LATEST);
+> 
+> Yes, good idea (BTW, did the EA syscall docs land?)
 
-Yeah, looks right to me as well.
+I'll be giving a kernel summit talk about extensible syscalls to come to
+some agreement on a few things. After this we'll update the doc patch
+we have now and merge it. :)
 
-> It means that we have two fixes on top of the original patchset. Could
-> you please send v5 with the two fixes integrated? I would just squash
-> them into the 4th patch.
+> 
+> I've made these SECCOMP_NOTIFY_ADDFD_SIZE_* to match your examples below
+> (i.e.  I added "SIZE" to what you suggested above).
 
-I'd prefer v5, if possible.
+Yup, sounds good!
 
-	-ss
+> 
+> > somewhere which is what we do for clone3(), openat2() and others to
+> > catch build-time nonsense.
+> > 
+> > include/uapi/linux/perf_event.h:#define PERF_ATTR_SIZE_VER0     64      /* sizeof first published struct */
+> > include/uapi/linux/sched.h:#define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
+> > include/uapi/linux/sched/types.h:#define SCHED_ATTR_SIZE_VER0   48      /* sizeof first published struct */
+> > include/linux/fcntl.h:#define OPEN_HOW_SIZE_VER0        24 /* sizeof first published struct */
+> > include/linux/fcntl.h:#define OPEN_HOW_SIZE_LATEST      OPEN_HOW_SIZE_VER0
+> 
+> The ..._SIZE_VER0 and ...LATEST stuff doesn't seem useful to export via
+> UAPI. Above, 2 of the 3 export to uapi. Is there a specific rationale
+> for which should and which shouldn't?
+
+I think openat2() just didn't think it was useful. I find them helpful
+because I often update codebase to the newest struct I know about:
+
+struct clone_args {
+	__aligned_u64 flags;
+	__aligned_u64 pidfd;
+	__aligned_u64 child_tid;
+	__aligned_u64 parent_tid;
+	__aligned_u64 exit_signal;
+	__aligned_u64 stack;
+	__aligned_u64 stack_size;
+	__aligned_u64 tls;
+/* CLONE_ARGS_SIZE_VER0 64 */
+	__aligned_u64 set_tid;
+	__aligned_u64 set_tid_size;
+/* CLONE_ARGS_SIZE_VER1 80 */
+	__aligned_u64 cgroup;
+/* CLONE_ARGS_SIZE_VER2 88 */
+};
+
+But bumping it means I can't use:
+
+clone3(&clone_args, sizeof(clone));
+
+everywhere in the codebase because I'm fscking over everyone on older
+kernels now. :)
+
+Soin various parts of the codebase I will just use:
+
+clone3(&clone_args, CLONE_ARGS_SIZE_VER0);
+
+because I don't care about any of the additional features and I don't
+need the kernel to copy any of the other stuff. Then in other parts of
+the codebase I want to set_tid so I use:
+
+clone3(&clone_args, CLONE_ARGS_SIZE_VER1);
+
+This way I can also set "templates", i.e.
+
+struct clone_args clone_template1 = {
+	.flags		|= CLONE_CLEAR_SIGHAND,
+	.exit_signal	= SIGCHLD,
+	.set_tid	= 1000,
+	.set_tid_size	= 1,
+};
+
+and then use the same struct for:
+
+clone3(&clone_template1, CLONE_ARGS_SIZE_VER0);
+clone3(&clone_template1, CLONE_ARGS_SIZE_VER1);
+
+Whereas sizeof(clone_template1) would always give me
+CLONE_ARGS_SIZE_VER2.
+
+Christian
