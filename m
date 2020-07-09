@@ -2,137 +2,327 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01527C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE28C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE33A2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32952076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgGIKxS (ORCPT
+        id S1726513AbgGIKy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:53:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:25233 "EHLO mga12.intel.com"
+        Thu, 9 Jul 2020 06:54:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:50478 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbgGIKxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:53:18 -0400
-IronPort-SDR: 5bAOzo8vPO0qiBySoGeyAmQc8XplNZo/kY3UwKt35RYS3ppVxSc0OH3KJzWSDiK4rPMsyiMwdw
- dBVkqq9dSqjw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="127557441"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="127557441"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 03:53:17 -0700
-IronPort-SDR: P4hWY/sye1VYuLTzDCkFtKV52yM7tKk5/vXcJpES3ptC2WS01pmaVpqjBuZ+rp+5rbNRAgTcIZ
- 5oWMsWZ+jzpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="323208484"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jul 2020 03:53:15 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 9D3E01EA; Thu,  9 Jul 2020 13:53:14 +0300 (EEST)
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jann Horn <jannh@google.com>, stable@vger.kernel.org,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH] mm: Close race between munmap() and expand_upwards()/downwards()
-Date:   Thu,  9 Jul 2020 13:53:09 +0300
-Message-Id: <20200709105309.42495-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.27.0
+        id S1726302AbgGIKy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:54:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 732B51FB;
+        Thu,  9 Jul 2020 03:54:26 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA5ED3F887;
+        Thu,  9 Jul 2020 03:54:24 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 11:54:18 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     kishon@ti.com, robh@kernel.org, bhelgaas@google.com,
+        m-karicheri2@ti.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, shawn.guo@linaro.org,
+        songxiaowei@hisilicon.com, svarbanov@mm-sol.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: convert to
+ devm_platform_ioremap_resource_byname()
+Message-ID: <20200709105418.GA19638@e121166-lin.cambridge.arm.com>
+References: <20200528161510.31935-1-zhengdejin5@gmail.com>
+ <20200708164013.5076-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708164013.5076-1-zhengdejin5@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VMA with VM_GROWSDOWN or VM_GROWSUP flag set can change their size under
-mmap_read_lock(). It can lead to race with __do_munmap():
+On Thu, Jul 09, 2020 at 12:40:13AM +0800, Dejin Zheng wrote:
+> Use devm_platform_ioremap_resource_byname() to simplify codes.
+> it contains platform_get_resource_byname() and devm_ioremap_resource().
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> v1 -> v2:
+> 	- rebase to pci/dwc branch
+> 	- add Gustavo and Rob's Reviewed tag
+> 
+>  drivers/pci/controller/dwc/pci-dra7xx.c         | 11 ++++-------
+>  drivers/pci/controller/dwc/pci-keystone.c       |  7 +++----
+>  drivers/pci/controller/dwc/pcie-artpec6.c       | 12 ++++--------
+>  .../pci/controller/dwc/pcie-designware-plat.c   |  3 +--
+>  drivers/pci/controller/dwc/pcie-histb.c         |  7 ++-----
+>  drivers/pci/controller/dwc/pcie-intel-gw.c      |  7 ++-----
+>  drivers/pci/controller/dwc/pcie-kirin.c         | 17 ++++++-----------
+>  drivers/pci/controller/dwc/pcie-qcom.c          |  6 ++----
+>  drivers/pci/controller/dwc/pcie-uniphier.c      |  3 +--
+>  9 files changed, 25 insertions(+), 48 deletions(-)
 
-	Thread A			Thread B
-__do_munmap()
-  detach_vmas_to_be_unmapped()
-  mmap_write_downgrade()
-				expand_downwards()
-				  vma->vm_start = address;
-				  // The VMA now overlaps with
-				  // VMAs detached by the Thread A
-				// page fault populates expanded part
-				// of the VMA
-  unmap_region()
-    // Zaps pagetables partly
-    // populated by Thread B
+Applied to pci/dwc, thanks.
 
-Similar race exists for expand_upwards().
+Lorenzo
 
-The fix is to avoid downgrading mmap_lock in __do_munmap() if detached
-VMAs are next to VM_GROWSDOWN or VM_GROWSUP VMA.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reported-by: Jann Horn <jannh@google.com>
-Fixes: dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
-Cc: <stable@vger.kernel.org> # 4.20
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
----
- mm/mmap.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 59a4682ebf3f..71df4b36b42a 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -2620,7 +2620,7 @@ static void unmap_region(struct mm_struct *mm,
-  * Create a list of vma's touched by the unmap, removing them from the mm's
-  * vma list as we go..
-  */
--static void
-+static bool
- detach_vmas_to_be_unmapped(struct mm_struct *mm, struct vm_area_struct *vma,
- 	struct vm_area_struct *prev, unsigned long end)
- {
-@@ -2645,6 +2645,17 @@ detach_vmas_to_be_unmapped(struct mm_struct *mm, struct vm_area_struct *vma,
- 
- 	/* Kill the cache */
- 	vmacache_invalidate(mm);
-+
-+	/*
-+	 * Do not downgrade mmap_sem if we are next to VM_GROWSDOWN or
-+	 * VM_GROWSUP VMA. Such VMAs can change their size under
-+	 * down_read(mmap_sem) and collide with the VMA we are about to unmap.
-+	 */
-+	if (vma && (vma->vm_flags & VM_GROWSDOWN))
-+		return false;
-+	if (prev && (prev->vm_flags & VM_GROWSUP))
-+		return false;
-+	return true;
- }
- 
- /*
-@@ -2825,7 +2836,8 @@ int __do_munmap(struct mm_struct *mm, unsigned long start, size_t len,
- 	}
- 
- 	/* Detach vmas from rbtree */
--	detach_vmas_to_be_unmapped(mm, vma, prev, end);
-+	if (!detach_vmas_to_be_unmapped(mm, vma, prev, end))
-+		downgrade = false;
- 
- 	if (downgrade)
- 		mmap_write_downgrade(mm);
--- 
-2.26.2
-
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index 6184ebc9392d..e5d0c7ac09b9 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -593,13 +593,12 @@ static int __init dra7xx_add_pcie_ep(struct dra7xx_pcie *dra7xx,
+>  	ep = &pci->ep;
+>  	ep->ops = &pcie_ep_ops;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ep_dbics");
+> -	pci->dbi_base = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "ep_dbics");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ep_dbics2");
+> -	pci->dbi_base2 = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base2 =
+> +		devm_platform_ioremap_resource_byname(pdev, "ep_dbics2");
+>  	if (IS_ERR(pci->dbi_base2))
+>  		return PTR_ERR(pci->dbi_base2);
+>  
+> @@ -626,7 +625,6 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
+>  	struct dw_pcie *pci = dra7xx->pci;
+>  	struct pcie_port *pp = &pci->pp;
+>  	struct device *dev = pci->dev;
+> -	struct resource *res;
+>  
+>  	pp->irq = platform_get_irq(pdev, 1);
+>  	if (pp->irq < 0) {
+> @@ -638,8 +636,7 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbics");
+> -	pci->dbi_base = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "rc_dbics");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 790679fdfa48..5ffc3b40c4f6 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -1228,8 +1228,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>  	if (!pci)
+>  		return -ENOMEM;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+> -	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
+> +	ks_pcie->va_app_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "app");
+>  	if (IS_ERR(ks_pcie->va_app_base))
+>  		return PTR_ERR(ks_pcie->va_app_base);
+>  
+> @@ -1323,8 +1323,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	if (pci->version >= 0x480A) {
+> -		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
+> -		atu_base = devm_ioremap_resource(dev, res);
+> +		atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
+>  		if (IS_ERR(atu_base)) {
+>  			ret = PTR_ERR(atu_base);
+>  			goto err_get_sync;
+> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
+> index 28d5a1095200..7d2cfa288b01 100644
+> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
+> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
+> @@ -455,8 +455,7 @@ static int artpec6_add_pcie_ep(struct artpec6_pcie *artpec6_pcie,
+>  	ep = &pci->ep;
+>  	ep->ops = &pcie_ep_ops;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+> -	pci->dbi_base2 = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base2 = devm_platform_ioremap_resource_byname(pdev, "dbi2");
+>  	if (IS_ERR(pci->dbi_base2))
+>  		return PTR_ERR(pci->dbi_base2);
+>  
+> @@ -481,8 +480,6 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct dw_pcie *pci;
+>  	struct artpec6_pcie *artpec6_pcie;
+> -	struct resource *dbi_base;
+> -	struct resource *phy_base;
+>  	int ret;
+>  	const struct of_device_id *match;
+>  	const struct artpec_pcie_of_data *data;
+> @@ -512,13 +509,12 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
+>  	artpec6_pcie->variant = variant;
+>  	artpec6_pcie->mode = mode;
+>  
+> -	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> -	pci->dbi_base = devm_ioremap_resource(dev, dbi_base);
+> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+> -	phy_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+> -	artpec6_pcie->phy_base = devm_ioremap_resource(dev, phy_base);
+> +	artpec6_pcie->phy_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "phy");
+>  	if (IS_ERR(artpec6_pcie->phy_base))
+>  		return PTR_ERR(artpec6_pcie->phy_base);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
+> index 73646b677aff..712456f6ce36 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-plat.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
+> @@ -153,8 +153,7 @@ static int dw_plat_add_pcie_ep(struct dw_plat_pcie *dw_plat_pcie,
+>  	ep = &pci->ep;
+>  	ep->ops = &pcie_ep_ops;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+> -	pci->dbi_base2 = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base2 = devm_platform_ioremap_resource_byname(pdev, "dbi2");
+>  	if (IS_ERR(pci->dbi_base2))
+>  		return PTR_ERR(pci->dbi_base2);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+> index 811b5c6d62ea..6d3524c39a9b 100644
+> --- a/drivers/pci/controller/dwc/pcie-histb.c
+> +++ b/drivers/pci/controller/dwc/pcie-histb.c
+> @@ -304,7 +304,6 @@ static int histb_pcie_probe(struct platform_device *pdev)
+>  	struct histb_pcie *hipcie;
+>  	struct dw_pcie *pci;
+>  	struct pcie_port *pp;
+> -	struct resource *res;
+>  	struct device_node *np = pdev->dev.of_node;
+>  	struct device *dev = &pdev->dev;
+>  	enum of_gpio_flags of_flags;
+> @@ -324,15 +323,13 @@ static int histb_pcie_probe(struct platform_device *pdev)
+>  	pci->dev = dev;
+>  	pci->ops = &dw_pcie_ops;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
+> -	hipcie->ctrl = devm_ioremap_resource(dev, res);
+> +	hipcie->ctrl = devm_platform_ioremap_resource_byname(pdev, "control");
+>  	if (IS_ERR(hipcie->ctrl)) {
+>  		dev_err(dev, "cannot get control reg base\n");
+>  		return PTR_ERR(hipcie->ctrl);
+>  	}
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc-dbi");
+> -	pci->dbi_base = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "rc-dbi");
+>  	if (IS_ERR(pci->dbi_base)) {
+>  		dev_err(dev, "cannot get rc-dbi base\n");
+>  		return PTR_ERR(pci->dbi_base);
+> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> index 2d8dbb318087..c3b3a1d162b5 100644
+> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> @@ -253,11 +253,9 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
+>  	struct intel_pcie_port *lpp = platform_get_drvdata(pdev);
+>  	struct dw_pcie *pci = &lpp->pci;
+>  	struct device *dev = pci->dev;
+> -	struct resource *res;
+>  	int ret;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> -	pci->dbi_base = devm_ioremap_resource(dev, res);
+> +	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+> @@ -291,8 +289,7 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
+>  	ret = of_pci_get_max_link_speed(dev->of_node);
+>  	lpp->link_gen = ret < 0 ? 0 : ret;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+> -	lpp->app_base = devm_ioremap_resource(dev, res);
+> +	lpp->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
+>  	if (IS_ERR(lpp->app_base))
+>  		return PTR_ERR(lpp->app_base);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> index c19617a912bd..e5e765038686 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -147,23 +147,18 @@ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+>  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+>  				    struct platform_device *pdev)
+>  {
+> -	struct device *dev = &pdev->dev;
+> -	struct resource *apb;
+> -	struct resource *phy;
+> -	struct resource *dbi;
+> -
+> -	apb = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb");
+> -	kirin_pcie->apb_base = devm_ioremap_resource(dev, apb);
+> +	kirin_pcie->apb_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "apb");
+>  	if (IS_ERR(kirin_pcie->apb_base))
+>  		return PTR_ERR(kirin_pcie->apb_base);
+>  
+> -	phy = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+> -	kirin_pcie->phy_base = devm_ioremap_resource(dev, phy);
+> +	kirin_pcie->phy_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "phy");
+>  	if (IS_ERR(kirin_pcie->phy_base))
+>  		return PTR_ERR(kirin_pcie->phy_base);
+>  
+> -	dbi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> -	kirin_pcie->pci->dbi_base = devm_ioremap_resource(dev, dbi);
+> +	kirin_pcie->pci->dbi_base =
+> +		devm_platform_ioremap_resource_byname(pdev, "dbi");
+>  	if (IS_ERR(kirin_pcie->pci->dbi_base))
+>  		return PTR_ERR(kirin_pcie->pci->dbi_base);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 73d4eed26f65..b79f7878c993 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1405,8 +1405,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  	if (pcie->gen < 0)
+>  		pcie->gen = 2;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
+> -	pcie->parf = devm_ioremap_resource(dev, res);
+> +	pcie->parf = devm_platform_ioremap_resource_byname(pdev, "parf");
+>  	if (IS_ERR(pcie->parf)) {
+>  		ret = PTR_ERR(pcie->parf);
+>  		goto err_pm_runtime_put;
+> @@ -1419,8 +1418,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  		goto err_pm_runtime_put;
+>  	}
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+> -	pcie->elbi = devm_ioremap_resource(dev, res);
+> +	pcie->elbi = devm_platform_ioremap_resource_byname(pdev, "elbi");
+>  	if (IS_ERR(pcie->elbi)) {
+>  		ret = PTR_ERR(pcie->elbi);
+>  		goto err_pm_runtime_put;
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index a5401a0b1e58..3a7f403b57b8 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -416,8 +416,7 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->pci.dbi_base))
+>  		return PTR_ERR(priv->pci.dbi_base);
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+> -	priv->base = devm_ioremap_resource(dev, res);
+> +	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
+>  	if (IS_ERR(priv->base))
+>  		return PTR_ERR(priv->base);
+>  
+> -- 
+> 2.25.0
+> 
