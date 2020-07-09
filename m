@@ -6,91 +6,87 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A65C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82922C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D73E2064B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A7620578
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594337120;
-	bh=uT3DVaKVwMc10c4eyvN1ly/aAofiXPvPKdmvxw7V/gg=;
+	s=default; t=1594337198;
+	bh=u0E4LONPQnc+wTjO/xBIuKk+op7079Pyjo+9EDfXtpI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AxG0HlqsjNXZxvwajNrXtgQ4ZyQAdwh3bN14iSEiZIANlmqwq7r6xPKumBnTyY4Y+
-	 dxhj4lVJbYb3O409zs0dmF7Syh2NXCfwxinvQqsJhIC++PG+q1Dl5wXNOmXyDtPlf1
-	 296C01/YBck93UOfk2Oac/0ZAXSWUO6/nmV34JWo=
+	b=1KxipCCYLMuYy7+DKMhHvVskuApP0vvgv0Dv4sRsOh2RUt3/1KAtrOgAY62AWN+FI
+	 yIRk23TKcwUJ0cP+ufAJ6WdUbxzbHnSMUXZ/p4KJTGAmR9Dfj+FuGMfemfLTotqJPT
+	 qP3juWLLkR+ZIXJlP8V+LOQAJgppV0HkelnIgdMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgGIXZT (ORCPT
+        id S1726830AbgGIX0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:25:19 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41183 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgGIXZS (ORCPT
+        Thu, 9 Jul 2020 19:26:37 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42477 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgGIX0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:25:18 -0400
-Received: by mail-il1-f196.google.com with SMTP id q3so3505205ilt.8;
-        Thu, 09 Jul 2020 16:25:18 -0700 (PDT)
+        Thu, 9 Jul 2020 19:26:36 -0400
+Received: by mail-io1-f67.google.com with SMTP id c16so4137579ioi.9;
+        Thu, 09 Jul 2020 16:26:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=PXrhidXAYpHgJ5A1zfsaViW170f8YexLRVqFFy8RY/c=;
-        b=CoHlkUMzLpWkuoq1BjLfN6mXy0dKLWnMzx2r3PWhJUKRsW8FVpSsFdgoBetmPS8MGR
-         fi80s5wVd/L1Q3wiw7mmx3aNESQ4D2DlkvxWoxjStdI/VHFLAKqb6U4AS59yqqd9IYTu
-         UG5SYbvpJH3XBo4KJ0SmA5VCZTocyJFmVO8PnvRIPmSHHgU+EwnXmaDTKvQXaT7KuaMz
-         88LnsT2Ojn5v/odITi0Skw6lJ214cDhaxVMz7emhY65KNk8GFzJV0un2/oAY1LnTiZ18
-         FanUs6T2PQz6FgqkFcjMZlpD6lBlSwjWrITY2m84TC2m2Xz+JnBgubpiFT/u/9FQNZ1p
-         vxJg==
-X-Gm-Message-State: AOAM530fborSF9xNByJ9D/TxK2SXDtzJHgI1Q7cLBWaeECM4B+AOR7wZ
-        xZaKUSYaHd5X3ol0qzAXWw==
-X-Google-Smtp-Source: ABdhPJz+sCGtaNOGJjBqfJDxwmiYliI+H+mZAltp9t+Hmr+fTaxn5oIL3q39psHUShfZ+M33Yo33Rg==
-X-Received: by 2002:a92:d811:: with SMTP id y17mr44950299ilm.35.1594337117775;
-        Thu, 09 Jul 2020 16:25:17 -0700 (PDT)
+        bh=9qBBiKVAEwV0csR2KHgZP1aEu5doNildOz5brRqIvOE=;
+        b=pNS97OGHYffRnd+8s0+166MAwja6y2NdBJGratPyN6wWNoPmRbBiqb/trUV4BwYFZ0
+         1nFvQX4bEd+B7ohi+cxX0GIJy5OWk2xYmizVTM6BcZ45HJMD62CYL8lUCWVILbxpEgaj
+         8S16uS1c29Jep9IvbmYMiUm13hobtZ21C7yYNdZ/SZy4gneVrCqUMoFbRP3w3TizJd+V
+         rBLbarQ+KGlTMMgPkNgwEX/t4etG2ljzKQtICN4Mk8s5G0Xcbuj4MQhcurfwr/V0TGvj
+         pPWlbbvtqJPfKo5JEk6jy/fu8AeRDfw7YC4WOIwoyl+WKat9expb1CwXsf8UMTWWzs1R
+         BT3A==
+X-Gm-Message-State: AOAM533DIU5KT7UKXrlAMRrmBjtXTBLM/KPwvXVPrC7jqmlJy1BrHtmB
+        uPVLWRy6GIddEBpQCxAwtg==
+X-Google-Smtp-Source: ABdhPJxZ84RtZ9dBJ7PT0YLFvMCuODq/mOXFzn2IHZs4voJJrnOFgJuUsKcK23DdSq/g4j1nI/GzwQ==
+X-Received: by 2002:a05:6638:14c5:: with SMTP id l5mr73891024jak.134.1594337195695;
+        Thu, 09 Jul 2020 16:26:35 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id u62sm2619663ilc.87.2020.07.09.16.25.16
+        by smtp.gmail.com with ESMTPSA id u15sm2853758iog.18.2020.07.09.16.26.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 16:25:17 -0700 (PDT)
-Received: (nullmailer pid 1093400 invoked by uid 1000);
-        Thu, 09 Jul 2020 23:25:15 -0000
-Date:   Thu, 9 Jul 2020 17:25:15 -0600
+        Thu, 09 Jul 2020 16:26:35 -0700 (PDT)
+Received: (nullmailer pid 1095549 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:26:33 -0000
+Date:   Thu, 9 Jul 2020 17:26:33 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux@rempel-privat.de,
-        shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, s.hauer@pengutronix.de,
-        wolfram@the-dreams.de, festevam@gmail.com, Linux-imx@nxp.com,
-        robh+dt@kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 2/2] dt-bindings: i2c: Convert imx i2c to json-schema
-Message-ID: <20200709232515.GA1093270@bogus>
-References: <1592279454-32551-1-git-send-email-Anson.Huang@nxp.com>
- <1592279454-32551-2-git-send-email-Anson.Huang@nxp.com>
+Cc:     shawnguo@kernel.org, marex@denx.de, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
+        festevam@gmail.com, Linux-imx@nxp.com, s.hauer@pengutronix.de,
+        linux-spi@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH V3 2/3] dt-bindings: spi: Convert imx cspi to json-schema
+Message-ID: <20200709232633.GA1095495@bogus>
+References: <1592281575-32708-1-git-send-email-Anson.Huang@nxp.com>
+ <1592281575-32708-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592279454-32551-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1592281575-32708-3-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 11:50:54 +0800, Anson Huang wrote:
-> Convert the i.MX I2C binding to DT schema format using json-schema,
-> some improvements applied, such as update example based on latest DT
-> file, add more compatible for existing SoCs, and remove unnecessary
-> common property "pinctrl".
+On Tue, 16 Jun 2020 12:26:14 +0800, Anson Huang wrote:
+> Convert the i.MX CSPI binding to DT schema format using json-schema,
+> update compatible, remove obsolete properties "fsl,spi-num-chipselects"
+> and update the example based on latest DT file.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
 > Changes since V2:
-> 	- remove 'clock-frequency' property's type and use enum for it, ONLY support 100KHz/400KHz.
-> 	- remove *-gpios's typs/description, since it is already defined in i2c-gpio.yaml.
-> 	- fix space issue in example.
+> 	- remove redundant "maxItems" in "clocks" and "clock-names".
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-imx.txt  |  49 ----------
->  Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 103 +++++++++++++++++++++
->  2 files changed, 103 insertions(+), 49 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.yaml
+>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       | 56 -------------
+>  .../devicetree/bindings/spi/fsl-imx-cspi.yaml      | 97 ++++++++++++++++++++++
+>  2 files changed, 97 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
 > 
 
-Applied, thanks!
+Reviewed-by: Rob Herring <robh@kernel.org>
