@@ -2,103 +2,133 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A16C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1442A20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A05206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3VV0Yy2W";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oNat9XoY"
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="WiAQr+CW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgGIJb4 (ORCPT
+        id S1726327AbgGIJgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:31:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35372 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgGIJb4 (ORCPT
+        Thu, 9 Jul 2020 05:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgGIJga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:31:56 -0400
-Date:   Thu, 9 Jul 2020 11:31:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594287114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Tuvfl4lp33mBSrKFJ/WLHd+knY1GDMg47O2dd0IKQZE=;
-        b=3VV0Yy2WZ5KQ0MWtljWkVUa4AKf/Ua4rWCCtmsqoO4Gt+KopdJ4HHaUSiPE0Hl9wpAXcmV
-        JbSwavg1LDn5jE1t/e5R4KFhtG72UiikOvT963BcCc9oXoboQvVvjgIk1JigHHSXpC5qfh
-        VqTUlZQI3nHdyW33g/XX5keagaLWeSZTOC0r9QLX4C3JiJ7r7rSbl2BaIMF31X2WqT/XlT
-        S1GNaz4x4kfOX/N5Zhfa1lNNI8VdY6h86LtGNsxdkxidmOTAkd7AESeCnrP9NGTuG4IEcJ
-        +md1GawMYIhVrqMObROCqkY5BkrvvBrodNKIi6vOCuMGbzsyT02kH98PBxdxdA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594287114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Tuvfl4lp33mBSrKFJ/WLHd+knY1GDMg47O2dd0IKQZE=;
-        b=oNat9XoYL5AZf51a+7Yod57UPOska9x7/QETpTN2n3+SvV+hH3nHuznkSK2w4LGXgTIUgR
-        pPGyLBXIeQCO/ADA==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Daniel Wagner <dwagner@suse.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>,
-        Pavel Machek <pavel@denx.de>
-Subject: Re: [ANNOUNCE] 4.4.229-rt200
-Message-ID: <20200709093151.o6ea5lqc753pxdr7@linutronix.de>
-References: <159423384250.24491.10602573106875114227@beryllium>
+        Thu, 9 Jul 2020 05:36:30 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DB9C061A0B
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 02:36:30 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id n2so1286274edr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 02:36:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eygZbTdlFFJ71jCLfCgJ+FFK+a7qNbIVolSlOz1F8GM=;
+        b=WiAQr+CWI7AR7BcmGBUGWjPFNscJqLLdx51nc0bGW2Zjlly/I7bVYJKiNQ5FIK42gQ
+         ztKZ39/kOKalWkN6N32n9+XcKyY2/UZpc0fDuRm0PCCb/Qq39LkHNF83Q1ad+4KSpgiV
+         LTgltQyaJIT9ryfmqIqBqoTOuXUkDuBlRZqCb4KIGN39bAlxO6AKe1pry724NX4dMW6E
+         Thw3IS52wTv26/tNSpIZ2OhuwOSW2kWMybtNxYwUWn+l1g1ADjvnStvay3TcV2Q2XIJY
+         genZjiQMJwXx7fw8+JQ5Xk/LKkC57jVNSW8/UQ/LfFzmgNF9SBYB6Z7JaKK9wrAlePEW
+         xRXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eygZbTdlFFJ71jCLfCgJ+FFK+a7qNbIVolSlOz1F8GM=;
+        b=Igsp3P4Cy2Y0XQ0kTHX67j1HpmHS1u4SjhHqPqkQbkD1no4eRT6vLp4KwRWwGv7jq1
+         Ggg6NzEetrPMN4MA5Ybvaxoj0toRBYMXt8K0qkwQCdMAjjArhsIdpnJBDivNmzTLQTRH
+         9RmjoikLrS4+MOBUZk1NGATcPMYJnTpStamlt1hAJC+KKy/1djtj9frEvXD8PVHouiOc
+         EmfZQ8Xno+YXTjJ6NKF3YEntlbcE3aWtQ5AOY70sZ25BH7AY127P1GlVR+ZMlnKBSf9R
+         IFIR7SaDn1qU+TdZRwGm9jgIuWEnVM8oTUDunS9VtJbP4pcyM/zlsaEocEXJjMil82Vk
+         Y/qg==
+X-Gm-Message-State: AOAM530B9xlqDOntP1JXuMgUpKrS1oxLYU45aC6uVzfpw5HUTnbF8iOg
+        vUO1W/+95sW5UmkiEHNCc3VDqsiLCR4G8sCktIDs8A==
+X-Google-Smtp-Source: ABdhPJyBTmJWVm+jeRh/T397jZe1feymToc3uhaSUxFBG3KtVFCrNLA1lCw6fQ/UuGQVOizKlaB8ldlMBCqSg811i6s=
+X-Received: by 2002:a05:6402:14c1:: with SMTP id f1mr73921180edx.342.1594287389229;
+ Thu, 09 Jul 2020 02:36:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <159423384250.24491.10602573106875114227@beryllium>
+References: <20200708134613.131555-1-bsz@semihalf.com>
+In-Reply-To: <20200708134613.131555-1-bsz@semihalf.com>
+From:   Bartosz Szczepanek <bsz@semihalf.com>
+Date:   Thu, 9 Jul 2020 11:36:18 +0200
+Message-ID: <CABLO=+kwtYKdEHNsYS13+=LgFZ3L7Snym-aBthxe=vOsjiPTbg@mail.gmail.com>
+Subject: Re: [PATCH] thermal/int340x_thermal: Prevent page fault on
+ .set_mode() op
+To:     Matthew Garrett <mjg59@google.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Pandruvada Srinivas <srinivas.pandruvada@linux.intel.com>,
+        linux-pm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Radoslaw Biernacki <rad@semihalf.com>,
+        Alex Levin <levinale@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-08 18:44:02 [-0000], Daniel Wagner wrote:
-> I'm pleased to announce the 4.4.229-rt200 stable release.
-> 
-> This release is just an update to the new stable 4.4.215 version.
+Hi Rui, Matthew,
 
-Your template is off here.
+I think this regression should be corrected still in the 5.8 release
+cycle. It may cause kernel panic if .set_mode() is called before
+current_uuid_store(), and from what I see both operations can be
+triggered from sysfs. What I'm not 100% sure about is if we should
+apply the above fix, or rather revert the driver to its default
+behaviour of using uuid=0 if it wasn't set from userspace (this is how
+it was before Matthew's commit). What do you think?
 
-> Note: This update required dealing with a conflict in net/core/dev.c, where
-> devnet_rename_seq was moved from a seqence count to an RWSEM and renamed
-> to devnet_rename_sem. If you encounter runtime issues that show tracebacks
-> in net/core/dev.c, please let me know.
+Best regards,
+Bartosz
+
+
+On Wed, Jul 8, 2020 at 3:46 PM Bartosz Szczepanek <bsz@semihalf.com> wrote:
 >
-> Patch "net: Add a mutex around devnet_rename_seq" dropped in favour of
-> 602c47fbf46b ("net: core: device_rename: Use rwsem instead of a seqcount")
-
-Yes, this was the intention of the exercise :)
- 
-> Known issues:
-> 
->   sigwaittest with hackbench as workload is able to trigger a crash on x86_64,
->   the same as reported for the v4.4.220-rt196 release. The crash seems to
->   be triggered by a BPF program. IIRC, BPF was never supported in v4.4-rt
->   and I just forgot to disable in my configuration.
-
-In v5.4.3-rt1 there is
-    fe18e9e08e25d ("BPF: Disable on PREEMPT_RT")
-
-so maybe backport this across the stable kernels. Fixing it is a way
-larger queue. If the intention is to keep it disabled it could be
-enforced via Kconfig so it is not enabled by accident (or by using
-oldconfig on a distro config which has it enabled).
-
-> Enjoy!
-> Daniel
-
-Sebastian
+> Starting from commit "thermal/int340x_thermal: Don't require IDSP to
+> exist", priv->current_uuid_index is initialized to -1. This value may
+> be passed to int3400_thermal_run_osc() from int3400_thermal_set_mode,
+> contributing to page fault when accessing int3400_thermal_uuids array
+> at index -1.
+>
+> This commit adds a check on uuid value to int3400_thermal_run_osc.
+>
+> Signed-off-by: Bartosz Szczepanek <bsz@semihalf.com>
+> ---
+>  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> index 0b3a62655843..12448ccd27f1 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> @@ -216,11 +216,16 @@ static int int3400_thermal_run_osc(acpi_handle handle,
+>         acpi_status status;
+>         int result = 0;
+>         struct acpi_osc_context context = {
+> -               .uuid_str = int3400_thermal_uuids[uuid],
+> +               .uuid_str = NULL,
+>                 .rev = 1,
+>                 .cap.length = 8,
+>         };
+>
+> +       if (uuid < 0 || uuid >= INT3400_THERMAL_MAXIMUM_UUID)
+> +               return -EINVAL;
+> +
+> +       context.uuid_str = int3400_thermal_uuids[uuid];
+> +
+>         buf[OSC_QUERY_DWORD] = 0;
+>         buf[OSC_SUPPORT_DWORD] = enable;
+>
+> --
+> 2.17.1
+>
