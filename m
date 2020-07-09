@@ -2,233 +2,91 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C417FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0F92065F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1002074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y3ropLhK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kfAlLVsR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgGIKPS (ORCPT
+        id S1726789AbgGIKQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:15:18 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:58912 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgGIKPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:15:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594289715; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=R96k3NJkJXHArnjayQMtO7eaVw9xfD/00FOqn9uud7M=; b=Y3ropLhK56zPOGEuvlL/0RVlfIdbARvb73Fc2VSZKXZKtXXDjm3dgficdf66LZ1Lwfx2F6fC
- f4lVUSFlJlOnn5n4dMFXmh+d59A6kujV3qnNLKTpyp6DVxvRbujqfwM9um3M+v3jgPorOx2e
- S7HLvnM98Zxbgk806VInj3LAKFw=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
- 5f06ee2c0082b2784837d1ca (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 10:15:08
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0C0B4C433A1; Thu,  9 Jul 2020 10:15:08 +0000 (UTC)
-Received: from [192.168.0.129] (unknown [183.83.142.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0FFF2C43387;
-        Thu,  9 Jul 2020 10:15:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0FFF2C43387
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-Subject: Re: [PATCH v3 3/8] ASoC: qcom: lpass: Use regmap_field for i2sctl and
- dmactl registers
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
- <1594184896-10629-4-git-send-email-rohitkr@codeaurora.org>
- <a59dc25f-cac2-5540-f1f4-78fd749c65c9@linaro.org>
- <3b849440-091e-bbd3-4944-8a196e181af7@codeaurora.org>
- <ac634d4d-527a-7262-2744-203c04ee0982@linaro.org>
-From:   Rohit Kumar <rohitkr@codeaurora.org>
-Message-ID: <4c5cb96c-9423-67a5-0da6-ee7cf9b1ea32@codeaurora.org>
-Date:   Thu, 9 Jul 2020 15:44:59 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 06:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgGIKQN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:16:13 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 337FAC061A0B;
+        Thu,  9 Jul 2020 03:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+4y1tH7JgQGg/m4Y2HPNpPcl0NpQqyVNAfEoubft9uY=; b=kfAlLVsRpqnbZQEAK40SMcQERa
+        AJ3dkC/7hx9RCDtrf0/3gke1gSrkFxyJf+EkHzqRSG2oK+901gljldEXBKdkGbomGpYn1EapFRu6Q
+        HtpsebXW3mT3AJ7A/iUdncW27w3voAXB1ykeDfelYyIfxvgjmF32l4dB+dqkg6GDU3HVaDCf1B3VM
+        hl9DInOwoFkeAlr6t+Hz9maFrGkMHr+BcG6SApp1XiUze3uBczRlS9d45yOfyfdaQ8BymLq8TlYfV
+        Bp9/pC3nrvuEJg/IaqP0CHEfyJgNA9ZAl4XPHDXNx6u58PfGJvJfsmDwELO/eD2GabcXZTwTR2gff
+        AFhDMLkg==;
+Received: from [2001:4bb8:188:5f50:7053:304b:bf82:82cf] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtTax-0000ZA-F3; Thu, 09 Jul 2020 10:15:59 +0000
+Date:   Thu, 9 Jul 2020 12:15:59 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        mb@lightnvm.io, linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        Selvakumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH v3 4/4] io_uring: add support for zone-append
+Message-ID: <20200709085501.GA64935@infradead.org>
+References: <1593974870-18919-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200705185227epcas5p16fba3cb92561794b960184c89fdf2bb7@epcas5p1.samsung.com>
+ <1593974870-18919-5-git-send-email-joshi.k@samsung.com>
+ <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
 MIME-Version: 1.0
-In-Reply-To: <ac634d4d-527a-7262-2744-203c04ee0982@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fe0066b7-5380-43ee-20b2-c9b17ba18e4f@kernel.dk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 05, 2020 at 03:00:47PM -0600, Jens Axboe wrote:
+> > diff --git a/fs/io_uring.c b/fs/io_uring.c
+> > index 155f3d8..cbde4df 100644
+> > --- a/fs/io_uring.c
+> > +++ b/fs/io_uring.c
+> > @@ -402,6 +402,8 @@ struct io_rw {
+> >  	struct kiocb			kiocb;
+> >  	u64				addr;
+> >  	u64				len;
+> > +	/* zone-relative offset for append, in sectors */
+> > +	u32			append_offset;
+> >  };
+> 
+> I don't like this very much at all. As it stands, the first cacheline
+> of io_kiocb is set aside for request-private data. io_rw is already
+> exactly 64 bytes, which means that you're now growing io_rw beyond
+> a cacheline and increasing the size of io_kiocb as a whole.
+> 
+> Maybe you can reuse io_rw->len for this, as that is only used on the
+> submission side of things.
 
-On 7/9/2020 3:36 PM, Srinivas Kandagatla wrote:
->
->
-> On 09/07/2020 10:57, Rohit Kumar wrote:
->> Thanks Srini for reviewing.
->>
->> On 7/9/2020 2:56 PM, Srinivas Kandagatla wrote:
->>>
->>>
->>> On 08/07/2020 06:08, Rohit kumar wrote:
->>>> I2SCTL and DMACTL registers has different bits alignment for newer
->>>> LPASS variants of SC7180 soc. Use REG_FIELD_ID() to define the
->>>> reg_fields in platform specific file and removed shifts and mask
->>>> macros for such registers from header file.
->>>>
->>>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->>>
->>> Thanks Rohit for doing this, this looks much better now!
->>> I have few minor comments..
->>>
->>>> ---
->>>>   sound/soc/qcom/lpass-apq8016.c   |  24 ++++++
->>>>   sound/soc/qcom/lpass-cpu.c       | 163 
->>>> +++++++++++++++++++++++----------------
->>>>   sound/soc/qcom/lpass-ipq806x.c   |  24 ++++++
->>>>   sound/soc/qcom/lpass-lpaif-reg.h | 157 
->>>> +++++++++++++++++++------------------
->>>>   sound/soc/qcom/lpass-platform.c  | 151 
->>>> +++++++++++++++++++++++++++---------
->>>>   sound/soc/qcom/lpass.h           |  53 +++++++++++++
->>>>   6 files changed, 398 insertions(+), 174 deletions(-)
->>>>
->>>
->>> index f0c7e93..f358d12 100644
->>>> --- a/sound/soc/qcom/lpass-cpu.c
->>>> +++ b/sound/soc/qcom/lpass-cpu.c
->>>> @@ -29,6 +29,32 @@
->>>>   #define LPASS_CPU_I2S_SD0_1_2_MASK    GENMASK(2, 0)
->>>>   #define LPASS_CPU_I2S_SD0_1_2_3_MASK    GENMASK(3, 0)
->>>
->>>
->>>>   }
->>>>   -static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream 
->>>> *substream,
->>>> -        struct snd_soc_dai *dai)
->>>> -{
->>>> -    struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
->>>> -    int ret;
->>>> -
->>>> -    ret = regmap_write(drvdata->lpaif_map,
->>>> -               LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
->>>> -               0);
->>>> -    if (ret)
->>>> -        dev_err(dai->dev, "error writing to i2sctl reg: %d\n", ret);
->>>> -
->>>> -    return ret;
->>>> -}
->>>
->>> Any particular reason why this function remove
->>
->> This was causing issue in playback/capture concurrency. It sets 
->> I2SCTL register value to 0
->>
->> when usecase ends. However, playback/capture specific bits are 
->> already cleared during trigger() stop
->>
->> function. So, this is not needed.
->
-> This should be sent as separate fix with fixes tag!
-Ok. Will create separate patch with fixes tag and post.
->
->>
->>
->>>
->>>> diff --git a/sound/soc/qcom/lpass-lpaif-reg.h 
->>>> b/sound/soc/qcom/lpass-lpaif-reg.h
->>>> index 72a3e2f..5258e60 100644
->>>> --- a/sound/soc/qcom/lpass-lpaif-reg.h
->>>> +++ b/sound/soc/qcom/lpass-lpaif-reg.h
->>>> @@ -12,15 +12,12 @@
->>> ...
->>>>   #endif /* __LPASS_LPAIF_REG_H__ */
->>>> diff --git a/sound/soc/qcom/lpass-platform.c 
->>>> b/sound/soc/qcom/lpass-platform.c
->>>> index 34f7fd1..445ca193 100644
->>>> --- a/sound/soc/qcom/lpass-platform.c
->>>> +++ b/sound/soc/qcom/lpass-platform.c
->>>> @@ -50,6 +50,53 @@ static const struct snd_pcm_hardware 
->>>> lpass_platform_pcm_hardware = {
->>>>       .fifo_size        =    0,
->>>>   };
->>> ...
->>>>   static int lpass_platform_pcmops_open(struct snd_soc_component 
->>>> *component,
->>>>                         struct snd_pcm_substream *substream)
->>>>   {
->>>> @@ -59,9 +106,9 @@ static int lpass_platform_pcmops_open(struct 
->>>> snd_soc_component *component,
->>>>       struct lpass_data *drvdata = 
->>>> snd_soc_component_get_drvdata(component);
->>>>       struct lpass_variant *v = drvdata->variant;
->>>>       int ret, dma_ch, dir = substream->stream;
->>>> -    struct lpass_pcm_data *data;
->>>> +    struct lpass_pcm_data *data = NULL;
->>>>   -    data = devm_kzalloc(soc_runtime->dev, sizeof(*data), 
->>>> GFP_KERNEL);
->>>> +    data = kzalloc(sizeof(*data), GFP_KERNEL);
->>>
->>> Does this change belong in this patch?
->>
->>
->> As part of this change, I fixed memory leak too by adding kfree() in 
->> close()
->>
->> However, this was causing issue as memory was allocated using 
->> devm_kzalloc().
->>
->> Should I move it to different patch?
->
-> That would be the right thing to do, can also add fixes tag!
-
-
-Sure, Will do that in next spin.
-
->
->
->>
->>>
->>>>       if (!data)
->>>>           return -ENOMEM;
->>>>   @@ -111,13 +158,13 @@ static int 
->>>> lpass_platform_pcmops_close(struct snd_soc_component *component,
->>>>       struct snd_pcm_runtime *runtime = substream->runtime;
->>>>       struct lpass_data *drvdata = 
->>>> snd_soc_component_get_drvdata(component);
->>>>       struct lpass_variant *v = drvdata->variant;
->
->>>
->>> Above two along with rddma members can be removed, these become 
->>> redundant after adding regmap field!
->>>
->> wrdma_channels is used in alloc_dma_channel() to get the channel id.
->>
->> Also, both are used for other DMA registers such as LPAIF_RDMABASE_REG,
->>
->> LPAIF_RDMABUFF_REG, LPAIF_RDMACURR_REG, etc.
->>
-> Ah I see we are still using this in lpass_cpu_regmap_writeable!
-> ignore my previous comments about removing them!
->
-> --srini
-
--- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
-
+We don't actually need any new field at all.  By the time the write
+returned ki_pos contains the offset after the write, and the res
+argument to ->ki_complete contains the amount of bytes written, which
+allow us to trivially derive the starting position.
