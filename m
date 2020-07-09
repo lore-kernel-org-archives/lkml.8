@@ -6,96 +6,90 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C802BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B804C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4F9E206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F5F1206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594326339;
-	bh=JlQ5UWa3wVHDOj4X8rqWllbVEYuOP0sv1i4VD8112vQ=;
+	s=default; t=1594326372;
+	bh=cITVT+0Hmjc0/8RxgoF23JFYOMYqwmrkEtcPGiYLk10=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kSyvkVJMFOz/akOVEcmXaIY17gtjYKhS7yQ4anVeAV5Ubwn6LY52ILSbDPJpCiypn
-	 c4mBikhDPESZ79PbNfzea6I5UOmc/cZ158lC1Jfa/cxyNpHttnd4qdTY43nlKIYzCr
-	 KTcG5W9jjXrUPkqhFt7cGG1LhhbHrSUQThGTYruA=
+	b=1duZYGgpQpZqtfYfo4ky5CsIm/Arr+QZYuypt8BxlM+IlTxcZ+oEmMa5J2n92EgyV
+	 6tT4S95v4WxZb0XGNKfAjFRPYm7hfQB5ePbKZMuRv2gq7Zzq7aheqoeO2VKF/eblBo
+	 aLcl2lPskOnI5FsiC4MJxDtce47UZPyrKiAlUmxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgGIUZi (ORCPT
+        id S1726765AbgGIU0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:25:38 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41307 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgGIUZg (ORCPT
+        Thu, 9 Jul 2020 16:26:11 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43733 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgGIU0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:25:36 -0400
-Received: by mail-io1-f65.google.com with SMTP id o5so3688495iow.8;
-        Thu, 09 Jul 2020 13:25:35 -0700 (PDT)
+        Thu, 9 Jul 2020 16:26:10 -0400
+Received: by mail-il1-f195.google.com with SMTP id i18so3153365ilk.10;
+        Thu, 09 Jul 2020 13:26:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gB+TJBo4jwSPKnuZ4I54QRWbT+GZvVYToFIo0A59PEk=;
-        b=Iv0ZpZSsG4Ve90G0Iag+NdHzXqYb6N+OyT/xO639DtCvKIjtNdSTBUK4AE+WcRwUk7
-         l1h8Lm5TxmsWadkB8ZAaq4IMtlUKLiHOzxZuO+2PHfGAT0YaGZz5FH6REkG4OggJ7mh2
-         TZFGF+17jZdBBZWvbvdzOa5dz6MukCUfD/InhcFUHMFsjeqP5GDl8t+hlgWkVsmr+7Wu
-         F+BNjPOnGWtRe2GmlUtS3/2FABCfVpHqfmwoFnBUphZTfvJ0WPirhA+Mj2H2FYz7dXqP
-         ZR+KMIsgbsaB8pooCjvMYjh+fdIyh2PakhicFhTLwPrwR21qFgL3/9Tp6lmR2kwfllvd
-         8U/w==
-X-Gm-Message-State: AOAM5323N1bMjv9czSNhjTjCG10zyVVzAA6DO9HklrGyQU8gt+XUCge+
-        u7PPBG+GyciETyOwgq5+xg==
-X-Google-Smtp-Source: ABdhPJywySDNWQF8EEE70975VZPQ+l79RtOSVMqnNVbgPGiWjw8WBfjhfCfRyEEqFWiv7B1J1X2bVA==
-X-Received: by 2002:a05:6638:1511:: with SMTP id b17mr66676337jat.113.1594326335459;
-        Thu, 09 Jul 2020 13:25:35 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pbqcota+uxMHedfTegltZRxrsC6vfzXshLlXxe0iuA8=;
+        b=MA3r+Apiiwt047W2N6FfWHbA84e+aBRwYnvrLTWrC/+sxIGvuWI8AZOX/82FKw+Z1J
+         XhZG960jao2bJi20ykLXPrHAPmow0MXBoB9URKaPSb6wig23KoZxyqSzwCdf34FLQ09r
+         Q+OEnO8nBtTa24TPVoKlgOKJ75eLh2IL/5+ZaWULq/VF56UBgDWIz9l5eW9tlGnwIwEV
+         HBd+ek9KbUM/5i3vOciANbOIg1ulsHDrHue0J5qFGMg6ytLnCBAycaNkitvFgkymN9Xz
+         w2Ds448FnfESmcaSsw9ArgL+zXxjlDi5KK4AEUj4F8JTJt4T7w5T56Gvb48lXNqAEE9s
+         o8qw==
+X-Gm-Message-State: AOAM532zMLpbiQViSN5oydu83ybvbWjDK/5JoPXqnWcRayphpycNsqcp
+        WFfsniLLkR5I67sxOUR35sQ6e6hL9Q==
+X-Google-Smtp-Source: ABdhPJz/rrxaNaSnbsqf9KR30EyQSwsbmLE+U5dYgyuILwBQnI28nLIAJh6GSc0L5Paa1d13u6Lulg==
+X-Received: by 2002:a92:89da:: with SMTP id w87mr14231050ilk.236.1594326369801;
+        Thu, 09 Jul 2020 13:26:09 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id k1sm2328118ilr.35.2020.07.09.13.25.34
+        by smtp.gmail.com with ESMTPSA id s17sm2788133ioj.10.2020.07.09.13.26.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 13:25:34 -0700 (PDT)
-Received: (nullmailer pid 829870 invoked by uid 1000);
-        Thu, 09 Jul 2020 20:25:33 -0000
-Date:   Thu, 9 Jul 2020 14:25:33 -0600
+        Thu, 09 Jul 2020 13:26:09 -0700 (PDT)
+Received: (nullmailer pid 830691 invoked by uid 1000);
+        Thu, 09 Jul 2020 20:26:08 -0000
+Date:   Thu, 9 Jul 2020 14:26:08 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RESEND PATCH v7 2/2] devicetree: bindings: phy: Document
- ipq806x dwc3 qcom phy
-Message-ID: <20200709202533.GA829809@bogus>
-References: <20200615205333.20747-1-ansuelsmth@gmail.com>
- <20200615205333.20747-2-ansuelsmth@gmail.com>
+To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, tsbogend@alpha.franken.de,
+        p.zabel@pengutronix.de, f.fainelli@gmail.com, robh+dt@kernel.org,
+        jonas.gorski@gmail.com, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v7 2/9] dt-bindings: reset: add BCM6345 reset controller
+ bindings
+Message-ID: <20200709202608.GA830643@bogus>
+References: <20200617105042.3824116-1-noltari@gmail.com>
+ <20200617105042.3824116-3-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200615205333.20747-2-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200617105042.3824116-3-noltari@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 22:53:27 +0200, Ansuel Smith wrote:
-> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-> inizialize and use usb on ipq806x SoC.
+On Wed, 17 Jun 2020 12:50:34 +0200, Álvaro Fernández Rojas wrote:
+> Add device tree binding documentation for BCM6345 reset controller.
 > 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
-> v7:
-> * Drop useless AllOf
-> v6:
-> * Add maximum value
-> v5:
-> * Fix dt_binding_check error
-> v4:
-> * Add qcom to specific bindings
-> v3:
-> * Use explicit reg instead of regmap
+>  v7: no changes
+>  v6: no changes
+>  v5: no changes
+>  v4: change license and fix maxItems.
+>  v3: no changes
+>  v2: no changes
 > 
->  .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 55 ++++++++++++++
->  .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 73 +++++++++++++++++++
->  2 files changed, 128 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+>  .../bindings/reset/brcm,bcm6345-reset.yaml    | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
