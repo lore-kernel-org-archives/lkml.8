@@ -2,94 +2,124 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86553C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE3F220674
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FFBE206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:08:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQJbLNgz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgGIJFi (ORCPT
+        id S1726289AbgGIJIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:05:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52894 "EHLO
+        Thu, 9 Jul 2020 05:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgGIJFi (ORCPT
+        with ESMTP id S1726122AbgGIJIB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:05:38 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1228BC061A0B;
-        Thu,  9 Jul 2020 02:05:38 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 6D7732A5F19
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, dianders@chromium.org,
-        heiko@sntech.de, maz@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH] dt-bindings: devfreq: rk3399_dmc: Add rockchip,pmu phandle
-Date:   Thu,  9 Jul 2020 11:05:29 +0200
-Message-Id: <20200709090529.1404999-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 9 Jul 2020 05:08:01 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08FF1C061A0B;
+        Thu,  9 Jul 2020 02:08:01 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id b92so825040pjc.4;
+        Thu, 09 Jul 2020 02:08:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=j3K2X3/RiGy249KpzJwq9E4MvMleCWKUqV6iVngTkS8=;
+        b=SQJbLNgzhdKt01fp9fZPyoHqwU8+UpC+a7O8V/WpWkH1DDIXjYR5B0pHn2nHngRHlN
+         JDA0G4ruUCz6wrkNDFJ/UXDGC/MGMbEKQvNqNMUQtbppd7zxbZ1j3sKY1LDkCVa/sYH4
+         tCL6+mtsYBneYv1EC4wtcBr8Zk81brcr1HUJBuTct2diJ4kI9ZcwfBHsUMGPPGxecnvj
+         xGOUC9XtQglTlZSo7k0PAMc7GVn9PmWxb4wq2TYYuxHwYkBn2Fb620VVwnxuLa5QF6BS
+         o9Z2OfqVrOBg8F9xuQN08N6fs4GOAgCgCRo35vGx4myODcTCjcRXUZunFCdzt+GdGgI1
+         0+sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=j3K2X3/RiGy249KpzJwq9E4MvMleCWKUqV6iVngTkS8=;
+        b=otz9GeoB71fI9MyukEnbuVYfY0miIZp03Cp2dgjv5qdLD/U8zrM7S9s6E4+/20ZsB/
+         8CsJJpZBr3tNzeU9rinS+0lfVWg6AoITPmO+g9N+u/CQGjbhgiAsCT9dgLDQqmB7iUJp
+         4fXjISMGxaYFtOX54xF7v2EakRjyGuqx3we6904gP6EnyyOnM+QRtpXGSExxlcL+jMAN
+         Vw05TFQex18KJtodjQgojhf9bbv6DMhB0wYBzWBxledVHfe9Vm24m2u2HdqWl8n/xl5i
+         eJ0GN0EoSTlM7ayvaVWgdaPXxb65/jxJ6AB1wwLfSMpU12Nej5/snTM8gwTkVPEgyHUj
+         1O+g==
+X-Gm-Message-State: AOAM533YWTHKEvlfZfuguMqnuckZPlZNGoDPVVCSKbeodnTfXmsKBmjB
+        RzLOO5OLdDA3NVzrUpCkdXAwF1wT3mCZhOT+VII=
+X-Google-Smtp-Source: ABdhPJwRtV0Jd7qJCGSCXF3A+Ex2/kk91xx8MhsUVXW+KUq9GprPICkkSO6Biphls5J1Y9iAFKqSpeUZLPlRTZx2L+g=
+X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr13725161pjb.181.1594285680452;
+ Thu, 09 Jul 2020 02:08:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200708202355.28507-1-digetx@gmail.com> <20200708202355.28507-4-digetx@gmail.com>
+ <CAHp75VejftNuSqdYvd1YE1SdRON6=mQ_iD2dEr4K9D8YGgeRBQ@mail.gmail.com> <675c4691-d372-4fe1-d515-c86fdba2f588@gmail.com>
+In-Reply-To: <675c4691-d372-4fe1-d515-c86fdba2f588@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Jul 2020 12:07:44 +0300
+Message-ID: <CAHp75Vd89QpwaGvkpzG+pxnLd8S2guPCARLW5xPwhxXL8ZRfFw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] gpio: max77620: Don't set of_node
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Rockchip DMC (Dynamic Memory Interface) needs to access to the PMU
-general register files to know the DRAM type, so add a phandle to the
-syscon that manages these registers.
+On Thu, Jul 9, 2020 at 12:44 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+> 08.07.2020 23:57, Andy Shevchenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Wednesday, July 8, 2020, Dmitry Osipenko <digetx@gmail.com
+> > <mailto:digetx@gmail.com>> wrote:
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
----
-Following the discussion in [1] and after having [2] accepted, this
-patch is a RESEND of a patch [3] that has already all the acks but for
-some reason and my bad, I lost the tracking, didn't land. The patch adds
-documentation for an already property implemented in the driver, so
-resend the patch again. There is a slighty modification, the rockchip,pmu
-property has been moved to be optional as is not really required.
+...
 
-Thanks,
-  Enric
+> > I gave a second look and I think my suggestion is wrong. Here is an
+> > interesting propagation of the parent device node to its grand son,
+> > leaving son=E2=80=99s one untouched. Original code has intentions to do=
+ that way.
+>
+> The [1] says that gpio_chip.parent should point at the "device providing
+> the GPIOs".
 
-[1] https://lkml.org/lkml/2020/6/22/692
-[2] https://lkml.org/lkml/2020/6/30/367
-[3] https://patchwork.kernel.org/patch/10901593/
+Yes, physical device I believe.
 
- Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+> That's the pdev->dev.parent in the case of this driver.
+> MAX77620 is an MFD PMIC device that has virtual sub-devices like GPIO
+> controller, PINCTRL and RTC. The MFD is the parent device that provides
+> the GPIOs [2].
+>
+> [1]
+> https://elixir.bootlin.com/linux/v5.8-rc3/source/include/linux/gpio/drive=
+r.h#L276
+>
+> [2]
+> https://elixir.bootlin.com/linux/v5.8-rc3/source/arch/arm64/boot/dts/nvid=
+ia/tegra210-p2180.dtsi#L48
+>
+> I think the old code was wrong and this patch is correct, please correct
+> me if I'm missing something.
 
-diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-index 0ec68141f85a..a10d1f6d85c6 100644
---- a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-+++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-@@ -18,6 +18,8 @@ Optional properties:
- 			 format depends on the interrupt controller.
- 			 It should be a DCF interrupt. When DDR DVFS finishes
- 			 a DCF interrupt is triggered.
-+- rockchip,pmu:		 Phandle to the syscon managing the "PMU general register
-+			 files".
- 
- Following properties relate to DDR timing:
- 
--- 
-2.27.0
+Hmm... I have checked through GPIO drivers I have knowledge of / care
+about and PMIC ones do like you suggested in this patch, the rest
+(which are instantiated from MFD) take a virtual platform device.
 
+Looking at DT excerpt I think you're rather right than wrong, so I
+leave it to you and maintainers.
+Thanks!
+
+--=20
+With Best Regards,
+Andy Shevchenko
