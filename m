@@ -2,638 +2,134 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3612C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24F6C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 703A02074A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA452073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:39:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nz+teg8o"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eg3Q+4u1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KTfzcCae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgGIHhR (ORCPT
+        id S1726287AbgGIHjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:37:17 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:1635 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGIHhQ (ORCPT
+        Thu, 9 Jul 2020 03:39:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbgGIHjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:37:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594280233; x=1625816233;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=td70l1YK+2ggHr5XbLEJo/BgF3dPPCkFscm3fpFN8VU=;
-  b=nz+teg8oOZAv2lsPhnJwA3k0Xh3/8tGEwWemaiDFlZ2qb4952YjcPtSF
-   uov5HiawoaFWWXqaX5XDFYWiBA5Kg079ddOr4VmiACtmm/h+/7B5qFDGJ
-   7IxV7KnIk/7wgvIw+f6dYa4BL15gS0SOris9QTKMPCOeoBre3jyumfiZz
-   8=;
-IronPort-SDR: 0zwBclE1w2FCuzUmi2zMQYwx3h3sfvx9U4uw+XWEZ8gXofN9kZqtrejBbuDzK+saaIuJkeRSAS
- qrEGWJWqPr+w==
-X-IronPort-AV: E=Sophos;i="5.75,331,1589241600"; 
-   d="scan'208";a="57249437"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 09 Jul 2020 07:37:09 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 1A174A2595;
-        Thu,  9 Jul 2020 07:37:07 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 9 Jul 2020 07:37:06 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.73) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 9 Jul 2020 07:36:57 +0000
-Subject: Re: [PATCH v4 11/18] nitro_enclaves: Add logic for enclave memory
- region set
-To:     Alexander Graf <graf@amazon.de>, <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        "Stefano Garzarella" <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-12-andraprs@amazon.com>
- <798dbb9f-0fe4-9fd9-2e64-f6f2bc740abf@amazon.de>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <b7b7691c-595f-531e-9db3-c8e3fc21f983@amazon.com>
-Date:   Thu, 9 Jul 2020 10:36:47 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Thu, 9 Jul 2020 03:39:09 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 131B1C061A0B;
+        Thu,  9 Jul 2020 00:39:09 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 09:39:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594280347;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9iDuCPY5jQD/QE0vjfP0a2K9MiEkv+fafOh2l6dUgtQ=;
+        b=eg3Q+4u1Jkv/Kn5+vvvuWi/l0zsTaal1qOeVcF6HT01CBEq/I82eHHL1HpKwoLiXp+zMbJ
+        7rNCoW2CDsD2XwouMOsR/VdBNuVcabqS28PLIOigPwHkH/x09iSxxGbvF2wXqDZNoVW/7/
+        3eWIeGfBndrDJRV/fkvsn9LdoLCKO0mMPZUmzin8Sza5d+K6pBWBEnuKFBcOO3yjVqxSd1
+        19GathtpXqFwljq5K9M3aeJ2Lkro6SeRrEFKuCq5hXJcg0L8qG1K/adJyXlHIOX6s4rKXC
+        KMjl01whu/u63DVoU5bAXutnVDC8rMEDUfzAEpLy/+pYqA71+4sgLoWBK3Dibw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594280347;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9iDuCPY5jQD/QE0vjfP0a2K9MiEkv+fafOh2l6dUgtQ=;
+        b=KTfzcCae9F6ml/fMfVsarbSqtOzXHPyKmy9J6NmM0RURPwLtWxlU3+PjTA4wqLG1EUYvJ4
+        9+z+5he+1U8aAGAQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+        Mahipal Challa <mahipalreddy2006@gmail.com>,
+        Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: Re: [PATCH v4] mm/zswap: move to use crypto_acomp API for hardware
+ acceleration
+Message-ID: <20200709073905.lgs5kvccnz6eqsyd@linutronix.de>
+References: <20200707125210.33256-1-song.bao.hua@hisilicon.com>
+ <20200708145934.4w3qk53mgavyyln7@linutronix.de>
+ <B926444035E5E2439431908E3842AFD25610B7@DGGEMI525-MBS.china.huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <798dbb9f-0fe4-9fd9-2e64-f6f2bc740abf@amazon.de>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.73]
-X-ClientProxiedBy: EX13D06UWA001.ant.amazon.com (10.43.160.220) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <B926444035E5E2439431908E3842AFD25610B7@DGGEMI525-MBS.china.huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 06/07/2020 13:46, Alexander Graf wrote:
->
->
-> On 22.06.20 22:03, Andra Paraschiv wrote:
->> Another resource that is being set for an enclave is memory. User space
->> memory regions, that need to be backed by contiguous memory regions,
->> are associated with the enclave.
->>
->> One solution for allocating / reserving contiguous memory regions, that
->> is used for integration, is hugetlbfs. The user space process that is
->> associated with the enclave passes to the driver these memory regions.
->>
->> The enclave memory regions need to be from the same NUMA node as the
->> enclave CPUs.
->>
->> Add ioctl command logic for setting user space memory region for an
->> enclave.
->>
->> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
->> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
->> ---
->> Changelog
->>
->> v3 -> v4
->>
->> * Check enclave memory regions are from the same NUMA node as the
->> =A0=A0 enclave CPUs.
->> * Use dev_err instead of custom NE log pattern.
->> * Update the NE ioctl call to match the decoupling from the KVM API.
->>
->> v2 -> v3
->>
->> * Remove the WARN_ON calls.
->> * Update static calls sanity checks.
->> * Update kzfree() calls to kfree().
->>
->> v1 -> v2
->>
->> * Add log pattern for NE.
->> * Update goto labels to match their purpose.
->> * Remove the BUG_ON calls.
->> * Check if enclave max memory regions is reached when setting an enclave
->> =A0=A0 memory region.
->> * Check if enclave state is init when setting an enclave memory region.
->> ---
->> =A0 drivers/virt/nitro_enclaves/ne_misc_dev.c | 257 ++++++++++++++++++++=
-++
->> =A0 1 file changed, 257 insertions(+)
->>
->> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c =
-
->> b/drivers/virt/nitro_enclaves/ne_misc_dev.c
->> index cfdefa52ed2a..17ccb6cdbd75 100644
->> --- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
->> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
->> @@ -476,6 +476,233 @@ static int ne_create_vcpu_ioctl(struct =
-
->> ne_enclave *ne_enclave, u32 vcpu_id)
->> =A0=A0=A0=A0=A0 return rc;
->> =A0 }
->> =A0 +/**
->> + * ne_sanity_check_user_mem_region - Sanity check the userspace memory
->> + * region received during the set user memory region ioctl call.
->> + *
->> + * This function gets called with the ne_enclave mutex held.
->> + *
->> + * @ne_enclave: private data associated with the current enclave.
->> + * @mem_region: user space memory region to be sanity checked.
->> + *
->> + * @returns: 0 on success, negative return value on failure.
->> + */
->> +static int ne_sanity_check_user_mem_region(struct ne_enclave =
-
->> *ne_enclave,
->> +=A0=A0=A0 struct ne_user_memory_region *mem_region)
->> +{
->> +=A0=A0=A0 if (ne_enclave->mm !=3D current->mm)
->> +=A0=A0=A0=A0=A0=A0=A0 return -EIO;
->> +
->> +=A0=A0=A0 if ((mem_region->memory_size % NE_MIN_MEM_REGION_SIZE) !=3D 0=
-) {
->> +=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "Mem size not=
- multiple of 2 MiB\n");
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
->
-> Can we make this an error that gets propagated to user space =
-
-> explicitly? I'd rather have a clear error return value of this =
-
-> function than a random message in dmesg.
-
-We can make this, will add memory checks specific NE error codes, as for =
-
-the other call paths in the series e.g. enclave CPU(s) setup.
-
->
->> +=A0=A0=A0 }
->> +
->> +=A0=A0=A0 if ((mem_region->userspace_addr & (NE_MIN_MEM_REGION_SIZE - 1=
-)) ||
->
-> This logic already relies on the fact that NE_MIN_MEM_REGION_SIZE is a =
-
-> power of two. Can you do the same above on the memory_size check?
-
-Done.
-
->
->> +=A0=A0=A0=A0=A0=A0=A0 !access_ok((void __user *)(unsigned =
-
->> long)mem_region->userspace_addr,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mem_region->memory_size)) {
->> +=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "Invalid user=
- space addr range\n");
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
->
-> Same comment again. Return different errors for different conditions, =
-
-> so that user space has a chance to print proper errors to its users.
->
-> Also, don't we have to check alignment of userspace_addr as well?
->
-
-Would need an alignment check for 2 MiB at least, yes.
-
->> +=A0=A0=A0 }
->> +
->> +=A0=A0=A0 return 0;
->> +}
->> +
->> +/**
->> + * ne_set_user_memory_region_ioctl - Add user space memory region to =
-
->> the slot
->> + * associated with the current enclave.
->> + *
->> + * This function gets called with the ne_enclave mutex held.
->> + *
->> + * @ne_enclave: private data associated with the current enclave.
->> + * @mem_region: user space memory region to be associated with the =
-
->> given slot.
->> + *
->> + * @returns: 0 on success, negative return value on failure.
->> + */
->> +static int ne_set_user_memory_region_ioctl(struct ne_enclave =
-
->> *ne_enclave,
->> +=A0=A0=A0 struct ne_user_memory_region *mem_region)
->> +{
->> +=A0=A0=A0 struct ne_pci_dev_cmd_reply cmd_reply =3D {};
->> +=A0=A0=A0 long gup_rc =3D 0;
->> +=A0=A0=A0 unsigned long i =3D 0;
->> +=A0=A0=A0 struct ne_mem_region *ne_mem_region =3D NULL;
->> +=A0=A0=A0 unsigned long nr_phys_contig_mem_regions =3D 0;
->> +=A0=A0=A0 unsigned long nr_pinned_pages =3D 0;
->> +=A0=A0=A0 struct page **phys_contig_mem_regions =3D NULL;
->> +=A0=A0=A0 int rc =3D -EINVAL;
->> +=A0=A0=A0 struct slot_add_mem_req slot_add_mem_req =3D {};
->> +
->> +=A0=A0=A0 rc =3D ne_sanity_check_user_mem_region(ne_enclave, mem_region=
-);
->> +=A0=A0=A0 if (rc < 0)
->> +=A0=A0=A0=A0=A0=A0=A0 return rc;
->> +
->> +=A0=A0=A0 ne_mem_region =3D kzalloc(sizeof(*ne_mem_region), GFP_KERNEL);
->> +=A0=A0=A0 if (!ne_mem_region)
->> +=A0=A0=A0=A0=A0=A0=A0 return -ENOMEM;
->> +
->> +=A0=A0=A0 /*
->> +=A0=A0=A0=A0 * TODO: Update nr_pages value to handle contiguous virtual=
- address
->> +=A0=A0=A0=A0 * ranges mapped to non-contiguous physical regions. Hugetl=
-bfs =
-
->> can give
->> +=A0=A0=A0=A0 * 2 MiB / 1 GiB contiguous physical regions.
->> +=A0=A0=A0=A0 */
->> +=A0=A0=A0 ne_mem_region->nr_pages =3D mem_region->memory_size /
->> +=A0=A0=A0=A0=A0=A0=A0 NE_MIN_MEM_REGION_SIZE;
->> +
->> +=A0=A0=A0 ne_mem_region->pages =3D kcalloc(ne_mem_region->nr_pages,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 size=
-of(*ne_mem_region->pages),
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 GFP_=
-KERNEL);
->> +=A0=A0=A0 if (!ne_mem_region->pages) {
->> +=A0=A0=A0=A0=A0=A0=A0 kfree(ne_mem_region);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 return -ENOMEM;
->
-> kfree(NULL) is a nop, so you can just set rc and goto free_mem_region =
-
-> here and below.
-
-Updated both return paths.
-
->
->> +=A0=A0=A0 }
->> +
->> +=A0=A0=A0 phys_contig_mem_regions =3D kcalloc(ne_mem_region->nr_pages,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sizeof(=
-*phys_contig_mem_regions),
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 GFP_KER=
-NEL);
->> +=A0=A0=A0 if (!phys_contig_mem_regions) {
->> +=A0=A0=A0=A0=A0=A0=A0 kfree(ne_mem_region->pages);
->> +=A0=A0=A0=A0=A0=A0=A0 kfree(ne_mem_region);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 return -ENOMEM;
->> +=A0=A0=A0 }
->> +
->> +=A0=A0=A0 /*
->> +=A0=A0=A0=A0 * TODO: Handle non-contiguous memory regions received from=
- user =
-
->> space.
->> +=A0=A0=A0=A0 * Hugetlbfs can give 2 MiB / 1 GiB contiguous physical reg=
-ions. =
-
->> The
->> +=A0=A0=A0=A0 * virtual address space can be seen as contiguous, althoug=
-h it is
->> +=A0=A0=A0=A0 * mapped underneath to 2 MiB / 1 GiB physical regions e.g.=
- 8 MiB
->> +=A0=A0=A0=A0 * virtual address space mapped to 4 physically contiguous =
-
->> regions of 2
->> +=A0=A0=A0=A0 * MiB.
->> +=A0=A0=A0=A0 */
->> +=A0=A0=A0 do {
->> +=A0=A0=A0=A0=A0=A0=A0 unsigned long tmp_nr_pages =3D ne_mem_region->nr_=
-pages -
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 nr_pinned_pages;
->> +=A0=A0=A0=A0=A0=A0=A0 struct page **tmp_pages =3D ne_mem_region->pages +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 nr_pinned_pages;
->> +=A0=A0=A0=A0=A0=A0=A0 u64 tmp_userspace_addr =3D mem_region->userspace_=
-addr +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 nr_pinned_pages * NE_MIN_MEM_REGION_S=
-IZE;
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 gup_rc =3D get_user_pages(tmp_userspace_addr, tmp=
-_nr_pages,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 FOLL_GET, tmp=
-_pages, NULL);
->> +=A0=A0=A0=A0=A0=A0=A0 if (gup_rc < 0) {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 rc =3D gup_rc;
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
-device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
-Error in gup [rc=3D%d]\n", rc);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 unpin_user_pages(ne_mem_region->pages=
-, nr_pinned_pages);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto free_mem_region;
->> +=A0=A0=A0=A0=A0=A0=A0 }
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 nr_pinned_pages +=3D gup_rc;
->> +
->> +=A0=A0=A0 } while (nr_pinned_pages < ne_mem_region->nr_pages);
->
-> Can this deadlock the kernel? Shouldn't we rather return an error when =
-
-> we can't pin all pages?
-
-It shouldn't cause a deadlock, based on the return values:
-
- > Returns either number of pages pinned (which may be less than the
- > number requested), or an error. Details about the return value:
- >
- > -- If nr_pages is 0, returns 0.
- > -- If nr_pages is >0, but no pages were pinned, returns -errno.
- > -- If nr_pages is >0, and some pages were pinned, returns the number of
- > pages pinned. Again, this may be less than nr_pages.
-
-
-But I can update the logic to have all or nothing.
-
->
->> +
->> +=A0=A0=A0 /*
->> +=A0=A0=A0=A0 * TODO: Update checks once physically contiguous regions a=
-re =
-
->> collected
->> +=A0=A0=A0=A0 * based on the user space address and get_user_pages() res=
-ults.
->> +=A0=A0=A0=A0 */
->> +=A0=A0=A0 for (i =3D 0; i < ne_mem_region->nr_pages; i++) {
->> +=A0=A0=A0=A0=A0=A0=A0 if (!PageHuge(ne_mem_region->pages[i])) {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
-device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
-Not a hugetlbfs page\n");
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto unpin_pages;
->> +=A0=A0=A0=A0=A0=A0=A0 }
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 if (huge_page_size(page_hstate(ne_mem_region->pag=
-es[i])) !=3D
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 NE_MIN_MEM_REGION_SIZE) {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
-device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
-Page size isn't 2 MiB\n");
->
-> Why is a huge page size of >2MB a problem? Can't we just make =
-
-> huge_page_size() the ne mem slot size?
-
-It's not a problem, actually this is part of the TODO(s) from the =
-
-current function, to support contiguous regions larger than 2 MiB. It's =
-
-just that we started with 2 MiB. :)
-
->
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto unpin_pages;
->> +=A0=A0=A0=A0=A0=A0=A0 }
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 if (ne_enclave->numa_node !=3D
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 page_to_nid(ne_mem_region->pages[i]))=
- {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
-device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
-Page isn't from NUMA node %d\n",
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 n=
-e_enclave->numa_node);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto unpin_pages;
->
-> Is there a way to give user space hints on *why* things are going wrong?
-
-Yes, one option for the user space to have more insights is to have the =
-
-specific NE error codes you mentioned, so that we can improve the =
-
-experience even further.
-
->
->> +=A0=A0=A0=A0=A0=A0=A0 }
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 /*
->> +=A0=A0=A0=A0=A0=A0=A0=A0 * TODO: Update once handled non-contiguous mem=
-ory regions
->> +=A0=A0=A0=A0=A0=A0=A0=A0 * received from user space.
->> +=A0=A0=A0=A0=A0=A0=A0=A0 */
->> +=A0=A0=A0=A0=A0=A0=A0 phys_contig_mem_regions[i] =3D ne_mem_region->pag=
-es[i];
->> +=A0=A0=A0 }
->> +
->> +=A0=A0=A0 /*
->> +=A0=A0=A0=A0 * TODO: Update once handled non-contiguous memory regions =
-received
->> +=A0=A0=A0=A0 * from user space.
->> +=A0=A0=A0=A0 */
->> +=A0=A0=A0 nr_phys_contig_mem_regions =3D ne_mem_region->nr_pages;
->> +
->> +=A0=A0=A0 if ((ne_enclave->nr_mem_regions + nr_phys_contig_mem_regions)=
- >
->> +=A0=A0=A0=A0=A0=A0=A0 ne_enclave->max_mem_regions) {
->> +=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "Reached max =
-memory regions %lld\n",
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ne_enclave->m=
-ax_mem_regions);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 goto unpin_pages;
->> +=A0=A0=A0 }
->> +
->> +=A0=A0=A0 for (i =3D 0; i < nr_phys_contig_mem_regions; i++) {
->> +=A0=A0=A0=A0=A0=A0=A0 u64 phys_addr =3D page_to_phys(phys_contig_mem_re=
-gions[i]);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 slot_add_mem_req.slot_uid =3D ne_enclave->slot_ui=
-d;
->> +=A0=A0=A0=A0=A0=A0=A0 slot_add_mem_req.paddr =3D phys_addr;
->> +=A0=A0=A0=A0=A0=A0=A0 /*
->> +=A0=A0=A0=A0=A0=A0=A0=A0 * TODO: Update memory size of physical contigu=
-ous memory
->> +=A0=A0=A0=A0=A0=A0=A0=A0 * region, in case of non-contiguous memory reg=
-ions received
->> +=A0=A0=A0=A0=A0=A0=A0=A0 * from user space.
->> +=A0=A0=A0=A0=A0=A0=A0=A0 */
->> +=A0=A0=A0=A0=A0=A0=A0 slot_add_mem_req.size =3D NE_MIN_MEM_REGION_SIZE;
->
-> Yeah, for now, just make it huge_page_size()! :)
-
-Yup, I'll handle this in order to have the option for other sizes, in =
-
-addition to 2 MiB e.g. 1 GiB for hugetlbfs.
-
->
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 rc =3D ne_do_request(ne_enclave->pdev, SLOT_ADD_M=
-EM,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 &slot_add_mem_re=
-q, sizeof(slot_add_mem_req),
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 &cmd_reply, size=
-of(cmd_reply));
->> +=A0=A0=A0=A0=A0=A0=A0 if (rc < 0) {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
-device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
-Error in slot add mem [rc=3D%d]\n",
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 r=
-c);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /* TODO: Only unpin memory regions no=
-t added. */
->
-> Are we sure we're not creating an unusable system here?
-
-The way the requests to the PCI device are structured is that we cannot =
-
-get back a memory region / CPU, once added, till the enclave is =
-
-terminated. Let's say there is an error in the remaining logic from the =
-
-ioctl, after the region is successfully added, then the memory region =
-
-can be given back to the primary / parent VM once the enclave =
-
-termination (including slot free) is done.
-
-We can either have the logic handle one contiguous region per ioctl call =
-
-(user space gives a memory region that is backed by a single contiguous =
-
-physical memory region) or have a for loop to go through all contiguous =
-
-regions (user space gives a memory region that is backed by a set of =
-
-(smaller) contiguous physical memory regions). In the second case, if a =
-
-request to the NE PCI device fails, already added memory regions can be =
-
-given back only on slot free, triggered by the enclave termination, when =
-
-closing the enclave fd.
-
->
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto unpin_pages;
->> +=A0=A0=A0=A0=A0=A0=A0 }
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 ne_enclave->mem_size +=3D slot_add_mem_req.size;
->> +=A0=A0=A0=A0=A0=A0=A0 ne_enclave->nr_mem_regions++;
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 memset(&slot_add_mem_req, 0, sizeof(slot_add_mem_=
-req));
->> +=A0=A0=A0=A0=A0=A0=A0 memset(&cmd_reply, 0, sizeof(cmd_reply));
->
-> If you define the variables in the for loop scope, you don't need to =
-
-> manually zero them again.
-
-Updated to have the variables in the loop instead.
-
-Thank you.
-
-Andra
-
->
->> +=A0=A0=A0 }
->> +
->> +=A0=A0=A0 list_add(&ne_mem_region->mem_region_list_entry,
->> +=A0=A0=A0=A0=A0=A0=A0=A0 &ne_enclave->mem_regions_list);
->> +
->> +=A0=A0=A0 kfree(phys_contig_mem_regions);
->> +
->> +=A0=A0=A0 return 0;
->> +
->> +unpin_pages:
->> +=A0=A0=A0 unpin_user_pages(ne_mem_region->pages, ne_mem_region->nr_page=
-s);
->> +free_mem_region:
->> +=A0=A0=A0 kfree(phys_contig_mem_regions);
->> +=A0=A0=A0 kfree(ne_mem_region->pages);
->> +=A0=A0=A0 kfree(ne_mem_region);
->> +
->> +=A0=A0=A0 return rc;
->> +}
->> +
->> =A0 static long ne_enclave_ioctl(struct file *file, unsigned int cmd,
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 unsigned long arg)
->> =A0 {
->> @@ -561,6 +788,36 @@ static long ne_enclave_ioctl(struct file *file, =
-
->> unsigned int cmd,
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0 return 0;
->> =A0=A0=A0=A0=A0 }
->> =A0 +=A0=A0=A0 case NE_SET_USER_MEMORY_REGION: {
->> +=A0=A0=A0=A0=A0=A0=A0 struct ne_user_memory_region mem_region =3D {};
->> +=A0=A0=A0=A0=A0=A0=A0 int rc =3D -EINVAL;
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 if (copy_from_user(&mem_region, (void *)arg,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sizeof(mem_regio=
-n))) {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
-device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
-Error in copy from user\n");
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -EFAULT;
->> +=A0=A0=A0=A0=A0=A0=A0 }
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 mutex_lock(&ne_enclave->enclave_info_mutex);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 if (ne_enclave->state !=3D NE_STATE_INIT) {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err_ratelimited(ne_misc_dev.this_=
-device,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "=
-Enclave isn't in init state\n");
->> +
->> + mutex_unlock(&ne_enclave->enclave_info_mutex);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
->> +=A0=A0=A0=A0=A0=A0=A0 }
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 rc =3D ne_set_user_memory_region_ioctl(ne_enclave=
-, &mem_region);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 mutex_unlock(&ne_enclave->enclave_info_mutex);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0 return rc;
->> +=A0=A0=A0 }
->> +
->> =A0=A0=A0=A0=A0 default:
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0 return -ENOTTY;
->> =A0=A0=A0=A0=A0 }
->>
-
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
-
+On 2020-07-09 01:32:38 [+0000], Song Bao Hua (Barry Song) wrote:
+> > This looks using the same synchronous mechanism around an asynchronous
+> > interface. It works as a PoC.
+> > 
+> > As far as I remember the crypto async interface, the incoming skbs were fed to
+> > the async interface and returned to the caller so the NIC could continue
+> > allocate new RX skbs and move on. Only if the queue of requests was getting
+> > to long the code started to throttle. Eventually the async crypto code
+> > completed the decryption operation in a different context and fed the
+> > decrypted packet(s) into the stack.
+> > 
+> > From a quick view, you would have to return -EINPROGRESS here and have at
+> > the caller side something like that:
+> > 
+> > iff --git a/mm/page_io.c b/mm/page_io.c
+> > index e8726f3e3820b..9d1baa46ec3ed 100644
+> > --- a/mm/page_io.c
+> > +++ b/mm/page_io.c
+> > @@ -252,12 +252,15 @@ int swap_writepage(struct page *page, struct
+> > writeback_control *wbc)
+> >                 unlock_page(page);
+> >                 goto out;
+> >         }
+> > -       if (frontswap_store(page) == 0) {
+> > +       ret = frontswap_store(page);
+> > +       if (ret == 0) {
+> >                 set_page_writeback(page);
+> >                 unlock_page(page);
+> >                 end_page_writeback(page);
+> >                 goto out;
+> >         }
+> > +       if (ret = -EINPROGRESS)
+> > +               goto out;
+> >         ret = __swap_writepage(page, wbc, end_swap_bio_write);
+> >  out:
+> >         return ret;
+> > 
+> Unfortunately, this is not true and things are not that simple.
+> 
+> We can't simply depend on -EINPROGRESS and go out.
+> We have to wait for the result of compression to decide if we should
+> do __swap_writepage(). As one page might be compressed into two
+> pages, in this case, we will still need to do _swap_writepage().
+> As I replied in the latest email, all of the async improvement to frontswap
+> needs very careful thinking and benchmark. It can only happen after
+> we build the base in this patch, fixing the broken connection between
+> zswap and those new zip drivers.
+
+At the time the compression finishes you see what happens and based on
+the design you can either complete it immediately (the 0/error case from
+above) or forward the result to the caller and let him decide.
+
+> Thanks
+> Barry
+
+Sebastian
