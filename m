@@ -2,147 +2,115 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2882C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15029C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE97A20774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594332367;
-	bh=1E3KNYJwxzhk32vkxEFceHo/gsiJzSp6Aq70IvYmWQI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ksZkp4TgzIi750QKbq0zphVcybzWZ6KSVlpPYaAl0gCrkkRHA2hf8wP9Q9X5tZVm4
-	 Ds5hadnJIqO31BT550hh4MmNc7qyAh9SK7VSWkHoyTZu5KU/Z8pTFQizC0g5n9SSji
-	 sC63JH+VqqsG7hH9czE0ZX4pKCHHJN/7sB2++Zh8=
+	by mail.kernel.org (Postfix) with ESMTP id E691820774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:06:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s0JZ5pO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgGIWGG (ORCPT
+        id S1726831AbgGIWGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgGIWGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:06:05 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7E91206A1;
-        Thu,  9 Jul 2020 22:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594332364;
-        bh=1E3KNYJwxzhk32vkxEFceHo/gsiJzSp6Aq70IvYmWQI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hOh4lvO6KVrS6aI6+Ob+ftOEskN/RvK0Afz3UgwW9FW6/2X96hxs19EqA5He/U1bA
-         +xP3oo0uep2m07nZQ4vYHju3ZIIj7vIK3v1ta6WdtVWZhpBWYnFslhv0cuX8rFBdem
-         rfOv/uGGLlBSdNUzbFcGYr7H8NrfRXMLQFKOoWok=
-Date:   Thu, 9 Jul 2020 17:06:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Matt Jolly <Kangie@footclan.ninja>
-Cc:     Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 2/2] PCI/AER: Log correctable errors as warning, not error
-Message-ID: <20200709220602.GA21872@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708001401.405749-2-helgaas@kernel.org>
+        Thu, 9 Jul 2020 18:06:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgGIWGo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 18:06:44 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42BE7C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 15:06:44 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k4so1368067pld.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 15:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8CK0I8zJbGlH0rJDFXmQvv5rpjqRFDp888sWR1bVovw=;
+        b=s0JZ5pO/GZ7fXyqQDzDmx8kuDguwspLqorvrH+OdYjBFl/uCF0Be7BpE7WGfgBRcen
+         4Htj9cQoZMRn4Z3ToPS9QIEmkfghneRkevOktoFcG7CLk7KCwN8ZyJsceZArCZZB7TBu
+         IGhyyBu38L+7+mARgarW6v6rqsVnMQKlVY45ClkQpAPr/4D5jgxo9kTmKcVSn9RTkkYL
+         eMsOxA2kaMLQ5LTNrvMTzqstPrtXoLW2AAoozhtuV31v0esflicl6y61CUlNWmJc1oxj
+         Zt/saYZAe1nU4NqGrqLWw5l2dmiBQix+rIP2lxS/8JIODBlTgY7VEUtpa0VT92815QnE
+         1+jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=8CK0I8zJbGlH0rJDFXmQvv5rpjqRFDp888sWR1bVovw=;
+        b=UqR7Fd1129DKuX2vGyt37jSx6uNvLBXHl8SOiXWGeD0NjBoIBn0wkLZtN222EWrS/1
+         e8V0rqBWgHCVVVHrbMRguwzzHa8f3wR/WJX9Qe5cjVeMBT3hno6vRgQLOIx9d9Eggcpp
+         WqXjRU7l2MwVkT4lS2tEdb//KIKyCNGAGZnS4VTIPSIzhBrtZvrxSPoWOj++Iz9FOVZj
+         UONWPFbsK0YKetAn7CrgtOFC4znjRuJTzsr8fRr5erOeoi8aK+2o9el0DqBbF+Y4l9zB
+         hCVDClziYHHJ3QOQBV6+S0XjJ3MMv2Lbd8QcDtLguOHDFyduc4CXGMpUPMxDgn5XdLe9
+         RDxg==
+X-Gm-Message-State: AOAM531CLBdrrYeBzSTamz3sU7+0LSsSv93Bp/Z26nLgZyyxjvc4kJP8
+        HMR3KEgoT1HjwIT6gX7OBqv2VQ==
+X-Google-Smtp-Source: ABdhPJyR7Siu7Y/A4iQg3bBo7ftXxCV5V8bWZODguKGhUXjoYZ4xnZ1Kn21deuob8QYmEuB9LYfIOw==
+X-Received: by 2002:a17:90a:2367:: with SMTP id f94mr2400859pje.20.1594332403444;
+        Thu, 09 Jul 2020 15:06:43 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id q20sm3875614pfn.111.2020.07.09.15.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 15:06:42 -0700 (PDT)
+Date:   Thu, 09 Jul 2020 15:06:42 -0700 (PDT)
+X-Google-Original-Date: Thu, 09 Jul 2020 14:48:00 PDT (-0700)
+Subject:     Re: [PATCH V2 0/3] riscv: Enable LOCKDEP
+In-Reply-To: <1593266228-61125-1-git-send-email-guoren@kernel.org>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
+        greentime.hu@sifive.com, zong.li@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, tycho@tycho.ws, nickhu@andestech.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, guoren@linux.alibaba.com
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+To:     guoren@kernel.org
+Message-ID: <mhng-af022fcc-7dce-4d1b-9204-d31241538412@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 07:14:01PM -0500, Bjorn Helgaas wrote:
-> From: Matt Jolly <Kangie@footclan.ninja>
-> 
-> PCIe correctable errors are recovered by hardware with no need for software
-> intervention (PCIe r5.0, sec 6.2.2.1).
-> 
-> Reduce the log level of correctable errors from KERN_ERR to KERN_WARNING.
-> 
-> The bug reports below are for correctable error logging.  This doesn't fix
-> the cause of those reports, but it may make the messages less alarming.
-> 
-> [bhelgaas: commit log, use pci_printk() to avoid code duplication]
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=201517
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=196183
-> Link: https://lore.kernel.org/r/20200618155511.16009-1-Kangie@footclan.ninja
-> Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-I applied both of these to pci/error for v5.9.
-
+On Sat, 27 Jun 2020 06:57:05 PDT (-0700), guoren@kernel.org wrote:
+> From: Guo Ren <guoren@linux.alibaba.com>
+>
+> Lockdep is needed by proving the spinlocks and rwlocks. To support it,
+> we need to add TRACE_IRQFLAGS codes in kernel/entry.S. These patches
+> follow Documentation/irqflags-tracing.txt.
+>
+> Fixup 2 bugs that block the lockdep implementation.
+>
 > ---
->  drivers/pci/pcie/aer.c | 25 +++++++++++++++----------
->  1 file changed, 15 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 9176c8a968b9..ca886bf91fd9 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -673,20 +673,23 @@ static void __aer_print_error(struct pci_dev *dev,
->  {
->  	const char **strings;
->  	unsigned long status = info->status & ~info->mask;
-> -	const char *errmsg;
-> +	const char *level, *errmsg;
->  	int i;
->  
-> -	if (info->severity == AER_CORRECTABLE)
-> +	if (info->severity == AER_CORRECTABLE) {
->  		strings = aer_correctable_error_string;
-> -	else
-> +		level = KERN_WARNING;
-> +	} else {
->  		strings = aer_uncorrectable_error_string;
-> +		level = KERN_ERR;
-> +	}
->  
->  	for_each_set_bit(i, &status, 32) {
->  		errmsg = strings[i];
->  		if (!errmsg)
->  			errmsg = "Unknown Error Bit";
->  
-> -		pci_err(dev, "   [%2d] %-22s%s\n", i, errmsg,
-> +		pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
->  				info->first_error == i ? " (First)" : "");
->  	}
->  	pci_dev_aer_stats_incr(dev, info);
-> @@ -696,6 +699,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  {
->  	int layer, agent;
->  	int id = ((dev->bus->number << 8) | dev->devfn);
-> +	const char *level;
->  
->  	if (!info->status) {
->  		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> @@ -706,13 +710,14 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
->  	agent = AER_GET_AGENT(info->severity, info->status);
->  
-> -	pci_err(dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-> -		aer_error_severity_string[info->severity],
-> -		aer_error_layer[layer], aer_agent_string[agent]);
-> +	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
-> +
-> +	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-> +		   aer_error_severity_string[info->severity],
-> +		   aer_error_layer[layer], aer_agent_string[agent]);
->  
-> -	pci_err(dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> -		dev->vendor, dev->device,
-> -		info->status, info->mask);
-> +	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> +		   dev->vendor, dev->device, info->status, info->mask);
->  
->  	__aer_print_error(dev, info);
->  
-> -- 
-> 2.25.1
-> 
+> Changes in v2
+>  - Remove sX regs recovery codes which are unnecessary, because
+>    callee will handle them. Thx Greentime :)
+>
+>  - Move "restore a0 - a7" to handle_syscall, but if _TIF_SYSCALL_WORK
+>    is set, "restore a1 - a7" is still duplicated. I prefer a C wrapper
+>    for syscall.
+>
+> Guo Ren (2):
+>   riscv: Fixup static_obj() fail
+>   riscv: Enable LOCKDEP_SUPPORT & fixup TRACE_IRQFLAGS_SUPPORT
+>
+> Zong Li (1):
+>   riscv: Fixup lockdep_assert_held with wrong param cpu_running
+>
+>  arch/riscv/Kconfig              |  3 +++
+>  arch/riscv/kernel/entry.S       | 33 ++++++++++++++++++++++++++++++++-
+>  arch/riscv/kernel/smpboot.c     |  1 -
+>  arch/riscv/kernel/vmlinux.lds.S |  2 +-
+>  4 files changed, 36 insertions(+), 3 deletions(-)
+
+These are on for-next.  As far as I can tell lockdep is working, but I'm just
+doing some simple boot tests.
+
+Thanks!
