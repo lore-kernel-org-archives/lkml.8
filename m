@@ -6,61 +6,67 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F88C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E282C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D09C220720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F4B20672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594332067;
-	bh=qGD80egtZFoMZA4mqqCxfqJGdccsub1sxXgdZJ/oxAI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=18yqiQ5HnKpAWfczwsOep5iqT0YGWm+CJdINLwpqTQb3vMB9o3oAvCxnFxEXw1R1g
-	 0M+cXb3eigmE6qdAZndkmvVnwXShVYoxGlnFPYC07NaHSUMZh/Ft8hOFcElV0OJfe5
-	 XjaIUmYPXLLGsq9Bd4oFSHZZp7FKQblo0kWflX4g=
+	s=default; t=1594332073;
+	bh=5465ewyg8MdvQtK6kDkNf3vR6jyKNYnfzaqI7TcJus0=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=l1+Pb1ZsjjjgCYy6DfxqgRyd+84zoHzFfh0TGvM7Y74GBdoqOQOpCN53fUHzdYLsQ
+	 Tp3SQGAfjq6h3vKwcToxPdksZ+vUOG7+RSt/1sJ8nrNwfvflj4V1Kr+wMCIJeESbXZ
+	 j9SQ0OOPhx7cR5nVPMXCZ7NdK9htUBxHagrFJsm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgGIWBG (ORCPT
+        id S1727054AbgGIWBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:01:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44608 "EHLO mail.kernel.org"
+        Thu, 9 Jul 2020 18:01:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgGIWBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:01:05 -0400
+        id S1726213AbgGIWBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 18:01:10 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7477D20672;
-        Thu,  9 Jul 2020 22:01:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C08A20720;
+        Thu,  9 Jul 2020 22:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594332065;
-        bh=qGD80egtZFoMZA4mqqCxfqJGdccsub1sxXgdZJ/oxAI=;
+        s=default; t=1594332070;
+        bh=5465ewyg8MdvQtK6kDkNf3vR6jyKNYnfzaqI7TcJus0=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=pb4bGji5iciLzjQCBs8dZ+8RF2x9sDoV4tQUe8e6j468R+x6CvcHXeJM8o5LEhTw/
-         B4sSp+udV7Q9lcQmU+jf4CJ2/EGa3HzdKB9MQxKGRyNPqcuJF8rBp1lBSIUGWujfQX
-         75BRpln9Nm4tLA9vmpueSxpLHi026SBzHmZN7Tqc=
-Date:   Thu, 09 Jul 2020 23:00:59 +0100
+        b=xO8luKZhOq9teQnCJytYCt+xVlwCKKoErVl9+n5hrXinAiS6rw/rHfQPGdJRBy3VO
+         kxYqKZQEAZd3byucZCx/SbIyRjeLrMwDV8fd5ohLFcxwFr+8zcz2xfhD8Tr+eMGjea
+         goOddP84IZZ4p012xFPfWXk0XblS/HCvjvP98Nd4=
+Date:   Thu, 09 Jul 2020 23:01:04 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     linux-spi@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Zhang Qiang <qiang.zhang@windriver.com>,
-        linux-samsung-soc@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Petr Mladek <pmladek@suse.com>
-In-Reply-To: <20200709065007.26896-1-m.szyprowski@samsung.com>
-References: <CGME20200709065016eucas1p22ef816e6a2a6e47c008cabc5e06d6716@eucas1p2.samsung.com> <20200709065007.26896-1-m.szyprowski@samsung.com>
-Subject: Re: [PATCH v3] spi: use kthread_create_worker() helper
-Message-Id: <159433204447.479.9183431834773506860.b4-ty@kernel.org>
+To:     robh+dt@kernel.org, linux-spi@vger.kernel.org,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200708194400.22213-1-grandmaster@al2klimov.de>
+References: <20200708194400.22213-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH] SPI SUBSYSTEM: Replace HTTP links with HTTPS ones
+Message-Id: <159433204447.479.16639997538518023197.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 08:50:07 +0200, Marek Szyprowski wrote:
-> Use kthread_create_worker() helper to simplify the code. It uses
-> the kthread worker API the right way. It will eventually allow
-> to remove the FIXME in kthread_worker_fn() and add more consistency
-> checks in the future.
+On Wed, 8 Jul 2020 21:44:00 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 
 Applied to
 
@@ -68,8 +74,8 @@ Applied to
 
 Thanks!
 
-[1/1] spi: use kthread_create_worker() helper
-      commit: 60a883d119ab9ef63f830c85bbd2f0e2e2314f4f
+[1/1] SPI SUBSYSTEM: Replace HTTP links with HTTPS ones
+      commit: 3ea4eac3e29f8a63646ddc1bdf90f2efce7d082c
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
