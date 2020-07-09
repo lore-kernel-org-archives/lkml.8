@@ -5,69 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAA1C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADDF2078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43942078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:46:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S9JQfJkt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CN0ZbGb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbgGIRqF (ORCPT
+        id S1728504AbgGIRqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:46:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48878 "EHLO
+        Thu, 9 Jul 2020 13:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbgGIRqC (ORCPT
+        with ESMTP id S1728211AbgGIRqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:46:02 -0400
+        Thu, 9 Jul 2020 13:46:05 -0400
 Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6135EC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:02 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id q5so3293190wru.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2B9C08E763
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:05 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id b6so3271426wrs.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xTqXVtAy6STm+CsKD82SFXkbTZ9Yyt2OGjfREOk+wxw=;
-        b=S9JQfJkt74EhytPvboT0wPEsWVg4OmCFYcNqHiChFX9Ce69gEUSsHaVYbxBjlOfqzF
-         /Z5WmgD7mCxQg5qL9vEsu+Ok+V/Rsrryoi6l02scA1Hp6owww0VU8y3sEvSqqbaLHtkP
-         p6A5jxcrfRIPw+t5kSrT+MbLgovNOInkeVtQL5FfEA7GEXtlnQSsvBYSvh6mj9QH+MsL
-         47WOD0IDDYXu9eIBYe1IR1i8tupG8AKOP6Qr5ERENBCFo5mnzFykllrvh1WHaW52QNaR
-         Y9fZjksMUNTw+KXQ8rJtik2x8pxjCka8wpUJCN4CbVDDeCbC+b2mR/Dt9z04/sYrfpu2
-         doyw==
+        bh=Xgee6VNOxowtnDCzKQ+Sz5+2OlEHHNxO9R7xXG9/C34=;
+        b=CN0ZbGb9MRi59LyH9zB97Z++En4BiFKyZiVJ381/Rg/kN/CRIXsIj5dOBuPWrgWYll
+         GCC4SY1ommscxO/xbHRiJsP9m9mTbUb2zqVnoKobE1zycNVZF9pMLQqAmgqs3iCBMDj4
+         tDbRDBRq4ZQRPQBorsXefezGStUApK5AxTRyQtAbm85q8fD1uo7odg1823GwPU+gV5yt
+         0SC9pcojni05hKi+ADI2yzgZxOiIPevQSlW3k4b1/rqwedTXMU50EHrMi83xNzoig7L1
+         ZybfqqQJhVnLjtajD4lEeBaUZ7Ul7+fvz67bHXfJmT/Z5PkKToKPczVj85D1Ap2DGimO
+         cbFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xTqXVtAy6STm+CsKD82SFXkbTZ9Yyt2OGjfREOk+wxw=;
-        b=d98E9a8mEP2UZ+Z5zkKJWAuDflFDghqKgC/DAtryJjJ4vFG4vtIAhlViM5yylF8Dcr
-         IK7LuP1OPRmLhBwE+GzErSzX6l/ZWUzmYzy1ssMt0XxpwD3GPEo6sO1DRDPnF1INlLqz
-         NC8SHY5e/Uos05iIen+nJyscWjOgBfH9Jx1bvaHaccPylHTtfiHLg/knbLyUKo27/B0h
-         KB9boFcOBS4xSEUQUN0fSGoi96oTfodoDAnqgZUPpDW+AS42IRLjwduOjx1fE7VwZ1zp
-         vZIQKPiZrMAVqdYOcBj2jn3DfU8e3SdHZ+9C1o0/tkCPqL7QCIaWMoN3HU3ZO9FAqtY0
-         MMpQ==
-X-Gm-Message-State: AOAM533993+pHtnM13YormG8oEWFKYsn5YbBGAPmlxiZ+YstBV7jVZ2n
-        VwBsQ2w9bWnlHMNF2Miv0un4yg==
-X-Google-Smtp-Source: ABdhPJwmxoKBk0V1ybPQdpN3mHBUNT+ChaQuAGzu5i0BAePdNB2eXh4C37EVHiTyJIFG4bMLogHgiw==
-X-Received: by 2002:a5d:55c9:: with SMTP id i9mr63242054wrw.404.1594316761133;
-        Thu, 09 Jul 2020 10:46:01 -0700 (PDT)
+        bh=Xgee6VNOxowtnDCzKQ+Sz5+2OlEHHNxO9R7xXG9/C34=;
+        b=rFKLXRJ02OX0G7tDEYjt3Zd5cbWDrnFTDpjOVjkizOW7Lx8NEerF+S46DIod747bHn
+         zYpBevXE2iiRmMy1IyB3OlqD46OO0Q6Ji1pIjZ6SPsQFEtc7NVk8nbqHCwbw+j0EScvc
+         iv5mfOQMs6d4h0xuzx59b652S0n/CPvwJ42s3qaWIe9wCVdC4REins+zW523IiQJjESM
+         aG6UPBF2M2w5ro0zOd7m+Wu4VEPkFsI/uFCuqVU7wbRsd9DqWxs7mkC63TRY99MuBQh+
+         0utObE7jiXCVDG0q7RtYVbOSNXAOO9rJMkWoAZp3/6EovhNg0siiE8PlM1CVHf1goldg
+         qY8Q==
+X-Gm-Message-State: AOAM533/hgw84rr4TJiZj2fiULPn0Occx1deVzhBnphEr1wemoir4BZU
+        FSd+e0Rb8pSQa8/NK6ipbPGPBA==
+X-Google-Smtp-Source: ABdhPJxXg1VXnP+XIMR+kFM9aoY9RsEO6ZeabXxiOPXeOKB4exk4yDDPWKj2LiaG2tte5nqk/5Ja2A==
+X-Received: by 2002:a5d:4687:: with SMTP id u7mr68300611wrq.357.1594316764208;
+        Thu, 09 Jul 2020 10:46:04 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.45.59
+        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.46.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:46:00 -0700 (PDT)
+        Thu, 09 Jul 2020 10:46:03 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
         linux-scsi@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
         "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
-Subject: [PATCH 02/24] scsi: aacraid: commctrl: Fix a few kerneldoc issues
-Date:   Thu,  9 Jul 2020 18:45:34 +0100
-Message-Id: <20200709174556.7651-3-lee.jones@linaro.org>
+Subject: [PATCH 05/24] scsi: aacraid: dpcsup: Demote partially documented function header
+Date:   Thu,  9 Jul 2020 18:45:37 +0100
+Message-Id: <20200709174556.7651-6-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200709174556.7651-1-lee.jones@linaro.org>
 References: <20200709174556.7651-1-lee.jones@linaro.org>
@@ -78,84 +78,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Functions must follow imediately after the header documenting them and
-all parameters must be present.
+This should be populated by someone who knows the meaning of all the params.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/aacraid/commctrl.c:43: warning: Excess function parameter 'dev' description in 'AAC_DEBUG_PREAMBLE'
- drivers/scsi/aacraid/commctrl.c:43: warning: Excess function parameter 'arg' description in 'AAC_DEBUG_PREAMBLE'
- drivers/scsi/aacraid/commctrl.c:167: warning: Function parameter or member 'dev' not described in 'open_getadapter_fib'
- drivers/scsi/aacraid/commctrl.c:167: warning: Function parameter or member 'arg' not described in 'open_getadapter_fib'
- drivers/scsi/aacraid/commctrl.c:458: warning: Cannot understand  *
- on line 458 - I thought it was a doc line
+ drivers/scsi/aacraid/dpcsup.c:272: warning: Function parameter or member 'isAif' not described in 'aac_intr_normal'
+ drivers/scsi/aacraid/dpcsup.c:272: warning: Function parameter or member 'isFastResponse' not described in 'aac_intr_normal'
+ drivers/scsi/aacraid/dpcsup.c:272: warning: Function parameter or member 'aif_fib' not described in 'aac_intr_normal'
 
 Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
 Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/aacraid/commctrl.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/scsi/aacraid/dpcsup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/aacraid/commctrl.c b/drivers/scsi/aacraid/commctrl.c
-index 34e65dea992e4..59e82a832042f 100644
---- a/drivers/scsi/aacraid/commctrl.c
-+++ b/drivers/scsi/aacraid/commctrl.c
-@@ -32,6 +32,8 @@
- 
- #include "aacraid.h"
- 
-+# define AAC_DEBUG_PREAMBLE	KERN_INFO
-+# define AAC_DEBUG_POSTAMBLE
- /**
-  *	ioctl_send_fib	-	send a FIB from userspace
-  *	@dev:	adapter is being processed
-@@ -40,9 +42,6 @@
-  *	This routine sends a fib to the adapter on behalf of a user level
-  *	program.
-  */
--# define AAC_DEBUG_PREAMBLE	KERN_INFO
--# define AAC_DEBUG_POSTAMBLE
--
- static int ioctl_send_fib(struct aac_dev * dev, void __user *arg)
- {
- 	struct hw_fib * kfib;
-@@ -158,11 +157,12 @@ static int ioctl_send_fib(struct aac_dev * dev, void __user *arg)
- 
- /**
-  *	open_getadapter_fib	-	Get the next fib
-+ *	@dev:	adapter is being processed
-+ *	@arg:	arguments to the open call
-  *
-  *	This routine will get the next Fib, if available, from the AdapterFibContext
-  *	passed in from the user.
-  */
--
- static int open_getadapter_fib(struct aac_dev * dev, void __user *arg)
- {
- 	struct aac_fib_context * fibctx;
-@@ -234,7 +234,6 @@ static int open_getadapter_fib(struct aac_dev * dev, void __user *arg)
-  *	This routine will get the next Fib, if available, from the AdapterFibContext
-  *	passed in from the user.
-  */
--
- static int next_getadapter_fib(struct aac_dev * dev, void __user *arg)
- {
- 	struct fib_ioctl f;
-@@ -455,11 +454,10 @@ static int check_revision(struct aac_dev *dev, void __user *arg)
+diff --git a/drivers/scsi/aacraid/dpcsup.c b/drivers/scsi/aacraid/dpcsup.c
+index 749f8e740ece1..fbe334c59f376 100644
+--- a/drivers/scsi/aacraid/dpcsup.c
++++ b/drivers/scsi/aacraid/dpcsup.c
+@@ -258,7 +258,7 @@ static void aac_aif_callback(void *context, struct fib * fibptr)
+ }
  
  
- /**
-- *
-  * aac_send_raw_scb
-- *
-+ *	@dev:	adapter is being processed
-+ *	@arg:	arguments to the send call
-  */
--
- static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
- {
- 	struct fib* srbfib;
+-/**
++/*
+  *	aac_intr_normal	-	Handle command replies
+  *	@dev: Device
+  *	@index: completion reference
 -- 
 2.25.1
 
