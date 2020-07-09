@@ -2,163 +2,166 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78775C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E42920775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256C120775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:31:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WzP+fhFv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sjI6DwpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgGITaB (ORCPT
+        id S1726645AbgGITbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:30:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37014 "EHLO
+        Thu, 9 Jul 2020 15:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGITaB (ORCPT
+        with ESMTP id S1726213AbgGITbB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 15:30:01 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7091C08C5CE;
-        Thu,  9 Jul 2020 12:30:00 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id i14so1418708pfu.13;
-        Thu, 09 Jul 2020 12:30:00 -0700 (PDT)
+        Thu, 9 Jul 2020 15:31:01 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B79C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 12:30:59 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o8so3187330wmh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 12:30:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SfPnUrCLC8MoE50iZXFPXzREUXXMlurx/d7NT2/fQso=;
-        b=WzP+fhFv9UUOahYFPaOY0+wWb+9ZizDO45DPXrYXqJgMWOsq2VMrYB0imu1nhHckQf
-         X+pIA/XzRXdcAgozk+d2f8N/ymexlvIbVkRg23Y60Iqk7EBv9fIaCZDEELfs9twmu1Eb
-         B9N/xG46OpI4/NwKwsQ05fH9yjNON5oBBKI9N0ai2VtIFxsOye+Uf2cQ2X6UAMn2eYfX
-         BWEPOSiaQUTVJwWHRlLRoUSRrRMeAcQRvJiAM1xHwENGd9Nn2EyULtisoXTH02dfRmnT
-         OHBTHStr/hKawJgt8/kDOV/wJfvfHvCffbNzNiJSMkA7Fzo4d9HlaSevD6XvUerQKE2E
-         O76Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=L+LwzgLNEgol7CXfPapnfKmz3dkEdqHIky+sLEe7mDM=;
+        b=sjI6DwpFKsR6gK/VMhtAGOCdKTzdrmwVAONuYp4qgTpkS93cRn3Y7CxugSZ96WKmCk
+         Do6BGNye0fYKu163ytYi3CmCrlrvogHvHiVRjPVQK3mXHkxV6xjheqJoAh5T45DHLSn4
+         jmcfvD2epFdPOYhj6dYwqF9hG1lL/zKXS7g7VtWnX1O2cNsbOus0swj//UwryID4sHEz
+         pT6j6wULZXCpjfW18nr8vyKj6TbvzE26gaILJYyOQ+/XsC+lmcXpfWKaICSb4FOoAAt9
+         RyvcUwC7exvH/uGGx1bb7HSYKo+4g1MlJdwrmUFC0fPaBEQlWlHU/AuVIHMMMeswlq2h
+         6gSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SfPnUrCLC8MoE50iZXFPXzREUXXMlurx/d7NT2/fQso=;
-        b=LnfTgvJAp9cbuGZfaYlibEk8Yq8Mn01Gljw/ZDgyP7qhF/Ri0nrpFovuyLdfLaJpnS
-         fxa/iDpdoDPgaJnpnM6GhOPC5hyYURKt85vsuQzDOlNMdPM1rPVWcFGDH6zqZjaYoCkl
-         XQPH2mD3E1xj0l/1AHLTGKyrwODwXQdPNdK7Ha5J9eIba1M8HdKRc7dWNxIv1eFi7cc7
-         TPa4TnKbZnIt8Yc8XBKHaEQHtiQ/obriqPiyg0+qrn2A2E6tAViTghBBiNmWOvfljKSv
-         MtOvChKWM5khc4wt839onb9HQu6TaHmBU7Rp0tjeZeonDtQ8GMV2s1XjD6+C3S1b//8N
-         evmg==
-X-Gm-Message-State: AOAM531+IV9Dq72q223RBu+wp1r68R2+2joF/wWuusT4ilANgcKPnOMt
-        XqPEOQUE1/gKpv4xofqLg1hfhRMf1KuCkhhoPqU=
-X-Google-Smtp-Source: ABdhPJzC3Ft5wsmSKHLS7XSGFi9+4k7/M8CqYWia+iuaFVIVXnBNaQBqSGPaHjfW2eyaPKMcPyhNDeoZHc4gcbp6UFY=
-X-Received: by 2002:a05:6a00:790:: with SMTP id g16mr23919062pfu.36.1594322998724;
- Thu, 09 Jul 2020 12:29:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=L+LwzgLNEgol7CXfPapnfKmz3dkEdqHIky+sLEe7mDM=;
+        b=FTRdFRqWeNTSpxU8QGxxtt8Xt50xNfnH258kihzrvs8aQ81KrOU9dbuM/dS54q1n6r
+         /wCW9EVSdcdqP6EwugViyXahI7e18JdhOLdjFgUCm0TXbfLV5eyBYfyGnlVQM1zUMdHw
+         ruOG3LLfEOLtPVGsWPssgSkLDmTKKszv1Lh1IncwTk59n/pY4pH/h623UCxoRiO0mulv
+         CjQ2Mf5bcQUA9V3hkrG6HFziZQ1ntGRCS9rzxDM6dMBHHSrcTIVjYiCxsFebRjKG8Qdd
+         S5ZBrP5Cog08PmNLhFj68KEB7TnjfNk6jPyS2Ri/FzaICRl3ap3U8Y6xueVWdEIOlqsy
+         z5/A==
+X-Gm-Message-State: AOAM531tlactJnh0JFxXrKJPpYAHl5zcduCQ2n4GTRwHq/ve7TTiXkvq
+        +HaQJct/CamNHCPpChPrHkbHTjC6YNc=
+X-Google-Smtp-Source: ABdhPJwGEKhh/PCpKUnxXNb35yPFp0vg18Wi1RCEtzRH5rArf/zDzv+9pwDPdE7RWQ4lF0uKeKBwyA==
+X-Received: by 2002:a1c:c242:: with SMTP id s63mr1479379wmf.146.1594323058275;
+        Thu, 09 Jul 2020 12:30:58 -0700 (PDT)
+Received: from dell ([109.180.115.154])
+        by smtp.gmail.com with ESMTPSA id n16sm5919830wmc.40.2020.07.09.12.30.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 12:30:57 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 20:30:55 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>
+Subject: Re: [PATCH 24/24] scsi: aic7xxx: aic79xx_osm: Remove set but unused
+ variabes 'saved_scsiid' and 'saved_modes'
+Message-ID: <20200709193055.GA3500@dell>
+References: <20200709174556.7651-1-lee.jones@linaro.org>
+ <20200709174556.7651-25-lee.jones@linaro.org>
+ <1594318443.10411.14.camel@linux.ibm.com>
 MIME-Version: 1.0
-References: <cover.1591584631.git.y.linux@paritcher.com> <cover.1591811549.git.y.linux@paritcher.com>
- <7fb650f568b44eb78e37aa8a534a69d7@AUSX13MPC105.AMER.DELL.COM>
-In-Reply-To: <7fb650f568b44eb78e37aa8a534a69d7@AUSX13MPC105.AMER.DELL.COM>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jul 2020 22:29:42 +0300
-Message-ID: <CAHp75VdEtHfGavFBaC9Y2=bzX5pAeLqnssBE1owudRv9pKDAXw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] platform/x86: dell-wmi: new keys
-To:     Mario Limonciello <Mario.Limonciello@dell.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Matthew Garrett <mjg59@srcf.ucam.org>, y.linux@paritcher.com,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594318443.10411.14.camel@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 10:23 PM <Mario.Limonciello@dell.com> wrote:
->
-> > -----Original Message-----
-> > From: Y Paritcher <y.linux@paritcher.com>
-> > Sent: Wednesday, June 10, 2020 12:57 PM
-> > To: Pali Roh=C3=A1r
-> > Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
-> > Matthew Garrett; Limonciello, Mario
-> > Subject: [PATCH v4 0/3] platform/x86: dell-wmi: new keys
-> >
-> >
-> > [EXTERNAL EMAIL]
-> >
-> > change since v3:
-> >     No code changes.
-> >     Update commit message to reflect info given by Mario at dell.
-> >
-> > Is there anything more i have to do for the patches that were reviewed
-> > or will they be picked up by the maintainers?
-> > Thanks
-> >
-> > Y Paritcher (3):
-> >   platform/x86: dell-wmi: add new backlight events
-> >   platform/x86: dell-wmi: add new keymap type 0x0012
-> >   platform/x86: dell-wmi: add new dmi mapping for keycode 0xffff
-> >
-> >  drivers/platform/x86/dell-wmi.c | 28 +++++++++++++++++++++++++---
-> >  1 file changed, 25 insertions(+), 3 deletions(-)
-> >
-> > --
-> > 2.27.0
->
-> Andy,
->
-> The whole series looks good to me now.  You can put this on the patches
-> when they're swooped up.
->
-> Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
->
-> However I would like to note there was a comment that you had a direct qu=
-estion
-> asked by Pali that probably got lost in the thread.  This was on patch 3/=
-3 on v3.
-> I think it's worth answering as it could dictate a follow up patch to cha=
-nge behavior.
->
-> The summary of my argument which led to his is nested somewhere in the th=
-read was that
-> to most users this isn't useful since they can't act on it.  IE they can'=
-t use something
-> like setkeycodes and go on their merry way.  The user who could act on it=
- by coming
-> to upstream and submitting questions and patches is more technical and ha=
-ving them
-> use dyndbg to turn on the messages about unknown shouldn't be a big deal.
->
-> > I'm not sure, but I thought that
-> > throwing warning or info message is the correct solution. Driver cannot
-> > handle something, so it inform about it, instead of silently dropping
-> > event. Same behavior I'm seeing in other kernel drivers.
->
-> > But looks like that you and Mario have opposite opinion, that kernel
-> > should not log unknown events and rather should drop them.
->
-> > I would like to have behavior of dell-wmi same as in other drivers for
-> > consistency, so the best would be to ask WMI/platform maintainers. They
-> > could have opinion how to handle these problem globally.
->
-> > ...
->
-> > Darren & Andy, could you please say something to this, what do you thin=
-k
-> > about silently dropping events/actions which are currently unknown for
-> > dell-wmi driver? It is better to log them or not? Currently we are
-> > logging them.
->
-> Can you please advise which way you would rather have the subsystem go?
+On Thu, 09 Jul 2020, James Bottomley wrote:
 
-Seems Pali is okay with this version, so everything is settled I suppose.
-I will add it to my queue, thanks!
+> On Thu, 2020-07-09 at 18:45 +0100, Lee Jones wrote:
+> > Haven't been used since 2006.
+> > 
+> > Fixes the following W=1 kernel build warning(s):
+> > 
+> >  drivers/scsi/aic7xxx/aic79xx_osm.c: In function
+> > ‘ahd_linux_queue_abort_cmd’:
+> >  drivers/scsi/aic7xxx/aic79xx_osm.c:2155:17: warning: variable
+> > ‘saved_modes’ set but not used [-Wunused-but-set-variable]
+> >  drivers/scsi/aic7xxx/aic79xx_osm.c:2148:9: warning: variable
+> > ‘saved_scsiid’ set but not used [-Wunused-but-set-variable]
+> > 
+> > Cc: Hannes Reinecke <hare@suse.com>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/scsi/aic7xxx/aic79xx_osm.c | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/aic7xxx/aic79xx_osm.c
+> > b/drivers/scsi/aic7xxx/aic79xx_osm.c
+> > index 3782a20d58885..b0c6701f64a83 100644
+> > --- a/drivers/scsi/aic7xxx/aic79xx_osm.c
+> > +++ b/drivers/scsi/aic7xxx/aic79xx_osm.c
+> > @@ -2141,14 +2141,12 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
+> > *cmd)
+> >  	u_int  saved_scbptr;
+> >  	u_int  active_scbptr;
+> >  	u_int  last_phase;
+> > -	u_int  saved_scsiid;
+> >  	u_int  cdb_byte;
+> >  	int    retval;
+> >  	int    was_paused;
+> >  	int    paused;
+> >  	int    wait;
+> >  	int    disconnected;
+> > -	ahd_mode_state saved_modes;
+> >  	unsigned long flags;
+> >  
+> >  	pending_scb = NULL;
+> > @@ -2239,7 +2237,7 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
+> > *cmd)
+> >  		goto done;
+> >  	}
+> >  
+> > -	saved_modes = ahd_save_modes(ahd);
+> > +	ahd_save_modes(ahd);
+> 
+> Well, this is clearly wrong, since ahd_save_modes has no side effects.
 
+Great.  Thanks for letting me know.
 
---=20
-With Best Regards,
-Andy Shevchenko
+I tend to err on the side of caution with these types of fix-ups.
+
+I will remove it.
+
+> However, I think it also means there's a bug in this code:
+> 
+> >  	ahd_set_modes(ahd, AHD_MODE_SCSI, AHD_MODE_SCSI);
+> 
+> You can't do this without later restoring the mode, so someone needs to
+> figure out where the missing ahd_restore_modes() should go.
+> 
+> >  	last_phase = ahd_inb(ahd, LASTPHASE);
+> >  	saved_scbptr = ahd_get_scbptr(ahd);
+> > @@ -2257,7 +2255,7 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
+> > *cmd)
+> >  	 * passed in command.  That command is currently active on
+> > the
+> >  	 * bus or is in the disconnected state.
+> >  	 */
+> > -	saved_scsiid = ahd_inb(ahd, SAVED_SCSIID);
+> > +	ahd_inb(ahd, SAVED_SCSIID);
+> 
+> I think this can just go.
+
+Happy to remove it also.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
