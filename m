@@ -2,83 +2,162 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6714FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 508D0206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60C2206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:40:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RavDLxpZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgGIWiJ (ORCPT
+        id S1726840AbgGIWkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:38:09 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:38032 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726228AbgGIWiI (ORCPT
+        Thu, 9 Jul 2020 18:40:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgGIWkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:38:08 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 6C2C3D7B967;
-        Fri, 10 Jul 2020 08:38:03 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jtfB4-0000y8-Kh; Fri, 10 Jul 2020 08:38:02 +1000
-Date:   Fri, 10 Jul 2020 08:38:02 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-Message-ID: <20200709223802.GY2005@dread.disaster.area>
-References: <20200707191629.13911-1-longman@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707191629.13911-1-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=7-415B0cAAAA:8 a=20KFwNOVAAAA:8
-        a=l721tooEcPd6T4aNpT4A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Thu, 9 Jul 2020 18:40:04 -0400
+Received: from mail-ed1-x549.google.com (mail-ed1-x549.google.com [IPv6:2a00:1450:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1698C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 15:40:03 -0700 (PDT)
+Received: by mail-ed1-x549.google.com with SMTP id g18so4038197edu.22
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 15:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=iqosYcn7kQPjocZvyi+NfPVq5PvGqtnjSCLp5/oKQXs=;
+        b=RavDLxpZJLKohKgWzL6HD55f+hMB3P+QQOus0wp2wrm4kjDav0qJeK3m9hcaCT18yu
+         Hv4gzTPyp79k4xoYh9DrZ/tikObbYHo7i01guwW7nYM0fGhuR2TGRiXcRUd5dLqUwiDp
+         WYRU0DbPe0chjytzjudEN4s1tZvCVVQaAjol4GX+jD0q9X4qLqRrzPnB/NSYDrzCJ8Ht
+         zkG7/CZTplxCkk19echChOtumQe6CWncIyFj0CObyLO8bXqKl6qYlpC+qzeFo/dacHvV
+         edQADHrxMeOUOXch9kqvdPFx15QbuQ0yHqmdOSVoXDIs6XK3aaS/wsTjcgxxBymtBkI4
+         yhMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=iqosYcn7kQPjocZvyi+NfPVq5PvGqtnjSCLp5/oKQXs=;
+        b=h5pYa0KieDRa962ncdWzzvqqjwGiTQtfVXWIl0W6Maom75Eka6G5JWGWzHuIezl9LV
+         W0xPX0y0Xk5gKJY96OFQMlie+gifwgtukL599v/D8X/GMnAYazo457RlMHm9bmZaUH7G
+         L7veG9QR97A9ypoAmxwLBoprsX/x6yXOTqLtRFfFlxx7INVJV6VeK42yoNIe9cPWD5b1
+         iQPO+4uDZY8YDI9xiUAsCEXwW3f12WjrDjlpvJQX/DAZmGDQSNfHIgCc5OBM59LWq0RV
+         O9Rwt1kwQnkB3b+wBC6HWNMcuG2MoAHdSXe8p7vyoQ99ufhwOHupXh9xPLgGN0EUkQKA
+         DCDQ==
+X-Gm-Message-State: AOAM530IjWPQWV/ve4k4fU8hctiW9S7V2Uv76QgY+fXU/wCFLl+sv7T8
+        i7OZoYUcjCVDGhG9rPnn6H81UmL2RA==
+X-Google-Smtp-Source: ABdhPJx7YKdcI+dRFIHHz7zvtqV/mFv+19PzycpPNaLcc/1csUi0EEyliqdHL9qrUiIPnuZFFldHqQa2+w==
+X-Received: by 2002:a17:906:a055:: with SMTP id bg21mr54361093ejb.516.1594334402107;
+ Thu, 09 Jul 2020 15:40:02 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 00:39:48 +0200
+Message-Id: <20200709223948.1051613-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+Subject: [PATCH resend] binder: Prevent context manager from incrementing ref 0
+From:   Jann Horn <jannh@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>
+Cc:     devel@driverdev.osuosl.org, Mattias Nissler <mnissler@google.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 03:16:29PM -0400, Waiman Long wrote:
-> One way to avoid this splat is to add GFP_NOFS to the affected allocation
-> calls by using the memalloc_nofs_save()/memalloc_nofs_restore() pair.
-> This shouldn't matter unless the system is really running out of memory.
-> In that particular case, the filesystem freeze operation may fail while
-> it was succeeding previously.
-> 
-> Without this patch, the command sequence below will show that the lock
-> dependency chain sb_internal -> fs_reclaim exists.
-> 
->  # fsfreeze -f /home
->  # fsfreeze --unfreeze /home
->  # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
-> 
-> After applying the patch, such sb_internal -> fs_reclaim lock dependency
-> chain can no longer be found. Because of that, the locking dependency
-> warning will not be shown.
-> 
-> Suggested-by: Dave Chinner <david@fromorbit.com>
-> Signed-off-by: Waiman Long <longman@redhat.com>
+Binder is designed such that a binder_proc never has references to
+itself. If this rule is violated, memory corruption can occur when a
+process sends a transaction to itself; see e.g.
+<https://syzkaller.appspot.com/bug?extid=09e05aba06723a94d43d>.
 
-Looks good. Thanks for working through this, Waiman.
+There is a remaining edgecase through which such a transaction-to-self
+can still occur from the context of a task with BINDER_SET_CONTEXT_MGR
+access:
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+ - task A opens /dev/binder twice, creating binder_proc instances P1
+   and P2
+ - P1 becomes context manager
+ - P2 calls ACQUIRE on the magic handle 0, allocating index 0 in its
+   handle table
+ - P1 dies (by closing the /dev/binder fd and waiting a bit)
+ - P2 becomes context manager
+ - P2 calls ACQUIRE on the magic handle 0, allocating index 1 in its
+   handle table
+   [this triggers a warning: "binder: 1974:1974 tried to acquire
+   reference to desc 0, got 1 instead"]
+ - task B opens /dev/binder once, creating binder_proc instance P3
+ - P3 calls P2 (via magic handle 0) with (void*)1 as argument (two-way
+   transaction)
+ - P2 receives the handle and uses it to call P3 (two-way transaction)
+ - P3 calls P2 (via magic handle 0) (two-way transaction)
+ - P2 calls P2 (via handle 1) (two-way transaction)
 
-Cheers,
+And then, if P2 does *NOT* accept the incoming transaction work, but
+instead closes the binder fd, we get a crash.
 
-Dave.
+Solve it by preventing the context manager from using ACQUIRE on ref 0.
+There shouldn't be any legitimate reason for the context manager to do
+that.
+
+Additionally, print a warning if someone manages to find another way to
+trigger a transaction-to-self bug in the future.
+
+Cc: stable@vger.kernel.org
+Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+sending again because I forgot to CC LKML the first time... sorry about
+the spam.
+
+ drivers/android/binder.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index f50c5f182bb5..cac65ff3a257 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -2982,6 +2982,12 @@ static void binder_transaction(struct binder_proc *proc,
+ 			goto err_dead_binder;
+ 		}
+ 		e->to_node = target_node->debug_id;
++		if (WARN_ON(proc == target_proc)) {
++			return_error = BR_FAILED_REPLY;
++			return_error_param = -EINVAL;
++			return_error_line = __LINE__;
++			goto err_invalid_target_handle;
++		}
+ 		if (security_binder_transaction(proc->tsk,
+ 						target_proc->tsk) < 0) {
+ 			return_error = BR_FAILED_REPLY;
+@@ -3635,10 +3641,16 @@ static int binder_thread_write(struct binder_proc *proc,
+ 				struct binder_node *ctx_mgr_node;
+ 				mutex_lock(&context->context_mgr_node_lock);
+ 				ctx_mgr_node = context->binder_context_mgr_node;
+-				if (ctx_mgr_node)
++				if (ctx_mgr_node) {
++					if (ctx_mgr_node->proc == proc) {
++						binder_user_error("%d:%d context manager tried to acquire desc 0\n");
++						mutex_unlock(&context->context_mgr_node_lock);
++						return -EINVAL;
++					}
+ 					ret = binder_inc_ref_for_node(
+ 							proc, ctx_mgr_node,
+ 							strong, NULL, &rdata);
++				}
+ 				mutex_unlock(&context->context_mgr_node_lock);
+ 			}
+ 			if (ret)
+
+base-commit: 2a89b99f580371b86ae9bafd6cbeccd3bfab524a
 -- 
-Dave Chinner
-david@fromorbit.com
+2.27.0.389.gc38d7665816-goog
+
