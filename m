@@ -2,81 +2,69 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADADC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC03E2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9508920774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgGIMAI (ORCPT
+        id S1727899AbgGIMAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:00:08 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2540 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726599AbgGIMAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:00:07 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 990AC231693D6120607E;
-        Thu,  9 Jul 2020 20:00:03 +0800 (CST)
-Received: from dggema763-chm.china.huawei.com (10.1.198.205) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Thu, 9 Jul 2020 20:00:03 +0800
-Received: from lhreml703-chm.china.huawei.com (10.201.108.52) by
- dggema763-chm.china.huawei.com (10.1.198.205) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 9 Jul 2020 19:59:59 +0800
-Received: from lhreml703-chm.china.huawei.com ([10.201.68.198]) by
- lhreml703-chm.china.huawei.com ([10.201.68.198]) with mapi id 15.01.1913.007;
- Thu, 9 Jul 2020 12:59:57 +0100
-From:   Salil Mehta <salil.mehta@huawei.com>
-To:     yuzenghui <yuzenghui@huawei.com>
-CC:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
-        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>
-Subject: RE: [REPORT] possible circular locking dependency when booting a VM
- on arm64 host
-Thread-Topic: [REPORT] possible circular locking dependency when booting a VM
- on arm64 host
-Thread-Index: AQHWVd2KjX+gRVf/zUS8x8KvRiYF2qj/EP5QgAAAiYCAABH08A==
-Date:   Thu, 9 Jul 2020 11:59:57 +0000
-Message-ID: <937de9e7174f444bb4adae075213c92e@huawei.com>
-References: <7225eba7-6e5e-ec7e-953b-d1fef0b1775b@huawei.com>
- <134ee452eda74f0cbdc10354fe66c48e@huawei.com>
- <7c1bb3c1-3f64-8c24-ed59-eb3da7bf6643@huawei.com>
-In-Reply-To: <7c1bb3c1-3f64-8c24-ed59-eb3da7bf6643@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.68.122]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 9 Jul 2020 08:00:14 -0400
+Received: from mga09.intel.com ([134.134.136.24]:64922 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726599AbgGIMAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:00:13 -0400
+IronPort-SDR: VoXYPPbBcEogUJ3D8gFVzaH3n/DU1Qs/z5xPb4Ptnggq3TyfVUKJtRATsN+zg2+ZsrehSeGIEP
+ IWef8HzfL88Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="149467367"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="149467367"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 05:00:11 -0700
+IronPort-SDR: yeTdKlI4dprMjnusNpvYhmX12shyjq70DohI/oNO837KzfmT0OT9kjR1/KQ0YEmhGyDNEI9hPI
+ 5sSeqAjVJMvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="316205409"
+Received: from nk4-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.52.252])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Jul 2020 05:00:07 -0700
+Date:   Thu, 9 Jul 2020 15:00:06 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Masahisa Kojima <masahisa.kojima@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ardb@kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: Re: [PATCH v3 0/2] synquacer: add TPM support
+Message-ID: <20200709120006.GC683620@linux.intel.com>
+References: <20200708131424.18729-1-masahisa.kojima@linaro.org>
+ <20200708162017.GB549022@linux.intel.com>
+ <CADQ0-X9im8yVVVJbJL5Ssaa49UTOw+M=tYrfhNoODUaY723O8A@mail.gmail.com>
+ <CADQ0-X8xF0NpMakEB_Kqd2hVSrMsMB5FqFd7V9F1eLryJbEeFA@mail.gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADQ0-X8xF0NpMakEB_Kqd2hVSrMsMB5FqFd7V9F1eLryJbEeFA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiB5dXplbmdodWkNCj4gU2VudDogVGh1cnNkYXksIEp1bHkgOSwgMjAyMCAxMjo1MCBQ
-TQ0KPiBUbzogU2FsaWwgTWVodGEgPHNhbGlsLm1laHRhQGh1YXdlaS5jb20+DQo+IENjOiBNYXJj
-IFp5bmdpZXIgPG1hekBrZXJuZWwub3JnPjsgVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9u
-aXguZGU+OyBMaW51eA0KPiBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnPjsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBaaHVh
-bmd5dXplbmcgKFlpc2VuKQ0KPiA8eWlzZW4uemh1YW5nQGh1YXdlaS5jb20+OyBXYW5naGFpYmlu
-IChEKSA8d2FuZ2hhaWJpbi53YW5nQGh1YXdlaS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUkVQT1JU
-XSBwb3NzaWJsZSBjaXJjdWxhciBsb2NraW5nIGRlcGVuZGVuY3kgd2hlbiBib290aW5nIGEgVk0N
-Cj4gb24gYXJtNjQgaG9zdA0KPiANCj4gT24gMjAyMC83LzkgMTg6NTQsIFNhbGlsIE1laHRhIHdy
-b3RlOg0KPiA+IEhpIFl1emVuZ2h1aSwNCj4gPiBJIHdpbGwgdHJ5IHRvIHJlcHJvZHVjZSBpdCB0
-b2RheSBhdCBvdXIgcGxhdGZvcm0uIEp1c3Qgb25lIHF1ZXN0aW9uIGlzIGl0IGVhc2lseQ0KPiA+
-IHJlcHJvZHVjaWJsZSBvciBpcyBhIHJhcmUgb2NjdXJyZW5jZT8NCj4gDQo+IFNhbGlsLCBpdCdz
-IDEwMCUgcmVwcm9kdWNpYmxlIG9uY2UgeW91IHN0YXJ0IGEgZ3Vlc3QuIFlvdSBkb24ndCBldmVu
-DQo+IG5lZWQgdG8gYXNzaWduIGhvc3RkZXYgdG8gdGhlIFZNLg0KDQpUaGFua3MhDQo=
+On Thu, Jul 09, 2020 at 08:46:35AM +0900, Masahisa Kojima wrote:
+> Hi Jarkko,
+> 
+> > Hi Jakko,
+> I apologize for mis-spelling of your name.
+> Same mistake also appears in my another reply to "[PATCH v3 1/2] tpm:
+> tis: add support for MMIO TPM on SynQuacer"
+
+No worries :-)
+
+/Jarkko
