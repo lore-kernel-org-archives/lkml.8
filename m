@@ -2,105 +2,100 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17A0206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:33:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ysIolg+C"
+	by mail.kernel.org (Postfix) with ESMTP id 17E61206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgGIKds (ORCPT
+        id S1726707AbgGIKeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38382 "EHLO
+        Thu, 9 Jul 2020 06:34:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbgGIKdr (ORCPT
+        with ESMTP id S1726357AbgGIKeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:33:47 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 917A5C061A0B;
-        Thu,  9 Jul 2020 03:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IvpXUYK9H+QnmAsI+N7Y+NJkZMFkfZkklbiU2ToyVQs=; b=ysIolg+CeRhNjk4NEZhTj9mj5g
-        ca828lNtjuaGV9NHITlG2ZDPtxGhXNhk3KrvudsXjUJmb8J4XG/OF1nzUOwI//gHDtqE0EANnpbE+
-        bbiBnPXo5VHSiHumhpr2Qu+akcJEqpES74jCyTShVPKFLAmD/sBzeRgZb/ORaBfu5DUyt8R+5OLWf
-        GfezKgB7POj5RVO9xyLQJYa4YqvWXnYTcjZguHbo5tiN+wTk/yxkJo9dnoBBMvOLBeJh/GXmNplaB
-        k6UuaBO7U4dpxgXLgt+GyuZ9p/eO25EDL03UeJAkSn2ViIUTHUSjhhYACWMO+fCLOzes7hYXYC/zl
-        7sbP7/LA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtTs4-0007rF-9q; Thu, 09 Jul 2020 10:33:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 66F76300739;
-        Thu,  9 Jul 2020 12:33:38 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 53455235B3D17; Thu,  9 Jul 2020 12:33:38 +0200 (CEST)
-Date:   Thu, 9 Jul 2020 12:33:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-        Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] powerpc/64s: implement queued spinlocks and
- rwlocks
-Message-ID: <20200709103338.GQ597537@hirez.programming.kicks-ass.net>
-References: <20200706043540.1563616-1-npiggin@gmail.com>
- <20200706043540.1563616-5-npiggin@gmail.com>
- <877dvdvvkm.fsf@mpe.ellerman.id.au>
+        Thu, 9 Jul 2020 06:34:13 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F21C061A0B
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 03:34:13 -0700 (PDT)
+Received: from cap.home.8bytes.org (p549adb3d.dip0.t-ipconnect.de [84.154.219.61])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id CC3B2189;
+        Thu,  9 Jul 2020 12:34:09 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        joro@8bytes.org
+Subject: [PATCH] x86/idt: Make sure idt_table takes a whole page
+Date:   Thu,  9 Jul 2020 12:33:55 +0200
+Message-Id: <20200709103355.11359-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877dvdvvkm.fsf@mpe.ellerman.id.au>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 08:20:25PM +1000, Michael Ellerman wrote:
-> Nicholas Piggin <npiggin@gmail.com> writes:
-> > These have shown significantly improved performance and fairness when
-> > spinlock contention is moderate to high on very large systems.
-> >
-> >  [ Numbers hopefully forthcoming after more testing, but initial
-> >    results look good ]
-> 
-> Would be good to have something here, even if it's preliminary.
-> 
-> > Thanks to the fast path, single threaded performance is not noticably
-> > hurt.
-> >
-> > Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> > ---
-> >  arch/powerpc/Kconfig                      | 13 ++++++++++++
-> >  arch/powerpc/include/asm/Kbuild           |  2 ++
-> >  arch/powerpc/include/asm/qspinlock.h      | 25 +++++++++++++++++++++++
-> >  arch/powerpc/include/asm/spinlock.h       |  5 +++++
-> >  arch/powerpc/include/asm/spinlock_types.h |  5 +++++
-> >  arch/powerpc/lib/Makefile                 |  3 +++
-> 
-> >  include/asm-generic/qspinlock.h           |  2 ++
-> 
-> Who's ack do we need for that part?
+From: Joerg Roedel <jroedel@suse.de>
 
-Mine I suppose would do, as discussed earlier, it probably isn't
-required anymore, but I understand the paranoia of not wanting to change
-too many things at once :-)
+On x86-32 the idt_table with 256 entries needs only 2048 bytes. It is
+page-aligned, but the end of the .bss..page_aligned section is not
+guaranteed to be page-aligned.
 
+As a result, symbols from other .bss sections may end up on the same
+4k page as the idt_table, and will accidentially get mapped read-only
+during boot, causing unexpected page-faults when the kernel writes to
+them.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Avoid this by making the idt_table 4kb in size even on x86-32. On
+x86-64 the idt_table is already 4kb large, so nothing changes there.
+
+Fixes: 3e77abda65b1c ("x86/idt: Consolidate idt functionality")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/kernel/idt.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 0db21206f2f3..83e24f837127 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -157,8 +157,13 @@ static const __initconst struct idt_data apic_idts[] = {
+ #endif
+ };
+ 
+-/* Must be page-aligned because the real IDT is used in the cpu entry area */
+-static gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
++/*
++ * Must be page-aligned because the real IDT is used in the cpu entry area.
++ * Allocate more entries than needed so that idt_table takes a whole page, so it
++ * is safe to map the idt_table read-only and into the user-space page-table.
++ */
++#define IDT_ENTRIES_ALLOCATED	(PAGE_SIZE / sizeof(gate_desc))
++static gate_desc idt_table[IDT_ENTRIES_ALLOCATED] __page_aligned_bss;
+ 
+ struct desc_ptr idt_descr __ro_after_init = {
+ 	.size		= IDT_TABLE_SIZE - 1,
+@@ -335,6 +340,9 @@ void __init idt_setup_apic_and_irq_gates(void)
+ 	idt_map_in_cea();
+ 	load_idt(&idt_descr);
+ 
++	BUILD_BUG_ON(IDT_ENTRIES_ALLOCATED < IDT_ENTRIES);
++	BUILD_BUG_ON(sizeof(idt_table) != PAGE_SIZE);
++
+ 	/* Make the IDT table read only */
+ 	set_memory_ro((unsigned long)&idt_table, 1);
+ 
+-- 
+2.27.0
+
