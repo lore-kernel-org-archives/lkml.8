@@ -2,259 +2,114 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE70C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B513020767
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7F6207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:28:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bscbuXmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgGIR0p convert rfc822-to-8bit (ORCPT
+        id S1728234AbgGIR2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:26:45 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:55053 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgGIR0l (ORCPT
+        Thu, 9 Jul 2020 13:28:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33336 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727785AbgGIR2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:26:41 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mqagw-1kg8Ym2LE8-00mZEm; Thu, 09 Jul 2020 19:26:36 +0200
-Received: by mail-qk1-f173.google.com with SMTP id j80so2591176qke.0;
-        Thu, 09 Jul 2020 10:26:35 -0700 (PDT)
-X-Gm-Message-State: AOAM531+RKtRkkuSgXgTqUGILhhWbsxIdzAT1aBSgOG939KHumFUyfDJ
-        eWFXpmRL+71z92CX6oRBXDPp8T60OLHgnFZAaJw=
-X-Google-Smtp-Source: ABdhPJxrBo0AwUBiMw2v4TVCTLmtL0EMGqThmAS9J2fIdN9aQHe1QjAu6oSNR/5pXdXtSVlu3fBviu/RfylxDKEg8NM=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr64230494qkf.394.1594315594655;
- Thu, 09 Jul 2020 10:26:34 -0700 (PDT)
+        Thu, 9 Jul 2020 13:28:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594315685;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=GfadFP0vLdHdZ4FwpCfHglgC68S6cIQIOSckhJEfNgY=;
+        b=bscbuXmLi5cOdh2umI/+VRfpmr3m/zw8iLlklYNuATHw69nZpGWeJ/KxXa5RBhnls7oao9
+        cFpj5Kj7/IUowM6mBJ984WnIU1XpjiiHUggicicZxQonAHQVZgnIkddUWPEyswgaXOx7sG
+        xEXBBQZqKTIifEOVEa+8VCsqReNTbJc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-254-ZW040yRZNMCJDXcieKH_eQ-1; Thu, 09 Jul 2020 13:28:03 -0400
+X-MC-Unique: ZW040yRZNMCJDXcieKH_eQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 354DF1081;
+        Thu,  9 Jul 2020 17:28:02 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CB6477F8C2;
+        Thu,  9 Jul 2020 17:28:01 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Makarand Sonare <makarandsonare@google.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: [PATCH v2] KVM: nVMX: fixes for preemption timer migration
+Date:   Thu,  9 Jul 2020 13:28:01 -0400
+Message-Id: <20200709172801.2697-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-References: <20200707180955.53024-1-mic@digikod.net> <20200707180955.53024-9-mic@digikod.net>
- <CAK8P3a0FkoxFtcQJ2jSqyLbDCOp3R8-1JoY8CWAgbSZ9hH9wdQ@mail.gmail.com>
- <7f407b67-d470-25fd-1287-f4f55f18e74a@digikod.net> <CAK8P3a1ehWZErD2a0iBqn37s-LTAtW0AbV_gt32iX3cQkXbpOQ@mail.gmail.com>
- <ec79f6ad-1c11-d69f-724b-622baa28f19f@digikod.net>
-In-Reply-To: <ec79f6ad-1c11-d69f-724b-622baa28f19f@digikod.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 9 Jul 2020 19:26:18 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a34X1qfDhn8u3nR+aQA_g+V2i35L0oTnvhNAs83YJPB_w@mail.gmail.com>
-Message-ID: <CAK8P3a34X1qfDhn8u3nR+aQA_g+V2i35L0oTnvhNAs83YJPB_w@mail.gmail.com>
-Subject: Re: [PATCH v19 08/12] landlock: Add syscall implementation
-To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        Richard Weinberger <richard@nod.at>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:iRcBYKYD93f4v9LIOGfIm9I4Jp5dCKpb7azDIbgiJg8MrXcXS0A
- 3PCcVOfAYcRI9RqKDmiQkMbYZ0QWQ6tXDL9rxGCxG5WlrFaRDOHKRYbFbSi+6Jy2pHO6Mi7
- ZmGLAnY8GSKliBqfkmuFGhPZwK8eksVzan4/FCfakwNgDc9B+RW3Cqwl+rIdyoYOhp9Tspf
- qWrlkU+dQjTqliSx9OkkQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WxxayRk9FsM=:QmAt6LpR2PYdjIOJRYCOna
- YmuweTPad0jSOk4xLYarpEbL3+Lz2qI4ov91Vv6HgZn1TjYdFhYMbBLWSIRD9z0ONmEC/Dj40
- eTrg0Gh21wO6R/XIqO6ZORm24FmXJNf/0mwvIpb5CE9zvnauBR/D1rtzBZ7Jctu4l22Y17yfD
- vhiqbsyyQWYIo58aSys4A/i2qzeG96QlY0wS8fTB0a3WovdWwRiSI5dbK34Sm6vCkSLXZDgrV
- rv4F/p2xCSWNBPMooK0TpdZCwOIxQiE4vg4vBIZwHHe4sjbHXCKaWByl+qX8f3u/khlSgTRxb
- egFgqzbTu5sVx/C3HjWYcWmI0yKZl0x3x0phWjW3+w2vYhVw0YRts/56DoDCBCjVqkZt/q9kv
- wCn4FBYj4IrA7noE2G3Th3IW9EaaiE93o6gA2k3ud8dXOaK4ulv6eQ1EsDJOb3wZrRSKxvBgN
- XVMUjYRNtIPeSJrTltDIX3jNoyNF8hv20nhsc0Kc9fzro69Ojbh/2/4/OzaiLnEBLimKCn0b/
- iKXxWrAkeLRlFowhCQhwdeIEmJRFb2zu/cAIcAAkZWksMs4jbd3rSArDHQHuPsILWYqxRg13K
- iFFzBzdUY1ZqcykQLM6enKSuZuw+OUKeT3iKkBbgfO8Gd2tsWcLRC5fgO35ZAR9KznOJ1k6kf
- WrGbsvvHsZW1Iet+CftRVJc2jDgHzxnf6xvowb6HBGkoPx/h0hXaQq+1mmiGBC/7cRYyPZCXs
- cQhdR1tIqqrj/pUIZddn67Bt/x7hWKVN30aRN7AZ1q7/kjurvCOT3di1tTbzE6KWKS9rQ4eYK
- JQc29xsgJ0H4SvDaEN2pjcpk1H+DyP2e2GWPGHU7OuCWiHggc/0tWLT7nQFpPRjba96tGBGoz
- kRLqm6K6weffT+IhAusDJDQzbjHB9bbZjmEy+WqFrTkgAXX6gKumolSL3IBRFE1kkeS+78xU8
- zlD5T7QyG89ju9iSiVyQ6rOlaPvfbUoggHMzw/SdtQsFpZvphgm3E
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 7:50 PM Mickaël Salaün <mic@digikod.net> wrote:
-> On 08/07/2020 15:49, Arnd Bergmann wrote:
-> > On Wed, Jul 8, 2020 at 3:04 PM Mickaël Salaün <mic@digikod.net> wrote:
-> >> On 08/07/2020 10:57, Arnd Bergmann wrote:
-> >>> On Tue, Jul 7, 2020 at 8:10 PM Mickaël Salaün <mic@digikod.net> wrote:
-> >>>
-> >>> It looks like all you need here today is a single argument bit, plus
-> >>> possibly some room for extensibility. I would suggest removing all
-> >>> the extra bits and using a syscall like
-> >>>
-> >>> SYSCALL_DEFINE1(landlock_create_ruleset, u32, flags);
-> >>>
-> >>> I don't really see how this needs any variable-length arguments,
-> >>> it really doesn't do much.
-> >>
-> >> We need the attr_ptr/attr_size pattern because the number of ruleset
-> >> properties will increase (e.g. network access mask).
-> >
-> > But how many bits do you think you will *actually* need in total that
-> > this needs to be a two-dimensional set of flags? At the moment you
-> > only have a single bit that you interpret.
->
-> I think there is a misunderstanding. For this syscall I wasn't talking
-> about the "options" field but about the "handled_access_fs" field which
-> has 14 bits dedicated to control access to the file system:
-> https://landlock.io/linux-doc/landlock-v19/security/landlock/user.html#filesystem-flags
+Commit 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer migration",
+2020-06-01) accidentally broke nVMX live migration from older version
+by changing the userspace ABI.  Restore it and, while at it, ensure
+that vmx->nested.has_preemption_timer_deadline is always initialized
+according to the KVM_STATE_VMX_PREEMPTION_TIMER_DEADLINE flag.
 
-Ok, got it. I didn't read far enough there.
+Cc: Makarand Sonare <makarandsonare@google.com>
+Fixes: 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer migration")
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+v1->v2: coding style [Jim]
 
-> The idea is to add other handled_access_* fields for other kernel object
-> types (e.g. network, process, etc.).
->
-> The "options" field is fine as a raw __u32 syscall argument.
+ arch/x86/include/uapi/asm/kvm.h | 5 +++--
+ arch/x86/kvm/vmx/nested.c       | 1 +
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-I'd still like to avoid having it variable-length and structured though.
-How about having a __u32 "options" flag, plus an indirect argument
-with 32 fixed-length (all 32 bit or all 64 bit) flag words, each of which
-corresponds to one of the option bits?
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index 17c5a038f42d..0780f97c1850 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -408,14 +408,15 @@ struct kvm_vmx_nested_state_data {
+ };
+ 
+ struct kvm_vmx_nested_state_hdr {
+-	__u32 flags;
+ 	__u64 vmxon_pa;
+ 	__u64 vmcs12_pa;
+-	__u64 preemption_timer_deadline;
+ 
+ 	struct {
+ 		__u16 flags;
+ 	} smm;
++
++	__u32 flags;
++	__u64 preemption_timer_deadline;
+ };
+ 
+ struct kvm_svm_nested_state_data {
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index b26655104d4a..d4a4cec034d0 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -6176,6 +6176,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+ 			goto error_guest_mode;
+ 	}
+ 
++	vmx->nested.has_preemption_timer_deadline = false;
+ 	if (kvm_state->hdr.vmx.flags & KVM_STATE_VMX_PREEMPTION_TIMER_DEADLINE) {
+ 		vmx->nested.has_preemption_timer_deadline = true;
+ 		vmx->nested.preemption_timer_deadline =
+-- 
+2.26.2
 
-It's still fairly complex that way, but not as much as the version
-you have right now that can be extended in multiple dimensions.
-
-This could possibly also help avoid the need for the get_features
-syscall: If user space just passes the bitmap of all the access flags
-it wants to use in a fixed-size structure, the kernel can update the
-bits to mask out the ones it does not understand and write back
-that bitmap as the result of create_ruleset().
-
-> >>> To be on the safe side, you might split up the flags into either the
-> >>> upper/lower 16 bits or two u32 arguments, to allow both compatible
-> >>> (ignored by older kernels if flag is set) and incompatible (return error
-> >>> when an unknown flag is set) bits.
-> >>
-> >> This may be a good idea in general, but in the case of Landlock, because
-> >> this kind of (discretionary) sandboxing should be a best-effort security
-> >> feature, we should avoid incompatible behavior. In practice, every
-> >> unknown bit returns an error because userland can probe for available
-> >> bits thanks to the get_features command. This kind of (in)compatibility
-> >> can then be handled by userland.
-> >
-> > If there are not going to be incompatible extensions, then just ignore
-> > all unknown bits and never return an error but get rid of the user
-> > space probing that just complicates the interface.
->
-> There was multiple discussions about ABI compatibility, especially
-> inspired by open(2) vs. openat2(2), and ignoring flags seems to be a bad
-> idea. In the "sandboxer" example, we first probe the supported features
-> and then mask unknown bits (i.e. access rights) at run time in userland.
-> This strategy is quite straightforward, backward compatible and
-> future-proof.
-
-For behavior changing flags, I agree they should be seen as
-incompatible flags (i.e. return an error if an unknown bit is set).
-
-However, for the flags you pass in in an allowlist, treating them
-as compatible (i.e. ignore any unknown flags, allowing everything
-you are not forbidding already) seems completely reasonable
-to me. Do you foresee user space doing anything other than masking
-out the bits that the kernel doesn't know about? If not, then doing
-it in the  kernel should always be simpler.
-
-> >> I suggest this syscall signature:
-> >> SYSCALL_DEFINE3(landlock_create_ruleset, __u32, options, const struct
-> >> landlock_attr_ruleset __user *, ruleset_ptr, size_t, ruleset_size);
-> >
-> > The other problem here is that indirect variable-size structured arguments
-> > are a pain to instrument with things like strace or seccomp, so you
-> > should first try to use a fixed argument list, and fall back to a fixed
-> > structure if that fails.
->
-> I agree that it is not perfect with the current tools but this kind of
-> extensible structs are becoming common and well defined (e.g. openat2).
-> Moreover there is some work going on for seccomp to support "extensible
-> argument" syscalls: https://lwn.net/Articles/822256/
-
-openat2() is already more complex than we'd ideally want, I think we
-should try hard to make new syscalls simpler than that, following the
-rule that any interface should be as simple as possible, but no simpler.
-
-> >>>> +static int syscall_add_rule_path_beneath(const void __user *const attr_ptr,
-> >>>> +               const size_t attr_size)
-> >>>> +{
-> >>>> +       struct landlock_attr_path_beneath attr_path_beneath;
-> >>>> +       struct path path;
-> >>>> +       struct landlock_ruleset *ruleset;
-> >>>> +       int err;
-> >>>
-> >>> Similarly, it looks like this wants to be
-> >>>
-> >>> SYSCALL_DEFINE3(landlock_add_rule_path_beneath, int, ruleset, int,
-> >>> path, __u32, flags)
-> >>>
-> >>> I don't see any need to extend this in a way that wouldn't already
-> >>> be served better by adding another system call. You might argue
-> >>> that 'flags' and 'allowed_access' could be separate, with the latter
-> >>> being an indirect in/out argument here, like
-> >>>
-> >>> SYSCALL_DEFINE4(landlock_add_rule_path_beneath, int, ruleset, int, path,
-> >>>                            __u64 *, allowed_acces, __u32, flags)
-> >>
-> >> To avoid adding a new syscall for each new rule type (e.g. path_beneath,
-> >> path_range, net_ipv4_range, etc.), I think it would be better to keep
-> >> the attr_ptr/attr_size pattern and to explicitely set a dedicated option
-> >> flag to specify the attr type.
-> >>
-> >> This would look like this:
-> >> SYSCALL_DEFINE4(landlock_add_rule, __u32, options, int, ruleset, const
-> >> void __user *, rule_ptr, size_t, rule_size);
-> >>
-> >> The rule_ptr could then point to multiple types like struct
-> >> landlock_attr_path_beneath (without the current ruleset_fd field).
-> >
-> > This again introduces variable-sized structured data. How many different
-> > kinds of rule types do you think there will be (most likely, and maybe an
-> > upper bound)?
->
-> I don't know how many rule types will come, but right now I think it may
-> be less than 10.
-
-Ok,
-
-> > Could (some of) these be generalized to use the same data structure?
->
-> I don't think so, file path and network addresses are an example of very
-> different types.
-
-Clearly the target object is something different, but maybe there is
-enough commonality to still make them fit into a more regular form.
-
-For the file system case, you have an identify for an object
-(the file descriptor) and the  '__u64 allowed_access'. I would
-expect that the 'allowed_access' concept is generic enough that
-you can make it a direct argument (32 bit register arg, or pointer
-to a __u64). Do you expect others to need something besides
-an object identifier and a permission bitmask? Maybe it could
-be something like
-
- SYSCALL_DEFINE4(landlock_add_rule, int, ruleset, __u32, options,
-                       const void __user *, object, const __u64 __user
-*, allowed_access,
-                       __u32, flags);
-
-with a fixed-length 'object' identifier type (file descriptor,
-sockaddr_storage, ...) for each option.
-
-    Arnd
