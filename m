@@ -2,102 +2,114 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C899C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A3DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29D5A2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:02:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594310539;
-	bh=K45DJ14e/pHYHlhDRXMB06y45U/dqxzjDYmEbXO0t7Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=P1cfNDzlXjXHnGtXPcOV1YwkSBYaouTEQe9m8P8L/UpiC+d8+QWMGwsIwn+gzGbYi
-	 MrzCoDJ8nMUtXwI3vNOZn+IwuZuimyAarxCzNtHQJhc148xw7soohTHmw4VCpP8xd/
-	 QZbn1izf7miHvKIk+jOZn6M8N4OoSovKohtnihl4=
+	by mail.kernel.org (Postfix) with ESMTP id 6DF5D20767
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:05:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgGIQCS (ORCPT
+        id S1727856AbgGIQFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:02:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727865AbgGIQCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:02:17 -0400
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEF53208C3
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 16:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594310537;
-        bh=K45DJ14e/pHYHlhDRXMB06y45U/dqxzjDYmEbXO0t7Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Pf7UXbU5lI9fMgrjIppWAZNBiQBJ/ELPGJrwqbOK9P0wrNZbvFk/HlQd8hDDHBVDn
-         mgfmVUHcng5qIeI+42c4TRsXfdOxCMAhCnMNiWPoxfzMU/nx+GwhNpHxKUbGZ6KMAL
-         fUMiKYOWX6VmX4AOqQ1B7DApro0HpdFHj3K9QDDs=
-Received: by mail-wr1-f52.google.com with SMTP id q5so2963002wru.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 09:02:16 -0700 (PDT)
-X-Gm-Message-State: AOAM531uyDyXILun8C5+SEnkoSoJM4GGhQmhgwE6PcGsoq11xrkWj785
-        Z5Or7uc7bdGSzuuzB+jzWc9xh3+fxd0LKomSoErPNw==
-X-Google-Smtp-Source: ABdhPJxzRIFsc7By7VMCeEO3c+cA7oBIQu77SztDLFlUnbln1kuZgDgGF2rnT8p5T+DVTINyww/KaQgNkWN6aCLZjCI=
-X-Received: by 2002:adf:f707:: with SMTP id r7mr63065788wrp.70.1594310533334;
- Thu, 09 Jul 2020 09:02:13 -0700 (PDT)
+        Thu, 9 Jul 2020 12:05:16 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:54543 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbgGIQFQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:05:16 -0400
+Received: from webmail.gandi.net (webmail15.sd4.0x35.net [10.200.201.15])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPA id 9DA5B1BF20B;
+        Thu,  9 Jul 2020 16:05:11 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200709145447.549145421@hpe.com> <20200709145448.652996700@hpe.com>
-In-Reply-To: <20200709145448.652996700@hpe.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 9 Jul 2020 09:02:01 -0700
-X-Gmail-Original-Message-ID: <CALCETrXo9gTR0XWQ5e-YoRryyvJ3tuOaOVB+DyF5OUNRpfBteQ@mail.gmail.com>
-Message-ID: <CALCETrXo9gTR0XWQ5e-YoRryyvJ3tuOaOVB+DyF5OUNRpfBteQ@mail.gmail.com>
-Subject: Re: [patch v2 09/13] x86: Remove efi=old_map command line option
-To:     steve.wahl@hpe.com
-Cc:     Jonathan Corbet <corbet@lwn.net>, Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Young <dyoung@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Austin Kim <austindh.kim@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Russ Anderson <rja@hpe.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 09 Jul 2020 18:05:11 +0200
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 0/6] iio/adc: ingenic: Cleanups & add touchscreen mode.
+In-Reply-To: <CAHp75VcwgL8pH+pH9TnsuwbWr=wSFu37sX8sTkbkfk+iBv7Jng@mail.gmail.com>
+References: <20200709152200.10039-1-contact@artur-rojek.eu>
+ <CAHp75VcwgL8pH+pH9TnsuwbWr=wSFu37sX8sTkbkfk+iBv7Jng@mail.gmail.com>
+Message-ID: <9865deba48fdb1b5bb522ae7cabef7bc@artur-rojek.eu>
+X-Sender: contact@artur-rojek.eu
+User-Agent: Roundcube Webmail/1.3.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 7:55 AM <steve.wahl@hpe.com> wrote:
->
-> As a part of UV1 platform removal, delete the efi=old_map option,
-> which should no longer be needed.
+Hey Andy,
 
-Can you also update kernel_parameters.txt?
+On 2020-07-09 17:43, Andy Shevchenko wrote:
+> On Thu, Jul 9, 2020 at 6:22 PM Artur Rojek <contact@artur-rojek.eu> 
+> wrote:
+>> 
+>> Hi all,
+>> 
+>> v8 of this patchset introduces some structural changes, which I deemed
+>> worthy highlighting here:
+> 
+> Can you remind me if I gave you tags on the previous version?
+I received no tags from you on this patchset so far.
 
---Andy
+Cheers,
+Artur
+
+> If so, is the above the reason to drop them?
+> 
+>> 
+>>  - adc-joystick related changes have been dropped from this patchset 
+>> and
+>>    will be upstreamed separately. Their only connection to this 
+>> patchset
+>>    was that they used INGENIC_ADC_TOUCH_* defines in the DTS example,
+>>    causing trouble to Rob's scripts.
+>> 
+>>  - Integrated Paul's changes, which introduce an ADCMD low-level 
+>> command
+>>    feature. These changes affect patches 5/6 and 6/6, with the former
+>>    requiring Rob to re-ack.
+>> 
+>> Cheers,
+>> Artur
+>> 
+>> Artur Rojek (5):
+>>   dt-bindings: iio/adc: Convert ingenic-adc docs to YAML.
+>>   IIO: Ingenic JZ47xx: Error check clk_enable calls.
+>>   IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
+>>   dt-bindings: iio/adc: Add touchscreen idx for JZ47xx SoC ADC
+>>   IIO: Ingenic JZ47xx: Add touchscreen mode.
+>> 
+>> Paul Cercueil (1):
+>>   iio/adc: ingenic: Retrieve channels list from soc data struct
+>> 
+>>  .../bindings/iio/adc/ingenic,adc.txt          |  49 ---
+>>  .../bindings/iio/adc/ingenic,adc.yaml         |  71 ++++
+>>  drivers/iio/adc/Kconfig                       |   1 +
+>>  drivers/iio/adc/ingenic-adc.c                 | 386 
+>> ++++++++++++++++--
+>>  include/dt-bindings/iio/adc/ingenic,adc.h     |   6 +
+>>  5 files changed, 426 insertions(+), 87 deletions(-)
+>>  delete mode 100644 
+>> Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+>> 
+>> --
+>> 2.27.0
+>> 
