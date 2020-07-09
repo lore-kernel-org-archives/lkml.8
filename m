@@ -2,134 +2,127 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC97C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D109C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDC22070E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4AD206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:35:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="XN33SzHh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qhvrh91H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgGIWes (ORCPT
+        id S1726773AbgGIWf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:34:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38032 "EHLO
+        Thu, 9 Jul 2020 18:35:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgGIWer (ORCPT
+        with ESMTP id S1726269AbgGIWf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:34:47 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92016C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 15:34:47 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id q198so3502900qka.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 15:34:47 -0700 (PDT)
+        Thu, 9 Jul 2020 18:35:28 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8562AC08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 15:35:28 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z3so1607676pfn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 15:35:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nGzR1WtRF8Y8tGKLwHQjy7lggywuCqvt56g9Ssnty14=;
-        b=XN33SzHhxER6ZyVjHyeXjMhX536wgzMnw6B/6NCjLZgko9k/DgUnON6auLfZbFRNHH
-         zADdDT8A3f3eiKj+EM8oF9OEfH6P3gTKjqNl33W5Aq4BT32OI1hOdTiqeo0lC77A9O7X
-         cgSSNWnoK4cKsVFryv7xhGj5pW7W0eDx7m0vkSNbIA4H4ByzBzgOep9KnJhDcatSk7ti
-         2nIFgycv6LN49S6zBfaV3cErfAfTqf0mTpLyRZXncXzmZAnU/kk9fMtp+LFltmHfPnVU
-         F8eWqAUP6oAZGhHDogHLVB9YQIdiM1fRE/y8zSSY/tPhaZuN7R6kB4C2eVDKrg48/uhN
-         Kw1w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kM+IChOCCY2qzDdaGchO/Aoq+RoZYyonRNazqswaWP0=;
+        b=Qhvrh91HDkhVWDK/+/B4Hw+OlVZvwuv/ZWHMiSSmCgw4vLrsIhG7VMztdqxMlrJ8rU
+         0hOl5IUFf89c+iaFoOJ0W/zebf1rv05PMvYbbeipkhEXh5q8hG1euVeLv+ribwqLJWYB
+         cHm1vpObishp1g4R12qBkYvtLtPyqTKezLIrc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nGzR1WtRF8Y8tGKLwHQjy7lggywuCqvt56g9Ssnty14=;
-        b=t/QSelaf8cY4zz8uhCVLg7XG5xlwAdLm0kRf1aiq+dG4Q/jep2QlNMAeGDbemLnLE+
-         fBgZIVAPi1IEYeQoHdK2YVim6JWetGX6gTJcT3My6LqS4Rx0VHfu2Adsyn+Shq1JF6eB
-         RnLb4j7l30EIM6JU7cv1cPFQ8yyX6tfNJ4mU2qPw9Cfg1W9/6Y2E9TH1OKTvel3Lym3V
-         ZJOmNq8wlnTAB3zD/vNJLk5PWCI8CC19WIULOzea5ZWUMWiR/APvnHmgoaDxA6vgVHjy
-         Mjb88hCqbEgT0Gk+aWQCdj58Dn1CJU7i/uF9hvrXCuZpSCAQlJVPBaAQnwNJG56QLPKW
-         /TZw==
-X-Gm-Message-State: AOAM532sshvlWp0w511NGU5NUfrYzruEE6Advtrfuqrd1Mk2Le3xXgFI
-        IRmff1KiB3pFJZTTCdOek4qjAR7u847q5zo1
-X-Google-Smtp-Source: ABdhPJz3R95qBwSgxEru/Shu4hNfF1GuP4jw2nXmuF6ITk4JjFBp3/peBCYE1DJSJYvsLz702FTn+g==
-X-Received: by 2002:a37:88c2:: with SMTP id k185mr53706537qkd.53.1594334086637;
-        Thu, 09 Jul 2020 15:34:46 -0700 (PDT)
-Received: from localhost.localdomain ([196.52.2.97])
-        by smtp.gmail.com with ESMTPSA id o12sm5029160qtl.48.2020.07.09.15.34.43
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kM+IChOCCY2qzDdaGchO/Aoq+RoZYyonRNazqswaWP0=;
+        b=udJqVq+4lDZdPmGrav5hbFBisdZCUOJeDjrUPhamy2JYk1FIdCs2Mxg+QfZ9ENepZw
+         xFshu9Pi2ljtQzI9RbrF3kUopPatY66a3AGG9O9mku0TTO4OSfwriVIcvrnnr72cDHPX
+         m29P5qpzZS4FyMw3nWezfjAFuKekh/hY5HdqKn4Llhhwtt7iUA//7QXT747sPSvwGdEk
+         BrLIEbIcPwLaRHnBcOkXHuoDdWzWL4bMw3udY5Fvlni7KMX7iia1R7mqdxx1TOZ3YGXF
+         ENki070KTA+X7elketM+kgR6kgGydLkfUKMKNrr+hoFo5q62BU2EXfmpgCGeTLrxKt8W
+         PG4A==
+X-Gm-Message-State: AOAM532uSYL8jZBClgIMlz1ayC3cqcnPxazLJinSVg6GlLCuxYGqEH0W
+        yhw9R/y5ZIVYLZQgThX85e+iYw==
+X-Google-Smtp-Source: ABdhPJwD/P7eqvd4f5ccMiZGMgkLzKVgKJseEMwpjGYj6fVV5lmNaBSoLKMV9VLKUql7LxXfBZ6HOw==
+X-Received: by 2002:aa7:938c:: with SMTP id t12mr59089142pfe.37.1594334128092;
+        Thu, 09 Jul 2020 15:35:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g9sm3717827pfm.151.2020.07.09.15.35.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 15:34:45 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH] gpio: omap: handle pin config bias flags
-Date:   Fri, 10 Jul 2020 00:34:01 +0200
-Message-Id: <20200709223401.780051-1-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
+        Thu, 09 Jul 2020 15:35:27 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 15:35:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@aculab.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v7 2/9] pidfd: Add missing sock updates for pidfd_getfd()
+Message-ID: <202007091534.382887A@keescook>
+References: <20200709182642.1773477-1-keescook@chromium.org>
+ <20200709182642.1773477-3-keescook@chromium.org>
+ <CAG48ez1gz3mtAO5QdvGEMt5KnRBq7hhWJMGS6piGDrcGNEdSrQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez1gz3mtAO5QdvGEMt5KnRBq7hhWJMGS6piGDrcGNEdSrQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify omap_gpio_set_config() to handle pin config bias flags by calling
-gpiochip_generic_config().
+On Thu, Jul 09, 2020 at 10:00:42PM +0200, Jann Horn wrote:
+> On Thu, Jul 9, 2020 at 8:26 PM Kees Cook <keescook@chromium.org> wrote:
+> > The sock counting (sock_update_netprioidx() and sock_update_classid())
+> > was missing from pidfd's implementation of received fd installation. Add
+> > a call to the new __receive_sock() helper.
+> [...]
+> > diff --git a/kernel/pid.c b/kernel/pid.c
+> [...]
+> > @@ -642,10 +643,12 @@ static int pidfd_getfd(struct pid *pid, int fd)
+> >         }
+> >
+> >         ret = get_unused_fd_flags(O_CLOEXEC);
+> > -       if (ret < 0)
+> > +       if (ret < 0) {
+> >                 fput(file);
+> > -       else
+> > +       } else {
+> >                 fd_install(ret, file);
+> > +               __receive_sock(file);
+> > +       }
+> 
+> __receive_sock() has to be before fd_install(), otherwise `file` can
+> be a dangling pointer.
 
-The pin group for the gpio line must have the corresponding pinconf
-properties:
+I've swapped the order now and double-checked the other uses. Everything
+else seems fine.
 
-PIN_CONFIG_BIAS_PULL_UP requires "pinctrl-single,bias-pullup"
-PIN_CONFIG_BIAS_PULL_DOWN requires "pinctrl-single,bias-pulldown"
-
-This is necessary for pcs_pinconf_set() to find the requested bias
-parameter in the PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.
-
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- drivers/gpio/gpio-omap.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index b8e2ecc3eade..a471a152f318 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -896,12 +896,25 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
- 				unsigned long config)
- {
- 	u32 debounce;
-+	int ret;
- 
--	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
--		return -ENOTSUPP;
-+	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
-+	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
-+	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN))
-+	{
-+		ret = gpiochip_generic_config(chip, offset, config);
-+	}
-+	else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE)
-+	{
-+		debounce = pinconf_to_config_argument(config);
-+		ret = omap_gpio_debounce(chip, offset, debounce);
-+	}
-+	else
-+	{
-+		ret = -ENOTSUPP;
-+	}
- 
--	debounce = pinconf_to_config_argument(config);
--	return omap_gpio_debounce(chip, offset, debounce);
-+	return ret;
- }
- 
- static void omap_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
 -- 
-2.25.1
-
+Kees Cook
