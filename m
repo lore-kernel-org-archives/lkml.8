@@ -2,141 +2,123 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE348C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5558C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC6D2053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF88D2053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BLXjG3xr";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="iXwmOR4+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAof9Wa/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgGIFQS (ORCPT
+        id S1726372AbgGIFQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 01:16:18 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:1223 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgGIFQR (ORCPT
+        Thu, 9 Jul 2020 01:16:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgGIFQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 01:16:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594271791; x=1625807791;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=5bmzxdNseWDWb+EYi6IfUVSqHlyVAjiXlar1aumKodI=;
-  b=BLXjG3xrMmIDWbCNYLN9dIOsbP8O8XiQcJXkwQYy7b4xjUMWrWQw5W+A
-   g8S2jiWMlgawuy4VI/r4gJ3rE+IxY4f1eqUZ9faVbGjoAF5Uql98P9Jvz
-   sHl08L3sNNrn2I8wdF3wGSt369Dxrcgy/mG0+ZJwyRpEsmCd2JitLYvmU
-   0Ge709LDlIO9YxWwDhv/H4pycA336G++w0+cju2hOm4GFy6Q8fqwuIVRf
-   cI/Yb7Bl9PUVuZ8Bt9gGg8hX9Lid5xw3cuESQobD8zb2CEZAJ3L7jF9ao
-   9U1K9K91ifbttjBSCELpOLy3+iSgvLPslbddISbY/NSEhYcOVibgDkIC6
-   w==;
-IronPort-SDR: 2NZO4gfEFYPFWbo+3L9LD7hlR1xAanfT5NZC7RVEhSrhm3CTi+5SLZ9N4zVT2TTc302ZaiR4y7
- tmYarLvYz7PDqH2/l3kfigT7KbX9ybCLI1zfeD/N/aDSrsMPXlxykalerGFuE0MuIUkrvDD02C
- j1a1EsAAkkeyk/jYEewAvGp7Zf7QBVvaE1D8AtzCV6XMjo0KgVrhiGwHI2CZtjf2r11NzYqnbc
- TgRmL/EuX7iL1NStK35N2AUCV/QuvDd0AB50q9esh0+N/JO+NvcpG2laoD3REK1tOP6OPNvLPh
- HI8=
-X-IronPort-AV: E=Sophos;i="5.75,330,1589212800"; 
-   d="scan'208";a="245012151"
-Received: from mail-bn8nam11lp2176.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.176])
-  by ob1.hgst.iphmx.com with ESMTP; 09 Jul 2020 13:16:27 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X00KiSxR4lB+2l0j4keUSznvOlPHfsBSpei/a6PEF7sN3GOJNhGpSCBqdBJ6U4hurWCPFDNMw2cpkHE6s2wihXlXYG4chLlm0SaIEpzAw45h1SiRl5d/7xWs/5yqzeEc3OETOfhCdc0NvICwlh/9+Zj5ZXuM81L3A5G7Jn3JD8gKiIFyqt2G6H3kJtICZphbjgpNjsO2d/N4DVV57FsITMGft+k6eNV40yPW5No6fx97gdMiNqw2qzAnEanz/vJ8G6K/fX5C+zrD38mNAhlWJF52fCK7goWcv/qYIGxuJF7Dih3vaOtcRdwA3MyFK7Ymyp6591sl55s+ree1dtNLfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5bmzxdNseWDWb+EYi6IfUVSqHlyVAjiXlar1aumKodI=;
- b=OBpjtjgX7XL7ZkmQ3VdhuAsEfndk7cI2XnxPBa6tYI+8A/i9O0OX+QnzQ3LGP/Q+1CXTCEqcONFKvLrli9+xPIbLh/wvhjU/pE9rICXYPXet6LFftDI0CdzhiRvE9Wpk+Pdb9EK+h8bPmrfxMQA7Yms3tCgrFW6v1G77hbB14twY3iprPVPTKjwhIItSKuuHcmelqOSK4K6XcVpoyfb8yyuR5dFZEnkbhBkApWHALJgBcOqwLf6ARjouZhEVixkh92CejLBg+8Aq2m7wg1Xml2iuVi+sd0R0a2I/wNP2DsQ2LD+Tfw7MGqZUA6enZfN8EPFjK6UGVI12WzrvB+8lag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Thu, 9 Jul 2020 01:16:30 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C68AC061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 22:16:30 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g67so453798pgc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 22:16:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5bmzxdNseWDWb+EYi6IfUVSqHlyVAjiXlar1aumKodI=;
- b=iXwmOR4+Y2GRIGxSo9Vx7/vyc6W/k1nbmxbc4sLDIP8iJpiBj4AgcaPiR++46sx26EaFhPEWae2JXDGYV94C+9mKOn5B0TBlTobtcp0LhIOus/xMYgOhMxsEW8LqoXTXzHKPKgmEZGpmwfeXggpMDLc+ilY5II3z6HLwymwIXVM=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4960.namprd04.prod.outlook.com (2603:10b6:805:98::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Thu, 9 Jul
- 2020 05:16:12 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::1c80:dad0:4a83:2ef2]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::1c80:dad0:4a83:2ef2%4]) with mapi id 15.20.3153.031; Thu, 9 Jul 2020
- 05:16:12 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-Subject: RE: [PATCH v5 0/5] scsi: ufs: Add Host Performance Booster Support
-Thread-Topic: [PATCH v5 0/5] scsi: ufs: Add Host Performance Booster Support
-Thread-Index: AQHWUMe/HeWQynTPF0eBDwBI4Q2f4aj+XPoAgABhPNA=
-Date:   Thu, 9 Jul 2020 05:16:12 +0000
-Message-ID: <SN6PR04MB464097E646395C000C2DCAC3FC640@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <963815509.21593732182531.JavaMail.epsvc@epcpadp2>
-        <CGME20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4@epcms2p4>
- <231786897.01594251001808.JavaMail.epsvc@epcpadp1>
-In-Reply-To: <231786897.01594251001808.JavaMail.epsvc@epcpadp1>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: samsung.com; dkim=none (message not signed)
- header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1cddac90-9cac-4927-c408-08d823c73279
-x-ms-traffictypediagnostic: SN6PR04MB4960:
-x-microsoft-antispam-prvs: <SN6PR04MB49605AC693E2E14F399EBB5BFC640@SN6PR04MB4960.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kCRnez6Id+50QjAPMdD9KSP06nycw/Eu7mi8iMCLVEOHqwAYkmLGR0+CV3lSqfukeGM9XLo7GRD+vrX/lCbckKI4i6XnbK1cyaRaq5OLKerJ2vODWWcOKoPrfJMVlizhvjuJ/o2R7BdMTfBt4GgvE6ECUNCiBw+ApG6SeBZ4A49UiJwp3XzwZnCseLU29n+VhmW/C2ALzHh0vqEomU+a6uBrq5LLSbR8/JIltEM4z4Ke5BEcUIkLDTBiI8fLzWyoh4992jX2KhJ3Tsxkz9if/9HJ0XgZB9JK3Fod9F2mdN0hI7zl8ZVYARxDJ3LE01Xo
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(39850400004)(366004)(136003)(558084003)(83380400001)(8936002)(52536014)(7696005)(110136005)(54906003)(4326008)(2906002)(55016002)(316002)(9686003)(7416002)(71200400001)(5660300002)(66946007)(66556008)(86362001)(66446008)(66476007)(8676002)(33656002)(64756008)(76116006)(478600001)(6506007)(26005)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: YBlbQuNqyK6E5hZ7Pmxr6P/8Ri9DzjvhDUzrZEur0lXso7i3WTnvlIkakEwhgD18hOVSOl8IHKgn2LvIwO2vp0r/ycqpnX0kgdzsORFjFs9z9PqDaM6g4WzZ9Hlg0gAbX/pIKKv+uA+JZnOYv0RWtLAbrl7eh+miwkoD07KQ0oyWa9qu5CYKTB3im1LEN/w8ChRiyYwbNGyfNgUBdW69tcWMV27EGl+6AOhZurLdX07QTlfddQ4ZHpf6UdZ5kLmwWz8UxT2m/GgghbTb/glGjM3OiiGxz7OKak8IOldbFe2J/QJDYdpDvdr8Wb9dGedARqEpVmyjdvFGY7JwFTxciQS3amKE6CAduR8VsSFz6Pz8QGQKe7Pz/GzGqdb/kJf7kQDq5zQRNjSDzCkeMcLxSXZxhF5Lfsm9UAJcmJWjKEJscPeilpikmHNaaJZ+5sJwLi+4Inov29Q8ShV+2OsAIltOA6nu9no5wp7aa+xsRd0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=91cgWNdNTjuywuMBqdp6jcGvPo/gEqZWR0GA9Vdmqs4=;
+        b=eAof9Wa/baDPpwGfDSvNMqcmulK5NTQAeiso5xODHHXSCnA7z0K8xb7mPwhjRxAT4g
+         //EVlIUYHqZRywU/+4bUNf0Um8uANMgERfnimmksPGhYlwJGVdZAhjPbMIu5XQySJHBR
+         rH1fNakfNGRf/FVCr4kpUBENfwoDxeNdlHlDqTRpFi4NJwj+2+SHgWwykkdZyX+7K5zC
+         6xEQ/rVbbUNcx7C3pPclpH4+PjU/qSJkah6E4PInFLfuvnMud5WO7gYvwStZDHaAy8li
+         ER+dx9FjTtt4fA1XzoIP4tuX9Z1QUieuuhg2NM+bXbeFtGhSlTmJYjbXgRAD6KFWKp8Y
+         q2jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=91cgWNdNTjuywuMBqdp6jcGvPo/gEqZWR0GA9Vdmqs4=;
+        b=mcVRk+mpAwHAEbp61QsqN35LcvJP5IA9zXwhiXPLqw7YLzmpNDSidV41k53sFTZI1F
+         UFf6BdfAW5Qe9h2cNgUyJuckeh8aUgWt8nNDqgpOJTRpIUs6DrqV2z5ZSKSIsT+xLMwB
+         o4VTCHbp5iICtJqsIeguw/ICdJmSoyM5lcUThse/fggeJDNS0uESxUAt88Y5Is45K0Bv
+         92JNGHUUxn5yDmBNKPAeB90qBqKkUpInRXF8mLEpzJrl3E0pXkisS5NY56GdIl0RRYmw
+         b/t4W9nbdXv+/r2s8Dau7g8KshUbEWt0t4PfNNMVY22urQm4F50IXNxiRiptaWpa+NDE
+         ocmg==
+X-Gm-Message-State: AOAM530/N6bnFc9z+yXUsPpqZmHFrkmCKtwyT+2PBjze+3zVWgFElTfE
+        VZwzggRsNuVMxUaq9DGGOzc=
+X-Google-Smtp-Source: ABdhPJxRAWzAVCj+ltV+EgEao0QfDkJRJJOJBELElndaan+ZHkjQ8rK4N5zzVlmHvJ9UnYHcWwS4TQ==
+X-Received: by 2002:a63:a558:: with SMTP id r24mr54074568pgu.70.1594271790216;
+        Wed, 08 Jul 2020 22:16:30 -0700 (PDT)
+Received: from ?IPv6:2001:470:67:5b9:5dec:e971:4cde:a128? ([2001:470:67:5b9:5dec:e971:4cde:a128])
+        by smtp.gmail.com with ESMTPSA id h3sm1056943pjz.23.2020.07.08.22.16.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 22:16:28 -0700 (PDT)
+Subject: Re: BUG: KASAN: global-out-of-bounds in is_affected_midr_range_list
+ on arm64
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        LTP List <ltp@lists.linux.it>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, catalin.marinas@arm.com,
+        Will Deacon <will@kernel.org>, james.morse@arm.com,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        saiprakash.ranjan@codeaurora.org, steven.price@arm.com,
+        suzuki.poulose@arm.com, Mark Rutland <mark.rutland@arm.com>,
+        ascull@google.com, Marc Zyngier <marc.zyngier@arm.com>
+References: <CA+G9fYs3EavpU89-rTQfqQ9GgxAMgMAk7jiiVrfP0yxj5s+Q6g@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <559c5a04-a2ab-bfa2-c26e-4fbbf6d273ed@gmail.com>
+Date:   Wed, 8 Jul 2020 22:16:26 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR04MB4640.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cddac90-9cac-4927-c408-08d823c73279
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 05:16:12.4060
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jwzVbExVKbaWYpl7QCv9bu/EOhjZIioBZv5n16q8O+rkQNDDGWMQ7a8KeKmKgUMsApGxCAXSNuAWTOiUK/dbUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4960
+In-Reply-To: <CA+G9fYs3EavpU89-rTQfqQ9GgxAMgMAk7jiiVrfP0yxj5s+Q6g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBIZWxsbywNCj4gDQo+IEp1c3QgYSBnZW50bGUgcmVtaW5kZXIgdGhhdCBJJ2QgbGlrZSBzb21l
-IGZlZWRiYWNrLg0KPiBBbnkgc3VnZ2VzdGlvbnMgaGVyZT8NCklmIG5vLW9uZSBvYmplY3RzLCBJ
-IHRoaW5rIHlvdSBjYW4gc3VibWl0IHlvdXIgcGF0Y2hlcyBmb3IgcmV2aWV3IGFzIG5vbi1SRkMu
-DQoNClRoYW5rcywNCkF2cmkNCg0KPiANCj4gVGhhbmtzLA0KPiBEYWVqdW4NCg==
+
+
+On 7/8/2020 9:36 PM, Naresh Kamboju wrote:
+> While running LTP cpuhotplug test on mainline 5.8.0-rc4 the kernel BUG noticed
+> on arm64 Juno-r2 KASAN config enabled kernel.
+> 
+> steps to reproduce:
+> - boot KASAN enabled Juno-r2 device
+> - cd /opt/ltp
+> - ./runltp -f cpuhotplug
+> 
+> metadata:
+>   git branch: master
+>   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>   git commit: 63e1968a2c87e9461e9694a96991935116e0cec7
+>   kernel-config:
+> https://builds.tuxbuild.com/wc75HkrGrWgQCdI-l_1jUw/kernel.config
+>   vmlinux: https://builds.tuxbuild.com/wc75HkrGrWgQCdI-l_1jUw/vmlinux.xz
+>   system.map: https://builds.tuxbuild.com/wc75HkrGrWgQCdI-l_1jUw/System.map
+> 
+> Test log:
+> Name:   cpuhotplug02
+> Date:   Thu Jul  9 00:09:24 UTC 2020
+> Desc:   What happens to a process when its CPU is offlined?
+> 
+
+Just sent a tentative fix:
+
+https://lore.kernel.org/linux-arm-kernel/20200709051345.14544-1-f.fainelli@gmail.com/
+-- 
+Florian
