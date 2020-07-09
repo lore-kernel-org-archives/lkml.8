@@ -2,120 +2,186 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3313C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28E32076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56FC620774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594296063;
-	bh=G9bmSFELKRxQPZ+NTn/InZnU9Px+G3f6WIIbF0sa7VQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aDPpFPNfcPKbE98NWZPr+MBvpXbSD/fJZa2unE5uaV6Utm4v67vBmJUQMNsJhPxEW
-	 Cy4KJqOKwIn2UIRt3aAs34aLqfleHX0BQon/ZrK4VydmLGKF/ExTsqFsMzDPkWw47Z
-	 vlp2sSw5vuyDYEWct57l2PfO3TgqWFwR3xJjmCEs=
+	s=default; t=1594296118;
+	bh=jmR5CTz+E7TqevRraFYC+5WhBW87NXqpOthLtGkC1Rk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NT9gTtS7GhF+Lj8/NPhLTWA4XfGlnvzl/msgFY306suo+/o2xaR/cF6MkAknrL3ao
+	 VxqGRcgqVAdrLeLy0DqUF3+XUXnGScNdcegSFseFYpWvCSY5H0w7yOxjwLzelPioqM
+	 JhZgBXv0mvYQoai75ShTpdS3EqPgegyHoXZWQwYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgGIMBC (ORCPT
+        id S1727796AbgGIMB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:01:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbgGIMBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:01:02 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B28E206C3;
-        Thu,  9 Jul 2020 12:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594296061;
-        bh=G9bmSFELKRxQPZ+NTn/InZnU9Px+G3f6WIIbF0sa7VQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=W3B8WlB78HBGwrFnK785PkNtYGqHBvxgmEZjQ6cwZYSKsdt/WKie6QVgUhSwSY17R
-         umEt+YyxTxQ/57mWnWm1QNwPOYsuNrwoXnueLtkQFIorEJNiR/AZATrJb8RRL5Gqgx
-         t/yEKgISVcv5GEhh8CZqzE+IqhpZY3M3CSeJw9JQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jtVEZ-00ANHv-S1; Thu, 09 Jul 2020 13:00:59 +0100
+        Thu, 9 Jul 2020 08:01:57 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41371 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgGIMB4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:01:56 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y22so1637967oie.8;
+        Thu, 09 Jul 2020 05:01:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=arGB3qPgvw7a+4/UTLYjhwxhE2h0cMITMWEpR/EppSw=;
+        b=uBsTAjL0aPJAYww5WDd40Mr+Kb/BoFcsie8Swc9NxfoAJZOWypqKGuXWhP9+c/pbu6
+         nAORn6sZlxeobItXKwsfxKu9BEv/f5svBcPkv5MIWIqtnZvgC1dFJOFPX/pALwdk9hE1
+         zNAe/g13uAMmrNtlsVJuqMmtJCX5pkLvRZ4XwPQ0uu6I6yUGiVZLbE4zvBK6SWK6+AqO
+         VOmI5sSLAfG1ZjVzRsCM6rVFGeKb6H6LveZRJDcVn+H3iT14ChjWGv1duWrWcjTOdp+/
+         feSx378mjhOiQiFuUhWyZ1JJraCwkpy5bfJ3axinEtVjfIM3BWh4THT+U8weM5PJMYBG
+         sFkA==
+X-Gm-Message-State: AOAM530cJJVruX889HBaeiazC02MqS30HE/+rCvqQ1F8oiDbaMuHaWb4
+        vMTLiMhFhzOAd6szaKh/vil35DmUXcIAhopj5FU=
+X-Google-Smtp-Source: ABdhPJy6fX4MP9HJD0Gd7VfPZSItTZzRNbcG1ycT8hK+IFW7DY5nj7Y1e2OaWwINKmHEs44NyiS85mr4klvr/IAZcsM=
+X-Received: by 2002:aca:4a89:: with SMTP id x131mr11350502oia.103.1594296115512;
+ Thu, 09 Jul 2020 05:01:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 09 Jul 2020 13:00:59 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org,
-        Sushma Kalakota <sushmax.kalakota@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] irqdomain/treewide: Keep firmware node unconditionally
- allocated
-In-Reply-To: <873661qakd.fsf@nanos.tec.linutronix.de>
-References: <20200706154410.GA117493@bjorn-Precision-5520>
- <873661qakd.fsf@nanos.tec.linutronix.de>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <b90acf9f348f2eb7b7244913c130cbff@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, helgaas@kernel.org, andriy.shevchenko@linux.intel.com, jonathan.derrick@intel.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, sushmax.kalakota@intel.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200413134611.478441-1-enric.balletbo@collabora.com>
+ <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
+ <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com> <10490419.gsntqH5CaE@kreacher>
+ <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com>
+In-Reply-To: <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 9 Jul 2020 14:01:43 +0200
+Message-ID: <CAJZ5v0hH5MFRWuJX=UjevXo1rHh=ca=skHazasKiEZxOVUw1VA@mail.gmail.com>
+Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Wed, Jun 10, 2020 at 11:21 PM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Rafael,
+>
+> Many thanks for your feedback. See my answers inline.
+>
+> On 5/6/20 13:17, Rafael J. Wysocki wrote:
+> > On Tuesday, April 14, 2020 4:35:38 PM CEST Enric Balletbo i Serra wrote:
+> >> Hi Rafael,
+> >>
+> >> On 13/4/20 22:41, Rafael J. Wysocki wrote:
+> >>> On Mon, Apr 13, 2020 at 3:46 PM Enric Balletbo i Serra
+> >>> <enric.balletbo@collabora.com> wrote:
+> >>>>
+> >>>> This driver attaches to the ChromeOS ACPI device and then exports the values
+> >>>> reported by the ACPI in a sysfs directory. These values are not exported
+> >>>> via the standard ACPI tables, hence a specific driver is needed to do
+> >>>> it.
+> >>>
+> >>> So how exactly are they exported?
+> >>>
+> >>
+> >> They are exported through sysfs.
+> >>
+> >>>> The ACPI values are presented in the string form (numbers as decimal
+> >>>> values) or binary blobs, and can be accessed as the contents of the
+> >>>> appropriate read only files in the standard ACPI devices sysfs directory tree.
+> >>>
+> >>> My understanding based on a cursory look at the patch is that there is
+> >>> an ACPI device with _HID equal to "GGL0001"  and one or more special
+> >>> methods under it that return values which you want to export over
+> >>> sysfs as binary attributes.  They appear to be read-only.
+> >>>
+> >>
+> >> Exactly, there is an ACPI device equal to "GGL0001" and one special method
+> >> called MLST that returns a list of the other control methods supported by the
+> >> Chrome OS hardware device. The driver calls the special MLST method and goes
+> >> through the list.
+> >>
+> >>> I guess that these data are to be consubed by user space?
+> >>>
+> >>
+> >> Yes, this is used by user space, to be more specific ChromeOS userspace uses it.
+> >
+> > Well, let me start over.
+> >
+> > The subject and changelog of this patch are not precise enough IMO and there is
+> > not enough information in the latter.
+> >
+>
+> Ok, I can improve that.
 
-Catching up on email...
+Please do.
 
-On 2020-07-09 10:53, Thomas Gleixner wrote:
-> Quite some non OF/ACPI users of irqdomains allocate firmware nodes of 
-> type
-> IRQCHIP_FWNODE_NAMED or IRQCHIP_FWNODE_NAMED_ID and free them right 
-> after
-> creating the irqdomain. The only purpose of these FW nodes is to convey
-> name information. When this was introduced the core code did not store 
-> the
-> pointer to the node in the irqdomain. A recent change stored the 
-> firmware
-> node pointer in irqdomain for other reasons and missed to notice that 
-> the
-> usage sites which do the alloc_fwnode/create_domain/free_fwnode 
-> sequence
-> are broken by this. Storing a dangling pointer is dangerous itself, but 
-> in
-> case that the domain is destroyed later on this leads to a double free.
-> 
-> Remove the freeing of the firmware node after creating the irqdomain 
-> from
-> all affected call sites to cure this.
-> 
-> Fixes: 711419e504eb ("irqdomain: Add the missing assignment of
-> domain->fwnode for named fwnode")
-> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: stable@vger.kernel.org
+> > It is not clear what "ACPI driver for ChromeOS" means.  There may be many ACPI
+> > drivers in a Linux-based system as a rule.
+> >
+> > It is unclear what the ChromeOS ACPI device is and why it is there.  Is there
+> > any documentation of it you can point me to?
+> >
+>
+> I'm afraid, I don't think there is any documentation, I'll ask around.
+>
+> > It is unclear what you mean by "These values are not exported via the standard
+> > ACPI tables".
+> >
+> > It looks like (but it is not actually documented in any way) the idea is to
+> > get to the ACPI device object with _HID returning "GGL0001", evaluate the
+> > MLST method under it and then evaluate the methods listed by it and export the
+> > data returned by them via sysfs, under the "GGL0001" device on the "acpi" bus.
+> > Is this correct?
+> >
+>
+> Yes, this is correct.
+>
+> > If so, there is a couple of issues here.
+> >
+> > First off, GGL0001 is not a valid ACPI device ID, because the GGL prefix is not
 
-Urgh, that's pretty disastrous. My bad. Thanks a lot for having
-put this patch together.
+[cut]
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+> > Next, device attributes in sysfs are part of the kernel ABI and once defined,
+> > they cannot change (exceptions happen, but rarely), so you must guarantee
+> > that whatever appears in there, will always be present for devices with the
+> > given device ID in the future in the same format.
+> >
+> > Can you actually guarantee that?  If so, what is that guarantee based on?
+> >
+>
+> Although is not really documented, can we say that this is a standard "de facto"
+> assuming that there are lots of devices in the field and for a long time with
+> that? Can this be a guarantee?
 
-If you can take it directly into Linus' tree, that'd be greatly
-appreciated.
+I would like the firmware interface to be documented in
+Documentation/firmware-guide/acpi/ in the first place, given the lack
+of any existing documentation of it that can be pointed to.
 
-Thanks again,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks!
