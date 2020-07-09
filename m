@@ -2,128 +2,342 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FC9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFCB207DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDFA207DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hqw4zfkP"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dVSVbGi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbgGIQde (ORCPT
+        id S1728256AbgGIQeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:33:34 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:13612 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727074AbgGIQdd (ORCPT
+        Thu, 9 Jul 2020 12:34:23 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4465 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbgGIQeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:33:33 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069GSsaH001240;
-        Thu, 9 Jul 2020 18:33:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=p3WUOE1BFwyOWMLXIbNJG7i4gfk1IMbX9+3yZTZGgc0=;
- b=hqw4zfkPmSiAVjOKbFFXR17hj+FvjIVnsf2E+u1VCnJYTA6OnmCdgZwKUfsheROFR2Hx
- qYcNAOeoZFM9+ZZDyZtQb1FPYscHfRkQPmvzWx4xGetXakawhMyG8Ur3AgycMA7cGmnA
- bv94kxjz4a7W3M9FngTcznB9i4t5WZzfa2qUfy2ZdtcobyTM9CHIT5GcompPoMDFXAAA
- 6b7aBGykp3mw73mZOiJkv7s2Q5+jdYIPSD/j+T1KwvCVyUIZ8mBaNdhmga87SQHiDcKe
- XM6He93AZZ16Vfi+uibfAkV3IUmf1PIvPEjjkyoXUDSvts2dvtFaIUW9W0A/fYo96YHL FA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 325k4cx04y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 18:33:27 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5E3DE10002A;
-        Thu,  9 Jul 2020 18:33:27 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 51A5C2CA1F8;
-        Thu,  9 Jul 2020 18:33:27 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.49) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jul
- 2020 18:33:26 +0200
-Subject: Re: [PATCH v5 00/11] remoteproc: stm32: Add support for attaching to
- M4
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "ohad@wizery.com" <ohad@wizery.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>
-CC:     "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200707213112.928383-1-mathieu.poirier@linaro.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <9d54383c-d653-cddf-7746-21f1001122ea@st.com>
-Date:   Thu, 9 Jul 2020 18:33:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 9 Jul 2020 12:34:22 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0746d70000>; Thu, 09 Jul 2020 09:33:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 09 Jul 2020 09:34:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 09 Jul 2020 09:34:22 -0700
+Received: from [10.2.168.64] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jul
+ 2020 16:34:18 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+CC:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        <linux-mm@kvack.org>, Jonathan Corbet <corbet@lwn.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Ingo Molnar" <mingo@redhat.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        "Hugh Dickins" <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V4] mm/vmstat: Add events for THP migration without split
+Date:   Thu, 9 Jul 2020 12:34:16 -0400
+X-Mailer: MailMate (1.13.1r5690)
+Message-ID: <27CD781D-48F0-4019-934F-78994BAEC656@nvidia.com>
+In-Reply-To: <cab90a5c-4c61-e9ad-659f-a9438d639fe5@infradead.org>
+References: <1594287583-16568-1-git-send-email-anshuman.khandual@arm.com>
+ <cab90a5c-4c61-e9ad-659f-a9438d639fe5@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200707213112.928383-1-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_08:2020-07-09,2020-07-09 signatures=0
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_F60EA73D-8D00-4701-A4BB-277AC627A5CC_=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594312407; bh=1/jJBTVfKcjlJZrHITpd75UYHwBpEDY2rEoyFlYDArM=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=dVSVbGi7Nrqr+zbkHXkZ/dKyoxzicZ9g+go6AD2JlgGOSYw1D/3E1mODpmZXUNvRz
+         ZlHKosxXy5g6QpEcfkvKdUYgFOijFijCUfSnu/gUsh3jZjrTNlY7ddeUEW1cpvTaso
+         QX1rHoy8ZR1+P0zcx01NXu5APSfX8ZQFacgxA/utH4QMCj8/aoT1wNGZHP7KobWOdH
+         iqCikHb1fSIweLoTdn3+DYf3Cd7H1YAwSE4CLYPhcYS17EdDQzRCXY+lETNOkoK/p7
+         tKfFIzcduVxHrcaJvj9bhfWwPm09aU0fXN3niDuV+BUOH/FAGIJkeMi6mjpJXYhFXS
+         AOTYfhJFk0X7w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--=_MailMate_F60EA73D-8D00-4701-A4BB-277AC627A5CC_=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On 9 Jul 2020, at 11:34, Randy Dunlap wrote:
+
+> Hi,
+>
+> I have a few comments on this.
+>
+> a. I reported it very early and should have been Cc-ed.
+>
+> b. A patch that applies to mmotm or linux-next would have been better
+> than a full replacement patch.
+>
+> c. I tried replacing what I believe is the correct/same patch file in m=
+motm
+> and still have build errors.
+>
+> (more below)
+>
+> On 7/9/20 2:39 AM, Anshuman Khandual wrote:
+>
+>> ---
+>> Applies on 5.8-rc4.
+>>
+>> Changes in V4:
+>>
+>> - Changed THP_MIGRATION_FAILURE as THP_MIGRATION_FAIL per John
+>> - Dropped all conditional 'if' blocks in migrate_pages() per Andrew an=
+d John
+>> - Updated migration events documentation per John
+>> - Updated thp_nr_pages variable as nr_subpages for an expected merge c=
+onflict
+>> - Moved all new THP vmstat events into CONFIG_MIGRATION
+>> - Updated Cc list with Documentation/ and tracing related addresses
+>>
+>> Changes in V3: (https://patchwork.kernel.org/patch/11647237/)
+>>
+>> - Formatted new events documentation with 'fmt' tool per Matthew
+>> - Made events universally available i.e dropped ARCH_ENABLE_THP_MIGRAT=
+ION
+>> - Added THP_MIGRATION_SPLIT
+>> - Updated trace_mm_migrate_pages() with THP events
+>> - Made THP events update normal page migration events as well
+>>
+>> Changes in V2: (https://patchwork.kernel.org/patch/11586893/)
+>>
+>> - Dropped PMD reference both from code and commit message per Matthew
+>> - Added documentation and updated the commit message per Daniel
+>>
+>> Changes in V1: (https://patchwork.kernel.org/patch/11564497/)
+>>
+>> - Changed function name as thp_pmd_migration_success() per John
+>> - Folded in a fix (https://patchwork.kernel.org/patch/11563009/) from =
+Hugh
+>>
+>> Changes in RFC V2: (https://patchwork.kernel.org/patch/11554861/)
+>>
+>> - Decopupled and renamed VM events from their implementation per Zi an=
+d John
+>> - Added THP_PMD_MIGRATION_FAILURE VM event upon allocation failure and=
+ split
+>>
+>> Changes in RFC V1: (https://patchwork.kernel.org/patch/11542055/)
+>>
+>>  Documentation/vm/page_migration.rst | 27 +++++++++++++++
+>>  include/linux/vm_event_item.h       |  3 ++
+>>  include/trace/events/migrate.h      | 17 ++++++++--
+>>  mm/migrate.c                        | 52 ++++++++++++++++++++++++----=
+-
+>>  mm/vmstat.c                         |  3 ++
+>>  5 files changed, 91 insertions(+), 11 deletions(-)
+>>
+>
+>> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_it=
+em.h
+>> index 24fc7c3ae7d6..2e6ca53b9bbd 100644
+>> --- a/include/linux/vm_event_item.h
+>> +++ b/include/linux/vm_event_item.h
+>> @@ -56,6 +56,9 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOU=
+T,
+>>  #endif
+>>  #ifdef CONFIG_MIGRATION
+>>  		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
+>> +		THP_MIGRATION_SUCCESS,
+>> +		THP_MIGRATION_FAIL,
+>> +		THP_MIGRATION_SPLIT,
+>
+> These 3 new symbols are still only present if CONFIG_MIGRATION=3Dy, but=
+ the build errors
+> are using these symbols even when CONFIG_MIGRATION is not set.
+>
+>>  #endif
+>>  #ifdef CONFIG_COMPACTION
+>>  		COMPACTMIGRATE_SCANNED, COMPACTFREE_SCANNED,
+>
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index f37729673558..c706e3576cfc 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1429,22 +1429,35 @@ int migrate_pages(struct list_head *from, new_=
+page_t get_new_page,
+>>  		enum migrate_mode mode, int reason)
+>>  {
+>>  	int retry =3D 1;
+>> +	int thp_retry =3D 1;
+>>  	int nr_failed =3D 0;
+>>  	int nr_succeeded =3D 0;
+>> +	int nr_thp_succeeded =3D 0;
+>> +	int nr_thp_failed =3D 0;
+>> +	int nr_thp_split =3D 0;
+>>  	int pass =3D 0;
+>> +	bool is_thp =3D false;
+>>  	struct page *page;
+>>  	struct page *page2;
+>>  	int swapwrite =3D current->flags & PF_SWAPWRITE;
+>> -	int rc;
+>> +	int rc, nr_subpages;
+>>
+>>  	if (!swapwrite)
+>>  		current->flags |=3D PF_SWAPWRITE;
+>>
+>> -	for(pass =3D 0; pass < 10 && retry; pass++) {
+>> +	for (pass =3D 0; pass < 10 && (retry || thp_retry); pass++) {
+>>  		retry =3D 0;
+>> +		thp_retry =3D 0;
+>>
+>>  		list_for_each_entry_safe(page, page2, from, lru) {
+>>  retry:
+>> +			/*
+>> +			 * THP statistics is based on the source huge page.
+>> +			 * Capture required information that might get lost
+>> +			 * during migration.
+>> +			 */
+>> +			is_thp =3D PageTransHuge(page);
+>> +			nr_subpages =3D hpage_nr_pages(page);
+>>  			cond_resched();
+>>
+>>  			if (PageHuge(page))
+>> @@ -1475,15 +1488,30 @@ int migrate_pages(struct list_head *from, new_=
+page_t get_new_page,
+>>  					unlock_page(page);
+>>  					if (!rc) {
+>>  						list_safe_reset_next(page, page2, lru);
+>> +						nr_thp_split++;
+>>  						goto retry;
+>>  					}
+>>  				}
+>> +				if (is_thp) {
+>> +					nr_thp_failed++;
+>> +					nr_failed +=3D nr_subpages;
+>> +					goto out;
+>> +				}
+>>  				nr_failed++;
+>>  				goto out;
+>>  			case -EAGAIN:
+>> +				if (is_thp) {
+>> +					thp_retry++;
+>> +					break;
+>> +				}
+>>  				retry++;
+>>  				break;
+>>  			case MIGRATEPAGE_SUCCESS:
+>> +				if (is_thp) {
+>> +					nr_thp_succeeded++;
+>> +					nr_succeeded +=3D nr_subpages;
+>> +					break;
+>> +				}
+>>  				nr_succeeded++;
+>>  				break;
+>>  			default:
+>> @@ -1493,19 +1521,27 @@ int migrate_pages(struct list_head *from, new_=
+page_t get_new_page,
+>>  				 * removed from migration page list and not
+>>  				 * retried in the next outer loop.
+>>  				 */
+>> +				if (is_thp) {
+>> +					nr_thp_failed++;
+>> +					nr_failed +=3D nr_subpages;
+>> +					break;
+>> +				}
+>>  				nr_failed++;
+>>  				break;
+>>  			}
+>>  		}
+>>  	}
+>> -	nr_failed +=3D retry;
+>> +	nr_failed +=3D retry + thp_retry;
+>> +	nr_thp_failed +=3D thp_retry;
+>>  	rc =3D nr_failed;
+>>  out:
+>> -	if (nr_succeeded)
+>> -		count_vm_events(PGMIGRATE_SUCCESS, nr_succeeded);
+>> -	if (nr_failed)
+>> -		count_vm_events(PGMIGRATE_FAIL, nr_failed);
+>> -	trace_mm_migrate_pages(nr_succeeded, nr_failed, mode, reason);
+>> +	count_vm_events(PGMIGRATE_SUCCESS, nr_succeeded);
+>> +	count_vm_events(PGMIGRATE_FAIL, nr_failed);
+>> +	count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
+>> +	count_vm_events(THP_MIGRATION_FAIL, nr_thp_failed);
+>> +	count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
+>
+> These references still cause build errors.
+>
+>> +	trace_mm_migrate_pages(nr_succeeded, nr_failed, nr_thp_succeeded,
+>> +			       nr_thp_failed, nr_thp_split, mode, reason);
+>>
+>>  	if (!swapwrite)
+>>  		current->flags &=3D ~PF_SWAPWRITE;
+>> diff --git a/mm/vmstat.c b/mm/vmstat.c
+>> index 3fb23a21f6dd..09914a4bfee4 100644
+>> --- a/mm/vmstat.c
+>> +++ b/mm/vmstat.c
+>> @@ -1234,6 +1234,9 @@ const char * const vmstat_text[] =3D {
+>>  #ifdef CONFIG_MIGRATION
+>>  	"pgmigrate_success",
+>>  	"pgmigrate_fail",
+>> +	"thp_migration_success",
+>> +	"thp_migration_fail",
+>> +	"thp_migration_split",
+>>  #endif
+>>  #ifdef CONFIG_COMPACTION
+>>  	"compact_migrate_scanned",
+>>
+>
+
+Which arch are you building? I did not see any error
+after applying this patch on mmotm (reverting the existing ones)
+and compiling them on x86_64. I used make x86_64_defconfig and
+unselected COMPACTION and MIGRATION.
+
+mm/migrate.c and added vm events will not be used
+if CONFIG_MIGRATION is unchecked. Why would they cause compilation errors=
+?
 
 
-On 7/7/20 11:31 PM, Mathieu Poirier wrote:
-> This set applies on top of [1] and refactors the STM32 platform code in
-> order to attach to the M4 remote processor when it has been started by the
-> boot loader.
-> 
-> New to V5:
-> 1) Added Bjorn's reviewed-by to patch 06.
-> 2) Removed Loic's reviewed-by from patch 08, it has changed too much.
-> 
-> Patches that need to be reviewed: 7, 8, 9 and 10.
-> 
-> Tested on ST's mp157c development board.
-> 
-> Thanks,
-> Mathieu
-> 
-> [1]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=314523
-> 
-> Mathieu Poirier (11):
->   remoteproc: stm32: Decouple rproc from memory translation
->   remoteproc: stm32: Request IRQ with platform device
->   remoteproc: stm32: Decouple rproc from DT parsing
->   remoteproc: stm32: Remove memory translation from DT parsing
->   remoteproc: stm32: Parse syscon that will manage M4 synchronisation
->   remoteproc: stm32: Properly set co-processor state when attaching
->   remoteproc: Make function rproc_resource_cleanup() public
->   remoteproc: stm32: Split function stm32_rproc_parse_fw()
->   remoteproc: stm32: Properly handle the resource table when attaching
->   remoteproc: stm32: Introduce new attach() operation
->   remoteproc: stm32: Update M4 state in stm32_rproc_stop()
-> 
->  drivers/remoteproc/remoteproc_core.c |   3 +-
->  drivers/remoteproc/stm32_rproc.c     | 214 ++++++++++++++++++++++++---
->  include/linux/remoteproc.h           |   1 +
->  3 files changed, 198 insertions(+), 20 deletions(-)
-> 
+=E2=80=94
+Best Regards,
+Yan Zi
 
-I tested the series with the [1] 
-Minor remarks on patch 6 & 8. After fixing them, for the series:
+--=_MailMate_F60EA73D-8D00-4701-A4BB-277AC627A5CC_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+-----BEGIN PGP SIGNATURE-----
 
-Thank you very much for your work on this feature.
+iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl8HRwgPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKIesP/AgVeCChftpNKRZ07SX8+xw4Q3khJxCxNJyJ
+s6DFiUQmAayYCkeeyNp8BzHeBaZmFOXH5PgFHE2/iOsdqGke0zVvN6w7ZgF3wJwV
+nMiSYC7IZGsn3S2Mf0+JWoascFsiRpLQxgyOFwMSIYtiTARpmqU4FENaDv0qEeaf
+2579pKK4mZhxkLmwrzsjy8YVRrm0Kc0wHhD4cjg2Ph1ZTslVMcAxMkoHgw3L9LPc
+1NkFyJzZZ2yOTNgODySa2/b7sb8F75EBWK1Icrc8eM1teCNVpYja/gEm+On1G1vN
+BBWf6m65ABqHpWB7jYNeBo4bUhfVNjex93IolNi0oVOX9PG6FlG3fzs8jKaRZPMA
+XIryQZQ6ySbP7LST+TSSiJQGmt/xwkDW86JqVSrHNhg6IHQ3SCYNW97RXnEoGfLe
+oEOaOveHExM0LDj/0zVHvrG8pxDTCxlp/t8IqC7tho5hYAKLc1iHsrvLIXN90s9o
+rIZYE+xrhrD+QVltmtaN5GwOkVKS6ENtOWjLGzGFAhRQUYx3o16JxmtlrMqc1uHC
+Ix3QqmCiBkl091NZaOdFViZECnuGuaBRJzReaqvUlmUIhH9DyPmKa5qCfBBDutpN
+5y2RfduUxqWD99Eo+Dj2qCDum0pCU8igP6mEZFLfEG5zQWVg7uQgJ4JheuiOGo5+
+ckOktc2j
+=OReh
+-----END PGP SIGNATURE-----
 
-Arnaud
+--=_MailMate_F60EA73D-8D00-4701-A4BB-277AC627A5CC_=--
