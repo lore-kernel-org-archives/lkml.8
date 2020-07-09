@@ -2,98 +2,164 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0281C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2306E20774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:38:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dc7wmo6i"
+	by mail.kernel.org (Postfix) with ESMTP id 737F920774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgGIUit (ORCPT
+        id S1726756AbgGIUjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:38:49 -0400
-Received: from mout.gmx.net ([212.227.17.22]:36545 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgGIUir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:38:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1594327091;
-        bh=2UXj/YT1X1xRE6iXdWnGBTz2+zD4QV71s7VPwzbW098=;
-        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
-         CC:From;
-        b=dc7wmo6i6/U4z4UFZCv2hyADvI9GnbubqtA4+cjFVinJIzToiqRyfwtKd9jTjfDmz
-         88x9gV0RNDyW+Ok0R1wZQUcPXRFGajuwMnycWn1V+HYT1i9gNunfQGrv42JxiHMM/s
-         I7w/rmdPA7oAGHsTh3j+vmr3gpagukk1bRve70ME=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from frank-s9 ([80.208.213.58]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M42jQ-1jtdJ52PB2-0001Ay; Thu, 09
- Jul 2020 22:38:11 +0200
-Date:   Thu, 09 Jul 2020 22:38:04 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200709203134.GI1551@shell.armlinux.org.uk>
-References: <20200709055742.3425-1-frank-w@public-files.de> <20200709134115.GK928075@lunn.ch> <20200709203134.GI1551@shell.armlinux.org.uk>
+        Thu, 9 Jul 2020 16:39:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46894 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726183AbgGIUjo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 16:39:44 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069JW2m0066808;
+        Thu, 9 Jul 2020 15:57:09 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 325kgy6b54-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 15:57:09 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 069JonWg007544;
+        Thu, 9 Jul 2020 19:57:09 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04dal.us.ibm.com with ESMTP id 325k28au91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 19:57:08 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 069Jv6Vu20840928
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Jul 2020 19:57:06 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B6BBE7806A;
+        Thu,  9 Jul 2020 19:57:07 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A57E7805C;
+        Thu,  9 Jul 2020 19:57:07 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.54.227])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Jul 2020 19:57:07 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-mmc@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au,
+        ulf.hansson@linaro.org, adrian.hunter@intel.com, sboyd@kernel.org,
+        mturquette@baylibre.com, eajames@linux.ibm.com
+Subject: [PATCH 1/2] clk: AST2600: Add mux for EMMC clock
+Date:   Thu,  9 Jul 2020 14:57:05 -0500
+Message-Id: <20200709195706.12741-2-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200709195706.12741-1-eajames@linux.ibm.com>
+References: <20200709195706.12741-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] net: ethernet: mtk_eth_soc: fix mtu warning
-Reply-to: frank-w@public-files.de
-To:     linux-mediatek@lists.infradead.org,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     netdev@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel@vger.kernel.org, Mark Lee <Mark-MC.Lee@mediatek.com>,
-        =?ISO-8859-1?Q?Ren=E9_van_Dorst?= <opensource@vdorst.com>,
-        John Crispin <john@phrozen.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org, Felix Fietkau <nbd@nbd.name>
-From:   Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <08A4F0A0-ED34-4FB1-BD38-0977C52771F1@public-files.de>
-X-Provags-ID: V03:K1:h7S43N8I4FY0MTa+lsB0ECm63VvXcEgDY4fIR7I5CDS/H67dvv0
- yJI5IcRam4U4lWsr3Ta1+Oa1xvd/KII+gEkl3S4agBboYXBVuA9nqH4PIoWb7beeOYJaWwm
- T9ofk4Pey7aTQ71WubbVE2Wu6YWUhxyoRepZys6TpnvJtjS9Oqzu3EQ+gWIoBY42hgRs45Y
- t/XRuVj+HVg1BZtnAMWNQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HIxVHMenlqU=:0JFB4OxdjQJLsk7Nnw88QD
- qRVVOTZfIQj1kDpgOg+cG4la+w4tWEZaK4pz6SrHVxKlAx+Ga90Hx6vJaw4prUrcAjk18uGgw
- YPOKhs9igXHKuq1BgZLZV4m/kuTvBOiA1bpE8P03gep+/YnBX5C2i419phyrEPX4V7ZqVuElP
- FLNdarM4vpMMTtwD/BpqMaIKFWwQDjxN1MZKJ6XX20J0rT0ZGCJnTSvlS+cTon2WnRwUxDePD
- pe/Dhls1p9TCTm4CsfdFbvi5Ql3HQFa+c7lnAjUSNe0obJX14J2toBIBIbF5XplBnx616+oKb
- 1ZkexoLUgPBRWI78LTYw5uymy4e+7xHE+XuI1OR58Uk6m3xAoxPiF7zs96CCLI3ar9eE1bnHr
- 354DbjTJ8PGnGN16IT2kzV7n/j3V3rzlj5gAeBGlF6y1sfwJFoHIGSiD0RHh3TGyrZXXN/pdX
- CxUdsV6w82c5z+yQyLJ/LrwjnytJkA/X44XlzRnoGlfswIbiRegidgUIUpI1OsEVbAkXpV5vU
- dIjUuYwA7gH6vmfDX9H9S/PoQt52TGCpvRrMfSDrrFo7ppW+8TIvoWvY8yR1ptPjK+Y4kXwun
- vYsS7gJ15b2R72tFXd9WcsTHkb/kW/JNPEr8iSM5rR52K1x347YrZOmfSrIzS5xs0+ewSZ1qA
- 6aKyuZOFQ7Cy7AIGJ8ixtmruQa0aStA+AtchbmnrieOhPczvlbxYVnOWo07XXybZPHPh2IJ4q
- bQiDF57qxojfb3p6GK/RC2h1WaxqOde+GOJnJUCoTHDfqxBIsW7XFhSn6W2kq/HRRtEEMZ2ws
- 1T1wtivps4VBX0wsUVT/3MLDwPAkt9rLoe7mwgwd/Q689MgY8P5CEam/8ZgepLfepNOBkw/ND
- r45zNXnvMPrSxcf4qILCeef3ApN6ZFMMdL66sjBuwyTw2oExAVTuOUbn/nPRwm18VjFsPDa+n
- ZHQlsS19gmrzx076c/C8Cq2O3tyFRPtTv2skyfcU6X+sLM5JRTiZeGZ+cLSXQdSCxIcJZ94NG
- ooeNsqD1EdtB0vz+wZ/jku5gRLea62TJEOp4DnRxbfgvxepPfU1EuUNXTkvP6fgY81K7Pr0jM
- AXH9fylN/bpDxAx0ogpQhHMLCbU6opZm1IR6Fe109r63iX6Cen1CZCi2WlLWwjYtU1pzG6agE
- nwnIwehdzF8+Hk6u9vxxjcln5weTYMohEIqPfZz33X+WO29LhojsQtBprJbhVx9hvFYYB5siW
- 0K9VoPIiQqxCsuhmUm6xVZZd6wBipP++vkaSPoA==
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-09_10:2020-07-09,2020-07-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 suspectscore=1 bulkscore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007090131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The EMMC clock can be derived from either the HPLL or the MPLL. Register
+a clock mux so that the rate is calculated correctly based upon the
+parent.
 
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ drivers/clk/clk-ast2600.c | 49 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 41 insertions(+), 8 deletions(-)
 
-Am 9=2E Juli 2020 22:31:34 MESZ schrieb Russell King - ARM Linux admin <li=
-nux@armlinux=2Eorg=2Euk>:
->Are there any plans to solve these warnings for Marvell 88e6xxx DSA
->ports?
+diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
+index 99afc949925f..177368cac6dd 100644
+--- a/drivers/clk/clk-ast2600.c
++++ b/drivers/clk/clk-ast2600.c
+@@ -131,6 +131,18 @@ static const struct clk_div_table ast2600_eclk_div_table[] = {
+ 	{ 0 }
+ };
+ 
++static const struct clk_div_table ast2600_emmc_extclk_div_table[] = {
++	{ 0x0, 2 },
++	{ 0x1, 4 },
++	{ 0x2, 6 },
++	{ 0x3, 8 },
++	{ 0x4, 10 },
++	{ 0x5, 12 },
++	{ 0x6, 14 },
++	{ 0x7, 16 },
++	{ 0 }
++};
++
+ static const struct clk_div_table ast2600_mac_div_table[] = {
+ 	{ 0x0, 4 },
+ 	{ 0x1, 4 },
+@@ -390,6 +402,11 @@ static struct clk_hw *aspeed_g6_clk_hw_register_gate(struct device *dev,
+ 	return hw;
+ }
+ 
++static const char *const emmc_extclk_parent_names[] = {
++	"emmc_extclk_hpll_in",
++	"mpll",
++};
++
+ static const char * const vclk_parent_names[] = {
+ 	"dpll",
+ 	"d1pll",
+@@ -459,16 +476,32 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
+ 		return PTR_ERR(hw);
+ 	aspeed_g6_clk_data->hws[ASPEED_CLK_UARTX] = hw;
+ 
+-	/* EMMC ext clock divider */
+-	hw = clk_hw_register_gate(dev, "emmc_extclk_gate", "hpll", 0,
+-			scu_g6_base + ASPEED_G6_CLK_SELECTION1, 15, 0,
+-			&aspeed_g6_clk_lock);
++	/* EMMC ext clock */
++	hw = clk_hw_register_fixed_factor(dev, "emmc_extclk_hpll_in", "hpll",
++					  0, 1, 2);
+ 	if (IS_ERR(hw))
+ 		return PTR_ERR(hw);
+-	hw = clk_hw_register_divider_table(dev, "emmc_extclk", "emmc_extclk_gate", 0,
+-			scu_g6_base + ASPEED_G6_CLK_SELECTION1, 12, 3, 0,
+-			ast2600_div_table,
+-			&aspeed_g6_clk_lock);
++
++	hw = clk_hw_register_mux(dev, "emmc_extclk_mux",
++				 emmc_extclk_parent_names,
++				 ARRAY_SIZE(emmc_extclk_parent_names), 0,
++				 scu_g6_base + ASPEED_G6_CLK_SELECTION1, 11, 1,
++				 0, &aspeed_g6_clk_lock);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	hw = clk_hw_register_gate(dev, "emmc_extclk_gate", "emmc_extclk_mux",
++				  0, scu_g6_base + ASPEED_G6_CLK_SELECTION1,
++				  15, 0, &aspeed_g6_clk_lock);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	hw = clk_hw_register_divider_table(dev, "emmc_extclk",
++					   "emmc_extclk_gate", 0,
++					   scu_g6_base +
++						ASPEED_G6_CLK_SELECTION1, 12,
++					   3, 0, ast2600_emmc_extclk_div_table,
++					   &aspeed_g6_clk_lock);
+ 	if (IS_ERR(hw))
+ 		return PTR_ERR(hw);
+ 	aspeed_g6_clk_data->hws[ASPEED_CLK_EMMC] = hw;
+-- 
+2.24.0
 
-Maybe it's a better idea to restore previous condition?
-
-if (ret && ret !=3D -EOPNOTSUPP)
-
-Or use another loglevel (dev_dbg)
-regards Frank
