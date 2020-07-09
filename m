@@ -2,183 +2,166 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBEBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44222067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:59:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MPOeUPjF"
+	by mail.kernel.org (Postfix) with ESMTP id E93D92067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgGII7G (ORCPT
+        id S1726435AbgGII7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:59:06 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:26454 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726140AbgGII7F (ORCPT
+        Thu, 9 Jul 2020 04:59:19 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:41734 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgGII7T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:59:05 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0698sLp9016309;
-        Thu, 9 Jul 2020 10:59:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=AuAHoXnzN38gS14zx/vXMvisoYUc+8Vj5hyXrhj6d/g=;
- b=MPOeUPjF5Md6YaMmnapkk5OeVe+0pzEd997W7tyLQNHT0BHDNBYRmR3Pm6oFC1vnbnut
- ehegrugm/ucow3A5cNkf24jR2fHekw7094kFVuI6YmZOt9S/kjPaTMvnNjspoYIaYoj+
- xS1gfaAQT+oLULuqR9UgkbHuk0JRd++b33wmgg+IqEP6bD1/CqcQ7UVkec+YskkuSYFP
- OO6fdYqP7/USUaLr4TFptU8rzVn6vh+mTEWKatIAw/yrwwZIUk9dVtpaYcLj/h5CXB2T
- UsFtDgIPKdcH3w/09eBSOASNuDwzqY9LlmKR8yyyphDkug7DJQ9BHGbMC9HJ6y5Dd+hK 7Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 325k403jjp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 10:59:01 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EDCEA10002A;
-        Thu,  9 Jul 2020 10:58:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E09182AB504;
-        Thu,  9 Jul 2020 10:58:56 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.50) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jul
- 2020 10:58:56 +0200
-Subject: Re: [PATCH v5 9/9] remoteproc: Properly handle firmware name when
- attaching
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "ohad@wizery.com" <ohad@wizery.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>
-CC:     "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200707210014.927691-1-mathieu.poirier@linaro.org>
- <20200707210014.927691-10-mathieu.poirier@linaro.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <4cf20bea-6a77-1a1f-b448-a9abad8f1179@st.com>
-Date:   Thu, 9 Jul 2020 10:58:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 9 Jul 2020 04:59:19 -0400
+Received: by mail-io1-f69.google.com with SMTP id n3so856735iob.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 01:59:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=LGqLODc4HGQ5xzNFpLq0IH0ZYBFoMrEw5ZuA1wUgMck=;
+        b=QD3jwqMyrJDtGQtfAAI/TmSeZlzetr8p5eiBcLObiyskKqfMsqClwWsL7q8KFqS+jM
+         V7ZMyoAb8VRScwiVFTlZK1U79RXc1lZF4PpKlG+3KWFgjO0JRILBoZ8ISZ+fi37RW2Gf
+         +rZlWo8705FOMzDyb+3K/E/gGcFdpnFX7t2wuDzy/y4oeFAzsOX17m3nzm2waJooi/gD
+         /+vgjmJoGFYZHHdT3kBGX7ZcI8m0oVCUdE4OIf1UZGaLrKetz5ATWOD4NV9Q0MXCByqa
+         LO4bZq0yYkM/t+W+Fe+jGKMmGvJgFzI8D4epMvLB7+F38UKCKpR8vIACeilHSLs5FKEH
+         lf2Q==
+X-Gm-Message-State: AOAM530fAlL2sHF5ke360eAYNfpuwdIG0r3BIV2Ap/q8g1Z062AxXdlH
+        w2qkZhtGihE7QHp/FPQ2FEhtzEzmaa47QFhjnKUjADiOViJq
+X-Google-Smtp-Source: ABdhPJxNHGo6m3Iiw/201KlTC4qcTluFpu2sbu9PyrxOirwyMtJkIfnAsi4iRRiseiCwLotvOU6IAZ+dGd2QXzyR7SLNa/LeTirm
 MIME-Version: 1.0
-In-Reply-To: <20200707210014.927691-10-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_04:2020-07-08,2020-07-09 signatures=0
+X-Received: by 2002:a6b:4409:: with SMTP id r9mr40481641ioa.158.1594285157558;
+ Thu, 09 Jul 2020 01:59:17 -0700 (PDT)
+Date:   Thu, 09 Jul 2020 01:59:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007cad8705a9fe70b6@google.com>
+Subject: KASAN: use-after-free Read in delete_and_unsubscribe_port (2)
+From:   syzbot <syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11561e7b100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
+dashboard link: https://syzkaller.appspot.com/bug?extid=1a54a94bd32716796edd
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in list_empty include/linux/list.h:282 [inline]
+BUG: KASAN: use-after-free in delete_and_unsubscribe_port+0x420/0x4f0 sound/core/seq/seq_ports.c:530
+Read of size 8 at addr ffff88809533de50 by task syz-executor.0/29034
+
+CPU: 0 PID: 29034 Comm: syz-executor.0 Not tainted 5.8.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ list_empty include/linux/list.h:282 [inline]
+ delete_and_unsubscribe_port+0x420/0x4f0 sound/core/seq/seq_ports.c:530
+ snd_seq_port_disconnect+0x433/0x5c0 sound/core/seq/seq_ports.c:610
+ snd_seq_ioctl_unsubscribe_port+0x1fc/0x400 sound/core/seq/seq_clientmgr.c:1525
+ snd_seq_ioctl+0x202/0x3e0 sound/core/seq/seq_clientmgr.c:2157
+ snd_seq_ioctl_compat+0xdc/0x2d0 sound/core/seq/seq_compat.c:109
+ __do_compat_sys_ioctl+0x1d3/0x230 fs/ioctl.c:847
+ do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:403
+ __do_fast_syscall_32 arch/x86/entry/common.c:448 [inline]
+ do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:474
+ entry_SYSENTER_compat+0x6d/0x7c arch/x86/entry/entry_64_compat.S:138
+RIP: 0023:0xf7ff0569
+Code: Bad RIP value.
+RSP: 002b:00000000f5deb0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000040505331
+RDX: 0000000020000200 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 29030:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+ kmem_cache_alloc_trace+0x14f/0x2d0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ snd_seq_port_connect+0x5d/0x520 sound/core/seq/seq_ports.c:553
+ snd_seq_ioctl_subscribe_port+0x1fc/0x400 sound/core/seq/seq_clientmgr.c:1484
+ snd_seq_ioctl+0x202/0x3e0 sound/core/seq/seq_clientmgr.c:2157
+ snd_seq_ioctl_compat+0xdc/0x2d0 sound/core/seq/seq_compat.c:109
+ __do_compat_sys_ioctl+0x1d3/0x230 fs/ioctl.c:847
+ do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:403
+ __do_fast_syscall_32 arch/x86/entry/common.c:448 [inline]
+ do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:474
+ entry_SYSENTER_compat+0x6d/0x7c arch/x86/entry/entry_64_compat.S:138
+
+Freed by task 29035:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3757
+ snd_seq_port_disconnect+0x4c1/0x5c0 sound/core/seq/seq_ports.c:614
+ snd_seq_ioctl_unsubscribe_port+0x1fc/0x400 sound/core/seq/seq_clientmgr.c:1525
+ snd_seq_ioctl+0x202/0x3e0 sound/core/seq/seq_clientmgr.c:2157
+ snd_seq_ioctl_compat+0xdc/0x2d0 sound/core/seq/seq_compat.c:109
+ __do_compat_sys_ioctl+0x1d3/0x230 fs/ioctl.c:847
+ do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:403
+ __do_fast_syscall_32 arch/x86/entry/common.c:448 [inline]
+ do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:474
+ entry_SYSENTER_compat+0x6d/0x7c arch/x86/entry/entry_64_compat.S:138
+
+The buggy address belongs to the object at ffff88809533de00
+ which belongs to the cache kmalloc-128 of size 128
+The buggy address is located 80 bytes inside of
+ 128-byte region [ffff88809533de00, ffff88809533de80)
+The buggy address belongs to the page:
+page:ffffea000254cf40 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88809533d100
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00029c2e48 ffffea0002257d48 ffff8880aa000700
+raw: ffff88809533d100 ffff88809533d000 000000010000000a 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809533dd00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809533dd80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff88809533de00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                 ^
+ ffff88809533de80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88809533df00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
-On 7/7/20 11:00 PM, Mathieu Poirier wrote:
-> This patch prevents the firmware image name from being displayed when
-> the remoteproc core is attaching to a remote processor. This is needed
-> needed since there is no guarantee about the nature of the firmware
-> image that is loaded by the external entity.
-> 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Reviewed-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-
-Thanks,
-Arnaud
-
-> ---
->  drivers/remoteproc/remoteproc_core.c  | 18 ++++++++++++++++++
->  drivers/remoteproc/remoteproc_sysfs.c | 16 ++++++++++++++--
->  include/linux/remoteproc.h            |  2 ++
->  3 files changed, 34 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 6b6e4ec8cf3a..099c76ab198f 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1624,6 +1624,14 @@ static int rproc_stop(struct rproc *rproc, bool crashed)
->  
->  	rproc->state = RPROC_OFFLINE;
->  
-> +	/*
-> +	 * The remote processor has been stopped and is now offline, which means
-> +	 * that the next time it is brought back online the remoteproc core will
-> +	 * be responsible to load its firmware.  As such it is no longer
-> +	 * autonomous.
-> +	 */
-> +	rproc->autonomous = false;
-> +
->  	dev_info(dev, "stopped remote processor %s\n", rproc->name);
->  
->  	return 0;
-> @@ -2142,6 +2150,16 @@ int rproc_add(struct rproc *rproc)
->  	/* create debugfs entries */
->  	rproc_create_debug_dir(rproc);
->  
-> +	/*
-> +	 * Remind ourselves the remote processor has been attached to rather
-> +	 * than booted by the remoteproc core.  This is important because the
-> +	 * RPROC_DETACHED state will be lost as soon as the remote processor
-> +	 * has been attached to.  Used in firmware_show() and reset in
-> +	 * rproc_stop().
-> +	 */
-> +	if (rproc->state == RPROC_DETACHED)
-> +		rproc->autonomous = true;
-> +
->  	/* if rproc is marked always-on, request it to boot */
->  	if (rproc->auto_boot) {
->  		ret = rproc_trigger_auto_boot(rproc);
-> diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-> index 264759713934..eea514cec50e 100644
-> --- a/drivers/remoteproc/remoteproc_sysfs.c
-> +++ b/drivers/remoteproc/remoteproc_sysfs.c
-> @@ -15,8 +15,20 @@ static ssize_t firmware_show(struct device *dev, struct device_attribute *attr,
->  			  char *buf)
->  {
->  	struct rproc *rproc = to_rproc(dev);
-> -
-> -	return sprintf(buf, "%s\n", rproc->firmware);
-> +	const char *firmware = rproc->firmware;
-> +
-> +	/*
-> +	 * If the remote processor has been started by an external
-> +	 * entity we have no idea of what image it is running.  As such
-> +	 * simply display a generic string rather then rproc->firmware.
-> +	 *
-> +	 * Here we rely on the autonomous flag because a remote processor
-> +	 * may have been attached to and currently in a running state.
-> +	 */
-> +	if (rproc->autonomous)
-> +		firmware = "unknown";
-> +
-> +	return sprintf(buf, "%s\n", firmware);
->  }
->  
->  /* Change firmware name via sysfs */
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index bf6a310ba870..cf5e31556780 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -491,6 +491,7 @@ struct rproc_dump_segment {
->   * @table_sz: size of @cached_table
->   * @has_iommu: flag to indicate if remote processor is behind an MMU
->   * @auto_boot: flag to indicate if remote processor should be auto-started
-> + * @autonomous: true if an external entity has booted the remote processor
->   * @dump_segments: list of segments in the firmware
->   * @nb_vdev: number of vdev currently handled by rproc
->   */
-> @@ -524,6 +525,7 @@ struct rproc {
->  	size_t table_sz;
->  	bool has_iommu;
->  	bool auto_boot;
-> +	bool autonomous;
->  	struct list_head dump_segments;
->  	int nb_vdev;
->  	u8 elf_class;
-> 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
