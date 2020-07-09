@@ -2,94 +2,81 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7830AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 615B320774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:47:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fl75ul74"
+	by mail.kernel.org (Postfix) with ESMTP id 547ED2078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:47:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594331277;
+	bh=X/RbrgmMEAFhpcmxsuI6o1tnFCIhreoKEGLJxGBir+Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=yxqqYSLjaNHXN6ZiW0IY/eoErVlE1ILYzPlG8bU7W3nwATgmAtDqyX4jtUst3Dlhr
+	 S3uTpT2al5UiLyqYbB0o3KjVHKaG2DX6kopxyWpNbHQyU/Us8mn9EIi2lYfQzUrPSF
+	 6mpXKCB8FprLKl+4GUK1H6wbM+RErul15olGCs/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgGIVrl (ORCPT
+        id S1726789AbgGIVr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgGIVrk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:47:40 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 620CFC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 14:47:40 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u5so1576679pfn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 14:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=3ZVIY3Uh21PSHby7uDQirlJmyVi+sT/V+eGSfwDSnig=;
-        b=Fl75ul74qjFTiw8HF8Zdsg0x9BeA1yYTtFUlTB3tyfIxzsbiAqppQhDl78MrHtBk+u
-         ib3sE81iaCMvr4RPhmlfQUj+oKBiwBHDKHHfFNcCWHo7zISurmMlPoEoP8SGas0EVl0j
-         6i+35yqlwGI+jSeF/u9Jr5hAGTFwbHBXw6+5epFxk1kFf24a4MzaNbm96aH+cVszf1Sp
-         t2xPn4prKDvcz80pcdupK3Z2cJbsaK2l8LUwvet1XwzqIzAvr18k4PjhkQEfvfYffwGB
-         lekYmJ67+Ik2fuPvPmv3PqhUvjupnMJjTjZoiSxxKohngfWv4Jz5/ie/kW2q0rGqC4CJ
-         QqpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=3ZVIY3Uh21PSHby7uDQirlJmyVi+sT/V+eGSfwDSnig=;
-        b=eFOVPnmZguk6/w46qXwh3cCTaYUNr37BNwRH+Wk63pd7l7bxqGXfimMnaL4HrZWcJE
-         XPhVeWY83lh23kmGVX1Vx6dR9CXO7uaEQI0Th8xbJu+26wZAek+scrW45UYP+W4blBTf
-         TdSPZ6so+8mBdQdhygXf9fp1hzvpcvD5NWeW9da3Ih/fM0Oht0/aBClpVw/yW5NBCe1E
-         q+UQwQoauWhsYv3mhB08GPxaEIunKmSeiYkv2xgsMhA+B6fJqG6/5+tYOSpVcXzgux6c
-         bbSfUrVATeld9t6UqVWbDotgwx2DAUcoXDe//piwxQXgXXz+AmshnlxueeOH6ZpogKdj
-         lf/Q==
-X-Gm-Message-State: AOAM532tcKRb4DwbukQI4f3XQb8PpVU+wbD+lqssNfP6jsHvw0dMLLCu
-        cGmLcYVZOk1T8j5daUsN9eXc5A==
-X-Google-Smtp-Source: ABdhPJyZtlWIYvpC/I5htgEiy2+tQZ1xz65j289wDj7iN+c23npcW1nofGWxPnNkteDa+fctbj/YxQ==
-X-Received: by 2002:a63:8c4a:: with SMTP id q10mr56412758pgn.431.1594331259707;
-        Thu, 09 Jul 2020 14:47:39 -0700 (PDT)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id e16sm3720025pff.180.2020.07.09.14.47.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 14:47:39 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 14:47:38 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-cc:     Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma-pool: Do not allocate pool memory from CMA
-In-Reply-To: <20200708164936.9340-1-nsaenzjulienne@suse.de>
-Message-ID: <alpine.DEB.2.23.453.2007091447240.972523@chino.kir.corp.google.com>
-References: <20200708164936.9340-1-nsaenzjulienne@suse.de>
-User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
+        Thu, 9 Jul 2020 17:47:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726311AbgGIVrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 17:47:55 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28DD120774;
+        Thu,  9 Jul 2020 21:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594331275;
+        bh=X/RbrgmMEAFhpcmxsuI6o1tnFCIhreoKEGLJxGBir+Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CC1DYYJ0Qp8fQyyYG0iTL+iHk9v+HDV/NOxDKOponp+fivZeaH5qbba0fotKAbVg9
+         IjU/ByjOBcdBt4EjnEeMXDcrlVQTYFMpaWbOUUaIv1sbvODUtwfpy76kxk/280Me/O
+         m6v0yEl0tMRMbtum6CorvGRvwpzt6BteA+AFq3WQ=
+Date:   Thu, 9 Jul 2020 16:47:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org,
+        Sushma Kalakota <sushmax.kalakota@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] irqdomain/treewide: Keep firmware node unconditionally
+ allocated
+Message-ID: <20200709214753.GA20422@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <873661qakd.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020, Nicolas Saenz Julienne wrote:
-
-> There is no guarantee to CMA's placement, so allocating a zone specific
-> atomic pool from CMA might return memory from a completely different
-> memory zone. So stop using it.
+On Thu, Jul 09, 2020 at 11:53:06AM +0200, Thomas Gleixner wrote:
+> Quite some non OF/ACPI users of irqdomains allocate firmware nodes of type
+> IRQCHIP_FWNODE_NAMED or IRQCHIP_FWNODE_NAMED_ID and free them right after
+> creating the irqdomain. The only purpose of these FW nodes is to convey
+> name information. When this was introduced the core code did not store the
+> pointer to the node in the irqdomain. A recent change stored the firmware
+> node pointer in irqdomain for other reasons and missed to notice that the
+> usage sites which do the alloc_fwnode/create_domain/free_fwnode sequence
+> are broken by this. Storing a dangling pointer is dangerous itself, but in
+> case that the domain is destroyed later on this leads to a double free.
 > 
-> Fixes: c84dc6e68a1d ("dma-pool: add additional coherent pools to map to gfp mask")
-> Reported-by: Jeremy Linton <jeremy.linton@arm.com>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Remove the freeing of the firmware node after creating the irqdomain from
+> all affected call sites to cure this.
+> 
+> Fixes: 711419e504eb ("irqdomain: Add the missing assignment of domain->fwnode for named fwnode")
+> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: stable@vger.kernel.org
 
-Acked-by: David Rientjes <rientjes@google.com>
-
-Thanks Nicolas!
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci/
