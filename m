@@ -2,144 +2,149 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFBEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54692C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC5A2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:04:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xvuz8I1/"
+	by mail.kernel.org (Postfix) with ESMTP id 289DF20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:06:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgGINEu (ORCPT
+        id S1726606AbgGINGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:04:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbgGINEu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:04:50 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03BB2C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:04:50 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id s10so2231202wrw.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:04:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cxtZhw5woxZcTsV2Wp7psLUxcb5BFmsKDAfOagUL4sY=;
-        b=xvuz8I1/hkEAiRYpSqTwmKttCmZEzyBHvj9s7cdjEb9XBydQo+eWsCkwcy+B4QGHzf
-         ORyAyKCcTWkDyxB/xjNv9enVy/G4Lj20CJBQF3Y5YkYSn2BYUnOyuX3wdGtcC1y2b2a4
-         1cxExy1THorxVzUmG6rcc5Z5PpcJ/pHiXqzvxseggwm2ltJTTs0RfAdZbusZ5peXzjOm
-         Ris1ljd2C2PabKM7u+pIGQy5a6IL+doDBM4r0tjJrhmA/19pHxhthE0U0o9hlXMcQSzY
-         zXlOYRQipjTDlu0i8pEis/wGoAm5I5FvPWFNSYIvQyNzaM+n50VWGqxgpjEP/cMmPkqL
-         TcMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cxtZhw5woxZcTsV2Wp7psLUxcb5BFmsKDAfOagUL4sY=;
-        b=SupWdw8V1a8ub18AKJBGFa7tF0j+eUm/UhNdH1zblYr6vYJMB7ViVXdua/cxgsgdfj
-         YL+RbkvlPPN6htgSlVmb+Ec3+GsJvatqLyqAcxM7FSk5RXlYVhDjG++eSzK4LlsLswvM
-         cGyix1/i7sTLjc+xBaoGLhr3/5JXiB59AMMg3Eb1zC9J+gQl+8Aqb+grUlW5H9gsQYwD
-         BwynHLXf7vI5bYtVR04rzqloOjaM7HPta2MTICH+hWu1jXJcJVmsXF7S4jiwSl4BJDIX
-         AuqBgiKtzVnB+ZSRWo+kC/VVVKcxlBLd8OtVCZjYlVQrWD1AGBwkqKYC9K+cJoS1ZrQn
-         rhXw==
-X-Gm-Message-State: AOAM533Pwc2etPkVnMsjPUF4OBhjnkZdVtw1EKhrW8nLQHCK/j/3u7ki
-        GTGhXdHKdlRLR4CCHf9h+f1/nw==
-X-Google-Smtp-Source: ABdhPJwbPXvCrytr2Xz5PfX6gJk8BmG2mp3z1oRGxvVN/kb8c0RGAvXpnd2AiEII9ZyPibJ1FqawSg==
-X-Received: by 2002:adf:fe85:: with SMTP id l5mr60035990wrr.333.1594299888650;
-        Thu, 09 Jul 2020 06:04:48 -0700 (PDT)
-Received: from dell ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id j16sm5450209wrt.7.2020.07.09.06.04.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 06:04:47 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 14:04:45 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 08/32] usb: typec: tcpm: tcpm: Remove dangling unused
- 'struct tcpm_altmode_ops'
-Message-ID: <20200709130445.GZ3500@dell>
-References: <20200706133341.476881-1-lee.jones@linaro.org>
- <20200706133341.476881-9-lee.jones@linaro.org>
- <ca14707c-7d40-07ac-da1d-ca27a2e93dcd@redhat.com>
- <20200706142051.GA3500@dell>
- <f2fdead0-9fac-dad3-5d76-41308d5c689d@redhat.com>
+        Thu, 9 Jul 2020 09:06:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:57408 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbgGINGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 09:06:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED4C01FB;
+        Thu,  9 Jul 2020 06:06:42 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6F983FA00;
+        Thu,  9 Jul 2020 06:06:41 -0700 (PDT)
+References: <20200702144258.19326-1-vincent.guittot@linaro.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: handle case of task_h_load() returning 0
+In-reply-to: <20200702144258.19326-1-vincent.guittot@linaro.org>
+Date:   Thu, 09 Jul 2020 14:06:35 +0100
+Message-ID: <jhjsge0ltwk.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f2fdead0-9fac-dad3-5d76-41308d5c689d@redhat.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 09 Jul 2020, Hans de Goede wrote:
 
-> Hi,
-> 
-> On 7/6/20 4:20 PM, Lee Jones wrote:
-> > On Mon, 06 Jul 2020, Hans de Goede wrote:
-> > 
-> > > Hi,
-> > > 
-> > > On 7/6/20 3:33 PM, Lee Jones wrote:
-> > > > Looks as though a079973f462a3 ("usb: typec: tcpm: Remove tcpc_config
-> > > > configuration mechanism") pulled out the only use of 'tcpm_altmode_ops'
-> > > > last year.  No need to keep it around.
-> > > > 
-> > > > Fixes the following W=1 kernel build warning(s):
-> > > > 
-> > > >    drivers/usb/typec/tcpm/tcpm.c:1551:39: warning: ‘tcpm_altmode_ops’ defined but not used [-Wunused-const-variable=]
-> > > >    1551 | static const struct typec_altmode_ops tcpm_altmode_ops = {
-> > > >    | ^~~~~~~~~~~~~~~~
-> > > > 
-> > > > Cc: Guenter Roeck <linux@roeck-us.net>
-> > > > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > > > Cc: Hans de Goede <hdegoede@redhat.com>
-> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > 
-> > > This is necessary for adding Display port over Type-C support
-> > > on devices using the tcpm code, rather then firmware, to do
-> > > the Type-C alt-mode negotiation.
-> > > 
-> > > I have a local patch in my tree which adds support for this.
-> > > 
-> > > But Heikki did not like my approach, so that patch
-> > > (which needs the bits you are removing) never landed
-> > > upstream:
-> > > 
-> > > https://patchwork.kernel.org/patch/11199517/
-> > > 
-> > > Which is somewhat old now.
-> > 
-> > Yes, that's a just a little old now.
-> > 
-> > If it drags on for much longer, perhaps consider taking it out for the
-> > time being and adding it back when you start to make use of it again?
-> > 
-> > > Heikki said he would look into an approach to this more to
-> > > his liking. Heikki an progress on this area?
-> 
-> Just a little headsup that I'm making some time now to take a look
-> at solving this in the previously discussed better way, with the hope
-> of that we can get that upstream. So hopefully I will have some
-> patches for this ready during the upcoming weekend.
+On 02/07/20 15:42, Vincent Guittot wrote:
+> task_h_load() can return 0 in some situations like running stress-ng
+> mmapfork, which forks thousands of threads, in a sched group on a 224 cores
+> system. The load balance doesn't handle this correctly because
+> env->imbalance never decreases and it will stop pulling tasks only after
+> reaching loop_max, which can be equal to the number of running tasks of
+> the cfs. Make sure that imbalance will be decreased by at least 1.
+>
+> misfit task is the other feature that doesn't handle correctly such
+> situation although it's probably more difficult to face the problem
+> because of the smaller number of CPUs and running tasks on heterogenous
+> system.
+>
+> We can't simply ensure that task_h_load() returns at least one because it
+> would imply to handle underrun in other places.
+>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-Sounds good.  Thanks for the update.
+I dug some more into this; if I got my math right, this can be reproduced
+with a single task group below the root. Forked tasks get max load, so this
+can be tried out with either tons of forks or tons of CPU hogs.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+We need
+
+  p->se.avg.load_avg * cfs_rq->h_load
+  -----------------------------------  < 1
+    cfs_rq_load_avg(cfs_rq) + 1
+
+Assuming homogeneous system with tasks spread out all over (no other tasks
+interfering), that should boil down to
+
+  1024 * (tg.shares / nr_cpus)
+  ---------------------------  < 1
+  1024 * (nr_tasks_on_cpu)
+
+IOW
+
+  tg.shares / nr_cpus < nr_tasks_on_cpu
+
+If we get tasks nicely spread out, a simple condition to hit this should be
+to have more tasks than shares.
+
+I can hit task_h_load=0 with the following on my Juno (pinned to one CPU to
+make things simpler; big.LITTLE doesn't yield equal weights between CPUs):
+
+  cgcreate -g cpu:tg0
+
+  echo 128 > /sys/fs/cgroup/cpu/tg0/cpu.shares
+
+  for ((i=0; i<130; i++)); do
+      # busy loop of your choice
+      taskset -c 0 ./loop.sh &
+      echo $! > /sys/fs/cgroup/cpu/tg0/tasks
+  done
+
+> ---
+>  kernel/sched/fair.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 6fab1d17c575..62747c24aa9e 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4049,7 +4049,13 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+>               return;
+>       }
+>
+> -	rq->misfit_task_load = task_h_load(p);
+> +	/*
+> +	 * Make sure that misfit_task_load will not be null even if
+> +	 * task_h_load() returns 0. misfit_task_load is only used to select
+> +	 * rq with highest load so adding 1 will not modify the result
+> +	 * of the comparison.
+> +	 */
+> +	rq->misfit_task_load = task_h_load(p) + 1;
+
+For here and below; wouldn't it be a tad cleaner to just do
+
+        foo = max(task_h_load(p), 1);
+
+Otherwise, I think I've properly convinced myself we do want to have
+that in one form or another. So either way:
+
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+
+>  }
+>
+>  #else /* CONFIG_SMP */
+> @@ -7664,6 +7670,16 @@ static int detach_tasks(struct lb_env *env)
+>                           env->sd->nr_balance_failed <= env->sd->cache_nice_tries)
+>                               goto next;
+>
+> +			/*
+> +			 * Depending of the number of CPUs and tasks and the
+> +			 * cgroup hierarchy, task_h_load() can return a null
+> +			 * value. Make sure that env->imbalance decreases
+> +			 * otherwise detach_tasks() will stop only after
+> +			 * detaching up to loop_max tasks.
+> +			 */
+> +			if (!load)
+> +				load = 1;
+> +
+>                       env->imbalance -= load;
+>                       break;
