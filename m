@@ -2,207 +2,188 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A94FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B80C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D2B20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E1F20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594334798;
+	bh=dtlzcr0QvM7s/s8aUqSHa/DeH/oh6yuUyMb1mVo9rNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IHXCAdfDfbmSPZM0sNpT2o8lloeivALJSsm02C8Lu9QrH1sWKci/kLEqS3QI2Gh4I
+	 zMhC1fURaaUlYn2ebSnu4c0DCfGvFf0F/Dpp5HEelL1xVN30TDchPKFm2MHmfK3iww
+	 4jdGwViSnA1f5ShRo8ToMGkPe17tvpAOswWlUr0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgGIWqa (ORCPT
+        id S1727839AbgGIWqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:46:30 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48256 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727086AbgGIWqX (ORCPT
+        Thu, 9 Jul 2020 18:46:36 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44044 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgGIWq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:46:23 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8260E8040A7B;
-        Thu,  9 Jul 2020 22:46:16 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Y9dyZ2IkX5J8; Fri, 10 Jul 2020 01:46:15 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 10/11] dmaengine: dw: Introduce max burst length hw config
-Date:   Fri, 10 Jul 2020 01:45:49 +0300
-Message-ID: <20200709224550.15539-11-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 9 Jul 2020 18:46:29 -0400
+Received: by mail-io1-f65.google.com with SMTP id i4so4030742iov.11;
+        Thu, 09 Jul 2020 15:46:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QXFKaIMVMvoCqLqiHJ2gAavHpO+CjG0ilPbgcK2+QFs=;
+        b=OVGZQIbQF1+vcqb1L6GeXRw5pW1d/A4vcjQJ4Pa55elc44WgLSmpAr0OKEARSNABvc
+         cvy1bqKiHOHxWeAW3n38IhZE7ExDPKsvzybq59ClQ+5k0myaCqAF0F+Giv3IvzYoahHw
+         SEp4m7LVxZuEpB6TUPs915bqoKH/qn/jQZuxwlTuKgnp/+7VvFU7AMFXmZOC8IdpJE9C
+         561QMBsMsAYTOih+NNDPejoQtODTUewVmkzkOOfg6G5kFowDxujK4/9cGh578eXUQgmc
+         Mq8fRicWY2w+Um1ItpUgDhKuWr/Omcf5SUuXuDQrcaCPNiPoiKjgZ3jlDWhRcm9O5tNo
+         rLTA==
+X-Gm-Message-State: AOAM530Pv4zObmmMqn+GHEh4jPsI2V8VSEbVXGTgbmWTVdWI5Lwr4krw
+        E+/RxiApbmVZBVU/S7TEmQ==
+X-Google-Smtp-Source: ABdhPJyKXp0NnPd3+aWgOm1nwSaG7xmAY38yYWlsy/z8UNBc0kMfraXWzB4Dxdq1HDX525Ov/1rOuw==
+X-Received: by 2002:a05:6602:1544:: with SMTP id h4mr45081721iow.24.1594334788520;
+        Thu, 09 Jul 2020 15:46:28 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id g8sm2510122ilq.49.2020.07.09.15.46.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 15:46:27 -0700 (PDT)
+Received: (nullmailer pid 1029281 invoked by uid 1000);
+        Thu, 09 Jul 2020 22:46:26 -0000
+Date:   Thu, 9 Jul 2020 16:46:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     lgirdwood@gmail.com, mark.rutland@arm.com, agross@kernel.org,
+        broonie@kernel.org, heikki.krogerus@linux.intel.com,
+        gregkh@linuxfoundation.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jackp@codeaurora.org, rdunlap@infradead.org,
+        bryan.odonoghue@linaro.org
+Subject: Re: [PATCH v5 2/6] dt-bindings: usb: Add Qualcomm PMIC type C
+ controller dt-binding
+Message-ID: <20200709224626.GA1021653@bogus>
+References: <20200703015102.27295-1-wcheng@codeaurora.org>
+ <20200703015102.27295-3-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703015102.27295-3-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IP core of the DW DMA controller may be synthesized with different
-max burst length of the transfers per each channel. According to Synopsis
-having the fixed maximum burst transactions length may provide some
-performance gain. At the same time setting up the source and destination
-multi size exceeding the max burst length limitation may cause a serious
-problems. In our case the DMA transaction just hangs up. In order to fix
-this lets introduce the max burst length platform config of the DW DMA
-controller device and don't let the DMA channels configuration code
-exceed the burst length hardware limitation.
+On Thu, Jul 02, 2020 at 06:50:58PM -0700, Wesley Cheng wrote:
+> Introduce the dt-binding for enabling USB type C orientation and role
+> detection using the PM8150B.  The driver will be responsible for receiving
+> the interrupt at a state change on the CC lines, reading the orientation/role,
+> and communicating this information to the remote clients, which can include
+> a role switch node and a type C switch.
+> 
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  .../bindings/usb/qcom,pmic-typec.yaml         | 130 ++++++++++++++++++
+>  1 file changed, 130 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+> new file mode 100644
+> index 000000000000..735b1f74664b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+> @@ -0,0 +1,130 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/usb/qcom,pmic-typec.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm PMIC based USB type C Detection Driver
+> +
+> +maintainers:
+> +  - Wesley Cheng <wcheng@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm PMIC Type C Detect
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,pm8150b-usb-typec
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: Type C base address
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: CC change interrupt from PMIC
+> +
+> +  connector:
+> +    description: Connector type for remote endpoints
+> +    type: object
+> +    $ref: /schemas/connector/usb-connector.yaml#
 
-Note the maximum burst length parameter can be detected either in runtime
-from the DWC parameter registers or from the dedicated DT property.
-Depending on the IP core configuration the maximum value can vary from
-channel to channel so by overriding the channel slave max_burst capability
-we make sure a DMA consumer will get the channel-specific max burst
-length.
+Why is all the connector schema duplicated here? You only need things 
+that are further constrained like 'compatible'.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+> +
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - usb-c-connector
+> +
+> +      power-role:
+> +       enum:
+> +         - dual
+> +         - source
+> +         - sink
+> +
+> +      data-role:
+> +        enum:
+> +          - dual
+> +          - host
+> +          - device
+> +
+> +      ports:
+> +        description: Remote endpoint connections
+> +        type: object
+> +
+> +        properties:
+> +          port@0:
+> +            description: Remote endpoints for the High Speed path
+> +            type: object
+> +
+> +          port@1:
+> +            description: Remote endpoints for the Super Speed path
+> +            type: object
+> +
+> +            properties:
+> +              endpoint@0:
+> +                description: Connection to USB type C mux node
+> +                type: object
+> +
+> +                properties:
+> +                  remote-endpoint:
+> +                    maxItems: 1
 
----
+'remote-endpoint' in not an array.
 
-Changelog v2:
-- Rearrange SoBs.
-- Discard dwc_get_maxburst() accessor. It's enough to have a clamping
-  guard against exceeding the hardware max burst limitation.
+> +                    description: Node reference to the type C mux
+> +
+> +              endpoint@1:
+> +                description: Connection to role switch node
+> +                type: object
+> +
+> +                properties:
+> +                  remote-endpoint:
+> +                    maxItems: 1
+> +                    description: Node reference to the role switch node
 
-Changelog v3:
-- Override the slave channel max_burst capability instead of calculating
-  the minimum value of max burst lengths and setting the DMA-device
-  generic capability.
+So USB-SS data can come from 'type C mux' or 'role switch node'? That 
+seems odd.
 
-Changelog v5:
-- Clamp the dst and src burst lengths in the generic dwc_config() method
-  instead of doing that in the encode_maxburst() callback.
-- Define max_burst with u32 type in struct dw_dma_platform_data.
-- Perform of_property_read_u32_array() directly into the platform data
-  max_burst member.
-
-Changelog v6:
-- Move DW_DMA_MAX_BURST macro definition to the previous patch.
----
- drivers/dma/dw/core.c                | 10 ++++++++++
- drivers/dma/dw/of.c                  |  5 +++++
- drivers/dma/dw/regs.h                |  2 ++
- include/linux/platform_data/dma-dw.h |  3 +++
- 4 files changed, 20 insertions(+)
-
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 4887aa2fc73c..588b9bae827c 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -791,6 +791,11 @@ static int dwc_config(struct dma_chan *chan, struct dma_slave_config *sconfig)
- 
- 	memcpy(&dwc->dma_sconfig, sconfig, sizeof(*sconfig));
- 
-+	dwc->dma_sconfig.src_maxburst =
-+		clamp(dwc->dma_sconfig.src_maxburst, 0U, dwc->max_burst);
-+	dwc->dma_sconfig.dst_maxburst =
-+		clamp(dwc->dma_sconfig.dst_maxburst, 0U, dwc->max_burst);
-+
- 	dw->encode_maxburst(dwc, &dwc->dma_sconfig.src_maxburst);
- 	dw->encode_maxburst(dwc, &dwc->dma_sconfig.dst_maxburst);
- 
-@@ -1051,7 +1056,9 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
- 
- static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
- {
-+	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
- 
-+	caps->max_burst = dwc->max_burst;
- }
- 
- int do_dma_probe(struct dw_dma_chip *chip)
-@@ -1194,9 +1201,12 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 			dwc->nollp =
- 				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0 ||
- 				(dwc_params >> DWC_PARAMS_HC_LLP & 0x1) == 1;
-+			dwc->max_burst =
-+				(0x4 << (dwc_params >> DWC_PARAMS_MSIZE & 0x7));
- 		} else {
- 			dwc->block_size = pdata->block_size;
- 			dwc->nollp = !pdata->multi_block[i];
-+			dwc->max_burst = pdata->max_burst[i] ?: DW_DMA_MAX_BURST;
- 		}
- 	}
- 
-diff --git a/drivers/dma/dw/of.c b/drivers/dma/dw/of.c
-index 9e27831dee32..1474b3817ef4 100644
---- a/drivers/dma/dw/of.c
-+++ b/drivers/dma/dw/of.c
-@@ -98,6 +98,11 @@ struct dw_dma_platform_data *dw_dma_parse_dt(struct platform_device *pdev)
- 			pdata->multi_block[tmp] = 1;
- 	}
- 
-+	if (of_property_read_u32_array(np, "snps,max-burst-len", pdata->max_burst,
-+				       nr_channels)) {
-+		memset32(pdata->max_burst, DW_DMA_MAX_BURST, nr_channels);
-+	}
-+
- 	if (!of_property_read_u32(np, "snps,dma-protection-control", &tmp)) {
- 		if (tmp > CHAN_PROTCTL_MASK)
- 			return NULL;
-diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
-index 1ab840b06e79..76654bd13c1a 100644
---- a/drivers/dma/dw/regs.h
-+++ b/drivers/dma/dw/regs.h
-@@ -126,6 +126,7 @@ struct dw_dma_regs {
- /* Bitfields in DWC_PARAMS */
- #define DWC_PARAMS_MBLK_EN	11		/* multi block transfer */
- #define DWC_PARAMS_HC_LLP	13		/* set LLP register to zero */
-+#define DWC_PARAMS_MSIZE	16		/* max group transaction size */
- 
- /* bursts size */
- enum dw_dma_msize {
-@@ -284,6 +285,7 @@ struct dw_dma_chan {
- 	/* hardware configuration */
- 	unsigned int		block_size;
- 	bool			nollp;
-+	u32			max_burst;
- 
- 	/* custom slave configuration */
- 	struct dw_dma_slave	dws;
-diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
-index 369e41e9dcc9..4f681df85c27 100644
---- a/include/linux/platform_data/dma-dw.h
-+++ b/include/linux/platform_data/dma-dw.h
-@@ -44,6 +44,8 @@ struct dw_dma_slave {
-  * @data_width: Maximum data width supported by hardware per AHB master
-  *		(in bytes, power of 2)
-  * @multi_block: Multi block transfers supported by hardware per channel.
-+ * @max_burst: Maximum value of burst transaction size supported by hardware
-+ *	       per channel (in units of CTL.SRC_TR_WIDTH/CTL.DST_TR_WIDTH).
-  * @protctl: Protection control signals setting per channel.
-  */
- struct dw_dma_platform_data {
-@@ -58,6 +60,7 @@ struct dw_dma_platform_data {
- 	unsigned char	nr_masters;
- 	unsigned char	data_width[DW_DMA_MAX_NR_MASTERS];
- 	unsigned char	multi_block[DW_DMA_MAX_NR_CHANNELS];
-+	u32		max_burst[DW_DMA_MAX_NR_CHANNELS];
- #define CHAN_PROTCTL_PRIVILEGED		BIT(0)
- #define CHAN_PROTCTL_BUFFERABLE		BIT(1)
- #define CHAN_PROTCTL_CACHEABLE		BIT(2)
--- 
-2.26.2
-
+Rob
