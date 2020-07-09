@@ -2,163 +2,103 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE657C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D463F20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1442A20663
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:31:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3VV0Yy2W";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oNat9XoY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgGIJbM (ORCPT
+        id S1726733AbgGIJb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgGIJbM (ORCPT
+        Thu, 9 Jul 2020 05:31:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35372 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgGIJb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:31:12 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE6CC061A0B;
-        Thu,  9 Jul 2020 02:31:11 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 056222A61E8
-Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mario.Limonciello@dell.com
-Cc:     rjw@rjwysocki.net, rafael@kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, lenb@kernel.org, kernel@collabora.com,
-        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
-        gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org,
-        ayman.bagabas@gmail.com, benjamin.tissoires@redhat.com,
-        blaz@mxxn.io, dvhart@infradead.org, gregkh@linuxfoundation.org,
-        hdegoede@redhat.com, jeremy@system76.com, 2pi@mok.nu,
-        mchehab+samsung@kernel.org, rajatja@google.com,
-        srinivas.pandruvada@linux.intel.com,
-        platform-driver-x86@vger.kernel.org
-References: <20200413134611.478441-1-enric.balletbo@collabora.com>
- <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
- <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
- <10490419.gsntqH5CaE@kreacher>
- <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com>
- <59771d3689da41a5bbc67541aa6f4777@AUSX13MPC105.AMER.DELL.COM>
- <20200610214033.GB248110@dtor-ws>
- <adf9daaf08f1464684e48ec203194fe9@AUSX13MPC105.AMER.DELL.COM>
- <20200610224305.GC248110@dtor-ws>
- <1e32b7db-5457-e0cf-5e5e-36f21d5a91eb@collabora.com>
-Message-ID: <b9e46ec7-c362-da76-a532-8d380b16d915@collabora.com>
-Date:   Thu, 9 Jul 2020 11:31:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 05:31:56 -0400
+Date:   Thu, 9 Jul 2020 11:31:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594287114;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tuvfl4lp33mBSrKFJ/WLHd+knY1GDMg47O2dd0IKQZE=;
+        b=3VV0Yy2WZ5KQ0MWtljWkVUa4AKf/Ua4rWCCtmsqoO4Gt+KopdJ4HHaUSiPE0Hl9wpAXcmV
+        JbSwavg1LDn5jE1t/e5R4KFhtG72UiikOvT963BcCc9oXoboQvVvjgIk1JigHHSXpC5qfh
+        VqTUlZQI3nHdyW33g/XX5keagaLWeSZTOC0r9QLX4C3JiJ7r7rSbl2BaIMF31X2WqT/XlT
+        S1GNaz4x4kfOX/N5Zhfa1lNNI8VdY6h86LtGNsxdkxidmOTAkd7AESeCnrP9NGTuG4IEcJ
+        +md1GawMYIhVrqMObROCqkY5BkrvvBrodNKIi6vOCuMGbzsyT02kH98PBxdxdA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594287114;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tuvfl4lp33mBSrKFJ/WLHd+knY1GDMg47O2dd0IKQZE=;
+        b=oNat9XoYL5AZf51a+7Yod57UPOska9x7/QETpTN2n3+SvV+hH3nHuznkSK2w4LGXgTIUgR
+        pPGyLBXIeQCO/ADA==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Daniel Wagner <dwagner@suse.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Pavel Machek <pavel@denx.de>
+Subject: Re: [ANNOUNCE] 4.4.229-rt200
+Message-ID: <20200709093151.o6ea5lqc753pxdr7@linutronix.de>
+References: <159423384250.24491.10602573106875114227@beryllium>
 MIME-Version: 1.0
-In-Reply-To: <1e32b7db-5457-e0cf-5e5e-36f21d5a91eb@collabora.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <159423384250.24491.10602573106875114227@beryllium>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+On 2020-07-08 18:44:02 [-0000], Daniel Wagner wrote:
+> I'm pleased to announce the 4.4.229-rt200 stable release.
+> 
+> This release is just an update to the new stable 4.4.215 version.
 
-On 11/6/20 13:06, Enric Balletbo i Serra wrote:
-> Hi,
-> 
-> On 11/6/20 0:43, Dmitry Torokhov wrote:
->> On Wed, Jun 10, 2020 at 09:52:12PM +0000, Mario.Limonciello@dell.com wrote:
->>>> -----Original Message-----
->>>> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>>> Sent: Wednesday, June 10, 2020 4:41 PM
->>>> To: Limonciello, Mario
->>>> Cc: enric.balletbo@collabora.com; rjw@rjwysocki.net; rafael@kernel.org;
->>>> linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; lenb@kernel.org;
->>>> kernel@collabora.com; groeck@chromium.org; bleung@chromium.org;
->>>> dtor@chromium.org; gwendal@chromium.org; vbendeb@chromium.org;
->>>> andy@infradead.org; ayman.bagabas@gmail.com; benjamin.tissoires@redhat.com;
->>>> blaz@mxxn.io; dvhart@infradead.org; gregkh@linuxfoundation.org;
->>>> hdegoede@redhat.com; jeremy@system76.com; 2pi@mok.nu;
->>>> mchehab+samsung@kernel.org; rajatja@google.com;
->>>> srinivas.pandruvada@linux.intel.com; platform-driver-x86@vger.kernel.org
->>>> Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
->>>>
->>>>
->>>> [EXTERNAL EMAIL]
->>>>
->>>> On Wed, Jun 10, 2020 at 09:28:36PM +0000, Mario.Limonciello@dell.com wrote:
->>>>>>
->>>>>> To give you some references, if I'm not wrong, this prefix is used in
->>>> all
->>>>>> or
->>>>>> almost all Intel Chromebook devices (auron, cyan, eve, fizz, hatch,
->>>>>> octopus,
->>>>>> poppy, strago ...) The ACPI source for this device can be found here
->>>> [1],
->>>>>> and,
->>>>>> if not all, almost all Intel based Chromebooks are shipped with the
->>>>>> firmware
->>>>>> that supports this.
->>>>>
->>>>> You can potentially carry a small patch in your downstream kernel for the
->>>>> legacy stuff until it reaches EOL.  At least for the new stuff you could
->>>>> enact a process that properly reserves unique numbers and changes the
->>>> driver
->>>>> when the interface provided by the ACPI device has changed.
->>>>
->>>> If we use this prefix for hatch EOL is ~7 years from now.
->>>>
->>>
->>> Isn't the whole point of the ACPI registry and choosing an ID?  You know internally
->>> if you need to change the interface that a new ID is needed and a new driver will
->>> be needed that comprehends that ID change.  So if you can't guarantee that 0001 is
->>> the same driver interface in every firmware implementation google used then that is
->>> where this falls apart.
->>>
-> 
-> As far as I know GGL0001 has the same driver interface in every firmware
-> implementation Google used. But I'll ask to make sure.
-> 
->>> I know there is a long support lifecycle but you're talking about rebasing
->>> to new LTS kernels a handful of times between now and then.  If the interface really
->>> is stable the patch should be small and it shouldn't be a large amount of technical
->>> debt to carry downstream until EOL.
->>
->> I think we are talking about different things actually. Let's forget
->> about Chrome OS and downstream kernels. We have devices that have
->> already been shipped and in hands of users. Some of them are old, some
->> of them are new. We can't not enforce that firmware for these devices
->> will be either released or updated. Therefore, if we want expose this
->> device in mainline kernel, we need to have it handle "GGL0001" HID in
->> addition to whatever proper HID we may select for it.
->>
-> 
-> FWIW, after investigate a bit more, although GGL is not in the ACPI ID list it
-> is in the PNP ID list [1]. So as far as I understand GGL0001 is valid ID. I know
-> that PNP ID is the legacy identifier but since this was here for long time and
-> will be here also for long time, I am wondering if we can take that as an
-> argument to have GGL0001 as a valid device to be exposed in the kernel.
-> 
+Your template is off here.
 
-So, as the GGL prefix is a valid ID in the PNP ID list, is this a valid argument
-to take in consideration this patch and resolves your concern regarding the ID?
+> Note: This update required dealing with a conflict in net/core/dev.c, where
+> devnet_rename_seq was moved from a seqence count to an RWSEM and renamed
+> to devnet_rename_sem. If you encounter runtime issues that show tracebacks
+> in net/core/dev.c, please let me know.
+>
+> Patch "net: Add a mutex around devnet_rename_seq" dropped in favour of
+> 602c47fbf46b ("net: core: device_rename: Use rwsem instead of a seqcount")
 
-Thanks,
- Enric
+Yes, this was the intention of the exercise :)
+ 
+> Known issues:
+> 
+>   sigwaittest with hackbench as workload is able to trigger a crash on x86_64,
+>   the same as reported for the v4.4.220-rt196 release. The crash seems to
+>   be triggered by a BPF program. IIRC, BPF was never supported in v4.4-rt
+>   and I just forgot to disable in my configuration.
 
+In v5.4.3-rt1 there is
+    fe18e9e08e25d ("BPF: Disable on PREEMPT_RT")
 
+so maybe backport this across the stable kernels. Fixing it is a way
+larger queue. If the intention is to keep it disabled it could be
+enforced via Kconfig so it is not enabled by accident (or by using
+oldconfig on a distro config which has it enabled).
 
-> Thanks,
->  Enric
-> 
-> [1] https://uefi.org/pnp_id_list
-> 
-> 
->> We internally can fix it (HID) for next generation of devices.
->>
->> Thanks.
->>
-> 
+> Enjoy!
+> Daniel
+
+Sebastian
