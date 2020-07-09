@@ -2,181 +2,134 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5194BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA03C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30BCF2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF972076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fyQw7Y/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgGIMe3 (ORCPT
+        id S1726513AbgGIMl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:34:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:58877 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbgGIMe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:34:29 -0400
-IronPort-SDR: ISz3MHLtZRjP6PI2Wnz/4M5oOhIi9O/KMzPS2B2XtTkDGPcARZVTJPKaONDYOSPRMT9nPg4o7a
- Zy3JExFvWpmQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="146071306"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="146071306"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 05:34:28 -0700
-IronPort-SDR: 1uMOXgoWBELbK18jUlVXoNj5Q+9MKptGG07GRx9dNquO5dirlwEgU/OR4T7Kko8oAp+BMqQ9Qm
- Gh/OtsWWbnBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="306419297"
-Received: from lkp-server01.sh.intel.com (HELO 5019aad283e6) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Jul 2020 05:34:27 -0700
-Received: from kbuild by 5019aad283e6 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jtVkw-00002L-ED; Thu, 09 Jul 2020 12:34:26 +0000
-Date:   Thu, 09 Jul 2020 20:33:58 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.07.06a] BUILD SUCCESS
- 3b69dc4d0fad073eb5554dacdccddf6c21577802
-Message-ID: <5f070eb6.gs+CirEBfEhamM1t%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Thu, 9 Jul 2020 08:41:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32685 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726340AbgGIMl0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:41:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594298485;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=tpJNxP8waOOJpfsjd4XC3WT5kl8A0DcdvOVn6bZN3a8=;
+        b=fyQw7Y/jvTpPogXDauGtPo3UuJLqFoAGnJSL62iQIdoPEXEIfSKEF1oQ1RRSRuumurpM7Z
+        tVGInpgvqnHshNAQ9ceyRVtRxND1H2TF8bU0As8m9gIy/wiWF40DlfakKTqIe43R28uBvY
+        7TTFLlEF4pM9yn3n3309te31lwnRD6M=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-216-CZRNft4nPaiWjaT0p2H-8w-1; Thu, 09 Jul 2020 08:41:23 -0400
+X-MC-Unique: CZRNft4nPaiWjaT0p2H-8w-1
+Received: by mail-qv1-f72.google.com with SMTP id e6so1272857qva.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 05:41:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tpJNxP8waOOJpfsjd4XC3WT5kl8A0DcdvOVn6bZN3a8=;
+        b=OUWNlSb08PxFdR2HRQUPwv1Z1MAWIFO2lqSqoJZe1rs3R3MzXncKvSnPtYBMTU4jHa
+         r4b8m9Ojj3CZiRdinO56FdqpqApMXxJaJLudyaMYkvBW92jR9PGMLJEmolRaxYjjJLK+
+         89eGWMca6dLV7rIHQACYtt/LbTSEMLr3MEQIIrRZorGQMkJ3LdubtZABoUqriQhgFoSW
+         Ngkxczq451QuolXeAgfJRz4AkZyQeqbghop8hbUG9a8IF0XtaW4MMaYZaFWmsvCtJUEo
+         VFYLkIUz1opW3JR2/2uebTT7wVLOB/Jq7pQK4ZzeWexvG0830Klxr1gFL7b/omnRMDYE
+         fJTA==
+X-Gm-Message-State: AOAM532Td6s7itIHiB2bfDUmy0aEA1PcidLwfI3buIJyCDVJqFOB8gAG
+        5SHwXwVKU3YXyOonppy4yvhsal79edMqfgG8HBkmUhv8vlpgc9o1UxBctsv9mW5NYyudIoOBKRC
+        cO/jghp/n/v6YLWe++PBNMqEC
+X-Received: by 2002:ac8:47d0:: with SMTP id d16mr65801521qtr.349.1594298483154;
+        Thu, 09 Jul 2020 05:41:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwcpU7pTwX9WQtLj7PdrlfhtJk8kg3m8usW0TpTKA1vracbJcDrge1iTFu11tiAd+no4QhgOQ==
+X-Received: by 2002:ac8:47d0:: with SMTP id d16mr65801500qtr.349.1594298482902;
+        Thu, 09 Jul 2020 05:41:22 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id g30sm3940598qte.72.2020.07.09.05.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 05:41:22 -0700 (PDT)
+From:   trix@redhat.com
+To:     stuyoder@gmail.com, laurentiu.tudor@nxp.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH v2] bus: fsl-mc: fix invalid free in fsl_mc_device_add
+Date:   Thu,  9 Jul 2020 05:41:15 -0700
+Message-Id: <20200709124115.5708-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.07.06a
-branch HEAD: 3b69dc4d0fad073eb5554dacdccddf6c21577802  lib: Add backtrace_idle parameter to force backtrace of idle CPUs
+From: Tom Rix <trix@redhat.com>
 
-elapsed time: 730m
+clang static analysis flags this error
 
-configs tested: 111
-configs skipped: 7
+fsl-mc-bus.c:695:2: warning: Attempt to free released memory [unix.Malloc]
+        kfree(mc_dev);
+        ^~~~~~~~~~~~~
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The problem block of code is
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-powerpc                     pq2fads_defconfig
-sh                               j2_defconfig
-sh                          sdk7786_defconfig
-arm                          pxa910_defconfig
-um                            kunit_defconfig
-arm                         lpc18xx_defconfig
-ia64                        generic_defconfig
-mips                        vocore2_defconfig
-arc                     haps_hs_smp_defconfig
-m68k                       bvme6000_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                           efm32_defconfig
-arc                                 defconfig
-mips                      pistachio_defconfig
-arm                          simpad_defconfig
-xtensa                         virt_defconfig
-parisc                            allnoconfig
-mips                      pic32mzda_defconfig
-arm                       netwinder_defconfig
-openrisc                 simple_smp_defconfig
-arm                             pxa_defconfig
-mips                 decstation_r4k_defconfig
-mips                         tb0226_defconfig
-arm                       spear13xx_defconfig
-ia64                             alldefconfig
-sh                        sh7785lcr_defconfig
-mips                      maltasmvp_defconfig
-mips                           ci20_defconfig
-m68k                             alldefconfig
-arc                      axs103_smp_defconfig
-arm                          prima2_defconfig
-sh                           sh2007_defconfig
-mips                      maltaaprp_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allmodconfig
-um                               allyesconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+		mc_bus = kzalloc(sizeof(*mc_bus), GFP_KERNEL);
+		if (!mc_bus)
+			return -ENOMEM;
 
+		mc_dev = &mc_bus->mc_dev;
+
+mc_bus's structure contains a mc_dev element,
+freeing it later is not appropriate.
+
+So check if mc_bus was allocated before freeing mc_dev
+
+This is a case where checkpatch
+
+WARNING: kfree(NULL) is safe and this check is probably not required
++	if (mc_bus)
++		kfree(mc_bus);
+
+is wrong.
+
+Fixes: a042fbed0290 ("staging: fsl-mc: simplify couple of deallocations")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ v1: add a comment to explain freeing uniqueness
+ 
+ drivers/bus/fsl-mc/fsl-mc-bus.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+index 40526da5c6a6..df10ed430baa 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-bus.c
++++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+@@ -691,8 +691,14 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+ 
+ error_cleanup_dev:
+ 	kfree(mc_dev->regions);
+-	kfree(mc_bus);
+-	kfree(mc_dev);
++	/*
++	 * mc_bus allocates a private version of mc_dev
++	 * it is not appropriate to free the private version.
++	 */
++	if (mc_bus)
++		kfree(mc_bus);
++	else
++		kfree(mc_dev);
+ 
+ 	return error;
+ }
+-- 
+2.18.1
+
