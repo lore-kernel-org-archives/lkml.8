@@ -2,204 +2,116 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF63C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81955C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8405206E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DEA206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:12:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hd5Go24A"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VNy6BSxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgGIJMR (ORCPT
+        id S1726630AbgGIJM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:12:17 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39030 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726211AbgGIJMQ (ORCPT
+        Thu, 9 Jul 2020 05:12:29 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:51599 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726211AbgGIJM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:12:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594285934;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=QpwS1vWzxNYsRbVzCpxXy92PEVS5TzvhnObTcapX3Nk=;
-        b=hd5Go24ANdtD8X01XCbiCS+KqQnOCnKh31VcIPRh26rNa2gn4MtsIt1RpC089GOXbFky1P
-        S2TibDA2mflXXqtunG6OM0dNnOYnEuHRU5dtSmYiYZqDzAzOcObmuDZNJQO/kVrXhV4+K4
-        uQ6VBgx3bwv6hQNQOPrQQDT+0feJPxc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-59-DKd0UOzSMmOKiLY4--yi-A-1; Thu, 09 Jul 2020 05:12:10 -0400
-X-MC-Unique: DKd0UOzSMmOKiLY4--yi-A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1B86A107ACCA;
-        Thu,  9 Jul 2020 09:12:07 +0000 (UTC)
-Received: from [10.36.114.174] (ovpn-114-174.ams2.redhat.com [10.36.114.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B998010013C2;
-        Thu,  9 Jul 2020 09:11:58 +0000 (UTC)
-Subject: Re: [PATCH v3 6/6] mm/memory_hotplug: fix unpaired
- mem_hotplug_begin/done
-To:     Jia He <justin.he@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, stable@vger.kernel.org
-References: <20200709020629.91671-1-justin.he@arm.com>
- <20200709020629.91671-7-justin.he@arm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <2dfaf00b-9b08-8b90-6056-b53f7aa9b51c@redhat.com>
-Date:   Thu, 9 Jul 2020 11:11:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 9 Jul 2020 05:12:28 -0400
+X-UUID: 81185da012804daea3709e7722070278-20200709
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=qd/l2ng/0l+Gi9Tf+m12gtyHV45xTKoWAIi8K6LgRjc=;
+        b=VNy6BSxHnYazrySmA/dMhTYlhRv40eKlsB/J65eTLTbp8/aPKqfn537gPxKo0pHspLDEUzefx0PJSsjTODuke2a3PkGq+zziBbyLwMKrYjcTa+rSirFHTBeR4SBmRgo7ko8BsgClFLvARH8zxIB0aVlCxfVz5eqw1+bbMn96qKc=;
+X-UUID: 81185da012804daea3709e7722070278-20200709
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1422258399; Thu, 09 Jul 2020 17:12:25 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 9 Jul 2020 17:12:15 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 9 Jul 2020 17:12:18 +0800
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Neal Liu <neal.liu@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Subject: [PATCH v2 1/2] dt-bindings: devapc: add bindings for mtk-devapc
+Date:   Thu, 9 Jul 2020 17:12:06 +0800
+Message-ID: <1594285927-1840-2-git-send-email-neal.liu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1594285927-1840-1-git-send-email-neal.liu@mediatek.com>
+References: <1594285927-1840-1-git-send-email-neal.liu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200709020629.91671-7-justin.he@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 0E15991C4C7F97952111FB4DE219BB39A44992477E5D35D7CD0F363BB37AF36B2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.07.20 04:06, Jia He wrote:
-> When check_memblock_offlined_cb() returns failed rc(e.g. the memblock is
-> online at that time), mem_hotplug_begin/done is unpaired in such case.
-> 
-> Therefore a warning:
->  Call Trace:
->   percpu_up_write+0x33/0x40
->   try_remove_memory+0x66/0x120
->   ? _cond_resched+0x19/0x30
->   remove_memory+0x2b/0x40
->   dev_dax_kmem_remove+0x36/0x72 [kmem]
->   device_release_driver_internal+0xf0/0x1c0
->   device_release_driver+0x12/0x20
->   bus_remove_device+0xe1/0x150
->   device_del+0x17b/0x3e0
->   unregister_dev_dax+0x29/0x60
->   devm_action_release+0x15/0x20
->   release_nodes+0x19a/0x1e0
->   devres_release_all+0x3f/0x50
->   device_release_driver_internal+0x100/0x1c0
->   driver_detach+0x4c/0x8f
->   bus_remove_driver+0x5c/0xd0
->   driver_unregister+0x31/0x50
->   dax_pmem_exit+0x10/0xfe0 [dax_pmem]
-> 
-> Fixes: f1037ec0cc8a ("mm/memory_hotplug: fix remove_memory() lockdep splat")
-> Cc: stable@vger.kernel.org # v5.6+
-> Signed-off-by: Jia He <justin.he@arm.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  mm/memory_hotplug.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index b49ab743d914..3e0645387daf 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1752,7 +1752,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
->  	 */
->  	rc = walk_memory_blocks(start, size, NULL, check_memblock_offlined_cb);
->  	if (rc)
-> -		goto done;
-> +		return rc;
->  
->  	/* remove memmap entry */
->  	firmware_map_remove(start, start + size, "System RAM");
-> @@ -1776,9 +1776,8 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
->  
->  	try_offline_node(nid);
->  
-> -done:
->  	mem_hotplug_done();
-> -	return rc;
-> +	return 0;
->  }
->  
->  /**
-> 
-
-@Andrew, can you pick that up directly? It's independent of the other stuff.
-
--- 
-Thanks,
-
-David / dhildenb
+QWRkIGJpbmRpbmdzIGZvciBtdGstZGV2YXBjLg0KDQpTaWduZWQtb2ZmLWJ5OiBOZWFsIExpdSA8
+bmVhbC5saXVAbWVkaWF0ZWsuY29tPg0KLS0tDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc29j
+L21lZGlhdGVrL2RldmFwYy55YW1sICAgfCAgIDgyICsrKysrKysrKysrKysrKysrKysrDQogMSBm
+aWxlIGNoYW5nZWQsIDgyIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9kZXZhcGMueWFtbA0KDQpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRl
+ay9kZXZhcGMueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvbWVk
+aWF0ZWsvZGV2YXBjLnlhbWwNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi5m
+MDgyNDNlDQotLS0gL2Rldi9udWxsDQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvc29jL21lZGlhdGVrL2RldmFwYy55YW1sDQpAQCAtMCwwICsxLDgyIEBADQorIyBTUERY
+LUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAgT1IgQlNELTItQ2xhdXNlKQ0KKyMgIyBDb3B5
+cmlnaHQgMjAyMCBNZWRpYVRlayBJbmMuDQorJVlBTUwgMS4yDQorLS0tDQorJGlkOiAiaHR0cDov
+L2RldmljZXRyZWUub3JnL3NjaGVtYXMvc29jL21lZGlhdGVrL2RldmFwYy55YW1sIyINCiskc2No
+ZW1hOiAiaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjIg0KKw0K
+K3RpdGxlOiBNZWRpYVRlayBEZXZpY2UgQWNjZXNzIFBlcm1pc3Npb24gQ29udHJvbCBkcml2ZXIN
+CisNCitkZXNjcmlwdGlvbjogfA0KKyAgTWVkaWFUZWsgYnVzIGZhYnJpYyBwcm92aWRlcyBUcnVz
+dFpvbmUgc2VjdXJpdHkgc3VwcG9ydCBhbmQgZGF0YQ0KKyAgcHJvdGVjdGlvbiB0byBwcmV2ZW50
+IHNsYXZlcyBmcm9tIGJlaW5nIGFjY2Vzc2VkIGJ5IHVuZXhwZWN0ZWQgbWFzdGVycy4NCisgIFRo
+ZSBzZWN1cml0eSB2aW9sYXRpb24gaXMgbG9nZ2VkIGFuZCBzZW50IHRvIHRoZSBwcm9jZXNzb3Ig
+Zm9yIGZ1cnRoZXINCisgIGFuYWx5c2lzIGFuZCBjb3VudGVybWVhc3VyZXMuDQorDQorbWFpbnRh
+aW5lcnM6DQorICAtIE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+DQorDQorcHJvcGVy
+dGllczoNCisgIGNvbXBhdGlibGU6DQorICAgIGVudW06DQorICAgICAgLSBtZWRpYXRlayxtdDY3
+NzktZGV2YXBjDQorDQorICByZWc6DQorICAgIGRlc2NyaXB0aW9uOiBUaGUgYmFzZSBhZGRyZXNz
+IG9mIGRldmFwYyByZWdpc3RlciBiYW5rDQorICAgIG1heEl0ZW1zOiAxDQorDQorICBpbnRlcnJ1
+cHRzOg0KKyAgICBkZXNjcmlwdGlvbjogQSBzaW5nbGUgaW50ZXJydXB0IHNwZWNpZmllcg0KKyAg
+ICBtYXhJdGVtczogMQ0KKw0KKyAgY2xvY2tzOg0KKyAgICBkZXNjcmlwdGlvbjogQ29udGFpbnMg
+bW9kdWxlIGNsb2NrIHNvdXJjZSBhbmQgY2xvY2sgbmFtZXMNCisgICAgbWF4SXRlbXM6IDENCisN
+CisgIGNsb2NrLW5hbWVzOg0KKyAgICBkZXNjcmlwdGlvbjogTmFtZXMgb2YgdGhlIGNsb2NrcyBs
+aXN0IGluIGNsb2NrcyBwcm9wZXJ0eQ0KKyAgICBtYXhJdGVtczogMQ0KKw0KKyAgbWVkaWF0ZWst
+c2x2X3R5cGVfbnVtOg0KKyAgICBkZXNjcmlwdGlvbjogTnVtYmVycyBvZiBzbGF2ZSB0eXBlIGlu
+IG1lZGlhdGVrIHBsYXRmb3JtDQorICAgIG1heEl0ZW1zOiAxDQorDQorICBtZWRpYXRlay12aW9f
+ZGJnczoNCisgICAgZGVzY3JpcHRpb246IFRoZSBtYXNrIGJpdCBhbmQgc3RhcnQgYml0IG9mIGRl
+dmFwYyB2aW9sYXRpb24gZGVidWcgcmVnaXN0ZXJzDQorICAgIG1heEl0ZW1zOiA1DQorDQorICBt
+ZWRpYXRlay1wZHNfb2Zmc2V0Og0KKyAgICBkZXNjcmlwdGlvbjogVGhlIG9mZnNldCBvZiBkZXZh
+cGMgcGRzIHJlZ2lzdGVycw0KKyAgICBtYXhJdGVtczogMQ0KKw0KK3JlcXVpcmVkOg0KKyAgLSBj
+b21wYXRpYmxlDQorICAtIHJlZw0KKyAgLSBpbnRlcnJ1cHRzDQorICAtIGNsb2Nrcw0KKyAgLSBj
+bG9jay1uYW1lcw0KKyAgLSBtZWRpYXRlay1zbHZfdHlwZV9udW0NCisgIC0gbWVkaWF0ZWstdmlv
+X2RiZ3MNCisgIC0gbWVkaWF0ZWstcGRzX29mZnNldA0KKw0KK2V4YW1wbGVzOg0KKyAgLSB8DQor
+ICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+
+DQorICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9tdDY3NzktY2xrLmg+DQorDQorICAg
+IGRldmFwYzogZGV2YXBjQDEwMjA3MDAwIHsNCisgICAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVr
+LG10Njc3OS1kZXZhcGMiOw0KKyAgICAgIHJlZyA9IDwweDEwMjA3MDAwIDB4MTAwMD47DQorICAg
+ICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE2OCBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KKyAgICAg
+IGNsb2NrcyA9IDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJBX0RFVklDRV9BUEM+Ow0KKyAgICAgIGNs
+b2NrLW5hbWVzID0gImRldmFwYy1pbmZyYS1jbG9jayI7DQorDQorICAgICAgbWVkaWF0ZWstc2x2
+X3R5cGVfbnVtID0gL2JpdHMvIDggPDE+Ow0KKyAgICAgIG1lZGlhdGVrLXZpb19kYmdzID0gPDB4
+MDAwMEZGRkYgMHgwPiwNCisgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDAwM0YwMDAwIDB4
+MTA+LA0KKyAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4MDA0MDAwMDAgMHgxNj4sDQorICAg
+ICAgICAgICAgICAgICAgICAgICAgICA8MHgwMDgwMDAwMCAweDE3PiwNCisgICAgICAgICAgICAg
+ICAgICAgICAgICAgIDwweDBGMDAwMDAwIDB4MTg+Ow0KKyAgICAgIG1lZGlhdGVrLXBkc19vZmZz
+ZXQgPSA8MHgwIDB4NDAwIDB4OTAwIDB4OTA0DQorICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAweEYwMCAweEYxMCAweEYxNCAweEYyMD47DQorICAgIH07DQotLSANCjEuNy45LjUNCg==
 
