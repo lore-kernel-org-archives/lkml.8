@@ -2,117 +2,153 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E35FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85FD32074A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C198A20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594275053;
+	bh=HkO5Yg136PYC2vLtfeUtNDLTItu1WXaILkpHkgJ+kI4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C6UIMAzXypwHyEMfi7vsnrTHkclZYhkLV3XV7x6Ru7fX5SrYCrkULHqFnNWRL3N9J
+	 fLaWNEaIXWBz8Ybk1Aa2NuJELsAD05qbtLNro0c4Wmqydie0s8kW91fokdaKc9Eofo
+	 V6wuJ3Ed+lXQJ5pu6Z3qvUoJc6TIqTVAb4RCLuIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgGIGFC (ORCPT
+        id S1726345AbgGIGKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 02:05:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54484 "EHLO mx2.suse.de"
+        Thu, 9 Jul 2020 02:10:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgGIGFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 02:05:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 936A7AC9F;
-        Thu,  9 Jul 2020 06:04:59 +0000 (UTC)
-Subject: Re: [PATCH] bcache: writeback: Remove unneeded variable i
-To:     Xu Wang <vulab@iscas.ac.cn>
-Cc:     kent.overstreet@gmail.com, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200709055358.30237-1-vulab@iscas.ac.cn>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- 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
-Message-ID: <b4a983cd-a392-c1c9-85b3-3116d9a4fb73@suse.de>
-Date:   Thu, 9 Jul 2020 14:04:52 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        id S1725787AbgGIGKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 02:10:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CE31206A5;
+        Thu,  9 Jul 2020 06:10:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594275051;
+        bh=HkO5Yg136PYC2vLtfeUtNDLTItu1WXaILkpHkgJ+kI4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sLttGrpufPQVt+u3fxp4mi2R6RDJR5DtBMws794b2hTptjRsjf3gvPM6cHsHLyer/
+         4aCxkZcuxRYvYRNWvwW4jK2ffF9PGak4YXAha7EpFiRHa9YYxN05Y1expxSNzhowwP
+         nbMdXzYy7IGI8I2JB2brCvvvvLZoeDrRxClxYyt4=
+Date:   Thu, 9 Jul 2020 08:10:48 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        stable <stable@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>
+Subject: Re: [PATCH] omapfb: dss: Fix max fclk divider for omap36xx
+Message-ID: <20200709061048.GA129902@kroah.com>
+References: <20200630182636.439015-1-aford173@gmail.com>
+ <b9052a12-af5a-c1b9-5b86-907eac470cf8@ti.com>
+ <20200703193648.GA373653@ravnborg.org>
+ <bda1606f-b12c-3356-15ce-489fc2441737@ti.com>
+ <CAHCN7xJdg8uUDaghFftze2K6t2pnyZg_JYpdmA=UU-shmk0Xgw@mail.gmail.com>
+ <CAHCN7xLGAWEO5CPDOsHoy4B0FjD+1GHhHYgihmVg=mhjUFjSTQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200709055358.30237-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHCN7xLGAWEO5CPDOsHoy4B0FjD+1GHhHYgihmVg=mhjUFjSTQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/9 13:53, Xu Wang wrote:
-> Remove unneeded variable i in bch_dirty_init_thread().
+On Wed, Jul 08, 2020 at 06:37:51PM -0500, Adam Ford wrote:
+> On Mon, Jul 6, 2020 at 6:18 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > On Mon, Jul 6, 2020 at 1:02 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On 03/07/2020 22:36, Sam Ravnborg wrote:
+> > > > Hi Tomi.
+> > > >
+> > > > On Fri, Jul 03, 2020 at 10:17:29AM +0300, Tomi Valkeinen wrote:
+> > > >> On 30/06/2020 21:26, Adam Ford wrote:
+> > > >>> The drm/omap driver was fixed to correct an issue where using a
+> > > >>> divider of 32 breaks the DSS despite the TRM stating 32 is a valid
+> > > >>> number.  Through experimentation, it appears that 31 works, and
+> > > >>> it is consistent with the value used by the drm/omap driver.
+> > > >>>
+> > > >>> This patch fixes the divider for fbdev driver instead of the drm.
+> > > >>>
+> > > >>> Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+> > > >>>
+> > > >>> Cc: <stable@vger.kernel.org> #4.9+
+> > > >>> Signed-off-by: Adam Ford <aford173@gmail.com>
+> > > >>> ---
+> > > >>> Linux 4.4 will need a similar patch, but it doesn't apply cleanly.
+> > > >>>
+> > > >>> The DRM version of this same fix is:
+> > > >>> e2c4ed148cf3 ("drm/omap: fix max fclk divider for omap36xx")
+> > > >>>
+> > > >>>
+> > > >>> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> > > >>> index 7252d22dd117..bfc5c4c5a26a 100644
+> > > >>> --- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> > > >>> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+> > > >>> @@ -833,7 +833,7 @@ static const struct dss_features omap34xx_dss_feats = {
+> > > >>>    };
+> > > >>>    static const struct dss_features omap3630_dss_feats = {
+> > > >>> -   .fck_div_max            =       32,
+> > > >>> +   .fck_div_max            =       31,
+> > > >>>     .dss_fck_multiplier     =       1,
+> > > >>>     .parent_clk_name        =       "dpll4_ck",
+> > > >>>     .dpi_select_source      =       &dss_dpi_select_source_omap2_omap3,
+> > > >>>
+> > > >>
+> > > >> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > > > Will you apply to drm-misc?
+> > >
+> > > This is for fbdev, so I presume Bartlomiej will pick this one.
+> > >
+> > > > Note  following output from "dim fixes":
+> > > > $ dim fixes f76ee892a99e
+> > > > Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+> > > > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > > > Cc: Dave Airlie <airlied@gmail.com>
+> > > > Cc: Rob Clark <robdclark@gmail.com>
+> > > > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > > > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > > > Cc: Jason Yan <yanaijie@huawei.com>
+> > > > Cc: "Andrew F. Davis" <afd@ti.com>
+> > > > Cc: YueHaibing <yuehaibing@huawei.com>
+> > > > Cc: <stable@vger.kernel.org> # v4.5+
+> > > >
+> > > > Here it says the fix is valid from v4.5 onwards.
+> > >
+> > > Hmm... Adam, you marked the fix to apply to v4.9+, and then you said
+> > > v4.4 needs a new patch (that's before the big copy/rename). Did you
+> > > check the versions between 4.4 and 4.9? I would guess this one applies
+> > > to v4.5+.
+> >
+> > I only tried 4.9 because it's listed as an LTS kernel.  The stuff
+> > between 4.4 and 4.9 were EOL, so I didn't go back further.    The 4.5+
+> > is probably more accurate.  I would like to do the same thing for the
+> > 4.4 kernel, but I am not sure the proper way to do that.
 > 
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> What is the correct protocol for patching 4.4?  I'd like to do that,
+> but the patch would be unique to the 4.4.  Should I just submit the
+> patch directly to stable and cc Tomi?
 
-Add it into my testing queue. Thanks.
+Yes, and document the heck out of why this is a 4.4-only patch, and why
+we can't take whatever happened in newer kernels instead.
 
-Coly Li
+thanks,
 
-> ---
->  drivers/md/bcache/writeback.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-> index 1cf1e5016cb9..71801c086b82 100644
-> --- a/drivers/md/bcache/writeback.c
-> +++ b/drivers/md/bcache/writeback.c
-> @@ -825,10 +825,8 @@ static int bch_dirty_init_thread(void *arg)
->  	struct btree_iter iter;
->  	struct bkey *k, *p;
->  	int cur_idx, prev_idx, skip_nr;
-> -	int i;
->  
->  	k = p = NULL;
-> -	i = 0;
->  	cur_idx = prev_idx = 0;
->  
->  	bch_btree_iter_init(&c->root->keys, &iter, NULL);
-> 
-
+greg k-h
