@@ -6,95 +6,99 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E51C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9117220738
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1F220738
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lvW2ellQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U6G9E2dw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgGIDqh (ORCPT
+        id S1726283AbgGIDsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 23:46:37 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:39349 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726117AbgGIDqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 23:46:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594266394; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=ClVKfwV1sejEfp520mgp/j3raQqoqw5b6t+T4bASRgo=; b=lvW2ellQIRrW8+KAwx7Vva1IwwOxB9EIYl1y6knp25DzV932Sr8tOFURQJmq/bX6QEx+Qz1P
- MZFQ8UG5FEwPsWe8pZ3ul+5jr6q4phDV93kFejSG2+eBWmOBged3yUU2xD0Jxf0FJHJ7bDdG
- W7ZIhuu/V6mbF5QShuIX4u4G+N4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
- 5f06931a71d7ca1d3a4fdf91 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 03:46:34
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F024EC433C6; Thu,  9 Jul 2020 03:46:32 +0000 (UTC)
-Received: from [192.168.0.129] (unknown [183.83.142.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F3ADC433C6;
-        Thu,  9 Jul 2020 03:46:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F3ADC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-Subject: Re: [PATCH v3 5/8] ASoC: qcom: lpass-platform: Replace card->dev with
- component->dev
-To:     Mark Brown <broonie@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
-        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ajit Pandey <ajitp@codeaurora.org>
-References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
- <1594184896-10629-6-git-send-email-rohitkr@codeaurora.org>
- <20200708165041.GX4655@sirena.org.uk>
-From:   Rohit Kumar <rohitkr@codeaurora.org>
-Message-ID: <79221e43-c4f0-8e75-e97e-f0f255f3f68c@codeaurora.org>
-Date:   Thu, 9 Jul 2020 09:16:11 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 8 Jul 2020 23:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgGIDsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 23:48:06 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE246C061A0B;
+        Wed,  8 Jul 2020 20:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=flvZ17SdeYCgDzmst9WBe5pC+viP+SaP3isapAJ36bo=; b=U6G9E2dwPL6X9AOKHmbN8D1Ana
+        Xg4JPwui72nhP0L/iVdT9FV8yrai+np3QJiR1EefKNKeylnJ36zU8f8YMzFP0dysE/2CFgv+sPx+e
+        YFYA9vVhGsJ4AafRLTno/BB0Rt/TvDIIyYCxZ12e6lrNtYceBcDqvH9J1jDPNYPYJCgEIcsrlGmpm
+        uZkfN87QsShxX+JkdLS81p44LK5k5+dHI5qQTvr169inaiUHcNNL4EQmowt3my5j044gs0lMnkbmO
+        YTV/bEg8BdAFiS/t+QsC5k/PrAiYKfGejCFTccRcKWtn+Ve6uNKK6Ag3tgrBJ+OEI/y4pyr5Bf47+
+        jh9z+j5g==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtNXU-000463-7T; Thu, 09 Jul 2020 03:48:00 +0000
+Subject: Re: mmotm 2020-07-08-19-28 uploaded (mm/migrate.c)
+To:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+References: <20200709022901.FTEvQ122j%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <11c5e928-1227-286d-ef7d-6d6e554747db@infradead.org>
+Date:   Wed, 8 Jul 2020 20:47:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200708165041.GX4655@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200709022901.FTEvQ122j%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/8/20 7:29 PM, Andrew Morton wrote:
+> The mm-of-the-moment snapshot 2020-07-08-19-28 has been uploaded to
+> 
+>    http://www.ozlabs.org/~akpm/mmotm/
+> 
+> mmotm-readme.txt says
+> 
+> README for mm-of-the-moment:
+> 
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+> 
 
-On 7/8/2020 10:20 PM, Mark Brown wrote:
-> On Wed, Jul 08, 2020 at 10:38:13AM +0530, Rohit kumar wrote:
->> From: Ajit Pandey <ajitp@codeaurora.org>
->>
->> We are allocating dma memory for component->dev but trying to mmap
->> such memory for substream->pcm->card->dev. Replace device argument
->> in mmap with component->dev to fix this.
-> This is a bug fix and should've been at the start of the series (or sent
-> separately) so that it can be applied without the rest of the series.
+on i386:
 
-Thanks Mark for the suggestion. I will send it separately.
+CONFIG_MIGRATION=y
+# CONFIG_TRANSPARENT_HUGEPAGE is not set
 
-For other patches in series, I will wait for comments before posting next
+../mm/migrate.c: In function ‘migrate_pages’:
+../mm/migrate.c:1528:19: error: ‘THP_MIGRATION_SUCCESS’ undeclared (first use in this function); did you mean ‘PGMIGRATE_SUCCESS’?
+   count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
+                   ^~~~~~~~~~~~~~~~~~~~~
+                   PGMIGRATE_SUCCESS
+../mm/migrate.c:1528:19: note: each undeclared identifier is reported only once for each function it appears in
+../mm/migrate.c:1530:19: error: ‘THP_MIGRATION_FAILURE’ undeclared (first use in this function); did you mean ‘THP_MIGRATION_SUCCESS’?
+   count_vm_events(THP_MIGRATION_FAILURE, nr_thp_failed);
+                   ^~~~~~~~~~~~~~~~~~~~~
+                   THP_MIGRATION_SUCCESS
+../mm/migrate.c:1532:19: error: ‘THP_MIGRATION_SPLIT’ undeclared (first use in this function); did you mean ‘THP_MIGRATION_FAILURE’?
+   count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
+                   ^~~~~~~~~~~~~~~~~~~
+                   THP_MIGRATION_FAILURE
 
-patchset.
 
-Thanks,
+from: mm-vmstat-add-events-for-thp-migration-without-split.patch
 
-Rohit
 
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
