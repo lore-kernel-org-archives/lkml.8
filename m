@@ -2,99 +2,94 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7AAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3842620775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:58:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rSk5WGGO"
+	by mail.kernel.org (Postfix) with ESMTP id 039A12078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594335553;
+	bh=CvjSmXLTZlhe55gXOcG9J6F0YEYFt0Qd1moDQDGQurM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N7Qs0Kr1TZTFTQdhzsh1Q1awcrGn6spsYB7PJPopb04/XQXAS/NaA43vXPdeHsx/+
+	 4PWifeCxqL9vClA6uSVP+Bdx2QBiHz+GycRSo8fWCVI9DM/C7QTJ532ZgLLPRLPPH2
+	 ft00GHeuDrW0+mqtAPdafPmTYRTq1mTLtfnzc52Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgGIW6e (ORCPT
+        id S1727042AbgGIW7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:58:34 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:55292 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgGIW6e (ORCPT
+        Thu, 9 Jul 2020 18:59:11 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39779 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgGIW7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:58:34 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7CF3B20B4908;
-        Thu,  9 Jul 2020 15:58:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7CF3B20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1594335513;
-        bh=hSzJx2wtRzs8tVYEA8JZveVIM1/46jY2Nc6LR+6a8eQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rSk5WGGOxrF25+SM75K/PBmOHPatBSoFi5EA1+37GzkrFox6aXG2W26Y4Rlpu8Szf
-         5yXyDBc3XeLf2DF2jjnRfAGARelF7M2sQA7qCez+gwAoizU4ysAQcEWlaoGkjHGLzo
-         jZk1MKmAQcVBakotL38XMKeFn0+YsOHsbgEn+3SQ=
-Date:   Thu, 9 Jul 2020 17:58:23 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Require that all digests are present in
- TCG_PCR_EVENT2 structures
-Message-ID: <20200709225823.GA4939@sequoia>
-References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
- <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
- <20200617230958.GC62794@linux.intel.com>
- <20200630183321.GE4694@sequoia>
- <20200702235718.GI31291@linux.intel.com>
+        Thu, 9 Jul 2020 18:59:11 -0400
+Received: by mail-il1-f194.google.com with SMTP id k6so3483439ili.6;
+        Thu, 09 Jul 2020 15:59:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=L3fpOCR7zM4ZxGuK+eNCHPbHYSclsLiEIrCGH3OzMVM=;
+        b=EKYDDmDkJSTAGNnZ8Db7EaTjRZ2D9OKySGP9jtpC32wA/gIRK+65txTmoh3mOfjXjo
+         9PkuXOwCUnYA4sVYitOwWlM1SMZNBGflsFwKOT9CVibITYqEOFAtLaC6h0tiiUjcaWRp
+         tkk8xC1pvxqEh2wmCrzRCFJNVipbQ9gDnALi7WRUqe/JqppxuC9OjBLFEX9kvHgR4ZAp
+         Y6YT2luKHXquTsD8cDydr5P0GVmbvSaDprJmLJCrglHijAmsp04+n80tusZ185SIUWPW
+         flEWQxqMFiVfacADMo+LnsMGWimqujJZHDneC6/Wb+93m5i5GvGRWgAu/7F3cMi1wcg9
+         2new==
+X-Gm-Message-State: AOAM532LGSO0SreFiYFoq23RRxNmJ8jenUkTsYCCZ/AKHogMkte+V6Wg
+        JNjkcytSR0B/q2PUx7UTkWcn1pQHkw==
+X-Google-Smtp-Source: ABdhPJye6n072SWsftPsIMtTWtI5n12frE/SfKf/T0jgywXOT3QXO0QwpSLQU3TozzPHp/MEq8IZYA==
+X-Received: by 2002:a92:c087:: with SMTP id h7mr47566683ile.279.1594335550346;
+        Thu, 09 Jul 2020 15:59:10 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id a5sm2601913ilt.71.2020.07.09.15.59.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 15:59:09 -0700 (PDT)
+Received: (nullmailer pid 1049633 invoked by uid 1000);
+        Thu, 09 Jul 2020 22:59:08 -0000
+Date:   Thu, 9 Jul 2020 16:59:08 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        f.fainelli@gmail.com, zajec5@gmail.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        tsbogend@alpha.franken.de, robh+dt@kernel.org
+Subject: Re: [PATCH v4 1/9] dt-bindings: soc: brcm: add BCM63xx power domain
+ binding
+Message-ID: <20200709225908.GA1049552@bogus>
+References: <20200610171630.465579-1-noltari@gmail.com>
+ <20200613082140.2009461-1-noltari@gmail.com>
+ <20200613082140.2009461-2-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200702235718.GI31291@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200613082140.2009461-2-noltari@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-03 02:57:18, Jarkko Sakkinen wrote:
-> On Tue, Jun 30, 2020 at 01:33:21PM -0500, Tyler Hicks wrote:
-> > Jarkko, is this an ack from you?
-> > 
-> > Is there anything I can do to help along this fix?
-> > 
-> > I've spoke with two others that have poured through these specs to
-> > implement firmware event log parsers and they thought the change made
-> > sense.
-> > 
-> > Tyler
+On Sat, 13 Jun 2020 10:21:32 +0200, Álvaro Fernández Rojas wrote:
+> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+> to enable/disable certain components in order to save power.
 > 
-> I revisited the original patch and this stroke into my eye:
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  v4: change license and move to bindings/power.
+>  v3: fix reg maxItems and quote #power-domain-cells.
+>  v2: Add separate YAML file.
 > 
-> "This is true, for example, when firmware passes the event log to the
-> kernel via a reserved memory region described in device tree."
+>  .../bindings/power/brcm,bcm63xx-power.yaml    | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/brcm,bcm63xx-power.yaml
 > 
-> During this discussion you gave an explanation what can trigger the bug
-> but in the commit message nothing anchors to anything.
-> 
-> Please give a concrete example what can trigger the issue directly in
-> the commit message instead. It's obviously needed.
-> 
-> In addition, you could also rewrite the existing inline comment to be
-> something more reasonable to the context.
 
-These are all fair points and I also see that there's a new conflict
-with the TPM next branch. I'll rebase the patch on the current next
-branch, expand on the commit message, and improve the comment in v2.
-
-Tyler
-
-> 
-> /Jarkko
+Reviewed-by: Rob Herring <robh@kernel.org>
