@@ -2,106 +2,88 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 363F120774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594327042;
-	bh=xjEEXLbt8pEcvVWCv8pAsUIeYY91n2f0n/mTuo0fCf4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kme8lB4P7tr/b5r0llQrGfCuQ3PeKUFq/BQ+hxOZ06CcbRgpcTzQnb7uWxK0tHa8j
-	 2wuGNfH80llBFtqIb4mTOIhkopyjo5UoiCPbD86vkuuSpmYUpb0ZHuD4wCJfEhgS3c
-	 Y7OU3Lu6kTrkz1OA0KbPs8yuinEIY0kRskeomLMY=
+	by mail.kernel.org (Postfix) with ESMTP id 7242B207D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgGIUhV (ORCPT
+        id S1726519AbgGIUiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:37:21 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42325 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgGIUhU (ORCPT
+        Thu, 9 Jul 2020 16:38:10 -0400
+Received: from www62.your-server.de ([213.133.104.62]:53702 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgGIUiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:37:20 -0400
-Received: by mail-io1-f66.google.com with SMTP id c16so3736559ioi.9;
-        Thu, 09 Jul 2020 13:37:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zYVtac9Zi8Ea45Dv/JsLDGweT3Jj92BXMb3jivMTATc=;
-        b=kVPjSnwCAg311sBi3lHCyqmE4UhJN1LrBKJOZdTCC/5VyextoYgu+J9wM+uID5YYHw
-         R+QuvU+FFgGoGKlUePa1U+YgDibaYXptK327Z2Y1f6HCmteLBwQjW6tkqZlzNGurszjJ
-         xua3HReQTME1vVnj4u0lK3i4ichUa4uxlCTAL+GVfBNOodnehEoihcSgTWgY4sPFLnEU
-         FaL8aVeBYEIcv+Ff0S/iiZ4pRK4BN51Y/0OuOwdj5dI/FnO70a0VZU2q9487EKXTRuVO
-         lgY2fkicjtVnNqharm+Pp75IHwxuIGN1XVoSFgyxJ4eidN27cHBLDnO4nsj47PvoDqYP
-         gnjg==
-X-Gm-Message-State: AOAM5323GwomK/MIuIxQPg41+orQ78JJ0YzgZyS5V0XlQ9VUHplwLE54
-        anIvWLSLQT7H94tEvn51vA==
-X-Google-Smtp-Source: ABdhPJzQBLgQu0/F5feMhyP/ZARue5TvyvtGE6/nGRA3cx1winlPMxKdNtL0DNf3bejnqdNjMXZpcg==
-X-Received: by 2002:a05:6638:e93:: with SMTP id p19mr56572629jas.67.1594327039832;
-        Thu, 09 Jul 2020 13:37:19 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id i188sm2677380ioa.33.2020.07.09.13.37.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 13:37:19 -0700 (PDT)
-Received: (nullmailer pid 846237 invoked by uid 1000);
-        Thu, 09 Jul 2020 20:37:18 -0000
-Date:   Thu, 9 Jul 2020 14:37:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     hugues.fruchet@st.com, mchehab@kernel.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-media@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        vincent.guittot@linaro.org, valentin.schneider@arm.com,
-        rjw@rjwysocki.net, devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] dt-bindings: media: stm32-dcmi: Add DCMI min
- frequency property
-Message-ID: <20200709203718.GA837160@bogus>
-References: <20200701130129.30961-1-benjamin.gaignard@st.com>
- <20200701130129.30961-2-benjamin.gaignard@st.com>
+        Thu, 9 Jul 2020 16:38:09 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jtdIr-0004e3-9w; Thu, 09 Jul 2020 22:37:57 +0200
+Received: from [178.196.57.75] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jtdIr-000GNM-0k; Thu, 09 Jul 2020 22:37:57 +0200
+Subject: Re: [PATCH] MAINTAINERS: XDP: restrict N: and K:
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>, ast@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
+        john.fastabend@gmail.com, mchehab+huawei@kernel.org,
+        robh@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+References: <20200709194257.26904-1-grandmaster@al2klimov.de>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <d7689340-55fc-5f3f-60ee-b9c952839cab@iogearbox.net>
+Date:   Thu, 9 Jul 2020 22:37:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701130129.30961-2-benjamin.gaignard@st.com>
+In-Reply-To: <20200709194257.26904-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.3/25868/Thu Jul  9 15:58:00 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 03:01:27PM +0200, Benjamin Gaignard wrote:
-> Document st,stm32-dcmi-min-frequency property which is used to
-> request CPUs minimum frequency when streaming frames.
+On 7/9/20 9:42 PM, Alexander A. Klimov wrote:
+> Rationale:
+> Documentation/arm/ixp4xx.rst contains "xdp" as part of "ixdp465"
+> which has nothing to do with XDP.
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 > ---
->  Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>   See also: https://lore.kernel.org/lkml/20200709132607.7fb42415@carbon/
 > 
-> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-> index 3fe778cb5cc3..05ca85a2411a 100644
-> --- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-> +++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-> @@ -44,6 +44,13 @@ properties:
->        bindings defined in
->        Documentation/devicetree/bindings/media/video-interfaces.txt.
->  
-> +  st,stm32-dcmi-min-frequency:
-> +    description: DCMI minimum CPUs frequency requirement (in KHz).
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +      - default: 0
+>   MAINTAINERS | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1d4aa7f942de..2bb7feb838af 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18708,8 +18708,8 @@ F:	include/trace/events/xdp.h
+>   F:	kernel/bpf/cpumap.c
+>   F:	kernel/bpf/devmap.c
+>   F:	net/core/xdp.c
+> -N:	xdp
+> -K:	xdp
+> +N:	(?:\b|_)xdp(?:\b|_)
+> +K:	(?:\b|_)xdp(?:\b|_)
 
-I think this is questionable to be in DT and if it is, it's something 
-that's hardly specific to ST or this block. IIRC, we already have a way 
-to specify minimum OPPs.
+Please also include \W to generally match on non-alphanumeric char given you
+explicitly want to avoid [a-z0-9] around the term xdp.
 
-Rob
+>   XDP SOCKETS (AF_XDP)
+>   M:	Björn Töpel <bjorn.topel@intel.com>
+> 
+
