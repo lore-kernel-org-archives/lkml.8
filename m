@@ -2,80 +2,124 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 744A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B98C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60A00206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3B3206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:58:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="QBkJqIQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgGIFyJ (ORCPT
+        id S1726492AbgGIF6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 01:54:09 -0400
-Received: from smtp23.cstnet.cn ([159.226.251.23]:53472 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726129AbgGIFyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 01:54:09 -0400
-Received: from localhost (unknown [159.226.5.99])
-        by APP-03 (Coremail) with SMTP id rQCowAC3v_P4sAZfGxivAw--.26608S2;
-        Thu, 09 Jul 2020 13:54:00 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     colyli@suse.de, kent.overstreet@gmail.com,
-        linux-bcache@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-Subject: [PATCH] bcache: writeback: Remove unneeded variable i
-Date:   Thu,  9 Jul 2020 05:53:58 +0000
-Message-Id: <20200709055358.30237-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: rQCowAC3v_P4sAZfGxivAw--.26608S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtF15Cw43uw48Wr43uryUZFb_yoWxArg_uF
-        1Yqan2kFWFk3WkWw12v3WfZrWj934DZF1vq3WSkrZI9F1Sy3s7XrWxZr4kJr1I9Fy8uFWD
-        G342qr4UAr1v9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb4xFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJV
-        W0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
-        WwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
-        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4U
-        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUDfHUUUU
-        UU=
-X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBQIMA16HQrOxfQADsv
+        Thu, 9 Jul 2020 01:58:39 -0400
+Received: from mout.gmx.net ([212.227.15.18]:41727 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbgGIF6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 01:58:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1594274280;
+        bh=TZyOZH4895BbG19FeNnP5yjeMPwsXxV4vbelAvplHBw=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=QBkJqIQOi3Ezk6E5qvcxxXfpkAXw1PbdrY4RIcpGpU5Xwyf7W2vVjn0V1wZ6XjsdA
+         VZ+SSuZIVEAZcahAE5LJyv8721HONnSS39X3UtDczbcWMBopJ4ujDXM+uRhaRISOtE
+         UW60GY9lgNq5SPIAGgaCrcI9yfsT8ZZIwvTeeok0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([80.208.213.58]) by mail.gmx.com
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MF3He-1k8ldY2LKS-00FSxk; Thu, 09 Jul 2020 07:58:00 +0200
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+        Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH v2] net: ethernet: mtk_eth_soc: fix mtu warning
+Date:   Thu,  9 Jul 2020 07:57:42 +0200
+Message-Id: <20200709055742.3425-1-frank-w@public-files.de>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Wiq1d0Rddq7HCel86HaixNIkmlj/ib233BDnqRUt+y8BT1RO3P0
+ KCVI1KoqMaaeH+Jnk7aRF5LN5LWIrxCy5SoM6qHoojl1Y9q7hd4SEuQ9BsurAKmIh4IZ1zs
+ UNKnFIkIvAaj38rFsVzNuw6Fm0S41lXvLr4TsfQFYfaz3gLFwQlhW+8EJwv0sZcbieLvfNY
+ Hsx+dBl35UMvQTDEG5WYg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GJQnkQj6Nb8=:e3QUf6iX7w/bGxzDtL+VVs
+ jk2SPQO+nbTdJvY/LeUEntYYjH3TMcN6x7qrdIoTQNRtcRp8uFpEzWVfgbMgOR78GudBWPBqP
+ dFc58Yyab73JQqWzKHkdHkjOzTinxYTJVbcr9/6VurbXAgvDWlp2u2FzYn9pxt9hiRnk1IIUD
+ VdaCFS/9O/UE/SiDsHv3HtlSSOBEfwjIALJG1sddZ8K5Vobmnz/LlXbrcjuSDl4a3cod1lyA0
+ VKMdRPmN0hghIeUa6JMorwpfNyIOvG3+GL8s4lBYcwaUlccqqmKLYsyDXlPPkPcxjtYYKslwq
+ xyyviK2P+SjjIcr7pWpDmfpDTmut7GDcMt4tI19E1JqLzscmj5Z37kB+pguQo4qit04Cdx/Y6
+ flrAj2m5J+6B5ZCB9u2O4NObdlNrsso8y/XeC2QqaGCkA/eXFOSUuqkUGcDrNMPZfpvxFep3D
+ flVKf1L9WALPO/Z4E9gG4hbdbLW+FXRss5Irq8a3oU9Eh94ia+0bv25QBpwKSm0Q9MSw109xr
+ jJoflQJ+HVCMvmFNHfC1IDdfIfuyEFTgBG6UFMfULFPHXajROxympOid+ub/9ljPNu0J91aEu
+ lc6nwOvsr0SIS4ccTmeGFrzLhPjsMmMvXfE9v2iQgKhkrjB7BKHIKsAbMvIUZmiW8M/VH0+BZ
+ ZUix3SOI+7Sw2aQ9gGpmJETxzX/2q6lXqX90P37zgrX12W4X7OqeKIZ+DQCf0xfXYZ/RtD9Y/
+ rMLeTb+LfP75ejDzQXkOr/Gsyzqw3tY6YuPHUqnAx2anFT0dLlBwKBotcvkYfxT33rldIp6t5
+ FTL3SxA0e/wuLypT3Z01cKANwLl68V9VMLs4rzswRkkLI1YN3zjtQGMGSUhxbS468QnY/TiLN
+ 6ejRpplKpxtaMMG7GAa7WA5brKvg01i8UBOEfYbTq9O4TvfOhgDHn/3VWwSYFhjAWMg3nUfDD
+ stPWVYQhiE/XIBqj3RzHWpQGnuwKEnlnWrDF/+uKtMKW03sbDpXGTSZOJzluW9ngLm4MsDFmw
+ 8Zpy93ahKjYC9IR0kGGmB9+tovjtJsVLVbG8Uydyf181xb+BTsoRDcuQOh2EC7KukQUEbLYhK
+ l0XNKshQj4Q9mcZZIR7ul3ES+j6LMOgA9BXzj2985NZKHLkrvUdxnY2q31DrhHp4Q8Mhc/0GQ
+ q+gvjrkhWqkIRUnTWKPe982fGbEGtmlu6V+YR/8V+DidFTv5whDsbyIPQGGFVZOual8DJksEh
+ WOWsY314213II6zL7HloqXxJiwTRxprY8JVbDGQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded variable i in bch_dirty_init_thread().
+From: Ren=C3=A9 van Dorst <opensource@vdorst.com>
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/md/bcache/writeback.c | 2 --
- 1 file changed, 2 deletions(-)
+in recent Kernel-Versions there are warnings about incorrect MTU-Size
+like these:
 
-diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-index 1cf1e5016cb9..71801c086b82 100644
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -825,10 +825,8 @@ static int bch_dirty_init_thread(void *arg)
- 	struct btree_iter iter;
- 	struct bkey *k, *p;
- 	int cur_idx, prev_idx, skip_nr;
--	int i;
- 
- 	k = p = NULL;
--	i = 0;
- 	cur_idx = prev_idx = 0;
- 
- 	bch_btree_iter_init(&c->root->keys, &iter, NULL);
--- 
-2.17.1
+mt7530 mdio-bus:00: nonfatal error -95 setting MTU on port x
+eth0: mtu greater than device maximum
+mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA o=
+verhead
+
+Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
+Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set the=
+ MTU")
+Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
+Signed-off-by: Ren=C3=A9 van Dorst <opensource@vdorst.com>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+=2D--
+changes in v2:
+  Fixes: tag show 12-chars of sha1 and moved above other tags
+=2D--
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/eth=
+ernet/mediatek/mtk_eth_soc.c
+index 85735d32ecb0..00e3d70f7d07 100644
+=2D-- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -2891,6 +2891,10 @@ static int mtk_add_mac(struct mtk_eth *eth, struct =
+device_node *np)
+ 	eth->netdev[id]->irq =3D eth->irq[0];
+ 	eth->netdev[id]->dev.of_node =3D np;
+
++	eth->netdev[id]->mtu =3D 1536;
++	eth->netdev[id]->min_mtu =3D ETH_MIN_MTU;
++	eth->netdev[id]->max_mtu =3D 1536;
++
+ 	return 0;
+
+ free_netdev:
+=2D-
+2.25.1
 
