@@ -6,78 +6,73 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E27C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B41205CB
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710C0205CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgGIK6W (ORCPT
+        id S1726892AbgGIK61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:58:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17828 "EHLO
+        Thu, 9 Jul 2020 06:58:27 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54240 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726357AbgGIK6V (ORCPT
+        by vger.kernel.org with ESMTP id S1726357AbgGIK6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:58:21 -0400
+        Thu, 9 Jul 2020 06:58:23 -0400
 Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069AW0dZ137680;
-        Thu, 9 Jul 2020 06:58:17 -0400
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069AW0U8138271;
+        Thu, 9 Jul 2020 06:58:04 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 325uqvagwj-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 325uqvagpt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 06:58:16 -0400
+        Thu, 09 Jul 2020 06:58:04 -0400
 Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 069AWrOs141843;
-        Thu, 9 Jul 2020 06:58:16 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 325uqvaguc-1
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 069AevYf178504;
+        Thu, 9 Jul 2020 06:58:04 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 325uqvagpg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 06:58:16 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 069AtdJV011983;
-        Thu, 9 Jul 2020 10:58:13 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 325u410f14-1
+        Thu, 09 Jul 2020 06:58:04 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 069AtYQI030714;
+        Thu, 9 Jul 2020 10:58:03 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma02dal.us.ibm.com with ESMTP id 325k1nq01p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 10:58:13 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 069AwA1w58065042
+        Thu, 09 Jul 2020 10:58:03 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 069Aw2bU52494804
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jul 2020 10:58:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79A01AE045;
-        Thu,  9 Jul 2020 10:58:10 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4C8FAE04D;
-        Thu,  9 Jul 2020 10:58:09 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.34.67])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jul 2020 10:58:09 +0000 (GMT)
-Subject: Re: [PATCH v5 2/2] s390: virtio: PV needs VIRTIO I/O device
- protection
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-References: <1594283959-13742-1-git-send-email-pmorel@linux.ibm.com>
- <1594283959-13742-3-git-send-email-pmorel@linux.ibm.com>
- <20200709105733.6d68fa53.cohuck@redhat.com>
- <20200709115553.2dde6ab1.pasic@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <12b1ca5c-fc03-18c7-bdca-cedabc5f1e1d@linux.ibm.com>
-Date:   Thu, 9 Jul 2020 12:58:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 9 Jul 2020 10:58:02 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 20AE8BE054;
+        Thu,  9 Jul 2020 10:58:02 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B36F6BE051;
+        Thu,  9 Jul 2020 10:58:01 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.199.58.93])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Jul 2020 10:58:01 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 4DCB62E2EB8; Thu,  9 Jul 2020 14:31:11 +0530 (IST)
+Date:   Thu, 9 Jul 2020 14:31:11 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, benh@kernel.crashing.org,
+        paulus@samba.org, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
+        pratik.r.sampat@gmail.com
+Subject: Re: [PATCH 1/2] powerpc/powernv/idle: Exclude mfspr on HID1,4,5 on
+ P9 and above
+Message-ID: <20200709090111.GA24354@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200703124640.42820-1-psampat@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200709115553.2dde6ab1.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703124640.42820-1-psampat@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-09_05:2020-07-09,2020-07-09 signatures=0
@@ -91,95 +86,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 03, 2020 at 06:16:39PM +0530, Pratik Rajesh Sampat wrote:
+> POWER9 onwards the support for the registers HID1, HID4, HID5 has been
+> receded.
+> Although mfspr on the above registers worked in Power9, In Power10
+> simulator is unrecognized. Moving their assignment under the
+> check for machines lower than Power9
+> 
+> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
 
+Nice catch.
 
-On 2020-07-09 11:55, Halil Pasic wrote:
-> On Thu, 9 Jul 2020 10:57:33 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
-> 
->> On Thu,  9 Jul 2020 10:39:19 +0200
->> Pierre Morel <pmorel@linux.ibm.com> wrote:
->>
->>> If protected virtualization is active on s390, the virtio queues are
->>> not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
->>> negotiated. Use the new arch_validate_virtio_features() interface to
->>> fail probe if that's not the case, preventing a host error on access
->>> attempt
-> 
-> Punctuation at the end?
-> 
-> Also 'that's not the case' refers to the negation
-> 'VIRTIO_F_IOMMU_PLATFORM has been negotiated',
-> arch_validate_virtio_features() is however part of
-> virtio_finalize_features(), which is in turn part of the feature
-> negotiation. But that is details. I'm fine with keeping the message as
-> is.
-> 
->>>
->>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>> ---
->>>   arch/s390/mm/init.c | 27 +++++++++++++++++++++++++++
->>>   1 file changed, 27 insertions(+)
->>>
->>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->>> index 6dc7c3b60ef6..b8e6f90117da 100644
->>> --- a/arch/s390/mm/init.c
->>> +++ b/arch/s390/mm/init.c
->>> @@ -45,6 +45,7 @@
->>>   #include <asm/kasan.h>
->>>   #include <asm/dma-mapping.h>
->>>   #include <asm/uv.h>
->>> +#include <linux/virtio_config.h>
->>>   
->>>   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
->>>   
->>> @@ -161,6 +162,32 @@ bool force_dma_unencrypted(struct device *dev)
->>>   	return is_prot_virt_guest();
->>>   }
->>>   
->>> +/*
->>> + * arch_validate_virtio_features
->>> + * @dev: the VIRTIO device being added
->>> + *
->>> + * Return an error if required features are missing on a guest running
->>> + * with protected virtualization.
->>> + */
->>> +int arch_validate_virtio_features(struct virtio_device *dev)
->>> +{
->>> +	if (!is_prot_virt_guest())
->>> +		return 0;
->>> +
->>> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
->>> +		dev_warn(&dev->dev, "device must provide VIRTIO_F_VERSION_1\n");
->>
->> I'd probably use "legacy virtio not supported with protected
->> virtualization".
->>
->>> +		return -ENODEV;
->>> +	}
->>> +
->>> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
->>> +		dev_warn(&dev->dev,
->>> +			 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");
->>
->> "support for limited memory access required for protected
->> virtualization"
->>
->> ?
->>
->> Mentioning the feature flag is shorter in both cases, though.
-> 
-> I liked the messages in v4. Why did we change those? Did somebody
-> complain?
-> 
-> I prefer the old ones, but it any case:
-> 
-> Acked-by: Halil Pasic <pasic@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 
-Thanks,
-Pierre
-
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+> ---
+>  arch/powerpc/platforms/powernv/idle.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+> index 2dd467383a88..19d94d021357 100644
+> --- a/arch/powerpc/platforms/powernv/idle.c
+> +++ b/arch/powerpc/platforms/powernv/idle.c
+> @@ -73,9 +73,6 @@ static int pnv_save_sprs_for_deep_states(void)
+>  	 */
+>  	uint64_t lpcr_val	= mfspr(SPRN_LPCR);
+>  	uint64_t hid0_val	= mfspr(SPRN_HID0);
+> -	uint64_t hid1_val	= mfspr(SPRN_HID1);
+> -	uint64_t hid4_val	= mfspr(SPRN_HID4);
+> -	uint64_t hid5_val	= mfspr(SPRN_HID5);
+>  	uint64_t hmeer_val	= mfspr(SPRN_HMEER);
+>  	uint64_t msr_val = MSR_IDLE;
+>  	uint64_t psscr_val = pnv_deepest_stop_psscr_val;
+> @@ -117,6 +114,9 @@ static int pnv_save_sprs_for_deep_states(void)
+> 
+>  			/* Only p8 needs to set extra HID regiters */
+>  			if (!cpu_has_feature(CPU_FTR_ARCH_300)) {
+> +				uint64_t hid1_val = mfspr(SPRN_HID1);
+> +				uint64_t hid4_val = mfspr(SPRN_HID4);
+> +				uint64_t hid5_val = mfspr(SPRN_HID5);
+> 
+>  				rc = opal_slw_set_reg(pir, SPRN_HID1, hid1_val);
+>  				if (rc != 0)
+> -- 
+> 2.25.4
+> 
+--
+Thanks and Regards
+gautham.
