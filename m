@@ -2,83 +2,85 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D97C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 107B4206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:22:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594282938;
-	bh=sWUPCkqH0F+VWeWXkIpSdFyGoORAipbqnBL7/L00KRI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=peafXEAJ8lUHakQBgrY1KEZvfnifF7IXysxYL6JKxAjovXgxylA7N1T9uRa2ZZC/w
-	 NkHGYZMbjFF8/r2K0iJaqcxqI/DRjMCGXqzxHPhVDipWkxZB1J5jSkZ63+t5Ro7/xB
-	 WCNTEmMycya0dpihy5QIxJY5nxQSBtiNyHHOVPAI=
+	by mail.kernel.org (Postfix) with ESMTP id 23BB72076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgGIIWQ (ORCPT
+        id S1726409AbgGIIWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:22:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36674 "EHLO mail.kernel.org"
+        Thu, 9 Jul 2020 04:22:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:28547 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgGIIWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:22:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA962073A;
-        Thu,  9 Jul 2020 08:22:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594282936;
-        bh=sWUPCkqH0F+VWeWXkIpSdFyGoORAipbqnBL7/L00KRI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lYcTEJoMoMqtKh5vR+jIJ5hb8KNVidfBziGOvLOHAIDbTZForqDLuDalCGCGaoBT/
-         OEVZJIkaySQC8gihrEgIxq0hfCrpbD+GgCklkQX31yNUCyfia6JsB3XFrV+C3ma92i
-         wpJM6qpxtugoTybI2It+NsuPnkfM36QdumpcWCXs=
-Date:   Thu, 9 Jul 2020 10:22:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] genpd: Fix up terminology with parent/child
-Message-ID: <20200709082222.GE13487@kroah.com>
-References: <202007081629.0840B4CB78@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202007081629.0840B4CB78@keescook>
+        id S1726151AbgGIIWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 04:22:53 -0400
+IronPort-SDR: 8GVPbMB/TdwT+YzEHdBm+9aiWW9xqji+Klf1ic9BYV/Xe1pz2bWUk3MOztgBVKrsIqExZxB9Xe
+ RJI4xHNsYStg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="145450275"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="145450275"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 01:22:48 -0700
+IronPort-SDR: HgabUgEHzhTKJMlrn/f8oWUal2Nu61e4o4VL+Ip5I4+SZcY8NUctaTZmQUF6D2mKgcyCSWeRYl
+ CXHaC/+qylrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="483714216"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by fmsmga006.fm.intel.com with ESMTP; 09 Jul 2020 01:22:46 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, lgoncalv@redhat.com,
+        Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        Russ Weight <russell.h.weight@intel.com>
+Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+Date:   Thu,  9 Jul 2020 16:18:25 +0800
+Message-Id: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 04:32:13PM -0700, Kees Cook wrote:
-> The genpd infrastructure uses the terms master/slave, but such uses have
-> no external exposures (not even in Documentation/driver-api/pm/*) and are
-> not mandated by nor associated with any external specifications. Change
-> the language used through-out to parent/child.
-> 
-> There was one possible exception in the debugfs node
-> "pm_genpd/pm_genpd_summary" but its path has no hits outside of the
-> kernel itself when performing a code search[1], and it seems even this
-> single usage has been non-functional since it was introduced due to a
-> typo in the Python ("apend" instead of correct "append"). Fix the typo
-> while we're at it.
-> 
-> [1] https://codesearch.debian.net/
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Add PCIe Device ID for Intel FPGA PAC N3000.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Wu Hao <hao.wu@intel.com>
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+---
+ drivers/fpga/dfl-pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+index 73b5153..824aecf 100644
+--- a/drivers/fpga/dfl-pci.c
++++ b/drivers/fpga/dfl-pci.c
+@@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev)
+ #define PCIE_DEVICE_ID_PF_INT_5_X	0xBCBD
+ #define PCIE_DEVICE_ID_PF_INT_6_X	0xBCC0
+ #define PCIE_DEVICE_ID_PF_DSC_1_X	0x09C4
++#define PCIE_DEVICE_ID_PF_PAC_N3000	0x0B30
+ /* VF Device */
+ #define PCIE_DEVICE_ID_VF_INT_5_X	0xBCBF
+ #define PCIE_DEVICE_ID_VF_INT_6_X	0xBCC1
+@@ -76,6 +77,7 @@ static struct pci_device_id cci_pcie_id_tbl[] = {
+ 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_VF_INT_6_X),},
+ 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_PF_DSC_1_X),},
+ 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_VF_DSC_1_X),},
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCIE_DEVICE_ID_PF_PAC_N3000),},
+ 	{0,}
+ };
+ MODULE_DEVICE_TABLE(pci, cci_pcie_id_tbl);
+-- 
+2.7.4
+
