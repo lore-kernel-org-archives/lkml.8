@@ -2,109 +2,100 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67954C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0AA2076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:30:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uCte/59H"
+	by mail.kernel.org (Postfix) with ESMTP id 6DEB52076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:32:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594279926;
+	bh=kakKZcSdsSt03vkEyqiFdKJJD1UpoTlT8bIHlJigmBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FYsyK0hCnl8RziksQ9tzeCKtGUUIMLmKy6gGKI1VkFKEUmpp1eM/6+SN+QudW9Svn
+	 7ZTTEnrFtzaCvVVaNrnhyYmzuDgVqOpJbv9x0xhTA6s/5E1zN7iCuZMbXhXR+iUjD6
+	 3JJWd6g3gj5t6eTSvOF6hZ+CNOMepFnRKWK4i390=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgGIHa5 (ORCPT
+        id S1726286AbgGIHcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:30:57 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:14880 "EHLO m43-7.mailgun.net"
+        Thu, 9 Jul 2020 03:32:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbgGIHa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:30:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594279856; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=eX6swdK+GyKO1zLMYL5rWu0Mc8+iIL0pLhWcHpoCOpA=; b=uCte/59HM8b/EIRvwujfmn1b+1K6t6YIu8ZNsZVBau2oPLUki2jvXDZkMXBT0xtoGVszs/+p
- s6gUxYtMB2MughzKDahZtSzbSRio7NHkV5ovRFTvTIo17roxGhevIwkoul8oOoLetm1y1+3P
- I1lOlvNIUDC9K9fQK092BiUXXcs=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f06c7a2a33b1a3dd4234737 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 07:30:42
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 54116C433CB; Thu,  9 Jul 2020 07:30:42 +0000 (UTC)
-Received: from [192.168.43.98] (unknown [157.44.103.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726184AbgGIHcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 03:32:04 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C647C433CA;
-        Thu,  9 Jul 2020 07:30:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7C647C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH] spi: spi-geni-qcom: Set the clock properly at runtime
- resume
-To:     Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        georgi.djakov@linaro.org, swboyd@chromium.org,
-        mkshah@codeaurora.org, ctheegal@codeaurora.org, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20200708163922.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <c7956e65-d21b-8844-45d7-de06b8d3d4f0@codeaurora.org>
-Date:   Thu, 9 Jul 2020 13:00:28 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 2674F20767;
+        Thu,  9 Jul 2020 07:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594279924;
+        bh=kakKZcSdsSt03vkEyqiFdKJJD1UpoTlT8bIHlJigmBk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0HEp8AIMosA+aX0/9PHIsVTDp/+r3qiQ/04W1r98dGizruyYLq/Ta7D+cHnPBZroh
+         CB8PR4wIL7Yjoy5h0nnNNEuhmFhBrWjbqtFKvoAQ/3jxuXAL9S/Ub3eXde+GqK/xMD
+         cAqOs2yrTUBa4ORtQdFc4E55sk8DISnRCsAZSCSM=
+Date:   Thu, 9 Jul 2020 08:31:59 +0100
+From:   Will Deacon <will@kernel.org>
+To:     =?utf-8?B?5b2t5rWpKFJpY2hhcmQp?= <richard.peng@oppo.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64/module-plts: Consider the special case where
+ plt_max_entries is 0
+Message-ID: <20200709073159.GA27725@willie-the-truck>
+References: <HKAPR02MB429186AF5DC0A187A345F3BCE0640@HKAPR02MB4291.apcprd02.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200708163922.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <HKAPR02MB429186AF5DC0A187A345F3BCE0640@HKAPR02MB4291.apcprd02.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
+On Thu, Jul 09, 2020 at 07:18:01AM +0000, 彭浩(Richard) wrote:
+> On Thu, 9 Jul 2020 at 09:50, 彭浩(Richard) <richard.peng@oppo.com> wrote:
+> >> >Apparently, you are hitting a R_AARCH64_JUMP26 or R_AARCH64_CALL26
+> >> >relocation that operates on a b or bl instruction that is more than
+> >> >128 megabytes away from its target.
+> >> >
+> >> My understanding is that a module that calls functions that are not part of the module will use PLT.
+> >> Plt_max_entries =0 May occur if a module does not depend on other module functions.
+> >>
+> >
+> >A PLT slot is allocated for each b or bl instruction that refers to a
+> >symbol that lives in a different section, either of the same module
+> > (e.g., bl in .init calling into .text), of another module, or of the
+> >core kernel.
+> >
+> >I don't see how you end up with plt_max_entries in this case, though.
+> if a module does not depend on other module functions, PLT entries in the module is equal to 0.
 
->   
-> @@ -670,7 +674,13 @@ static int __maybe_unused spi_geni_runtime_resume(struct device *dev)
->   	if (ret)
->   		return ret;
->   
-> -	return geni_se_resources_on(&mas->se);
-> +	ret = geni_se_resources_on(&mas->se);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_pm_opp_set_rate(mas->dev, mas->cur_sclk_hz);
-> +
-> +	return 0;
->   }
+This brings me back to my earlier question: if there are no PLT entries in
+the module, then count_plts() will not find any R_AARCH64_JUMP26 or
+R_AARCH64_CALL26 relocations that require PLTs and will therefore return 0.
+The absence of these relocations means that module_emit_plt_entry() will not
+be called by apply_relocate_add(), and so your patch should have no effect.
 
-Should we fail to resume if error is returned from 'opp_set_rate'?
+You seem to be saying that module_emit_plt_entry() _is_ being called,
+despite count_plts() returning 0. One way that can happen is if PLTs are
+needed for branches within a single, very large text section, but you also
+say that's not the case.
 
-'spi_geni_prepare_message' use to fail for any error from 
-'opp_set_rate'  before patch series "Avoid clock setting if not needed".
+So I think we need more information from you so that we can either reproduce
+this ourselves, or better understand where things are going wrong.
 
-But now it's possible that 'prepare_message' can return success even 
-when opp are not at desired state(from previous resume call).
+Finally, you said that your kernel is "5.6.0-rc3+". Are you able to
+reproduce with mainline (5.8-rc4)?
 
-Regards,
+Will
 
-Akash
-
->   
->   static int __maybe_unused spi_geni_suspend(struct device *dev)
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
-
+P.S. whenever you reply, the mail threading breaks :(
