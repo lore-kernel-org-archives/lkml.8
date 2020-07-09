@@ -2,109 +2,109 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E732C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFECC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 698A7206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF99F20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594277106;
+	bh=yqyv6h2XInBV1EY6m64ceNwhddRMrP8QNwYqF1Bx1zM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aPblpGadTaWdmiLWiH2GvfoGUs4ZduIK2b+WMKpqJIM7Pj4Agg06ms6PjMSQDwYJV
+	 rWV66vXlHlu6sAkjTD5zIBw/fgeOqoOTsxwzyKZ2skcoEzBtyHYKL9azSYAbSOwSUu
+	 ozPPD6KtC2FPqgURyQ0fA5G1OqqpITjOQMEn3sZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgGIGo3 (ORCPT
+        id S1726356AbgGIGpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 02:44:29 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:63878 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726099AbgGIGo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 02:44:28 -0400
-Received: from localhost.localdomain (unknown [210.32.144.65])
-        by mail-app2 (Coremail) with SMTP id by_KCgDn7+esvAZfYMwOAA--.34107S4;
-        Thu, 09 Jul 2020 14:44:00 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Hien Dang <hien.dang.eb@renesas.com>,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v3] PCI: rcar: Fix runtime PM imbalance on error
-Date:   Thu,  9 Jul 2020 14:43:56 +0800
-Message-Id: <20200709064356.8800-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgDn7+esvAZfYMwOAA--.34107S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFyDGryUXF4UurW3ArWUJwb_yoW8GrWxpr
-        W2qFWayF4kW3yYqa17JF1kuFya93ZIy3srGws7Kw17Z3ZxAFyjqryrCFyrtF12grW8Z3WY
-        y3WYqryxCFZ5ZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9m1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
-        JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
-        67AK6r47MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
-        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
-        6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUkhLnUUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgwNBlZdtO+R4gAIsu
+        Thu, 9 Jul 2020 02:45:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbgGIGpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 02:45:03 -0400
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CBCC206C3;
+        Thu,  9 Jul 2020 06:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594277103;
+        bh=yqyv6h2XInBV1EY6m64ceNwhddRMrP8QNwYqF1Bx1zM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=S27nB3x7AqgVsIDI5HG/zYaxeNuKyksZnZr+RRkqGY7MIo9S/41mt5nHh9O9jq+Vh
+         WPb/31fvxPOxVm42lKbgbpNAK2zK/XEvUv8NVrgN/JTAjVACfCwIShtBQ6i2g36f7G
+         +R/TjJuoZaqSWa9RFyQNPXRPr1oNSc6QkvyR6L58=
+Received: by mail-oo1-f48.google.com with SMTP id p26so157477oos.7;
+        Wed, 08 Jul 2020 23:45:03 -0700 (PDT)
+X-Gm-Message-State: AOAM532mePkfTX5CFgGA6T07np9+l8/JTQe3q8oJBDJp//JF903BcjlO
+        rNAwkpbLKYmuUuetP9ZnpSu6UvM9AVB3c/ULfNk=
+X-Google-Smtp-Source: ABdhPJxJg0zCtFdI6GkRc3m2LXwEKb/oojArjl7Y2J0R0eiIZ44Vv+yY/2C03uazutRVzLit4S54OK5Uwh8Pl/WqJ+0=
+X-Received: by 2002:a4a:de8d:: with SMTP id v13mr31588321oou.45.1594277102535;
+ Wed, 08 Jul 2020 23:45:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200623150935.32181-1-geert+renesas@glider.be> <CAMj1kXHY7b1nNoOU-LuXiriFPcTC4ZfMccivhJWJvAUGPhwMzQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXHY7b1nNoOU-LuXiriFPcTC4ZfMccivhJWJvAUGPhwMzQ@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 9 Jul 2020 09:44:51 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXHHt7hBqnBrcvzVg9ShghpQqq-cR=pNcVMovon-uoP0xg@mail.gmail.com>
+Message-ID: <CAMj1kXHHt7hBqnBrcvzVg9ShghpQqq-cR=pNcVMovon-uoP0xg@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER
+ should not default to yes
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-the call returns an error code. Thus a corresponding decrement is
-needed on the error handling path to keep the counter balanced.
+On Thu, 25 Jun 2020 at 19:11, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Tue, 23 Jun 2020 at 17:09, Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> >
+> > EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER is deprecated, so it should not
+> > be enabled by default.
+> >
+> > In light of commit 4da0b2b7e67524cc ("efi/libstub: Re-enable command
+> > line initrd loading for x86"), keep the default for X86.
+> >
+> > Fixes: cf6b83664895a5c7 ("efi/libstub: Make initrd file loader configurable")
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Queued as a fix, thanks.
+>
 
-Fixes: 0df6150e7ceb ("PCI: rcar: Use runtime PM to control controller
-clock")
+I am going to have to postpone this one - it appears kernelCI uses
+QEMU firmware that does not implement the new initrd loading protocol
+yet, so I will need to get that fixed first.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
 
-Changelog:
-
-v2: - Remove unnecessary 'err_pm_put' label.
-      Refine commit message.
-
-v3: - Add Fixes tag.
-      Rebase the patch on top of the latest kernel.
----
- drivers/pci/controller/pcie-rcar-host.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index d210a36561be..060c24f5221e 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -986,7 +986,7 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 	err = pm_runtime_get_sync(pcie->dev);
- 	if (err < 0) {
- 		dev_err(pcie->dev, "pm_runtime_get_sync failed\n");
--		goto err_pm_disable;
-+		goto err_pm_put;
- 	}
- 
- 	err = rcar_pcie_get_resources(host);
-@@ -1057,8 +1057,6 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 
- err_pm_put:
- 	pm_runtime_put(dev);
--
--err_pm_disable:
- 	pm_runtime_disable(dev);
- 	pci_free_resource_list(&host->resources);
- 
--- 
-2.17.1
-
+> > ---
+> >  drivers/firmware/efi/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+> > index e6fc022bc87e03ab..56055c61904e49f4 100644
+> > --- a/drivers/firmware/efi/Kconfig
+> > +++ b/drivers/firmware/efi/Kconfig
+> > @@ -127,7 +127,7 @@ config EFI_ARMSTUB_DTB_LOADER
+> >  config EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER
+> >         bool "Enable the command line initrd loader" if !X86
+> >         depends on EFI_STUB && (EFI_GENERIC_STUB || X86)
+> > -       default y
+> > +       default y if X86
+> >         help
+> >           Select this config option to add support for the initrd= command
+> >           line parameter, allowing an initrd that resides on the same volume
+> > --
+> > 2.17.1
+> >
