@@ -2,295 +2,144 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19787C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67049C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E566320720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2662065D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 06:55:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594277751;
+	bh=0qnpvvOZ2ouMPWabm2r0fZNRG344s4R3ra9at+9Szr4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gDnmOy2q+pnxQ9ahb36kbpgYhj5WsUDgim3+8L/2dvdmr4NB6RFeynjhuSh380K2q
+	 HZ1Q88xZTrNncQXQspbIAm0evE1dVvs29Dz1TO+9b7Ma9kg/LfIYX66dtAoJ47HcCa
+	 9qoA8bJZD9G0YycjEz1wMEDH0opUl9EjENHjNvUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgGIGxB (ORCPT
+        id S1726269AbgGIGzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 02:53:01 -0400
-Received: from mga03.intel.com ([134.134.136.65]:23716 "EHLO mga03.intel.com"
+        Thu, 9 Jul 2020 02:55:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbgGIGw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 02:52:57 -0400
-IronPort-SDR: cXpnQQuiwSljON5zbjLofKyll1BE2kQl3yhAQ9JiMIu6x07D2NQVFUHcYfanrQ3PRarqpPYEUK
- KK4jOttWgYYA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="147941554"
-X-IronPort-AV: E=Sophos;i="5.75,330,1589266800"; 
-   d="scan'208";a="147941554"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 23:52:48 -0700
-IronPort-SDR: DQx8SsSANSNSyEiyLe5IMsuP+TDx7d+iTxwqPOIOKZvClH8We/a8xuwx3zl+ajjzt5s+FlPszM
- Zzc4/sso1dSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,330,1589266800"; 
-   d="scan'208";a="484166202"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.31.114]) ([10.255.31.114])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Jul 2020 23:52:45 -0700
-Cc:     baolu.lu@linux.intel.com, Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] iommu: iommu_aux_at(de)tach_device() extension
-To:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20200707013957.23672-1-baolu.lu@linux.intel.com>
- <20200707013957.23672-2-baolu.lu@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <508d92a1-a13a-2082-53c0-ea23094533c1@linux.intel.com>
-Date:   Thu, 9 Jul 2020 14:52:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726006AbgGIGzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 02:55:48 -0400
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ED172065D
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:55:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594277747;
+        bh=0qnpvvOZ2ouMPWabm2r0fZNRG344s4R3ra9at+9Szr4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0BJ/s2ur1C0tGBHUScgrUPTUDAedxmw1oV9wtOfbUB/oDtFRYPEGvBBjWBt41aSI7
+         niuJtyLcD4TPlc74Rr8vHUtgkSP7mNH1k7tSjrabgkUfat5SUVj1cfc8SKcM+wVnpk
+         idhHXaWZuGfYv5yWJbyKVK6cMenGhMXovW+39H0Q=
+Received: by mail-ot1-f51.google.com with SMTP id e90so1003349ote.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 23:55:47 -0700 (PDT)
+X-Gm-Message-State: AOAM533feXPQJ9kcUo6+3XLlNK+Fgf7+dkAL/lOw4xSSUc7HohdIvviJ
+        ePbC664EpnDzJch8GAHJoiUnun/Pg2gHNjxQs/w=
+X-Google-Smtp-Source: ABdhPJx7BX00j0I/RdFxi452b9LxUoul9y9tcHXUMYbwEUodWJY43CuHz8AlSXVbR30IoBYp8sU9PpMfs1ubvARRRJQ=
+X-Received: by 2002:a9d:6e85:: with SMTP id a5mr11940861otr.90.1594277746780;
+ Wed, 08 Jul 2020 23:55:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200707013957.23672-2-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <HKAPR02MB42915BECBD71F5ABA0890533E0640@HKAPR02MB4291.apcprd02.prod.outlook.com>
+In-Reply-To: <HKAPR02MB42915BECBD71F5ABA0890533E0640@HKAPR02MB4291.apcprd02.prod.outlook.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 9 Jul 2020 09:55:35 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXFPUPEtgMJPVj-ZANpPSgkcCxuOmhJR-sTV-JK3F4_cVg@mail.gmail.com>
+Message-ID: <CAMj1kXFPUPEtgMJPVj-ZANpPSgkcCxuOmhJR-sTV-JK3F4_cVg@mail.gmail.com>
+Subject: Re: [PATCH] arm64/module-plts: Consider the special case where
+ plt_max_entries is 0
+To:     =?UTF-8?B?5b2t5rWpKFJpY2hhcmQp?= <richard.peng@oppo.com>
+Cc:     Will Deacon <will@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/7 9:39, Lu Baolu wrote:
-> The hardware assistant vfio mediated device is a use case of iommu
-> aux-domain. The interactions between vfio/mdev and iommu during mdev
-> creation and passthr are:
-> 
-> - Create a group for mdev with iommu_group_alloc();
-> - Add the device to the group with
->          group = iommu_group_alloc();
->          if (IS_ERR(group))
->                  return PTR_ERR(group);
-> 
->          ret = iommu_group_add_device(group, &mdev->dev);
->          if (!ret)
->                  dev_info(&mdev->dev, "MDEV: group_id = %d\n",
->                           iommu_group_id(group));
-> - Allocate an aux-domain
->          iommu_domain_alloc()
-> - Attach the aux-domain to the physical device from which the mdev is
->    created.
->          iommu_aux_attach_device()
-> 
-> In the whole process, an iommu group was allocated for the mdev and an
-> iommu domain was attached to the group, but the group->domain leaves
-> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
-> 
-> The iommu_get_domain_for_dev() is a necessary interface for device
-> drivers that want to support aux-domain. For example,
-> 
->          struct iommu_domain *domain;
->          struct device *dev = mdev_dev(mdev);
->          unsigned long pasid;
-> 
->          domain = iommu_get_domain_for_dev(dev);
->          if (!domain)
->                  return -ENODEV;
-> 
->          pasid = iommu_aux_get_pasid(domain, dev->parent);
->          if (pasid == IOASID_INVALID)
->                  return -EINVAL;
-> 
->           /* Program the device context with the PASID value */
->           ....
-> 
-> This extends iommu_aux_at(de)tach_device() so that the users could pass
-> in an optional device pointer (struct device for vfio/mdev for example),
-> and the necessary check and data link could be done.
-> 
-> Fixes: a3a195929d40b ("iommu: Add APIs for multiple domains per device")
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->   drivers/iommu/iommu.c           | 86 +++++++++++++++++++++++++++++----
->   drivers/vfio/vfio_iommu_type1.c |  5 +-
->   include/linux/iommu.h           | 12 +++--
->   3 files changed, 87 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 1ed1e14a1f0c..435835058209 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -2723,26 +2723,92 @@ EXPORT_SYMBOL_GPL(iommu_dev_feature_enabled);
->    * This should make us safe against a device being attached to a guest as a
->    * whole while there are still pasid users on it (aux and sva).
->    */
-> -int iommu_aux_attach_device(struct iommu_domain *domain, struct device *dev)
-> +int iommu_aux_attach_device(struct iommu_domain *domain,
-> +			    struct device *phys_dev, struct device *dev)
+On Thu, 9 Jul 2020 at 09:50, =E5=BD=AD=E6=B5=A9(Richard) <richard.peng@oppo=
+.com> wrote:
+>
+> On Wed, 8 Jul 2020 at 13:03, =E5=BD=AD=E6=B5=A9(Richard) <richard.peng@op=
+po.com> wrote:
+> >>
+> >>
+> >> On Tue, Jul 07, 2020 at 07:46:08AM -0400, Peng Hao wrote:
+> >> >> If plt_max_entries is 0, a warning is triggered.
+> >> >> WARNING: CPU: 200 PID: 3000 at arch/arm64/kernel/module-plts.c:97 m=
+odule_emit_plt_entry+0xa4/0x150
+> >> >
+> >> > Which kernel are you seeing this with? There is a PLT-related change=
+ in
+> >> > for-next/core, and I'd like to rule if out if possible.
+> >> >
+> >> 5.6.0-rc3+
+> >> >> Signed-off-by: Peng Hao <richard.peng@oppo.com>
+> >> >> ---
+> >> >>  arch/arm64/kernel/module-plts.c | 3 ++-
+> >> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >> >>
+> >> >> diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/mo=
+dule-plts.c
+> >> >> index 65b08a74aec6..1868c9ac13f2 100644
+> >> >> --- a/arch/arm64/kernel/module-plts.c
+> >> >> +++ b/arch/arm64/kernel/module-plts.c
+> >> >> @@ -79,7 +79,8 @@ u64 module_emit_plt_entry(struct module *mod, Elf=
+64_Shdr *sechdrs,
+> >> >>      int i =3D pltsec->plt_num_entries;
+> >> >>      int j =3D i - 1;
+> >> >>      u64 val =3D sym->st_value + rela->r_addend;
+> >> >> -
+> >> >> +    if (pltsec->plt_max_entries =3D=3D 0)
+> >> >> +            return 0;
+> >> >
+> >> >Hmm, but if there aren't any PLTs then how do we end up here?
+> >> >
+> >> We also returned 0 when warning was triggered.
+> >
+> >That doesn't really answer the question.
+> >
+> >Apparently, you are hitting a R_AARCH64_JUMP26 or R_AARCH64_CALL26
+> >relocation that operates on a b or bl instruction that is more than
+> >128 megabytes away from its target.
+> >
+> My understanding is that a module that calls functions that are not part =
+of the module will use PLT.
+> Plt_max_entries =3D0 May occur if a module does not depend on other modul=
+e functions.
+>
 
-I hit a lock issue during internal test. Will fix it in the next
-version.
+A PLT slot is allocated for each b or bl instruction that refers to a
+symbol that lives in a different section, either of the same module
+(e.g., bl in .init calling into .text), of another module, or of the
+core kernel.
 
-Best regards,
-baolu
+I don't see how you end up with plt_max_entries in this case, though.
+Are you sure you have CONFIG_RANDOMIZE_BASE enabled?
 
->   {
-> -	int ret = -ENODEV;
-> +	struct iommu_group *group;
-> +	int ret;
->   
-> -	if (domain->ops->aux_attach_dev)
-> -		ret = domain->ops->aux_attach_dev(domain, dev);
-> +	if (!domain->ops->aux_attach_dev ||
-> +	    !iommu_dev_feature_enabled(phys_dev, IOMMU_DEV_FEAT_AUX))
-> +		return -ENODEV;
->   
-> -	if (!ret)
-> -		trace_attach_device_to_domain(dev);
-> +	/* Bare use only. */
-> +	if (!dev) {
-> +		ret = domain->ops->aux_attach_dev(domain, phys_dev);
-> +		if (!ret)
-> +			trace_attach_device_to_domain(phys_dev);
-> +
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * The caller has created a made-up device (for example, vfio/mdev)
-> +	 * and allocated an iommu_group for user level direct assignment.
-> +	 * Make sure that the group has only single device and hasn't been
-> +	 * attached by any other domain.
-> +	 */
-> +	group = iommu_group_get(dev);
-> +	if (!group)
-> +		return -ENODEV;
-> +
-> +	/*
-> +	 * Lock the group to make sure the device-count doesn't change while
-> +	 * we are attaching.
-> +	 */
-> +	mutex_lock(&group->mutex);
-> +	ret = -EINVAL;
-> +	if ((iommu_group_device_count(group) != 1) || group->domain)
-> +		goto out_unlock;
-> +
-> +	ret = -EBUSY;
-> +	if (group->default_domain && group->domain != group->default_domain)
-> +		goto out_unlock;
-> +
-> +	ret = domain->ops->aux_attach_dev(domain, phys_dev);
-> +	if (!ret) {
-> +		trace_attach_device_to_domain(phys_dev);
-> +		group->domain = domain;
-> +	}
-> +
-> +out_unlock:
-> +	mutex_unlock(&group->mutex);
-> +	iommu_group_put(group);
->   
->   	return ret;
->   }
->   EXPORT_SYMBOL_GPL(iommu_aux_attach_device);
->   
-> -void iommu_aux_detach_device(struct iommu_domain *domain, struct device *dev)
-> +void iommu_aux_detach_device(struct iommu_domain *domain,
-> +			     struct device *phys_dev, struct device *dev)
->   {
-> -	if (domain->ops->aux_detach_dev) {
-> -		domain->ops->aux_detach_dev(domain, dev);
-> -		trace_detach_device_from_domain(dev);
-> +	struct iommu_group *group;
-> +
-> +	if (WARN_ON_ONCE(!domain->ops->aux_detach_dev))
-> +		return;
-> +
-> +	if (!dev) {
-> +		domain->ops->aux_detach_dev(domain, phys_dev);
-> +		trace_detach_device_from_domain(phys_dev);
-> +
-> +		return;
->   	}
-> +
-> +	group = iommu_group_get(dev);
-> +	if (!group)
-> +		return;
-> +
-> +	mutex_lock(&group->mutex);
-> +	if (WARN_ON(iommu_group_device_count(group) != 1))
-> +		goto out_unlock;
-> +
-> +	domain->ops->aux_detach_dev(domain, phys_dev);
-> +	group->domain = NULL;
-> +	trace_detach_device_from_domain(phys_dev);
-> +
-> +out_unlock:
-> +	mutex_unlock(&group->mutex);
-> +	iommu_group_put(group);
->   }
->   EXPORT_SYMBOL_GPL(iommu_aux_detach_device);
->   
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 5e556ac9102a..d3be45dfa58e 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -1635,7 +1635,8 @@ static int vfio_mdev_attach_domain(struct device *dev, void *data)
->   	iommu_device = vfio_mdev_get_iommu_device(dev);
->   	if (iommu_device) {
->   		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
-> -			return iommu_aux_attach_device(domain, iommu_device);
-> +			return iommu_aux_attach_device(domain,
-> +						       iommu_device, dev);
->   		else
->   			return iommu_attach_device(domain, iommu_device);
->   	}
-> @@ -1651,7 +1652,7 @@ static int vfio_mdev_detach_domain(struct device *dev, void *data)
->   	iommu_device = vfio_mdev_get_iommu_device(dev);
->   	if (iommu_device) {
->   		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
-> -			iommu_aux_detach_device(domain, iommu_device);
-> +			iommu_aux_detach_device(domain, iommu_device, dev);
->   		else
->   			iommu_detach_device(domain, iommu_device);
->   	}
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 5657d4fef9f2..7da5e67bf7dc 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -632,8 +632,10 @@ bool iommu_dev_has_feature(struct device *dev, enum iommu_dev_features f);
->   int iommu_dev_enable_feature(struct device *dev, enum iommu_dev_features f);
->   int iommu_dev_disable_feature(struct device *dev, enum iommu_dev_features f);
->   bool iommu_dev_feature_enabled(struct device *dev, enum iommu_dev_features f);
-> -int iommu_aux_attach_device(struct iommu_domain *domain, struct device *dev);
-> -void iommu_aux_detach_device(struct iommu_domain *domain, struct device *dev);
-> +int iommu_aux_attach_device(struct iommu_domain *domain,
-> +			    struct device *phys_dev, struct device *dev);
-> +void iommu_aux_detach_device(struct iommu_domain *domain,
-> +			     struct device *phys_dev, struct device *dev);
->   int iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev);
->   
->   struct iommu_sva *iommu_sva_bind_device(struct device *dev,
-> @@ -1007,13 +1009,15 @@ iommu_dev_disable_feature(struct device *dev, enum iommu_dev_features feat)
->   }
->   
->   static inline int
-> -iommu_aux_attach_device(struct iommu_domain *domain, struct device *dev)
-> +iommu_aux_attach_device(struct iommu_domain *domain,
-> +			struct device *phys_dev, struct device *dev)
->   {
->   	return -ENODEV;
->   }
->   
->   static inline void
-> -iommu_aux_detach_device(struct iommu_domain *domain, struct device *dev)
-> +iommu_aux_detach_device(struct iommu_domain *domain,
-> +			struct device *phys_dev, struct device *dev)
->   {
->   }
->   
-> 
+> >In module_frob_arch_sections(), we count all such relocations that
+> >point to other sections, and allocate a PLT slot for each (and update
+> >plt_max_entries) accordingly. So this means that the relocation in
+> >question was disregarded, and this could happen for only two reasons:
+> >- the branch instruction and its target are both in the same section,
+> >in which case this section is *really* large,
+> >- CONFIG_RANDOMIZE_BASE is disabled, but you are still ending up in a
+> >situation where the modules are really far away from the core kernel
+> >or from other modules.
+> >
+> >Do you have a lot of [large] modules loaded when this happens?
+> I don=E2=80=99t think I have [large] modules.  I'll trace which module ca=
+used this warning.
+
+Yes please.
