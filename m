@@ -2,294 +2,168 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A384C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ABDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF7420720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4846720720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 07:23:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O/nDcgXc"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="lLQXcIXJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgGIHTX (ORCPT
+        id S1726261AbgGIHXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgGIHTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 03:19:22 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0ECDC061A0B
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 00:19:21 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 17so744278wmo.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 00:19:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=rK4Ffv5aG0A0EOhQbqugqrEy785eJT1rmoFf8+WDBIg=;
-        b=O/nDcgXcPcuLsPcTqokgWlvfmwYLB1G+AJmlT3fF9FI+1m1lCdP4neWb1mOBhXAmyJ
-         jaq4rncghlyjaWe/Zl6UiyUS+u1lVlj+O6NNUe0f6aQvRkFfpf37Wk/hBiS4v/DHng5g
-         xZzyj3vgUwU8AETvgF9EuhSAPXCOj6xUSg+nLeOdnEDBLNqKHOC4FcG5+2c8Y2jkhuR8
-         ydZ6ujll8z9DvvT4PXwO74EdU/tkMjI1XDkwhfeBU87h9E3vLj+dQZo3s5StZqM31KD7
-         EC1WYrevJ9aLm5o3AX96QI9eCgTYXZHy07j+QynQjsQ1PebN1EvEGuB8k72jAlM2CHvX
-         Efiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=rK4Ffv5aG0A0EOhQbqugqrEy785eJT1rmoFf8+WDBIg=;
-        b=FyWr+FLbwApy+F5SIfyE1cvIBnsLyIR3040Wot6LLm5puJ1Wa2ZhxIBByiOmdxOmMd
-         S3ayWqiqYqfR2tARC/nq6Zfli7vNcP2RcTyU/+IT7IYHW2E0+8YdyjqNIskFViTRpmTp
-         PwnAP1pwNo00ppvlGUBFh8dGzagrJ27/AohwRuXF5WZM1qYj13BbBYJmMWGAm+wwpyCs
-         fp1ij6t9qoP+gLGmkLExhdYc6yA29Sqa109DQoMNj/Zpdm5WPKfCWr+9eryeoTRc+duh
-         Og2vu1IE4Kivtqy3LHYXps2baPFyTPCZ/RWLWKM9/aHhW5n8DWDy7fq6PbKEP2fHyz/d
-         DAAQ==
-X-Gm-Message-State: AOAM530zhAlRpCf78W7x3yf6RY+Muz0h+oDMt60fUrfGv746UBjGwCM6
-        dE2AWKdXREdaruajgaQdvbQJTV4+So2NjA==
-X-Google-Smtp-Source: ABdhPJwBCpkDGamuVQ/7Ir2TYO9kU5rpW5yt14ZDk+k17eCtccoVc2zuP0q7QedVcIV93FkVr/OemA==
-X-Received: by 2002:a7b:c210:: with SMTP id x16mr12783446wmi.178.1594279160233;
-        Thu, 09 Jul 2020 00:19:20 -0700 (PDT)
-Received: from [192.168.0.13] ([83.216.184.132])
-        by smtp.gmail.com with ESMTPSA id c25sm3269720wml.18.2020.07.09.00.19.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jul 2020 00:19:18 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] bfq: fix blkio cgroup leakage
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <87k0zdrj7s.fsf@dmws.yandex.net>
-Date:   Thu, 9 Jul 2020 09:19:41 +0200
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
-        axboe@kernel.dk
+        Thu, 9 Jul 2020 03:23:03 -0400
+Received: from mout.web.de ([212.227.15.14]:39591 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbgGIHXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 03:23:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1594279361;
+        bh=4xFv8ti/OzBQfVAv9dMHgSddCt57MGCFKZdrZ/W39nY=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=lLQXcIXJaI/RfXgWUNwMgOK2aSON8JpR4Bbv0WZn8XYIInclOzYx3xqQzaXsou58a
+         CgBXWFRozLGiHl1rbLWvL0b7RoqShI+BC3nrm85khh/M/GAFVYg2P9o5JIIHheGa3a
+         hqll19DXiR0SKkXgt/ySAQl36QN2xmj95l4GFuvk=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.81.209]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MUVrX-1kJWSo1i31-00RFQX; Thu, 09
+ Jul 2020 09:22:41 +0200
+Subject: Re: [PATCH] scsi: fcoe: add missed kfree() in an error path
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hannes Reinecke <hare@suse.de>,
+        "James E. J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Neerav Parikh <Neerav.Parikh@intel.com>
+References: <977e2781-99ed-54c0-27ad-82d768a1c1e6@web.de>
+ <5F067CDA.8010404@huawei.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <ec1e1405-7582-0709-f2a5-a8b91e45fa1a@web.de>
+Date:   Thu, 9 Jul 2020 09:22:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <5F067CDA.8010404@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <545F1ABF-B2B2-4523-9259-D3F93A9BB330@linaro.org>
-References: <20200702105751.20482-1-dmonakhov@gmail.com>
- <429E50C6-83BA-4A3F-BE9C-06C7C762AF33@linaro.org>
- <87k0zdrj7s.fsf@dmws.yandex.net>
-To:     Dmitry Monakhov <dmonakhov@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+X-Provags-ID: V03:K1:tJ4Ea4WeRgIbK/YfyxkGEjAF7FVqtNiAMnNvYGIx3QWtiQBzR9O
+ yOZ6PMyj0ERCqBM7/cuSBsAOQFmQMVRWbWawJVzI5C3muSzWa4eP5VBVkCM8h++chn15IRF
+ /R9Mrs/CsfjtXA4r5mX89LknsCvJ6fxJDIcCUY1dBawJ7Js4tjKCuHobrvgeLKr9MdnGyij
+ XRao0L31FTJHjRpJstibA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CbIL8RvE6Kk=:AYUYSEglmSOmihPACDuvmI
+ 6XMkcu7ChJSuXb+O/RxD/IM3DP4JSj91ejVeUVDiA5m7CPp5Xw48o94eepzhLK15C/xmTCgOe
+ 1qCxYye4rG45Pt33dkR4+T66O6Fp4dVRZL8nghqiuBATrp0P40EymtipK0XNYHVPDVsfyH8bi
+ ikovuwtTN57+tbTvjUCILDMYutIp1UovEfkuEWZp1QvFruir8cykZcNQXKUpLfONGRuGjVy4i
+ /ObolBKHD6xirhjDuUiYzZPRgYpF4j86BTWSXx47u9GQlGXjrUctGNeivnzOhgAC7o4jbzDT6
+ I3lNhSmhD0vsm2BR2GsXMDH3kAfouwQtUsJfSjW9JAdrafkjdw7uadLMFk0T8X2Ygyc7rxad9
+ HED2GJWBTr1TsaoxArawGf/Klz0sSe1MYYcodjFWrxySJW7vNwRUCLjcZ1nqn6MtsXGATiRu6
+ 5E+hdEQAWYcaG9m3vi+8KhdI1PJ17sbgcTvNjeFqqVcPoSsJmTnB0FOzrbjUREZdWPHl+IBUI
+ Il4qZKrwUTZYEmjOw7zZRb+qmKMWhTnNw+Tu8ha+vfcuGPlRrBiyfP7HyHjMc9ItF8Hc0msOr
+ f+fwngF9wZubAL9/+mGdx3Djm5wXj/JUhEBca46UmzzbWZIJ/keaH7+u9XTSpsY1sYOs71pDD
+ 9mrQV1JU4I4KtNR4yOw8embUEt2RN/fc9H+LZzuem8HdAhn2rLyfU9dp0ooxqBnmeLRcLi59W
+ /2SsNfXG7icvpSXEuL09p9KXzPWabufxdrXEwMqY/u/v21zYTFCwMZPybvps8F/3LcQMTf+eC
+ iQo3bCWJSooN9WI2CD7pkcE8i/g9z86aZ2S9boQSK/HCvDTxJY/kKCFaF1NVJdceKN3a88lIB
+ DytFFqZ8hp2qCLKz/28NSFF8UPyXabqnvPfTovIGQoz3WUM/wDrEC9jL3OVLig9yjCfEk0WNW
+ FiCIyg/qj0Lbk1kQuPUeOKn9izh7ShsDBAI6Ahe7I+drhRSVyEpAitk8hQDwkEfGakd+R1VTh
+ IjE4uHQsutLYwbVD0CStm4bJ2NlAI7l9tNWigSLGmCohBgJqSbrHMnTZhT68Kn3mKtw/10wnD
+ E6Np99TRAtyzO/INd0sZmftzMGDnEC3EAAtRE0bHED6SqOJQHmN67yUpRGr9y5e8nX/OtHphJ
+ uoEYH+HmB5Aj9p97xvihWw+eYGQrDobWniT0E/wean5JMm2W8xQCWJ2LdlYqqetTZYz2+OJ/I
+ AfgaQ9vZ1aHZk2pGTTiq89Iev8DIjLNgpmKpZnQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>>> fcoe_fdmi_info() misses to call kfree() in an error path.
+>>> Add the missed function call to fix it.
+>>
+>> I suggest to use an additional jump target for the completion
+>> of the desired exception handling.
+>>
+>>
+>> =E2=80=A6
+>>> +++ b/drivers/scsi/fcoe/fcoe.c
+>>> @@ -830,6 +830,7 @@ static void fcoe_fdmi_info(struct fc_lport *lport,=
+ struct net_device *netdev)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rc) {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 printk(KERN_INFO "fcoe: Failed to retrieve FDMI "
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "information fro=
+m netdev.\n");
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kf=
+ree(fdmi);
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 return;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
+urn;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 got=
+o free_fdmi;
+>>
+>>
+>> How do you think about to apply any further coding style adjustments?
+>
+> The local variable "fdmi" is invisible to the function.
 
+I have got understanding difficulties for this information.
+The function call =E2=80=9Ckfree(fdmi)=E2=80=9D is already used at the end=
+ of this if branch.
+Thus I propose to add a label there.
 
-> Il giorno 8 lug 2020, alle ore 19:48, Dmitry Monakhov =
-<dmonakhov@gmail.com> ha scritto:
->=20
-> Paolo Valente <paolo.valente@linaro.org> writes:
->=20
->> Hi,
->> sorry for the delay.  The commit you propose to drop fix the issues
->> reported in [1].
->>=20
->> Such a commit does introduce the leak that you report (thank you for
->> spotting it).  Yet, according to the threads mentioned in [1],
->> dropping that commit would take us back to those issues.
->>=20
->> Maybe the solution is to fix the unbalance that you spotted?
-> I'm not quite shure that do I understand which bug was addressed for =
-commit db37a34c563b.
-> AFAIU both bugs mentioned in original patchset was fixed by:
-> 478de3380 ("block, bfq: deschedule empty bfq_queues not referred by =
-any proces")
-> f718b0932 ( block, bfq: do not plug I/O for bfq_queues with no proc =
-refs)"
->=20
-> So I review commit db37a34c563b as independent one.
-> It introduces extra reference for bfq_groups via bfqg_and_blkg_get(),
-> but do we actually need it here?
->=20
-> #IF CONFIG_BFQ_GROUP_IOSCHED is enabled:
-> bfqd->root_group is holded by bfqd from bfq_init_queue()
-> other bfq_queue objects are owned by corresponding blkcg from =
-bfq_pd_alloc()
-> So bfq_queue can not disappear under us.
->=20
+Do you notice any additional improvement possibilities for this software m=
+odule?
 
-You are right, but incomplete.  No extra ref is needed for an entity
-that represents a bfq_queue.  And this consideration mistook me before
-I realized that that commit was needed.  The problem is that an entity
-may also represent a group of entities.  In that case no reference is
-taken through any bfq_queue.  The commit you want to remove takes this
-missing reference.
-
-Paolo
-
-> #IF CONFIG_BFQ_GROUP_IOSCHED is disabled:
-> we have only one  bfqd->root_group object which allocated from =
-bfq_create_group_hierarch()
-> and bfqg_and_blkg_get() bfqg_and_blkg_put() are noop
->=20
-> Resume: in both cases extra reference is not required, so I continue =
-to
-> insist that we should revert  commit db37a34c563b because it tries to
-> solve a non existing issue, but introduce the real one.
->=20
-> Please correct me if I'm wrong.
->>=20
->> I'll check it ASAP, unless you do it before me.
->>=20
->> Thanks,
->> Paolo
->>=20
->> [1] https://lkml.org/lkml/2020/1/31/94
->>=20
->>> Il giorno 2 lug 2020, alle ore 12:57, Dmitry Monakhov =
-<dmonakhov@gmail.com> ha scritto:
->>>=20
->>> commit db37a34c563b ("block, bfq: get a ref to a group when adding =
-it to a service tree")
->>> introduce leak forbfq_group and blkcg_gq objects because of get/put
->>> imbalance. See trace balow:
->>> -> blkg_alloc
->>>  -> bfq_pq_alloc
->>>    -> bfqg_get (+1)
->>> ->bfq_activate_bfqq
->>> ->bfq_activate_requeue_entity
->>>   -> __bfq_activate_entity
->>>      ->bfq_get_entity
-> ->>         ->bfqg_and_blkg_get (+1)  <=3D=3D=3D=3D : Note1
->>> ->bfq_del_bfqq_busy
->>> ->bfq_deactivate_entity+0x53/0xc0 [bfq]
->>>   ->__bfq_deactivate_entity+0x1b8/0x210 [bfq]
->>>     -> bfq_forget_entity(is_in_service =3D true)
->>> 	 entity->on_st_or_in_serv =3D false   <=3D=3D=3D :Note2
->>> 	 if (is_in_service)
->>> 	     return;  =3D=3D> do not touch reference
->>> -> blkcg_css_offline
->>> -> blkcg_destroy_blkgs
->>> -> blkg_destroy
->>>  -> bfq_pd_offline
->>>   -> __bfq_deactivate_entity
->>>        if (!entity->on_st_or_in_serv) /* true, because (Note2)
->>> 		return false;
->>> -> bfq_pd_free
->>>   -> bfqg_put() (-1, byt bfqg->ref =3D=3D 2) because of (Note2)
->>> So bfq_group and blkcg_gq  will leak forever, see test-case below.
->>> If fact bfq_group objects reference counting are quite different
->>> from bfq_queue. bfq_groups object are referenced by blkcg_gq via
->>> blkg_policy_data pointer, so  neither nor blkg_get() neither =
-bfqg_get
->>> required here.
->>>=20
->>>=20
->>> This patch drop commit db37a34c563b ("block, bfq: get a ref to a =
-group when adding it to a service tree")
->>> and add corresponding comment.
->>>=20
->>> ##TESTCASE_BEGIN:
->>> #!/bin/bash
->>>=20
->>> max_iters=3D${1:-100}
->>> #prep cgroup mounts
->>> mount -t tmpfs cgroup_root /sys/fs/cgroup
->>> mkdir /sys/fs/cgroup/blkio
->>> mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
->>>=20
->>> # Prepare blkdev
->>> grep blkio /proc/cgroups
->>> truncate -s 1M img
->>> losetup /dev/loop0 img
->>> echo bfq > /sys/block/loop0/queue/scheduler
->>>=20
->>> grep blkio /proc/cgroups
->>> for ((i=3D0;i<max_iters;i++))
->>> do
->>>   mkdir -p /sys/fs/cgroup/blkio/a
->>>   echo 0 > /sys/fs/cgroup/blkio/a/cgroup.procs
->>>   dd if=3D/dev/loop0 bs=3D4k count=3D1 of=3D/dev/null iflag=3Ddirect =
-2> /dev/null
->>>   echo 0 > /sys/fs/cgroup/blkio/cgroup.procs
->>>   rmdir /sys/fs/cgroup/blkio/a
->>>   grep blkio /proc/cgroups
->>> done
->>> ##TESTCASE_END:
->>>=20
->>> Signed-off-by: Dmitry Monakhov <dmonakhov@gmail.com>
->>> ---
->>> block/bfq-cgroup.c  |  2 +-
->>> block/bfq-iosched.h |  1 -
->>> block/bfq-wf2q.c    | 15 +++++----------
->>> 3 files changed, 6 insertions(+), 12 deletions(-)
->>>=20
->>> diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
->>> index 68882b9..b791e20 100644
->>> --- a/block/bfq-cgroup.c
->>> +++ b/block/bfq-cgroup.c
->>> @@ -332,7 +332,7 @@ static void bfqg_put(struct bfq_group *bfqg)
->>> 		kfree(bfqg);
->>> }
->>>=20
->>> -void bfqg_and_blkg_get(struct bfq_group *bfqg)
->>> +static void bfqg_and_blkg_get(struct bfq_group *bfqg)
->>> {
->>> 	/* see comments in bfq_bic_update_cgroup for why refcounting =
-bfqg */
->>> 	bfqg_get(bfqg);
->>> diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
->>> index cd224aa..7038952 100644
->>> --- a/block/bfq-iosched.h
->>> +++ b/block/bfq-iosched.h
->>> @@ -986,7 +986,6 @@ struct bfq_group *bfq_find_set_group(struct =
-bfq_data *bfqd,
->>> struct blkcg_gq *bfqg_to_blkg(struct bfq_group *bfqg);
->>> struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
->>> struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, =
-int node);
->>> -void bfqg_and_blkg_get(struct bfq_group *bfqg);
->>> void bfqg_and_blkg_put(struct bfq_group *bfqg);
->>>=20
->>> #ifdef CONFIG_BFQ_GROUP_IOSCHED
->>> diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
->>> index 34ad095..6a363bb 100644
->>> --- a/block/bfq-wf2q.c
->>> +++ b/block/bfq-wf2q.c
->>> @@ -529,13 +529,14 @@ static void bfq_get_entity(struct bfq_entity =
-*entity)
->>> {
->>> 	struct bfq_queue *bfqq =3D bfq_entity_to_bfqq(entity);
->>>=20
->>> +	/* Grab reference only for bfq_queue's objects, bfq_group ones
->>> +	 * are owned by blkcg_gq
->>> +	 */
->>> 	if (bfqq) {
->>> 		bfqq->ref++;
->>> 		bfq_log_bfqq(bfqq->bfqd, bfqq, "get_entity: %p %d",
->>> 			     bfqq, bfqq->ref);
->>> -	} else
->>> -		bfqg_and_blkg_get(container_of(entity, struct bfq_group,
->>> -					       entity));
->>> +	}
->>> }
->>>=20
->>> /**
->>> @@ -649,14 +650,8 @@ static void bfq_forget_entity(struct =
-bfq_service_tree *st,
->>>=20
->>> 	entity->on_st_or_in_serv =3D false;
->>> 	st->wsum -=3D entity->weight;
->>> -	if (is_in_service)
->>> -		return;
->>> -
->>> -	if (bfqq)
->>> +	if (bfqq && !is_in_service)
->>> 		bfq_put_queue(bfqq);
->>> -	else
->>> -		bfqg_and_blkg_put(container_of(entity, struct bfq_group,
->>> -					       entity));
->>> }
->>>=20
->>> /**
->>> --=20
->>> 2.7.4
->>>=20
-
+Regards,
+Markus
