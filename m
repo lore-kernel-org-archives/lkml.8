@@ -2,137 +2,115 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DF3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D796206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:24:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ELrxvSxq"
+	by mail.kernel.org (Postfix) with ESMTP id BD03A206A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgGIIYT (ORCPT
+        id S1726443AbgGIIZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:24:19 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:26597 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgGIIYS (ORCPT
+        Thu, 9 Jul 2020 04:25:51 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:49771 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgGIIZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:24:18 -0400
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200709082415epoutp03a98e6d9e02bba1aa92d68079884be96e~gB-3m8K7D2458524585epoutp03y
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 08:24:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200709082415epoutp03a98e6d9e02bba1aa92d68079884be96e~gB-3m8K7D2458524585epoutp03y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594283055;
-        bh=jrgreaOxBNKWaQmWizCcB2xRM4knpZFef7IBVXPqW0k=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=ELrxvSxqebtaM0tp/Q4yFecthyu/hd8GOgu/WSUsrOn0pShZatQ2KiFxYvNazgxDe
-         BOFnXgO2LOZmo2B4L3TccAMOUZkIc3Q4oAtJvwnkWqhlUG7Qeb33X7oIxnatrSCRvo
-         2PaIL2hznHObcf6YZk1XxM2viC8SQHl9gIWBoGPU=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20200709082414epcas2p1365b5bbfffd710b831802b91f88f219a~gB-3SnEfk1793717937epcas2p16;
-        Thu,  9 Jul 2020 08:24:14 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.40.181]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4B2TjS4qd7zMqYkq; Thu,  9 Jul
-        2020 08:24:12 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DA.F1.18874.924D60F5; Thu,  9 Jul 2020 17:24:09 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200709082408epcas2p4369fa8f06a57c7358be38282aae0f501~gB-xR0TtA1636816368epcas2p4q;
-        Thu,  9 Jul 2020 08:24:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200709082408epsmtrp12efabc2c3e00ce3cda19320a7c0b880c~gB-xRMSdd1891618916epsmtrp1m;
-        Thu,  9 Jul 2020 08:24:08 +0000 (GMT)
-X-AuditID: b6c32a46-519ff700000049ba-5a-5f06d429a5e0
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D9.84.08382.824D60F5; Thu,  9 Jul 2020 17:24:08 +0900 (KST)
-Received: from pika.dsn.sec.samsung.com (unknown [12.36.155.212]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200709082408epsmtip11258ec8f93d94a418f00bc7f9beb23bb~gB-xFD2Ai0298102981epsmtip1k;
-        Thu,  9 Jul 2020 08:24:08 +0000 (GMT)
-From:   sanggil2.kim@samsung.com
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sanggil Kim <sanggil2.kim@samsung.com>
-Subject: [PATCH] arm64: kernel: Add module symbols _text, _etext.
-Date:   Thu,  9 Jul 2020 17:23:45 +0900
-Message-Id: <1594283025-4166-1-git-send-email-sanggil2.kim@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7bCmma7mFbZ4g6nvBS02Pb7GanF51xw2
-        ixdzPzI6MHtsXlLv0bdlFaPH501yAcxROTYZqYkpqUUKqXnJ+SmZeem2St7B8c7xpmYGhrqG
-        lhbmSgp5ibmptkouPgG6bpk5QHuUFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQWG
-        hgV6xYm5xaV56XrJ+blWhgYGRqZAlQk5GWv/72AuOM1acWD6RpYGxhssXYycHBICJhKvn91k
-        7GLk4hAS2MEocbrtOhuE84lR4vjlVVDON0aJDVMfs8K0tHQcgWrZyyhxZNplVriqp99uMYFU
-        sQnISbT8PccIYosIaEhM6XrMDmIzC3hIPF70E6xGWMBRYtmDR2BxFgFViV3/3wGt4+DgFXCX
-        2LlcFGKZnMTNc53MIPMlBP6zSXyc1wt1hYvE1fnH2CBsYYlXx7ewQ9hSEi/726DscomVDetZ
-        IJpbGCXuLn0H1WAsMetZOyPIMmYBTYn1u/RBTAkBZYkjt1ggzuST6Dj8lx0izCvR0SYE0agm
-        8W/lNKgLZCSWrljDBGF7SPzduwzsWyGBWImt1w6yTGCUnYUwfwEj4ypGsdSC4tz01GKjAiPk
-        SNrECE47Wm47GKe8/aB3iJGJg/EQowQHs5IIr4Eia7wQb0piZVVqUX58UWlOavEhRlNgcE1k
-        lhJNzgcmvrySeENTIzMzA0tTC1MzIwslcd56xQtxQgLpiSWp2ampBalFMH1MHJxSDUwN7YeE
-        Yy+H/fE0FPsvYs63uir0bQj/dv0vV7bekf57qudnyI7eU6teF6yyf/K2MGR3vu7c1w8Z36eU
-        Xr+oavv7Zc2uYmOvrQKS4gLrNlUHdk0P7+G9N6mkIerl4hqt5DOL56s5mAafWrJ1VQvP9ry6
-        vb0Gx84yys0zZThit7b3v5XZvtXFy24/4LnuK30gYqk0e/KkP9NKulNmBG26XegzkbFjh/ef
-        VRN97kQGG3V/WvpGatPzbxYb5jDotnQx23TfTN/OtTJ+QafVAi/1STNb0hpZgsvvrN2ixPR/
-        0201/d6FWzgZz8zNVH5iFuZ9a4G8L0+Pl9iOe3zRWv9P3Ffo6ppz649H1cLFt7svqgQqsRRn
-        JBpqMRcVJwIAy3eJCsQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHJMWRmVeSWpSXmKPExsWy7bCSnK7GFbZ4g0v/BSw2Pb7GanF51xw2
-        ixdzPzI6MHtsXlLv0bdlFaPH501yAcxRXDYpqTmZZalF+nYJXBlr/+9gLjjNWnFg+kaWBsYb
-        LF2MnBwSAiYSLR1HGLsYuTiEBHYzSrzdNoUVIiEj8envCiYIW1jifssRVoiiL4wSHS3XwbrZ
-        BOQkWv6eYwSxRQQ0JKZ0PWbvYuTgYBbwkji4zBkkLCzgKLHswSN2EJtFQFVi1/93bCAlvALu
-        EjuXi0KMl5O4ea6TeQIjzwJGhlWMkqkFxbnpucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMFBoKW5
-        g3H7qg96hxiZOBgPMUpwMCuJ8BoossYL8aYkVlalFuXHF5XmpBYfYpTmYFES571RuDBOSCA9
-        sSQ1OzW1ILUIJsvEwSnVwMTrWp59plvgqsJx3eev3qyQMz+ysJmh2ScmY+1Eqz9tT4QOXnKd
-        +3v2/88Wv5h7H8dGhPTuKFxjay4i2OVj7eaUeK3sF6PTsfiat14f4qoyrx7eU/0y17l+fpHi
-        3qic1Gy3v1y89Zo3PnT82rmT0+zZ/RmaxsfETB3YXSMCw9dsaRPSD71yaY5Wb4aS1bPK6S95
-        I3at0egr2eD2rmxe4I6VvHWF6nn+V4Tuz44xf6RWz7lc6Z/0uVcCqX6eQU8strfPe3PW94vy
-        k4rIeYIfDnhzGNwO+ljk3Gx/LVxoo86/Sz/2Mnc28hxjSl/H+HzS8qRlG5kYc/YosIb8eGl8
-        96uT2Ff32Ut/3lX4u6ZZR4mlOCPRUIu5qDgRAB16vdhxAgAA
-X-CMS-MailID: 20200709082408epcas2p4369fa8f06a57c7358be38282aae0f501
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200709082408epcas2p4369fa8f06a57c7358be38282aae0f501
-References: <CGME20200709082408epcas2p4369fa8f06a57c7358be38282aae0f501@epcas2p4.samsung.com>
+        Thu, 9 Jul 2020 04:25:51 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N3KY0-1ksKCc1Gdu-010OXV; Thu, 09 Jul 2020 10:25:48 +0200
+Received: by mail-qk1-f181.google.com with SMTP id r22so968803qke.13;
+        Thu, 09 Jul 2020 01:25:48 -0700 (PDT)
+X-Gm-Message-State: AOAM5301F+bOdf+TubDVoF1UnG2iFepNCxGyQmXXymvxk6DNuL4jmWp6
+        VWkwCv2+Op97jA4jCz0U4Q/lzL01rTp7oXDjN2Q=
+X-Google-Smtp-Source: ABdhPJyXV7lQWgRTMyw9+0OfyvkSZbUKyqYlpR84nLWBDaf70IBhbe8ZuySwyXzLn/Mvu7wXfcuJTGuY/HrtTVDvAdw=
+X-Received: by 2002:a37:b484:: with SMTP id d126mr61620523qkf.394.1594283147047;
+ Thu, 09 Jul 2020 01:25:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+In-Reply-To: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 9 Jul 2020 10:25:31 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0ii1Z-UG8NpwTvkmOEcOvvTo4+m9xjW0JqR6LPvUZ4=g@mail.gmail.com>
+Message-ID: <CAK8P3a0ii1Z-UG8NpwTvkmOEcOvvTo4+m9xjW0JqR6LPvUZ4=g@mail.gmail.com>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michel Lespinasse <walken@google.com>, Fan_Yang@sjtu.edu.cn,
+        bgeffon@google.com, Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:D8cLPAtVmYJNHX82yXkx8yIvNgY46mlsG7SbYhlpgnrpceAfWnN
+ fDyO7u7VBVkc00qpi7S1u+Z4KlvmL5e0mtCGQvGwl0Wahxbi8XFirNidOFdHnZQTbMh5EFo
+ xkqt36qdmmT7GG8VkvbYEM5hwmhJzwatjwa8tcbt24JSBUfbu//9lBwgUdWmKg+B3WW228H
+ 3x2SMyVDaJeLJxSatEBvQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:S9AndeVjhyw=:PKm31LwmL7kkYDpBFQ/p/c
+ 6Vx1LAI5YigIFWBb3O8pJw4qjNp9lSIoMRYRxRg+xWPfxEgJeuSDmGL5rLebtnqMKXnryKAtx
+ xbyA5n6JyrAHMrd/aGFLvcntI0hoKJTFi0iDJ+KfQPty+Ae1xAZjijiCbB2AvrldZq+kl/u0a
+ BrHyAwoGkGGeBMXYuAuoV6CNfQwiU+3XyRePc0v7iOd1dMb6Hy+8VHEMJpeKDHYPrVju9zWQG
+ XFyemMYXzs+E1JnaQ/P1Te1nCK1uW1Lkpi+yHugoXgr5WM5Q9tqQArmvbACcW53F/yv2nOuqf
+ 7Bxz1Cmf05nbSRFkqgWf/OdN10X9pXswx2P24dZ27dRdQfOvhF0g5i67UyFdQ8OtMDIa5M/Uo
+ Vz+Fm8mML7sbLei6Euo8ZRF2ru+T89MkrZCCB1OUkljB3/19KF64USbYnaYUEjO0b/J2ctHx/
+ KtwKsmqnKCOawZomCFdmKX2r16eEA/GBO+YdbZ5nig656Mb5Q1RxbVQyK4YpXQHw56B8IkUS8
+ 7X1W0gRUlx+AxkNohPmFhlm15FPWM4288Z7FqW4/QXhTVExhQIQWfMMTvDgCdMuoBBFJRXlUz
+ 3qbU1md5T3tVVtn2SZEsradD0buVbqRFfmwrKlhIvFTRe4j5o3pX20VuSYUxCkk4R5u6RtpvR
+ JfoqhW1MkJqzg0agWrJyd1tclI1yZebK3I8WMLXgbfPMcqRqH+LWEUFNJOfycxULPzQQl4HEz
+ inA+HqMtWnxQvNCPc2gavGIgHUSUHUqtdl7w92ujC27MVAfXM+wvCk3W5ECF+sx3l+iCm1Q0X
+ PJEY1ImZ+WcZtgI8VzjjHmWB8SJ+yhWpAyNI9ZWhzDuB6Z8F48nmTL0NJ/vjljA5d4SnhJZ3l
+ 2CJSoQGSE1bvso6aWyih0rQX3Aik6kYqK6Y1W+6NfHoT4tqEmxlVLy1BCMJJBtBIAo70VmZa7
+ 0AKCGIMVAm9JSzCgMT9VGusY/TDXo4QLg91ii7NK06Ot+1FlF63aG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanggil Kim <sanggil2.kim@samsung.com>
+On Thu, Jul 9, 2020 at 7:28 AM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> While running LTP mm test suite on i386 or qemu_i386 this kernel warning
+> has been noticed from stable 5.4 to stable 5.7 branches and mainline 5.8.0-rc4
+> and linux next.
 
-We have a solution to protect kernel code section(autually from _text to
-_etext) by not MMU. In order to do this, we have to know the addresses
-of _text and _etext at runtime.
+Are you able to correlate this with any particular test case in LTP, or does
+it happen for random processes?
 
-Signed-off-by: Sanggil Kim <sanggil2.kim@samsung.com>
----
- arch/arm64/kernel/head.S | 3 +++
- 1 file changed, 3 insertions(+)
+In the log you linked to, it happens once for ksm05.c and multiple times for
+thp01.c, sources here:
 
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index 037421c..09b405e 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -1003,3 +1003,6 @@ SYM_FUNC_START_LOCAL(__primary_switch)
- 	adrp	x0, __PHYS_OFFSET
- 	br	x8
- SYM_FUNC_END(__primary_switch)
-+
-+EXPORT_SYMBOL(_text)
-+EXPORT_SYMBOL(_etext)
--- 
-2.7.4
+https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/ksm/ksm05.c
+https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/thp/thp01.c
 
+Is it always these tests that trigger the warning, or sometimes others?
+
+When you say it happens with linux-5.4 stable, does that mean you don't see
+it with older versions? What is the last known working version?
+
+I also see that you give the virtual machine 16GB of RAM, but as you are
+running a 32-bit kernel without PAE, only 2.3GB end up being available,
+and some other LTP tests in the log run out of memory.
+
+You could check if the behavior changes if you give the kernel less memory,
+e.g. 768MB (lowmem only), or enable CONFIG_X86_PAE to let it use the
+entire 16GB.
+
+> full test log,
+> https://lkft.validation.linaro.org/scheduler/job/1541788#L9308
+
+       Arnd
