@@ -2,143 +2,138 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7820CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3426C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 569B52077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C601F20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EinuUTTl"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rCiEZYZ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgGINS1 (ORCPT
+        id S1727101AbgGINTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:18:27 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52105 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726376AbgGINS1 (ORCPT
+        Thu, 9 Jul 2020 09:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726941AbgGINTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:18:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594300705;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uai31VQPEZN9rwf7OACVSGu+VKSktCcJq5Sw/CwzuWw=;
-        b=EinuUTTlujbGjr4xZyU7p/wo+Mvxq0TMdHv+5P2e1gpyUW0SMyDS1xvHIiasSBiV5F/0cw
-        VxjnbuRFNn4+2EksL1sM7E7/mTDEPPcnnOe2dhtz8P1SYsZQdeeqmrmYFKjTTTczgHmlj3
-        A7RDdc9mo1FXIEJdR5CzcvT8x+wAFGA=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-SaIDNl0fMgilbK6kCKYFQw-1; Thu, 09 Jul 2020 09:18:24 -0400
-X-MC-Unique: SaIDNl0fMgilbK6kCKYFQw-1
-Received: by mail-qt1-f200.google.com with SMTP id q7so1572290qtq.14
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:18:21 -0700 (PDT)
+        Thu, 9 Jul 2020 09:19:30 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C80E8C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:19:29 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id ed14so906961qvb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wDgz11ShYk/Rb+cjhB3hGNA4H8iFe+o/AJhL/6TvR/c=;
+        b=rCiEZYZ9CED5ElkKfWtMCX8ixiQqplvTeIu+Ibn+QBVy3wXBuDBikSfnSKeNCRj/VB
+         EqrVchTsBbGc2W4JWOIzzNVs1qy4idQxgXy97+072cnPMGKGFuMvjU3yMnu4EE5TT6mj
+         ooFWv3xAjwHTB7RfTTbBACSQ7WhJUIzjDqmPKM91EatqfR1ThIFZ0bhRDCUVl230P+P2
+         pW3pfIm3zvrjncMfAhRrznCBtGEMNIqV8f4UKRPrlh0GmAqAnTpZ3MidAZEOM8F0zIvp
+         rH2B5Xpi3y5E/XAeSdtuqt5ODAyaLxUXME5yc/FwYj2cReLsn6uLB+MOM284lCaJi6/8
+         BmXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=uai31VQPEZN9rwf7OACVSGu+VKSktCcJq5Sw/CwzuWw=;
-        b=mJRqKgB2OOKDq7IkWgpgpLX4v4kdX5gLnGpb4d9xjKN4HPRtQnSriQsbUX7XddpDbP
-         jvHa2SvbYLgs+JS4qUk9g/ROVy1hPERMXF5ch7Nj5WmAmVHG7t4rG2q989jIi8wlidTJ
-         G1RwxAGXXrxc4U7LBlFem7QBB4So5ach4IOQC16fqOniWdGnYufpPVjD1eYQuCuedMLy
-         sm7DklABIYrgqLDx6lO8aIIgwGi8iJ+mAjrltp/FbZslPxjLo5sdWAaVg1iYIyd1Pl4C
-         FH6c6FHlu6EDdNgVLaaAkdEY33QiKuseIxCOB9dpPX6J1AI+9kN5z8iB2tBLDA93eLa/
-         meng==
-X-Gm-Message-State: AOAM533q2L3ADQhpX5VzFD2GQKst2ShWuhBirpH/Fd5XcwpiDAg7Ow1z
-        m4Kd/97KMjGs+DSE/mC61jAITkvTvOax7cswnvgomPIPhmNzyDCjAx2OnnNm/YFv8DiM8P7ud7R
-        E9LsI/lXD7pDkIVVACTC1A+VC
-X-Received: by 2002:a37:8384:: with SMTP id f126mr63218162qkd.471.1594300701321;
-        Thu, 09 Jul 2020 06:18:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx7733/CHza1JSmzGYP3thc0Mpq3yjFhyLoQCKPyMkKUFdIFsXC4ZM3kw7kuIP92vg/wsKeMg==
-X-Received: by 2002:a37:8384:: with SMTP id f126mr63218141qkd.471.1594300701089;
-        Thu, 09 Jul 2020 06:18:21 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id t57sm3733727qtc.91.2020.07.09.06.18.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 06:18:20 -0700 (PDT)
-Subject: Re: [RESEND PATCH 1/2] fpga: dfl: pci: reduce the scope of variable
- 'ret'
-To:     Xu Yilun <yilun.xu@intel.com>, mdf@kernel.org,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     lgoncalv@redhat.com
-References: <1594282337-32125-1-git-send-email-yilun.xu@intel.com>
- <1594282337-32125-2-git-send-email-yilun.xu@intel.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <ef506ec6-d857-736b-e9e2-46077ab7d778@redhat.com>
-Date:   Thu, 9 Jul 2020 06:18:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wDgz11ShYk/Rb+cjhB3hGNA4H8iFe+o/AJhL/6TvR/c=;
+        b=qjl1qFT7cqRfkN/UWxcQkR2YwdS25/5H/zyEPtO4g7CN2mphRWLg3pj1dDfFegUKey
+         17yVEul1nWHLCsA1WkfRw/dmANSUfObNQGqGhMCnOO1Vw/kmTZYM0SHR9QoThEn4ErrI
+         TUy/tsONs33gHzUkqSdamN9CWXlevZeVR4maog4ARJilakv0eL64L4WD19ylVi19PScq
+         SA6T/lUTbo4niaT0wdJBh5oap5yKj8PXmvzBjYiigwdb85h9k+vKArpJCwfGjP4XuJs3
+         nmCICW4HOkojPqkCQ3V3GdJdFa3RJPdtYeN7/E1vBl2eKqDUGG0WSgzXkrS3CLdjfkqf
+         +JAQ==
+X-Gm-Message-State: AOAM533qzuscgl4Mmxufs/AuQmSqXfTKZnBX+ijIcV6fl1RMlawMAWS1
+        1y6nr2a2XLndvNYxfC5Ds+nwIqy+Liek8tmzRngcEA==
+X-Google-Smtp-Source: ABdhPJyBlDePeobZPrB/H+vNSKy8PsVTe99vnGiqo586PyF/ZAgTRfMF07tYml4pg+RfsX6MJuGd7z9oI42LX8hANPA=
+X-Received: by 2002:a05:6214:72c:: with SMTP id c12mr59335115qvz.76.1594300768959;
+ Thu, 09 Jul 2020 06:19:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1594282337-32125-2-git-send-email-yilun.xu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200708041600.768775-1-warthog618@gmail.com>
+In-Reply-To: <20200708041600.768775-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 9 Jul 2020 15:19:18 +0200
+Message-ID: <CAMpxmJUtD_GrQObd=1-6pVv4xDb4GO52J6sDyvVvtxzySjBzJw@mail.gmail.com>
+Subject: Re: [PATCH 00/17] gpiolib: cdev: pre-uAPI v2 cleanups
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think a better change is to use the ret variable, like this
-
---- a/drivers/fpga/dfl-pci.c
-+++ b/drivers/fpga/dfl-pci.c
-@@ -312,7 +312,7 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
-                }
-        }
- 
--       return num_vfs;
-+       return ret;
- }
-
-The existing use of returning num_vfs is not right, the function should return 0/err not num_vfs. currently it is reusing the 0 passed in with num_vfs to mean disable as the 0 return status.  it should be properly returning ret.
-
-Tom
-
-On 7/9/20 1:12 AM, Xu Yilun wrote:
-> This is to fix lkp cppcheck warnings:
+On Wed, Jul 8, 2020 at 6:18 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
->  drivers/fpga/dfl-pci.c:230:6: warning: The scope of the variable 'ret' can be reduced. [variableScope]
->     int ret = 0;
->         ^
+> This collection of patches provides improvements to or
+> address minor problems in gpiolib-cdev.
 >
->  drivers/fpga/dfl-pci.c:230:10: warning: Variable 'ret' is assigned a value that is never used. [unreadVariable]
->     int ret = 0;
->             ^
+> The majority of the patches (1-7, 9-11) have been pulled directly from
+> my "gpio: cdev: add uAPI V2" patch set, as they are not related to any
+> uAPI changes.
+> The remaining patches were either split out of the remaining patches
+> from that set, as they are not directly part of the uAPI changes, or
+> were inspired by fixes for issues in that set, or were only noticed
+> subsequent to that set.
 >
-> Fixes: 3c2760b78f90 ("fpga: dfl: pci: fix return value of cci_pci_sriov_configure")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Acked-by: Wu Hao <hao.wu@intel.com>
-> ---
->  drivers/fpga/dfl-pci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Changes since "gpio: cdev: add uAPI V2":
+>  - rebase onto latest gpio/devel
+>  - fix typo in patch 1 commit description
+>  - replace patch 8 with the blocking notifier call chain patch
+>  - rename priv to cdev instead of gcdev in patch 9
+>  - fix error handling in patch 10
+>  - add patches 12 to 17
 >
-> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> index 4a14a24..73b5153 100644
-> --- a/drivers/fpga/dfl-pci.c
-> +++ b/drivers/fpga/dfl-pci.c
-> @@ -285,7 +285,6 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
->  {
->  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
->  	struct dfl_fpga_cdev *cdev = drvdata->cdev;
-> -	int ret = 0;
->  
->  	if (!num_vfs) {
->  		/*
-> @@ -297,6 +296,8 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
->  		dfl_fpga_cdev_config_ports_pf(cdev);
->  
->  	} else {
-> +		int ret;
-> +
->  		/*
->  		 * before enable SRIOV, put released ports into VF access mode
->  		 * first of all.
+> Kent Gibson (17):
+>   gpiolib: move gpiolib-sysfs function declarations into their own
+>     header
+>   gpiolib: cdev: sort includes
+>   gpiolib: cdev: minor indentation fixes
+>   gpiolib: cdev: refactor gpiohandle_flags_to_desc_flags
+>   gpiolib: cdev: rename 'filep' and 'filp' to 'file' to be consistent
+>     with other use
+>   gpiolib: cdev: rename numdescs to num_descs
+>   gpiolib: cdev: remove pointless decrement of i
+>   gpiolib: cdev: use blocking notifier call chain instead of atomic
+>   gpiolib: cdev: rename priv to cdev
+>   gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
+>   gpiolib: cdev: remove recalculation of offset
+>   gpiolib: cdev: refactor linehandle cleanup into linehandle_free
+>   gpiolib: cdev: refactor lineevent cleanup into lineevent_free
+>   gpio: uapi: fix misplaced comment line
+>   tools: gpio: fix spurious close warning in lsgpio
+>   tools: gpio: fix spurious close warning in gpio-utils
+>   tools: gpio: fix spurious close warning in gpio-event-mon
+>
+>  drivers/gpio/gpiolib-cdev.c  | 385 ++++++++++++++++-------------------
+>  drivers/gpio/gpiolib-sysfs.c |   1 +
+>  drivers/gpio/gpiolib-sysfs.h |  24 +++
+>  drivers/gpio/gpiolib.c       |  15 +-
+>  drivers/gpio/gpiolib.h       |  20 +-
+>  include/uapi/linux/gpio.h    |   2 +-
+>  tools/gpio/gpio-event-mon.c  |   3 +-
+>  tools/gpio/gpio-utils.c      |   4 +-
+>  tools/gpio/lsgpio.c          |   3 +-
+>  9 files changed, 217 insertions(+), 240 deletions(-)
+>  create mode 100644 drivers/gpio/gpiolib-sysfs.h
+>
+>
+> base-commit: b239e4454e59bc85d466eb5630da46f6a876df77
+> --
+> 2.27.0
+>
 
+Hi Kent,
+
+The entire series looks good to me, thanks for doing this. I'll pick
+it up into my tree and send a PR to Linus.
+
+Bartosz
