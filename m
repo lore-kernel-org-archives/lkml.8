@@ -2,173 +2,149 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5149C2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1200B2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:55:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="PK9IdWac"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="obOtKnNk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgGIIzS (ORCPT
+        id S1726497AbgGIIzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:55:18 -0400
-Received: from mail-eopbgr1400128.outbound.protection.outlook.com ([40.107.140.128]:1357
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726122AbgGIIzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:55:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FeHxj/maVUYclvWUCDPGc4ymaEKv9JB2bd3LDdMrxc6OGZncHfjphQYhveYs9RKJ264DqdkzLjbAnrT1d12tQT8wvl/f8vKm5Vy0RcKIsoG5VPpcu/U5XObhjAcfcr2xcGY/jTydb72JiRtVgub/XWomupiAGVbp3fflu7CBnQIX6Ti/ClIanBK+7MjBYL/rQDJE+HE6A1oq2e70FpIdZruFMD/V7jPFCv78Za6o6nwM/Eg5TJZaaHSfSmmsUn/eniC/ta/lxuuQ3eIsi1Gcp0TU23woMWbM2DtOaPEq6SXiSq4nUluqN9K9elOw2d3j/jrYb3g+80z/R5KxRj67sA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ATRzOvBRSRcBp3xtC5lNtvw2YrsleU8nD9y8kTBj+cU=;
- b=R3YJY2BrWCZKAjkA1heXdfHSzyX1B413ZWR6D32Qb38XbsVH7+aIiw4zL21BMw249KEf2fd20bJdTj13nUOF3zZy2yjqx5YfAnsoPaQ/cA7Fxp/2Cw5tH+DO1U0nQwJgw92iwHhNDGESgRFM1ZTQ/u/tAZjgMyhzXrk6+8qfmLx2S8HfjGrtC+q0QCbRQSIGMaA7bfFeAIGp5NhWzw/YOdmLrD/40GFi76DRSrBA40MYILUIEV+5bvYmjNtPXNXisjozaoIgL37Pd+OCSWz977OyZ8EZaD1+46tfM7xCx8gV4HgDZr0nOD1UK9G93EguOEt4oK6efU9ZB14+z0YRQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ATRzOvBRSRcBp3xtC5lNtvw2YrsleU8nD9y8kTBj+cU=;
- b=PK9IdWach98Xkt/M1RHX1SneqYCNYxTRSlhKgUrrCmzRl8RrTUhUOx8zbNPv+0yVGMMsRmMd8iRshJPIAtYLql3k9a+4FYBz11BKa2GdaS/ieVYf3vasPs8pOr746iPiHtA8dASHLBjj7a7LGQaiKkr9Lbl2H1DfFct/I0aslL4=
-Received: from OSBPR01MB4024.jpnprd01.prod.outlook.com (2603:1096:604:4b::15)
- by OSBPR01MB3080.jpnprd01.prod.outlook.com (2603:1096:604:1d::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Thu, 9 Jul
- 2020 08:55:12 +0000
-Received: from OSBPR01MB4024.jpnprd01.prod.outlook.com
- ([fe80::2198:7e23:8f02:b240]) by OSBPR01MB4024.jpnprd01.prod.outlook.com
- ([fe80::2198:7e23:8f02:b240%5]) with mapi id 15.20.3153.029; Thu, 9 Jul 2020
- 08:55:12 +0000
-From:   Dien Pham <dien.pham.ry@renesas.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Subject: RE: [PATCH v2 2/2] clk: scmi: Fix min and max rate when registering
- clocks with discrete rates
-Thread-Topic: [PATCH v2 2/2] clk: scmi: Fix min and max rate when registering
- clocks with discrete rates
-Thread-Index: AQHWVcldxf7eBbhrV0WytRuJ2WVzT6j+6QFggAAEUoCAAAQbcA==
-Date:   Thu, 9 Jul 2020 08:55:12 +0000
-Message-ID: <OSBPR01MB40243874BD95329871DE02A4D1640@OSBPR01MB4024.jpnprd01.prod.outlook.com>
-References: <20200709081705.46084-1-sudeep.holla@arm.com>
- <20200709081705.46084-2-sudeep.holla@arm.com>
- <OSBPR01MB40249DA5EFECDA8C5AC9C619D1640@OSBPR01MB4024.jpnprd01.prod.outlook.com>
- <20200709083925.GC31544@bogus>
-In-Reply-To: <20200709083925.GC31544@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [210.245.28.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0a29fd2f-a866-4ae7-378e-08d823e5cabf
-x-ms-traffictypediagnostic: OSBPR01MB3080:
-x-microsoft-antispam-prvs: <OSBPR01MB3080045FD9EEE80DC17B478FD1640@OSBPR01MB3080.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 04599F3534
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XhT6w/j9TsJFwaLdv6SpHh2eUaDRihaLWsYIyLoSf8KEYe71srXQe18BQp+wiew4HTEZroB0v/jPI5HdaYrOfz4SYtF0a51Nl8S+95W3gXuZ41FdgIo+kZjDNBzfOHI9gtKIAAF/mnLTaQPe+IZb2oUZJt3l6jXqlYA7Ttg8cMgcXVKlyH+26lN3g6Ct6EMRlEZ2oX3EQVZjJHSwFal67qRlBDKB36IphrEfTkbLULKQyHF5dkpABglkPmKMGI/tWjL2XOMbIY8bP6TrucOcIigJs0hUDzuD06TG9ChmIW/BtWDpdY4zsLhhVe/FMqk4AMLnLp/O0XUMDu43Q5eBM6dZMHHnf/BY6Z1sONrulpzEZ5C4mrE65RSP9WwwHk09EzOct5LZU8L0l3SF6kPsSA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB4024.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(86362001)(5660300002)(6506007)(8676002)(8936002)(478600001)(55016002)(966005)(9686003)(2906002)(52536014)(316002)(7696005)(71200400001)(186003)(4326008)(54906003)(64756008)(66556008)(66476007)(6916009)(66446008)(66946007)(33656002)(76116006)(26005)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: xDhL5UT96dRtYfSmDn/8Gjow2/bLZ9Ja6acAlyfR/QboVz9EPxxDP4K57g5NzmSUK2UQALqIyHY0RCs1a5vTNIETAwhKthd6Ao5dIGCAOmaGOjfb3CKLIPYhApNlU++eCh9rh2vYg4bZMysZayiRn62QbEvbxXoO1l+gTMoXfzMhAzgup1IH86IcKLReIfjojK3SaecDdQtRM+CowzSMKuShQuOnz4UIvUD0LevNspcNAA8wA0xnmXDRJYyu0m5SEirDMyR1TzTJCiY8BwNy5D+qmEuNOdmCprxC+m+aNm/dSEw/etnUjxw621QqNL0hLEP2OcxJSw7KoKgsCfWHg+dGG7Y2YjxnMbDBusiw4vxsfvZPvdjKLzi8OVU2q3ZuMolGGs5EjuYamJS7i4FSHut4plkhyhajxRxo8PcGtOP3h0W5xrIroRnWjuAGQkOY3XkA57xi73fks+nN1S+Fx0Q5HSEteOFFohYA8YF0BTQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jul 2020 04:55:48 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:55186 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726446AbgGIIzr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 04:55:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594284946; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=u5pWM02G/lO8GGvz/lXNVeUoqV1SpfqF+W43CpXRMM0=; b=obOtKnNkYk4w7BVR4cPlkwNnSvySlFYxqhoIF80Q6gwwkICEBmOkaNkrEFm8dSXECv9urYAi
+ 6odNhrgf0wcyJh34yI29dvbmqzAq9K0/mfPuwz+npCtsP2LDzJYc0k1XP5YGe4kiD53MoMm9
+ RFTLvXTAj8xwmoGaS1DEx3N203Q=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
+ 5f06db92c746eb6f00de562b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 08:55:46
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 775A4C433CB; Thu,  9 Jul 2020 08:55:45 +0000 (UTC)
+Received: from [192.168.1.11] (unknown [61.3.20.152])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2F593C43387;
+        Thu,  9 Jul 2020 08:55:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2F593C43387
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH] spi: spi-geni-qcom: Set the clock properly at runtime
+ resume
+To:     Douglas Anderson <dianders@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, akashast@codeaurora.org,
+        georgi.djakov@linaro.org, swboyd@chromium.org,
+        mkshah@codeaurora.org, ctheegal@codeaurora.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+References: <20200708163922.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <23e53f2b-02b0-2c9b-a165-4ca5a2c84a89@codeaurora.org>
+Date:   Thu, 9 Jul 2020 14:25:38 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSBPR01MB4024.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a29fd2f-a866-4ae7-378e-08d823e5cabf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 08:55:12.7208
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3Dq4VKNBTepdO6ocVUAgq7Mo9sFVFr9IRfaRldKwzhQDLUIq8IJykcbfBHZKO71puLpHCMHyuFrVyhHdWeMePIGuoKCfIlTNYeiqhXiJahQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB3080
+In-Reply-To: <20200708163922.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Sudeep-san,
 
->-----Original Message-----
->From: Sudeep Holla <sudeep.holla@arm.com>=20
->Sent: Thursday, July 9, 2020 3:39 PM
->To: Dien Pham <dien.pham.ry@renesas.com>
->Cc: linux-arm-kernel@lists.infradead.org; linux-clk@vger.kernel.org; Steph=
-en Boyd <sboyd@kernel.org>; linux-kernel@vger.kernel.org; Michael Turquette=
- <mturquette@baylibre.com>; Sudeep Holla <sudeep.holla@arm.com>
->Subject: Re: [PATCH v2 2/2] clk: scmi: Fix min and max rate when registeri=
-ng clocks with discrete rates
->
->On Thu, Jul 09, 2020 at 08:26:54AM +0000, Dien Pham wrote:
->> Hi Sudeep,
->>
->> Thanks for your patch.
->>
->> >-----Original Message-----
->> >From: Sudeep Holla <sudeep.holla@arm.com>
->> >Sent: Thursday, July 9, 2020 3:17 PM
->> >To: linux-arm-kernel@lists.infradead.org; linux-clk@vger.kernel.org; St=
-ephen Boyd <sboyd@kernel.org>
->> >Cc: Sudeep Holla <sudeep.holla@arm.com>; linux-kernel@vger.kernel.org; =
-Michael Turquette <mturquette@baylibre.com>; Dien Pham <dien.pham.ry@renesa=
-s.com>
->> >Subject: [PATCH v2 2/2] clk: scmi: Fix min and max rate when registerin=
-g clocks with discrete rates
->> >
->> >Currently we are not initializing the scmi clock with discrete rates co=
-rrectly. We fetch the min_rate and max_rate value only for clocks with rang=
-es and ignore the ones with discrete rates. This will lead to wrong initial=
-ization of rate range when clock supports discrete rate.
->> >
->> >Fix this by using the first and the last rate in the sorted list of the=
- discrete clock rates while registering the clock.
->> >
->> >Link: https://lore.kernel.org/r/20200708110725.18017-2-sudeep.holla@arm=
-.com
->> >Fixes: 6d6a1d82eaef7 ("clk: add support for clocks provided by SCMI")
->> >Reported-by: Dien Pham <dien.pham.ry@renesas.com>
->> >Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> >---
->> > drivers/clk/clk-scmi.c | 22 +++++++++++++++++++---
->> > 1 file changed, 19 insertions(+), 3 deletions(-)
->> >
->> >Hi Stephen,
->> >
->> >If you are fine, I can take this via ARM SoC along with the change in f=
-irmware driver. However it is also fine if you want to merge this independe=
-ntly as there is no strict dependency. Let me know either way.
->> >
->> >v1[1]->v2:
->> >	- Fixed the missing ; which was sent by mistake.
->>
->> I tested the patch,
->> I is ok and can fix my issue.
->>
->
->Thanks for testing. Can I add ?
->
->Tested-by: Dien Pham <dien.pham.ry@renesas.com>
+On 7/9/2020 5:09 AM, Douglas Anderson wrote:
+> In the patch ("spi: spi-geni-qcom: Avoid clock setting if not needed")
+> we avoid a whole pile of clock code.  As part of that, we should have
+> restored the clock at runtime resume.  Do that.
+> 
+> It turns out that, at least with today's configurations, this doesn't
+> actually matter.  That's because none of the current device trees have
+> an OPP table for geni SPI yet.  That makes dev_pm_opp_set_rate(dev, 0)
+> a no-op.  This is why it wasn't noticed in the testing of the original
+> patch.  It's still a good idea to fix, though.
 
-It is ok.
+good catch, without this (and with OPP tables added) we would end up removing
+the performance vote on suspend and never put it back unless the rate changes.
+Perhaps a similar change would be needed for spi-qcom-qspi too?
 
-Thanks,
-Best regard,
-DIEN Pham
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> Sending this as a separate patch even though I think the patch it's
+> fixing [1] hasn't landed yet.  I'd be happy if this was squashed into
+> that patch when landing if that suits everyone, but it could land on
+> its own too.
+> 
+> Like the patch it's fixing, this needs to target the Qualcomm tree in
+> order to avoid merge conflicts.
+> 
+> [1] https://lore.kernel.org/r/20200701174506.1.Icfdcee14649fc0a6c38e87477b28523d4e60bab3@changeid
+> 
+>   drivers/spi/spi-geni-qcom.c | 12 +++++++++++-
+>   1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> index 97fac5ea6afd..e5ece1bcc4ad 100644
+> --- a/drivers/spi/spi-geni-qcom.c
+> +++ b/drivers/spi/spi-geni-qcom.c
+> @@ -79,6 +79,7 @@ struct spi_geni_master {
+>   	u32 tx_wm;
+>   	u32 last_mode;
+>   	unsigned long cur_speed_hz;
+> +	unsigned long cur_sclk_hz;
+>   	unsigned int cur_bits_per_word;
+>   	unsigned int tx_rem_bytes;
+>   	unsigned int rx_rem_bytes;
+> @@ -116,6 +117,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>   	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
+>   	if (ret)
+>   		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
+> +	else
+> +		mas->cur_sclk_hz = sclk_freq;
+> +
+>   	return ret;
+>   }
+>   
+> @@ -670,7 +674,13 @@ static int __maybe_unused spi_geni_runtime_resume(struct device *dev)
+>   	if (ret)
+>   		return ret;
+>   
+> -	return geni_se_resources_on(&mas->se);
+> +	ret = geni_se_resources_on(&mas->se);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_pm_opp_set_rate(mas->dev, mas->cur_sclk_hz);
+> +
+> +	return 0;
+>   }
+>   
+>   static int __maybe_unused spi_geni_suspend(struct device *dev)
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
