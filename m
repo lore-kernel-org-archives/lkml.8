@@ -2,111 +2,138 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5A9D2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3892073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L7ek4xBY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c5xs2zQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgGINAJ (ORCPT
+        id S1726660AbgGINAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbgGINAI (ORCPT
+        Thu, 9 Jul 2020 09:00:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48604 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726358AbgGINAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:00:08 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 647E0C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:00:08 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o11so2243660wrv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:00:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lVrj7tYkfLoGqvj3owMMt4Bxl+SxGlyf+OCDf2yZMSo=;
-        b=L7ek4xBYwpneFtHsjTj0MYwILJTEK3Nj780DPHIK1FuNFhDJDr+CSoGzo4P0o3dpIh
-         9YZibjSOxKTeqGh0ST4+UBsRXc61uFSV0tFsLQxShbTr49697Rfpc5EXVQ9wYTfkR48C
-         tfgc16paYu2j+UsVSX61+39AEqw3hYhysVXcaLzD4T8upQ75XniWPUt3EhC9m1d85dGA
-         8oIkdfGEunG83rGo9fZFF2hGfZTNSMXvaD2bF3FtmdJtaCPrsdtTZQ3lgLai9MBP2IcH
-         38RCF3NwtCh1zCngT7dWBDYjNM42XXhSqOjUt0YRYTJHvY0NNiQQaZ6EcpCAcqTgKd0d
-         iYDw==
+        Thu, 9 Jul 2020 09:00:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594299646;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YSXgeEhLv5Tj53wSYbt5UYfNvPxCwCEac8F+A/0zihk=;
+        b=c5xs2zQJHCgFo8YFbAHL1BAz9yfOBag3AhJR8Ds7B9IjgPVbmnwu0ESmzYgKbbM68d9zUE
+        elSysEorkQWxeAXxUemkhzr5YCvAUgb8UznEugVHrpvTbbdVDu0iNHRnqmFr0zoElr7nYj
+        eMYTYUE3JdDvEsI7pz+OdZcRnYq14fM=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-115-0MF8MjOYNpyVazSs99AWNA-1; Thu, 09 Jul 2020 09:00:44 -0400
+X-MC-Unique: 0MF8MjOYNpyVazSs99AWNA-1
+Received: by mail-qv1-f72.google.com with SMTP id m18so1294472qvt.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:00:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lVrj7tYkfLoGqvj3owMMt4Bxl+SxGlyf+OCDf2yZMSo=;
-        b=ANuMGbh1UBhlzWu2mVkH2+ibW4q/8puhjz3NmjSyy2xpC6nLAkJAz9AD27yjdFMOKX
-         VZz0K2cV6XFL3F/rq+nPqctjDsbL+Dv2kfL1hkJOm885MR1C08kUxDz6p+8tGB4sAIGm
-         HuSVqCVyFYoPw1WAMpZlDmeUVJon+ahqqEEDwf51pxP352QkCNtthZNF0Z915wikliyw
-         e+rLQQ7zYgtwHFaF+vgBkV2ZmA4fXec235+FYmXCovVL5FvsTC9O14skb8SnypqwLPEG
-         ikc+9OeiqOzbNHHluWWN4ShQhOhOUBUOp28zM2rX49vmq3pwlhmUlQCb9kBfH6g+dElU
-         sQyg==
-X-Gm-Message-State: AOAM532cocqyn79w6gqwSLCIJQ+fH24gL4u4hAvw6rh7NaPJueP3WjS4
-        qJPd8VebGmsYMT6dX6JixZolMw==
-X-Google-Smtp-Source: ABdhPJwkuHIpsYSzMeKdthPBV+xKywxAKxEC7b9ioVSPi5Ib6zLkYE+NtrbGLmwRzENCvP0j4tqMAQ==
-X-Received: by 2002:adf:e901:: with SMTP id f1mr63389805wrm.80.1594299607024;
-        Thu, 09 Jul 2020 06:00:07 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id u15sm5660717wrm.64.2020.07.09.06.00.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jul 2020 06:00:06 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org
-Cc:     bjorn.andersson@linaro.org, georgi.djakov@linaro.org,
-        jun.nie@linaro.org, mdtipton@codeaurora.org,
-        okukatla@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] interconnect: msm8916: Fix buswidth of pcnoc_s nodes
-Date:   Thu,  9 Jul 2020 16:00:04 +0300
-Message-Id: <20200709130004.12462-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=YSXgeEhLv5Tj53wSYbt5UYfNvPxCwCEac8F+A/0zihk=;
+        b=Mgo8OGyAlF9w5SUW9KeilZLKU1Zslz73ACfxMtWJPEV092lM4UmDfjlSXvP9V7IZdc
+         gQx+yjLGCtmnP3jjL5bkpWEDicGLUUvEks0B+7jh7uocIE7CgXfRAOQHWbgGRxhZHT+T
+         cc1K6yRlF/g6s5k70BzOr7OZBlTB/6ecXL7w7L71k6u42BRxLCm1pcC8L/SDFFq+ungm
+         zzO2oEW8r7lF/iIdJZPlMOPbjELQpT6ogRh7m0e0jOxnlD1jZO3ntX92E1LwrJFKXmUi
+         0ygmk+lbjiFp1n+/CJTHplnPWjfMggEpODiotdgHRItQAYE84jGo07qduLkZyYzaFVOP
+         3UXg==
+X-Gm-Message-State: AOAM533p6JozRQd0WzXW+WU5dq3N4YOZxMSTMSixzGeVPOHeBMGm/F9n
+        mDuoeQOCkZqZTMbiac4j9nMBy3Wjo0E56IVRxHZod5WHWa+Hq0smpnf11XvSbuYVzTaeHA+opbI
+        ooOMZtE/Bq9jk6/GuYu2fT/LW
+X-Received: by 2002:a05:620a:958:: with SMTP id w24mr63937046qkw.20.1594299643822;
+        Thu, 09 Jul 2020 06:00:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwmIIe/1yIwX7BG5ThjTMW2ZaJ1OANij7ZtdWK/gj/VJQ69fGc/AlUQ8twBBUU4xG8b7PG2Mg==
+X-Received: by 2002:a05:620a:958:: with SMTP id w24mr63937011qkw.20.1594299643609;
+        Thu, 09 Jul 2020 06:00:43 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id t57sm3684437qtc.91.2020.07.09.06.00.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 06:00:42 -0700 (PDT)
+Subject: Re: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+To:     "Wu, Hao" <hao.wu@intel.com>, "Xu, Yilun" <yilun.xu@intel.com>
+Cc:     "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+References: <1594282705-32289-1-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB3819117029F124067F7EA8B985640@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <20200709093527.GA32541@yilunxu-OptiPlex-7050>
+ <DM6PR11MB3819D07348C347B5BB8F86C085640@DM6PR11MB3819.namprd11.prod.outlook.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <2d7919d5-a320-58f4-5c9d-7ef868ad8676@redhat.com>
+Date:   Thu, 9 Jul 2020 06:00:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <DM6PR11MB3819D07348C347B5BB8F86C085640@DM6PR11MB3819.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The buswidth of the pcnoc_s_* nodes is actually not 8, but
-4 bytes. Let's fix it.
 
-Reported-by: Jun Nie <jun.nie@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/interconnect/qcom/msm8916.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+On 7/9/20 3:14 AM, Wu, Hao wrote:
+>> On Thu, Jul 09, 2020 at 05:10:49PM +0800, Wu, Hao wrote:
+>>>> Subject: [PATCH] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+>>>>
+>>>> Add PCIe Device ID for Intel FPGA PAC N3000.
+>>>>
+>>>> Signed-off-by: Wu Hao <hao.wu@intel.com>
+>>>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+>>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>>> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+>>>> ---
+>>>>  drivers/fpga/dfl-pci.c | 2 ++
+>>>>  1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+>>>> index 73b5153..824aecf 100644
+>>>> --- a/drivers/fpga/dfl-pci.c
+>>>> +++ b/drivers/fpga/dfl-pci.c
+>>>> @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev)
+>>>>  #define PCIE_DEVICE_ID_PF_INT_5_X0xBCBD
+>>>>  #define PCIE_DEVICE_ID_PF_INT_6_X0xBCC0
+>>>>  #define PCIE_DEVICE_ID_PF_DSC_1_X0x09C4
+>>>> +#define PCIE_DEVICE_ID_PF_PAC_N3000 0x0B30
+>>> Should we drop _PF_ here? and also do you want _INTEL_ here?
+>> I think we could keep _PF_, also there is no need to support VF of pac
+>> n3000 in product now, but it does exist (ID: 0x0b31).
 
-diff --git a/drivers/interconnect/qcom/msm8916.c b/drivers/interconnect/qcom/msm8916.c
-index e94f3c5228b7..42c6c5581662 100644
---- a/drivers/interconnect/qcom/msm8916.c
-+++ b/drivers/interconnect/qcom/msm8916.c
-@@ -197,13 +197,13 @@ DEFINE_QNODE(pcnoc_int_0, MSM8916_PNOC_INT_0, 8, -1, -1, MSM8916_PNOC_SNOC_MAS,
- DEFINE_QNODE(pcnoc_int_1, MSM8916_PNOC_INT_1, 8, -1, -1, MSM8916_PNOC_SNOC_MAS);
- DEFINE_QNODE(pcnoc_m_0, MSM8916_PNOC_MAS_0, 8, -1, -1, MSM8916_PNOC_INT_0);
- DEFINE_QNODE(pcnoc_m_1, MSM8916_PNOC_MAS_1, 8, -1, -1, MSM8916_PNOC_SNOC_MAS);
--DEFINE_QNODE(pcnoc_s_0, MSM8916_PNOC_SLV_0, 8, -1, -1, MSM8916_SLAVE_CLK_CTL, MSM8916_SLAVE_TLMM, MSM8916_SLAVE_TCSR, MSM8916_SLAVE_SECURITY, MSM8916_SLAVE_MSS);
--DEFINE_QNODE(pcnoc_s_1, MSM8916_PNOC_SLV_1, 8, -1, -1, MSM8916_SLAVE_IMEM_CFG, MSM8916_SLAVE_CRYPTO_0_CFG, MSM8916_SLAVE_MSG_RAM, MSM8916_SLAVE_PDM, MSM8916_SLAVE_PRNG);
--DEFINE_QNODE(pcnoc_s_2, MSM8916_PNOC_SLV_2, 8, -1, -1, MSM8916_SLAVE_SPDM, MSM8916_SLAVE_BOOT_ROM, MSM8916_SLAVE_BIMC_CFG, MSM8916_SLAVE_PNOC_CFG, MSM8916_SLAVE_PMIC_ARB);
--DEFINE_QNODE(pcnoc_s_3, MSM8916_PNOC_SLV_3, 8, -1, -1, MSM8916_SLAVE_MPM, MSM8916_SLAVE_SNOC_CFG, MSM8916_SLAVE_RBCPR_CFG, MSM8916_SLAVE_QDSS_CFG, MSM8916_SLAVE_DEHR_CFG);
--DEFINE_QNODE(pcnoc_s_4, MSM8916_PNOC_SLV_4, 8, -1, -1, MSM8916_SLAVE_VENUS_CFG, MSM8916_SLAVE_CAMERA_CFG, MSM8916_SLAVE_DISPLAY_CFG);
--DEFINE_QNODE(pcnoc_s_8, MSM8916_PNOC_SLV_8, 8, -1, -1, MSM8916_SLAVE_USB_HS, MSM8916_SLAVE_SDCC_1, MSM8916_SLAVE_BLSP_1);
--DEFINE_QNODE(pcnoc_s_9, MSM8916_PNOC_SLV_9, 8, -1, -1, MSM8916_SLAVE_SDCC_2, MSM8916_SLAVE_LPASS, MSM8916_SLAVE_GRAPHICS_3D_CFG);
-+DEFINE_QNODE(pcnoc_s_0, MSM8916_PNOC_SLV_0, 4, -1, -1, MSM8916_SLAVE_CLK_CTL, MSM8916_SLAVE_TLMM, MSM8916_SLAVE_TCSR, MSM8916_SLAVE_SECURITY, MSM8916_SLAVE_MSS);
-+DEFINE_QNODE(pcnoc_s_1, MSM8916_PNOC_SLV_1, 4, -1, -1, MSM8916_SLAVE_IMEM_CFG, MSM8916_SLAVE_CRYPTO_0_CFG, MSM8916_SLAVE_MSG_RAM, MSM8916_SLAVE_PDM, MSM8916_SLAVE_PRNG);
-+DEFINE_QNODE(pcnoc_s_2, MSM8916_PNOC_SLV_2, 4, -1, -1, MSM8916_SLAVE_SPDM, MSM8916_SLAVE_BOOT_ROM, MSM8916_SLAVE_BIMC_CFG, MSM8916_SLAVE_PNOC_CFG, MSM8916_SLAVE_PMIC_ARB);
-+DEFINE_QNODE(pcnoc_s_3, MSM8916_PNOC_SLV_3, 4, -1, -1, MSM8916_SLAVE_MPM, MSM8916_SLAVE_SNOC_CFG, MSM8916_SLAVE_RBCPR_CFG, MSM8916_SLAVE_QDSS_CFG, MSM8916_SLAVE_DEHR_CFG);
-+DEFINE_QNODE(pcnoc_s_4, MSM8916_PNOC_SLV_4, 4, -1, -1, MSM8916_SLAVE_VENUS_CFG, MSM8916_SLAVE_CAMERA_CFG, MSM8916_SLAVE_DISPLAY_CFG);
-+DEFINE_QNODE(pcnoc_s_8, MSM8916_PNOC_SLV_8, 4, -1, -1, MSM8916_SLAVE_USB_HS, MSM8916_SLAVE_SDCC_1, MSM8916_SLAVE_BLSP_1);
-+DEFINE_QNODE(pcnoc_s_9, MSM8916_PNOC_SLV_9, 4, -1, -1, MSM8916_SLAVE_SDCC_2, MSM8916_SLAVE_LPASS, MSM8916_SLAVE_GRAPHICS_3D_CFG);
- DEFINE_QNODE(pcnoc_snoc_mas, MSM8916_PNOC_SNOC_MAS, 8, 29, -1, MSM8916_PNOC_SNOC_SLV);
- DEFINE_QNODE(pcnoc_snoc_slv, MSM8916_PNOC_SNOC_SLV, 8, -1, 45, MSM8916_SNOC_INT_0, MSM8916_SNOC_INT_BIMC, MSM8916_SNOC_INT_1);
- DEFINE_QNODE(qdss_int, MSM8916_SNOC_QDSS_INT, 8, -1, -1, MSM8916_SNOC_INT_0, MSM8916_SNOC_INT_BIMC);
+I was wondering about the vf id, thanks!
+
+>>
+>> And add _INTEL_ is good to me.
+>>
+>> Then how about this one:
+>>   #define PCIE_DEVICE_ID_PF_INTEL_PAC_N3000	0x0B30
+> I am just considering the alignment with ids defined in include/linux/pci_ids.h
+> So drop _PF_ before _INTEL_ would be better? : )
+
+To be consistent, all the id's are intel and all could drop pf.
+
+Tom
+
+>
+> Thanks
+> Hao
+>
+
