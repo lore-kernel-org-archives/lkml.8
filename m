@@ -2,114 +2,94 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8767C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA13DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C018A20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFB620775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594322709;
+	bh=K0jknX9e/ibMpn57/XlujpI7iXBL+jyJnW4FsG4J+tk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cKuucFgJZ/W8Tm0KZGiyNekzAlJl2Up5RBDuMciUltKqCDLmWv4iFREKb+SkezZMb
+	 /kpL8SfEbYxr9PDRBq4PqqzyP5jlE/6owcU8yaJ3uxwCka4NQqJGdKlU28iAYRa8og
+	 sFR0WK1qtcZLSrDhm8nfU29OWbuo51nqInvrRwrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgGITYl (ORCPT
+        id S1726708AbgGITZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:24:41 -0400
-Received: from mga01.intel.com ([192.55.52.88]:63842 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgGITYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 15:24:40 -0400
-IronPort-SDR: 7BNdIwuv1//38vKz3EvnBvo5vkADvhSC/QCUfoTY/GyJ1VBT5RXc8iDbO9MZ84J/UDVLpRzB08
- +Gu8i5St3BSQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="166183556"
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="166183556"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 12:24:40 -0700
-IronPort-SDR: sMZsTiHVopK3ePEcpWwnCOAclmj9xhQ/9CxqYKvsyQ8WVcc/mC/cnIrpFDy+ALUTYqjlpxw6W5
- haZS4pM+VAzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="358543721"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga001.jf.intel.com with ESMTP; 09 Jul 2020 12:24:40 -0700
-Date:   Thu, 9 Jul 2020 12:24:40 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
-Message-ID: <20200709192440.GD24919@linux.intel.com>
-References: <20200622220442.21998-1-peterx@redhat.com>
- <20200622220442.21998-2-peterx@redhat.com>
- <20200625061544.GC2141@linux.intel.com>
- <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
- <20200625162540.GC3437@linux.intel.com>
- <20200626180732.GB175520@xz-x1>
- <20200626181820.GG6583@linux.intel.com>
- <47b90b77-cf03-6087-b25f-fcd2fd313165@redhat.com>
- <20200630154726.GD7733@linux.intel.com>
- <20200709182220.GG199122@xz-x1>
+        Thu, 9 Jul 2020 15:25:06 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36683 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgGITZG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 15:25:06 -0400
+Received: by mail-io1-f68.google.com with SMTP id y2so3548267ioy.3;
+        Thu, 09 Jul 2020 12:25:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5DD46ZsIeppMNyS9uf1ashBYJjtuEqvvHc5Gyh8gPlA=;
+        b=VH3oRM4ATVjSoomHYR7uDRCH3g+wnSMjRA2bGmb8QWMc2OQWEG4/FLq8oH5m/DIl8Q
+         8Sey0w6i9pmmchpZKX+DHnul7kVopYsI7YV7TqwsGd4s2KYNvxNI6E4ci6/HIjXXRzWt
+         BwLLlG324rBeeFF2TeMfOtLKE8GfZaBMFnDQGsNzV6a5bcEWDzU3fdDGf6z4ukYf2Rp7
+         /XmLieBs6+/Jx6mNG5IxlQR+07io0Jw7EYGHauHRopUX7NqNIEqwqxzYUV7vhdRoUxGl
+         yPLRUifPFLuzhod5e88TFnmx0+JBkPNZlvo5TPbxpwbOoEfIIkv8IOqIO6bkE4XhGWZr
+         hUHg==
+X-Gm-Message-State: AOAM533SNLVrnmaRQDa0G6OQtKAfiecBOQxAa4mLqPJonjo1X7+gbPQ1
+        30h2+KV1cmXSt6ka0VgoBw==
+X-Google-Smtp-Source: ABdhPJweNbWtVYNFr8NJv3XP/k1jpC6i+0l4M88nutRLz18pWdLFvSz6puSEMhCLOHjx1ZxiGlL8QA==
+X-Received: by 2002:a05:6602:2e8d:: with SMTP id m13mr43936103iow.100.1594322705319;
+        Thu, 09 Jul 2020 12:25:05 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id c7sm2358325ilo.85.2020.07.09.12.25.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 12:25:04 -0700 (PDT)
+Received: (nullmailer pid 749236 invoked by uid 1000);
+        Thu, 09 Jul 2020 19:25:04 -0000
+Date:   Thu, 9 Jul 2020 13:25:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, pavel@ucw.cz
+Subject: Re: [PATCH v29 04/16] dt: bindings: lp50xx: Introduce the lp50xx
+ family of RGB drivers
+Message-ID: <20200709192504.GA749144@bogus>
+References: <20200622185919.2131-1-dmurphy@ti.com>
+ <20200622185919.2131-5-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200709182220.GG199122@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200622185919.2131-5-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 02:22:20PM -0400, Peter Xu wrote:
-> On Tue, Jun 30, 2020 at 08:47:26AM -0700, Sean Christopherson wrote:
-> > On Sat, Jun 27, 2020 at 04:24:34PM +0200, Paolo Bonzini wrote:
-> > > On 26/06/20 20:18, Sean Christopherson wrote:
-> > > >> Btw, would it be more staightforward to check "vcpu->arch.arch_capabilities &
-> > > >> ARCH_CAP_TSX_CTRL_MSR" rather than "*ebx | (F(RTM) | F(HLE))" even if we want
-> > > >> to have such a fix?
-> > > > Not really, That ends up duplicating the check in vmx_get_msr().  From an
-> > > > emulation perspective, this really is a "guest" access to the MSR, in the
-> > > > sense that it the virtual CPU is in the guest domain, i.e. not a god-like
-> > > > entity that gets to break the rules of emulation.
-> > > 
-> > > But if you wrote a guest that wants to read MSR_IA32_TSX_CTRL, there are
-> > > two choices:
-> > > 
-> > > 1) check ARCH_CAPABILITIES first
-> > > 
-> > > 2) blindly access it and default to 0.
-> > > 
-> > > Both are fine, because we know MSR_IA32_TSX_CTRL has no
-> > > reserved/must-be-one bits.  Calling __kvm_get_msr and checking for an
-> > > invalid MSR through the return value is not breaking the rules of
-> > > emulation, it is "faking" a #GP handler.
-> > 
-> > "guest" was the wrong choice of word.  My point was that, IMO, emulation
-> > should never set host_initiated=true.
-> > 
-> > To me, accessing MSRs with host_initiated is the equivalent of loading a
-> > ucode patch, i.e. it's super duper special stuff that deliberately turns
-> > off all safeguards and can change the fundamental behavior of the (virtual)
-> > CPU.
+On Mon, 22 Jun 2020 13:59:07 -0500, Dan Murphy wrote:
+> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
+> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
+> can control RGB LEDs individually or as part of a control bank group.
+> These devices have the ability to adjust the mixing control for the RGB
+> LEDs to obtain different colors independent of the overall brightness of
+> the LED grouping.
 > 
-> This seems to be an orthogonal change against what this series tried to do.  We
-> use host_initiated=true in current code, and this series won't change that fact
-> either.  As I mentioned in the other thread, at least the rdmsr warning is
-> ambiguous when it's not initiated from the guest if without this patchset, and
-> this series could address that.
-
-My argument is that using host_initiated=true is wrong.  
-
-> > > So I think Peter's patch is fine, but (possibly on top as a third patch)
-> > > __must_check should be added to MSR getters and setters.  Also one
-> > > possibility is to return -EINVAL for invalid MSRs.
+> Datasheet:
+> http://www.ti.com/lit/ds/symlink/lp5012.pdf
+> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+> http://www.ti.com/lit/ds/symlink/lp5036.pdf
 > 
-> Yeah I can add another patch for that.  Also if to repost, I tend to also
-> introduce KVM_MSR_RET_[OK|ERROR] too, which seems to be cleaner when we had
-> KVM_MSR_RET_INVALID.
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/leds/leds-lp50xx.yaml | 130 ++++++++++++++++++
+>  1 file changed, 130 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
 > 
-> Any objections before I repost?
 
-Heh, or perhaps "Any objections that haven't been overruled before I repost?" :-D
+Reviewed-by: Rob Herring <robh@kernel.org>
