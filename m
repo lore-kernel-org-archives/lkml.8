@@ -2,92 +2,148 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9571C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1865AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1F2F20672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D8120720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594335709;
-	bh=hN6QIvbQztwLKcD9XrA0l4jVZB2qrI5lz+q7bVAULz0=;
+	s=default; t=1594335854;
+	bh=wGxTtySOQywGlGpNmMEAdtnIGXAXgwkUZcr7aDb3kkQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UOqX5c3Qjf0ZdNSaX4cfN5N6wZbpCgP6xjpFfePGvBEs26h9amqZrubObus1eC+ok
-	 RlUpWPd/EFF+q3U2foAyTdFvcApCsk9r54ovzpe94Iojj6vJi9DZWfXwbWy7fL05U1
-	 KHg1nd5DU9KuMVBQwhXoQxtjuZS7Jf/MTkUy5DOE=
+	b=I6oKYXuZhIxr3xvjse2m/Fvy9kH/NkmtJTxDBsyRcDIbgkyYV7DsxDQWYr37PDdHH
+	 xZAiHNIp2QyiXofa4FpbBRkkEz9tOBj7wBZMb7ipNKmCfvuwspWtq2/ybopowOdUTa
+	 M7YEJaIovQa47VOOWAarXodj780L79u7viTbRJOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgGIXBs (ORCPT
+        id S1726821AbgGIXEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:01:48 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34266 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgGIXBr (ORCPT
+        Thu, 9 Jul 2020 19:04:13 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:39997 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgGIXEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:01:47 -0400
-Received: by mail-il1-f196.google.com with SMTP id t4so3506242iln.1;
-        Thu, 09 Jul 2020 16:01:47 -0700 (PDT)
+        Thu, 9 Jul 2020 19:04:13 -0400
+Received: by mail-il1-f193.google.com with SMTP id e18so3463849ilr.7;
+        Thu, 09 Jul 2020 16:04:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9LyLZwIT1Tmr8hoOHUcIhBbsWHFqoFhPBb0XwVuwXiQ=;
-        b=VI6B9P4jBgmrxLumZnTKzhe0SNvMzHeDplja2GUShO82aI45InIRX17hoa8czdzHuq
-         jk7VRSxWRCMgESxUrICg9XsyzUPiUN7lJWwv5zV7USRd6S4BH7h7tfLQ1P7VDyXlD7CP
-         085GQ8ecy/UPffOVK4GMQItJlYECHKmHEoyQ1FeAvUAEyalh1YKm6WNONbAyH5kvt7QW
-         iMrvoi72hFjIbWokIimu1Yqq3x9vRgirHqG538XsQIaFA7HTlT56khbaLLVyYAxWOR7k
-         4sQ4jV9n1Qp6aed/bY4TpVVNUPT6VlKycpZe3hYEFwIDp8ISD7ESNP1/lORyzcvFIyuy
-         TKhg==
-X-Gm-Message-State: AOAM532vJwodWAB9zateqBu7xa/FXKph8vdnD3G7ROnTYEv26LmRCaLc
-        9b27xu0ZxqnnnD+sOUR9Pw==
-X-Google-Smtp-Source: ABdhPJyFvJ/g6/scOhXaZDnhFMuXx37vLAx8Q2m8TIpc14eIJDuv0hQ7JlMf0TmAmHFL2IdEMnlwKQ==
-X-Received: by 2002:a92:cb03:: with SMTP id s3mr49942616ilo.1.1594335707291;
-        Thu, 09 Jul 2020 16:01:47 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=rtaAPiL9q7qGUDFYXyM+6i10yrbGLvC0ihaUk4rwR58=;
+        b=IUPfvhVmpRupGSuQi0URRb7gwpepEt3tL/v+4ZAxAb7nkUgusXljh94BkMM/GNma4j
+         LE5XyLYdPJ1iHJ64HYKeuLyRAD6Bu/81HaLJDLsqMtOyYYp4vB7aWMn548thGyfqndf6
+         84U1r5snIHkX7yUFiBRhGg/VVfZqSureM16nQBnh0ve2TJIo/QlwgPEgQOqALm/OIIjF
+         J6NM7it9AZXyQ7dMHpQgn67mE29JjprOurWj8hvDJvedd4CkzjnMBpZSalvLE3O6pWXx
+         6p7Wk2cHoXsqdL40fQVoKWZxAl+tH+rLlsIJC+xlKDIxowOkSfXY/jwxBTOFMtBeKoXt
+         dxXA==
+X-Gm-Message-State: AOAM530uWSLvgBvD5lCj7NxKOWgRSHJ++0Cn8o1iYDtA8wC5nn0WMVbt
+        5noZjc0q7NfQhGEXSL3TZkE1koV4Cg==
+X-Google-Smtp-Source: ABdhPJzthpu8MazWs5NHvqwNU1OpG2+x92i5Yk1GeUgmVLRH4IDXuVNaA4PDlsQ8jAajcfUwQBEy4Q==
+X-Received: by 2002:a92:da4c:: with SMTP id p12mr20547204ilq.142.1594335851875;
+        Thu, 09 Jul 2020 16:04:11 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id m6sm2701349ilb.39.2020.07.09.16.01.46
+        by smtp.gmail.com with ESMTPSA id g1sm2523394ilk.51.2020.07.09.16.04.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 16:01:46 -0700 (PDT)
-Received: (nullmailer pid 1054096 invoked by uid 1000);
-        Thu, 09 Jul 2020 23:01:45 -0000
-Date:   Thu, 9 Jul 2020 17:01:45 -0600
+        Thu, 09 Jul 2020 16:04:11 -0700 (PDT)
+Received: (nullmailer pid 1057926 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:04:10 -0000
+Date:   Thu, 9 Jul 2020 17:04:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     f.fainelli@gmail.com, zajec5@gmail.com, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, hauke@hauke-m.de, jonas.gorski@gmail.com
-Subject: Re: [PATCH v4 5/9] mips: bmips: add BCM6318 power domain definitions
-Message-ID: <20200709230145.GA1054020@bogus>
-References: <20200610171630.465579-1-noltari@gmail.com>
- <20200613082140.2009461-1-noltari@gmail.com>
- <20200613082140.2009461-6-noltari@gmail.com>
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 05/12] dt-bindings: arm: Add mstar YAML schema
+Message-ID: <20200709230410.GA1054276@bogus>
+References: <20200612130032.3905240-2-daniel@0x0f.com>
+ <20200616121525.1409790-1-daniel@0x0f.com>
+ <20200616121525.1409790-6-daniel@0x0f.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200613082140.2009461-6-noltari@gmail.com>
+In-Reply-To: <20200616121525.1409790-6-daniel@0x0f.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Jun 2020 10:21:36 +0200, Álvaro Fernández Rojas wrote:
-> BCM6318 SoCs have a power domain controller to enable/disable certain
-> components in order to save power.
+On Tue, Jun 16, 2020 at 09:15:18PM +0900, Daniel Palmer wrote:
+> This adds some intial boards for Armv7 based mstar platforms.
 > 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 > ---
->  v4: no changes.
->  v3: no changes (patch reordered).
->  v2: Add BCM6318 dt-bindings header file.
+>  .../devicetree/bindings/arm/mstar.yaml        | 34 +++++++++++++++++++
+>  MAINTAINERS                                   |  7 ++++
+>  2 files changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mstar.yaml
 > 
->  include/dt-bindings/soc/bcm6318-pm.h | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 include/dt-bindings/soc/bcm6318-pm.h
-> 
+> diff --git a/Documentation/devicetree/bindings/arm/mstar.yaml b/Documentation/devicetree/bindings/arm/mstar.yaml
+> new file mode 100644
+> index 000000000000..7bb91a546b5f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mstar.yaml
+> @@ -0,0 +1,34 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/mstar.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MStar platforms device tree bindings
+> +
+> +maintainers:
+> +  - Daniel Palmer <daniel@thingy.jp>
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +        # infinity boards
+
+Make a 'description:' rather than a comment. With that,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +        - items:
+> +          - enum:
+> +              - thingyjp,breadbee-crust # thingy.jp BreadBee Crust
+> +              - thingyjp,breadbee-crustx # thingy.jp BreadBee Crustx
+> +          - const: mstar,infinity
+> +
+> +        # infinity3 boards
+> +        - items:
+> +          - enum:
+> +              - thingyjp,breadbee # thingy.jp BreadBee
+> +          - const: mstar,infinity3
+> +
+> +        # mercury5 boards
+> +        - items:
+> +          - enum:
+> +              - 70mai,midrived08 # 70mai midrive d08
+> +          - const: mstar,mercury5
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 68f21d46614c..a8640c1c50cc 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2117,6 +2117,13 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  S:	Maintained
+>  F:	arch/arm/mach-pxa/mioa701.c
+>  
+> +ARM/MStar/Sigmastar Armv7 SoC support
+> +M:	Daniel Palmer <daniel@thingy.jp>
+> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +S:	Maintained
+> +W:	http://linux-chenxing.org/
+> +F:	Documentation/devicetree/bindings/arm/mstar.yaml
+> +
+>  ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
+>  M:	Michael Petchkovsky <mkpetch@internode.on.net>
+>  S:	Maintained
+> -- 
+> 2.27.0.rc0
+> 
