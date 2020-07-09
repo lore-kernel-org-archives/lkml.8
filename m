@@ -2,167 +2,93 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68891C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 519262076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1EB20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:08:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="S+pa8Qch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgGINIS (ORCPT
+        id S1726947AbgGINIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:08:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35601 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgGINIR (ORCPT
+        Thu, 9 Jul 2020 09:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726471AbgGINIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:08:17 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jtWHd-0001Iq-Q4; Thu, 09 Jul 2020 13:08:13 +0000
-Date:   Thu, 9 Jul 2020 15:08:11 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Matt Denton <mpdenton@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 6/7] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <20200709130811.zjyn6ptsd3rss3j4@wittgenstein>
-References: <20200706201720.3482959-1-keescook@chromium.org>
- <20200706201720.3482959-7-keescook@chromium.org>
- <20200707133049.nfxc6vz6vcs26m3b@wittgenstein>
- <202007082307.EB5BAD3A0@keescook>
+        Thu, 9 Jul 2020 09:08:50 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E2B5C061A0B;
+        Thu,  9 Jul 2020 06:08:50 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2c1p6kb3z9sQt;
+        Thu,  9 Jul 2020 23:08:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594300127;
+        bh=QZ2TXUsNwQX+5fM9Z1XiCcYS14Bjz3U37QBOvz6UKLY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=S+pa8QchmxP/Hxz4V1WUici9SiDKn8JD1Us5ZCcQAQe1yWQShqT5YaMiaOZxeJ3dC
+         rBBqvGc64UF7gICaq5k2juWXu5gvNKnpQ4p0wydsDPTTJazoe9sK9exr5t7Qy2IdDI
+         GXzQJQFy59DUMKIF7MHCax9LgfeJBBCj+sa6Y0bUGX78O54OwKpAediiFX5+0DXf/l
+         IQHYNnOTf6JNcSASxc+CRCmrh34Ph+vWm7JcD+JLpcSfw0DdyGSimLSdiBlxDTwipD
+         PNNgOkftpOHxE6WGZv1w5aKmSoa3kG1DTALDGYc+7dDtjPmPw6+Lnmkh27dwaIaq3h
+         EOopchiXVINNw==
+Date:   Thu, 9 Jul 2020 23:08:45 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Sterba <dsterba@suse.cz>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commits in the btrfs tree
+Message-ID: <20200709230845.12f5d4f8@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202007082307.EB5BAD3A0@keescook>
+Content-Type: multipart/signed; boundary="Sig_/n5OSowseHPXt_qLhu/dGza6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 11:12:02PM -0700, Kees Cook wrote:
-> On Tue, Jul 07, 2020 at 03:30:49PM +0200, Christian Brauner wrote:
-> > Hm, maybe change that description to sm like:
-> > 
-> > [...]
-> 
-> Cool, yeah. Thanks! I've tweaked it a little more
-> 
-> > > +	/* 24 is original sizeof(struct seccomp_notif_addfd) */
-> > > +	if (size < 24 || size >= PAGE_SIZE)
-> > > +		return -EINVAL;
-> > 
-> > Hm, so maybe add the following:
-> > 
-> > #define SECCOMP_NOTIFY_ADDFD_VER0 24
-> > #define SECCOMP_NOTIFY_ADDFD_LATEST SECCOMP_NOTIFY_ADDFD_VER0
-> > 
-> > and then place:
-> > 
-> > BUILD_BUG_ON(sizeof(struct seccomp_notify_addfd) < SECCOMP_NOTIFY_ADDFD_VER0);
-> > BUILD_BUG_ON(sizeof(struct open_how) != SECCOMP_NOTIFY_ADDFD_LATEST);
-> 
-> Yes, good idea (BTW, did the EA syscall docs land?)
+--Sig_/n5OSowseHPXt_qLhu/dGza6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'll be giving a kernel summit talk about extensible syscalls to come to
-some agreement on a few things. After this we'll update the doc patch
-we have now and merge it. :)
+Hi all,
 
-> 
-> I've made these SECCOMP_NOTIFY_ADDFD_SIZE_* to match your examples below
-> (i.e.  I added "SIZE" to what you suggested above).
+Commits
 
-Yup, sounds good!
+  708dd6a863c3 ("btrfs: switch to iomap_dio_rw() for dio")
+  11b399d70e53 ("iomap: IOMAP_DIO_RWF_NO_STALE_PAGECACHE return if page inv=
+alidation fails")
+  b65c4e58e476 ("iomap: Convert wait_for_completion to flags")
 
-> 
-> > somewhere which is what we do for clone3(), openat2() and others to
-> > catch build-time nonsense.
-> > 
-> > include/uapi/linux/perf_event.h:#define PERF_ATTR_SIZE_VER0     64      /* sizeof first published struct */
-> > include/uapi/linux/sched.h:#define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
-> > include/uapi/linux/sched/types.h:#define SCHED_ATTR_SIZE_VER0   48      /* sizeof first published struct */
-> > include/linux/fcntl.h:#define OPEN_HOW_SIZE_VER0        24 /* sizeof first published struct */
-> > include/linux/fcntl.h:#define OPEN_HOW_SIZE_LATEST      OPEN_HOW_SIZE_VER0
-> 
-> The ..._SIZE_VER0 and ...LATEST stuff doesn't seem useful to export via
-> UAPI. Above, 2 of the 3 export to uapi. Is there a specific rationale
-> for which should and which shouldn't?
+are missing a Signed-off-by from their committer.
 
-I think openat2() just didn't think it was useful. I find them helpful
-because I often update codebase to the newest struct I know about:
+--=20
+Cheers,
+Stephen Rothwell
 
-struct clone_args {
-	__aligned_u64 flags;
-	__aligned_u64 pidfd;
-	__aligned_u64 child_tid;
-	__aligned_u64 parent_tid;
-	__aligned_u64 exit_signal;
-	__aligned_u64 stack;
-	__aligned_u64 stack_size;
-	__aligned_u64 tls;
-/* CLONE_ARGS_SIZE_VER0 64 */
-	__aligned_u64 set_tid;
-	__aligned_u64 set_tid_size;
-/* CLONE_ARGS_SIZE_VER1 80 */
-	__aligned_u64 cgroup;
-/* CLONE_ARGS_SIZE_VER2 88 */
-};
+--Sig_/n5OSowseHPXt_qLhu/dGza6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-But bumping it means I can't use:
+-----BEGIN PGP SIGNATURE-----
 
-clone3(&clone_args, sizeof(clone));
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8HFt0ACgkQAVBC80lX
+0GwvJwgAkjueta/Jkqy2dpDRSgMtlGhK1bZS35hZSJqFp9UiqCfMGuJGv0d8CCpn
+pBXEb6qqJJqqjuH2nAW9ft8R2+GXFxJRsq/A/lcKM73x4BeKH9vwhDagTCzwxn4R
+PB3jZ0X07lTepLDIgL7R2xqe+It049aMdeB13wnEkJHVqYboidKgAjRLnqfZZWB3
+JS+mLzgGbFaUVVo5DwYoKxowUuTsuMQFDdaKZNZMQOea073YzFcnM8qUZ8GpvCVH
+Vb0dDyuiiBzsKwaZiNhNgZBreFZAI11P9z5xTOLK5aaHJm21F4sTG+bt6VCja1b4
+j2P4fx+y/uKsmz38VQU7w/T1HtKFpw==
+=anhP
+-----END PGP SIGNATURE-----
 
-everywhere in the codebase because I'm fscking over everyone on older
-kernels now. :)
-
-Soin various parts of the codebase I will just use:
-
-clone3(&clone_args, CLONE_ARGS_SIZE_VER0);
-
-because I don't care about any of the additional features and I don't
-need the kernel to copy any of the other stuff. Then in other parts of
-the codebase I want to set_tid so I use:
-
-clone3(&clone_args, CLONE_ARGS_SIZE_VER1);
-
-This way I can also set "templates", i.e.
-
-struct clone_args clone_template1 = {
-	.flags		|= CLONE_CLEAR_SIGHAND,
-	.exit_signal	= SIGCHLD,
-	.set_tid	= 1000,
-	.set_tid_size	= 1,
-};
-
-and then use the same struct for:
-
-clone3(&clone_template1, CLONE_ARGS_SIZE_VER0);
-clone3(&clone_template1, CLONE_ARGS_SIZE_VER1);
-
-Whereas sizeof(clone_template1) would always give me
-CLONE_ARGS_SIZE_VER2.
-
-Christian
+--Sig_/n5OSowseHPXt_qLhu/dGza6--
