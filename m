@@ -2,105 +2,117 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8257C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC51207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A9D207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKkSjnvR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mIyW8zZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgGIUCq (ORCPT
+        id S1726948AbgGIUCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42164 "EHLO
+        Thu, 9 Jul 2020 16:02:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgGIUCp (ORCPT
+        with ESMTP id S1726262AbgGIUCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:02:45 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72CE5C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 13:02:45 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 1so1461372pfn.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 13:02:45 -0700 (PDT)
+        Thu, 9 Jul 2020 16:02:47 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D096DC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 13:02:47 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id f2so1257204plr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 13:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3z14lY97vXASMj1PrDNEz8cKF4lZZq/EFvNs+z/7mOc=;
-        b=MKkSjnvRAxx4/qVf+1YXmxCkrWHU0nEIbp2Jc9g/L9G4C1axUGYI25wNrdlx2WXyqR
-         92eNdEM2lpnJYewa4usNccDoiCKaorIzTMzV/vetehFfngQbriv518KpLcVt1P2wz+Cs
-         cL02C+7bRcrtPg484JK9xWW1/LcFdnNPfUwzoDvw1yaZneAW6AdlJQMTle4aW/AHAn/0
-         XKM20oalN87ow358jbkhFtcGxsXgO7enY9UFYyVsfZUX6UZ9sJmPC54oUmqYbhWuxdrx
-         0FIOQrQUiyLFOqOYHHAc8nSZRoLZpP7V7ylu0i4Doo6HjhslNF3aqW8Ix78RD4/Y1QqY
-         2ZOw==
+         :cc;
+        bh=2VF7eJrZIbjXtY34qIPtFXhMtxmmt28w7rrxhSng8oY=;
+        b=mIyW8zZOWOY1pVXYX/2zNQFllS1xgMrpixZbYUPUyWHOZ6IlW8z95tLUpzi8JiW48R
+         7wlKto0aIRL/lggyxOGdZuOWJpSvH5vRS0WbAz1cvUNNAMP4TgDSp7aLxVIuBL0zUnyR
+         QiF6K9DF2QwoRsxqwDlvXq+eh1l1djghBCJjMwcogQ6HwLreSqgMFv8POKDy18zyR4Gb
+         751DZz4Bhjg0wAaRs2YK1ZjBly1oTt0N2PNdTfAYzIxn2HXpXkHZHESHOHcbJP9VUdp4
+         mc6uUFW7KPrMhLj9H4BwJ3/v2QN5OoaFfEmTfZ8r5lyGRjEYD7mBb2LGrMGVizRqRpdG
+         bkJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3z14lY97vXASMj1PrDNEz8cKF4lZZq/EFvNs+z/7mOc=;
-        b=E2RdYYRlr/o1n1u8n7umUfbvgTwApss+5qC2aKGPMDfPA3J2bA7PCBYAQSigLy/ELN
-         w75LXT13+Nvqj6NGW/Lu5rN3BMRxwh08wu/o44nEGhIl3T4Pa7jBgI3YSQ1VLiKpHMTW
-         3DzIGViPdkweLtD6ksSpzNpCS5firhZ75P5AAOckYi+5SGOO4m/+222NJJD+bBAMyiDc
-         8Bjdt0+TMBxW7EIUTOchWizAj6FcX9vXvrtwKFqldDDi/+TKWTa0K3qnoBBBAmfCpFBG
-         sFJOtC9dat4l/PhLIc8dpzWYg3Joa89fMThYqnmJzNn01aGAfJwZyaqSrEz/kSCigkJI
-         vAqw==
-X-Gm-Message-State: AOAM530SocJhQsoiLJhkiWj5wH8+EkfEeHgZ/1PmAARvzkSOHhEngB7P
-        Q1t+W64Dynr2e20iZpnf60FUW8F2iXgwh60ZZsE=
-X-Google-Smtp-Source: ABdhPJzQ5gFNblMOR4BmUWDLXOWG/XqyZSTZN3n5FDRGxPL3uMGt4ALEUO+9GsmhbNdJEGV7YHhfN/qFC2/2PutzcSA=
-X-Received: by 2002:a63:a05f:: with SMTP id u31mr48709589pgn.4.1594324964993;
- Thu, 09 Jul 2020 13:02:44 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=2VF7eJrZIbjXtY34qIPtFXhMtxmmt28w7rrxhSng8oY=;
+        b=HSO63fA4nGzeJXyPMqwXP9mSrj1vpA2yOp4sBXejOZh++N4Z2OYXrf1pY/nA+UmTdH
+         MWofEPEZJjzfiaW7EG3Yf0qP16QbJZYtNfiygCSJK+06DVlqlQWE7c0K7BVoHRwQqc/h
+         RZc8SbA0R/Yk4EOiq32L9CSbu5TUxwxV4JrCSf37y4iKtbiT4bboQ8maohlnr/bg9LYY
+         ii6cHFRLGUlrsuSPBVZa/IYaehh72Wczqj9UWyg1Ct6x5xfDmI0Yehx0pJn3bstAdlqd
+         B1+jeTIQKoNja/cBsznPOVorTnGOqQTzql1VOtxTSZ33dzWZ52S4fNpYHSZpC2yKielG
+         X5HA==
+X-Gm-Message-State: AOAM5312W3QOleuIXdeuAZf9eZyB3/13L/UlwzC3YiQ91dx6PPwFtCU2
+        SbomEv5EIFVCqJPQCagtSfk6vUTvE2OG1crqjkCUeA==
+X-Google-Smtp-Source: ABdhPJwaZaJ+u5RMaS3HRspVE6liBbxnKyRa6B6ssKDIkoaASfmGaGbdWDCMdFhzpm1ErlOjqfFKvkpfi9hhufy+8YE=
+X-Received: by 2002:a17:90a:21ef:: with SMTP id q102mr1866229pjc.101.1594324967094;
+ Thu, 09 Jul 2020 13:02:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <202007100247.bJq2hgt6%lkp@intel.com>
-In-Reply-To: <202007100247.bJq2hgt6%lkp@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jul 2020 23:02:28 +0300
-Message-ID: <CAHp75VfpC6rX41dts3KeyMLPh8QD3ojEH6Moyu-1naE-_cfrFg@mail.gmail.com>
-Subject: Re: drivers/pinctrl/pinctrl-mcp23s08_spi.c:129:1-3: WARNING:
- PTR_ERR_OR_ZERO can be used
-To:     kernel test robot <lkp@intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
+References: <20200530221127.459704-1-brgerst@gmail.com> <CAKwvOdn7Ugu_687b9CnOnL8RA9hbi+ONCb10gS=3VqtkTsmduw@mail.gmail.com>
+ <CAKwvOdm4gMe_-DcB_H4mDGm8Yy++_7G20sg9xuZoom-rF2j1Sw@mail.gmail.com>
+In-Reply-To: <CAKwvOdm4gMe_-DcB_H4mDGm8Yy++_7G20sg9xuZoom-rF2j1Sw@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 9 Jul 2020 13:02:35 -0700
+Message-ID: <CAKwvOd=0pD2-h_777SjG8dPqw3HYGkmS3UJ2tCWVqmsCL1cZ=w@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] x86: Clean up percpu operations
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Alistair Delva <adelva@google.com>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 9:34 PM kernel test robot <lkp@intel.com> wrote:
+On Wed, Jul 8, 2020 at 12:36 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
 >
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t master
-> head:   0bddd227f3dc55975e2b8dfa7fc6f959b062a2c7
-> commit: 0f04a81784fe3ddc00cae74c517265b3ddb8825c pinctrl: mcp23s08: Split=
- to three parts: core, I=E6=B6=8E, SPI
-> date:   3 months ago
-> config: i386-randconfig-c001-20200709 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
+> On Mon, Jun 1, 2020 at 2:00 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >
+> > On Sat, May 30, 2020 at 3:11 PM Brian Gerst <brgerst@gmail.com> wrote:
+> > >
+> > > The core percpu operations already have a switch on the width of the
+> > > data type, which resulted in an extra amount of dead code being
+> > > generated with the x86 operations having another switch.  This patch set
+> > > rewrites the x86 ops to remove the switch.  Additional cleanups are to
+> > > use named assembly operands, and to cast variables to the width used in
+> > > the assembly to make Clang happy.
+> >
+> > Thanks for all of the work that went into this series.  I think I've
+> > reviewed all of them.
+> > With this series plus this hunk:
+> > https://github.com/ClangBuiltLinux/continuous-integration/blob/master/patches/llvm-all/linux-next/x86/x86-support-i386-with-Clang.patch#L219-L237
+> > I can build and boot i386_defconfig with Clang! So for the series:
+> >
+> > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 >
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
+> tglx, Ingo, Boris, Linus,
+> Do you all have thoughts on this series?  I can understand "let
+> sleeping dogs lie" but some Android folks are really interested in
+> i386 testing, and randconfigs/allnoconfigs are doing i386 builds which
+> are currently broken w/ Clang. This series gets us closer to having
+> test coverage of this ISA with another toolchain, FWIW.
 
->    128          mcp->regmap =3D devm_regmap_init(dev, &mcp23sxx_spi_regma=
-p, mcp, copy);
->  > 129          if (IS_ERR(mcp->regmap))
->    130                  return PTR_ERR(mcp->regmap);
->    131
->    132          return 0;
+Oh, was https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6ec4476ac825
+alluding to this, perchance?
 
-Right.
-
-I expect LKP to generate such patches and submit :-)
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Thanks,
+~Nick Desaulniers
