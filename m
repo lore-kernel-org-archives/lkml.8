@@ -2,78 +2,94 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67171206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594272630;
-	bh=4IX4LY45faliARN3WG0EnS0QUvtq8EhBAHND+vk7uOs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Fifpt/EIygDy2bICDdUaCWdYEYy60EQM41sNl7xCHVDvdCfADClf6UqvO+4sDuk7a
-	 x/eaamNhnHLkYVZQPwK/1TBx6fuC9cfvAbF1dHIVOH+S/NrMHwDvhzm5RdVVFIBIzC
-	 e7BbZfNck7IwlDjRP81G0LqO8Jag9GTtZFT+VRlM=
+	by mail.kernel.org (Postfix) with ESMTP id 45907206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:30:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOxiNM1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726433AbgGIFa3 (ORCPT
+        id S1726471AbgGIFau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 01:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbgGIFa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 01:30:28 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF55206A1;
-        Thu,  9 Jul 2020 05:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594272628;
-        bh=4IX4LY45faliARN3WG0EnS0QUvtq8EhBAHND+vk7uOs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ah473ElMO1z3Tf02N5OGRiMwSHdvVhYVuHm0rbf16M6X/Aov5QMICL3UtvboLG0Mr
-         hnCJI+kS+5D6PRPDv/teU0Q5B+rPtf0gmXAQ98zHF83tiAn1gFWPNKFGmp37bMBZFA
-         KVFEAOjkk+JVSYtHWd70kvWfe1pwff7yEEj5HYGI=
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH] f2fs: don't skip writeback of quota data
-Date:   Wed,  8 Jul 2020 22:30:27 -0700
-Message-Id: <20200709053027.351974-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+        Thu, 9 Jul 2020 01:30:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgGIFau (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 01:30:50 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BFAEC061A0B;
+        Wed,  8 Jul 2020 22:30:50 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d10so370824pll.3;
+        Wed, 08 Jul 2020 22:30:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hgH0s8PPXpzC+u6KlQUY0OheSaLFAPTeW98tNqYnm3U=;
+        b=HOxiNM1ARlxshyRYYVhTy3rNVffABjy6YgB+s3BXI/Yw8YfTPqNd0ys9DynUnaqiml
+         R+e4LZcQdVAihE3rdN9H78ifdPJQsJDlBjDXQ4XXqfhPMtgft/GdrN/JYGJlwn+bVEZI
+         BJtEWox+pYIvXHAcPeOIEqvnrFldNAerCHeiwEHFSuR+YZIrF2wyO4UD0ai9QupbDzAX
+         BJ/YjH1StGEcRxnrhtPLSQZcCDRDi5QStoM2hHSYFmA8au2K9Ye8hRCDGXXrF64Sb7V2
+         7e/ooGKsr8O3mTYoLvA9B3vzbMZ0/HM/w94EJn8GVLfF/5/TR7GRKbOTLXdcQNRLRJSJ
+         Vovw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hgH0s8PPXpzC+u6KlQUY0OheSaLFAPTeW98tNqYnm3U=;
+        b=pYEKhkD7wSYTrU/9KQMOANBEWLPbuTB8j66tQM8PID3IdpzWs058iB8DKYTuR7FpXB
+         tS256JxS9mIUNIW0ptja5ELh3YWZMKydoCMF3McDJTZb+fFzsLWIKz0iMh5A9ga0rJ7A
+         mvaAxz6zowVW8/wT/Akz4S1g4jPdcSDY90Z29WN9mlzBj3H20jFDXLxRWudFa5/yHOcs
+         /H9uNlbw3egXERFAfDptGHOF9Le4I+cz4IyZC4iRHus0QSF+FcDThr6TXDSov7B9DCWb
+         ftPUo/JT2H0seLQLebdmEieOvoeNbBeS4xiZPG9FbHcPGkEweW9xsoC0ydgW/HsIy300
+         wV6Q==
+X-Gm-Message-State: AOAM530QQ7zM/TO7UTypDY1UoHw7HklIu5QVqS3hpCE+hE442ugt5wFN
+        WzWoxnxbOQSyPFNAOcen/lPO6pcV
+X-Google-Smtp-Source: ABdhPJxR58Gn3XcuylHelgitVxt+imlv8A6URI94zT33yJ7dG8TpyzL2qZdixb95GG5Rc08MiafsGA==
+X-Received: by 2002:a17:902:d698:: with SMTP id v24mr22269143ply.163.1594272649431;
+        Wed, 08 Jul 2020 22:30:49 -0700 (PDT)
+Received: from dtor-ws ([100.99.132.186])
+        by smtp.gmail.com with ESMTPSA id z6sm1341951pfn.173.2020.07.08.22.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 22:30:48 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 22:30:46 -0700
+From:   'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
+To:     "Dave.Wang" <dave.wang@emc.com.tw>
+Cc:     Linux-kernel@vger.kernel.org, Linux-input@vger.kernel.org,
+        jingle.wu@emc.com.tw,
+        'Benjamin Tissoires' <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH] Input: elan_i2c - Add more hardware ID for Lenovo laptop
+Message-ID: <20200709053046.GH3273837@dtor-ws>
+References: <001e01d5a368$24946950$6dbd3bf0$@emc.com.tw>
+ <20191202010253.GO248138@dtor-ws>
+ <000201d5a8bd$9fead3f0$dfc07bd0$@emc.com.tw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000201d5a8bd$9fead3f0$dfc07bd0$@emc.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It doesn't need to bypass flushing quota data in background.
+On Mon, Dec 02, 2019 at 11:07:26AM +0800, Dave.Wang wrote:
+> Hi Dmitry,
+> 
+> List device with its corresponding hardware ID as below patch,
+> Please check , thanks!
+> 
+> Add more hardware ID for Lenovo laptop.
+> 
+> Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/data.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied, thank you.
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 44645f4f914b6..72e8b50e588c1 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -3148,7 +3148,7 @@ static int __f2fs_write_data_pages(struct address_space *mapping,
- 	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
- 		goto skip_write;
- 
--	if ((S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) &&
-+	if (S_ISDIR(inode->i_mode) &&
- 			wbc->sync_mode == WB_SYNC_NONE &&
- 			get_dirty_pages(inode) < nr_pages_to_skip(sbi, DATA) &&
- 			f2fs_available_free_memory(sbi, DIRTY_DENTS))
 -- 
-2.27.0.383.g050319c2ae-goog
-
+Dmitry
