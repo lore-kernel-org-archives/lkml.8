@@ -2,138 +2,115 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E76C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE01C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDF120836
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594322246;
-	bh=yzF+W3NuN5vHb++Eg1LQozRb7Fnun3QKYsoWUnQhzUE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=wqVZuFhTR3H4I9a1qX2cnzoXaQO/6z0EMaXbmm4avexBGMpCE/ENtFbPdLLkPMXDv
-	 F5xTLhx/YTp4oCVXs91/1nE/Yw7VUmRAUpPIYDFS1QzP57hsYiK9eOF1g7tKZ5AStH
-	 u8TNXIirjczn4eDcnrAaF5Vm8diZbK4F1ShluXoQ=
+	by mail.kernel.org (Postfix) with ESMTP id 471252078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgGITRZ (ORCPT
+        id S1726523AbgGITSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:17:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgGITRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 15:17:24 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03BF82078B;
-        Thu,  9 Jul 2020 19:17:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594322244;
-        bh=yzF+W3NuN5vHb++Eg1LQozRb7Fnun3QKYsoWUnQhzUE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gCdmvTrnzGIBRoy4hFgZ+BfEmqkT/cSJ/Bu1ILlPEUpcyxKfT1McFFER3/97eUY9k
-         EQU7VL7vbC1FrjAlSQenhcPoaNZfw+jqLXei6s5ihxh/sGCcOCVgOIGUEPehnnxZig
-         dFXI9Ud4J74JkiJKle4uF7vVODVTwYXy7t7GAHh4=
-Date:   Thu, 9 Jul 2020 14:17:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sean V Kelley <sean.v.kelley@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Berni <bernhard@turmann.eu>
-Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 208507] New: BISECTED:
- i2c timeout loading module ddbridge with commit
- d2345d1231d80ecbea5fb764eb43123440861462]
-Message-ID: <20200709191722.GA6054@bjorn-Precision-5520>
+        Thu, 9 Jul 2020 15:18:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40794 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726116AbgGITSL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 15:18:11 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069J2LKL062957;
+        Thu, 9 Jul 2020 15:17:58 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 325kh4ce7f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 15:17:58 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 069JAsxh012219;
+        Thu, 9 Jul 2020 19:17:57 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04dal.us.ibm.com with ESMTP id 325k28akx6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 19:17:57 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 069JHumG16253368
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Jul 2020 19:17:56 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 219696E050;
+        Thu,  9 Jul 2020 19:17:56 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B1EEC6E052;
+        Thu,  9 Jul 2020 19:17:55 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.54.227])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Jul 2020 19:17:55 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-fsi@lists.ozlabs.org
+Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        jk@ozlabs.org, joel@jms.id.au, alistair@popple.id.au,
+        eajames@linux.ibm.com, andrew@aj.id.au
+Subject: [PATCH] fsi: aspeed: Enable 23-bit addressing
+Date:   Thu,  9 Jul 2020 14:17:43 -0500
+Message-Id: <20200709191743.11224-1-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-09_09:2020-07-09,2020-07-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=994
+ priorityscore=1501 lowpriorityscore=0 clxscore=1011 mlxscore=0 bulkscore=0
+ spamscore=0 suspectscore=1 adultscore=0 impostorscore=0 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007090129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bisected to Debian commit d2345d1231d8, which is a backport of the
-upstream commit b88bf6c3b6ff ("PCI: Add boot interrupt quirk mechanism
-for Xeon chipsets").
+In order to access more than the second hub link, 23-bit addressing is
+required. The core provides the highest two bits of address as the slave
+ID to the master.
 
-Reporter confirmed that reverting the Debian backport from 4.19.132
-fixes the problem.
+OpenBMC-Staging-Count: 1
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Acked-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ drivers/fsi/fsi-master-aspeed.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
------ Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
-
-Date: Thu, 09 Jul 2020 15:01:11 +0000
-From: bugzilla-daemon@bugzilla.kernel.org
-To: bjorn@helgaas.com
-Subject: [Bug 208507] New: BISECTED: i2c timeout loading module ddbridge with
-	commit d2345d1231d80ecbea5fb764eb43123440861462
-Message-ID: <bug-208507-41252@https.bugzilla.kernel.org/>
-
-https://bugzilla.kernel.org/show_bug.cgi?id=208507
-
-            Bug ID: 208507
-           Summary: BISECTED: i2c timeout loading module ddbridge with
-                    commit d2345d1231d80ecbea5fb764eb43123440861462
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 4.19.132
-          Hardware: x86-64
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: PCI
-          Assignee: drivers_pci@kernel-bugs.osdl.org
-          Reporter: bernhard@turmann.eu
-        Regression: Yes
-
-Created attachment 290179
-  --> https://bugzilla.kernel.org/attachment.cgi?id=290179&action=edit
-dmesg on 4.19.132
-
-OS: Debian 10.4 Buster
-CPU: Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz
-Hardware: Supermicro  Super Server
-Mainboard: Supermicro X10SDV
-DVB card: Digital Devices Cine S2 V7 Advanced DVB adapter
-
-Issue:
-=====
-Loading kernel module ddbridge fails with i2c timeouts, see attached dmesg. The
-dvb media adapter is unusable.
-This happened after Linux kernel upgrade from 4.19.98-1+deb10u1 to
-4.19.118-2+deb10u1.
-
-A git bisect based on the Debian kernel repo on branch buster identified as
-first bad commit: [1fb0eb795661ab9e697c3a053b35aa4dc3b81165] Update to
-4.19.116.
-
-Another git bisect based on upstream Linux kernel repo on branch v4.19.y
-identified as first bad commit: [d2345d1231d80ecbea5fb764eb43123440861462] PCI:
-Add boot interrupt quirk mechanism for Xeon chipsets.
-
-Other affected Debian kernel version: 5.6.14+2~bpo10+1
-I tested this version via buster-backports, because so far I was unable to
-build my own kernel from 5.6.y or even 5.7.y.
-
-Workaround:
-==========
-Reverting the mentioned commit d2345d1231d80ecbea5fb764eb43123440861462 on top
-of 4.19.132 is fixing the problem. Reverting the same commit on 4.19.118 or
-4.19.116 is also fixing the problem.
-
-It seems, I can only add one attachment now, so I will add more attachments
-later after bug is submitted.
-
-Thanks and Regards
-Berni
-
+diff --git a/drivers/fsi/fsi-master-aspeed.c b/drivers/fsi/fsi-master-aspeed.c
+index f49742b310c2..b49dccf14315 100644
+--- a/drivers/fsi/fsi-master-aspeed.c
++++ b/drivers/fsi/fsi-master-aspeed.c
+@@ -241,9 +241,10 @@ static int aspeed_master_read(struct fsi_master *master, int link,
+ 	struct fsi_master_aspeed *aspeed = to_fsi_master_aspeed(master);
+ 	int ret;
+ 
+-	if (id != 0)
++	if (id > 0x3)
+ 		return -EINVAL;
+ 
++	addr |= id << 21;
+ 	addr += link * FSI_HUB_LINK_SIZE;
+ 
+ 	switch (size) {
+@@ -273,9 +274,10 @@ static int aspeed_master_write(struct fsi_master *master, int link,
+ 	struct fsi_master_aspeed *aspeed = to_fsi_master_aspeed(master);
+ 	int ret;
+ 
+-	if (id != 0)
++	if (id > 0x3)
+ 		return -EINVAL;
+ 
++	addr |= id << 21;
+ 	addr += link * FSI_HUB_LINK_SIZE;
+ 
+ 	switch (size) {
 -- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+2.24.0
 
------ End forwarded message -----
