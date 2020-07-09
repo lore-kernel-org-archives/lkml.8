@@ -2,106 +2,109 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC951C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94187C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAEFF20774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594333782;
-	bh=E208A14aCfyfhIZEqe3NQHFbrt6g5zBe4tEPba/Vq9o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FjSuZ+0ZUcLvOE4DafLcAKJIzfPbO9NL6HwFQAmTckcjUdp3Ec+FQQE5IPfPKnTnz
-	 zk3cifMN1ThJ+M5Ci6gpFm7hGQXLX909gEQGB+R74PYcV+kwbyFq5eKU65mJHVsmQ8
-	 6MGlAOtvEp8ALd8jFCBX8tCRD80gIwUNkJwyisn4=
+	by mail.kernel.org (Postfix) with ESMTP id 73F562070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:31:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t2NUbC/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgGIW3l (ORCPT
+        id S1726818AbgGIWb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:29:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgGIW3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:29:40 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C286A2070E;
-        Thu,  9 Jul 2020 22:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594333780;
-        bh=E208A14aCfyfhIZEqe3NQHFbrt6g5zBe4tEPba/Vq9o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NKqKKc8xnvizQPi2StbY0b8q08RvrvefMq4WRetFnCvzXi4Ubx588t32FpsogtlwB
-         kbyEITE2574L4GkNN42uoE0xB/omC4c1XcFwWetzUTLtbuMpjYgVVhZ5X3E03sU90/
-         XQ5sErkspJfMvHFH7oTBSHySz/8jCT38FEJ91BVQ=
-Date:   Thu, 9 Jul 2020 18:29:38 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        alsa-devel@alsa-project.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        sound-open-firmware@alsa-project.org
-Subject: Re: [PATCH AUTOSEL 5.7 15/53] ASoC: SOF: Intel: add PCI IDs for
- ICL-H and TGL-H
-Message-ID: <20200709222938.GC2722994@sasha-vm>
-References: <20200702012202.2700645-1-sashal@kernel.org>
- <20200702012202.2700645-15-sashal@kernel.org>
- <20200702111835.GB4483@sirena.org.uk>
- <0baf17f3-1af8-a4a1-644c-ab27490f9b44@linux.intel.com>
- <20200702160528.GL4483@sirena.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200702160528.GL4483@sirena.org.uk>
+        Thu, 9 Jul 2020 18:31:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgGIWb0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 18:31:26 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B327C08C5CE;
+        Thu,  9 Jul 2020 15:31:26 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id l17so3730073wmj.0;
+        Thu, 09 Jul 2020 15:31:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=1ZXHHJyT4ZWtPPZc+bM/HKDR03mHSzkUIiQvXIJuh1o=;
+        b=t2NUbC/F7fOEsFIbvEwoVqdBw7F0qnNn3BG/fu08kTJXPNrqeqm26mMRqlsvo9Oluj
+         CSW+lsriyYwfgl9llQa6RQA1LBUmsJ7sBD5wgYgH8BS4UOJpWZ81/kbU2enpH2UL3LFh
+         Holg4gYg/fEv0ZU9c48UFTpbPMLjiwHKVxpYsjheTU+2c6xKp7FOLYEQ+Ub3O7XT1HJL
+         XzmqoJ4if2WRn8VBWeZdVk+0fq8nQxW3Te4Uqp+3w66EZaQdW0Tvl01Iwb1erAie3ib6
+         lFBMcntOva/OaP/1Ahfza8o+p+a+G2p2traFPrCyEqELB626fm+dJyJrA0nuUynL9na2
+         K5Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1ZXHHJyT4ZWtPPZc+bM/HKDR03mHSzkUIiQvXIJuh1o=;
+        b=rzxK+ouNJOoNtuP4t4m0WGj999ZsrfCeDpMZGsKvqaLW2VAUVyiVskPXeWO5i0oAgb
+         j58gchgWqF2sZaxY5luf2/3CLZsbJIMuvDkOQCYb2awH0J2wYM3gEFjPutsplMZMqjT8
+         mnJ4lVWUd5nG8F6a8VVRRZA3WN4GzGtPRyH6R8ydjr8WGjFyJtPmRgtSM4vlNhbGUpT9
+         l0JS95WreIJhQExK44T9jguBYd4BA0WMABlNmhC9iDE4X/S+zACtl3KFn8G/o8DZV0jw
+         MwA9DMg3FVNko8tRl2HIGKvqfwnHhhtcrJUVzeZl+GgsOsKNJKIFbXbGA0+iRrnlXqpM
+         640Q==
+X-Gm-Message-State: AOAM530pbuFp/KP+9E6FuG0vwL+FAz+CsLc5LPFe/XueO8o/UGwbRcuM
+        yhGmLD/bE3/GnZuopwMD0CfiesNt
+X-Google-Smtp-Source: ABdhPJyQMem+AdS3FQG91slu/e8CNlip8v9odOwgRMv7PyWemUE9qtN8mi7LNpKFSPiaZ03uwOzPmg==
+X-Received: by 2002:a1c:e910:: with SMTP id q16mr2058462wmc.188.1594333884718;
+        Thu, 09 Jul 2020 15:31:24 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id m10sm7375267wru.4.2020.07.09.15.31.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 15:31:24 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE)
+Subject: [PATCH 0/6] irqchip: Broadcom STB interrupt controller updates
+Date:   Thu,  9 Jul 2020 15:30:10 -0700
+Message-Id: <20200709223016.989-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 05:05:28PM +0100, Mark Brown wrote:
->On Thu, Jul 02, 2020 at 10:42:21AM -0500, Pierre-Louis Bossart wrote:
->> On 7/2/20 6:18 AM, Mark Brown wrote:
->> > On Wed, Jul 01, 2020 at 09:21:24PM -0400, Sasha Levin wrote:
->> > > From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->
->> > > [ Upstream commit c8d2e2bfaeffa0f914330e8b4e45b986c8d30b58 ]
->
->> > > Usually the DSP is not traditionally enabled on H skews but this might
->> > > be used moving forward.
->
->> > "This might be used moving forward"?
->
->> There are two conditions for the SOF driver to be used in a distro:
->> a) the DSP needs to be enabled (as reported by the pci class info)
->> b) sound/hda/intel-dsp-config.c needs to contain a quirk to select SOF over
->> the legacy HDaudio, such as presence of DMIC/SoundWire or a known vendor
->> DMI.
->
->> Traditionally for desktops neither a) nor b) are true, but this is changing:
->> we will start adding quirks for specific product lines as requested by OEMs.
->
->> Does this answer to your question?
->
->The question was more of a why is this being backported one - without
->those extra quirks this does nothing, and frankly with them it seems
->like a *major* change someone might see in stable if they update their
->kernel and it suddenly switches to an entirely different DSP software
->stack.
+Hi Marc,
 
-Hey Mark,
+This patch series contains a number of updates for Broadcom STB L2
+interrupt controllers to enable them as wake-up interrupt controllers,
+and add missing compatible strings that should be matched.
 
-It got picked up because the stable rules explicitly call out PCI IDs as
-something we take into the stable trees, and so the AUTOSEL brains
-picked up on this...
+Thanks!
 
-I'll drop this patch as it doesn't do much.
+Florian Fainelli (3):
+  dt-bindings: interrupt-controller: Document Broadcom STB HIF L2
+  dt-bindings: interrupt-controller: Document UPG auxiliary L2
+  irqchip/brcmstb-l2: Match UPG_AUX_AON_INTR2 compatible
+
+Justin Chen (2):
+  irqchip/bcm7120-l2: Set controller as wake-up source
+  irqchip/brcmstb-l2: Set controller as wake-up source
+
+Kamal Dasu (1):
+  irqchip/brcmstb-l2: Match HIF_SPI_INTR2 compatible
+
+ .../bindings/interrupt-controller/brcm,l2-intc.txt        | 5 ++++-
+ drivers/irqchip/irq-bcm7120-l2.c                          | 8 +++++---
+ drivers/irqchip/irq-brcmstb-l2.c                          | 5 +++++
+ 3 files changed, 14 insertions(+), 4 deletions(-)
 
 -- 
-Thanks,
-Sasha
+2.17.1
+
