@@ -2,262 +2,111 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 145EB206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:44:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X2SawVNZ"
+	by mail.kernel.org (Postfix) with ESMTP id DE2732070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgGIWoO (ORCPT
+        id S1727042AbgGIWqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:44:14 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52880 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726832AbgGIWoN (ORCPT
+        Thu, 9 Jul 2020 18:46:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48090 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbgGIWqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:44:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594334651;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0pRvRbjVFo2K1Flclf5DF7wx+UyM877Wq0TJd7EOegs=;
-        b=X2SawVNZXgt0l+shZr5ZkpOtioGP6N0DWoIz9EqNYHhh8MJEMwVSLc1BZ4MwPWQCJlH0cc
-        y8bj/oKtqRPbWEXrBjci8k7B8DcQtNukiIP0XJgW/B3IxvfyI4W/xtZCTXtFPglowXQbI3
-        3tJXvK/clq5SkBXg85sQF74mlj55TtM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-44xQFelVOIG0wKywaBWRbA-1; Thu, 09 Jul 2020 18:44:08 -0400
-X-MC-Unique: 44xQFelVOIG0wKywaBWRbA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4269107ACCA;
-        Thu,  9 Jul 2020 22:44:06 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 594D66FEE7;
-        Thu,  9 Jul 2020 22:44:06 +0000 (UTC)
-Date:   Thu, 9 Jul 2020 16:44:03 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Diana Craciun <diana.craciun@oss.nxp.com>
-Cc:     kvm@vger.kernel.org, bharatb.linux@gmail.com,
-        linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com,
-        Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Subject: Re: [PATCH v3 2/9] vfio/fsl-mc: Scan DPRC objects on vfio-fsl-mc
- driver bind
-Message-ID: <20200709164403.18659708@x1.home>
-In-Reply-To: <20200706154153.11477-3-diana.craciun@oss.nxp.com>
-References: <20200706154153.11477-1-diana.craciun@oss.nxp.com>
-        <20200706154153.11477-3-diana.craciun@oss.nxp.com>
-Organization: Red Hat
+        Thu, 9 Jul 2020 18:46:15 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id DE4E780045E4;
+        Thu,  9 Jul 2020 22:46:10 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GfUmouGNyPhz; Fri, 10 Jul 2020 01:46:10 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 02/11] dt-bindings: dma: dw: Add max burst transaction length property
+Date:   Fri, 10 Jul 2020 01:45:41 +0300
+Message-ID: <20200709224550.15539-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  6 Jul 2020 18:41:46 +0300
-Diana Craciun <diana.craciun@oss.nxp.com> wrote:
+This array property is used to indicate the maximum burst transaction
+length supported by each DMA channel.
 
-> The DPRC (Data Path Resource Container) device is a bus device and has
-> child devices attached to it. When the vfio-fsl-mc driver is probed
-> the DPRC is scanned and the child devices discovered and initialized.
-> 
-> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
-> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
-> ---
->  drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 106 ++++++++++++++++++++++
->  drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |   1 +
->  2 files changed, 107 insertions(+)
-> 
-> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> index 8b53c2a25b32..ad8d06cceb71 100644
-> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> @@ -15,6 +15,8 @@
->  
->  #include "vfio_fsl_mc_private.h"
->  
-> +static struct fsl_mc_driver vfio_fsl_mc_driver;
-> +
->  static int vfio_fsl_mc_open(void *device_data)
->  {
->  	if (!try_module_get(THIS_MODULE))
-> @@ -84,6 +86,69 @@ static const struct vfio_device_ops vfio_fsl_mc_ops = {
->  	.mmap		= vfio_fsl_mc_mmap,
->  };
->  
-> +static int vfio_fsl_mc_bus_notifier(struct notifier_block *nb,
-> +				    unsigned long action, void *data)
-> +{
-> +	struct vfio_fsl_mc_device *vdev = container_of(nb,
-> +					struct vfio_fsl_mc_device, nb);
-> +	struct device *dev = data;
-> +	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
-> +	struct fsl_mc_device *mc_cont = to_fsl_mc_device(mc_dev->dev.parent);
-> +
-> +	if (action == BUS_NOTIFY_ADD_DEVICE &&
-> +	    vdev->mc_dev == mc_cont) {
-> +		mc_dev->driver_override = kasprintf(GFP_KERNEL, "%s",
-> +						    vfio_fsl_mc_ops.name);
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-mips@vger.kernel.org
 
-I notice the vfio-pci code that this is modeled from also doesn't check
-this allocation for NULL.  Maybe both should print a dev_warn on the
-ultra slim chance it would fail.
+---
 
-> +		dev_info(dev, "Setting driver override for device in dprc %s\n",
-> +			 dev_name(&mc_cont->dev));
-> +	} else if (action == BUS_NOTIFY_BOUND_DRIVER &&
-> +		vdev->mc_dev == mc_cont) {
-> +		struct fsl_mc_driver *mc_drv = to_fsl_mc_driver(dev->driver);
-> +
-> +		if (mc_drv && mc_drv != &vfio_fsl_mc_driver)
-> +			dev_warn(dev, "Object %s bound to driver %s while DPRC bound to vfio-fsl-mc\n",
-> +				 dev_name(dev), mc_drv->driver.name);
-> +		}
+Changelog v2:
+- Rearrange SoBs.
+- Move $ref to the root level of the properties. So do with the
+  constraints.
+- Set default max-burst-len to 256 TR-WIDTH words.
 
-Nit, } is over-indented, should be aligned to the previous 'else if'.
+Changelog v3:
+- Add more details into the property description about what limitations
+  snps,max-burst-len defines.
+---
+ .../bindings/dma/snps,dma-spear1340.yaml          | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int vfio_fsl_mc_init_device(struct vfio_fsl_mc_device *vdev)
-> +{
-> +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-> +	int ret;
-> +
-> +	/* Non-dprc devices share mc_io from parent */
-> +	if (!is_fsl_mc_bus_dprc(mc_dev)) {
-> +		struct fsl_mc_device *mc_cont = to_fsl_mc_device(mc_dev->dev.parent);
-> +
-> +		mc_dev->mc_io = mc_cont->mc_io;
-> +		return 0;
-> +	}
-> +
-> +	vdev->nb.notifier_call = vfio_fsl_mc_bus_notifier;
-> +	ret = bus_register_notifier(&fsl_mc_bus_type, &vdev->nb);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* open DPRC, allocate a MC portal */
-> +	ret = dprc_setup(mc_dev);
-> +	if (ret < 0) {
-> +		dev_err(&mc_dev->dev, "Failed to setup DPRC (error = %d)\n", ret);
-> +		bus_unregister_notifier(&fsl_mc_bus_type, &vdev->nb);
-> +		return ret;
-> +	}
-> +
-> +	ret = dprc_scan_container(mc_dev, false);
-> +	if (ret < 0) {
-> +		dev_err(&mc_dev->dev, "Container scanning failed: %d\n", ret);
-> +		bus_unregister_notifier(&fsl_mc_bus_type, &vdev->nb);
-> +		dprc_cleanup(mc_dev);
-
-All else being equal, should these be reversed to mirror the setup?
-
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
->  {
->  	struct iommu_group *group;
-> @@ -112,9 +177,42 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
->  		return ret;
->  	}
->  
-> +	ret = vfio_fsl_mc_init_device(vdev);
-> +	if (ret < 0) {
-> +		vfio_iommu_group_put(group, dev);
-> +		return ret;
-> +	}
-> +
->  	return ret;
->  }
->  
-> +static int vfio_fsl_mc_device_remove(struct device *dev, void *data)
-> +{
-> +	struct fsl_mc_device *mc_dev;
-> +
-> +	WARN_ON(!dev);
-> +	mc_dev = to_fsl_mc_device(dev);
-> +	if (WARN_ON(!mc_dev))
-> +		return -ENODEV;
-> +
-> +	kfree(mc_dev->driver_override);
-> +	mc_dev->driver_override = NULL;
-
-This is out of scope, all other buses that support a driver_override
-free this is the bus driver code.  Why isn't it sufficient that it's
-done in fsl_mc_device_remove()?
-
-> +
-> +	/*
-> +	 * The device-specific remove callback will get invoked by device_del()
-> +	 */
-> +	device_del(&mc_dev->dev);
-> +	put_device(&mc_dev->dev);
-
-In fact, why are we doing any of this?  I think these devices were
-created via dprc_scan_container(), so shouldn't there be a dprc
-callback to remove them?  What happens if one of them did get bound to
-another driver, haven't we just deleted the device out from under them?
-In vfio-pci for instance, we call pci_disable_sriov() to remove any
-vfs.  Thanks,
-
-Alex
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void vfio_fsl_mc_cleanup_dprc(struct fsl_mc_device *mc_dev)
-> +{
-> +	device_for_each_child(&mc_dev->dev, NULL, vfio_fsl_mc_device_remove);
-> +	dprc_cleanup(mc_dev);
-> +}
-> +
->  static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
->  {
->  	struct vfio_fsl_mc_device *vdev;
-> @@ -124,6 +222,14 @@ static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
->  	if (!vdev)
->  		return -EINVAL;
->  
-> +	if (vdev->nb.notifier_call)
-> +		bus_unregister_notifier(&fsl_mc_bus_type, &vdev->nb);
-> +
-> +	if (is_fsl_mc_bus_dprc(mc_dev))
-> +		vfio_fsl_mc_cleanup_dprc(vdev->mc_dev);
-> +
-> +	mc_dev->mc_io = NULL;
-> +
->  	vfio_iommu_group_put(mc_dev->dev.iommu_group, dev);
->  
->  	return 0;
-> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-> index e79cc116f6b8..37d61eaa58c8 100644
-> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-> @@ -9,6 +9,7 @@
->  
->  struct vfio_fsl_mc_device {
->  	struct fsl_mc_device		*mc_dev;
-> +	struct notifier_block        nb;
->  };
->  
->  #endif /* VFIO_FSL_MC_PRIVATE_H */
+diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+index e7611840a7cf..20870f5c14dd 100644
+--- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
++++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+@@ -120,6 +120,21 @@ properties:
+         enum: [0, 1]
+         default: 1
+ 
++  snps,max-burst-len:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      Maximum length of the burst transactions supported by the controller.
++      This property defines the upper limit of the run-time burst setting
++      (CTLx.SRC_MSIZE/CTLx.DST_MSIZE fields) so the allowed burst length
++      will be from 1 to max-burst-len words. It's an array property with one
++      cell per channel in the units determined by the value set in the
++      CTLx.SRC_TR_WIDTH/CTLx.DST_TR_WIDTH fields (data width).
++    items:
++      maxItems: 8
++      items:
++        enum: [4, 8, 16, 32, 64, 128, 256]
++        default: 256
++
+   snps,dma-protection-control:
+     $ref: /schemas/types.yaml#definitions/uint32
+     description: |
+-- 
+2.26.2
 
