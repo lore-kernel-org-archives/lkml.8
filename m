@@ -2,29 +2,29 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3399C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50F28206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98CB8206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbgGICGs (ORCPT
+        id S1726263AbgGICG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 22:06:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:52366 "EHLO foss.arm.com"
+        Wed, 8 Jul 2020 22:06:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:52420 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbgGICGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 22:06:47 -0400
+        id S1726072AbgGICG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 22:06:56 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87FBE31B;
-        Wed,  8 Jul 2020 19:06:46 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D82F1045;
+        Wed,  8 Jul 2020 19:06:56 -0700 (PDT)
 Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.212.213])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 363C73F887;
-        Wed,  8 Jul 2020 19:06:36 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0FF5D3F887;
+        Wed,  8 Jul 2020 19:06:46 -0700 (PDT)
 From:   Jia He <justin.he@arm.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
@@ -53,55 +53,49 @@ Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Kaly Xin <Kaly.Xin@arm.com>, Jia He <justin.he@arm.com>
-Subject: [PATCH v3 0/6] Fix and enable pmem as RAM device on arm64
-Date:   Thu,  9 Jul 2020 10:06:23 +0800
-Message-Id: <20200709020629.91671-1-justin.he@arm.com>
+Subject: [PATCH v3 1/6] mm/memory_hotplug: introduce default dummy memory_add_physaddr_to_nid()
+Date:   Thu,  9 Jul 2020 10:06:24 +0800
+Message-Id: <20200709020629.91671-2-justin.he@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200709020629.91671-1-justin.he@arm.com>
+References: <20200709020629.91671-1-justin.he@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixies a few issues when I tried to enable pmem as RAM device on arm64.
+This is to introduce a general dummy helper. memory_add_physaddr_to_nid()
+is a fallback option to get the nid in case NUMA_NO_NID is detected.
 
-To use memory_add_physaddr_to_nid as a fallback nid, it would be better
-implement a general version (__weak) in mm/memory_hotplug. After that, arm64/
-sh/s390 can simply use the general version, and PowerPC/ia64/x86 will use
-arch specific version.
+After this patch, arm64/sh/s390 can simply use the general dummy version.
+PowerPC/x86/ia64 will still use their specific version.
 
-Tested on ThunderX2 host/qemu "-M virt" guest with a nvdimm device. The 
-memblocks from the dax pmem device can be either hot-added or hot-removed
-on arm64 guest. Also passed the compilation test on x86.
+Signed-off-by: Jia He <justin.he@arm.com>
+---
+ mm/memory_hotplug.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Changes:
-v3: - introduce general version memory_add_physaddr_to_nid, refine the arch
-      specific one
-    - fix an uninitialization bug in v2 device-dax patch
-v2: https://lkml.org/lkml/2020/7/7/71
-    - Drop unnecessary patch to harden try_offline_node
-    - Use new solution(by David) to fix dev->target_node=-1 during probing
-    - Refine the mem_hotplug_begin/done patch
-
-v1: https://lkml.org/lkml/2020/7/5/381
-
-
-Jia He (6):
-  mm/memory_hotplug: introduce default dummy
-    memory_add_physaddr_to_nid()
-  arm64/mm: use default dummy memory_add_physaddr_to_nid()
-  sh/mm: use default dummy memory_add_physaddr_to_nid()
-  mm: don't export memory_add_physaddr_to_nid in arch specific directory
-  device-dax: use fallback nid when numa_node is invalid
-  mm/memory_hotplug: fix unpaired mem_hotplug_begin/done
-
- arch/arm64/mm/numa.c | 10 ----------
- arch/ia64/mm/numa.c  |  2 --
- arch/sh/mm/init.c    |  9 ---------
- arch/x86/mm/numa.c   |  1 -
- drivers/dax/kmem.c   | 21 +++++++++++++--------
- mm/memory_hotplug.c  | 15 ++++++++++++---
- 6 files changed, 25 insertions(+), 33 deletions(-)
-
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index da374cd3d45b..b49ab743d914 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -350,6 +350,16 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+ 	return err;
+ }
+ 
++#ifdef CONFIG_NUMA
++int __weak memory_add_physaddr_to_nid(u64 start)
++{
++	pr_info_once("Unknown target node for memory at 0x%llx, assuming node 0\n",
++			start);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
++#endif
++
+ /* find the smallest valid pfn in the range [start_pfn, end_pfn) */
+ static unsigned long find_smallest_section_pfn(int nid, struct zone *zone,
+ 				     unsigned long start_pfn,
 -- 
 2.17.1
 
