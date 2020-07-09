@@ -2,188 +2,114 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7151EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46C91207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9D720767
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:06:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NlA/VgQJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIMYWZNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgGIQGV (ORCPT
+        id S1726844AbgGIQGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:06:21 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49884 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726357AbgGIQGV (ORCPT
+        Thu, 9 Jul 2020 12:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbgGIQG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:06:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594310779;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5OfLVV9ee+e3aH9dIq9Uyj1RNa4dEfM45FxDPLW9s5s=;
-        b=NlA/VgQJqA0Q24ZO3iOfXFf/3fA9Mma4nXewT+RKFTNODn/sNrOctwkhaxSDp8J4mUd/65
-        jyne8uQIbz3Y4f5g1Yk8UCiRie+psAcIq677Vhs3mbEl9ObV1EGivWcwe89mvII9lFyHF8
-        724AV0cBSegsZorUHgSPju1Ag3kqlF4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-378-3cdqq7fgOK-wggAAqi1Q3w-1; Thu, 09 Jul 2020 12:06:17 -0400
-X-MC-Unique: 3cdqq7fgOK-wggAAqi1Q3w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83A94100AA21;
-        Thu,  9 Jul 2020 16:06:15 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-120-122.rdu2.redhat.com [10.10.120.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB60179CE7;
-        Thu,  9 Jul 2020 16:06:13 +0000 (UTC)
-Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks for
- SPLPAR
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-References: <20200706043540.1563616-1-npiggin@gmail.com>
- <20200706043540.1563616-6-npiggin@gmail.com>
- <874kqhvu1v.fsf@mpe.ellerman.id.au>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <8265d782-4e50-a9b2-a908-0cb588ffa09c@redhat.com>
-Date:   Thu, 9 Jul 2020 12:06:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 9 Jul 2020 12:06:29 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82558C08C5CE;
+        Thu,  9 Jul 2020 09:06:29 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id z5so1168505pgb.6;
+        Thu, 09 Jul 2020 09:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a9l+tYk/85riUuxTuUt4kuJT2J7SexvNZ2Qs7Rkx7Yo=;
+        b=UIMYWZNGO9j/+zxVwaG/pEaMhgQBDOz4sVQUc96onnh3Km64D+wPEh6h63Qz4TWSP2
+         XsRY+ISPSZbxWrsDHzOqVd3DwO+jn13q7r7UYZokOo3s1FiG2nwMwWwZmqd5bFtKwxQ+
+         7min4joP/kLnjFue26kvH4McDc7c5GblSG7uorFlGZ1P99NsSe0V1sqwQJZB4X76mdCu
+         i6xYF2pb+ijEansklByBwX3lMG37FMLYsZDj5qGeE1VcWDp4k58yGsiDHg61qtsqLdZf
+         yX2vc1mZYM0hIQBguHbDQseqkSVx1Y72XZwWvUrLszIzAplDVdOmRTluucejQGA4GE03
+         8YdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a9l+tYk/85riUuxTuUt4kuJT2J7SexvNZ2Qs7Rkx7Yo=;
+        b=GtX/uKXrSAitsAhJEefctt6eFVW8OGo/Dqc4bwKTr6vqnw37IBlSaeso6gF4AeuEV7
+         fB9kwjhBLwgH/Ym/kdzoAZjuwj5rI/HT94aFhHJ3Y0v9fqDU6hlyONVWSt4aWZcHjgLy
+         sXmUSdM1Qt6NQEczZpaJmYdD8ow8BIwjdncRSWRjgiyawBG93FAXdFvplGhYhtnefRwf
+         MJE0dtXAuLkJjBQ4kw2DznBr38BDBCrg17cKcGJ4XBZEaXiKHP2wHquSCgxuZL8Yk3oW
+         QYbre/xONnt4SP7xWbI1ug0wvHgOc7ry+SdRXn9i9nJLLreuuc59awri9NFfuIAV6za0
+         Pf/Q==
+X-Gm-Message-State: AOAM533AkOdLiMd3mF504GE6mRL2L7YnOXzD0Rr6zPDUg0bLhsc1bfm7
+        QVKUTJLplXbdJ4Y5VrclU7loj58sqccTrMNq3YIiWdw/
+X-Google-Smtp-Source: ABdhPJw90IfU29sKTmXTJq8bdQnP0yZs7hx9knd5n/D85O14jgfWNCfjuyKFo/9tQ7e8RF9+ZB+nLooFp1k14LQoezE=
+X-Received: by 2002:a62:7657:: with SMTP id r84mr56878331pfc.130.1594310789004;
+ Thu, 09 Jul 2020 09:06:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <874kqhvu1v.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200601091851.5491-1-vadimp@mellanox.com> <20200601091851.5491-2-vadimp@mellanox.com>
+In-Reply-To: <20200601091851.5491-2-vadimp@mellanox.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Jul 2020 19:06:13 +0300
+Message-ID: <CAHp75VfFdf=ZxuURpVR6LRaDm+x4VQsPgR6FLrcZPhLMn8MOpw@mail.gmail.com>
+Subject: Re: [PATCH platform-next v1 1/8] platform/mellanox: mlxreg-hotplug:
+ Use capability register for attribute creation
+To:     Vadim Pasternak <vadimp@mellanox.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/20 6:53 AM, Michael Ellerman wrote:
-> Nicholas Piggin <npiggin@gmail.com> writes:
+On Mon, Jun 1, 2020 at 12:19 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
 >
->> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
->> ---
->>   arch/powerpc/include/asm/paravirt.h           | 28 ++++++++
->>   arch/powerpc/include/asm/qspinlock.h          | 66 +++++++++++++++++++
->>   arch/powerpc/include/asm/qspinlock_paravirt.h |  7 ++
->>   arch/powerpc/platforms/pseries/Kconfig        |  5 ++
->>   arch/powerpc/platforms/pseries/setup.c        |  6 +-
->>   include/asm-generic/qspinlock.h               |  2 +
-> Another ack?
->
-I am OK with adding the #ifdef around queued_spin_lock().
+> Create the 'sysfs' attributes according to configuration provided
+> through the capability register, which purpose is to indicate the
+> actual number of the components within the particular group.
+> Such components could be, for example the FAN or power supply units.
+> The motivation is to avoid adding a new code in the future in order to
+> distinct between the systems types supported different number of the
 
-Acked-by: Waiman Long <longman@redhat.com>
+supported -> supporting a
 
->> diff --git a/arch/powerpc/include/asm/paravirt.h b/arch/powerpc/include/asm/paravirt.h
->> index 7a8546660a63..f2d51f929cf5 100644
->> --- a/arch/powerpc/include/asm/paravirt.h
->> +++ b/arch/powerpc/include/asm/paravirt.h
->> @@ -45,6 +55,19 @@ static inline void yield_to_preempted(int cpu, u32 yield_count)
->>   {
->>   	___bad_yield_to_preempted(); /* This would be a bug */
->>   }
->> +
->> +extern void ___bad_yield_to_any(void);
->> +static inline void yield_to_any(void)
->> +{
->> +	___bad_yield_to_any(); /* This would be a bug */
->> +}
-> Why do we do that rather than just not defining yield_to_any() at all
-> and letting the build fail on that?
->
-> There's a condition somewhere that we know will false at compile time
-> and drop the call before linking?
->
->> diff --git a/arch/powerpc/include/asm/qspinlock_paravirt.h b/arch/powerpc/include/asm/qspinlock_paravirt.h
->> new file mode 100644
->> index 000000000000..750d1b5e0202
->> --- /dev/null
->> +++ b/arch/powerpc/include/asm/qspinlock_paravirt.h
->> @@ -0,0 +1,7 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later */
->> +#ifndef __ASM_QSPINLOCK_PARAVIRT_H
->> +#define __ASM_QSPINLOCK_PARAVIRT_H
-> _ASM_POWERPC_QSPINLOCK_PARAVIRT_H please.
->
->> +
->> +EXPORT_SYMBOL(__pv_queued_spin_unlock);
-> Why's that in a header? Should that (eventually) go with the generic implementation?
-The PV qspinlock implementation is not that generic at the moment. Even 
-though native qspinlock is used by a number of archs, PV qspinlock is 
-only currently used in x86. This is certainly an area that needs 
-improvement.
->> diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
->> index 24c18362e5ea..756e727b383f 100644
->> --- a/arch/powerpc/platforms/pseries/Kconfig
->> +++ b/arch/powerpc/platforms/pseries/Kconfig
->> @@ -25,9 +25,14 @@ config PPC_PSERIES
->>   	select SWIOTLB
->>   	default y
->>   
->> +config PARAVIRT_SPINLOCKS
->> +	bool
->> +	default n
-> default n is the default.
->
->> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
->> index 2db8469e475f..747a203d9453 100644
->> --- a/arch/powerpc/platforms/pseries/setup.c
->> +++ b/arch/powerpc/platforms/pseries/setup.c
->> @@ -771,8 +771,12 @@ static void __init pSeries_setup_arch(void)
->>   	if (firmware_has_feature(FW_FEATURE_LPAR)) {
->>   		vpa_init(boot_cpuid);
->>   
->> -		if (lppaca_shared_proc(get_lppaca()))
->> +		if (lppaca_shared_proc(get_lppaca())) {
->>   			static_branch_enable(&shared_processor);
->> +#ifdef CONFIG_PARAVIRT_SPINLOCKS
->> +			pv_spinlocks_init();
->> +#endif
->> +		}
-> We could avoid the ifdef with this I think?
->
-> diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
-> index 434615f1d761..6ec72282888d 100644
-> --- a/arch/powerpc/include/asm/spinlock.h
-> +++ b/arch/powerpc/include/asm/spinlock.h
-> @@ -10,5 +10,9 @@
->   #include <asm/simple_spinlock.h>
->   #endif
->
-> +#ifndef CONFIG_PARAVIRT_SPINLOCKS
-> +static inline void pv_spinlocks_init(void) { }
-> +#endif
-> +
->   #endif /* __KERNEL__ */
->   #endif /* __ASM_SPINLOCK_H */
->
->
-> cheers
->
-We don't really need to do a pv_spinlocks_init() if pv_kick() isn't 
-supported.
+> components like power supplies, FANs, ASICs, line cards.
 
-Cheers,
-Longman
+...
 
+>                 /* Go over all units within the item. */
+> -               for (j = 0; j < item->count; j++, data++, id++) {
+> +               for (j = 0, k = 0; j < item->count; j++, data++) {
+> +                       /* Skip if bit in mask is not set. */
+> +                       if (!(item->mask & BIT(j)))
+> +                               continue;
+
+Instead of splitted comments and this code, perhaps
+
+/* Go over all unmasked units within item */
+for_each_set_bit(j, &item->mask, item->count) {
+...
+}
+
+It might require a mask defined as unsigned long, though. Or temporary
+variables.
+
+>                 }
+> +               num_attrs += k;
+>         }
+
+-- 
+With Best Regards,
+Andy Shevchenko
