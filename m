@@ -2,126 +2,132 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A170C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0689B20767
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FA420767
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GWkyDewu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H8CkoSPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgGIRXf (ORCPT
+        id S1728246AbgGIRZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgGIRXe (ORCPT
+        Thu, 9 Jul 2020 13:25:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23364 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727066AbgGIRZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:23:34 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66B62C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:23:34 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id e18so2684570ilr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:23:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QfbeKlIO0rvmOmH/fXg5wm5BC2aAKsXNn27bZMELkkA=;
-        b=GWkyDewuHzKA6IQtYRZQUeIzpZj+ZYxSI0F9LmC/PLWYgpBkO48MXGFg9nUoAhQ+HE
-         lbVLBP1zDndsm/GU4u8AnwOO4A0FDbAGqJBRuZPNqXGY05ivRZ9Kk1YTTUtnPMJJWt38
-         4avyd4g6Pp+Z3U1xBwmEz1bTTp1Gfy8s86LnXvR4Hxp/HlSjLpg/sJa/yziKWDT6EMdU
-         qjJvc48zjau7NB7HLZbiGDp/ZNZGn7foAYWVkA+kMfVTHetM9Isf1+2ZHNupi4kkkK2E
-         CiCgKcROUwb5G5PDtlBGKtgqbS3j9wc0OIhEa/zmgNkXSGJCFODMLImqOGeX69nNY4Kc
-         aecA==
+        Thu, 9 Jul 2020 13:25:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594315516;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=b8Qv6SZiSuVo4vD9vQZEd6hGhjNKEb58ljkswnlnFUk=;
+        b=H8CkoSPXjOlrVkzY7ejnjBssWKVUJRKZ6Rb4OlL7h9Q+kZEaSrHJblFooGFWJbpDiFPVkE
+        95KMg/40AyyS8dEZ2ETFgaIsAVCEcwkiCjlNNKTx9CWvo0KCuHmcxm8TG0bLKAHOMLsA6Y
+        kswyLGPOobMS33A3ZdtcdNl5/lINyC0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-DR13Bn_aOyizIjOuWL8s2A-1; Thu, 09 Jul 2020 13:25:11 -0400
+X-MC-Unique: DR13Bn_aOyizIjOuWL8s2A-1
+Received: by mail-wr1-f71.google.com with SMTP id b14so2597194wrp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:25:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QfbeKlIO0rvmOmH/fXg5wm5BC2aAKsXNn27bZMELkkA=;
-        b=NyMFTmTlyg56tOsNQ8+xeP88a9RN9/YJr/h8AEyYcn+ivp2spxqOUuiQOJOImD34al
-         /DSr6W+znZuJBym+LLMJppVnIpP5roJWShAMdUZNKj4wkVkAnvVhkzpOstOrk81J61kt
-         Lt1Od2T/B4OEcvx9hdHwMcT3SB40NXai/DEU082i+gkBMIyqAG8C2SltoxZXW1GJXl2b
-         gfJib+5gbaVyqKa/K0SFS2fWg61p+jmFg9w5mWsUksyRkWRI+Jnhsu07qAkMpQ/rK/41
-         82MLqQryuUkI1dtby5qLrjkeClc1BycN1Fdr1URGd3p0UUgtPxv4rJPvAnZpJbYBt9ha
-         lC6Q==
-X-Gm-Message-State: AOAM530H9xEFJNFteDbH2ejutLniqK9vJECw/GK9Y0xdifNBGBizNYBr
-        RhDa8xagRk+TCsZUuX6qlZH8toKrMto/pAGp4iXbwQ==
-X-Google-Smtp-Source: ABdhPJxhne2a9Tt91XzKX0hagSjCEcPUtArkiZmCTZopZHelGOPqa4XeWF0QSnjLMvk6qhXghfoSYfwGlrRGITvvG+M=
-X-Received: by 2002:a92:c989:: with SMTP id y9mr38849091iln.108.1594315413474;
- Thu, 09 Jul 2020 10:23:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200709171507.1819-1-pbonzini@redhat.com>
-In-Reply-To: <20200709171507.1819-1-pbonzini@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 9 Jul 2020 10:23:22 -0700
-Message-ID: <CALMp9eQPqUUDzzkdHbq05VPFfgm=fP4O6=47ZV7q5eOEVNFPXQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: nVMX: fixes for preemption timer migration
-To:     Paolo Bonzini <pbonzini@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=b8Qv6SZiSuVo4vD9vQZEd6hGhjNKEb58ljkswnlnFUk=;
+        b=LPueCw9jFW5/wakKk2ttaCnMRifX4QR9Z493W+sMlH4wrndtEJcT+AskTXoHTZodBJ
+         ELAeQjGLPBJmZa+NKL4uRF46F4xGwiz3hJ+Q0RKH42Xll8RSNPSnq/niR7Bvjs0mWXYW
+         A2PzXhpv5p5WI4uIANQ6uUcuRACP5601i5vVpO+SZ6PJohZol9SUdi2d3uCSzrh1G82V
+         lMSmx4QBajNBb7iMVqXdqTV+ICbnX1sV4XCG/UuZcuSgY0+onQQ0SIl/XeWhGAG9vBhX
+         3a2WrnpT+88Ou2h+QWbvnpDCjWbRahr8mAfqzqYTdh6IRkG9oKysGikG9WEI0jvTSun0
+         Kc8Q==
+X-Gm-Message-State: AOAM531C7DNm1kARVN+gfatxREYbfbaNDlq3FYpi7zIs8h4vW70MLpHv
+        xJb5W+ku5P6iL9N4A2sWsQ0vkLv3ecgi+4pFSnljmTe8CfLQ86w1odbJqykguJOxYVVoBj3zjZW
+        yXJY5Wux1r2eLK8zF1W81ghaC
+X-Received: by 2002:a7b:c2f7:: with SMTP id e23mr996534wmk.175.1594315510102;
+        Thu, 09 Jul 2020 10:25:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxPYqDXYqthnhjM/diEFdFohRcWFAGDvkgioJtDR2c8ynwAtrqLCLcAhiCq+M+J57rHUlqjHA==
+X-Received: by 2002:a7b:c2f7:: with SMTP id e23mr996516wmk.175.1594315509869;
+        Thu, 09 Jul 2020 10:25:09 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.gmail.com with ESMTPSA id e5sm6352773wrs.33.2020.07.09.10.25.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 10:25:09 -0700 (PDT)
+Subject: Re: [PATCH] KVM: nSVM: vmentry ignores EFER.LMA and possibly
+ RFLAGS.VM
+To:     Jim Mattson <jmattson@google.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>, Bandan Das <bsd@redhat.com>,
-        Makarand Sonare <makarandsonare@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        kvm list <kvm@vger.kernel.org>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+References: <20200709095525.907771-1-pbonzini@redhat.com>
+ <CALMp9eREY4e7kb22CxReNV83HwR7D_tBkn2i5LUbGLGe_yw5nQ@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <782fdf92-38f8-c081-9796-5344ab3050d5@redhat.com>
+Date:   Thu, 9 Jul 2020 19:25:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <CALMp9eREY4e7kb22CxReNV83HwR7D_tBkn2i5LUbGLGe_yw5nQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 10:15 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> Commit 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer migration",
-> 2020-06-01) accidentally broke nVMX live migration from older version
-> by changing the userspace ABI.  Restore it and, while at it, ensure
-> that vmx->nested.has_preemption_timer_deadline is always initialized
-> according to the KVM_STATE_VMX_PREEMPTION_TIMER_DEADLINE flag.
->
-> Cc: Makarand Sonare <makarandsonare@google.com>
-> Fixes: 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer migration")
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/include/uapi/asm/kvm.h | 5 +++--
->  arch/x86/kvm/vmx/nested.c       | 3 ++-
->  2 files changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-> index 17c5a038f42d..0780f97c1850 100644
-> --- a/arch/x86/include/uapi/asm/kvm.h
-> +++ b/arch/x86/include/uapi/asm/kvm.h
-> @@ -408,14 +408,15 @@ struct kvm_vmx_nested_state_data {
->  };
->
->  struct kvm_vmx_nested_state_hdr {
-> -       __u32 flags;
->         __u64 vmxon_pa;
->         __u64 vmcs12_pa;
-> -       __u64 preemption_timer_deadline;
->
->         struct {
->                 __u16 flags;
->         } smm;
-> +
-> +       __u32 flags;
-> +       __u64 preemption_timer_deadline;
->  };
->
->  struct kvm_svm_nested_state_data {
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index b26655104d4a..3fc2411edc92 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -6180,7 +6180,8 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
->                 vmx->nested.has_preemption_timer_deadline = true;
->                 vmx->nested.preemption_timer_deadline =
->                         kvm_state->hdr.vmx.preemption_timer_deadline;
-> -       }
-> +       } else
-> +               vmx->nested.has_preemption_timer_deadline = false;
+On 09/07/20 19:12, Jim Mattson wrote:
+>> +
+>> +       /* The processor ignores EFER.LMA, but svm_set_efer needs it.  */
+>> +       efer &= ~EFER_LMA;
+>> +       if ((nested_vmcb->save.cr0 & X86_CR0_PG)
+>> +           && (nested_vmcb->save.cr4 & X86_CR4_PAE)
+>> +           && (efer & EFER_LME))
+>> +               efer |= EFER_LMA;
+> The CR4.PAE check is unnecessary, isn't it? The combination CR0.PG=1,
+> EFER.LMA=1, and CR4.PAE=0 is not a legal processor state.
 
-Doesn't the coding standard require braces around the else clause?
+Yeah, I was being a bit cautious because this is the nested VMCB and it
+can be filled in with invalid state, but indeed that condition was added
+just yesterday by myself in nested_vmcb_checks (while reviewing Krish's
+CR0/CR3/CR4 reserved bit check series).
 
-Reviewed-by: Jim Mattson <jmattson@google.com>
+That said, the VMCB here is guest memory and it can change under our
+feet between nested_vmcb_checks and nested_prepare_vmcb_save.  Copying
+the whole save area is overkill, but we probably should copy at least
+EFER/CR0/CR3/CR4 in a struct at the beginning of nested_svm_vmrun; this
+way there'd be no TOC/TOU issues between nested_vmcb_checks and
+nested_svm_vmrun.  This would also make it easier to reuse the checks in
+svm_set_nested_state.  Maybe Maxim can look at it while I'm on vacation,
+as he's eager to do more nSVM stuff. :D
+
+I'll drop this patch for now.
+
+Thanks for the speedy review!
+
+Paolo
+
+> According to the SDM,
+> 
+> * IA32_EFER.LME cannot be modified while paging is enabled (CR0.PG =
+> 1). Attempts to do so using WRMSR cause a general-protection exception
+> (#GP(0)).
+> * Paging cannot be enabled (by setting CR0.PG to 1) while CR4.PAE = 0
+> and IA32_EFER.LME = 1. Attempts to do so using MOV to CR0 cause a
+> general-protection exception (#GP(0)).
+> * CR4.PAE and CR4.LA57 cannot be modified while either 4-level paging
+> or 5-level paging is in use (when CR0.PG = 1 and IA32_EFER.LME = 1).
+> Attempts to do so using MOV to CR4 cause a general-protection
+> exception (#GP(0)).
+> 
+
