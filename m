@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE227C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0153C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A87C620708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8053A20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="cSBMP19e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="a0Vq+ob8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgGIKBu (ORCPT
+        id S1726787AbgGIKB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:01:50 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:27589 "EHLO
+        Thu, 9 Jul 2020 06:01:56 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:27616 "EHLO
         esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgGIKBj (ORCPT
+        with ESMTP id S1726770AbgGIKBv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:01:39 -0400
+        Thu, 9 Jul 2020 06:01:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594288899; x=1625824899;
+  t=1594288911; x=1625824911;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=YrFb0GHYJSVnxx4wY0JWDfV+FNkiN88T+WCC0hZkD+w=;
-  b=cSBMP19e93x0kyMafAgj0ncGZZXnL5rZgWgeTPGbaVgRzBgzZKJp3HsR
-   dl7kzm1V4MYfMzWB45pzrADhKI0DTxdyAzpDLHtwNhTkbxDuSpIVB7oe0
-   cS9z2h1B0DQdN+Ys+0Po233PFGT8HtqdN/HZuXFjMI7aEEfZO2ghZA9n3
-   dVArYweyK91U4pAaw9gdkxxuROCJouTIFpihaQVPigEwRrZybjBEKsOBC
-   aBjrXOrg9235I7mSrY2zSGja051DA4tiUoh+nolXmzBwiNpAy70KYpPBo
-   kjmT/feWzcaBUJtuO2FSte8FUKuBeObfJWIMhizr5idacQS9tB10vU/Ij
-   A==;
-IronPort-SDR: H+lu3KFO/njvveRiO7eU1/abKsY3L05ku0bXUtLx2SFAWrCxi1YLl/LCbH/bC5wPkuX8qgxUlN
- G1PjvVoodiauKDWxbu7WBGSflGnFr3ncuUdSqir8/46F3c7VhxK4GjNu0mpKp6kujpF8MDkoWx
- fEAFeujgncziLu7YHgKz7oEpHgOgvDMkZCCb3rAq71lIo/gE/XSNejuqvm5uQSz0Fgcq3TwVIy
- ZgcpaBkGQyt37HqIfkONK4rGxDhFfcd7jfznh3taEfJ1mVrDKqSI7/U0y3TlreuAgN/hWwYkk7
- ID4=
+  bh=KXvHOUThZBG1JwN3D0CPyXX+5vP02M2Oe4vY5byDp8I=;
+  b=a0Vq+ob8Qi8n0J7VbN2XbZywFiTrQFNgWpBQ2mjtrqI7HE5BPOLD7PgS
+   W/LjbikeSWkQftAz/w9hdE0MB7KLMUPzIbyC2K3ERPgyHD2FSWBfLohEH
+   oW++wVTxKpm/e7yyQf6dahRQCv6njLOFT/1HcwGM6/qyeAlV16k6KijJn
+   1C+q99ImuHkZ2XpstiQ9CHzE6EtZ+g6ra17Pzakl9s4OWrZP4HuDTBBy3
+   uPTT/FTk5AOQ9C3H8BkevhFNgsBXKjPfBA7oau/gCMHXTvGuGZKPYLlWH
+   e+Um68Ym5o7c1npEfXqRcxps9d+DEa83VC8TsNkADl/dSnXVQMK4XdlBD
+   w==;
+IronPort-SDR: wZziJ5/WzLOphgcVL7rFJJeLqlxQfORWVk0sHn8Ok8G+UYZKiRQ3WxR5e70P07Z2arP0RlsFVf
+ iiw7IGYDJt9UWVy3l8o5bod2X5QtM3W3ET/qZ/qQx52moCOygY60Ox6ZXZZAsC6b49RbGAbhS2
+ tb3M5vVh221RzHhOjwtANJvVQ05BBDEwNDEFKQQl9xCbhJ6EAA8rTAp9NRS8XyOLCPgJ8pZNuw
+ VZzraTOCcOqRZ7q5k724lRr4t6aF3xDVYK+eJd06plVZw5ugtGZSakqKes6vXwJrTwRdJPZle0
+ lWM=
 X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="82397707"
+   d="scan'208";a="82397724"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:01:38 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2020 03:01:50 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 9 Jul 2020 03:01:38 -0700
+ 15.1.1979.3; Thu, 9 Jul 2020 03:01:49 -0700
 Received: from soft-dev3.localdomain (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:01:34 -0700
+ 15.1.1979.3 via Frontend Transport; Thu, 9 Jul 2020 03:01:46 -0700
 From:   Horatiu Vultur <horatiu.vultur@microchip.com>
 To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
@@ -59,9 +59,9 @@ To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
 CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v2 02/12] bridge: uapi: mrp: Extend MRP attributes for MRP interconnect
-Date:   Thu, 9 Jul 2020 12:00:30 +0200
-Message-ID: <20200709100040.554623-3-horatiu.vultur@microchip.com>
+Subject: [PATCH net-next v2 05/12] bridge: mrp: Rename br_mrp_port_open to br_mrp_ring_port_open
+Date:   Thu, 9 Jul 2020 12:00:33 +0200
+Message-ID: <20200709100040.554623-6-horatiu.vultur@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200709100040.554623-1-horatiu.vultur@microchip.com>
 References: <20200709100040.554623-1-horatiu.vultur@microchip.com>
@@ -73,179 +73,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend the existing MRP netlink attributes to allow to configure MRP
-Interconnect:
-
-IFLA_BRIDGE_MRP_IN_ROLE - the parameter type is br_mrp_in_role which
-  contains the interconnect id, the ring id, the interconnect role(MIM
-  or MIC) and the port ifindex that represents the interconnect port.
-
-IFLA_BRIDGE_MRP_IN_STATE - the parameter type is br_mrp_in_state which
-  contains the interconnect id and the interconnect state.
-
-IFLA_BRIDGE_MRP_IN_TEST - the parameter type is br_mrp_start_in_test
-  which contains the interconnect id, the interval at which to send
-  MRP_InTest frames, how many test frames can be missed before declaring
-  the interconnect ring open and the period which represents for how long
-  to send MRP_InTest frames.
+This patch renames the function br_mrp_port_open to
+br_mrp_ring_port_open. In this way is more clear that a ring port lost
+the continuity because there will be also a br_mrp_in_port_open.
 
 Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 ---
- include/uapi/linux/if_bridge.h  | 53 +++++++++++++++++++++++++++++++++
- include/uapi/linux/mrp_bridge.h | 38 +++++++++++++++++++++++
- 2 files changed, 91 insertions(+)
+ net/bridge/br_mrp.c         | 6 +++---
+ net/bridge/br_mrp_netlink.c | 2 +-
+ net/bridge/br_private_mrp.h | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-index c114c1c2bd533..d840a3e37a37c 100644
---- a/include/uapi/linux/if_bridge.h
-+++ b/include/uapi/linux/if_bridge.h
-@@ -167,6 +167,9 @@ enum {
- 	IFLA_BRIDGE_MRP_RING_ROLE,
- 	IFLA_BRIDGE_MRP_START_TEST,
- 	IFLA_BRIDGE_MRP_INFO,
-+	IFLA_BRIDGE_MRP_IN_ROLE,
-+	IFLA_BRIDGE_MRP_IN_STATE,
-+	IFLA_BRIDGE_MRP_START_IN_TEST,
- 	__IFLA_BRIDGE_MRP_MAX,
- };
+diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
+index 779e1eb754430..d4176f8956d05 100644
+--- a/net/bridge/br_mrp.c
++++ b/net/bridge/br_mrp.c
+@@ -213,7 +213,7 @@ static void br_mrp_test_work_expired(struct work_struct *work)
+ 		}
  
-@@ -245,6 +248,37 @@ enum {
+ 		if (notify_open && !mrp->ring_role_offloaded)
+-			br_mrp_port_open(p->dev, true);
++			br_mrp_ring_port_open(p->dev, true);
+ 	}
  
- #define IFLA_BRIDGE_MRP_INFO_MAX (__IFLA_BRIDGE_MRP_INFO_MAX - 1)
+ 	p = rcu_dereference(mrp->s_port);
+@@ -229,7 +229,7 @@ static void br_mrp_test_work_expired(struct work_struct *work)
+ 		}
  
-+enum {
-+	IFLA_BRIDGE_MRP_IN_STATE_UNSPEC,
-+	IFLA_BRIDGE_MRP_IN_STATE_IN_ID,
-+	IFLA_BRIDGE_MRP_IN_STATE_STATE,
-+	__IFLA_BRIDGE_MRP_IN_STATE_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_IN_STATE_MAX (__IFLA_BRIDGE_MRP_IN_STATE_MAX - 1)
-+
-+enum {
-+	IFLA_BRIDGE_MRP_IN_ROLE_UNSPEC,
-+	IFLA_BRIDGE_MRP_IN_ROLE_RING_ID,
-+	IFLA_BRIDGE_MRP_IN_ROLE_IN_ID,
-+	IFLA_BRIDGE_MRP_IN_ROLE_ROLE,
-+	IFLA_BRIDGE_MRP_IN_ROLE_I_IFINDEX,
-+	__IFLA_BRIDGE_MRP_IN_ROLE_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_IN_ROLE_MAX (__IFLA_BRIDGE_MRP_IN_ROLE_MAX - 1)
-+
-+enum {
-+	IFLA_BRIDGE_MRP_START_IN_TEST_UNSPEC,
-+	IFLA_BRIDGE_MRP_START_IN_TEST_IN_ID,
-+	IFLA_BRIDGE_MRP_START_IN_TEST_INTERVAL,
-+	IFLA_BRIDGE_MRP_START_IN_TEST_MAX_MISS,
-+	IFLA_BRIDGE_MRP_START_IN_TEST_PERIOD,
-+	__IFLA_BRIDGE_MRP_START_IN_TEST_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_START_IN_TEST_MAX (__IFLA_BRIDGE_MRP_START_IN_TEST_MAX - 1)
-+
- struct br_mrp_instance {
- 	__u32 ring_id;
- 	__u32 p_ifindex;
-@@ -270,6 +304,25 @@ struct br_mrp_start_test {
- 	__u32 monitor;
- };
+ 		if (notify_open && !mrp->ring_role_offloaded)
+-			br_mrp_port_open(p->dev, true);
++			br_mrp_ring_port_open(p->dev, true);
+ 	}
  
-+struct br_mrp_in_state {
-+	__u32 in_state;
-+	__u16 in_id;
-+};
-+
-+struct br_mrp_in_role {
-+	__u32 ring_id;
-+	__u32 in_role;
-+	__u32 i_ifindex;
-+	__u16 in_id;
-+};
-+
-+struct br_mrp_start_in_test {
-+	__u32 interval;
-+	__u32 max_miss;
-+	__u32 period;
-+	__u16 in_id;
-+};
-+
- struct bridge_stp_xstats {
- 	__u64 transition_blk;
- 	__u64 transition_fwd;
-diff --git a/include/uapi/linux/mrp_bridge.h b/include/uapi/linux/mrp_bridge.h
-index bee3665402129..6aeb13ef0b1ec 100644
---- a/include/uapi/linux/mrp_bridge.h
-+++ b/include/uapi/linux/mrp_bridge.h
-@@ -21,11 +21,22 @@ enum br_mrp_ring_role_type {
- 	BR_MRP_RING_ROLE_MRA,
- };
+ out:
+@@ -537,7 +537,7 @@ static void br_mrp_mrm_process(struct br_mrp *mrp, struct net_bridge_port *port,
+ 	 * not closed
+ 	 */
+ 	if (mrp->ring_state != BR_MRP_RING_STATE_CLOSED)
+-		br_mrp_port_open(port->dev, false);
++		br_mrp_ring_port_open(port->dev, false);
+ }
  
-+enum br_mrp_in_role_type {
-+	BR_MRP_IN_ROLE_DISABLED,
-+	BR_MRP_IN_ROLE_MIC,
-+	BR_MRP_IN_ROLE_MIM,
-+};
-+
- enum br_mrp_ring_state_type {
- 	BR_MRP_RING_STATE_OPEN,
- 	BR_MRP_RING_STATE_CLOSED,
- };
+ /* Determin if the test hdr has a better priority than the node */
+diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
+index c4f5c356811f3..acce300c0cc29 100644
+--- a/net/bridge/br_mrp_netlink.c
++++ b/net/bridge/br_mrp_netlink.c
+@@ -368,7 +368,7 @@ int br_mrp_fill_info(struct sk_buff *skb, struct net_bridge *br)
+ 	return -EMSGSIZE;
+ }
  
-+enum br_mrp_in_state_type {
-+	BR_MRP_IN_STATE_OPEN,
-+	BR_MRP_IN_STATE_CLOSED,
-+};
-+
- enum br_mrp_port_state_type {
- 	BR_MRP_PORT_STATE_DISABLED,
- 	BR_MRP_PORT_STATE_BLOCKED,
-@@ -36,6 +47,7 @@ enum br_mrp_port_state_type {
- enum br_mrp_port_role_type {
- 	BR_MRP_PORT_ROLE_PRIMARY,
- 	BR_MRP_PORT_ROLE_SECONDARY,
-+	BR_MRP_PORT_ROLE_INTER,
- };
+-int br_mrp_port_open(struct net_device *dev, u8 loc)
++int br_mrp_ring_port_open(struct net_device *dev, u8 loc)
+ {
+ 	struct net_bridge_port *p;
+ 	int err = 0;
+diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
+index 5e612123c5605..d5957f7e687ff 100644
+--- a/net/bridge/br_private_mrp.h
++++ b/net/bridge/br_private_mrp.h
+@@ -74,6 +74,6 @@ int br_mrp_port_switchdev_set_role(struct net_bridge_port *p,
+ 				   enum br_mrp_port_role_type role);
  
- enum br_mrp_tlv_header_type {
-@@ -45,6 +57,10 @@ enum br_mrp_tlv_header_type {
- 	BR_MRP_TLV_HEADER_RING_TOPO = 0x3,
- 	BR_MRP_TLV_HEADER_RING_LINK_DOWN = 0x4,
- 	BR_MRP_TLV_HEADER_RING_LINK_UP = 0x5,
-+	BR_MRP_TLV_HEADER_IN_TEST = 0x6,
-+	BR_MRP_TLV_HEADER_IN_TOPO = 0x7,
-+	BR_MRP_TLV_HEADER_IN_LINK_DOWN = 0x8,
-+	BR_MRP_TLV_HEADER_IN_LINK_UP = 0x9,
- 	BR_MRP_TLV_HEADER_OPTION = 0x7f,
- };
+ /* br_mrp_netlink.c  */
+-int br_mrp_port_open(struct net_device *dev, u8 loc);
++int br_mrp_ring_port_open(struct net_device *dev, u8 loc);
  
-@@ -118,4 +134,26 @@ struct br_mrp_oui_hdr {
- 	__u8 oui[MRP_OUI_LENGTH];
- };
- 
-+struct br_mrp_in_test_hdr {
-+	__be16 id;
-+	__u8 sa[ETH_ALEN];
-+	__be16 port_role;
-+	__be16 state;
-+	__be16 transitions;
-+	__be32 timestamp;
-+};
-+
-+struct br_mrp_in_topo_hdr {
-+	__u8 sa[ETH_ALEN];
-+	__be16 id;
-+	__be16 interval;
-+};
-+
-+struct br_mrp_in_link_hdr {
-+	__u8 sa[ETH_ALEN];
-+	__be16 port_role;
-+	__be16 id;
-+	__be16 interval;
-+};
-+
- #endif
+ #endif /* _BR_PRIVATE_MRP_H */
 -- 
 2.27.0
 
