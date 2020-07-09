@@ -2,72 +2,92 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25A6E2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:50:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XnqtmWtJ"
+	by mail.kernel.org (Postfix) with ESMTP id C36FE2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgGINuE (ORCPT
+        id S1727938AbgGINuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:50:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57752 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726775AbgGINuE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:50:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594302602;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=wU/IYW624cTJ+phT8QcHfdGdebh3N/uM3T5RVMhvW8A=;
-        b=XnqtmWtJ+2s4Ns3ltRBlz1jQ1/iKfG+LxN/uUVbrkViT8qfnMYteneEKpgRaMG/QP7/Ua4
-        G1Zfnht5tBo7VYAV107hoW2ZUjM5fqeohE6/HCPXB7ktGh9SDPtRNKAhqPZQTsujROMJD3
-        CCSALI+P6p1+lrUCtu7MTTic+WMqpBY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-wK33q6onO3WVT8WIpOKZrA-1; Thu, 09 Jul 2020 09:49:58 -0400
-X-MC-Unique: wK33q6onO3WVT8WIpOKZrA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F455100CC84;
-        Thu,  9 Jul 2020 13:49:57 +0000 (UTC)
-Received: from ws.net.home (unknown [10.40.194.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7098C5D98A;
-        Thu,  9 Jul 2020 13:49:56 +0000 (UTC)
-Date:   Thu, 9 Jul 2020 15:49:53 +0200
-From:   Karel Zak <kzak@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        util-linux@vger.kernel.org
-Subject: [ANNOUNCE] util-linux v2.36-rc2
-Message-ID: <20200709134953.ist5schagi3hjhs7@ws.net.home>
+        Thu, 9 Jul 2020 09:50:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33878 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726358AbgGINuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 09:50:19 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 95FC5C72E21C9F5B04F0;
+        Thu,  9 Jul 2020 21:50:15 +0800 (CST)
+Received: from DESKTOP-8RFUVS3.china.huawei.com (10.174.185.226) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 9 Jul 2020 21:50:08 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <maz@kernel.org>
+CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <wanghaibin.wang@huawei.com>, Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH] irqchip/gic-v4.1: Ensure accessing the correct RD when writing INVALLR
+Date:   Thu, 9 Jul 2020 21:49:59 +0800
+Message-ID: <20200709134959.1039-1-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.185.226]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The GICv4.1 spec tells us that it's CONSTRAINED UNPREDICTABLE to issue a
+register-based invalidation operation for a vPEID not mapped to that RD,
+or another RD within the same CommonLPIAff group.
 
-The util-linux release v2.36-rc2 is available at
- 
-  http://www.kernel.org/pub/linux/utils/util-linux/v2.36
- 
-Feedback and bug reports, as always, are welcomed.
- 
-  Karel
+To follow this rule, commit f3a059219bc7 ("irqchip/gic-v4.1: Ensure mutual
+exclusion between vPE affinity change and RD access") tried to address the
+race between the RD accesses and the vPE affinity change, but somehow
+forgot to take GICR_INVALLR into account. Let's take the vpe_lock before
+evaluating vpe->col_idx to fix it.
 
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+---
+ drivers/irqchip/irq-gic-v3-its.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index da44bfa48bc2..50a04cca8207 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -4087,18 +4087,22 @@ static void its_vpe_4_1_deschedule(struct its_vpe *vpe,
+ static void its_vpe_4_1_invall(struct its_vpe *vpe)
+ {
+ 	void __iomem *rdbase;
++	unsigned long flags;
+ 	u64 val;
++	int cpu;
+ 
+ 	val  = GICR_INVALLR_V;
+ 	val |= FIELD_PREP(GICR_INVALLR_VPEID, vpe->vpe_id);
+ 
+ 	/* Target the redistributor this vPE is currently known on */
+-	raw_spin_lock(&gic_data_rdist_cpu(vpe->col_idx)->rd_lock);
+-	rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
++	cpu = vpe_to_cpuid_lock(vpe, &flags);
++	raw_spin_lock(&gic_data_rdist_cpu(cpu)->rd_lock);
++	rdbase = per_cpu_ptr(gic_rdists->rdist, cpu)->rd_base;
+ 	gic_write_lpir(val, rdbase + GICR_INVALLR);
+ 
+ 	wait_for_syncr(rdbase);
+-	raw_spin_unlock(&gic_data_rdist_cpu(vpe->col_idx)->rd_lock);
++	raw_spin_unlock(&gic_data_rdist_cpu(cpu)->rd_lock);
++	vpe_to_cpuid_unlock(vpe, flags);
+ }
+ 
+ static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
 -- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+2.19.1
 
