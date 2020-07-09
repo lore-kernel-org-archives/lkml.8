@@ -2,99 +2,115 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38551C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A598D2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167EF2077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kdFWAGk0"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="T8w15sga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgGIRQd (ORCPT
+        id S1728410AbgGIRRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbgGIRQc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:16:32 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E575C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:16:32 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id q15so2744887wmj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:16:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=hmI2pr2O9KFjOijImT0+FbwAxpzgzTC7FzYN5zC+JMs=;
-        b=kdFWAGk0iUZjedKRxztU8bWiH5sKHhTAW2YDVKwD0F4snsgNQbd7zDLFvbt/82x6v/
-         VH1bMVKIQDTNUk6wRU09AL4x949Kvdk8Fmy7jJfhaCgoAi1Oeb2oNn2ZDZQQOMoN/XzS
-         z6kVLGhD+PUMmrjZhruiAd1VNsJvMHq3ra6DhjOP/+DFzGt7VECEJFvxMpk/44knnKOA
-         bgMRnTP7942Eg9Vbn6StDNLbyB/Ry5kzQvGOpKZc6hJKnxS2JoSPonOfOHxSenJT2SE9
-         5OQXVdPkvF8hkOV5keFg7XHUveIvwJn8r+6yDyv6pP4aHQYaINL8izDOd7s17Ae0glYq
-         bNlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=hmI2pr2O9KFjOijImT0+FbwAxpzgzTC7FzYN5zC+JMs=;
-        b=d1H+xw98BEkRWGaVmuPfjYVYkYj1SX9pARIef15RbKEjdJ/kKu3Q0NbVxjSBc6X6IZ
-         pCEP0ZSrO6ZZXo+PCJt+yZW/SDUrMLS6kY1L3JJ+QY+4+K89laGMiDWnVaVkfIg1oyoq
-         rUWpXCm6/VZyc6vC4KF0cPiqoMLfPvucV8W+tQxTTdarlupRYdRplRAEQ8PHeiph1cPO
-         Ovolkcb+rGfEK418s7icFr8L5DWZYNkBnwLiZPjlUdz+pOA3D5vjMrUDeJ0oIqNtCPHz
-         Jq/OuRXKTeVI8n5VzxhEyKreMwb7rpyvMhZ0N+R4L5ybQgyZCr91ibUyASuadVEhG3uz
-         grqQ==
-X-Gm-Message-State: AOAM533H4TqX7ydWHDnOONLhyywMyicq4dydSOOJoUE5OuCYm0vk0rU+
-        9V2P2lSWBQqWz9rtpI4FMhX7PQ==
-X-Google-Smtp-Source: ABdhPJxoDnl4uLj+qPytb0Ar31Lq542I0abu2UkCil0ADdhflQlq17LPcs+qSc6RV6scXxwjkK5nZA==
-X-Received: by 2002:a1c:a74c:: with SMTP id q73mr1006135wme.96.1594314990921;
-        Thu, 09 Jul 2020 10:16:30 -0700 (PDT)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id f197sm6043371wme.33.2020.07.09.10.16.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:16:30 -0700 (PDT)
-References: <20200629203904.2989007-1-martin.blumenstingl@googlemail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     narmstrong@baylibre.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] clk: meson8b: add two missing gate clocks
-In-reply-to: <20200629203904.2989007-1-martin.blumenstingl@googlemail.com>
-Date:   Thu, 09 Jul 2020 19:16:29 +0200
-Message-ID: <1jk0zcip76.fsf@starbuckisacylon.baylibre.com>
+        Thu, 9 Jul 2020 13:17:17 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52446 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727110AbgGIRRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 13:17:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1594315034; bh=3gV7jbp/PfKuXvsiiUXQuSbzC+4R90WKkgDUbSbOroA=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=T8w15sgaUVglRVUStLjyOBe5kD6r6ILjnGJfRaIwX30oPX3HkV/WG0tir90B7u8Tn
+         cwaI33E1ldqktkSPsiixkN2P9H9gkRxRVczxvTT/cGA3ybOv6S8vs2mflJ4EGQLURd
+         IdchOT3qguFiAcjCF1YgaUueWR3ccklPvnTELtUM=
+Date:   Thu, 9 Jul 2020 19:17:13 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
+        icenowy@aosc.io, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        liyong@allwinnertech.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 04/16] dt-bindings: pinctrl: sunxi: make gpio banks
+ supplies required
+Message-ID: <20200709171713.tutnlchji4e6i5pv@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
+        mripard@kernel.org, wens@csie.org, mturquette@baylibre.com,
+        sboyd@kernel.org, gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
+        icenowy@aosc.io, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        liyong@allwinnertech.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200708071942.22595-1-frank@allwinnertech.com>
+ <20200708071942.22595-5-frank@allwinnertech.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708071942.22595-5-frank@allwinnertech.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On Mon 29 Jun 2020 at 22:39, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+On Wed, Jul 08, 2020 at 03:19:30PM +0800, Frank Lee wrote:
+> Since we don't really have to care about the existing DT for boards,
+> it would be great to make the gpio banks supplies required.
 
-> While trying to figure out how to set up the video clocks on the 32-bit
-> SoCs I found that the current clock tree is missing two gates. This adds
-> the missing gates based on evidence found in the public S805 datasheet,
-> the GXBB clock driver and 3.10 vendor kernel.
->
-> I didn't add any Fixes tag because this clock tree is still read-only
-> and the HDMI PLL (the top-most clock in this tree) needs more work as
-> well.
->
->
-> Martin Blumenstingl (2):
->   clk: meson: meson8b: add the vclk_en gate clock
->   clk: meson: meson8b: add the vclk2_en gate clock
->
->  drivers/clk/meson/meson8b.c | 60 ++++++++++++++++++++++++++++++-------
->  drivers/clk/meson/meson8b.h |  4 ++-
->  2 files changed, 53 insertions(+), 11 deletions(-)
+What if the borad doesn't use one of the banks? How would
+I describe such a board if defining supplies for all banks
+is required?
 
-Applied Thx.
+regards,
+	o.
+
+> Signed-off-by: Frank Lee <frank@allwinnertech.com>
+> ---
+>  .../devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml         | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> index 226aba0..c30a7b7 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> @@ -134,6 +134,7 @@ patternProperties:
+>  required:
+>    - "#gpio-cells"
+>    - "#interrupt-cells"
+> +  - "^vcc-p[a-hlm]-supply$"
+>    - compatible
+>    - reg
+>    - interrupts
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
