@@ -2,88 +2,189 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561D9C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17C892070E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:11:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nBxJcRD1"
+	by mail.kernel.org (Postfix) with ESMTP id 3D9DE2070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbgGIILl (ORCPT
+        id S1726283AbgGIIPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:11:41 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:65394 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726215AbgGIILk (ORCPT
+        Thu, 9 Jul 2020 04:15:35 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55606 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgGIIPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:11:40 -0400
-X-UUID: 6e9b63f79d02473db4515b1cba2e297c-20200709
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=EmxpDFVko6vGSPtolSl68cxmu0wfDYMew3MmoQC0gGU=;
-        b=nBxJcRD1CP+djsbHQpGpme/u8nI9OcJe4moXRREEiW1gud67tvRXHWdQXeoEbiqT0ryin7KMUuwazGeMxQ8DoOcgtWfUIvU5d2QtMiZYc4qAv68J7N9P5fOXoHk1W23J35yR2LDUA5aX6r+pr7nvq1zRui/VGz2AtM66INqwMz4=;
-X-UUID: 6e9b63f79d02473db4515b1cba2e297c-20200709
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1010882677; Thu, 09 Jul 2020 16:11:30 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 9 Jul 2020 16:11:30 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 9 Jul 2020 16:11:28 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Felipe Balbi <balbi@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [RFC PATCH] usb: dwc3: fix maximum_speed check for usb2.0-only core
-Date:   Thu, 9 Jul 2020 16:10:50 +0800
-Message-ID: <1594282250-25544-1-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
+        Thu, 9 Jul 2020 04:15:35 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id 3ECFB2A6173
+Subject: Re: [PATCH] tty/sysrq: Add alternative SysRq key
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, kernel@collabora.com
+References: <20200511180145.GU89269@dtor-ws>
+ <20200619162819.715-1-andrzej.p@collabora.com>
+ <20200709050538.GG3273837@dtor-ws>
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Message-ID: <ceb64085-5fff-f4c8-a2e5-ea9e1a7329bf@collabora.com>
+Date:   Thu, 9 Jul 2020 10:15:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: E13421386F9A3D99A6F76BE1A8A8E25F83593278EF8CA57E9EC0A00D10D06AE22000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200709050538.GG3273837@dtor-ws>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIG1heGltdW1fc3BlZWQgd2lsbCBiZSBVU0JfU1BFRURfU1VQRVJfUExVUywgYnV0IHRoZQ0K
-bWF4aW11bV9zcGVlZCBjaGVjayBmb3IgdXNiMi4wLW9ubHkgY29yZSBkb2Vzbid0IGNvbnNpZGVy
-IGl0LA0Kc28gZml4IGl0LCBhbmQgbW92ZSB0aGUgY2tlY2sgaW50byBkd2MzX2NoZWNrX3BhcmFt
-cygpLg0KDQpTaWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRl
-ay5jb20+DQotLS0NCk5vdGU6DQoNCldoZW4gSSBsb29rIGF0IHRoZSBjb2RlLCBmaW5kIHRoYXQg
-dGhpcyBtYXkgYmUgYSBwcm9ibGVtLCBidXQgbm8NCnBsYXRmb3JtIHRvIHRlc3QgaXQuDQotLS0N
-CiBkcml2ZXJzL3VzYi9kd2MzL2NvcmUuYyB8IDE0ICsrKysrKystLS0tLS0tDQogMSBmaWxlIGNo
-YW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvdXNiL2R3YzMvY29yZS5jIGIvZHJpdmVycy91c2IvZHdjMy9jb3JlLmMNCmluZGV4IDI1
-YzY4NmE3Li5mZmQ1YWIzIDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZHdjMy9jb3JlLmMNCisr
-KyBiL2RyaXZlcnMvdXNiL2R3YzMvY29yZS5jDQpAQCAtOTMwLDEzICs5MzAsNiBAQCBzdGF0aWMg
-aW50IGR3YzNfY29yZV9pbml0KHN0cnVjdCBkd2MzICpkd2MpDQogCSAqLw0KIAlkd2MzX3dyaXRl
-bChkd2MtPnJlZ3MsIERXQzNfR1VJRCwgTElOVVhfVkVSU0lPTl9DT0RFKTsNCiANCi0JLyogSGFu
-ZGxlIFVTQjIuMC1vbmx5IGNvcmUgY29uZmlndXJhdGlvbiAqLw0KLQlpZiAoRFdDM19HSFdQQVJB
-TVMzX1NTUEhZX0lGQyhkd2MtPmh3cGFyYW1zLmh3cGFyYW1zMykgPT0NCi0JCQlEV0MzX0dIV1BB
-UkFNUzNfU1NQSFlfSUZDX0RJUykgew0KLQkJaWYgKGR3Yy0+bWF4aW11bV9zcGVlZCA9PSBVU0Jf
-U1BFRURfU1VQRVIpDQotCQkJZHdjLT5tYXhpbXVtX3NwZWVkID0gVVNCX1NQRUVEX0hJR0g7DQot
-CX0NCi0NCiAJcmV0ID0gZHdjM19waHlfc2V0dXAoZHdjKTsNCiAJaWYgKHJldCkNCiAJCWdvdG8g
-ZXJyMDsNCkBAIC0xNDI2LDYgKzE0MTksMTMgQEAgc3RhdGljIHZvaWQgZHdjM19jaGVja19wYXJh
-bXMoc3RydWN0IGR3YzMgKmR3YykNCiANCiAJCWJyZWFrOw0KIAl9DQorDQorCS8qIEhhbmRsZSBV
-U0IyLjAtb25seSBjb3JlIGNvbmZpZ3VyYXRpb24gKi8NCisJaWYgKERXQzNfR0hXUEFSQU1TM19T
-U1BIWV9JRkMoZHdjLT5od3BhcmFtcy5od3BhcmFtczMpID09DQorCQkJRFdDM19HSFdQQVJBTVMz
-X1NTUEhZX0lGQ19ESVMpIHsNCisJCWlmIChkd2MtPm1heGltdW1fc3BlZWQgPiBVU0JfU1BFRURf
-SElHSCkNCisJCQlkd2MtPm1heGltdW1fc3BlZWQgPSBVU0JfU1BFRURfSElHSDsNCisJfQ0KIH0N
-CiANCiBzdGF0aWMgaW50IGR3YzNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikN
-Ci0tIA0KMS45LjENCg==
+Hi Dmitry,
+
+W dniu 09.07.2020 o 07:05, Dmitry Torokhov pisze:
+> Hi Andrzej,
+> 
+> On Fri, Jun 19, 2020 at 06:28:19PM +0200, Andrzej Pietrasiewicz wrote:
+>> There exist machines which don't have SysRq key at all, e.g. chromebooks.
+>>
+>> This patch allows configuring an alternative key to act as SysRq. Devices
+>> which declare KEY_SYSRQ in their 'keybit' bitmap continue using KEY_SYSRQ,
+>> but other devices use the alternative SysRq key instead, by default F10.
+>> Which key is actually used can be modified with sysrq's module parameter.
+> 
+> I guess you will be removing KEY_SYSRQ form all Chrome OS internal AT
+> keyboards and external USB keyboard with Chrome OS layouts as well? Via
+> udev keymap? I suppose this could work... Or have a per device setting
+> as we allocate a separate handle for each input device attached to the
+> SysRq handler.
+> 
+
+To me it makes most sense to have the decision taken per each input
+device - if it is capable of providing KEY_SYSRQ, then it is used,
+otherwise the alternative is taken.
+
+The question is how to provide this information at ->connect() time.
+
+Ideally chromebook's keyboard should be modelled in such a way that
+it reflects reality. And the reality is that chromebooks probably
+declare they use full AT PS/2 keyboard even though they have less keys.
+
+It is unclear to me whether it makes sense to struggle to better
+reflect actual keys repertoire at the kernel level. If udev's keymap
+can be used, that should do. Now, are we able to guarantee that the
+modification of the keyboard layout happens before the sysrq handler
+is matched against the keyboard?
+
+Andrzej
+
+>>
+>> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+>> ---
+>>   drivers/tty/sysrq.c | 28 +++++++++++++++++++++++++---
+>>   1 file changed, 25 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+>> index 0dc3878794fd..e1d271c84746 100644
+>> --- a/drivers/tty/sysrq.c
+>> +++ b/drivers/tty/sysrq.c
+>> @@ -604,6 +604,7 @@ EXPORT_SYMBOL(handle_sysrq);
+>>   
+>>   #ifdef CONFIG_INPUT
+>>   static int sysrq_reset_downtime_ms;
+>> +static unsigned short alternative_sysrq_key = KEY_F10;
+>>   
+>>   /* Simple translation table for the SysRq keys */
+>>   static const unsigned char sysrq_xlate[KEY_CNT] =
+>> @@ -621,6 +622,7 @@ struct sysrq_state {
+>>   	unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];
+>>   	unsigned int alt;
+>>   	unsigned int alt_use;
+>> +	unsigned short sysrq_key;
+>>   	bool active;
+>>   	bool need_reinject;
+>>   	bool reinjecting;
+>> @@ -770,10 +772,10 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+>>   
+>>   		/* Simulate press and release of Alt + SysRq */
+>>   		input_inject_event(handle, EV_KEY, alt_code, 1);
+>> -		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
+>> +		input_inject_event(handle, EV_KEY, sysrq->sysrq_key, 1);
+>>   		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
+>>   
+>> -		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
+>> +		input_inject_event(handle, EV_KEY, sysrq->sysrq_key, 0);
+>>   		input_inject_event(handle, EV_KEY, alt_code, 0);
+>>   		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
+>>   
+>> @@ -805,6 +807,7 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
+>>   		}
+>>   		break;
+>>   
+>> +key_sysrq:
+>>   	case KEY_SYSRQ:
+>>   		if (value == 1 && sysrq->alt != KEY_RESERVED) {
+>>   			sysrq->active = true;
+>> @@ -825,11 +828,15 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
+>>   		 * triggering print screen function.
+>>   		 */
+>>   		if (sysrq->active)
+>> -			clear_bit(KEY_SYSRQ, sysrq->handle.dev->key);
+>> +			clear_bit(sysrq->sysrq_key, sysrq->handle.dev->key);
+>>   
+>>   		break;
+>>   
+>>   	default:
+>> +		/* handle non-default sysrq key */
+>> +		if (code == sysrq->sysrq_key)
+>> +			goto key_sysrq;
+>> +
+>>   		if (sysrq->active && value && value != 2) {
+>>   			sysrq->need_reinject = false;
+>>   			__handle_sysrq(sysrq_xlate[code], true);
+>> @@ -924,6 +931,14 @@ static int sysrq_connect(struct input_handler *handler,
+>>   	sysrq->handle.private = sysrq;
+>>   	timer_setup(&sysrq->keyreset_timer, sysrq_do_reset, 0);
+>>   
+>> +	if (test_bit(KEY_SYSRQ, dev->keybit)) {
+>> +		sysrq->sysrq_key = KEY_SYSRQ;
+>> +		pr_info("%s: using default sysrq key [%x]\n", dev->name, KEY_SYSRQ);
+>> +	} else {
+>> +		sysrq->sysrq_key = alternative_sysrq_key;
+>> +		pr_info("%s: Using alternative sysrq key: [%x]\n", dev->name, sysrq->sysrq_key);
+>> +	}
+> 
+> This is way too noisy IMO.
+> 
+>> +
+>>   	error = input_register_handle(&sysrq->handle);
+>>   	if (error) {
+>>   		pr_err("Failed to register input sysrq handler, error %d\n",
+>> @@ -1032,6 +1047,13 @@ module_param_array_named(reset_seq, sysrq_reset_seq, sysrq_reset_seq,
+>>   
+>>   module_param_named(sysrq_downtime_ms, sysrq_reset_downtime_ms, int, 0644);
+>>   
+>> +module_param(alternative_sysrq_key, ushort, 0644);
+>> +MODULE_PARM_DESC(alternative_sysrq_key,
+>> +	"Alternative SysRq key for input devices that don't have SysRq key. F10 by default.\n"
+>> +	"Example\n"
+>> +	"Using F9 as SysRq:\n"
+>> +	"sysrq.alternative_sysrq_key=0x43\n");
+>> +
+>>   #else
+>>   
+>>   static inline void sysrq_register_handler(void)
+>>
+>> base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+>> -- 
+>> 2.17.1
+>>
+> 
 
