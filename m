@@ -2,291 +2,88 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D49FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9E12077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FE6207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:56:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UK+TwBVB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgGIOzz (ORCPT
+        id S1728291AbgGIOz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:55:55 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:62244 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728226AbgGIOzs (ORCPT
+        Thu, 9 Jul 2020 10:55:59 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17304 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728256AbgGIOzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:55:48 -0400
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069EtBBu004486;
-        Thu, 9 Jul 2020 14:55:11 GMT
-Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
-        by mx0b-002e3701.pphosted.com with ESMTP id 326523g64t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jul 2020 14:55:10 +0000
-Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g2t2352.austin.hpe.com (Postfix) with ESMTP id DA145C4;
-        Thu,  9 Jul 2020 14:54:49 +0000 (UTC)
-Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-        id 47EA0202032FF; Thu,  9 Jul 2020 09:54:48 -0500 (CDT)
-Message-ID: <20200709145448.176958179@hpe.com>
-User-Agent: quilt/0.66
-Date:   Thu, 09 Jul 2020 09:54:52 -0500
-From:   steve.wahl@hpe.com
-To:     Steve Wahl <steve.wahl@hpe.com>, Jonathan Corbet <corbet@lwn.net>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Young <dyoung@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Austin Kim <austindh.kim@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-efi@vger.kernel.org
-Cc:     Russ Anderson <rja@hpe.com>
-Subject: [patch v2 05/13] x86: Remove support for UV1 platform from uv_bau.h
-References: <20200709145447.549145421@hpe.com>
+        Thu, 9 Jul 2020 10:55:51 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f072fe90000>; Thu, 09 Jul 2020 07:55:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 09 Jul 2020 07:55:50 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 09 Jul 2020 07:55:50 -0700
+Received: from [10.19.64.157] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jul
+ 2020 14:55:46 +0000
+Subject: Re: [PATCH v3 1/6] gpio: max77620: Replace 8 with MAX77620_GPIO_NR
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20200708202355.28507-1-digetx@gmail.com>
+ <20200708202355.28507-2-digetx@gmail.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Laxman Dewangan <ldewangan@nvidia.com>
+Message-ID: <15bac6b3-3f24-6990-101f-9d58c50041bc@nvidia.com>
+Date:   Thu, 9 Jul 2020 20:24:50 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-09_08:2020-07-09,2020-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- malwarescore=0 mlxlogscore=999 suspectscore=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 mlxscore=0
- clxscore=1015 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007090112
+In-Reply-To: <20200708202355.28507-2-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594306537; bh=P+oP8TVVw3ec+WzDZWciB4Eb9moLNMO/xISdTvi2eTs=;
+        h=X-PGP-Universal:Subject:To:References:CC:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding;
+        b=UK+TwBVBSNtc76NmKgxwgTdwNP+RLbiJ//6qHIoCKSEqyeC3Be8Ly/1+MW8BFv0NV
+         sjH5vCg0CdbkJejfsjEFL/PS338wgX8qylhOYmU78dx1x10q4gpBJYmQMkR73vM23M
+         UH2wQ9hcbQTnLEsN6O8krbOejyszCyEFkJQavqfFn3Rova9N7vq27eEleElFfXVF5u
+         JgfOIjgz1HoO3RXee8UQdJ4l1cDLMA/9ZNe7pv9Azk4w9XlS+T4MAhslioua/aNa2v
+         J5Wf4gm645T4z3RtQs3ryA94jlV275Bgpu8EIgQS0gDaZ6K7X6PNmQRqQK59SzVfIM
+         3Pmzzx1gIHsFg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arch/x86/include/asm/uv/uv_bau.h: Remove UV1 support
-arch/x86/platform/uv/tlb_uv.c: follow structure name change in uv_bau.h
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
----
- arch/x86/include/asm/uv/uv_bau.h |  118 ++-------------------------------------
- arch/x86/platform/uv/tlb_uv.c    |    4 -
- 2 files changed, 9 insertions(+), 113 deletions(-)
 
---- linux.orig/arch/x86/include/asm/uv/uv_bau.h	2020-07-07 10:49:50.265510378 -0500
-+++ linux/arch/x86/include/asm/uv/uv_bau.h	2020-07-07 10:56:14.265046872 -0500
-@@ -46,10 +46,7 @@
- #define UV_ACT_STATUS_SIZE		2
- #define UV_DISTRIBUTION_SIZE		256
- #define UV_SW_ACK_NPENDING		8
--#define UV1_NET_ENDPOINT_INTD		0x38
--#define UV2_NET_ENDPOINT_INTD		0x28
--#define UV_NET_ENDPOINT_INTD		(is_uv1_hub() ?			\
--			UV1_NET_ENDPOINT_INTD : UV2_NET_ENDPOINT_INTD)
-+#define UV_NET_ENDPOINT_INTD		0x28
- #define UV_PAYLOADQ_GNODE_SHIFT		49
- #define UV_PTC_BASENAME			"sgi_uv/ptc_statistics"
- #define UV_BAU_BASENAME			"sgi_uv/bau_tunables"
-@@ -64,14 +61,9 @@
-  * UV2: Bit 19 selects between
-  *  (0): 10 microsecond timebase and
-  *  (1): 80 microseconds
-- *  we're using 560us, similar to UV1: 65 units of 10us
-+ *  we're using 560us
-  */
--#define UV1_INTD_SOFT_ACK_TIMEOUT_PERIOD (9UL)
--#define UV2_INTD_SOFT_ACK_TIMEOUT_PERIOD (15UL)
--
--#define UV_INTD_SOFT_ACK_TIMEOUT_PERIOD	(is_uv1_hub() ?			\
--		UV1_INTD_SOFT_ACK_TIMEOUT_PERIOD :			\
--		UV2_INTD_SOFT_ACK_TIMEOUT_PERIOD)
-+#define UV_INTD_SOFT_ACK_TIMEOUT_PERIOD	(15UL)
- /* assuming UV3 is the same */
- 
- #define BAU_MISC_CONTROL_MULT_MASK	3
-@@ -148,7 +140,6 @@
- 
- #define UV_LB_SUBNODEID			0x10
- 
--/* these two are the same for UV1 and UV2: */
- #define UV_SA_SHFT UVH_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT
- #define UV_SA_MASK UVH_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_MASK
- /* 4 bits of software ack period */
-@@ -189,8 +180,7 @@
- #define BAU_DESC_QUALIFIER		0x534749
- 
- enum uv_bau_version {
--	UV_BAU_V1 = 1,
--	UV_BAU_V2,
-+	UV_BAU_V2 = 2,
- 	UV_BAU_V3,
- 	UV_BAU_V4,
- };
-@@ -233,12 +223,12 @@ struct bau_local_cpumask {
-  */
- 
- /**
-- * struct uv1_2_3_bau_msg_payload - defines payload for INTD transactions
-+ * struct uv2_3_bau_msg_payload - defines payload for INTD transactions
-  * @address:		Signifies a page or all TLB's of the cpu
-  * @sending_cpu:	CPU from which the message originates
-  * @acknowledge_count:	CPUs on the destination Hub that received the interrupt
-  */
--struct uv1_2_3_bau_msg_payload {
-+struct uv2_3_bau_msg_payload {
- 	u64 address;
- 	u16 sending_cpu;
- 	u16 acknowledge_count;
-@@ -260,89 +250,6 @@ struct uv4_bau_msg_payload {
- };
- 
- /*
-- * UV1 Message header:  16 bytes (128 bits) (bytes 0x30-0x3f of descriptor)
-- * see table 4.2.3.0.1 in broacast_assist spec.
-- */
--struct uv1_bau_msg_header {
--	unsigned int	dest_subnodeid:6;	/* must be 0x10, for the LB */
--	/* bits 5:0 */
--	unsigned int	base_dest_nasid:15;	/* nasid of the first bit */
--	/* bits 20:6 */				/* in uvhub map */
--	unsigned int	command:8;		/* message type */
--	/* bits 28:21 */
--	/* 0x38: SN3net EndPoint Message */
--	unsigned int	rsvd_1:3;		/* must be zero */
--	/* bits 31:29 */
--	/* int will align on 32 bits */
--	unsigned int	rsvd_2:9;		/* must be zero */
--	/* bits 40:32 */
--	/* Suppl_A is 56-41 */
--	unsigned int	sequence:16;		/* message sequence number */
--	/* bits 56:41 */			/* becomes bytes 16-17 of msg */
--						/* Address field (96:57) is
--						   never used as an address
--						   (these are address bits
--						   42:3) */
--
--	unsigned int	rsvd_3:1;		/* must be zero */
--	/* bit 57 */
--	/* address bits 27:4 are payload */
--	/* these next 24  (58-81) bits become bytes 12-14 of msg */
--	/* bits 65:58 land in byte 12 */
--	unsigned int	replied_to:1;		/* sent as 0 by the source to
--						   byte 12 */
--	/* bit 58 */
--	unsigned int	msg_type:3;		/* software type of the
--						   message */
--	/* bits 61:59 */
--	unsigned int	canceled:1;		/* message canceled, resource
--						   is to be freed*/
--	/* bit 62 */
--	unsigned int	payload_1a:1;		/* not currently used */
--	/* bit 63 */
--	unsigned int	payload_1b:2;		/* not currently used */
--	/* bits 65:64 */
--
--	/* bits 73:66 land in byte 13 */
--	unsigned int	payload_1ca:6;		/* not currently used */
--	/* bits 71:66 */
--	unsigned int	payload_1c:2;		/* not currently used */
--	/* bits 73:72 */
--
--	/* bits 81:74 land in byte 14 */
--	unsigned int	payload_1d:6;		/* not currently used */
--	/* bits 79:74 */
--	unsigned int	payload_1e:2;		/* not currently used */
--	/* bits 81:80 */
--
--	unsigned int	rsvd_4:7;		/* must be zero */
--	/* bits 88:82 */
--	unsigned int	swack_flag:1;		/* software acknowledge flag */
--	/* bit 89 */
--						/* INTD trasactions at
--						   destination are to wait for
--						   software acknowledge */
--	unsigned int	rsvd_5:6;		/* must be zero */
--	/* bits 95:90 */
--	unsigned int	rsvd_6:5;		/* must be zero */
--	/* bits 100:96 */
--	unsigned int	int_both:1;		/* if 1, interrupt both sockets
--						   on the uvhub */
--	/* bit 101*/
--	unsigned int	fairness:3;		/* usually zero */
--	/* bits 104:102 */
--	unsigned int	multilevel:1;		/* multi-level multicast
--						   format */
--	/* bit 105 */
--	/* 0 for TLB: endpoint multi-unicast messages */
--	unsigned int	chaining:1;		/* next descriptor is part of
--						   this activation*/
--	/* bit 106 */
--	unsigned int	rsvd_7:21;		/* must be zero */
--	/* bits 127:107 */
--};
--
--/*
-  * UV2 Message header:  16 bytes (128 bits) (bytes 0x30-0x3f of descriptor)
-  * see figure 9-2 of harp_sys.pdf
-  * assuming UV3 is the same
-@@ -418,25 +325,14 @@ struct bau_desc {
- 	 * message template, consisting of header and payload:
- 	 */
- 	union bau_msg_header {
--		struct uv1_bau_msg_header	uv1_hdr;
- 		struct uv2_3_bau_msg_header	uv2_3_hdr;
- 	} header;
- 
- 	union bau_payload_header {
--		struct uv1_2_3_bau_msg_payload	uv1_2_3;
-+		struct uv2_3_bau_msg_payload	uv2_3;
- 		struct uv4_bau_msg_payload	uv4;
- 	} payload;
- };
--/* UV1:
-- *   -payload--    ---------header------
-- *   bytes 0-11    bits 41-56  bits 58-81
-- *       A           B  (2)      C (3)
-- *
-- *            A/B/C are moved to:
-- *       A            C          B
-- *   bytes 0-11  bytes 12-14  bytes 16-17  (byte 15 filled in by hw as vector)
-- *   ------------payload queue-----------
-- */
- /* UV2:
-  *   -payload--    ---------header------
-  *   bytes 0-11    bits 70-78  bits 21-44
---- linux.orig/arch/x86/platform/uv/tlb_uv.c	2020-07-07 10:56:13.665047592 -0500
-+++ linux/arch/x86/platform/uv/tlb_uv.c	2020-07-07 10:56:14.273046863 -0500
-@@ -1050,8 +1050,8 @@ const struct cpumask *uv_flush_tlb_other
- 	switch (bcp->uvhub_version) {
- 	case UV_BAU_V2:
- 	case UV_BAU_V3:
--		bau_desc->payload.uv1_2_3.address = address;
--		bau_desc->payload.uv1_2_3.sending_cpu = cpu;
-+		bau_desc->payload.uv2_3.address = address;
-+		bau_desc->payload.uv2_3.sending_cpu = cpu;
- 		break;
- 	case UV_BAU_V4:
- 		bau_desc->payload.uv4.address = address;
+On Thursday 09 July 2020 01:53 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> The MAX77620_GPIO_NR enum value represents the total number of GPIOs,
+> let's use it instead of a raw value in order to improve the code's
+> readability a tad.
+>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
 
+Looks good to me.
+Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
