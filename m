@@ -2,123 +2,120 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C614C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9206C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF7820672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82CAD2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594301868;
+	bh=2vuZwHJp3mjOxu8143EGZCnWFkodnfxtQtk5snUjqqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IUoJVv6cSjoUw0AMNVOEvCiskj5RAeBjy6xJYcDac8B37whkx1QRCs4xnei33WSfM
+	 u2zNqHLJxQKcsd1XLdo7T892ZtF4AsFx0OLRAkkbvZb83zMqWA2WQKOcQYoh1bjGiI
+	 3KDQPQwwhFGt/BOgc1Bm4mnSlRDciIOPdsC+APso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgGINe7 (ORCPT
+        id S1726856AbgGINhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:34:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:58802 "EHLO foss.arm.com"
+        Thu, 9 Jul 2020 09:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgGINe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:34:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06B291FB;
-        Thu,  9 Jul 2020 06:34:58 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15A453FA00;
-        Thu,  9 Jul 2020 06:34:51 -0700 (PDT)
-Subject: Re: [PATCH] sched/fair: handle case of task_h_load() returning 0
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-References: <20200702144258.19326-1-vincent.guittot@linaro.org>
- <4198cf3d-308e-feee-91c3-2edfd1748b4c@arm.com>
- <CAKfTPtBeRXCEWB3dTC8uOqbQ5xaZqQTAeG1EVGEk+pJcYz00sw@mail.gmail.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <9a282390-1c81-0e77-9567-116c8777f7b5@arm.com>
-Date:   Thu, 9 Jul 2020 15:34:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726410AbgGINhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 09:37:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9B2D206DF;
+        Thu,  9 Jul 2020 13:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594301866;
+        bh=2vuZwHJp3mjOxu8143EGZCnWFkodnfxtQtk5snUjqqI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KX0hie2/yuamyzxw873zrQ3qC2YPjmba20fFJAjKwYVO4bBV87P9S6QDF6wlZTR4+
+         nSGdOidAmPL3NZ7yfDpdl3+RPyHbLECnNhtWG81V58RhhHNLEzhHQLKAqPy/9Gbcv+
+         hRTZfguSCce3UmKo0p3vhXJoKowZcV2k9PJrYxfs=
+Date:   Thu, 9 Jul 2020 15:37:52 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     trix@redhat.com
+Cc:     stuyoder@gmail.com, laurentiu.tudor@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] bus: fsl-mc: fix invalid free in fsl_mc_device_add
+Message-ID: <20200709133752.GA415380@kroah.com>
+References: <20200709124115.5708-1-trix@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtBeRXCEWB3dTC8uOqbQ5xaZqQTAeG1EVGEk+pJcYz00sw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709124115.5708-1-trix@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/2020 11:47, Vincent Guittot wrote:
-> On Wed, 8 Jul 2020 at 11:45, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->>
->> On 02/07/2020 16:42, Vincent Guittot wrote:
->>> task_h_load() can return 0 in some situations like running stress-ng
->>> mmapfork, which forks thousands of threads, in a sched group on a 224 cores
->>> system. The load balance doesn't handle this correctly because
->>
->> I guess the issue here is that 'cfs_rq->h_load' in
->>
->> task_h_load() {
->>     struct cfs_rq *cfs_rq = task_cfs_rq(p);
->>     ...
->>     return div64_ul(p->se.avg.load_avg * cfs_rq->h_load,
->>                     cfs_rq_load_avg(cfs_rq) + 1);
->> }
->>
->> is still ~0 (or at least pretty small) compared to se.avg.load_avg being
->> 1024 and cfs_rq_load_avg(cfs_rq) n*1024 in these lb occurrences.
->>
->>> env->imbalance never decreases and it will stop pulling tasks only after
->>> reaching loop_max, which can be equal to the number of running tasks of
->>> the cfs. Make sure that imbalance will be decreased by at least 1.
-
-Looks like it's bounded by sched_nr_migrate (32 on my E5-2690 v2).
-
-env.loop_max  = min(sysctl_sched_nr_migrate, busiest->nr_running);
-
-[...]
-
->> I assume that this is related to the LKP mail
+On Thu, Jul 09, 2020 at 05:41:15AM -0700, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
 > 
-> I have found this problem while studying the regression raised in the
-> email below but it doesn't fix it. At least, it's not enough
+> clang static analysis flags this error
 > 
->>
->> https://lkml.kernel.org/r/20200421004749.GC26573@shao2-debian ?
+> fsl-mc-bus.c:695:2: warning: Attempt to free released memory [unix.Malloc]
+>         kfree(mc_dev);
+>         ^~~~~~~~~~~~~
+> 
+> The problem block of code is
+> 
+> 		mc_bus = kzalloc(sizeof(*mc_bus), GFP_KERNEL);
+> 		if (!mc_bus)
+> 			return -ENOMEM;
+> 
+> 		mc_dev = &mc_bus->mc_dev;
+> 
+> mc_bus's structure contains a mc_dev element,
+> freeing it later is not appropriate.
+> 
+> So check if mc_bus was allocated before freeing mc_dev
+> 
+> This is a case where checkpatch
+> 
+> WARNING: kfree(NULL) is safe and this check is probably not required
+> +	if (mc_bus)
+> +		kfree(mc_bus);
+> 
+> is wrong.
+> 
+> Fixes: a042fbed0290 ("staging: fsl-mc: simplify couple of deallocations")
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  v1: add a comment to explain freeing uniqueness
+>  
+>  drivers/bus/fsl-mc/fsl-mc-bus.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index 40526da5c6a6..df10ed430baa 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -691,8 +691,14 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>  
+>  error_cleanup_dev:
+>  	kfree(mc_dev->regions);
+> -	kfree(mc_bus);
+> -	kfree(mc_dev);
 
-I see. It also happens with other workloads but it's most visible
-at the beginning of a workload (fork).
+Close, but that still doesn't help with anyone coming along later, how
+about adding:
 
-Still on E5-2690 v2 (2*2*10, 40 CPUs):
+> +	/*
+> +	 * mc_bus allocates a private version of mc_dev
+> +	 * it is not appropriate to free the private version.
 
-In the taskgroup cfs_rq->h_load is ~ 1024/40 = 25 so this leads to
-task_h_load = 0 with cfs_rq->avg.load_avg 40 times higher than the
-individual task load (1024).
+	 * which means we have to check the pointer before freeing it.
+	 * Do not remove this check.
 
-One incarnation of 20 loops w/o any progress (that's w/o your patch).
+thanks,
 
-With loop='loop/loop_break/loop_max'
-and load='p->se.avg.load_avg/cfs_rq->h_load/cfs_rq->avg.load_avg'
-
-Jul  9 10:41:18 e105613-lin kernel: [73.068844] [stress-ng-mmapf 2907] SMT CPU37->CPU17 imb=8 loop=1/32/32 load=1023/23/43006
-Jul  9 10:41:18 e105613-lin kernel: [73.068873] [stress-ng-mmapf 3501] SMT CPU37->CPU17 imb=8 loop=2/32/32 load=1022/23/41983
-Jul  9 10:41:18 e105613-lin kernel: [73.068890] [stress-ng-mmapf 2602] SMT CPU37->CPU17 imb=8 loop=3/32/32 load=1023/23/40960
-...
-Jul  9 10:41:18 e105613-lin kernel: [73.069136] [stress-ng-mmapf 2520] SMT CPU37->CPU17 imb=8 loop=18/32/32 load=1023/23/25613
-Jul  9 10:41:18 e105613-lin kernel: [73.069144] [stress-ng-mmapf 3107] SMT CPU37->CPU17 imb=8 loop=19/32/32 load=1021/23/24589
-Jul  9 10:41:18 e105613-lin kernel: [73.069149] [stress-ng-mmapf 2672] SMT CPU37->CPU17 imb=8 loop=20/32/32 load=1024/23/23566
-...
-
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-
-
-
-
-
-
-
+greg k-h
