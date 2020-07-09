@@ -7,69 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21328C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEE48207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A59207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MWd5ju4J"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ea0ucSY+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbgGIRq4 (ORCPT
+        id S1728594AbgGIRrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:46:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48972 "EHLO
+        Thu, 9 Jul 2020 13:47:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728625AbgGIRqU (ORCPT
+        with ESMTP id S1728617AbgGIRqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:46:20 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C76F1C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:19 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l17so2848797wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:19 -0700 (PDT)
+        Thu, 9 Jul 2020 13:46:18 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47349C08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:17 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g10so6730975wmc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bOkk/AOE4a1rIKIblem9cC9W1YA+YYErwB4kADkbA6U=;
-        b=MWd5ju4JbdHMiJUX5GcVnX00rN3Hc3hTaDiVr7AuBgNidF2+dd4GO9vqUV1Qh46wyy
-         6KEyEo8a2wrrsboXdmxrShxWKCO00TCzZfMh548C3SPpvGr2YZBdtP1Ria0ltI6PaUbJ
-         A8X0QIzFq/GapHaUwFRvoweJ/fwptLu+HspTiL4q0k7W5KRaER1SwytpXR3UFxJVz15T
-         xHcejeaN3b+kVJMloB9uHu+wZP+G0tLsMeSOK0OZVTvXQPf/GYp3LUdiL2v1RwY/4VMh
-         Vl+ZWXughSux3xb5Y4EeAAUBv+uU6xLGI3+CNWu8pXlcuT1HJ1+Sq0NiJR2jr9km1aZW
-         rItA==
+        bh=SJ5riagb5ylGMgLFLpVaPq4YYsW+h0AJ68wtr1RKdm4=;
+        b=ea0ucSY+Vq0Zi7i16gO1xXUSw5rmujrM3nKQwkbbgB1jWlmJTMsPaXxxXncGKdpbAq
+         FQ0Vb8hL5vW8RID+GfNhv0fnKloeI8fPNECt6mDR95xCWli44zx2o/RS37NilezG4lA9
+         yHp/X74DcN2N1+Iz//f8diYi4caEx9zFkkkVGKFiOY9vUxM2jpK9lnIf0KYcbrx7fVS/
+         v1EqlkUK08P9e0YR7VT6Ucrkr93tGgta2Oqtqi7rTgeqUOfd73eNt9Ep83wKFB0S0lp5
+         sgq4MZVUuIpeVPqIxK/AQ98tTIYK/RasFP3EvtPZjY/YODbbU83hbl+PErH1nHEN9H4N
+         RECg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bOkk/AOE4a1rIKIblem9cC9W1YA+YYErwB4kADkbA6U=;
-        b=q9Kf86XLk3ll7RNXIWFwd89jkBpn5oLtVj4r/v+iGMHqr+uaN8QeyYFiSGHel9wFAf
-         NUFTJ1ViAxSXHTdzxH76CSFrfF2yZZf4svhfE2JZQtj3Py6LXr2BwsSdKfo2Xv2jXKaI
-         9HmbgcEdmqEKszinzcbMrm6gqwzJquOIlSRBhZReAeWTmjAG6ZmvnCfo1CWm5f1CVZzh
-         j21dsH/QNMKolGL/ImD8gQwKIW5v7omkJlwLPB79wcLIBM+DQxAWZ8eKYtvLfOPdXbam
-         N1euQM80u96+HEAYR3FEWHmciEYJNlTPj+Ky5IlhmjC9qu8f3rDHQtT9qc+0wtupB+OI
-         dN1g==
-X-Gm-Message-State: AOAM530x/JDN3TnYT0T9eV6OBaas6lRt0Mz9zwCtfBxG7J+GbNAscjL9
-        ywx7EuWsnLrnBKX0oxETa21Peg==
-X-Google-Smtp-Source: ABdhPJwpHmcDVcdQIAxODuM83/Qe1cHAicnMGlPXU41DMaChsw91V85OdaqnzLc7pB10PbgeRRRlMQ==
-X-Received: by 2002:a1c:7f82:: with SMTP id a124mr1054657wmd.132.1594316778528;
-        Thu, 09 Jul 2020 10:46:18 -0700 (PDT)
+        bh=SJ5riagb5ylGMgLFLpVaPq4YYsW+h0AJ68wtr1RKdm4=;
+        b=lvrbszbQbO5TpLwE3/DigQN/Jme3GVdMFf//sUTQHEJOblcDbqq/nVoFDXYoE7ji7u
+         AaWgEkecxs4y0BYP7WGDBupD5vi8m5pKzvG1ZreogpCvUjQ61qOJ7DbBMnDuSnf40LS2
+         OwJVXhAcqidvSzdeCDBMLNRSEw9hci+nGz9BnnI6au/O9gIKj1PWNWzRxb6lS0YId9AK
+         aIm2iHNwdHwJYW/pp8EXEgACLAHCiG5Rj8tfgLC5jWVBhjFrfCDIIFmnZ7lw/5rmSsnu
+         onFQk01GtKu12FGCpWTvJiJGV3g0UFFrfsupfNSi99Sx2VPmfM7TpfZVh1qk5kdqZTkF
+         kdjQ==
+X-Gm-Message-State: AOAM532VanfUYBusjmgAmh6Pf65UR2fH9fCMeDxGNG3K27QUZSlqtD+5
+        HBkfXZNm8j3Gtmh1KSUKfjoVqw==
+X-Google-Smtp-Source: ABdhPJz2C0PWGGgOBLpKDtOyIt3mWW9jH0LlQzF8TiMNreEzFo79gBy4+hnAO5A337QoQLn4fUvtmA==
+X-Received: by 2002:a05:600c:2241:: with SMTP id a1mr1100629wmm.168.1594316775933;
+        Thu, 09 Jul 2020 10:46:15 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.46.17
+        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.46.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:46:17 -0700 (PDT)
+        Thu, 09 Jul 2020 10:46:15 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
         linux-scsi@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Subbu Seetharaman <subbu.seetharaman@broadcom.com>,
-        Ketan Mukadam <ketan.mukadam@broadcom.com>,
-        Jitendra Bhivare <jitendra.bhivare@broadcom.com>,
-        linux-drivers@broadcom.com
-Subject: [PATCH 17/24] scsi: be2iscsi: be_iscsi: Fix API/documentation slip
-Date:   Thu,  9 Jul 2020 18:45:49 +0100
-Message-Id: <20200709174556.7651-18-lee.jones@linaro.org>
+        Hannes Reinecke <hare@kernel.org>, Linux GmbH <hare@suse.com>,
+        "Leonard N. Zubkoff" <lnz@dandelion.com>
+Subject: [PATCH 15/24] scsi: myrs: Demote obvious misuse of kerneldoc to standard comment blocks
+Date:   Thu,  9 Jul 2020 18:45:47 +0100
+Message-Id: <20200709174556.7651-16-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200709174556.7651-1-lee.jones@linaro.org>
 References: <20200709174556.7651-1-lee.jones@linaro.org>
@@ -80,88 +78,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And add descriptions for a couple of missing function parameters.
+No attempt has been made to document any of the demoted functions here.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/be2iscsi/be_iscsi.c:38: warning: Function parameter or member 'ep' not described in 'beiscsi_session_create'
- drivers/scsi/be2iscsi/be_iscsi.c:173: warning: Function parameter or member 'is_leading' not described in 'beiscsi_conn_bind'
- drivers/scsi/be2iscsi/be_iscsi.c:998: warning: Function parameter or member 'beiscsi_ep' not described in 'beiscsi_free_ep'
- drivers/scsi/be2iscsi/be_iscsi.c:998: warning: Excess function parameter 'ep' description in 'beiscsi_free_ep'
- drivers/scsi/be2iscsi/be_iscsi.c:1039: warning: Function parameter or member 'non_blocking' not described in 'beiscsi_open_conn'
- drivers/scsi/be2iscsi/be_iscsi.c:1135: warning: Function parameter or member 'shost' not described in 'beiscsi_ep_connect'
- drivers/scsi/be2iscsi/be_iscsi.c:1135: warning: Excess function parameter 'scsi_host' description in 'beiscsi_ep_connect'
- drivers/scsi/be2iscsi/be_iscsi.c:1236: warning: Function parameter or member 'beiscsi_ep' not described in 'beiscsi_conn_close'
- drivers/scsi/be2iscsi/be_iscsi.c:1236: warning: Excess function parameter 'ep' description in 'beiscsi_conn_close'
+ drivers/scsi/myrs.c:94: warning: Function parameter or member 'cmd_blk' not described in 'myrs_reset_cmd'
+ drivers/scsi/myrs.c:105: warning: Function parameter or member 'cs' not described in 'myrs_qcmd'
+ drivers/scsi/myrs.c:105: warning: Function parameter or member 'cmd_blk' not described in 'myrs_qcmd'
+ drivers/scsi/myrs.c:130: warning: Function parameter or member 'cs' not described in 'myrs_exec_cmd'
+ drivers/scsi/myrs.c:130: warning: Function parameter or member 'cmd_blk' not described in 'myrs_exec_cmd'
+ drivers/scsi/myrs.c:149: warning: Function parameter or member 'cs' not described in 'myrs_report_progress'
+ drivers/scsi/myrs.c:149: warning: Function parameter or member 'ldev_num' not described in 'myrs_report_progress'
+ drivers/scsi/myrs.c:149: warning: Function parameter or member 'msg' not described in 'myrs_report_progress'
+ drivers/scsi/myrs.c:149: warning: Function parameter or member 'blocks' not described in 'myrs_report_progress'
+ drivers/scsi/myrs.c:149: warning: Function parameter or member 'size' not described in 'myrs_report_progress'
+ drivers/scsi/myrs.c:160: warning: Function parameter or member 'cs' not described in 'myrs_get_ctlr_info'
+ drivers/scsi/myrs.c:222: warning: Function parameter or member 'cs' not described in 'myrs_get_ldev_info'
+ drivers/scsi/myrs.c:222: warning: Function parameter or member 'ldev_num' not described in 'myrs_get_ldev_info'
+ drivers/scsi/myrs.c:222: warning: Function parameter or member 'ldev_info' not described in 'myrs_get_ldev_info'
+ drivers/scsi/myrs.c:310: warning: Function parameter or member 'cs' not described in 'myrs_get_pdev_info'
+ drivers/scsi/myrs.c:310: warning: Function parameter or member 'channel' not described in 'myrs_get_pdev_info'
+ drivers/scsi/myrs.c:310: warning: Function parameter or member 'target' not described in 'myrs_get_pdev_info'
+ drivers/scsi/myrs.c:310: warning: Function parameter or member 'lun' not described in 'myrs_get_pdev_info'
+ drivers/scsi/myrs.c:310: warning: Function parameter or member 'pdev_info' not described in 'myrs_get_pdev_info'
+ drivers/scsi/myrs.c:353: warning: Function parameter or member 'cs' not described in 'myrs_dev_op'
+ drivers/scsi/myrs.c:353: warning: Function parameter or member 'opcode' not described in 'myrs_dev_op'
+ drivers/scsi/myrs.c:353: warning: Function parameter or member 'opdev' not described in 'myrs_dev_op'
+ drivers/scsi/myrs.c:379: warning: Function parameter or member 'cs' not described in 'myrs_translate_pdev'
+ drivers/scsi/myrs.c:379: warning: Function parameter or member 'channel' not described in 'myrs_translate_pdev'
+ drivers/scsi/myrs.c:379: warning: Function parameter or member 'target' not described in 'myrs_translate_pdev'
+ drivers/scsi/myrs.c:379: warning: Function parameter or member 'lun' not described in 'myrs_translate_pdev'
+ drivers/scsi/myrs.c:379: warning: Function parameter or member 'devmap' not described in 'myrs_translate_pdev'
+ drivers/scsi/myrs.c:422: warning: Function parameter or member 'cs' not described in 'myrs_get_event'
+ drivers/scsi/myrs.c:422: warning: Function parameter or member 'event_num' not described in 'myrs_get_event'
+ drivers/scsi/myrs.c:422: warning: Function parameter or member 'event_buf' not described in 'myrs_get_event'
+ drivers/scsi/myrs.c:484: warning: Function parameter or member 'cs' not described in 'myrs_enable_mmio_mbox'
+ drivers/scsi/myrs.c:484: warning: Function parameter or member 'enable_mbox_fn' not described in 'myrs_enable_mmio_mbox'
+ drivers/scsi/myrs.c:584: warning: Function parameter or member 'cs' not described in 'myrs_get_config'
+ drivers/scsi/myrs.c:688: warning: cannot understand function prototype: 'struct '
+ drivers/scsi/myrs.c:1967: warning: Function parameter or member 'dev' not described in 'myrs_is_raid'
+ drivers/scsi/myrs.c:1980: warning: Function parameter or member 'dev' not described in 'myrs_get_resync'
+ drivers/scsi/myrs.c:2005: warning: Function parameter or member 'dev' not described in 'myrs_get_state'
+ drivers/scsi/myrs.c:2343: warning: bad line:   the Error Status Register when the driver performs the BIOS handshaking.
+ drivers/scsi/myrs.c:2344: warning: bad line:   It returns true for fatal errors and false otherwise.
+ drivers/scsi/myrs.c:2349: warning: Function parameter or member 'cs' not described in 'myrs_err_status'
+ drivers/scsi/myrs.c:2349: warning: Function parameter or member 'status' not described in 'myrs_err_status'
+ drivers/scsi/myrs.c:2349: warning: Function parameter or member 'parm0' not described in 'myrs_err_status'
+ drivers/scsi/myrs.c:2349: warning: Function parameter or member 'parm1' not described in 'myrs_err_status'
 
-Cc: Subbu Seetharaman <subbu.seetharaman@broadcom.com>
-Cc: Ketan Mukadam <ketan.mukadam@broadcom.com>
-Cc: Jitendra Bhivare <jitendra.bhivare@broadcom.com>
-Cc: linux-drivers@broadcom.com
+Cc: Hannes Reinecke <hare@kernel.org>
+Cc: Linux GmbH <hare@suse.com>
+Cc: "Leonard N. Zubkoff" <lnz@dandelion.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/be2iscsi/be_iscsi.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/scsi/myrs.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/scsi/be2iscsi/be_iscsi.c b/drivers/scsi/be2iscsi/be_iscsi.c
-index 2058d50d62e12..fe10575bce7f0 100644
---- a/drivers/scsi/be2iscsi/be_iscsi.c
-+++ b/drivers/scsi/be2iscsi/be_iscsi.c
-@@ -27,6 +27,7 @@ extern struct iscsi_transport beiscsi_iscsi_transport;
+diff --git a/drivers/scsi/myrs.c b/drivers/scsi/myrs.c
+index 5c5666491c2ee..103803e779f2d 100644
+--- a/drivers/scsi/myrs.c
++++ b/drivers/scsi/myrs.c
+@@ -87,7 +87,7 @@ static char *myrs_raid_level_name(enum myrs_raid_level level)
+ 	return NULL;
+ }
  
- /**
-  * beiscsi_session_create - creates a new iscsi session
-+ * @ep: pointer to iscsi ep
-  * @cmds_max: max commands supported
-  * @qdepth: max queue depth supported
-  * @initial_cmdsn: initial iscsi CMDSN
-@@ -164,6 +165,7 @@ beiscsi_conn_create(struct iscsi_cls_session *cls_session, u32 cid)
-  * @cls_session: pointer to iscsi cls session
-  * @cls_conn: pointer to iscsi cls conn
-  * @transport_fd: EP handle(64 bit)
-+ * @is_leading: indicate if this is the session leading connection (MCS)
-  *
-  * This function binds the TCP Conn with iSCSI Connection and Session.
+-/**
++/*
+  * myrs_reset_cmd - clears critical fields in struct myrs_cmdblk
   */
-@@ -992,7 +994,7 @@ static void beiscsi_put_cid(struct beiscsi_hba *phba, unsigned short cid)
+ static inline void myrs_reset_cmd(struct myrs_cmdblk *cmd_blk)
+@@ -98,7 +98,7 @@ static inline void myrs_reset_cmd(struct myrs_cmdblk *cmd_blk)
+ 	cmd_blk->status = 0;
+ }
  
- /**
-  * beiscsi_free_ep - free endpoint
-- * @ep:	pointer to iscsi endpoint structure
-+ * @beiscsi_ep: pointer to device endpoint struct
+-/**
++/*
+  * myrs_qcmd - queues Command for DAC960 V2 Series Controllers.
   */
- static void beiscsi_free_ep(struct beiscsi_endpoint *beiscsi_ep)
- {
-@@ -1027,9 +1029,10 @@ static void beiscsi_free_ep(struct beiscsi_endpoint *beiscsi_ep)
+ static void myrs_qcmd(struct myrs_hba *cs, struct myrs_cmdblk *cmd_blk)
+@@ -122,7 +122,7 @@ static void myrs_qcmd(struct myrs_hba *cs, struct myrs_cmdblk *cmd_blk)
+ 	cs->next_cmd_mbox = next_mbox;
+ }
  
- /**
-  * beiscsi_open_conn - Ask FW to open a TCP connection
-- * @ep:	endpoint to be used
-+ * @beiscsi_ep: pointer to device endpoint struct
-  * @src_addr: The source IP address
-  * @dst_addr: The Destination  IP address
-+ * @non_blocking: blocking or non-blocking call
-  *
-  * Asks the FW to open a TCP connection
+-/**
++/*
+  * myrs_exec_cmd - executes V2 Command and waits for completion.
   */
-@@ -1123,7 +1126,7 @@ static int beiscsi_open_conn(struct iscsi_endpoint *ep,
+ static void myrs_exec_cmd(struct myrs_hba *cs,
+@@ -140,7 +140,7 @@ static void myrs_exec_cmd(struct myrs_hba *cs,
+ 	wait_for_completion(&complete);
+ }
  
- /**
-  * beiscsi_ep_connect - Ask chip to create TCP Conn
-- * @scsi_host: Pointer to scsi_host structure
-+ * @shost: Pointer to scsi_host structure
-  * @dst_addr: The IP address of Target
-  * @non_blocking: blocking or non-blocking call
-  *
-@@ -1228,7 +1231,7 @@ static void beiscsi_flush_cq(struct beiscsi_hba *phba)
- 
- /**
-  * beiscsi_conn_close - Invalidate and upload connection
-- * @ep: The iscsi endpoint
-+ * @beiscsi_ep: pointer to device endpoint struct
-  *
-  * Returns 0 on success,  -1 on failure.
+-/**
++/*
+  * myrs_report_progress - prints progress message
   */
+ static void myrs_report_progress(struct myrs_hba *cs, unsigned short ldev_num,
+@@ -153,7 +153,7 @@ static void myrs_report_progress(struct myrs_hba *cs, unsigned short ldev_num,
+ 		     (100 * (int)(blocks >> 7)) / (int)(size >> 7));
+ }
+ 
+-/**
++/*
+  * myrs_get_ctlr_info - executes a Controller Information IOCTL Command
+  */
+ static unsigned char myrs_get_ctlr_info(struct myrs_hba *cs)
+@@ -214,7 +214,7 @@ static unsigned char myrs_get_ctlr_info(struct myrs_hba *cs)
+ 	return status;
+ }
+ 
+-/**
++/*
+  * myrs_get_ldev_info - executes a Logical Device Information IOCTL Command
+  */
+ static unsigned char myrs_get_ldev_info(struct myrs_hba *cs,
+@@ -301,7 +301,7 @@ static unsigned char myrs_get_ldev_info(struct myrs_hba *cs,
+ 	return status;
+ }
+ 
+-/**
++/*
+  * myrs_get_pdev_info - executes a "Read Physical Device Information" Command
+  */
+ static unsigned char myrs_get_pdev_info(struct myrs_hba *cs,
+@@ -345,7 +345,7 @@ static unsigned char myrs_get_pdev_info(struct myrs_hba *cs,
+ 	return status;
+ }
+ 
+-/**
++/*
+  * myrs_dev_op - executes a "Device Operation" Command
+  */
+ static unsigned char myrs_dev_op(struct myrs_hba *cs,
+@@ -369,7 +369,7 @@ static unsigned char myrs_dev_op(struct myrs_hba *cs,
+ 	return status;
+ }
+ 
+-/**
++/*
+  * myrs_translate_pdev - translates a Physical Device Channel and
+  * TargetID into a Logical Device.
+  */
+@@ -414,7 +414,7 @@ static unsigned char myrs_translate_pdev(struct myrs_hba *cs,
+ 	return status;
+ }
+ 
+-/**
++/*
+  * myrs_get_event - executes a Get Event Command
+  */
+ static unsigned char myrs_get_event(struct myrs_hba *cs,
+@@ -476,7 +476,7 @@ static unsigned char myrs_get_fwstatus(struct myrs_hba *cs)
+ 	return status;
+ }
+ 
+-/**
++/*
+  * myrs_enable_mmio_mbox - enables the Memory Mailbox Interface
+  */
+ static bool myrs_enable_mmio_mbox(struct myrs_hba *cs,
+@@ -577,7 +577,7 @@ static bool myrs_enable_mmio_mbox(struct myrs_hba *cs,
+ 	return (status == MYRS_STATUS_SUCCESS);
+ }
+ 
+-/**
++/*
+  * myrs_get_config - reads the Configuration Information
+  */
+ static int myrs_get_config(struct myrs_hba *cs)
+@@ -682,7 +682,7 @@ static int myrs_get_config(struct myrs_hba *cs)
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * myrs_log_event - prints a Controller Event message
+  */
+ static struct {
+@@ -2338,11 +2338,11 @@ static struct myrs_hba *myrs_detect(struct pci_dev *pdev,
+ 	return NULL;
+ }
+ 
+-/**
++/*
+  * myrs_err_status reports Controller BIOS Messages passed through
+-  the Error Status Register when the driver performs the BIOS handshaking.
+-  It returns true for fatal errors and false otherwise.
+-*/
++ * the Error Status Register when the driver performs the BIOS handshaking.
++ * It returns true for fatal errors and false otherwise.
++ */
+ 
+ static bool myrs_err_status(struct myrs_hba *cs, unsigned char status,
+ 		unsigned char parm0, unsigned char parm1)
 -- 
 2.25.1
 
