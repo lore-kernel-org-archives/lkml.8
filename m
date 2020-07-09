@@ -2,175 +2,93 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1448C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC557207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906BA207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U5apnh1w"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wGq+g0t/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgGIUBi (ORCPT
+        id S1726813AbgGIUBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:01:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34419 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726771AbgGIUBh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:01:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594324895;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G12ohWomnrkg8Oqt/NPeW8Vqi7g3F+tOjv9UH7LVF3o=;
-        b=U5apnh1wUDupTobOmdl6NYHoq+i4gdb0GNiMgB65Mgz5TQH7tEMpo4ylcTn4alC6oP/lti
-        EH3A8qH1iaGE/yvjHFO7Xmhd05qxjgs2O9Cef5n0rBsX8W+7xYxO2wjvt2Di5DQ3yxjzJ4
-        8QjkSn1ZGLo031I8Mabq+D5Yf1DHtfg=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-Z0XtEYeyOcabRPaz9UEx9g-1; Thu, 09 Jul 2020 16:01:33 -0400
-X-MC-Unique: Z0XtEYeyOcabRPaz9UEx9g-1
-Received: by mail-qt1-f197.google.com with SMTP id g6so2484008qtr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 13:01:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=G12ohWomnrkg8Oqt/NPeW8Vqi7g3F+tOjv9UH7LVF3o=;
-        b=ZepF4JzjFedESyuMHN0Jb/699Vs3fS97ZwcX6MjU9K1kOHxo2q3O0n4IL7DYeb7Pfy
-         tRHBBTWddaa0Gso1sdOnfF2jh0wR7u1nCcGEf19qQo7hDs5uKaN9SSfWoPCBa85/u3IT
-         KS39MNfW4bqKDLor7SbjZ+VilmbXQudUEoARS/JoC4v/AelHU7myWPqjG+oiYCAL65GM
-         rTgLXeNd8ZPKSkZD4gv1RkmNPfIpaD5hOwmDMV2uCRkLgIBkv25hIkLZOWONWTsbvmdT
-         zV1NdZM2Wio2mxELn7aFCfmj4AgqWRWK4yy6RG2CdIJkgpt8nZEKPwk39dXAnwuoBf7N
-         JWEg==
-X-Gm-Message-State: AOAM531seR/4OFhir+JT+FFKZRHg7+oAt1WaX4nALJmOjhNc4VPTzzk9
-        Crf8+pWlHMIkTY5hFe1iAYsegZTTfHbiHWcQwCKDIeCSge7+C3Jowt92XiaODgD3QqJepGeIDWt
-        9gjJBGgk0Jbi27CsmGWJgUznW
-X-Received: by 2002:a37:aa03:: with SMTP id t3mr64775491qke.152.1594324893278;
-        Thu, 09 Jul 2020 13:01:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxACB1C/bMwcxkXUb1YkDL6tCyznoTH5j1W+4eqrGlghyl3xowSDdKoSxD1NHJpbnIvObk73A==
-X-Received: by 2002:a37:aa03:: with SMTP id t3mr64775468qke.152.1594324893043;
-        Thu, 09 Jul 2020 13:01:33 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id e9sm4586945qtq.70.2020.07.09.13.01.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 13:01:32 -0700 (PDT)
-Subject: Re: [PATCH] fpga: stratix10-soc: make FPGA task un-interruptible
-To:     richard.gong@linux.intel.com, mdf@kernel.org
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dinguyen@kernel.org, richard.gong@intel.com
-References: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <926c1117-1f31-5b3d-55af-4216db4f1745@redhat.com>
-Date:   Thu, 9 Jul 2020 13:01:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <1594138447-21488-1-git-send-email-richard.gong@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Thu, 9 Jul 2020 16:01:45 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:40244 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726790AbgGIUBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 16:01:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594324904; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=8iidDXtODABGvQpH1ZOjB+bZqANOW83DMaIoVI6ViP4=; b=wGq+g0t/874+MfGTKSMopqaGR9D2yrKs9iQS8GtITAwdDRcJhUciN7KLMN5e0jnNWTuHczLv
+ Fd0mt1p3fuP6MA4fJv0tyCX2JpOkKpXzDUn9+2I9ol/nITeKgcCkICWJvrEhiWMQxLz9OkGI
+ VaY7CBBDchmX5eRaAbe0orcP5c4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
+ 5f07778c9f03943e5cec6c07 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 20:01:16
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 85D56C43395; Thu,  9 Jul 2020 20:01:15 +0000 (UTC)
+Received: from akhilpo-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akhilpo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 81213C433C6;
+        Thu,  9 Jul 2020 20:01:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 81213C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
+From:   Akhil P Oommen <akhilpo@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        smasetty@codeaurora.org, devicetree@vger.kernel.org,
+        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
+        viresh.kumar@linaro.org, jonathan@marek.ca
+Subject: [PATCH v4 6/7] arm64: dts: qcom: sc7180: Add interconnects property for GPU
+Date:   Fri, 10 Jul 2020 01:30:26 +0530
+Message-Id: <1594324828-9571-7-git-send-email-akhilpo@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
+References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mostly fine, see inline question.
+From: Sharat Masetty <smasetty@codeaurora.org>
 
-On 7/7/20 9:14 AM, richard.gong@linux.intel.com wrote:
-> From: Richard Gong <richard.gong@intel.com>
->
-> When CTRL+C occurs during the process of FPGA reconfiguration, the FPGA
-> reconfiguration process stops and the user can't perform a new FPGA
-> reconfiguration properly.
->
-> Set FPGA complete task to be not interruptible so that the user can
-> properly perform FPGA reconfiguration after CTRL+C event.
->
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
-> ---
->  drivers/fpga/stratix10-soc.c | 23 +++--------------------
->  1 file changed, 3 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
-> index 44b7c56..657a70c 100644
-> --- a/drivers/fpga/stratix10-soc.c
-> +++ b/drivers/fpga/stratix10-soc.c
-> @@ -196,17 +196,13 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
->  	if (ret < 0)
->  		goto init_done;
->  
-> -	ret = wait_for_completion_interruptible_timeout(
-> +	ret = wait_for_completion_timeout(
->  		&priv->status_return_completion, S10_RECONFIG_TIMEOUT);
->  	if (!ret) {
->  		dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
->  		ret = -ETIMEDOUT;
->  		goto init_done;
->  	}
-> -	if (ret < 0) {
-> -		dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
-> -		goto init_done;
-> -	}
->  
->  	ret = 0;
->  	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
-> @@ -318,7 +314,7 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
->  		 */
->  		wait_status = 1; /* not timed out */
->  		if (!priv->status)
-> -			wait_status = wait_for_completion_interruptible_timeout(
-> +			wait_status = wait_for_completion_timeout(
->  				&priv->status_return_completion,
->  				S10_BUFFER_TIMEOUT);
->  
-> @@ -340,13 +336,6 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
->  			ret = -ETIMEDOUT;
->  			break;
->  		}
-> -		if (wait_status < 0) {
-> -			ret = wait_status;
-> -			dev_err(dev,
-> -				"error (%d) waiting for svc layer buffers\n",
-> -				ret);
-> -			break;
-> -		}
->  	}
->  
->  	if (!s10_free_buffers(mgr))
-> @@ -372,7 +361,7 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+This patch adds the interconnects property to the GPU node. This enables
+the GPU->DDR path bandwidth voting.
 
-This part is done in an infinite loop, is the loop still needed ?
+Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Reviewed-by: Tom Rix <trix@redhat.com>
-
->  		if (ret < 0)
->  			break;
->  
-> -		ret = wait_for_completion_interruptible_timeout(
-> +		ret = wait_for_completion_timeout(
->  			&priv->status_return_completion, timeout);
->  		if (!ret) {
->  			dev_err(dev,
-> @@ -380,12 +369,6 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
->  			ret = -ETIMEDOUT;
->  			break;
->  		}
-> -		if (ret < 0) {
-> -			dev_err(dev,
-> -				"error (%d) waiting for RECONFIG_COMPLETED\n",
-> -				ret);
-> -			break;
-> -		}
->  		/* Not error or timeout, so ret is # of jiffies until timeout */
->  		timeout = ret;
->  		ret = 0;
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 31b9217..a567297 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1470,6 +1470,8 @@
+ 			operating-points-v2 = <&gpu_opp_table>;
+ 			qcom,gmu = <&gmu>;
+ 
++			interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
++
+ 			gpu_opp_table: opp-table {
+ 				compatible = "operating-points-v2";
+ 
+-- 
+2.7.4
 
