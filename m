@@ -2,140 +2,118 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F557C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C83A207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B88C2078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:48:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AqhuIu0+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E7ABfm78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgGIRqB (ORCPT
+        id S1728430AbgGIRsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:46:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgGIRqA (ORCPT
+        Thu, 9 Jul 2020 13:48:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44629 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726615AbgGIRsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:46:00 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852DEC08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:00 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f2so3272154wrp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ez9cZtUnYXcwHobMCwZ6WRbdQJMWO8OSEw13aOAjRF4=;
-        b=AqhuIu0+Io42DkyiAGeDTpM8gtYQc7ga2djYpn77xw0TkcqCSEhW2kQpy0Qq9ceesu
-         rB9qyDdO2XEqWsMxs7k/BbWi+qt71wgCu+ayLaWPBbc6Htup9TqEpBNtaioqqKPFl37e
-         DZ5stDKVn/D37q3VBXCXcpvtAcNFomHsZRlyt+GQGo8Mtc7chva9JEREVyJwNOlSGH+N
-         Na3Jk+7ArS7AR8iAlFeJFTP+tKG17q4sSY83QBqFT+4cg5y9yyZBm7E8iepcFOTuoTrT
-         TnLs4ys4H3ziGMmZLlR0CBKRgxw+xQmxPNAUWsazjGMetZdeuImNrXPoduAm0ocW2dcr
-         rVVQ==
+        Thu, 9 Jul 2020 13:48:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594316921;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OBKaxszc9J3brzbIe9PuekXCVyqXMqYSpp7GRiPhBv8=;
+        b=E7ABfm78Bfw6SdgMguaaSWq7Uv3KkWTUVlAomUOOHgneWOoOp9Jp4sYEX8jxG8LFfbFnd7
+        K8i72Baj5YnAKk1kd3RWQ62xfOy7iG4bfmqsDV3yLibuufyKoNvKuaBW8CyA48Q2qqCGQL
+        vO4ubFhk0xdmePJNZGOnGhnGlfsZX70=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-462-A598r6JgNtWZPROidwbjXg-1; Thu, 09 Jul 2020 13:48:39 -0400
+X-MC-Unique: A598r6JgNtWZPROidwbjXg-1
+Received: by mail-wm1-f70.google.com with SMTP id 65so2894169wmd.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:48:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Ez9cZtUnYXcwHobMCwZ6WRbdQJMWO8OSEw13aOAjRF4=;
-        b=S6FlFjWtOjTpY4AS4WQd+kMtdRFv5k/mPxyqtE4vJN1pgW6V3tG1/JuyTiQw90/kaJ
-         bZii4CX2GFYZDWAz1R4pZK7uIh4EOJ2DuMAcrTJzYrUWH9j+7nhQXupdXUBOVYJv5yEC
-         DHhP7WAntR9+q8aNdiLtBkHiwGrjZQO4wx8i8FucsBcYAabQYpz58tOoz1bHJ6TuGLoj
-         cQRfDc/hoV3Pldd+uXXiHVEH0sjYQQvjSo2Jdria3FiVLjKVzb/QESY322HKBFLZxn9X
-         tg1ETd8c0vzIUcQEGtp4vazOi27zw6sh1FNt4n4rt07/JjKUMxRdmVf3yAB63zh3eiNJ
-         1NxA==
-X-Gm-Message-State: AOAM530Y6wf5Qj3ty2L1eiwnj+OZ+9Q1RwzFEt3yvrAgvHg09BNE4uvM
-        1X73CH+Hyd/RENZqItMGgOZOfg==
-X-Google-Smtp-Source: ABdhPJzEkFZJGyQA3CvHpF0B9hca7kSIEVMwChoMPGrpvSLjRr/U+S8sF1cWgSlUhyKupiS0v3BHmQ==
-X-Received: by 2002:adf:8b5a:: with SMTP id v26mr63641254wra.165.1594316758752;
-        Thu, 09 Jul 2020 10:45:58 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.45.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:45:58 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 00/24] Set 3: Fix another set of SCSI related W=1 warnings
-Date:   Thu,  9 Jul 2020 18:45:32 +0100
-Message-Id: <20200709174556.7651-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        bh=OBKaxszc9J3brzbIe9PuekXCVyqXMqYSpp7GRiPhBv8=;
+        b=bXD0FwlFnrHC6aAl1Xsu0FvOg0vlF8obnxTL+KErW/krDQksq1CjzJAxEjCgxLVSQd
+         MWQNqWJYdo61TkOZd91/jitiOk4lIl0fETgZ9gyCGUHdpjglr6pqQWEwsK+vcYQjfXBd
+         K3+P8ieGZR07FszPNE3C81UCF0Cj4ivdCsEduCuE1H9tgLHnGmqkoxP5KoZjIsekBxBE
+         J4OQSguPlNdYri34jBM5BQ+NuG7j5MxFu0/Xv3vH+RB61rTOB03kOxykIzoCkBphDNE3
+         zf8ql8WBPo6SAb7987JgJlZGe548TQZvYmH4WO57ido0ajcAkwk9BP7Q1uw/0zlCXMSB
+         jRAw==
+X-Gm-Message-State: AOAM533ZOQGHR9y6N0kArdCxJoN8kog8kCvIb8t93rBZniD30r8JNJ+K
+        ryqkz+jbdxcgHw5H0riQmW2QI6BUyTc1eK9IuID3GSxIKbw+ONuR/OZx63xtXKS0ihKnIblszcI
+        77btHlU2ax9cbeRfRSZmTk/Ui
+X-Received: by 2002:adf:81c8:: with SMTP id 66mr64370298wra.348.1594316918514;
+        Thu, 09 Jul 2020 10:48:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz8a4V2UuLN2uaVwSJn5bbrkO3YT8wXDAE7gV63PAyJaykIzI1KjDbVMYIB+Kg+e9aq5HyBaA==
+X-Received: by 2002:adf:81c8:: with SMTP id 66mr64370278wra.348.1594316918245;
+        Thu, 09 Jul 2020 10:48:38 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.gmail.com with ESMTPSA id o205sm6104990wme.24.2020.07.09.10.48.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 10:48:37 -0700 (PDT)
+Subject: Re: [PATCH v3 3/9] KVM: nSVM: reset nested_run_pending upon
+ nested_svm_vmrun_msrpm() failure
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        linux-kernel@vger.kernel.org
+References: <20200709145358.1560330-1-vkuznets@redhat.com>
+ <20200709145358.1560330-4-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <262fc5f8-935d-dce2-314e-ce5db6e73940@redhat.com>
+Date:   Thu, 9 Jul 2020 19:48:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709145358.1560330-4-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+On 09/07/20 16:53, Vitaly Kuznetsov wrote:
+> WARN_ON_ONCE(svm->nested.nested_run_pending) in nested_svm_vmexit()
+> will fire if nested_run_pending remains '1' but it doesn't really
+> need to, we are already failing and not going to run nested guest.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/svm/nested.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index e424bce13e6c..1cc8592b1820 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -468,6 +468,8 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
+>  	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb);
+>  
+>  	if (!nested_svm_vmrun_msrpm(svm)) {
+> +		svm->nested.nested_run_pending = 0;
+> +
+>  		svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
+>  		svm->vmcb->control.exit_code_hi = 0;
+>  		svm->vmcb->control.exit_info_1  = 0;
+> 
 
-Slowly working through the SCSI related ones.  There are many.
+I wouldn't complain if you added a kvm-unit-tests testcase for this...
 
-This brings the total of W=1 SCSI wanings from 1690 in v5.8-rc1 to 1109.
-
-Lee Jones (24):
-  scsi: aacraid: aachba: Repair two kerneldoc headers
-  scsi: aacraid: commctrl: Fix a few kerneldoc issues
-  scsi: aacraid: dpcsup: Fix logical bug when !DBG
-  scsi: aacraid: dpcsup: Remove unused variable 'status'
-  scsi: aacraid: dpcsup: Demote partially documented function header
-  scsi: aic94xx: aic94xx_seq: Document 'lseq' and repair
-    asd_update_port_links() header
-  scsi: aacraid: commsup: Fix a bunch of function header issues
-  scsi: aic94xx: aic94xx_scb: Fix a couple of formatting and bitrot
-    issues
-  scsi: aacraid: rx: Fill in the very parameter descriptions for
-    rx_sync_cmd()
-  scsi: pm8001: pm8001_ctl: Provide descriptions for the many
-    undocumented 'attr's
-  scsi: ipr: Fix a mountain of kerneldoc misdemeanours
-  scsi: virtio_scsi: Demote seemingly unintentional kerneldoc header
-  scsi: ipr: Remove a bunch of set but checked variables
-  scsi: ipr: Fix struct packed-not-aligned issues
-  scsi: myrs: Demote obvious misuse of kerneldoc to standard comment
-    blocks
-  scsi: megaraid: Fix a whole bunch of function header formatting issues
-  scsi: be2iscsi: be_iscsi: Fix API/documentation slip
-  scsi: be2iscsi: be_main: Fix misdocumentation of 'pcontext'
-  scsi: be2iscsi: be_mgmt: Add missing function parameter description
-  scsi: lpfc: lpfc_nvme: Correct some pretty obvious misdocumentation
-  scsi: aic7xxx: aic79xx_osm: Remove unused variable 'ahd'
-  scsi: aic7xxx: aic79xx_osm: Remove unused variables 'wait' and
-    'paused'
-  scsi: aic7xxx: aic79xx_osm: Fix 'amount_xferred' set but not used
-    issue
-  scsi: aic7xxx: aic79xx_osm: Remove set but unused variabes
-    'saved_scsiid' and 'saved_modes'
-
- drivers/scsi/aacraid/aachba.c      |   5 +-
- drivers/scsi/aacraid/commctrl.c    |  14 +-
- drivers/scsi/aacraid/commsup.c     |  12 +-
- drivers/scsi/aacraid/dpcsup.c      |  15 +-
- drivers/scsi/aacraid/rx.c          |  12 +-
- drivers/scsi/aic7xxx/aic79xx_osm.c |  16 +--
- drivers/scsi/aic94xx/aic94xx_scb.c |   6 +-
- drivers/scsi/aic94xx/aic94xx_seq.c |   6 +-
- drivers/scsi/be2iscsi/be_iscsi.c   |  11 +-
- drivers/scsi/be2iscsi/be_main.c    |   4 +-
- drivers/scsi/be2iscsi/be_mgmt.c    |   3 +-
- drivers/scsi/ipr.c                 |  90 +++++++-----
- drivers/scsi/ipr.h                 |   4 +-
- drivers/scsi/lpfc/lpfc_nvme.c      |  38 +++--
- drivers/scsi/megaraid.c            | 218 ++++++++++++++---------------
- drivers/scsi/myrs.c                |  34 ++---
- drivers/scsi/pm8001/pm8001_ctl.c   |  14 ++
- drivers/scsi/virtio_scsi.c         |   2 +-
- 18 files changed, 275 insertions(+), 229 deletions(-)
-
--- 
-2.25.1
+Paolo
 
