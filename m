@@ -2,107 +2,213 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E032C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6261DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC73C2076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3674C2076A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:54:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHVkVLq8"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="RmcOQKDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgGIUw4 (ORCPT
+        id S1726482AbgGIUyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:52:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50556 "EHLO
+        Thu, 9 Jul 2020 16:54:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgGIUw4 (ORCPT
+        with ESMTP id S1726213AbgGIUye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:52:56 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A0FC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 13:52:55 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id 9so3954008ljv.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 13:52:55 -0700 (PDT)
+        Thu, 9 Jul 2020 16:54:34 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CABC08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 13:54:34 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id w17so1300543ply.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 13:54:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fh2AsvdiqBtPIs80v+1OuPIjNrn7s9RuQyFPfypzlb4=;
-        b=sHVkVLq8P8Z26hbzD6scTmBB4gmkJS+ZtdGWvu3grwTurjn5/3E2HB3GJ01CWS37bo
-         tWBJs24H7vQVvI2+gpzhZnKHeC4kzlIOjliClGT1t9DqwJ6WCxXe/eNwFWLXdpHoS8PP
-         wBcGd1ZCIJhO1o1N3iCRHZriNoKbH6XKkPjMFcv1UAjFo4bj5u/DiSvaKiJEJuusRjjS
-         9zkWG7tMhe0uQd+coolYdbLQXdEe2z/DLVar22iPEfG7BnBU4vcJ2x75jfrDdXf6XVqv
-         7+7afd82HPA/yLLEe6tiSnv27noyQ53CvMN47pmoMRkAjTfKA/Zda1eXMkK2FFtFH6AZ
-         OoKQ==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TVsRdosVdOrgb86VUqLK7jhphF0DWrgDdhx+LVQ5W9o=;
+        b=RmcOQKDrKS4TjND+INPK5tStmtBHyi5qtg3Y2/m9cYCZFW0uO+IsLknrvepsIgymvM
+         1rl8Qh9/awqelifoBxaCYJMhnqffwoXjTs28EWlKt/CYudymkz1bs5PReyMJxMNTy+kP
+         VLBVpcaqzusSMmJ0G2K7yF/PXcUGPYm2ytCjhz+pZTEsf1xaskMKyxLQ7VN4tyQWYhT5
+         uCR73NTeWBkQNZGAK+oBDrbqr+Wdo37GJKjNCSc9EjpVYVpEnN4c+t+NA2rCRpG4xao1
+         S/e+ZozWba84kJcqWLJpfkRM3NcJ/IAYnDfAqxHH7dreMJytVTh97TQQMiu68P1KnCos
+         35yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fh2AsvdiqBtPIs80v+1OuPIjNrn7s9RuQyFPfypzlb4=;
-        b=srHbBYUfzY5lpyqxeatgfcpgunhdCJbLa4mq7JdXBNNrRpOOUr4nws7cxCGLgTAhmM
-         CgoNHFk2v7uHWCJYKUtCm/H6DzmHVH6WkfAqXK5P2fJPjUUoJ5NiryPVVTWhK3nvXzyZ
-         yrCY4Yj7JhOGH7aJaKDOdOsFDzqNnwzKemPU+dReN4OViSxFOV0ZPtR4gOfNak/UmA0F
-         /khxnwrVGmylCtl0THmwu6B8Ke56KO9v/xM1IELblk9PL+3wSzgc3sFMRvuuRTOyEAcP
-         2YzaNiT2gNN20mO2ar9Gx+mklJHpbcHPyeeiXi6cZRrLO9XXDei3/yke05UHo/vJ0qZc
-         gxPQ==
-X-Gm-Message-State: AOAM530EJP6+s6cjYDNvqCCfslOjg5GFvDwbE0EjkOkNy7uMQl9H6vYl
-        Gm87SRXhFacNx7UX+F5dv2mLCd5Dl0zeoOgyhcKNwoVR
-X-Google-Smtp-Source: ABdhPJyE3glsyD9QhjYteDniiXEqf7D+KyLAcFcfcclVTVhuIO0c5wDCL8ZJSok3d5oh82avYDkQfU3s3LdoxqE21dU=
-X-Received: by 2002:a2e:850f:: with SMTP id j15mr14987332lji.44.1594327974153;
- Thu, 09 Jul 2020 13:52:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
-In-Reply-To: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 9 Jul 2020 22:52:42 +0200
-Message-ID: <CANiq72n51z9QtFdj1cF72hhQikq7jxCA+TmKKSQcYo34WAPGsw@mail.gmail.com>
-Subject: Re: Linux kernel in-tree Rust support
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     alex.gaynor@gmail.com, geofft@ldpreload.com, jbaublitz@redhat.com,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=TVsRdosVdOrgb86VUqLK7jhphF0DWrgDdhx+LVQ5W9o=;
+        b=nl2gFIW3CCGcE7nGC1TJ0sdkqlUMDBQjaffZjjEBrr33bMJraZADy3LfnxJvY+MjoR
+         BVx0ZJtG4yP93AfqCJWPxn1D5iDBT/v5/BicP5x/s59L5ClFfKvrSkPxDLwxgHzEYKFF
+         wgA2WZgLKohwInOoo42NMqsJMtOVJ6Xl6F4L68YBtgqXcvIEY+ofdHSmAWZS1R5SSZE8
+         8gU3LFOd52V+VxSWUH86rFlVQwKiWnzShx0WArDKBhWoHZdEMLT1haBwA+PN9Bu3IPSX
+         tL4enLz8a5h2wK06BpI5W8ufj46LJ2p3URlawS5FUZsN7i35BNRNuH5svspHGQu+F95Y
+         gwAw==
+X-Gm-Message-State: AOAM530BRkKZ2+h0inUy3fBeVFayPd+sOs4JL6ulC6y0We/LxtHwvtmI
+        W3Q/Th614zSbzDLSKnrWBxecUg==
+X-Google-Smtp-Source: ABdhPJziIZaC2dw+9NZRbd8F8njrpqBsYNP/YdbUiTKDLO5hKbULu6MH/NnhmS/fwOD8OTxyeRAVaQ==
+X-Received: by 2002:a17:90b:4c0f:: with SMTP id na15mr1998077pjb.33.1594328073688;
+        Thu, 09 Jul 2020 13:54:33 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id f131sm3700561pgc.14.2020.07.09.13.54.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 13:54:33 -0700 (PDT)
+Date:   Thu, 09 Jul 2020 13:54:33 -0700 (PDT)
+X-Google-Original-Date: Thu, 09 Jul 2020 13:54:30 PDT (-0700)
+Subject:     Re: [PATCH 1/5] lib: Add a generic version of devmem_is_allowed()
+In-Reply-To: <20200709204921.GJ781326@linux.ibm.com>
+CC:     linux-riscv@lists.infradead.org, zong.li@sifive.com,
+        linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, gxt@pku.edu.cn,
+        Arnd Bergmann <arnd@arndb.de>, akpm@linux-foundation.org,
+        linus.walleij@linaro.org, mchehab+samsung@kernel.org,
+        gregory.0xf0@gmail.com, masahiroy@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        bgolaszewski@baylibre.com, tglx@linutronix.de, steve@sk2.org,
+        keescook@chromium.org, mcgrof@kernel.org, alex@ghiti.fr,
+        mark.rutland@arm.com, james.morse@arm.com,
+        andriy.shevchenko@linux.intel.com, alex.shi@linux.alibaba.com,
+        davem@davemloft.net, rdunlap@infradead.org, broonie@kernel.org,
+        uwe@kleine-koenig.org, rostedt@goodmis.org,
+        dan.j.williams@intel.com, mhiramat@kernel.org,
+        matti.vaittinen@fi.rohmeurope.com, zaslonko@linux.ibm.com,
+        krzk@kernel.org, willy@infradead.org, paulmck@kernel.org,
+        pmladek@suse.com, glider@google.com, elver@google.com,
+        davidgow@google.com, ardb@kernel.org, takahiro.akashi@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kernel-team@android.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     rppt@linux.ibm.com
+Message-ID: <mhng-809d2d2d-add0-4f43-9225-610485ee46d5@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
-
-On Thu, Jul 9, 2020 at 8:42 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+On Thu, 09 Jul 2020 13:49:21 PDT (-0700), rppt@linux.ibm.com wrote:
+> Hi Palmer,
 >
-> Hello folks,
-> I'm working on putting together an LLVM "Micro Conference" for the
-> upcoming Linux Plumbers Conf
-> (https://www.linuxplumbersconf.org/event/7/page/47-attend).  It's not
-> solidified yet, but I would really like to run a session on support
-> for Rust "in tree."  I suspect we could cover technical aspects of
-> what that might look like (I have a prototype of that, was trivial to
+> On Thu, Jul 09, 2020 at 01:05:48PM -0700, Palmer Dabbelt wrote:
+>> From: Palmer Dabbelt <palmerdabbelt@google.com>
+>>
+>> As part of adding support for STRICT_DEVMEM to the RISC-V port, Zong
+>> provided a devmem_is_allowed() implementation that's exactly the same as
+>> all the others I checked.  Instead I'm adding a generic version, which
+>> will soon be used.
+>>
+>> Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+>> ---
+>>  include/asm-generic/io.h |  4 ++++
+>>  lib/Kconfig              |  4 ++++
+>>  lib/Makefile             |  2 ++
+>>  lib/devmem_is_allowed.c  | 27 +++++++++++++++++++++++++++
+>>  4 files changed, 37 insertions(+)
+>>  create mode 100644 lib/devmem_is_allowed.c
+>>
+>> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+>> index 8b1e020e9a03..69e3db65fba0 100644
+>> --- a/include/asm-generic/io.h
+>> +++ b/include/asm-generic/io.h
+>> @@ -1122,6 +1122,10 @@ static inline void memcpy_toio(volatile void __iomem *addr, const void *buffer,
+>>  }
+>>  #endif
+>>
+>> +#ifndef CONFIG_GENERIC_DEVMEM_IS_ALLOWED
+>> +extern int devmem_is_allowed(unsigned long pfn);
+>> +#endif
+>> +
+>>  #endif /* __KERNEL__ */
+>>
+>>  #endif /* __ASM_GENERIC_IO_H */
+>> diff --git a/lib/Kconfig b/lib/Kconfig
+>> index df3f3da95990..3b1b6481e073 100644
+>> --- a/lib/Kconfig
+>> +++ b/lib/Kconfig
+>> @@ -676,3 +676,7 @@ config GENERIC_LIB_CMPDI2
+>>
+>>  config GENERIC_LIB_UCMPDI2
+>>  	bool
+>> +
+>> +config GENERIC_LIB_DEVMEM_IS_ALLOWED
+>> +	bool
+>> +	select ARCH_HAS_DEVMEM_IS_ALLOWED
+>
+> This seems to work the other way around from the usual Kconfig chains.
+> In the most cases ARCH_HAS_SOMETHING selects GENERIC_SOMETHING.
 
-Agreed, I wrote one ~half a year ago that compiled TUs through rustc
-mimicking what we do with cc to some degree (i.e. no cargo etc.), and
-it was quite pleasant.
+Ya, it seemed kind of odd.
 
-> wire up KBuild support), but also a larger question of "should we do
-> this?" or "how might we place limits on where this can be used?"
+>
+> I believe nicer way would be to make
+>
+> config STRICT_DEVMEM
+> 	bool "Filter access to /dev/mem"
+> 	depends on MMU && DEVMEM
+> 	depends on ARCH_HAS_DEVMEM_IS_ALLOWED || GENERIC_LIB_DEVMEM_IS_ALLOWED
+>
+> config GENERIC_LIB_DEVMEM_IS_ALLOWED
+> 	bool
+>
+> and then s/select ARCH_HAS_DEVMEM_IS_ALLOWED/select GENERIC_LIB_DEVMEM_IS_ALLOWED/
+> in the arch Kconfigs and drop ARCH_HAS_DEVMEM_IS_ALLOWED in the end.
 
-Indeed, I would say that is going to be the major topic, not so much
-the technical bits.
+There's some arches that can't be converted to the generic version, at least
+not trivially, so we wouldn't drop it.  I think it's still cleaner, though.
+I'll send a v2.
 
-> Question to folks explicitly in To:, are you planning on attending plumbers?
-
-I wasn't, but it definitely is an interesting topic that I wouldn't
-want to miss!
-
-Cheers,
-Miguel
+>
+>> diff --git a/lib/Makefile b/lib/Makefile
+>> index b1c42c10073b..554ef14f9be5 100644
+>> --- a/lib/Makefile
+>> +++ b/lib/Makefile
+>> @@ -318,3 +318,5 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+>>  # KUnit tests
+>>  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+>>  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
+>> +
+>> +obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
+>> diff --git a/lib/devmem_is_allowed.c b/lib/devmem_is_allowed.c
+>> new file mode 100644
+>> index 000000000000..c0d67c541849
+>> --- /dev/null
+>> +++ b/lib/devmem_is_allowed.c
+>> @@ -0,0 +1,27 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * A generic version of devmem_is_allowed.
+>> + *
+>> + * Based on arch/arm64/mm/mmap.c
+>> + *
+>> + * Copyright (C) 2020 Google, Inc.
+>> + * Copyright (C) 2012 ARM Ltd.
+>> + */
+>> +
+>> +#include <linux/mm.h>
+>> +#include <linux/ioport.h>
+>> +
+>> +/*
+>> + * devmem_is_allowed() checks to see if /dev/mem access to a certain address
+>> + * is valid. The argument is a physical page number.  We mimic x86 here by
+>> + * disallowing access to system RAM as well as device-exclusive MMIO regions.
+>> + * This effectively disable read()/write() on /dev/mem.
+>> + */
+>> +int devmem_is_allowed(unsigned long pfn)
+>> +{
+>> +	if (iomem_is_exclusive(pfn << PAGE_SHIFT))
+>> +		return 0;
+>> +	if (!page_is_ram(pfn))
+>> +		return 1;
+>> +	return 0;
+>> +}
+>> --
+>> 2.27.0.383.g050319c2ae-goog
+>>
