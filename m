@@ -2,130 +2,105 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E70D7207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC51207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:02:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lAhQdIIs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKkSjnvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgGIUCM (ORCPT
+        id S1726925AbgGIUCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:02:12 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:22657 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726848AbgGIUCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:02:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594324930; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=YLjZebXB525vE+wY7ILTYsnkukVESCi+HQU325VZ01E=; b=lAhQdIIslcK5rnpVsttg0wSXl9S3IwQCM3mwgAfTJf9XRqCayAczMwXQKgyBGlpFxpGWRBhx
- SeWD8rPcSxFZrcoYLhJsEY3X8L5xSiOicy0NFu5gnscqkZTwJJnqLbFqWub+qBM86vbbFxSF
- GftkQvnJEdi1iwTskVGVAG0joa4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5f077791bca1ed3155d75a86 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 20:01:21
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6CA24C433B1; Thu,  9 Jul 2020 20:01:20 +0000 (UTC)
-Received: from akhilpo-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9DA52C433A1;
-        Thu,  9 Jul 2020 20:01:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9DA52C433A1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
-        smasetty@codeaurora.org, devicetree@vger.kernel.org,
-        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
-        viresh.kumar@linaro.org, jonathan@marek.ca
-Subject: [PATCH v4 7/7] arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU opp
-Date:   Fri, 10 Jul 2020 01:30:27 +0530
-Message-Id: <1594324828-9571-8-git-send-email-akhilpo@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
-References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
+        Thu, 9 Jul 2020 16:02:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbgGIUCp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 16:02:45 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72CE5C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 13:02:45 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 1so1461372pfn.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 13:02:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3z14lY97vXASMj1PrDNEz8cKF4lZZq/EFvNs+z/7mOc=;
+        b=MKkSjnvRAxx4/qVf+1YXmxCkrWHU0nEIbp2Jc9g/L9G4C1axUGYI25wNrdlx2WXyqR
+         92eNdEM2lpnJYewa4usNccDoiCKaorIzTMzV/vetehFfngQbriv518KpLcVt1P2wz+Cs
+         cL02C+7bRcrtPg484JK9xWW1/LcFdnNPfUwzoDvw1yaZneAW6AdlJQMTle4aW/AHAn/0
+         XKM20oalN87ow358jbkhFtcGxsXgO7enY9UFYyVsfZUX6UZ9sJmPC54oUmqYbhWuxdrx
+         0FIOQrQUiyLFOqOYHHAc8nSZRoLZpP7V7ylu0i4Doo6HjhslNF3aqW8Ix78RD4/Y1QqY
+         2ZOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3z14lY97vXASMj1PrDNEz8cKF4lZZq/EFvNs+z/7mOc=;
+        b=E2RdYYRlr/o1n1u8n7umUfbvgTwApss+5qC2aKGPMDfPA3J2bA7PCBYAQSigLy/ELN
+         w75LXT13+Nvqj6NGW/Lu5rN3BMRxwh08wu/o44nEGhIl3T4Pa7jBgI3YSQ1VLiKpHMTW
+         3DzIGViPdkweLtD6ksSpzNpCS5firhZ75P5AAOckYi+5SGOO4m/+222NJJD+bBAMyiDc
+         8Bjdt0+TMBxW7EIUTOchWizAj6FcX9vXvrtwKFqldDDi/+TKWTa0K3qnoBBBAmfCpFBG
+         sFJOtC9dat4l/PhLIc8dpzWYg3Joa89fMThYqnmJzNn01aGAfJwZyaqSrEz/kSCigkJI
+         vAqw==
+X-Gm-Message-State: AOAM530SocJhQsoiLJhkiWj5wH8+EkfEeHgZ/1PmAARvzkSOHhEngB7P
+        Q1t+W64Dynr2e20iZpnf60FUW8F2iXgwh60ZZsE=
+X-Google-Smtp-Source: ABdhPJzQ5gFNblMOR4BmUWDLXOWG/XqyZSTZN3n5FDRGxPL3uMGt4ALEUO+9GsmhbNdJEGV7YHhfN/qFC2/2PutzcSA=
+X-Received: by 2002:a63:a05f:: with SMTP id u31mr48709589pgn.4.1594324964993;
+ Thu, 09 Jul 2020 13:02:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <202007100247.bJq2hgt6%lkp@intel.com>
+In-Reply-To: <202007100247.bJq2hgt6%lkp@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Jul 2020 23:02:28 +0300
+Message-ID: <CAHp75VfpC6rX41dts3KeyMLPh8QD3ojEH6Moyu-1naE-_cfrFg@mail.gmail.com>
+Subject: Re: drivers/pinctrl/pinctrl-mcp23s08_spi.c:129:1-3: WARNING:
+ PTR_ERR_OR_ZERO can be used
+To:     kernel test robot <lkp@intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sharat Masetty <smasetty@codeaurora.org>
+On Thu, Jul 9, 2020 at 9:34 PM kernel test robot <lkp@intel.com> wrote:
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t master
+> head:   0bddd227f3dc55975e2b8dfa7fc6f959b062a2c7
+> commit: 0f04a81784fe3ddc00cae74c517265b3ddb8825c pinctrl: mcp23s08: Split=
+ to three parts: core, I=E6=B6=8E, SPI
+> date:   3 months ago
+> config: i386-randconfig-c001-20200709 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
 
-Add opp-peak-kBps bindings to the GPU opp table, listing the peak
-GPU -> DDR bandwidth requirement for each opp level. This will be
-used to scale the DDR bandwidth along with the GPU frequency dynamically.
+>    128          mcp->regmap =3D devm_regmap_init(dev, &mcp23sxx_spi_regma=
+p, mcp, copy);
+>  > 129          if (IS_ERR(mcp->regmap))
+>    130                  return PTR_ERR(mcp->regmap);
+>    131
+>    132          return 0;
 
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Right.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index a567297..8567e9e 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1478,36 +1478,43 @@
- 				opp-800000000 {
- 					opp-hz = /bits/ 64 <800000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+					opp-peak-kBps = <8532000>;
- 				};
- 
- 				opp-650000000 {
- 					opp-hz = /bits/ 64 <650000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+					opp-peak-kBps = <7216000>;
- 				};
- 
- 				opp-565000000 {
- 					opp-hz = /bits/ 64 <565000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+					opp-peak-kBps = <5412000>;
- 				};
- 
- 				opp-430000000 {
- 					opp-hz = /bits/ 64 <430000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+					opp-peak-kBps = <5412000>;
- 				};
- 
- 				opp-355000000 {
- 					opp-hz = /bits/ 64 <355000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+					opp-peak-kBps = <3072000>;
- 				};
- 
- 				opp-267000000 {
- 					opp-hz = /bits/ 64 <267000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+					opp-peak-kBps = <3072000>;
- 				};
- 
- 				opp-180000000 {
- 					opp-hz = /bits/ 64 <180000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+					opp-peak-kBps = <1804000>;
- 				};
- 			};
- 		};
--- 
-2.7.4
+I expect LKP to generate such patches and submit :-)
 
+--=20
+With Best Regards,
+Andy Shevchenko
