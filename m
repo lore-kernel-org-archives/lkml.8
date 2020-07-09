@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68400C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C869FC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42D0E20708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A616A20708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 05:02:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oi9P502f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AOLHWt2G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgGIFBq (ORCPT
+        id S1726443AbgGIFCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 01:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
+        Thu, 9 Jul 2020 01:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgGIFBp (ORCPT
+        with ESMTP id S1725775AbgGIFBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 01:01:45 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA5BC061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 22:01:45 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id gc9so556516pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 22:01:45 -0700 (PDT)
+        Thu, 9 Jul 2020 01:01:42 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38C38C08C5DD
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 22:01:42 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id cv18so2902884pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 22:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Hqoe1VtzzAa4w0lrTNILxm5TZOFtQ6ZqFKD8K8ft5H8=;
-        b=oi9P502fvIr5PyRQt5SQntHS3N3rx17AUMRRDrMtGMGII+nqCiGfEZ2jmn+Oitn9pt
-         wlCSE90hhoVr6uoZKD+LbMQ5/Y9+xcLTPqnch8CseRIy2aPJnDwDAeis1HABlWtDOBy7
-         oKrHCpxZYZ9hLcBNAeQVP+cwUqCU2ANOYryvP9QJm+yNkv9tQahz++BfsI6BXQI+jDxj
-         xTnQFcZxteOYJ5U7JqW918NzOFQnWnQDEbicTDOR+IZkCAeVuIuonOeNa+Cy/Fu/mvWd
-         YPdVIRstiJ4F39m1b+ee9XpFEzYr38DuHaRZUFKsUNdfwzRteCm8CiBS+tK7rDMK18Kv
-         5ToQ==
+        bh=T+6WxJ1O6k89NNQZzhHWgQkm03zUeIAl0iKHL4vPlUk=;
+        b=AOLHWt2GPk9pGPq6HPxBOiLg8IkaE8fySTF+79CaOlFbY/Ii9OChxP90kbGu1Kpp4g
+         1geiQB3FJADTo1pUFgW3Sxa65geoU2CT5za4/L0HfEdsLOAuiS/hjjGJAhLd5WpirmZf
+         FtqNIv1CQKnyDdPXdmuFBCNC6yhLvo2cYc6qSM5QnmTXkmdX5EeDxnIrVvTmG4ZIadtN
+         9Wc0sp5jXMyQsZ3p/wY2QYy7Ht2049b7nCZwdk1eGIpkU//mzH2EjylQGA8lOiKrtshJ
+         LlRfr/5BOfigasYH241F2AoEDk2ymoYdc1UD+9rYiSk5J9TrKnHdKxLfuGL8+sE3Lbxw
+         Lrdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Hqoe1VtzzAa4w0lrTNILxm5TZOFtQ6ZqFKD8K8ft5H8=;
-        b=NpkV0NWEzqwGpJEBincKL0WvkwUYSnd4WHHnnqOjftqo/7v79CLrjOTHPdrEtL6P5L
-         oxTxwujyrMie+oDA5Wx+MEABt9EMoqiarbyL/zPACRGYuSAAUlqG22uZKrFTXx6aJBf8
-         +ZA7d81ERf4v+aXpONpXawsxyxbG8O+ZMvipopfliTZQEtEmUgLVRFafI8nucqDiJeGO
-         mEpyAMKXQOn6jAXi03G5UDXhEkPfBv8Deckc5m92Zp090WlMYmMBq6Xtox3faJhU7Q81
-         Jho+m1mvhoDJoOlZlz3fnEbM5fRXpyN/P0+T7AKrEwqyn85TUUtRRtzqzacQum+FFED3
-         oMPg==
-X-Gm-Message-State: AOAM531nnWO3HYIotcK9wPF8g+/v1pbvVT+BTbBk/bqRXdWKWvPgetzD
-        VtJdWdHiZDL9TRUsHxS22GVd3Q==
-X-Google-Smtp-Source: ABdhPJzCupbQIwvneQUBGafAC/eeTzQOM0srORgcQQb7VuqHhdTklwpUGbFFDu+jPwitKVvAVy/5VQ==
-X-Received: by 2002:a17:90b:1a86:: with SMTP id ng6mr13156196pjb.88.1594270904651;
-        Wed, 08 Jul 2020 22:01:44 -0700 (PDT)
+        bh=T+6WxJ1O6k89NNQZzhHWgQkm03zUeIAl0iKHL4vPlUk=;
+        b=OWDQpDm8XYy+lfdByixMfpRNPZ866PBeao+KLVxb/9iyR4j8Gugm98L0ADDSCV6ekP
+         H8wwSa19zRj8Cr5Aq8VR9ngtbVfNjQ8nBZOrsKBLcuLZ2qMtlAoJjHGpSrNbRORjh/yU
+         41dz0yMSJk0jSaeiBW2Z/+QV+8XIk1qErKL/wt+NdSamFNuLylWQypTdVDTuY2xpyZcz
+         jgJ3aN2ndx0GNAKnPDLMbkFoPCJPsXupj1OT4gVsQ14RGp1Bn3gkkaxmcnjwr3fLmYJH
+         hBK64OMASUvlRsB876pM4qtH3fj4+5eG1jQqMJbPY7ikbw/tdcdT+YSDre3EL/GWw74t
+         LGzg==
+X-Gm-Message-State: AOAM530eqGP+9Gi6lowIwPpKbyqvaErk7igSHgDkxg8tTycf2DdhdTaU
+        tEPBfjR5XfA99I3rE6uaCW6zaQ==
+X-Google-Smtp-Source: ABdhPJxF4d+sWu8w2NwzlZP7r/VFELTU9n5hnbo5rdODjHR0wnwyVgaX97f2R3IqlZFh0Lej268MjA==
+X-Received: by 2002:a17:90b:4d08:: with SMTP id mw8mr12970883pjb.119.1594270901682;
+        Wed, 08 Jul 2020 22:01:41 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h15sm999974pjc.14.2020.07.08.22.01.43
+        by smtp.gmail.com with ESMTPSA id h15sm999974pjc.14.2020.07.08.22.01.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 22:01:43 -0700 (PDT)
+        Wed, 08 Jul 2020 22:01:41 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -68,9 +68,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Jonathan Marek <jonathan@marek.ca>,
         linux-arm-msm@vger.kernel.org
-Subject: [PATCH 3/5] iommu/arm-smmu: Move SMR and S2CR definitions to header file
-Date:   Wed,  8 Jul 2020 22:01:43 -0700
-Message-Id: <20200709050145.3520931-4-bjorn.andersson@linaro.org>
+Subject: [PATCH 1/5] iommu/arm-smmu: Make all valid stream mappings BYPASS
+Date:   Wed,  8 Jul 2020 22:01:41 -0700
+Message-Id: <20200709050145.3520931-2-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200709050145.3520931-1-bjorn.andersson@linaro.org>
 References: <20200709050145.3520931-1-bjorn.andersson@linaro.org>
@@ -81,71 +81,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expose the SMR and S2CR structs in the header file, to allow platform
-specific implementations to populate/initialize the smrs and s2cr
-arrays.
+Turn all stream mappings marked as valid into BYPASS. This allows the
+platform specific implementation to configure stream mappings to match
+the boot loader's configuration for e.g. display to continue to function
+through the reset of the SMMU.
 
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/iommu/arm-smmu.c | 14 --------------
- drivers/iommu/arm-smmu.h | 15 +++++++++++++++
- 2 files changed, 15 insertions(+), 14 deletions(-)
+ drivers/iommu/arm-smmu.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index f33eda3117fa..e2d6c0aaf1ea 100644
+index 243bc4cb2705..2e27cf9815ab 100644
 --- a/drivers/iommu/arm-smmu.c
 +++ b/drivers/iommu/arm-smmu.c
-@@ -68,24 +68,10 @@ module_param(disable_bypass, bool, S_IRUGO);
- MODULE_PARM_DESC(disable_bypass,
- 	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
- 
--struct arm_smmu_s2cr {
--	struct iommu_group		*group;
--	int				count;
--	enum arm_smmu_s2cr_type		type;
--	enum arm_smmu_s2cr_privcfg	privcfg;
--	u8				cbndx;
--};
--
- #define s2cr_init_val (struct arm_smmu_s2cr){				\
- 	.type = disable_bypass ? S2CR_TYPE_FAULT : S2CR_TYPE_BYPASS,	\
+@@ -1924,6 +1924,22 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+ 	return 0;
  }
  
--struct arm_smmu_smr {
--	u16				mask;
--	u16				id;
--	bool				valid;
--};
--
- struct arm_smmu_cb {
- 	u64				ttbr[2];
- 	u32				tcr[2];
-diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index a71d193073e4..bcd160d01c53 100644
---- a/drivers/iommu/arm-smmu.h
-+++ b/drivers/iommu/arm-smmu.h
-@@ -251,6 +251,21 @@ enum arm_smmu_implementation {
- 	QCOM_SMMUV2,
- };
- 
-+struct arm_smmu_s2cr {
-+	struct iommu_group		*group;
-+	int				count;
-+	enum arm_smmu_s2cr_type		type;
-+	enum arm_smmu_s2cr_privcfg	privcfg;
-+	u8				cbndx;
-+};
++int arm_smmu_setup_identity(struct arm_smmu_device *smmu)
++{
++	int i;
 +
-+struct arm_smmu_smr {
-+	u16				mask;
-+	u16				id;
-+	bool				valid;
-+	bool				pinned;
-+};
++	for (i = 0; i < smmu->num_mapping_groups; i++) {
++		if (smmu->smrs[i].valid) {
++			smmu->s2crs[i].type = S2CR_TYPE_BYPASS;
++			smmu->s2crs[i].privcfg = S2CR_PRIVCFG_DEFAULT;
++			smmu->s2crs[i].cbndx = 0xff;
++			smmu->s2crs[i].count++;
++		}
++	}
 +
- struct arm_smmu_device {
- 	struct device			*dev;
++	return 0;
++}
++
+ struct arm_smmu_match_data {
+ 	enum arm_smmu_arch_version version;
+ 	enum arm_smmu_implementation model;
+@@ -2181,6 +2197,10 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 	if (err)
+ 		return err;
  
++	err = arm_smmu_setup_identity(smmu);
++	if (err)
++		return err;
++
+ 	if (smmu->version == ARM_SMMU_V2) {
+ 		if (smmu->num_context_banks > smmu->num_context_irqs) {
+ 			dev_err(dev,
 -- 
 2.26.2
 
