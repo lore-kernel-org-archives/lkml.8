@@ -2,87 +2,129 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDC5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BD2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D25CA20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A74E20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 20:05:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="AhNQ3fbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgGIUFg (ORCPT
+        id S1726582AbgGIUFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:05:36 -0400
-Received: from mga17.intel.com ([192.55.52.151]:60931 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgGIUFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 16:05:36 -0400
-IronPort-SDR: 3eOz8SEHUZgz0gjdV4IV/qbAx7vajirNY7N8/tgCURfm9BYS0B1/Pggc6+9vdOCn+4qsgTJ0xf
- U0EHOEVdnxzQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="128163456"
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="128163456"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 13:05:34 -0700
-IronPort-SDR: 5gj3bKx/CeHZJos+SOEy+1FMP/mAqE7tvzXQiqtUOIEIrHt6GcUSaLOvhEm+HPB540UMmQeiLk
- QxtdROqf2Ldg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="324330039"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
-  by orsmga007.jf.intel.com with ESMTP; 09 Jul 2020 13:05:34 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net, lenb@kernel.org, viresh.kumar@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com, kernel-janitors@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] cpufreq: intel_pstate: Fix static checker warning for epp variable
-Date:   Thu,  9 Jul 2020 13:05:22 -0700
-Message-Id: <20200709200522.3566181-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.25.4
+        Thu, 9 Jul 2020 16:05:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgGIUFr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 16:05:47 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2CFC08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 13:05:47 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id t7so1534813qvl.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 13:05:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PycHeytyEXnAfxuN7qqf3DZk4rAs+Sr/OQVpihKvwZY=;
+        b=AhNQ3fbwpzkEIcm+5ODN2ebHaNffsSaihE9J64OOIAKCSrPOSi8UTKlTBg+IOFXo9t
+         5bjjk0weUCuGjLom8mO3n25mxkCZmksLojflbh+6QCihWuuzCh0ut7Do9/4MUH9uccBR
+         bBPDd5Twd+Cbygxijcpwr3A11Rjp0BYBxDFWkVNH+XYp6OstTJeK2RnMGDUNmPdn9/pC
+         C5py86ce/WHUUfwQNnkMrv0D5p/H4i/o21HHeP9NzG5bCDisxZgP7a9fEfN1lP29epEn
+         E5qBcFQSAVhLpxnKd+CBvjfwNG6AgFsvOtC7UZuWlI5TTwoOj9pJVUXPhZS7mVHl0uAX
+         sd+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PycHeytyEXnAfxuN7qqf3DZk4rAs+Sr/OQVpihKvwZY=;
+        b=NWWB6clXEN8W/MgVwgSz4v60v4nbxT95K1htuLU8P5U6q7kUzP5bYMF5akR5hScHN0
+         /YFn8Z9CuVpQGOVaC645LljtespEaOeRUlTIqqrNx+kGeylmsUco4OK7BhWG4D1j7Fzq
+         tD9sQUjjEvjC5d4o+Db1FCjOXWPJ9VgkZ01tHLe0+23gJ3Qti0mljMJq6b4Ej1fqW4y6
+         y2SOrlpUdH1xd13c3P6ggdewFVAxQpiKRAr/Ka77ZKUJA5bOCxe26d1aR5L5UeTNc+I3
+         vh7UaGQ/6JXKVLL6zpNkmVtUk3v2ASEmmls6x0jTomg8mGRa617gUWnNhb1NWrynKu85
+         N43g==
+X-Gm-Message-State: AOAM5318lCwlTii6jPu7Ys039yHvu09N9Ev9ln/a/fTc31vtsS/0mHDw
+        bIYom86zanA0q7Y9hFuJ6xIY6w==
+X-Google-Smtp-Source: ABdhPJxcQip3en72uHZuZNYNwMWZgp8T1yNScrJF7eAeMu6gqoKUSdmJo+0p2Tl8FLdWhxkvOaeMpQ==
+X-Received: by 2002:a0c:fa84:: with SMTP id o4mr64584468qvn.186.1594325146682;
+        Thu, 09 Jul 2020 13:05:46 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id a185sm4702422qkg.3.2020.07.09.13.05.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 13:05:46 -0700 (PDT)
+Subject: Re: [PATCH v4 3/7] drm: msm: a6xx: set gpu freq through hfi
+To:     Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        smasetty@codeaurora.org, devicetree@vger.kernel.org,
+        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
+        viresh.kumar@linaro.org
+References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
+ <1594324828-9571-4-git-send-email-akhilpo@codeaurora.org>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <322c921f-7c8f-7052-b191-44f0dade742e@marek.ca>
+Date:   Thu, 9 Jul 2020 16:04:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594324828-9571-4-git-send-email-akhilpo@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix warning for:
-drivers/cpufreq/intel_pstate.c:731 store_energy_performance_preference()
-error: uninitialized symbol 'epp'.
+On 7/9/20 4:00 PM, Akhil P Oommen wrote:
+> Newer targets support changing gpu frequency through HFI. So
+> use that wherever supported instead of the legacy method.
+> 
 
-This warning is for a case, when energy_performance_preference attribute
-matches pre defined strings. In this case the value of raw epp will not
-be used to set EPP bits in MSR_HWP_REQUEST. So initializing with any
-value is fine.
+It was already using HFI on newer targets. Don't break it in one commit 
+then fix it in the next.
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
-This patch is on top of bleed-edge branch at
-https://kernel.googlesource.com/pub/scm/linux/kernel/git/rafael/linux-pm
-
- drivers/cpufreq/intel_pstate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index 44c7b4677675..94cd07678ee3 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -709,7 +709,7 @@ static ssize_t store_energy_performance_preference(
- 	struct cpudata *cpu_data = all_cpu_data[policy->cpu];
- 	char str_preference[21];
- 	bool raw = false;
--	u32 epp;
-+	u32 epp = 0;
- 	int ret;
- 
- 	ret = sscanf(buf, "%20s", str_preference);
--- 
-2.25.4
-
+> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+> ---
+>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index 233afea..b547339 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -121,6 +121,12 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+>   		if (gpu_freq == gmu->gpu_freqs[perf_index])
+>   			break;
+>   
+> +	if (!gmu->legacy) {
+> +		a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
+> +		icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+> +		return;
+> +	}
+> +
+>   	gmu->current_perf_index = perf_index;
+>   	gmu->freq = gmu->gpu_freqs[perf_index];
+>   
+> @@ -893,10 +899,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+>   	enable_irq(gmu->hfi_irq);
+>   
+>   	/* Set the GPU to the current freq */
+> -	if (gmu->legacy)
+> -		a6xx_gmu_set_initial_freq(gpu, gmu);
+> -	else
+> -		a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
+> +	a6xx_gmu_set_initial_freq(gpu, gmu);
+>   
+>   	/*
+>   	 * "enable" the GX power domain which won't actually do anything but it
+> 
