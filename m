@@ -2,89 +2,82 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E70EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D43C2206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B2F206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:17:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgGIJOo (ORCPT
+        id S1726298AbgGIJRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:14:44 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7827 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726122AbgGIJOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:14:43 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 19FFA74278D008C4810B;
-        Thu,  9 Jul 2020 17:14:40 +0800 (CST)
-Received: from [127.0.0.1] (10.174.186.75) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Jul 2020
- 17:14:29 +0800
-Subject: Re: [PATCH v1 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
-        <guohanjun@huawei.com>, <olof@lixom.net>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-References: <20200709091054.1698-1-yezhenyu2@huawei.com>
- <20200709091054.1698-3-yezhenyu2@huawei.com>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <362990d2-3948-9820-e2d9-aa1ff1c8b068@huawei.com>
-Date:   Thu, 9 Jul 2020 17:14:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 9 Jul 2020 05:17:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53048 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726122AbgGIJRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 05:17:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 411ABADE5;
+        Thu,  9 Jul 2020 09:17:45 +0000 (UTC)
+Subject: Re: [PATCH] efi: avoid error message when booting under Xen
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     Peter Jones <pjones@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+References: <20200610141052.13258-1-jgross@suse.com>
+ <094be567-2c82-7d5b-e432-288286c6c3fb@suse.com>
+Message-ID: <ec21b883-dc5c-f3fe-e989-7fa13875a4c4@suse.com>
+Date:   Thu, 9 Jul 2020 11:17:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200709091054.1698-3-yezhenyu2@huawei.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.186.75]
-X-CFilter-Loop: Reflected
+In-Reply-To: <094be567-2c82-7d5b-e432-288286c6c3fb@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/9 17:10, Zhenyu Ye wrote:
-> +	/*
-> +	 * When cpu does not support TLBI RANGE feature, we flush the tlb
-> +	 * entries one by one at the granularity of 'stride'.
-> +	 * When cpu supports the TLBI RANGE feature, then:
-> +	 * 1. If pages is odd, flush the first page through non-RANGE
-> +	 *    instruction;
-> +	 * 2. For remaining pages: The minimum range granularity is decided
-> +	 *    by 'scale', so we can not flush all pages by one instruction
-> +	 *    in some cases.
-> +	 *
-> +	 * For example, when the pages = 0xe81a, let's start 'scale' from
-> +	 * maximum, and find right 'num' for each 'scale':
-> +	 *
-> +	 *  When scale = 3, we can flush no pages because the minumum
-> +	 * range is 2^(5*3 + 1) = 0x10000.
-> +	 *  When scale = 2, the minimum range is 2^(5*2 + 1) = 0x800, we can
-> +	 * flush 0xe800 pages this time, the num = 0xe800/0x800 - 1 = 0x1c.
-> +	 * Remain pages is 0x1a;
-> +	 *  When scale = 1, the minimum range is 2^(5*1 + 1) = 0x40, no page
-> +	 * can be flushed.
-> +	 *  When scale = 0, we flush the remaining 0x1a pages, the num =
-> +	 * 0x1a/0x2 - 1 = 0xd.
-> +	 *
-> +	 * However, in most scenarios, the pages = 1 when flush_tlb_range() is
-> +	 * called. Start from scale = 3 or other proper value (such as scale =
-> +	 * ilog2(pages)), will incur extra overhead.
-> +	 * So increase 'scale' from 0 to maximum, the flush order is exactly
-> +	 * opposite to the example.
-> +	 */
+On 28.06.20 10:50, Jürgen Groß wrote:
+> Ping?
+> 
+> On 10.06.20 16:10, Juergen Gross wrote:
+>> efifb_probe() will issue an error message in case the kernel is booted
+>> as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
+>> that message by calling efi_mem_desc_lookup() only if EFI_PARAVIRT
+>> isn't set.
+>>
+>> Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes 
+>> when mapping the FB")
+>> Signed-off-by: Juergen Gross <jgross@suse.com>
+>> ---
+>>   drivers/video/fbdev/efifb.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+>> index 65491ae74808..f5eccd1373e9 100644
+>> --- a/drivers/video/fbdev/efifb.c
+>> +++ b/drivers/video/fbdev/efifb.c
+>> @@ -453,7 +453,7 @@ static int efifb_probe(struct platform_device *dev)
+>>       info->apertures->ranges[0].base = efifb_fix.smem_start;
+>>       info->apertures->ranges[0].size = size_remap;
+>> -    if (efi_enabled(EFI_BOOT) &&
+>> +    if (efi_enabled(EFI_BOOT) && !efi_enabled(EFI_PARAVIRT) &&
+>>           !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+>>           if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+>>               (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+>>
+> 
 
-The comments may be too long, probably should be moved to commit messages.
+In case I see no reaction from the maintainer for another week I'll take
+this patch through the Xen tree.
 
-Thanks,
-Zhenyu
 
+Juergen
