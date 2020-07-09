@@ -2,181 +2,118 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5855AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F355DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32CCA20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC4620767
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="zx/RNYiR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PCMgMMIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgGIOtZ (ORCPT
+        id S1726837AbgGIOuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:49:25 -0400
-Received: from mga11.intel.com ([192.55.52.93]:8705 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726517AbgGIOtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:49:25 -0400
-IronPort-SDR: hj+yBzppA/STumwnkDCJMcKInNzVkrKiHey0mn7nj6YXnc0CXCKrC/gqttuzNg7ZNFPfHMfjzT
- 2I99T9/fbOoA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="146092301"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="146092301"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 07:49:22 -0700
-IronPort-SDR: lxdIzXj9YnhWi3X5lr9/yNT/LdwZHedoQWVxV5oF67eZ6OIUwOXCQaYZFDYwcPvtFpcFhRkYTV
- bJveNgpJdykQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="324243209"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga007.jf.intel.com with ESMTP; 09 Jul 2020 07:49:21 -0700
-Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jul 2020 07:49:21 -0700
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jul 2020 07:49:21 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.109)
- by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 9 Jul 2020 07:49:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jHWqk1CWflXmbM3XkubB1C5cRopgJEdGNu8O+s/V1KTOvA5S8ayH5NUpnIkhUUd9FKL9YhppIKm9E6GtSkuK9qahPX+cUljSciOVSeVYv0p+TnGYXFD4ET904mnwbLWwEO7ABc1NGyAzbbP8XM3anOWqks2QFEHw1k18RGBBc/PVCAfSF+Fs1LDDJAcqqh36d+EKHQWMBHOTRQ7yafgSlidU7+FWPKxBw45/5ccDlj5n1fn3mEnOG4y3tXDZSU7kJ/jxUSmcfYsPtR7Z7N2y1LG5LickBmRsMY8Zu2vbalMVKoiUOb0mpaUy0GpIRDDCMLCNw1kmN8ngZ+7b9juHRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3olccjvRSAKD60SinJG/NJIaLCxpIzptIzOcaRIBwL4=;
- b=dRZyNiXVr1160QDkQZXvr0KMh7XF64XZVF8yHbBsfaiftdLRjQSiWFn+juASqaBCmeKVwJlPEszKoSDDllgZKEarSjGRTlM7jaG+eClHuFqoC6FVgwbsW3+IfzleqDf8MLr7J1PviwrxMUxQ1omP4p9WTnD5/qEjfeyWr4oJFe8r70CtYzLeSEGBgfyWooKk7zqOBtuYbSBZjydvt0nIvuvTP+JGsQUgl7lDP0I3toZ5KlVTdblSTosJYaZ6zlJbESUXC0CMIdJHUiULowTbVhQDkmHEOTt/NN54rMhh2LhcVMmY9OJqLZH0Qdk0h8Vc0grofC/SP8O8WjAMkXJMzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3olccjvRSAKD60SinJG/NJIaLCxpIzptIzOcaRIBwL4=;
- b=zx/RNYiRqTzICUJ9yiDz22/mEuVxL2txZZAkfeZuP9IVw9dgg6UbjvFOVL5Zz2GPa1A/DjHwKqdLNr8qFe67rWUnlWxSRaLsGvmo9XKoHugf/p31BAqLDKMsYPHEEHTGQ0OoTytVBovNmMpSw734bx1wjqf1xW+rmjbtVcC5Ip8=
-Received: from BYAPR11MB3256.namprd11.prod.outlook.com (2603:10b6:a03:76::19)
- by BY5PR11MB4226.namprd11.prod.outlook.com (2603:10b6:a03:1bf::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Thu, 9 Jul
- 2020 14:49:18 +0000
-Received: from BYAPR11MB3256.namprd11.prod.outlook.com
- ([fe80::4ca7:fbfa:78bf:173c]) by BYAPR11MB3256.namprd11.prod.outlook.com
- ([fe80::4ca7:fbfa:78bf:173c%4]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
- 14:49:18 +0000
-From:   "Moore, Robert" <robert.moore@intel.com>
-To:     Xu Wang <vulab@iscas.ac.cn>,
-        "Kaneda, Erik" <erik.kaneda@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] service_layers: osunixmap: Remove unnecessary brackets in
- acpi_os_map_memory()
-Thread-Topic: [PATCH] service_layers: osunixmap: Remove unnecessary brackets
- in acpi_os_map_memory()
-Thread-Index: AQHWVcgik7eppFgSsk2P33P93bkikKj/VH9g
-Date:   Thu, 9 Jul 2020 14:49:17 +0000
-Message-ID: <BYAPR11MB3256999B714C7F5598E3213687640@BYAPR11MB3256.namprd11.prod.outlook.com>
-References: <20200709080806.14328-1-vulab@iscas.ac.cn>
-In-Reply-To: <20200709080806.14328-1-vulab@iscas.ac.cn>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: iscas.ac.cn; dkim=none (message not signed)
- header.d=none;iscas.ac.cn; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [134.134.136.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1a90b89b-2804-463a-e887-08d8241741e0
-x-ms-traffictypediagnostic: BY5PR11MB4226:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB422603A578C748BE8A494FE887640@BY5PR11MB4226.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:226;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cnkkquuKdL2DidiZNAKx6SfiVtolNIYTO+nBjWHS65tfL0PzCJQGC8lffz6mZdp/0L6+3KbjnmmXoqnDzpR62z0D6r2weHXeuYzFO2C6i+tbWcA8w/+pA4wdmjdvpSs2xu/GM4VtX7SgMXaCOmdLQ9hJxe8m7+P3aHUiXaWROuR4GeRHu8RetW59bVw2g+yzIFQz9MGpm4WnD4a4t6N4APkLLI5BLRt/V9hcNq0HbWNNc1qtLuBTTR5X6gz1sSGSkbEVpv+gwLl0DlPLwiSfa/V0zy0y0wU1w0QbRXytPXt6/TpH9TDwpjpMWP0lEuK7FgkfWF/ciUQbYww1eRQPVA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3256.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(66556008)(7696005)(55016002)(53546011)(6506007)(83380400001)(71200400001)(76116006)(66946007)(8936002)(66476007)(66446008)(64756008)(52536014)(186003)(9686003)(26005)(86362001)(316002)(8676002)(110136005)(5660300002)(4326008)(33656002)(478600001)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: pEFN4lx0BHc6r8UnsXZCn7BC03Wo4LIM3cd5q/JE9J3fL6TAVJytHX+yhKJJPgaDSewbfxOKaMfhWhMm9CplXSALeCMtwzfTXwSrLNBZHvATC8z9T9inNQ8W2fbSteU5KZMqHG0G+BQnk4PeKLjY1Oui4D6Ne7ODRM0shDGN6ngy2t0Fs/NV6MTlMDLG5Unb/z9jqVtcAACAxNdDeA94kqpZuU/buu6rRuu0VLcrplQ6lfRdBLMSKCQU2SHGFgSCxxBs4obPIkINnBjPH2AhOf1aUA+DFPs5RoyD0cJTszB6MUdZ0mS0awBr2t5Dt4aNGVdQ0Xcwq0Vp4LaqhFvkKSK9uHA0Neibz2Q6zmvDrkLj8x9rY2iqjRo0eSnywXgD23N4hgfKZVvHxyEq8hSWdOUJFHj9TKewTpmg2ma24m6vqhugng42neTC62WXw1SZUUOlsFN1RXhLBAtpVmXJoAbQuLSruGBI5rTP09jDC9qbyLV0P4LnYXNYJhppbDBZ
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jul 2020 10:50:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgGIOuK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 10:50:10 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E32F9C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 07:50:09 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mn17so1220723pjb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 07:50:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Kim3CdbxyyOIhVT8nqi+K5F5C7o279gFE7n8I2AhGw=;
+        b=PCMgMMIMPYgEiSOnn0WY5wKtX6cQ7Z+UAnP1iiRucoEQNv/MdRE5U9c5KpDE2lrLCt
+         kkxmc4qkOKMgwTMSCezsgykchuRt1xzNJss9K4+HJBnMdi7Zw5W/8Z+vfTGJXDvz42Q8
+         XIw6BtvVUeg3ghXbZOO7MBapqShWQ1NOc4too=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Kim3CdbxyyOIhVT8nqi+K5F5C7o279gFE7n8I2AhGw=;
+        b=AptkGjRakr5l9BYuflYdSnR5HQy/PxADCsO9HppGvnapO2bAvOGrSKcYwPiPqM9Cwr
+         iKmOBFDGyMra2gKiW/gMXpiesLbHSaGkKA/RXxM4xlJ2rxA571qW/p5vBXR2hAsbqYaU
+         NkaJ/22MX6ejPBOT0dChxEH2K87ewM4ktR20DOpaiEN+4eXMxNM55Q8vJaLtmbsoLWXS
+         V1nAT57zkRePiuexKwkG3XLEnW7eYm9Q+tHZ/o4uY16TdfWSXi1IiEIg9YrTEe2fQq9b
+         btPFgpNoGPtNWXSBGEGCx2Fw6wvTjTll3fNfgvXBTr1mtd8TMm3KoBHRuOwUzq11Atr+
+         OlKw==
+X-Gm-Message-State: AOAM533oTPTLm8T6mbpm1fLeqjgBPSeHQy+AuBHdhFP6bWoxCZKLP5eO
+        YgMPHMl0Pqwed8VPR8zmCOXbu4ILtbw=
+X-Google-Smtp-Source: ABdhPJw5RNptGzp6gX+Rzq1D1wNbYOgoBqCHIcMeeAnkJmwsBPRWm24APyxOAGQKrhjEPZpObUTk4w==
+X-Received: by 2002:a17:90a:26a4:: with SMTP id m33mr423518pje.124.1594306209193;
+        Thu, 09 Jul 2020 07:50:09 -0700 (PDT)
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com. [209.85.210.176])
+        by smtp.gmail.com with ESMTPSA id u20sm3342154pfk.91.2020.07.09.07.50.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 07:50:09 -0700 (PDT)
+Received: by mail-pf1-f176.google.com with SMTP id m9so1132819pfh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 07:50:08 -0700 (PDT)
+X-Received: by 2002:a05:6122:78d:: with SMTP id k13mr41715186vkr.28.1594305878997;
+ Thu, 09 Jul 2020 07:44:38 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3256.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a90b89b-2804-463a-e887-08d8241741e0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 14:49:17.9150
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /P2XI8ZSd8eJwQ6jOikF1ACRzSEjy9ceIh/scGWvJ8yIy6CZGaFUWpOvIgsZLa9ljjIl9WuVqA7i5e6E6xTaCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4226
-X-OriginatorOrg: intel.com
+References: <20200708163922.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
+ <23e53f2b-02b0-2c9b-a165-4ca5a2c84a89@codeaurora.org>
+In-Reply-To: <23e53f2b-02b0-2c9b-a165-4ca5a2c84a89@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 9 Jul 2020 07:44:26 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XrD0TMCNG-2JZ6_f67+yU8Z+2ofkqMvp=uA9rB2bS6og@mail.gmail.com>
+Message-ID: <CAD=FV=XrD0TMCNG-2JZ6_f67+yU8Z+2ofkqMvp=uA9rB2bS6og@mail.gmail.com>
+Subject: Re: [PATCH] spi: spi-geni-qcom: Set the clock properly at runtime resume
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Maulik Shah <mkshah@codeaurora.org>, ctheegal@codeaurora.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
--		return (NULL);
-+		return NULL;
+Hi,
 
-This is the ACPICA coding standard, and it does not affect anything.
-Bob
+On Thu, Jul 9, 2020 at 1:55 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>
+>
+> On 7/9/2020 5:09 AM, Douglas Anderson wrote:
+> > In the patch ("spi: spi-geni-qcom: Avoid clock setting if not needed")
+> > we avoid a whole pile of clock code.  As part of that, we should have
+> > restored the clock at runtime resume.  Do that.
+> >
+> > It turns out that, at least with today's configurations, this doesn't
+> > actually matter.  That's because none of the current device trees have
+> > an OPP table for geni SPI yet.  That makes dev_pm_opp_set_rate(dev, 0)
+> > a no-op.  This is why it wasn't noticed in the testing of the original
+> > patch.  It's still a good idea to fix, though.
+>
+> good catch, without this (and with OPP tables added) we would end up removing
+> the performance vote on suspend and never put it back unless the rate changes.
+> Perhaps a similar change would be needed for spi-qcom-qspi too?
 
------Original Message-----
-From: Xu Wang <vulab@iscas.ac.cn>=20
-Sent: Thursday, July 09, 2020 1:08 AM
-To: Moore, Robert <robert.moore@intel.com>; Kaneda, Erik <erik.kaneda@intel=
-.com>; Wysocki, Rafael J <rafael.j.wysocki@intel.com>; lenb@kernel.org; vul=
-ab@iscas.ac.cn; linux-acpi@vger.kernel.org; devel@acpica.org
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] service_layers: osunixmap: Remove unnecessary brackets in =
-acpi_os_map_memory()
+The quad spi already patch had this fix and it actually mattered
+there.  That's what made me go look back and realize that I needed the
+fix in the geni SPI.  See:
 
-Remove extra brackets.
+https://lore.kernel.org/r/20200707131607.1.Ia7cb4f41ce93d37d0a764b47c8a453ce9e9c70ef@changeid
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- tools/power/acpi/os_specific/service_layers/osunixmap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'll send a v2 of that with Akash's suggestion of checking the return
+value, though.
 
-diff --git a/tools/power/acpi/os_specific/service_layers/osunixmap.c b/tool=
-s/power/acpi/os_specific/service_layers/osunixmap.c
-index c565546e85bc..52f3e70b5c81 100644
---- a/tools/power/acpi/os_specific/service_layers/osunixmap.c
-+++ b/tools/power/acpi/os_specific/service_layers/osunixmap.c
-@@ -70,7 +70,7 @@ void *acpi_os_map_memory(acpi_physical_address where, acp=
-i_size length)
- 	fd =3D open(SYSTEM_MEMORY, O_RDONLY | O_BINARY);
- 	if (fd < 0) {
- 		fprintf(stderr, "Cannot open %s\n", SYSTEM_MEMORY);
--		return (NULL);
-+		return NULL;
- 	}
-=20
- 	/* Align the offset to use mmap */
-@@ -85,7 +85,7 @@ void *acpi_os_map_memory(acpi_physical_address where, acp=
-i_size length)
- 	if (mapped_memory =3D=3D MAP_FAILED) {
- 		fprintf(stderr, "Cannot map %s\n", SYSTEM_MEMORY);
- 		close(fd);
--		return (NULL);
-+		return NULL;
- 	}
-=20
- 	close(fd);
---=20
-2.17.1
-
+-Doug
