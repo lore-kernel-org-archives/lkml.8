@@ -5,117 +5,172 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7375C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87EB32078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5E9207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V8V9ImnR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H1Gd2Qce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgGIRra (ORCPT
+        id S1728836AbgGIRri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48918 "EHLO
+        Thu, 9 Jul 2020 13:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728467AbgGIRqJ (ORCPT
+        with ESMTP id S1728491AbgGIRqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 13:46:09 -0400
+        Thu, 9 Jul 2020 13:46:08 -0400
 Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAC4C08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:08 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id o11so3289506wrv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB3CC08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 10:46:07 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j4so3274609wrp.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 10:46:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kZ+k2VRrvfDu4ASYD2+0hveDy1rv8dVhxsnPb7NP+X0=;
-        b=V8V9ImnR8xB5UICcA8klK0T3O2TMEGcxT3IeNsvPi2SesI8NXMjPkjfKTzlDixJeCA
-         TQUqVu9VgmdWB+IBVVm0GRFDpp3C7Gk64FNmT42cb45zFIF6tGGGrHhXyzp6hbmv9o+R
-         u8TYWFy6Cr7KgZDkvlKEz8xv7m2tev+Z26lCnfQh3hnc1EebHn1tpGWwp34hZ4n9rDgo
-         kIVsqIXv64xReH0F7tfZIN+biNjWMFRe5z+Ri70+RxymufKT/jhglyDIQQEkuPVjzlAo
-         tBASIAPgtFIRXkLj84Eq/CYZEOVlPaD1UXcI1xLsL+/1SRFCDJaiM0te7MPC2S/VM+u7
-         7w9A==
+        bh=t/zzBO2Jyh9x8BHnEJvhlwlew5qspE/Jnd9v9TqHGYM=;
+        b=H1Gd2QcePmOch/qjxRoMvW6JpS/d1uxfjssBsju4ijWuNBYeYhSLPGusubNnj64R5d
+         lBPC0Qh+tijB0657/8ocUTQZ6VlX4DDoXTQNRPhiWMmbtic0pnF8hwgMWiOEy3krR6EG
+         MM9qZbNhjzJosugv5Xct60LzcQ6H/ERwD1FmetEC+68lox6HzXQQqchkvRA86EEmgID1
+         u+CtA6elQsQtcnQ0i//PmrJwD9zmThbvWktCDt4ictyJiPhxsvrXz2JYtkVT0KLaaPAB
+         70Up4s7t49cja8tJgfdrv/f/xjbyjE6WcN1PZ9nN2M1ioLlvyDRNj9Mo4nYJDzXMOdEN
+         Up0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kZ+k2VRrvfDu4ASYD2+0hveDy1rv8dVhxsnPb7NP+X0=;
-        b=n5QDcq3ADv4/n2mgvfoKJ2SI2XAaqgdvOcMnfuKgq0D3VeRaYTDtYLYDh6IHCHvgaI
-         z6wzeydXIrHaqBLO6jQ4en2xPeMJevdgRWxl5iedCppBNEq/3t4ivHwxiF/JhMAjdv/K
-         GQQz2bFIPzV8UJY9cn+U6vVw1efZGF0TTdAwUs7rcOEVhje1XISnC16mtchxs/JWA58K
-         XktIGHqZUIyGUaFgEu1HtQuEuysI4AeT1VH982fPBPl+6pWIaNmugFt5x5++s29Qdm0s
-         /s8geOxKpjThrIHjlIHr7i0NSffPNs3eiHI/6uq+3vVMhwrjDLnv1lHhvLU7Esqc3Mbb
-         oFig==
-X-Gm-Message-State: AOAM533cFi8uLRc5QjhkFf553zGSP2BRkgitlyqK+yQ/Pqz35/nJURua
-        12cyKQZAQoG+m+8GDOF5sM17Uw==
-X-Google-Smtp-Source: ABdhPJy+miydl2tuFxxupMnPPutDp0xHv0OR8pXKzQnBcY7vuhjlJBfhS9/bSR6axO66wkFsLF6fLQ==
-X-Received: by 2002:adf:c44d:: with SMTP id a13mr66244554wrg.205.1594316767535;
-        Thu, 09 Jul 2020 10:46:07 -0700 (PDT)
+        bh=t/zzBO2Jyh9x8BHnEJvhlwlew5qspE/Jnd9v9TqHGYM=;
+        b=cEzK6X2MJSqH2tqN+Bp4SZxJM/BF/XgTzqqy3sVPrIgvb9nllYX5N8wjYep3LpDFuc
+         0RqXTdg+ANHNi5PVBmbchoB+prU6ICt3V5ikVseo47ILUfTL2Xl71Ac8qh+AHwWG0xhR
+         5nu6I4ujZC2pIEJLYDLMa5by7reJtExm01BB0wjyeFsbD4GKN7lneStsrxYhwzwoUMSV
+         MKW7zkukXYsM1x0Pq1m4dO+F06RbcEP2dMWkFhdIc9DuSOdAdn4rTiiCGLeK3pJpaMCj
+         sdvxQ7gf3HucIsk1xfZI5keVsiKCH7J3BhaTHPIrNCClG2gA0hbaJ48pZslIfrenNLTY
+         tGRg==
+X-Gm-Message-State: AOAM531y5b9xOMHHgSBv0OD+P7NKQmMAwAzx1bueE+Xu3gurhUApM6fi
+        rJt6YvWQBDa7E4sHDYPi8tErQg==
+X-Google-Smtp-Source: ABdhPJw/z+CbiouBYdlTZxBgt9fyrvU1bnWHwSoZXHlYLQw4mSjV7jsGybDb0S7HlMNgxmDi9+MCLQ==
+X-Received: by 2002:a5d:5341:: with SMTP id t1mr68373388wrv.207.1594316766614;
+        Thu, 09 Jul 2020 10:46:06 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.206])
-        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.46.06
+        by smtp.gmail.com with ESMTPSA id f15sm6063854wrx.91.2020.07.09.10.46.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:46:07 -0700 (PDT)
+        Thu, 09 Jul 2020 10:46:05 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
         linux-scsi@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Luben Tuikov <luben_tuikov@adaptec.com>
-Subject: [PATCH 08/24] scsi: aic94xx: aic94xx_scb: Fix a couple of formatting and bitrot issues
-Date:   Thu,  9 Jul 2020 18:45:40 +0100
-Message-Id: <20200709174556.7651-9-lee.jones@linaro.org>
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org
+Subject: [PATCH 07/24] scsi: aacraid: commsup: Fix a bunch of function header issues
+Date:   Thu,  9 Jul 2020 18:45:39 +0100
+Message-Id: <20200709174556.7651-8-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200709174556.7651-1-lee.jones@linaro.org>
 References: <20200709174556.7651-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc format should be '@.*: ', else the checker gets confused.
+Some parameters not documented.  Others misspelled.
+
+Also, functions must follow directly after the header that documents them.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/aic94xx/aic94xx_scb.c:137: warning: Function parameter or member 'phy' not described in 'asd_get_attached_sas_addr'
- drivers/scsi/aic94xx/aic94xx_scb.c:137: warning: Function parameter or member 'sas_addr' not described in 'asd_get_attached_sas_addr'
- drivers/scsi/aic94xx/aic94xx_scb.c:860: warning: Function parameter or member 't' not described in 'asd_ascb_timedout'
- drivers/scsi/aic94xx/aic94xx_scb.c:860: warning: Excess function parameter 'data' description in 'asd_ascb_timedout'
+ drivers/scsi/aacraid/commsup.c:223: warning: Function parameter or member 'scmd' not described in 'aac_fib_alloc_tag'
+ drivers/scsi/aacraid/commsup.c:421: warning: Function parameter or member 'qid' not described in 'aac_queue_get'
+ drivers/scsi/aacraid/commsup.c:421: warning: Function parameter or member 'hw_fib' not described in 'aac_queue_get'
+ drivers/scsi/aacraid/commsup.c:421: warning: Excess function parameter 'priority' description in 'aac_queue_get'
+ drivers/scsi/aacraid/commsup.c:421: warning: Excess function parameter 'fib' description in 'aac_queue_get'
+ drivers/scsi/aacraid/commsup.c:943: warning: Function parameter or member 'fibptr' not described in 'aac_fib_complete'
+ drivers/scsi/aacraid/commsup.c:943: warning: Excess function parameter 'fib' description in 'aac_fib_complete'
+ drivers/scsi/aacraid/commsup.c:1061: warning: Excess function parameter 'dev' description in 'AIF_SNIFF_TIMEOUT'
+ drivers/scsi/aacraid/commsup.c:1061: warning: Excess function parameter 'fibptr' description in 'AIF_SNIFF_TIMEOUT'
+ drivers/scsi/aacraid/commsup.c:2428: warning: Function parameter or member 'data' not described in 'aac_command_thread'
+ drivers/scsi/aacraid/commsup.c:2428: warning: Excess function parameter 'dev' description in 'aac_command_thread'
 
-Cc: Luben Tuikov <luben_tuikov@adaptec.com>
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linaro-mm-sig@lists.linaro.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/aic94xx/aic94xx_scb.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/aacraid/commsup.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/aic94xx/aic94xx_scb.c b/drivers/scsi/aic94xx/aic94xx_scb.c
-index 4a80ec08f0c96..c264b4b56970b 100644
---- a/drivers/scsi/aic94xx/aic94xx_scb.c
-+++ b/drivers/scsi/aic94xx/aic94xx_scb.c
-@@ -123,8 +123,8 @@ static unsigned ord_phy(struct asd_ha_struct *asd_ha, struct asd_phy *phy)
+diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
+index 8ee4e1abe568d..adbdc3b7c7a70 100644
+--- a/drivers/scsi/aacraid/commsup.c
++++ b/drivers/scsi/aacraid/commsup.c
+@@ -214,6 +214,7 @@ int aac_fib_setup(struct aac_dev * dev)
+ /**
+  *	aac_fib_alloc_tag-allocate a fib using tags
+  *	@dev: Adapter to allocate the fib for
++ *	@scmd: SCSI command
+  *
+  *	Allocate a fib from the adapter fib pool using tags
+  *	from the blk layer.
+@@ -405,8 +406,8 @@ static int aac_get_entry (struct aac_dev * dev, u32 qid, struct aac_entry **entr
+  *	aac_queue_get		-	get the next free QE
+  *	@dev: Adapter
+  *	@index: Returned index
+- *	@priority: Priority of fib
+- *	@fib: Fib to associate with the queue entry
++ *	@qid: Queue number
++ *	@hw_fib: Fib to associate with the queue entry
+  *	@wait: Wait if queue full
+  *	@fibptr: Driver fib object to go with fib
+  *	@nonotify: Don't notify the adapter
+@@ -934,7 +935,7 @@ int aac_fib_adapter_complete(struct fib *fibptr, unsigned short size)
  
  /**
-  * asd_get_attached_sas_addr -- extract/generate attached SAS address
-- * phy: pointer to asd_phy
-- * sas_addr: pointer to buffer where the SAS address is to be written
-+ * @phy: pointer to asd_phy
-+ * @sas_addr: pointer to buffer where the SAS address is to be written
+  *	aac_fib_complete	-	fib completion handler
+- *	@fib: FIB to complete
++ *	@fibptr: FIB to complete
   *
-  * This function extracts the SAS address from an IDENTIFY frame
-  * received.  If OOB is SATA, then a SAS address is generated from the
-@@ -847,7 +847,7 @@ void asd_build_initiate_link_adm_task(struct asd_ascb *ascb, int phy_id,
+  *	Will do all necessary work to complete a FIB.
+  */
+@@ -1049,6 +1050,7 @@ static void aac_handle_aif_bu(struct aac_dev *dev, struct aac_aifcmd *aifcmd)
+ 	}
+ }
+ 
++#define AIF_SNIFF_TIMEOUT	(500*HZ)
+ /**
+  *	aac_handle_aif		-	Handle a message from the firmware
+  *	@dev: Which adapter this fib is from
+@@ -1057,8 +1059,6 @@ static void aac_handle_aif_bu(struct aac_dev *dev, struct aac_aifcmd *aifcmd)
+  *	This routine handles a driver notify fib from the adapter and
+  *	dispatches it to the appropriate routine for handling.
+  */
+-
+-#define AIF_SNIFF_TIMEOUT	(500*HZ)
+ static void aac_handle_aif(struct aac_dev * dev, struct fib * fibptr)
+ {
+ 	struct hw_fib * hw_fib = fibptr->hw_fib_va;
+@@ -2416,7 +2416,7 @@ static int aac_send_hosttime(struct aac_dev *dev, struct timespec64 *now)
  
  /**
-  * asd_ascb_timedout -- called when a pending SCB's timer has expired
-- * @data: unsigned long, a pointer to the ascb in question
-+ * @t: Timer context used to fetch the SCB
+  *	aac_command_thread	-	command processing thread
+- *	@dev: Adapter to monitor
++ *	@data: Adapter to monitor
   *
-  * This is the default timeout function which does the most necessary.
-  * Upper layers can implement their own timeout function, say to free
+  *	Waits on the commandready event in it's queue. When the event gets set
+  *	it will pull FIBs off it's queue. It will continue to pull FIBs off
 -- 
 2.25.1
 
