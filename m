@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69357C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B930C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2A5206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F17A206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:11:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yq5oLu8A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HyeOmbP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgGICLG (ORCPT
+        id S1726285AbgGICLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 22:11:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45796 "EHLO
+        Wed, 8 Jul 2020 22:11:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgGICLF (ORCPT
+        with ESMTP id S1726222AbgGICLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 22:11:05 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E75C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 19:11:05 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id k23so683273iom.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 19:11:05 -0700 (PDT)
+        Wed, 8 Jul 2020 22:11:07 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90738C061A0B
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 19:11:07 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id v8so734218iox.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 19:11:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
         bh=XQKwdZHWoHY2rSxRNRjfiy4s8SsL+NaMfgyEBt9FVMQ=;
-        b=yq5oLu8Ao5cM+9i/QwjMwwbHAJ7qi9TlcWwXcNu9Pm4ERI9yjeGThHirHyl4q1xSwD
-         ZdJCFe7f5u3WPuTjh7p3Q4XQf+t+ot3C03XJUzTfjJLOK4iQ9TmqQb4Y5r5Z7p5pPH13
-         RmSNPkLWPpOEWkR2ORv0bF/1KRmcq55WUJLrNRC5Qp8VeTkclHI4F6c5FHJms5D46vW/
-         RRWBnfALX+2RkMIbU+aPky8VYmyoJjyCV/BfB8KhRJ6j3a6wKbm3ge1dq2hRxNF9PfYm
-         PDWeUks+oBW88zxWIwmFghKnJhCCshPEOeMZtgu18Qp04rt41Obuvpzrly+e2VYRkxqL
-         FXaw==
+        b=HyeOmbP69hy5by2aKWO+LM8Rs2KtKRT74K82KD4HQTcsFZ24MRyGImPMPlhce5FHKb
+         AVus0TeDI83nyIRToHSqku0RA4HGwTAL5ENXwXeHv44Jds3sj4bF8WhCYbj8r7bgQZX8
+         h1n0vY8UXXY/sOsykWUrcsQwCcl6DDc/qcA4LUL1/mPVcwR3p3PrNVtA44v3c5NzyZVh
+         N8ejoRw1b4NQ0x5fhgokSs9XRpZcwY53GV0BDNOG2S5bv+uHpi0dt4onj+C/tDuHyHFB
+         drmo7nrDYGNPcVV8q0mos3wMH+Q8ZYZFKQnayhJo4xjo/3iC7fgP1syB8eC/lhK35S5w
+         gBgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=XQKwdZHWoHY2rSxRNRjfiy4s8SsL+NaMfgyEBt9FVMQ=;
-        b=QTrigZeWe5aMDknnqAGDVcUQuZMCQ6ok1+OAN81rwmEwyv9yqeydOzwRRzCy6JtHKO
-         82bWwfS4vMx+KZ2mxxE3PgqKy+Vjrwq0SlQGe4jiUH4z1F0y1cyjsZtwJ6GMfe+7tabn
-         7xOnovQj74vSNxxW+rZey29FfG/h+UIKNaH21Ai44IAPrypwJt7OLnHzScm1isZBpRc7
-         uF0lmJQFKBAJDsuXUk/cid9F+bNonLp3cpUdWxypRXxMaevRuIQnY3Vdn7gsrmKb+GgE
-         TsD7WzAZ4onadcHUW/hlHwN1eoS18j0uthDzjyGiVw3bCny8bsLHvuqWnow4QbeJod5D
-         n2Uw==
-X-Gm-Message-State: AOAM5336nCGC04P8++SNUy+RvTIFrdAAleuIXv3yhSoATfjdE5BcE5it
-        bo03itqQBxVnui7Adk+SmayRfA==
-X-Google-Smtp-Source: ABdhPJzUaribanHeB7RYNCUqwFUZGpNAJBtINhYQYo1QOCVuZMwyjasupVK3U0gH8W850q5lF8+gcg==
-X-Received: by 2002:a02:cca8:: with SMTP id t8mr69432488jap.31.1594260665112;
-        Wed, 08 Jul 2020 19:11:05 -0700 (PDT)
+        b=qWekBAb5tpHz+xPUYmx6dvf0BnXopzkuFtDkL44X9EQPTcKOPuAO3IH5JHhAoNKmWJ
+         T57R0K2loYAnalBhMntexiT4vXMW8443TEKjXcxgx4R5gA8q8YRSja92Mn7ZrNSLVdm9
+         eQD8qZrUBF8TM0WCcJKQinPndBP7+oxB8lUYala2+w6HxMDMZ216ryOWjIICJu1aR0HK
+         mqHx8yei9/RX9PDApOm2F9YdJJLUiWeocUR5Gcx+R8r2Be+fNvuCG1DwqisSnpJEMySi
+         AruXKx9tC+RRhPB5jS1mtziMbPTuvX5Yuukx8t68WkX3KQxvVHZk7jsLo+uC9DG/G9yA
+         7vCw==
+X-Gm-Message-State: AOAM533YkEoaNfXAkcHhH/bzMMG0ibILPSSRlkOGP5MNt20RdOMQeBT8
+        yEFXrUt2T58BHZitwXbc/Wrwtg==
+X-Google-Smtp-Source: ABdhPJyu4qYUVmwutCnsTR9t8EWrgbz3Zq8qaXzw3Z7hYQ/d7qhwCYxzFOsvCag0r1fGqW4U84SL9w==
+X-Received: by 2002:a5d:9590:: with SMTP id a16mr23921644ioo.150.1594260666941;
+        Wed, 08 Jul 2020 19:11:06 -0700 (PDT)
 Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id a5sm1080977ilt.71.2020.07.08.19.11.03
+        by smtp.googlemail.com with ESMTPSA id t12sm1049935ilo.80.2020.07.08.19.11.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 19:11:04 -0700 (PDT)
+        Wed, 08 Jul 2020 19:11:06 -0700 (PDT)
 Subject: Re: [PATCH v2 2/2] bitfield.h: split up __BF_FIELD_CHECK macro
 To:     Nick Desaulniers <ndesaulniers@google.com>,
         "David S . Miller" <davem@davemloft.net>
@@ -75,8 +75,8 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
 References: <20200708230402.1644819-1-ndesaulniers@google.com>
  <20200708230402.1644819-3-ndesaulniers@google.com>
 From:   Alex Elder <elder@linaro.org>
-Message-ID: <265aac2c-85a9-7e80-5f51-43556c37d3d0@linaro.org>
-Date:   Wed, 8 Jul 2020 21:11:03 -0500
+Message-ID: <4ff07f7c-f4d5-1d50-e9b4-86ded2c20081@linaro.org>
+Date:   Wed, 8 Jul 2020 21:11:05 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
