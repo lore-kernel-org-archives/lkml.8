@@ -2,98 +2,107 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9383C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A21F207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D0B2065D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 17:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594313976;
-	bh=MjLxmKFsCwQKcejuUVJLBgHqXfK23AAaD9TAFxzTGAo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Sc8UAxWge1AdP3uytqLUsQW6AOpJ0qjI+7vOTTp2edjMrJngDzs5qSefngGTPoNch
-	 HKOqck5jW/A50qjnB4JH9ouTc2VtorTStcwBBrAUV1Rr2/l+0mCEeRkUIh2dFI0IGi
-	 aSQhe1p28gJr/p5v3iI2MSJtvN8BJj+LTkf8BzsM=
+	s=default; t=1594314042;
+	bh=eNWh+xJ0w6fGSzbqMlj+EBp07y7zWG4d0STd9iVep/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fTKTnI24W+4+vWFuXzdWVG9N4xwUyj34s83IaJA0fqEifR9hON2VoiiPamOpKRicw
+	 C33MBG8lxn8VFBonh3Uf7NJ6ItjK2uNjMZs0D1VxgCJ9RLqZIfGzSVb8dlHACM2+e5
+	 UsFdU7H7iRoF+y1GYWFYuoE08f0xpFgNGM/FWb0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgGIQ7f (ORCPT
+        id S1728139AbgGIRAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbgGIQ7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:59:34 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7554D2078B;
-        Thu,  9 Jul 2020 16:59:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594313974;
-        bh=MjLxmKFsCwQKcejuUVJLBgHqXfK23AAaD9TAFxzTGAo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=KSVyWHH2ritXsbDHAwt85ewJORhs7pRZVmsaIl1rUWFIoSrcLmzxfKg1Zqtqwsujj
-         h/HYzcc7kN+kQjyc+bBie7dfANi6hBh8xZLQtKw5UP8MWhsf5lSHNrSjPKM2fdrK8P
-         niekjdreA1SFdFZqVzJ+k74RUULknxQX1aojKLJ0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5AB3A3522CE7; Thu,  9 Jul 2020 09:59:34 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 09:59:34 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kaitao Cheng <pilgrimtao@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] kernel/smp: Fix an off by one in csd_lock_wait_toolong()
-Message-ID: <20200709165934.GD9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200709104818.GC20875@mwanda>
+        Thu, 9 Jul 2020 13:00:41 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38565 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgGIRAl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 13:00:41 -0400
+Received: by mail-io1-f66.google.com with SMTP id l1so3084655ioh.5;
+        Thu, 09 Jul 2020 10:00:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=J57B4SYSeZSds0MiAw/eWQKxFfmLvKjSluZG4Rx7dM0=;
+        b=m4YRvSMUURKSZ5R7Js7iwtbdrlp9PDTmPRbU/+sRmokivsT+Rd7i9aUKXS6iyHb5nf
+         BilinT6rXc6++EgqnZRyaTMbehJB0tCngqzQr9Ut3MUqCfrOn9E1KFrIwaLY3fcoLIR+
+         Ef1inw062uVbLNMdTuDacU3p5qAW1L/4HIbyzS6Vz6ThR8Bm3GF032q0OGl/PybAcydt
+         rfPbUUk3ImtGujVLLsX9s8cX4ltWxM5qM+qTwQfelt+gJB2cKPQ7gqn4fXyZmr8zvXF1
+         X/CTXSS2nSDFOzFsHOKLJgODU1cqY6kPgeEDvQDFA7wtfZKfyetlaDgWErixwq4NPPB7
+         WIkw==
+X-Gm-Message-State: AOAM532kQx2wp3eDbY3yLCO8vOfGs6ZxlA+M7RMFNsXQICgdl9chkkd5
+        MvyYYhuYtJMREWLpgQHplL6xHdJJjg==
+X-Google-Smtp-Source: ABdhPJym5BpBPRGl0IaG+oewAoSKHMUJvqWWhGsC8UTGI1GS5iPctaV9bpzLjDfYKxDsWZrvRq4bOQ==
+X-Received: by 2002:a05:6638:2649:: with SMTP id n9mr37825758jat.126.1594314040162;
+        Thu, 09 Jul 2020 10:00:40 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id c25sm2438583ioi.13.2020.07.09.10.00.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 10:00:39 -0700 (PDT)
+Received: (nullmailer pid 518350 invoked by uid 1000);
+        Thu, 09 Jul 2020 17:00:35 -0000
+Date:   Thu, 9 Jul 2020 11:00:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 11/14] dt-bindings: PCI: Add EP mode dt-bindings for
+ TI's J721E SoC
+Message-ID: <20200709170035.GA518075@bogus>
+References: <20200708093018.28474-1-kishon@ti.com>
+ <20200708093018.28474-12-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200709104818.GC20875@mwanda>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200708093018.28474-12-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 01:48:18PM +0300, Dan Carpenter wrote:
-> The __per_cpu_offset[] array has "nr_cpu_ids" elements so change the >
-> >= to prevent a read one element beyond the end of the array.
+On Wed, 08 Jul 2020 15:00:15 +0530, Kishon Vijay Abraham I wrote:
+> Add PCIe EP mode dt-bindings for TI's J721E SoC.
 > 
-> Fixes: 0504bc41a62c ("kernel/smp: Provide CSD lock timeout diagnostics")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-Good eyes, thank you!  Folding this into the original with
-attribution.
-
-							Thanx, Paul
-
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  kernel/smp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 89 +++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
 > 
-> diff --git a/kernel/smp.c b/kernel/smp.c
-> index 78b602cae6c2..f49966713ac3 100644
-> --- a/kernel/smp.c
-> +++ b/kernel/smp.c
-> @@ -171,7 +171,7 @@ static __always_inline bool csd_lock_wait_toolong(call_single_data_t *csd, u64 t
->  		*bug_id = atomic_inc_return(&csd_bug_count);
->  	cpu = csd_lock_wait_getcpu(csd);
->  	smp_mb(); // No stale cur_csd values!
-> -	if (WARN_ONCE(cpu < 0 || cpu > nr_cpu_ids, "%s: cpu = %d\n", __func__, cpu))
-> +	if (WARN_ONCE(cpu < 0 || cpu >= nr_cpu_ids, "%s: cpu = %d\n", __func__, cpu))
->  		cpu_cur_csd = READ_ONCE(per_cpu(cur_csd, 0));
->  	else
->  		cpu_cur_csd = READ_ONCE(per_cpu(cur_csd, cpu));
-> -- 
-> 2.27.0
-> 
+
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:0: [0, 42991616, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:1: [0, 43020288, 0, 1024] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:2: [0, 218103808, 0, 8388608] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:3: [0, 268435456, 0, 134217728] is too long
+
+
+See https://patchwork.ozlabs.org/patch/1325133
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
