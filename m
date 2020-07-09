@@ -2,135 +2,316 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C397C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 01:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 01:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C947207CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 01:08:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUDCIKGy"
+	by mail.kernel.org (Postfix) with ESMTP id 4EAC220739
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 01:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgGIBIM (ORCPT
+        id S1726194AbgGIBL0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 21:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgGIBIM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 21:08:12 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3A3C061A0B
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 18:08:12 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e8so453543ljb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 18:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9p8A15AqAW3/4x69j3zHQIbmUxWZ5XRdsvYgz8fpSzg=;
-        b=dUDCIKGyVGWqhjw5zNvQy07diR89AtZJdj1roS3qHcCVKZ/NL61/ygPihQnA5u8FWp
-         tr3Dh5Ry/EkrnbBfDiYMWQAQeJOWkgbZleGn5xGKQQ1sXwMahvkmQIxdyXIdNoZs13Yb
-         LqYX88bOuQi58aH98ZrSCi6L2kAyLqvTx1uZk2tAQo/w6Xvjts2UJu8kLld0QenduLS3
-         7jt7E5ygqRxZPSn3SQwqvIv862ba1GbqFAmo4WfIxQngVaYCzGXQyxxAWlNZES7Iqv3O
-         B96vxCyXGaB9MjTSevPXNJl+ijP1N+oAuGg0cezmj7k4mpGznUD3xqavDvkZev8J8rNQ
-         AwRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9p8A15AqAW3/4x69j3zHQIbmUxWZ5XRdsvYgz8fpSzg=;
-        b=kY4cukKTGrlS5ADz9n8CjIYleOaA7TX3NyD5R3mWikdBR9Wg7EVyIFpT5qd4VMvQhi
-         ugzRuuyW4jTPneheE/aJeWFTZooCdtc7KovEIh/60anVJaLoPdbrSpcDMkIob9pqnTtb
-         Ev/f+QSJcl7+tt6q8/5nz1q99v9G8fuzpWwhXwSWZyWKGOlh6tB32Fy4EfR1TrobnAC2
-         oPZstjrH8crqgrMMhyAQvGVZct0s8zZee0xAWEA+p7EtrddjKJCq12lXqV2D0cgPAGRj
-         gPQrGeZv1jGx9DhK9ks1r8zEHEVSZfO2JaO/QMRS04DNPA6HctW05Wvkl4O+9EBI17BK
-         WJMA==
-X-Gm-Message-State: AOAM532EVqTIu0eZv4cwF29bOudRjkCpky2248omUP5mefIpoKMf2ygp
-        c+r1LvpATtc0Zy00brhAh25j6rDfMRAcnshLaO47B4BH0Zk=
-X-Google-Smtp-Source: ABdhPJy26n9tOY2lSGWcseACx3qTHNw3D1259rQFhSnb/5ICl4BFpXDAaJGLWWqV735TrNAgrG2jwha97ufK1F1gJIA=
-X-Received: by 2002:a2e:8954:: with SMTP id b20mr33489279ljk.262.1594256890278;
- Wed, 08 Jul 2020 18:08:10 -0700 (PDT)
+        Wed, 8 Jul 2020 21:11:26 -0400
+Received: from mga17.intel.com ([192.55.52.151]:8914 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgGIBLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 21:11:25 -0400
+IronPort-SDR: 94hMBoD0m+AMZ6mUz0YUTWhvx1/snZLpN9HyBOxRn5RrWduNlX1Ol6Xg+ytbRNDQcLC0QHgUo+
+ FR+sTi8F6W7Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="127992112"
+X-IronPort-AV: E=Sophos;i="5.75,330,1589266800"; 
+   d="scan'208";a="127992112"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 18:10:54 -0700
+IronPort-SDR: V/LDRUR7VdRY695O68h4SRbkp0nfu+PKiZSc936BqdNcz6qsCahAd9SUOlwBaQZ2tEDZGBs5UW
+ V0MyXKcXSylw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,330,1589266800"; 
+   d="scan'208";a="297897450"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga002.jf.intel.com with ESMTP; 08 Jul 2020 18:10:54 -0700
+Received: from fmsmsx157.amr.corp.intel.com (10.18.116.73) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 8 Jul 2020 18:10:54 -0700
+Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
+ FMSMSX157.amr.corp.intel.com (10.18.116.73) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 8 Jul 2020 18:10:53 -0700
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.43]) by
+ SHSMSX103.ccr.corp.intel.com ([169.254.4.22]) with mapi id 14.03.0439.000;
+ Thu, 9 Jul 2020 09:10:50 +0800
+From:   "Li, Philip" <philip.li@intel.com>
+To:     lkp <lkp@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "Joerg Roedel" <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: RE: [kbuild-all] Re: [PATCH v4 4/7] iommu/vt-d: Handle non-page
+ aligned address
+Thread-Topic: [kbuild-all] Re: [PATCH v4 4/7] iommu/vt-d: Handle non-page
+ aligned address
+Thread-Index: AQHWVGM7alDg6pQwY02mLjQJxnTgwqj+cXsg
+Date:   Thu, 9 Jul 2020 01:10:49 +0000
+Message-ID: <831EE4E5E37DCC428EB295A351E66249527796C8@shsmsx102.ccr.corp.intel.com>
+References: <1594080774-33413-5-git-send-email-jacob.jun.pan@linux.intel.com>
+ <202007072152.EVgFqx18%lkp@intel.com>
+In-Reply-To: <202007072152.EVgFqx18%lkp@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.5.1.3
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200703065420.3544269-1-daeho43@gmail.com> <20200703141359.GA2953162@kroah.com>
- <CACOAw_yweR--34vBXBV07xEGxGhO2r9o_XYVw6h9dMP=C6zp5Q@mail.gmail.com> <20200708100527.GA448589@kroah.com>
-In-Reply-To: <20200708100527.GA448589@kroah.com>
-From:   Daeho Jeong <daeho43@gmail.com>
-Date:   Thu, 9 Jul 2020 10:07:59 +0900
-Message-ID: <CACOAw_zKK7oD+w2R-0OQGFvS5EUvWWTmyWvdTJZAqrLxHH1w5Q@mail.gmail.com>
-Subject: Re: [PATCH v3] f2fs: add symbolic link to kobject in sysfs
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I thought it's working for our system. But as you said, it might be
-not true for others. I got your point. Partition label would be a
-great idea for us.
+> Subject: [kbuild-all] Re: [PATCH v4 4/7] iommu/vt-d: Handle non-page aligned
+> address
+> 
+> Hi Jacob,
+> 
+> Thank you for the patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on iommu/next]
+> [also build test WARNING on linux/master linus/master v5.8-rc4 next-20200707]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use  as documented in
+> https://git-scm.com/docs/git-format-patch]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Jacob-Pan/iommu-vt-d-Misc-
+> tweaks-and-fixes-for-vSVA/20200707-081026
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
+> config: x86_64-randconfig-m031-20200707 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+Kindly ignore this, which is related to [-Wtype-limits], and is under
+discussion to move such warning from W=1 to W=2 as it may not
+suitable to fix which can hurt code readability.
 
-Thank you for your comment!
+Refer to https://lore.kernel.org/lkml/CAHk-=wiKCXEWKJ9dWUimGbrVRo_N2RosESUw8E7m9AEtyZcu=w@mail.gmail.com/
+for the discussion.
 
-2020=EB=85=84 7=EC=9B=94 8=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 7:05, Gr=
-eg KH <gregkh@linuxfoundation.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Mon, Jul 06, 2020 at 08:47:07AM +0900, Daeho Jeong wrote:
-> > > No Documentation/ABI/ entry for your new sysfs file/link?
-> >
-> > This is for adding a symbolic link to a pre-existed
-> > /sys/fs/f2fs/<disk> directory and it means /sys/fs/f2fs/<mount> points
-> > to /sys/fs/f2fs/<disk>. I already added the description of this in
-> > Documentation/filesystems/f2fs.rst.
->
-> Ok, but that's not the standard location for sysfs file documentation.
->
-> > > And what does this help with?
-> >
-> > Some system daemons in Android access with the pre-defined sysfs entry
-> > name in the json file. So whenever the project changes and the
-> > partition layout is changed, we have to follow up the changes and
-> > modify /sys/fs/f2fs/<disk> name in the json file accordingly.
->
-> That's what partition names are for, you should never depend on a
-> "random number".
->
-> > This will help them access all the f2fs sysfs entries consistently
-> > without requiring to know those changes.
->
-> No, please use a partition name, that is the only way to always know you
-> are mounting the correct partition.  You have created a random number
-> here that might, or might not, change between boots depending on the
-> order of the filesystem being mounted.  It is not persistant or
-> deterministic at all, please do not treat it as such.
->
-> > > If it's really needed, why don't we do this for all filesystem types?
-> >
-> > This is for the daemon to change the mode of only F2FS with the power
-> > hint of Android.
->
-> Again, the point is that a filesystem type is not unique, this, if
-> really really needed, should be an attribute for ALL filesystem types,
-> f2fs is not special here at all.
->
-> Please do not rely on this number ever being the same across boots,
-> because your code is such that you can not guarantee that.
->
-> And again, if you really want to know the partition you are mounting
-> really is the partition you think you are mounting, use the partition
-> label name, that is what it is there for, and is why we have been
-> relying on that for decades.  A new special per-filesystem-attribute
-> that is semi-random is not the correct solution for the problem you are
-> describing as far as I can determine.
->
-> thanks,
->
-> greg k-h
+
+> 
+>    In file included from include/linux/string.h:6,
+>                     from include/linux/uuid.h:12,
+>                     from include/linux/mod_devicetable.h:13,
+>                     from include/linux/pci.h:27,
+>                     from drivers/iommu/intel/dmar.c:19:
+>    drivers/iommu/intel/dmar.c: In function 'qi_flush_dev_iotlb_pasid':
+>    include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is
+> always false [-Wtype-limits]
+>       26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+>          |                            ^
+>    include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
+>       58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) :
+> __trace_if_value(cond))
+>          |                                                    ^~~~
+> >> drivers/iommu/intel/dmar.c:1459:2: note: in expansion of macro 'if'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |  ^~
+>    include/linux/bits.h:25:3: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+>       25 |  (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+>          |   ^~~~~~~~~~~~~~~~~
+>    include/linux/bits.h:45:3: note: in expansion of macro
+> 'GENMASK_INPUT_CHECK'
+>       45 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+>          |   ^~~~~~~~~~~~~~~~~~~
+>    drivers/iommu/intel/dmar.c:1459:13: note: in expansion of macro
+> 'GENMASK_ULL'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |             ^~~~~~~~~~~
+>    include/linux/bits.h:26:40: warning: comparison of unsigned expression < 0 is
+> always false [-Wtype-limits]
+>       26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+>          |                                        ^
+>    include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
+>       58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) :
+> __trace_if_value(cond))
+>          |                                                    ^~~~
+> >> drivers/iommu/intel/dmar.c:1459:2: note: in expansion of macro 'if'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |  ^~
+>    include/linux/bits.h:25:3: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+>       25 |  (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+>          |   ^~~~~~~~~~~~~~~~~
+>    include/linux/bits.h:45:3: note: in expansion of macro
+> 'GENMASK_INPUT_CHECK'
+>       45 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+>          |   ^~~~~~~~~~~~~~~~~~~
+>    drivers/iommu/intel/dmar.c:1459:13: note: in expansion of macro
+> 'GENMASK_ULL'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |             ^~~~~~~~~~~
+>    include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is
+> always false [-Wtype-limits]
+>       26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+>          |                            ^
+>    include/linux/compiler.h:58:61: note: in definition of macro '__trace_if_var'
+>       58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) :
+> __trace_if_value(cond))
+>          |                                                             ^~~~
+> >> drivers/iommu/intel/dmar.c:1459:2: note: in expansion of macro 'if'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |  ^~
+>    include/linux/bits.h:25:3: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+>       25 |  (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+>          |   ^~~~~~~~~~~~~~~~~
+>    include/linux/bits.h:45:3: note: in expansion of macro
+> 'GENMASK_INPUT_CHECK'
+>       45 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+>          |   ^~~~~~~~~~~~~~~~~~~
+>    drivers/iommu/intel/dmar.c:1459:13: note: in expansion of macro
+> 'GENMASK_ULL'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |             ^~~~~~~~~~~
+>    include/linux/bits.h:26:40: warning: comparison of unsigned expression < 0 is
+> always false [-Wtype-limits]
+>       26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+>          |                                        ^
+>    include/linux/compiler.h:58:61: note: in definition of macro '__trace_if_var'
+>       58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) :
+> __trace_if_value(cond))
+>          |                                                             ^~~~
+> >> drivers/iommu/intel/dmar.c:1459:2: note: in expansion of macro 'if'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |  ^~
+>    include/linux/bits.h:25:3: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+>       25 |  (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+>          |   ^~~~~~~~~~~~~~~~~
+>    include/linux/bits.h:45:3: note: in expansion of macro
+> 'GENMASK_INPUT_CHECK'
+>       45 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+>          |   ^~~~~~~~~~~~~~~~~~~
+>    drivers/iommu/intel/dmar.c:1459:13: note: in expansion of macro
+> 'GENMASK_ULL'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |             ^~~~~~~~~~~
+>    include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is
+> always false [-Wtype-limits]
+>       26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+>          |                            ^
+>    include/linux/compiler.h:69:3: note: in definition of macro '__trace_if_value'
+>       69 |  (cond) ?     \
+>          |   ^~~~
+>    include/linux/compiler.h:56:28: note: in expansion of macro '__trace_if_var'
+>       56 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
+>          |                            ^~~~~~~~~~~~~~
+> >> drivers/iommu/intel/dmar.c:1459:2: note: in expansion of macro 'if'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |  ^~
+>    include/linux/bits.h:25:3: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+>       25 |  (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+>          |   ^~~~~~~~~~~~~~~~~
+>    include/linux/bits.h:45:3: note: in expansion of macro
+> 'GENMASK_INPUT_CHECK'
+>       45 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+>          |   ^~~~~~~~~~~~~~~~~~~
+>    drivers/iommu/intel/dmar.c:1459:13: note: in expansion of macro
+> 'GENMASK_ULL'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |             ^~~~~~~~~~~
+>    include/linux/bits.h:26:40: warning: comparison of unsigned expression < 0 is
+> always false [-Wtype-limits]
+>       26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+>          |                                        ^
+>    include/linux/compiler.h:69:3: note: in definition of macro '__trace_if_value'
+>       69 |  (cond) ?     \
+>          |   ^~~~
+>    include/linux/compiler.h:56:28: note: in expansion of macro '__trace_if_var'
+>       56 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
+>          |                            ^~~~~~~~~~~~~~
+> >> drivers/iommu/intel/dmar.c:1459:2: note: in expansion of macro 'if'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |  ^~
+>    include/linux/bits.h:25:3: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+>       25 |  (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+>          |   ^~~~~~~~~~~~~~~~~
+>    include/linux/bits.h:45:3: note: in expansion of macro
+> 'GENMASK_INPUT_CHECK'
+>       45 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+>          |   ^~~~~~~~~~~~~~~~~~~
+>    drivers/iommu/intel/dmar.c:1459:13: note: in expansion of macro
+> 'GENMASK_ULL'
+>     1459 |  if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>          |             ^~~~~~~~~~~
+> 
+> vim +/if +1459 drivers/iommu/intel/dmar.c
+> 
+>   1438
+>   1439	/* PASID-based device IOTLB Invalidate */
+>   1440	void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16
+> pfsid,
+>   1441				      u32 pasid,  u16 qdep, u64 addr, unsigned int
+> size_order)
+>   1442	{
+>   1443		unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size_order -
+> 1);
+>   1444		struct qi_desc desc = {.qw1 = 0, .qw2 = 0, .qw3 = 0};
+>   1445
+>   1446		desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) |
+> QI_DEV_EIOTLB_SID(sid) |
+>   1447			QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
+>   1448			QI_DEV_IOTLB_PFSID(pfsid);
+>   1449
+>   1450		/*
+>   1451		 * If S bit is 0, we only flush a single page. If S bit is set,
+>   1452		 * The least significant zero bit indicates the invalidation address
+>   1453		 * range. VT-d spec 6.5.2.6.
+>   1454		 * e.g. address bit 12[0] indicates 8KB, 13[0] indicates 16KB.
+>   1455		 * size order = 0 is PAGE_SIZE 4KB
+>   1456		 * Max Invs Pending (MIP) is set to 0 for now until we have DIT in
+>   1457		 * ECAP.
+>   1458		 */
+> > 1459		if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
+>   1460			pr_warn_ratelimited("Invalidate non-aligned address %llx,
+> order %d\n", addr, size_order);
+>   1461
+>   1462		/* Take page address */
+>   1463		desc.qw1 = QI_DEV_EIOTLB_ADDR(addr);
+>   1464
+>   1465		if (size_order) {
+>   1466			/*
+>   1467			 * Existing 0s in address below size_order may be the
+> least
+>   1468			 * significant bit, we must set them to 1s to avoid having
+>   1469			 * smaller size than desired.
+>   1470			 */
+>   1471			desc.qw1 |= GENMASK_ULL(size_order +
+> VTD_PAGE_SHIFT,
+>   1472						VTD_PAGE_SHIFT);
+>   1473			/* Clear size_order bit to indicate size */
+>   1474			desc.qw1 &= ~mask;
+>   1475			/* Set the S bit to indicate flushing more than 1 page */
+>   1476			desc.qw1 |= QI_DEV_EIOTLB_SIZE;
+>   1477		}
+>   1478
+>   1479		qi_submit_sync(iommu, &desc, 1, 0);
+>   1480	}
+>   1481
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
