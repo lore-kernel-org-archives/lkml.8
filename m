@@ -2,90 +2,144 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF0FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC13320674
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0A820708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:35:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="VArBQFlZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgGIV3x (ORCPT
+        id S1726324AbgGIVfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:29:53 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:35872 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgGIV3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:29:53 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 1EB38BC0D1;
-        Thu,  9 Jul 2020 21:29:49 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     isely@pobox.com, mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] PVRUSB2 VIDEO4LINUX DRIVER: Replace HTTP links with HTTPS ones
-Date:   Thu,  9 Jul 2020 23:29:43 +0200
-Message-Id: <20200709212943.27437-1-grandmaster@al2klimov.de>
+        Thu, 9 Jul 2020 17:35:41 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:42201 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgGIVfk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 17:35:40 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EED8122F2E;
+        Thu,  9 Jul 2020 23:35:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1594330537;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/fRtwBstImdotDOxHKd2z9e1Ho9oc23EWAw+uHbrtGA=;
+        b=VArBQFlZ7I2NoYt4VThQJJRyciBm3FOc5gdMD1nvhNd6Z4J4HOkMrqcctz6z+Tjjncpl/J
+        hp+P766sd2ppI/vZequXgGRqs55EPTkTlkZnQ9VppE3fDjWyyONOjItbThjrV1Or4vwdiW
+        1f6qsJmBwtK1C9G47OpWZKpItxPHmTg=
+From:   Michael Walle <michael@walle.cc>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Michael Walle <michael@walle.cc>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Heiko Thiery <heiko.thiery@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: [PATCH net-next v6 0/4] net: enetc: remove bootloader dependency
+Date:   Thu,  9 Jul 2020 23:35:22 +0200
+Message-Id: <20200709213526.21972-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+This is a resend [now a new v6] of the series because the conversion to the
+phylink interface will likely take longer:
+https://lore.kernel.org/netdev/CA+h21hpBodyY8CtNH2ktRdc2FqPi=Fjp94=VVZvzSVbnvnfKVg@mail.gmail.com/
+Also the discussion in the v3 resend doesn't look like it will be resolved
+soon :/
+https://lore.kernel.org/netdev/20200701213433.9217-1-michael@walle.cc/
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Unfortunately, we have boards in the wild with a bootloader which doesn't
+set the PCS up correctly. Thus I'd really see this patches picked up as an
+intermediate step until the phylink conversion is ready. Vladimir Oltean
+already offered to convert enetc to phylink when he converts the felix to
+phylink. After this series the PCS setup of the enetc looks almost the same
+as the current felix setup. Thus conversion should be easy.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+These patches were picked from the following series:
+https://lore.kernel.org/netdev/1567779344-30965-1-git-send-email-claudiu.manoil@nxp.com/
+They have never been resent. I've picked them up, addressed Andrews
+comments, fixed some more bugs and asked Claudiu if I can keep their SOB
+tags; he agreed. I've tested this on our board which happens to have a
+bootloader which doesn't do the enetc setup in all cases. Though, only
+SGMII mode was tested.
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+changes since v5:
+ - fixed pcs->autoneg_complete and pcs->link assignment. Thanks Vladimir.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+changes since v4:
+ - moved (and renamed) the USXGMII constants to include/uapi/linux/mdio.h.
+   Suggested by Russell King.
 
- If you apply the patch, please let me know.
+changes since v3:
+ - rebased to latest net-next where devm_mdiobus_free() was removed.
+   replace it by mdiobus_free(). The internal MDIO bus is optional, if
+   there is any error, we try to run with the bootloader default PCS
+   settings, thus in the error case, we need to free the mdiobus.
 
+changes since v2:
+ - removed SOBs from "net: enetc: Initialize SerDes for SGMII and USXGMII
+   protocols" because almost everything has changed.
+ - get a phy_device for the internal PCS PHY so we can use the phy_
+   functions instead of raw mdiobus writes
+ - reuse macros already defined in fsl_mdio.h, move missing bits from
+   felix to fsl_mdio.h, because they share the same PCS PHY building
+   block
+ - added 2500BaseX mode (based on felix init routine)
+ - changed xgmii mode to usxgmii mode, because it is actually USXGMII and
+   felix does the same.
+ - fixed devad, which is 0x1f (MMD_VEND2)
 
- Documentation/driver-api/media/drivers/pvrusb2.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+changes since v1:
+ - mdiobus id is '"imdio-%s", dev_name(dev)' because the plain dev_name()
+   is used by the emdio.
+ - use mdiobus_write() instead of imdio->write(imdio, ..), since this is
+   already a full featured mdiobus
+ - set phy_mask to ~0 to avoid scanning the bus
+ - use phy_interface_mode_is_rgmii(phy_mode) to also include the RGMII
+   modes with pad delays.
+ - move enetc_imdio_init() to enetc_pf.c, there shouldn't be any other
+   users, should it?
+ - renamed serdes to SerDes
+ - printing the error code of mdiobus_register() in the error path
+ - call mdiobus_unregister() on _remove()
+ - call devm_mdiobus_free() if mdiobus_register() fails, since an
+   error is not fatal
 
-diff --git a/Documentation/driver-api/media/drivers/pvrusb2.rst b/Documentation/driver-api/media/drivers/pvrusb2.rst
-index 83bfaa531ea8..cbd9359c247a 100644
---- a/Documentation/driver-api/media/drivers/pvrusb2.rst
-+++ b/Documentation/driver-api/media/drivers/pvrusb2.rst
-@@ -20,7 +20,7 @@ last known snapshot and evolved the driver to the state it is in
- here.
- 
- More information on this driver can be found at:
--http://www.isely.net/pvrusb2.html
-+https://www.isely.net/pvrusb2.html
- 
- 
- This driver has a strong separation of layers.  They are very
+Alex Marginean (1):
+  net: enetc: Use DT protocol information to set up the ports
+
+Michael Walle (3):
+  net: phy: add USXGMII link partner ability constants
+  net: dsa: felix: (re)use already existing constants
+  net: enetc: Initialize SerDes for SGMII and USXGMII protocols
+
+ drivers/net/dsa/ocelot/felix_vsc9959.c        |  45 ++---
+ .../net/ethernet/freescale/enetc/enetc_hw.h   |   3 +
+ .../net/ethernet/freescale/enetc/enetc_pf.c   | 188 +++++++++++++++---
+ .../net/ethernet/freescale/enetc/enetc_pf.h   |   5 +
+ include/uapi/linux/mdio.h                     |  26 +++
+ 5 files changed, 210 insertions(+), 57 deletions(-)
+
 -- 
-2.27.0
+2.20.1
 
