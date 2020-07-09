@@ -2,85 +2,138 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E76C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D86E2078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CDF120836
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594322246;
+	bh=yzF+W3NuN5vHb++Eg1LQozRb7Fnun3QKYsoWUnQhzUE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=wqVZuFhTR3H4I9a1qX2cnzoXaQO/6z0EMaXbmm4avexBGMpCE/ENtFbPdLLkPMXDv
+	 F5xTLhx/YTp4oCVXs91/1nE/Yw7VUmRAUpPIYDFS1QzP57hsYiK9eOF1g7tKZ5AStH
+	 u8TNXIirjczn4eDcnrAaF5Vm8diZbK4F1ShluXoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgGITQs (ORCPT
+        id S1726460AbgGITRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:16:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgGITQr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 15:16:47 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0DD4C08C5CE;
-        Thu,  9 Jul 2020 12:16:47 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 07FFBBC116;
-        Thu,  9 Jul 2020 19:16:42 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, mhiramat@kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] kprobes: Replace HTTP links with HTTPS ones
-Date:   Thu,  9 Jul 2020 21:16:36 +0200
-Message-Id: <20200709191636.26252-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200708184201.611d929ae6017c87ea98b114@kernel.org>
-References: <20200708184201.611d929ae6017c87ea98b114@kernel.org>
+        Thu, 9 Jul 2020 15:17:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbgGITRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 15:17:24 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03BF82078B;
+        Thu,  9 Jul 2020 19:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594322244;
+        bh=yzF+W3NuN5vHb++Eg1LQozRb7Fnun3QKYsoWUnQhzUE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gCdmvTrnzGIBRoy4hFgZ+BfEmqkT/cSJ/Bu1ILlPEUpcyxKfT1McFFER3/97eUY9k
+         EQU7VL7vbC1FrjAlSQenhcPoaNZfw+jqLXei6s5ihxh/sGCcOCVgOIGUEPehnnxZig
+         dFXI9Ud4J74JkiJKle4uF7vVODVTwYXy7t7GAHh4=
+Date:   Thu, 9 Jul 2020 14:17:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Berni <bernhard@turmann.eu>
+Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 208507] New: BISECTED:
+ i2c timeout loading module ddbridge with commit
+ d2345d1231d80ecbea5fb764eb43123440861462]
+Message-ID: <20200709191722.GA6054@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Bisected to Debian commit d2345d1231d8, which is a backport of the
+upstream commit b88bf6c3b6ff ("PCI: Add boot interrupt quirk mechanism
+for Xeon chipsets").
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-          If both the HTTP and HTTPS versions
-          return 200 OK and serve the same content:
-            Replace HTTP with HTTPS.
+Reporter confirmed that reverting the Debian backport from 4.19.132
+fixes the problem.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- I'd really would like to get HTTPSifying done before other tasks...
+----- Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
 
- Documentation/kprobes.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Date: Thu, 09 Jul 2020 15:01:11 +0000
+From: bugzilla-daemon@bugzilla.kernel.org
+To: bjorn@helgaas.com
+Subject: [Bug 208507] New: BISECTED: i2c timeout loading module ddbridge with
+	commit d2345d1231d80ecbea5fb764eb43123440861462
+Message-ID: <bug-208507-41252@https.bugzilla.kernel.org/>
 
-diff --git a/Documentation/kprobes.txt b/Documentation/kprobes.txt
-index 8baab8832c5b..88b4d2845b37 100644
---- a/Documentation/kprobes.txt
-+++ b/Documentation/kprobes.txt
-@@ -693,7 +693,7 @@ process. Here are sample overhead figures (in usec) for x86 architectures::
- TODO
- ====
- 
--a. SystemTap (http://sourceware.org/systemtap): Provides a simplified
-+a. SystemTap (https://sourceware.org/systemtap): Provides a simplified
-    programming interface for probe-based instrumentation.  Try it out.
- b. Kernel return probes for sparc64.
- c. Support for other architectures.
+https://bugzilla.kernel.org/show_bug.cgi?id=208507
+
+            Bug ID: 208507
+           Summary: BISECTED: i2c timeout loading module ddbridge with
+                    commit d2345d1231d80ecbea5fb764eb43123440861462
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 4.19.132
+          Hardware: x86-64
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: PCI
+          Assignee: drivers_pci@kernel-bugs.osdl.org
+          Reporter: bernhard@turmann.eu
+        Regression: Yes
+
+Created attachment 290179
+  --> https://bugzilla.kernel.org/attachment.cgi?id=290179&action=edit
+dmesg on 4.19.132
+
+OS: Debian 10.4 Buster
+CPU: Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz
+Hardware: Supermicro  Super Server
+Mainboard: Supermicro X10SDV
+DVB card: Digital Devices Cine S2 V7 Advanced DVB adapter
+
+Issue:
+=====
+Loading kernel module ddbridge fails with i2c timeouts, see attached dmesg. The
+dvb media adapter is unusable.
+This happened after Linux kernel upgrade from 4.19.98-1+deb10u1 to
+4.19.118-2+deb10u1.
+
+A git bisect based on the Debian kernel repo on branch buster identified as
+first bad commit: [1fb0eb795661ab9e697c3a053b35aa4dc3b81165] Update to
+4.19.116.
+
+Another git bisect based on upstream Linux kernel repo on branch v4.19.y
+identified as first bad commit: [d2345d1231d80ecbea5fb764eb43123440861462] PCI:
+Add boot interrupt quirk mechanism for Xeon chipsets.
+
+Other affected Debian kernel version: 5.6.14+2~bpo10+1
+I tested this version via buster-backports, because so far I was unable to
+build my own kernel from 5.6.y or even 5.7.y.
+
+Workaround:
+==========
+Reverting the mentioned commit d2345d1231d80ecbea5fb764eb43123440861462 on top
+of 4.19.132 is fixing the problem. Reverting the same commit on 4.19.118 or
+4.19.116 is also fixing the problem.
+
+It seems, I can only add one attachment now, so I will add more attachments
+later after bug is submitted.
+
+Thanks and Regards
+Berni
+
 -- 
-2.27.0
+You are receiving this mail because:
+You are watching the assignee of the bug.
 
+----- End forwarded message -----
