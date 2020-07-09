@@ -2,152 +2,85 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86A942074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB54206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evO2b+NG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VpazQpdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGIOT1 (ORCPT
+        id S1726772AbgGIOVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:19:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbgGIOT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:19:26 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE103C08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 07:19:26 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id a11so2185460ilk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 07:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yyTk6JnzuB+6AJzk46UVONqrdhWhla94soaQwotr7mY=;
-        b=evO2b+NGHqDs7esJV54GOrqtSMtDd5WZ2hvUUE9vz9LXVfkTJ+XGA/QlGaVtSvaNVY
-         YwmcMWuWFnG4c3A/P5XZW/eAbKJVHZ7ZVouLxJeR70kE+iar6oXOemB5qQMzoJ2ZnBTW
-         xEiB6wbwD6phkstnwa3JflNxb+kOT/IfEn8+OAWJcnB6AlVTPgPxhIcLe/u9aUCZkxC+
-         PIJV7E8XlQ5ULmQe6d+87Lt7lKyhbgS435egBWH1wsiM1nlAQcIw2lurz8kGLcaKD35Z
-         gu/0iPaGLNfKgiozBpxtBAECIkt2iAlRCuC7LOke0jC5M9ta8K4CXDyQKFegh5Cryf2s
-         5/Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yyTk6JnzuB+6AJzk46UVONqrdhWhla94soaQwotr7mY=;
-        b=R8q8uMMIe5wvo1fab11hip1uZ3WuZAXVyB4lmVSOupOL8Lg83fhxxr50iThCpDbbaE
-         h1gqn66G7zohm4bzLP9pVOxx46mgi/1eZuue3fahRwOrkWbNvAEOI7fqJFUPttML8Z/f
-         z8VY3vUL2nn4MHKYZwcHwkEexR6aJzi3fzJ245lGGkJjJeVsCew+CVY4J0Qf0Nf1hgJk
-         uJQ1NHpTZ85EjJVquyjL5UceBNuzKYi2GjRi2rD6p1jUWsT1caqt8jvVnwaYFCBn6odY
-         JyJXvrLUYzmTEYLlNqu0iqKOiaPUWKPIDL9/7Q3iJlHReN4NqnfYRSk4H0mN/eYeOZAF
-         YeIg==
-X-Gm-Message-State: AOAM531BE8B7iiTVpzIxBUUbFtBlUMiqS/aN5cmXo3c1DFkJKttmPKJt
-        EUXyDdLEOm1EL1vLXBo0cj/+P0+L19ZT2I+kiAA=
-X-Google-Smtp-Source: ABdhPJzlf+b1KgiUbcjVMUS0N4HWsZdJIbmumIkqsvzYa0CfQiQ7QW9DlQt/UH6FKbef1ssVDxXvYUqiurOJnPvJwiQ=
-X-Received: by 2002:a92:52:: with SMTP id 79mr43127196ila.59.1594304365847;
- Thu, 09 Jul 2020 07:19:25 -0700 (PDT)
+        Thu, 9 Jul 2020 10:21:38 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:45007 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726615AbgGIOVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 10:21:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594304497; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=mef3WUw0Xoz9/rvpec4bfeBVTOIL1IZyFuhez1uFRbg=; b=VpazQpdpbJgaj8FilqmVttcIAI3S2T6ax8e4OQdEmsbvUt/rb5hyiMRrTq4H2vaUs8Nel3zT
+ OQ3X6BH3i4rfTZ8R7I7tcN4vDS5WC6BcWvtomPI5kES/1s94yJz5EFna5R6c7VrvT4pK7rAw
+ CH79NErvQY7tGRsRm7ZP3HWgCbs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f0727d89b7f1f3df7503eb0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 14:21:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 96B5DC433CA; Thu,  9 Jul 2020 14:21:12 +0000 (UTC)
+Received: from [192.168.0.4] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EDB79C433C8;
+        Thu,  9 Jul 2020 14:21:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EDB79C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH] tty: serial: qcom-geni-serial: Drop the icc bw votes in
+ suspend for console
+To:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
+        agross@kernel.org, gregkh@linuxfoundation.org,
+        georgi.djakov@linaro.org
+Cc:     mka@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        dianders@chromium.org, swboyd@chromium.org
+References: <1594287420-24141-1-git-send-email-rnayak@codeaurora.org>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <77c0899c-ab9a-e195-cc53-5f9bf340ab0e@codeaurora.org>
+Date:   Thu, 9 Jul 2020 19:51:06 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200709140322.131320-1-peron.clem@gmail.com>
-In-Reply-To: <20200709140322.131320-1-peron.clem@gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 9 Jul 2020 16:19:14 +0200
-Message-ID: <CAJiuCcdRB-ZLepes9BuypR4pErkhiJoOqk6R1meCksuaez-7xQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/14] Add regulator devfreq support to Panfrost
-To:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594287420-24141-1-git-send-email-rnayak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Thu, 9 Jul 2020 at 16:03, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>=
- wrote:
->
-> Hi,
->
-> This serie cleans and adds regulator support to Panfrost devfreq.
-> This is mostly based on comment for the freshly introduced lima
-> devfreq.
->
-> We need to add regulator support because on Allwinner the GPU OPP
-> table defines both frequencies and voltages.
->
-> First patches [01-07] should not change the actual behavior
-> and introduce a proper panfrost_devfreq struct.
+On 7/9/2020 3:07 PM, Rajendra Nayak wrote:
+> When using the geni-serial as console, its important to be
+> able to hit the lowest possible power state in suspend,
+> even with no_console_suspend.
+> The only thing that prevents it today on platforms like the sc7180
+> is the interconnect BW votes, which we certainly don't need when
+> the system is in suspend. So in the suspend handler mark them as
+> ACTIVE_ONLY (0x3) and on resume switch them back to the ALWAYS tag (0x7)
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
 
-Just saw that some changes have been made and pushed to 5.8-rc4.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
 
-I will push a v4 up to date.
-
-Regards,
-Clement
-
-
->
-> Regards,
-> Cl=C3=A9ment
->
-> Changes since v2:
->  - Collect Alyssa Rosenzweig reviewed-by tags
->  - Fix opp_set_regulator before adding opp_table (introduce in v2)
->  - Call err_fini in case opp_add_table failed
->
-> Changes since v1:
->  - Collect Steven Price reviewed-by tags
->  - Fix spinlock comment
->  - Drop OPP clock-name path
->  - Drop device_property_test patch
->  - Add rename error labels patch
->
->
-> Cl=C3=A9ment P=C3=A9ron (14):
->   drm/panfrost: avoid static declaration
->   drm/panfrost: clean headers in devfreq
->   drm/panfrost: don't use pfdevfreq.busy_count to know if hw is idle
->   drm/panfrost: introduce panfrost_devfreq struct
->   drm/panfrost: use spinlock instead of atomic
->   drm/panfrost: properly handle error in probe
->   drm/panfrost: rename error labels in device_init
->   drm/panfrost: move devfreq_init()/fini() in device
->   drm/panfrost: dynamically alloc regulators
->   drm/panfrost: add regulators to devfreq
->   arm64: defconfig: Enable devfreq cooling device
->   arm64: dts: allwinner: h6: Add cooling map for GPU
->   [DO NOT MERGE] arm64: dts: allwinner: h6: Add GPU OPP table
->   [DO NOT MERGE] arm64: dts: allwinner: force GPU regulator to be always
->
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   1 +
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 102 ++++++++++
->  arch/arm64/configs/defconfig                  |   1 +
->  drivers/gpu/drm/panfrost/panfrost_devfreq.c   | 175 ++++++++++++------
->  drivers/gpu/drm/panfrost/panfrost_devfreq.h   |  30 ++-
->  drivers/gpu/drm/panfrost/panfrost_device.c    |  61 +++---
->  drivers/gpu/drm/panfrost/panfrost_device.h    |  14 +-
->  drivers/gpu/drm/panfrost/panfrost_drv.c       |  15 +-
->  drivers/gpu/drm/panfrost/panfrost_job.c       |  10 +-
->  9 files changed, 296 insertions(+), 113 deletions(-)
->
-> --
-> 2.25.1
->
