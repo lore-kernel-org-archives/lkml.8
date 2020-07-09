@@ -2,171 +2,113 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB459C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23425C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A64720720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:49:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594338583;
-	bh=AzXu3c72rcQmjaWFefYfgiSM/p782Co8EQspHadBs2E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qibPsxN0FDhKIvvZveKUvWgzbGydw+ufD4A6uWWavBe0Br9P/3nIyGGfpZtnqv+rr
-	 Lf+iCR+QRMaYr2ajD1F88U6zj9zRKeW7Dzh8wPPn0+asG/kmhPC0vdpBspa4ongXBx
-	 V3V+tPh/gOFgEhJdACo/UdKzolX4p4ifJjzZQ714=
+	by mail.kernel.org (Postfix) with ESMTP id 0887020720
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbgGIXtm (ORCPT
+        id S1726756AbgGIXyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:49:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgGIXtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:49:41 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D0B62070E;
-        Thu,  9 Jul 2020 23:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594338580;
-        bh=AzXu3c72rcQmjaWFefYfgiSM/p782Co8EQspHadBs2E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CZFNAlYR79C7aQjMjGPPoyc/KUEvRwf9EpYnYLiugzjAQlDJW1D6/FSz/Wx7tbmip
-         Y7cg2Zm6mLl4gOnIbsiivv0QlzXV2O1TVRb7yBIg3TvoqJw+T+ERdgY855R81jWlpo
-         5A/94AlR4UfYswXBPFy1pQp2IxPAfIY0eVtxJQSU=
-Date:   Thu, 9 Jul 2020 19:49:39 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Shilovsky <piastryyy@gmail.com>
-Cc:     Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        linux-cifs <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>
-Subject: Re: [PATCH AUTOSEL 5.7 37/53] cifs: Fix double add page to memcg
- when cifs_readpages
-Message-ID: <20200709234939.GD2722994@sasha-vm>
-References: <20200702012202.2700645-1-sashal@kernel.org>
- <20200702012202.2700645-37-sashal@kernel.org>
- <CAKywueRGSriwuMGtG53i3Bm_ek_k1LMAK0fojf9++7=ar+6u8Q@mail.gmail.com>
+        Thu, 9 Jul 2020 19:54:22 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:41517 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgGIXyV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 19:54:21 -0400
+Received: by mail-il1-f199.google.com with SMTP id k6so2449825ilg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 16:54:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=pA1D2YOMFQkwPaYBnQ/rdy34gVd9ksQzg2H5D68cGj4=;
+        b=nW2k13hy8R+UHmuBhnqLAOu1lWFPPWim8xqDjJH3j0HIHtDCyvW6drOPY35N4+hJ1b
+         MkeLk7rmkqlyp1HmDJif6pcJbYsGBVc0XkRA7Yvb+8NujApCHpezpwshbtuBO+iJ5dCj
+         0XoKTWASF1kp5HjonMwm/nRe74F9fldXg1//+Jx8XS/qW4NwmxW3FGPt0Slz1+dJxUzu
+         0EQOW7UKqg8Sm0VKOvbuvD4bgPTzqlCGJsAcJ+qxpWpo6yLlXNPZYJZDiDCjn3onI9yJ
+         J+anjAEO5WWAzVGdcyZ+B7TgvqDDM8VUwRY6yMDh6fcXDGxK4J4ROdnbKMqQM3saSOkN
+         BP9Q==
+X-Gm-Message-State: AOAM533BBygYsxL+NU+Io/Vz+HeJmmaDxI87EEK+N6IjhY8iUBWHv7R1
+        7uFePC78AtsyjASckOJcv7szzhQNQBf1j7qUVQBbyEHzx5CJ
+X-Google-Smtp-Source: ABdhPJyDBO+jkuWfL+7LMleucW9jdEcd8VeOHm+EKp/lw736s7ukAPPxvJQFi0BD+kjXzh2UDSYTIBBdv5u5leLGKGilZyM1BvKn
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKywueRGSriwuMGtG53i3Bm_ek_k1LMAK0fojf9++7=ar+6u8Q@mail.gmail.com>
+X-Received: by 2002:a92:dc0f:: with SMTP id t15mr44091781iln.218.1594338859494;
+ Thu, 09 Jul 2020 16:54:19 -0700 (PDT)
+Date:   Thu, 09 Jul 2020 16:54:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005f350105aa0af108@google.com>
+Subject: WARNING in __kernel_write
+From:   syzbot <syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 09:08:45AM -0700, Pavel Shilovsky wrote:
->ср, 1 июл. 2020 г. в 18:35, Sasha Levin <sashal@kernel.org>:
->>
->> From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
->>
->> [ Upstream commit 95a3d8f3af9b0d63b43f221b630beaab9739d13a ]
->>
->> When xfstests generic/451, there is an BUG at mm/memcontrol.c:
->>   page:ffffea000560f2c0 refcount:2 mapcount:0 mapping:000000008544e0ea
->>        index:0xf
->>   mapping->aops:cifs_addr_ops dentry name:"tst-aio-dio-cycle-write.451"
->>   flags: 0x2fffff80000001(locked)
->>   raw: 002fffff80000001 ffffc90002023c50 ffffea0005280088 ffff88815cda0210
->>   raw: 000000000000000f 0000000000000000 00000002ffffffff ffff88817287d000
->>   page dumped because: VM_BUG_ON_PAGE(page->mem_cgroup)
->>   page->mem_cgroup:ffff88817287d000
->>   ------------[ cut here ]------------
->>   kernel BUG at mm/memcontrol.c:2659!
->>   invalid opcode: 0000 [#1] SMP
->>   CPU: 2 PID: 2038 Comm: xfs_io Not tainted 5.8.0-rc1 #44
->>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_
->>     073836-buildvm-ppc64le-16.ppc.4
->>   RIP: 0010:commit_charge+0x35/0x50
->>   Code: 0d 48 83 05 54 b2 02 05 01 48 89 77 38 c3 48 c7
->>         c6 78 4a ea ba 48 83 05 38 b2 02 05 01 e8 63 0d9
->>   RSP: 0018:ffffc90002023a50 EFLAGS: 00010202
->>   RAX: 0000000000000000 RBX: ffff88817287d000 RCX: 0000000000000000
->>   RDX: 0000000000000000 RSI: ffff88817ac97ea0 RDI: ffff88817ac97ea0
->>   RBP: ffffea000560f2c0 R08: 0000000000000203 R09: 0000000000000005
->>   R10: 0000000000000030 R11: ffffc900020237a8 R12: 0000000000000000
->>   R13: 0000000000000001 R14: 0000000000000001 R15: ffff88815a1272c0
->>   FS:  00007f5071ab0800(0000) GS:ffff88817ac80000(0000) knlGS:0000000000000000
->>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>   CR2: 000055efcd5ca000 CR3: 000000015d312000 CR4: 00000000000006e0
->>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>   Call Trace:
->>    mem_cgroup_charge+0x166/0x4f0
->>    __add_to_page_cache_locked+0x4a9/0x710
->>    add_to_page_cache_locked+0x15/0x20
->>    cifs_readpages+0x217/0x1270
->>    read_pages+0x29a/0x670
->>    page_cache_readahead_unbounded+0x24f/0x390
->>    __do_page_cache_readahead+0x3f/0x60
->>    ondemand_readahead+0x1f1/0x470
->>    page_cache_async_readahead+0x14c/0x170
->>    generic_file_buffered_read+0x5df/0x1100
->>    generic_file_read_iter+0x10c/0x1d0
->>    cifs_strict_readv+0x139/0x170
->>    new_sync_read+0x164/0x250
->>    __vfs_read+0x39/0x60
->>    vfs_read+0xb5/0x1e0
->>    ksys_pread64+0x85/0xf0
->>    __x64_sys_pread64+0x22/0x30
->>    do_syscall_64+0x69/0x150
->>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>   RIP: 0033:0x7f5071fcb1af
->>   Code: Bad RIP value.
->>   RSP: 002b:00007ffde2cdb8e0 EFLAGS: 00000293 ORIG_RAX: 0000000000000011
->>   RAX: ffffffffffffffda RBX: 00007ffde2cdb990 RCX: 00007f5071fcb1af
->>   RDX: 0000000000001000 RSI: 000055efcd5ca000 RDI: 0000000000000003
->>   RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
->>   R10: 0000000000001000 R11: 0000000000000293 R12: 0000000000000001
->>   R13: 000000000009f000 R14: 0000000000000000 R15: 0000000000001000
->>   Modules linked in:
->>   ---[ end trace 725fa14a3e1af65c ]---
->>
->> Since commit 3fea5a499d57 ("mm: memcontrol: convert page cache to a new
->> mem_cgroup_charge() API") not cancel the page charge, the pages maybe
->> double add to pagecache:
->> thread1                       | thread2
->> cifs_readpages
->> readpages_get_pages
->>  add_to_page_cache_locked(head,index=n)=0
->>                               | readpages_get_pages
->>                               | add_to_page_cache_locked(head,index=n+1)=0
->>  add_to_page_cache_locked(head, index=n+1)=-EEXIST
->>  then, will next loop with list head page's
->>  index=n+1 and the page->mapping not NULL
->> readpages_get_pages
->> add_to_page_cache_locked(head, index=n+1)
->>  commit_charge
->>   VM_BUG_ON_PAGE
->>
->> So, we should not do the next loop when any page add to page cache
->> failed.
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
->> Signed-off-by: Steve French <stfrench@microsoft.com>
->> Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->Hi Sasha,
->
->The patch description mentions the commit 3fea5a499d57 that changed
->the behavior and was introduced in v5.8-rc1. I noticed that you are
->targeting this patch for 4.9, 4.14, 4.19, 5.4 and 5.7 stable branches.
->Are you going to backport the commit 3fea5a499d57 as well?
+Hello,
 
-Nope, I'll drop this one. Thanks!
+syzbot found the following crash on:
 
--- 
-Thanks,
-Sasha
+HEAD commit:    89032636 Add linux-next specific files for 20200708
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15c4af2f100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=64a250ebabc6c320
+dashboard link: https://syzkaller.appspot.com/bug?extid=e6f77e16ff68b2434a2c
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15898b97100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14463a47100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 12 at fs/read_write.c:528 __kernel_write+0x828/0x9b0 fs/read_write.c:528
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc4-next-20200708-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events p9_write_work
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x45 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x13/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:542
+RIP: 0010:__kernel_write+0x828/0x9b0 fs/read_write.c:528
+Code: 01 89 c6 89 04 24 e8 d7 90 b5 ff 8b 04 24 85 c0 0f 84 c7 fa ff ff e9 b9 fa ff ff e8 42 94 b5 ff e9 e9 fe ff ff e8 38 94 b5 ff <0f> 0b 49 c7 c5 f7 ff ff ff e9 0e ff ff ff 4c 89 f7 e8 d2 48 f5 ff
+RSP: 0018:ffffc90000d2fb18 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 1ffff920001a5f67 RCX: ffffffff81be629e
+RDX: ffff8880a95f4300 RSI: ffffffff81be69f8 RDI: 0000000000000005
+RBP: ffff888094301158 R08: 0000000000000001 R09: ffff8880a95f4bd0
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff888094301040
+R13: 0000000000000000 R14: ffff8880943010c4 R15: 0000000000080001
+ kernel_write fs/read_write.c:569 [inline]
+ kernel_write+0xe2/0x200 fs/read_write.c:559
+ p9_fd_write net/9p/trans_fd.c:424 [inline]
+ p9_write_work+0x25e/0xca0 net/9p/trans_fd.c:475
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
