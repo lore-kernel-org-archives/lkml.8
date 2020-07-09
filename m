@@ -2,166 +2,137 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E93D92067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B67207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UyLQq+5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgGII7T (ORCPT
+        id S1726291AbgGIJBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:59:19 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:41734 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgGII7T (ORCPT
+        Thu, 9 Jul 2020 05:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52294 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbgGIJBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:59:19 -0400
-Received: by mail-io1-f69.google.com with SMTP id n3so856735iob.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 01:59:17 -0700 (PDT)
+        Thu, 9 Jul 2020 05:01:43 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B5FC061A0B
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 02:01:43 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id k6so1394364ili.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 02:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=55x0UBIPkk2Krfx/KXzHrVaxKqeYZGh5rVc+isvPSjw=;
+        b=UyLQq+5Zcvypue6+lOGoyOhePqCq/gCp2ZErd7RoeDuVOS95ZAqcftovuOcrSr/K+a
+         3vYLElrqp6O/jDNnk+q+ULcdqHsryivU4lMXiMWwAHN6mgiXK8yL0R1wMOmB7ofTvn3k
+         qF0C9ydQZqjToD7Gt3BAEpppprHu0kqXTvepj/BQAQlAJnywrsGyZUahpWSfVhuJ6PHa
+         wiegYy6r2MynMfaLhy0Ea9KENHP9qwuqrKcqHHDFB7WWhtoEb5gP+Ti5hDf42ViH1WaT
+         D6wJqIrHkywfxvtbSK7GNH5ISxwQKoM9+dP87tHzsDnFcqNuqShrUqqlbaPQVWfGlvgG
+         db+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=LGqLODc4HGQ5xzNFpLq0IH0ZYBFoMrEw5ZuA1wUgMck=;
-        b=QD3jwqMyrJDtGQtfAAI/TmSeZlzetr8p5eiBcLObiyskKqfMsqClwWsL7q8KFqS+jM
-         V7ZMyoAb8VRScwiVFTlZK1U79RXc1lZF4PpKlG+3KWFgjO0JRILBoZ8ISZ+fi37RW2Gf
-         +rZlWo8705FOMzDyb+3K/E/gGcFdpnFX7t2wuDzy/y4oeFAzsOX17m3nzm2waJooi/gD
-         /+vgjmJoGFYZHHdT3kBGX7ZcI8m0oVCUdE4OIf1UZGaLrKetz5ATWOD4NV9Q0MXCByqa
-         LO4bZq0yYkM/t+W+Fe+jGKMmGvJgFzI8D4epMvLB7+F38UKCKpR8vIACeilHSLs5FKEH
-         lf2Q==
-X-Gm-Message-State: AOAM530fAlL2sHF5ke360eAYNfpuwdIG0r3BIV2Ap/q8g1Z062AxXdlH
-        w2qkZhtGihE7QHp/FPQ2FEhtzEzmaa47QFhjnKUjADiOViJq
-X-Google-Smtp-Source: ABdhPJxNHGo6m3Iiw/201KlTC4qcTluFpu2sbu9PyrxOirwyMtJkIfnAsi4iRRiseiCwLotvOU6IAZ+dGd2QXzyR7SLNa/LeTirm
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=55x0UBIPkk2Krfx/KXzHrVaxKqeYZGh5rVc+isvPSjw=;
+        b=qYqqMyuysg0ulOtGPG74oJi9iuXNdtELnscXFWSFfIELpfoD8oZD6fhvwBIcgxazHN
+         kBTlarW8+2sQ87zmal8eJOiPe32T6rkjPR0jNl5leY3+2ex9NaSDHlRi68L0+mcZYdCS
+         amefrxTv7aFAvGm978ZQuPue3GVsy/SWECxOi99SjEMOXrvQGjhbcjOIHaWPv/2tSk7l
+         xxPERRFxxEgzRSWuD3ymeu41ApnIFdBDgkJ9wfF2oxV6k7gY62RWo94JdissS9OsHuaX
+         /merI7oAFeP60Im5pgXoR5SCRw2EQpz/71WmkEjnnLct7CCgbyf7zUr6vGTszsx2/6bY
+         Hcow==
+X-Gm-Message-State: AOAM530gjrapCRY+ekci6YOgJogzZoaMpQnn+adiVESmW92yaQmFGtOP
+        jPOd11i1GTHu9gEDADdHSrA/npAexqz9/tnpz70=
+X-Google-Smtp-Source: ABdhPJz6lyL1M32mjf3JxgiI/8RtiIq0VAeksFU6EQslv8TA2NBsE8hOamkfocpra4lgbUe+eVHGSGkkJYbAUnpueL4=
+X-Received: by 2002:a92:404e:: with SMTP id n75mr5224682ila.203.1594285302929;
+ Thu, 09 Jul 2020 02:01:42 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:4409:: with SMTP id r9mr40481641ioa.158.1594285157558;
- Thu, 09 Jul 2020 01:59:17 -0700 (PDT)
-Date:   Thu, 09 Jul 2020 01:59:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007cad8705a9fe70b6@google.com>
-Subject: KASAN: use-after-free Read in delete_and_unsubscribe_port (2)
-From:   syzbot <syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com>
-To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com
+References: <20200709062603.18480-1-mhocko@kernel.org> <20200709062603.18480-2-mhocko@kernel.org>
+ <CALOAHbAezHHN58cn0unLNbOjHJyYW=zhzQxpQD8_rD4O7qmYRQ@mail.gmail.com> <20200709081813.GD19160@dhcp22.suse.cz>
+In-Reply-To: <20200709081813.GD19160@dhcp22.suse.cz>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 9 Jul 2020 17:01:06 +0800
+Message-ID: <CALOAHbDZLM4bfGi7EQDzE6FabBinnZJ7yF+uZADUgx2S_pfg1w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] doc, mm: clarify /proc/<pid>/oom_score value range
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Jul 9, 2020 at 4:18 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 09-07-20 15:41:11, Yafang Shao wrote:
+> > On Thu, Jul 9, 2020 at 2:26 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > From: Michal Hocko <mhocko@suse.com>
+> > >
+> > > The exported value includes oom_score_adj so the range is no [0, 1000]
+> > > as described in the previous section but rather [0, 2000]. Mention that
+> > > fact explicitly.
+> > >
+> > > Signed-off-by: Michal Hocko <mhocko@suse.com>
+> > > ---
+> > >  Documentation/filesystems/proc.rst | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+> > > index 8e3b5dffcfa8..78a0dec323a3 100644
+> > > --- a/Documentation/filesystems/proc.rst
+> > > +++ b/Documentation/filesystems/proc.rst
+> > > @@ -1673,6 +1673,9 @@ requires CAP_SYS_RESOURCE.
+> > >  3.2 /proc/<pid>/oom_score - Display current oom-killer score
+> > >  -------------------------------------------------------------
+> > >
+> > > +Please note that the exported value includes oom_score_adj so it is effectively
+> > > +in range [0,2000].
+> > > +
+> >
+> > [0, 2000] may be not a proper range, see my reply in another thread.[1]
+> > As this value hasn't been documented before and nobody notices that, I
+> > think there might be no user really care about it before.
+> > So we should discuss the proper range if we really think the user will
+> > care about this value.
+>
+> Even if we decide the range should change, I do not really assume this
+> will happen, it is good to have the existing behavior clarified.
+>
 
-syzbot found the following crash on:
+But the existing behavior is not defined in the kernel documentation
+before, so I don't think that the user has a clear understanding of
+the existing behavior.
+The way to use the result of proc_oom_score is to compare which
+processes will be killed first by the OOM killer, IOW, the user should
+always use it to compare different processes. For example,
 
-HEAD commit:    7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11561e7b100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
-dashboard link: https://syzkaller.appspot.com/bug?extid=1a54a94bd32716796edd
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-userspace arch: i386
+if proc_oom_score(process_a) > proc_oom_score(process_b)
+then
+     process_a will be killed before process_b
+fi
 
-Unfortunately, I don't have any reproducer for this crash yet.
+And then  the user will "Use it together with
+/proc/<pid>/oom_score_adj to tune which
+ process should be killed in an out-of-memory situation."
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com
+That means what the user really cares about is the relative value, and
+they will not care about the range or the absolute value.
 
-==================================================================
-BUG: KASAN: use-after-free in list_empty include/linux/list.h:282 [inline]
-BUG: KASAN: use-after-free in delete_and_unsubscribe_port+0x420/0x4f0 sound/core/seq/seq_ports.c:530
-Read of size 8 at addr ffff88809533de50 by task syz-executor.0/29034
-
-CPU: 0 PID: 29034 Comm: syz-executor.0 Not tainted 5.8.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- list_empty include/linux/list.h:282 [inline]
- delete_and_unsubscribe_port+0x420/0x4f0 sound/core/seq/seq_ports.c:530
- snd_seq_port_disconnect+0x433/0x5c0 sound/core/seq/seq_ports.c:610
- snd_seq_ioctl_unsubscribe_port+0x1fc/0x400 sound/core/seq/seq_clientmgr.c:1525
- snd_seq_ioctl+0x202/0x3e0 sound/core/seq/seq_clientmgr.c:2157
- snd_seq_ioctl_compat+0xdc/0x2d0 sound/core/seq/seq_compat.c:109
- __do_compat_sys_ioctl+0x1d3/0x230 fs/ioctl.c:847
- do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:403
- __do_fast_syscall_32 arch/x86/entry/common.c:448 [inline]
- do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:474
- entry_SYSENTER_compat+0x6d/0x7c arch/x86/entry/entry_64_compat.S:138
-RIP: 0023:0xf7ff0569
-Code: Bad RIP value.
-RSP: 002b:00000000f5deb0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000040505331
-RDX: 0000000020000200 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 29030:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- kmem_cache_alloc_trace+0x14f/0x2d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- snd_seq_port_connect+0x5d/0x520 sound/core/seq/seq_ports.c:553
- snd_seq_ioctl_subscribe_port+0x1fc/0x400 sound/core/seq/seq_clientmgr.c:1484
- snd_seq_ioctl+0x202/0x3e0 sound/core/seq/seq_clientmgr.c:2157
- snd_seq_ioctl_compat+0xdc/0x2d0 sound/core/seq/seq_compat.c:109
- __do_compat_sys_ioctl+0x1d3/0x230 fs/ioctl.c:847
- do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:403
- __do_fast_syscall_32 arch/x86/entry/common.c:448 [inline]
- do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:474
- entry_SYSENTER_compat+0x6d/0x7c arch/x86/entry/entry_64_compat.S:138
-
-Freed by task 29035:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- snd_seq_port_disconnect+0x4c1/0x5c0 sound/core/seq/seq_ports.c:614
- snd_seq_ioctl_unsubscribe_port+0x1fc/0x400 sound/core/seq/seq_clientmgr.c:1525
- snd_seq_ioctl+0x202/0x3e0 sound/core/seq/seq_clientmgr.c:2157
- snd_seq_ioctl_compat+0xdc/0x2d0 sound/core/seq/seq_compat.c:109
- __do_compat_sys_ioctl+0x1d3/0x230 fs/ioctl.c:847
- do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:403
- __do_fast_syscall_32 arch/x86/entry/common.c:448 [inline]
- do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:474
- entry_SYSENTER_compat+0x6d/0x7c arch/x86/entry/entry_64_compat.S:138
-
-The buggy address belongs to the object at ffff88809533de00
- which belongs to the cache kmalloc-128 of size 128
-The buggy address is located 80 bytes inside of
- 128-byte region [ffff88809533de00, ffff88809533de80)
-The buggy address belongs to the page:
-page:ffffea000254cf40 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88809533d100
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00029c2e48 ffffea0002257d48 ffff8880aa000700
-raw: ffff88809533d100 ffff88809533d000 000000010000000a 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88809533dd00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88809533dd80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88809533de00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                 ^
- ffff88809533de80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88809533df00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Thanks
+Yafang
