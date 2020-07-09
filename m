@@ -2,189 +2,293 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF684C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C53C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96D442074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549922074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T+nG7tey"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EzvuBbCc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgGIMOh (ORCPT
+        id S1727123AbgGIMQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:14:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59536 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727813AbgGIMOg (ORCPT
+        Thu, 9 Jul 2020 08:16:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgGIMQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:14:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594296874;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kwRIPXQdD58+F7cV0LER43YEzOAqv3hHNiA5thj41Io=;
-        b=T+nG7teysCQg9Wgr5b8XmzUEiYcCai/DdYNiuEWUrAuset/I638gBJLBFxoLDnOWtgDTf7
-        +DnxG87twGbH6fsfLMIa9TnTkWoJdVATePkGGYliHaTqrFDzvyi0JN0bGv+v0HvDQ6XK6S
-        2mDyQfmsrCJ8zVtmqiOR6iyfm6S0/to=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-nUE7h5fCO9-ifTY0lOeipg-1; Thu, 09 Jul 2020 08:14:32 -0400
-X-MC-Unique: nUE7h5fCO9-ifTY0lOeipg-1
-Received: by mail-wr1-f69.google.com with SMTP id b8so1732222wro.19
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 05:14:32 -0700 (PDT)
+        Thu, 9 Jul 2020 08:16:42 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63300C061A0B
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 05:16:42 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id j11so1653654oiw.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 05:16:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gtY52tIWq853opmnP05cRWTZadfrEh+7Mvow4ysB5UI=;
+        b=EzvuBbCcza5Lc8H1+xaFsL/GcpsQiQft83Dr6MKsXK3kDsM+hDdyHDoqnHpZpg6EwJ
+         /ivR7cDmUWY37h1yECGYSlLtzFV77GBgDOvRsp03aLFEdses53OGGeoJ4eF3eyuhVqvw
+         bzJdh24RXKh842DpjoGMFrWxPKYlMyIZyLs9mOaPz2tUdalWRtrobBBynqo9ift+1gfw
+         MLvdnJJDcd4DM1Mv+PEoE598xR+IUqMWqPDpJOhmsuJb4t93IL8hTu6tJXXQR+FZGqJ4
+         CtmCIbbX7mAkFHC9/g72wQzFtmRRWmwSF9tgt8O8XN2FiXw64vh8RlAdckdm/yJneBMe
+         SpYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kwRIPXQdD58+F7cV0LER43YEzOAqv3hHNiA5thj41Io=;
-        b=iy7+83xpaWy3CBThigxW/OOEJK+/TosXu8mOfNUuUJBgtKyvduhZajAvD4yd4gmqRS
-         TXkvAD85HiANa3DX5Qg1d72loybQrI5j0Xs1sypzGVbWEBLSbgr31mGpMBnF28q0h3l3
-         4NDk0ll/Ksx+AoRRtYhunOuWRV0hKHEMQKQ1SW8UF459bFyZXu9H/58ekLpRq436XlIO
-         Ipc+t5fL0KJHI0vwvp0M2/CFUnH+szXebbVtbN0HXEda96S51SajIzXgYPs32CNZvSqW
-         /yCifAh4E0XB+X47HrR9O4DVh+AvtvvUOW5hPykxA62SRlgLWdLBg+pFatQGB8hP5bvK
-         ATWw==
-X-Gm-Message-State: AOAM531PKnzIM0nrCB06RZ0ks7mbMSC9uO4jA1jrbRpYbO2pEOP66eEj
-        1aytnPsSvkd8VLiGghSWgjZpWCdQoechXOZr6/RYqtg0qGpDUgb0oFk+c9c7v6mHyPUS1d5iFcr
-        eHVxyYnb0rd/EUC1OeCtDSs1f
-X-Received: by 2002:a7b:c92e:: with SMTP id h14mr13361792wml.36.1594296871530;
-        Thu, 09 Jul 2020 05:14:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwRhPo7g5kUipBnsOFe+3r9VY5ESGX0vtcsJ/9+mosHc1rT3gI7GlSh2CG+AM/UAt8pI6ZlHQ==
-X-Received: by 2002:a7b:c92e:: with SMTP id h14mr13361761wml.36.1594296871306;
-        Thu, 09 Jul 2020 05:14:31 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
-        by smtp.gmail.com with ESMTPSA id c206sm4897543wmf.36.2020.07.09.05.14.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 05:14:30 -0700 (PDT)
-Subject: Re: [PATCH v3 00/21] KVM: Cleanup and unify kvm_mmu_memory_cache
- usage
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc:     James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ben Gardon <bgardon@google.com>,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-References: <20200703023545.8771-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <9cce79d8-bc8a-8a3a-060a-c9a882dd7e07@redhat.com>
-Date:   Thu, 9 Jul 2020 14:14:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gtY52tIWq853opmnP05cRWTZadfrEh+7Mvow4ysB5UI=;
+        b=LFkeZXx+Aa5/2JElL8OHd15CP/mDs2qrF59VaX97cDAOiY+5XGVbh9DWtGYwI6m8Vm
+         2tAi3lsP4CKOEP55ZaKr+ovK0QNNVDG/esvcVhTl54Q1Lu6yvV2EfUfenOvqX1d/NHfq
+         06bsrfDUjuQJOYlCppXVUSRLO0zlzVOPsWT5IxZzlhIFcLj5j60Vg9MpMkxBhzRfJslP
+         xIQwzZmS026nepR93pgECMZ2C+OFyFU42vTBcnlRgeq0UCnkfMZcI1izftCbLWPECeny
+         2LSKsv5CD7WsXUMNvncT49yNRfFTHsvh8CTsOwJiiCqZOwGC0sUNL2b7X9BTTB/sop0o
+         LGFA==
+X-Gm-Message-State: AOAM533POABakiZ6rV7CjxPyqTnCISz+fZltqDyRCHNW8iiVREm3E7xN
+        /bQkdp+yT9M6wG2OaWjWLeOaN/c55Z0U30w1bzU=
+X-Google-Smtp-Source: ABdhPJxC54gbkQcmJ7hMV9rfO1LmLlmANkmq03x+B3tgI3fE47ZQkrvnd21LOza2x6DgCmrY2RzlwfHDM6Gbi3i51wo=
+X-Received: by 2002:aca:2b18:: with SMTP id i24mr11349219oik.103.1594297001482;
+ Thu, 09 Jul 2020 05:16:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200703023545.8771-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200623004520.26520-1-TheSven73@gmail.com> <20200623004520.26520-3-TheSven73@gmail.com>
+In-Reply-To: <20200623004520.26520-3-TheSven73@gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Thu, 9 Jul 2020 08:16:30 -0400
+Message-ID: <CAGngYiVM4xLXfxxKDrXw94tRM-ayTVmmkmSUR04WR1ahd6aH3g@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] romfs: address performance regression since v3.10
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Janos Farkas <chexum+dev@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/20 04:35, Sean Christopherson wrote:
-> The only interesting delta from v2 is that patch 18 is updated to handle
-> a conflict with arm64's p4d rework.  Resolution was straightforward
-> (famous last words).
-> 
-> 
-> This series resurrects Christoffer Dall's series[1] to provide a common
-> MMU memory cache implementation that can be shared by x86, arm64 and MIPS.
-> 
-> It also picks up a suggested change from Ben Gardon[2] to clear shadow
-> page tables during initial allocation so as to avoid clearing entire
-> pages while holding mmu_lock.
-> 
-> The front half of the patches do house cleaning on x86's memory cache
-> implementation in preparation for moving it to common code, along with a
-> fair bit of cleanup on the usage.  The middle chunk moves the patches to
-> common KVM, and the last two chunks convert arm64 and MIPS to the common
-> implementation.
-> 
-> Fully tested on x86 only.  Compile tested patches 14-21 on arm64, MIPS,
-> s390 and PowerPC.
+Hello Al,
 
-Queued, thanks.
+You are the closest I could find to a romfs maintainer. get_maintainer.pl
+doesn't appear to list any.
 
-Paolo
+This attempted performance regression fix didn't generate much feedback
+(to say the least). It's however a real issue for us when supporting a legacy
+product where we don't have the luxury of switching to a better-supported
+fs.
 
-> v3:
->   - Rebased to kvm/queue, commit a037ff353ba6 ("Merge ... into HEAD")
->   - Collect more review tags. [Ben]
-> 
-> v2:
->   - Rebase to kvm-5.8-2, commit 49b3deaad345 ("Merge tag ...").
->   - Use an asm-generic kvm_types.h for s390 and PowerPC instead of an
->     empty arch-specific file. [Marc]
->   - Explicit document "GFP_PGTABLE_USER == GFP_KERNEL_ACCOUNT | GFP_ZERO"
->     in the arm64 conversion patch. [Marc]
->   - Collect review tags. [Ben]
-> 
-> Sean Christopherson (21):
->   KVM: x86/mmu: Track the associated kmem_cache in the MMU caches
->   KVM: x86/mmu: Consolidate "page" variant of memory cache helpers
->   KVM: x86/mmu: Use consistent "mc" name for kvm_mmu_memory_cache locals
->   KVM: x86/mmu: Remove superfluous gotos from mmu_topup_memory_caches()
->   KVM: x86/mmu: Try to avoid crashing KVM if a MMU memory cache is empty
->   KVM: x86/mmu: Move fast_page_fault() call above
->     mmu_topup_memory_caches()
->   KVM: x86/mmu: Topup memory caches after walking GVA->GPA
->   KVM: x86/mmu: Clean up the gorilla math in mmu_topup_memory_caches()
->   KVM: x86/mmu: Separate the memory caches for shadow pages and gfn
->     arrays
->   KVM: x86/mmu: Make __GFP_ZERO a property of the memory cache
->   KVM: x86/mmu: Zero allocate shadow pages (outside of mmu_lock)
->   KVM: x86/mmu: Skip filling the gfn cache for guaranteed direct MMU
->     topups
->   KVM: x86/mmu: Prepend "kvm_" to memory cache helpers that will be
->     global
->   KVM: Move x86's version of struct kvm_mmu_memory_cache to common code
->   KVM: Move x86's MMU memory cache helpers to common KVM code
->   KVM: arm64: Drop @max param from mmu_topup_memory_cache()
->   KVM: arm64: Use common code's approach for __GFP_ZERO with memory
->     caches
->   KVM: arm64: Use common KVM implementation of MMU memory caches
->   KVM: MIPS: Drop @max param from mmu_topup_memory_cache()
->   KVM: MIPS: Account pages used for GPA page tables
->   KVM: MIPS: Use common KVM implementation of MMU memory caches
-> 
->  arch/arm64/include/asm/kvm_host.h  |  11 ---
->  arch/arm64/include/asm/kvm_types.h |   8 ++
->  arch/arm64/kvm/arm.c               |   2 +
->  arch/arm64/kvm/mmu.c               |  56 +++----------
->  arch/mips/include/asm/kvm_host.h   |  11 ---
->  arch/mips/include/asm/kvm_types.h  |   7 ++
->  arch/mips/kvm/mmu.c                |  44 ++--------
->  arch/powerpc/include/asm/Kbuild    |   1 +
->  arch/s390/include/asm/Kbuild       |   1 +
->  arch/x86/include/asm/kvm_host.h    |  14 +---
->  arch/x86/include/asm/kvm_types.h   |   7 ++
->  arch/x86/kvm/mmu/mmu.c             | 129 +++++++++--------------------
->  arch/x86/kvm/mmu/paging_tmpl.h     |  10 +--
->  include/asm-generic/kvm_types.h    |   5 ++
->  include/linux/kvm_host.h           |   7 ++
->  include/linux/kvm_types.h          |  19 +++++
->  virt/kvm/kvm_main.c                |  55 ++++++++++++
->  17 files changed, 176 insertions(+), 211 deletions(-)
->  create mode 100644 arch/arm64/include/asm/kvm_types.h
->  create mode 100644 arch/mips/include/asm/kvm_types.h
->  create mode 100644 arch/x86/include/asm/kvm_types.h
->  create mode 100644 include/asm-generic/kvm_types.h
-> 
+Is there anything I can do to further this? Is lkml
+currently accepting bug / regression fixes to romfs, or is it obsolete?
 
+Many thanks,
+Sven
+
+On Mon, Jun 22, 2020 at 8:45 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+>
+> Problem
+> -------
+> romfs sequential read performance has regressed very badly since
+> v3.10. Currently, reading a large file inside a romfs image is
+> up to 12x slower compared to reading the romfs image directly.
+>
+> Benchmarks:
+> - use a romfs image which contains a single 250M file
+> - calculate the md5sum of the romfs image directly (test 1)
+>   $ time md5sum image.romfs
+> - loop-mount the romfs image, and calc the md5sum of the file
+>   inside it (test 2)
+>   $ mount -o loop,ro image.romfs /mnt/romfs
+>   $ time md5sum /mnt/romfs/file
+> - drop caches in between
+>   $ echo 3 > /proc/sys/vm/drop_caches
+>
+> imx6 (arm cortex a9) on emmc, running v5.7.2:
+> (test 1)  5 seconds
+> (test 2) 60 seconds (12x slower)
+>
+> Intel i7-3630QM on Samsung SSD 850 EVO (EMT02B6Q),
+>     running Ubuntu with v4.15.0-106-generic:
+> (test 1) 1.3 seconds
+> (test 2) 3.3 seconds (2.5x slower)
+>
+> To show that a regression has occurred since v3.10:
+>
+> imx6 on emmc, running v3.10.17:
+> (test 1) 16 seconds
+> (test 2) 18 seconds
+>
+> Proposed Solution
+> -----------------
+> Increase the blocksize from 1K to PAGE_SIZE. This brings the
+> sequential read performance close to where it was on v3.10:
+>
+> imx6 on emmc, running v5.7.2:
+> (test 2 1K blocksize) 60 seconds
+> (test 2 4K blocksize) 22 seconds
+>
+> Intel on Ubuntu running v4.15:
+> (test 2 1K blocksize) 3.3 seconds
+> (test 2 4K blocksize) 1.9 seconds
+>
+> There is a risk that this may increase latency on random-
+> access workloads. But the test below suggests that this
+> is not a concern:
+>
+> Benchmark:
+> - use a 630M romfs image consisting of 9600 files
+> - loop-mount the romfs image
+>   $ mount -o loop,ro image.romfs /mnt/romfs
+> - drop all caches
+> - list all files in the filesystem (test 3)
+>   $ time find /mnt/romfs > /dev/null
+>
+> imx6 on emmc, running v5.7.2:
+> (test 3 1K blocksize) 9.5 seconds
+> (test 3 4K blocksize) 9   seconds
+>
+> Intel on Ubuntu, running v4.15:
+> (test 3 1K blocksize) 1.4 seconds
+> (test 3 4K blocksize) 1.2 seconds
+>
+> Practical Solution
+> ------------------
+> Introduce a mount-option called 'largeblocks'. If present,
+> increase the blocksize for much better sequential performance.
+>
+> Note that the Linux block layer can only support n-K blocks if
+> the underlying block device length is also aligned to n-K. This
+> may not always be the case. Therefore, the driver will pick the
+> largest blocksize which the underlying block device can support.
+>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+> Cc: Janos Farkas <chexum+dev@gmail.com>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> To: linux-kernel@vger.kernel.org
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>  fs/romfs/super.c | 62 ++++++++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 57 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/romfs/super.c b/fs/romfs/super.c
+> index 6fecdea791f1..93565aeaa43c 100644
+> --- a/fs/romfs/super.c
+> +++ b/fs/romfs/super.c
+> @@ -65,7 +65,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/init.h>
+>  #include <linux/blkdev.h>
+> -#include <linux/fs_context.h>
+> +#include <linux/fs_parser.h>
+>  #include <linux/mount.h>
+>  #include <linux/namei.h>
+>  #include <linux/statfs.h>
+> @@ -460,6 +460,54 @@ static __u32 romfs_checksum(const void *data, int size)
+>         return sum;
+>  }
+>
+> +enum romfs_param {
+> +       Opt_largeblocks,
+> +};
+> +
+> +static const struct fs_parameter_spec romfs_fs_parameters[] = {
+> +       fsparam_flag("largeblocks", Opt_largeblocks),
+> +       {}
+> +};
+> +
+> +/*
+> + * Parse a single mount parameter.
+> + */
+> +static int romfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+> +{
+> +       struct fs_parse_result result;
+> +       int opt;
+> +
+> +       opt = fs_parse(fc, romfs_fs_parameters, param, &result);
+> +       if (opt < 0)
+> +               return opt;
+> +
+> +       switch (opt) {
+> +       case Opt_largeblocks:
+> +               fc->fs_private = (void *) 1;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +/*
+> + * pick the largest blocksize which the underlying block device
+> + * is a multiple of. Or fall back to legacy (ROMBSIZE).
+> + */
+> +static int romfs_largest_blocksize(struct super_block *sb)
+> +{
+> +       loff_t device_sz = i_size_read(sb->s_bdev->bd_inode);
+> +       int blksz;
+> +
+> +       for (blksz = PAGE_SIZE; blksz > ROMBSIZE; blksz >>= 1)
+> +               if ((device_sz % blksz) == 0)
+> +                       break;
+> +
+> +       return blksz;
+> +}
+> +
+>  /*
+>   * fill in the superblock
+>   */
+> @@ -467,17 +515,19 @@ static int romfs_fill_super(struct super_block *sb, struct fs_context *fc)
+>  {
+>         struct romfs_super_block *rsb;
+>         struct inode *root;
+> -       unsigned long pos, img_size;
+> +       unsigned long pos, img_size, dev_blocksize;
+>         const char *storage;
+>         size_t len;
+>         int ret;
+>
+>  #ifdef CONFIG_BLOCK
+> +       dev_blocksize = fc->fs_private ? romfs_largest_blocksize(sb) :
+> +                                        ROMBSIZE;
+>         if (!sb->s_mtd) {
+> -               sb_set_blocksize(sb, ROMBSIZE);
+> +               sb_set_blocksize(sb, dev_blocksize);
+>         } else {
+> -               sb->s_blocksize = ROMBSIZE;
+> -               sb->s_blocksize_bits = blksize_bits(ROMBSIZE);
+> +               sb->s_blocksize = dev_blocksize;
+> +               sb->s_blocksize_bits = blksize_bits(dev_blocksize);
+>         }
+>  #endif
+>
+> @@ -573,6 +623,7 @@ static int romfs_get_tree(struct fs_context *fc)
+>  static const struct fs_context_operations romfs_context_ops = {
+>         .get_tree       = romfs_get_tree,
+>         .reconfigure    = romfs_reconfigure,
+> +       .parse_param    = romfs_parse_param,
+>  };
+>
+>  /*
+> @@ -607,6 +658,7 @@ static struct file_system_type romfs_fs_type = {
+>         .owner          = THIS_MODULE,
+>         .name           = "romfs",
+>         .init_fs_context = romfs_init_fs_context,
+> +       .parameters     = romfs_fs_parameters,
+>         .kill_sb        = romfs_kill_sb,
+>         .fs_flags       = FS_REQUIRES_DEV,
+>  };
+> --
+> 2.17.1
+>
