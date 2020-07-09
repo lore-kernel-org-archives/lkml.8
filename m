@@ -2,342 +2,144 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E184AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDFA207DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62EB2077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:35:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dVSVbGi7"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ciEH7ddf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgGIQeX (ORCPT
+        id S1728269AbgGIQfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:34:23 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4465 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgGIQeW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:34:22 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0746d70000>; Thu, 09 Jul 2020 09:33:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 09 Jul 2020 09:34:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 09 Jul 2020 09:34:22 -0700
-Received: from [10.2.168.64] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jul
- 2020 16:34:18 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-CC:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        <linux-mm@kvack.org>, Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        "Hugh Dickins" <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V4] mm/vmstat: Add events for THP migration without split
-Date:   Thu, 9 Jul 2020 12:34:16 -0400
-X-Mailer: MailMate (1.13.1r5690)
-Message-ID: <27CD781D-48F0-4019-934F-78994BAEC656@nvidia.com>
-In-Reply-To: <cab90a5c-4c61-e9ad-659f-a9438d639fe5@infradead.org>
-References: <1594287583-16568-1-git-send-email-anshuman.khandual@arm.com>
- <cab90a5c-4c61-e9ad-659f-a9438d639fe5@infradead.org>
+        Thu, 9 Jul 2020 12:35:02 -0400
+Received: from mail-eopbgr50076.outbound.protection.outlook.com ([40.107.5.76]:6020
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726497AbgGIQfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:35:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AYG5juHvfkz1//BFgMW7K7ByZywRZGd48A9mCHXRt4ICGrzeCp4ZSNHRIjvsJGwh2xjPAhEe/Yruz89u0a9fBNs5HUJJe37TM2bz1xu4+jVe8hWSeLwtpUX5d+PaeTDNRb/HLWzjtfalq3fPrNGYVAxJwrSHlCfnGLnEGDzQ0IjtFaWLt8s/9gqssOQTmCRlrSZH/3gOhaYHQ7bIuVWLdN8tKouvtKjPglR4x5HkzScYHmulJnLjtCqTyAuWaxOTZF+FXyLl0P8tpGbtjS1tdoZs1WyH14qg8s5h8oPfFz+5pTQ9RbtjAezVOvHqosL29tMD34EiA5uGqxhEHndG6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9I3JKPOR1zH8nOihF2OFtOlnTKklEl6kb3lCDua/N98=;
+ b=n83zH4Nzr85Rq0OknGDQnHQtIX3VU+hI5OK2xnfIFQBBE0b7uGiXiFz7RetX8IgrDnz6PxsP66o601kGe8ayao/nPgBCvTsG42UE0QZhTEUaS78oLnlG4S0OrhAmaou3ADpY/9nEuGuGuZkg82pK811FXNIWxhTJTSLMXymt4X6vW8i8s6xHCpMeaXdpqFfab/jB2ck7wWtlPrrKXmQki70UIf/BpYYB7u+1vk23la3YHQ+Vh4ffPuSp08BIvshnTCC079acsezv4hP/JvRa+fFtUjRg1e8JgMVtonRTyVfw+XJAFVXy9k65Q9xUZtfwhwL8QTKnmRouaOfKLVKiWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9I3JKPOR1zH8nOihF2OFtOlnTKklEl6kb3lCDua/N98=;
+ b=ciEH7ddfB0Kuzb93S62xe/iF4y0pBcy37RHmM8urS2phiFj2zAHxPDgDvcVKpfZ6oqTDBpkRiZMFo9AH3W6UrAd0jn+v5EYBKw4AotneszZx1a7ixDv9GaKHdjALiX7mosP9tfAKMN6CAqkDkqrJSm8UULQLFF0CuQkuPzQKVxg=
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB5982.eurprd05.prod.outlook.com (2603:10a6:803:e4::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Thu, 9 Jul
+ 2020 16:34:58 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3174.022; Thu, 9 Jul 2020
+ 16:34:58 +0000
+Date:   Thu, 9 Jul 2020 13:34:55 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 11/12] PM, libnvdimm: Add 'mem-quiet' state and
+ callback for firmware activation
+Message-ID: <20200709163455.GA23821@mellanox.com>
+References: <159408711335.2385045.2567600405906448375.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159408717289.2385045.14094866475168644020.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200709150051.GA17342@infradead.org>
+ <20200709153854.GY23821@mellanox.com>
+ <CAPcyv4hSPWEUih=we5QM_rdk7fLemi8phyk8_0tOd8ieL_=vPg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4hSPWEUih=we5QM_rdk7fLemi8phyk8_0tOd8ieL_=vPg@mail.gmail.com>
+X-ClientProxiedBy: MN2PR20CA0013.namprd20.prod.outlook.com
+ (2603:10b6:208:e8::26) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_F60EA73D-8D00-4701-A4BB-277AC627A5CC_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594312407; bh=1/jJBTVfKcjlJZrHITpd75UYHwBpEDY2rEoyFlYDArM=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=dVSVbGi7Nrqr+zbkHXkZ/dKyoxzicZ9g+go6AD2JlgGOSYw1D/3E1mODpmZXUNvRz
-         ZlHKosxXy5g6QpEcfkvKdUYgFOijFijCUfSnu/gUsh3jZjrTNlY7ddeUEW1cpvTaso
-         QX1rHoy8ZR1+P0zcx01NXu5APSfX8ZQFacgxA/utH4QMCj8/aoT1wNGZHP7KobWOdH
-         iqCikHb1fSIweLoTdn3+DYf3Cd7H1YAwSE4CLYPhcYS17EdDQzRCXY+lETNOkoK/p7
-         tKfFIzcduVxHrcaJvj9bhfWwPm09aU0fXN3niDuV+BUOH/FAGIJkeMi6mjpJXYhFXS
-         AOTYfhJFk0X7w==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR20CA0013.namprd20.prod.outlook.com (2603:10b6:208:e8::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22 via Frontend Transport; Thu, 9 Jul 2020 16:34:58 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jtZVf-007eRH-2H; Thu, 09 Jul 2020 13:34:55 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 13597d3d-58ed-45b5-3833-08d8242604ee
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5982:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB59824D538C077C58E3B5652CCF640@VI1PR05MB5982.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZTKcz6ux2JcsNyzBPY0WgsFBEsbfrKkkma2JNmuvSuBaefYs9/9AJpT6gkdBXb73O1s3VI65CC09vikqNMHE+9f9noU90K8RgjpwAd993NOr10Jic8AgK7qKIQvvJpAJAXRR+GRTBPGngGTqJ7MwjvPYbQngnXMoNUzFmDBhKo78l5+gNLe76YJT0TNtlfek4ebvq29tyl/BS+1rZ7R8XQsm90KvAG7yQBkknDdqH/J1V2HQ8/GcNlsNEwgOHUyU8okTFhmqq78o9WfHavDeNHoRygnHcKkEomZ1wG71CVuBNgDbA9Y/JZlRrFVab56AMTanxvpejL81tNacrL8vMw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(396003)(346002)(136003)(2906002)(36756003)(66946007)(478600001)(8676002)(8936002)(316002)(2616005)(66556008)(7416002)(426003)(1076003)(186003)(4326008)(66476007)(9786002)(53546011)(9746002)(33656002)(54906003)(83380400001)(26005)(86362001)(5660300002)(6916009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: U2J8laW2GtYJ+Hew9rjmv1wblmff+YannsBw1Mjz+JND8M8ZbMOzE4SnodcCfjohtsP6BK5OuExVfqfEt1aULoOQ3Dh9UD+Nkp2tiewhTr/OlsYrkPDcEB8lIIgZHiXv4p2BM8hxNqjdz7dAvuwtaO18wIWZb+X/pWtWO+I7Pp/7LI57OqOnpXq49WAs8LVSX29M8B1ZySWsceL0xD69/SzGAQRaEpzx2g9fZF7mUx8azHelgspW+AkZLm0R6p0rXjimG/HzF2mgbne/eRq7Q0PX6LK1/ODqKvO4jjTHc52QlcQ228w0bLGN8QtNtKWMvKEFU/HZrnVeCk768E98zJuwBoHdyx0CukyggoahoeE6oUgEDotF8zWwZt2FF88wO5wO29DGMKaFMae3qyQ1rknmek4sXApvPzC0VKNEhzEBA6WUwI9lRHG+4aNaC8n2sNoOvL30bHCupRLhQbh6IQep49Qu5wllJdXRQcmJfsI=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13597d3d-58ed-45b5-3833-08d8242604ee
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2020 16:34:58.4352
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qFH47HJlU74F/iO57gR8k0uCA7etsM0zYxq2gyTF9WhuoYUZuzWuhDQxx+gyCfrVQpm2MnxXO/oEQvUXgv4gjw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5982
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_F60EA73D-8D00-4701-A4BB-277AC627A5CC_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jul 09, 2020 at 09:10:06AM -0700, Dan Williams wrote:
+> On Thu, Jul 9, 2020 at 8:39 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
+> >
+> > On Thu, Jul 09, 2020 at 04:00:51PM +0100, Christoph Hellwig wrote:
+> > > On Mon, Jul 06, 2020 at 06:59:32PM -0700, Dan Williams wrote:
+> > > > The runtime firmware activation capability of Intel NVDIMM devices
+> > > > requires memory transactions to be disabled for 100s of microseconds.
+> > > > This timeout is large enough to cause in-flight DMA to fail and other
+> > > > application detectable timeouts. Arrange for firmware activation to be
+> > > > executed while the system is "quiesced", all processes and device-DMA
+> > > > frozen.
+> > > >
+> > > > It is already required that invoking device ->freeze() callbacks is
+> > > > sufficient to cease DMA. A device that continues memory writes outside
+> > > > of user-direction violates expectations of the PM core to be to
+> > > > establish a coherent hibernation image.
+> > > >
+> > > > That said, RDMA devices are an example of a device that access memory
+> > > > outside of user process direction.
+> >
+> > Are you saying freeze doesn't work for some RDMA drivers? That would
+> > be a driver bug, I think.
+> 
+> Right, it's more my hunch than a known bug at this point, but in my
+> experience with testing server class hardware when I've reported a
+> power management bugs I've sometimes got the incredulous response "who
+> suspends / hibernates servers!?". I can drop that comment.
+> 
+> Are there protocol timeouts that might need to be adjusted for a 100s
+> of microseconds blip in memory controller response?
 
-On 9 Jul 2020, at 11:34, Randy Dunlap wrote:
+Survivability depends alot on HW support, it has to suspend, not
+discard DMAs that it needs to issue. Most likely things are as you
+say, and HW doesn't support safe short time suspend. The usual use of
+PM stuff here is to make the machine ready for kexec
 
-> Hi,
->
-> I have a few comments on this.
->
-> a. I reported it very early and should have been Cc-ed.
->
-> b. A patch that applies to mmotm or linux-next would have been better
-> than a full replacement patch.
->
-> c. I tried replacing what I believe is the correct/same patch file in m=
-motm
-> and still have build errors.
->
-> (more below)
->
-> On 7/9/20 2:39 AM, Anshuman Khandual wrote:
->
->> ---
->> Applies on 5.8-rc4.
->>
->> Changes in V4:
->>
->> - Changed THP_MIGRATION_FAILURE as THP_MIGRATION_FAIL per John
->> - Dropped all conditional 'if' blocks in migrate_pages() per Andrew an=
-d John
->> - Updated migration events documentation per John
->> - Updated thp_nr_pages variable as nr_subpages for an expected merge c=
-onflict
->> - Moved all new THP vmstat events into CONFIG_MIGRATION
->> - Updated Cc list with Documentation/ and tracing related addresses
->>
->> Changes in V3: (https://patchwork.kernel.org/patch/11647237/)
->>
->> - Formatted new events documentation with 'fmt' tool per Matthew
->> - Made events universally available i.e dropped ARCH_ENABLE_THP_MIGRAT=
-ION
->> - Added THP_MIGRATION_SPLIT
->> - Updated trace_mm_migrate_pages() with THP events
->> - Made THP events update normal page migration events as well
->>
->> Changes in V2: (https://patchwork.kernel.org/patch/11586893/)
->>
->> - Dropped PMD reference both from code and commit message per Matthew
->> - Added documentation and updated the commit message per Daniel
->>
->> Changes in V1: (https://patchwork.kernel.org/patch/11564497/)
->>
->> - Changed function name as thp_pmd_migration_success() per John
->> - Folded in a fix (https://patchwork.kernel.org/patch/11563009/) from =
-Hugh
->>
->> Changes in RFC V2: (https://patchwork.kernel.org/patch/11554861/)
->>
->> - Decopupled and renamed VM events from their implementation per Zi an=
-d John
->> - Added THP_PMD_MIGRATION_FAILURE VM event upon allocation failure and=
- split
->>
->> Changes in RFC V1: (https://patchwork.kernel.org/patch/11542055/)
->>
->>  Documentation/vm/page_migration.rst | 27 +++++++++++++++
->>  include/linux/vm_event_item.h       |  3 ++
->>  include/trace/events/migrate.h      | 17 ++++++++--
->>  mm/migrate.c                        | 52 ++++++++++++++++++++++++----=
--
->>  mm/vmstat.c                         |  3 ++
->>  5 files changed, 91 insertions(+), 11 deletions(-)
->>
->
->> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_it=
-em.h
->> index 24fc7c3ae7d6..2e6ca53b9bbd 100644
->> --- a/include/linux/vm_event_item.h
->> +++ b/include/linux/vm_event_item.h
->> @@ -56,6 +56,9 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOU=
-T,
->>  #endif
->>  #ifdef CONFIG_MIGRATION
->>  		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
->> +		THP_MIGRATION_SUCCESS,
->> +		THP_MIGRATION_FAIL,
->> +		THP_MIGRATION_SPLIT,
->
-> These 3 new symbols are still only present if CONFIG_MIGRATION=3Dy, but=
- the build errors
-> are using these symbols even when CONFIG_MIGRATION is not set.
->
->>  #endif
->>  #ifdef CONFIG_COMPACTION
->>  		COMPACTMIGRATE_SCANNED, COMPACTFREE_SCANNED,
->
->> diff --git a/mm/migrate.c b/mm/migrate.c
->> index f37729673558..c706e3576cfc 100644
->> --- a/mm/migrate.c
->> +++ b/mm/migrate.c
->> @@ -1429,22 +1429,35 @@ int migrate_pages(struct list_head *from, new_=
-page_t get_new_page,
->>  		enum migrate_mode mode, int reason)
->>  {
->>  	int retry =3D 1;
->> +	int thp_retry =3D 1;
->>  	int nr_failed =3D 0;
->>  	int nr_succeeded =3D 0;
->> +	int nr_thp_succeeded =3D 0;
->> +	int nr_thp_failed =3D 0;
->> +	int nr_thp_split =3D 0;
->>  	int pass =3D 0;
->> +	bool is_thp =3D false;
->>  	struct page *page;
->>  	struct page *page2;
->>  	int swapwrite =3D current->flags & PF_SWAPWRITE;
->> -	int rc;
->> +	int rc, nr_subpages;
->>
->>  	if (!swapwrite)
->>  		current->flags |=3D PF_SWAPWRITE;
->>
->> -	for(pass =3D 0; pass < 10 && retry; pass++) {
->> +	for (pass =3D 0; pass < 10 && (retry || thp_retry); pass++) {
->>  		retry =3D 0;
->> +		thp_retry =3D 0;
->>
->>  		list_for_each_entry_safe(page, page2, from, lru) {
->>  retry:
->> +			/*
->> +			 * THP statistics is based on the source huge page.
->> +			 * Capture required information that might get lost
->> +			 * during migration.
->> +			 */
->> +			is_thp =3D PageTransHuge(page);
->> +			nr_subpages =3D hpage_nr_pages(page);
->>  			cond_resched();
->>
->>  			if (PageHuge(page))
->> @@ -1475,15 +1488,30 @@ int migrate_pages(struct list_head *from, new_=
-page_t get_new_page,
->>  					unlock_page(page);
->>  					if (!rc) {
->>  						list_safe_reset_next(page, page2, lru);
->> +						nr_thp_split++;
->>  						goto retry;
->>  					}
->>  				}
->> +				if (is_thp) {
->> +					nr_thp_failed++;
->> +					nr_failed +=3D nr_subpages;
->> +					goto out;
->> +				}
->>  				nr_failed++;
->>  				goto out;
->>  			case -EAGAIN:
->> +				if (is_thp) {
->> +					thp_retry++;
->> +					break;
->> +				}
->>  				retry++;
->>  				break;
->>  			case MIGRATEPAGE_SUCCESS:
->> +				if (is_thp) {
->> +					nr_thp_succeeded++;
->> +					nr_succeeded +=3D nr_subpages;
->> +					break;
->> +				}
->>  				nr_succeeded++;
->>  				break;
->>  			default:
->> @@ -1493,19 +1521,27 @@ int migrate_pages(struct list_head *from, new_=
-page_t get_new_page,
->>  				 * removed from migration page list and not
->>  				 * retried in the next outer loop.
->>  				 */
->> +				if (is_thp) {
->> +					nr_thp_failed++;
->> +					nr_failed +=3D nr_subpages;
->> +					break;
->> +				}
->>  				nr_failed++;
->>  				break;
->>  			}
->>  		}
->>  	}
->> -	nr_failed +=3D retry;
->> +	nr_failed +=3D retry + thp_retry;
->> +	nr_thp_failed +=3D thp_retry;
->>  	rc =3D nr_failed;
->>  out:
->> -	if (nr_succeeded)
->> -		count_vm_events(PGMIGRATE_SUCCESS, nr_succeeded);
->> -	if (nr_failed)
->> -		count_vm_events(PGMIGRATE_FAIL, nr_failed);
->> -	trace_mm_migrate_pages(nr_succeeded, nr_failed, mode, reason);
->> +	count_vm_events(PGMIGRATE_SUCCESS, nr_succeeded);
->> +	count_vm_events(PGMIGRATE_FAIL, nr_failed);
->> +	count_vm_events(THP_MIGRATION_SUCCESS, nr_thp_succeeded);
->> +	count_vm_events(THP_MIGRATION_FAIL, nr_thp_failed);
->> +	count_vm_events(THP_MIGRATION_SPLIT, nr_thp_split);
->
-> These references still cause build errors.
->
->> +	trace_mm_migrate_pages(nr_succeeded, nr_failed, nr_thp_succeeded,
->> +			       nr_thp_failed, nr_thp_split, mode, reason);
->>
->>  	if (!swapwrite)
->>  		current->flags &=3D ~PF_SWAPWRITE;
->> diff --git a/mm/vmstat.c b/mm/vmstat.c
->> index 3fb23a21f6dd..09914a4bfee4 100644
->> --- a/mm/vmstat.c
->> +++ b/mm/vmstat.c
->> @@ -1234,6 +1234,9 @@ const char * const vmstat_text[] =3D {
->>  #ifdef CONFIG_MIGRATION
->>  	"pgmigrate_success",
->>  	"pgmigrate_fail",
->> +	"thp_migration_success",
->> +	"thp_migration_fail",
->> +	"thp_migration_split",
->>  #endif
->>  #ifdef CONFIG_COMPACTION
->>  	"compact_migrate_scanned",
->>
->
-
-Which arch are you building? I did not see any error
-after applying this patch on mmotm (reverting the existing ones)
-and compiling them on x86_64. I used make x86_64_defconfig and
-unselected COMPACTION and MIGRATION.
-
-mm/migrate.c and added vm events will not be used
-if CONFIG_MIGRATION is unchecked. Why would they cause compilation errors=
-?
-
-
-=E2=80=94
-Best Regards,
-Yan Zi
-
---=_MailMate_F60EA73D-8D00-4701-A4BB-277AC627A5CC_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl8HRwgPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKIesP/AgVeCChftpNKRZ07SX8+xw4Q3khJxCxNJyJ
-s6DFiUQmAayYCkeeyNp8BzHeBaZmFOXH5PgFHE2/iOsdqGke0zVvN6w7ZgF3wJwV
-nMiSYC7IZGsn3S2Mf0+JWoascFsiRpLQxgyOFwMSIYtiTARpmqU4FENaDv0qEeaf
-2579pKK4mZhxkLmwrzsjy8YVRrm0Kc0wHhD4cjg2Ph1ZTslVMcAxMkoHgw3L9LPc
-1NkFyJzZZ2yOTNgODySa2/b7sb8F75EBWK1Icrc8eM1teCNVpYja/gEm+On1G1vN
-BBWf6m65ABqHpWB7jYNeBo4bUhfVNjex93IolNi0oVOX9PG6FlG3fzs8jKaRZPMA
-XIryQZQ6ySbP7LST+TSSiJQGmt/xwkDW86JqVSrHNhg6IHQ3SCYNW97RXnEoGfLe
-oEOaOveHExM0LDj/0zVHvrG8pxDTCxlp/t8IqC7tho5hYAKLc1iHsrvLIXN90s9o
-rIZYE+xrhrD+QVltmtaN5GwOkVKS6ENtOWjLGzGFAhRQUYx3o16JxmtlrMqc1uHC
-Ix3QqmCiBkl091NZaOdFViZECnuGuaBRJzReaqvUlmUIhH9DyPmKa5qCfBBDutpN
-5y2RfduUxqWD99Eo+Dj2qCDum0pCU8igP6mEZFLfEG5zQWVg7uQgJ4JheuiOGo5+
-ckOktc2j
-=OReh
------END PGP SIGNATURE-----
-
---=_MailMate_F60EA73D-8D00-4701-A4BB-277AC627A5CC_=--
+Jason
