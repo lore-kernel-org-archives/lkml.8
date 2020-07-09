@@ -2,135 +2,119 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6305C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1347720720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF876207DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="fJdsoF0I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgGIPrt (ORCPT
+        id S1728119AbgGIPsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:47:49 -0400
-Received: from mga07.intel.com ([134.134.136.100]:65354 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbgGIPrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:47:49 -0400
-IronPort-SDR: zWcAl1CBz8ho4wdzuI0K6pR9lYnbxKDPvdNE0k6B8RqIeHIsgDdrlRdwRftVfw8gnYRXjShmqN
- Gun1BpHFSIIw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="212931531"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="212931531"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 08:47:48 -0700
-IronPort-SDR: cE9JhtxvrZXc4jXdrrCsehjy1soh2GYV/VEffc4pqCe90cpz7eO/WgThxiLkUkSOt1RsCnX3pA
- iA1cbdX19Rog==
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="324261360"
-Received: from otcsectest.jf.intel.com (HELO 64c96d3be97b) ([10.54.30.81])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 08:47:48 -0700
-Date:   Thu, 9 Jul 2020 15:44:12 +0000
-From:   "Andersen, John" <john.s.andersen@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        x86@kernel.org, hpa@zytor.com, shuah@kernel.org,
-        liran.alon@oracle.com, drjones@redhat.com,
-        rick.p.edgecombe@intel.com, kristen@linux.intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, mchehab+huawei@kernel.org,
-        gregkh@linuxfoundation.org, paulmck@kernel.org,
-        pawan.kumar.gupta@linux.intel.com, jgross@suse.com,
-        mike.kravetz@oracle.com, oneukum@suse.com, luto@kernel.org,
-        peterz@infradead.org, fenghua.yu@intel.com,
-        reinette.chatre@intel.com, vineela.tummalapalli@intel.com,
-        dave.hansen@linux.intel.com, arjan@linux.intel.com,
-        caoj.fnst@cn.fujitsu.com, bhe@redhat.com, nivedita@alum.mit.edu,
-        keescook@chromium.org, dan.j.williams@intel.com,
-        eric.auger@redhat.com, aaronlewis@google.com, peterx@redhat.com,
-        makarandsonare@google.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH 2/4] KVM: x86: Introduce paravirt feature CR0/CR4 pinning
-Message-ID: <20200709154412.GA25@64c96d3be97b>
-References: <20200617190757.27081-1-john.s.andersen@intel.com>
- <20200617190757.27081-3-john.s.andersen@intel.com>
- <0fa9682e-59d4-75f7-366f-103d6b8e71b8@intel.com>
- <20200618144314.GB23@258ff54ff3c0>
- <124a59a3-a603-701b-e3bb-61e83d70b20d@intel.com>
- <20200707211244.GN20096@linux.intel.com>
- <19b97891-bbb0-1061-5971-549a386f7cfb@intel.com>
- <31eb5b00-9e2a-aa10-0f20-4abc3cd35112@redhat.com>
+        Thu, 9 Jul 2020 11:48:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728099AbgGIPsS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 11:48:18 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0375C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 08:48:17 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e4so2951921ljn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 08:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/O6H63+iy27zC2H7F0ueImelp7Ge5SFqvQCCzIgdoPI=;
+        b=fJdsoF0IE+FLEEv9KDqsmMTunmNA1t7ytAqxnRwXZCyUBjvHa+7Feup8NmXZt2RCIu
+         wsgnS324bHVYR7X24SjoapJxe8mrX3K9+2PcjnHWf6rNZtlb7ZolU+tws3K1hH1KVmcm
+         bycKsH6D+8Qh9cjGdW5CUIhYqPa2fotIWVcNMVaZzViZEam/5tBRnUOj9UJO1x+fIc3m
+         O8cVqipLSngqj+FzKufF+G68podLoQIbSZLK6hhNLOGNV82XT9hOnl60iqcAl0Y9sW56
+         rQS8TUjYjEzWJepjjp1cqlqgBm1rgHT/O7QjaC3BjKm630xfivlUM+Jy9Sg0MDc3qNtn
+         ucVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/O6H63+iy27zC2H7F0ueImelp7Ge5SFqvQCCzIgdoPI=;
+        b=OR2OdNKJs7DoJQy7DBUSqQ3h4QedMcUHanXYlMD7IbMQr/NuA/dpLAZFWXgS/9BjKb
+         QvbW/yZupQP8Imyme5AWVv8UJHfop//HAcFRiJ6LtxWhUvhp3Zi21wmMoli5FJFohyYw
+         5RT+53XAbRWBlQE1dBMMDKYv44KCCHxtdFFi/u2ljDAztMaEo9rv0lWbrBIaV2zxrSbQ
+         x1S/HcJ6MvMKgTaUBGdmfdDoOOMIq9zfv10/xQ3WTzWAC0QG1XGDhdrzJhFxyMjFd9W0
+         Ua3ifPEMdoXucQpBOV1dwTk1bKTa4GRqaY20SXHWwJ0hiqCFNptDf8otsGwBWdUhafNV
+         e4xw==
+X-Gm-Message-State: AOAM5335PG4Q7amBBRz42UMdkDrRUVi7pgoYzefgee3CDgCUTalsbI12
+        O2+jqijn0aTNig9UkpusfbJN/w==
+X-Google-Smtp-Source: ABdhPJwXJuJPmi0hCIRXh7hOH2stPsHaUlbTEb3sv+IZgUbomityN8CqxmAJv3P/iYDzqj1wj1dh5A==
+X-Received: by 2002:a2e:9144:: with SMTP id q4mr21400278ljg.84.1594309696184;
+        Thu, 09 Jul 2020 08:48:16 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id 83sm1055834lfk.84.2020.07.09.08.48.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 08:48:15 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 8F36210222B; Thu,  9 Jul 2020 18:48:16 +0300 (+03)
+Date:   Thu, 9 Jul 2020 18:48:16 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        lkp@intel.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
+Subject: Re: [PATCH v14 07/20] mm/thp: narrow lru locking
+Message-ID: <20200709154816.wieg5thfejyv2h2l@box>
+References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1593752873-4493-8-git-send-email-alex.shi@linux.alibaba.com>
+ <124eeef1-ff2b-609e-3bf6-a118100c3f2a@linux.alibaba.com>
+ <20200706113513.GY25523@casper.infradead.org>
+ <alpine.LSU.2.11.2007062059420.2793@eggly.anvils>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <31eb5b00-9e2a-aa10-0f20-4abc3cd35112@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <alpine.LSU.2.11.2007062059420.2793@eggly.anvils>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 11:51:54PM +0200, Paolo Bonzini wrote:
-> On 07/07/20 23:48, Dave Hansen wrote:
-> > On 7/7/20 2:12 PM, Sean Christopherson wrote:
-> >>>>> Let's say Intel loses its marbles and adds a CR4 bit that lets userspace
-> >>>>> write to kernel memory.  Linux won't set it, but an attacker would go
-> >>>>> after it, first thing.
-> >> That's an orthogonal to pinning.  KVM never lets the guest set CR4 bits that
-> >> are unknown to KVM.  Supporting CR4.NO_MARBLES would require an explicit KVM
-> >> change to allow it to be set by the guest, and would also require a userspace
-> >> VMM to expose NO_MARBLES to the guest.
-> >>
-> >> That being said, this series should supporting pinning as much as possible,
-> >> i.e. if the bit can be exposed to the guest and doesn't require special
-> >> handling in KVM, allow it to be pinned.  E.g. TS is a special case because
-> >> pinning would require additional emulator support and IMO isn't interesting
-> >> enough to justify the extra complexity.  At a glance, I don't see anything
-> >> that would prevent pinning FSGSBASE.
-> > 
-> > Thanks for filling in the KVM picture.
-> > 
-> > If we're supporting as much pinning as possible, can we also add
-> > something to make it inconvenient for someone to both make a CR4 bit
-> > known to KVM *and* ignore the pinning aspects?
-> > 
-> > We should really make folks think about it.  Something like:
-> > 
-> > #define KVM_CR4_KNOWN 0xff
-> > #define KVM_CR4_PIN_ALLOWED 0xf0
-> > #define KVM_CR4_PIN_NOT_ALLOWED 0x0f
-> > 
-> > BUILD_BUG_ON(KVM_CR4_KNOWN !=
-> >              (KVM_CR4_PIN_ALLOWED|KVM_CR4_PIN_NOT_ALLOWED));
-> > 
-> > So someone *MUST* make an active declaration about new bits being pinned
-> > or not?
+On Mon, Jul 06, 2020 at 09:52:34PM -0700, Hugh Dickins wrote:
+> On Mon, 6 Jul 2020, Matthew Wilcox wrote:
+> > On Mon, Jul 06, 2020 at 05:15:09PM +0800, Alex Shi wrote:
+> > > Hi Kirill & Johannes & Matthew,
 > 
-> I would just make all unknown bits pinnable (or perhaps all CR4 bits in
-> general).
+> Adding Kirill, who was in patch's Cc list but not mail's Cc list.
 > 
+> I asked Alex to direct this one particularly to Kirill and Johannes
+> and Matthew because (and I regret that the commit message still does
+> not make this at all clear) this patch changes the lock ordering:
+> which for years has been lru_lock outside memcg move_lock outside
+> i_pages lock, but here inverted to lru_lock inside i_pages lock.
+> 
+> I don't see a strong reason to have them one way round or the other,
+> and think Alex is right that they can safely be reversed here: but
+> he doesn't actually give any reason for doing so (if cleanup, then
+> I think the cleanup should have been taken further), and no reason
+> for doing so as part of this series.
 
-Sounds good. I'll make it this way in the next revision. I'll do the same for
-CR0 (unless I hear otherwise). I've added the last paragraph here under the
-ALLOWED MSRs data section.
+I've looked around and changing order of lru_lock wrt. i_pages lock seems
+safe. I don't have much experience with memcg move_lock.
 
-data:
-        Bits which may be pinned.
+Alex, if you are going ahead with the patch, please document the locking
+order. We have some locking orders listed at the beginning of filemap.c
+and rmap.c.
 
-        Attempting to pin bits other than these will result in a failure when
-        writing to the respective CR pinned MSR.
+local_irq_disable() also deserves a comment.
 
-        Bits which are allowed to be pinned default to WP for CR0 and SMEP,
-        SMAP, and UMIP for CR4.
-
-        The host VMM may modify the set of allowed bits. However, only the above
-        have been tested to work. Allowing the guest to pin other bits may or
-        may not be compatible with KVM.
+-- 
+ Kirill A. Shutemov
