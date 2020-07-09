@@ -2,58 +2,71 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF12C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C697C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E69F92074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A8F2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:51:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="IKD2ten4"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wmYPZM9L";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tnsXg0F5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgGIKvG (ORCPT
+        id S1726872AbgGIKvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:51:06 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34817 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgGIKvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:51:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B2Xyv3zTwz9sQt;
-        Thu,  9 Jul 2020 20:51:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1594291864;
-        bh=VI4aFN/tvbsGFEJ4xA4/0VeUoMRZZnfq/gpr3pAx8G0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=IKD2ten4BhzVwExubvn3K93mtWqnC3WWAZoRzc+c3H8YbG4WdsqsYIsWtHE7Mr0GH
-         nGpjcBK6Dan3kZ/RMkJ8HleBBVOarl2j8GlhAGagpMFmLzOUokO9woJyZe4KB9Tvwf
-         0gHMuKiiBQ3KcLbW84Ee0saFgPCykKlyofIbboYWIBK9RSlMTJJFeFiEwRu+zC4apq
-         bE4ngiBaxW+gJCjWBfPK2R/oK0LL8F7QhMQriTR0TsdOezFACf1z9JYBLvElvotO+B
-         y9apR0IOzs3WlCA9v8OvGe3t3FZaAfE4Haq+4aFUFiz6O2rlfWYCuDwrQiPGASWc69
-         zr4ZnuPJOXulA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, Will Deacon <will@kernel.org>,
+        Thu, 9 Jul 2020 06:51:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36208 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGIKvi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:51:38 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594291896;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZBseBq/So0/jIR32rElntMZUFEP+pJqhChMmzOIuleE=;
+        b=wmYPZM9LjhbQ94b7RWQizzuz2YV8n0dhxkZsYadTgdAYGNAlkpNrVzSwA02JfQnKLdOUQf
+        TUQ1+Cvioo0db9ObXHeRcytzonuGuWq8r/DNO+TWYJjlFNuxTzTa+rzAYmG3qBsXDlhjzp
+        coqgEpHeDaS39bSIXpPH04WGLIGA95TA4wVEZjplPxAhEWyau39N9ZTnoj1tK8j0LbYagQ
+        G9uBSvEUt6LZw/lj2ijpi2sp2EZ+pcPnXQVr2JBWaeKpCKz+/13rXfVJ0BS/bRfPaMjKp6
+        nlbRcQA0P9BJbx0rSFEt1/Xn+1t816z7ETLfq3sPm/lrDHCWpuIZDWXDD8tMCw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594291896;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZBseBq/So0/jIR32rElntMZUFEP+pJqhChMmzOIuleE=;
+        b=tnsXg0F5uad7JSmxfc+jFCoIt8UpX45DiDXmLbSwnjtgf/nlO7eiJW1WhwQlcVDyDZ7W1q
+        uJ1/dfvgIjwZ+cAQ==
+To:     Abhishek Bhardwaj <abhishekbh@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Abhishek Bhardwaj <abhishekbh@google.com>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
         Waiman Long <longman@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks for SPLPAR
-In-Reply-To: <20200706043540.1563616-6-npiggin@gmail.com>
-References: <20200706043540.1563616-1-npiggin@gmail.com> <20200706043540.1563616-6-npiggin@gmail.com>
-Date:   Thu, 09 Jul 2020 20:53:16 +1000
-Message-ID: <874kqhvu1v.fsf@mpe.ellerman.id.au>
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v5] x86/speculation/l1tf: Add KConfig for setting the L1D cache flush mode
+In-Reply-To: <20200708194715.4073300-1-abhishekbh@google.com>
+References: <20200708194715.4073300-1-abhishekbh@google.com>
+Date:   Thu, 09 Jul 2020 12:51:34 +0200
+Message-ID: <87y2ntotah.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,103 +74,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicholas Piggin <npiggin@gmail.com> writes:
+Abhishek Bhardwaj <abhishekbh@google.com> writes:
+> This change adds a new kernel configuration that sets the l1d cache
+> flush setting at compile time rather than at run time.
+>
+> The reasons for this change are as follows -
+>
+>  - Kernel command line arguments are getting unwieldy. These parameters
+>  are not a scalable way to set the kernel config. They're intended as a
+>  super limited way for the bootloader to pass info to the kernel and
+>  also as a way for end users who are not compiling the kernel themselves
+>  to tweak the kernel behavior.
+>
+>  - Also, if a user wants this setting from the start. It's a definite
+>  smell that it deserves to be a compile time thing rather than adding
+>  extra code plus whatever miniscule time at runtime to pass an
+>  extra argument.
+>
+>  - Finally, it doesn't preclude the runtime / kernel command line way.
+>  Users are free to use those as well.
 
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> ---
->  arch/powerpc/include/asm/paravirt.h           | 28 ++++++++
->  arch/powerpc/include/asm/qspinlock.h          | 66 +++++++++++++++++++
->  arch/powerpc/include/asm/qspinlock_paravirt.h |  7 ++
->  arch/powerpc/platforms/pseries/Kconfig        |  5 ++
->  arch/powerpc/platforms/pseries/setup.c        |  6 +-
->  include/asm-generic/qspinlock.h               |  2 +
+TBH, I don't see why this is a good idea.
 
-Another ack?
+ 1) I'm not following your argumentation that the command line option is
+    a poor Kconfig replacement. The L1TF mode is a boot time (module
+    load time) decision and the command line parameter is there to
+    override the carefully chosen and sensible default behaviour.
 
-> diff --git a/arch/powerpc/include/asm/paravirt.h b/arch/powerpc/include/asm/paravirt.h
-> index 7a8546660a63..f2d51f929cf5 100644
-> --- a/arch/powerpc/include/asm/paravirt.h
-> +++ b/arch/powerpc/include/asm/paravirt.h
-> @@ -45,6 +55,19 @@ static inline void yield_to_preempted(int cpu, u32 yield_count)
->  {
->  	___bad_yield_to_preempted(); /* This would be a bug */
->  }
-> +
-> +extern void ___bad_yield_to_any(void);
-> +static inline void yield_to_any(void)
-> +{
-> +	___bad_yield_to_any(); /* This would be a bug */
-> +}
+ 2) You can add the desired mode to the compiled in (partial) kernel
+    command line today.
 
-Why do we do that rather than just not defining yield_to_any() at all
-and letting the build fail on that?
+ 3) Boot loaders are well capable of handling large kernel command lines
+    and the extra time spend for reading the parameter does not matter
+    at all.
 
-There's a condition somewhere that we know will false at compile time
-and drop the call before linking?
+ 4) It's just a tiny part of the whole speculation maze. If we go there
+    for L1TF then we open the flood gates for a gazillion other config
+    options.
 
-> diff --git a/arch/powerpc/include/asm/qspinlock_paravirt.h b/arch/powerpc/include/asm/qspinlock_paravirt.h
-> new file mode 100644
-> index 000000000000..750d1b5e0202
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/qspinlock_paravirt.h
-> @@ -0,0 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +#ifndef __ASM_QSPINLOCK_PARAVIRT_H
-> +#define __ASM_QSPINLOCK_PARAVIRT_H
+ 5) It's completely useless for distro kernels.
 
-_ASM_POWERPC_QSPINLOCK_PARAVIRT_H please.
+ 6) The implementation is horrible. We have proper choice selectors
+    which allow to add parseable information instead of random numbers
+    and a help text.
 
-> +
-> +EXPORT_SYMBOL(__pv_queued_spin_unlock);
+Sorry, you need to find better arguments than 'unwieldy and smell' to
+make this palatable.
 
-Why's that in a header? Should that (eventually) go with the generic implementation?
+Thanks,
 
-> diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
-> index 24c18362e5ea..756e727b383f 100644
-> --- a/arch/powerpc/platforms/pseries/Kconfig
-> +++ b/arch/powerpc/platforms/pseries/Kconfig
-> @@ -25,9 +25,14 @@ config PPC_PSERIES
->  	select SWIOTLB
->  	default y
->  
-> +config PARAVIRT_SPINLOCKS
-> +	bool
-> +	default n
-
-default n is the default.
-
-> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-> index 2db8469e475f..747a203d9453 100644
-> --- a/arch/powerpc/platforms/pseries/setup.c
-> +++ b/arch/powerpc/platforms/pseries/setup.c
-> @@ -771,8 +771,12 @@ static void __init pSeries_setup_arch(void)
->  	if (firmware_has_feature(FW_FEATURE_LPAR)) {
->  		vpa_init(boot_cpuid);
->  
-> -		if (lppaca_shared_proc(get_lppaca()))
-> +		if (lppaca_shared_proc(get_lppaca())) {
->  			static_branch_enable(&shared_processor);
-> +#ifdef CONFIG_PARAVIRT_SPINLOCKS
-> +			pv_spinlocks_init();
-> +#endif
-> +		}
-
-We could avoid the ifdef with this I think?
-
-diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
-index 434615f1d761..6ec72282888d 100644
---- a/arch/powerpc/include/asm/spinlock.h
-+++ b/arch/powerpc/include/asm/spinlock.h
-@@ -10,5 +10,9 @@
- #include <asm/simple_spinlock.h>
- #endif
-
-+#ifndef CONFIG_PARAVIRT_SPINLOCKS
-+static inline void pv_spinlocks_init(void) { }
-+#endif
-+
- #endif /* __KERNEL__ */
- #endif /* __ASM_SPINLOCK_H */
-
-
-cheers
+        tglx
