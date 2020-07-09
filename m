@@ -2,87 +2,112 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7453C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD59C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89BF0206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7AC5206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 02:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgGICLr (ORCPT
+        id S1726320AbgGICMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 22:11:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57750 "EHLO huawei.com"
+        Wed, 8 Jul 2020 22:12:45 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60244 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726118AbgGICLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 22:11:47 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2EF1B20BDB74D96789CF;
-        Thu,  9 Jul 2020 10:11:43 +0800 (CST)
-Received: from [10.174.179.105] (10.174.179.105) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 9 Jul 2020
- 10:11:39 +0800
-Subject: Re: [PATCH] scsi: fcoe: add missed kfree() in an error path
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        <linux-scsi@vger.kernel.org>
-References: <977e2781-99ed-54c0-27ad-82d768a1c1e6@web.de>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Hannes Reinecke" <hare@suse.de>,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Neerav Parikh <Neerav.Parikh@intel.com>,
-        Robert Love <robert.w.love@intel.com>
-From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
-Message-ID: <5F067CDA.8010404@huawei.com>
-Date:   Thu, 9 Jul 2020 10:11:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.1.0
+        id S1726118AbgGICMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jul 2020 22:12:44 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 772BA91C3703B6672BBD;
+        Thu,  9 Jul 2020 10:12:43 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Jul 2020
+ 10:12:41 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <io-uring@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <axboe@kernel.dk>
+Subject: [PATCH] io_uring: fix memleak in __io_sqe_files_update()
+Date:   Thu, 9 Jul 2020 10:11:41 +0000
+Message-ID: <20200709101141.3261977-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <977e2781-99ed-54c0-27ad-82d768a1c1e6@web.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.105]
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.27]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I got a memleak report when doing some fuzz test:
 
+BUG: memory leak
+unreferenced object 0xffff888113e02300 (size 488):
+comm "syz-executor401", pid 356, jiffies 4294809529 (age 11.954s)
+hex dump (first 32 bytes):
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+a0 a4 ce 19 81 88 ff ff 60 ce 09 0d 81 88 ff ff ........`.......
+backtrace:
+[<00000000129a84ec>] kmem_cache_zalloc include/linux/slab.h:659 [inline]
+[<00000000129a84ec>] __alloc_file+0x25/0x310 fs/file_table.c:101
+[<000000003050ad84>] alloc_empty_file+0x4f/0x120 fs/file_table.c:151
+[<000000004d0a41a3>] alloc_file+0x5e/0x550 fs/file_table.c:193
+[<000000002cb242f0>] alloc_file_pseudo+0x16a/0x240 fs/file_table.c:233
+[<00000000046a4baa>] anon_inode_getfile fs/anon_inodes.c:91 [inline]
+[<00000000046a4baa>] anon_inode_getfile+0xac/0x1c0 fs/anon_inodes.c:74
+[<0000000035beb745>] __do_sys_perf_event_open+0xd4a/0x2680 kernel/events/core.c:11720
+[<0000000049009dc7>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
+[<00000000353731ca>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-On 2020/7/7 19:38, Markus Elfring wrote:
->> fcoe_fdmi_info() misses to call kfree() in an error path.
->> Add the missed function call to fix it.
->
-> I suggest to use an additional jump target for the completion
-> of the desired exception handling.
->
->
-> …
->> +++ b/drivers/scsi/fcoe/fcoe.c
->> @@ -830,6 +830,7 @@ static void fcoe_fdmi_info(struct fc_lport *lport, struct net_device *netdev)
->>   		if (rc) {
->>   			printk(KERN_INFO "fcoe: Failed to retrieve FDMI "
->>   					"information from netdev.\n");
->> +			kfree(fdmi);
->>   			return;
->>   		}
->
-> -			return;
-> +			goto free_fdmi;
->
->
-> How do you think about to apply any further coding style adjustments?
+BUG: memory leak
+unreferenced object 0xffff8881152dd5e0 (size 16):
+comm "syz-executor401", pid 356, jiffies 4294809529 (age 11.954s)
+hex dump (first 16 bytes):
+01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 ................
+backtrace:
+[<0000000074caa794>] kmem_cache_zalloc include/linux/slab.h:659 [inline]
+[<0000000074caa794>] lsm_file_alloc security/security.c:567 [inline]
+[<0000000074caa794>] security_file_alloc+0x32/0x160 security/security.c:1440
+[<00000000c6745ea3>] __alloc_file+0xba/0x310 fs/file_table.c:106
+[<000000003050ad84>] alloc_empty_file+0x4f/0x120 fs/file_table.c:151
+[<000000004d0a41a3>] alloc_file+0x5e/0x550 fs/file_table.c:193
+[<000000002cb242f0>] alloc_file_pseudo+0x16a/0x240 fs/file_table.c:233
+[<00000000046a4baa>] anon_inode_getfile fs/anon_inodes.c:91 [inline]
+[<00000000046a4baa>] anon_inode_getfile+0xac/0x1c0 fs/anon_inodes.c:74
+[<0000000035beb745>] __do_sys_perf_event_open+0xd4a/0x2680 kernel/events/core.c:11720
+[<0000000049009dc7>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
+[<00000000353731ca>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-The local variable "fdmi" is invisible to the function.
-See fcoe_fdmi_info().
+If io_sqe_file_register() failed, we need put the file that get by fget()
+to avoid the memleak.
 
-	Thanks
->
-> Regards,
-> Markus
-> .
->
+Fixes: c3a31e605620 ("io_uring: add support for IORING_REGISTER_FILES_UPDATE")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ fs/io_uring.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index e507737f044e..5c2487d954b2 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -6814,8 +6814,10 @@ static int __io_sqe_files_update(struct io_ring_ctx *ctx,
+ 			}
+ 			table->files[index] = file;
+ 			err = io_sqe_file_register(ctx, file, i);
+-			if (err)
++			if (err) {
++				fput(file);
+ 				break;
++			}
+ 		}
+ 		nr_args--;
+ 		done++;
+-- 
+2.17.1
+
