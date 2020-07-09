@@ -2,146 +2,88 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC26AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0699D2078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:19:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="zyd/XYwv"
+	by mail.kernel.org (Postfix) with ESMTP id AB63D20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594336777;
+	bh=hNVl4MWznyMfS8GySJsgugZ/zhrGnUF7yLAPCn/w1OU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1CMWwrPmL7iJOC5sIDylmljSkzNT+aZ7Ijyx1pnf6KjvoryVnB4OCvUMNt0yXjKS1
+	 1tOoX28VDV4y+QtT26jABc8NDD5mbiWWuWqe8gInseeHXJgS8R/YHy8k0mYJCn7Tb5
+	 N3C8htcuPV2Kxf8PriAuEp3eyFUoAZhHRCCRowq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgGIXTU (ORCPT
+        id S1726818AbgGIXTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:19:20 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.239]:29814 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726222AbgGIXTT (ORCPT
+        Thu, 9 Jul 2020 19:19:36 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33967 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgGIXTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:19:19 -0400
-X-Greylist: delayed 1274 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jul 2020 19:19:19 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id A221F610F3
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 17:58:03 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id tfURj2rJLhmVTtfURjdMIc; Thu, 09 Jul 2020 17:58:03 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=+pLQSi4gSGFUZLAlhOhXhgkdvPyTfhNDYAomd0BkvtI=; b=zyd/XYwvTPFJvdpHyV4hpYx92/
-        omLmpyj4MiJBhOrluRwYKaaYzBb3ME7ZBYwNwtvMWpo2wy/4Lj210Itmo8Gf9PvhrLoiXEECuTvuJ
-        0C+F+CWFSCmKbdJVhqA2DX2Atej1mI7vKqWgq8tO7di7fNSSMVq1rS23FpvoQWXYmPCBUsKRlW5eF
-        NCcK3Nt6l1Lb8X802BRchjduBMoQerm6r+2JfydlMhryopdkfEV6CmbvWd8/dZSK7R8JjEAvYug/6
-        tjFwdmXtedaObW6H2DHTDb/QHKRZDdSCFfg8VYTa7Vdz0OYpPkX9/7asMchAFzw8LC8qAfYds/nr1
-        OY+75wdQ==;
-Received: from [201.162.245.14] (port=59252 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jtfUQ-000CKE-99; Thu, 09 Jul 2020 17:58:02 -0500
-Subject: Re: [PATCH] Documentation/security-bugs: Explain why plain text is
- preferred
-To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        security@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <202007091110.205DC6A9@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <7c8bb93c-89e5-cf56-76cd-1187b54d141d@embeddedor.com>
-Date:   Thu, 9 Jul 2020 18:03:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 9 Jul 2020 19:19:36 -0400
+Received: by mail-io1-f67.google.com with SMTP id q74so4170919iod.1;
+        Thu, 09 Jul 2020 16:19:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=420yMXhBf21AgrF9OyTg/NVRUT5NXpwkF7oK2H8zSmE=;
+        b=DdfzghdxZ4aZt40WaxYmcGIBrJMmC+WBnC0IPTfOj4+eJ1SLhuNQV0oKIbO5IsgG9H
+         0+GVVZBoN2vwz2Mtn0VsuB4uUDFTYhOb4whpkwK58GDJfgPT5Rdy3eIVzD3sTnNuB/2B
+         1KG1i1Xb7YKyZyk0ZfiCdl7wsOE+KbmHj5TJbBhAqlP6pwLjEo3/a6qgXAVqL/fNvP+C
+         EzMY6K68jY9f/2gCqKx5IRgTrZaoKlYwcu44w7QQu83RHkoP1dWN/KmHgHKf9LSQ0JN2
+         ZYsmFuelb0gTYvHZ75LuReLecofFZH5aP7E4eWDXMR8YJ/ZVzf90DIwJKkfuwm3b3NYt
+         pShA==
+X-Gm-Message-State: AOAM530rdFxuU5rT6W0vyTR8ue8kZfnL7LLiNXkxpd7DuXcs+HcI3+OC
+        XnIGrWxZhHlrZJjpVDdg+Q==
+X-Google-Smtp-Source: ABdhPJy6SVfqLGFLbMKsYIRFUYjf2S/5bFNmf+t797DpfD0y5B/NUOXz4NHISeqWaPt442qO7JyHTg==
+X-Received: by 2002:a05:6602:2555:: with SMTP id j21mr24877145ioe.11.1594336775496;
+        Thu, 09 Jul 2020 16:19:35 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id u6sm2489573ilg.32.2020.07.09.16.19.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 16:19:35 -0700 (PDT)
+Received: (nullmailer pid 1083622 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:19:33 -0000
+Date:   Thu, 9 Jul 2020 17:19:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     kishon@ti.com, nm@ti.com, t-kristo@ti.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vigneshr@ti.com
+Subject: Re: [PATCH v4 3/6] arm64: dts: ti: k3-j721e-main: Add system
+ controller node and SERDES lane mux
+Message-ID: <20200709231933.GA1083562@bogus>
+References: <20200629125254.28754-1-rogerq@ti.com>
+ <20200629125254.28754-4-rogerq@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <202007091110.205DC6A9@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.245.14
-X-Source-L: No
-X-Exim-ID: 1jtfUQ-000CKE-99
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.245.14]:59252
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629125254.28754-4-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/9/20 13:11, Kees Cook wrote:
-> The security contact list gets regular reports contained in archive
-> attachments. This tends to add some back-and-forth delay in dealing with
-> security reports since we have to ask for plain text, etc.
+On Mon, 29 Jun 2020 15:52:51 +0300, Roger Quadros wrote:
+> From: Kishon Vijay Abraham I <kishon@ti.com>
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> The system controller node manages the CTRL_MMR0 region.
+> Add serdes_ln_ctrl node which is used for controlling the SERDES lane mux.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 27 ++++++++++++
+>  include/dt-bindings/mux/mux-j721e-wiz.h   | 53 +++++++++++++++++++++++
+>  2 files changed, 80 insertions(+)
+>  create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
+> 
 
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
---
-Gustavo
+Acked-by: Rob Herring <robh@kernel.org>
