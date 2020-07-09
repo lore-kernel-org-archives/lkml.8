@@ -2,234 +2,174 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60683C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1929C20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35BD420786
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q9WMiXJD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oiAxobyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgGIWxd (ORCPT
+        id S1726989AbgGIWyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:53:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26343 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726228AbgGIWxc (ORCPT
+        Thu, 9 Jul 2020 18:54:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgGIWyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:53:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594335210;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i1INxgto+D5Y2oZMGBhvrqyvzD6Mkg+QqFtK0D1z/D4=;
-        b=Q9WMiXJDMA6xVyA+N394yjoJ5sQpVWcFdOg1EaUd1UTTwJ7U7rv8cHakt4LmhYykiBSbcf
-        UF+x/GcCT9EbgRsVPelkeSNeBj3vNvWE7DNI1n9yEEzHGHkZY4c+6zpbnMH2quw/Bd9UN8
-        +UuhtPNbf6/R8x4L+pMn2D8y6c+Swiw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-AvYNFt9gNSCCJe_xKIP91A-1; Thu, 09 Jul 2020 18:53:28 -0400
-X-MC-Unique: AvYNFt9gNSCCJe_xKIP91A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FE00192FDA0;
-        Thu,  9 Jul 2020 22:53:27 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E4B4D60BE2;
-        Thu,  9 Jul 2020 22:53:26 +0000 (UTC)
-Date:   Thu, 9 Jul 2020 16:53:26 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Diana Craciun <diana.craciun@oss.nxp.com>
-Cc:     kvm@vger.kernel.org, bharatb.linux@gmail.com,
-        linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com,
-        Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Subject: Re: [PATCH v3 4/9] vfio/fsl-mc: Implement
- VFIO_DEVICE_GET_REGION_INFO ioctl call
-Message-ID: <20200709165326.72d43d0c@x1.home>
-In-Reply-To: <20200706154153.11477-5-diana.craciun@oss.nxp.com>
-References: <20200706154153.11477-1-diana.craciun@oss.nxp.com>
-        <20200706154153.11477-5-diana.craciun@oss.nxp.com>
-Organization: Red Hat
+        Thu, 9 Jul 2020 18:54:52 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA58BC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 15:54:51 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id d18so3108217edv.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 15:54:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h3E9CmP5pzqqITk3EJ5pCRFF7120Umpn5DkCt3PZmyI=;
+        b=oiAxobyVHtmcT1uDdRMJ5KCPYgiJcvwg0bT1wajNVARoK+DbSmJJH5GxohbU2nIXcM
+         Md7jqXoAgG2YNCHynS+jYIxySL/eeY/W5eQ2bBGiSkR9ZLPebSPskM/5ojc9HlENFh7m
+         ZY28rYsR19yHA+3606f8FYuhvf0kWd9VKB2VQI5iRidasRanhGt9foQatc3RxeUF2q5n
+         1aVv2B23MxyAfxPBr/YN1YDItdj/K45hkyB9lWfpYiZfBSjubtYSnVMNfCi6gSk9ju0P
+         r6QBZRTmNEEhhPCz5z7twQtfxrWiWI3qT7jG4ZixRQXIgjBAxm4HLaiX+LX9dutby4d0
+         jFcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h3E9CmP5pzqqITk3EJ5pCRFF7120Umpn5DkCt3PZmyI=;
+        b=ApDkusx+93vZN/1Q2Nk0s4mtvTYMRMnF9rRWQFQuV3PrBscGKxmyJ2HguEMKopTlLB
+         xUByWtMmX+PNC0t5OJ1+pHygkM30QpzojlOcXNYIxO7kitQIdAbexYgBBac/LazrQAdi
+         bK+Mpecm5pZFg4rXw9wuBnJaK9k9dh5FEMTLDwRzxMYZ8IraxtXDKcsYLngJe/wO9Ygy
+         V2ykf4p7rJ6FX8gU41fojie4CDBocktRbAw1pcXkk+3asVghnPsi8u7P4dJWmI2QcD/u
+         menkhKr7IuSmS0KG9/OhTLhSvNw3sg9OFOrxw5peDXpE9RtDmX6HGE1SzWtIhaPh147j
+         op2A==
+X-Gm-Message-State: AOAM530MLCPJ8aElHQ/ZEDH1rR5NucFW+S3rKCLUA569JCuc32Qqwf9F
+        eFc6nyl38RqZ+DrWTsD9TSIzoeZ/TmfzAR+ryn28ig==
+X-Google-Smtp-Source: ABdhPJz9uaSIXcnqe4UJG/4qyWvxlwUPgsKdudNjp8UAkBRNtmqP10AQmMtpHxhnQTomWWTQ1SKnxvYiDJCH0O5UzlM=
+X-Received: by 2002:a50:c355:: with SMTP id q21mr71840462edb.121.1594335290245;
+ Thu, 09 Jul 2020 15:54:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200709223948.1051613-1-jannh@google.com>
+In-Reply-To: <20200709223948.1051613-1-jannh@google.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Thu, 9 Jul 2020 15:54:38 -0700
+Message-ID: <CAHRSSEwAZEgLKCYa-+uOB7xuNKs1z9gkr5PWCHLcKc1mZpcgoQ@mail.gmail.com>
+Subject: Re: [PATCH resend] binder: Prevent context manager from incrementing
+ ref 0
+To:     Jann Horn <jannh@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Mattias Nissler <mnissler@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  6 Jul 2020 18:41:48 +0300
-Diana Craciun <diana.craciun@oss.nxp.com> wrote:
+On Thu, Jul 9, 2020 at 3:40 PM Jann Horn <jannh@google.com> wrote:
+>
+> Binder is designed such that a binder_proc never has references to
+> itself. If this rule is violated, memory corruption can occur when a
+> process sends a transaction to itself; see e.g.
+> <https://syzkaller.appspot.com/bug?extid=09e05aba06723a94d43d>.
+>
+> There is a remaining edgecase through which such a transaction-to-self
+> can still occur from the context of a task with BINDER_SET_CONTEXT_MGR
+> access:
+>
+>  - task A opens /dev/binder twice, creating binder_proc instances P1
+>    and P2
+>  - P1 becomes context manager
+>  - P2 calls ACQUIRE on the magic handle 0, allocating index 0 in its
+>    handle table
+>  - P1 dies (by closing the /dev/binder fd and waiting a bit)
+>  - P2 becomes context manager
+>  - P2 calls ACQUIRE on the magic handle 0, allocating index 1 in its
+>    handle table
+>    [this triggers a warning: "binder: 1974:1974 tried to acquire
+>    reference to desc 0, got 1 instead"]
+>  - task B opens /dev/binder once, creating binder_proc instance P3
+>  - P3 calls P2 (via magic handle 0) with (void*)1 as argument (two-way
+>    transaction)
+>  - P2 receives the handle and uses it to call P3 (two-way transaction)
+>  - P3 calls P2 (via magic handle 0) (two-way transaction)
+>  - P2 calls P2 (via handle 1) (two-way transaction)
+>
+> And then, if P2 does *NOT* accept the incoming transaction work, but
+> instead closes the binder fd, we get a crash.
+>
+> Solve it by preventing the context manager from using ACQUIRE on ref 0.
+> There shouldn't be any legitimate reason for the context manager to do
+> that.
+>
+> Additionally, print a warning if someone manages to find another way to
+> trigger a transaction-to-self bug in the future.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-> Expose to userspace information about the memory regions.
-> 
-> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
-> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+Nice catch.
+
+Acked-by: Todd Kjos <tkjos@google.com>
+
 > ---
->  drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 77 ++++++++++++++++++++++-
->  drivers/vfio/fsl-mc/vfio_fsl_mc_private.h | 19 ++++++
->  2 files changed, 95 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> index 937b6eddc71a..10bd9f78b8de 100644
-> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> @@ -17,16 +17,72 @@
->  
->  static struct fsl_mc_driver vfio_fsl_mc_driver;
->  
-> +static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
-> +{
-> +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-> +	int count = mc_dev->obj_desc.region_count;
-> +	int i;
-> +
-> +	vdev->regions = kcalloc(count, sizeof(struct vfio_fsl_mc_region),
-> +				GFP_KERNEL);
-> +	if (!vdev->regions)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < count; i++) {
-> +		struct resource *res = &mc_dev->regions[i];
-> +
-> +		vdev->regions[i].addr = res->start;
-> +		vdev->regions[i].size = resource_size(res);
-> +		vdev->regions[i].flags = 0;
-> +	}
-> +
-> +	vdev->num_regions = mc_dev->obj_desc.region_count;
-> +	return 0;
-> +}
-> +
-> +static void vfio_fsl_mc_regions_cleanup(struct vfio_fsl_mc_device *vdev)
-> +{
-> +	vdev->num_regions = 0;
-> +	kfree(vdev->regions);
-> +}
-> +
->  static int vfio_fsl_mc_open(void *device_data)
->  {
-> +	struct vfio_fsl_mc_device *vdev = device_data;
-> +	int ret;
-> +
->  	if (!try_module_get(THIS_MODULE))
->  		return -ENODEV;
->  
-> +	mutex_lock(&vdev->driver_lock);
-> +	if (!vdev->refcnt) {
-> +		ret = vfio_fsl_mc_regions_init(vdev);
-> +		if (ret)
-> +			goto err_reg_init;
-> +	}
-> +	vdev->refcnt++;
-> +
-> +	mutex_unlock(&vdev->driver_lock);
-> +
->  	return 0;
-> +
-> +err_reg_init:
-> +	mutex_unlock(&vdev->driver_lock);
-> +	module_put(THIS_MODULE);
-> +	return ret;
->  }
->  
->  static void vfio_fsl_mc_release(void *device_data)
->  {
-> +	struct vfio_fsl_mc_device *vdev = device_data;
-> +
-> +	mutex_lock(&vdev->driver_lock);
-> +
-> +	if (!(--vdev->refcnt))
-> +		vfio_fsl_mc_regions_cleanup(vdev);
-> +
-> +	mutex_unlock(&vdev->driver_lock);
-> +
->  	module_put(THIS_MODULE);
->  }
->  
-> @@ -59,7 +115,25 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
->  	}
->  	case VFIO_DEVICE_GET_REGION_INFO:
->  	{
-> -		return -ENOTTY;
-> +		struct vfio_region_info info;
-> +
-> +		minsz = offsetofend(struct vfio_region_info, offset);
-> +
-> +		if (copy_from_user(&info, (void __user *)arg, minsz))
-> +			return -EFAULT;
-> +
-> +		if (info.argsz < minsz)
-> +			return -EINVAL;
-> +
-> +		if (info.index >= vdev->num_regions)
-> +			return -EINVAL;
-> +
-> +		/* map offset to the physical address  */
-> +		info.offset = VFIO_FSL_MC_INDEX_TO_OFFSET(info.index);
-> +		info.size = vdev->regions[info.index].size;
-> +		info.flags = vdev->regions[info.index].flags;
-> +
-> +		return copy_to_user((void __user *)arg, &info, minsz);
->  	}
->  	case VFIO_DEVICE_GET_IRQ_INFO:
->  	{
-> @@ -201,6 +275,7 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
->  		vfio_iommu_group_put(group, dev);
->  		return ret;
->  	}
-> +	mutex_init(&vdev->driver_lock);
-
-
-Consider all calling mutex_destory() in the remove callback, it's only
-used for lock debugging, so we're only partially successful in calling
-it.  Thanks,
-
-Alex
-
->  
->  	return ret;
->  }
-> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-> index 37d61eaa58c8..818dfd3df4db 100644
-> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-> @@ -7,9 +7,28 @@
->  #ifndef VFIO_FSL_MC_PRIVATE_H
->  #define VFIO_FSL_MC_PRIVATE_H
->  
-> +#define VFIO_FSL_MC_OFFSET_SHIFT    40
-> +#define VFIO_FSL_MC_OFFSET_MASK (((u64)(1) << VFIO_FSL_MC_OFFSET_SHIFT) - 1)
-> +
-> +#define VFIO_FSL_MC_OFFSET_TO_INDEX(off) ((off) >> VFIO_FSL_MC_OFFSET_SHIFT)
-> +
-> +#define VFIO_FSL_MC_INDEX_TO_OFFSET(index)	\
-> +	((u64)(index) << VFIO_FSL_MC_OFFSET_SHIFT)
-> +
-> +struct vfio_fsl_mc_region {
-> +	u32			flags;
-> +	u32			type;
-> +	u64			addr;
-> +	resource_size_t		size;
-> +};
-> +
->  struct vfio_fsl_mc_device {
->  	struct fsl_mc_device		*mc_dev;
->  	struct notifier_block        nb;
-> +	int				refcnt;
-> +	u32				num_regions;
-> +	struct vfio_fsl_mc_region	*regions;
-> +	struct mutex driver_lock;
->  };
->  
->  #endif /* VFIO_FSL_MC_PRIVATE_H */
-
+> sending again because I forgot to CC LKML the first time... sorry about
+> the spam.
+>
+>  drivers/android/binder.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index f50c5f182bb5..cac65ff3a257 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -2982,6 +2982,12 @@ static void binder_transaction(struct binder_proc *proc,
+>                         goto err_dead_binder;
+>                 }
+>                 e->to_node = target_node->debug_id;
+> +               if (WARN_ON(proc == target_proc)) {
+> +                       return_error = BR_FAILED_REPLY;
+> +                       return_error_param = -EINVAL;
+> +                       return_error_line = __LINE__;
+> +                       goto err_invalid_target_handle;
+> +               }
+>                 if (security_binder_transaction(proc->tsk,
+>                                                 target_proc->tsk) < 0) {
+>                         return_error = BR_FAILED_REPLY;
+> @@ -3635,10 +3641,16 @@ static int binder_thread_write(struct binder_proc *proc,
+>                                 struct binder_node *ctx_mgr_node;
+>                                 mutex_lock(&context->context_mgr_node_lock);
+>                                 ctx_mgr_node = context->binder_context_mgr_node;
+> -                               if (ctx_mgr_node)
+> +                               if (ctx_mgr_node) {
+> +                                       if (ctx_mgr_node->proc == proc) {
+> +                                               binder_user_error("%d:%d context manager tried to acquire desc 0\n");
+> +                                               mutex_unlock(&context->context_mgr_node_lock);
+> +                                               return -EINVAL;
+> +                                       }
+>                                         ret = binder_inc_ref_for_node(
+>                                                         proc, ctx_mgr_node,
+>                                                         strong, NULL, &rdata);
+> +                               }
+>                                 mutex_unlock(&context->context_mgr_node_lock);
+>                         }
+>                         if (ret)
+>
+> base-commit: 2a89b99f580371b86ae9bafd6cbeccd3bfab524a
+> --
+> 2.27.0.389.gc38d7665816-goog
+>
