@@ -2,210 +2,149 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22616C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01D472074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C212074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 12:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594297108;
-	bh=0d67Y8UvYLgaPIhr1Hlc+Z6U3OE3Kp6d4ia4b+j8cEc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CFFrg55bYcbIffbASOATvavevDlrIkyOH3R7E66Aq3HAzyoXwP7/AE2cRnKVwbpRp
-	 Kj9TxIi3jPva7Jh3Z+hz37PwVcS3qj9TYBZ75QCU1BylCmwOGO6wrB9ZbsqTiyGs/Y
-	 EAHzjJOgjVIFWvFZmnph1k2TVrZ1h3An9vK2nVA8=
+	s=default; t=1594297333;
+	bh=qOFNT6tblN8CGBYOHgoyMwlCS9ntBDtTAmhooTF7pYU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GodRN+rBYP7bvJth5vyEa4v0M9wB7dKTREOQWdkYFHDKr7EiTATIAu6ktEsLkMKt7
+	 0PZVa2mmLJlDYE22n/7OOVk/stPyoEMLk7ZL4oImxH/fDkrKBOU6//HGX7tQlic+7f
+	 rUq9NgI8mk4bsn/oOR3/rTOKG5xRnatEJiEqQiJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgGIMS0 (ORCPT
+        id S1726746AbgGIMWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:18:26 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43278 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgGIMS0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:18:26 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x83so1671643oif.10;
-        Thu, 09 Jul 2020 05:18:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BHVNxL+/4Dut3OSZTR+rYs7XqFLN3i0nnfmN8u7+xOA=;
-        b=HsPvqGX/GQ4OR4PD8qcCtxVGfclDRun1lAmESdkuU5btq7AutoGcvN2+yohnLpnadd
-         tO60+9ABX4LJe7VCGmwf3pMI0Wt1N8tamr/dvrWsGebqc3FP3mb9sonTbgnWOl2SQJlL
-         XrMcCPoWHbBo1ReQEkC5cDiVhkDhg/amdZE7fFBqo6gU3bkQKQ/Af52flG6sJY2c8EI7
-         d8f/IOU/hs3D5OqeNUDtC5WOWMs620lKXhe0IQgsWQZWUMi/uGVUYieMxucFV7xyzYcs
-         EzH+gn1USAQ2/QGft1FL1b4AIs4vs8pz6/nhGibMmQkjTqmyS7KOxkq3mjRBGnsYvNiJ
-         HYeQ==
-X-Gm-Message-State: AOAM532wTK2f2HpwOkCilCgt7dQ/Nsva5wPIK2qVvOttSL6JD3fYtrE9
-        5NR/R1T7hZM+PT3ikdyQUQB0WiT8/B8serd8Okc=
-X-Google-Smtp-Source: ABdhPJxtj1vjB44EgNVrKbINxMf3MLBQQVOimbtqX57PoimFmHD9A3C9Fv4wq87LSAfsDKch7XlhTuenX5e7j0W2xjI=
-X-Received: by 2002:aca:4a89:: with SMTP id x131mr11420648oia.103.1594297104569;
- Thu, 09 Jul 2020 05:18:24 -0700 (PDT)
+        Thu, 9 Jul 2020 08:22:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbgGIMWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:22:11 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF662206DF;
+        Thu,  9 Jul 2020 12:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594297331;
+        bh=qOFNT6tblN8CGBYOHgoyMwlCS9ntBDtTAmhooTF7pYU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KtxyWHHx+5ZItqJHRCkusAhW3YrwOy/2Y2xyNkI/pV3lEuRrgm+jS66grgjwvUf3l
+         9zwjAReLz1PRnsqUI7uu/bdBdiBVOERfDDyfKHwQNj28ljL4aqeNYexV+tZ35fJf8W
+         4UUg6xfkT59gMsoFAHOFOtpQuRcYBTDQeC40WSdg=
+Received: by pali.im (Postfix)
+        id A25CE15A1; Thu,  9 Jul 2020 14:22:08 +0200 (CEST)
+Date:   Thu, 9 Jul 2020 14:22:08 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200709122208.rmfeuu6zgbwh3fr5@pali>
+References: <20200528143141.29956-1-pali@kernel.org>
+ <20200702083036.12230-1-pali@kernel.org>
+ <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-References: <1594005196-16327-1-git-send-email-neal.liu@mediatek.com> <1594005196-16327-2-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1594005196-16327-2-git-send-email-neal.liu@mediatek.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 9 Jul 2020 14:18:13 +0200
-Message-ID: <CAJZ5v0ihB5AJwSRpjaOnXAmciregzxARL5xfudu1h+=_LXaE_w@mail.gmail.com>
-Subject: Re: [PATCH v2] cpuidle: change enter_s2idle() prototype
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 5:13 AM Neal Liu <neal.liu@mediatek.com> wrote:
->
-> Control Flow Integrity(CFI) is a security mechanism that disallows
-> changes to the original control flow graph of a compiled binary,
-> making it significantly harder to perform such attacks.
->
-> init_state_node() assign same function callback to different
-> function pointer declarations.
->
-> static int init_state_node(struct cpuidle_state *idle_state,
->                            const struct of_device_id *matches,
->                            struct device_node *state_node) { ...
->         idle_state->enter = match_id->data; ...
->         idle_state->enter_s2idle = match_id->data; }
->
-> Function declarations:
->
-> struct cpuidle_state { ...
->         int (*enter) (struct cpuidle_device *dev,
->                       struct cpuidle_driver *drv,
->                       int index);
->
->         void (*enter_s2idle) (struct cpuidle_device *dev,
->                               struct cpuidle_driver *drv,
->                               int index); };
->
-> In this case, either enter() or enter_s2idle() would cause CFI check
-> failed since they use same callee.
+On Thursday 09 July 2020 12:35:09 Lorenzo Pieralisi wrote:
+> On Thu, Jul 02, 2020 at 10:30:36AM +0200, Pali Rohár wrote:
+> > When there is no PCIe card connected and advk_pcie_rd_conf() or
+> > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+> > root bridge, the aardvark driver throws the following error message:
+> > 
+> >   advk-pcie d0070000.pcie: config read/write timed out
+> > 
+> > Obviously accessing PCIe registers of disconnected card is not possible.
+> > 
+> > Extend check in advk_pcie_valid_device() function for validating
+> > availability of PCIe bus. If PCIe link is down, then the device is marked
+> > as Not Found and the driver does not try to access these registers.
+> > 
+> > This is just an optimization to prevent accessing PCIe registers when card
+> > is disconnected. Trying to access PCIe registers of disconnected card does
+> > not cause any crash, kernel just needs to wait for a timeout. So if card
+> > disappear immediately after checking for PCIe link (before accessing PCIe
+> > registers), it does not cause any problems.
+> > 
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > 
+> > ---
+> > Changes in V3:
+> > * Add comment to the code
+> > Changes in V2:
+> > * Update commit message, mention that this is optimization
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index 90ff291c24f0..d18f389b36a1 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -644,6 +644,13 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+> >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+> >  		return false;
+> >  
+> > +	/*
+> > +	 * If the link goes down after we check for link-up, nothing bad
+> > +	 * happens but the config access times out.
+> > +	 */
+> > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+> > +		return false;
+> > +
+> >  	return true;
+> >  }
+> 
+> Question: this basically means that you can only effectively enumerate
+> bus number == root_bus_nr and AFAICS if at probe the link did not
+> come up it will never do, will it ?
+> 
+> Isn't this equivalent to limiting the bus numbers the bridge is capable
+> of handling ?
+> 
+> Reworded: if in advk_pcie_setup_hw() the link does not come up, what's
+> the point of trying to enumerate the bus hierarchy below the root bus ?
 
-Can you please explain this in a bit more detail?
+Hello Lorenzo!
 
-As it stands, I don't understand the problem statement enough to apply
-the patch.
+PCIe link can theoretically come up even after boot, but aardvark driver
+currently does not support link detection at runtime. So it checks and
+enumerate device only at probe time.
 
-> Align function prototype of enter() since it needs return value for
-> some use cases. The return value of enter_s2idle() is no
-> need currently.
+I do not know if hardware has some mechanism to inform kernel that PCIe
+link come up (or down) and re-enumeration is required. Or the only
+option is polling via advk_pcie_link_up().
 
-So last time I requested you to document why ->enter_s2idle needs to
-return an int in the code, which has not been done.  Please do that.
+So if device is not visible at the probe time then it would not appear
+in system and cannot be used. This is current state.
 
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> ---
->  drivers/acpi/processor_idle.c   |    6 ++++--
->  drivers/cpuidle/cpuidle-tegra.c |    8 +++++---
->  drivers/idle/intel_idle.c       |    6 ++++--
->  include/linux/cpuidle.h         |    6 +++---
->  4 files changed, 16 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-> index 75534c5..6ffb6c9 100644
-> --- a/drivers/acpi/processor_idle.c
-> +++ b/drivers/acpi/processor_idle.c
-> @@ -655,8 +655,8 @@ static int acpi_idle_enter(struct cpuidle_device *dev,
->         return index;
->  }
->
-> -static void acpi_idle_enter_s2idle(struct cpuidle_device *dev,
-> -                                  struct cpuidle_driver *drv, int index)
-> +static int acpi_idle_enter_s2idle(struct cpuidle_device *dev,
-> +                                 struct cpuidle_driver *drv, int index)
->  {
->         struct acpi_processor_cx *cx = per_cpu(acpi_cstate[index], dev->cpu);
->
-> @@ -674,6 +674,8 @@ static void acpi_idle_enter_s2idle(struct cpuidle_device *dev,
->                 }
->         }
->         acpi_idle_do_entry(cx);
-> +
-> +       return 0;
->  }
->
->  static int acpi_processor_setup_cpuidle_cx(struct acpi_processor *pr,
-> diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
-> index 1500458..a12fb14 100644
-> --- a/drivers/cpuidle/cpuidle-tegra.c
-> +++ b/drivers/cpuidle/cpuidle-tegra.c
-> @@ -253,11 +253,13 @@ static int tegra_cpuidle_enter(struct cpuidle_device *dev,
->         return err ? -1 : index;
->  }
->
-> -static void tegra114_enter_s2idle(struct cpuidle_device *dev,
-> -                                 struct cpuidle_driver *drv,
-> -                                 int index)
-> +static int tegra114_enter_s2idle(struct cpuidle_device *dev,
-> +                                struct cpuidle_driver *drv,
-> +                                int index)
->  {
->         tegra_cpuidle_enter(dev, drv, index);
-> +
-> +       return 0;
->  }
->
->  /*
-> diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-> index f449584..b178da3 100644
-> --- a/drivers/idle/intel_idle.c
-> +++ b/drivers/idle/intel_idle.c
-> @@ -175,13 +175,15 @@ static __cpuidle int intel_idle(struct cpuidle_device *dev,
->   * Invoked as a suspend-to-idle callback routine with frozen user space, frozen
->   * scheduler tick and suspended scheduler clock on the target CPU.
->   */
-> -static __cpuidle void intel_idle_s2idle(struct cpuidle_device *dev,
-> -                                       struct cpuidle_driver *drv, int index)
-> +static __cpuidle int intel_idle_s2idle(struct cpuidle_device *dev,
-> +                                      struct cpuidle_driver *drv, int index)
->  {
->         unsigned long eax = flg2MWAIT(drv->states[index].flags);
->         unsigned long ecx = 1; /* break on interrupt flag */
->
->         mwait_idle_with_hints(eax, ecx);
-> +
-> +       return 0;
->  }
->
->  /*
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index ec2ef63..bee10c0 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -66,9 +66,9 @@ struct cpuidle_state {
->          * suspended, so it must not re-enable interrupts at any point (even
->          * temporarily) or attempt to change states of clock event devices.
->          */
-> -       void (*enter_s2idle) (struct cpuidle_device *dev,
-> -                             struct cpuidle_driver *drv,
-> -                             int index);
-> +       int (*enter_s2idle)(struct cpuidle_device *dev,
-> +                           struct cpuidle_driver *drv,
-> +                           int index);
->  };
->
->  /* Idle State Flags */
-> --
-> 1.7.9.5
+Just to note that our hardware does not support physical hotplug of
+mPCIe cards. You need to connect card when board is powered off.
+
+So if at the aardvark probe time PCIe link is not up then trying to
+enumerate devices under (software) root bridge is not needed. But it is
+needed to register/enumerate software root bridge device and currently
+both is done by one (recursive) call pci_host_probe().
