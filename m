@@ -2,190 +2,158 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3106FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1349C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0615D20672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E9C20672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 08:46:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ETwEaFeE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kcK/laqx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S1qDs5C/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbgGIInO (ORCPT
+        id S1726509AbgGIIqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:43:14 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51536 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGIInO (ORCPT
+        Thu, 9 Jul 2020 04:46:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgGIIp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:43:14 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EC265289;
-        Thu,  9 Jul 2020 10:43:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594284191;
-        bh=/VoKmI/DiBrtBJiaTvk1IXoOMWdrKG9Lxw4goxipK6Y=;
-        h=Subject:To:References:From:Reply-To:Date:In-Reply-To:From;
-        b=ETwEaFeE4nHWgv3yOt5Q4Pa0ZjXfQiEIGfmQS9Emqs3f7vG43WziN/s4rARiu64pZ
-         C3Fnbv0mo3jdm2Q6gyqO61f9Yhe/WHPSbcjWCYy8RC1pRQIO7EXtbwr/mPrNreK2WG
-         JDQKA6ntcmaqms3+Qz6DTJ55pyTiy+9nCxJn6Wbc=
-Subject: Re: [PATCH] TI DAVINCI SERIES MEDIA DRIVER: Replace HTTP links with
- HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        prabhakar.csengg@gmail.com, mchehab@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200709072814.24218-1-grandmaster@al2klimov.de>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Organization: Ideas on Board
-Message-ID: <dab6510d-4b3a-7439-bff0-e927ddd2622f@ideasonboard.com>
-Date:   Thu, 9 Jul 2020 09:43:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 9 Jul 2020 04:45:59 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B733CC061A0B;
+        Thu,  9 Jul 2020 01:45:59 -0700 (PDT)
+Date:   Thu, 09 Jul 2020 08:45:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594284358;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hjTJHow2R2XKL/tp30Tx1s7Zv1GQqNVD5CZB7vIOE/s=;
+        b=kcK/laqx/M0C9cBFddVrS2wjjFbjKpMLce2ezvFvs1anLVwgvJCHZ2w5E+OdWCspbT7QEJ
+        EznydsYqVU/wT38BTUsqdwSW+iRqGPzATpM9+PJU24D95ElJYLbXf6LPEi/ELDTTZWxMiO
+        v4vBH3Zy//WeHXA3eSbjg4K5ZsHnBCfNeMQiVFfkrTXnkvA1FxWK3urmCy3yD5QXe8nYyz
+        i17z+EK+I2O5oEsKlC8M7JKgforUeZUv0s2+29Px7l7+Hdc/uPuyMcl19dVs9IZnNHJGkv
+        dOAhhokja4Hlg7tUaVNwO9kzD39eHxasmIqqc3mP/auPiTKP24rJYVcNdY2bFg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594284358;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hjTJHow2R2XKL/tp30Tx1s7Zv1GQqNVD5CZB7vIOE/s=;
+        b=S1qDs5C/hynlBnpgDM68zB1RDixP4rt5BqTEeE5vY4Fih6snVfcLNqOOTYn/4wOolYxXOH
+        8NifYeGUlqJpjNDQ==
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched, vmlinux.lds: Increase STRUCT_ALIGNMENT to 64
+ bytes for GCC-4.9
+Cc:     kernel test robot <lkp@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200630144905.GX4817@hirez.programming.kicks-ass.net>
+References: <20200630144905.GX4817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200709072814.24218-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Message-ID: <159428435768.4006.17156231921502478446.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
+The following commit has been merged into the sched/core branch of tip:
 
-On 09/07/2020 08:28, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Commit-ID:     85c2ce9104eb93517db2037699471c517e81f9b4
+Gitweb:        https://git.kernel.org/tip/85c2ce9104eb93517db2037699471c517e81f9b4
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Tue, 30 Jun 2020 16:49:05 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 08 Jul 2020 11:39:00 +02:00
 
-This non-https link redirects to the https link already with a 301, so
-the content is expectedly the same.
+sched, vmlinux.lds: Increase STRUCT_ALIGNMENT to 64 bytes for GCC-4.9
 
-I doubt many people click on these links, as I guess they're usually
-rendered as text so it depends on the editor, I expect as much as
-anything it's 'advertising' or confirmation of the copyright notice.
+For some mysterious reason GCC-4.9 has a 64 byte section alignment for
+structures, all other GCC versions (and Clang) tested (including 4.8
+and 5.0) are fine with the 32 bytes alignment.
 
-But still, I've just clicked on them ... and I think this is a
-reasonable step.
+Getting this right is important for the new SCHED_DATA macro that
+creates an explicitly ordered array of 'struct sched_class' in the
+linker script and expect pointer arithmetic to work.
 
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Fixes: c3a340f7e7ea ("sched: Have sched_class_highest define by vmlinux.lds.h")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200630144905.GX4817@hirez.programming.kicks-ass.net
+---
+ include/asm-generic/vmlinux.lds.h | 18 +++++++++++-------
+ kernel/sched/sched.h              |  3 ++-
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely or at least not HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
-> 
->  drivers/media/platform/davinci/vpbe_display.c | 2 +-
->  drivers/media/platform/davinci/vpif.c         | 2 +-
->  drivers/media/platform/davinci/vpif.h         | 2 +-
->  drivers/media/platform/davinci/vpif_display.c | 2 +-
->  drivers/media/platform/davinci/vpif_display.h | 2 +-
->  include/media/davinci/vpbe_display.h          | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/platform/davinci/vpbe_display.c b/drivers/media/platform/davinci/vpbe_display.c
-> index 7ab13eb7527d..d19bad997f30 100644
-> --- a/drivers/media/platform/davinci/vpbe_display.c
-> +++ b/drivers/media/platform/davinci/vpbe_display.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /*
-> - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
->   */
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> diff --git a/drivers/media/platform/davinci/vpif.c b/drivers/media/platform/davinci/vpif.c
-> index df66461f5d4f..e9794c9fc7fe 100644
-> --- a/drivers/media/platform/davinci/vpif.c
-> +++ b/drivers/media/platform/davinci/vpif.c
-> @@ -5,7 +5,7 @@
->   * The hardware supports SDTV, HDTV formats, raw data capture.
->   * Currently, the driver supports NTSC and PAL standards.
->   *
-> - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
->   *
->   * This program is free software; you can redistribute it and/or
->   * modify it under the terms of the GNU General Public License as
-> diff --git a/drivers/media/platform/davinci/vpif.h b/drivers/media/platform/davinci/vpif.h
-> index 2466c7c77deb..c6d1d890478a 100644
-> --- a/drivers/media/platform/davinci/vpif.h
-> +++ b/drivers/media/platform/davinci/vpif.h
-> @@ -1,7 +1,7 @@
->  /*
->   * VPIF header file
->   *
-> - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
->   *
->   * This program is free software; you can redistribute it and/or
->   * modify it under the terms of the GNU General Public License as
-> diff --git a/drivers/media/platform/davinci/vpif_display.c b/drivers/media/platform/davinci/vpif_display.c
-> index 7d55fd45240e..46afc029138f 100644
-> --- a/drivers/media/platform/davinci/vpif_display.c
-> +++ b/drivers/media/platform/davinci/vpif_display.c
-> @@ -2,7 +2,7 @@
->   * vpif-display - VPIF display driver
->   * Display driver for TI DaVinci VPIF
->   *
-> - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
->   * Copyright (C) 2014 Lad, Prabhakar <prabhakar.csengg@gmail.com>
->   *
->   * This program is free software; you can redistribute it and/or
-> diff --git a/drivers/media/platform/davinci/vpif_display.h b/drivers/media/platform/davinci/vpif_display.h
-> index af2765fdcea8..f731a65eefd6 100644
-> --- a/drivers/media/platform/davinci/vpif_display.h
-> +++ b/drivers/media/platform/davinci/vpif_display.h
-> @@ -1,7 +1,7 @@
->  /*
->   * VPIF display header file
->   *
-> - * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
->   *
->   * This program is free software; you can redistribute it and/or
->   * modify it under the terms of the GNU General Public License as
-> diff --git a/include/media/davinci/vpbe_display.h b/include/media/davinci/vpbe_display.h
-> index 56d05a855140..6d2a93740130 100644
-> --- a/include/media/davinci/vpbe_display.h
-> +++ b/include/media/davinci/vpbe_display.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0-only */
->  /*
-> - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
->   */
->  #ifndef VPBE_DISPLAY_H
->  #define VPBE_DISPLAY_H
-> 
-
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 66fb84c..3ceb4b7 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -109,6 +109,17 @@
+ #endif
+ 
+ /*
++ * GCC 4.5 and later have a 32 bytes section alignment for structures.
++ * Except GCC 4.9, that feels the need to align on 64 bytes.
++ */
++#if __GNUC__ == 4 && __GNUC_MINOR__ == 9
++#define STRUCT_ALIGNMENT 64
++#else
++#define STRUCT_ALIGNMENT 32
++#endif
++#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
++
++/*
+  * The order of the sched class addresses are important, as they are
+  * used to determine the order of the priority of each sched class in
+  * relation to each other.
+@@ -123,13 +134,6 @@
+ 	*(__stop_sched_class)			\
+ 	__end_sched_classes = .;
+ 
+-/*
+- * Align to a 32 byte boundary equal to the
+- * alignment gcc 4.5 uses for a struct
+- */
+-#define STRUCT_ALIGNMENT 32
+-#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
+-
+ /* The actual configuration determine if the init/exit sections
+  * are handled as text/data or they can be discarded (which
+  * often happens at runtime)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 5aa6661..9bef2dd 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -67,6 +67,7 @@
+ #include <linux/tsacct_kern.h>
+ 
+ #include <asm/tlb.h>
++#include <asm-generic/vmlinux.lds.h>
+ 
+ #ifdef CONFIG_PARAVIRT
+ # include <asm/paravirt.h>
+@@ -1810,7 +1811,7 @@ struct sched_class {
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 	void (*task_change_group)(struct task_struct *p, int type);
+ #endif
+-} __aligned(32); /* STRUCT_ALIGN(), vmlinux.lds.h */
++} __aligned(STRUCT_ALIGNMENT); /* STRUCT_ALIGN(), vmlinux.lds.h */
+ 
+ static inline void put_prev_task(struct rq *rq, struct task_struct *prev)
+ {
