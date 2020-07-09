@@ -2,468 +2,181 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C78FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5855AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB93920767
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32CCA20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:49:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6Newwhh"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="zx/RNYiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgGIOrx (ORCPT
+        id S1727901AbgGIOtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbgGIOrv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:47:51 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE51C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 07:47:51 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id z5so1074951pgb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 07:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9ro8BWZ6Nt1mU3LMw0YQWvIfUyjJ2BroQgSItIneQ5Q=;
-        b=r6Newwhhh4id3vyMleK/DDOTJ5BmSCDsvpopEE2wYlyQO9NJK/TuvaAh4BmqG7uYUw
-         5mIauWSwlKFsSol5wFSU6pgJv/tjAg62Y3toDsZ8fL/X9SAYpg87Rb6ttxNHEe8xiXyQ
-         mTi4rGoEQEDKoyARkto5x8bvekNfCkPLSH8o3t4tjJWeIjjOGwayEAPPjr2YDXFhKTu7
-         ysXpEdAAmLIqsDSPVzDE1zkqQdBVPCPCm7IOc5O2VMmkD2R4srsL2+WLVwMB0y5T4MGw
-         Ead/2CISYR/C9tFCxxiW9Z03MmzOM6vIGa8ye/+1R3BFm9V2HkHPPukBofmQDyEmE5bV
-         YXPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9ro8BWZ6Nt1mU3LMw0YQWvIfUyjJ2BroQgSItIneQ5Q=;
-        b=L/PftEnTizjokrjho16hvw6ylOtL32fF5uCv2mJ8bbIxAoBvX2ri/GG6rEGQgF7BnW
-         n5bShp6q2xYc2a5QEvBeynsfRybc0/Ji74P+CK5/84kQXJc9RwV8d+ySJF5KY6MB1rIV
-         E/ycSoQU+api5M55e2hX9/MfJzNqoaNYKE9wfCd2BDn1zOUUfxPiZ7Ar5B9zqxDVEVhD
-         gN9VzQ/yIK2LiyIu15NsZrxPUliZ9R5mW7Q5GlnS2Xv+RgSgGiLS3huiaL2PZJIkYV67
-         p/RWyg+jwYany2o87aospwa9OQrJQoXR8qtn+09bkN3mgvMwEQDpvj3I8FVQX6haYf/q
-         /6vQ==
-X-Gm-Message-State: AOAM531nYcLgV2IEzv7vseq55PWwPAnTYDA5zC+TSwsveXc3PJGLmEZP
-        KQGE4gsX8jM7zf8RySUwXjQmSQ==
-X-Google-Smtp-Source: ABdhPJymAnrBf8Zxkz/lsMjbxHDbT9CpQ8lZNyy0Mhe4hGauWUspH9zwNPT31V/BWn4VdYarAhLaCQ==
-X-Received: by 2002:a05:6a00:2292:: with SMTP id f18mr58309786pfe.192.1594306071120;
-        Thu, 09 Jul 2020 07:47:51 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e20sm3122098pfl.212.2020.07.09.07.47.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 07:47:50 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 07:45:34 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, saravanak@google.com,
-        dianders@chromium.org, vincent.guittot@linaro.org,
-        amit.kucheria@linaro.org, robdclark@chromium.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: sdm845: Add cpu OPP tables
-Message-ID: <20200709144534.GA1881320@builder.lan>
-References: <20200702204643.25785-1-sibis@codeaurora.org>
+        Thu, 9 Jul 2020 10:49:25 -0400
+Received: from mga11.intel.com ([192.55.52.93]:8705 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726517AbgGIOtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 10:49:25 -0400
+IronPort-SDR: hj+yBzppA/STumwnkDCJMcKInNzVkrKiHey0mn7nj6YXnc0CXCKrC/gqttuzNg7ZNFPfHMfjzT
+ 2I99T9/fbOoA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="146092301"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="146092301"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 07:49:22 -0700
+IronPort-SDR: lxdIzXj9YnhWi3X5lr9/yNT/LdwZHedoQWVxV5oF67eZ6OIUwOXCQaYZFDYwcPvtFpcFhRkYTV
+ bJveNgpJdykQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="324243209"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga007.jf.intel.com with ESMTP; 09 Jul 2020 07:49:21 -0700
+Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 9 Jul 2020 07:49:21 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 9 Jul 2020 07:49:21 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.109)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 9 Jul 2020 07:49:21 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jHWqk1CWflXmbM3XkubB1C5cRopgJEdGNu8O+s/V1KTOvA5S8ayH5NUpnIkhUUd9FKL9YhppIKm9E6GtSkuK9qahPX+cUljSciOVSeVYv0p+TnGYXFD4ET904mnwbLWwEO7ABc1NGyAzbbP8XM3anOWqks2QFEHw1k18RGBBc/PVCAfSF+Fs1LDDJAcqqh36d+EKHQWMBHOTRQ7yafgSlidU7+FWPKxBw45/5ccDlj5n1fn3mEnOG4y3tXDZSU7kJ/jxUSmcfYsPtR7Z7N2y1LG5LickBmRsMY8Zu2vbalMVKoiUOb0mpaUy0GpIRDDCMLCNw1kmN8ngZ+7b9juHRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3olccjvRSAKD60SinJG/NJIaLCxpIzptIzOcaRIBwL4=;
+ b=dRZyNiXVr1160QDkQZXvr0KMh7XF64XZVF8yHbBsfaiftdLRjQSiWFn+juASqaBCmeKVwJlPEszKoSDDllgZKEarSjGRTlM7jaG+eClHuFqoC6FVgwbsW3+IfzleqDf8MLr7J1PviwrxMUxQ1omP4p9WTnD5/qEjfeyWr4oJFe8r70CtYzLeSEGBgfyWooKk7zqOBtuYbSBZjydvt0nIvuvTP+JGsQUgl7lDP0I3toZ5KlVTdblSTosJYaZ6zlJbESUXC0CMIdJHUiULowTbVhQDkmHEOTt/NN54rMhh2LhcVMmY9OJqLZH0Qdk0h8Vc0grofC/SP8O8WjAMkXJMzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3olccjvRSAKD60SinJG/NJIaLCxpIzptIzOcaRIBwL4=;
+ b=zx/RNYiRqTzICUJ9yiDz22/mEuVxL2txZZAkfeZuP9IVw9dgg6UbjvFOVL5Zz2GPa1A/DjHwKqdLNr8qFe67rWUnlWxSRaLsGvmo9XKoHugf/p31BAqLDKMsYPHEEHTGQ0OoTytVBovNmMpSw734bx1wjqf1xW+rmjbtVcC5Ip8=
+Received: from BYAPR11MB3256.namprd11.prod.outlook.com (2603:10b6:a03:76::19)
+ by BY5PR11MB4226.namprd11.prod.outlook.com (2603:10b6:a03:1bf::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Thu, 9 Jul
+ 2020 14:49:18 +0000
+Received: from BYAPR11MB3256.namprd11.prod.outlook.com
+ ([fe80::4ca7:fbfa:78bf:173c]) by BYAPR11MB3256.namprd11.prod.outlook.com
+ ([fe80::4ca7:fbfa:78bf:173c%4]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
+ 14:49:18 +0000
+From:   "Moore, Robert" <robert.moore@intel.com>
+To:     Xu Wang <vulab@iscas.ac.cn>,
+        "Kaneda, Erik" <erik.kaneda@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] service_layers: osunixmap: Remove unnecessary brackets in
+ acpi_os_map_memory()
+Thread-Topic: [PATCH] service_layers: osunixmap: Remove unnecessary brackets
+ in acpi_os_map_memory()
+Thread-Index: AQHWVcgik7eppFgSsk2P33P93bkikKj/VH9g
+Date:   Thu, 9 Jul 2020 14:49:17 +0000
+Message-ID: <BYAPR11MB3256999B714C7F5598E3213687640@BYAPR11MB3256.namprd11.prod.outlook.com>
+References: <20200709080806.14328-1-vulab@iscas.ac.cn>
+In-Reply-To: <20200709080806.14328-1-vulab@iscas.ac.cn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: iscas.ac.cn; dkim=none (message not signed)
+ header.d=none;iscas.ac.cn; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [134.134.136.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1a90b89b-2804-463a-e887-08d8241741e0
+x-ms-traffictypediagnostic: BY5PR11MB4226:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB422603A578C748BE8A494FE887640@BY5PR11MB4226.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:226;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cnkkquuKdL2DidiZNAKx6SfiVtolNIYTO+nBjWHS65tfL0PzCJQGC8lffz6mZdp/0L6+3KbjnmmXoqnDzpR62z0D6r2weHXeuYzFO2C6i+tbWcA8w/+pA4wdmjdvpSs2xu/GM4VtX7SgMXaCOmdLQ9hJxe8m7+P3aHUiXaWROuR4GeRHu8RetW59bVw2g+yzIFQz9MGpm4WnD4a4t6N4APkLLI5BLRt/V9hcNq0HbWNNc1qtLuBTTR5X6gz1sSGSkbEVpv+gwLl0DlPLwiSfa/V0zy0y0wU1w0QbRXytPXt6/TpH9TDwpjpMWP0lEuK7FgkfWF/ciUQbYww1eRQPVA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3256.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(66556008)(7696005)(55016002)(53546011)(6506007)(83380400001)(71200400001)(76116006)(66946007)(8936002)(66476007)(66446008)(64756008)(52536014)(186003)(9686003)(26005)(86362001)(316002)(8676002)(110136005)(5660300002)(4326008)(33656002)(478600001)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: pEFN4lx0BHc6r8UnsXZCn7BC03Wo4LIM3cd5q/JE9J3fL6TAVJytHX+yhKJJPgaDSewbfxOKaMfhWhMm9CplXSALeCMtwzfTXwSrLNBZHvATC8z9T9inNQ8W2fbSteU5KZMqHG0G+BQnk4PeKLjY1Oui4D6Ne7ODRM0shDGN6ngy2t0Fs/NV6MTlMDLG5Unb/z9jqVtcAACAxNdDeA94kqpZuU/buu6rRuu0VLcrplQ6lfRdBLMSKCQU2SHGFgSCxxBs4obPIkINnBjPH2AhOf1aUA+DFPs5RoyD0cJTszB6MUdZ0mS0awBr2t5Dt4aNGVdQ0Xcwq0Vp4LaqhFvkKSK9uHA0Neibz2Q6zmvDrkLj8x9rY2iqjRo0eSnywXgD23N4hgfKZVvHxyEq8hSWdOUJFHj9TKewTpmg2ma24m6vqhugng42neTC62WXw1SZUUOlsFN1RXhLBAtpVmXJoAbQuLSruGBI5rTP09jDC9qbyLV0P4LnYXNYJhppbDBZ
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702204643.25785-1-sibis@codeaurora.org>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3256.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a90b89b-2804-463a-e887-08d8241741e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 14:49:17.9150
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /P2XI8ZSd8eJwQ6jOikF1ACRzSEjy9ceIh/scGWvJ8yIy6CZGaFUWpOvIgsZLa9ljjIl9WuVqA7i5e6E6xTaCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4226
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 02 Jul 13:46 PDT 2020, Sibi Sankar wrote:
+-		return (NULL);
++		return NULL;
 
-> Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+This is the ACPICA coding standard, and it does not affect anything.
+Bob
 
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+-----Original Message-----
+From: Xu Wang <vulab@iscas.ac.cn>=20
+Sent: Thursday, July 09, 2020 1:08 AM
+To: Moore, Robert <robert.moore@intel.com>; Kaneda, Erik <erik.kaneda@intel=
+.com>; Wysocki, Rafael J <rafael.j.wysocki@intel.com>; lenb@kernel.org; vul=
+ab@iscas.ac.cn; linux-acpi@vger.kernel.org; devel@acpica.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH] service_layers: osunixmap: Remove unnecessary brackets in =
+acpi_os_map_memory()
 
-and applied.
+Remove extra brackets.
 
-Thanks,
-Bjorn
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ tools/power/acpi/os_specific/service_layers/osunixmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> ---
-> 
-> v2:
->  * Drop interconnect tags
->  * Add all possible cpu opps from supported frequency list
-> 
-> v1: https://patchwork.kernel.org/patch/11527589/
-> 
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 285 +++++++++++++++++++++++++++
->  1 file changed, 285 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 8eb5a31346d28..9a7e27ede7186 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/clock/qcom,lpass-sdm845.h>
->  #include <dt-bindings/clock/qcom,rpmh.h>
->  #include <dt-bindings/clock/qcom,videocc-sdm845.h>
-> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
->  #include <dt-bindings/interconnect/qcom,sdm845.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/phy/phy-qcom-qusb2.h>
-> @@ -198,6 +199,9 @@ &LITTLE_CPU_SLEEP_1
->  			capacity-dmips-mhz = <607>;
->  			dynamic-power-coefficient = <100>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
-> +			operating-points-v2 = <&cpu0_opp_table>;
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_0>;
->  			L2_0: l2-cache {
-> @@ -220,6 +224,9 @@ &LITTLE_CPU_SLEEP_1
->  			capacity-dmips-mhz = <607>;
->  			dynamic-power-coefficient = <100>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
-> +			operating-points-v2 = <&cpu0_opp_table>;
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_100>;
->  			L2_100: l2-cache {
-> @@ -239,6 +246,9 @@ &LITTLE_CPU_SLEEP_1
->  			capacity-dmips-mhz = <607>;
->  			dynamic-power-coefficient = <100>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
-> +			operating-points-v2 = <&cpu0_opp_table>;
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_200>;
->  			L2_200: l2-cache {
-> @@ -258,6 +268,9 @@ &LITTLE_CPU_SLEEP_1
->  			capacity-dmips-mhz = <607>;
->  			dynamic-power-coefficient = <100>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
-> +			operating-points-v2 = <&cpu0_opp_table>;
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_300>;
->  			L2_300: l2-cache {
-> @@ -277,6 +290,9 @@ &BIG_CPU_SLEEP_1
->  					   &CLUSTER_SLEEP_0>;
->  			dynamic-power-coefficient = <396>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
-> +			operating-points-v2 = <&cpu4_opp_table>;
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_400>;
->  			L2_400: l2-cache {
-> @@ -296,6 +312,9 @@ &BIG_CPU_SLEEP_1
->  					   &CLUSTER_SLEEP_0>;
->  			dynamic-power-coefficient = <396>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
-> +			operating-points-v2 = <&cpu4_opp_table>;
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_500>;
->  			L2_500: l2-cache {
-> @@ -315,6 +334,9 @@ &BIG_CPU_SLEEP_1
->  					   &CLUSTER_SLEEP_0>;
->  			dynamic-power-coefficient = <396>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
-> +			operating-points-v2 = <&cpu4_opp_table>;
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_600>;
->  			L2_600: l2-cache {
-> @@ -334,6 +356,9 @@ &BIG_CPU_SLEEP_1
->  					   &CLUSTER_SLEEP_0>;
->  			dynamic-power-coefficient = <396>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
-> +			operating-points-v2 = <&cpu4_opp_table>;
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_700>;
->  			L2_700: l2-cache {
-> @@ -433,6 +458,266 @@ CLUSTER_SLEEP_0: cluster-sleep-0 {
->  		};
->  	};
->  
-> +	cpu0_opp_table: cpu0_opp_table {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		cpu0_opp1: opp-300000000 {
-> +			opp-hz = /bits/ 64 <300000000>;
-> +			opp-peak-kBps = <800000 4800000>;
-> +		};
-> +
-> +		cpu0_opp2: opp-403200000 {
-> +			opp-hz = /bits/ 64 <403200000>;
-> +			opp-peak-kBps = <800000 4800000>;
-> +		};
-> +
-> +		cpu0_opp3: opp-480000000 {
-> +			opp-hz = /bits/ 64 <480000000>;
-> +			opp-peak-kBps = <800000 6451200>;
-> +		};
-> +
-> +		cpu0_opp4: opp-576000000 {
-> +			opp-hz = /bits/ 64 <576000000>;
-> +			opp-peak-kBps = <800000 6451200>;
-> +		};
-> +
-> +		cpu0_opp5: opp-652800000 {
-> +			opp-hz = /bits/ 64 <652800000>;
-> +			opp-peak-kBps = <800000 7680000>;
-> +		};
-> +
-> +		cpu0_opp6: opp-748800000 {
-> +			opp-hz = /bits/ 64 <748800000>;
-> +			opp-peak-kBps = <1804000 9216000>;
-> +		};
-> +
-> +		cpu0_opp7: opp-825600000 {
-> +			opp-hz = /bits/ 64 <825600000>;
-> +			opp-peak-kBps = <1804000 9216000>;
-> +		};
-> +
-> +		cpu0_opp8: opp-902400000 {
-> +			opp-hz = /bits/ 64 <902400000>;
-> +			opp-peak-kBps = <1804000 10444800>;
-> +		};
-> +
-> +		cpu0_opp9: opp-979200000 {
-> +			opp-hz = /bits/ 64 <979200000>;
-> +			opp-peak-kBps = <1804000 11980800>;
-> +		};
-> +
-> +		cpu0_opp10: opp-1056000000 {
-> +			opp-hz = /bits/ 64 <1056000000>;
-> +			opp-peak-kBps = <1804000 11980800>;
-> +		};
-> +
-> +		cpu0_opp11: opp-1132800000 {
-> +			opp-hz = /bits/ 64 <1132800000>;
-> +			opp-peak-kBps = <2188000 13516800>;
-> +		};
-> +
-> +		cpu0_opp12: opp-1228800000 {
-> +			opp-hz = /bits/ 64 <1228800000>;
-> +			opp-peak-kBps = <2188000 15052800>;
-> +		};
-> +
-> +		cpu0_opp13: opp-1324800000 {
-> +			opp-hz = /bits/ 64 <1324800000>;
-> +			opp-peak-kBps = <2188000 16588800>;
-> +		};
-> +
-> +		cpu0_opp14: opp-1420800000 {
-> +			opp-hz = /bits/ 64 <1420800000>;
-> +			opp-peak-kBps = <3072000 18124800>;
-> +		};
-> +
-> +		cpu0_opp15: opp-1516800000 {
-> +			opp-hz = /bits/ 64 <1516800000>;
-> +			opp-peak-kBps = <3072000 19353600>;
-> +		};
-> +
-> +		cpu0_opp16: opp-1612800000 {
-> +			opp-hz = /bits/ 64 <1612800000>;
-> +			opp-peak-kBps = <4068000 19353600>;
-> +		};
-> +
-> +		cpu0_opp17: opp-1689600000 {
-> +			opp-hz = /bits/ 64 <1689600000>;
-> +			opp-peak-kBps = <4068000 20889600>;
-> +		};
-> +
-> +		cpu0_opp18: opp-1766400000 {
-> +			opp-hz = /bits/ 64 <1766400000>;
-> +			opp-peak-kBps = <4068000 22425600>;
-> +		};
-> +	};
-> +
-> +	cpu4_opp_table: cpu4_opp_table {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		cpu4_opp1: opp-300000000 {
-> +			opp-hz = /bits/ 64 <300000000>;
-> +			opp-peak-kBps = <800000 4800000>;
-> +		};
-> +
-> +		cpu4_opp2: opp-403200000 {
-> +			opp-hz = /bits/ 64 <403200000>;
-> +			opp-peak-kBps = <800000 4800000>;
-> +		};
-> +
-> +		cpu4_opp3: opp-480000000 {
-> +			opp-hz = /bits/ 64 <480000000>;
-> +			opp-peak-kBps = <1804000 4800000>;
-> +		};
-> +
-> +		cpu4_opp4: opp-576000000 {
-> +			opp-hz = /bits/ 64 <576000000>;
-> +			opp-peak-kBps = <1804000 4800000>;
-> +		};
-> +
-> +		cpu4_opp5: opp-652800000 {
-> +			opp-hz = /bits/ 64 <652800000>;
-> +			opp-peak-kBps = <1804000 4800000>;
-> +		};
-> +
-> +		cpu4_opp6: opp-748800000 {
-> +			opp-hz = /bits/ 64 <748800000>;
-> +			opp-peak-kBps = <1804000 4800000>;
-> +		};
-> +
-> +		cpu4_opp7: opp-825600000 {
-> +			opp-hz = /bits/ 64 <825600000>;
-> +			opp-peak-kBps = <2188000 9216000>;
-> +		};
-> +
-> +		cpu4_opp8: opp-902400000 {
-> +			opp-hz = /bits/ 64 <902400000>;
-> +			opp-peak-kBps = <2188000 9216000>;
-> +		};
-> +
-> +		cpu4_opp9: opp-979200000 {
-> +			opp-hz = /bits/ 64 <979200000>;
-> +			opp-peak-kBps = <2188000 9216000>;
-> +		};
-> +
-> +		cpu4_opp10: opp-1056000000 {
-> +			opp-hz = /bits/ 64 <1056000000>;
-> +			opp-peak-kBps = <3072000 9216000>;
-> +		};
-> +
-> +		cpu4_opp11: opp-1132800000 {
-> +			opp-hz = /bits/ 64 <1132800000>;
-> +			opp-peak-kBps = <3072000 11980800>;
-> +		};
-> +
-> +		cpu4_opp12: opp-1209600000 {
-> +			opp-hz = /bits/ 64 <1209600000>;
-> +			opp-peak-kBps = <4068000 11980800>;
-> +		};
-> +
-> +		cpu4_opp13: opp-1286400000 {
-> +			opp-hz = /bits/ 64 <1286400000>;
-> +			opp-peak-kBps = <4068000 11980800>;
-> +		};
-> +
-> +		cpu4_opp14: opp-1363200000 {
-> +			opp-hz = /bits/ 64 <1363200000>;
-> +			opp-peak-kBps = <4068000 15052800>;
-> +		};
-> +
-> +		cpu4_opp15: opp-1459200000 {
-> +			opp-hz = /bits/ 64 <1459200000>;
-> +			opp-peak-kBps = <4068000 15052800>;
-> +		};
-> +
-> +		cpu4_opp16: opp-1536000000 {
-> +			opp-hz = /bits/ 64 <1536000000>;
-> +			opp-peak-kBps = <5412000 15052800>;
-> +		};
-> +
-> +		cpu4_opp17: opp-1612800000 {
-> +			opp-hz = /bits/ 64 <1612800000>;
-> +			opp-peak-kBps = <5412000 15052800>;
-> +		};
-> +
-> +		cpu4_opp18: opp-1689600000 {
-> +			opp-hz = /bits/ 64 <1689600000>;
-> +			opp-peak-kBps = <5412000 19353600>;
-> +		};
-> +
-> +		cpu4_opp19: opp-1766400000 {
-> +			opp-hz = /bits/ 64 <1766400000>;
-> +			opp-peak-kBps = <6220000 19353600>;
-> +		};
-> +
-> +		cpu4_opp20: opp-1843200000 {
-> +			opp-hz = /bits/ 64 <1843200000>;
-> +			opp-peak-kBps = <6220000 19353600>;
-> +		};
-> +
-> +		cpu4_opp21: opp-1920000000 {
-> +			opp-hz = /bits/ 64 <1920000000>;
-> +			opp-peak-kBps = <7216000 19353600>;
-> +		};
-> +
-> +		cpu4_opp22: opp-1996800000 {
-> +			opp-hz = /bits/ 64 <1996800000>;
-> +			opp-peak-kBps = <7216000 20889600>;
-> +		};
-> +
-> +		cpu4_opp23: opp-2092800000 {
-> +			opp-hz = /bits/ 64 <2092800000>;
-> +			opp-peak-kBps = <7216000 20889600>;
-> +		};
-> +
-> +		cpu4_opp24: opp-2169600000 {
-> +			opp-hz = /bits/ 64 <2169600000>;
-> +			opp-peak-kBps = <7216000 20889600>;
-> +		};
-> +
-> +		cpu4_opp25: opp-2246400000 {
-> +			opp-hz = /bits/ 64 <2246400000>;
-> +			opp-peak-kBps = <7216000 20889600>;
-> +		};
-> +
-> +		cpu4_opp26: opp-2323200000 {
-> +			opp-hz = /bits/ 64 <2323200000>;
-> +			opp-peak-kBps = <7216000 20889600>;
-> +		};
-> +
-> +		cpu4_opp27: opp-2400000000 {
-> +			opp-hz = /bits/ 64 <2400000000>;
-> +			opp-peak-kBps = <7216000 22425600>;
-> +		};
-> +
-> +		cpu4_opp28: opp-2476800000 {
-> +			opp-hz = /bits/ 64 <2476800000>;
-> +			opp-peak-kBps = <7216000 22425600>;
-> +		};
-> +
-> +		cpu4_opp29: opp-2553600000 {
-> +			opp-hz = /bits/ 64 <2553600000>;
-> +			opp-peak-kBps = <7216000 22425600>;
-> +		};
-> +
-> +		cpu4_opp30: opp-2649600000 {
-> +			opp-hz = /bits/ 64 <2649600000>;
-> +			opp-peak-kBps = <7216000 22425600>;
-> +		};
-> +
-> +		cpu4_opp31: opp-2745600000 {
-> +			opp-hz = /bits/ 64 <2745600000>;
-> +			opp-peak-kBps = <7216000 25497600>;
-> +		};
-> +
-> +		cpu4_opp32: opp-2803200000 {
-> +			opp-hz = /bits/ 64 <2803200000>;
-> +			opp-peak-kBps = <7216000 25497600>;
-> +		};
-> +	};
-> +
->  	pmu {
->  		compatible = "arm,armv8-pmuv3";
->  		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+diff --git a/tools/power/acpi/os_specific/service_layers/osunixmap.c b/tool=
+s/power/acpi/os_specific/service_layers/osunixmap.c
+index c565546e85bc..52f3e70b5c81 100644
+--- a/tools/power/acpi/os_specific/service_layers/osunixmap.c
++++ b/tools/power/acpi/os_specific/service_layers/osunixmap.c
+@@ -70,7 +70,7 @@ void *acpi_os_map_memory(acpi_physical_address where, acp=
+i_size length)
+ 	fd =3D open(SYSTEM_MEMORY, O_RDONLY | O_BINARY);
+ 	if (fd < 0) {
+ 		fprintf(stderr, "Cannot open %s\n", SYSTEM_MEMORY);
+-		return (NULL);
++		return NULL;
+ 	}
+=20
+ 	/* Align the offset to use mmap */
+@@ -85,7 +85,7 @@ void *acpi_os_map_memory(acpi_physical_address where, acp=
+i_size length)
+ 	if (mapped_memory =3D=3D MAP_FAILED) {
+ 		fprintf(stderr, "Cannot map %s\n", SYSTEM_MEMORY);
+ 		close(fd);
+-		return (NULL);
++		return NULL;
+ 	}
+=20
+ 	close(fd);
+--=20
+2.17.1
+
