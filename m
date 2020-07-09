@@ -2,165 +2,187 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAA09207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA04A20774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QhS++ITn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tvU8QRAc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgGISw2 (ORCPT
+        id S1726275AbgGISyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 14:52:28 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46850 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgGISw1 (ORCPT
+        Thu, 9 Jul 2020 14:54:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgGISyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 14:52:27 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069IpeZp058636;
-        Thu, 9 Jul 2020 13:51:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594320700;
-        bh=GtWtWQHKdBXB3CLNnasO+bNWYTz+NerPnNTBio+tRkU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=QhS++ITnV6S47j8LNZmwdw3dbtxLzP4GSKKOfA5cXwjYgSbCszdTooHYUWXpncK3W
-         dqNm4Ok89JXwaT8iKBDYQsa9G3U2C60Ecff8u0pFRBqrMUijlnXWFLFq1aX7AxUCdZ
-         Ei2cqFpe5MJ0aaV0iE/Ub7Wsjr2Pl7gSCnUtbKrI=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 069IpeE8060318
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Jul 2020 13:51:40 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 9 Jul
- 2020 13:51:40 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 9 Jul 2020 13:51:40 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069Ipdbw009667;
-        Thu, 9 Jul 2020 13:51:40 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 2/2] ASoC: tlv320adcx140: Add tx offset slot programming
-Date:   Thu, 9 Jul 2020 13:51:29 -0500
-Message-ID: <20200709185129.10505-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200709185129.10505-1-dmurphy@ti.com>
-References: <20200709185129.10505-1-dmurphy@ti.com>
+        Thu, 9 Jul 2020 14:54:52 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3E39C08C5CE;
+        Thu,  9 Jul 2020 11:54:51 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id bm28so679793edb.2;
+        Thu, 09 Jul 2020 11:54:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZzXAPkftkjwIiTphx145Tg9PbZ/KHwLrGaBNp1a/xzQ=;
+        b=tvU8QRAcYPj7xFR2ZHt/uKYrnPP4wkoFfX28TjcL/pFxTLV2IgSaR2IfCTVUc5C8ft
+         wAK8oqMsRtX943tVcu41vQrumnICSdXvMbI/NTQyYkYZgardoazLQTKgv+X4h39scIQi
+         TODpYm6aeYq7ibHXJ3L2oLrJYfTaVhDdaMBabgLLCr/5dtgUD+X0sTbTVHDrOyVxmwWY
+         BOY0G5TV0xFy8lZEpKtb2aTjrKTW+UougWVzOxB2Zn5MfrcY5pxVhjn20F/tVx+UDPo5
+         B4ZXm9JFtu8jGgY9izBB36l0NrExqWlBwHFBt4j1jD2NIYabekiiIwNQ30LpmUJDo8eP
+         tf2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZzXAPkftkjwIiTphx145Tg9PbZ/KHwLrGaBNp1a/xzQ=;
+        b=JDg024M38NsZNWdXI7aBDulTGCtkLv3bjNOx+q1jpWrpZhvIfuG3czAs9rUAAqKHbk
+         bt/CL8wogOznYc90btky93fRdlX36F3FaeIa9kAVp6Xf9JataalacU9G8Djj38VrUeTA
+         57RDtioDdLa3D0aDWdR+0rHPjJXGDpFJ0dfQqK/svZujQp5doFqLBLZCJdEYG58beZYN
+         oSXnxmcab+jco/dBaLzMUCytqKfqz635Zk9re25nVHSEe9yHK1lk2LL72aOHATkHBWqP
+         eRmKEuztKHMuejmMF1HPgcfQSs4AisYkIBVco2Qx2CoOWGBT8BDDw7OpserwaAXCEvIC
+         xFlQ==
+X-Gm-Message-State: AOAM533yR1rSNZr3WwTx/vBSlaNEGpWSTUPSubIlgFTR2zO+jC7PHRJG
+        AhgLAATr+SWwJTytCj54llwSnrPKMAlb3G98OgY=
+X-Google-Smtp-Source: ABdhPJym+0byF6j2MSgwE+oVtEh+E1cDSaOiZnSMabgRzWHKmr9yu4WK140lJjmBsViWfoDA1MBCeBx5R81Ch8oM2oM=
+X-Received: by 2002:a05:6402:1250:: with SMTP id l16mr74987434edw.362.1594320890278;
+ Thu, 09 Jul 2020 11:54:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200709050145.3520931-1-bjorn.andersson@linaro.org>
+ <20200709050145.3520931-3-bjorn.andersson@linaro.org> <CAF6AEGugJYmMpeH_9mWXcegq1awzraUzBTa0S1Rqcr3=Bmk0uQ@mail.gmail.com>
+ <20200709164833.GR11847@yoga> <CAF6AEGvmqSNeQSFhc4SDJ=09x_LMVz=DmzUEb6GGv=s=f8P2aA@mail.gmail.com>
+In-Reply-To: <CAF6AEGvmqSNeQSFhc4SDJ=09x_LMVz=DmzUEb6GGv=s=f8P2aA@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 9 Jul 2020 11:55:22 -0700
+Message-ID: <CAF6AEGvHjiS8r32FkVs5yK+nk+caEr4dikCnrE205nqToTA4tg@mail.gmail.com>
+Subject: Re: [PATCH 2/5] iommu/arm-smmu: Emulate bypass by using context banks
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the TX offset slot programming.  There is no RX offset slot
-register.
+On Thu, Jul 9, 2020 at 9:56 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Thu, Jul 9, 2020 at 9:48 AM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > On Thu 09 Jul 09:17 PDT 2020, Rob Clark wrote:
+> >
+> > > On Wed, Jul 8, 2020 at 10:01 PM Bjorn Andersson
+> > > <bjorn.andersson@linaro.org> wrote:
+> > [..]
+> > > > @@ -678,7 +680,11 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+> > > >         if (smmu_domain->smmu)
+> > > >                 goto out_unlock;
+> > > >
+> > > > -       if (domain->type == IOMMU_DOMAIN_IDENTITY) {
+> > > > +       /*
+> > > > +        * Nothing to do for IDENTITY domains,unless disabled context banks are
+> > > > +        * used to emulate bypass mappings on Qualcomm platforms.
+> > > > +        */
+> > > > +       if (domain->type == IOMMU_DOMAIN_IDENTITY && !smmu->qcom_bypass_quirk) {
+> > >
+> > > maybe I'm overlooking something, but I think this would put us back to
+> > > allocating pgtables (and making iommu->map/unmap() no longer no-ops),
+> > > which I don't think we want
+> > >
+> >
+> > You're right, we are allocating page tables for these contexts and
+> > map/unmap would modify the page tables. But afaict traversal is never
+> > performed, given that the banks are never enabled.
+> >
+> > But as drivers probe properly, or the direct mapped drivers sets up
+> > their iommu domains explicitly with translation this would not be used.
+> >
+> > So afaict we're just wasting some memory - for the gain of not
+> > overcomplicating this function.
+>
+> the problem is that it makes dma_map/unmap less of a no-op than it
+> should be (for the case where the driver is explicitly managing it's
+> own domain)..  I was hoping to get rid of the hacks to use dma_sync go
+> back to dma_map/unmap for cache cleaning
 
-Since there is no RX offset the check for slot symmetry can be removed.
+That said, it seems to cause less explosions than before.. either that
+or I'm not trying hard enough.  Still, I think it would probably
+result in unnecessary tlb inv's.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- sound/soc/codecs/tlv320adcx140.c | 40 ++++++++------------------------
- 1 file changed, 10 insertions(+), 30 deletions(-)
+Previously, *somehow* we seemed to end up with dma_map/unmap trying to
+modify the domain that we had attached.
 
-diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-index f884abdb576e..d900af967f8c 100644
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -646,6 +646,8 @@ static int adcx140_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
- 	u8 iface_reg1 = 0;
- 	u8 iface_reg2 = 0;
-+	int offset = 0;
-+	int width = adcx140->slot_width;
- 
- 	/* set master/slave audio interface */
- 	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-@@ -688,7 +690,10 @@ static int adcx140_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 		iface_reg1 |= ADCX140_LEFT_JUST_BIT;
- 		break;
- 	case SND_SOC_DAIFMT_DSP_A:
-+		offset += (adcx140->tdm_delay * width + 1);
-+		break;
- 	case SND_SOC_DAIFMT_DSP_B:
-+		offset += adcx140->tdm_delay * width;
- 		break;
- 	default:
- 		dev_err(component->dev, "Invalid DAI interface format\n");
-@@ -705,6 +710,11 @@ static int adcx140_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	snd_soc_component_update_bits(component, ADCX140_MST_CFG0,
- 				      ADCX140_BCLK_FSYNC_MASTER, iface_reg2);
- 
-+	/* Configure data offset */
-+	snd_soc_component_update_bits(component, ADCX140_ASI_CFG1,
-+				      ADCX140_TX_OFFSET_MASK, offset);
-+
-+
- 	return 0;
- }
- 
-@@ -716,11 +726,6 @@ static int adcx140_set_dai_tdm_slot(struct snd_soc_dai *codec_dai,
- 	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
- 	unsigned int lsb;
- 
--	if (tx_mask != rx_mask) {
--		dev_err(component->dev, "tx and rx masks must be symmetric\n");
--		return -EINVAL;
--	}
--
- 	/* TDM based on DSP mode requires slots to be adjacent */
- 	lsb = __ffs(tx_mask);
- 	if ((lsb + 1) != __fls(tx_mask)) {
-@@ -745,34 +750,9 @@ static int adcx140_set_dai_tdm_slot(struct snd_soc_dai *codec_dai,
- 	return 0;
- }
- 
--static int adcx140_prepare(struct snd_pcm_substream *substream,
--			 struct snd_soc_dai *dai)
--{
--	struct snd_soc_component *component = dai->component;
--	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
--	int offset = 0;
--	int width = adcx140->slot_width;
--
--	if (!width)
--		width = substream->runtime->sample_bits;
--
--	/* TDM slot selection only valid in DSP_A/_B mode */
--	if (adcx140->dai_fmt == SND_SOC_DAIFMT_DSP_A)
--		offset += (adcx140->tdm_delay * width + 1);
--	else if (adcx140->dai_fmt == SND_SOC_DAIFMT_DSP_B)
--		offset += adcx140->tdm_delay * width;
--
--	/* Configure data offset */
--	snd_soc_component_update_bits(component, ADCX140_ASI_CFG1,
--				      ADCX140_TX_OFFSET_MASK, offset);
--
--	return 0;
--}
--
- static const struct snd_soc_dai_ops adcx140_dai_ops = {
- 	.hw_params	= adcx140_hw_params,
- 	.set_fmt	= adcx140_set_dai_fmt,
--	.prepare	= adcx140_prepare,
- 	.set_tdm_slot	= adcx140_set_dai_tdm_slot,
- };
- 
--- 
-2.27.0
+BR,
+-R
 
+> BR,
+> -R
+>
+>
+> >
+> > Regards,
+> > Bjorn
+> >
+> > > BR,
+> > > -R
+> > >
+> > > >                 smmu_domain->stage = ARM_SMMU_DOMAIN_BYPASS;
+> > > >                 smmu_domain->smmu = smmu;
+> > > >                 goto out_unlock;
+> > > > @@ -826,6 +832,10 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+> > > >         domain->geometry.aperture_end = (1UL << ias) - 1;
+> > > >         domain->geometry.force_aperture = true;
+> > > >
+> > > > +       /* Enable translation for non-identity context banks */
+> > > > +       if (domain->type != IOMMU_DOMAIN_IDENTITY)
+> > > > +               cfg->m = true;
+> > > > +
+> > > >         /* Initialise the context bank with our page table cfg */
+> > > >         arm_smmu_init_context_bank(smmu_domain, &pgtbl_cfg);
+> > > >         arm_smmu_write_context_bank(smmu, cfg->cbndx);
+> > > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> > > > index d172c024be61..a71d193073e4 100644
+> > > > --- a/drivers/iommu/arm-smmu.h
+> > > > +++ b/drivers/iommu/arm-smmu.h
+> > > > @@ -305,6 +305,8 @@ struct arm_smmu_device {
+> > > >
+> > > >         /* IOMMU core code handle */
+> > > >         struct iommu_device             iommu;
+> > > > +
+> > > > +       bool                            qcom_bypass_quirk;
+> > > >  };
+> > > >
+> > > >  enum arm_smmu_context_fmt {
+> > > > @@ -323,6 +325,7 @@ struct arm_smmu_cfg {
+> > > >         };
+> > > >         enum arm_smmu_cbar_type         cbar;
+> > > >         enum arm_smmu_context_fmt       fmt;
+> > > > +       bool                            m;
+> > > >  };
+> > > >  #define ARM_SMMU_INVALID_IRPTNDX       0xff
+> > > >
+> > > > --
+> > > > 2.26.2
+> > > >
+> > > > _______________________________________________
+> > > > iommu mailing list
+> > > > iommu@lists.linux-foundation.org
+> > > > https://lists.linuxfoundation.org/mailman/listinfo/iommu
