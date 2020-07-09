@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19526C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0FFE207F9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F722073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:18:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="og8x68gW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QY/BbB98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgGIPSp (ORCPT
+        id S1728252AbgGIPSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:18:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
+        Thu, 9 Jul 2020 11:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbgGIPSh (ORCPT
+        with ESMTP id S1728150AbgGIPSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:18:37 -0400
+        Thu, 9 Jul 2020 11:18:46 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F46C08C5CE;
-        Thu,  9 Jul 2020 08:18:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7895DC08C5CE;
+        Thu,  9 Jul 2020 08:18:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=yk3OCOpM9ERuS6a7MWF8GpDAoj/9WQHMyiD2P3ZZBTM=; b=og8x68gWYuZpircwpKYt9bfwDe
-        mkjQJ2RAgcwJ/9PBxcGh5jTT0DoJUbWYyKMBsDac9EWcJ8x8o5yS9iFyUC3u23A4YDfiDbcJrm2yH
-        /xSGnkYdB6Swp6t0pfja1VH8jv3pZ7tPRSnrgvPphg7h4MSv2P2sCUlMEmaPCHGwnpBCxXdXDu8ny
-        5tYhcEWAKiSKYAve1UkWmET8tGnrA7sS5YLR8paj39lxIXA1Q0+om+jddH6SVm4KI/q5n7lk3VEWU
-        EDocAbMuPIGp6F9XPaMPmsQfH2yi2RIXmaTprwQlI01IV/yeVLYTDYT0eZlKnbDzm0JbFoTpnN+HK
-        2F35+7RQ==;
+        bh=4Q7oU7KSFv868hQYqAShdiN8TCW220JDegTgqB1k4fw=; b=QY/BbB98LE4pY80pN791XLF+RN
+        hH5jVErzdhj6itDy95ltl1BO8lZl5RfE8tV2avcehalV3AcuDjbaS9xqk3eGfxO/xVpMLqqfVZvQS
+        S4r6vn5DpVX9GuNC/tnmnrmk6nrKtHb0rKIYjvs5Mh/9w6GzYy7ZnybXTjMSbrm1f2Ilj2sOLa1GP
+        mfU5p5+cvs1nJDGRKZ7h2tZpsG5w9aoeRE2rnLN05HHJGL47eD/TOL8Ljjc7Xxmjj1f8RFxkVzRN7
+        jEAUyiybJOaY9Sg7n4NrA3sejGm3rBz+Wa5QLxixtG6YTJedZul9dHo3pEcCN8XZ8B0PEyxC52I1y
+        0HxyQT1w==;
 Received: from [2001:4bb8:188:5f50:7053:304b:bf82:82cf] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtYJn-0005N0-B7; Thu, 09 Jul 2020 15:18:35 +0000
+        id 1jtYJw-0005Ot-Ig; Thu, 09 Jul 2020 15:18:45 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 13/17] initramfs: remove the populate_initrd_image and clean_rootfs stubs
-Date:   Thu,  9 Jul 2020 17:18:10 +0200
-Message-Id: <20200709151814.110422-14-hch@lst.de>
+Subject: [PATCH 17/17] fs: remove ksys_open
+Date:   Thu,  9 Jul 2020 17:18:14 +0200
+Message-Id: <20200709151814.110422-18-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200709151814.110422-1-hch@lst.de>
 References: <20200709151814.110422-1-hch@lst.de>
@@ -59,57 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If initrd support is not enable just print the warning directly instead
-of hiding the fact that we just failed behind two stub functions.
+Just open code it in the two callers.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- init/initramfs.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+ fs/open.c                | 11 ++++++++---
+ include/linux/syscalls.h | 11 -----------
+ 2 files changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/init/initramfs.c b/init/initramfs.c
-index 7a38012e1af742..d10404625c31f0 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -618,13 +618,7 @@ static void __init clean_rootfs(void)
- 	ksys_close(fd);
- 	kfree(buf);
- }
--#else
--static inline void clean_rootfs(void)
--{
--}
--#endif /* CONFIG_BLK_DEV_RAM */
+diff --git a/fs/open.c b/fs/open.c
+index 6348173532e663..4375a5a8e726ea 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -1193,7 +1193,9 @@ long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
  
--#ifdef CONFIG_BLK_DEV_RAM
- static void __init populate_initrd_image(char *err)
+ SYSCALL_DEFINE3(open, const char __user *, filename, int, flags, umode_t, mode)
  {
- 	ssize_t written;
-@@ -644,11 +638,6 @@ static void __init populate_initrd_image(char *err)
- 		       written, initrd_end - initrd_start);
- 	ksys_close(fd);
+-	return ksys_open(filename, flags, mode);
++	if (force_o_largefile())
++		flags |= O_LARGEFILE;
++	return do_sys_open(AT_FDCWD, filename, flags, mode);
  }
--#else
--static void __init populate_initrd_image(char *err)
--{
--	printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
+ 
+ SYSCALL_DEFINE4(openat, int, dfd, const char __user *, filename, int, flags,
+@@ -1255,9 +1257,12 @@ COMPAT_SYSCALL_DEFINE4(openat, int, dfd, const char __user *, filename, int, fla
+  */
+ SYSCALL_DEFINE2(creat, const char __user *, pathname, umode_t, mode)
+ {
+-	return ksys_open(pathname, O_CREAT | O_WRONLY | O_TRUNC, mode);
 -}
- #endif /* CONFIG_BLK_DEV_RAM */
++	int flags = O_CREAT | O_WRONLY | O_TRUNC;
  
- static int __init populate_rootfs(void)
-@@ -668,8 +657,12 @@ static int __init populate_rootfs(void)
++	if (force_o_largefile())
++		flags |= O_LARGEFILE;
++	return do_sys_open(AT_FDCWD, pathname, flags, mode);
++}
+ #endif
  
- 	err = unpack_to_rootfs((char *)initrd_start, initrd_end - initrd_start);
- 	if (err) {
-+#ifdef CONFIG_BLK_DEV_RAM
- 		clean_rootfs();
- 		populate_initrd_image(err);
-+#else
-+		printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
-+#endif
- 	}
+ /*
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 59af62090ac400..39ff738997a172 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1372,17 +1372,6 @@ static inline int ksys_close(unsigned int fd)
+ 	return __close_fd(current->files, fd);
+ }
  
- done:
+-extern long do_sys_open(int dfd, const char __user *filename, int flags,
+-			umode_t mode);
+-
+-static inline long ksys_open(const char __user *filename, int flags,
+-			     umode_t mode)
+-{
+-	if (force_o_largefile())
+-		flags |= O_LARGEFILE;
+-	return do_sys_open(AT_FDCWD, filename, flags, mode);
+-}
+-
+ extern long do_sys_truncate(const char __user *pathname, loff_t length);
+ 
+ static inline long ksys_truncate(const char __user *pathname, loff_t length)
 -- 
 2.26.2
 
