@@ -2,56 +2,73 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2832C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E15C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81BC12078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB782078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 18:43:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5VfzWBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgGISnm (ORCPT
+        id S1726751AbgGISnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 14:43:42 -0400
-Received: from mga14.intel.com ([192.55.52.115]:34079 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgGISnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 14:43:41 -0400
-IronPort-SDR: aES/5/9aDQnQd/Oj/5HqlcjFQ6fP65c+uZwkX+G4qMgUL8qYs5Smu+4achyIfQsmbIJsM9vKPB
- T7kYU2AQxXzg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="147166672"
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="147166672"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 11:43:10 -0700
-IronPort-SDR: aLVUxwbumtA0VDDj/erIBDT5YZPyZBbKLx0K3hbgaaBMz8ZtTcansNhxrgbQWPFtcrHRqcknJa
- //SYQoCFvWqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
-   d="scan'208";a="280391549"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 09 Jul 2020 11:43:07 -0700
-Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id 6703A580801;
-        Thu,  9 Jul 2020 11:43:07 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     rjw@rjwysocki.net, lenb@kernel.org, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        dan.j.williams@intel.com, shyjumon.n@intel.com
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org
-Subject: [PATCH V5] drivers/nvme: Add support for ACPI StorageD3Enable property
-Date:   Thu,  9 Jul 2020 11:43:33 -0700
-Message-Id: <20200709184333.6241-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200702225011.10932-1-david.e.box@linux.intel.com>
-References: <20200702225011.10932-1-david.e.box@linux.intel.com>
+        Thu, 9 Jul 2020 14:43:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgGISno (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 14:43:44 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6E1BC08C5CE;
+        Thu,  9 Jul 2020 11:43:43 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a14so1397366pfi.2;
+        Thu, 09 Jul 2020 11:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zrAh6RYH46bGf89a0AIXAF4lgmMCYC94Zg5yeKwIb90=;
+        b=K5VfzWBrCKorOTK9sywIZ2ezQEBFSf68ClRpb62R75JqyiSC0cigFG4M12kwfnkZJB
+         YS1znwCzMogJ9A4CzZoFJ4PzglUzTeS/cav8KLyh83v2x/jGKPR+biiouY7Sys8W5PO+
+         U5nFN3YHXYehFlg/d3nwC51Qy8CrQ5m10Yp7zaNraD4ZvUM0nNYVEnjGkJkdqmsIzj9g
+         4ARnHW87kYuL/IJCgIjC5rERRzRry1K1uFIPXvp2gO4k+Nxf3S25yOMZ6Qju4XtPox5w
+         W3CtPIsuRPGQ9KMr8k0ZLossjF5TXKsGlKeGvhaXQ7arERslDeEkWFY6SNdeLUGIBwJD
+         KdSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zrAh6RYH46bGf89a0AIXAF4lgmMCYC94Zg5yeKwIb90=;
+        b=jponwZNtfzbSYb3ofS6TcelvnPE13oHKNBRjCSVSh2VQqBxzSB5lkpwknslhn/Jh9K
+         jmg8gkUHF/P9A1u4Dovx4dyG3YYE2v/XlWaMpVJtN0RoLsMCTEJFD4Goh/ko9kYvhz18
+         YvTPdl/dtCYwF8Ggcw2IJxn92vHj+I4m5B6yTyu68KkBnpHxY6KPQkW/S8gF3Riq8wF2
+         /OymuNLnSceiEGWkFK+Tgtxs7KnOTvqHeWSzW4DfeC6PRxdr7Gk4gyGJ30LMxDsI85Qe
+         B98thCC2WzODZsryVhKwOVDeObBPnkf5VXZCLwYwhUWozcdZDSBCJ8URTmk+vYY7hMHX
+         9eiQ==
+X-Gm-Message-State: AOAM5303UXb3Q/1Cf+IzITu+8EwIrEqymTs2az10viNUysoLUWZxVdmU
+        +ORqE2Wh06SD1FyBD4EINcU=
+X-Google-Smtp-Source: ABdhPJwu5oDS2DXNshKPqNoq+4Y55IgTBjP8/9OTn6H0r/sEvI8hDdQDCjjuDo8uACUiWYd5RoHW5A==
+X-Received: by 2002:a65:4c0b:: with SMTP id u11mr53908414pgq.383.1594320223339;
+        Thu, 09 Jul 2020 11:43:43 -0700 (PDT)
+Received: from localhost.localdomain.com ([2605:e000:160b:911f:a2ce:c8ff:fe03:6cb0])
+        by smtp.gmail.com with ESMTPSA id s22sm3553999pfm.164.2020.07.09.11.43.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 11:43:42 -0700 (PDT)
+From:   Chris Healy <cphealy@gmail.com>
+To:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Chris Healy <cphealy@gmail.com>
+Subject: [PATCH net-next] net: dsa: mv88e6xxx: Add serdes read/write dynamic debug
+Date:   Thu,  9 Jul 2020 11:43:18 -0700
+Message-Id: <20200709184318.4192-1-cphealy@gmail.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,178 +76,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements a solution for a BIOS hack used on some currently
-shipping Intel systems to change driver power management policy for PCIe
-NVMe drives. Some newer Intel platforms, like some Comet Lake systems,
-require that PCIe devices use D3 when doing suspend-to-idle in order to
-allow the platform to realize maximum power savings. This is particularly
-needed to support ATX power supply shutdown on desktop systems. In order to
-ensure this happens for root ports with storage devices, Microsoft
-apparently created this ACPI _DSD property as a way to influence their
-driver policy. To my knowledge this property has not been discussed with
-the NVME specification body.
+Add deb_dbg print statements in both serdes_read and serdes_write
+functions.
 
-Though the solution is not ideal, it addresses a problem that also affects
-Linux since the NVMe driver's default policy of using NVMe APST during
-suspend-to-idle prevents the PCI root port from going to D3 and leads to
-higher power consumption for these platforms. The power consumption
-difference may be negligible on laptop systems, but many watts on desktop
-systems when the ATX power supply is blocked from powering down.
-
-The patch creates a new nvme_acpi_storage_d3 function to check for the
-StorageD3Enable property during probe and enables D3 as a quirk if set.  It
-also provides a 'noacpi' module parameter to allow skipping the quirk if
-needed.
-
-Tested on:
-PM961 NVMe SED Samsung 512GB
-INTEL SSDPEKKF512G8
-
-Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Signed-off-by: Chris Healy <cphealy@gmail.com>
 ---
-Changes from V4:
- 	- Add support for North complex PCI root ports.
-	- Use acpi_bus_get_device instead of acpi_bus_get_acpi_device.
-	  Also fixes compiler error on V4 reported by lkp@intel.com.
-	- Place CONFIG_ACPI around function since acpi_bus_get_device
-	  is not stubbed out.
+ drivers/net/dsa/mv88e6xxx/serdes.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-Changes from V3:
- 	- Use pcie_find_root_port() instead of pci_find_pcie_root_port(),
- 	  changed in 5.8.
- 	- Remove "Cc:" emails that ended up at top of V3 commit message.
- 	- Fix changelog numbering.
- 
-Changes from V2:
-	- Remove check for "not yet bound" ACPI companion device since
-	  this will not be a concern at driver probe time per Rafael.
-	- Move storage_d3 function out of PCI core and into NVMe driver
-	  since there's nothing the PCI core can do with this code as
-	  noted by Bjorn.
- 
-Changes from V1:
-	- Export the pci_acpi_storage_d3 function for use by drivers as
-	  needed instead of modifying the pci header.
-	- Add missing put on acpi device handle.
-	- Add 'noacpi' module parameter to allow undoing this change.
-	- Add info message that this is a platform quirk.
-
-
- drivers/acpi/property.c |  3 ++
- drivers/nvme/host/pci.c | 64 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 67 insertions(+)
-
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index e601c4511a8b..c2e2ae774a19 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -45,6 +45,9 @@ static const guid_t prp_guids[] = {
- 	/* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
- 	GUID_INIT(0x6c501103, 0xc189, 0x4296,
- 		  0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
-+	/* Storage device needs D3 GUID: 5025030f-842f-4ab4-a561-99a5189762d0 */
-+	GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
-+		  0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
- };
- 
- /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index b1d18f0633c7..7c0be363eb22 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -4,6 +4,7 @@
-  * Copyright (c) 2011-2014, Intel Corporation.
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/aer.h>
- #include <linux/async.h>
- #include <linux/blkdev.h>
-@@ -94,6 +95,10 @@ static unsigned int poll_queues;
- module_param_cb(poll_queues, &io_queue_count_ops, &poll_queues, 0644);
- MODULE_PARM_DESC(poll_queues, "Number of queues to use for polled IO.");
- 
-+static bool noacpi;
-+module_param(noacpi, bool, 0444);
-+MODULE_PARM_DESC(noacpi, "disable acpi bios quirks");
+diff --git a/drivers/net/dsa/mv88e6xxx/serdes.c b/drivers/net/dsa/mv88e6xxx/serdes.c
+index 9c07b4f3d345..756b34343547 100644
+--- a/drivers/net/dsa/mv88e6xxx/serdes.c
++++ b/drivers/net/dsa/mv88e6xxx/serdes.c
+@@ -20,14 +20,25 @@
+ static int mv88e6352_serdes_read(struct mv88e6xxx_chip *chip, int reg,
+ 				 u16 *val)
+ {
+-	return mv88e6xxx_phy_page_read(chip, MV88E6352_ADDR_SERDES,
++	int err;
 +
- struct nvme_dev;
- struct nvme_queue;
- 
-@@ -2759,6 +2764,55 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
- 	return 0;
++	err =  mv88e6xxx_phy_page_read(chip, MV88E6352_ADDR_SERDES,
+ 				       MV88E6352_SERDES_PAGE_FIBER,
+ 				       reg, val);
++
++	if (err)
++		return err;
++
++	dev_dbg(chip->dev, "serdes <- reg: 0x%.2x val: 0x%.2x\n", reg, *val);
++
++	return 0;
  }
  
-+#ifdef CONFIG_ACPI
-+static bool nvme_acpi_storage_d3(struct pci_dev *dev)
-+{
-+	const struct fwnode_handle *fwnode;
-+	struct acpi_device *adev;
-+	struct pci_dev *root;
-+	acpi_handle handle;
-+	acpi_status status;
-+	u8 val;
-+
-+	/*
-+	 * Look for _DSD property specifying that the storage device on
-+	 * the port must use D3 to support deep platform power savings during
-+	 * suspend-to-idle
-+	 */
-+	root = pcie_find_root_port(dev);
-+	if (!root)
-+		return false;
-+
-+	adev = ACPI_COMPANION(&root->dev);
-+	if (!adev)
-+		return false;
-+
-+	/*
-+	 * The property is defined in the PXSX device for South complex ports
-+	 * and in the PEGP device for North complex ports.
-+	 */
-+	status = acpi_get_handle(adev->handle, "PXSX", &handle);
-+	if (ACPI_FAILURE(status)) {
-+		status = acpi_get_handle(adev->handle, "PEGP", &handle);
-+		if (ACPI_FAILURE(status))
-+			return false;
-+	}
-+
-+	if (acpi_bus_get_device(handle, &adev))
-+		return false;
-+
-+	fwnode = acpi_fwnode_handle(adev);
-+
-+	return fwnode_property_read_u8(fwnode, "StorageD3Enable", &val) ?
-+		false : val == 1;
-+}
-+#else
-+static inline bool nvme_acpi_storage_d3(struct pci_dev *dev)
-+{
-+	return false;
-+}
-+#endif
-+
- static void nvme_async_probe(void *data, async_cookie_t cookie)
+ static int mv88e6352_serdes_write(struct mv88e6xxx_chip *chip, int reg,
+ 				  u16 val)
  {
- 	struct nvme_dev *dev = data;
-@@ -2808,6 +2862,16 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	quirks |= check_vendor_combination_bug(pdev);
- 
-+	if (!noacpi && nvme_acpi_storage_d3(pdev)) {
-+		/*
-+		 * Some systems use a bios work around to ask for D3 on
-+		 * platforms that support kernel managed suspend.
-+		 */
-+		dev_info(&pdev->dev,
-+			 "platform quirk: setting simple suspend\n");
-+		quirks |= NVME_QUIRK_SIMPLE_SUSPEND;
-+	}
++	dev_dbg(chip->dev, "serdes -> reg: 0x%.2x val: 0x%.2x\n", reg, val);
 +
- 	/*
- 	 * Double check that our mempool alloc size will cover the biggest
- 	 * command we support.
+ 	return mv88e6xxx_phy_page_write(chip, MV88E6352_ADDR_SERDES,
+ 					MV88E6352_SERDES_PAGE_FIBER,
+ 					reg, val);
+@@ -37,8 +48,17 @@ static int mv88e6390_serdes_read(struct mv88e6xxx_chip *chip,
+ 				 int lane, int device, int reg, u16 *val)
+ {
+ 	int reg_c45 = MII_ADDR_C45 | device << 16 | reg;
++	int err;
++
++	err = mv88e6xxx_phy_read(chip, lane, reg_c45, val);
++	if (err)
++		return err;
++
++	dev_dbg(chip->dev, "serdes <- lane: %.2d device: 0x%.2x reg_c45: 0x%.4x val: 0x%.4x\n",
++		lane, device, reg_c45, *val);
++
++	return 0;
+ 
+-	return mv88e6xxx_phy_read(chip, lane, reg_c45, val);
+ }
+ 
+ static int mv88e6390_serdes_write(struct mv88e6xxx_chip *chip,
+@@ -46,6 +66,9 @@ static int mv88e6390_serdes_write(struct mv88e6xxx_chip *chip,
+ {
+ 	int reg_c45 = MII_ADDR_C45 | device << 16 | reg;
+ 
++	dev_dbg(chip->dev, "serdes -> lane: %.2d device: 0x%.2x reg_c45: 0x%.4x val: 0x%.4x\n",
++		lane, device, reg_c45, val);
++
+ 	return mv88e6xxx_phy_write(chip, lane, reg_c45, val);
+ }
+ 
 -- 
-2.20.1
+2.21.3
 
