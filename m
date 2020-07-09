@@ -2,125 +2,60 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A039C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73722C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9775206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nBLjgNyS"
+	by mail.kernel.org (Postfix) with ESMTP id 5636C206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 19:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgGITpG (ORCPT
+        id S1726648AbgGITqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:45:06 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:64978 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgGITpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 15:45:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594323905; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=QE+bNVj/SQwtedJ12CCaAW9op0bzYQQpyVC83CKXLmY=; b=nBLjgNySIjS5/2tE0mtLMPlLdRvte+L1Z/7gMrPqzQ3SJkhg6WZTQbGMVyZr7HnkEB7z0pgL
- KllouaFTY3DneZTTm68Ws3MZJ3hzMmIPKi0Djjnu+3fNSEb0l0ScOrYuI7l6yIaYbUhLcFOR
- ndj4tG86ESpSHOmtTHcfJFRURZk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
- 5f0773c09b7f1f3df712d0ed (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 19:45:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D1D00C433C6; Thu,  9 Jul 2020 19:45:03 +0000 (UTC)
-Received: from [192.168.1.117] (ip70-179-20-127.sd.sd.cox.net [70.179.20.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 616E4C433CA;
-        Thu,  9 Jul 2020 19:45:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 616E4C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Add generic qcom bindings
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, agross@kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20200623040515.23317-1-mdtipton@codeaurora.org>
- <20200623040515.23317-2-mdtipton@codeaurora.org>
- <20200709153527.GJ3191083@google.com>
-From:   Mike Tipton <mdtipton@codeaurora.org>
-Message-ID: <265041af-2a5c-4a09-457f-f4b39cbdb8eb@codeaurora.org>
-Date:   Thu, 9 Jul 2020 12:45:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200709153527.GJ3191083@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Thu, 9 Jul 2020 15:46:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgGITqC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 15:46:02 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15436C08C5CE;
+        Thu,  9 Jul 2020 12:46:02 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8AE301279621D;
+        Thu,  9 Jul 2020 12:46:01 -0700 (PDT)
+Date:   Thu, 09 Jul 2020 12:46:00 -0700 (PDT)
+Message-Id: <20200709.124600.1376090134337246963.davem@davemloft.net>
+To:     cphealy@gmail.com
+Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: dsa: mv88e6xxx: Add serdes read/write
+ dynamic debug
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200709184318.4192-1-cphealy@gmail.com>
+References: <20200709184318.4192-1-cphealy@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 Jul 2020 12:46:01 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/2020 8:35 AM, Matthias Kaehlcke wrote:
-> On Mon, Jun 22, 2020 at 09:05:14PM -0700, Mike Tipton wrote:
->> Add generic qcom interconnect bindings that are common across platforms. In
->> particular, these include QCOM_ICC_TAG_* macros that clients can use when
->> calling icc_set_tag().
->>
->> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
->> ---
->>   include/dt-bindings/interconnect/qcom,icc.h | 26 +++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>   create mode 100644 include/dt-bindings/interconnect/qcom,icc.h
->>
->> diff --git a/include/dt-bindings/interconnect/qcom,icc.h b/include/dt-bindings/interconnect/qcom,icc.h
->> new file mode 100644
->> index 000000000000..cd34f36daaaa
->> --- /dev/null
->> +++ b/include/dt-bindings/interconnect/qcom,icc.h
->> @@ -0,0 +1,26 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
->> +#define __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
->> +
->> +/*
->> + * The AMC bucket denotes constraints that are applied to hardware when
->> + * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
->> + * when the execution environment transitions between active and low power mode.
->> + */
->> +#define QCOM_ICC_BUCKET_AMC		0
->> +#define QCOM_ICC_BUCKET_WAKE		1
->> +#define QCOM_ICC_BUCKET_SLEEP		2
->> +#define QCOM_ICC_NUM_BUCKETS		3
->> +
->> +#define QCOM_ICC_TAG_AMC		(1 << QCOM_ICC_BUCKET_AMC)
->> +#define QCOM_ICC_TAG_WAKE		(1 << QCOM_ICC_BUCKET_WAKE)
->> +#define QCOM_ICC_TAG_SLEEP		(1 << QCOM_ICC_BUCKET_SLEEP)
->> +#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
->> +#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
->> +					 QCOM_ICC_TAG_SLEEP)
->> +
->> +#endif
-> 
-> Would it make sense to squash the two patches of this series into a
-> single patch? This would make it more evident that this was moved
-> from drivers/interconnect/qcom/icc-rpmh.h and avoid duplicate
-> definitions if only this patch was applied.
+From: Chris Healy <cphealy@gmail.com>
+Date: Thu,  9 Jul 2020 11:43:18 -0700
 
-Makes sense to me. I'm going to have to move this to my other patch 
-series anyway, so I can squash these two and include it in v2 of 
-"interconnect: qcom: Misc bcm-voter changes and fixes".
+> Add deb_dbg print statements in both serdes_read and serdes_write
+> functions.
+> 
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
+
+Please just use tracepoints or similar for this.
