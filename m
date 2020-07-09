@@ -2,169 +2,145 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2396C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD36F2076A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E87820663
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:12:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="coFPDVVu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BHTdJH/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgGIKMp (ORCPT
+        id S1726828AbgGIKMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:12:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726433AbgGIKMo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:12:44 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33DE7C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 03:12:44 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f18so1756362wrs.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 03:12:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F6g7fDptGIzcY72zTri5KBvJJQVzV3/1jzTXQNV3HuM=;
-        b=coFPDVVuvafd81nThgtSu0cQL7bq1mh93sEFCf+KGqyoIo5FBqkxkIUod13S1KaPLu
-         uXLU67/XWgjX/Knt7+yNrZdrx90+sADqntqOb2FgqXvmg+UFOcdAkEHE7pZEaVwfCD6n
-         TpydZ84o6TTExBrj92STaQRWNhRTmdKhfvhEs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F6g7fDptGIzcY72zTri5KBvJJQVzV3/1jzTXQNV3HuM=;
-        b=CLc9ouMaucET5WDVz2Gfq/11Hni0ZBNCsWFubHYX1M9HgdUbE9Lc9873nph5VPeO/R
-         ZWwfW7FwfJtEBrmO6lhV0YzRi3GRII1d2aO6tjw0jX/oZC3uClcU+Hn3Epi1dDIC+acH
-         U5KO9xm9Xok6OZ5G7+Yaut+nwwWb5QMbnQDL6oFKBT3n/Kj5Eq0bQT1NOiwATB0yHHkJ
-         8NhOTEZ6evP4oUU5WKDST+b7g2r2Rue9kBFO044O3fKykYquyYq24yJrra0UAmcN2k+w
-         +B5AhhW0dkAVTywfdHxCJphZQSr1tqzb3S8SbyJBq7Kd2eZAa5+uJIWssbV2b19d7M7e
-         7Sag==
-X-Gm-Message-State: AOAM530HP8j/xYBm3f/avHv5lF8ecKTuS9SYuwo0KlbnUS4tovLb7al9
-        noF9NAisMNFNN0otUNnR4haPwwUpxIw=
-X-Google-Smtp-Source: ABdhPJztxd9ybzuPdUmBiF9b0n0gq1IqMMvtclokdmjAg/DXj6rkBJNamKoGI+PesauLp51wDgEtRg==
-X-Received: by 2002:adf:e546:: with SMTP id z6mr58343987wrm.99.1594289562595;
-        Thu, 09 Jul 2020 03:12:42 -0700 (PDT)
-Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id g3sm5538287wrb.59.2020.07.09.03.12.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 03:12:42 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH bpf-next v4 0/4] Generalizing bpf_local_storage
-Date:   Thu,  9 Jul 2020 12:12:35 +0200
-Message-Id: <20200709101239.3829793-1-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+        Thu, 9 Jul 2020 06:12:51 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:31019 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726773AbgGIKMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 06:12:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594289569; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=wWq91HAC/ZSJGdVzwMRWL+Q0WO0UCK3z/tPDOpaZ6gU=; b=BHTdJH/wFBRn7Jt5WrDIV170lSicBm9FCA+9GWr/KFGnK/d0vPBT+9IGy1Qw1EfCPl/j1BhO
+ 2NSwG8ccAulRiKhqJoFWlip9p9cGn6LNzEpYNNR4QPoTgwngZ1b6tjNMQ/tKcluESdtvLGsq
+ uXnyeGzRcKQIPLidBsqEujkgkIA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
+ 5f06ed9ea33b1a3dd4559642 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 10:12:46
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BFC65C433C8; Thu,  9 Jul 2020 10:12:45 +0000 (UTC)
+Received: from [192.168.0.129] (unknown [183.83.142.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 437E9C433C6;
+        Thu,  9 Jul 2020 10:12:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 437E9C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+Subject: Re: [PATCH v3 6/8] dt-bindings: sound: lpass-cpu: Add sc7180 lpass
+ cpu node
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
+ <1594184896-10629-7-git-send-email-rohitkr@codeaurora.org>
+ <6b6b0e38-9c04-e065-8a43-ccfec260d60c@linaro.org>
+ <430e0d24-c5c2-84ec-fe7b-b6b27192666d@codeaurora.org>
+ <de07f84b-40bc-d9ae-932d-623a5e8341e2@linaro.org>
+From:   Rohit Kumar <rohitkr@codeaurora.org>
+Message-ID: <40ca93fe-5bf0-ace3-4f95-90624d29a409@codeaurora.org>
+Date:   Thu, 9 Jul 2020 15:42:38 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <de07f84b-40bc-d9ae-932d-623a5e8341e2@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
 
-# v3 -> v4
+On 7/9/2020 3:38 PM, Srinivas Kandagatla wrote:
+>
+>
+> On 09/07/2020 11:01, Rohit Kumar wrote:
+>>
+>> On 7/9/2020 2:57 PM, Srinivas Kandagatla wrote:
+>>>
+>>>
+>>> On 08/07/2020 06:08, Rohit kumar wrote:
+>>>> Add dt-bindings to support "qcom,lpass-cpu-sc7180" node.
+>>>>
+>>>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+>>>> ---
+>>>>   Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt | 3 ++-
+>>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git 
+>>>> a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt 
+>>>> b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>>>> index 32c2cdb..04e34cc 100644
+>>>> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>>>> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>>>> @@ -4,7 +4,8 @@ This node models the Qualcomm Technologies 
+>>>> Low-Power Audio SubSystem (LPASS).
+>>>>     Required properties:
+>>>>   -- compatible        : "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu"
+>>>> +- compatible        : "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
+>>>> +              "qcom,lpass-cpu-sc7180"
+>>>>   - clocks        : Must contain an entry for each entry in 
+>>>> clock-names.
+>>>>   - clock-names        : A list which must include the following 
+>>>> entries:
+>>>>                   * "ahbix-clk"
+>>>
+>>> Can you also list the clocks that are mandatory for this SoC.
+>>>
+>>> --srini
+>>>
+>> Will it be fine if I update it in patch 8 only where we have moved to 
+>> yaml format?
+>>
+> May be reverse the order, Convert to Yaml first and then add sc7180!
 
-- Fixed a missing include to bpf_sk_storage.h in bpf_sk_storage.c
-- Fixed some functions that were not marked as static which led to
-  W=1 compilation warnings.
+Actually Mark suggested to keep yaml change at the end of patch series 
+as there
 
-# v2 -> v3
+are pending yaml patch reviews and it might take time. If we keep yaml 
+change before sc7180
 
-* Restructured the code as per Martin's suggestions:
-  - Common functionality in bpf_local_storage.c
-  - bpf_sk_storage functionality remains in net/bpf_sk_storage.
-  - bpf_inode_storage is kept separate as it is enabled only with
-    CONFIG_BPF_LSM.
-* A separate cache for inode and sk storage with macros to define it.
-* Use the ops style approach as suggested by Martin instead of the
-  enum + switch style.
-* Added the inode map to bpftool bash completion and docs.
-* Rebase and indentation fixes.
+change, then it will get blocked until yaml review. For now, I can 
+update in exisiting
 
-# v1 -> v2
+documentation. Please suggest.
 
-* Use the security blob pointer instead of dedicated member in
-  struct inode.
-* Better code re-use as suggested by Alexei.
-* Dropped the inode count arithmetic as pointed out by Alexei.
-* Minor bug fixes and rebase.
+Thanks
 
-bpf_sk_storage can already be used by some BPF program types to annotate
-socket objects. These annotations are managed with the life-cycle of the
-object (i.e. freed when the object is freed) which makes BPF programs
-much simpler and less prone to errors and leaks.
-
-This patch series:
-
-* Generalizes the bpf_sk_storage infrastructure to allow easy
-  implementation of local storage for other objects
-* Implements local storage for inodes
-* Makes both bpf_{sk, inode}_storage available to LSM programs.
-
-Local storage is safe to use in LSM programs as the attachment sites are
-limited and the owning object won't be freed, however, this is not the
-case for tracing. Usage in tracing is expected to follow a white-list
-based approach similar to the d_path helper
-(https://lore.kernel.org/bpf/20200506132946.2164578-1-jolsa@kernel.org).
-
-Access to local storage would allow LSM programs to implement stateful
-detections like detecting the unlink of a running executable from the
-examples shared as a part of the KRSI series
-https://lore.kernel.org/bpf/20200329004356.27286-1-kpsingh@chromium.org/
-and
-https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_detect_exec_unlink.c
-
-
-KP Singh (4):
-  bpf: Generalize bpf_sk_storage
-  bpf: Implement bpf_local_storage for inodes
-  bpf: Allow local storage to be used from LSM programs
-  bpf: Add selftests for local_storage
-
- include/linux/bpf.h                           |  14 +
- include/linux/bpf_local_storage.h             | 190 ++++
- include/linux/bpf_lsm.h                       |  21 +
- include/linux/bpf_types.h                     |   3 +
- include/net/bpf_sk_storage.h                  |   2 +
- include/net/sock.h                            |   4 +-
- include/uapi/linux/bpf.h                      |  54 +-
- kernel/bpf/Makefile                           |   2 +
- kernel/bpf/bpf_inode_storage.c                | 333 +++++++
- kernel/bpf/bpf_local_storage.c                | 517 +++++++++++
- kernel/bpf/bpf_lsm.c                          |  21 +-
- kernel/bpf/syscall.c                          |   3 +-
- kernel/bpf/verifier.c                         |  10 +
- net/core/bpf_sk_storage.c                     | 825 ++++--------------
- security/bpf/hooks.c                          |   7 +
- .../bpf/bpftool/Documentation/bpftool-map.rst |   2 +-
- tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
- tools/bpf/bpftool/map.c                       |   3 +-
- tools/include/uapi/linux/bpf.h                |  54 +-
- tools/lib/bpf/libbpf_probes.c                 |   5 +-
- .../bpf/prog_tests/test_local_storage.c       |  60 ++
- .../selftests/bpf/progs/local_storage.c       | 136 +++
- 22 files changed, 1599 insertions(+), 670 deletions(-)
- create mode 100644 include/linux/bpf_local_storage.h
- create mode 100644 kernel/bpf/bpf_inode_storage.c
- create mode 100644 kernel/bpf/bpf_local_storage.c
- create mode 100644 tools/testing/selftests/bpf/prog_tests/test_local_storage.c
- create mode 100644 tools/testing/selftests/bpf/progs/local_storage.c
-
+>
+> --srini
+>> Thanks,
+>>
+>> Rohit
+>>
+>>>
+>>>>
 -- 
-2.27.0.389.gc38d7665816-goog
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
 
