@@ -2,95 +2,234 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0AB020775
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594335186;
-	bh=vRE5aU7yKq/yPZ5Ksc1Q4bkc7U4jVBaPcNOWeF2bEvo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vLs1PRajdcXDvE5UeyS/QV1z+cGsen4r6bnQTIEDu0aWtanXgpmV422TRe5zOomVC
-	 Zp8LM/TcVlnl1OicJf1700HcQ70BGqr16K5PTilnGSfIfbay3MCYmwCEjtrUq1WdFE
-	 FoyPvgdeSkT8ehk4k5aexLDsGCiE1zCs+D65h0QQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1929C20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:53:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q9WMiXJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgGIWxF (ORCPT
+        id S1726961AbgGIWxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:53:05 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36701 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgGIWxE (ORCPT
+        Thu, 9 Jul 2020 18:53:33 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26343 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726228AbgGIWxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:53:04 -0400
-Received: by mail-io1-f66.google.com with SMTP id y2so4096437ioy.3;
-        Thu, 09 Jul 2020 15:53:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CWctQ+oPsrh2CQ2K8/zJVYpMPZS2KFRjIV9n6HaYQyw=;
-        b=ZsFRDwG3FvU40JGROwwspKtHXLSDR7I3NYWn6aa9k+g6LHk4oOn/fy1GDMhreDKYuy
-         1jI7YF50J1A41bcB6eNvboYLdGLn2lXJ7VGq4ouBM1z8/qciQn4mmLsh8ETmGrUAZ7/v
-         +j3la4XfYpb3WAxd/sYlIMjYTjnET/d3z99KTBIbYV3q2QU7ejJINFCxnXZ68cLbxSZ+
-         Ywu1FKOYwACpuK4p8RGtprQ2Sh1gdXYHcO8Y+FOQdOVieJpAU16Wg2jIG4LWr1m89JjG
-         7jMDpqsVwgWfX9YCo1ZTgOjmWSoaXocmRUGJmKLP0+S+D4RtjtfNsafpJBYo03KgrPqa
-         gsgg==
-X-Gm-Message-State: AOAM530sXCN0jmQIOIfz0xHCvDto2NNk3bzBYEeZbiUS+q3ek7JgJX2C
-        K6dtj+PCfc4NBubPBdm9jw==
-X-Google-Smtp-Source: ABdhPJwwvy7ujm3HQgU+9jDV+5qCjA1bMeOcMV3kTkahbrX+wcOiaHxY+SLssCL00Ow/rjiZmcyoLg==
-X-Received: by 2002:a5d:8143:: with SMTP id f3mr28998541ioo.157.1594335183612;
-        Thu, 09 Jul 2020 15:53:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id l10sm2525017ilc.52.2020.07.09.15.53.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 15:53:03 -0700 (PDT)
-Received: (nullmailer pid 1039988 invoked by uid 1000);
-        Thu, 09 Jul 2020 22:53:02 -0000
-Date:   Thu, 9 Jul 2020 16:53:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 2/4] dt-bindings: arm: rockchip: Add Rock Pi N8 binding
-Message-ID: <20200709225302.GA1039958@bogus>
-References: <20200709100756.42384-1-jagan@amarulasolutions.com>
- <20200709100756.42384-3-jagan@amarulasolutions.com>
+        Thu, 9 Jul 2020 18:53:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594335210;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=i1INxgto+D5Y2oZMGBhvrqyvzD6Mkg+QqFtK0D1z/D4=;
+        b=Q9WMiXJDMA6xVyA+N394yjoJ5sQpVWcFdOg1EaUd1UTTwJ7U7rv8cHakt4LmhYykiBSbcf
+        UF+x/GcCT9EbgRsVPelkeSNeBj3vNvWE7DNI1n9yEEzHGHkZY4c+6zpbnMH2quw/Bd9UN8
+        +UuhtPNbf6/R8x4L+pMn2D8y6c+Swiw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-476-AvYNFt9gNSCCJe_xKIP91A-1; Thu, 09 Jul 2020 18:53:28 -0400
+X-MC-Unique: AvYNFt9gNSCCJe_xKIP91A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FE00192FDA0;
+        Thu,  9 Jul 2020 22:53:27 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E4B4D60BE2;
+        Thu,  9 Jul 2020 22:53:26 +0000 (UTC)
+Date:   Thu, 9 Jul 2020 16:53:26 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Diana Craciun <diana.craciun@oss.nxp.com>
+Cc:     kvm@vger.kernel.org, bharatb.linux@gmail.com,
+        linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com,
+        Bharat Bhushan <Bharat.Bhushan@nxp.com>
+Subject: Re: [PATCH v3 4/9] vfio/fsl-mc: Implement
+ VFIO_DEVICE_GET_REGION_INFO ioctl call
+Message-ID: <20200709165326.72d43d0c@x1.home>
+In-Reply-To: <20200706154153.11477-5-diana.craciun@oss.nxp.com>
+References: <20200706154153.11477-1-diana.craciun@oss.nxp.com>
+        <20200706154153.11477-5-diana.craciun@oss.nxp.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709100756.42384-3-jagan@amarulasolutions.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 09 Jul 2020 15:37:54 +0530, Jagan Teki wrote:
-> Rock Pi N8 is a Rockchip RK3288 based SBC, which has
-> - VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
-> - Compatible carrier board from Radxa.
-> 
-> VMARC RK3288 SOM need to mount on top of dalang carrier
-> board for making Rock PI N8 SBC.
-> 
-> Add dt-bindings for it.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Changes for v5, v4, v3, v2:
-> - none
-> 
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+On Mon,  6 Jul 2020 18:41:48 +0300
+Diana Craciun <diana.craciun@oss.nxp.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> Expose to userspace information about the memory regions.
+> 
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+> ---
+>  drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 77 ++++++++++++++++++++++-
+>  drivers/vfio/fsl-mc/vfio_fsl_mc_private.h | 19 ++++++
+>  2 files changed, 95 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> index 937b6eddc71a..10bd9f78b8de 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> @@ -17,16 +17,72 @@
+>  
+>  static struct fsl_mc_driver vfio_fsl_mc_driver;
+>  
+> +static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
+> +{
+> +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
+> +	int count = mc_dev->obj_desc.region_count;
+> +	int i;
+> +
+> +	vdev->regions = kcalloc(count, sizeof(struct vfio_fsl_mc_region),
+> +				GFP_KERNEL);
+> +	if (!vdev->regions)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < count; i++) {
+> +		struct resource *res = &mc_dev->regions[i];
+> +
+> +		vdev->regions[i].addr = res->start;
+> +		vdev->regions[i].size = resource_size(res);
+> +		vdev->regions[i].flags = 0;
+> +	}
+> +
+> +	vdev->num_regions = mc_dev->obj_desc.region_count;
+> +	return 0;
+> +}
+> +
+> +static void vfio_fsl_mc_regions_cleanup(struct vfio_fsl_mc_device *vdev)
+> +{
+> +	vdev->num_regions = 0;
+> +	kfree(vdev->regions);
+> +}
+> +
+>  static int vfio_fsl_mc_open(void *device_data)
+>  {
+> +	struct vfio_fsl_mc_device *vdev = device_data;
+> +	int ret;
+> +
+>  	if (!try_module_get(THIS_MODULE))
+>  		return -ENODEV;
+>  
+> +	mutex_lock(&vdev->driver_lock);
+> +	if (!vdev->refcnt) {
+> +		ret = vfio_fsl_mc_regions_init(vdev);
+> +		if (ret)
+> +			goto err_reg_init;
+> +	}
+> +	vdev->refcnt++;
+> +
+> +	mutex_unlock(&vdev->driver_lock);
+> +
+>  	return 0;
+> +
+> +err_reg_init:
+> +	mutex_unlock(&vdev->driver_lock);
+> +	module_put(THIS_MODULE);
+> +	return ret;
+>  }
+>  
+>  static void vfio_fsl_mc_release(void *device_data)
+>  {
+> +	struct vfio_fsl_mc_device *vdev = device_data;
+> +
+> +	mutex_lock(&vdev->driver_lock);
+> +
+> +	if (!(--vdev->refcnt))
+> +		vfio_fsl_mc_regions_cleanup(vdev);
+> +
+> +	mutex_unlock(&vdev->driver_lock);
+> +
+>  	module_put(THIS_MODULE);
+>  }
+>  
+> @@ -59,7 +115,25 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
+>  	}
+>  	case VFIO_DEVICE_GET_REGION_INFO:
+>  	{
+> -		return -ENOTTY;
+> +		struct vfio_region_info info;
+> +
+> +		minsz = offsetofend(struct vfio_region_info, offset);
+> +
+> +		if (copy_from_user(&info, (void __user *)arg, minsz))
+> +			return -EFAULT;
+> +
+> +		if (info.argsz < minsz)
+> +			return -EINVAL;
+> +
+> +		if (info.index >= vdev->num_regions)
+> +			return -EINVAL;
+> +
+> +		/* map offset to the physical address  */
+> +		info.offset = VFIO_FSL_MC_INDEX_TO_OFFSET(info.index);
+> +		info.size = vdev->regions[info.index].size;
+> +		info.flags = vdev->regions[info.index].flags;
+> +
+> +		return copy_to_user((void __user *)arg, &info, minsz);
+>  	}
+>  	case VFIO_DEVICE_GET_IRQ_INFO:
+>  	{
+> @@ -201,6 +275,7 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
+>  		vfio_iommu_group_put(group, dev);
+>  		return ret;
+>  	}
+> +	mutex_init(&vdev->driver_lock);
+
+
+Consider all calling mutex_destory() in the remove callback, it's only
+used for lock debugging, so we're only partially successful in calling
+it.  Thanks,
+
+Alex
+
+>  
+>  	return ret;
+>  }
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> index 37d61eaa58c8..818dfd3df4db 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> @@ -7,9 +7,28 @@
+>  #ifndef VFIO_FSL_MC_PRIVATE_H
+>  #define VFIO_FSL_MC_PRIVATE_H
+>  
+> +#define VFIO_FSL_MC_OFFSET_SHIFT    40
+> +#define VFIO_FSL_MC_OFFSET_MASK (((u64)(1) << VFIO_FSL_MC_OFFSET_SHIFT) - 1)
+> +
+> +#define VFIO_FSL_MC_OFFSET_TO_INDEX(off) ((off) >> VFIO_FSL_MC_OFFSET_SHIFT)
+> +
+> +#define VFIO_FSL_MC_INDEX_TO_OFFSET(index)	\
+> +	((u64)(index) << VFIO_FSL_MC_OFFSET_SHIFT)
+> +
+> +struct vfio_fsl_mc_region {
+> +	u32			flags;
+> +	u32			type;
+> +	u64			addr;
+> +	resource_size_t		size;
+> +};
+> +
+>  struct vfio_fsl_mc_device {
+>  	struct fsl_mc_device		*mc_dev;
+>  	struct notifier_block        nb;
+> +	int				refcnt;
+> +	u32				num_regions;
+> +	struct vfio_fsl_mc_region	*regions;
+> +	struct mutex driver_lock;
+>  };
+>  
+>  #endif /* VFIO_FSL_MC_PRIVATE_H */
+
