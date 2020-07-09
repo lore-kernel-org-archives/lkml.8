@@ -2,168 +2,179 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE063C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB073C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9890A206E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D1A206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 09:10:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vRZqKThI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c+910fMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgGIJJS (ORCPT
+        id S1726321AbgGIJKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgGIJJQ (ORCPT
+        Thu, 9 Jul 2020 05:10:36 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31681 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726140AbgGIJKe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 05:09:16 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A592C061A0B
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 02:09:16 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id f16so834657pjt.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 02:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dfRkitREAl1cCOBzHtF2sXnD7um5XaadlgUl3USHzOw=;
-        b=vRZqKThIDXkF1WZVYjCd+lAU6Yw2xjVCcYtJIao696XqXbwd91uA7uJ5g1mR35cCFB
-         rZr5VYDRmnjk9boh6Jl5KyqMTPrY2H0G8FIPX9kZMMCJPuMs+cBqkQKxNe1W3lYR78eH
-         FaDvwzxnmHT5f6eztfFL7bkqinHccld+C1fydY+Qf2Rf7XdsUzJs1yIBEsg04ZFanFWe
-         CFTvMh7apsM6QnpAVOUY5cjzNo85yhDwcicI+HX+8QaqeD9tHp0W2Rw4UnVEHSDGHPIR
-         LEpTCKYLqF5yE0phZTENtyuOY4JTQ61JAFBPpDquOfQkBPwEsUM6VfBzbZKzL88cLkdf
-         uAlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dfRkitREAl1cCOBzHtF2sXnD7um5XaadlgUl3USHzOw=;
-        b=ZmTsgvTVKuC73JCgsRR4Al8wLizMrEgkTDBxyGLlViYzgvTJF9bE52YVAKUd0hLy80
-         c5q7J/qiIcs7Y/YA2AEB14abYDlXqBA/mYXMyPCgW547WiuadIsXefAAZmRxkwtFMmvc
-         chMAl3bQBOSSo3JmbXR2LA/D3X7yBG0ABfUCtmvxnBqLDavBSMH/lPnh60SQu4tvHA9Y
-         /B1wCe/yYlg3U5xP+wF0DHzG7YS4rHUnJv6KH5KwLnHAe3Th9Dj4Id0hqFDmF1uUktY4
-         dfrybN0MUP11sDnDvqxNejhdtAGdbplckSmUSLU12H0YwJ12nExW48mElhQ3No1Yq0K7
-         GBeQ==
-X-Gm-Message-State: AOAM531M1kRoebOpzdKEgSxoOxn/ytVjLMGJgG9g4r2xX9RdQTtGL+vH
-        N9CCV1kABYBBT44bcltrL5ROvw==
-X-Google-Smtp-Source: ABdhPJxrn0x/9eaXzBdCUMoLFcH5nlz8yRsfA6f4zpfmqLIKKts2GJNGLlHeTT9csCf0DTwa8Bx4bA==
-X-Received: by 2002:a17:90a:b00e:: with SMTP id x14mr14377506pjq.57.1594285755440;
-        Thu, 09 Jul 2020 02:09:15 -0700 (PDT)
-Received: from localhost ([122.172.40.201])
-        by smtp.gmail.com with ESMTPSA id u19sm2364195pfk.98.2020.07.09.02.09.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jul 2020 02:09:14 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 14:39:12 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thu, 9 Jul 2020 05:10:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594285832;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=1uXh9vCoEDCR46UJjFfL6baTz7YqyGL7n2iucNp2lHY=;
+        b=c+910fMsMSl2UPgGATcfNPVF2+yrvA/33onlrVY7rMSqrzNtZI+mftjA9G1Yuxa2G/vI6/
+        ppfT0iyKlkW3kLBbKFNahxMy1t6dJiBiYgbGd0aqgQ0YNWhfnh9EWpGpW0t/f4LQ76Sqjm
+        7YzX0tZolv7SJa2DcCdD9p1SgId7DzM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-512-NPk9uFuZPB2pOPPUEoIcxQ-1; Thu, 09 Jul 2020 05:10:29 -0400
+X-MC-Unique: NPk9uFuZPB2pOPPUEoIcxQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1201A1014E6A;
+        Thu,  9 Jul 2020 09:10:24 +0000 (UTC)
+Received: from [10.36.114.174] (ovpn-114-174.ams2.redhat.com [10.36.114.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E680E7F8BF;
+        Thu,  9 Jul 2020 09:10:14 +0000 (UTC)
+Subject: Re: [PATCH v3 1/6] mm/memory_hotplug: introduce default dummy
+ memory_add_physaddr_to_nid()
+To:     Jia He <justin.he@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/8] cpufreq: allow drivers to flag custom support for
- freq invariance
-Message-ID: <20200709090912.vapouiruidgypxzc@vireshk-i7>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
- <20200701090751.7543-2-ionela.voinescu@arm.com>
- <20200701094417.ffuvduz6pqknjcks@vireshk-i7>
- <20200701133330.GA32736@arm.com>
- <CAJZ5v0gT+xWwxcx3OZjXBnDLr9i4VOt2Vp3ScWBxbu+NiopkbA@mail.gmail.com>
- <20200702025818.s4oh7rzz3tr6zwqr@vireshk-i7>
- <20200702114425.GB28120@arm.com>
- <389dd87f-fed0-e4ea-81f3-5491fd2a54d1@arm.com>
- <20200709085354.GA5623@arm.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Kaly Xin <Kaly.Xin@arm.com>
+References: <20200709020629.91671-1-justin.he@arm.com>
+ <20200709020629.91671-2-justin.he@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <884d57cc-20ef-af2c-dd33-8e9dec4759de@redhat.com>
+Date:   Thu, 9 Jul 2020 11:10:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709085354.GA5623@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200709020629.91671-2-justin.he@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-07-20, 09:53, Ionela Voinescu wrote:
-> On Monday 06 Jul 2020 at 14:14:47 (+0200), Dietmar Eggemann wrote:
-> > Why can't we just move the arch_set_freq_scale() call from cpufreq
-> > driver to cpufreq core w/o introducing a FIE related driver flag?
-> > 
-> > Current scenario for Frequency Invariance Engine (FIE) on arm/arm64.
-> > 
-> > +------------------------------+       +------------------------------+
-> > |                              |       |                              |
-> > | cpufreq core:                |       | arch: (arm, arm64)           |
-> > 
-> > |                              |       |                              |
-> > | weak arch_set_freq_scale() {}|       |                              |
-> > |                              |       |                              |
-> > +------------------------------+       |                              |
-> >                                        |                              |
-> > +------------------------------+       |                              |
-> > |                              |       |                              |
-> > | cpufreq driver:              |       |                              |
-> > |                            +-----------> arch_set_freq_scale()      |
-> > |                              |       |   {                          |
-> > +------------------------------+       |      if (use counters)       |
-> >                                        |        return;               |
-> > +------------------------------+       |      ...                     |
-> > |                              |       |   }                          |
-> > | task scheduler:              |       |                              |
-> > |                            +-----------> arch_scale_freq_tick()*    |
-> > |                              |       |   {                          |
-> > 
-> > |                              |       |      if (!use counters)      |
-> > |                              |       |        return;               |
-> > |                              |       |      ...                     |
-> > |                              |       |   }                          |
-> > +------------------------------+       +------------------------------+
-> > 
-> > * defined as topology_scale_freq_tick() in arm64
-> > 
-> > Only Arm/Arm64 defines arch_set_freq_scale() to get the 'legacy' CPUfreq
-> > based FIE. This would still be the case when we move
-> > arch_set_freq_scale() from individual cpufreq drivers to cpufreq core.
-> > 
-> > Arm64 is the only arch which has to runtime-choose between two different
-> > FIEs. This is currently done by bailing out early in one of the FIE
-> > functions based on 'use counters'.
-> > 
-> > X86 (and others) will continue to not define arch_set_freq_scale().
-> > 
-> > The issue with CONFIG_BL_SWITCHER (vexpress-spc-cpufreq.c) could be
-> > solved arm/arm64 internally (arch_topology.c) by putting
-> > arch_set_freq_scale() under a !CONFIG_BL_SWITCHER guard.
-> > I doubt that there are any arm bL systems out there running it. At least
-> > I'm not aware of any complaints due to missing FIE support in bl
-> > switcher setups so far.
-
-I agree to that.
-
-> Thank you Dietmar, for your review.
+On 09.07.20 04:06, Jia He wrote:
+> This is to introduce a general dummy helper. memory_add_physaddr_to_nid()
+> is a fallback option to get the nid in case NUMA_NO_NID is detected.
 > 
-> I was trying to suggest the same in my other replies.
+> After this patch, arm64/sh/s390 can simply use the general dummy version.
+> PowerPC/x86/ia64 will still use their specific version.
+> 
+> Signed-off-by: Jia He <justin.he@arm.com>
+> ---
+>  mm/memory_hotplug.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index da374cd3d45b..b49ab743d914 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -350,6 +350,16 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+>  	return err;
+>  }
+>  
+> +#ifdef CONFIG_NUMA
+> +int __weak memory_add_physaddr_to_nid(u64 start)
+> +{
+> +	pr_info_once("Unknown target node for memory at 0x%llx, assuming node 0\n",
+> +			start);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+> +#endif
+> +
+>  /* find the smallest valid pfn in the range [start_pfn, end_pfn) */
+>  static unsigned long find_smallest_section_pfn(int nid, struct zone *zone,
+>  				     unsigned long start_pfn,
+> 
 
-I am sorry, I must have overlooked that part in your replies,
-otherwise I may agreed to it :)
-
-> Rafael, Viresh, would you mind confirming whether you still consider
-> having an 'opt in' flag is preferable here?
-
-Well, we wanted an opt-in flag instead of an opt-out one. And no flag
-is certainly better.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
-viresh
+Thanks,
+
+David / dhildenb
+
