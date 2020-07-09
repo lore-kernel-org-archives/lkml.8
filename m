@@ -2,154 +2,209 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF97C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E98C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2ED320786
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594302265;
-	bh=KWLKUQZ1jRMvThE8wuD9eO8Q9wMcE9HKK2fJnQpGhbw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XK6MhYn2sWIhhMUDiXQ7HmPp3Ou6M8dlX1a6OvJz4ySL328TNdG/wxa4w78ytQyOG
-	 AhwLxLWu+4j81Xm5v6n9uZv+wYdX+tW2nElaa8Czfnv1A5gis24cMKR3hqofBeH+m4
-	 WBqI5skSpb63xo8Kcblfyyi4Fj2pk8x2CGtq27AQ=
+	by mail.kernel.org (Postfix) with ESMTP id 349DA20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgGINoY (ORCPT
+        id S1726859AbgGINrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:44:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726340AbgGINoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:44:21 -0400
-Received: from hump.s81c.com (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48F92207BB;
-        Thu,  9 Jul 2020 13:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594302261;
-        bh=KWLKUQZ1jRMvThE8wuD9eO8Q9wMcE9HKK2fJnQpGhbw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JSMwAEJnnf6L1MMk4Z3QAcBVV1WuTyo0PWk2LcirjKvWuYI26+Ol6sLp1Ieueu1/R
-         e8FOZZhpqO6LrRrKeJxN/vV8yz9OQOPb5MMt0baL4/Xew/d6mVR70gmTcRRj0OLlXQ
-         sdmcNqQrvuF2uLl6n14a4GShZ/0tJw1iIeUhCaZ8=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Vineet Gupta <vgupta@synopsys.com>
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [RFC/RFT PATCH v2 1/1] arc: add sparsemem support
-Date:   Thu,  9 Jul 2020 16:44:12 +0300
-Message-Id: <20200709134412.1464453-2-rppt@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200709134412.1464453-1-rppt@kernel.org>
-References: <20200709134412.1464453-1-rppt@kernel.org>
+        Thu, 9 Jul 2020 09:47:48 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7829 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726340AbgGINrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 09:47:48 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D60BB8AE3C51F749F6A6;
+        Thu,  9 Jul 2020 21:47:43 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.174.186.75) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 9 Jul 2020 21:47:35 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <maz@kernel.org>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <steven.price@arm.com>
+CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>
+Subject: [RFC PATCH v1] arm64: kvm: flush tlbs by range in unmap_stage2_range function
+Date:   Thu, 9 Jul 2020 21:47:31 +0800
+Message-ID: <20200709134731.2384-1-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.186.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+Now in unmap_stage2_range(), we unmap a page by the following
+steps:
+	p*d_clear();
+	kvm_tlb_flush_vmid_ipa();  # take 2us;
+	kvm_flush_dcache_p*d();    # take 0.5us;
+	put_page();
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+When the range is very large, such as 1G, then unmap_stage2_range()
+may take more than 500ms at one time. This may cause some performance
+problems in the following case:
+
+The VM that uses 1G hugepage memory, with high memory pressure (the
+dirty page rate reaches 500MB/s), does migration with --live.  When
+the bandwidth is less than dirty rate, the migration will failed and
+VM will rollback to the source host.  unmap_stage2_range() will be
+called to combine the scattered 4K pages -- then cause the vm's
+downtime too long.
+
+In my test, unmap_stage2_range() can take a maximum of 1.2s, and
+the VM downtime reaches 7s. VM configuration is as follows:
+
+  <memory unit='KiB'>201326592</memory>
+  <vcpu placement='static'>48</vcpu>
+  <memoryBacking>
+    <hugepages>
+      <page size='1' unit='GiB' nodeset='0'/>
+    </hugepages>
+  </memoryBacking>
+
+The dirty rate is 500MB/s ~ 1000MB/s, and bandwidth is 500MB.
+
+--
+So, this patch move the kvm_tlb_flush_vmid_ipa() out of loop, and
+flush tlbs by range after other operations are complete.  Because
+we do not make new mapping for the pages, so this don't violate
+the BBM rules.
+
+After this change, the cost of unmap_stage2_range() can reduce to
+16ms, and VM downtime can be less than 1s.
+
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
 ---
- arch/arc/Kconfig                 | 10 ++++++++++
- arch/arc/include/asm/sparsemem.h | 13 +++++++++++++
- arch/arc/mm/init.c               |  7 ++++++-
- 3 files changed, 29 insertions(+), 1 deletion(-)
- create mode 100644 arch/arc/include/asm/sparsemem.h
+ arch/arm64/include/asm/kvm_asm.h |  2 ++
+ arch/arm64/kvm/hyp/tlb.c         | 36 ++++++++++++++++++++++++++++++++
+ arch/arm64/kvm/mmu.c             | 11 +++++++---
+ 3 files changed, 46 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index 197896cfbd23..a3e4f9cc2fe7 100644
---- a/arch/arc/Kconfig
-+++ b/arch/arc/Kconfig
-@@ -49,6 +49,7 @@ config ARC
- 	select PCI_SYSCALL if PCI
- 	select PERF_USE_VMALLOC if ARC_CACHE_VIPT_ALIASING
- 	select HAVE_ARCH_JUMP_LABEL if ISA_ARCV2 && !CPU_ENDIAN_BE32
-+	select SPARSEMEM_STATIC if SPARSEMEM
+diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+index 352aaebf4198..ef8203d3ca45 100644
+--- a/arch/arm64/include/asm/kvm_asm.h
++++ b/arch/arm64/include/asm/kvm_asm.h
+@@ -61,6 +61,8 @@ extern char __kvm_hyp_vector[];
  
- config ARCH_HAS_CACHE_LINE_SIZE
- 	def_bool y
-@@ -68,8 +69,15 @@ config GENERIC_CSUM
- config ARCH_DISCONTIGMEM_ENABLE
- 	def_bool n
+ extern void __kvm_flush_vm_context(void);
+ extern void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa);
++extern void __kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t start,
++				       phys_addr_t end);
+ extern void __kvm_tlb_flush_vmid(struct kvm *kvm);
+ extern void __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu);
  
-+config ARCH_SPARSEMEM_ENABLE
-+	def_bool n
-+
- config ARCH_FLATMEM_ENABLE
- 	def_bool y
-+	depends on !HIGHMEM
-+
-+config ARCH_SELECT_MEMORY_MODEL
-+	def_bool n
- 
- config MMU
- 	def_bool y
-@@ -509,6 +517,8 @@ config LINUX_RAM_BASE
- config HIGHMEM
- 	bool "High Memory Support"
- 	select ARCH_DISCONTIGMEM_ENABLE
-+	select ARCH_SPARSEMEM_ENABLE
-+	select ARCH_SELECT_MEMORY_MODEL
- 	help
- 	  With ARC 2G:2G address split, only upper 2G is directly addressable by
- 	  kernel. Enable this to potentially allow access to rest of 2G and PAE
-diff --git a/arch/arc/include/asm/sparsemem.h b/arch/arc/include/asm/sparsemem.h
-new file mode 100644
-index 000000000000..b23bedd9d6f0
---- /dev/null
-+++ b/arch/arc/include/asm/sparsemem.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_ARC_SPARSEMEM_H
-+#define _ASM_ARC_SPARSEMEM_H
-+
-+#ifdef CONFIG_ARC_HAS_PAE40
-+#define MAX_PHYSMEM_BITS	40
-+#define SECTION_SIZE_BITS	32
-+#else
-+#define MAX_PHYSMEM_BITS	32
-+#define SECTION_SIZE_BITS	31
-+#endif
-+
-+#endif /* _ASM_ARC_SPARSEMEM_H */
-diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-index e7bdc2ac1c87..eee8794aa172 100644
---- a/arch/arc/mm/init.c
-+++ b/arch/arc/mm/init.c
-@@ -153,7 +153,12 @@ void __init setup_arch_memory(void)
- 	 * DISCONTIGMEM in turns requires multiple nodes. node 0 above is
- 	 * populated with normal memory zone while node 1 only has highmem
- 	 */
-+#ifdef CONFIG_DISCONTIGMEM
- 	node_set_online(1);
-+#elif defined(CONFIG_SPARSEMEM)
-+	memblocks_present();
-+	sparse_init();
-+#endif
- 
- 	min_high_pfn = PFN_DOWN(high_mem_start);
- 	max_high_pfn = PFN_DOWN(high_mem_start + high_mem_sz);
-@@ -162,7 +167,7 @@ void __init setup_arch_memory(void)
- 
- 	high_memory = (void *)(min_high_pfn << PAGE_SHIFT);
- 	kmap_init();
--#endif
-+#endif /* CONFIG_HIGHMEM */
- 
- 	free_area_init(max_zone_pfn);
+diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/tlb.c
+index d063a576d511..4f4737a7e588 100644
+--- a/arch/arm64/kvm/hyp/tlb.c
++++ b/arch/arm64/kvm/hyp/tlb.c
+@@ -189,6 +189,42 @@ void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
+ 	__tlb_switch_to_host(kvm, &cxt);
  }
+ 
++void __hyp_text __kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t start,
++					   phys_addr_t end)
++{
++	struct tlb_inv_context cxt;
++	unsigned long addr;
++
++	start = __TLBI_VADDR(start, 0);
++	end = __TLBI_VADDR(end, 0);
++
++	dsb(ishst);
++
++	/* Switch to requested VMID */
++	kvm = kern_hyp_va(kvm);
++	__tlb_switch_to_guest(kvm, &cxt);
++
++	if ((end - start) >= 512 << (PAGE_SHIFT - 12)) {
++		__tlbi(vmalls12e1is);
++		goto end;
++	}
++
++	for (addr = start; addr < end; addr += 1 << (PAGE_SHIFT - 12))
++		__tlbi(ipas2e1is, addr);
++
++	dsb(ish);
++	__tlbi(vmalle1is);
++
++end:
++	dsb(ish);
++	isb();
++
++	if (!has_vhe() && icache_is_vpipt())
++		__flush_icache_all();
++
++	__tlb_switch_to_host(kvm, &cxt);
++}
++
+ void __hyp_text __kvm_tlb_flush_vmid(struct kvm *kvm)
+ {
+ 	struct tlb_inv_context cxt;
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index 8c0035cab6b6..bcc719c32921 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -63,6 +63,12 @@ static void kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
+ 	kvm_call_hyp(__kvm_tlb_flush_vmid_ipa, kvm, ipa);
+ }
+ 
++static void kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t start,
++				     phys_addr_t end)
++{
++	kvm_call_hyp(__kvm_tlb_flush_vmid_range, kvm, start, end);
++}
++
+ /*
+  * D-Cache management functions. They take the page table entries by
+  * value, as they are flushing the cache using the kernel mapping (or
+@@ -267,7 +273,6 @@ static void unmap_stage2_ptes(struct kvm *kvm, pmd_t *pmd,
+ 			pte_t old_pte = *pte;
+ 
+ 			kvm_set_pte(pte, __pte(0));
+-			kvm_tlb_flush_vmid_ipa(kvm, addr);
+ 
+ 			/* No need to invalidate the cache for device mappings */
+ 			if (!kvm_is_device_pfn(pte_pfn(old_pte)))
+@@ -295,7 +300,6 @@ static void unmap_stage2_pmds(struct kvm *kvm, pud_t *pud,
+ 				pmd_t old_pmd = *pmd;
+ 
+ 				pmd_clear(pmd);
+-				kvm_tlb_flush_vmid_ipa(kvm, addr);
+ 
+ 				kvm_flush_dcache_pmd(old_pmd);
+ 
+@@ -324,7 +328,6 @@ static void unmap_stage2_puds(struct kvm *kvm, p4d_t *p4d,
+ 				pud_t old_pud = *pud;
+ 
+ 				stage2_pud_clear(kvm, pud);
+-				kvm_tlb_flush_vmid_ipa(kvm, addr);
+ 				kvm_flush_dcache_pud(old_pud);
+ 				put_page(virt_to_page(pud));
+ 			} else {
+@@ -352,6 +355,8 @@ static void unmap_stage2_p4ds(struct kvm *kvm, pgd_t *pgd,
+ 
+ 	if (stage2_p4d_table_empty(kvm, start_p4d))
+ 		clear_stage2_pgd_entry(kvm, pgd, start_addr);
++
++	kvm_tlb_flush_vmid_range(kvm, start_addr, end);
+ }
+ 
+ /**
 -- 
-2.26.2
+2.19.1
+
 
