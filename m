@@ -2,95 +2,104 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59393C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 392A320774
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695EC20672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 21:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgGIVJp (ORCPT
+        id S1726645AbgGIVMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:09:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgGIVJo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 17:09:44 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DE70C08C5CE;
-        Thu,  9 Jul 2020 14:09:44 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 6D644BC070;
-        Thu,  9 Jul 2020 21:09:40 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     chenyu56@huawei.com, wangbinghui@hisilicon.com, kishon@ti.com,
-        vkoul@kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] USB IP DRIVER FOR HISILICON KIRIN: Replace HTTP links with HTTPS ones
-Date:   Thu,  9 Jul 2020 23:09:33 +0200
-Message-Id: <20200709210933.27359-1-grandmaster@al2klimov.de>
+        Thu, 9 Jul 2020 17:12:55 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48641 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbgGIVMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 17:12:54 -0400
+IronPort-SDR: zYmXNkegbqZW8ttBVqW+Fb9OPMitK+9NJngz/+TbgxgVnoU3D8mdRsJjjFX5DF5hHeWbfAUSwC
+ L4phwt6RBvPQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="147200600"
+X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
+   d="scan'208";a="147200600"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 14:12:53 -0700
+IronPort-SDR: HL1NxPNKrlVgGsyiHBtUvZOy7JZ9ONOwA/QDyK5kyklSsh/Edk5Q8Scsc3DgwBI0El5KtpVVxg
+ uqD2y2SHHsOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
+   d="scan'208";a="358569577"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga001.jf.intel.com with ESMTP; 09 Jul 2020 14:12:53 -0700
+Date:   Thu, 9 Jul 2020 14:12:53 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Xiong Zhang <xiong.y.zhang@intel.com>,
+        Wayne Boyer <wayne.boyer@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>
+Subject: Re: [PATCH] KVM: x86/mmu: Add capability to zap only sptes for the
+ affected memslot
+Message-ID: <20200709211253.GW24919@linux.intel.com>
+References: <20200703025047.13987-1-sean.j.christopherson@intel.com>
+ <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Wed, Jul 08, 2020 at 06:08:24PM +0200, Paolo Bonzini wrote:
+> On 03/07/20 04:50, Sean Christopherson wrote:
+> > Introduce a new capability, KVM_CAP_MEMSLOT_ZAP_CONTROL, to allow
+> > userspace to control the memslot zapping behavior on a per-VM basis.
+> > x86's default behavior is to zap all SPTEs, including the root shadow
+> > page, across all memslots.  While effective, the nuke and pave approach
+> > isn't exactly performant, especially for large VMs and/or VMs that
+> > heavily utilize RO memslots for MMIO devices, e.g. option ROMs.
+> > 
+> > On a vanilla VM with 6gb of RAM, the targeted zap reduces the number of
+> > EPT violations during boot by ~14% with THP enabled in the host, and by
+> > ~7% with THP disabled in the host.  On a much more custom VM with 32gb
+> > and a significant amount of memslot zapping, this can reduce the number
+> > of EPT violations by 50% during guest boot, and improve boot time by
+> > as much as 25%.
+> > 
+> > Keep the current x86 memslot zapping behavior as the default, as there's
+> > an unresolved bug that pops up when zapping only the affected memslot,
+> > and the exact conditions that trigger the bug are not fully known.  See
+> > https://patchwork.kernel.org/patch/10798453 for details.
+> > 
+> > Implement the capability as a set of flags so that other architectures
+> > might be able to use the capability without having to conform to x86's
+> > semantics.
+> 
+> It's bad that we have no clue what's causing the bad behavior, but I
+> don't think it's wise to have a bug that is known to happen when you
+> enable the capability. :/
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+I don't necessarily disagree, but at the same time it's entirely possible
+it's a Qemu bug.  If the bad behavior doesn't occur with other VMMs, those
+other VMMs shouldn't be penalized because we can't figure out what Qemu is
+getting wrong.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Even if this is a kernel bug, I'm fairly confident at this point that it's
+not a KVM bug.  Or rather, if it's a KVM "bug", then there's a fundamental
+dependency in memslot management that needs to be rooted out and documented.
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
-
- drivers/phy/hisilicon/phy-hi3660-usb3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/phy/hisilicon/phy-hi3660-usb3.c b/drivers/phy/hisilicon/phy-hi3660-usb3.c
-index cc0af2c044d0..575c867d13ca 100644
---- a/drivers/phy/hisilicon/phy-hi3660-usb3.c
-+++ b/drivers/phy/hisilicon/phy-hi3660-usb3.c
-@@ -3,7 +3,7 @@
-  * Phy provider for USB 3.0 controller on HiSilicon 3660 platform
-  *
-  * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
-- *		http://www.huawei.com
-+ *		https://www.huawei.com
-  *
-  * Authors: Yu Chen <chenyu56@huawei.com>
-  */
--- 
-2.27.0
-
+And we're kind of in a catch-22; it'll be extremely difficult to narrow down
+exactly who is breaking what without being able to easily test the optimized
+zapping with other VMMs and/or setups.
