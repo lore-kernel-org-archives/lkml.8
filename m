@@ -2,93 +2,98 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C70AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9824C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7951820772
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:43:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NFgYwB4A"
+	by mail.kernel.org (Postfix) with ESMTP id 740CC20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594302261;
+	bh=v6Vn1YgNxBgfgcIxWirvzy4yRH6zVpQpKkve958MzHg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sXDLT+VcwfFl3sjgEpoKbRGT+3P+GFRnlDHOHhBEludwrH6lqyWTNM23mug3yyAjd
+	 0XhZGPmoFQ2bE23iRltcSXqv7Tl57u0bfUEMKL/VIGwBVxEXfs1yv/4lEnQ1MAf2dE
+	 wA63JTEXoEld3FAVu/OtUL1fPAzCDuh5SefxFeWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgGINnX (ORCPT
+        id S1727101AbgGINoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgGINnW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:43:22 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 401B4C08C5CE;
-        Thu,  9 Jul 2020 06:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7rOYKU4XztveD5i31wb3QbJ+1+S+S7EVYyvxSdJ1iFM=; b=NFgYwB4AfSfixGSTDV5fwWhcoX
-        DO23STOr9Z3uquozmLEMTByMzstm5nYsixXwt7Y/NCLJqsAXLxmWiSerp+pMIiMnxPII+HB3CACGp
-        oXJb3/YWxiPidACkUAcynOQ+moJc4SH4SCAhYL0wiMY38IzGb3po79KWdr4BNs44B6jJyJazldxS5
-        mr7FD6hblNBolK+BSxnnLsy5jJmhxXtZyK4lcmRfsXtDsce6hc+NjEE6Jsbd8t+ltZv6zCUjrBX3t
-        xENvTNVLNh8fzy7IQM48Tu/JXAgrM1uWSGfTQYBNN4BWECFb+fiRFQ6oVzWrGIh8c07Vsz1/K97et
-        1e0VhbWQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtWpb-0001Gb-5I; Thu, 09 Jul 2020 13:43:19 +0000
-Date:   Thu, 9 Jul 2020 14:43:19 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH 0/2] Remove kiocb ki_complete
-Message-ID: <20200709134319.GD12769@casper.infradead.org>
-References: <20200708222637.23046-1-willy@infradead.org>
- <20200709101705.GA2095@infradead.org>
- <20200709111036.GA12769@casper.infradead.org>
- <20200709132611.GA1382@infradead.org>
- <ffbd272c-32f3-8c8c-6395-5eab47725929@gmail.com>
+        Thu, 9 Jul 2020 09:44:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726340AbgGINoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 09:44:19 -0400
+Received: from hump.s81c.com (unknown [87.71.40.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B524D20772;
+        Thu,  9 Jul 2020 13:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594302258;
+        bh=v6Vn1YgNxBgfgcIxWirvzy4yRH6zVpQpKkve958MzHg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lMjqciFNM1a9a8XnYPdfLoueKSxMVUUC04xe4cfAyGXumRmM6Jtyvobso2Qakeuwj
+         sIBHMI9VZIZgtHqb9wOAov5RLIq1Uaq8+D3D6esAvdXjKms88zyMXvasGLfDo4XMAb
+         U8RBe2jWwmIDfdzAvZCLYWce/w9R6DPhHMJw9q1g=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Vineet Gupta <vgupta@synopsys.com>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [RFC/RFT PATCH v2 0/1] arc: add sparsemem support
+Date:   Thu,  9 Jul 2020 16:44:11 +0300
+Message-Id: <20200709134412.1464453-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ffbd272c-32f3-8c8c-6395-5eab47725929@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 04:37:59PM +0300, Pavel Begunkov wrote:
-> On 09/07/2020 16:26, Christoph Hellwig wrote:
-> > On Thu, Jul 09, 2020 at 12:10:36PM +0100, Matthew Wilcox wrote:
-> >> On Thu, Jul 09, 2020 at 11:17:05AM +0100, Christoph Hellwig wrote:
-> >>> I really don't like this series at all.  If saves a single pointer
-> >>> but introduces a complicated machinery that just doesn't follow any
-> >>> natural flow.  And there doesn't seem to be any good reason for it to
-> >>> start with.
-> >>
-> >> Jens doesn't want the kiocb to grow beyond a single cacheline, and we
-> >> want the ability to set the loff_t in userspace for an appending write,
-> >> so the plan was to replace the ki_complete member in kiocb with an
-> >> loff_t __user *ki_posp.
-> >>
-> >> I don't think it's worth worrying about growing kiocb, personally,
-> >> but this seemed like the easiest way to make room for a new pointer.
-> > 
-> > The user offset pointer has absolutely no business in the the kiocb
-> > itself - it is a io_uring concept which needs to go into the io_kiocb,
-> > which has 14 bytes left in the last cache line in my build.  It would
-> > fit in very well there right next to the result and user pointer.
-> 
-> After getting a valid offset, io_uring shouldn't do anything but
-> complete the request. And as io_kiocb implicitly contains a CQE entry,
-> not sure we need @append_offset in the first place.
-> 
-> Kanchan, could you take a look if you can hide it in req->cflags?
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-No, that's not what cflags are for.  And besides, there's only 32 bits
-there.
+Hi,
+
+It took me a while to get back to it, but better late than never :)
+
+This patch adds SPARSEMEM support as an alternative to DISCONTIGMEM in
+the case when there are two DRAM banks populated.
+
+I've verified that it boots on nsim, but I could not find a way to make
+nsim emulate two memory banks.
+
+There is slight improvement in the resulting kernel size for
+nsim_700_defconfig with CONFIG_HIGHMEM=y.
+
+If sparse actually works on a system with 2 DRAM banks and does not
+introduce performance regression, I suggest to update this patch to
+replace DISCONTIGMEM with SPARSEMEM on arc.
+
+$ size discontig/vmlinux  sparse/vmlinux 
+   text	   data	    bss	    dec	    hex	filename
+3894379	1093092	 244932	5232403	 4fd713	discontig/vmlinux
+3879040	1093964	 244956	5217960	 4f9ea8	sparse/vmlinux
+
+$ ./scripts/bloat-o-meter ~/tmp/arc/discontig/vmlinux  ~/tmp/arc/sparse/vmlinux 
+add/remove: 35/23 grow/shrink: 35/384 up/down: 8110/-26438 (-18328)
+...
+Total: Before=4282217, After=4263889, chg -0.43%
+
+
+Mike Rapoport (1):
+  arc: add sparsemem support
+
+ arch/arc/Kconfig                 | 10 ++++++++++
+ arch/arc/include/asm/sparsemem.h | 13 +++++++++++++
+ arch/arc/mm/init.c               |  7 ++++++-
+ 3 files changed, 29 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arc/include/asm/sparsemem.h
+
+-- 
+2.26.2
+
