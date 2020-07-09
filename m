@@ -2,85 +2,81 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 197C2207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0670F207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 15:19:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="lR+7/Yra"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K0LBPbWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgGIPTI (ORCPT
+        id S1728306AbgGIPTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:19:08 -0400
-Received: from m15113.mail.126.com ([220.181.15.113]:43809 "EHLO
-        m15113.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728087AbgGIPSg (ORCPT
+        Thu, 9 Jul 2020 11:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728117AbgGIPSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 11:18:36 -0400
-X-Greylist: delayed 1859 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jul 2020 11:18:31 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=/LgYjZNguoFLQwNLPw
-        QMJhRcOD+VgjClMKSQRTgSi+I=; b=lR+7/YraQf1f9P/fcok66ol6sfV/ch3EVt
-        KakuqRIXOLPUhGybbNWYPo0hHsrk7T+ppQuO2axZt7o4IYBCW9TFvZVzbiTwpfhD
-        gpbep0aluEdVkF5RqVMNXqS8j9yzEfpAroWLCQPG03j0/8Z42AIW5O0C8lZqX26N
-        xckiSTy48=
-Received: from 192.168.137.252 (unknown [112.10.74.133])
-        by smtp3 (Coremail) with SMTP id DcmowAA3FATJLQdfCX7hHQ--.16361S3;
-        Thu, 09 Jul 2020 22:46:35 +0800 (CST)
-From:   Xianting Tian <xianting_tian@126.com>
-To:     mst@redhat.com, jasowang@redhat.com, pbonzini@redhat.com,
-        stefanha@redhat.com, jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: virtio_scsi: remove unnecessary condition check
-Date:   Thu,  9 Jul 2020 10:46:32 -0400
-Message-Id: <1594305992-8458-1-git-send-email-xianting_tian@126.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: DcmowAA3FATJLQdfCX7hHQ--.16361S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Xw47tryktw1xCw43ZF48Crg_yoW3Krc_XF
-        4FqrsrGr15KFn2kry8GryfZrWY9anrZF40kr9YgFyfCr1Fqwn0gr1jqr1rZF4fWw4jk3W3
-        Cw4vyr1S9r1xGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8Tv3UUUUUU==
-X-Originating-IP: [112.10.74.133]
-X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbi5gtcpFpD+5LX2gAAso
+        Thu, 9 Jul 2020 11:18:34 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B21C08C5CE;
+        Thu,  9 Jul 2020 08:18:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=loyJfIjr6uG+JtT8Ae3i8+buKjp1+Mq9QHCSFksTz0I=; b=K0LBPbWi/Xr8DW4OgY7Ac/hL4a
+        Jy5EevLYuoCtkhhqLlEe006QWoiJBnpK/RmcAqD6YCvSWOUN8cZ1musNMtT/4C4T2LFivaQlTeX6U
+        sbr3OW3wp1OuHveZEryV3TIbdvgjwC4FAMPLl3LhcECISsz0otyX/JHdlrUjoNJvrG/zX4F/fisN/
+        kdQFw2mQtsY4h30VIgq6TWq/sQnx6KJvQUYUpc18c1Wb83bA343vxH3ZCOf4KmndSLyZ/8wJJT2h2
+        x9qJVV9Ss5ohLOfNYQN3Gx3p3CsCs3Sj3bZVqAIKdS2yjWJ7SQzCaVABphLmNciYkLJZpkuAXIwSG
+        UTNDoYZQ==;
+Received: from [2001:4bb8:188:5f50:7053:304b:bf82:82cf] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtYJk-0005MY-77; Thu, 09 Jul 2020 15:18:32 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 11/17] initrd: mark init_linuxrc as __init
+Date:   Thu,  9 Jul 2020 17:18:08 +0200
+Message-Id: <20200709151814.110422-12-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200709151814.110422-1-hch@lst.de>
+References: <20200709151814.110422-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmem_cache_destroy can correctly handle null pointer parameter,
-so there is no need to check if the parameter is null before
-calling kmem_cache_destroy.
-
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/scsi/virtio_scsi.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ init/do_mounts_initrd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-index bfec84a..5bc288f 100644
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -1007,10 +1007,8 @@ static int __init init(void)
- 		mempool_destroy(virtscsi_cmd_pool);
- 		virtscsi_cmd_pool = NULL;
- 	}
--	if (virtscsi_cmd_cache) {
--		kmem_cache_destroy(virtscsi_cmd_cache);
--		virtscsi_cmd_cache = NULL;
--	}
-+	kmem_cache_destroy(virtscsi_cmd_cache);
-+	virtscsi_cmd_cache = NULL;
- 	return ret;
+diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+index e4f88e9e1c0839..57ad5b2da8f5f5 100644
+--- a/init/do_mounts_initrd.c
++++ b/init/do_mounts_initrd.c
+@@ -56,7 +56,7 @@ static int __init early_initrd(char *p)
  }
+ early_param("initrd", early_initrd);
  
+-static int init_linuxrc(struct subprocess_info *info, struct cred *new)
++static int __init init_linuxrc(struct subprocess_info *info, struct cred *new)
+ {
+ 	ksys_unshare(CLONE_FS | CLONE_FILES);
+ 	console_on_rootfs();
 -- 
-1.8.3.1
+2.26.2
 
