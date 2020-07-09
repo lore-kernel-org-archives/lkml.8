@@ -2,168 +2,154 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13422C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E061020739
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5771C206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 03:57:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qZMRcaF5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEn0HM2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgGID4w (ORCPT
+        id S1726364AbgGID50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jul 2020 23:56:52 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:19307 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgGID4v (ORCPT
+        Wed, 8 Jul 2020 23:57:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgGID5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jul 2020 23:56:51 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200709035647epoutp04f6d08b0f0cd9ea7b22b43894319faacc~f_WWdfBXL2133321333epoutp04O
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 03:56:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200709035647epoutp04f6d08b0f0cd9ea7b22b43894319faacc~f_WWdfBXL2133321333epoutp04O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594267007;
-        bh=p/SFYzbsPHltH/8FwWWSzx9XA/itHl9p3f2bkVFrBuw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=qZMRcaF5ClIEb8THOQLa9Odiau3YHDAWg33tVYcwURUJO7ceExXsBVFPKDzdv0pI+
-         KyG7JVlJE7DryzQt5r3bsSesT1Zoo1pvfM7Jesr+1jmmlYultyp8bV7goI6AW9fkxt
-         ZNWPoGuO3GPEMrtahIgkTUZiIaDAzzYV6jPQb3HQ=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200709035647epcas1p226f752719a90eaf749561c4c9cd79579~f_WWC7wnd1895318953epcas1p2P;
-        Thu,  9 Jul 2020 03:56:47 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4B2Mms1LQKzMqYly; Thu,  9 Jul
-        2020 03:56:45 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        95.F1.18978.D75960F5; Thu,  9 Jul 2020 12:56:45 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200709035644epcas1p33f1cb4e5797fcdca3f038c76b08b910f~f_WTYAtvs0146701467epcas1p3z;
-        Thu,  9 Jul 2020 03:56:44 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200709035644epsmtrp1ad6314501fb2ea7f17d1de275a534ad8~f_WTXOxFf0699306993epsmtrp1s;
-        Thu,  9 Jul 2020 03:56:44 +0000 (GMT)
-X-AuditID: b6c32a35-5edff70000004a22-7a-5f06957d6074
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        64.26.08382.C75960F5; Thu,  9 Jul 2020 12:56:44 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200709035644epsmtip295da1225b8f6210d69568765d9b1c019~f_WTC22E-1353413534epsmtip2j;
-        Thu,  9 Jul 2020 03:56:44 +0000 (GMT)
-Subject: Re: [PATCH 1/2] memory: samsung: exynos5422-dmc: Adjust polling
- interval and uptreshold
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     willy.mh.wolff.ml@gmail.com, k.konieczny@samsung.com,
-        b.zolnierkie@samsung.com, krzk@kernel.org, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        s.nawrocki@samsung.com, kgene@kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <fa3f651a-3c2b-188b-e2dc-4fd05ce4a1b7@samsung.com>
-Date:   Thu, 9 Jul 2020 13:08:09 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Wed, 8 Jul 2020 23:57:25 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C2CC061A0B;
+        Wed,  8 Jul 2020 20:57:24 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f2so274857plr.8;
+        Wed, 08 Jul 2020 20:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qQt1wAad2dU36xgkUvfXYmyUmki1DUvy4308x3ajvro=;
+        b=JEn0HM2UOIrt7165EtIi3924HR53H+Pcb8TB4DpwL6xe5Mcm2w+8SCZ3YqMtFRqMh2
+         cPQUl2EjRiiCSE8XlfV/rJBsvGn5O0rg3mvW1aq5tHcBeHECAKBCeHrwWrJdwQxcSW1i
+         no+1kqpgqHKOrNCJv5Ox/L1BG9x2Zdpl82o1DI6KQvU8k5ohcc5lgd+Gu1hzlNxuhrB8
+         wXI5dmj33WUH5JNe7qB3s4mrUvNZQRZ2oHxnwLmbIlV+mgpXUppWsxwQM6HoFjAJQkrr
+         4U6ZlV92BnEsl6/Xlv7uqaVSGpb67WPS/3JzAuudxTtMneZgurES5Y4LVvSVwaolD57w
+         KDaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=qQt1wAad2dU36xgkUvfXYmyUmki1DUvy4308x3ajvro=;
+        b=LleOrq2JJK1EzEXefQvP/k6tu15bpyOuzEh2eXNlrJboK/6KHSj8+1cmSnz3SeNd9W
+         cX1VSjF4N2RtBlNKLYqafsdxF2ShFZXhDX8e1TWZdMyzAMIybQ9XuNP/sHFuElIKrLbm
+         /7UggHtPnCcmqu5n+b2RmyZ95k6wM+/CItbIaloFww9+rku8JxD5OsTOXZojv5vve1B7
+         B0fjFVtSCe8c32wuvxfXefxCX/6YOnw0uZIsjzerIJQ17J/g6RxuJJjGXZiMX6482pYI
+         ixPaEVhYQt4QAP4T7oOESyqt14iA/qvtz3n79In201RsAgAzg7mx8WH6WQjk/GXasSrN
+         +mng==
+X-Gm-Message-State: AOAM531zBfhN+BvHuBY77h+waQ9ByrSOUtHh60rG62+gYlqSULxlT8n8
+        tlQ4eeo/VVP4U9RFx0E7nRudy+UkEpk=
+X-Google-Smtp-Source: ABdhPJzsNy9Ri3SWc/9z0KU/WCHqvlMAR3M+nmRFHvMKnEMW/piTKdghg/WgW5Mkn9sQVcosWUnc8A==
+X-Received: by 2002:a17:90a:3567:: with SMTP id q94mr11689566pjb.226.1594267044525;
+        Wed, 08 Jul 2020 20:57:24 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z5sm1084965pfn.117.2020.07.08.20.57.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 20:57:23 -0700 (PDT)
+Subject: Re: [PATCH] hwmon: adm1275: Make sure we are reading enough data for
+ different chips
+To:     Chu Lin <linchuyuan@google.com>
+Cc:     Kais Belgaied <belgaied@google.com>,
+        Jason Ling <jasonling@google.com>, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zhongqi Li <zhongqil@google.com>
+References: <20200708235306.3854404-1-linchuyuan@google.com>
+ <a219c4ba-23ec-f6a0-1bbb-593e54dd11be@roeck-us.net>
+ <CAKCA56DrA30WATZqCv6dDbj0siUW3Uvub0P1_6xRO-aPsMMPVg@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <e23a181d-1a10-48ef-4747-162d71fe2e6c@roeck-us.net>
+Date:   Wed, 8 Jul 2020 20:57:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200708153420.29484-2-lukasz.luba@arm.com>
+In-Reply-To: <CAKCA56DrA30WATZqCv6dDbj0siUW3Uvub0P1_6xRO-aPsMMPVg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIJsWRmVeSWpSXmKPExsWy7bCmnm7tVLZ4g4Mr2Sw2zljPajHxxhUW
-        iwWfZrBa9D9+zWxx/vwGdouzTW/YLTY9vsZqcXnXHDaLz71HGC1mnN/HZLGwqYXd4nbjCjaL
-        w2/aWS2+nXjE6MDnsWbeGkaPnbPusntsWtXJ5rF5Sb1H35ZVjB6fN8kFsEVl22SkJqakFimk
-        5iXnp2TmpdsqeQfHO8ebmhkY6hpaWpgrKeQl5qbaKrn4BOi6ZeYAXaukUJaYUwoUCkgsLlbS
-        t7Mpyi8tSVXIyC8usVVKLUjJKbAs0CtOzC0uzUvXS87PtTI0MDAyBSpMyM5offGFuaCPq2JP
-        90KmBsZVHF2MnBwSAiYS587PY+5i5OIQEtjBKLHj5lEmCOcTo8Tl2ydYIJxvjBJf/zYClXGA
-        tcx/JQ4R38so0bnjFCOE855RYtWl96wgc4UFkiSWvZ4MNkpEYBWjxPf3R1hBHGaBO0CjGucy
-        glSxCWhJ7H9xgw3E5hdQlLj64zFYnFfATmL+931gNouAisSM7fvZQWxRgTCJk9taoGoEJU7O
-        fMICYnMKWEr8nD4TbA6zgLjErSfzmSBseYntb+eAfSchcIFD4uOdi2wQb7tITHr5lBHCFpZ4
-        dXwLO4QtJfGyvw3KrpZYefIIG0RzB6PElv0XWCESxhL7l4L8xgG0QVNi/S59iLCixM7fEI8x
-        C/BJvPvawwoJL16JjjYhiBJlicsP7jJB2JISi9s72SYwKs1C8s4sJC/MQvLCLIRlCxhZVjGK
-        pRYU56anFhsWGCLH9yZGcFrWMt3BOPHtB71DjEwcjIcYJTiYlUR4DRRZ44V4UxIrq1KL8uOL
-        SnNSiw8xmgIDeCKzlGhyPjAz5JXEG5oaGRsbW5gYmpkaGiqJ8+aoAzUJpCeWpGanphakFsH0
-        MXFwSjUwiW/lly91uyA5W95he37kxchlWRb+ApdsDstudOC9YWzfLGv8oXHalzzRpkijq45X
-        PgrFzrFfzpaf/c52xsGTNXfvLr/cb1i0Kn5fhnn4VUnpnYYN237/1jx6Lc/IUfjuh8Bl0keP
-        qQR65azsmZ2z5eyRmg91j5VEzzeLWRTMKVNvDWwNC/C8k9b48Yeg79fa7rONzIGVM5/OvL3A
-        8ic7L3ta4Kp/NcH2DFc2rZ127GvqygQt2yvc4spJtT7r79UWZfvs5dh3frqcoejn2vUvVZz2
-        hHgduKdfs+7/pObt+xuO35qs+7bNQDLp1I3JDhNDhP7kn96v5isXsEL3i5bKB8XcLgbnlMmx
-        x44rnfqgxFKckWioxVxUnAgAK7LIe1QEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFIsWRmVeSWpSXmKPExsWy7bCSvG7NVLZ4g6P/pC02zljPajHxxhUW
-        iwWfZrBa9D9+zWxx/vwGdouzTW/YLTY9vsZqcXnXHDaLz71HGC1mnN/HZLGwqYXd4nbjCjaL
-        w2/aWS2+nXjE6MDnsWbeGkaPnbPusntsWtXJ5rF5Sb1H35ZVjB6fN8kFsEVx2aSk5mSWpRbp
-        2yVwZbS++MJc0MdVsad7IVMD4yqOLkYODgkBE4n5r8S7GLk4hAR2M0rsm3+JvYuREyguKTHt
-        4lFmiBphicOHiyFq3jJKzHm8lRWkRlggSWLZ68lMIAkRgVWMEvfu3wBrZha4wyhxsCUSburq
-        a6sZQRJsAloS+1/cYAOx+QUUJa7+eAwW5xWwk5j/fR+YzSKgIjFj+36wQaICYRI7lzxmgqgR
-        lDg58wkLiM0pYCnxc/pMNohl6hJ/5l1ihrDFJW49mc8EYctLbH87h3kCo/AsJO2zkLTMQtIy
-        C0nLAkaWVYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5uZsYwdGppbmDcfuqD3qHGJk4GA8x
-        SnAwK4nwGiiyxgvxpiRWVqUW5ccXleakFh9ilOZgURLnvVG4ME5IID2xJDU7NbUgtQgmy8TB
-        KdXA1PbI7fHknPbGp45HlvCvVf6m3y57/q/ZKf8Z+Xsf2iYePV09/dCGaJ+AY2K2zy7uvnTO
-        7Cd7RXXsWf2ZdysOVolfmlXI+XjpFM/c3N1PfNmmRG+yCIzLn509tXJ234UuvflX5pcynC+N
-        C/83XfDhvAmic7bVLm47VXBSwz/9eaXYi4MSIpee1rJo/faXPteQsPH1/UMGYbvvvC8+vu2+
-        xefKovD3B3i6GhoEyrmdC+0LfsXYXPKL1NLTWrR1rc0PfdVzNWLR/4M1bZOOhlwLu+8363iL
-        SdqTr5zTPAoqezduP1lZ67qjV3GzWy+jOXvTswlnp8VZWEsl1m2ecqd5gcDyUuXqZ5xGS6f5
-        uPalK7EUZyQaajEXFScCAPZMCWM9AwAA
-X-CMS-MailID: 20200709035644epcas1p33f1cb4e5797fcdca3f038c76b08b910f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501
-References: <20200708153420.29484-1-lukasz.luba@arm.com>
-        <CGME20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501@epcas1p4.samsung.com>
-        <20200708153420.29484-2-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
-
-On 7/9/20 12:34 AM, Lukasz Luba wrote:
-> In order to react faster and make better decisions under some workloads,
-> benchmarking the memory subsystem behavior, adjust the polling interval
-> and upthreshold value used by the simple_ondemand governor.
+On 7/8/20 8:30 PM, Chu Lin wrote:
+> On Wed, Jul 8, 2020 at 5:33 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> On 7/8/20 4:53 PM, Chu Lin wrote:
+>>> Issue:
+>>> When binding adm1272 to the adm1275 driver, PEC error is reported.
+>>> See blow:
+>>
+>> s/blow/below/
+>>
+>> Also, unless I am missing something, the error is only seen if PEC is
+>> enabled.
 > 
-> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> ---
->  drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-> index 93e9c2429c0d..e03ee35f0ab5 100644
-> --- a/drivers/memory/samsung/exynos5422-dmc.c
-> +++ b/drivers/memory/samsung/exynos5422-dmc.c
-> @@ -1466,10 +1466,10 @@ static int exynos5_dmc_probe(struct platform_device *pdev)
->  		 * Setup default thresholds for the devfreq governor.
->  		 * The values are chosen based on experiments.
->  		 */
-> -		dmc->gov_data.upthreshold = 30;
-> +		dmc->gov_data.upthreshold = 10;
->  		dmc->gov_data.downdifferential = 5;
->  
-> -		exynos5_dmc_df_profile.polling_ms = 500;
-> +		exynos5_dmc_df_profile.polling_ms = 100;
->  	}
->  
->  
+> This is correct.
 > 
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+That should be mentioned in the description.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Thanks,
+Guenter
+
+> Regards,
+> Chu
+> 
+
