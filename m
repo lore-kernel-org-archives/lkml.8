@@ -2,156 +2,129 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B685C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30FC020708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4F120708
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 13:53:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="npvFezMT"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BjWZhcJG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgGINwo (ORCPT
+        id S1727950AbgGINxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:52:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40908 "EHLO
+        Thu, 9 Jul 2020 09:53:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbgGINwn (ORCPT
+        with ESMTP id S1727856AbgGINxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:52:43 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EAFCC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:52:43 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id s9so2457717ljm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:52:43 -0700 (PDT)
+        Thu, 9 Jul 2020 09:53:10 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3167AC08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 06:53:10 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id c16so2351521ioi.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 06:53:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gGVuo8ujJimg/zW9016fI/nLusAS6eB6X5j2AJ72Jog=;
-        b=npvFezMTC8fOUcAN70TXMU8kzvjWJ2iynpk3U+Bf5E2N6rYnHzVn2idLDJ64d0yIDn
-         idLfET28ODOTABtdRYtCqGmMJKGolCFnKUN+PIe7P0Gjg7dpGIyKAeHBhzyqbn9xOO3g
-         DUkJ6ZCCf/89U8o3cCKCI3wRoLV6G7SFkMlhrzX+xFYOgeVDsdnS/Xa1VpPZanylz7qu
-         UuTcYo4TZOOgh+c9GK3p295TFbpP0nx4m9XhUzRFTXxiwR+X2E7qL2Y4wVIrQO5+DP8+
-         oyN3E96ugzvXaQHIX1og1wNJNI02ilr6dhwoJsLMm3lYvtq3+IwzB0gGaKID6Rkj9b5E
-         BdPg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MdcBjmP7qGWR1MpBAxRS6pB+OY/RQLdcm4qT/nupz3g=;
+        b=BjWZhcJGYeO/nZp2SRVBsmB5Ei77q8MrUISpXYS8soe+YNMxcSX6beIjMuI3Q05mxL
+         gXY4Bw0kuYaA6GAj4ujXqufV5EipZgKw/jMhE5sCSyg9rMz64OM3LShd71rVSmg1N5ap
+         /WH8FEF0+S2cFsHijeSnwEfnr6m/w8IkO0IUYeyKSmZA3K1VuSYheHIZc0bX4J+miskc
+         s8hGdjjZJl4hLHqJ0RpwJ8bSXyqx7qO5aUtQg9kzDTIEpTDvUrAHjpbO0CVwFCvuc8+M
+         MkAwSdB5SFIDB63Cth1qeUqZr5I+O4JOII0KIJ8lIg/eL3m9KP/hw51WcHviT92cRQky
+         bimQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gGVuo8ujJimg/zW9016fI/nLusAS6eB6X5j2AJ72Jog=;
-        b=m1se6U2A2pETVReHnqWc+feh2/z06Tp9WXATpeHcxFoHo3RkKvSA308Dr4+IIcwYcr
-         ACj+3BNUM+RfgBFUMisDkbeL6MA7T+wC4hRQWeKi5dAvQax7nc3TdD4FU2k8wloz/DJY
-         H0bBgqlEgHGfIZcA0PAiA0cQXmJ0wRMzXlmViGrLV48CXAkuNX4UGEm5QhoY8rXtpSqD
-         SYsQzE2XgxwKH2M/Z6ULSP7tdXHjWg8lJgFDXv8FtLzOS2C3ut80B87bHDP9XZgAncAY
-         acpOlI3pfxgsHXOwYb6JGe/2KN3b+iowNWdTjEqQ2R29sA1f95ZVzleHjmt5zYEChvd5
-         barw==
-X-Gm-Message-State: AOAM533smSoqBGydFY+FNUXXxCBWv7ETyH5XjuDFsFbPNZu/AmhMFYOH
-        Yg0+nOEId65g7Ox/SEMRlagligStfYM9BnmLuJ3THQ==
-X-Google-Smtp-Source: ABdhPJyQqg3jfxMgebkWLUYMwv5N+RIZKCbN+OV/eVxLE/UvQPOv1OpAHpnmUdBAT2ATHZ+9p+dUPugRYkKtv+xlMb8=
-X-Received: by 2002:a2e:7f10:: with SMTP id a16mr38244974ljd.69.1594302761669;
- Thu, 09 Jul 2020 06:52:41 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MdcBjmP7qGWR1MpBAxRS6pB+OY/RQLdcm4qT/nupz3g=;
+        b=dfQKEwJe+idN02qF3WZgE2zXf77tVfXamA+C8g2nCEB+G03sXOW9VmbqNtnH+4MpDy
+         Kklnaf9shv/apkm7QNaFbBE+lHek6fsgGi2PZr352zyRRM67J3lT2jSUYWhJAF/zbpwM
+         rD6BKdus2JJaIh6bNsRh3UB+gv5OuBEw23TSWTOxa5So5eezoF14N5Zq8jFvNaIMVXou
+         DhwRaEPhIZ3VIF1N+QHO3pyoLfwiz1FisCGHZqYda/G7wtuv6Nwjz6iVk1ao4su62gYP
+         C474F7T5P/mq2HqW3kz1tkZoUrDm8pHvCOSkMTS0tyYv6HUWDbcA/fqIjnDbxKSDopn5
+         BXSA==
+X-Gm-Message-State: AOAM533igT+rPOiQoqigRrJWopAVQVA50CX6sFl36QMB+zqRMeUOJ/v1
+        2Fwqqn0C/Uq6VQ3WkKM/Koym/Q==
+X-Google-Smtp-Source: ABdhPJy39Z382Q5bYeHMpva+0EOk6l7VKjY+mG3CJn9HtsoBPJfb2IFz340kCmDhMrghd/EAVUHtHQ==
+X-Received: by 2002:a02:c6a7:: with SMTP id o7mr74870852jan.7.1594302789510;
+        Thu, 09 Jul 2020 06:53:09 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 13sm1920029ilj.81.2020.07.09.06.53.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 06:53:08 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Remove kiocb ki_complete
+To:     Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kanchan Joshi <joshi.k@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <20200708222637.23046-1-willy@infradead.org>
+ <20200709101705.GA2095@infradead.org>
+ <20200709111036.GA12769@casper.infradead.org>
+ <20200709132611.GA1382@infradead.org>
+ <20200709133249.GC12769@casper.infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <cac3062d-3779-5c1b-b3f5-07823c198ead@kernel.dk>
+Date:   Thu, 9 Jul 2020 07:53:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200702144258.19326-1-vincent.guittot@linaro.org>
- <4198cf3d-308e-feee-91c3-2edfd1748b4c@arm.com> <CAKfTPtBeRXCEWB3dTC8uOqbQ5xaZqQTAeG1EVGEk+pJcYz00sw@mail.gmail.com>
- <9a282390-1c81-0e77-9567-116c8777f7b5@arm.com>
-In-Reply-To: <9a282390-1c81-0e77-9567-116c8777f7b5@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 9 Jul 2020 15:52:29 +0200
-Message-ID: <CAKfTPtDzsryz=V3WKo5zPkvWSagNAh1tr+ZaV5UwXBr7xMQPUQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: handle case of task_h_load() returning 0
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200709133249.GC12769@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020 at 15:34, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
-> On 08/07/2020 11:47, Vincent Guittot wrote:
-> > On Wed, 8 Jul 2020 at 11:45, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> >>
-> >> On 02/07/2020 16:42, Vincent Guittot wrote:
-> >>> task_h_load() can return 0 in some situations like running stress-ng
-> >>> mmapfork, which forks thousands of threads, in a sched group on a 224 cores
-> >>> system. The load balance doesn't handle this correctly because
-> >>
-> >> I guess the issue here is that 'cfs_rq->h_load' in
-> >>
-> >> task_h_load() {
-> >>     struct cfs_rq *cfs_rq = task_cfs_rq(p);
-> >>     ...
-> >>     return div64_ul(p->se.avg.load_avg * cfs_rq->h_load,
-> >>                     cfs_rq_load_avg(cfs_rq) + 1);
-> >> }
-> >>
-> >> is still ~0 (or at least pretty small) compared to se.avg.load_avg being
-> >> 1024 and cfs_rq_load_avg(cfs_rq) n*1024 in these lb occurrences.
-> >>
-> >>> env->imbalance never decreases and it will stop pulling tasks only after
-> >>> reaching loop_max, which can be equal to the number of running tasks of
-> >>> the cfs. Make sure that imbalance will be decreased by at least 1.
->
-> Looks like it's bounded by sched_nr_migrate (32 on my E5-2690 v2).
+On 7/9/20 7:32 AM, Matthew Wilcox wrote:
+> On Thu, Jul 09, 2020 at 02:26:11PM +0100, Christoph Hellwig wrote:
+>> On Thu, Jul 09, 2020 at 12:10:36PM +0100, Matthew Wilcox wrote:
+>>> On Thu, Jul 09, 2020 at 11:17:05AM +0100, Christoph Hellwig wrote:
+>>>> I really don't like this series at all.  If saves a single pointer
+>>>> but introduces a complicated machinery that just doesn't follow any
+>>>> natural flow.  And there doesn't seem to be any good reason for it to
+>>>> start with.
+>>>
+>>> Jens doesn't want the kiocb to grow beyond a single cacheline, and we
+>>> want the ability to set the loff_t in userspace for an appending write,
+>>> so the plan was to replace the ki_complete member in kiocb with an
+>>> loff_t __user *ki_posp.
+>>>
+>>> I don't think it's worth worrying about growing kiocb, personally,
+>>> but this seemed like the easiest way to make room for a new pointer.
+>>
+>> The user offset pointer has absolutely no business in the the kiocb
+>> itself - it is a io_uring concept which needs to go into the io_kiocb,
+>> which has 14 bytes left in the last cache line in my build.  It would
+>> fit in very well there right next to the result and user pointer.
+> 
+> I agree.  Jens doesn't.
 
-yes
+Stop putting words in my mouth, especially when they are totally untrue.
 
->
-> env.loop_max  = min(sysctl_sched_nr_migrate, busiest->nr_running);
->
-> [...]
->
-> >> I assume that this is related to the LKP mail
-> >
-> > I have found this problem while studying the regression raised in the
-> > email below but it doesn't fix it. At least, it's not enough
-> >
-> >>
-> >> https://lkml.kernel.org/r/20200421004749.GC26573@shao2-debian ?
->
-> I see. It also happens with other workloads but it's most visible
-> at the beginning of a workload (fork).
->
-> Still on E5-2690 v2 (2*2*10, 40 CPUs):
->
-> In the taskgroup cfs_rq->h_load is ~ 1024/40 = 25 so this leads to
-> task_h_load = 0 with cfs_rq->avg.load_avg 40 times higher than the
-> individual task load (1024).
->
-> One incarnation of 20 loops w/o any progress (that's w/o your patch).
->
-> With loop='loop/loop_break/loop_max'
-> and load='p->se.avg.load_avg/cfs_rq->h_load/cfs_rq->avg.load_avg'
->
-> Jul  9 10:41:18 e105613-lin kernel: [73.068844] [stress-ng-mmapf 2907] SMT CPU37->CPU17 imb=8 loop=1/32/32 load=1023/23/43006
-> Jul  9 10:41:18 e105613-lin kernel: [73.068873] [stress-ng-mmapf 3501] SMT CPU37->CPU17 imb=8 loop=2/32/32 load=1022/23/41983
-> Jul  9 10:41:18 e105613-lin kernel: [73.068890] [stress-ng-mmapf 2602] SMT CPU37->CPU17 imb=8 loop=3/32/32 load=1023/23/40960
-> ...
-> Jul  9 10:41:18 e105613-lin kernel: [73.069136] [stress-ng-mmapf 2520] SMT CPU37->CPU17 imb=8 loop=18/32/32 load=1023/23/25613
-> Jul  9 10:41:18 e105613-lin kernel: [73.069144] [stress-ng-mmapf 3107] SMT CPU37->CPU17 imb=8 loop=19/32/32 load=1021/23/24589
-> Jul  9 10:41:18 e105613-lin kernel: [73.069149] [stress-ng-mmapf 2672] SMT CPU37->CPU17 imb=8 loop=20/32/32 load=1024/23/23566
-> ...
->
-> Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+I was opposed to growing struct io_rw in io_uring, which is where the
+extra append variable belonds, beyond a cacheline. You mentioned you
+could probably shave some bits out of struct kiocb, which is how this
+completion handling business came about. If kiocb was shrunk, then io_rw
+has room for the needed variable.
 
-Thanks
+At no point have I said that whatever we need to shove in there for
+io_uring should be in the kiocb, that would not make any sense. I'm
+just opposed to growing the per-op data field in io_kiocb beyond
+a cacheline. And that's especially true for something like append
+writes, which I don't consider super interesting.
 
->
->
->
->
->
->
->
+
+-- 
+Jens Axboe
+
