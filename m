@@ -2,152 +2,127 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF682C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA6882074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FA52074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgGIOrK (ORCPT
+        id S1727856AbgGIOrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:47:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:34320 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbgGIOrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 10:47:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DEC631B;
-        Thu,  9 Jul 2020 07:47:09 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 233F73F792;
-        Thu,  9 Jul 2020 07:47:08 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 15:47:01 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
-References: <20200528143141.29956-1-pali@kernel.org>
- <20200702083036.12230-1-pali@kernel.org>
- <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
- <20200709122208.rmfeuu6zgbwh3fr5@pali>
+        Thu, 9 Jul 2020 10:47:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35306 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726517AbgGIOrs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 10:47:48 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 069EWbET029312;
+        Thu, 9 Jul 2020 10:47:40 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32637wcf4u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 10:47:39 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 069EWnJ0030541;
+        Thu, 9 Jul 2020 10:47:39 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32637wcf3a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 10:47:39 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 069Eir4R013124;
+        Thu, 9 Jul 2020 14:47:36 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06fra.de.ibm.com with ESMTP id 325k2qrfw6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jul 2020 14:47:36 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 069ElXWW57868576
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Jul 2020 14:47:33 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B5E29AE055;
+        Thu,  9 Jul 2020 14:47:33 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D72AAE051;
+        Thu,  9 Jul 2020 14:47:33 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.152.61])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Jul 2020 14:47:32 +0000 (GMT)
+Date:   Thu, 9 Jul 2020 16:47:00 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v5 2/2] s390: virtio: PV needs VIRTIO I/O device
+ protection
+Message-ID: <20200709164700.09a83069.pasic@linux.ibm.com>
+In-Reply-To: <270d8674-0f73-0a38-a2a7-fbc1caa44301@linux.ibm.com>
+References: <1594283959-13742-1-git-send-email-pmorel@linux.ibm.com>
+        <1594283959-13742-3-git-send-email-pmorel@linux.ibm.com>
+        <20200709105733.6d68fa53.cohuck@redhat.com>
+        <270d8674-0f73-0a38-a2a7-fbc1caa44301@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200709122208.rmfeuu6zgbwh3fr5@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-09_08:2020-07-09,2020-07-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=999 clxscore=1015 malwarescore=0
+ priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0 mlxscore=0
+ impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007090104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 02:22:08PM +0200, Pali Rohár wrote:
-> On Thursday 09 July 2020 12:35:09 Lorenzo Pieralisi wrote:
-> > On Thu, Jul 02, 2020 at 10:30:36AM +0200, Pali Rohár wrote:
-> > > When there is no PCIe card connected and advk_pcie_rd_conf() or
-> > > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-> > > root bridge, the aardvark driver throws the following error message:
-> > > 
-> > >   advk-pcie d0070000.pcie: config read/write timed out
-> > > 
-> > > Obviously accessing PCIe registers of disconnected card is not possible.
-> > > 
-> > > Extend check in advk_pcie_valid_device() function for validating
-> > > availability of PCIe bus. If PCIe link is down, then the device is marked
-> > > as Not Found and the driver does not try to access these registers.
-> > > 
-> > > This is just an optimization to prevent accessing PCIe registers when card
-> > > is disconnected. Trying to access PCIe registers of disconnected card does
-> > > not cause any crash, kernel just needs to wait for a timeout. So if card
-> > > disappear immediately after checking for PCIe link (before accessing PCIe
-> > > registers), it does not cause any problems.
-> > > 
-> > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > 
-> > > ---
-> > > Changes in V3:
-> > > * Add comment to the code
-> > > Changes in V2:
-> > > * Update commit message, mention that this is optimization
-> > > ---
-> > >  drivers/pci/controller/pci-aardvark.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > index 90ff291c24f0..d18f389b36a1 100644
-> > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > @@ -644,6 +644,13 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
-> > >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
-> > >  		return false;
-> > >  
-> > > +	/*
-> > > +	 * If the link goes down after we check for link-up, nothing bad
-> > > +	 * happens but the config access times out.
-> > > +	 */
-> > > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-> > > +		return false;
-> > > +
-> > >  	return true;
-> > >  }
+On Thu, 9 Jul 2020 12:51:58 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
+
+> >> +int arch_validate_virtio_features(struct virtio_device *dev)
+> >> +{
+> >> +	if (!is_prot_virt_guest())
+> >> +		return 0;
+> >> +
+> >> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
+> >> +		dev_warn(&dev->dev, "device must provide VIRTIO_F_VERSION_1\n");  
 > > 
-> > Question: this basically means that you can only effectively enumerate
-> > bus number == root_bus_nr and AFAICS if at probe the link did not
-> > come up it will never do, will it ?
+> > I'd probably use "legacy virtio not supported with protected
+> > virtualization".
+> >   
+> >> +		return -ENODEV;
+> >> +	}
+> >> +
+> >> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
+> >> +		dev_warn(&dev->dev,
+> >> +			 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");  
 > > 
-> > Isn't this equivalent to limiting the bus numbers the bridge is capable
-> > of handling ?
+> > "support for limited memory access required for protected
+> > virtualization"
 > > 
-> > Reworded: if in advk_pcie_setup_hw() the link does not come up, what's
-> > the point of trying to enumerate the bus hierarchy below the root bus ?
+> > ?
+> > 
+> > Mentioning the feature flag is shorter in both cases, though.  
 > 
-> Hello Lorenzo!
-> 
-> PCIe link can theoretically come up even after boot, but aardvark driver
-> currently does not support link detection at runtime. So it checks and
-> enumerate device only at probe time.
+> And I think easier to look for in case of debugging purpose.
+> I change it if there is more demands.
 
-If the link is not up at probe enumerating devices below the root
-bus is basically useless and that's actually what is causing the
-delays you are fixing. Is this correct ?
+Not all our end users are kernel and/or qemu developers. I find the
+messages from v4 less technical, more informative, and way better.
 
-> I do not know if hardware has some mechanism to inform kernel that PCIe
-> link come up (or down) and re-enumeration is required. Or the only
-> option is polling via advk_pcie_link_up().
-> 
-> So if device is not visible at the probe time then it would not appear
-> in system and cannot be used. This is current state.
-> 
-> Just to note that our hardware does not support physical hotplug of
-> mPCIe cards. You need to connect card when board is powered off.
-> 
-> So if at the aardvark probe time PCIe link is not up then trying to
-> enumerate devices under (software) root bridge is not needed. But it is
-> needed to register/enumerate software root bridge device and currently
-> both is done by one (recursive) call pci_host_probe().
-
-I understand that but the bridge bus resource can be trimmed to just
-contain the root bus because that's the only one where there is a
-chance you can enumerate a device.
-
-I would like to get Bjorn's opinion on this, I don't like these "link is
-up" checks in config accessors (they are racy and honestly it is a
-run-time check that does not make much sense, either it is always
-true/false or it is inevitably racy) I was wondering if we can find an
-alternative solution but I am not sure the one I suggested above is
-better than this patch.
-
-Lorenzo
+Regards,
+Halil
