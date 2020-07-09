@@ -2,150 +2,90 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11292C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E81DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF79420708
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58C82074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 10:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lc+omKDZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HSlub6Mu"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JssfrsI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgGIKEv (ORCPT
+        id S1726460AbgGIKGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:04:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33820 "EHLO
+        Thu, 9 Jul 2020 06:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgGIKEu (ORCPT
+        with ESMTP id S1726298AbgGIKGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:04:50 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C16BC061A0B;
-        Thu,  9 Jul 2020 03:04:50 -0700 (PDT)
-Date:   Thu, 09 Jul 2020 10:04:46 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594289087;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dXH1fpBV4Oym4GLTgCmE/nJ8fXIAKGGs5Wg9KfiTMVk=;
-        b=lc+omKDZ4zjK5eskqG6yJ7++eY6og70sCWynTb2dploUg1L2EU2aV6jDRFyXNO4zxuoHbT
-        Szz0rze4DsLEEwdAVfDc8gJGUbECLo/XKIHYrWzkt/84sggzncVRqXWLJf1J+9NTicKIVK
-        WbJYxzDJApGmVe9uE7QPmeBZ1rp/rsZjzbWHnQL7TrY+o8C+ynCC+pw6s7ga4nikf/RUCn
-        mJtQW4KYPaoH5pUNa4YKh+VPeVLqNVnyjwdUOrDOpGjjNJOaJHCQf8z04fMvxw4rfwoP1Y
-        KrCm+yQiKsub3lacJelNtwYLVeec3nDPAVpGYb1gWhz0oXdwRkWZbXUIEfRLnQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594289087;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dXH1fpBV4Oym4GLTgCmE/nJ8fXIAKGGs5Wg9KfiTMVk=;
-        b=HSlub6Mu1R87O+XAiuX7CRftkum5LYWi0UVO/uVAWEYCN0A4+eH8BZIrUZxwY7JLYM7iRd
-        tClPfZ7NpEt8n/Ag==
-From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] timer: Prevent base->clk from moving backward
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200703010657.2302-1-frederic@kernel.org>
-References: <20200703010657.2302-1-frederic@kernel.org>
+        Thu, 9 Jul 2020 06:06:35 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB6F1C061A0B
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 03:06:34 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id w27so1190966qtb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 03:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QYZh0HDct7EvWrh08V2VUFBZGUG8j1YW7X9xdQQstqg=;
+        b=JssfrsI9q4a9e/ZI7loh1iE1EJ89c+4Jo4Vznfaao/PSuhSZ9w59Vea2lkPHoQ1nYy
+         V8yDOr4iTZIkyjgAv9UqD7EZthgTxcTrCXvDv/J85BkD8XAxKPh+Qknl3sG4gfRty+3D
+         Ble9sHQeIfzv27PeL06xqDQbNJt4DT//GJAxwKJBivVfAwY8IueNqVKkaSXU1dfPKjSP
+         0TaPUE/sCknBUPPuYKYUwVq5HKQ78QWoJg0Zii5AdXcXZ938sfGSNPblu0PCMgj+Im2K
+         c1E1xnVG/QSDkJa7j/jm1I89QhJ9Hg5QW0VMhFg3niRinw9sgF55+XKBZKvYdwN+K5RQ
+         akFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QYZh0HDct7EvWrh08V2VUFBZGUG8j1YW7X9xdQQstqg=;
+        b=sXuWWY7Ppql9XGy8deZgOjZ4AQGtWEilpHrd3s1e6uqgag8SlMNjDANup4/6Lw+HTL
+         kVTMJy7T2Y6uWfvU6eerRgictDBQxlkocC7hUQ2ozJvZk7fQnU/qA72rbUlZHJKSqHGu
+         IuxH+Vv+Shi5jnZgFe8ujS/BZoyWQpIob7Z+beFzdu3OQpXIzn6m4ptsM0WeY94KzuRX
+         utIS/sI9utIqACGvd1gKYhQYcIB8NeKTjJW0zZmoowAVoE1IKmoUr7xohojqaPM2oWvL
+         uaXw3M8z6AZKWvAWUjP4i3Ki8ch1GFyqBGZjuJ2+lwO9EfBztB3Om/uopb9qtMy6+p6v
+         eC2Q==
+X-Gm-Message-State: AOAM53111boH3X8n4er2BPDKObIJLrPWKgEeEYdiPZ035rmEA6wAz7Il
+        +v6fNAgLXbujYxq8kdx6PtD/qYi8IYFVipTtJewXmM8s
+X-Google-Smtp-Source: ABdhPJzF1XdYKoYcEH2fBYYgsSptyJ+OeZOdaCdGgxgRYXL/oYNVmi9EN0IelvN/YIe700361hL2bl0v7rxTcpS7Hy4=
+X-Received: by 2002:aed:21da:: with SMTP id m26mr45842495qtc.197.1594289193967;
+ Thu, 09 Jul 2020 03:06:33 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159428908623.4006.8962643860352985536.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200708041600.768775-1-warthog618@gmail.com> <20200708041600.768775-9-warthog618@gmail.com>
+In-Reply-To: <20200708041600.768775-9-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 9 Jul 2020 12:06:23 +0200
+Message-ID: <CAMpxmJUbd6tFp12q7+iEW5DUEvLdDKhnNMRChatRUUzvshC=iw@mail.gmail.com>
+Subject: Re: [PATCH 08/17] gpiolib: cdev: use blocking notifier call chain
+ instead of atomic
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+On Wed, Jul 8, 2020 at 6:19 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> Replace usage of atomic_notifier_call_chain with
+> blocking_notifier_call_chain as the notifier function,
+> lineinfo_changed_notify, calls gpio_desc_to_lineinfo,
+> which calls pinctrl_gpio_can_use_line, which can sleep.
+>
+> The chain isn't being called from an atomic context so the
+> the blocking notifier is a suitable substitute.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 
-Commit-ID:     30c66fc30ee7a98c4f3adf5fb7e213b61884474f
-Gitweb:        https://git.kernel.org/tip/30c66fc30ee7a98c4f3adf5fb7e213b61884474f
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Fri, 03 Jul 2020 03:06:57 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 09 Jul 2020 11:56:57 +02:00
+In the back of my mind I still think I chose atomic notifiers for a
+reason but I can't remember it now. Anyway, we can apply it and see if
+anything bad happens and potentially just revert it.
 
-timer: Prevent base->clk from moving backward
-
-When a timer is enqueued with a negative delta (ie: expiry is below
-base->clk), it gets added to the wheel as expiring now (base->clk).
-
-Yet the value that gets stored in base->next_expiry, while calling
-trigger_dyntick_cpu(), is the initial timer->expires value. The
-resulting state becomes:
-
-	base->next_expiry < base->clk
-
-On the next timer enqueue, forward_timer_base() may accidentally
-rewind base->clk. As a possible outcome, timers may expire way too
-early, the worst case being that the highest wheel levels get spuriously
-processed again.
-
-To prevent from that, make sure that base->next_expiry doesn't get below
-base->clk.
-
-Fixes: a683f390b93f ("timers: Forward the wheel clock whenever possible")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200703010657.2302-1-frederic@kernel.org
----
- kernel/time/timer.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 398e6ea..9a838d3 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -584,7 +584,15 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
- 	 * Set the next expiry time and kick the CPU so it can reevaluate the
- 	 * wheel:
- 	 */
--	base->next_expiry = timer->expires;
-+	if (time_before(timer->expires, base->clk)) {
-+		/*
-+		 * Prevent from forward_timer_base() moving the base->clk
-+		 * backward
-+		 */
-+		base->next_expiry = base->clk;
-+	} else {
-+		base->next_expiry = timer->expires;
-+	}
- 	wake_up_nohz_cpu(base->cpu);
- }
- 
-@@ -896,10 +904,13 @@ static inline void forward_timer_base(struct timer_base *base)
- 	 * If the next expiry value is > jiffies, then we fast forward to
- 	 * jiffies otherwise we forward to the next expiry value.
- 	 */
--	if (time_after(base->next_expiry, jnow))
-+	if (time_after(base->next_expiry, jnow)) {
- 		base->clk = jnow;
--	else
-+	} else {
-+		if (WARN_ON_ONCE(time_before(base->next_expiry, base->clk)))
-+			return;
- 		base->clk = base->next_expiry;
-+	}
- #endif
- }
- 
+Bart
