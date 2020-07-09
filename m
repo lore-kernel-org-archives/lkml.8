@@ -2,118 +2,135 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C454C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50414C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 758C2207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594313589;
-	bh=E2aiJO9jwHhI4kNAWEHwixeAchOzZ2uu8DVO/dJIjzI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aHiMo63C3eikb+uo+ZcBR3LHBoS97nOVv/c6jnNP/Xk6suGy5BIrcpvi8IOXK1RoV
-	 /cKaUK0Rcfg8OY9vZ9RRA+g/BD2ZK85j1pX3zesizmmANUn/Qh6Sdvv5Z/8Zs2Sh++
-	 I622KYftbx2syeJZiIZW13uI7VOcw8tUtVJO+Te8=
+	by mail.kernel.org (Postfix) with ESMTP id 320282078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 16:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgGIQxH (ORCPT
+        id S1728234AbgGIQx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:53:07 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43534 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGIQxG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:53:06 -0400
-Received: by mail-il1-f193.google.com with SMTP id i18so2597463ilk.10;
-        Thu, 09 Jul 2020 09:53:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QGtnLn93cLTP51XtiHAgImeMicUFaKH6Di/Wzvj2c74=;
-        b=oSNLxOy0M8NZnfujoffuh3of8VypFHIuNRE33MxxXVHT7XKORSMkPSS3Fm8TDlnJlq
-         iporDYwG+6f6ywfXIvS53ORS3GioQd3zQddH1UeJKjADz0cqeL3FsATJCu34D4g7dXo7
-         ZOLM8Npc44Kt1w/sY3XhW3AI4XPNkNqZzhGRmBvpgu3oUrRuosVHdFLsS3FWwjuI1mH1
-         jv8F1TwGwuTsVB4lz2SMD0DjMW+tK+llNbW7psN8a1HLPaucNHfcPBBIKFFPKadD7Sa0
-         xEnIEFiHjbpU8VuB52GfbArXjStSp9PdbKBWVmJwo378BN4pCrcmegtTlecTVzEVkzNc
-         kWtw==
-X-Gm-Message-State: AOAM532Ngs0GdEWsr4XypUabH0FIxCpdURbvnas2Kc52xFA5i0mSt+T3
-        LYgYilQBc8+d/W2nsCDrXw0Fdw2Mdw==
-X-Google-Smtp-Source: ABdhPJwLatvtfpim77UnE4k3Fw8neGwQY9Y5yT7cf7NbhVzmfdTlq+t+Xv/AgKtyxAHMq4oobz0XSg==
-X-Received: by 2002:a92:cb10:: with SMTP id s16mr48806023ilo.192.1594313585538;
-        Thu, 09 Jul 2020 09:53:05 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id o16sm2076043ilt.59.2020.07.09.09.53.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 09:53:04 -0700 (PDT)
-Received: (nullmailer pid 507617 invoked by uid 1000);
-        Thu, 09 Jul 2020 16:52:42 -0000
-Date:   Thu, 9 Jul 2020 10:52:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     gregory.clement@bootlin.com, megous@megous.com, anarsoul@gmail.com,
-        tiny.windzz@gmail.com, sboyd@kernel.org, jason@lakedaemon.net,
-        robh+dt@kernel.org, maz@kernel.org, wens@csie.org,
-        lee.jones@linaro.org, mripard@kernel.org,
-        amit.kucheria@verdurent.com, linux-i2c@vger.kernel.org,
-        icenowy@aosc.io, linux-gpio@vger.kernel.org,
-        srinivas.kandagatla@linaro.org, linux-pm@vger.kernel.org,
-        daniel.lezcano@linaro.org, liyong@allwinnertech.com,
-        huangshuosheng@allwinnertech.com, linus.walleij@linaro.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        bage@linutronix.de, linux-arm-kernel@lists.infradead.org,
-        mturquette@baylibre.com, rui.zhang@intel.com, tglx@linutronix.de,
-        clabbe@baylibre.com, linux-kernel@vger.kernel.org,
-        p.zabel@pengutronix.de, stefan@olimex.com
-Subject: Re: [PATCH v3 04/16] dt-bindings: pinctrl: sunxi: make gpio banks
- supplies required
-Message-ID: <20200709165242.GA506534@bogus>
-References: <20200708071942.22595-1-frank@allwinnertech.com>
- <20200708071942.22595-5-frank@allwinnertech.com>
+        Thu, 9 Jul 2020 12:53:26 -0400
+Received: from mga09.intel.com ([134.134.136.24]:29814 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgGIQxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:53:25 -0400
+IronPort-SDR: UnKa4NJ/f19y74904M33B3hEgwcqBfCMqgwyeJFRBRjpm04HBju/EU6zd6f8bkoUPCdrB6gfzs
+ QY353bOHQ4bw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="149522304"
+X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
+   d="scan'208";a="149522304"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 09:53:24 -0700
+IronPort-SDR: Wfl4DjtewN9y8lcEqx4mIg3O24jMaRiJiaPADj4LdYQdAQsGMIduDLoSz9zrw7NJXWISQtLIrM
+ CzRnXHnkAHbw==
+X-IronPort-AV: E=Sophos;i="5.75,332,1589266800"; 
+   d="scan'208";a="284216674"
+Received: from mdcoakle-mobl.amr.corp.intel.com (HELO [10.255.231.43]) ([10.255.231.43])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 09:53:24 -0700
+Subject: Re: [PATCH] ASoC: Intel: boards: eve: Fix DMIC records zero
+To:     vamshi.krishna.gopal@intel.com, lma@semihalf.com,
+        harshapriya.n@intel.com, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Cc:     sathya.prakash.m.r@intel.com, brndt@google.com
+References: <20200709152526.15764-1-vamshi.krishna.gopal@intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <79866874-1ec3-50a1-1034-39bc116264fd@linux.intel.com>
+Date:   Thu, 9 Jul 2020 11:53:23 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708071942.22595-5-frank@allwinnertech.com>
+In-Reply-To: <20200709152526.15764-1-vamshi.krishna.gopal@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Jul 2020 15:19:30 +0800, Frank Lee wrote:
-> Since we don't really have to care about the existing DT for boards,
-> it would be great to make the gpio banks supplies required.
+
+
+On 7/9/20 10:25 AM, vamshi.krishna.gopal@intel.com wrote:
+> From: Brent Lu <brent.lu@intel.com>
 > 
-> Signed-off-by: Frank Lee <frank@allwinnertech.com>
+> Add a dapm route to provide ssp mclk/sclk early
+> for DMIC  on SSP0(rt5514) and Headset on SSP1(rt5663)
+> since sclk for both codecs are different the
+> struct now defines SSP0 and SSP1 mclk , sclk separately
+> This change ensures the DMIC PCM port
+> will not return all-zero data
+> 
+> Signed-off-by: Brent Lu <brent.lu@intel.com>
+> Signed-off-by: Vamshi Krishna Gopal <vamshi.krishna.gopal@intel.com>
 > ---
->  .../devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml         | 1 +
->  1 file changed, 1 insertion(+)
+>   .../intel/boards/kbl_rt5663_rt5514_max98927.c | 150 ++++++++++++------
+>   1 file changed, 102 insertions(+), 48 deletions(-)
 > 
+> diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> index b34cf6cf1139..584e4f9cedc2 100644
+> --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> @@ -53,8 +53,10 @@ struct kbl_codec_private {
+>   	struct snd_soc_jack kabylake_headset;
+>   	struct list_head hdmi_pcm_list;
+>   	struct snd_soc_jack kabylake_hdmi[2];
+> -	struct clk *mclk;
+> -	struct clk *sclk;
+> +	struct clk *ssp0_mclk;
+> +	struct clk *ssp0_sclk;
+> +	struct clk *ssp1_mclk;
+> +	struct clk *ssp1_sclk;
 
+The definition of a per-SSP MCLK is just wrong. there are 2 MCLKs 
+regardless of the number of SSPs, this should be MCLK0 and MCLK1.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+It probably works in your case since you have 2 SSPs, but the Skylake 
+driver exposes ssp2..5_mclk clocks that don't exist in hardware. Oh well.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml: required:2: '^vcc-p[a-hlm]-supply$' does not match '^([a-zA-Z#][a-zA-Z0-9,+\\-._@]{0,63}|\\$nodename)$'
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml: ignoring, error in schema: required: 2
-warning: no schema found in file: ./Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml: ignoring, error in schema: required: 2
-warning: no schema found in file: ./Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+If you don't mind I'd prefer it if you used mclk0 and mclk1 and drop the 
+ssp_ prefix. You can still use the "ssp0_mclk" and "ssp1_mclk" strings 
+when calling devm_clk_get(), but that way if the Skylake driver is fixed 
+at some point we will not have to change the code in this driver, only 
+the clock names.
 
+[...]
 
-See https://patchwork.ozlabs.org/patch/1325057
+> @@ -757,6 +800,29 @@ static struct snd_soc_card kabylake_audio_card = {
+>   	.late_probe = kabylake_card_late_probe,
+>   };
+>   
+> +static int kabylake_audio_clk_get(struct device *dev, const char *id,
+> +	struct clk **clk)
+> +{
+> +	int ret = 0;
+> +
+> +	if (!clk)
+> +		return -EINVAL;
+> +
+> +	*clk = devm_clk_get(dev, id);
+> +	if (IS_ERR(*clk)) {
+> +		ret = PTR_ERR(*clk);
+> +		if (ret == -ENOENT) {
+> +			dev_info(dev, "Failed to get %s, defer probe\n", id);
+> +			return -EPROBE_DEFER;
+> +		}
+> +
+> +		dev_err(dev, "Failed to get %s with err:%d\n", id, ret);
+> +		return ret;
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+nit-pick: you can remove this return since you already have one two 
+lines below.
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+> +	}
+> +
+> +	return ret;
+> +}
+> +
 
