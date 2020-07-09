@@ -2,138 +2,121 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B51AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF56206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:06:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v+kVGjQt"
+	by mail.kernel.org (Postfix) with ESMTP id 56728206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 04:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgGIEGW (ORCPT
+        id S1726272AbgGIEHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 00:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgGIEGV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 00:06:21 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404D9C08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jul 2020 21:06:21 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id e14so1334533ybk.17
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jul 2020 21:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=1y2c3rjVWMDvkKdYX8ZNaWmxEBIIQ3QnKUzqSw9YCtw=;
-        b=v+kVGjQtYzAabSAO2hVKtBYznz8uI02EUUuXTacWLcGXnVXhea9CwSYIsZtGhtthah
-         h/+cSWroxJWyTyGcFs465H2HD9/sIjqtZFwUH03rkplMnoTi1vTfMBerm5WA517N4Qfg
-         EJeH/U3ffEFGZCS3iICsNNefitXPX3j3iy9S1ip8ujMtHfAGmuiBmxovYam+sjIF1B04
-         HFwkf3qBzbRKekmUJ68IpQMvcUg611xkelANY1Fltk4u7wAbpBNEOcXalgIV1Rw0lSIW
-         vv3tnHZ1ZDyPuikQ9k9xf1EK/mhOQPeSrLKQUH4q36ZNQ5u8zfRk8t3yIJ5iaBPNn4qH
-         92gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=1y2c3rjVWMDvkKdYX8ZNaWmxEBIIQ3QnKUzqSw9YCtw=;
-        b=s1KykfTnGsyntfYmH71s0TbHy3+fmMBpDNpm5jNXy28MlxqrbeJ0yHjd43kDnh4I94
-         heLKE5bNraek7oHqYAyucG7Ae8Zb74G3PlXxuB0uEQU4agx1XOLnolXJHRFt7z9JyCWO
-         b4h/+wvwIFtSiUXBRgajrq/76FCT94oLR/tOzbHXk2Ad7r5In5AlWtTom5D1V9PKjxMx
-         MsI+B1j5aoiqMOwbt7zYKzqxdikvUAK5OVOybF8THei9yRFHKo7BlfdoPn3n7LE8Bd3+
-         qF8nBWU1PMGyMLtVAHgG1dLXarI0f3cenJOz8uLihOhQdevCzcCug6goSbcEZA+aKeaL
-         KoWQ==
-X-Gm-Message-State: AOAM533sQgGcTCLIJp/C4MrLo5i3Xzchjg+2Arhgrntrz8o96Por4OHu
-        t9wbgRWqFN6PsWhRqjisZTetiwNobrzD2Rg4
-X-Google-Smtp-Source: ABdhPJysVuabU1/EIYkuOguPqwUhvSghCQ6RiPLy3m040sjW13pEIAe6T9sUlWstOcS5Rovj8NjC7SwRQ2He9Hk+
-X-Received: by 2002:a25:4143:: with SMTP id o64mr17348936yba.226.1594267580232;
- Wed, 08 Jul 2020 21:06:20 -0700 (PDT)
-Date:   Thu,  9 Jul 2020 04:06:12 +0000
-Message-Id: <20200709040612.3977094-1-linchuyuan@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH v2] hwmon: adm1275: Make sure we are reading enough data for
- different chips
-From:   Chu Lin <linchuyuan@google.com>
-To:     linux@roeck-us.net
-Cc:     belgaied@google.com, jasonling@google.com, jdelvare@suse.com,
-        linchuyuan@google.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhongqil@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 9 Jul 2020 00:07:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58618 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbgGIEHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 00:07:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 665ACAEA8;
+        Thu,  9 Jul 2020 04:07:43 +0000 (UTC)
+Subject: Re: [PATCH] bcache: writeback: Remove unneeded variable ret
+To:     Xu Wang <vulab@iscas.ac.cn>
+Cc:     kent.overstreet@gmail.com, linux-bcache@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200709033904.27391-1-vulab@iscas.ac.cn>
+From:   Coly Li <colyli@suse.de>
+Autocrypt: addr=colyli@suse.de; keydata=
+ mQINBFYX6S8BEAC9VSamb2aiMTQREFXK4K/W7nGnAinca7MRuFUD4JqWMJ9FakNRd/E0v30F
+ qvZ2YWpidPjaIxHwu3u9tmLKqS+2vnP0k7PRHXBYbtZEMpy3kCzseNfdrNqwJ54A430BHf2S
+ GMVRVENiScsnh4SnaYjFVvB8SrlhTsgVEXEBBma5Ktgq9YSoy5miatWmZvHLFTQgFMabCz/P
+ j5/xzykrF6yHo0rHZtwzQzF8rriOplAFCECp/t05+OeHHxjSqSI0P/G79Ll+AJYLRRm9til/
+ K6yz/1hX5xMToIkYrshDJDrUc8DjEpISQQPhG19PzaUf3vFpmnSVYprcWfJWsa2wZyyjRFkf
+ J51S82WfclafNC6N7eRXedpRpG6udUAYOA1YdtlyQRZa84EJvMzW96iSL1Gf+ZGtRuM3k49H
+ 1wiWOjlANiJYSIWyzJjxAd/7Xtiy/s3PRKL9u9y25ftMLFa1IljiDG+mdY7LyAGfvdtIkanr
+ iBpX4gWXd7lNQFLDJMfShfu+CTMCdRzCAQ9hIHPmBeZDJxKq721CyBiGAhRxDN+TYiaG/UWT
+ 7IB7LL4zJrIe/xQ8HhRO+2NvT89o0LxEFKBGg39yjTMIrjbl2ZxY488+56UV4FclubrG+t16
+ r2KrandM7P5RjR+cuHhkKseim50Qsw0B+Eu33Hjry7YCihmGswARAQABtBhDb2x5IExpIDxj
+ b2x5bGlAc3VzZS5kZT6JAlYEEwEIAEACGyMHCwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgBYh
+ BOo+RS/0+Uhgjej60Mc5B5Nrffj8BQJcR84dBQkY++fuAAoJEMc5B5Nrffj8ixcP/3KAKg1X
+ EcoW4u/0z+Ton5rCyb/NpAww8MuRjNW82UBUac7yCi1y3OW7NtLjuBLw5SaVG5AArb7IF3U0
+ qTOobqfl5XHsT0o5wFHZaKUrnHb6y7V3SplsJWfkP3JmOooJsQB3z3K96ZTkFelsNb0ZaBRu
+ gV+LA4MomhQ+D3BCDR1it1OX/tpvm2uaDF6s/8uFtcDEM9eQeqATN/QAJ49nvU/I8zDSY9rc
+ 0x9mP0x+gH4RccbnoPu/rUG6Fm1ZpLrbb6NpaYBBJ/V1BC4lIOjnd24bsoQrQmnJn9dSr60X
+ 1MY60XDszIyzRw7vbJcUn6ZzPNFDxFFT9diIb+wBp+DD8ZlD/hnVpl4f921ZbvfOSsXAJrKB
+ 1hGY17FPwelp1sPcK2mDT+pfHEMV+OQdZzD2OCKtza/5IYismJJm3oVUYMogb5vDNAw9X2aP
+ XgwUuG+FDEFPamFMUwIfzYHcePfqf0mMsaeSgtA/xTxzx/0MLjUJHl46Bc0uKDhv7QUyGz0j
+ Ywgr2mHTvG+NWQ/mDeHNGkcnsnp3IY7koDHnN2xMFXzY4bn9m8ctqKo2roqjCzoxD/njoAhf
+ KBzdybLHATqJG/yiZSbCxDA1n/J4FzPyZ0rNHUAJ/QndmmVspE9syFpFCKigvvyrzm016+k+
+ FJ59Q6RG4MSy/+J565Xj+DNY3/dCuQINBFYX6S8BEADZP+2cl4DRFaSaBms08W8/smc5T2CO
+ YhAoygZn71rB7Djml2ZdvrLRjR8Qbn0Q/2L2gGUVc63pJnbrjlXSx2LfAFE0SlfYIJ11aFdF
+ 9w7RvqWByQjDJor3Z0fWvPExplNgMvxpD0U0QrVT5dIGTx9hadejCl/ug09Lr6MPQn+a4+qs
+ aRWwgCSHaIuDkH3zI1MJXiqXXFKUzJ/Fyx6R72rqiMPHH2nfwmMu6wOXAXb7+sXjZz5Po9GJ
+ g2OcEc+rpUtKUJGyeQsnCDxUcqJXZDBi/GnhPCcraQuqiQ7EGWuJfjk51vaI/rW4bZkA9yEP
+ B9rBYngbz7cQymUsfxuTT8OSlhxjP3l4ZIZFKIhDaQeZMj8pumBfEVUyiF6KVSfgfNQ/5PpM
+ R4/pmGbRqrAAElhrRPbKQnCkGWDr8zG+AjN1KF6rHaFgAIO7TtZ+F28jq4reLkur0N5tQFww
+ wFwxzROdeLHuZjL7eEtcnNnzSkXHczLkV4kQ3+vr/7Gm65mQfnVpg6JpwpVrbDYQeOFlxZ8+
+ GERY5Dag4KgKa/4cSZX2x/5+KkQx9wHwackw5gDCvAdZ+Q81nm6tRxEYBBiVDQZYqO73stgT
+ ZyrkxykUbQIy8PI+g7XMDCMnPiDncQqgf96KR3cvw4wN8QrgA6xRo8xOc2C3X7jTMQUytCz9
+ 0MyV1QARAQABiQI8BBgBCAAmAhsMFiEE6j5FL/T5SGCN6PrQxzkHk2t9+PwFAlxHziAFCRj7
+ 5/EACgkQxzkHk2t9+PxgfA//cH5R1DvpJPwraTAl24SUcG9EWe+NXyqveApe05nk15zEuxxd
+ e4zFEjo+xYZilSveLqYHrm/amvQhsQ6JLU+8N60DZHVcXbw1Eb8CEjM5oXdbcJpXh1/1BEwl
+ 4phsQMkxOTns51bGDhTQkv4lsZKvNByB9NiiMkT43EOx14rjkhHw3rnqoI7ogu8OO7XWfKcL
+ CbchjJ8t3c2XK1MUe056yPpNAT2XPNF2EEBPG2Y2F4vLgEbPv1EtpGUS1+JvmK3APxjXUl5z
+ 6xrxCQDWM5AAtGfM/IswVjbZYSJYyH4BQKrShzMb0rWUjkpXvvjsjt8rEXpZEYJgX9jvCoxt
+ oqjCKiVLpwje9WkEe9O9VxljmPvxAhVqJjX62S+TGp93iD+mvpCoHo3+CcvyRcilz+Ko8lfO
+ hS9tYT0HDUiDLvpUyH1AR2xW9RGDevGfwGTpF0K6cLouqyZNdhlmNciX48tFUGjakRFsxRmX
+ K0Jx4CEZubakJe+894sX6pvNFiI7qUUdB882i5GR3v9ijVPhaMr8oGuJ3kvwBIA8lvRBGVGn
+ 9xvzkQ8Prpbqh30I4NMp8MjFdkwCN6znBKPHdjNTwE5PRZH0S9J0o67IEIvHfH0eAWAsgpTz
+ +jwc7VKH7vkvgscUhq/v1/PEWCAqh9UHy7R/jiUxwzw/288OpgO+i+2l11Y=
+Message-ID: <e50bf828-997d-38e7-76c4-fd3a70ab6c36@suse.de>
+Date:   Thu, 9 Jul 2020 12:07:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200709033904.27391-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Issue:
-When PEC is enabled, binding adm1272 to the adm1275 would
-fail due to PEC error. See below:
-adm1275: probe of xxxx failed with error -74
+On 2020/7/9 11:39, Xu Wang wrote:
+> Remove unneeded variable ret i.
+> 
 
-Diagnosis:
-Per the datasheet of adm1272, adm1278, adm1293 and amd1294,
-PMON_CONFIG (0xd4) is 16bits wide. On the other hand,
-PMON_CONFIG (0xd4) for adm1275 is 8bits wide. The driver should not
-assume everything is 8bits wide and read only 8bits from it.
+I see 'i' is removed, where is 'ret' ?
 
-Solution:
-If it is adm1272, adm1278, adm1293 and adm1294, use i2c_read_word.
-Else, use i2c_read_byte
-
-Testing:
-Binding adm1272 to the driver.
-The change is only tested on adm1272.
-
-Signed-off-by: Chu Lin <linchuyuan@google.com>
----
-
-ChangeLog v1 -> v2
-  - Rename config_read_fn_ptr to config_read_fn
-  - Move config_read_fn to the first line as it is the longest
-    variable declaration
-  - Include adm1293 and adm1294
-  - Remove the inline comment as I think the purpose is obvious
+Thanks.
 
 
- drivers/hwmon/pmbus/adm1275.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Coly Li
 
-diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-index e25f541227da..19317575d1c6 100644
---- a/drivers/hwmon/pmbus/adm1275.c
-+++ b/drivers/hwmon/pmbus/adm1275.c
-@@ -465,6 +465,7 @@ MODULE_DEVICE_TABLE(i2c, adm1275_id);
- static int adm1275_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-+	s32 (*config_read_fn)(const struct i2c_client *client, u8 reg);
- 	u8 block_buffer[I2C_SMBUS_BLOCK_MAX + 1];
- 	int config, device_config;
- 	int ret;
-@@ -510,11 +511,16 @@ static int adm1275_probe(struct i2c_client *client,
- 			   "Device mismatch: Configured %s, detected %s\n",
- 			   id->name, mid->name);
- 
--	config = i2c_smbus_read_byte_data(client, ADM1275_PMON_CONFIG);
-+	if (mid->driver_data == adm1272 || mid->driver_data == adm1278 ||
-+	    mid->driver_data == adm1293 || mid->driver_data == adm1294)
-+		config_read_fn = i2c_smbus_read_word_data;
-+	else
-+		config_read_fn = i2c_smbus_read_byte_data;
-+	config = config_read_fn(client, ADM1275_PMON_CONFIG);
- 	if (config < 0)
- 		return config;
- 
--	device_config = i2c_smbus_read_byte_data(client, ADM1275_DEVICE_CONFIG);
-+	device_config = config_read_fn(client, ADM1275_DEVICE_CONFIG);
- 	if (device_config < 0)
- 		return device_config;
- 
--- 
-2.27.0.383.g050319c2ae-goog
+
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> ---
+>  drivers/md/bcache/writeback.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
+> index 1cf1e5016cb9..71801c086b82 100644
+> --- a/drivers/md/bcache/writeback.c
+> +++ b/drivers/md/bcache/writeback.c
+> @@ -825,10 +825,8 @@ static int bch_dirty_init_thread(void *arg)
+>  	struct btree_iter iter;
+>  	struct bkey *k, *p;
+>  	int cur_idx, prev_idx, skip_nr;
+> -	int i;
+>  
+>  	k = p = NULL;
+> -	i = 0;
+>  	cur_idx = prev_idx = 0;
+>  
+>  	bch_btree_iter_init(&c->root->keys, &iter, NULL);
+> 
 
