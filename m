@@ -2,195 +2,157 @@ Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FF2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1D7320672
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:11:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594332672;
-	bh=i4gEU3Jy5mL2Z9vP7rYPgGIlBm/BNckhMMbkDa2wMmo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wb6jPAj2k/aK34T+udiT0wJ85LX+SyhcINDZv4ZaTeYqW7zstjQtKCP3wxDHqmYbh
-	 z3vRljzlz4wSu+fVytehdvSSKHFEw4tHHZZbhyTZTV0VphU84tIo1opb1gb0HCIJt1
-	 KWUDwBM9EuAk3rUrZIlX/Ae4bQ6/15COr/lr1vOU=
+	by mail.kernel.org (Postfix) with ESMTP id 0817420774
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 22:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YeiB4IUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGIWLL (ORCPT
+        id S1726796AbgGIWMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:11:11 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38032 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgGIWLK (ORCPT
+        Thu, 9 Jul 2020 18:12:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34553 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726509AbgGIWMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 18:11:10 -0400
-Received: by mail-io1-f65.google.com with SMTP id l1so4004090ioh.5;
-        Thu, 09 Jul 2020 15:11:10 -0700 (PDT)
+        Thu, 9 Jul 2020 18:12:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594332720;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=758EHlGaUry/NckEyeUvxCklE6cCvb630RQv0tLvdYA=;
+        b=YeiB4IUa9BaFMn8WfH6/+gHqpwoKNFi5OfUnSvvry1A2xldDOY0t6uTQO+r+VPw6RQDNkr
+        jO4c4RD1I+98x88lfiLqDfVMor8OJzcIVIQrvPwzppboKnTXbWMxnfQ0T9cn4hXPEvJaOy
+        UKDvEcCzIE4rIRQ6UiVyIhlMhHpw9hw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-342-1lDqHp4YMHysCkOgCXH7uA-1; Thu, 09 Jul 2020 18:11:58 -0400
+X-MC-Unique: 1lDqHp4YMHysCkOgCXH7uA-1
+Received: by mail-wr1-f72.google.com with SMTP id c6so3318778wru.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 15:11:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bT3++BEYrjJIhXhzxTXtHnkKclhpqH+T88s6CFRclJo=;
-        b=CswQIaPFF7yO7s2kqmjnqUNEjLtZBue0XA50JduhAGmpTial2flxV8NnZ53tiVBq3K
-         6qwhM/zRC7S7hrBe3AqBVrWXlOD+LBYYF2X5qmHuxr/TRlqK+8G4UGVcvo8j6aaUlnrm
-         NmAH2IsUPNa/fwDp86q/xvUEe0ofY27oCr4aLopOAr96Urr4wXlnmFFXhfjKFlp5/ABP
-         fE4FIlBkZpWLoTUAiTYkzI2RPyr3q1nbVNYZcG1gplFT0EW7+u7UzpHrbV7KsDjtuw+p
-         K7IhLvbfRuE9AwEEBOEm/DOW6TLdowr7HePw03uqR7q4o+Vk62RZYsSCdxkqjGHL6D1F
-         eJ2A==
-X-Gm-Message-State: AOAM5329/S4wBhbcB5eD5saL2zCOx+kh016WwI0AYTJLHtZyVm1TNU3a
-        5qngspslNEycPcutt6NmFA==
-X-Google-Smtp-Source: ABdhPJz4lRiz70zmxalQUoUYbGE8Rm547bR48XMoyyuw4D0hqYCx9U1AiTKXy2iCcGXC/viEMPy/cA==
-X-Received: by 2002:a02:b0d5:: with SMTP id w21mr63608081jah.27.1594332669694;
-        Thu, 09 Jul 2020 15:11:09 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id o7sm2824483ioo.4.2020.07.09.15.11.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 15:11:09 -0700 (PDT)
-Received: (nullmailer pid 982246 invoked by uid 1000);
-        Thu, 09 Jul 2020 22:11:05 -0000
-Date:   Thu, 9 Jul 2020 16:11:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     simon@fire.lp0.eu, jonas.gorski@gmail.com, kishon@ti.com,
-        vkoul@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
-Message-ID: <20200709221105.GA976808@bogus>
-References: <20200619100035.4032596-1-noltari@gmail.com>
- <20200619100035.4032596-2-noltari@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=758EHlGaUry/NckEyeUvxCklE6cCvb630RQv0tLvdYA=;
+        b=tkClrjZ9P4w30/kzUJVJmOBZVimdd0byR+Zl2TkGHyNkBJCzLBtjATHlY98k4tyfix
+         x1FWAMCLYt/Tbu8shqtH5LIhEEC2yhIqeCb5KrCei+oA0CE+8oGOVP2Xw9oPDY6zGGpe
+         lV1ctalbmKjyK1lPQmbc57EQzDch48uqdnqiZUmpEQwJzpvMA0O6hzic+GD1VSMsNLoN
+         gNzGFdjKk1luaLAUnihBpDiJe/oV94iplwZ0fgD2btUKvzDt7XbuZ9mxIVGuEOuJtWAM
+         Og0gW2Si3MN+dteMMPOglyXkhRNpgYPfrY3RrXN48Olg1FsASsyjKOLi92R6Dq6rqqNj
+         cjvA==
+X-Gm-Message-State: AOAM531si5UM9z1hptXWAVkLw1L4CAB2Xsu914Mv+VgX3RHbD/ya8oeX
+        0LGVZS5URy4bnuHIBtb1uYcUWqDa2SmRHCghIyoxGGH58+NcLWHcvVZykEjdcl0R+qjszc2aURJ
+        aOBQwetayxhsThjfVWDuJHC6i
+X-Received: by 2002:a1c:1dc7:: with SMTP id d190mr1971878wmd.36.1594332717246;
+        Thu, 09 Jul 2020 15:11:57 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyyko/wjjykerR4DidiAgh7BXG5yDKDFtXAj+IWVbAOd/Vv2sJIVqB/tx9p5PEZZSQACpLVHw==
+X-Received: by 2002:a1c:1dc7:: with SMTP id d190mr1971860wmd.36.1594332716979;
+        Thu, 09 Jul 2020 15:11:56 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9541:9439:cb0f:89c? ([2001:b07:6468:f312:9541:9439:cb0f:89c])
+        by smtp.gmail.com with ESMTPSA id t16sm7403677wru.9.2020.07.09.15.11.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 15:11:56 -0700 (PDT)
+Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
+To:     Peter Xu <peterx@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
+ <20200625162540.GC3437@linux.intel.com> <20200626180732.GB175520@xz-x1>
+ <20200626181820.GG6583@linux.intel.com>
+ <47b90b77-cf03-6087-b25f-fcd2fd313165@redhat.com>
+ <20200630154726.GD7733@linux.intel.com> <20200709182220.GG199122@xz-x1>
+ <20200709192440.GD24919@linux.intel.com> <20200709210919.GI199122@xz-x1>
+ <20200709212652.GX24919@linux.intel.com> <20200709215046.GJ199122@xz-x1>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <610241d9-b2ab-8643-1ede-3f957573dff3@redhat.com>
+Date:   Fri, 10 Jul 2020 00:11:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200619100035.4032596-2-noltari@gmail.com>
+In-Reply-To: <20200709215046.GJ199122@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 12:00:34PM +0200, Álvaro Fernández Rojas wrote:
-> Document BCM63xx USBH PHY bindings.
+On 09/07/20 23:50, Peter Xu wrote:
+>> Sean: Objection your honor.
+>> Paolo: Overruled, you're wrong.
+>> Sean: Phooey.
+>>
+>> My point is that even though I still object to this series, Paolo has final
+>> say.
+>
+> I could be wrong, but I feel like Paolo was really respecting your input, as
+> always.
+
+I do respect Sean's input, but I also believe that in this case there's
+three questions:
+
+a) should KVM be allowed to use the equivalent of rdmsr*_safe() on guest
+MSRs?  I say a mild yes, Sean says a strong no.
+
+b) is it good to separate the "1" and "-EINVAL" results so that
+ignore_msrs handling can be moved out of the MSR access functions?  I
+say yes because KVM should never rely on ignore_msrs; Sean didn't say
+anything (it's not too relevant if you answer no to the first question).
+
+c) is it possible to reimplement TSX_CTRL_MSR to avoid using the
+equivalent of rdmsr*_safe()?  Sean says yes and it's not really possible
+to argue against that, but then it doesn't really matter if you answer
+yes to the first two questions.
+
+Sean sees your patch mostly as answering "yes" to the question (a), and
+therefore disagrees with it.  I see your patch mostly as answering "yes"
+to question (b), and therefore like it.  I would also accept a patch
+that reimplements TSX_CTRL_MSR (question c), but I consider your patch
+to be an improvement anyway (question b).
+
+> It's just as simple as a 2:1 vote, isn't it? (I can still count myself
+> in for the vote, right? :)
+
+I do have the final say but I try to use that as little as possible (or
+never).  And then it happens that ever so rare disagreements cluster in
+the same week!
+
+The important thing is to analyze the source of the disagreement.
+Usually when that happens, it's because a change has multiple purposes
+and people see it in a different way.
+
+In this case, I'm happy to accept this patch (and overrule Sean) not
+because he's wrong on question (a), but because in my opinion the actual
+motivation of the patch is question (b).
+
+To be fair, I would prefer it if ignore_msrs didn't apply to
+host-initiated MSR accesses at all (only guest accesses).  That would
+make this series much much simpler.  It wouldn't solve the disagremement
+on question (a), but perhaps it would be a patch that Sean would agree on.
+
+Thanks,
+
+Paolo
+
+> Btw, you didn't reply to my other email:
 > 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  v5: no changes.
->  v4: conditionally require 1/2 clocks and fix clock/reset values.
->  v3: no changes.
->  v2: phy-cells changed to 1.
+>   https://lore.kernel.org/kvm/20200626191118.GC175520@xz-x1/
 > 
->  .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   | 84 +++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
-> new file mode 100644
-> index 000000000000..f267da6193a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
-> @@ -0,0 +1,84 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/brcm,bcm63xx-usbh-phy.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: BCM63xx USBH PHY
-> +
-> +maintainers:
-> +  - Álvaro Fernández Rojas <noltari@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - brcm,bcm6318-usbh-phy
-> +      - brcm,bcm6328-usbh-phy
-> +      - brcm,bcm6358-usbh-phy
-> +      - brcm,bcm6362-usbh-phy
-> +      - brcm,bcm6368-usbh-phy
-> +      - brcm,bcm63268-usbh-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: usbh
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  "#phy-cells":
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - "#phy-cells"
+> Let me change the question a bit - Do you think e.g. we should never use
+> rdmsr*_safe() in the Linux kernel as long as the MSR has a bit somewhere
+> telling whether the MSR exists (so we should never trigger #GP on these MSRs)?
+> I think it's a similar question that we're discussing here..
 
-You need:
-
-additionalProperties: false
-
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - brcm,bcm6318-usbh-phy
-> +            - brcm,bcm63268-usbh-phy
-> +    then:
-> +      properties:
-> +        clocks:
-> +          maxItems: 2
-
-This doesn't work. The main schema will also be applied and it says 
-there's 1. The main schema has to cover all the cases and then if/then 
-schemas add constraints.
-
-> +        clock-names:
-> +          items:
-> +            - const: usbh
-> +            - const: usb_ref
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - brcm,bcm6318-usbh-phy
-> +            - brcm,bcm6328-usbh-phy
-> +            - brcm,bcm6362-usbh-phy
-> +            - brcm,bcm63268-usbh-phy
-> +    then:
-> +      properties:
-> +        power-domains:
-> +          maxItems: 1
-> +      required:
-> +        - power-domains
-> +
-> +examples:
-> +  - |
-> +    usbh: usb-phy@10001700 {
-> +      compatible = "brcm,bcm6368-usbh-phy";
-> +      reg = <0x10001700 0x38>;
-> +      clocks = <&periph_clk 15>;
-> +      clock-names = "usbh";
-> +      resets = <&periph_rst 12>;
-> +      #phy-cells = <1>;
-> +    };
-> -- 
-> 2.27.0
-> 
