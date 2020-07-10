@@ -2,81 +2,90 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051E8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A33DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDDCD206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5690206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 09:42:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zA0m11Wb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgGJJii (ORCPT
+        id S1726867AbgGJJmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:38:38 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:49904 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726288AbgGJJii (ORCPT
+        Fri, 10 Jul 2020 05:42:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgGJJmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:38:38 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D2ABA803202B;
-        Fri, 10 Jul 2020 09:38:35 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id S5HEgB7Js0P8; Fri, 10 Jul 2020 12:38:35 +0300 (MSK)
-Date:   Fri, 10 Jul 2020 12:38:34 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
- callback
-Message-ID: <20200710093834.su3nsjesnhntpd6d@mobilestation>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
- <20200710084503.GE3703480@smile.fi.intel.com>
+        Fri, 10 Jul 2020 05:42:17 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E930BC08C5CE;
+        Fri, 10 Jul 2020 02:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ZjyAASXArgWq7Bdptru/76m4wkYaBPhc/UpB8fdqxik=; b=zA0m11Wbj0k3n0yOG9UmwXpKUJ
+        V17bvo/1zKlsCPwQNKiZI/RjBUNXZkUNWu9dvgin0QAOptrpEHiKCR4/IpSlfVuUvwky/9TEbfIqF
+        o9/aLWSBXIFmpR9byGbnDCEeW84gtfWVMHMKx9HA7wmjEzghv5VZAOE6heMECAbZjly10rSBK4Rw/
+        xx11ZaN+4V9LRQu7I55jib6FRuZ7VBF4mmzoR0vHkKzdNQGxcdLJ8Vynn4NPnLiXRk2znsjGK50BT
+        pB7+kPXU0eTO3snr3WCNcbkhlk7YwAm86/gqK+Z8pClP1S14vHWsZCaxWzQpLVs3JP2meGj2CuWD6
+        d+9rH4iQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtpXf-0003av-46; Fri, 10 Jul 2020 09:42:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8922301179;
+        Fri, 10 Jul 2020 11:42:01 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 944062B5130F2; Fri, 10 Jul 2020 11:42:01 +0200 (CEST)
+Date:   Fri, 10 Jul 2020 11:42:01 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-arch@vger.kernel.org, x86@kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        Anton Blanchard <anton@ozlabs.org>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
+Message-ID: <20200710094201.GZ4800@hirez.programming.kicks-ass.net>
+References: <20200710015646.2020871-1-npiggin@gmail.com>
+ <20200710015646.2020871-5-npiggin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710084503.GE3703480@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200710015646.2020871-5-npiggin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
-> > There are DMA devices (like ours version of Synopsys DW DMAC) which have
-> > DMA capabilities non-uniformly redistributed between the device channels.
-> > In order to provide a way of exposing the channel-specific parameters to
-> > the DMA engine consumers, we introduce a new DMA-device callback. In case
-> > if provided it gets called from the dma_get_slave_caps() method and is
-> > able to override the generic DMA-device capabilities.
+On Fri, Jul 10, 2020 at 11:56:43AM +1000, Nicholas Piggin wrote:
+> And get rid of the generic sync_core_before_usermode facility.
 > 
+> This helper is the wrong way around I think. The idea that membarrier
+> state requires a core sync before returning to user is the easy one
+> that does not need hiding behind membarrier calls. The gap in core
+> synchronization due to x86's sysret/sysexit and lazy tlb mode, is the
+> tricky detail that is better put in x86 lazy tlb code.
+> 
+> Consider if an arch did not synchronize core in switch_mm either, then
+> membarrier_mm_sync_core_before_usermode would be in the wrong place
+> but arch specific mmu context functions would still be the right place.
+> There is also a exit_lazy_tlb case that is not covered by this call, which
+> could be a bugs (kthread use mm the membarrier process's mm then context
+> switch back to the process without switching mm or lazy mm switch).
+> 
+> This makes lazy tlb code a bit more modular.
 
-> In light of recent developments consider not to add 'slave' and a such words to the kernel.
+Hurmph, I know I've been staring at this at some point. I think I meant
+to have a TIF to force the IRET path in the case of MEMBAR_SYNC_CORE.
+But I was discouraged by amluto.
 
-As long as the 'slave' word is used in the name of the dma_slave_caps
-structure and in the rest of the DMA-engine subsystem, it will be ambiguous
-to use some else terminology. If renaming needs to be done, then it should be
-done synchronously for the whole subsystem.
-
--Sergey
-
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
