@@ -1,132 +1,134 @@
-Return-Path: <SRS0=8wH5=AU=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D69C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C543CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 011FE206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jul 2020 23:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BF52065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 00:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="cCuwIOGJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l+YJYSNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgGIX64 (ORCPT
+        id S1726546AbgGJAJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:58:56 -0400
-Received: from rcdn-iport-5.cisco.com ([173.37.86.76]:21784 "EHLO
-        rcdn-iport-5.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgGIX64 (ORCPT
+        Thu, 9 Jul 2020 20:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgGJAJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 19:58:56 -0400
-X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jul 2020 19:58:55 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=2283; q=dns/txt; s=iport;
-  t=1594339135; x=1595548735;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=tF4pr/5XLKqBBsQkjwuwO6riASGyIFysFx/ut+c98HA=;
-  b=cCuwIOGJNxx3XPF18pAdLlhRAzpx2+5LmhIdJTb5rYP2zUYB7rs5DZF9
-   uaJ8DSYWi4H9LE8P+wXN4qC/2BEM8rlKRCrjW4SWNpYNypLNKhNvVvAkK
-   RiBgB0hUw0OzZZ4qaDBgQekrU8GHdEqrI1/uAqWd7mdeRv5w8fLEOHEkX
-   0=;
-X-IronPort-AV: E=Sophos;i="5.75,332,1589241600"; 
-   d="scan'208";a="532948238"
-Received: from rcdn-core-1.cisco.com ([173.37.93.152])
-  by rcdn-iport-5.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 09 Jul 2020 23:51:50 +0000
-Received: from sjc-ads-2033.cisco.com (sjc-ads-2033.cisco.com [171.70.61.221])
-        by rcdn-core-1.cisco.com (8.15.2/8.15.2) with ESMTP id 069NpoJ5024104;
-        Thu, 9 Jul 2020 23:51:50 GMT
-Received: by sjc-ads-2033.cisco.com (Postfix, from userid 396877)
-        id E14BAC5C; Thu,  9 Jul 2020 16:51:49 -0700 (PDT)
-From:   Julius Hemanth Pitti <jpitti@cisco.com>
-To:     keescook@chromium.org, yzaikin@google.com, mcgrof@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        akpm@linux-foundation.org, mingo@elte.hu, viro@zeniv.linux.org.uk,
-        xe-linux-external@cisco.com,
-        Julius Hemanth Pitti <jpitti@cisco.com>
-Subject: [PATCH] proc/sysctl: make protected_* world readable
-Date:   Thu,  9 Jul 2020 16:51:15 -0700
-Message-Id: <20200709235115.56954-1-jpitti@cisco.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 9 Jul 2020 20:09:31 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD49C08C5CE;
+        Thu,  9 Jul 2020 17:09:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=CQnfePGDywr5hyWJkQsut1Wvk/z9Wg9+7a713iD9BgE=; b=l+YJYSNHugjbpplxyxFeWA2iUD
+        XUKWJ+m8QrHfLTDeV56w4h9PyrSkQGVXKZDvnbLqyFkbV14lcbxtpbnQyOiW9yxib4Oi+Hgiq2fH9
+        WkD2LW/G0oTs3b53CPzK7vSQBYIxfbAMybx/aaqiYYX+32El1B/IXjnfzpbGSide+XRDK56CFbK1t
+        Z5Qnl/2frA+8cWLb9kNEEw4VrHj/lXVFyFBOF6JdoLN9ZMJI/1YMmWkq9BYxhCf69hbn6atGzumEw
+        L2y4F/BMuEU+5h2z74/P3HB2TJ7GMussuBKTGL/zJrDeSQvLIKk7e4I0AW4y6TrQH7BGBwnKVz0I6
+        8MR5YLjg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtgbV-0002ig-Mw; Fri, 10 Jul 2020 00:09:26 +0000
+Subject: Re: [RFC v2 1/4] futex2: Add new futex interface
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        peterz@infradead.org
+Cc:     krisman@collabora.com, kernel@collabora.com, dvhart@infradead.org,
+        mingo@redhat.com, pgriffais@valvesoftware.com, fweimer@redhat.com,
+        libc-alpha@sourceware.org, malteskarupke@web.de,
+        linux-api@vger.kernel.org, arnd@arndb.de
+References: <20200709175921.211387-1-andrealmeid@collabora.com>
+ <20200709175921.211387-2-andrealmeid@collabora.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b505827d-252f-4325-db8e-047b8eb9c5fb@infradead.org>
+Date:   Thu, 9 Jul 2020 17:09:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200709175921.211387-2-andrealmeid@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 171.70.61.221, sjc-ads-2033.cisco.com
-X-Outbound-Node: rcdn-core-1.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-protected_* files have 600 permissions which prevents
-non-superuser from reading them.
+Hi,
 
-Container like "AWS greengrass" refuse to launch unless
-protected_hardlinks and protected_symlinks are set. When
-containers like these run with "userns-remap" or "--user"
-mapping container's root to non-superuser on host, they
-fail to run due to denied read access to these files.
+On 7/9/20 10:59 AM, André Almeida wrote:
+> 
+> 
+> diff --git a/kernel/futex2.c b/kernel/futex2.c
+> new file mode 100644
+> index 000000000000..b87a10ba7c01
+> --- /dev/null
+> +++ b/kernel/futex2.c
+> @@ -0,0 +1,73 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * futex2 system call interface by André Almeida <andrealmeid@collabora.com>
+> + *
+> + * Copyright 2020 Collabora Ltd.
+> + */
+> +
+> +#include <linux/syscalls.h>
+> +
+> +#include <asm/futex.h>
+> +
+> +/*
+> + * Set of flags that futex2 operates. If we got something that is not in this
+> + * set, it can be a unsupported futex1 operation like BITSET or PI, so we
+> + * refuse to accept
+> + */
+> +#define FUTEX2_MASK (FUTEX_SIZE_MASK | FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME)
+> +
+> +/**
+> + * sys_futex_wait: Wait on a futex address if (*uaddr) == val
 
-As these protections are hardly a secret, and do not
-possess any security risk, making them world readable.
+Function name line should use - as separator, not :, so
+ * sys_futex_wait - Wait on a futex address if (*uaddr) == val
 
-Though above greengrass usecase needs read access to
-only protected_hardlinks and protected_symlinks files,
-setting all other protected_* files to 644 to keep
-consistency.
+> + * @uaddr: User address of futex
+> + * @val:   Expected value of futex
+> + * @flags: Checks if futex is private, the size of futex and the clockid
+> + * @timo:  Optional absolute timeout. Supports only 64bit time.
+> + */
+> +SYSCALL_DEFINE4(futex_wait, void __user *, uaddr, unsigned long, val,
+> +		unsigned long, flags, struct __kernel_timespec __user *, timo)
+> +{
+  ...
+> +}
+> +
+> +/**
+> + * sys_futex_wake: Wake a number of futexes waiting in an address
 
-Fixes: 800179c9b8a1 ("fs: add link restrictions")
-Signed-off-by: Julius Hemanth Pitti <jpitti@cisco.com>
----
- kernel/sysctl.c |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+Same here:
+ * sys_futex_wake - Wake a number of futexes waiting in an address
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index db1ce7a..aeca2fd 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -3223,7 +3223,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.procname	= "protected_symlinks",
- 		.data		= &sysctl_protected_symlinks,
- 		.maxlen		= sizeof(int),
--		.mode		= 0600,
-+		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
- 		.extra2		= SYSCTL_ONE,
-@@ -3232,7 +3232,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.procname	= "protected_hardlinks",
- 		.data		= &sysctl_protected_hardlinks,
- 		.maxlen		= sizeof(int),
--		.mode		= 0600,
-+		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
- 		.extra2		= SYSCTL_ONE,
-@@ -3241,7 +3241,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.procname	= "protected_fifos",
- 		.data		= &sysctl_protected_fifos,
- 		.maxlen		= sizeof(int),
--		.mode		= 0600,
-+		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
- 		.extra2		= &two,
-@@ -3250,7 +3250,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.procname	= "protected_regular",
- 		.data		= &sysctl_protected_regular,
- 		.maxlen		= sizeof(int),
--		.mode		= 0600,
-+		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
- 		.extra2		= &two,
+or could it be "on an address":
+ * sys_futex_wake - Wake a number of futexes waiting on an address
+
+> + * @uaddr:   Address of futex to be woken up
+> + * @nr_wake: Number of futexes to be woken up
+> + * @flags:   Checks if futex is private and the size of futex
+> + */
+> +SYSCALL_DEFINE3(futex_wake, void __user *, uaddr, unsigned int, nr_wake,
+> +		unsigned long, flags)
+> +{
+
+
+thanks.
 -- 
-1.7.1
+~Randy
 
