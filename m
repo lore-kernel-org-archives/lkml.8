@@ -2,264 +2,135 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8971C433F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C60E1C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 938CD2065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC062065D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:21:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNtM+doY"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="IiyV/6kj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgGJPUS (ORCPT
+        id S1728028AbgGJPVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgGJPTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:19:34 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A60CC08C5CE;
-        Fri, 10 Jul 2020 08:19:04 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 22so6560964wmg.1;
-        Fri, 10 Jul 2020 08:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XrzFqDjZylNG+KL47kJnNsuvtb+1kxd+FPY+/i5mZt4=;
-        b=UNtM+doYl8G3EzvIWbXAfCydIYtbFtA/G65jpu8mwF5//qs+MAlXc3y9qszbPU687D
-         CYDVzXa2j2Q3IkfrxO+d/sRFSUEpP+FtA6lJISsji6Kx7ufcEJGzD4Ej6oO94KwzB63u
-         sO1yqQuF4Fta7foJsA5tYSNCrtdbZX8Mb5V8VrM8/Yl+m88PJBesCAhnrkKOstjyODIf
-         qjNHQsapydA7qW5u/AB0Etram1VzVzJL+zLiSZhH3ZXB84kpS/C756PaUXH24wtYfULd
-         nOACW/fPGEPhSjHnfgROOQ1pGrgfesos7KeIznyfbEJVkxM6M8RpkkxOlnKHrtS/OkGg
-         kZmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XrzFqDjZylNG+KL47kJnNsuvtb+1kxd+FPY+/i5mZt4=;
-        b=h+bMnpbWZNTg3eZ8/f53VZY3pvP4T27rM2wNBEPKDcKHKbmr+xT7IqKqI8QjZj7p+K
-         s0l5AWwbpaCuiKeO2Fg5wqdp6mUjdTW6IIw1zkf2+vmP4BnhhbzkV1oqIOFf6QwQuO9h
-         KyB9Iqo+c33aXqVRpKT75AW1+dTZU/SV5oHIuRgA//xE6kM5XXLefEkgS62npCx1Rhj+
-         9YUqK4lBJ6vl54ESBn+1wYWX4bEwpsaFGt8jqvhO63tBDlBwwSc9p4+e/h8YyBSqHLkP
-         WG1NjcucgqqLtIgCzsbTsB6hyhkgaz6IPqRKWkPwkexxnbA8vL7mBwS2I+/OsnlgwHU3
-         KepQ==
-X-Gm-Message-State: AOAM532bmRWwCZxym3qyjlImHVsP4Prf0GiT/T3FWl3cGx8t02tjpoeT
-        VIIgbAtfQ7+y/lmTJPpdzzpG1tHENak=
-X-Google-Smtp-Source: ABdhPJzCkcfkGK+ERXI385yQy9ajXHjD/934EyflpmvQE2QG2B1P+YuyDCKd9EOc/U3LBtnDAZ1wBQ==
-X-Received: by 2002:a1c:28c4:: with SMTP id o187mr5420848wmo.62.1594394343258;
-        Fri, 10 Jul 2020 08:19:03 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.245])
-        by smtp.gmail.com with ESMTPSA id r10sm10531744wrm.17.2020.07.10.08.19.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 08:19:02 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] thermal: mediatek: prepare to add support for
- other platforms
-To:     Henry Yen <henry.yen@mediatek.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Steven Liu <steven.liu@mediatek.com>,
-        Michael Kao <michael.kao@mediatek.com>
-References: <1588238074-19338-1-git-send-email-henry.yen@mediatek.com>
- <1588238074-19338-2-git-send-email-henry.yen@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <94d81c8a-2710-98a1-4cae-040e9b51fcd9@gmail.com>
-Date:   Fri, 10 Jul 2020 17:19:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 10 Jul 2020 11:21:15 -0400
+Received: from mout.gmx.net ([212.227.15.15]:36177 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726977AbgGJPVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:21:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1594394445;
+        bh=IwTd6axjUykRPNOqnxq1T8INyLFtH4Grahn4QNilSIY=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=IiyV/6kjkH3p89Vqdcea131zUdn9e34AvyYLqul29i8n3OewYzMUQPSaAYq+mKx0g
+         qRT7h8fpEin/AOQKIM1D81dhUL1jo3orZvfF5ny395Xfn2hNnYZZqtdUsmAXakBUYM
+         Ta9mDhOuebH3gbKq09HFuzthzrJxp5O/9dmSEC9A=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([79.150.73.70]) by mail.gmx.com (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MmlT2-1kdSCA3C6Q-00juVa; Fri, 10
+ Jul 2020 17:20:44 +0200
+Date:   Fri, 10 Jul 2020 17:20:24 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Kees Cook <keescook@chromium.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        kernel-hardening@lists.openwall.com,
+        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] firewire: Remove function callback casts
+Message-ID: <20200710152024.GA3305@ubuntu>
+References: <20200530090839.7895-1-oscar.carter@gmx.com>
+ <20200708130628.GA21753@workstation>
 MIME-Version: 1.0
-In-Reply-To: <1588238074-19338-2-git-send-email-henry.yen@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708130628.GA21753@workstation>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:NXOytpk85GGVi2EnBsjBjoJRKIjmWxRVO9BFlQb88DJo4bolwEQ
+ vJlfsHetbkUzntLVvbSdJ7BPm7lucP7k88RrGtbyKFzirFQlLkGPcAgOq2jED7UYt3CZKgV
+ QWJo8yzPSrWfqjp3wjSixQi6aHWnWKy0qgIauL2EZb4V8wME7v6/t2kvM4GEsVNsPL7RVxI
+ mOOGIm1/q555Wckac+/xg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cprC2WU1qiE=:g5jM+UtJlALXvgDapZSWJW
+ y2Vg03TXGW8JcjxyvkncCzBEjctPVHWdf7QJxWOmMGjPLwpy8hBTpzZuLk9d9cHzMb9mq6v/+
+ yIOb1Hlz3Eof2ItGQju+EWGUv/R4WkD1xC54pa7hkQm+dTFM/bGYz7Z6gDVsDhlpNCgX5p3Pm
+ rGVw2r9Ug/WxrnWW0cuyMf6UP1BFpkhX8Qn+X2QZhqECj3cUW9bcIVfKKqFS0YYMtTRt0iuq+
+ SvncdleCVJMHmng7n668wfGIQDrA6LVA7+E+z5JSjsWpZ6iZDDKpxIgSh8C5UQS0my4Ycdtla
+ /cwNW7iVtvSJ2fgny+CRAr0WaU7Je6KEmJ28nvWdOWzV97D4ryksdbUJouZohvQ0tHg4ROx1i
+ cn2ZEPlfgJmSzDYCp1G2ZEeikjHfOoT3QMFNjYulQicUNiNIuZ4llXeDVOr8QK33P7pTKQTbS
+ ppApIZu1Ev1PLIDrCr55gES7r/kv6k0Gd7rrDVhsfIYcg2yCNsVpUlZl+kSgN0WnWnxda2oVM
+ 9VqOK3ZR9I/jC1Ih7VOSEfIWJKm+3yn+39ZTI8hHk8Uu9YAsm2rz1nnO/p3P0sEG+ud/9vkUd
+ ijYrb9wiuy1ogJ5BR7CH1Upud2xvLD121FuCMYhUTHAPZTivwyE+eGplJBBFuZCOOi9cAelO7
+ LRuXGgHcW17FMVz5rj2W04G44WXsEWXfy72vPPl1sE1A3HlsGl7ktP3ySKhd+OOrx+O5BoXwc
+ auoI95ZP6L6FWmeO0QMH4e88HuFxNYWCDKUV4f8c7W5LIhKLHBCGr4vdW0hC9sltiOU5iODMn
+ sWpVPR/XZKMmqMXzOG5kMllrRUp4DoNgOz10GRWrfAgGB+u0tUxsoKzDKcN+3Sxm6Vjwk7Iu2
+ d8vvZARPL0fuPn1pRPrvj2wJOLk9WPSTSp2KnWEDuFWjxRMPQNflAjXP2M1dBuq/yuoyNd/FT
+ mtgRi9gsvSzYMAs4k9oJbOTQGEyLJq6nCQqEKGN+KKbwijMRKReoCE6x4JYUSEmSIQXDecopH
+ aQbue1p/3V0tXxMI1UyXGkL+nuZAhlo6+XlP2PFdMHAcFpkSPql1l+bD1ZAOS7/7R5PcXz4AL
+ C+1DeW2nZNf+l3tWAoepmD5b/Yr4mDQsIx2sW3ijyHg17nA+0zWyYQ/H78RgifNTO3DpGGVsE
+ WmINZ0mM4XBMTQnbwYtWIS6Ub2bB5VPgzsk+w2rJNpLBzQF1z1kX03yX+SN1iLvxfu7h1O07s
+ 66DlNnCNC5yb2iySX1vISn9b/X8KRhEaFyoH36g==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Takashi,
 
+On Wed, Jul 08, 2020 at 10:06:28PM +0900, Takashi Sakamoto wrote:
+> Hi,
+>
+> I'm sorry to be late but I was stuck at my work for ALSA control
+> service programs for audio and music units on IEEE 1394 bus[1].
+>
+> On Sat, May 30, 2020 at 11:08:39AM +0200, Oscar Carter wrote:
+> > [...]
+> > Hi,
+> >
+> > this is another proposal to achieved the goal of remove function callb=
+ack
+> > cast start by me with the first [1] and second [2] versions, and follo=
+wed
+> > by the work of Takashi Sakamoto with his first [3] and second [4] vers=
+ions,
+> > and the code of Stefan Richter [5].
+> >
+> > The purpose of this third version is to put together all the work done
+> > until now following the comments of all reviewed patches.
+> >
+> > I've added the "Co-developed-by" and "Signed-off-by" tags to give cred=
+it to
+> > Takashi Sakamoto and Stefan Richter if there are no objections.
+>
+> In my opinion, it's no need to add my and Stefan's sign-off tag to patch
+> in which you firstly wrote even if it includes ideas from the others ;)
 
-On 30/04/2020 11:14, Henry Yen wrote:
-> It is known that Mediatek owns two thermal systems, which only differ
-> in the way of reading calibration data and converting temperature.
-> MT8173, MT8183, MT2701 and MT2712 belongs to version 1 thermal
-> system, and MT7622 belongs to version 2.
-> 
-> In order to handle both systems, the suffix _V1 is appended to the
-> current code, and then the second patch will add _V2 functions with
-> the same purpose but different implementation.
-> 
-> Signed-off-by: Henry Yen <henry.yen@mediatek.com>
+I would like to leave it as is because most of the work is based on your c=
+ode
+(Takashi and Stefan).
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > [...]
+>
+> Anyway this patch looks good to me. I test this patch with libhinoko and
+> find no regression.
+>
+> Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+> Testeb-by: Takashi Sakamoto<o-takashi@sakamocchi.jp>
+>
+>
+> [1] [RFT] ALSA control service programs for Digidesign Digi 002/003 fami=
+ly
+> and Tascam FireWire series
+> https://mailman.alsa-project.org/pipermail/alsa-devel/2020-July/170331.h=
+tml
+>
+> Thanks
+>
+> Takashi Sakamoto
 
-> ---
->   drivers/thermal/mtk_thermal.c | 114 ++++++++++++++++++----------------
->   1 file changed, 62 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-> index 76e30603d4d5..10107d9d56a8 100644
-> --- a/drivers/thermal/mtk_thermal.c
-> +++ b/drivers/thermal/mtk_thermal.c
-> @@ -120,18 +120,18 @@
->    * MT2701 has 3 sensors and needs 3 VTS calibration data.
->    * MT2712 has 4 sensors and needs 4 VTS calibration data.
->    */
-> -#define CALIB_BUF0_VALID		BIT(0)
-> -#define CALIB_BUF1_ADC_GE(x)		(((x) >> 22) & 0x3ff)
-> -#define CALIB_BUF0_VTS_TS1(x)		(((x) >> 17) & 0x1ff)
-> -#define CALIB_BUF0_VTS_TS2(x)		(((x) >> 8) & 0x1ff)
-> -#define CALIB_BUF1_VTS_TS3(x)		(((x) >> 0) & 0x1ff)
-> -#define CALIB_BUF2_VTS_TS4(x)		(((x) >> 23) & 0x1ff)
-> -#define CALIB_BUF2_VTS_TS5(x)		(((x) >> 5) & 0x1ff)
-> -#define CALIB_BUF2_VTS_TSABB(x)		(((x) >> 14) & 0x1ff)
-> -#define CALIB_BUF0_DEGC_CALI(x)		(((x) >> 1) & 0x3f)
-> -#define CALIB_BUF0_O_SLOPE(x)		(((x) >> 26) & 0x3f)
-> -#define CALIB_BUF0_O_SLOPE_SIGN(x)	(((x) >> 7) & 0x1)
-> -#define CALIB_BUF1_ID(x)		(((x) >> 9) & 0x1)
-> +#define CALIB_BUF0_VALID_V1		BIT(0)
-> +#define CALIB_BUF1_ADC_GE_V1(x)		(((x) >> 22) & 0x3ff)
-> +#define CALIB_BUF0_VTS_TS1_V1(x)	(((x) >> 17) & 0x1ff)
-> +#define CALIB_BUF0_VTS_TS2_V1(x)	(((x) >> 8) & 0x1ff)
-> +#define CALIB_BUF1_VTS_TS3_V1(x)	(((x) >> 0) & 0x1ff)
-> +#define CALIB_BUF2_VTS_TS4_V1(x)	(((x) >> 23) & 0x1ff)
-> +#define CALIB_BUF2_VTS_TS5_V1(x)	(((x) >> 5) & 0x1ff)
-> +#define CALIB_BUF2_VTS_TSABB_V1(x)	(((x) >> 14) & 0x1ff)
-> +#define CALIB_BUF0_DEGC_CALI_V1(x)	(((x) >> 1) & 0x3f)
-> +#define CALIB_BUF0_O_SLOPE_V1(x)	(((x) >> 26) & 0x3f)
-> +#define CALIB_BUF0_O_SLOPE_SIGN_V1(x)	(((x) >> 7) & 0x1)
-> +#define CALIB_BUF1_ID_V1(x)		(((x) >> 9) & 0x1)
->   
->   enum {
->   	VTS1,
-> @@ -525,7 +525,7 @@ static const struct mtk_thermal_data mt8183_thermal_data = {
->    * This converts the raw ADC value to mcelsius using the SoC specific
->    * calibration constants
->    */
-> -static int raw_to_mcelsius(struct mtk_thermal *mt, int sensno, s32 raw)
-> +static int raw_to_mcelsius_v1(struct mtk_thermal *mt, int sensno, s32 raw)
->   {
->   	s32 tmp;
->   
-> @@ -594,9 +594,9 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
->   		raw = readl(mt->thermal_base +
->   			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
->   
-> -		temp = raw_to_mcelsius(mt,
-> -				       conf->bank_data[bank->id].sensors[i],
-> -				       raw);
-> +		temp = raw_to_mcelsius_v1(mt,
-> +					  conf->bank_data[bank->id].sensors[i],
-> +					  raw);
->   
->   		/*
->   		 * The first read of a sensor often contains very high bogus
-> @@ -758,6 +758,51 @@ static u64 of_get_phys_base(struct device_node *np)
->   	return of_translate_address(np, regaddr_p);
->   }
->   
-> +static int mtk_thermal_extract_efuse_v1(struct mtk_thermal *mt, u32 *buf)
-> +{
-> +	int i;
-> +
-> +	if (!(buf[0] & CALIB_BUF0_VALID_V1))
-> +		return -EINVAL;
-> +
-> +	mt->adc_ge = CALIB_BUF1_ADC_GE_V1(buf[1]);
-> +
-> +	for (i = 0; i < mt->conf->num_sensors; i++) {
-> +		switch (mt->conf->vts_index[i]) {
-> +		case VTS1:
-> +			mt->vts[VTS1] = CALIB_BUF0_VTS_TS1_V1(buf[0]);
-> +			break;
-> +		case VTS2:
-> +			mt->vts[VTS2] = CALIB_BUF0_VTS_TS2_V1(buf[0]);
-> +			break;
-> +		case VTS3:
-> +			mt->vts[VTS3] = CALIB_BUF1_VTS_TS3_V1(buf[1]);
-> +			break;
-> +		case VTS4:
-> +			mt->vts[VTS4] = CALIB_BUF2_VTS_TS4_V1(buf[2]);
-> +			break;
-> +		case VTS5:
-> +			mt->vts[VTS5] = CALIB_BUF2_VTS_TS5_V1(buf[2]);
-> +			break;
-> +		case VTSABB:
-> +			mt->vts[VTSABB] =
-> +				CALIB_BUF2_VTS_TSABB_V1(buf[2]);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +
-> +	mt->degc_cali = CALIB_BUF0_DEGC_CALI_V1(buf[0]);
-> +	if (CALIB_BUF1_ID_V1(buf[1]) &
-> +	    CALIB_BUF0_O_SLOPE_SIGN_V1(buf[0]))
-> +		mt->o_slope = -CALIB_BUF0_O_SLOPE_V1(buf[0]);
-> +	else
-> +		mt->o_slope = CALIB_BUF0_O_SLOPE_V1(buf[0]);
-> +
-> +	return 0;
-> +}
-> +
->   static int mtk_thermal_get_calibration_data(struct device *dev,
->   					    struct mtk_thermal *mt)
->   {
-> @@ -793,43 +838,8 @@ static int mtk_thermal_get_calibration_data(struct device *dev,
->   		goto out;
->   	}
->   
-> -	if (buf[0] & CALIB_BUF0_VALID) {
-> -		mt->adc_ge = CALIB_BUF1_ADC_GE(buf[1]);
-> -
-> -		for (i = 0; i < mt->conf->num_sensors; i++) {
-> -			switch (mt->conf->vts_index[i]) {
-> -			case VTS1:
-> -				mt->vts[VTS1] = CALIB_BUF0_VTS_TS1(buf[0]);
-> -				break;
-> -			case VTS2:
-> -				mt->vts[VTS2] = CALIB_BUF0_VTS_TS2(buf[0]);
-> -				break;
-> -			case VTS3:
-> -				mt->vts[VTS3] = CALIB_BUF1_VTS_TS3(buf[1]);
-> -				break;
-> -			case VTS4:
-> -				mt->vts[VTS4] = CALIB_BUF2_VTS_TS4(buf[2]);
-> -				break;
-> -			case VTS5:
-> -				mt->vts[VTS5] = CALIB_BUF2_VTS_TS5(buf[2]);
-> -				break;
-> -			case VTSABB:
-> -				mt->vts[VTSABB] = CALIB_BUF2_VTS_TSABB(buf[2]);
-> -				break;
-> -			default:
-> -				break;
-> -			}
-> -		}
-> -
-> -		mt->degc_cali = CALIB_BUF0_DEGC_CALI(buf[0]);
-> -		if (CALIB_BUF1_ID(buf[1]) &
-> -		    CALIB_BUF0_O_SLOPE_SIGN(buf[0]))
-> -			mt->o_slope = -CALIB_BUF0_O_SLOPE(buf[0]);
-> -		else
-> -			mt->o_slope = CALIB_BUF0_O_SLOPE(buf[0]);
-> -	} else {
-> +	if (mtk_thermal_extract_efuse_v1(mt, buf))
->   		dev_info(dev, "Device not calibrated, using default calibration values\n");
-> -	}
->   
->   out:
->   	kfree(buf);
-> 
+Regards,
+Oscar Carter
