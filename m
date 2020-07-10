@@ -2,143 +2,57 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C4BC433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B5AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD6302078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:07:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594386456;
-	bh=wjSIUpxX6Ea5CgBfCSyg/TMOt/2UDZnOyntEmUuAgpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W9Iw5WuO2PsZM4W9q87yyXMH0NWMFvEgFgkGW3gZV0GbzXJbPbFRoMG9RqhkPuZFK
-	 8Iy17Pax/JU/0HL86U6irbmsy54VP3pDhCfXqkzm8O4AyOySPlbMF8NZI6sq8DF+na
-	 WV7PD8d+dAkRozgk3vr0t0Qyl+aswWWscNarLYKo=
+	by mail.kernel.org (Postfix) with ESMTP id 88D012077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgGJNHf (ORCPT
+        id S1728002AbgGJNII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:07:35 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38762 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgGJNHd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:07:33 -0400
-Received: by mail-ed1-f67.google.com with SMTP id n2so4607632edr.5;
-        Fri, 10 Jul 2020 06:07:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IhjbyydRkafatOFYJUQWB8jqmQKoDEwVSOznMMqxhFo=;
-        b=Nad8aXsjhnZkSxA7iE8zeoTezfltjopOXl8RE+9tGURXHPD4jSwClzBvCcBPDpa4UU
-         dw+zlSGaTc+vt2foNOdBEftsjzbyTpDtglHNSaMk18yO8Y1WyEhJdTTsr+lbqvcHiadn
-         78COdQOG/Tkw3c70Wh1XLmEHBZg1uyHGYqbJ/6viiJIPrhk6SpsDWS86I9ASteSDENh2
-         JOvlUkkrpzPVAsMlLwS4mkaQD5js5tblkoVzWbItDUxB1We0oSWrlcP2eCU1iFCgzFVW
-         ZxgGzLuWZmFlPdFML45oC0zgT4n29aPkGQHQ9hklDVdsgp6jyOv0QQRaQkHCqEmUcLW0
-         zL1w==
-X-Gm-Message-State: AOAM532EQ9cDIYGCaUHmZc7sz19h0MkWPwoQ0HHkzNfrcjkbFQSXbyyv
-        4KZDtMnTVAF1MP2RgWJZa0c=
-X-Google-Smtp-Source: ABdhPJy7GvB0YGcvjriG0PCDBYS91figVPtXSFiWz8TRbw35P+rdTnGn8EDvM7zDY0obC6Fi35h29w==
-X-Received: by 2002:aa7:da8d:: with SMTP id q13mr73846957eds.339.1594386450284;
-        Fri, 10 Jul 2020 06:07:30 -0700 (PDT)
-Received: from pi3 ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id lj18sm3602276ejb.43.2020.07.10.06.07.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 06:07:29 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 15:07:27 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, willy.mh.wolff.ml@gmail.com,
-        k.konieczny@samsung.com, b.zolnierkie@samsung.com,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
-Subject: Re: [PATCH 1/2] memory: samsung: exynos5422-dmc: Adjust polling
- interval and uptreshold
-Message-ID: <20200710130727.GA22991@pi3>
-References: <20200708153420.29484-1-lukasz.luba@arm.com>
- <CGME20200708153448epcas1p438fae2327ac69fcc1a78d9c73cfda501@epcas1p4.samsung.com>
- <20200708153420.29484-2-lukasz.luba@arm.com>
- <fa3f651a-3c2b-188b-e2dc-4fd05ce4a1b7@samsung.com>
- <a676fc18-6f1f-8502-e8d5-5ad1ccf0eec6@arm.com>
- <20200710124503.GB22897@pi3>
- <0bfb4332-9a2e-9ff9-1a86-d9875a8f34bb@arm.com>
+        Fri, 10 Jul 2020 09:08:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbgGJNIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:08:07 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18E7D20748;
+        Fri, 10 Jul 2020 13:08:07 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 09:08:05 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] tracing: toplevel d_entry already initialized
+Message-ID: <20200710090805.2ee0b97f@oasis.local.home>
+In-Reply-To: <20200710011119.GB51939@L-31X9LVDL-1304.local>
+References: <20200703020612.12930-1-richard.weiyang@linux.alibaba.com>
+        <20200703020612.12930-5-richard.weiyang@linux.alibaba.com>
+        <20200709181359.42b4e61e@oasis.local.home>
+        <20200710011119.GB51939@L-31X9LVDL-1304.local>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0bfb4332-9a2e-9ff9-1a86-d9875a8f34bb@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 01:56:33PM +0100, Lukasz Luba wrote:
-> 
-> 
-> On 7/10/20 1:45 PM, Krzysztof Kozlowski wrote:
-> > On Fri, Jul 10, 2020 at 09:34:45AM +0100, Lukasz Luba wrote:
-> > > Hi Chanwoo,
-> > > 
-> > > On 7/9/20 5:08 AM, Chanwoo Choi wrote:
-> > > > Hi Lukasz,
-> > > > 
-> > > > On 7/9/20 12:34 AM, Lukasz Luba wrote:
-> > > > > In order to react faster and make better decisions under some workloads,
-> > > > > benchmarking the memory subsystem behavior, adjust the polling interval
-> > > > > and upthreshold value used by the simple_ondemand governor.
-> > > > > 
-> > > > > Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-> > > > > Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> > > > > ---
-> > > > >    drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
-> > > > >    1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-> > > > > index 93e9c2429c0d..e03ee35f0ab5 100644
-> > > > > --- a/drivers/memory/samsung/exynos5422-dmc.c
-> > > > > +++ b/drivers/memory/samsung/exynos5422-dmc.c
-> > > > > @@ -1466,10 +1466,10 @@ static int exynos5_dmc_probe(struct platform_device *pdev)
-> > > > >    		 * Setup default thresholds for the devfreq governor.
-> > > > >    		 * The values are chosen based on experiments.
-> > > > >    		 */
-> > > > > -		dmc->gov_data.upthreshold = 30;
-> > > > > +		dmc->gov_data.upthreshold = 10;
-> > > > >    		dmc->gov_data.downdifferential = 5;
-> > > > > -		exynos5_dmc_df_profile.polling_ms = 500;
-> > > > > +		exynos5_dmc_df_profile.polling_ms = 100;
-> > > > >    	}
-> > > > > 
-> > > > 
-> > > > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> > > > 
-> > > 
-> > > Thank you for the review. Do you think this patch could go through
-> > > your tree together with your patches?
-> > > 
-> > > I don't know Krzysztof's opinion about the patch 2/2, but
-> > > I would expect, assuming the patch itself is correct, he would
-> > > like to take it into his next/dt branch.
-> > 
-> > In the cover letter you mentioned that this is a follow up for the
-> > Chanwoo's patchset. But are these patches really depending on it? Can
-> > they be picked up independently?
-> 
-> 
-> They are not heavily dependent on Chanwoo's patches.
-> Yes, they can be picked up independently.
-> I just wanted to mention that the patch 1/2 was produced on the
-> code base which had already applied Chanwoo's patch for DMC.
-> If you like to take both 1/2 and 2/2 into your tree, it's good.
+On Fri, 10 Jul 2020 09:11:19 +0800
+Wei Yang <richard.weiyang@linux.alibaba.com> wrote:
 
-Then let me take them. If there is more development ongoing, it would
-create unnecessary merges between trees.
+> Yep, if you think there is no need.
+> 
+> Do you want me to send v2 based on you comments?
 
-Best regards,
-Krzysztof
+I already applied patch 2 and 3. Please send a v2 with the 4-5 folded,
+and you can also include a patch to remove the dentry of
+tracing_init_dentry() return.
 
+-- Steve
