@@ -3,164 +3,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9411C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4021C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93BAD2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F4F20725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:30:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLMJe+V9"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="BumlcOmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgGJR3s (ORCPT
+        id S1728208AbgGJRaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43618 "EHLO
+        Fri, 10 Jul 2020 13:30:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgGJR3s (ORCPT
+        with ESMTP id S1726962AbgGJRaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:29:48 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7007C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:29:47 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id y10so6971790eje.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:29:47 -0700 (PDT)
+        Fri, 10 Jul 2020 13:30:21 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B061C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:30:21 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mn17so2905787pjb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dhYqHDXmVB851MO24k0xJG8pSyIioIjacD8y0LsCCxY=;
-        b=dLMJe+V9OFFRHOT42hrZZ1af8nQv7C6RUMqJRqQTx5tKDOZ8GvnlINDSvRebp84+iU
-         m7IQVo5KdPxMFgtHzn8b+huKWXTMhwT9YtcAEAjYMQA2ytWBrN/gts3Imut/Hysm0f86
-         FMd6HXbnlMjLcq1Pu1reAqpngO8kLHyS10S+JLt06MgNOdupDkW2kNYqn2dDOkMsZS+L
-         1xrS2mpxHCeQFfcdO5nV9spuB/E4DmmcsY/a88MrBRyF2I3DZp8wL4+L3eTUP0ZTPTQL
-         iL1nofMyqqy/pfiAZW6rku3LfcG4tO0SCqavMgENEzHFSwiClEjGVHkrJd1tF783H9dh
-         ALZA==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NNOpX7zDJV4e6MqnpK0c1GKw6S05vm1dDD8qM9H4QAo=;
+        b=BumlcOmRyWmV34V0WnslhAdIOlWLgH0M6des+BNHIMbocDgDL/sGvEV2F232x8Kez/
+         txkLpRixttssRpjMpHHHLKlVjaxH4ADaQcwyS13x6TEb/7SkalWdmqb9fyASZ+11Ljg/
+         WYsUOaZvojTJDC53BbPr6b1L0FykO7UoEjNrLiY22Aj47LE5SUB8MUk8U1FjOiKiVR8X
+         rP45YEcqF4I5hE+JAB1wUGmRMmyN4LHcw2ILoPDj6mbAcFope0T5ttPMVQTYYM5Uo0ge
+         uBQgV6WWgIQYjQbl0zGG9YmWmnv7ApKh60Jw2QHUbwEz+kbqL185pz4/qYbIFi9bZ7OD
+         EU0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dhYqHDXmVB851MO24k0xJG8pSyIioIjacD8y0LsCCxY=;
-        b=W1pCKiUnUfOTRbH7QbgbRjDF0/hp7LwSRTaTw7cKSvQgoFJNclIs04awVaO1Nfg4+S
-         xQ256KxJhfxjeXjZAUjxtlbwkjWZvTSRvx/KPDCExpysfXRjeWuBPukjOAeSbyf2Dxz8
-         9zF5yE7N/cGPkOEhblIURWczr6lNFcEr/fZ/3YUQoNgGt6ImzddYI61R29/i4EOOL+Wh
-         NuNx+SxSdeX1CAnh3MsRcEXbIz2l/McxX+dhg8nZgAQW2EbYv/qEeAobBDIrKgbuVOgo
-         r7jAJ7fkSFyqbUh/1s+Ges1V/utrWX8LfuO4J5Expih1x2AbLpWUWunFsksB1rkvezVO
-         Aotw==
-X-Gm-Message-State: AOAM533Nw1sI47/8itP0d1xggCDmOFYS7bxzYqPtSSzC44wAJtYHksiL
-        yNNldkc/baNT0R8YmLIcCiFwZfrszKs94Ay9KmIw4nuCcBk=
-X-Google-Smtp-Source: ABdhPJyTnwMaj0fBe3xhHrqoUd5Au+DzxnbxORXfAamjJPmba1exXOGavNjGe0okwDqGFdHfQ8vRWv6iZ1kk1s3wtmM=
-X-Received: by 2002:a17:906:c209:: with SMTP id d9mr38452213ejz.449.1594402186385;
- Fri, 10 Jul 2020 10:29:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <df2597f6-af21-5547-d39c-94c02ad17adb@linux.alibaba.com>
- <20200709155002.GF12769@casper.infradead.org> <20200709160750.utl46xvavceuvnom@box>
- <f761007f-4663-f72e-b0da-fc3ce9486b4b@linux.alibaba.com> <441ebbeb-0408-e22e-20f4-1be571c4a18e@nextfour.com>
- <50113530-fae5-bb36-56c2-5b5c4f90426d@linux.alibaba.com>
-In-Reply-To: <50113530-fae5-bb36-56c2-5b5c4f90426d@linux.alibaba.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Fri, 10 Jul 2020 10:29:27 -0700
-Message-ID: <CAHbLzko9DtqTpamdGAZRtRm9fq8E-FQR_79SHso7SeheUjzEzA@mail.gmail.com>
-Subject: Re: a question of split_huge_page
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     =?UTF-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=NNOpX7zDJV4e6MqnpK0c1GKw6S05vm1dDD8qM9H4QAo=;
+        b=h8hBd1Ryo6sRvcNPCLq15LjGiHeNFyDHlCgftyRmx2DK5RxRsruKo4Y7oODJRIr/Vd
+         SDJ59GC6pFJl9moxhZ/dSKrEophqsIGz2k0eFy85htCB+bpDMrNIeveLCPGqfVWJrh4G
+         EUniLdDOJYM4sAr1FF1kDDkTvNYUcZqfMChvqgJMFnj7gGOSvprs9XInM7QQn+WP4SW2
+         CVjR6dwF8WgSZ8zGmj02QopjNTLXmXjlV/3PLcVHgYIkRjkN8Rjs5mnmhDybuwq2zh+1
+         w8ujDTShBJiHIJrOi3uP8j6lp5dkGyIq5ZHJC2aK8aSIA8Dx9RXjcFHK96/h7Ax5IObj
+         jRvw==
+X-Gm-Message-State: AOAM5338u5eAO36oRT6L09mUotH2lAIffamgPq0s5lRAfgfC98vK32dJ
+        ZD9lB0wR5a3Xsjcf32U0k7El3w==
+X-Google-Smtp-Source: ABdhPJxSBaTuTeaxjBm4A5kHzDSTVrnLGZh3eB75FK+XRaeA3wzVkI7EZNAzLMTp7OVPZTe4x0fSBA==
+X-Received: by 2002:a17:902:9683:: with SMTP id n3mr36897652plp.65.1594402220938;
+        Fri, 10 Jul 2020 10:30:20 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id s6sm6192968pfd.20.2020.07.10.10.30.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 10:30:20 -0700 (PDT)
+Date:   Fri, 10 Jul 2020 10:30:20 -0700 (PDT)
+X-Google-Original-Date: Fri, 10 Jul 2020 10:30:10 PDT (-0700)
+Subject:     Re: [PATCH v2 0/2] riscv: Add context tracker suppor
+In-Reply-To: <cover.1592989082.git.greentime.hu@sifive.com>
+CC:     greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        guoren@linux.alibaba.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     greentime.hu@sifive.com
+Message-ID: <mhng-39d66393-b510-4b88-a0a7-93075d014531@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 2:35 AM Alex Shi <alex.shi@linux.alibaba.com> wrote=
-:
+On Wed, 24 Jun 2020 02:03:14 PDT (-0700), greentime.hu@sifive.com wrote:
+> This patchset adds support for irq_work via self IPI and context tracking.
+> It is tested in qemu-system-riscv64 and SiFive HiFive Unleashed board based
+> on v5.8-rc2.
 >
-> =E5=9C=A8 2020/7/10 =E4=B8=8B=E5=8D=881:28, Mika Penttil=C3=A4 =E5=86=99=
-=E9=81=93:
-> >
-> >
-> > On 10.7.2020 7.51, Alex Shi wrote:
-> >>
-> >> =E5=9C=A8 2020/7/10 =E4=B8=8A=E5=8D=8812:07, Kirill A. Shutemov =E5=86=
-=99=E9=81=93:
-> >>> On Thu, Jul 09, 2020 at 04:50:02PM +0100, Matthew Wilcox wrote:
-> >>>> On Thu, Jul 09, 2020 at 11:11:11PM +0800, Alex Shi wrote:
-> >>>>> Hi Kirill & Matthew,
-> >>>>>
-> >>>>> In the func call chain, from split_huge_page() to lru_add_page_tail=
-(),
-> >>>>> Seems tail pages are added to lru list at line 963, but in this sce=
-nario
-> >>>>> the head page has no lru bit and isn't set the bit later. Why we do=
- this?
-> >>>>> or do I miss sth?
-> >>>> I don't understand how we get to split_huge_page() with a page that'=
-s
-> >>>> not on an LRU list.  Both anonymous and page cache pages should be o=
-n
-> >>>> an LRU list.  What am I missing?>
-> >>
-> >> Thanks a lot for quick reply!
-> >> What I am confusing is the call chain: __iommu_dma_alloc_pages()
-> >> to split_huge_page(), in the func, splited page,
-> >>      page =3D alloc_pages_node(nid, alloc_flags, order);
-> >> And if the pages were added into lru, they maybe reclaimed and lost,
-> >> that would be a panic bug. But in fact, this never happened for long t=
-ime.
-> >> Also I put a BUG() at the line, it's nevre triggered in ltp, and run_v=
-mtests
-> >
-> >
-> > In  __iommu_dma_alloc_pages, after split_huge_page(),  who is taking a
-> > reference on tail pages? Seems tail pages are freed and the function
-> > errornously returns them in pages[] array for use?
-> >
+> ---
+> Changes in v2
+>  - Fix the compiling warning
 >
-> CC Joerg and iommu list,
+> Greentime Hu (2):
+>   riscv: Support irq_work via self IPIs
+>   riscv: Enable context tracking
 >
-> That's a good question. seems the split_huge_page was never triggered her=
-e,
-> since the func would check the PageLock first. and have page->mapping and=
- PageAnon
-> check, any of them couldn't be matched for the alloced page.
->
-> Hi Joerg,
-> would you like look into this? do we still need the split_huge_page() her=
-e?
+>  arch/riscv/Kconfig                |  1 +
+>  arch/riscv/include/asm/irq_work.h | 10 ++++++++++
+>  arch/riscv/kernel/entry.S         | 23 +++++++++++++++++++++++
+>  arch/riscv/kernel/smp.c           | 15 +++++++++++++++
+>  4 files changed, 49 insertions(+)
+>  create mode 100644 arch/riscv/include/asm/irq_work.h
 
-I think this is the same problem which has been discussed a couple of
-weeks ago. Please refer to:
-https://lore.kernel.org/linux-mm/20200619001938.GA135965@carbon.dhcp.thefac=
-ebook.com/
-
-I think the conclusion is split_huge_page() can't be used in this path
-at all. But we didn't reach a fix yet.
-
->
-> Thanks
-> Alex
->
-> int split_huge_page_to_list(struct page *page, struct list_head *list)
-> {
->         struct page *head =3D compound_head(page);
->         struct deferred_split *ds_queue =3D get_deferred_split_queue(head=
-);
->         struct anon_vma *anon_vma =3D NULL;
->         struct address_space *mapping =3D NULL;
->         int count, mapcount, extra_pins, ret;
->         pgoff_t end;
->
->         VM_BUG_ON_PAGE(is_huge_zero_page(head), head);
->         VM_BUG_ON_PAGE(!PageLocked(head), head);        <=3D=3D
-> >
->
+These are on for-next, with some merge conflicts fixed up.  Thanks!
