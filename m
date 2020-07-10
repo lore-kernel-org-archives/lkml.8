@@ -2,98 +2,104 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C67EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D24FC2065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1C92072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 03:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgGJDPT (ORCPT
+        id S1726965AbgGJDQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jul 2020 23:15:19 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7285 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726495AbgGJDPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jul 2020 23:15:18 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 599847F8CC46ECA42E9A;
-        Fri, 10 Jul 2020 11:15:14 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 10 Jul
- 2020 11:15:13 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: don't skip writeback of quota data
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
-References: <20200709053027.351974-1-jaegeuk@kernel.org>
- <2f4207db-57d1-5b66-f1ee-3532feba5d1f@huawei.com>
- <20200709190545.GA3001066@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <ae1a3e8a-6209-8d4b-7235-5c8897076501@huawei.com>
-Date:   Fri, 10 Jul 2020 11:15:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200709190545.GA3001066@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Thu, 9 Jul 2020 23:16:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:44094 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726495AbgGJDQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jul 2020 23:16:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E923831B;
+        Thu,  9 Jul 2020 20:16:37 -0700 (PDT)
+Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.212.213])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A22283F9AB;
+        Thu,  9 Jul 2020 20:16:28 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        David Hildenbrand <david@redhat.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Kaly Xin <Kaly.Xin@arm.com>, Jia He <justin.he@arm.com>
+Subject: [PATCH v4 0/2] Fix and enable pmem as RAM device on arm64
+Date:   Fri, 10 Jul 2020 11:16:17 +0800
+Message-Id: <20200710031619.18762-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/10 3:05, Jaegeuk Kim wrote:
-> On 07/09, Chao Yu wrote:
->> On 2020/7/9 13:30, Jaegeuk Kim wrote:
->>> It doesn't need to bypass flushing quota data in background.
->>
->> The condition is used to flush quota data in batch to avoid random
->> small-sized udpate, did you hit any problem here?
-> 
-> I suspect this causes fault injection test being stuck by waiting for inode
-> writeback completion. With this patch, it has been running w/o any issue so far.
-> I keep an eye on this.
+This fixies a few issues when I tried to enable pmem as RAM device on arm64.
 
-Hmmm.. so that this patch may not fix the root cause, and it may hiding the
-issue deeper.
+To use memory_add_physaddr_to_nid as a fallback nid, it would be better
+implement a general version (__weak) in mm/memory_hotplug. After that, arm64/
+sh/s390 can simply use the general version, and PowerPC/ia64/x86 will use
+arch specific version.
 
-How about just keeping this patch in our private branch to let fault injection
-test not be stuck? until we find the root cause in upstream codes.
+Tested on ThunderX2 host/qemu "-M virt" guest with a nvdimm device. The
+memblocks from the dax pmem device can be either hot-added or hot-removed
+on arm64 guest. Also passed the compilation test on x86.
 
-Thanks,
+Changes:
+v4: - remove "device-dax: use fallback nid when numa_node is invalid", wait
+      for Dan Williams' phys_addr_to_target_node() patch
+    - folder v3 patch1-4 into single one, no functional changes
+v3: https://lkml.org/lkml/2020/7/8/1541
+    - introduce general version memory_add_physaddr_to_nid, refine the arch
+      specific one
+    - fix an uninitialization bug in v2 device-dax patch
+v2: https://lkml.org/lkml/2020/7/7/71
+    - Drop unnecessary patch to harden try_offline_node
+    - Use new solution(by David) to fix dev->target_node=-1 during probing
+    - Refine the mem_hotplug_begin/done patch
 
-> 
-> Thanks,
-> 
->>
->> Thanks,
->>
->>>
->>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>> ---
->>>  fs/f2fs/data.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->>> index 44645f4f914b6..72e8b50e588c1 100644
->>> --- a/fs/f2fs/data.c
->>> +++ b/fs/f2fs/data.c
->>> @@ -3148,7 +3148,7 @@ static int __f2fs_write_data_pages(struct address_space *mapping,
->>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
->>>  		goto skip_write;
->>>  
->>> -	if ((S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) &&
->>> +	if (S_ISDIR(inode->i_mode) &&
->>>  			wbc->sync_mode == WB_SYNC_NONE &&
->>>  			get_dirty_pages(inode) < nr_pages_to_skip(sbi, DATA) &&
->>>  			f2fs_available_free_memory(sbi, DIRTY_DENTS))
->>>
-> .
-> 
+v1: https://lkml.org/lkml/2020/7/5/381
+
+Jia He (2):
+  mm/memory_hotplug: introduce default dummy
+    memory_add_physaddr_to_nid()
+  mm/memory_hotplug: fix unpaired mem_hotplug_begin/done
+
+ arch/arm64/mm/numa.c | 10 ----------
+ arch/ia64/mm/numa.c  |  2 --
+ arch/sh/mm/init.c    |  9 ---------
+ arch/x86/mm/numa.c   |  1 -
+ mm/memory_hotplug.c  | 15 ++++++++++++---
+ 5 files changed, 12 insertions(+), 25 deletions(-)
+
+-- 
+2.17.1
+
