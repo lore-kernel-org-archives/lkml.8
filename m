@@ -2,174 +2,172 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF4DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AE2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7BAD2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:27:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="F2cDmiZt"
+	by mail.kernel.org (Postfix) with ESMTP id 3AA652078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594409409;
+	bh=HKUsObJTxAzGIdEMpdjrd4x7q3Pjx/3zWOsbyKi8J8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lyXYolnQU6srkS5fzc5gLohWVQVQ7CHiqwbPIEBZPJjP3U9oRy0evMVZ7xrozStrL
+	 117I0RnqfyusQ4WSJW1r1pF4D2AX8yh6yHTxYhpyJ66aFLStmtJa/Sm/UUwKk6pzD2
+	 EYBIHc3Vo2a17vSBdfUze6xfiT95RKIS8UFi/dHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgGJT1J (ORCPT
+        id S1728066AbgGJTaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:27:09 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13951 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgGJT1J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 15:27:09 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f08c09f0002>; Fri, 10 Jul 2020 12:25:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 10 Jul 2020 12:27:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 10 Jul 2020 12:27:08 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jul
- 2020 19:27:08 +0000
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
- by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 10 Jul 2020 19:27:08 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Aq7VuaKEMFPcsmnTOVK9Ry2kF7BTohB/+Qyc1Sy7D3HuoOvpP1btgleXDGQtzNKOo8Z3XYlLnk+0WYcS35nO6EdArT2SIDZaH1RNKOC7CVIh7KH6PUCzZm2ooY9ZmODgAD0b1s3RiLzAmtimEHpuQhHjIe20iMGqGLsqdhAIh7YJXP/axjrIjDFa/6xSKxZPjVrLn08058/URbeqtF4DIIq50Hwx5EXnYPHRbT3K+8UAt6qXODZCtC8V8qBZn5ZaMtHDEKtYeRuJBTn69izKI18J08xLHXfw1SkRPVyx/NghusVyCWl6w1h8PKY50i5ZMFQyZR15w7ukFfVBKjnSWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dsl+3s7kxr7SMHNDGo4LHQjuAXbCM0wy7MBqQM85g1I=;
- b=nThigix6nu+a0UUI2ZbNlvo++I8Mk6+2u5UjpqkDYjWp9onaKUD/+UmesfNMWo/WgMsIhVB4/zDqHqDMpsjrWy4BQkCVtf5KYnnNafyLKFWL5cmFg/V9LBuj5LZJ6Q4thLbfpcpaMEV+lYcsdasENFfj6/s1FSR3aZaqrqt1kUKHyTSIzzXhLpAzUXbthYf0iA6O1AnS4+oTVnzZUcSqvyLW82Q+oHTRjRo/LI5fMXdozN+2NabuN8tbqoTeZ8ErIfMNOhsHZz1VL50mdfS/Nig63pcbTnkmOWpYF6M4Xx8TJ9no4sFtugH5RepPaedzHrJWnuc6fKJ4UjQt8Jarew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB2812.namprd12.prod.outlook.com (2603:10b6:5:44::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Fri, 10 Jul
- 2020 19:27:06 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3174.023; Fri, 10 Jul 2020
- 19:27:06 +0000
-Date:   Fri, 10 Jul 2020 16:27:04 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        <nouveau@lists.freedesktop.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>
-Subject: Re: [PATCH v3 0/5] mm/hmm/nouveau: add PMD system memory mapping
-Message-ID: <20200710192704.GA2128670@nvidia.com>
-References: <20200701225352.9649-1-rcampbell@nvidia.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200701225352.9649-1-rcampbell@nvidia.com>
-X-ClientProxiedBy: BL0PR05CA0027.namprd05.prod.outlook.com
- (2603:10b6:208:91::37) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Fri, 10 Jul 2020 15:30:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbgGJTaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 15:30:07 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 637F72076A;
+        Fri, 10 Jul 2020 19:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594409406;
+        bh=HKUsObJTxAzGIdEMpdjrd4x7q3Pjx/3zWOsbyKi8J8I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b4lsMVUp03tGaCM4yusSTbgfcwdNY0Vg1sMxofe1XOXmiemJxVvz40mZTTs1U2y65
+         +zn9BzjIgGMIGogaR4VxJVPj5Im+hbb95iECFrVENJHa5RO0Umio8o5mW7fJSzS/yv
+         +KA5KmHrdV96d3kzJdUIUpj2irSPpLGB7Q7mBbbc=
+Received: by pali.im (Postfix)
+        id 2019A1514; Fri, 10 Jul 2020 21:30:04 +0200 (CEST)
+Date:   Fri, 10 Jul 2020 21:30:03 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200710193003.2lt3i5ocy5kk3b3p@pali>
+References: <20200710154458.bntk7cgewvxmubf4@pali>
+ <20200710160828.GA63389@bjorn-Precision-5520>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR05CA0027.namprd05.prod.outlook.com (2603:10b6:208:91::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.10 via Frontend Transport; Fri, 10 Jul 2020 19:27:06 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1jtyfo-008vmv-KO; Fri, 10 Jul 2020 16:27:04 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9177b145-75c2-4049-4736-08d825073b35
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2812:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB2812B6B56045DD6A1F58C927C2650@DM6PR12MB2812.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 305Ufw90HhBFMT/1GPUc6uSet826Wvu296nfQyq6gnqQ8cYQD1Bnt3ooX1itvMdOl42zVCZpP5g8nWtNFpLma/hl0Rn8fQZjnrRs6AWVFknE4bZoyIdTPVgQT6CSWiXdxFifX+pin7IGYSnJmKzEBTNsqjhMN5DjfFl9/VLkPjVoB1Zkfe7+oMjUVSHbHDGBWL7SOiWBLHwy0upORL+obtA1szjDpUwQNbFc7IXNvo5FU2UyKPCzrDDip7v887awH5MMXFiW7KJUSdos0rMuCpdJ7PCW0IhwwGPjZXDTiZXCxtCwYBlQPAqMskniTZ+ppRtPQfKb/YefzPtShxbqEYaJ4Dapse7Hht6NgEUqS3YU5PObx7QtfPqOoYyguxHeCz9CUWEAK162LslJIceikg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(66946007)(33656002)(8676002)(66476007)(478600001)(966005)(66556008)(4326008)(54906003)(37006003)(5660300002)(316002)(83380400001)(6636002)(1076003)(9786002)(9746002)(36756003)(2906002)(8936002)(426003)(2616005)(26005)(86362001)(7416002)(186003)(6862004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: A8BzdaAH9jnqq65Bw4sgRrR92lhlzNxUpzBZwAcuKzfwG1LrTamH04HuvBd7Uh4lP+izRYH8wc31C3YF0d7H5HrD4GYh0ubJ9yPGtl8y4usVXQ8wYu3AKvYaT4Sr7oiuRysanBjiz8vQLfz14d/AUNZ4ycUxu4Ohkr76NayzBRCgGV7lTZLy0dYkKWUCgv1Hkbsb+HDPePKUyIkq7g6aStPs/N9vqNiG1C1rFNF7a69rj2BuKJuYAjcsPeOTGoPD9B7cMP0Z7bdtBFppbZ66deQYRoz+DpKuWwsg/daF2aBhmC1QUK2Ly/byRGcsBOj3s6fqmQObiXeG9OM+BNKH9kzUPau9/uOf72WAXMDkcqiKypmH5TcLx4eeDwFgKg06dX7LN/aQbkyv9p5PIqNcmzmhGnloWvH+IERZbP2U+vZuciu4gq2AfNX2O+E23Z9OUL98Ho7sGz+rdynD1L6rYe95dM4+oHlbvX7XWjXCINg=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9177b145-75c2-4049-4736-08d825073b35
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2020 19:27:06.5588
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TwtRop608c1tIPU5Y1bLlyg2UDTtg0EAPjw0br3nS0wM332sqc0GGXmv698NzaQP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2812
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594409119; bh=Dsl+3s7kxr7SMHNDGo4LHQjuAXbCM0wy7MBqQM85g1I=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-MS-Exchange-Transport-Forked:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=F2cDmiZtLmH9W++upqh2NucKtPkjA5uv6T8/zJuGaGPvrBsjlahofAXHrAENe7eaY
-         g6Y0HULgjxF1shyI6IFcKrQFFglrq5js11q53Zh0hN6oJux23A6+gR1HQDNVTyiH49
-         GetNPIwrKLtd9ra1/MHNOsLpdfW4yMAxJ1EIeQS2ZJr4IXOR1UZbetfr+YpNW9Hq1U
-         4kWykxxX/pyJq+YTMfJDPEslAcxMUbt8WZLlYgTM9EcQwMjz0q48U8TIiEyzVCsJFY
-         BuH6SBMi1aaGBDmD+uGpgi9JvKQ2M+SpA86biCIiIAXz0kKFHXMerdKbK1VniJ58UY
-         Sg3UrcvvKoNWg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200710160828.GA63389@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 03:53:47PM -0700, Ralph Campbell wrote:
-> The goal for this series is to introduce the hmm_pfn_to_map_order()
-> function. This allows a device driver to know that a given 4K PFN is
-> actually mapped by the CPU using a larger sized CPU page table entry and
-> therefore the device driver can safely map system memory using larger
-> device MMU PTEs.
-> The series is based on 5.8.0-rc3 and is intended for Jason Gunthorpe's
-> hmm tree. These were originally part of a larger series:
-> https://lore.kernel.org/linux-mm/20200619215649.32297-1-rcampbell@nvidia.com/
+On Friday 10 July 2020 11:08:28 Bjorn Helgaas wrote:
+> On Fri, Jul 10, 2020 at 05:44:58PM +0200, Pali Rohár wrote:
+> > I can reproduce following issue: Connect Compex WLE900VX card, configure
+> > aardvark to gen2 mode. And then card is detected only after the first
+> > link training. If kernel tries to retrain link again (e.g. via ASPM
+> > code) then card is not detected anymore. 
 > 
-> Changes in v3:
-> Replaced the HMM_PFN_P[MU]D flags with hmm_pfn_to_map_order() to
-> indicate the size of the CPU mapping.
+> Somebody should go over the ASPM retrain link code and the PCIe spec
+> with a fine-toothed comb.  Maybe we're doing something wrong there.
+
+I think this is not ASPM related as card simply disappear just after
+flipping PCI_EXP_LNKCTL_RL bit second time without changing ASPM bits.
+
+> Or maybe aardvark has some hardware issue and we need some sort of
+> quirk to work around it.
+
+It is possible that this is aardvark issue. As I said I really do not
+know.
+
+In aardvark driver there is already merged workaround for this issue:
+driver force gen1 aardvark mode for gen1 card.
+
+> > Another issue which happens for WLE900VX, WLE600VX and WLE1216VS-20 (but
+> > not for WLE200VX): Linux kernel can detect these cards only if it issues
+> > card reset via PERST# signal and start link training (via standard pcie
+> > endpoint register PCI_EXP_LNKCTL/PCI_EXP_LNKCTL_RL)
 > 
-> Changes in v2:
-> Make the hmm_range_fault() API changes into a separate series and add
->   two output flags for PMD/PUD instead of a single compund page flag as
->   suggested by Jason Gunthorpe.
-> Make the nouveau page table changes a separate patch as suggested by
->   Ben Skeggs.
-> Only add support for 2MB nouveau mappings initially since changing the
-> 1:1 CPU/GPU page table size assumptions requires a bigger set of changes.
-> Rebase to 5.8.0-rc3.
+> I think you mean "downstream port" (not "endpoint") register?
+
+Yes.
+
+> PCI_EXP_LNKCTL_RL is only applicable to *downstream ports* (root ports
+> or switch downstream ports) and is reserved for endpoints.
 > 
-> Ralph Campbell (5):
->   nouveau/hmm: fault one page at a time
->   mm/hmm: add hmm_mapping order
->   nouveau: fix mapping 2MB sysmem pages
->   nouveau/hmm: support mapping large sysmem pages
->   hmm: add tests for HMM_PFN_PMD flag
+> > immediately after
+> > enable link training in aardvark (via aardvark specific LINK_TRAINING_EN
+> > bit). If there is e.g. 100ms delay between enabling link training and
+> > setting PCI_EXP_LNKCTL_RL bit then these cards are not detected.
+> 
+> This sounds problematic.  Hardware should not be dependent on the
+> software being "fast enough".  In general we should be able to insert
+> arbitrary delays at any point without breaking anything.
 
-Applied to hmm.git. 
+Yes, it is problematic. For example following commit broke those cards:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f4c7d053d7f77cd5c1a1ba7c7ce085ddba13d1d7
 
-I edited the comment for hmm_pfn_to_map_order() and added a function
-to compute the field.
+And this commit fixed it (just msleep was moved to different stage):
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6964494582f56a3882c2c53b0edbfe99eb32b2e1
 
-Thanks,
-Jason
+But we somehow need to deal with it until we find root cause.
+
+Basically additional sleep in aardvark init phase can break WLE900VX
+cards, but not WLE200VX.
+
+And because WLE900VX works fine with pci-mvebu and WLE200VX works fine
+with pci-aardvark we cannot deduce from it if problem for combination of
+WLE900VX and aardvark is in WLE900VX or in aardvark.
+
+> But I have the impression that aardvark requires more software
+> hand-holding that most hardware does.  If it imposes timing
+> requirements on the software, that *should* be documented in the
+> aardvark spec.
+
+There is absolutely nothing regarding to timings in documentation which
+I saw. In documentation are just instructions/steps how to init PCI
+subsystem and it is basically advk_pcie_setup_hw() function.
+
+> > I read in kernel bugzilla that WLE600VX and WLE900VX cards are buggy and
+> > more people have problems with them. But issues described in kernel
+> > bugzilla (like card is reporting incorrect PCI device id) I'm not
+> > observing.
+> 
+> Pointer?
+
+Hm... I cannot find right now pointer to bugzilla, but I have pointer to
+ath9k-devel mailing list with that incorrect device id:
+
+https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
+
+> Is the incorrect device ID 0xffff?
+
+No, incorrect device ID in that case is 0xabcd and vendor ID is correct
+(Qualcomm).
+
+> That could be a symptom
+> of a PCIe error.  If we read a device ID that's something other than
+> 0, 0xffff, or the correct ID, that would be really weird.  Even 0
+> would be really strange.
+
+It is strange and also reason why discussion on that list is long.
+
+As I said, I'm not seeing that problem with wrong device ID.
+
+But I know people who are observing same problem on different boards
+(which do not use aardvark) as described in above mailing list thread
+with Compex ath10k cards.
+
+> I suspect these wifi cards are a little special because they probably
+> play unusual games with power for airplane mode and the like.
+
+This is another/different problem and is already "documented" in kernel
+bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=84821#c52
