@@ -2,113 +2,116 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89579C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6999EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6116420725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43CCF20725
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:41:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ot5kVJyl"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Wp/NcYU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgGJQko (ORCPT
+        id S1728335AbgGJQlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36044 "EHLO
+        Fri, 10 Jul 2020 12:41:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727818AbgGJQko (ORCPT
+        with ESMTP id S1726920AbgGJQll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:40:44 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCA85C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:40:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5JirCkn89k8MUp/m8kLxMzaZ+LJvaG0MnKjB28N/O94=; b=ot5kVJyl1vabhjzTqsdGWowaoj
-        np5/uHrJrIf4kSBsgAaYjWyVAf/d+tchaVuzAtqOEU1oHv8kBCtIKpvZaeFf7T5dXQy+NOh91ATW/
-        XBK+C/BygfbealqXa+DibYx3Olo+DXBsfQ713m+rkT4HI+YqFw3OV3R1+xiLMl6MJFeWNpkwDwnre
-        7oW9ctN5g1L8GBp9+3eWANV7QTiSVl+qtg9hjxBS/ZENpkg90G02rEK+QvRtW3k8XwyPPtRJYlNHN
-        rqSYj6qTwwoLEOOHYhlZVmyxpAan4YxeDk2g+VCAiFkT3CsniYob1xS3VrMpf4TYpMCG4aHdHP2G6
-        c/mekBdQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtw4n-0004I7-Hf; Fri, 10 Jul 2020 16:40:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BE22B304E03;
-        Fri, 10 Jul 2020 18:40:37 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B2B9D203D2889; Fri, 10 Jul 2020 18:40:37 +0200 (CEST)
-Date:   Fri, 10 Jul 2020 18:40:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: user_access_{save,restore}() semantics
-Message-ID: <20200710164037.GV597537@hirez.programming.kicks-ass.net>
-References: <20200710161527.GA22579@lst.de>
+        Fri, 10 Jul 2020 12:41:41 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04579C08C5CE
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:41:41 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x8so2466097plm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=yv3QBCAvG6YZU7bGRxRyZKQa73z0mQNhdf8Wtgm0GNQ=;
+        b=Wp/NcYU0dbUHW5C0f5j0U/BlTUrZHf7GTVEUeStgfJmsy/CTrVLHPdo9tZ9a4hpCjH
+         BDf7UEzNWJQrYCAS7EOG3Hh3T/+mKCHue+LDFO/yGJ6BCBgS/Rz26L9pfRt/vjHp0mgN
+         6XS5q9BqwG4C1n8k8xsLmIjGkB+Hke4t4x/tKnHaoNlL9g/WB3DeS6gVUrKtqE8Ecy3+
+         HzWCCA//8SyeQvAItCMAVih2NoPy7fNMGjcwfPuCfkreUv3mBFHKbHG4Xarb3oBRShDR
+         cQpeGcev2dn1T+p0oqOQ7FMlCw3Nwwt6gRJ8TuZnws2oZJBtOFBcj9qxRJDjpHw9p3M5
+         luzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=yv3QBCAvG6YZU7bGRxRyZKQa73z0mQNhdf8Wtgm0GNQ=;
+        b=WyVUHyNaKwOOnNqpCtTDkOo6GhNHMvTVeTrEDW4GKzKt1Pqv5muqALQRN4A4sc32GW
+         MlT6ZX4Dow7223dOu4lhhumpzp6MUQZtnI3h/rC4HTpjY/jA2l7ncB6Nl6fnYE/YRnNG
+         OAz7DsJx2fhrqFPuRU74Wg26NZL63nZXq9HdLMFCIFER7Gp0m4ZKms5bRKJ9dveWuTfO
+         7O1MVPA6Qn8Tu3jgV1yIcggQFD8XMX5fX9s850CB+rfvH89hG/WYIIci83/+k9E3BQ5N
+         IGjvow08ICPnLGcta0BDAIbW2uezpdll0fGlqc+4ZLqJX+8zKjThkNxSVlgD8dI8n+sK
+         bOyw==
+X-Gm-Message-State: AOAM532xAD9YzEPL/bKBAVKHSI60NJJy7FUKJJRf7oMHed7zwmJdtXYY
+        tDt5YbypXDjz6POeeR+N0iHHsQ==
+X-Google-Smtp-Source: ABdhPJwPV4et91gVoizdjv5AIKJiRZMhudwxxGDeDIiTxV/LirlZJ67s8UEUkjmiCal45kQB28e3RA==
+X-Received: by 2002:a17:902:b095:: with SMTP id p21mr56941393plr.4.1594399300441;
+        Fri, 10 Jul 2020 09:41:40 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id hg13sm5961210pjb.21.2020.07.10.09.41.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 09:41:39 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] genpd: Fix up terminology with parent/child
+In-Reply-To: <CAPDyKFrAe4zRRAidY86L2UVyQUDeDc7HdjpJAn-r7ctYeHL0Zg@mail.gmail.com>
+References: <202007081629.0840B4CB78@keescook> <CAJZ5v0iZMveZv_nfu2upLQkp5-8sNdzRf8ATQV1UadvzcN+ZGA@mail.gmail.com> <CAPDyKFrAe4zRRAidY86L2UVyQUDeDc7HdjpJAn-r7ctYeHL0Zg@mail.gmail.com>
+Date:   Fri, 10 Jul 2020 09:41:39 -0700
+Message-ID: <7h8sfr1fwc.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710161527.GA22579@lst.de>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 06:15:27PM +0200, Christoph Hellwig wrote:
-> Hi Peter,
-> 
-> can you explain (and maybe document while we're at it) what the
-> exact semantics of the user_access_{save,restore} helpers are?
-> 
-> Reverse engineering from the commit text they seem to be about
-> saving the current uaccess state.  But do they also enable/disable
-> anything?
+Ulf Hansson <ulf.hansson@linaro.org> writes:
 
-user_access_save() is like local_irq_save(), it stores the EFLAGS and
-clears AC/IF resp. user_access_restore(), like local_irq_restore(),
-simply restores the previously saved EFLAGS.
+> On Thu, 9 Jul 2020 at 14:25, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>>
+>> On Thu, Jul 9, 2020 at 1:32 AM Kees Cook <keescook@chromium.org> wrote:
+>> >
+>> > The genpd infrastructure uses the terms master/slave, but such uses have
+>> > no external exposures (not even in Documentation/driver-api/pm/*) and are
+>> > not mandated by nor associated with any external specifications. Change
+>> > the language used through-out to parent/child.
+>> >
+>> > There was one possible exception in the debugfs node
+>> > "pm_genpd/pm_genpd_summary" but its path has no hits outside of the
+>> > kernel itself when performing a code search[1], and it seems even this
+>> > single usage has been non-functional since it was introduced due to a
+>> > typo in the Python ("apend" instead of correct "append"). Fix the typo
+>> > while we're at it.
+>> >
+>> > [1] https://codesearch.debian.net/
+>> >
+>> > Signed-off-by: Kees Cook <keescook@chromium.org>
+>>
+>> Applied as 5.9 material with a minor subject edit, thanks!
+>
+> If not too late, feel free to add my ack to the patch.
 
-So for code that had user_access_begin(),
-user_access_save()/user_access_restore() will temporarily disable
-user-access and allow calling other code.
+And mine too.
 
-something like so?
-
----
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 0a76ddc07d59..c4fadefdb9b2 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -336,7 +336,25 @@ long strnlen_user_nofault(const void __user *unsafe_addr, long count);
- #define unsafe_get_user(x,p,e) unsafe_op_wrap(__get_user(x,p),e)
- #define unsafe_put_user(x,p,e) unsafe_op_wrap(__put_user(x,p),e)
- #define unsafe_copy_to_user(d,s,l,e) unsafe_op_wrap(__copy_to_user(d,s,l),e)
-+
-+/*
-+ * user_access_save(): save current user-access state and disable
-+ *
-+ * Similar to local_irq_save(), which saves IRQ state and disables
-+ * IRQs, exceppt for user-access state.
-+ *
-+ * Returns a value to be used only by user_access_restore() to
-+ * restore the user-access state.
-+ */
- static inline unsigned long user_access_save(void) { return 0UL; }
-+
-+/*
-+ * user_access_restore(): restore a previous user-access state
-+ * @flags: value obtained from a prevous user_access_save() call
-+ *
-+ * Similar to local_irq_restore(), which restores a previously saved
-+ * IRQ state, except for user-access state.
-+ */
- static inline void user_access_restore(unsigned long flags) { }
- #endif
- #ifndef user_write_access_begin
+Acked-by: Kevin Hilman <khilman@baylibre.com>
