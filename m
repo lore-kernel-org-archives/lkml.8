@@ -2,90 +2,112 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1954C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 879B7207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79959207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 08:55:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xf9Dd9sh"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ghWKKb5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgGJIxm (ORCPT
+        id S1727839AbgGJIzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 04:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbgGJIxl (ORCPT
+        Fri, 10 Jul 2020 04:55:01 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:62732 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726644AbgGJIzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 04:53:41 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761EFC08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 01:53:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Vpuh/UyJCwIooEffOYqRs5sxFTS9oyEwixxCjgqxAA4=; b=xf9Dd9sh8eexx3l9KAeK/ORwsk
-        n4t8Mi80UqPBVV9JSsCoXJLrNUNWqVUolu/+xGlhhJcWsHPkYM5kOyZtaiZ/LPYxlunL5QqOuY6HH
-        hoXQ84I/JxHwA+yV1RB7ux89quepCwI9sBgpaMKvt99b9TDw8mAE6Y0Ojq0pGan0bsXqjgaI7ic1g
-        SNbH7yMPpl+5X09zRWqMJGmmwXbtNNkUb//1EjeZ/TCR+mmzNy2ip6qHXXBDnGuzMNlDNOaGpDgaB
-        EDKKlUzAgKt2THNOrNfK6OPnt2P3dULPaS35tFGJnAJvLlWIiPOPRXPUCFg5SE05DhSxAP6aApEJD
-        /6VJtfJw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtomh-0006xk-HE; Fri, 10 Jul 2020 08:53:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 31C4C304E03;
-        Fri, 10 Jul 2020 10:53:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 18A0E214ECE40; Fri, 10 Jul 2020 10:53:27 +0200 (CEST)
-Date:   Fri, 10 Jul 2020 10:53:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2 02/10] x86/percpu: Clean up percpu_to_op()
-Message-ID: <20200710085327.GW4800@hirez.programming.kicks-ass.net>
-References: <20200530221127.459704-1-brgerst@gmail.com>
- <20200530221127.459704-3-brgerst@gmail.com>
- <20200709103024.GO597537@hirez.programming.kicks-ass.net>
- <CAMzpN2i3TPxpf5ktaQgb5EmB9wd84V+J5U6=_MuihtXx1-cp+A@mail.gmail.com>
+        Fri, 10 Jul 2020 04:55:01 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 06A8saaK005019
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 17:54:37 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 06A8saaK005019
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1594371277;
+        bh=0Q9D16DhxWs1xBAnPr62IwEtpJ/f0OZ70hr30AlXAJo=;
+        h=From:Date:Subject:To:Cc:From;
+        b=ghWKKb5vQ+P383msknbAJW/dVzwoGATzXEh7uxM0i/3K7haCQLGNivH3r11Lx8rvd
+         WEEFzRRo/+M4QAm4jmO/zE2c6AfmASXGF1vZqRBXP3deTd3pdb1xOXZ7U6T2Q5qAsc
+         P2of6jtVmYRhfu+4+fnAzT/N+h2avDF40tkAi0MLKG4/9jYAcd52/smkR8COvllvSI
+         bh/Rt9cuThbj8mReZKnI/GfL4sWPX5B694DSbsfYO3YOSyqH7icCV9Zm9lETxmZkaR
+         njChnyOOYuxKktPFvnnD/PqvcR68wxYwuB218v6s9P04nZYyDDi4xags8+UA/lrQo+
+         THEosRlIeSoWA==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id d198so2597457vsc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 01:54:37 -0700 (PDT)
+X-Gm-Message-State: AOAM531wlz0YXeJfU2OX7I2czuZ3Dq/Xe99OaFkjPwpEzOqzZfl9voZD
+        6Gu9jU2YqqJZkemvsH9KG7IUSmKacBDsiHCJjZA=
+X-Google-Smtp-Source: ABdhPJwrs+pqi9pGjcMyWBcb5sTFWJ9s3vVaFosNnB/ENozPQIuRY8vgNVCHtfwoBxHf56VI9MFx6eeOojF7HcjD9Xc=
+X-Received: by 2002:a67:694d:: with SMTP id e74mr52949969vsc.155.1594371276396;
+ Fri, 10 Jul 2020 01:54:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMzpN2i3TPxpf5ktaQgb5EmB9wd84V+J5U6=_MuihtXx1-cp+A@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 10 Jul 2020 17:53:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARK4SKhSW-xwgc3vq7FO7N864jPgzm8NtsGOv8wVFVyBQ@mail.gmail.com>
+Message-ID: <CAK7LNARK4SKhSW-xwgc3vq7FO7N864jPgzm8NtsGOv8wVFVyBQ@mail.gmail.com>
+Subject: [GIT PULL] arm64: dts: uniphier: UniPhier DT updates for v5.9
+List-Id: <soc.lore.kernel.org>
+To:     soc@kernel.org, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 12:38:23AM -0400, Brian Gerst wrote:
-> On Thu, Jul 9, 2020 at 6:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Sat, May 30, 2020 at 06:11:19PM -0400, Brian Gerst wrote:
-> > > +     if (0) {                                                        \
-> > > +             typeof(_var) pto_tmp__;                                 \
-> > > +             pto_tmp__ = (_val);                                     \
-> > > +             (void)pto_tmp__;                                        \
-> > > +     }                                                               \
-> >
-> > This is repeated at least once more; and it looks very similar to
-> > __typecheck() and typecheck() but is yet another variant afaict.
-> 
-> The problem with typecheck() is that it will complain about a mismatch
-> between unsigned long and u64 (defined as unsigned long long) even
-> though both are 64-bits wide on x86-64.  Cleaning that mess up is
-> beyond the scope of this series, so I kept the existing checks.
+Hi Olof, Arnd,
 
-Fair enough; thanks for explaining.
+Here are UniPhier DT (64bit) updates for the v5.9 merge window.
+
+Please pull!
+
+
+The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
+
+  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+tags/uniphier-dt64-v5.9
+
+for you to fetch changes up to e6bd81a2290f03db8baf761d06071f269dc8e177:
+
+  arm64: dts: uniphier: Add missing clock-names and reset-names to
+pcie-phy (2020-07-10 10:33:28 +0900)
+
+----------------------------------------------------------------
+UniPhier ARM64 SoC DT updates for v5.9
+
+- add missing interrupts property to support card serial
+
+- fix node names to follow the DT schema
+
+- add clock-names and reset-names to pcie-phy
+
+----------------------------------------------------------------
+Kunihiko Hayashi (2):
+      arm64: dts: uniphier: Rename ethphy node to ethernet-phy
+      arm64: dts: uniphier: Add missing clock-names and reset-names to pcie-phy
+
+Masahiro Yamada (2):
+      arm64: dts: uniphier: add interrupts to support card serial
+      arm64: dts: uniphier: give fixed port number to support card serial
+
+ arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts  |  2 +-
+ arch/arm64/boot/dts/socionext/uniphier-ld11-ref.dts     |  8 ++++++--
+ arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts |  2 +-
+ arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts  |  2 +-
+ arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts     |  8 ++++++--
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi        |  2 ++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts     | 10 +++++++---
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi        |  2 ++
+ 8 files changed, 26 insertions(+), 10 deletions(-)
