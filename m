@@ -2,516 +2,137 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A994C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96CFC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48AAB20725
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594399181;
-	bh=SIzoKGrG+qkPEk/qrJU8zj3XGu2D4HkXDHV9NZmbCXE=;
-	h=To:Cc:From:Subject:Date:List-ID:From;
-	b=zOp0e/W8u14MrDFxGqyQgKtgsmH5R7rWBcMhktsTDb4AYG0bQZ0LdHAWBNQTwUu9z
-	 GRakSpxCnGGqvHjtJZ71mCJu7Fqnt2tYLTgzRkIQAkmL9MQfofqo0Puvl8kEFEXCZd
-	 LYxDTKqrcQG0oFcgZL9dCfq9HC1AjEZ7iz3m38cQ=
+	by mail.kernel.org (Postfix) with ESMTP id AD9422078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:40:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PUfVp2sZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgGJQjk (ORCPT
+        id S1728299AbgGJQkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgGJQjj (ORCPT
+        Fri, 10 Jul 2020 12:40:49 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57682 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727818AbgGJQkr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:39:39 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 070E8C08C5CE
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:39:39 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id n24so4611842otr.13
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 09:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=67PxYPjEch8C6zTSY3ZVdK7Ai5qglilo8P3dvtMjP2I=;
-        b=E9yMShM6sDUhQaoeReQuGbgI9Vn3xImSR1eUM6By8RjxBWzXFo/jVabBWhH08e4l6A
-         /8tS7Ri72njF9MXMCfGvMOViQrDEgrjB6VhVAdNd8SL2XsKXKL1uQU/bGJkqCGfESfRh
-         JSRhx0llgU7FAov0AO7ApqKkevZpSLnFxB9pQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=67PxYPjEch8C6zTSY3ZVdK7Ai5qglilo8P3dvtMjP2I=;
-        b=GpIwuaLQXS5syBm49d4ccyU5fSfLIVHK2yeQf3LAVlF7vo8BD0DTK25ZiAjljuu6iV
-         VVz9Bf16pqqB/GPuvy9+JYGXv5uZbT0b/LQqP7Plzf6s5nzJrE4sG19sxFI8jSb5XutY
-         dNyv9yuGLGH50bl8Yq0JT1WJmybqYZrAye3W4jnTUnCoF15wAVPZ2WfQ/fe7kKk06Ort
-         Gf/RpZHxYd/Qyfec+2FbUOKCSxV39XnA3sJpb52JLI+P/W3wZQg0f0E2ee7lL6ZfrFZj
-         O0WllJwpKQPWKjZKKybU96icnP46fttBizO1t0IGmnkPe834RCqiwueBs7+EJCkzYt97
-         cF8g==
-X-Gm-Message-State: AOAM530LMqNccHWn1STY/kQEzgxuM7p/wji7DUPegEx2d5u6KBFMnJfP
-        mT8MGVewun/sH1wlgESdl6VFeg==
-X-Google-Smtp-Source: ABdhPJzZu8RJ5CiP3e56yR3ByIb+ZpA64vNU4j+ohS2B1YPBxZuN/9f93c3eItJoGb5gkgF04tCMIg==
-X-Received: by 2002:a9d:3a65:: with SMTP id j92mr38137082otc.14.1594399178326;
-        Fri, 10 Jul 2020 09:39:38 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id m2sm1230613ooe.43.2020.07.10.09.39.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 09:39:37 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] Kselftest fixes update for Linux 5.8-rc5
-Message-ID: <f4297017-1d27-741d-3abc-36b6918801f6@linuxfoundation.org>
-Date:   Fri, 10 Jul 2020 10:39:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 10 Jul 2020 12:40:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594399245;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=16iHsWi68rugM50PMlWHTfZ82HbbVxq1zQ7HFx1abr0=;
+        b=PUfVp2sZV+BuLe+xvyJMy87O/gO8RvjpplRAgVItlRIXZbuJ6Ng/VrPgjAJssS/0g+u2e0
+        g/N87oNhdX3efpshaMEHQ6QW160ZSJlkUE2sdAHxw6LJ3+9/BF3q0iUdgLO1jDGOaN2wO0
+        Wa/XZa7VMtSHejIZCnvx68PhQ8LGeqQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-29-ZEPGKszDNvimJnurQS_0wg-1; Fri, 10 Jul 2020 12:40:41 -0400
+X-MC-Unique: ZEPGKszDNvimJnurQS_0wg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F7DD800685;
+        Fri, 10 Jul 2020 16:40:38 +0000 (UTC)
+Received: from mail (ovpn-112-112.rdu2.redhat.com [10.10.112.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B6B6D7EF89;
+        Fri, 10 Jul 2020 16:40:37 +0000 (UTC)
+Date:   Fri, 10 Jul 2020 12:40:37 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        Alan Cox <alan@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Idan Yaniv <idan.yaniv@ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 1/5] mm: make HPAGE_PxD_{SHIFT,MASK,SIZE} always
+ available
+Message-ID: <20200710164037.GA11749@redhat.com>
+References: <20200706172051.19465-1-rppt@kernel.org>
+ <20200706172051.19465-2-rppt@kernel.org>
+ <alpine.LSU.2.11.2007062153000.2793@eggly.anvils>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------0C286AB941D5FF612009F235"
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.2007062153000.2793@eggly.anvils>
+User-Agent: Mutt/1.14.5 (2020-06-23)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------0C286AB941D5FF612009F235
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Hello Hugh and Mike,
 
-Hi Linus,
+On Mon, Jul 06, 2020 at 10:07:34PM -0700, Hugh Dickins wrote:
+> Adding Andrea to Cc, he's the one who structured it that way,
+> and should be consulted.
+>
+> I'm ambivalent myself.  Many's the time I've been irritated by the
+> BUILD_BUG() in HPAGE_etc, and it's responsible for very many #ifdef
+> CONFIG_TRANSPARENT_HUGEPAGEs or IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)s
+> that you find uglily scattered around the source.
+> 
+> But that's the point of it: it's warning when you write code peculiar
+> to THP, that is going to bloat the build of kernels without any THP.
+> 
+> So although I've often been tempted to do as you suggest, I've always
+> ended up respecting Andrea's intention, and worked around it instead
+> (sometimes with #ifdef or IS_ENABLED(), sometimes with
+> PMD_{SHIFT,MASK_SIZE}, sometimes with a local definition).
 
-Please pull the following Kselftest fixes update for Linux 5.8-rc5.
+The only other reasons that comes to mind in addition of optimizing
+the bloat away at build time is to make it easier to identify the THP
+code and to make it explicit that hugetlbfs shouldn't us it or it
+could be wrong on some arches.
 
-This Kselftest fixes update for Linux 5.8-rc5 consists of tmp2 test
-changes to run on python3 and kselftest framework fix to incorrect
-return type.
+However for this case the BUILD_BUG() looks right and this doesn't
+look like a false positive.
 
-diff is attached.
+This patchset has nothing to do THP, so it'd be more correct to use
+MAX_ORDER whenever the fragmentation is about the buddy (doesn't look
+the case here) or PUD_SIZE/ORDER/PMD_SIZE/ORDER if the objective is
+not to unnecessarily split extra and unrelated hugepud/hugepmds in the
+direct mapping (as in this case).
 
-thanks,
--- Shuah
+The real issue exposed by the BUILD_BUG is the lack of PMD_ORDER
+definition and fs/dax.c already run into and it solved it locally in the
+dax.c file:
 
-----------------------------------------------------------------
-The following changes since commit 377ff83083c953dd58c5a030b3c9b5b85d8cc727:
+/* The order of a PMD entry */
+#define PMD_ORDER	(PMD_SHIFT - PAGE_SHIFT)
 
-   selftests: tpm: Use /bin/sh instead of /bin/bash (2020-06-29 14:19:38 
--0600)
+The fact it's not just this patch but also dax.c that run into the
+same issue, makes me think PMD_ORDER should be defined and then you
+can use PMD_* and PUD_* for this non-THP purpose.
 
-are available in the Git repository at:
+Then the question if to remove the BUILD_BUG becomes orthogonal to
+this patchset, but I don't see much value in retaining HPAGE_PMD/PUD_*
+unless the BUILD_BUG is retained too, because this patchset already
+hints that without the BUILD_BUG() the HPAGE_PMD_* definitions would
+likely spill into non THP paths and they would lose also the only
+value left (the ability to localize the THP code paths). So I wouldn't
+be against removing the BUILD_BUG if it's causing maintenance
+overhead, but then I would drop HPAGE_PMD_* too along with it or it
+may just cause confusion.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
-tags/linux-kselftest-fixes-5.8-rc5
+Thanks,
+Andrea
 
-for you to fetch changes up to 3c01655ac82eb6d1cc2cfe9507031f1b5e0a6df1:
-
-   kselftest: ksft_test_num return type should be unsigned (2020-07-06 
-15:07:47 -0600)
-
-----------------------------------------------------------------
-linux-kselftest-fixes-5.8-rc5
-
-This Kselftest fixes update for Linux 5.8-rc5 consists of tmp2 test
-changes to run on python3 and kselftest framework fix to incorrect
-return type.
-
-----------------------------------------------------------------
-Paolo Bonzini (1):
-       kselftest: ksft_test_num return type should be unsigned
-
-Pengfei Xu (1):
-       selftests: tpm: upgrade TPM2 tests from Python 2 to Python 3
-
-  tools/testing/selftests/kselftest.h        |  2 +-
-  tools/testing/selftests/tpm2/test_smoke.sh |  4 +--
-  tools/testing/selftests/tpm2/test_space.sh |  2 +-
-  tools/testing/selftests/tpm2/tpm2.py       | 56 
-++++++++++++++++--------------
-  tools/testing/selftests/tpm2/tpm2_tests.py | 39 +++++++++++----------
-  5 files changed, 53 insertions(+), 50 deletions(-)
-----------------------------------------------------------------
-
---------------0C286AB941D5FF612009F235
-Content-Type: text/x-patch; charset=UTF-8;
- name="linux-kselftest-fixes-5.8-rc5.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="linux-kselftest-fixes-5.8-rc5.diff"
-
-diff --git a/tools/testing/selftests/kselftest.h b/tools/testing/selftests/kselftest.h
-index 0ac49d91a260..862eee734553 100644
---- a/tools/testing/selftests/kselftest.h
-+++ b/tools/testing/selftests/kselftest.h
-@@ -36,7 +36,7 @@ struct ksft_count {
- static struct ksft_count ksft_cnt;
- static unsigned int ksft_plan;
- 
--static inline int ksft_test_num(void)
-+static inline unsigned int ksft_test_num(void)
- {
- 	return ksft_cnt.ksft_pass + ksft_cnt.ksft_fail +
- 		ksft_cnt.ksft_xfail + ksft_cnt.ksft_xpass +
-diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
-index 1334e301d2a0..3e5ff29ee1dd 100755
---- a/tools/testing/selftests/tpm2/test_smoke.sh
-+++ b/tools/testing/selftests/tpm2/test_smoke.sh
-@@ -6,5 +6,5 @@ ksft_skip=4
- 
- [ -e /dev/tpm0 ] || exit $ksft_skip
- 
--python -m unittest -v tpm2_tests.SmokeTest
--python -m unittest -v tpm2_tests.AsyncTest
-+python3 -m unittest -v tpm2_tests.SmokeTest
-+python3 -m unittest -v tpm2_tests.AsyncTest
-diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
-index 00259cb746cf..04c47b13fe8a 100755
---- a/tools/testing/selftests/tpm2/test_space.sh
-+++ b/tools/testing/selftests/tpm2/test_space.sh
-@@ -6,4 +6,4 @@ ksft_skip=4
- 
- [ -e /dev/tpmrm0 ] || exit $ksft_skip
- 
--python -m unittest -v tpm2_tests.SpaceTest
-+python3 -m unittest -v tpm2_tests.SpaceTest
-diff --git a/tools/testing/selftests/tpm2/tpm2.py b/tools/testing/selftests/tpm2/tpm2.py
-index d0fcb66a88a6..f34486cd7342 100644
---- a/tools/testing/selftests/tpm2/tpm2.py
-+++ b/tools/testing/selftests/tpm2/tpm2.py
-@@ -247,14 +247,14 @@ class ProtocolError(Exception):
- class AuthCommand(object):
-     """TPMS_AUTH_COMMAND"""
- 
--    def __init__(self, session_handle=TPM2_RS_PW, nonce='', session_attributes=0,
--                 hmac=''):
-+    def __init__(self, session_handle=TPM2_RS_PW, nonce=bytes(),
-+                 session_attributes=0, hmac=bytes()):
-         self.session_handle = session_handle
-         self.nonce = nonce
-         self.session_attributes = session_attributes
-         self.hmac = hmac
- 
--    def __str__(self):
-+    def __bytes__(self):
-         fmt = '>I H%us B H%us' % (len(self.nonce), len(self.hmac))
-         return struct.pack(fmt, self.session_handle, len(self.nonce),
-                            self.nonce, self.session_attributes, len(self.hmac),
-@@ -268,11 +268,11 @@ class AuthCommand(object):
- class SensitiveCreate(object):
-     """TPMS_SENSITIVE_CREATE"""
- 
--    def __init__(self, user_auth='', data=''):
-+    def __init__(self, user_auth=bytes(), data=bytes()):
-         self.user_auth = user_auth
-         self.data = data
- 
--    def __str__(self):
-+    def __bytes__(self):
-         fmt = '>H%us H%us' % (len(self.user_auth), len(self.data))
-         return struct.pack(fmt, len(self.user_auth), self.user_auth,
-                            len(self.data), self.data)
-@@ -296,8 +296,9 @@ class Public(object):
-         return '>HHIH%us%usH%us' % \
-             (len(self.auth_policy), len(self.parameters), len(self.unique))
- 
--    def __init__(self, object_type, name_alg, object_attributes, auth_policy='',
--                 parameters='', unique=''):
-+    def __init__(self, object_type, name_alg, object_attributes,
-+                 auth_policy=bytes(), parameters=bytes(),
-+                 unique=bytes()):
-         self.object_type = object_type
-         self.name_alg = name_alg
-         self.object_attributes = object_attributes
-@@ -305,7 +306,7 @@ class Public(object):
-         self.parameters = parameters
-         self.unique = unique
- 
--    def __str__(self):
-+    def __bytes__(self):
-         return struct.pack(self.__fmt(),
-                            self.object_type,
-                            self.name_alg,
-@@ -343,7 +344,7 @@ def get_algorithm(name):
- 
- def hex_dump(d):
-     d = [format(ord(x), '02x') for x in d]
--    d = [d[i: i + 16] for i in xrange(0, len(d), 16)]
-+    d = [d[i: i + 16] for i in range(0, len(d), 16)]
-     d = [' '.join(x) for x in d]
-     d = os.linesep.join(d)
- 
-@@ -401,7 +402,7 @@ class Client:
-         pcrsel_len = max((i >> 3) + 1, 3)
-         pcrsel = [0] * pcrsel_len
-         pcrsel[i >> 3] = 1 << (i & 7)
--        pcrsel = ''.join(map(chr, pcrsel))
-+        pcrsel = ''.join(map(chr, pcrsel)).encode()
- 
-         fmt = '>HII IHB%us' % (pcrsel_len)
-         cmd = struct.pack(fmt,
-@@ -443,7 +444,7 @@ class Client:
-             TPM2_CC_PCR_EXTEND,
-             i,
-             len(auth_cmd),
--            str(auth_cmd),
-+            bytes(auth_cmd),
-             1, bank_alg, dig)
- 
-         self.send_cmd(cmd)
-@@ -457,7 +458,7 @@ class Client:
-                           TPM2_RH_NULL,
-                           TPM2_RH_NULL,
-                           16,
--                          '\0' * 16,
-+                          ('\0' * 16).encode(),
-                           0,
-                           session_type,
-                           TPM2_ALG_NULL,
-@@ -472,7 +473,7 @@ class Client:
- 
-         for i in pcrs:
-             pcr = self.read_pcr(i, bank_alg)
--            if pcr == None:
-+            if pcr is None:
-                 return None
-             x += pcr
- 
-@@ -489,7 +490,7 @@ class Client:
-         pcrsel = [0] * pcrsel_len
-         for i in pcrs:
-             pcrsel[i >> 3] |= 1 << (i & 7)
--        pcrsel = ''.join(map(chr, pcrsel))
-+        pcrsel = ''.join(map(chr, pcrsel)).encode()
- 
-         fmt = '>HII IH%usIHB3s' % ds
-         cmd = struct.pack(fmt,
-@@ -497,7 +498,8 @@ class Client:
-                           struct.calcsize(fmt),
-                           TPM2_CC_POLICY_PCR,
-                           handle,
--                          len(dig), str(dig),
-+                          len(dig),
-+                          bytes(dig),
-                           1,
-                           bank_alg,
-                           pcrsel_len, pcrsel)
-@@ -534,7 +536,7 @@ class Client:
- 
-         self.send_cmd(cmd)
- 
--    def create_root_key(self, auth_value = ''):
-+    def create_root_key(self, auth_value = bytes()):
-         attributes = \
-             Public.FIXED_TPM | \
-             Public.FIXED_PARENT | \
-@@ -570,11 +572,11 @@ class Client:
-             TPM2_CC_CREATE_PRIMARY,
-             TPM2_RH_OWNER,
-             len(auth_cmd),
--            str(auth_cmd),
-+            bytes(auth_cmd),
-             len(sensitive),
--            str(sensitive),
-+            bytes(sensitive),
-             len(public),
--            str(public),
-+            bytes(public),
-             0, 0)
- 
-         return struct.unpack('>I', self.send_cmd(cmd)[10:14])[0]
-@@ -587,7 +589,7 @@ class Client:
-         attributes = 0
-         if not policy_dig:
-             attributes |= Public.USER_WITH_AUTH
--            policy_dig = ''
-+            policy_dig = bytes()
- 
-         auth_cmd =  AuthCommand()
-         sensitive = SensitiveCreate(user_auth=auth_value, data=data)
-@@ -608,11 +610,11 @@ class Client:
-             TPM2_CC_CREATE,
-             parent_key,
-             len(auth_cmd),
--            str(auth_cmd),
-+            bytes(auth_cmd),
-             len(sensitive),
--            str(sensitive),
-+            bytes(sensitive),
-             len(public),
--            str(public),
-+            bytes(public),
-             0, 0)
- 
-         rsp = self.send_cmd(cmd)
-@@ -635,7 +637,7 @@ class Client:
-             TPM2_CC_LOAD,
-             parent_key,
-             len(auth_cmd),
--            str(auth_cmd),
-+            bytes(auth_cmd),
-             blob)
- 
-         data_handle = struct.unpack('>I', self.send_cmd(cmd)[10:14])[0]
-@@ -653,7 +655,7 @@ class Client:
-             TPM2_CC_UNSEAL,
-             data_handle,
-             len(auth_cmd),
--            str(auth_cmd))
-+            bytes(auth_cmd))
- 
-         try:
-             rsp = self.send_cmd(cmd)
-@@ -675,7 +677,7 @@ class Client:
-             TPM2_CC_DICTIONARY_ATTACK_LOCK_RESET,
-             TPM2_RH_LOCKOUT,
-             len(auth_cmd),
--            str(auth_cmd))
-+            bytes(auth_cmd))
- 
-         self.send_cmd(cmd)
- 
-@@ -693,7 +695,7 @@ class Client:
-         more_data, cap, cnt = struct.unpack('>BII', rsp[:9])
-         rsp = rsp[9:]
- 
--        for i in xrange(0, cnt):
-+        for i in range(0, cnt):
-             handle = struct.unpack('>I', rsp[:4])[0]
-             handles.append(handle)
-             rsp = rsp[4:]
-diff --git a/tools/testing/selftests/tpm2/tpm2_tests.py b/tools/testing/selftests/tpm2/tpm2_tests.py
-index 728be7c69b76..9d764306887b 100644
---- a/tools/testing/selftests/tpm2/tpm2_tests.py
-+++ b/tools/testing/selftests/tpm2/tpm2_tests.py
-@@ -20,8 +20,8 @@ class SmokeTest(unittest.TestCase):
-         self.client.close()
- 
-     def test_seal_with_auth(self):
--        data = 'X' * 64
--        auth = 'A' * 15
-+        data = ('X' * 64).encode()
-+        auth = ('A' * 15).encode()
- 
-         blob = self.client.seal(self.root_key, data, auth, None)
-         result = self.client.unseal(self.root_key, blob, auth, None)
-@@ -30,8 +30,8 @@ class SmokeTest(unittest.TestCase):
-     def test_seal_with_policy(self):
-         handle = self.client.start_auth_session(tpm2.TPM2_SE_TRIAL)
- 
--        data = 'X' * 64
--        auth = 'A' * 15
-+        data = ('X' * 64).encode()
-+        auth = ('A' * 15).encode()
-         pcrs = [16]
- 
-         try:
-@@ -58,14 +58,15 @@ class SmokeTest(unittest.TestCase):
-         self.assertEqual(data, result)
- 
-     def test_unseal_with_wrong_auth(self):
--        data = 'X' * 64
--        auth = 'A' * 20
-+        data = ('X' * 64).encode()
-+        auth = ('A' * 20).encode()
-         rc = 0
- 
-         blob = self.client.seal(self.root_key, data, auth, None)
-         try:
--            result = self.client.unseal(self.root_key, blob, auth[:-1] + 'B', None)
--        except ProtocolError, e:
-+            result = self.client.unseal(self.root_key, blob,
-+                        auth[:-1] + 'B'.encode(), None)
-+        except ProtocolError as e:
-             rc = e.rc
- 
-         self.assertEqual(rc, tpm2.TPM2_RC_AUTH_FAIL)
-@@ -73,8 +74,8 @@ class SmokeTest(unittest.TestCase):
-     def test_unseal_with_wrong_policy(self):
-         handle = self.client.start_auth_session(tpm2.TPM2_SE_TRIAL)
- 
--        data = 'X' * 64
--        auth = 'A' * 17
-+        data = ('X' * 64).encode()
-+        auth = ('A' * 17).encode()
-         pcrs = [16]
- 
-         try:
-@@ -91,7 +92,7 @@ class SmokeTest(unittest.TestCase):
-         # This should succeed.
- 
-         ds = tpm2.get_digest_size(tpm2.TPM2_ALG_SHA1)
--        self.client.extend_pcr(1, 'X' * ds)
-+        self.client.extend_pcr(1, ('X' * ds).encode())
- 
-         handle = self.client.start_auth_session(tpm2.TPM2_SE_POLICY)
- 
-@@ -108,7 +109,7 @@ class SmokeTest(unittest.TestCase):
- 
-         # Then, extend a PCR that is part of the policy and try to unseal.
-         # This should fail.
--        self.client.extend_pcr(16, 'X' * ds)
-+        self.client.extend_pcr(16, ('X' * ds).encode())
- 
-         handle = self.client.start_auth_session(tpm2.TPM2_SE_POLICY)
- 
-@@ -119,7 +120,7 @@ class SmokeTest(unittest.TestCase):
-             self.client.policy_password(handle)
- 
-             result = self.client.unseal(self.root_key, blob, auth, handle)
--        except ProtocolError, e:
-+        except ProtocolError as e:
-             rc = e.rc
-             self.client.flush_context(handle)
-         except:
-@@ -130,13 +131,13 @@ class SmokeTest(unittest.TestCase):
- 
-     def test_seal_with_too_long_auth(self):
-         ds = tpm2.get_digest_size(tpm2.TPM2_ALG_SHA1)
--        data = 'X' * 64
--        auth = 'A' * (ds + 1)
-+        data = ('X' * 64).encode()
-+        auth = ('A' * (ds + 1)).encode()
- 
-         rc = 0
-         try:
-             blob = self.client.seal(self.root_key, data, auth, None)
--        except ProtocolError, e:
-+        except ProtocolError as e:
-             rc = e.rc
- 
-         self.assertEqual(rc, tpm2.TPM2_RC_SIZE)
-@@ -152,7 +153,7 @@ class SmokeTest(unittest.TestCase):
-                               0xDEADBEEF)
- 
-             self.client.send_cmd(cmd)
--        except IOError, e:
-+        except IOError as e:
-             rejected = True
-         except:
-             pass
-@@ -212,7 +213,7 @@ class SmokeTest(unittest.TestCase):
-             self.client.tpm.write(cmd)
-             rsp = self.client.tpm.read()
- 
--        except IOError, e:
-+        except IOError as e:
-             # read the response
-             rsp = self.client.tpm.read()
-             rejected = True
-@@ -283,7 +284,7 @@ class SpaceTest(unittest.TestCase):
-         rc = 0
-         try:
-             space1.send_cmd(cmd)
--        except ProtocolError, e:
-+        except ProtocolError as e:
-             rc = e.rc
- 
-         self.assertEqual(rc, tpm2.TPM2_RC_COMMAND_CODE |
-
---------------0C286AB941D5FF612009F235--
