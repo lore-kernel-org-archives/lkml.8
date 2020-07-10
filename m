@@ -2,81 +2,63 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A39C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ED1C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F92F20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F7D20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgGJNix (ORCPT
+        id S1727059AbgGJNjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:38:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57954 "EHLO mx2.suse.de"
+        Fri, 10 Jul 2020 09:39:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:47102 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbgGJNix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:38:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id EAE72AC9F;
-        Fri, 10 Jul 2020 13:38:51 +0000 (UTC)
-Subject: Re: [PATCH] efi: avoid error message when booting under Xen
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     xen-devel@lists.xenproject.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Jones <pjones@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>
-References: <20200610141052.13258-1-jgross@suse.com>
- <094be567-2c82-7d5b-e432-288286c6c3fb@suse.com>
- <CGME20200709091750eucas1p18003b0c8127600369485c62c1e587c22@eucas1p1.samsung.com>
- <ec21b883-dc5c-f3fe-e989-7fa13875a4c4@suse.com>
- <170e01b1-220d-5cb7-03b2-c70ed3ae58e4@samsung.com>
- <CAMj1kXGE52Y6QQhGLU6r_9x6TVftZqfS7zyLCiDusZhV4tbhjg@mail.gmail.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <b4e60a2f-e761-d9ad-88ad-fe041109c063@suse.com>
-Date:   Fri, 10 Jul 2020 15:38:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAMj1kXGE52Y6QQhGLU6r_9x6TVftZqfS7zyLCiDusZhV4tbhjg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726832AbgGJNjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:39:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0B211FB;
+        Fri, 10 Jul 2020 06:39:50 -0700 (PDT)
+Received: from e120937-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D38F03F8C6;
+        Fri, 10 Jul 2020 06:39:49 -0700 (PDT)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, cristian.marussi@arm.com, arnd@arndb.de
+Subject: [PATCH 1/3] firmware: arm_scmi: Remove zero-length array in SCMI Notifications
+Date:   Fri, 10 Jul 2020 14:39:17 +0100
+Message-Id: <20200710133919.39792-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.07.20 15:27, Ard Biesheuvel wrote:
-> On Fri, 10 Jul 2020 at 13:17, Bartlomiej Zolnierkiewicz
-> <b.zolnierkie@samsung.com> wrote:
->>
->>
->> [ added EFI Maintainer & ML to Cc: ]
->>
->> Hi,
->>
->> On 7/9/20 11:17 AM, Jürgen Groß wrote:
->>> On 28.06.20 10:50, Jürgen Groß wrote:
->>>> Ping?
->>>>
->>>> On 10.06.20 16:10, Juergen Gross wrote:
->>>>> efifb_probe() will issue an error message in case the kernel is booted
->>>>> as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
->>>>> that message by calling efi_mem_desc_lookup() only if EFI_PARAVIRT
->>>>> isn't set.
->>>>>
-> 
-> Why not test for EFI_MEMMAP instead of EFI_BOOT?
+Substitute zero-length array defined in scmi_base_error_report with
+a flexible length array definition.
 
-Honestly I'm not sure EFI_BOOT is always set in that case. If you tell
-me it is fine to just replace the test to check for EFI_MEMMAP I'm fine
-to modify my patch.
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+---
+ include/linux/scmi_protocol.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+index 46d98be92466..7d4348fb7330 100644
+--- a/include/linux/scmi_protocol.h
++++ b/include/linux/scmi_protocol.h
+@@ -421,7 +421,7 @@ struct scmi_base_error_report {
+ 	u32 agent_id;
+ 	bool fatal;
+ 	u16 cmd_count;
+-	u64 reports[0];
++	u64 reports[];
+ };
+ 
+ #endif /* _LINUX_SCMI_PROTOCOL_H */
+-- 
+2.17.1
 
-Juergen
