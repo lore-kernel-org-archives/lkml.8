@@ -2,140 +2,228 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EC6C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD28A2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:19:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SrZQX7GJ"
+	by mail.kernel.org (Postfix) with ESMTP id D56122078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 19:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgGJTTv (ORCPT
+        id S1727925AbgGJTWl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727086AbgGJTTu (ORCPT
+        Fri, 10 Jul 2020 15:22:41 -0400
+Received: from mailoutvs32.siol.net ([185.57.226.223]:57978 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726867AbgGJTWl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 15:19:50 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88426C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 12:19:50 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id r19so7649147ljn.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 12:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I+/ZpUV9Tne4bK1xpzXtQG1xnjDQvm0MBQHRZpe8AKo=;
-        b=SrZQX7GJ/Kzlw7h1SoI4rLoG7YGWqAT/kts4Om0DARGMfvQ+gkwU91XHLDByWaZPKr
-         IoYy4s39ckACTY2bkjVyoBhXim+W3EULp1zDxw6MMTAeKt9oTeFxWHogTuPIvA8iXUDw
-         Zczvd4dOYsYW1xQZz4YXUbxDyYS3XHJWc89DzZRjAfGNrqq+9P563ReWl16DhDZQL51V
-         9Yspg+SEe7+FbfqOWkkMymkTEuxTqEx9tUplIbsBELrvMgRsd9LFGZTl9sjshweklDQn
-         M+nVoOCtjCNi558ol0/dG/X9JBVZyEu5AVsAsr88olD3n7pfKtPVsEBZRtwQ/JIAqNCJ
-         1Qsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I+/ZpUV9Tne4bK1xpzXtQG1xnjDQvm0MBQHRZpe8AKo=;
-        b=IjBPlgxlzqboYRAu+0zSj2VU18QRcu/iEngOB7MIyY6KgX4DxawShki6vLDCR96d0Y
-         cJIQSJ3riBttX378+VS3ENFvAzvc+E3ROvyZX/5NKBz9M+nWviYpyI+SLO9DLFS9qq8N
-         AQA6moGf2Ut/l9XZMy3yhi4ENDHULPn7lA/jkqXEqQqCKwNgC/RjEaZovm2vkF+Dap8q
-         tPJ3eWoujOPt/9mk0beF6Gp9VhvyG07dwtVZc4j8VBdeDlqh/J94DmmQfHPEWcIvRSLa
-         Iy6sw5zbQ/3Qn3d3JcBuTwfPluf7aflT+V38eyUyKQEnzTzlMOfSd/kLTNUpeXWnc2vl
-         5stg==
-X-Gm-Message-State: AOAM533ul2H6v01YUOVRGmL24d+Ix/upSo0h73AmqBn5hw/pRJvAzb5a
-        PG2Hs2DZMCGsX4gSS+xAMBoEkvSwZ1v0ursTaE6R+g==
-X-Google-Smtp-Source: ABdhPJzFoBkdGox40ei+klbQof0Gx0aadBK6ptgvGIgeyE4rH15dG1JqNPii8/FCJemts6XHE9l+BcstW37Cp3UGcYM=
-X-Received: by 2002:a2e:9996:: with SMTP id w22mr3900690lji.446.1594408788744;
- Fri, 10 Jul 2020 12:19:48 -0700 (PDT)
+        Fri, 10 Jul 2020 15:22:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 9A60B522763;
+        Fri, 10 Jul 2020 21:22:37 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id gejh6xTW37uc; Fri, 10 Jul 2020 21:22:37 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 1D556522762;
+        Fri, 10 Jul 2020 21:22:37 +0200 (CEST)
+Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 0D90A522763;
+        Fri, 10 Jul 2020 21:22:35 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     peron.clem@gmail.com, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Samuel Holland <samuel@sholland.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [linux-sunxi] [PATCH 01/16] ASoC: sun4i-i2s: Add support for H6 I2S
+Date:   Fri, 10 Jul 2020 21:22:34 +0200
+Message-ID: <3787973.dVgI16VYFl@jernej-laptop>
+In-Reply-To: <72a6fddf-5e84-f050-2eee-74178d457789@sholland.org>
+References: <20200704113902.336911-1-peron.clem@gmail.com> <20200704113902.336911-2-peron.clem@gmail.com> <72a6fddf-5e84-f050-2eee-74178d457789@sholland.org>
 MIME-Version: 1.0
-References: <20200709194718.189231-1-guro@fb.com> <20200710122917.GB3022@dhcp22.suse.cz>
- <CALvZod6Yk8QoZjbNkGE8-qeOD187Nu-+VwasoROGZs_UsMgbEQ@mail.gmail.com> <20200710184205.GB350256@carbon.dhcp.thefacebook.com>
-In-Reply-To: <20200710184205.GB350256@carbon.dhcp.thefacebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 10 Jul 2020 12:19:37 -0700
-Message-ID: <CALvZod45_zVaFhvw-wc9b6-Fth=fZo5Fo6xCwRVkrWC6ZprYyw@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcontrol: avoid workload stalls when lowering memory.high
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Domas Mituzas <domas@fb.com>, Tejun Heo <tj@kernel.org>,
-        Chris Down <chris@chrisdown.name>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 11:42 AM Roman Gushchin <guro@fb.com> wrote:
->
-> On Fri, Jul 10, 2020 at 07:12:22AM -0700, Shakeel Butt wrote:
-> > On Fri, Jul 10, 2020 at 5:29 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Thu 09-07-20 12:47:18, Roman Gushchin wrote:
-> > > > Memory.high limit is implemented in a way such that the kernel
-> > > > penalizes all threads which are allocating a memory over the limit.
-> > > > Forcing all threads into the synchronous reclaim and adding some
-> > > > artificial delays allows to slow down the memory consumption and
-> > > > potentially give some time for userspace oom handlers/resource control
-> > > > agents to react.
-> > > >
-> > > > It works nicely if the memory usage is hitting the limit from below,
-> > > > however it works sub-optimal if a user adjusts memory.high to a value
-> > > > way below the current memory usage. It basically forces all workload
-> > > > threads (doing any memory allocations) into the synchronous reclaim
-> > > > and sleep. This makes the workload completely unresponsive for
-> > > > a long period of time and can also lead to a system-wide contention on
-> > > > lru locks. It can happen even if the workload is not actually tight on
-> > > > memory and has, for example, a ton of cold pagecache.
-> > > >
-> > > > In the current implementation writing to memory.high causes an atomic
-> > > > update of page counter's high value followed by an attempt to reclaim
-> > > > enough memory to fit into the new limit. To fix the problem described
-> > > > above, all we need is to change the order of execution: try to push
-> > > > the memory usage under the limit first, and only then set the new
-> > > > high limit.
-> > >
-> > > Shakeel would this help with your pro-active reclaim usecase? It would
-> > > require to reset the high limit right after the reclaim returns which is
-> > > quite ugly but it would at least not require a completely new interface.
-> > > You would simply do
-> > >         high = current - to_reclaim
-> > >         echo $high > memory.high
-> > >         echo infinity > memory.high # To prevent direct reclaim
-> > >                                     # allocation stalls
-> > >
-> >
-> > This will reduce the chance of stalls but the interface is still
-> > non-delegatable i.e. applications can not change their own memory.high
-> > for the use-cases like application controlled proactive reclaim and
-> > uswapd.
->
-> Can you, please, elaborate a bit more on this? I didn't understand
-> why.
->
+Hi Samuel!
 
-Sure. Do we want memory.high a CFTYPE_NS_DELEGATABLE type file? I
-don't think so otherwise any job on a system can change their
-memory.high and can adversely impact the isolation and memory
-scheduling of the system.
+Dne petek, 10. julij 2020 ob 07:44:33 CEST je Samuel Holland napisal(a):
+> On 7/4/20 6:38 AM, Clément Péron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > 
+> > H6 I2S is very similar to that in H3, except it supports up to 16
+> > channels.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> > ---
+> > 
+> >  sound/soc/sunxi/sun4i-i2s.c | 227 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 227 insertions(+)
+> > 
+> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> > index d0a8d5810c0a..9690389cb68e 100644
+> > --- a/sound/soc/sunxi/sun4i-i2s.c
+> > +++ b/sound/soc/sunxi/sun4i-i2s.c
+> > @@ -124,6 +124,21 @@
+> > 
+> >  #define SUN8I_I2S_RX_CHAN_SEL_REG	0x54
+> >  #define SUN8I_I2S_RX_CHAN_MAP_REG	0x58
+> > 
+> > +/* Defines required for sun50i-h6 support */
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK	GENMASK(21, 20)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset)	((offset) << 20)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_MASK		GENMASK(19, 16)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL(chan)		((chan - 1) << 16)
+> > +#define SUN50I_H6_I2S_TX_CHAN_EN_MASK		GENMASK(15, 0)
+> > +#define SUN50I_H6_I2S_TX_CHAN_EN(num_chan)	(((1 << num_chan) - 1))
+> > +
+> > +#define SUN50I_H6_I2S_TX_CHAN_MAP0_REG	0x44
+> > +#define SUN50I_H6_I2S_TX_CHAN_MAP1_REG	0x48
+> > +
+> > +#define SUN50I_H6_I2S_RX_CHAN_SEL_REG	0x64
+> > +#define SUN50I_H6_I2S_RX_CHAN_MAP0_REG	0x68
+> > +#define SUN50I_H6_I2S_RX_CHAN_MAP1_REG	0x6C
+> > +
+> > 
+> >  struct sun4i_i2s;
+> >  
+> >  /**
+> > 
+> > @@ -466,6 +481,65 @@ static int sun8i_i2s_set_chan_cfg(const struct
+> > sun4i_i2s *i2s,> 
+> >  	return 0;
+> >  
+> >  }
+> > 
+> > +static int sun50i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
+> > +				   const struct snd_pcm_hw_params 
+*params)
+> > +{
+> > +	unsigned int channels = params_channels(params);
+> > +	unsigned int slots = channels;
+> > +	unsigned int lrck_period;
+> > +
+> > +	if (i2s->slots)
+> > +		slots = i2s->slots;
+> > +
+> > +	/* Map the channels for playback and capture */
+> > +	regmap_write(i2s->regmap, SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 
+0x76543210);
+> > +	regmap_write(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 
+0x76543210);
+> > +
+> > +	/* Configure the channels */
+> > +	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+> > +			   SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
+> > +			   SUN50I_H6_I2S_TX_CHAN_SEL(channels));
+> > +	regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
+> > +			   SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
+> > +			   SUN50I_H6_I2S_TX_CHAN_SEL(channels));
+> > +
+> > +	regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
+> > +			   SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM_MASK,
+> > +			   
+SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM(channels));
+> > +	regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
+> > +			   SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM_MASK,
+> > +			   
+SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM(channels));
+> > +
+> > +	switch (i2s->format & SND_SOC_DAIFMT_FORMAT_MASK) {
+> > +	case SND_SOC_DAIFMT_DSP_A:
+> > +	case SND_SOC_DAIFMT_DSP_B:
+> > +	case SND_SOC_DAIFMT_LEFT_J:
+> 
+> > +	case SND_SOC_DAIFMT_RIGHT_J:
+> According to the manual, LEFT_J and RIGHT_J should use the same calculation
+> as I2S, not the one for PCM/DSP.
+> 
+> > +		lrck_period = params_physical_width(params) * slots;
+> > +		break;
+> > +
+> > +	case SND_SOC_DAIFMT_I2S:
+> > +		lrck_period = params_physical_width(params);
+> > +		break;
+> > +
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (i2s->slot_width)
+> > +		lrck_period = i2s->slot_width;
+> > +
+> > +	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
+> > +			   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
+> > +			   SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
+> 
+> From the description in the manual, this looks off by one. The number of
+> BCLKs per LRCK is LRCK_PERIOD + 1.
 
-Next we have to agree that there are valid use-cases to allow
-applications to reclaim from their cgroups and I think uswapd and
-proactive reclaim are valid use-cases. Let's suppose memory.high is
-the only way to trigger reclaim but the application can not write to
-their top level memory.high, so, it has to create a dummy cgroup of
-which it has write access to memory.high and has to move itself to
-that dummy cgroup to use memory.high to trigger reclaim for
-uswapd/proactive-reclaim.
+Are you sure? Macro SUN8I_I2S_FMT0_LRCK_PERIOD() is defined as follows:
+
+#define SUN8I_I2S_FMT0_LRCK_PERIOD(period)	((period - 1) << 8)
+
+which already lowers value by 1.
+
+Best regards,
+Jernej
+
+> 
+> > +
+> > +	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+> > +			   SUN50I_H6_I2S_TX_CHAN_EN_MASK,
+> > +			   SUN50I_H6_I2S_TX_CHAN_EN(channels));
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > 
+> >  static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+> >  
+> >  			       struct snd_pcm_hw_params *params,
+> >  			       struct snd_soc_dai *dai)
+> > 
+> > @@ -691,6 +765,108 @@ static int sun8i_i2s_set_soc_fmt(const struct
+> > sun4i_i2s *i2s,> 
+> >  	return 0;
+> >  
+> >  }
+> > 
+> > +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+> > +				  unsigned int fmt)
+> > +{
+> > +	u32 mode, val;
+> > +	u8 offset;
+> > +
+> > +	/*
+> > +	 * DAI clock polarity
+> > +	 *
+> > +	 * The setup for LRCK contradicts the datasheet, but under a
+> > +	 * scope it's clear that the LRCK polarity is reversed
+> > +	 * compared to the expected polarity on the bus.
+> > +	 */
+> 
+> This comment makes us sound a lot more confident than I think we actually
+> are.
+> 
+> Regards,
+> Samuel
+
+
+
+
