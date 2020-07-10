@@ -2,106 +2,94 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CDDC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7984FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF82E2065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:32:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vP7ocyP6"
+	by mail.kernel.org (Postfix) with ESMTP id 4BF3B2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 15:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594395338;
+	bh=gI3yEGsGyMaUOOnDy+UZFfrMEPrpJsahOsnjo0T8Coc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g3L3wqHUgDaqvfL+1njac1MuP5hSooJ/T0vzRbDTxgvKcvr1ntzlPOKD5pLLkiaKa
+	 gPtNwDP+DN+CnZEgMU7K9tbRcDBUUGs0HrYdfkwFuD+/8QqqxRJ+KpQgetkZOBgD/U
+	 dtfx5b3gGX3yFRfPSStdO+dAtWmdhYerid11Xl6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgGJPcw (ORCPT
+        id S1727083AbgGJPfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:32:52 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55504 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbgGJPcv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:32:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06AFGfbR091218;
-        Fri, 10 Jul 2020 15:32:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=noRFkj+OQDbBA2VGp4VYO7xlUC6XPPINL2vE+AEdyMs=;
- b=vP7ocyP6G8yyQHxRakpibhyM1nz+c9fv0HuXARINt0xwJGXnneDkHMx3/I9UqlGe0CDP
- a0c+6nMpavkOsyuS6N4K9cIu548k77Y6U9ObDCmG20VB/170q6aRnsMcG6RUGknHH8+r
- gL78ARsbKlZWOO088PwfuNNLnqotvlsP5YvtRQJxhu7FeUTuznVOMKzuBjhEsmUA6par
- mSbZ6IlrmXcxxdg05cm4SVb2jZhgvAcpfeTaGBpmpkOaSxijP2Ub+hrjs8eVFN3bAZY+
- l6reAtwEC+XXnRCO4zxYIo4Q+OIOn2eb8IUP/uHGiLO3288Gxmm5oKDZYPQCs+3Iq53c FQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 325y0ar568-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 15:32:18 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06AFHMZH146270;
-        Fri, 10 Jul 2020 15:32:17 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 325k3k25k2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jul 2020 15:32:17 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06AFWDQx014888;
-        Fri, 10 Jul 2020 15:32:13 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 10 Jul 2020 08:32:13 -0700
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id 58EB86A00F1; Fri, 10 Jul 2020 11:33:09 -0400 (EDT)
-Date:   Fri, 10 Jul 2020 11:33:09 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Sargun Dhillon <sargun@sargun.me>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Jann Horn <jannh@google.com>, Aleksa Sarai <asarai@suse.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        io-uring@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Moyer <jmoyer@redhat.com>
-Subject: Re: [PATCH RFC 0/3] io_uring: add restrictions to support untrusted
- applications and guests
-Message-ID: <20200710153309.GA4699@char.us.oracle.com>
-References: <20200710141945.129329-1-sgarzare@redhat.com>
+        Fri, 10 Jul 2020 11:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726872AbgGJPfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:35:37 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53F9E20725;
+        Fri, 10 Jul 2020 15:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594395336;
+        bh=gI3yEGsGyMaUOOnDy+UZFfrMEPrpJsahOsnjo0T8Coc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0HLdx85blFvC788EU5GISpD8YvLXgUcUqFLh1FxvQIhJA12/km9XIFkEF3IXMXm2P
+         nsw8XESdyQSCcinvt3Aq6Moa/pDJO2nANG7PoXscm0YfNnjvrNSGS9JuyXQk+dUxWG
+         4BKm0M/Zfk5CDuyE0QEo0tTk8dRS76QzbWH4m4jk=
+Date:   Fri, 10 Jul 2020 16:35:31 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Shreyas Joshi <shreyas.joshi@biamp.com>
+Cc:     linux-spi@vger.kernel.org, shreyasjoshi15@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: spi-cadence: add support for chip select high
+Message-ID: <20200710153530.GA46888@sirena.org.uk>
+References: <20200710045140.458-1-shreyas.joshi@biamp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
 Content-Disposition: inline
-In-Reply-To: <20200710141945.129329-1-sgarzare@redhat.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9678 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007100105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9678 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 malwarescore=0
- clxscore=1011 impostorscore=0 phishscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007100105
+In-Reply-To: <20200710045140.458-1-shreyas.joshi@biamp.com>
+X-Cookie: Do clones have navels?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-.snip..
-> Just to recap the proposal, the idea is to add some restrictions to the
-> operations (sqe, register, fixed file) to safely allow untrusted applications
-> or guests to use io_uring queues.
 
-Hi!
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is neat and quite cool - but one thing that keeps nagging me is
-what how much overhead does this cut from the existing setup when you use
-virtio (with guests obviously)? That is from a high level view the
-beaty of io_uring being passed in the guest is you don't have the
-virtio ring -> io_uring processing, right?
+On Fri, Jul 10, 2020 at 02:51:40PM +1000, Shreyas Joshi wrote:
 
-Thanks!
+> spi cadence driver should support spi-cs-high in mode bits
+> so that the peripherals that needs the chip select to be high active can
+> use it. Add the SPI-CS-HIGH flag in the supported mode bits.
+
+This doesn't apply against current code, please check and resend:
+
+HEAD is now at 3ea4eac3e29f SPI SUBSYSTEM: Replace HTTP links with HTTPS ones
+Applying: spi: spi-cadence: add support for chip select high
+error: corrupt patch at line 18
+error: could not build fake ancestor
+Patch failed at 0001 spi: spi-cadence: add support for chip select high
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8IisIACgkQJNaLcl1U
+h9DBxwf/SNduPQaFfCuvDvvx11pYNTr1Jepbd3k5HKVQ+kEu7WG40id0/bBfbnFg
+apY8ORg1zqSq4Q1zogVp42+OnQ0qVrKOIYPEAXr4ztDzA7pM0LfNdKtkon2ZBkJS
+IJ6p0ic+/j4X4FTZddd/cNn6oFERL2Gjnoa0QD5MjRhlEufMyybvRZj1zGWWpcF+
+hIXIEuKJrrUzyF2BCVHnmdr9Bn2jqcMsIVXc8Mm5VDdHSTyax0V8TxSlttKmnBLa
+LoXyvqRE4T3hF/WmOHswjhlXaZKNVhkw1O5mzkyUun5mAya9wtmtrU1QXqGvv1P7
+f8nmdDKKnccShhOjafcjckrcH2Uwiw==
+=NRw/
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
