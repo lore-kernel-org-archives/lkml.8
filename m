@@ -2,176 +2,166 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A584CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B4FC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 832132076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D560520853
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 17:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ILDYVm0L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c7JFXD/A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgGJRrC (ORCPT
+        id S1727989AbgGJRsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:47:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46274 "EHLO
+        Fri, 10 Jul 2020 13:48:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGJRrB (ORCPT
+        with ESMTP id S1726920AbgGJRsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 13:47:01 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07FB1C08C5DC
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:47:01 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id t9so3677796lfl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:47:00 -0700 (PDT)
+        Fri, 10 Jul 2020 13:48:18 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6E90C08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:48:17 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id u25so3691666lfm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:48:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=m/CMHk4w6+cNFzgYJXIzp3UU76Y8y9UeHEGOkUVbXTU=;
-        b=ILDYVm0LcXLZZrfmAxtURkQprTX9skjAShvhFipQKJAKbFGyoFEeZfJniL4uh1sJtQ
-         6GQsddyIJ/M36EE7v0/XiEEynwtBixNj1dz7zWXkp46lP3Sbmpdp/lJneh5gVSnuRIoP
-         uDZ95SWe4tPPb6v31ajhDIGF2FUlWNiVlWd+8=
+        bh=QGH/1ehoZFwfhkJOgaIaTubnPetz+f4biA6QGk/2Uyo=;
+        b=c7JFXD/A4EOhJwcLKu31TlBZ9abJajqaRKQlVWu/avrgpYDKmq8FSwvFK0J5HLnvNj
+         Qp7Uz4blgJRqRqgOUAc3ruSqMZJRakazZjRrjHpru1thFep0tt+PjNMVb0JiBOzDfdjQ
+         SuqVlOh3YkcyPvVxX1f0dOPQTLXNyaVDx5KQopfd2MKsDPz40FavPXF/hmuRMZO3jAGB
+         vGbPXs71UGM5Kmg+G/NYtoVmh6Bu8+1CDVAlE/XIEnXprO6B2cVS4F/Ym2a9WvYAQELb
+         0EYa1Xo7BZCpJDCcnQgtSMyut2weoOJrX99Q1Xm2rhAz9w0bQeFMaPeCc4CaPDFP0wOc
+         N9EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=m/CMHk4w6+cNFzgYJXIzp3UU76Y8y9UeHEGOkUVbXTU=;
-        b=rl3Cu49tVxkL9WOTXYkVAcObu5RjIRQKg/LNai6ojRrKujAo/PAuDQ1dYwCkg5sYjU
-         SXor94IQt01WpFz657ieCExxJrD6S3IHXqnWYNwA3h2QnD//SPsF4HFt/uNcG8G8ynb1
-         8vfEDAkUq/eiPv9QwvHLngae7oqvvHRb2MuVz9Tul5rfX8hS0ytu8A/Stg2Js15wYRri
-         qf4g6uWz5Sdu9kdY3fFLXpI+irQXfGjLiMtR8FyK/3XoO1lTv3vwSLkUUZtaPfJ7BLGX
-         baPLw1oErXQrwzqGIeRPRI29kMCXc9RjBPmIzT4fSCFBUZE3b3xAX2o1RoA39ocE+4N7
-         OLbg==
-X-Gm-Message-State: AOAM5306LkAIuXDY5vr8ZjKozxK072ui3n2X7HlQ0M8aWqZ2bIXOqPQW
-        dNFSOQPUzgHb6QX/qK6uTpjq91t8UX8=
-X-Google-Smtp-Source: ABdhPJzmcWNZP3D/rIuLnAIW9QBcxwfOqxYmdGBYY8+wrNchYFNnrHuHTdpHxrFzbLOmMM7XbAP/SA==
-X-Received: by 2002:a19:83c7:: with SMTP id f190mr44731849lfd.14.1594403219184;
-        Fri, 10 Jul 2020 10:46:59 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id e10sm2101663ljb.118.2020.07.10.10.46.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 10:46:58 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id h19so7364747ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jul 2020 10:46:58 -0700 (PDT)
-X-Received: by 2002:ac2:44b2:: with SMTP id c18mr42517426lfm.99.1594402767378;
- Fri, 10 Jul 2020 10:39:27 -0700 (PDT)
+        bh=QGH/1ehoZFwfhkJOgaIaTubnPetz+f4biA6QGk/2Uyo=;
+        b=Xc+8VYCh9LE/gaTIsRzEOT8Q3l6M29Odu3/PUMVbyNQzI625mmqfY0yIM+IhmCNAGO
+         xvXEnX9RSQgUQ8Cz0+NHYoqgc6yvpZlqhsiN5ahtX6g02cZ1j4WnqWcHt95VbbXKe/OZ
+         0Xy68fyihMS8869T0U39FwCGBYd4lYJrj3PmMaJA2HNVVjOejQ2KkVRRxyYXz6hYj2DO
+         NnI3kZVuKuwXHobQvCzCBXR+Ga4mtKYO3NYFZOCdF843HFaauHqhv8gzR5Qn4u03cZz7
+         5Ke0qmo7zjHgOtoXbVYZMzibkpS7Xw9vrbAW9DjEhFnhhO8ekeUSqxpKvgqjcy1+s1M0
+         H42A==
+X-Gm-Message-State: AOAM532FDsfkTSFtofLL77Cu33DkdC/PlcvQlmhRlI7P6d3TWyRYgKSa
+        hwnzzurFsqpU5+LJxUz38cjZbZD3NB6jD6YvqM+hCw==
+X-Google-Smtp-Source: ABdhPJyCpqQFIy3eX/eFjtB9ld/zDOw4OnCM+wpMSQlR21gzdFLeVumVkGcJ/4fP4kY2YEfNFw8cH/ItJI+rohXmENc=
+X-Received: by 2002:a19:4285:: with SMTP id p127mr42097847lfa.74.1594403295614;
+ Fri, 10 Jul 2020 10:48:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626200033.1528052-1-dianders@chromium.org> <20200626125844.2.Iabd56347670b9e4e916422773aba5b27943d19ee@changeid>
-In-Reply-To: <20200626125844.2.Iabd56347670b9e4e916422773aba5b27943d19ee@changeid>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 10 Jul 2020 10:38:50 -0700
-X-Gmail-Original-Message-ID: <CAE=gft504BAm2sr0S32kSO2xoQWhjrXLXa9+uqgkcPO6wjNhrg@mail.gmail.com>
-Message-ID: <CAE=gft504BAm2sr0S32kSO2xoQWhjrXLXa9+uqgkcPO6wjNhrg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] serial: qcom_geni_serial: Always use 4 bytes per TX
- FIFO word
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        daniel.thompson@linaro.org,
-        Akash Asthana <akashast@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        sumit.garg@linaro.org, Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+ <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+ <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com> <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
+In-Reply-To: <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 10 Jul 2020 23:18:03 +0530
+Message-ID: <CA+G9fYudT63yZrkWG+mfKHTcn5mP+Ay6hraEQy3G_4jufztrrA@mail.gmail.com>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Michel Lespinasse <walken@google.com>,
+        Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Brian Geffon <bgeffon@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        Jerome Glisse <jglisse@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 1:01 PM Douglas Anderson <dianders@chromium.org> wrote:
+On Fri, 10 Jul 2020 at 10:55, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> The geni serial driver had a rule that we'd only use 1 byte per FIFO
-> word for the TX FIFO if we were being used for the serial console.
-> This is ugly and a bit of a pain.  It's not too hard to fix, so fix
-> it.
+> On Thu, Jul 9, 2020 at 9:29 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > Your patch applied and re-tested.
+> > warning triggered 10 times.
+> >
+> > old: bfe00000-c0000000 new: bfa00000 (val: 7d530067)
 >
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+> Hmm.. It's not even the overlapping case, it's literally just "move
+> exactly 2MB of page tables exactly one pmd down". Which should be the
+> nice efficient case where we can do it without modifying the lower
+> page tables at all, we just move the PMD entry.
 >
->  drivers/tty/serial/qcom_geni_serial.c | 57 +++++++++++++++++----------
->  1 file changed, 37 insertions(+), 20 deletions(-)
+> There shouldn't be anything in the new address space from bfa00000-bfdfffff.
 >
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 4610e391e886..583d903321b5 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -103,12 +103,18 @@
->  #define DEFAULT_IO_MACRO_IO2_IO3_MASK          GENMASK(15, 4)
->  #define IO_MACRO_IO2_IO3_SWAP          0x4640
+> That PMD value obviously says differently, but it looks like a nice
+> normal PMD value, nothing bad there.
 >
-> +/* We always configure 4 bytes per FIFO word */
-> +#define BYTES_PER_FIFO_WORD            4
-> +
->  struct qcom_geni_private_data {
->         /* NOTE: earlycon port will have NULL here */
->         struct uart_driver *drv;
+> I'm starting to think that the issue might be that this is because the
+> stack segment is special. Not only does it have the growsdown flag,
+> but that whole thing has the magic guard page logic.
 >
->         u32 poll_cached_bytes;
->         unsigned int poll_cached_bytes_cnt;
-> +
-> +       u32 write_cached_bytes;
-> +       unsigned int write_cached_bytes_cnt;
->  };
+> So I wonder if we have installed a guard page _just_ below the old
+> stack, so that we have populated that pmd because of that.
 >
->  struct qcom_geni_serial_port {
-> @@ -121,8 +127,6 @@ struct qcom_geni_serial_port {
->         bool setup;
->         int (*handle_rx)(struct uart_port *uport, u32 bytes, bool drop);
->         unsigned int baud;
-> -       unsigned int tx_bytes_pw;
-> -       unsigned int rx_bytes_pw;
->         void *rx_fifo;
->         u32 loopback;
->         bool brk;
-> @@ -390,13 +394,25 @@ static void qcom_geni_serial_poll_put_char(struct uart_port *uport,
->  #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
->  static void qcom_geni_serial_wr_char(struct uart_port *uport, int ch)
->  {
-> -       writel(ch, uport->membase + SE_GENI_TX_FIFOn);
-> +       struct qcom_geni_private_data *private_data = uport->private_data;
-> +
-> +       private_data->write_cached_bytes =
-> +               (private_data->write_cached_bytes >> 8) | (ch << 24);
-> +       private_data->write_cached_bytes_cnt++;
-> +
-> +       if (private_data->write_cached_bytes_cnt == BYTES_PER_FIFO_WORD) {
-> +               writel(private_data->write_cached_bytes,
-> +                      uport->membase + SE_GENI_TX_FIFOn);
-> +               private_data->write_cached_bytes_cnt = 0;
-> +       }
->  }
+> We used to have an _actual_ guard page and then play nasty games with
+> vm_start logic. We've gotten rid of that, though, and now we have that
+> "stack_guard_gap" logic that _should_ mean that vm_start is always
+> exact and proper (and that pgtbales_free() should have emptied it, but
+> maybe we have some case we forgot about.
 >
->  static void
->  __qcom_geni_serial_console_write(struct uart_port *uport, const char *s,
->                                  unsigned int count)
->  {
-> +       struct qcom_geni_private_data *private_data = uport->private_data;
-> +
->         int i;
->         u32 bytes_to_send = count;
+> > [  741.511684] WARNING: CPU: 1 PID: 15173 at mm/mremap.c:211 move_page_tables.cold+0x0/0x2b
+> > [  741.598159] Call Trace:
+> > [  741.600694]  setup_arg_pages+0x22b/0x310
+> > [  741.621687]  load_elf_binary+0x31e/0x10f0
+> > [  741.633839]  __do_execve_file+0x5a8/0xbf0
+> > [  741.637893]  __ia32_sys_execve+0x2a/0x40
+> > [  741.641875]  do_syscall_32_irqs_on+0x3d/0x2c0
+> > [  741.657660]  do_fast_syscall_32+0x60/0xf0
+> > [  741.661691]  do_SYSENTER_32+0x15/0x20
+> > [  741.665373]  entry_SYSENTER_32+0x9f/0xf2
+> > [  741.734151]  old: bfe00000-c0000000 new: bfa00000 (val: 7d530067)
 >
-> @@ -431,6 +447,15 @@ __qcom_geni_serial_console_write(struct uart_port *uport, const char *s,
->                                                         SE_GENI_M_IRQ_CLEAR);
->                 i += chars_to_write;
->         }
-> +
-> +       if (private_data->write_cached_bytes_cnt) {
-> +               private_data->write_cached_bytes >>= BITS_PER_BYTE *
-> +                       (BYTES_PER_FIFO_WORD - private_data->write_cached_bytes_cnt);
-> +               writel(private_data->write_cached_bytes,
-> +                      uport->membase + SE_GENI_TX_FIFOn);
-> +               private_data->write_cached_bytes_cnt = 0;
-> +       }
+> Nothing looks bad, and the ELF loading phase memory map should be
+> really quite simple.
+>
+> The only half-way unusual thing is that you have basically exactly 2MB
+> of stack at execve time (easy enough to tune by just setting argv/env
+> right), and it's moved down by exactly 2MB.
+>
+> And that latter thing is just due to randomization, see
+> arch_align_stack() in arch/x86/kernel/process.c.
+>
+> So that would explain why it doesn't happen every time.
+>
+> What happens if you apply the attached patch to *always* force the 2MB
+> shift (rather than moving the stack by a random amount), and then run
+> the other program (t.c -> compiled to "a.out").
 
-How does this not end up sending stray zeros? In other words, how does
-the hardware know which bytes of this word are valid?
+I have applied your patch and test started in a loop for a million times
+but the test ran for 35 times. Seems like the test got a timeout after 1 hour.
+kernel messages printed while testing a.out
+
+a.out (480) used greatest stack depth: 4872 bytes left
+
+On other device
+kworker/dying (172) used greatest stack depth: 5044 bytes left
+
+Re-running test with long timeouts 4 hours and will share findings.
+
+ref:
+https://lkft.validation.linaro.org/scheduler/job/1555132#L1515
+
+- Naresh
