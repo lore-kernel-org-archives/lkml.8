@@ -2,85 +2,120 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E13C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B94CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950F220720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F0620720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:18:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XqqlC1qC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgGJGRm (ORCPT
+        id S1727879AbgGJGSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:17:42 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:40182 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgGJGRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:17:41 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id CC78DBC117;
-        Fri, 10 Jul 2020 06:17:36 +0000 (UTC)
-Subject: Re: [PATCH] MAINTAINERS: XDP: restrict N: and K:
-To:     Daniel Borkmann <daniel@iogearbox.net>, ast@kernel.org,
-        davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
-        john.fastabend@gmail.com, mchehab+huawei@kernel.org,
-        robh@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-References: <20200709194257.26904-1-grandmaster@al2klimov.de>
- <d7689340-55fc-5f3f-60ee-b9c952839cab@iogearbox.net>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <19a4a48b-3b83-47b9-ac48-e0a95a50fc5e@al2klimov.de>
-Date:   Fri, 10 Jul 2020 08:17:34 +0200
+        Fri, 10 Jul 2020 02:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727772AbgGJGSL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 02:18:11 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D87C08C5CE;
+        Thu,  9 Jul 2020 23:18:11 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B32sX0CGnz9sRK;
+        Fri, 10 Jul 2020 16:18:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594361888;
+        bh=uebh7Nj+FZYez9qaSQRIVhMsqdQtviRjGVGzYgirTWo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=XqqlC1qCopY/k+4JUsz77Op4qC/UktVCViUgw0QJ3im+6So+nyWLJ8LS46D+OWLG+
+         MzFukU5KFg1YvrvAjR72AM87GBaqUFbVXBecw8IMWxnXqzTAeMNcQlJpEO4DAkFFbJ
+         oMwQHnHOycBTH0JjVHKvhLLluWVkxaquKBGrsxnnE6GSMt+iD8cYi2+Z72HnDXljPC
+         nBTaY5+T8axvyReUyXc2CQa9LN0z7ZUnOgamn09BAQyTraeeEZR+lXhPB+3SDziCTr
+         29zN8qT1ytAA4xRlb/6zAf8j8Uquq7up19vdOvq7LpmmccBCiqyIOqlxu99Bm49Y4u
+         ujx0b/PwUUOXw==
+Date:   Fri, 10 Jul 2020 16:18:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christian Brauner <christian@brauner.io>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the pidfd tree with the seccomp tree
+Message-ID: <20200710161806.28d8c856@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <d7689340-55fc-5f3f-60ee-b9c952839cab@iogearbox.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+Content-Type: multipart/signed; boundary="Sig_/BKyrhWxOocKHwTO5Q19txOk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/BKyrhWxOocKHwTO5Q19txOk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-Am 09.07.20 um 22:37 schrieb Daniel Borkmann:
-> On 7/9/20 9:42 PM, Alexander A. Klimov wrote:
->> Rationale:
->> Documentation/arm/ixp4xx.rst contains "xdp" as part of "ixdp465"
->> which has nothing to do with XDP.
->>
->> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->> ---
->>   See also: https://lore.kernel.org/lkml/20200709132607.7fb42415@carbon/
->>
->>   MAINTAINERS | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 1d4aa7f942de..2bb7feb838af 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -18708,8 +18708,8 @@ F:    include/trace/events/xdp.h
->>   F:    kernel/bpf/cpumap.c
->>   F:    kernel/bpf/devmap.c
->>   F:    net/core/xdp.c
->> -N:    xdp
->> -K:    xdp
->> +N:    (?:\b|_)xdp(?:\b|_)
->> +K:    (?:\b|_)xdp(?:\b|_)
-> 
-> Please also include \W to generally match on non-alphanumeric char given 
-> you
-> explicitly want to avoid [a-z0-9] around the term xdp.
-Aren't \W, ^ and $ already covered by \b?
+Today's linux-next merge of the pidfd tree got a conflict in:
 
-> 
->>   XDP SOCKETS (AF_XDP)
->>   M:    Björn Töpel <bjorn.topel@intel.com>
->>
-> 
+  fs/file.c
+
+between commit:
+
+  21fec66fd4be ("fs: Move __scm_install_fd() to __receive_fd()")
+
+from the seccomp tree and commit:
+
+  60997c3d45d9 ("close_range: add CLOSE_RANGE_UNSHARE")
+
+from the pidfd tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/file.c
+index 4fb111735d1d,340bc9569f9d..000000000000
+--- a/fs/file.c
++++ b/fs/file.c
+@@@ -18,7 -19,7 +19,8 @@@
+  #include <linux/bitops.h>
+  #include <linux/spinlock.h>
+  #include <linux/rcupdate.h>
+ +#include <net/sock.h>
++ #include <linux/close_range.h>
+ =20
+  unsigned int sysctl_nr_open __read_mostly =3D 1024*1024;
+  unsigned int sysctl_nr_open_min =3D BITS_PER_LONG;
+
+--Sig_/BKyrhWxOocKHwTO5Q19txOk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ICB4ACgkQAVBC80lX
+0Gxb3gf/XR6DTlWiYpt8lqJWXNtw298QPZ+oY0HhzoIdMn5fmODYdVrvygpy0Ee0
+hLE3ijXyEXgWvBfY+eiQ9Xj2lGbuXFnay2pfjJJXjA5YvdpE5p4dunEaqbte95Af
+1YtpdFu+JvgPoSg7Xxzw6HIX0FMohG04N7NGZcLqz/w3ZZgEveBeGX0lDBmoff2c
+5FX1ydeh04dnXEEbNDUlr2QsW01z58+6Hgr3x+Ov86F1JG2hA/pHJmYQ+vu2e3sy
+sVAeQtdPH8MKD3FPQor12c+D86BPlIQjwfs+NxbVCWyJuu3bUN+LOW5aXMtY40Td
+FQ0oRLXCYY2QgB/+UZ5JzDuAG/FX3w==
+=aYHZ
+-----END PGP SIGNATURE-----
+
+--Sig_/BKyrhWxOocKHwTO5Q19txOk--
