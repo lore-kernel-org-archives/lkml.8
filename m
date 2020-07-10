@@ -2,149 +2,154 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58926C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE8C2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B0720748
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 04:17:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="svROGCk/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x2EauDhp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgGJER3 (ORCPT
+        id S1726816AbgGJERu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 00:17:29 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:39106 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgGJER2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 00:17:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594354647; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=O9zhu2Dphpft1snZ7vrzgZ8RN04Y/HeAiDq4LhF8xv8=; b=svROGCk/NzXYviE7kMnDN4aWY2IpOOi4DczTbMtCZLliPcXXeAuRfPzt95C86nV9ym1bgJM7
- Ca4Ni1vE1C7ZJAYgsOI6dHiBwKdWHQu2TvNC9pMy3TxylghWRluCxuxtC2SGr6NfKAy0V9rL
- mDdH1hj0YtOzYDbotJwUm0KkDWA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5f07ebd7c431f7323bf5adf7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 04:17:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D3442C43387; Fri, 10 Jul 2020 04:17:26 +0000 (UTC)
-Received: from [192.168.1.11] (unknown [117.247.20.80])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6FF5EC433C8;
-        Fri, 10 Jul 2020 04:17:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6FF5EC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v2] spi: spi-geni-qcom: Set the clock properly at runtime
- resume
-To:     Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mkshah@codeaurora.org, georgi.djakov@linaro.org,
-        Akash Asthana <akashast@codeaurora.org>, swboyd@chromium.org,
-        linux-arm-msm@vger.kernel.org, mka@chromium.org,
-        ctheegal@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-References: <20200709074037.v2.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <378698e8-bd1e-5cea-7ca3-0560759e561a@codeaurora.org>
-Date:   Fri, 10 Jul 2020 09:47:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 00:17:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbgGJERt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 00:17:49 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F30EC08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 21:17:49 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h22so4860303lji.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 21:17:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GOMunx3lII6WiFhmgXs6T+sFqTi8oTyhM5FPcahBiiw=;
+        b=x2EauDhpkHLZTqe4KZEHA12Eg/+hjjsWaGtUf76DIl22j4xWvuSNhdrb1CmJN7sFKA
+         ZI9hXDk3LNKTzhj+MSOjESmm/PRUTbRsky5OwjMhbVOqeU46NMBofU93TgMavaTNJrff
+         8ZqcFxYWALq3owf6BE5DpDkQZwxurRUvMZbJ+VlWKXYoAERkOQ35aLZigtpQe/3sGot5
+         Lk0M6l199ufPUj1B9V3PO4CGbukEkl/oLLHeGM3yM9Yfi3RZ5cfqssnLWjOEQW0cKNrJ
+         4hXgsG8d4wWT8i9pv2epuJcGwmog4GXGw7nqOkK99uljD1qt+f5KUsWr4TC2ivxVVgTf
+         VIOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GOMunx3lII6WiFhmgXs6T+sFqTi8oTyhM5FPcahBiiw=;
+        b=IZyoOrDIwUlGnB3kZN+Q3Y7yasZHEqrNqjqOndnWIT9KudjFovduB4bY7A0PgOBZHr
+         EajF8bf5Cg4HUkBWAmBFYHXc/cClU/gcckPvK3PX78GdVAyWf/oHtP1oPbi4CgcTYzvX
+         PO3E8iTYZHw+G+dRfsfXsGDhiDxjk79lK2ZLS6x9g80iEnHgbMVHOrMFWWsP8b5zEDEY
+         vfbivTSYDvzQoRaWZgZ7vlIiC+RmUWXJF0HBcwuJYFrrq4Kj5lvreINt05JKs42O3fgC
+         +QsTB8t4YH33cLZAdy6jn8DY3tiYQgcuYfCVDgj2SLYnPLUyOYTw9zp0SQpSpDe+Zzss
+         buaA==
+X-Gm-Message-State: AOAM5307H2pOMfVdG2uH1egiOHaXCG0YNWQ+WnY4czf4cWsv5nQiC0IO
+        D6T2PpQPHT6KJ+oZEW6dwu5HghJS3qXTM1sSMv7R+w==
+X-Google-Smtp-Source: ABdhPJzJ5G9NeGhYRGYXrilWZEb+Io/ok8iNRSWg6aJugFsWnWQO5XiLBdPCFqnu9yYcQ3qL/dVPmgppJtVodiO8leM=
+X-Received: by 2002:a2e:9089:: with SMTP id l9mr31662918ljg.431.1594354667432;
+ Thu, 09 Jul 2020 21:17:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200709074037.v2.1.I0b701fc23eca911a5bde4ae4fa7f97543d7f960e@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+ <CAK8P3a0ii1Z-UG8NpwTvkmOEcOvvTo4+m9xjW0JqR6LPvUZ4=g@mail.gmail.com>
+In-Reply-To: <CAK8P3a0ii1Z-UG8NpwTvkmOEcOvvTo4+m9xjW0JqR6LPvUZ4=g@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 10 Jul 2020 09:47:35 +0530
+Message-ID: <CA+G9fYsoEiQ-8ECKxMqQqPZKUbTQStp6wZi7ZiJDyi0YahFAvg@mail.gmail.com>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michel Lespinasse <walken@google.com>, Fan_Yang@sjtu.edu.cn,
+        bgeffon@google.com, Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 9 Jul 2020 at 13:55, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Thu, Jul 9, 2020 at 7:28 AM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > While running LTP mm test suite on i386 or qemu_i386 this kernel warning
+> > has been noticed from stable 5.4 to stable 5.7 branches and mainline 5.8.0-rc4
+> > and linux next.
+>
+> Are you able to correlate this with any particular test case in LTP, or does
+> it happen for random processes?
+>
+> In the log you linked to, it happens once for ksm05.c and multiple times for
+> thp01.c, sources here:
+>
+> https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/ksm/ksm05.c
+> https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/thp/thp01.c
+>
+> Is it always these tests that trigger the warning, or sometimes others?
 
-On 7/9/2020 8:10 PM, Douglas Anderson wrote:
-> In the patch ("spi: spi-geni-qcom: Avoid clock setting if not needed")
-> we avoid a whole pile of clock code.  As part of that, we should have
-> restored the clock at runtime resume.  Do that.
-> 
-> It turns out that, at least with today's configurations, this doesn't
-> actually matter.  That's because none of the current device trees have
-> an OPP table for geni SPI yet.  That makes dev_pm_opp_set_rate(dev, 0)
-> a no-op.  This is why it wasn't noticed in the testing of the original
-> patch.  It's still a good idea to fix, though.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Acked-by: Mark Brown <broonie@kernel.org>
+These two test cases are causing this warning multiple times on i386.
 
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+>
+> When you say it happens with linux-5.4 stable, does that mean you don't see
+> it with older versions? What is the last known working version?
 
-> ---
-> Sending this as a separate patch even though I think the patch it's
-> fixing [1] hasn't landed yet.  I'd be happy if this was squashed into
-> that patch when landing if that suits everyone, but it could land on
-> its own too.
-> 
-> Like the patch it's fixing, this needs to target the Qualcomm tree in
-> order to avoid merge conflicts.
-> 
-> [1] https://lore.kernel.org/r/20200701174506.1.Icfdcee14649fc0a6c38e87477b28523d4e60bab3@changeid
-> 
-> Changes in v2:
-> - Return error from runtime resume if dev_pm_opp_set_rate() fails.
-> 
->   drivers/spi/spi-geni-qcom.c | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-> index 97fac5ea6afd..0e11a90490ff 100644
-> --- a/drivers/spi/spi-geni-qcom.c
-> +++ b/drivers/spi/spi-geni-qcom.c
-> @@ -79,6 +79,7 @@ struct spi_geni_master {
->   	u32 tx_wm;
->   	u32 last_mode;
->   	unsigned long cur_speed_hz;
-> +	unsigned long cur_sclk_hz;
->   	unsigned int cur_bits_per_word;
->   	unsigned int tx_rem_bytes;
->   	unsigned int rx_rem_bytes;
-> @@ -116,6 +117,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
->   	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
->   	if (ret)
->   		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
-> +	else
-> +		mas->cur_sclk_hz = sclk_freq;
-> +
->   	return ret;
->   }
->   
-> @@ -670,7 +674,11 @@ static int __maybe_unused spi_geni_runtime_resume(struct device *dev)
->   	if (ret)
->   		return ret;
->   
-> -	return geni_se_resources_on(&mas->se);
-> +	ret = geni_se_resources_on(&mas->se);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return dev_pm_opp_set_rate(mas->dev, mas->cur_sclk_hz);
->   }
->   
->   static int __maybe_unused spi_geni_suspend(struct device *dev)
-> 
+I do not notice on stable-4.19 and below versions.
+Sorry i did not get the known working commit id or version.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+It started happening from stable-rc 5.0 first release.
+I have evidence [1] showing it on 5.0.1
+
+>
+> I also see that you give the virtual machine 16GB of RAM, but as you are
+> running a 32-bit kernel without PAE, only 2.3GB end up being available,
+> and some other LTP tests in the log run out of memory.
+>
+> You could check if the behavior changes if you give the kernel less memory,
+> e.g. 768MB (lowmem only), or enable CONFIG_X86_PAE to let it use the
+> entire 16GB.
+
+Warning is still happening after enabling PAE config.
+But the oom-killer messages are gone. Thank you.
+
+CONFIG_HIGHMEM=y
+CONFIG_X86_PAE=y
+
+full test log oom-killer messages are gone and kernel warning is still there,
+https://lkft.validation.linaro.org/scheduler/job/1552606#L10357
+
+build location:
+https://builds.tuxbuild.com/puilcMcGVwzFMN5fDUhY4g/
+
+[1] https://qa-reports.linaro.org/lkft/linux-stable-rc-5.0-oe/build/v5.0.1/testrun/1324990/suite/ltp-mm-tests/test/ksm02/log
+
+---
+[  775.646689] WARNING: CPU: 3 PID: 10858 at
+/srv/oe/build/tmp-lkft-glibc/work-shared/intel-core2-32/kernel-source/mm/mremap.c:211
+move_page_tables+0x553/0x570
+[  775.647006] Modules linked in: fuse
+[  775.647006] CPU: 3 PID: 10858 Comm: true Not tainted 5.0.1 #1
+[  775.647006] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.10.2-1 04/01/2014
+[  775.647006] EIP: move_page_tables+0x553/0x570
+
+- Naresh
