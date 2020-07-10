@@ -2,976 +2,470 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A972C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE63C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0432820720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 12:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DCB20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 13:03:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="q51Fyo69"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgGJM7q (ORCPT
+        id S1727090AbgGJNDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 08:59:46 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41774 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGJM7p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 08:59:45 -0400
-Received: from [IPv6:2003:cb:8737:cf00:b1e0:33ea:13e:2fa7] (p200300cb8737cf00b1e033ea013e2fa7.dip0.t-ipconnect.de [IPv6:2003:cb:8737:cf00:b1e0:33ea:13e:2fa7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: dafna)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0EE8F2A69DA;
-        Fri, 10 Jul 2020 13:59:39 +0100 (BST)
-Subject: Re: [PATCH v8 03/14] media: rkisp1: Add user space ABI definitions
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
-        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, hans.verkuil@cisco.com,
-        sakari.ailus@linux.intel.com, kernel@collabora.com,
-        ezequiel@collabora.com, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-4-helen.koike@collabora.com>
- <20190815184659.GA5011@pendragon.ideasonboard.com>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <0614045e-ec3f-1aef-9d51-d3bd8276a47a@collabora.com>
-Date:   Fri, 10 Jul 2020 14:59:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20190815184659.GA5011@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 10 Jul 2020 09:03:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:26300 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbgGJNDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 09:03:08 -0400
+IronPort-SDR: 0lzjiYXp7jzUN5kQqXtpSpyHKtwwWM5kuv+myfXNEAobLlEy8PLH0lzr6sBu/CIFd6bFS5KTjf
+ k8QAt/vrgOYQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="149659638"
+X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
+   d="scan'208";a="149659638"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 06:03:07 -0700
+IronPort-SDR: Ad9WB9iMZ2mq+eWGxbeLkVTRXDzx78TB5mDNpsuyrEIEzxx38Ubvl+BfCK36SEX5x3agSZTf8T
+ yJpo6evtZobQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
+   d="scan'208";a="323540997"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Jul 2020 06:03:06 -0700
+Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 10 Jul 2020 06:03:06 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 10 Jul 2020 06:03:06 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.50) by
+ edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Fri, 10 Jul 2020 06:03:05 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cwZG3T6AXiIluWQZwL3Uw0rCHQUqeGASh5Wc03GtwV6oMReiCLAMuSfY+H1c0QWQCUS5jR7SWDVigibyBfE03mVWFyqdSGf/eha7RjewPgHIP60ekkyI41hYJjROLHRMKRfAhJ43NXALic1Za/hwnl7uj4b5TnSVQg725ATOepuGnFmL0fJ4CrLajY+SOnMUqwo5HHbrqqFAJ+MvCsPgZmsnHY0C5hdY0idY9/em48f1dWoxqcgMYolqLu31QW2fF+IBkI3RJGpSLkhXZN8t3QeiNangXyoTqRQcchSROdOJOrEiuZp3aKVgrVP0L5DuGNBXR1WANJrGMsUXAoDzLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aveOQeU0/y9EyLb4Vtzl3wSeC6giGldMyfnC8L0D1eY=;
+ b=NOyUFFPD5KsKCnaT12eNGx+1ER/mo9u4OozdFrpVoO9IWhw7MaJvyJ5WdhuZRZxo33Tve9ma0gkDwD+d4Nzu9WqHORWwjOmWYVxMwe/YZthvtMCrPgvU4l+WSxRf8+kPhndJtHZSvYTf5UD4q0Lwxk71yGDkTZOK9v/g/d/hOHDn4HcIhM/dlPIHe9Hqx6Wsv+Myth95mIY7rxfpgKpBgJcx+QHLQIB2sMfonMhGvtoC4x45aEfdl/U9+RcedWEg36sqt02s8l5t8Pmcb3EZUFWSiT3GG3jUV5WAa42iN6sJrbxBvugNm3sg5a7oCd74OzzbA6fYljc7+XcikulRpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aveOQeU0/y9EyLb4Vtzl3wSeC6giGldMyfnC8L0D1eY=;
+ b=q51Fyo698moz+ZSm92fI7/j08JmYwiFfZez36n0IlnPzHWhNXjlQobcKw/PAR06pZ3xCFREj7K1ZSIvEn6EmWH1uoSp8Kixn7T59hbd/wSfLpuZcZGwI21/LY6rOPWKPRLkOVYJaGcKmOTCLnIURkQMceDwuYWHffo9wsMrNzYk=
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
+ DM5PR11MB0025.namprd11.prod.outlook.com (2603:10b6:4:63::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3153.22; Fri, 10 Jul 2020 13:03:04 +0000
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::9002:97a2:d8c0:8364]) by DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::9002:97a2:d8c0:8364%10]) with mapi id 15.20.3174.023; Fri, 10 Jul
+ 2020 13:03:04 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
+ (alloc/free)
+Thread-Topic: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
+ (alloc/free)
+Thread-Index: AQHWSgRRzB2G/Oy5QEmxCHQWFS0FB6j02KQAgACUCyCAB/5SUIAAxDYAgABLnwCAABmKAIAAAO4wgAAFFYCAAAD78IAASzDwgAB/qYCAAOQrQIAAlDkAgAACCBA=
+Date:   Fri, 10 Jul 2020 13:03:03 +0000
+Message-ID: <DM5PR11MB1435D0686B10A833A2687515C3650@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
+        <1592988927-48009-7-git-send-email-yi.l.liu@intel.com>
+        <20200702151832.048b44d1@x1.home>
+        <CY4PR11MB1432DD97F44EB8AA5CCC87D8C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
+        <DM5PR11MB1435B159DA10C8301B89A6F0C3670@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <20200708135444.4eac48a4@x1.home>
+        <DM5PR11MB14358A8797E3C02E50B37FFEC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <MWHPR11MB16456D12135AA36BA16CE4208C640@MWHPR11MB1645.namprd11.prod.outlook.com>
+        <DM5PR11MB14357DC99EFCDE7E02944E2EC3640@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <MWHPR11MB1645F822D9267005AE5BCE528C640@MWHPR11MB1645.namprd11.prod.outlook.com>
+        <DM5PR11MB143577F0C21EDB82B82EEB35C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <DM5PR11MB143584D5A0AAE13E0D2D04B7C3640@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <20200709082751.320742ab@x1.home>
+        <DM5PR11MB1435AA0A724D4A59B56E8CA8C3650@DM5PR11MB1435.namprd11.prod.outlook.com>
+ <20200710065500.2478db37@x1.home>
+In-Reply-To: <20200710065500.2478db37@x1.home>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.102.204.38]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b6f97b9f-499f-4768-1216-08d824d1952d
+x-ms-traffictypediagnostic: DM5PR11MB0025:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB0025CC13059CBCF01BD6BEB6C3650@DM5PR11MB0025.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 046060344D
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LCZxVCRup5N41Sxf4BTFzbxdshdBegFATQ8hB2BJwkOhjSwrTPnpqVfzHj5VR/7q29hxmF0uI6CnG1n3Xi6kqVJxQL49QtSfKIAtwcVgIUJSavllRxNqhb4up6KYqEjmMWy+r/S3W4IaNgeh7CHuUGVAnCaF4BFMZJJe13SQ8YV69OUp9USjLMsanjBeGF/bjvFl7GR8L+Kbs/Gt5+fnPjh0Z5Z14y0z6cci5c2E0/m90KVP/TOhmZaMJOR4rjIM0omzQ9I7OZxZ8QatDigZ8kGjhCa4WKdrhMDfLXZ8jjZ/T4Mu6g4H+goarfsGvRTIPXExg4fHKVRq6luAzhjdQg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(396003)(366004)(376002)(33656002)(2906002)(71200400001)(6916009)(26005)(6506007)(66946007)(8676002)(86362001)(30864003)(7696005)(52536014)(316002)(83380400001)(7416002)(54906003)(66446008)(64756008)(186003)(55016002)(5660300002)(66556008)(478600001)(66476007)(4326008)(8936002)(76116006)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: o7izvSx9xZKpUCztUHtOkOQ/QBUj+1fNnherLcHPXxMklR+OYGKgfMBw3rYX9kbHKKGqlf8jEpYeqtcNSKFXf1syYkg7UAXKDdLF6VuDwnnPbISDVshpDjsk40YOkFav2zyBQgVjJ2jrPt0yXfH8OVnwBN/2MwL10SSdnweqOpfZIMZbE4yTTfgjUhL+QRrFEy8r/1oniXe76QGiej0dfdoPMLS+IibJOg98om8+5m+Kte6DMqOZwl+M2tezudqxsoaRiwpCYWisIhiaFikuAKqwYRhFEIOt0sM0Rb1b6UNQqWBE4enK+CPRgFhP/xmWvkltddWR45d7wT6pwNBXrpX1bbWryfOM9WLQgCSJfgXVwhe+ncbc5pmBeZEu0bysWtZlLr/cGOnhKjZg6WahsNbGeFeidMzJnxBxa3QL4irD6bPH/xJ+yg0tBuE/knwAl8ubTv3x0rDBsmXb08K46DE4xgycdjUgxD949tcroiDbkip0SBP+qeeyGXvkflx5
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6f97b9f-499f-4768-1216-08d824d1952d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2020 13:03:03.9790
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: J4rjXK8Wa+G/echB5hMfAcoOZr93WffZj+Pt08m+5QNH7jXV7zZ0X1lJ9Rzpe640q/iEUPGCMLxsltqy+gCSUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0025
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Friday, July 10, 2020 8:55 PM
+>=20
+> On Fri, 10 Jul 2020 05:39:57 +0000
+> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+>=20
+> > Hi Alex,
+> >
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Thursday, July 9, 2020 10:28 PM
+> > >
+> > > On Thu, 9 Jul 2020 07:16:31 +0000
+> > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> > >
+> > > > Hi Alex,
+> > > >
+> > > > After more thinking, looks like adding a r-b tree is still not enou=
+gh to
+> > > > solve the potential problem for free a range of PASID in one ioctl.=
+ If
+> > > > caller gives [0, MAX_UNIT] in the free request, kernel anyhow shoul=
+d
+> > > > loop all the PASIDs and search in the r-b tree. Even VFIO can track=
+ the
+> > > > smallest/largest allocated PASID, and limit the free range to an ac=
+curate
+> > > > range, it is still no efficient. For example, user has allocated tw=
+o PASIDs
+> > > > ( 1 and 999), and user gives the [0, MAX_UNIT] range in free reques=
+t. VFIO
+> > > > will limit the free range to be [1, 999], but still needs to loop P=
+ASID 1 -
+> > > > 999, and search in r-b tree.
+> > >
+> > > That sounds like a poor tree implementation.  Look at vfio_find_dma()
+> > > for instance, it returns a node within the specified range.  If the
+> > > tree has two nodes within the specified range we should never need to
+> > > call a search function like vfio_find_dma() more than three times.  W=
+e
+> > > call it once, get the first node, remove it.  Call it again, get the
+> > > other node, remove it.  Call a third time, find no matches, we're don=
+e.
+> > > So such an implementation limits searches to N+1 where N is the numbe=
+r
+> > > of nodes within the range.
+> >
+> > I see. When getting a free range from user. Use the range to find suite=
+d
+> > PASIDs in the r-b tree. For the example I mentioned, if giving [0, MAX_=
+UNIT],
+> > will find two nodes. If giving [0, 100] range, then only one node will =
+be
+> > found. But even though, it still take some time if the user holds a bun=
+ch
+> > of PASIDs and user gives a big free range.
+>=20
+>=20
+> But that time is bounded.  The complexity of the tree and maximum
+> number of operations on the tree are bounded by the number of nodes,
+> which is bound by the user's pasid quota.  Thanks,
 
+yes, let me try it. thanks. :-)
 
-On 15.08.19 20:46, Laurent Pinchart wrote:
-> Hi Helen,
-> 
-> Thank you ofor the patch.
-> 
-> On Tue, Jul 30, 2019 at 03:42:45PM -0300, Helen Koike wrote:
->> From: Jeffy Chen <jeffy.chen@rock-chips.com>
->>
->> Add the header for userspace
->>
->> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
->> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
->> [update for upstream]
->> Signed-off-by: Helen Koike <helen.koike@collabora.com>
->>
->> ---
->> Hi,
->>
->> I don't have the "REF_01 - ISP_user_manual, Rev 2.57" document that was
->> mentioned in previous version, so I'm adding a TODO for now to improve
->> the docs once we collect the information.
-> 
-> I would keep the document name in the TODO entry, for reference.
-> 
->> If Rockchip people could help here it would be great.
-> 
-> As you don't have access to the documentation I won't focus on the
-> issues that you can't address, but in general I think we need more
-> documentation than what is provided here. In particular we need a
-> description of the pipeline, with the order of the processing blocks.
-> 
->> Changes in v8: None
->> Changes in v7:
->> - Fix checkpatch errors (lines over 80 and SPDX)
->> - Add TODO to improve docs
->>
->>   include/uapi/linux/rkisp1-config.h | 816 +++++++++++++++++++++++++++++
->>   1 file changed, 816 insertions(+)
->>   create mode 100644 include/uapi/linux/rkisp1-config.h
->>
->> diff --git a/include/uapi/linux/rkisp1-config.h b/include/uapi/linux/rkisp1-config.h
->> new file mode 100644
->> index 000000000000..9ab979bb4adb
->> --- /dev/null
->> +++ b/include/uapi/linux/rkisp1-config.h
->> @@ -0,0 +1,816 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
->> +/*
->> + * Rockchip isp1 driver
-> 
-> Maybe "Rockchip ISP1 userspace API" ?
-> 
->> + * Copyright (C) 2017 Rockchip Electronics Co., Ltd.
->> + */
->> +
->> +/*
->> + * TODO: Improve documentation, mostly regarding abbreviation and hardware
->> + * specificities.
->> + */
->> +
->> +#ifndef _UAPI_RKISP1_CONFIG_H
->> +#define _UAPI_RKISP1_CONFIG_H
->> +
->> +#include <linux/types.h>
->> +#include <linux/v4l2-controls.h>
-> 
-> Is v4l2-controls.h needed ?
-> 
->> +
->> +#define CIFISP_MODULE_DPCC              (1 << 0)
->> +#define CIFISP_MODULE_BLS               (1 << 1)
->> +#define CIFISP_MODULE_SDG               (1 << 2)
->> +#define CIFISP_MODULE_HST               (1 << 3)
->> +#define CIFISP_MODULE_LSC               (1 << 4)
->> +#define CIFISP_MODULE_AWB_GAIN          (1 << 5)
->> +#define CIFISP_MODULE_FLT               (1 << 6)
->> +#define CIFISP_MODULE_BDM               (1 << 7)
->> +#define CIFISP_MODULE_CTK               (1 << 8)
->> +#define CIFISP_MODULE_GOC               (1 << 9)
->> +#define CIFISP_MODULE_CPROC             (1 << 10)
->> +#define CIFISP_MODULE_AFC               (1 << 11)
->> +#define CIFISP_MODULE_AWB               (1 << 12)
->> +#define CIFISP_MODULE_IE                (1 << 13)
->> +#define CIFISP_MODULE_AEC               (1 << 14)
->> +#define CIFISP_MODULE_WDR               (1 << 15)
->> +#define CIFISP_MODULE_DPF               (1 << 16)
->> +#define CIFISP_MODULE_DPF_STRENGTH      (1 << 17)
-> 
-> Should we use BIT() here ?
-> 
->> +
->> +#define CIFISP_CTK_COEFF_MAX            0x100
->> +#define CIFISP_CTK_OFFSET_MAX           0x800
->> +
->> +#define CIFISP_AE_MEAN_MAX              25
->> +#define CIFISP_HIST_BIN_N_MAX           16
->> +#define CIFISP_AFM_MAX_WINDOWS          3
->> +#define CIFISP_DEGAMMA_CURVE_SIZE       17
->> +
->> +#define CIFISP_BDM_MAX_TH               0xFF
-> 
-> Hex constants are usually expressed lower-case in the kernel.
-> 
->> +
->> +/*
->> + * Black level compensation
->> + */
->> +/* maximum value for horizontal start address */
->> +#define CIFISP_BLS_START_H_MAX             0x00000FFF
->> +/* maximum value for horizontal stop address */
->> +#define CIFISP_BLS_STOP_H_MAX              0x00000FFF
->> +/* maximum value for vertical start address */
->> +#define CIFISP_BLS_START_V_MAX             0x00000FFF
->> +/* maximum value for vertical stop address */
->> +#define CIFISP_BLS_STOP_V_MAX              0x00000FFF
->> +/* maximum is 2^18 = 262144*/
->> +#define CIFISP_BLS_SAMPLES_MAX             0x00000012
->> +/* maximum value for fixed black level */
->> +#define CIFISP_BLS_FIX_SUB_MAX             0x00000FFF
->> +/* minimum value for fixed black level */
->> +#define CIFISP_BLS_FIX_SUB_MIN             0xFFFFF000
->> +/* 13 bit range (signed)*/
->> +#define CIFISP_BLS_FIX_MASK                0x00001FFF
->> +
->> +/*
->> + * Automatic white balance measurments
->> + */
->> +#define CIFISP_AWB_MAX_GRID                1
->> +#define CIFISP_AWB_MAX_FRAMES              7
->> +
->> +/*
->> + * Gamma out
->> + */
->> +/* Maximum number of color samples supported */
->> +#define CIFISP_GAMMA_OUT_MAX_SAMPLES       17
->> +
->> +/*
->> + * Lens shade correction
->> + */
->> +#define CIFISP_LSC_GRAD_TBL_SIZE           8
->> +#define CIFISP_LSC_SIZE_TBL_SIZE           8
->> +/*
->> + * The following matches the tuning process,
->> + * not the max capabilities of the chip.
->> + * Last value unused.
->> + */
->> +#define	CIFISP_LSC_DATA_TBL_SIZE           290
->> +
->> +/*
->> + * Histogram calculation
->> + */
->> +/* Last 3 values unused. */
->> +#define CIFISP_HISTOGRAM_WEIGHT_GRIDS_SIZE 28
->> +
->> +/*
->> + * Defect Pixel Cluster Correction
->> + */
->> +#define CIFISP_DPCC_METHODS_MAX       3
->> +
->> +/*
->> + * Denoising pre filter
->> + */
->> +#define CIFISP_DPF_MAX_NLF_COEFFS      17
->> +#define CIFISP_DPF_MAX_SPATIAL_COEFFS  6
->> +
->> +/*
->> + * Measurement types
->> + */
->> +#define CIFISP_STAT_AWB           (1 << 0)
->> +#define CIFISP_STAT_AUTOEXP       (1 << 1)
->> +#define CIFISP_STAT_AFM_FIN       (1 << 2)
->> +#define CIFISP_STAT_HIST          (1 << 3)
->> +
->> +enum cifisp_histogram_mode {
->> +	CIFISP_HISTOGRAM_MODE_DISABLE,
->> +	CIFISP_HISTOGRAM_MODE_RGB_COMBINED,
->> +	CIFISP_HISTOGRAM_MODE_R_HISTOGRAM,
->> +	CIFISP_HISTOGRAM_MODE_G_HISTOGRAM,
->> +	CIFISP_HISTOGRAM_MODE_B_HISTOGRAM,
->> +	CIFISP_HISTOGRAM_MODE_Y_HISTOGRAM
->> +};
->> +
->> +enum cifisp_awb_mode_type {
->> +	CIFISP_AWB_MODE_MANUAL,
->> +	CIFISP_AWB_MODE_RGB,
->> +	CIFISP_AWB_MODE_YCBCR
->> +};
->> +
->> +enum cifisp_flt_mode {
->> +	CIFISP_FLT_STATIC_MODE,
->> +	CIFISP_FLT_DYNAMIC_MODE
->> +};
->> +
->> +/**
->> + * enum cifisp_exp_ctrl_autostop - stop modes
->> + * @CIFISP_EXP_CTRL_AUTOSTOP_0: continuous measurement
->> + * @CIFISP_EXP_CTRL_AUTOSTOP_1: stop measuring after a complete frame
->> + */
->> +enum cifisp_exp_ctrl_autostop {
->> +	CIFISP_EXP_CTRL_AUTOSTOP_0 = 0,
->> +	CIFISP_EXP_CTRL_AUTOSTOP_1 = 1,
->> +};
->> +
->> +/**
->> + * enum cifisp_exp_meas_mode - Exposure measure mode
->> + * @CIFISP_EXP_MEASURING_MODE_0: Y = 16 + 0.25R + 0.5G + 0.1094B
->> + * @CIFISP_EXP_MEASURING_MODE_1: Y = (R + G + B) x (85/256)
->> + */
->> +enum cifisp_exp_meas_mode {
->> +	CIFISP_EXP_MEASURING_MODE_0,
->> +	CIFISP_EXP_MEASURING_MODE_1,
->> +};
->> +
->> +/*---------- PART1: Input Parameters ------------*/
->> +
->> +struct cifisp_window {
->> +	__u16 h_offs;
->> +	__u16 v_offs;
->> +	__u16 h_size;
->> +	__u16 v_size;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_bls_fixed_val - BLS fixed subtraction values
->> + *
->> + * The values will be subtracted from the sensor
->> + * values. Therefore a negative value means addition instead of subtraction!
->> + *
->> + * @r: Fixed (signed!) subtraction value for Bayer pattern R
->> + * @gr: Fixed (signed!) subtraction value for Bayer pattern Gr
->> + * @gb: Fixed (signed!) subtraction value for Bayer pattern Gb
->> + * @b: Fixed (signed!) subtraction value for Bayer pattern B
->> + */
->> +struct cifisp_bls_fixed_val {
->> +	__s16 r;
->> +	__s16 gr;
->> +	__s16 gb;
->> +	__s16 b;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_bls_config - Configuration used by black level subtraction
->> + *
->> + * @enable_auto: Automatic mode activated means that the measured values
->> + *		 are subtracted. Otherwise the fixed subtraction
->> + *		 values will be subtracted.
->> + * @en_windows: enabled window
->> + * @bls_window1: Measurement window 1 size
->> + * @bls_window2: Measurement window 2 size
->> + * @bls_samples: Set amount of measured pixels for each Bayer position
->> + *		 (A, B,C and D) to 2^bls_samples.
->> + * @cifisp_bls_fixed_val: Fixed subtraction values
->> + */
->> +struct cifisp_bls_config {
->> +	__u8 enable_auto;
->> +	__u8 en_windows;
->> +	struct cifisp_window bls_window1;
->> +	struct cifisp_window bls_window2;
->> +	__u8 bls_samples;
->> +	struct cifisp_bls_fixed_val fixed_val;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_dpcc_methods_config - Methods Configuration used by DPCC
->> + *
->> + * Methods Configuration used by Defect Pixel Cluster Correction
->> + *
->> + * @method: Method enable bits
->> + * @line_thresh: Line threshold
->> + * @line_mad_fac: Line MAD factor
->> + * @pg_fac: Peak gradient factor
->> + * @rnd_thresh: Rank Neighbor Difference threshold
->> + * @rg_fac: Rank gradient factor
->> + */
->> +struct cifisp_dpcc_methods_config {
->> +	__u32 method;
->> +	__u32 line_thresh;
->> +	__u32 line_mad_fac;
->> +	__u32 pg_fac;
->> +	__u32 rnd_thresh;
->> +	__u32 rg_fac;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_dpcc_methods_config - Configuration used by DPCC
-> 
-> Should be cifisp_dpcc_config.
-> 
->> + *
->> + * Configuration used by Defect Pixel Cluster Correction
->> + *
->> + * @mode: dpcc output mode
->> + * @output_mode: whether use hard coded methods
->> + * @set_use: stage1 methods set
->> + * @methods: methods config
->> + * @ro_limits: rank order limits
->> + * @rnd_offs: differential rank offsets for rank neighbor difference
->> + */
->> +struct cifisp_dpcc_config {
->> +	__u32 mode;
->> +	__u32 output_mode;
->> +	__u32 set_use;
->> +	struct cifisp_dpcc_methods_config methods[CIFISP_DPCC_METHODS_MAX];
->> +	__u32 ro_limits;
->> +	__u32 rnd_offs;
->> +} __attribute__ ((packed));
->> +
->> +struct cifisp_gamma_corr_curve {
->> +	__u16 gamma_y[CIFISP_DEGAMMA_CURVE_SIZE];
->> +} __attribute__ ((packed));
->> +
->> +struct cifisp_gamma_curve_x_axis_pnts {
->> +	__u32 gamma_dx0;
->> +	__u32 gamma_dx1;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_gamma_corr_curve - Configuration used by sensor degamma
-> 
-> Should be cifisp_sdg_config
-> 
->> + *
->> + * @curve_x: gamma curve point definition axis for x
->> + * @xa_pnts: x increments
->> + */
->> +struct cifisp_sdg_config {
->> +	struct cifisp_gamma_corr_curve curve_r;
->> +	struct cifisp_gamma_corr_curve curve_g;
->> +	struct cifisp_gamma_corr_curve curve_b;
->> +	struct cifisp_gamma_curve_x_axis_pnts xa_pnts;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_lsc_config - Configuration used by Lens shading correction
->> + *
->> + * refer to REF_01 for details
->> + */
->> +struct cifisp_lsc_config {
->> +	__u32 r_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
->> +	__u32 gr_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
->> +	__u32 gb_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
->> +	__u32 b_data_tbl[CIFISP_LSC_DATA_TBL_SIZE];
->> +
->> +	__u32 x_grad_tbl[CIFISP_LSC_GRAD_TBL_SIZE];
->> +	__u32 y_grad_tbl[CIFISP_LSC_GRAD_TBL_SIZE];
->> +
->> +	__u32 x_size_tbl[CIFISP_LSC_SIZE_TBL_SIZE];
->> +	__u32 y_size_tbl[CIFISP_LSC_SIZE_TBL_SIZE];
->> +	__u16 config_width;
->> +	__u16 config_height;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_ie_config - Configuration used by image effects
->> + *
->> + * @eff_mat_1: 3x3 Matrix Coefficients for Emboss Effect 1
->> + * @eff_mat_2: 3x3 Matrix Coefficients for Emboss Effect 2
->> + * @eff_mat_3: 3x3 Matrix Coefficients for Emboss 3/Sketch 1
->> + * @eff_mat_4: 3x3 Matrix Coefficients for Sketch Effect 2
->> + * @eff_mat_5: 3x3 Matrix Coefficients for Sketch Effect 3
->> + * @eff_tint: Chrominance increment values of tint (used for sepia effect)
->> + */
->> +struct cifisp_ie_config {
->> +	__u16 effect;
->> +	__u16 color_sel;
->> +	__u16 eff_mat_1;
->> +	__u16 eff_mat_2;
->> +	__u16 eff_mat_3;
->> +	__u16 eff_mat_4;
->> +	__u16 eff_mat_5;
->> +	__u16 eff_tint;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_cproc_config - Configuration used by Color Processing
->> + *
->> + * @c_out_range: Chrominance pixel clipping range at output.
->> + *		 (0 for limit, 1 for full)
->> + * @y_in_range: Luminance pixel clipping range at output.
->> + * @y_out_range: Luminance pixel clipping range at output.
->> + * @contrast: 00~ff, 0.0~1.992
->> + * @brightness: 80~7F, -128~+127
->> + * @sat: saturation, 00~FF, 0.0~1.992
->> + * @hue: 80~7F, -90~+87.188
->> + */
->> +struct cifisp_cproc_config {
->> +	__u8 c_out_range;
->> +	__u8 y_in_range;
->> +	__u8 y_out_range;
->> +	__u8 contrast;
->> +	__u8 brightness;
->> +	__u8 sat;
->> +	__u8 hue;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_awb_meas_config - Configuration used by auto white balance
->> + *
->> + * @awb_wnd: white balance measurement window (in pixels)
->> + *	     (from enum cifisp_awb_mode_type)
->> + * @max_y: only pixels values < max_y contribute to awb measurement, set to 0
->> + *	   to disable this feature
->> + * @min_y: only pixels values > min_y contribute to awb measurement
->> + * @max_csum: Chrominance sum maximum value, only consider pixels with Cb+Cr,
->> + *	      smaller than threshold for awb measurements
->> + * @min_c: Chrominance minimum value, only consider pixels with Cb/Cr
->> + *	   each greater than threshold value for awb measurements
->> + * @frames: number of frames - 1 used for mean value calculation
->> + *	    (ucFrames=0 means 1 Frame)
->> + * @awb_ref_cr: reference Cr value for AWB regulation, target for AWB
->> + * @awb_ref_cb: reference Cb value for AWB regulation, target for AWB
->> + */
->> +struct cifisp_awb_meas_config {
->> +	/*
->> +	 * Note: currently the h and v offsets are mapped to grid offsets
->> +	 */
->> +	struct cifisp_window awb_wnd;
->> +	__u32 awb_mode;
->> +	__u8 max_y;
->> +	__u8 min_y;
->> +	__u8 max_csum;
->> +	__u8 min_c;
->> +	__u8 frames;
->> +	__u8 awb_ref_cr;
->> +	__u8 awb_ref_cb;
->> +	__u8 enable_ymax_cmp;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_awb_gain_config - Configuration used by auto white balance gain
->> + *
->> + * out_data_x = ( AWB_GEAIN_X * in_data + 128) >> 8
->> + */
->> +struct cifisp_awb_gain_config {
->> +	__u16 gain_red;
->> +	__u16 gain_green_r;
->> +	__u16 gain_blue;
->> +	__u16 gain_green_b;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_flt_config - Configuration used by ISP filtering
->> + *
->> + * @mode: ISP_FILT_MODE register fields (from enum cifisp_flt_mode)
->> + * @grn_stage1: ISP_FILT_MODE register fields
->> + * @chr_h_mode: ISP_FILT_MODE register fields
->> + * @chr_v_mode: ISP_FILT_MODE register fields
->> + *
->> + * refer to REF_01 for details.
->> + */
->> +
->> +struct cifisp_flt_config {
->> +	__u32 mode;
->> +	__u8 grn_stage1;
->> +	__u8 chr_h_mode;
->> +	__u8 chr_v_mode;
->> +	__u32 thresh_bl0;
->> +	__u32 thresh_bl1;
->> +	__u32 thresh_sh0;
->> +	__u32 thresh_sh1;
->> +	__u32 lum_weight;
->> +	__u32 fac_sh1;
->> +	__u32 fac_sh0;
->> +	__u32 fac_mid;
->> +	__u32 fac_bl0;
->> +	__u32 fac_bl1;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_bdm_config - Configuration used by Bayer DeMosaic
->> + *
->> + * @demosaic_th: threshod for bayer demosaicing texture detection
->> + */
->> +struct cifisp_bdm_config {
->> +	__u8 demosaic_th;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_ctk_config - Configuration used by Cross Talk correction
->> + *
->> + * @coeff: color correction matrix
->> + * @ct_offset_b: offset for the crosstalk correction matrix
->> + */
->> +struct cifisp_ctk_config {
->> +	__u16 coeff0;
->> +	__u16 coeff1;
->> +	__u16 coeff2;
->> +	__u16 coeff3;
->> +	__u16 coeff4;
->> +	__u16 coeff5;
->> +	__u16 coeff6;
->> +	__u16 coeff7;
->> +	__u16 coeff8;
->> +	__u16 ct_offset_r;
->> +	__u16 ct_offset_g;
->> +	__u16 ct_offset_b;
->> +} __attribute__ ((packed));
->> +
->> +enum cifisp_goc_mode {
->> +	CIFISP_GOC_MODE_LOGARITHMIC,
->> +	CIFISP_GOC_MODE_EQUIDISTANT
->> +};
->> +
->> +/**
->> + * struct cifisp_goc_config - Configuration used by Gamma Out correction
->> + *
->> + * @mode: goc mode (from enum cifisp_goc_mode)
->> + * @gamma_y: gamma out curve y-axis for all color components
->> + */
->> +struct cifisp_goc_config {
->> +	__u32 mode;
->> +	__u16 gamma_y[CIFISP_GAMMA_OUT_MAX_SAMPLES];
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_hst_config - Configuration used by Histogram
->> + *
->> + * @mode: histogram mode (from enum cifisp_histogram_mode)
->> + * @histogram_predivider: process every stepsize pixel, all other pixels are
->> + *			  skipped
->> + * @meas_window: coordinates of the measure window
->> + * @hist_weight: weighting factor for sub-windows
->> + */
->> +struct cifisp_hst_config {
->> +	__u32 mode;
->> +	__u8 histogram_predivider;
->> +	struct cifisp_window meas_window;
->> +	__u8 hist_weight[CIFISP_HISTOGRAM_WEIGHT_GRIDS_SIZE];
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_aec_config - Configuration used by Auto Exposure Control
->> + *
->> + * @mode: Exposure measure mode (from enum cifisp_exp_meas_mode)
->> + * @autostop: stop mode (from enum cifisp_exp_ctrl_autostop)
->> + * @meas_window: coordinates of the measure window
->> + */
->> +struct cifisp_aec_config {
->> +	__u32 mode;
->> +	__u32 autostop;
->> +	struct cifisp_window meas_window;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_afc_config - Configuration used by Auto Focus Control
->> + *
->> + * @num_afm_win: max CIFISP_AFM_MAX_WINDOWS
->> + * @afm_win: coordinates of the meas window
->> + * @thres: threshold used for minimizing the influence of noise
->> + * @var_shift: the number of bits for the shift operation at the end of the
->> + *	       calculation chain.
->> + */
->> +struct cifisp_afc_config {
->> +	__u8 num_afm_win;
->> +	struct cifisp_window afm_win[CIFISP_AFM_MAX_WINDOWS];
->> +	__u32 thres;
->> +	__u32 var_shift;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * enum cifisp_dpf_gain_usage - dpf gain usage
->> + * @CIFISP_DPF_GAIN_USAGE_DISABLED: don't use any gains in preprocessing stage
->> + * @CIFISP_DPF_GAIN_USAGE_NF_GAINS: use only the noise function gains from
->> + *				    registers DPF_NF_GAIN_R, ...
->> + * @CIFISP_DPF_GAIN_USAGE_LSC_GAINS:  use only the gains from LSC module
->> + * @CIFISP_DPF_GAIN_USAGE_NF_LSC_GAINS: use the noise function gains and the
->> + *					gains from LSC module
->> + * @CIFISP_DPF_GAIN_USAGE_AWB_GAINS: use only the gains from AWB module
->> + * @CIFISP_DPF_GAIN_USAGE_AWB_LSC_GAINS: use the gains from AWB and LSC module
->> + * @CIFISP_DPF_GAIN_USAGE_MAX: upper border (only for an internal evaluation)
->> + */
->> +enum cifisp_dpf_gain_usage {
->> +	CIFISP_DPF_GAIN_USAGE_DISABLED,
->> +	CIFISP_DPF_GAIN_USAGE_NF_GAINS,
->> +	CIFISP_DPF_GAIN_USAGE_LSC_GAINS,
->> +	CIFISP_DPF_GAIN_USAGE_NF_LSC_GAINS,
->> +	CIFISP_DPF_GAIN_USAGE_AWB_GAINS,
->> +	CIFISP_DPF_GAIN_USAGE_AWB_LSC_GAINS,
->> +	CIFISP_DPF_GAIN_USAGE_MAX
->> +};
->> +
->> +/**
->> + * enum cifisp_dpf_gain_usage - dpf gain usage
-> 
-> This should be cifisp_dpf_rb_filtersize and the description should be
-> updated.
-> 
->> + * @CIFISP_DPF_RB_FILTERSIZE_13x9: red and blue filter kernel size 13x9
->> + *				   (means 7x5 active pixel)
->> + * @CIFISP_DPF_RB_FILTERSIZE_9x9: red and blue filter kernel size 9x9
->> + *				   (means 5x5 active pixel)
->> + */
->> +enum cifisp_dpf_rb_filtersize {
->> +	CIFISP_DPF_RB_FILTERSIZE_13x9,
->> +	CIFISP_DPF_RB_FILTERSIZE_9x9,
->> +};
->> +
->> +/**
->> + * enum cifisp_dpf_nll_scale_mode - dpf noise level scale mode
->> + * @CIFISP_NLL_SCALE_LINEAR: use a linear scaling
->> + * @CIFISP_NLL_SCALE_LOGARITHMIC: use a logarithmic scaling
->> + */
->> +enum cifisp_dpf_nll_scale_mode {
->> +	CIFISP_NLL_SCALE_LINEAR,
->> +	CIFISP_NLL_SCALE_LOGARITHMIC,
->> +};
->> +
->> +/**
->> + * struct cifisp_dpf_nll - Noise level lookup
->> + *
->> + * @coeff: Noise level Lookup coefficient
->> + * @scale_mode: dpf noise level scale mode (from enum cifisp_dpf_nll_scale_mode)
->> + */
->> +struct cifisp_dpf_nll {
->> +	__u16 coeff[CIFISP_DPF_MAX_NLF_COEFFS];
->> +	__u32 scale_mode;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_dpf_rb_flt - Red blue filter config
->> + *
->> + * @fltsize: The filter size for the red and blue pixels
->> + *	     (from enum cifisp_dpf_rb_filtersize)
->> + * @spatial_coeff: Spatial weights
->> + * @r_enable: enable filter processing for red pixels
->> + * @b_enable: enable filter processing for blue pixels
->> + */
->> +struct cifisp_dpf_rb_flt {
->> +	__u32 fltsize;
->> +	__u8 spatial_coeff[CIFISP_DPF_MAX_SPATIAL_COEFFS];
->> +	__u8 r_enable;
->> +	__u8 b_enable;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_dpf_g_flt - Green filter Configuration
->> + *
->> + * @spatial_coeff: Spatial weights
->> + * @gr_enable: enable filter processing for green pixels in green/red lines
->> + * @gb_enable: enable filter processing for green pixels in green/blue lines
->> + */
->> +struct cifisp_dpf_g_flt {
->> +	__u8 spatial_coeff[CIFISP_DPF_MAX_SPATIAL_COEFFS];
->> +	__u8 gr_enable;
->> +	__u8 gb_enable;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_dpf_gain - Noise function Configuration
->> + *
->> + * @mode: dpf gain usage  (from enum cifisp_dpf_gain_usage)
->> + * @nf_r_gain: Noise function Gain that replaces the AWB gain for red pixels
->> + * @nf_b_gain: Noise function Gain that replaces the AWB gain for blue pixels
->> + * @nf_gr_gain: Noise function Gain that replaces the AWB gain
->> + *		for green pixels in a red line
->> + * @nf_gb_gain: Noise function Gain that replaces the AWB gain
->> + *		for green pixels in a blue line
->> + */
->> +struct cifisp_dpf_gain {
->> +	__u32 mode;
->> +	__u16 nf_r_gain;
->> +	__u16 nf_b_gain;
->> +	__u16 nf_gr_gain;
->> +	__u16 nf_gb_gain;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_dpf_config - Configuration used by De-noising pre-filter
->> + *
->> + * @gain: noise function gain
->> + * @g_flt: green filter config
->> + * @rb_flt: red blue filter config
->> + * @nll: noise level lookup
->> + */
->> +struct cifisp_dpf_config {
->> +	struct cifisp_dpf_gain gain;
->> +	struct cifisp_dpf_g_flt g_flt;
->> +	struct cifisp_dpf_rb_flt rb_flt;
->> +	struct cifisp_dpf_nll nll;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_dpf_strength_config - strength of the filter
->> + *
->> + * @r: filter strength of the RED filter
->> + * @g: filter strength of the GREEN filter
->> + * @b: filter strength of the BLUE filter
->> + */
->> +struct cifisp_dpf_strength_config {
->> +	__u8 r;
->> +	__u8 g;
->> +	__u8 b;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_isp_other_cfg - Parameters for some blocks in rockchip isp1
->> + *
->> + * @dpcc_config: Defect Pixel Cluster Correction config
->> + * @bls_config: Black Level Subtraction config
->> + * @sdg_config: sensor degamma config
->> + * @lsc_config: Lens Shade config
->> + * @awb_gain_config: Auto White balance gain config
->> + * @flt_config: filter config
->> + * @bdm_config: demosaic config
->> + * @ctk_config: cross talk config
->> + * @goc_config: gamma out config
->> + * @bls_config: black level subtraction config
->> + * @dpf_config: De-noising pre-filter config
->> + * @dpf_strength_config: dpf strength config
->> + * @cproc_config: color process config
->> + * @ie_config: image effects config
->> + */
->> +struct cifisp_isp_other_cfg {
->> +	struct cifisp_dpcc_config dpcc_config;
->> +	struct cifisp_bls_config bls_config;
->> +	struct cifisp_sdg_config sdg_config;
->> +	struct cifisp_lsc_config lsc_config;
->> +	struct cifisp_awb_gain_config awb_gain_config;
->> +	struct cifisp_flt_config flt_config;
->> +	struct cifisp_bdm_config bdm_config;
->> +	struct cifisp_ctk_config ctk_config;
->> +	struct cifisp_goc_config goc_config;
->> +	struct cifisp_dpf_config dpf_config;
->> +	struct cifisp_dpf_strength_config dpf_strength_config;
->> +	struct cifisp_cproc_config cproc_config;
->> +	struct cifisp_ie_config ie_config;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_isp_meas_cfg - Rockchip ISP1 Measure Parameters
->> + *
->> + * @awb_meas_config: auto white balance config
->> + * @hst_config: histogram config
->> + * @aec_config: auto exposure config
->> + * @afc_config: auto focus config
->> + */
->> +struct cifisp_isp_meas_cfg {
->> +	struct cifisp_awb_meas_config awb_meas_config;
->> +	struct cifisp_hst_config hst_config;
->> +	struct cifisp_aec_config aec_config;
->> +	struct cifisp_afc_config afc_config;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct rkisp1_isp_params_cfg - Rockchip ISP1 Input Parameters Meta Data
->> + *
->> + * @module_en_update: mask the enable bits of which module should be updated
->> + * @module_ens: mask the enable value of each module, only update the module
->> + *		which correspond bit was set in module_en_update
->> + * @module_cfg_update: mask the config bits of which module should be updated
->> + * @meas: measurement config
->> + * @others: other config
->> + */
->> +struct rkisp1_isp_params_cfg {
->> +	__u32 module_en_update;
->> +	__u32 module_ens;
->> +	__u32 module_cfg_update;
->> +
->> +	struct cifisp_isp_meas_cfg meas;
->> +	struct cifisp_isp_other_cfg others;
->> +} __attribute__ ((packed));
-> 
-> As far as I understand most (all ?) of the structures defined above are
-> not used directly by the hardware, is that right ? In that case, do they
-> need to be packed ?
+Regards,
+Yi Liu
 
-Hi,
-I guess the 'packed' is a mean to serialize the struct since it is sent to userspace as
-a buffer. I see that the ipu3 also uses 'packed' for the
-metadata formats. If we don't have the 'packed' it means we relay on that
-the userspace uses the same padding as the kernel for the struct.
-Is it ok to assume that?
+> Alex
+>=20
+> > > > So I'm wondering can we fall back to prior proposal which only free=
+ one
+> > > > PASID for a free request. how about your opinion?
+> > >
+> > > Doesn't it still seem like it would be a useful user interface to hav=
+e
+> > > a mechanism to free all pasids, by calling with exactly [0, MAX_UINT]=
+?
+> > > I'm not sure if there's another use case for this given than the user
+> > > doesn't have strict control of the pasid values they get.  Thanks,
+> >
+> > I don't have such use case neither. perhaps we may allow it in future b=
+y
+> > adding flag. but if it's still useful, I may try with your suggestion. =
+:-)
+> >
+> > Regards,
+> > Yi Liu
+> >
+> > > Alex
+> > >
+> > > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > > Sent: Thursday, July 9, 2020 10:26 AM
+> > > > >
+> > > > > Hi Kevin,
+> > > > >
+> > > > > > From: Tian, Kevin <kevin.tian@intel.com>
+> > > > > > Sent: Thursday, July 9, 2020 10:18 AM
+> > > > > >
+> > > > > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > > > > Sent: Thursday, July 9, 2020 10:08 AM
+> > > > > > >
+> > > > > > > Hi Kevin,
+> > > > > > >
+> > > > > > > > From: Tian, Kevin <kevin.tian@intel.com>
+> > > > > > > > Sent: Thursday, July 9, 2020 9:57 AM
+> > > > > > > >
+> > > > > > > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > > > > > > Sent: Thursday, July 9, 2020 8:32 AM
+> > > > > > > > >
+> > > > > > > > > Hi Alex,
+> > > > > > > > >
+> > > > > > > > > > Alex Williamson <alex.williamson@redhat.com>
+> > > > > > > > > > Sent: Thursday, July 9, 2020 3:55 AM
+> > > > > > > > > >
+> > > > > > > > > > On Wed, 8 Jul 2020 08:16:16 +0000 "Liu, Yi L"
+> > > > > > > > > > <yi.l.liu@intel.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > > Hi Alex,
+> > > > > > > > > > >
+> > > > > > > > > > > > From: Liu, Yi L < yi.l.liu@intel.com>
+> > > > > > > > > > > > Sent: Friday, July 3, 2020 2:28 PM
+> > > > > > > > > > > >
+> > > > > > > > > > > > Hi Alex,
+> > > > > > > > > > > >
+> > > > > > > > > > > > > From: Alex Williamson <alex.williamson@redhat.com=
+>
+> > > > > > > > > > > > > Sent: Friday, July 3, 2020 5:19 AM
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > On Wed, 24 Jun 2020 01:55:19 -0700 Liu Yi L
+> > > > > > > > > > > > > <yi.l.liu@intel.com> wrote:
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > > This patch allows user space to request PASID
+> > > > > > > > > > > > > > allocation/free,
+> > > > > > > e.g.
+> > > > > > > > > > > > > > when serving the request from the guest.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > PASIDs that are not freed by userspace are
+> > > > > > > > > > > > > > automatically freed
+> > > > > > > > > when
+> > > > > > > > > > > > > > the IOASID set is destroyed when process exits.
+> > > > > > > > > > > [...]
+> > > > > > > > > > > > > > +static int vfio_iommu_type1_pasid_request(stru=
+ct
+> > > > > > > > > > > > > > +vfio_iommu
+> > > > > > > > > *iommu,
+> > > > > > > > > > > > > > +					  unsigned long
+> arg) {
+> > > > > > > > > > > > > > +	struct vfio_iommu_type1_pasid_request req;
+> > > > > > > > > > > > > > +	unsigned long minsz;
+> > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > +	minsz =3D offsetofend(struct
+> > > > > > vfio_iommu_type1_pasid_request,
+> > > > > > > > > > range);
+> > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > +	if (copy_from_user(&req, (void __user *)arg,
+> minsz))
+> > > > > > > > > > > > > > +		return -EFAULT;
+> > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > +	if (req.argsz < minsz || (req.flags &
+> > > > > > > > > > ~VFIO_PASID_REQUEST_MASK))
+> > > > > > > > > > > > > > +		return -EINVAL;
+> > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > +	if (req.range.min > req.range.max)
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Is it exploitable that a user can spin the kernel=
+ for a
+> > > > > > > > > > > > > long time in the case of a free by calling this w=
+ith [0,
+> > > > > > > > > > > > > MAX_UINT] regardless of their
+> > > > > > > > > > actual
+> > > > > > > > > > > > allocations?
+> > > > > > > > > > > >
+> > > > > > > > > > > > IOASID can ensure that user can only free the PASID=
+s
+> > > > > > > > > > > > allocated to the
+> > > > > > > > > user.
+> > > > > > > > > > but
+> > > > > > > > > > > > it's true, kernel needs to loop all the PASIDs with=
+in the
+> > > > > > > > > > > > range provided by user.
+> > > > > > > > > > it
+> > > > > > > > > > > > may take a long time. is there anything we can do? =
+one
+> > > > > > > > > > > > thing may limit
+> > > > > > > > > the
+> > > > > > > > > > range
+> > > > > > > > > > > > provided by user?
+> > > > > > > > > > >
+> > > > > > > > > > > thought about it more, we have per-VM pasid quota (sa=
+y
+> > > > > > > > > > > 1000), so even if user passed down [0, MAX_UNIT], ker=
+nel
+> > > > > > > > > > > will only loop the
+> > > > > > > > > > > 1000 pasids at most. do you think we still need to do=
+ something
+> on
+> > > it?
+> > > > > > > > > >
+> > > > > > > > > > How do you figure that?  vfio_iommu_type1_pasid_request=
+()
+> > > > > > > > > > accepts the user's min/max so long as (max > min) and p=
+asses
+> > > > > > > > > > that to vfio_iommu_type1_pasid_free(), then to
+> > > > > > > > > > vfio_pasid_free_range() which loops as:
+> > > > > > > > > >
+> > > > > > > > > > 	ioasid_t pasid =3D min;
+> > > > > > > > > > 	for (; pasid <=3D max; pasid++)
+> > > > > > > > > > 		ioasid_free(pasid);
+> > > > > > > > > >
+> > > > > > > > > > A user might only be able to allocate 1000 pasids, but
+> > > > > > > > > > apparently they can ask to free all they want.
+> > > > > > > > > >
+> > > > > > > > > > It's also not obvious to me that calling ioasid_free() =
+is only
+> > > > > > > > > > allowing the user to free their own passid.  Does it?  =
+It
+> > > > > > > > > > would be a pretty
+> > > > > > > >
+> > > > > > > > Agree. I thought ioasid_free should at least carry a token =
+since
+> > > > > > > > the user
+> > > > > > > space is
+> > > > > > > > only allowed to manage PASIDs in its own set...
+> > > > > > > >
+> > > > > > > > > > gaping hole if a user could free arbitrary pasids.  A r=
+-b tree
+> > > > > > > > > > of passids might help both for security and to bound sp=
+inning in a
+> > > loop.
+> > > > > > > > >
+> > > > > > > > > oh, yes. BTW. instead of r-b tree in VFIO, maybe we can a=
+dd an
+> > > > > > > > > ioasid_set parameter for ioasid_free(), thus to prevent t=
+he user
+> > > > > > > > > from freeing PASIDs that doesn't belong to it. I remember=
+ Jacob
+> > > > > > > > > mentioned it
+> > > > > > > before.
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > check current ioasid_free:
+> > > > > > > >
+> > > > > > > >         spin_lock(&ioasid_allocator_lock);
+> > > > > > > >         ioasid_data =3D xa_load(&active_allocator->xa, ioas=
+id);
+> > > > > > > >         if (!ioasid_data) {
+> > > > > > > >                 pr_err("Trying to free unknown IOASID %u\n"=
+, ioasid);
+> > > > > > > >                 goto exit_unlock;
+> > > > > > > >         }
+> > > > > > > >
+> > > > > > > > Allow an user to trigger above lock paths with MAX_UINT tim=
+es
+> > > > > > > > might still
+> > > > > > > be bad.
+> > > > > > >
+> > > > > > > yeah, how about the below two options:
+> > > > > > >
+> > > > > > > - comparing the max - min with the quota before calling ioasi=
+d_free().
+> > > > > > >   If max - min > current quota of the user, then should fail =
+it. If
+> > > > > > >   max - min < quota, then call ioasid_free() one by one. stil=
+l trigger
+> > > > > > >   the above lock path with quota times.
+> > > > > >
+> > > > > > This is definitely wrong. [min, max] is about the range of the =
+PASID
+> > > > > > value, while quota is about the number of allocated PASIDs. It'=
+s a bit
+> > > > > > weird to mix two together.
+> > > > >
+> > > > > got it.
+> > > > >
+> > > > > > btw what is the main purpose of allowing batch PASID free reque=
+sts?
+> > > > > > Can we just simplify to allow one PASID in each free just like =
+how is
+> > > > > > it done in allocation path?
+> > > > >
+> > > > > it's an intention to reuse the [min, max] range as allocation pat=
+h. currently,
+> > > we
+> > > > > don't have such request as far as I can see.
+> > > > >
+> > > > > > >
+> > > > > > > - pass the max and min to ioasid_free(), let ioasid_free() de=
+cide.
+> should
+> > > > > > >   be able to avoid trigger the lock multiple times, and ioasi=
+d has have a
+> > > > > > >   track on how may PASIDs have been allocated, if max - min i=
+s larger
+> than
+> > > > > > >   the allocated number, should fail anyway.
+> > > > > >
+> > > > > > What about Alex's r-b tree suggestion? Is there any downside in=
+ you
+> mind?
+> > > > >
+> > > > > no downside, I was just wanting to reuse the tracks in ioasid_set=
+. I can add
+> a
+> > > r-b
+> > > > > for allocated PASIDs and find the PASIDs in the r-b tree only do =
+free for
+> the
+> > > > > PASIDs found in r-b tree, others in the range would be ignored.
+> > > > > does it look good?
+> > > > >
+> > > > > Regards,
+> > > > > Yi Liu
+> > > > >
+> > > > > > Thanks,
+> > > > > > Kevin
+> > > >
+> >
 
-Thanks,
-Dafna
-
-
-> 
-> Some of the structures have a _cfg suffix, while others have a _config
-> suffix. Should we standardise on one of the two ?
-> 
->> +
->> +/*---------- PART2: Measurement Statistics ------------*/
->> +
->> +/**
->> + * struct cifisp_bls_meas_val - AWB measured values
-> 
-> This should be cifisp_awb_meas
-> 
->> + *
->> + * @cnt: White pixel count, number of "white pixels" found during laster
-> 
-> s/laster/last/ ?
-> 
->> + *	 measurement
->> + * @mean_y_or_g: Mean value of Y within window and frames,
->> + *		 Green if RGB is selected.
->> + * @mean_cb_or_b: Mean value of Cb within window and frames,
->> + *		  Blue if RGB is selected.
->> + * @mean_cr_or_r: Mean value of Cr within window and frames,
->> + *		  Red if RGB is selected.
->> + */
->> +struct cifisp_awb_meas {
->> +	__u32 cnt;
->> +	__u8 mean_y_or_g;
->> +	__u8 mean_cb_or_b;
->> +	__u8 mean_cr_or_r;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_awb_stat - statistics automatic white balance data
->> + *
->> + * @awb_mean: Mean measured data
->> + */
->> +struct cifisp_awb_stat {
->> +	struct cifisp_awb_meas awb_mean[CIFISP_AWB_MAX_GRID];
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_bls_meas_val - BLS measured values
->> + *
->> + * @meas_r: Mean measured value for Bayer pattern R
->> + * @meas_gr: Mean measured value for Bayer pattern Gr
->> + * @meas_gb: Mean measured value for Bayer pattern Gb
->> + * @meas_b: Mean measured value for Bayer pattern B
->> + */
->> +struct cifisp_bls_meas_val {
->> +	__u16 meas_r;
->> +	__u16 meas_gr;
->> +	__u16 meas_gb;
->> +	__u16 meas_b;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_ae_stat - statistics auto exposure data
->> + *
->> + * @exp_mean: Mean luminance value of block xx
->> + * @bls_val:  BLS measured values
->> + *
->> + * Image is divided into 5x5 blocks.
->> + */
->> +struct cifisp_ae_stat {
->> +	__u8 exp_mean[CIFISP_AE_MEAN_MAX];
->> +	struct cifisp_bls_meas_val bls_val;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_af_meas_val - AF measured values
->> + *
->> + * @sum: sharpness, refer to REF_01 for definition
->> + * @lum: luminance, refer to REF_01 for definition
-> 
-> That will be lovely to use without documentation...
-> 
->> + */
->> +struct cifisp_af_meas_val {
->> +	__u32 sum;
->> +	__u32 lum;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_af_stat - statistics auto focus data
->> + *
->> + * @window: AF measured value of window x
->> + *
->> + * The module measures the sharpness in 3 windows of selectable size via
->> + * register settings(ISP_AFM_*_A/B/C)
->> + */
->> +struct cifisp_af_stat {
->> +	struct cifisp_af_meas_val window[CIFISP_AFM_MAX_WINDOWS];
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct cifisp_hist_stat - statistics histogram data
->> + *
->> + * @hist_bins: measured bin counters
->> + *
->> + * Measurement window divided into 25 sub-windows, set
->> + * with ISP_HIST_XXX
-> 
-> What is ISP_HIST_XXX ?
-> 
->> + */
->> +struct cifisp_hist_stat {
->> +	__u16 hist_bins[CIFISP_HIST_BIN_N_MAX];
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct rkisp1_stat_buffer - Rockchip ISP1 Statistics Data
->> + *
->> + * @cifisp_awb_stat: statistics data for automatic white balance
->> + * @cifisp_ae_stat: statistics data for auto exposure
->> + * @cifisp_af_stat: statistics data for auto focus
->> + * @cifisp_hist_stat: statistics histogram data
->> + */
->> +struct cifisp_stat {
->> +	struct cifisp_awb_stat awb;
->> +	struct cifisp_ae_stat ae;
->> +	struct cifisp_af_stat af;
->> +	struct cifisp_hist_stat hist;
->> +} __attribute__ ((packed));
->> +
->> +/**
->> + * struct rkisp1_stat_buffer - Rockchip ISP1 Statistics Meta Data
->> + *
->> + * @meas_type: measurement types (CIFISP_STAT_ definitions)
->> + * @frame_id: frame ID for sync
->> + * @params: statistics data
->> + */
->> +struct rkisp1_stat_buffer {
->> +	__u32 meas_type;
->> +	__u32 frame_id;
->> +	struct cifisp_stat params;
->> +} __attribute__ ((packed));
->> +
->> +#endif /* _UAPI_RKISP1_CONFIG_H */
-> 
