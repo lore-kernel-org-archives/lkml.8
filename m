@@ -2,203 +2,141 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA21DC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5C932078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594399933;
-	bh=KcvQZrHB38KDnUP8nxJc19jdFdt8oGFue3inzmz/Efc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=c9lewh7vnYBoWnBg09qa29ZEKqT9oG2ekS5alFH2KMO7cqJO58oBFussJxHRZpHDX
-	 t6l9siedTq4CBR16dwOoUbyox8tzRwWjATQQBwriVTQ4qznUDvxNOLzLM195WRXNcM
-	 D5W1jnpKiu3gNBwx6ewCEVdM2fsDd7YZpo2g3M0c=
+	by mail.kernel.org (Postfix) with ESMTP id B350D2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 16:57:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dgVJrxlU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgGJQwM (ORCPT
+        id S1728251AbgGJQ5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:52:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgGJQwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 12:52:12 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C5FB206F4;
-        Fri, 10 Jul 2020 16:52:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594399931;
-        bh=KcvQZrHB38KDnUP8nxJc19jdFdt8oGFue3inzmz/Efc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gpIwsoJ/xXbQSIbhAwidVUNkopiZBRtRJr6jm8fYtOsJO0sGFBU4VrzLmpjt8J0+h
-         bM3ZPwoxoAqbROw+x/9XrPnXHGuUR8yujViPTR/a4kKu7ko3AQlaCr7An51UhICwox
-         /CYhjCD7gHFg3nRhEECbjLxD55E4l8YFtDGAk0TY=
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Joel Fernandes <joelaf@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Richard Henderson <rth@twiddle.net>,
+        Fri, 10 Jul 2020 12:57:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbgGJQ5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:57:53 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305A2C08C5DC;
+        Fri, 10 Jul 2020 09:57:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=REVCDakwgDG+DYRws7LZzQi4QLzZc//D1GvkmuJe/WI=; b=dgVJrxlUyxMQ21th+aRn2MrSte
+        FdbzjRbZu8cLN84tlxqHdpFUtzI8O95wTMXQ/rcd+AaWG72Fv2A7dITBe7ZOMYqOkJkP5Wl2RDVQI
+        PrmqKB+qfPCs2PhwcxeQZndW25BDLWlRghD4B9Re6xZnguBBMY+GfbMomE2r+5y9IDCsfAeIH/DmH
+        C9EnZqB7WqxgWix+ggL/mp49WUS29EzpgQePI53Ku3ta6GNOlTwRLtiwQ46aA8MwI0KaYXr5V8FDZ
+        QO3Rc9Rco4kbnB4D8KC0p+ua5rvu7TpfJ+SFN8HchKD8BAzsrCCyjPu/Ro1bimWM5UAQlpTmOh6dY
+        AZQhWk4A==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jtwLK-0005Nl-8U; Fri, 10 Jul 2020 16:57:46 +0000
+Date:   Fri, 10 Jul 2020 17:57:46 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>,
+        linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Idan Yaniv <idan.yaniv@ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
         Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kernel-team@android.com
-Subject: [PATCH 00/18] Allow architectures to override __READ_ONCE()
-Date:   Fri, 10 Jul 2020 17:51:44 +0100
-Message-Id: <20200710165203.31284-1-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 1/5] mm: make HPAGE_PxD_{SHIFT,MASK,SIZE} always
+ available
+Message-ID: <20200710165746.GO12769@casper.infradead.org>
+References: <20200706172051.19465-1-rppt@kernel.org>
+ <20200706172051.19465-2-rppt@kernel.org>
+ <alpine.LSU.2.11.2007062153000.2793@eggly.anvils>
+ <20200710164037.GA11749@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710164037.GA11749@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Fri, Jul 10, 2020 at 12:40:37PM -0400, Andrea Arcangeli wrote:
+> Hello Hugh and Mike,
+> 
+> On Mon, Jul 06, 2020 at 10:07:34PM -0700, Hugh Dickins wrote:
+> > Adding Andrea to Cc, he's the one who structured it that way,
+> > and should be consulted.
+> >
+> > I'm ambivalent myself.  Many's the time I've been irritated by the
+> > BUILD_BUG() in HPAGE_etc, and it's responsible for very many #ifdef
+> > CONFIG_TRANSPARENT_HUGEPAGEs or IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)s
+> > that you find uglily scattered around the source.
+> > 
+> > But that's the point of it: it's warning when you write code peculiar
+> > to THP, that is going to bloat the build of kernels without any THP.
+> > 
+> > So although I've often been tempted to do as you suggest, I've always
+> > ended up respecting Andrea's intention, and worked around it instead
+> > (sometimes with #ifdef or IS_ENABLED(), sometimes with
+> > PMD_{SHIFT,MASK_SIZE}, sometimes with a local definition).
+> 
+> The only other reasons that comes to mind in addition of optimizing
+> the bloat away at build time is to make it easier to identify the THP
+> code and to make it explicit that hugetlbfs shouldn't us it or it
+> could be wrong on some arches.
+> 
+> However for this case the BUILD_BUG() looks right and this doesn't
+> look like a false positive.
+> 
+> This patchset has nothing to do THP, so it'd be more correct to use
+> MAX_ORDER whenever the fragmentation is about the buddy (doesn't look
+> the case here) or PUD_SIZE/ORDER/PMD_SIZE/ORDER if the objective is
+> not to unnecessarily split extra and unrelated hugepud/hugepmds in the
+> direct mapping (as in this case).
+> 
+> The real issue exposed by the BUILD_BUG is the lack of PMD_ORDER
+> definition and fs/dax.c already run into and it solved it locally in the
+> dax.c file:
+> 
+> /* The order of a PMD entry */
+> #define PMD_ORDER	(PMD_SHIFT - PAGE_SHIFT)
+> 
+> The fact it's not just this patch but also dax.c that run into the
+> same issue, makes me think PMD_ORDER should be defined and then you
+> can use PMD_* and PUD_* for this non-THP purpose.
 
-This is version three of the patches I previously posted here:
+We'll run into some namespace issues.
 
-  v1: https://lore.kernel.org/lkml/20191108170120.22331-1-will@kernel.org/
-  v2: https://lore.kernel.org/r/20200630173734.14057-1-will@kernel.org
+arch/arm/kernel/head.S:#define PMD_ORDER        3
+arch/arm/kernel/head.S:#define PMD_ORDER        2
+arch/mips/include/asm/pgtable-32.h:#define PMD_ORDER    aieeee_attempt_to_allocate_pmd
+arch/mips/include/asm/pgtable-64.h:#define PMD_ORDER            0
+arch/parisc/include/asm/pgtable.h:#define PMD_ORDER     1 /* Number of pages per pmd */
 
-Changes since v2 include:
+> Then the question if to remove the BUILD_BUG becomes orthogonal to
+> this patchset, but I don't see much value in retaining HPAGE_PMD/PUD_*
+> unless the BUILD_BUG is retained too, because this patchset already
+> hints that without the BUILD_BUG() the HPAGE_PMD_* definitions would
+> likely spill into non THP paths and they would lose also the only
+> value left (the ability to localize the THP code paths). So I wouldn't
+> be against removing the BUILD_BUG if it's causing maintenance
+> overhead, but then I would drop HPAGE_PMD_* too along with it or it
+> may just cause confusion.
 
-  * Actually add the barrier in READ_ONCE() for Alpha!
-  * Implement Alpha's smp_load_acquire() using __READ_ONCE(), rather than
-    the other way around.
-  * Further untangling of header files
-  * Use CONFIG_LTO instead of CONFIG_CLANG_LTO
+btw, using the hpage_ prefix already caused one problem in the hugetlb
+code:
 
-I have booted this on arm64, and build-tested as follows:
+https://lore.kernel.org/linux-mm/20200629185003.97202-1-mike.kravetz@oracle.com/
 
-  - arm64	allnoconfig, defconfig (also bisected) and allmodconfig
-  - arm32	allnoconfig, defconfig and allmodconfig
-  - x86_64	allnoconfig, defconfig and allmodcofig
-  - alpha	defconfig, defconfig+CONFIG_SMP=y
-  - riscv64	defconfig
-  - powerpc64	defconfig
-  - s390	defconfig
-  - sparc32	defconfig, defconfig+CONFIG_SMP=y
-  - sparc64	defconfig
-
-Cheers,
-
-Will
-
-Cc: Joel Fernandes <joelaf@google.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Marco Elver <elver@google.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org>
-Cc: linux-alpha@vger.kernel.org
-Cc: virtualization@lists.linux-foundation.org
-Cc: kernel-team@android.com
-
---->8
-
-SeongJae Park (1):
-  Documentation/barriers/kokr: Remove references to
-    [smp_]read_barrier_depends()
-
-Will Deacon (18):
-  tools: bpf: Use local copy of headers including uapi/linux/filter.h
-  compiler.h: Split {READ,WRITE}_ONCE definitions out into rwonce.h
-  asm/rwonce: Allow __READ_ONCE to be overridden by the architecture
-  alpha: Override READ_ONCE() with barriered implementation
-  asm/rwonce: Remove smp_read_barrier_depends() invocation
-  asm/rwonce: Don't pull <asm/barrier.h> into 'asm-generic/rwonce.h'
-  vhost: Remove redundant use of read_barrier_depends() barrier
-  alpha: Replace smp_read_barrier_depends() usage with smp_[r]mb()
-  locking/barriers: Remove definitions for [smp_]read_barrier_depends()
-  Documentation/barriers: Remove references to
-    [smp_]read_barrier_depends()
-  tools/memory-model: Remove smp_read_barrier_depends() from informal
-    doc
-  include/linux: Remove smp_read_barrier_depends() from comments
-  checkpatch: Remove checks relating to [smp_]read_barrier_depends()
-  arm64: Reduce the number of header files pulled into vmlinux.lds.S
-  arm64: alternatives: Split up alternative.h
-  arm64: cpufeatures: Add capability for LDAPR instruction
-  arm64: alternatives: Remove READ_ONCE() usage during patch operation
-  arm64: lto: Strengthen READ_ONCE() to acquire when CONFIG_LTO=y
-
- .../RCU/Design/Requirements/Requirements.rst  |   2 +-
- Documentation/memory-barriers.txt             | 156 +---------
- .../translations/ko_KR/memory-barriers.txt    | 146 +--------
- arch/alpha/include/asm/atomic.h               |  16 +-
- arch/alpha/include/asm/barrier.h              |  59 +---
- arch/alpha/include/asm/pgtable.h              |  10 +-
- arch/alpha/include/asm/rwonce.h               |  35 +++
- arch/arm/include/asm/vdso/gettimeofday.h      |   1 +
- arch/arm64/Kconfig                            |   3 +
- arch/arm64/include/asm/alternative-macros.h   | 276 ++++++++++++++++++
- arch/arm64/include/asm/alternative.h          | 267 +----------------
- arch/arm64/include/asm/cpucaps.h              |   3 +-
- arch/arm64/include/asm/insn.h                 |   3 +-
- arch/arm64/include/asm/kernel-pgtable.h       |   2 +-
- arch/arm64/include/asm/memory.h               |  11 +-
- arch/arm64/include/asm/rwonce.h               |  63 ++++
- arch/arm64/include/asm/uaccess.h              |   1 +
- .../include/asm/vdso/compat_gettimeofday.h    |   1 +
- arch/arm64/include/asm/vdso/gettimeofday.h    |   1 +
- arch/arm64/kernel/alternative.c               |   7 +-
- arch/arm64/kernel/cpufeature.c                |  10 +
- arch/arm64/kernel/entry.S                     |   1 +
- arch/arm64/kernel/vdso/Makefile               |   2 +-
- arch/arm64/kernel/vdso32/Makefile             |   2 +-
- arch/arm64/kernel/vmlinux.lds.S               |   1 -
- arch/arm64/kvm/hyp-init.S                     |   1 +
- arch/riscv/include/asm/vdso/gettimeofday.h    |   1 +
- drivers/vhost/vhost.c                         |   5 -
- include/asm-generic/Kbuild                    |   1 +
- include/asm-generic/barrier.h                 |  19 +-
- include/asm-generic/rwonce.h                  |  80 +++++
- include/linux/compiler.h                      |  83 +-----
- include/linux/nospec.h                        |   2 +
- include/linux/percpu-refcount.h               |   2 +-
- include/linux/ptr_ring.h                      |   2 +-
- mm/memory.c                                   |   2 +-
- scripts/checkpatch.pl                         |   9 +-
- tools/bpf/Makefile                            |   3 +-
- tools/include/uapi/linux/filter.h             |  90 ++++++
- .../Documentation/explanation.txt             |  26 +-
- 40 files changed, 636 insertions(+), 769 deletions(-)
- create mode 100644 arch/alpha/include/asm/rwonce.h
- create mode 100644 arch/arm64/include/asm/alternative-macros.h
- create mode 100644 arch/arm64/include/asm/rwonce.h
- create mode 100644 include/asm-generic/rwonce.h
- create mode 100644 tools/include/uapi/linux/filter.h
-
--- 
-2.27.0.383.g050319c2ae-goog
-
+I'd suggest we rename these to THP_PMD_* and THP_PUD_* to make it clear
+they're only for the THP case.
