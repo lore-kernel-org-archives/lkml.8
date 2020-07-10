@@ -2,94 +2,103 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6921C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07132076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 05:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A1A206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:02:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eaOWi4hb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FKTefwzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgGJF7J (ORCPT
+        id S1726756AbgGJGCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:59:09 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:36738 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725966AbgGJF7E (ORCPT
+        Fri, 10 Jul 2020 02:02:49 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54329 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725943AbgGJGCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 01:59:04 -0400
-X-UUID: 8c6f72ef7b134dfaa0591a3f94dd9dbe-20200710
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3J4M+F0supuqFwxgQsU3V/czRpfnA/Zs7qlL02F271M=;
-        b=eaOWi4hboW4xKQFG6Pz2Ttjuvu9LRJe9uYlsgtwdQEAF4M90fJb/wBYfVh/GKmCF8pWrjdL4FcrIO2HrhR+YHGfjvGQevi3sz16QpKqr/LpN/m/Mku0mVEEQHZwOkc7CfDR9ywpuFuVzm23MCU6cnl/6uEjqG6x+Re4YtB8xv9Q=;
-X-UUID: 8c6f72ef7b134dfaa0591a3f94dd9dbe-20200710
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1894286242; Fri, 10 Jul 2020 13:58:56 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
- (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 10 Jul
- 2020 13:58:52 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 10 Jul 2020 13:58:51 +0800
-Message-ID: <1594360692.23885.29.camel@mhfsdcap03>
-Subject: Re: [PATCH] usb: xhci-mtk: fix the failure of bandwidth allocation
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Ikjoon Jang <ikjn@chromium.org>
-Date:   Fri, 10 Jul 2020 13:58:12 +0800
-In-Reply-To: <CANMq1KA2kT1yLGqhJFBKt4sRzzE6r=ABkSX59S-Mjr8Dg8sTOQ@mail.gmail.com>
-References: <1594348182-431-1-git-send-email-chunfeng.yun@mediatek.com>
-         <CANMq1KA2kT1yLGqhJFBKt4sRzzE6r=ABkSX59S-Mjr8Dg8sTOQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 10 Jul 2020 02:02:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594360967;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xr6sF7nLX+jiDlYkdiRpogVjgNVxfUMLwXTP3iCqcp8=;
+        b=FKTefwzHf6DtnDCm0XsRvAMqSb3gTsNAMyaIoyzhZnPzDP1TXiKqPsnJXi2EHDkvdMJ/+a
+        6Os1QJsvLAQH6TtEGEyuXShbw+hiC9y4pRmPmvs27Sh+lC4spprta2AI0aUJQbzHZm1jnL
+        3ueooX86IfG5lYM/0gZH6LU4GpXPDas=
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
+ [209.85.167.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-vmsgvkGHMdeptKAZjhP77g-1; Fri, 10 Jul 2020 02:02:45 -0400
+X-MC-Unique: vmsgvkGHMdeptKAZjhP77g-1
+Received: by mail-oi1-f199.google.com with SMTP id p145so3189022oic.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 23:02:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xr6sF7nLX+jiDlYkdiRpogVjgNVxfUMLwXTP3iCqcp8=;
+        b=N+dTC962Kv7YRFIOMV6gVOUds1/l+D21tygbi3iSI6z9cenaklhtGFbYbs8wcsS1jR
+         FoQam16KLPfXd+SkJQaKU2zGKXUiFSc+FjiWwreRrHsTxLjdZh1CbeZ7jsmgSS9QCYW9
+         DOL1411LYoZFf4ZdA/YiNUIZGm9YmUxJOr+Y7h+yF0zO2rj5VByPygw53jEosbh2C7Vr
+         ew5y3BRVE7vaHqGxFS+cYNFzNkp/c+g2MNSOxVXYLzelAp3lc6qnNtqpUhRUigAcMPEG
+         aVfuZpn/qqHpl/d8kmZv0wIVCnFndzzHUiyGwCoPtq+MX7M1cJyw5oJd1d+jbtGrZJoq
+         wG0g==
+X-Gm-Message-State: AOAM530olkU5p9EI2PP9ur080r4CVPyBAo3tG926zX1UsRcc4kn7vKUM
+        ih/g5JN7tEzZghdL1cLEoAh1oSlx+9oGSQ7SOTSE2ExXWOQb4oNUH3hVFobri4BBd5YuyR4FTyu
+        Zr7mj4qiviRUAplddgooNxegzQ71aYVQb1/eO9Mqd
+X-Received: by 2002:a9d:c08:: with SMTP id 8mr55439013otr.187.1594360964653;
+        Thu, 09 Jul 2020 23:02:44 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwyWRDXQOxEoIeSRn2FeoMmze0VhGuYEL4K1E2DGwe0xC3DwjlDx8cdB5v+DCWt8qCHMZByA1rq6DeYZJ/IvE8=
+X-Received: by 2002:a9d:c08:: with SMTP id 8mr55438986otr.187.1594360964387;
+ Thu, 09 Jul 2020 23:02:44 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 97B22A963E31DADB986C97287E9D5D6F20148FF6D6DB6C9860D7A8A1AC4405352000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200709064946.GQ3874@shao2-debian> <9cfe8123-9cd7-a6ec-f73b-3252d695a387@linuxfoundation.org>
+In-Reply-To: <9cfe8123-9cd7-a6ec-f73b-3252d695a387@linuxfoundation.org>
+From:   Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Date:   Fri, 10 Jul 2020 09:02:28 +0300
+Message-ID: <CANoWswkjNnyBi68HL6VjX9dWt6VdjxycXV09j5L+jkCAbnrHrg@mail.gmail.com>
+Subject: Re: [selftests] 7cb32086e5: kernel-selftests.x86.check_initial_reg_state_32.fail
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA3LTEwIGF0IDExOjE0ICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
-DQo+IE9uIEZyaSwgSnVsIDEwLCAyMDIwIGF0IDEwOjMwIEFNIENodW5mZW5nIFl1biA8Y2h1bmZl
-bmcueXVuQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBUaGUgd01heFBhY2tldFNpemUg
-ZmllbGQgb2YgZW5kcG9pbnQgZGVzY3JpcHRvciBtYXkgYmUgemVybw0KPiA+IGFzIGRlZmF1bHQg
-dmFsdWUgaW4gYWx0ZXJuYXRlIGludGVyZmFjZSwgYW5kIHRoZXkgYXJlIG5vdA0KPiA+IGFjdHVh
-bGx5IHNlbGVjdGVkIHdoZW4gc3RhcnQgc3RyZWFtLCBzbyBza2lwIHRoZW0gd2hlbiB0cnkgdG8N
-Cj4gPiBhbGxvY2F0ZSBiYW5kd2lkdGguDQo+ID4NCj4gPiBDYzogc3RhYmxlIDxzdGFibGVAdmdl
-ci5rZXJuZWwub3JnPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENodW5mZW5nIFl1biA8Y2h1bmZlbmcu
-eXVuQG1lZGlhdGVrLmNvbT4NCj4gDQo+IEFkZCB0aGlzPw0KPiBGaXhlczogMGNiZDRiMzRjZGE5
-ZGZkICgieGhjaTogbWVkaWF0ZWs6IHN1cHBvcnQgTVRLIHhIQ0kgaG9zdCBjb250cm9sbGVyIikN
-Ck9rLCB0aGFua3MNCg0KPiANCj4gPiAtLS0NCj4gPiAgZHJpdmVycy91c2IvaG9zdC94aGNpLW10
-ay1zY2guYyB8IDQgKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay1zY2guYyBiL2Ry
-aXZlcnMvdXNiL2hvc3QveGhjaS1tdGstc2NoLmMNCj4gPiBpbmRleCBmZWE1NTU1Li40NWM1NGQ1
-NiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLXNjaC5jDQo+ID4g
-KysrIGIvZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay1zY2guYw0KPiA+IEBAIC01NTcsNiArNTU3
-LDEwIEBAIHN0YXRpYyBib29sIG5lZWRfYndfc2NoKHN0cnVjdCB1c2JfaG9zdF9lbmRwb2ludCAq
-ZXAsDQo+ID4gICAgICAgICBpZiAoaXNfZnNfb3JfbHMoc3BlZWQpICYmICFoYXNfdHQpDQo+ID4g
-ICAgICAgICAgICAgICAgIHJldHVybiBmYWxzZTsNCj4gPg0KPiA+ICsgICAgICAgLyogc2tpcCBl
-bmRwb2ludCB3aXRoIHplcm8gbWF4cGt0ICovDQo+ID4gKyAgICAgICBpZiAodXNiX2VuZHBvaW50
-X21heHAoJmVwLT5kZXNjKSA9PSAwKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gZmFsc2U7
-DQo+ID4gKw0KPiA+ICAgICAgICAgcmV0dXJuIHRydWU7DQo+ID4gIH0NCj4gPg0KPiA+IC0tDQo+
-ID4gMS45LjENCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXw0KPiA+IExpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPiA+IExpbnV4LW1lZGlhdGVr
-QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrDQoNCg==
+On Thu, Jul 9, 2020 at 6:36 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>
+> On 7/9/20 12:49 AM, kernel test robot wrote:
+> > Greeting,
+> >
+> > FYI, we noticed the following commit (built with gcc-9):
+> >
+> > commit: 7cb32086e59b514a832a3e11f5370d37e7cfe022 ("selftests: simplify run_tests")
+> > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> >
+> >
+>
+> Thanks for the report. I will drop this patch for now from next.
+>
+> Yauheni,
+>
+> This patch broke x86 32-bit test run
+> make run_tests -C x86
+>
+> Please resubmit the patch with the fix.
+
+I did not check carefully the report, but isn't it expected that some
+tests are moved after the patch since they originally were placed
+incorrectly?
+
+
+-- 
+WBR, Yauheni
 
