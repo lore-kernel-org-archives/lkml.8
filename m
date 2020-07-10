@@ -2,250 +2,235 @@ Return-Path: <SRS0=2Lxt=AV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F691C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1394AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3546220720
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD57720720
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jul 2020 06:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="H9xNKfMb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCNnBzGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgGJGPf (ORCPT
+        id S1727833AbgGJGPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52202 "EHLO
+        Fri, 10 Jul 2020 02:15:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgGJGPc (ORCPT
+        with ESMTP id S1726004AbgGJGPt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jul 2020 02:15:32 -0400
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D03D6C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jul 2020 23:15:32 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id j11so3901132oiw.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jul 2020 23:15:32 -0700 (PDT)
+        Fri, 10 Jul 2020 02:15:49 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AFD5C08C5CE;
+        Thu,  9 Jul 2020 23:15:49 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u18so2073364pfk.10;
+        Thu, 09 Jul 2020 23:15:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kali.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=firXECNMLXniKyCvwGOQp5z1TDCqfIAA522lZa0cjs8=;
-        b=H9xNKfMb1oeJa3rxcpAig9irEvNPG756hwbJvn5FslLD3+ycXhV6tX69JPMY7g8TOM
-         UuZv4JkqAYq2KOFmuZ9LSxIS0HFXwH/0/JVF9fbkt0LJQOm8tQTqcAGy39pYTngg8WB9
-         xlzhzaFUpmzh+0TfTm1MSD8sUoQi7I7tNk7HXLTPpTpAQHbfXfyJx9qd421vybSSoRKj
-         WLi9j58oaeYUa4AAraqE7c8bvVabf7BoNMm6fAAG4BKyDdk0tzuu/GzrkxNmDTvtOU2J
-         I5pQbmCgCPRJal3CLcWC1SybOzcVDSige9M0R5odTOVY/m3/ycP/RjBGPZFnuruP8YMJ
-         Su4g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3UDisdmmxAxoVFDA02zf8tgRXf0NT2qryD8Bj88ZzkU=;
+        b=CCNnBzGlzx2kwlJE26zUeWzUawQ+jCzFseRnJJDqF/W9ziK8E58GyapnxXQnmKOmnG
+         lpeljdj6FVx0JZKwIm2KDmLULADPCUJXz4DdB0K88wMCWV0CqQ6TiQ18FzmOtKPF9pPh
+         Ofkj9xNfQ56eJF4Hk8/TWYwmPbn1EFRlLDYpXRjRBatdth70hPEBrhjgu5wgJ87XDIKF
+         mNzLsb88HZaL5aMDK0V80Ar6QJhG7Y5M8w3AHFZGE2ccazhL6rMFx6viXQEDCQhZ8C29
+         S2P9fN9upJ1Ok7MR/7Wll0Ix/7SXeAKOg8QxQy47ujRyW3vOEsGDfBDD+VRCgSHvZjcZ
+         Mp8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=firXECNMLXniKyCvwGOQp5z1TDCqfIAA522lZa0cjs8=;
-        b=XaLmwcVawSBf5mLxniLF3h/QaWUC90lmARNVLgA/x+mKk+H6oXd5TsxxUriwFQlpQR
-         +XzAGHDYqblSVDcYA2BiCkKJWPzrl5SDYAUnG2AjOnJtHCjfNsgmyyBnS9d6gAm951n1
-         qDVqDKmr1otn2b581gtxM2gW8zBBUuLdzs23EwMDXBWex+dP2LNMBvbONGhVQR4PVWZl
-         sgPKYOCJZJX7KafPpqTPjqzTxZfUqjCP5d3nsR5d3wHmeiUs01+DcSTpxBiJAGVwgAZD
-         leQsCcaHqvaFZeJr54bhJDcLzvtf9cloblhPFdhd/UVdKi9Sz65mmfCxRylvC9fxNxqC
-         7KCg==
-X-Gm-Message-State: AOAM533lOxxUkmhs3K8GfNnHDQhFfVuFIwXhP4WcPnS4Z7EZNB1NiF2W
-        5BzoX+vjJLeDldvmL4Zw5yOKrQ==
-X-Google-Smtp-Source: ABdhPJzKYv1MQNBiX9pdiNawAOtCiBG3Cr1nwQSq8I7M2RjOSjTLvlyd/GsbATT1yLThRSl+gVcp3Q==
-X-Received: by 2002:aca:3017:: with SMTP id w23mr3106122oiw.18.1594361731934;
-        Thu, 09 Jul 2020 23:15:31 -0700 (PDT)
-Received: from [192.168.11.10] (cpe-173-175-113-3.satx.res.rr.com. [173.175.113.3])
-        by smtp.gmail.com with ESMTPSA id r14sm937732otp.54.2020.07.09.23.15.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 23:15:31 -0700 (PDT)
-Subject: Re: [PATCH v3 6/9] drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Steev Klimaszewski <steev@gentoo.org>
-References: <20191218143416.v3.6.Iaf8d698f4e5253d658ae283d2fd07268076a7c27@changeid>
- <20200710011935.GA7056@gentoo.org>
- <CAD=FV=X3oazamoKR1jHoXm-yCAp9208ahNd8y+NDPt1pU=5xRg@mail.gmail.com>
- <CAD=FV=UWQsGit6XMCzHn5cBRAC9nAaGReDyMzMM2Su02bfiPyQ@mail.gmail.com>
- <dc786abb-4bc2-2416-7ee5-de408aceb8f1@kali.org>
- <e0702671-3bed-9e3d-c7f4-d050c617eb65@kali.org>
- <bc795659-7dd6-c667-1c93-4331510ecfbc@kali.org>
- <CAD=FV=VC+RP8WfS-yuc65WRN2KokNbAs-F3UdQtQoZjcMMSNFA@mail.gmail.com>
-From:   Steev Klimaszewski <steev@kali.org>
-Message-ID: <f81f0d22-85d6-66eb-c8d9-345757f53959@kali.org>
-Date:   Fri, 10 Jul 2020 01:15:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAD=FV=VC+RP8WfS-yuc65WRN2KokNbAs-F3UdQtQoZjcMMSNFA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3UDisdmmxAxoVFDA02zf8tgRXf0NT2qryD8Bj88ZzkU=;
+        b=WO/yZXmvHyp/UzBgJdRnAJFSP8ydorh/lELGts+wEB9VnKhoTWo8nEL5a69rI/o+ej
+         7rh5NAlxynyGJl6o+I8JDcfyu1HJ/dQwsi5FsSfPY4KkJBKAGa2mOfg3P+VYv1G2EScU
+         8AnW0lMPusmEGvwAGk4/Cyr91yJduOcZTmoOeg2eEEUsu+cHmfZb1hDmd2jAqXmDh6hF
+         COpg/u1YlZvHNX9PBt4tRXtK0EJGBk3pInzJA8sWbjPnJJWR1IjxVtJWKmQv6A7iW6Tz
+         Vyp++A4l1YFBT8bWuUu8EID4gaYu6jjW87mi4xN2ymfd7oMXKeapSIs5Sai8EUWMV7Ua
+         XuCQ==
+X-Gm-Message-State: AOAM532o019p8TZGCxALVHOeYKCsXFVUB8yT4Dhzah+t5MmTisaXz7kN
+        //VwYwQQpjLc8bKJjHs/WYs=
+X-Google-Smtp-Source: ABdhPJwVmqZUAAKfhO3/uTq/APmG/M/vVevTvaXd5iCq2GNOukYygaFFeyJ1gQdq7JJEVW4TbnRU2w==
+X-Received: by 2002:a65:43c1:: with SMTP id n1mr17832268pgp.67.1594361747517;
+        Thu, 09 Jul 2020 23:15:47 -0700 (PDT)
+Received: from mi-OptiPlex-7050.mioffice.cn ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id j13sm4372525pjz.8.2020.07.09.23.15.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Jul 2020 23:15:47 -0700 (PDT)
+From:   yang che <chey84736@gmail.com>
+To:     mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        yang che <chey84736@gmail.com>
+Subject: [PATCH v3] hung_task:add detecting task in D state milliseconds timeout
+Date:   Fri, 10 Jul 2020 14:15:15 +0800
+Message-Id: <1594361715-25325-1-git-send-email-chey84736@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+current hung_task_check_interval_secs and hung_task_timeout_secs
+only supports seconds. In some cases,the TASK_UNINTERRUPTIBLE state
+takes less than 1 second,may need to hung task trigger panic
+get ramdump or print all cpu task.
 
-On 7/9/20 11:12 PM, Doug Anderson wrote:
->> root@c630:~# bus=$(i2cdetect -l | grep sn65 | sed 's/i2c-\([0-9]*\).*$/\1/')
->> root@c630:~# i2cdump ${bus} 0x50 i > edid
->> WARNING! This program can confuse your I2C bus, cause data loss and worse!
->> I will probe file /dev/i2c-16, address 0x50, mode i2c block
->> Continue? [Y/n]
->> root@c630:~# edid-decode edid
->> edid-decode (hex):
->>
->> 00 ff ff ff ff ff ff 00 09 e5 d1 07 00 00 00 00
->> 01 1c 01 04 a5 1d 11 78 0a 1d b0 a6 58 54 9e 26
->> 0f 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
->> 01 01 01 01 01 01 c0 39 80 18 71 38 28 40 30 20
->> 36 00 26 a5 10 00 00 1a 00 00 00 00 00 00 00 00
->> 00 00 00 00 00 00 00 00 00 1a 00 00 00 fe 00 42
->> 4f 45 20 43 51 0a 20 20 20 20 20 20 00 00 00 fe
->> 00 4e 56 31 33 33 46 48 4d 2d 4e 36 31 0a 00 9a
->>
->> 03 26 0a 77 ab 1c 05 71 6f 1d 8c f1 43 ce 6a bb
->> fb d3 11 20 39 07 22 6e 65 68 77 70 d3 05 34 73
->> 44 21 8b fd f5 6d 11 62 94 2a 7c fa 93 ba 6a 61
->> 92 da 15 53 4c 39 eb f7 86 23 97 48 e9 39 09 d2
->> 66 02 70 bb e2 77 0f 4a a3 a0 4c 72 6e 5d 47 70
->> 43 c2 13 f3 b2 d9 b9 78 02 be 41 82 15 6a 28 dc
->> 45 0f 9d eb 0f 2a cc e8 35 8d 34 7f 3e 84 5e a3
->> 30 5e 1e 29 0a 48 0c d1 0a c4 08 31 03 a9 3b 29
->>
->> ----------------
->>
->> EDID version: 1.4
->> Manufacturer: BOE Model 2001 Serial Number 0
->> Made in week 1 of 2018
->> Digital display
->> 8 bits per primary color channel
->> DisplayPort interface
->> Maximum image size: 29 cm x 17 cm
->> Gamma: 2.20
->> Supported color formats: RGB 4:4:4, YCrCb 4:4:4
->> First detailed timing includes the native pixel format and preferred
->> refresh rate
->> Color Characteristics
->>     Red:   0.6484, 0.3447
->>     Green: 0.3310, 0.6181
->>     Blue:  0.1503, 0.0615
->>     White: 0.3125, 0.3281
->> Established Timings I & II: none
->> Standard Timings: none
->> Detailed mode: Clock 147.840 MHz, 294 mm x 165 mm
->>                  1920 1968 2000 2200 ( 48  32 200)
->>                  1080 1083 1089 1120 (  3   6  31)
->>                  +hsync -vsync
->>                  VertFreq: 60.000 Hz, HorFreq: 67.200 kHz
->> Manufacturer-Specified Display Descriptor (0x00): 00 00 00 00 00 00 00
->> 00 00 00 00 00 00 00 00 1a  ................
->> Alphanumeric Data String: BOE CQ
->> Alphanumeric Data String: NV133FHM-N61
->> Checksum: 0x9a
->>
->> ----------------
->>
->> Unknown EDID Extension Block 0x03
->>     03 26 0a 77 ab 1c 05 71 6f 1d 8c f1 43 ce 6a bb .&.w...qo...C.j.
->>     fb d3 11 20 39 07 22 6e 65 68 77 70 d3 05 34 73  ... 9."nehwp..4s
->>     44 21 8b fd f5 6d 11 62 94 2a 7c fa 93 ba 6a 61 D!...m.b.*|...ja
->>     92 da 15 53 4c 39 eb f7 86 23 97 48 e9 39 09 d2 ...SL9...#.H.9..
->>     66 02 70 bb e2 77 0f 4a a3 a0 4c 72 6e 5d 47 70 f.p..w.J..Lrn]Gp
->>     43 c2 13 f3 b2 d9 b9 78 02 be 41 82 15 6a 28 dc C......x..A..j(.
->>     45 0f 9d eb 0f 2a cc e8 35 8d 34 7f 3e 84 5e a3 E....*..5.4.>.^.
->>     30 5e 1e 29 0a 48 0c d1 0a c4 08 31 03 a9 3b 29 0^.).H.....1..;)
->> Checksum: 0x29 (should be 0x82)
->>
->>
->> - My edid does in fact say it's 8bit
-> Crazy!  Mine:
->
-> Extracted contents:
-> header:          00 ff ff ff ff ff ff 00
-> serial number:   09 e5 2d 08 00 00 00 00 23 1c
-> version:         01 04
-> basic params:    95 1d 11 78 02
-> chroma info:     d5 00 a6 58 54 9f 27 0f 4f 57
-> established:     00 00 00
-> standard:        01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
-> descriptor 1:    c0 39 80 18 71 38 28 40 30 20 36 00 26 a5 10 00 00 1a
-> descriptor 2:    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> descriptor 3:    00 00 00 fe 00 42 4f 45 20 43 51 0a 20 20 20 20 20 20
-> descriptor 4:    00 00 00 fe 00 4e 56 31 33 33 46 48 4d 2d 4e 36 32 0a
-> extensions:      00
-> checksum:        40
->
-> Manufacturer: BOE Model 82d Serial Number 0
-> Made week 35 of 2018
-> EDID version: 1.4
-> Digital display
-> 6 bits per primary color channel
-> DisplayPort interface
-> Maximum image size: 29 cm x 17 cm
-> Gamma: 2.20
-> Supported color formats: RGB 4:4:4
-> First detailed timing is preferred timing
-> Established timings supported:
-> Standard timings supported:
-> Detailed mode: Clock 147.840 MHz, 294 mm x 165 mm
->                 1920 1968 2000 2200 hborder 0
->                 1080 1083 1089 1120 vborder 0
->                 +hsync -vsync
-> Manufacturer-specified data, tag 0
-> ASCII string: BOE
-> ASCII string: NV133FHM-N62
-> Checksum: 0x40 (valid)
->
-> Unknown extension block
->
-> EDID block does NOT conform to EDID 1.3!
->          Missing name descriptor
->          Missing monitor ranges
->          Detailed block string not properly terminated
-> EDID block does not conform at all!
->          Has 128 nonconformant extension block(s)
+modify hung_task_check_interval_secs to hung_task_check_interval_msecs,
+check interval use milliseconds. Add hung_task_timeout_msecs file to
+set milliseconds.
+task timeout = hung_task_timeout_secs * 1000 + hung_task_timeout_msecs.
 
-I did attempt to modify the patch, and I don't think I did it correctly
+Signed-off-by: yang che <chey84736@gmail.com>
+---
 
-Around line 232, I changed
+v2->v3:
+ Fix some format issues.
+ add use msecs_to_jiffies,jiffies_to_msec.
+ because use timeout = secs * 1000  + msecs,so sysctl_hung_task_timeout_msec
+ = CONFIG_DEFAULT_HUNG_TASK_TIMEOUT * MSEC_PER_SEC; will cause timeout is
+ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT double.
 
-IS_SC7180_TARGET(c->hw.hwversion))
+v1->v2:
+ add hung_task_check_interval_millisecs,hung_task_timeout_millisecs.
+ fix writing to the millisecond file silently overrides the setting in
+ the seconds file.
 
-to
+ [1]https://lore.kernel.org/lkml/CAN_w4MWMfoDGfpON-bYHrU=KuJG2vpFj01ZbN4r-iwM4AyyuGw@mail.gmail.com
+ [2]https://lore.kernel.org/lkml/20200705171633.GU25523@casper.infradead.org/
 
-IS_SC7180_TARGET(c->hw.hwversion) ||
+ include/linux/sched/sysctl.h |  3 ++-
+ kernel/hung_task.c           | 31 ++++++++++++++++++++++---------
+ kernel/sysctl.c              | 12 ++++++++++--
+ 3 files changed, 34 insertions(+), 12 deletions(-)
 
-IS_SDM845_TARGET(c->hw.hwversion))
-
-
-But it would seem that only gets us 1/2 way there...
-
-https://dev.gentoo.org/~steev/files/image2.jpg
-
-
-But should I continue on this path, or should we be finding others who 
-have an N61 and see what their EDID reports?
-
-I have another c630, but unfortunately, it appears to have the IVO 
-screen in it, instead of another N61.  I asked another user and he also 
-had the IVO.
-
--- steev
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index 660ac49..41b426e 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -16,8 +16,9 @@ extern unsigned int sysctl_hung_task_all_cpu_backtrace;
+ 
+ extern int	     sysctl_hung_task_check_count;
+ extern unsigned int  sysctl_hung_task_panic;
++extern unsigned long sysctl_hung_task_timeout_msecs;
+ extern unsigned long sysctl_hung_task_timeout_secs;
+-extern unsigned long sysctl_hung_task_check_interval_secs;
++extern unsigned long sysctl_hung_task_check_interval_msecs;
+ extern int sysctl_hung_task_warnings;
+ int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
+ 		void *buffer, size_t *lenp, loff_t *ppos);
+diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+index ce76f49..bac6f33 100644
+--- a/kernel/hung_task.c
++++ b/kernel/hung_task.c
+@@ -37,16 +37,23 @@ int __read_mostly sysctl_hung_task_check_count = PID_MAX_LIMIT;
+  * the RCU grace period. So it needs to be upper-bound.
+  */
+ #define HUNG_TASK_LOCK_BREAK (HZ / 10)
++#define MSEC_PER_SEC 1000L
+ 
+ /*
+- * Zero means infinite timeout - no checking done:
++ * Zero and sysctl_hung_task_timeout_msecs zero means infinite timeout - no checking done:
+  */
+ unsigned long __read_mostly sysctl_hung_task_timeout_secs = CONFIG_DEFAULT_HUNG_TASK_TIMEOUT;
+ 
+ /*
+- * Zero (default value) means use sysctl_hung_task_timeout_secs:
++ * Zero (default value) means only use sysctl_hung_task_timeout_secs
+  */
+-unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
++unsigned long  __read_mostly sysctl_hung_task_timeout_msecs;
++
++/*
++ * Zero (default value) means use
++ * sysctl_hung_task_timeout_secs * MSEC_PER_SEC + sysctl_hung_task_timeout_msecs
++ */
++unsigned long __read_mostly sysctl_hung_task_check_interval_msecs;
+ 
+ int __read_mostly sysctl_hung_task_warnings = 10;
+ 
+@@ -108,7 +115,8 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+ 		t->last_switch_time = jiffies;
+ 		return;
+ 	}
+-	if (time_is_after_jiffies(t->last_switch_time + timeout * HZ))
++
++	if (time_is_after_jiffies(t->last_switch_time + msecs_to_jiffies(timeout)))
+ 		return;
+ 
+ 	trace_sched_process_hang(t);
+@@ -126,13 +134,17 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+ 	if (sysctl_hung_task_warnings) {
+ 		if (sysctl_hung_task_warnings > 0)
+ 			sysctl_hung_task_warnings--;
+-		pr_err("INFO: task %s:%d blocked for more than %ld seconds.\n",
+-		       t->comm, t->pid, (jiffies - t->last_switch_time) / HZ);
++
++		pr_err("INFO: task %s:%d blocked for more than %ld.%03ld seconds.\n",
++			t->comm, t->pid,
++			jiffies_to_msecs(jiffies - t->last_switch_time) / MSEC_PER_SEC,
++			jiffies_to_msecs(jiffies - t->last_switch_time) % MSEC_PER_SEC);
+ 		pr_err("      %s %s %.*s\n",
+ 			print_tainted(), init_utsname()->release,
+ 			(int)strcspn(init_utsname()->version, " "),
+ 			init_utsname()->version);
+ 		pr_err("\"echo 0 > /proc/sys/kernel/hung_task_timeout_secs\""
++			"\"echo 0 > /proc/sys/kernel/hung_task_timeout_msecs\""
+ 			" disables this message.\n");
+ 		sched_show_task(t);
+ 		hung_task_show_lock = true;
+@@ -217,7 +229,7 @@ static long hung_timeout_jiffies(unsigned long last_checked,
+ 				 unsigned long timeout)
+ {
+ 	/* timeout of 0 will disable the watchdog */
+-	return timeout ? last_checked - jiffies + timeout * HZ :
++	return timeout ? last_checked - jiffies + msecs_to_jiffies(timeout) :
+ 		MAX_SCHEDULE_TIMEOUT;
+ }
+ 
+@@ -281,8 +293,9 @@ static int watchdog(void *dummy)
+ 	set_user_nice(current, 0);
+ 
+ 	for ( ; ; ) {
+-		unsigned long timeout = sysctl_hung_task_timeout_secs;
+-		unsigned long interval = sysctl_hung_task_check_interval_secs;
++		unsigned long timeout = sysctl_hung_task_timeout_secs * MSEC_PER_SEC +
++					sysctl_hung_task_timeout_msecs;
++		unsigned long interval = sysctl_hung_task_check_interval_msecs;
+ 		long t;
+ 
+ 		if (interval == 0)
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index db1ce7a..5c52759 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2476,6 +2476,14 @@ static struct ctl_table kern_table[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 	},
+ 	{
++		.procname       = "hung_task_timeout_msecs",
++		.data           = &sysctl_hung_task_timeout_msecs,
++		.maxlen         = sizeof(unsigned long),
++		.mode           = 0644,
++		.proc_handler   = proc_dohung_task_timeout_secs,
++		.extra2         = &hung_task_timeout_max,
++	},
++	{
+ 		.procname	= "hung_task_timeout_secs",
+ 		.data		= &sysctl_hung_task_timeout_secs,
+ 		.maxlen		= sizeof(unsigned long),
+@@ -2484,8 +2492,8 @@ static struct ctl_table kern_table[] = {
+ 		.extra2		= &hung_task_timeout_max,
+ 	},
+ 	{
+-		.procname	= "hung_task_check_interval_secs",
+-		.data		= &sysctl_hung_task_check_interval_secs,
++		.procname	= "hung_task_check_interval_msecs",
++		.data		= &sysctl_hung_task_check_interval_msecs,
+ 		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dohung_task_timeout_secs,
+-- 
+2.7.4
 
